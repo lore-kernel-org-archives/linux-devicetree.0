@@ -2,331 +2,265 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3934AC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 18:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A726C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 18:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED73E2158A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 18:16:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qVqCrB/N"
+	by mail.kernel.org (Postfix) with ESMTP id 3A0D92176D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 18:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfK2SQq (ORCPT
+        id S1726970AbfK2S2V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 13:16:46 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42782 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726985AbfK2SQp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 13:16:45 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 66so19436088otd.9;
-        Fri, 29 Nov 2019 10:16:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=l4xdyO3pbcjV7VFnEpdpI0eB5xd2aaOViAmddhCr718=;
-        b=qVqCrB/NvIAkVnXmiZv6toj/plOAU3xcgXsaNRck03Neip+Xo+z3vb1VtvIiJYpYl4
-         /H9cf1zpYUVGfLhxbcpJ+O3le/fnWQJOhLuWA13Oyp4+L7Tm1ZXTspg1QGH63wCnwwQH
-         6zXvNmQdUr2Jr3CIYoJ9nUUIRFGNcqklGkUrSa2Iz5WfU64k3RxglXCenQlyduE7oRXD
-         BXg3yoF8rLY/H+pRCtSc+EuDLwPp5/pPXahkDDtRYBCqrPSnEZxzf/9OMZaMekAwnRit
-         ia5qeSlHdw/WSN0/M4As5Bs+/tDd99Bv2HVBtCRA4Kt4GQDlvl0eJtzfzDfqUe/jFsun
-         2fPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l4xdyO3pbcjV7VFnEpdpI0eB5xd2aaOViAmddhCr718=;
-        b=OLcALX7KatnWMLmzEXdrV+t/auC0uLMTaPCRDg9yjG+c41cJpERie8Ucj38tZkUNzT
-         JMX7W/8UNpjYNEmvYziRwkJIFRbiQWyIdcawDxwG3OvJvpKRo/s0ETESZhCJZPD3CUf5
-         pphH88lnV8T2mGq+Uv1kcFf8v9AFRzCJpp8CQZgO9/DCtIAOvn8QUb4C1ba70ALaLMul
-         Keaf05046ufxqf2y6FC6oynkqGY9M0v6qy9bVWjcW9HkHlqQ9fmE1cyP35hoZEAI8Oz6
-         ARxFmaL/c8wrsCZi4UU95KSYxCIBVMcvdMtBFEfjy6rJAcWh6wh4Pbko0SSt4k+fK/4x
-         x2LQ==
-X-Gm-Message-State: APjAAAUEYGq5QeHtNjdUFwCgV7Jc+ciiEuJM8uq8JBJGf4wjQetwZOt/
-        oy+2bicUUXcSiAX+McGjNmg=
-X-Google-Smtp-Source: APXvYqxbgJui5nzV2IrxEm8sjBHlPUE1XdAYEN6NBbbf2zSzqSOOoWfLftMFiVNUKkRG0lKRqkS9bg==
-X-Received: by 2002:a9d:7f12:: with SMTP id j18mr2628854otq.17.1575051404246;
-        Fri, 29 Nov 2019 10:16:44 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l73sm3959987oib.0.2019.11.29.10.16.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Nov 2019 10:16:43 -0800 (PST)
-Date:   Fri, 29 Nov 2019 10:16:42 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Ben Pai <Ben_Pai@wistron.com>
-Cc:     robh+dt@kernel.org, jdelvare@suse.com,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, corbet@lwn.net, wangat@tw.ibm.com,
-        Andy_YF_Wang@wistron.com, Claire_Ku@wistron.com
-Subject: Re: [ v1] hwmon: (pmbus) Add Wistron power supply pmbus driver
-Message-ID: <20191129181642.GA4062@roeck-us.net>
-References: <20191129060230.14522-1-Ben_Pai@wistron.com>
+        Fri, 29 Nov 2019 13:28:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:51026 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726909AbfK2S2V (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 Nov 2019 13:28:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2AFE31B;
+        Fri, 29 Nov 2019 10:28:18 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D3DD23F68E;
+        Fri, 29 Nov 2019 10:28:17 -0800 (PST)
+Subject: Re: [PATCH v5 08/14] coresight: cti: Enable CTI associated with
+ devices.
+To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     mathieu.poirier@linaro.org
+References: <20191119231912.12768-1-mike.leach@linaro.org>
+ <20191119231912.12768-9-mike.leach@linaro.org>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <c48fe3ee-335b-3dfb-33c1-a2cd7d5a00e6@arm.com>
+Date:   Fri, 29 Nov 2019 18:28:16 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191129060230.14522-1-Ben_Pai@wistron.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191119231912.12768-9-mike.leach@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 02:02:30PM +0800, Ben Pai wrote:
-> Add the driver to monitor Wisreon power supplies with hwmon over pmbus.
-
-Wistron ?
-
+On 19/11/2019 23:19, Mike Leach wrote:
+> The CoreSight subsystem enables a path of devices from source to sink.
+> Any CTI devices associated with the path devices must be enabled at the
+> same time.
 > 
-> Signed-off-by: Ben Pai <Ben_Pai@wistron.com>
+> This patch adds an associated coresight_device element to the main
+> coresight device structure, and uses this to create associations between
+> the CTI and other devices based on the device tree data. The associated
+> device element is used to enable CTI in conjunction with the path elements.
+> 
+> CTI devices are reference counted so where a single CTI is associated with
+> multiple elements on the path, it will be enabled on the first associated
+> device enable, and disabled with the last associated device disable.
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
 > ---
->  drivers/hwmon/pmbus/Kconfig       |   9 ++
->  drivers/hwmon/pmbus/Makefile      |   1 +
->  drivers/hwmon/pmbus/wistron-wps.c | 180 ++++++++++++++++++++++++++++++
->  3 files changed, 190 insertions(+)
->  create mode 100644 drivers/hwmon/pmbus/wistron-wps.c
+>   drivers/hwtracing/coresight/coresight-cti.c   | 87 +++++++++++++++++++
+>   .../hwtracing/coresight/coresight-platform.c  | 23 +++++
+>   drivers/hwtracing/coresight/coresight-priv.h  |  6 ++
+>   drivers/hwtracing/coresight/coresight.c       | 58 +++++++++++--
+>   include/linux/coresight.h                     |  5 ++
+>   5 files changed, 173 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-> index d62d69bb7e49..ebb7024e58ab 100644
-> --- a/drivers/hwmon/pmbus/Kconfig
-> +++ b/drivers/hwmon/pmbus/Kconfig
-> @@ -219,6 +219,15 @@ config SENSORS_UCD9200
->  	  This driver can also be built as a module. If so, the module will
->  	  be called ucd9200.
->  
-> +config SENSORS_WISTRON_WPS
-> +	tristate "Wistron Power Supply"
-> +	help
-> +	  If you say yes here you get hardware monitoring support for the Wistron
-> +	  power supply.
-> +
-> +	  This driver can also be built as a module. If so, the module will
-> +	  be called wistron-wps.
-> +
->  config SENSORS_ZL6100
->  	tristate "Intersil ZL6100 and compatibles"
->  	help
-> diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-> index 03bacfcfd660..cad38f99e8c5 100644
-> --- a/drivers/hwmon/pmbus/Makefile
-> +++ b/drivers/hwmon/pmbus/Makefile
-> @@ -25,4 +25,5 @@ obj-$(CONFIG_SENSORS_TPS40422)	+= tps40422.o
->  obj-$(CONFIG_SENSORS_TPS53679)	+= tps53679.o
->  obj-$(CONFIG_SENSORS_UCD9000)	+= ucd9000.o
->  obj-$(CONFIG_SENSORS_UCD9200)	+= ucd9200.o
-> +obj-$(CONFIG_SENSORS_WISTRON_WPS) += wistron-wps.o
->  obj-$(CONFIG_SENSORS_ZL6100)	+= zl6100.o
-> diff --git a/drivers/hwmon/pmbus/wistron-wps.c b/drivers/hwmon/pmbus/wistron-wps.c
-> new file mode 100644
-> index 000000000000..764496aa9d4f
-> --- /dev/null
-> +++ b/drivers/hwmon/pmbus/wistron-wps.c
-> @@ -0,0 +1,180 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
+> diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
+> index 369488dd7b8e..cf116463149a 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti.c
+> @@ -440,6 +440,90 @@ int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
+>   	return err;
+>   }
+>   
 > +/*
-> + * Copyright 2019 Wistron Corp.
+> + * Look for a matching connection device name in the list of
+> + * connections. If found then swap in the csdev name and return
+> + * found.
 > + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/device.h>
-> +#include <linux/fs.h>
-> +#include <linux/i2c.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/pmbus.h>
-> +
-> +#include "pmbus.h"
-> +
-> +#define WPS_ID_CMD				0x99
-> +#define WPS_PN_CMD				0x9A
-> +#define WPS_FW_CMD				0x9B
-> +#define WPS_DATE_CMD				0x9D
-> +#define WPS_SN_CMD				0x9E
-> +
-> +enum {
-> +	WPS_DEBUGFS_ID,
-> +	WPS_DEBUGFS_PN,
-> +	WPS_DEBUGFS_SN,
-> +	WPS_DEBUGFS_FW,
-> +	WPS_DEBUGFS_DATE,
-> +	WPS_DEBUGFS_NUM_ENTRIES
-> +};
-> +
-> +struct wistron_wps {
-> +
-> +	struct i2c_client *client;
-> +
-> +	int debugfs_entries[WPS_DEBUGFS_NUM_ENTRIES];
-> +
-> +};
-> +
-> +#define to_psu(x, y) container_of((x), struct wistron_wps, debugfs_entries[(y)])
+> +static bool
+> +cti_match_con_name(struct cti_device *ctidev, const char *node_name,
+> +		   const char *csdev_name)
 
-container_of() doesn't really need the extra ().
-
-> +
-> +static ssize_t wistron_wps_debugfs_op(struct file *file, char __user *buf,
-> +				    size_t count, loff_t *ppos)
-
-Please align continuation lines with '('.
+Here we actually fixup the name of the connection, rather than simply 
+matching it. So it may be apt to rename this to cti_match_fixup_name()
 
 > +{
-> +	u8 cmd;
-> +	int rc;
-> +	int *idxp = file->private_data;
-> +	int idx = *idxp;
-> +	struct wistron_wps *psu = to_psu(idxp, idx);
-> +	char data[I2C_SMBUS_BLOCK_MAX] = { 0 };
+> +	struct cti_trig_con *trig_con;
 > +
-> +	switch (idx) {
-> +	case WPS_DEBUGFS_ID:
-> +		cmd = WPS_ID_CMD;
-> +		break;
-> +	case WPS_DEBUGFS_PN:
-> +		cmd = WPS_PN_CMD;
-> +		break;
-> +	case WPS_DEBUGFS_SN:
-> +		cmd = WPS_SN_CMD;
-> +		break;
-> +	case WPS_DEBUGFS_FW:
-> +		cmd = WPS_FW_CMD;
-> +		break;
-> +	case WPS_DEBUGFS_DATE:
-> +		cmd = WPS_DATE_CMD;
-> +		break;
-> +	default:
-> +		return -EINVAL;
+> +	list_for_each_entry(trig_con, &ctidev->trig_cons, node) {
+> +		if (trig_con->con_dev_name) {
+> +			if (!strcmp(node_name, trig_con->con_dev_name)) {
+
+Can there be duplicate node_name's ? Does it make sense to store the 
+fwhandle along with the "temporary node_name" to match it later while
+fixing up ?
+
+> +				/* match: so swap in csdev name */
+> +				kfree(trig_con->con_dev_name);
+> +				trig_con->con_dev_name =
+> +					kstrdup(csdev_name, GFP_KERNEL);
+> +				return true;
+> +			}
+> +		}
 > +	}
+> +	return false;
+> +}
+
+
+> +/*
+> + * Search the cti list to add an associated CTI into the supplied CS device
+> + * This will set the association if CTI declared before the CS device
+> + */
+> +void cti_add_assoc_to_csdev(struct coresight_device *csdev)
+> +{
+
+..
+
+ > +	struct cti_drvdata *ect_item;
+ > +	struct cti_device *ctidev;
+ > +	const char *node_name = NULL, *csdev_name;
+ > +
+ > +	/* protect the list */
+ > +	mutex_lock(&ect_mutex);
+ > +
+ > +	/* exit if current is an ECT device.*/
+ > +	if ((csdev->type == CORESIGHT_DEV_TYPE_ECT) || list_empty(&ect_net))
+ > +		goto cti_add_done;
+ > +
+ > +	/* if we didn't find the csdev previously we used the fwnode name */
+ > +	node_name = coresight_get_fwnode_name(csdev->dev.parent);
+
+We used "cti_plat_get_node_name()" when we added the name in the
+absence of csdev in patch 7, could we not reuse the function here ?
+
+ > +
+ > +	if (!node_name)
+ > +		goto cti_add_done;
+ > +
+ > +	/* this is the name we want to use for the association */
+ > +	csdev_name = dev_name(&csdev->dev);
+
+
 > +
-> +	rc = i2c_smbus_read_block_data(psu->client, cmd, data);
-> +	if (rc < 0)
-> +		return rc;
+> +	/* for each CTI in list... */
+> +	list_for_each_entry(ect_item, &ect_net, node) {
+> +		ctidev = &ect_item->ctidev;
+> +		if (cti_match_con_name(ctidev, node_name, csdev_name)) {
+> +			/*
+> +			 * if we found a matching name then update the
+> +			 * association pointers.
+> +			 */
+> +			csdev->ect_dev = ect_item->csdev;
+> +			goto cti_add_done;
+
+			break; instead ?
+
+> +		}
+> +	}
+> +cti_add_done:
+> +	mutex_unlock(&ect_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(cti_add_assoc_to_csdev);
 > +
-> +done:
-> +	data[rc] = '\n';
-
-The block command can return up to 32 bytes. If it does, the above code
-writes beyond the end of the buffer.
-
-> +	rc += 2;
-
-Why += 2 ? This will report the trailing '\0' to userspace (and require
-an even larger buffer). Is that intentional ?
-
+> +/*
+> + * Update the cross references where the associated device was found
+> + * while we were building the connection info. This will occur if the
+> + * assoc device was registered before the CTI.
+> + */
+> +static void cti_update_conn_xrefs(struct cti_drvdata *drvdata)
+> +{
+> +	struct cti_trig_con *tc;
+> +	struct cti_device *ctidev = &drvdata->ctidev;
 > +
-> +	return simple_read_from_buffer(buf, count, ppos, data, rc);
+> +	list_for_each_entry(tc, &ctidev->trig_cons, node) {
+> +		if (tc->con_dev)
+> +			tc->con_dev->ect_dev = drvdata->csdev;
+> +	}
+
+Does this need to take the coresight_mutex to avoid racing against
+a coresight_enable_path() ? Though this may be fine as long as the
+CTI driver detects that that device was not enabled.
+
+Also, it looks like we have a potential issue with perf vs sysfs mode.
+The perf mode doesn't seem to take the coresight_mutex, for
+build_path/enable_path operations. This is outside the scope of this
+series though.
+
 > +}
 > +
-> +static const struct file_operations wistron_wps_fops = {
-> +	.llseek = noop_llseek,
-> +	.read = wistron_wps_debugfs_op,
-> +	.open = simple_open,
-> +};
+>   /** cti ect operations **/
+>   int cti_enable(struct coresight_device *csdev)
+>   {
+> @@ -574,6 +658,9 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
+>   	drvdata->csdev_release = drvdata->csdev->dev.release;
+>   	drvdata->csdev->dev.release = cti_device_release;
+>   
+> +	/* set any cross references */
+> +	cti_update_conn_xrefs(drvdata);
 > +
-> +static struct pmbus_driver_info wistron_wps_info = {
-> +	.pages = 1,
-> +	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
-> +		PMBUS_HAVE_PIN | PMBUS_HAVE_POUT | PMBUS_HAVE_FAN12 |
-> +		PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
-> +		PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
-> +		PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
-> +		PMBUS_HAVE_STATUS_FAN12,
-> +};
+    	/* all done - dec pm refcount */
+>   	pm_runtime_put(&adev->dev);
+>   	dev_info(&drvdata->csdev->dev, "CTI initialized\n");
+> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+> index 3c5bee429105..6721cb1af5fe 100644
+> --- a/drivers/hwtracing/coresight/coresight-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+> @@ -293,6 +293,12 @@ static int of_get_coresight_platform_data(struct device *dev,
+>   
+>   	return 0;
+>   }
 > +
-> +static struct pmbus_platform_data wistron_wps_pdata = {
-> +	.flags = PMBUS_SKIP_STATUS_CHECK,
-
-This should be explained if it is indeed needed.
-
-> +};
+> +static inline const char *of_coresight_get_node_name(struct device *dev)
+> +{
+> +	return dev->of_node->full_name;
+> +}
 > +
-> +static int wistron_wps_probe(struct i2c_client *client,
-> +			   const struct i2c_device_id *id)
+>   #else
+>   static inline int
+>   of_get_coresight_platform_data(struct device *dev,
+> @@ -305,6 +311,11 @@ static inline int of_coresight_get_cpu(struct device *dev)
+>   {
+>   	return -ENODEV;
+>   }
+> +
+> +static inline const char *of_coresight_get_node_name(struct device *dev)
+> +{
+> +	return NULL;
+> +}
+>   #endif
+>   
+>   #ifdef CONFIG_ACPI
+> @@ -766,6 +777,18 @@ static inline int acpi_coresight_get_cpu(struct device *dev)
+>   }
+>   #endif
+>   
+> +const char *coresight_get_fwnode_name(struct device *dev)
 
-Please match ( in continuation lines.
+As mentioned above, please could we reuse the name helper we used
+during the insertion rather than introducing a new wrapper which
+effectively does the same thing ?
 
 > +{
-> +	int i, rc;
-> +	struct dentry *debugfs;
-> +	struct dentry *wistron_wps_dir;
-> +	struct wistron_wps *psu;
+> +	const char *node_name = NULL;
+> +	struct fwnode_handle *fwnode = dev_fwnode(dev);
 > +
-> +	client->dev.platform_data = &wistron_wps_pdata;
-> +	rc = pmbus_do_probe(client, id, &wistron_wps_info);
-> +	if (rc)
-> +		return rc;
+> +	if (is_of_node(fwnode))
+> +		node_name = of_coresight_get_node_name(dev);
 > +
-> +	psu = devm_kzalloc(&client->dev, sizeof(*psu), GFP_KERNEL);
-> +	if (!psu)
-> +		return 0;
-> +
-> +	psu->client = client;
-> +
-> +	debugfs = pmbus_get_debugfs_dir(client);
-> +	if (!debugfs)
-> +		return 0;
-> +
-> +	wistron_wps_dir = debugfs_create_dir(client->name, debugfs);
-> +	if (!wistron_wps_dir)
-> +		return 0;
-> +
-> +	for (i = 0; i < WPS_DEBUGFS_NUM_ENTRIES; ++i)
-> +		psu->debugfs_entries[i] = i;
-> +
-> +	debugfs_create_file("fru", 0444, wistron_wps_dir,
-> +			    &psu->debugfs_entries[WPS_DEBUGFS_ID],
-> +			    &wistron_wps_fops);
-> +	debugfs_create_file("part_number", 0444, wistron_wps_dir,
-> +			    &psu->debugfs_entries[WPS_DEBUGFS_PN],
-> +			    &wistron_wps_fops);
-> +	debugfs_create_file("serial_number", 0444, wistron_wps_dir,
-> +			    &psu->debugfs_entries[WPS_DEBUGFS_SN],
-> +			    &wistron_wps_fops);
-> +	debugfs_create_file("fw_version", 0444, wistron_wps_dir,
-> +			    &psu->debugfs_entries[WPS_DEBUGFS_FW],
-> +			    &wistron_wps_fops);
-> +	debugfs_create_file("mfr_date", 0444, wistron_wps_dir,
-> +			    &psu->debugfs_entries[WPS_DEBUGFS_DATE],
-> +			    &wistron_wps_fops);
-> +
-> +	return 0;
+> +	return node_name;
 > +}
-> +
-> +static const struct i2c_device_id wistron_wps_id[] = {
-> +	{ "wistron_wps", 1 },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, wistron_wps_id);
-> +
-> +static const struct of_device_id wistron_wps_of_match[] = {
-> +	{ .compatible = "wistron,wps" },
+> +EXPORT_SYMBOL_GPL(coresight_get_fwnode_name);
 
-This will need to be documented. It is also probably not the best name
-for a devicetree property (what is "wps" ?), but that will be up to
-a DT maintainer to decide.
+Why does this get exported ? If a following patch needs it, you may
+always do that when you need it.
 
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, wistron_wps_of_match);
-> +
-> +static struct i2c_driver wistron_wps_driver = {
-> +	.driver = {
-> +		.name = "wistron-wps",
-> +		.of_match_table = wistron_wps_of_match,
-> +	},
-> +	.probe = wistron_wps_probe,
-> +	.remove = pmbus_do_remove,
-> +	.id_table = wistron_wps_id,
-> +};
-> +
-> +module_i2c_driver(wistron_wps_driver);
-> +
-> +MODULE_AUTHOR("Ben Pai");
-> +MODULE_DESCRIPTION("PMBus driver for Wistron power supplies");
-> +MODULE_LICENSE("GPL");
+
+Cheers
+Suzuki
