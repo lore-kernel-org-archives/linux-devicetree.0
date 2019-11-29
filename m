@@ -2,96 +2,124 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A376C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 10:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796C0C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 10:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D41A2176D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 10:03:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bofh-nu.20150623.gappssmtp.com header.i=@bofh-nu.20150623.gappssmtp.com header.b="jJ1yhaLn"
+	by mail.kernel.org (Postfix) with ESMTP id 55BE320833
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 10:15:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfK2KC7 (ORCPT
+        id S1726651AbfK2KPu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 05:02:59 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53496 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfK2KC6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 05:02:58 -0500
-Received: by mail-wm1-f67.google.com with SMTP id u18so13540693wmc.3
-        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 02:02:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bofh-nu.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5UrKqSRJKoGBPMgO2/jdCKMQcuQ7A1Ss66dwsiix9b0=;
-        b=jJ1yhaLnNR0CYGklrHbhvyokqlCl72QlSTMfSa4E21afa0fYB8h7HwmCoSh8aVQe6U
-         iu5bAl6x2CbffFH/bawfVtQgwanXgHO+iS1Gb+OOA06PXIu/PIpL/HJn6LjoQyAkRO70
-         fxLYUtGpmfos2QR3CnLxgKJc59EDfltbblF2X6VKh+1o5HkGi+iyOiEa1L1YEFNfaPVi
-         Ni5VDKVwx/4bFy8RwrxZNNrw86cFlsDODmaLZv0yCr5qRZSmRt10SSWPFopZ4auPDcDq
-         dY3UsZ//d3BFZG6YSXWhh0M8Id1A0ugvSDqZdrW2smTbAWpG+H1lgDdlT80mzZ4SNjNj
-         /cPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5UrKqSRJKoGBPMgO2/jdCKMQcuQ7A1Ss66dwsiix9b0=;
-        b=IHj/4GBCgKejjWGooeb1YQjxbEuHS7gpzK3J1UXsz0EJDWpdbCFjw+mt1U9/OYzL40
-         K8QYxs4P8Jwvd5IzR23BNsEhFW4B/mYS1LSHeTKg4NWCflga/d81DucALNbI3mgqkWMR
-         TOmP9/IXDxDfgvCsqYT6bRmLcWFuNWCuuw3Acdf5IZfBamU34h242Mxi6eKLS3/y85lm
-         4FfxmlKp9XYNMK7ZFVF+phsteCfN9KTljY42U987VCoa3gAxel7ifUmd6KV8LlIyu0he
-         4+L09JbaB83BKPYFCXnaSgQldbvDPAiNQktnMYsAGg+EgdUmXZBoBdnDxJe2WAL2m+WE
-         iE6w==
-X-Gm-Message-State: APjAAAXmeMRaXiwTbLFpNR3tCLbTSaurBOkTDb2vMuYg0ZQh4g+McIPA
-        dVfEXDTAJwUgTn8E3rTL4J3c5wjkIf8WZgbplJ1JOA==
-X-Google-Smtp-Source: APXvYqzTAFXNZGcwafQIeJec73W3RgozsYABeK30eaJTije1g+7R6/B3hF2p2eSWHt317C9cAPOBhlSgllb4GK9GIO4=
-X-Received: by 2002:a1c:7708:: with SMTP id t8mr13713623wmi.29.1575021776664;
- Fri, 29 Nov 2019 02:02:56 -0800 (PST)
-MIME-Version: 1.0
-References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com> <1574864578-467-4-git-send-email-neal.liu@mediatek.com>
-In-Reply-To: <1574864578-467-4-git-send-email-neal.liu@mediatek.com>
-From:   Lars Persson <lists@bofh.nu>
-Date:   Fri, 29 Nov 2019 11:02:45 +0100
-Message-ID: <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        Fri, 29 Nov 2019 05:15:50 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41961 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbfK2KPt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 05:15:49 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iadJP-0002OG-QX; Fri, 29 Nov 2019 11:15:43 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iadJO-0007n4-JO; Fri, 29 Nov 2019 11:15:42 +0100
+Date:   Fri, 29 Nov 2019 11:15:42 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Crystal Guo <Crystal.Guo@mediatek.com>,
-        linux-crypto@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        wsd_upstream@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, stwiss.opensource@diasemi.com,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 1/5] gpio: add support to get local gpio number
+Message-ID: <20191129101542.drtcn44twcyzxqmm@pengutronix.de>
+References: <20191127135932.7223-1-m.felsch@pengutronix.de>
+ <20191127135932.7223-2-m.felsch@pengutronix.de>
+ <CACRpkdbG=XiQHNZa+zBqdyTDRhyXD5rLxbLjp3qqGbcQeTX26Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbG=XiQHNZa+zBqdyTDRhyXD5rLxbLjp3qqGbcQeTX26Q@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 11:02:21 up 14 days,  1:20, 29 users,  load average: 0.32, 0.13,
+ 0.04
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Neal,
+Hi Linus,
 
-On Wed, Nov 27, 2019 at 3:23 PM Neal Liu <neal.liu@mediatek.com> wrote:
->
-> For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
-> entropy sources is not accessible from normal world (linux) and
-> rather accessible from secure world (ATF/TEE) only. This driver aims
-> to provide a generic interface to ATF rng service.
->
+On 19-11-29 10:32, Linus Walleij wrote:
+> Hi Marco,
+> 
+> thanks for your patch!
+> 
+> On Wed, Nov 27, 2019 at 2:59 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> 
+> > Sometimes consumers needs to know the gpio-chip local gpio number of a
+> > 'struct gpio_desc' for further configuration. This is often the case for
+> > mfd devices.
+> >
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> (...)
+> > +int gpiod_to_offset(struct gpio_desc *desc)
+> > +{
+> > +       return gpio_chip_hwgpio(desc);
+> > +}
+> > +EXPORT_SYMBOL_GPL(gpiod_to_offset);
+> 
+> That seems like an unnecessary wrapper.
 
-I am working on several SoCs that also will need this kind of driver
-to get entropy from Arm trusted firmware.
-If you intend to make this a generic interface, please clean up the
-references to MediaTek and give it a more generic name. For example
-"Arm Trusted Firmware random number driver".
+I went this way due to minimal changes..
 
-It will also be helpful if the SMC call number is configurable.
+> What about renaming gpio_chip_hwgpio() everywhere
+> to gpiod_to_offet(), remove it from drivers/gpio/gpiolib.h
+> and export it in <linux/gpio/consumer.h> instead?
 
-- Lars
+That's also possible but then we have to include the consumer.h header
+within the gpiolib.c and this seems to be wrong. But since I'm not the
+maintainer it is up to you and Bart. Both ways are possible,
+
+> I suppose this is what Bartosz is indicating, not sure though.
+> 
+> Indeed it is a bit of a worrysome thing to export and we need
+> to be very specific about its usecase, so I'd also like some
+> nice to-the-point kerneldoc on the export site so that it is
+> clear what corner cases this function is for. (Like in this
+> specific driver.)
+
+Absolutly, I missed the kerneldoc.. but where should I put the kerneldoc
+if we go the 'wrapper'-way?
+
+Regards,
+  Marco
+
+> Yours,
+> Linus Walleij
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
