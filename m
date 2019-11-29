@@ -2,124 +2,106 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5679AC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 21:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7755AC43215
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 21:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2412C21771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 21:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46DA5217BA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 21:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lB9otGP+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="RJ7hXQMA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfK2VLZ (ORCPT
+        id S1727111AbfK2VVM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 16:11:25 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40426 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbfK2VLZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 16:11:25 -0500
-Received: by mail-il1-f195.google.com with SMTP id b15so4923974ila.7
-        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 13:11:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J737RfycvasrkDMuXXVhGv8GjJozMIk9WjH6tUo8YNU=;
-        b=lB9otGP+R7D5FDCg+yCl5lzrEbHVc6Uxs0+r8izKBMVVOofA3vofUwCrTGfrnh/HzZ
-         nQhDEkKv9iFoZWHxi6Lm1vM755MYXzxCy5RZp4jPRE/gJ2i9XvIJGWnd9ekCs/i9szP+
-         517eLdsZZuxFUU4mWYjZgOVY1hD6uyvbW1lnCzq/wktHxgnQA6T1f0c9qQjJHQmI0zbI
-         8V+2XFBdclfe41bWEdDMCU2YuW4KMdfuROPYnbBrNDN52yqzzuCMy8RtBtAnZxGVEyDm
-         ntE4PwYVP+sP+TljhMeQQ5sxV0Ry0ylzC2Nuyf3oC2BT/Tqn/gwKUaSZXUT6AHKd8tDK
-         rpEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J737RfycvasrkDMuXXVhGv8GjJozMIk9WjH6tUo8YNU=;
-        b=Qar2glpHVTyAoRW/zcrCRMW74Nq6a8RA2w1TEmPp2KzywECG1KT/ZZSmfDT4XbUEm9
-         4zpgaUg5SkwkoORjLxz457VPxoxEdio1nxzY/A87hSFxW4eLzvoabwiokZACWQXrd5GC
-         dnITCgIJqQ+9cGKEt/CaPcR2Kdzt9Vt7OgdEqx6fpAZAyrmPndFqyUhh5qtEcQMTKWSn
-         DhP2MhiMoJYFHM3wUOndee40yL2+p/7MutLcZIQRdbGE7sARday3t3w5Ryb2nPmXHQ0E
-         +THDWkv9nBH9ZQC4AGcpHhcWbRonmUKR75dMuPtAE9xYvEZeW5edCutwHclNnkLf4T1D
-         1Kyg==
-X-Gm-Message-State: APjAAAUsFP9cBhy+ypn1PdGG+eqLWwUTYEvcNMHQ6M1jlaVeC8OC9Se3
-        wLsarrWdlwHVSLG67p0UsNhz9XNaInr3F2vgQ/8Xkw==
-X-Google-Smtp-Source: APXvYqyOXHCVc3ozOJPEmGcC3VwB8m0Qnuuz5GE4mQlGcSQvgINwg2paqQAOa7PK0kmgMZbGH4Jw33/Thcthow443Ck=
-X-Received: by 2002:a92:1547:: with SMTP id v68mr13668342ilk.58.1575061884570;
- Fri, 29 Nov 2019 13:11:24 -0800 (PST)
+        Fri, 29 Nov 2019 16:21:12 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:51714 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727073AbfK2VVM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 Nov 2019 16:21:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=XwKYSe7gQcC1oU2kW2+rZ3DsikC1ppVrWIQm++k4A3k=; b=RJ7hXQMAhDnWk1UYyZdxdEIZNU
+        eJrnAJVwJzFccWe0WqBhOoEWO+/2mqvu1qWfaqw2trU/6ysvrt1MgojB3CrvHo1KXpkqv/dt1Z8W+
+        /5pvLylhvCXyDfGby3ePBMV/l0RBTEuNyfPZ+kYZSm473rVKzVFnZb2TuX2fHrN896DA=;
+Received: from p200300ccff0871001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff08:7100:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1ianhE-0001xZ-6S; Fri, 29 Nov 2019 22:21:00 +0100
+Received: from andi by aktux with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1ianhD-0004mP-Of; Fri, 29 Nov 2019 22:20:59 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
+        phh@phh.me, letux-kernel@openphoenux.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v3 0/6] Add rtc support for rn5t618 mfd
+Date:   Fri, 29 Nov 2019 22:20:39 +0100
+Message-Id: <20191129212045.18325-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191119231912.12768-1-mike.leach@linaro.org> <20191119231912.12768-8-mike.leach@linaro.org>
- <20191125212258.GB18542@xps15> <35357ff3-2b1e-764e-cfbd-65bcc7a4faa6@arm.com>
-In-Reply-To: <35357ff3-2b1e-764e-cfbd-65bcc7a4faa6@arm.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Fri, 29 Nov 2019 14:11:13 -0700
-Message-ID: <CANLsYkxqO71aBzf=BqcFDWccp3XH3gXc4OESgRy0-rTEe27fJA@mail.gmail.com>
-Subject: Re: [PATCH v5 07/14] coresight: cti: Add device tree support for
- custom CTI.
-To:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Cc:     Mike Leach <mike.leach@linaro.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 29 Nov 2019 at 07:16, Suzuki Kuruppassery Poulose
-<suzuki.poulose@arm.com> wrote:
->
-> On 25/11/2019 21:22, Mathieu Poirier wrote:
-> > On Tue, Nov 19, 2019 at 11:19:05PM +0000, Mike Leach wrote:
-> >> Adds support for CTIs whose connections are implementation defined at
-> >> hardware design time, and not constrained by v8 architecture.
-> >>
-> >> These CTIs have no standard connection setup, all the settings have to
-> >> be defined in the device tree files. The patch creates a set of connections
-> >> and trigger signals based on the information provided.
-> >>
-> >> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> >> ---
-> >>   .../coresight/coresight-cti-platform.c        | 250 +++++++++++++++++-
-> >>   .../hwtracing/coresight/coresight-cti-sysfs.c |  11 +
-> >>   2 files changed, 257 insertions(+), 4 deletions(-)
->
-> >> +static int cti_plat_create_impdef_connections(struct device *dev,
-> >> +                                          struct cti_drvdata *drvdata)
-> >> +{
-> >> +    int rc = 0;
-> >> +    struct fwnode_handle *fwnode = dev_fwnode(dev);
-> >> +    struct fwnode_handle *child = NULL;
-> >> +
-> >> +    if (IS_ERR_OR_NULL(fwnode))
-> >> +            return -EINVAL;
-> >> +
-> >> +    fwnode_for_each_child_node(fwnode, child) {
-> >> +            if (cti_plat_node_name_eq(child, CTI_DT_CONNS))
-> >> +                    rc = cti_plat_create_connection(dev, drvdata, child);
-> >> +            if (rc != 0)
-> >> +                    break;
-> >> +    }
-> >> +    fwnode_handle_put(child);
-> >
-> > As far as I can tell we don't need to call fwnode_handle_put()?
->
-> Actually we do, if we break the scan in between, at least for of_nodes.
-> I had to literally look it down all the way down to confirm this.
->
-> So for CONFIG_OF it ends up in of_get_next_available_child(), which
-> drops the ref on "prev" and grabs the "next". So in case we break
-> the loop, we must drop the ref on the child.
+In the variant rc5t619 the mfd has a rtc. This patchset adds
+support for it. To do so it adds the missing register defines in 
+rn5t618.h and general irq handling for that.
+Probably the irq definitions are the same except missing rtc + charger
+but due to missing information about that I do not add them.
+There might be some oddity about the charger irq which should be 
+researched when adding the charger subdevice.
 
-Well spotted.
+The rtc driver itself is based on 
+https://github.com/kobolabs/Kobo-Reader/blob/master/hw/imx6sll-clara/kernel.tar.bz2
+but heavily reworked.
 
-> Otherwise, the last
-> result would be NULL, which would have dropped the ref on the "last"
-> valid entry. And this is harmless with a NULL ptr.
->
-> Suzuki
+It was tested on the Kobo Clara HD.
+
+Changes in v3:
+- alignment cleanup
+- output cleanup, remove useless toggling of alarm flag in rtc probe
+- updated bindings description, so patch 1/5 becomes 2/6 and so on
+
+Changes in v2:
+- no dead code in irq code
+- various improvements and cleanups in rtc driver itself
+
+Andreas Kemnade (6):
+  dt-bindings: mfd: rn5t618: Document optional property interrupts
+  mfd: rn5t618: prepare for irq handling
+  mfd: rn5t618: add irq support
+  mfd: rn5t618: add rtc related registers
+  mfd: rn5t618: add more subdevices
+  rtc: rtc-rc5t619: add ricoh rc5t619 RTC driver
+
+ .../devicetree/bindings/mfd/rn5t618.txt       |   3 +
+ drivers/mfd/Kconfig                           |   1 +
+ drivers/mfd/Makefile                          |   2 +
+ drivers/mfd/{rn5t618.c => rn5t618-core.c}     |  52 +-
+ drivers/mfd/rn5t618-irq.c                     |  85 ++++
+ drivers/rtc/Kconfig                           |  10 +
+ drivers/rtc/Makefile                          |   1 +
+ drivers/rtc/rtc-rc5t619.c                     | 462 ++++++++++++++++++
+ include/linux/mfd/rn5t618.h                   |  27 +
+ 9 files changed, 640 insertions(+), 3 deletions(-)
+ rename drivers/mfd/{rn5t618.c => rn5t618-core.c} (78%)
+ create mode 100644 drivers/mfd/rn5t618-irq.c
+ create mode 100644 drivers/rtc/rtc-rc5t619.c
+
+-- 
+2.20.1
+
