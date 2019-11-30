@@ -1,194 +1,214 @@
-Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=1K1h=ZW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34734C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 23:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D71C432C0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 30 Nov 2019 02:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E022084D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 23:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8BBE20869
+	for <linux-devicetree@archiver.kernel.org>; Sat, 30 Nov 2019 02:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDfSvRU3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mv7BOpck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfK2XlW (ORCPT
+        id S1727179AbfK3COu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 18:41:22 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:35929 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727130AbfK2XlW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 18:41:22 -0500
-Received: by mail-yb1-f194.google.com with SMTP id v2so12141077ybo.3;
-        Fri, 29 Nov 2019 15:41:21 -0800 (PST)
+        Fri, 29 Nov 2019 21:14:50 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:47024 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfK3COu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 21:14:50 -0500
+Received: by mail-yb1-f193.google.com with SMTP id v15so12202421ybp.13
+        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 18:14:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8rKiQHSwuUCF9AELRHNdLMuxf8z6xR1bB61s0tnxzNE=;
-        b=kDfSvRU3IToCKYqz4BXDquOBvvC9Zy46H4g+899B8ZSEpHA3hMqRXTse+L/RAMQdHs
-         bmQFjBLR0y596ZukQgj2Wc5ogj5Hv6DJuLb9qmfvbPuQIuwMnATeIHww7BXS1IB23d7u
-         7l82E71a+GM7IqRawG8KJdCvXVDAU9AyMiEZ0lM7Pjtq25E+6DTwxVtqo1mGhR7RACyn
-         cgmzki2m8XR8GgiOIPPIbWdlqzAUy/p10XuivFsfN5iwaEhI8JmA/tH7D0+H6Z+K8RTi
-         HsweW5NOqWWyoX56cZj3t2Ehllx3nqCipJDa0FeM1db6K5h53KNMytsNJy+G0VtEGJAC
-         nFOA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cI8/7z9v59sx8rV1YXAjrbhcz/dsn2bdotkY6ICnSSs=;
+        b=mv7BOpckWzaTp/9wQ29LHYha8g5Fmm5opmo5Qp5W7XxK4FGCE2NIDj9AY9bgdQ2ZMq
+         EBNupNB8mjJ2QaR4QzsWXZJ0UCwW4m1MbyNcGO4nNaodfCXgrOGxCnD+UNBUFTyToJAf
+         HnEvs6pY0DfWrM6lleJdfIZGeRn7UnDT1mT4xRw35M+pMi+5mxPNQ4HXDx4xsiAFsAHp
+         BwQlWBk2/lGuegNxDi+eeIvw0aHKxr7UR6KdFvLchbC+zg74/rKKRiSF7N0+5kjL0ZnB
+         GWYLKRU+76pnp6zffYWvpTQ8SDa+L+WaDjC1mEgzDnQJfFbD37nN+5SKylTTkfV3MB0+
+         U0wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8rKiQHSwuUCF9AELRHNdLMuxf8z6xR1bB61s0tnxzNE=;
-        b=HQa5FgjwcaJ2c7EARyiJbPeVyTPGX4voaRoUPx6pEhl51mWu8GZ0lK4HiTV11IoLip
-         PoBjU+lrPRiNMc1BpphBmOuJjGgiteFoOiXuubgy+Q+7jJs3+IbDsj9NycEZkJAZw1ZP
-         lV78Rq8o6zDS4c29aAQmemEPfg5EZbWWoSWlh23RnLw1wZHHwqGNEZFtOrQRbgbGzt1A
-         lyUyNijiOKbmFN4LmRvzjY599OTznvzzuzff/rLnFuhFGZDYVVZ/Er8xiGE7ELJYuoeL
-         uQL3am6LKMRUcap4xV3lEHp0qMwbF4twKiMf5j+YPPtrEp4rB8YgGr/RruAEOUfs795/
-         LPvw==
-X-Gm-Message-State: APjAAAVpzfRjBnsrTDD0NsukPR33EV5kMprhpkjlu780NlRjxg51LzyX
-        A/HEDgiG8rAKszmeu4HZL+Q=
-X-Google-Smtp-Source: APXvYqwr/LIgU0jfzryCJVUcaDeplSmBTLSebhAPSCfhBOYQ8LJZyb6eDQWVMKL5MWICobsnwFY5rA==
-X-Received: by 2002:a25:245:: with SMTP id 66mr8022427ybc.104.1575070880925;
-        Fri, 29 Nov 2019 15:41:20 -0800 (PST)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id q131sm10636436ywh.22.2019.11.29.15.41.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 15:41:20 -0800 (PST)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: Add GPC Support
-Date:   Fri, 29 Nov 2019 17:41:08 -0600
-Message-Id: <20191129234108.12732-2-aford173@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191129234108.12732-1-aford173@gmail.com>
-References: <20191129234108.12732-1-aford173@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cI8/7z9v59sx8rV1YXAjrbhcz/dsn2bdotkY6ICnSSs=;
+        b=nOExYwFqJqRaX6enwm2HXMYXN/kwlnNU44J5SxwRx7OHc+u/PodsteMIagWeSiVv6j
+         yW6+1RLLl0olbSiDHHHw7URAf8wJN+KIZ2g9AMpKbqcx2NlAORVXuHwT4FM2PT7pfsuh
+         YgMezGTztCE6/bhLa01zh8QrxKy35LNOOq6gH0gGkqH42QKqA8NsEyZfbv3F5Jm4iLYy
+         JupU59MF8W2eiRjdu16DX1m2ywsHrvIYbSIOR9v81ptL+0JAsoru2r8OSq76VLPvjWiu
+         GcgUSJ9PRkty0Drt6bzGbVlJwdXuuD8ZlMdI1OrG0DpdNyfcpOXYtf4sh0Ab8AUoRAQt
+         EzPA==
+X-Gm-Message-State: APjAAAXrSsL8jNF+0eWB467UmuBo7nU2sjFWWCxubvWqtBW5q1nVRyIU
+        iSsSxmMIjkYI82cLnmYieI8=
+X-Google-Smtp-Source: APXvYqzHY3DrUeXIWwAdco703XfexT4OkbxHjgBhdWN5aycdweyJhyEIUqT6C/Ay0Qz2o0wd0992rg==
+X-Received: by 2002:a25:9346:: with SMTP id g6mr43480381ybo.6.1575080088485;
+        Fri, 29 Nov 2019 18:14:48 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id x84sm10978604ywg.47.2019.11.29.18.14.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Nov 2019 18:14:48 -0800 (PST)
+Subject: Re: [RFC] Efficiency of the phandle_cache on ppc64/SLOF
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Frank Rowand <frowand.list@gmail.com>
+References: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <e1f232f5-3847-a519-5cce-95a26512e82b@gmail.com>
+Date:   Fri, 29 Nov 2019 20:14:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The General Power Controller (GPC) used on the i.MX8MQ is the
-same as what is used on the i.MX8M Mini.
+On 11/29/19 9:10 AM, Sebastian Andrzej Siewior wrote:
+> I've been looking at phandle_cache and noticed the following: The raw
+> phandle value as generated by dtc starts at zero and is incremented by
+> one for each phandle entry. The qemu pSeries model is using Slof (which
+> is probably the same thing as used on real hardware) and this looks like
+> a poiner value for the phandle.
+> With
+> 	qemu-system-ppc64le -m 16G -machine pseries -smp 8 
+> 
+> I got the following output:
+> | entries: 64
+> | phandle 7e732468 slot 28 hash c
+> | phandle 7e732ad0 slot 10 hash 27
+> | phandle 7e732ee8 slot 28 hash 3a
+> | phandle 7e734160 slot 20 hash 36
+> | phandle 7e734318 slot 18 hash 3a
+> | phandle 7e734428 slot 28 hash 33
+> | phandle 7e734538 slot 38 hash 2c
+> | phandle 7e734850 slot 10 hash e
+> | phandle 7e735220 slot 20 hash 2d
+> | phandle 7e735bf0 slot 30 hash d
+> | phandle 7e7365c0 slot 0 hash 2d
+> | phandle 7e736f90 slot 10 hash d
+> | phandle 7e737960 slot 20 hash 2d
+> | phandle 7e738330 slot 30 hash d
+> | phandle 7e738d00 slot 0 hash 2d
+> | phandle 7e739730 slot 30 hash 38
+> | phandle 7e73bd08 slot 8 hash 17
+> | phandle 7e73c2e0 slot 20 hash 32
+> | phandle 7e73c7f8 slot 38 hash 37
+> | phandle 7e782420 slot 20 hash 13
+> | phandle 7e782ed8 slot 18 hash 1b
+> | phandle 7e73ce28 slot 28 hash 39
+> | phandle 7e73d390 slot 10 hash 22
+> | phandle 7e73d9a8 slot 28 hash 1a
+> | phandle 7e73dc28 slot 28 hash 37
+> | phandle 7e73de00 slot 0 hash a
+> | phandle 7e73e028 slot 28 hash 0
+> | phandle 7e7621a8 slot 28 hash 36
+> | phandle 7e73e458 slot 18 hash 1e
+> | phandle 7e73e608 slot 8 hash 1e
+> | phandle 7e740078 slot 38 hash 28
+> | phandle 7e740180 slot 0 hash 1d
+> | phandle 7e740240 slot 0 hash 33
+> | phandle 7e740348 slot 8 hash 29
+> | phandle 7e740410 slot 10 hash 2
+> | phandle 7e740eb0 slot 30 hash 3e
+> | phandle 7e745390 slot 10 hash 33
+> | phandle 7e747b08 slot 8 hash c
+> | phandle 7e748528 slot 28 hash f
+> | phandle 7e74a6e0 slot 20 hash 18
+> | phandle 7e74aab0 slot 30 hash b
+> | phandle 7e74f788 slot 8 hash d
+> | Used entries: 8, hashed: 29
+> 
+> So the hash array has 64 entries out which only 8 are populated. Using
+> hash_32() populates 29 entries.
+> Could someone with real hardware verify this?
+> I'm not sure how important this performance wise, it looks just like a
+> waste using only 1/8 of the array.
 
-This patch adds the GPC support to the device tree for the SoC.
+The hash used is based on the assumptions you noted, and as stated in the
+code, that phandle property values are in a contiguous range of 1..n
+(not starting from zero), which is what dtc generates.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+We knew that for systems that do not match the assumptions that the hash
+will not be optimal.  Unless there is a serious performance problem for
+such systems, I do not want to make the phandle hash code more complicated
+to optimize for these cases.  And the pseries have been performing ok
+without phandle related performance issues that I remember hearing since
+before the cache was added, which could have only helped the performance.
+Yes, if your observations are correct, some memory is being wasted, but
+a 64 entry cache is not very large on a pseries.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 6edbdfe2d0d7..860cddec9632 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include <dt-bindings/clock/imx8mm-clock.h>
-+#include <dt-bindings/power/imx8mq-power.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-@@ -498,6 +499,90 @@
- 				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
- 				#reset-cells = <1>;
- 			};
-+
-+			gpc: gpc@303a0000 {
-+				compatible = "fsl,imx8mm-gpc";
-+				reg = <0x303a0000 0x10000>;
-+				interrupt-parent = <&gic>;
-+				interrupt-controller;
-+				#interrupt-cells = <3>;
-+
-+				pgc {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					pgc_mipi: power-domain@0 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8M_POWER_DOMAIN_MIPI>;
-+					};
-+
-+					/*
-+					 * As per comment in ATF source code:
-+					 *
-+					 * PCIE1 and PCIE2 share the
-+					 * same reset signal, if we
-+					 * power down PCIE2, PCIE1
-+					 * will be held in reset too.
-+					 *
-+					 * So instead of creating two
-+					 * separate power domains for
-+					 * PCIE1 and PCIE2 we create a
-+					 * link between both and use
-+					 * it as a shared PCIE power
-+					 * domain.
-+					 */
-+					pgc_pcie: power-domain@1 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8M_POWER_DOMAIN_PCIE1>;
-+						power-domains = <&pgc_pcie2>;
-+					};
-+
-+					pgc_otg1: power-domain@2 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8M_POWER_DOMAIN_USB_OTG1>;
-+					};
-+
-+					pgc_otg2: power-domain@3 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8M_POWER_DOMAIN_USB_OTG2>;
-+					};
-+
-+					pgc_ddr1: power-domain@4 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8M_POWER_DOMAIN_DDR1>;
-+					};
-+
-+					pgc_gpu: power-domain@5 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8M_POWER_DOMAIN_GPU>;
-+					};
-+
-+					pgc_vpu: power-domain@6 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8M_POWER_DOMAIN_VPU>;
-+					};
-+
-+					pgc_disp: power-domain@7 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8M_POWER_DOMAIN_DISP>;
-+					};
-+
-+					pgc_mipi_csi1: power-domain@8 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8M_POWER_DOMAIN_MIPI_CSI1>;
-+					};
-+
-+					pgc_mipi_csi2: power-domain@9 {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8M_POWER_DOMAIN_MIPI_CSI2>;
-+					};
-+
-+					pgc_pcie2: power-domain@a {
-+						#power-domain-cells = <0>;
-+						reg = <IMX8M_POWER_DOMAIN_PCIE2>;
-+					};
-+				};
-+			};
- 		};
- 
- 		aips2: bus@30400000 {
--- 
-2.20.1
+There is already some push back from Rob that the existing code is more
+complex than needed (eg variable cache size).
+
+-Frank
+
+> 
+> The patch used for testing:
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 1d667eb730e19..2640d4bc81a9a 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -197,6 +197,7 @@ void of_populate_phandle_cache(void)
+>  	u32 cache_entries;
+>  	struct device_node *np;
+>  	u32 phandles = 0;
+> +	struct device_node **cache2;
+>  
+>  	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  
+> @@ -214,14 +215,32 @@ void of_populate_phandle_cache(void)
+>  
+>  	phandle_cache = kcalloc(cache_entries, sizeof(*phandle_cache),
+>  				GFP_ATOMIC);
+> +	cache2 = kcalloc(cache_entries, sizeof(*phandle_cache), GFP_ATOMIC);
+>  	if (!phandle_cache)
+>  		goto out;
+>  
+> +	pr_err("%s(%d) entries: %d\n", __func__, __LINE__, cache_entries);
+>  	for_each_of_allnodes(np)
+>  		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL) {
+> +			int slot;
+>  			of_node_get(np);
+>  			phandle_cache[np->phandle & phandle_cache_mask] = np;
+> +			slot = hash_32(np->phandle, __ffs(cache_entries));
+> +			cache2[slot] = np;
+> +			pr_err("%s(%d) phandle %x slot %x hash %x\n", __func__, __LINE__,
+> +			       np->phandle, np->phandle & phandle_cache_mask, slot);
+>  		}
+> +	{
+> +		int i, filled = 0, filled_hash = 0;
+> +
+> +		for (i = 0; i < cache_entries; i++) {
+> +			if (phandle_cache[i])
+> +				filled++;
+> +			if (cache2[i])
+> +				filled_hash++;
+> +		}
+> +		pr_err("%s(%d) Used entries: %d, hashed: %d\n", __func__, __LINE__, filled, filled_hash);
+> +	}
+>  
+>  out:
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> 
+> Sebastian
+> 
 
