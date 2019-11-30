@@ -2,140 +2,87 @@ Return-Path: <SRS0=1K1h=ZW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A7EC432C0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 30 Nov 2019 22:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFABC432C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 30 Nov 2019 23:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65D212075C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 30 Nov 2019 22:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5AC32075C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 30 Nov 2019 23:01:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YiL4AirM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t1ABPsjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfK3WwK (ORCPT
+        id S1727179AbfK3XBi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 30 Nov 2019 17:52:10 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:37441 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbfK3WwK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 30 Nov 2019 17:52:10 -0500
-Received: by mail-yw1-f67.google.com with SMTP id 4so11964526ywx.4;
-        Sat, 30 Nov 2019 14:52:08 -0800 (PST)
+        Sat, 30 Nov 2019 18:01:38 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33477 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727025AbfK3XBi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 30 Nov 2019 18:01:38 -0500
+Received: by mail-lj1-f193.google.com with SMTP id 21so4030107ljr.0;
+        Sat, 30 Nov 2019 15:01:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=w0VTjeAbtSqemOM43UsO8Hem8cE/aNSTS/UBVqjVywc=;
-        b=YiL4AirMTqr6aGYwyZ/Lh+rb4JR2HtOA76xqsjBh8p9VTZB4W1DziDewVMuiAdJkjJ
-         OkKzSzIx8F3HkzmEmJYvl2eIeguK0Z28QHhdjUlB4/ko7cASISyWnqSPn2PRjM4wUiVU
-         bZhKc33ydp+uW+wz4pNucl/F8ZuhVVGEhjUkpugcy0hOiFL4mahvEYfpU9ORvevutFpF
-         nOVNslyAnLBqF4YrSu5k5/Ye0bz/LSDnG0tDZhNc3+ldghQGwgs0vPnOONowz8uAGkfh
-         71xCP/NHJ/aB6UP27pGXaCSZZpgOUlGIcmvSJefbCI6hVG8JpAJ9Cukhkbds5TeVFzQG
-         QNDg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Whzdku0abQpHBeeiCCZ3/aENDMafY9GI5DWjx/0lTkI=;
+        b=t1ABPsjUqCFayQUQ/mh4goARt5Cu4TxJ5iOeoPNSmlOc9/ayXPGSezb3QxxLYbZOZ2
+         yMqwEfo7sSI8jvnug83X/HEPthLQytSCjZNr/wu+dgb6JmuE/P0KHo9HoW/Py5FbAZSJ
+         aBUTBzIuqUOPubJ4muv0jSS40wmK/ZrtkZMRWytmIjo8/vAn/AYw+Qyh9aTcH9qcnqQm
+         lnc/C0V1I+0xpsG5BFwJAj4nsee4+ZQvo9Rs0cC66i8/HjYvt6f4eozeYfq6DYpC7r7d
+         2ThZEYamDDVRT8Cn4PjWdetgizSd6yp8/HR4AaWDsFfyD7ci37wAN4sUa5UFbtXgdjqG
+         DJdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=w0VTjeAbtSqemOM43UsO8Hem8cE/aNSTS/UBVqjVywc=;
-        b=LeHd1MDncI3+E/uOslMWWwfKakrDvY3S7sG+aA9hER/0rEPZb9Z+/+WpulJjl+/8Cg
-         OGHzLcrij8e7E/+9og+mTR/C9ONQq4/7gWPnkYWI/fmyYU7bT0LvEeULlzj+9mk0nkD5
-         37W+r7GSjr11fzxbDkA/zJf3XicsZi4MRBHHoO18lLe2JiyJKNuMYGjbFLU17DwXChLA
-         bkYa8+hQzTpHhU5VKhaIIGJ7kcrD0hxdtSsiac9dR6aWf7iy+T5KhDXoo+3p1+PI9cml
-         sIDXU3Y8+u302YCd6yIcSfEmC8v8mbj4KoV8L5D+f2oCueuPuYdDsrxI699UYylI6Hud
-         7A8A==
-X-Gm-Message-State: APjAAAVuQoVM5YepJs8SHEMPJrslXLIdt1eDE3+GqpwWNWwPt40vEMka
-        A18f8+Nh9aSE/83/UujIhK3L9/4xdAo=
-X-Google-Smtp-Source: APXvYqwOR+XG0CXmcrTJVDU+HgRLkfmiEtFTdynP+cuDkyMBswz+hQZfRPCieMZsYMBTfVB3g06P8Q==
-X-Received: by 2002:a81:53c2:: with SMTP id h185mr16235156ywb.113.1575154327481;
-        Sat, 30 Nov 2019 14:52:07 -0800 (PST)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id y9sm2028163ywc.19.2019.11.30.14.52.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Nov 2019 14:52:06 -0800 (PST)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-crypto@vger.kernel.org
-Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Whzdku0abQpHBeeiCCZ3/aENDMafY9GI5DWjx/0lTkI=;
+        b=mEdhVEIyFbKmOt8FBVXSuUqCEgzeT7EYAp4ob7fBa55CtAYlEn54IuuQJbi/IbDoiy
+         YEtlohlVopGpQlwgEJms+E5AlUC4SBP+rp8wnFiqg9bySNPRSOmk5tshksGKHYExpDPu
+         pwtZGIwDVh4MaN4XqRxd4UnYE0/DqeYiR/7WkmLq6knF1RdGiIjYWJXnvxatC6y4edqM
+         W5r/9QKRBEDoEbmch8VnRPo07Ol5fasfugxX8+Km3qDQ1hiIEq1t2SLLiMgl30UYwoYC
+         ZfmivojcOrSwIXXC9G23ath3kgGh5jt+PGi90YcqKjWnAHWGg/VJzHemx/ndLZ4bsz/F
+         qSMA==
+X-Gm-Message-State: APjAAAUirqOjLAz8kg3A3bAZe0g1vC57wij3qJxHbVUojfC/PNLkah3X
+        4hVYeWgm+sO1UJmlx3aCxdSJV3JI4hCXkgDuZmI=
+X-Google-Smtp-Source: APXvYqwpO7e0hF0+Fk+TswWaGZIR50uVZZ3aI7Cg2frtlXcVMJ+36DwkMSSrB21yv88n1w1i2QPqtn6Vcp3q5WFrJUg=
+X-Received: by 2002:a2e:b5ac:: with SMTP id f12mr3379147ljn.0.1575154895735;
+ Sat, 30 Nov 2019 15:01:35 -0800 (PST)
+MIME-Version: 1.0
+References: <20191129234108.12732-1-aford173@gmail.com> <20191129234108.12732-2-aford173@gmail.com>
+ <CAOMZO5AyLBrsxr5rqkWgf44X0CQdqHcdaCLRaWLC25b18bF+xw@mail.gmail.com>
+ <CAOMZO5ALQQxoWFC9J5ZwT6DtsuVg-FaWCcGbcPK=psokWWRF8Q@mail.gmail.com> <CAHCN7x+zJt3i=Yw=2HjdtQa-rR4yMMvCMf319+wgMW0XQ=nF4g@mail.gmail.com>
+In-Reply-To: <CAHCN7x+zJt3i=Yw=2HjdtQa-rR4yMMvCMf319+wgMW0XQ=nF4g@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Sat, 30 Nov 2019 20:01:50 -0300
+Message-ID: <CAOMZO5Czqqe0p1LEWt11S-zXnejg_9Zob5wPf2Df5ZJh2dT0qg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: Add GPC Support
+To:     Adam Ford <aford173@gmail.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: imx8mm: Add Crypto CAAM support
-Date:   Sat, 30 Nov 2019 16:51:52 -0600
-Message-Id: <20191130225153.30111-2-aford173@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191130225153.30111-1-aford173@gmail.com>
-References: <20191130225153.30111-1-aford173@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The i.MX8M Mini supports the same crypto engine as what is in
-the i.MX8MQ, but it is not currently present in the device tree,
-because it may be resricted by security features.
+On Sat, Nov 30, 2019 at 7:50 PM Adam Ford <aford173@gmail.com> wrote:
 
-This patch places in into the device tree and marks it as disabled,
-but anyone not restricting the CAAM with secure mode functions
-can mark it as enabled.
+> I held off intentionally because of all the txt->yaml conversion, I
+> didn't want to get stuck in the middle of that.
+>
+> Would an tweak to the txt file be accepted?
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 2ed1a3537f05..68c7c1adeb60 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -723,6 +723,37 @@
- 				status = "disabled";
- 			};
- 
-+			crypto: crypto@30900000 {
-+				compatible = "fsl,sec-v4.0";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				reg = <0x30900000 0x40000>;
-+				ranges = <0 0x30900000 0x40000>;
-+				interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clk IMX8MM_CLK_AHB>,
-+					 <&clk IMX8MM_CLK_IPG_ROOT>;
-+				clock-names = "aclk", "ipg";
-+				status = "disabled";
-+
-+				sec_jr0: jr@1000 {
-+					compatible = "fsl,sec-v4.0-job-ring";
-+					reg = <0x1000 0x1000>;
-+					interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+
-+				sec_jr1: jr@2000 {
-+					compatible = "fsl,sec-v4.0-job-ring";
-+					reg = <0x2000 0x1000>;
-+					interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+
-+				sec_jr2: jr@3000 {
-+					compatible = "fsl,sec-v4.0-job-ring";
-+					reg = <0x3000 0x1000>;
-+					interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+			};
-+
- 			i2c1: i2c@30a20000 {
- 				compatible = "fsl,imx8mm-i2c", "fsl,imx21-i2c";
- 				#address-cells = <1>;
--- 
-2.20.1
-
+Yes, a patch to the existing txt binding should be fine.
