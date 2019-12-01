@@ -2,129 +2,183 @@ Return-Path: <SRS0=kxJ0=ZX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79678C432C0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Dec 2019 11:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D18C432C0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Dec 2019 13:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49FA02146E
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Dec 2019 11:42:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575200539;
-	bh=kszPCwKwRkGgz8VWT8Gr1cfkhsnDvbBxXBsC7fR5klM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nz0UvYN61ZMw7Myo3SV1qVOFxsCigj5YLIqmFrj0WRaMadvoqwFWNJs6i/D550F19
-	 MHxACgMeLRrLXSJkcuUzuha+R5CVdPvfJIYio2wX6Ifhgr+0XTGx7H18Xsjo4ZUjWr
-	 VPk9J306mmi5tISr4EdcCOq31OjmF3XmnOlFsLik=
+	by mail.kernel.org (Postfix) with ESMTP id 91F66206E4
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Dec 2019 13:49:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AP8lqIl6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfLALmS (ORCPT
+        id S1726439AbfLANtm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 1 Dec 2019 06:42:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbfLALmS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 1 Dec 2019 06:42:18 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFD5E20833;
-        Sun,  1 Dec 2019 11:42:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575200537;
-        bh=kszPCwKwRkGgz8VWT8Gr1cfkhsnDvbBxXBsC7fR5klM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rY9Q1SSJejMbemXU90YSUx4gFV5SCAmusUXAs/KPEQeDcQCpbgmY3e6SaSzEnaPIr
-         2YvTAOa3wTB/13IbN0q3ChrX3G91U2ofep3GcsO4PDmx+3s5WWKLVfVwsyHBR/us/+
-         xR6O+WnAIPshGjNtfNIcdYJJrInDs6VOq+hezvHA=
-Date:   Sun, 1 Dec 2019 11:42:12 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "rodrigorsdc@gmail.com" <rodrigorsdc@gmail.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v5 1/2] staging: iio: accel: adis16240: enforce SPI mode
- on probe function
-Message-ID: <20191201114212.08a068fc@archlinux>
-In-Reply-To: <2e62b4fa3ee93909bfcdc4d9b60015e7c22d510c.camel@analog.com>
-References: <20191123233510.4890-1-rodrigorsdc@gmail.com>
-        <2e62b4fa3ee93909bfcdc4d9b60015e7c22d510c.camel@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 1 Dec 2019 08:49:42 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55888 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbfLANtm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 1 Dec 2019 08:49:42 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB1DnaHp039061;
+        Sun, 1 Dec 2019 07:49:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575208176;
+        bh=iZYF62+IqF0GWydEuUcLGVvt3vdEsHDmf+YVohUaR3U=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=AP8lqIl6gZVlrUQ6DoMEPpwMSGoPeqZqygOHYIiRPTzPG/efPL9t5BkY1Qih00++J
+         WOdvoJDmxykpCgYRh4549vyGtvZvcc+1azEBejInEyIVlAU5LSnI3p4oh1H3mlovnk
+         f0cJ8Fim2BYpnflv/dthsn9yMSN5fp9clIeW6DUc=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB1DnaoX072759
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 1 Dec 2019 07:49:36 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 1 Dec
+ 2019 07:49:35 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sun, 1 Dec 2019 07:49:35 -0600
+Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB1DnW5Z111790;
+        Sun, 1 Dec 2019 07:49:32 -0600
+From:   Jyri Sarha <jsarha@ti.com>
+To:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
+        <peter.ujfalusi@ti.com>, <bparrot@ti.com>, <subhajit_paul@ti.com>,
+        <praneeth@ti.com>, <yamonkar@cadence.com>, <sjakhade@cadence.com>,
+        <robh+dt@kernel.org>
+Subject: [PATCH v2 1/5] dt-bindings: display: ti,k2g-dss: Add dt-schema yaml binding
+Date:   Sun, 1 Dec 2019 15:49:29 +0200
+Message-ID: <802bf3af8f5109b22bf615d92bca14f076d25de5.1575203210.git.jsarha@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1575203210.git.jsarha@ti.com>
+References: <cover.1575203210.git.jsarha@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 25 Nov 2019 07:55:39 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+Add dt-schema yaml bindig for K2G DSS, an ultra-light version of TI
+Keystone Display SubSystem.
 
-> On Sat, 2019-11-23 at 20:35 -0300, Rodrigo Carvalho wrote:
-> > [External]
-> > 
-> > According to the datasheet, this driver supports only SPI mode 3,
-> > so we should enforce it and call spi_setup() on probe function.
-> > 
-> > Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
-> > ---
-> > V5:
-> >   - Add this patch to the patchset
-> > 
-> >  drivers/staging/iio/accel/adis16240.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/drivers/staging/iio/accel/adis16240.c
-> > b/drivers/staging/iio/accel/adis16240.c
-> > index 82099db4bf0c..77b6b81767b9 100644
-> > --- a/drivers/staging/iio/accel/adis16240.c
-> > +++ b/drivers/staging/iio/accel/adis16240.c
-> > @@ -400,6 +400,13 @@ static int adis16240_probe(struct spi_device *spi)
-> >  	indio_dev->num_channels = ARRAY_SIZE(adis16240_channels);
-> >  	indio_dev->modes = INDIO_DIRECT_MODE;
-> >  
-> > +	spi->mode = SPI_MODE_3;  
-> 
-> A generic question from me here, since I am not sure.
-> 
-> Would this limit the configurations of this chip on the board?
-> In case there is some level-inverter [for various weird reasons] on the
-> board, this may not work, because the SPI controller would need CPOL to be
-> 0.
-> 
-> Not sure if this question is valid, or whether we need to care about such
-> configurations.
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ .../bindings/display/ti/ti,k2g-dss.yaml       | 97 +++++++++++++++++++
+ 1 file changed, 97 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
 
-It's a good question as this sort of trick is used sometimes. Let's see
-what responses we get to the other branch of this thread before moving forwards
-with this.
-
-Jonathan
-
-
-> 
-> Thanks
-> Alex
-> 
-> > +	ret = spi_setup(spi);
-> > +	if (ret) {
-> > +		dev_err(&spi->dev, "spi_setup failed!\n");
-> > +		return ret;
-> > +	}
-> > +
-> >  	ret = adis_init(st, indio_dev, spi, &adis16240_data);
-> >  	if (ret)
-> >  		return ret;  
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+new file mode 100644
+index 000000000000..2d92dea1c411
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+@@ -0,0 +1,97 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/display/ti/ti,k2g-dss.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Texas Instruments K2G Display Subsystem
++
++maintainers:
++  - Jyri Sarha <jsarha@ti.com>
++  - Tomi Valkeinen <tomi.valkeinen@ti.com>
++
++description: |
++  The K2G DSS is an ultra-light version of TI Keystone Display
++  SubSystem. It has only one output port and video plane. The
++  output is DPI.
++
++properties:
++  compatible:
++    const: ti,k2g-dss
++
++  reg:
++    maxItems: 5
++    minItems: 5
++
++  reg-names:
++    items:
++      - const: cfg
++      - const: common
++      - const: vid1
++      - const: ovr1
++      - const: vp1
++
++  clocks:
++    maxItems: 2
++    minItems: 2
++
++  clock-names:
++    items:
++      - const: fck
++      - const: vp1
++
++  interrupts:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++    description: phandle to the associated power domain
++
++  port@0:
++    type: object
++    description:
++      The DSS DPI output port node
++
++  max-memory-bandwidth:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Input memory (from main memory to dispc) bandwidth limit in
++      bytes per second
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - interrupts
++  - port@0
++
++additionalProperties: false
++
++examples:
++  - |
++        dss: dss@02540000 {
++                compatible = "ti,k2g-dss";
++                reg =   <0x02540000 0x400>,
++                        <0x02550000 0x1000>,
++                        <0x02557000 0x1000>,
++                        <0x0255a800 0x100>,
++                        <0x0255ac00 0x100>;
++                reg-names = "cfg", "common", "vid1", "ovr1", "vp1";
++                clocks =        <&k2g_clks 0x2 0>,
++                                <&k2g_clks 0x2 1>;
++                clock-names = "fck", "vp1";
++                interrupts = <GIC_SPI 247 IRQ_TYPE_EDGE_RISING>;
++
++                power-domains = <&k2g_pds 0x2>;
++                status = "disabled";
++
++                max-memory-bandwidth = <230000000>;
++                port {
++                        dpi_out: endpoint {
++                                remote-endpoint = <&sii9022_in>;
++                        };
++                };
++        };
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
