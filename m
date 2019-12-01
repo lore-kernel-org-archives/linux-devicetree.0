@@ -2,54 +2,66 @@ Return-Path: <SRS0=kxJ0=ZX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36B3C43215
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Dec 2019 10:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7719C432C3
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Dec 2019 11:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 955AE2231B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Dec 2019 10:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE513215F1
+	for <linux-devicetree@archiver.kernel.org>; Sun,  1 Dec 2019 11:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575197914;
-	bh=T3BCPZb+DEtCnqd72UKbIa5lrWksL4BLMpWGzxUovyI=;
+	s=default; t=1575200439;
+	bh=QADRPI/v7uWFrZlAU+lAp7qfdc0QVa9R92Z8HOa8KhA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=x2Z5KB2taKSny9KIc4OXnVbgo07Lu5K8O44c/kZWWnbnVr24QrYY1xpa+qnkmJNNd
-	 IlxoQGLbamClYq963qElsj9MgLchuZqBf1ooy5ruG9jtXezA2WX0b4smd+HiWIadOJ
-	 Y95/Y92tPClq2zCwDTe669M2E3jZ2qhKNk6tmVX8=
+	b=R3AySkWCawNVtGuOyv8EEi8imdC24biIs/wNhFsyCBUoorjYtpRiujnYDuKBXku4M
+	 Cw1NSXRPRx8wELobvrJCrh+LSW0X+jhs9+CHsDHzi/3AfKVjE+0LW26WWL8hCdy0m+
+	 wqExwRj66aDkewlKnyR2DSibpl09JsFlMcaUTIho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfLAK6e (ORCPT
+        id S1726303AbfLALkj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 1 Dec 2019 05:58:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38362 "EHLO mail.kernel.org"
+        Sun, 1 Dec 2019 06:40:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725993AbfLAK6d (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 1 Dec 2019 05:58:33 -0500
+        id S1726162AbfLALki (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 1 Dec 2019 06:40:38 -0500
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9570E20833;
-        Sun,  1 Dec 2019 10:58:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 005C620833;
+        Sun,  1 Dec 2019 11:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575197913;
-        bh=T3BCPZb+DEtCnqd72UKbIa5lrWksL4BLMpWGzxUovyI=;
+        s=default; t=1575200437;
+        bh=QADRPI/v7uWFrZlAU+lAp7qfdc0QVa9R92Z8HOa8KhA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=A/Quld9/z6SGlqhLMkZEw2ILifLLgyWyaBMCCc7UN+hwrK7IpMDYO74a8y2+2E1EW
-         mlDRTw7LkqE9ZD94+Evx6r5752oO+gXR2iaPJYTom7wyq6AhcgzyosFwfufl+t62BX
-         xntxkO+rOSArHcKhJVhlGy7gLyyo6R2pq6hIxFu0=
-Date:   Sun, 1 Dec 2019 10:58:29 +0000
+        b=IZpF2yGCdLXKN8JNr0Y7btEYg90Ty8DjDGwzbAQMzKDCMHYhZ1JMkeGoLlGRCSk4J
+         G3aARmYvar7U0WdKDgaTQSI8TrJmXBz/fVU2xd8//C46c064OHw+/nE/j7VQhCiSZU
+         DOE6vym2k+qL7osP6u4bcuBUDVZ1RaF5NKXtSzF0=
+Date:   Sun, 1 Dec 2019 11:40:32 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     <tomislav.denis@avl.com>
-Cc:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] bindings: iio: pressure: Add dlh-i2c
- documentation
-Message-ID: <20191201105829.79a04b90@archlinux>
-In-Reply-To: <20191129073420.9800-4-tomislav.denis@avl.com>
-References: <20191114100908.11180-1-tomislav.denis@avl.com>
-        <20191129073420.9800-1-tomislav.denis@avl.com>
-        <20191129073420.9800-4-tomislav.denis@avl.com>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "rodrigorsdc@gmail.com" <rodrigorsdc@gmail.com>,
+        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4] dt-bindings: iio: accel: add binding documentation
+ for ADIS16240
+Message-ID: <20191201114032.1a972dda@archlinux>
+In-Reply-To: <a55b9c576eded8c91a985aabbba89180561ab156.camel@analog.com>
+References: <20191123051927.5016-1-rodrigorsdc@gmail.com>
+        <20191123114119.7b0c3447@archlinux>
+        <a55b9c576eded8c91a985aabbba89180561ab156.camel@analog.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -59,90 +71,129 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 29 Nov 2019 08:34:20 +0100
-<tomislav.denis@avl.com> wrote:
 
-> From: Tomislav Denis <tomislav.denis@avl.com>
-> 
-> Add a device tree binding documentation for DLH series pressure
-> sensors.
-> 
-> Signed-off-by: Tomislav Denis <tomislav.denis@avl.com>
-Looks good to me, but I'll leave some time for others to take a look.
++CC Mark as we probably need a more general view point on
+the question of whether SPI mode should be enforced by binding
+or in the driver.
 
-> ---
->  .../bindings/iio/pressure/asc,dlh-i2c.yaml         | 51 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/pressure/asc,dlh-i2c.yaml
+On Mon, 25 Nov 2019 07:51:30 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+
+> On Sat, 2019-11-23 at 11:41 +0000, Jonathan Cameron wrote:
+> > On Sat, 23 Nov 2019 02:19:27 -0300
+> > Rodrigo Carvalho <rodrigorsdc@gmail.com> wrote:
+> >   
+> > > This patch add device tree binding documentation for ADIS16240.
+> > > 
+> > > Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>  
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/pressure/asc,dlh-i2c.yaml b/Documentation/devicetree/bindings/iio/pressure/asc,dlh-i2c.yaml
-> new file mode 100644
-> index 0000000..5de2277
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/pressure/asc,dlh-i2c.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/pressure/dlh-i2c.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: All Sensors DLH series low voltage digital pressure sensors
-> +
-> +maintainers:
-> +  - Tomislav Denis <tomislav.denis@avl.com>
-> +
-> +description: |
-> +  Bindings for the All Sensors DLH series pressure sensors.
-> +
-> +  Specifications about the sensors can be found at:
-> +    http://www.allsensors.com/cad/DS-0355_Rev_B.PDF
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - asc,dlhl60d
-> +      - asc,dlhl60g
-> +
-> +  reg:
-> +    description: I2C device address
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description: interrupt mapping for EOC(data ready) pin
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c0 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      pressure@29 {
-> +          compatible = "asc,dlhl60d";
-> +          reg = <0x29>;
-> +          interrupt-parent = <&gpio0>;
-> +          interrupts = <10 IRQ_TYPE_EDGE_RISING>;
-> +      };
-> +    };
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 39d6f0f..8f0eab0 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -674,6 +674,7 @@ W:	http://www.allsensors.com/
->  S:	Maintained
->  L:	linux-iio@vger.kernel.org
->  F:	drivers/iio/pressure/dlh-i2c.c
-> +F:	Documentation/devicetree/bindings/iio/pressure/dlh-i2c.yaml
->  
->  ALLEGRO DVT VIDEO IP CORE DRIVER
->  M:	Michael Tretter <m.tretter@pengutronix.de>
+> My bad for the late timing on this.
+> I'm slightly more fresh on Mondays.
+> But I will get overloaded with work in a few hours, so I may not have time
+> ot respond.
+> 
+> > No problem with this patch, but I definitely want to see an accompanying
+> > one enforcing the SPI mode in the driver.
+> >   
+> 
+> So, then the binding should probably also define spi-cpol & spi-cpha
+> as mandatory.
+> Maybe, the driver would do a check and print a warning.
+> 
+> I'm noticing that this device uses SPI mode 3, but this DT binding defaults
+> to SPI mode 0
+> 
+> > Right now the driver doesn't set it and so I'm fairly sure not putting
+> > it in the binding will leave you with a non working device.
+> > 
+> > The right option if only one option is supported is for the driver
+> > to call spi_setup with the relevant options.
+> >   
+> 
+> What if the board uses some level inverters [because of some weird reason]
+> and that messes up with the SPI mode?
+> It's not common, but it is possible.
+
+I have wondered the same and have a few boards that do this sort of thing.
+My personal feeling is that such level convertors should have explicit
+representation rather than being hidden in changes to
+the devicetree.  Perhaps via a single input single output mux that
+would wrap up the actions of any inverters in the path.
+
+As you say, the alternative is to just leave it to the devicetree bindings.
+
+Jonathan
+
+> 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> > > ---
+> > > V4:
+> > >    - Remove spi-cpha and spi-cpol in binding example, since this driver
+> > > supports only one timing mode.
+> > >  .../bindings/iio/accel/adi,adis16240.yaml     | 49 +++++++++++++++++++
+> > >  1 file changed, 49 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> > > 
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> > > b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> > > new file mode 100644
+> > > index 000000000000..8e902f7c49e6
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> > > @@ -0,0 +1,49 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: ADIS16240 Programmable Impact Sensor and Recorder driver
+> > > +
+> > > +maintainers:
+> > > +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > > +
+> > > +description: |
+> > > +  ADIS16240 Programmable Impact Sensor and Recorder driver that
+> > > supports
+> > > +  SPI interface.
+> > > +    https://www.analog.com/en/products/adis16240.html
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - adi,adis16240
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - interrupts
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/gpio/gpio.h>
+> > > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > > +    spi0 {
+> > > +        #address-cells = <1>;
+> > > +        #size-cells = <0>;
+> > > +
+> > > +        /* Example for a SPI device node */
+> > > +        accelerometer@0 {
+> > > +            compatible = "adi,adis16240";
+> > > +            reg = <0>;
+> > > +            spi-max-frequency = <2500000>;
+> > > +            interrupt-parent = <&gpio0>;
+> > > +            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> > > +        };
+> > > +    };  
 
