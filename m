@@ -2,155 +2,89 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BDFC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 305D7C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D16312071E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F298C20718
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:10:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OY79MF/N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uP8y/Lzi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfLBSE3 (ORCPT
+        id S1727868AbfLBSK7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:04:29 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:38240 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727420AbfLBSE3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 13:04:29 -0500
-Received: by mail-pj1-f67.google.com with SMTP id l4so56963pjt.5;
-        Mon, 02 Dec 2019 10:04:27 -0800 (PST)
+        Mon, 2 Dec 2019 13:10:59 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35668 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727670AbfLBSK7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 13:10:59 -0500
+Received: by mail-pj1-f66.google.com with SMTP id s8so74287pji.2;
+        Mon, 02 Dec 2019 10:10:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=cQ9oVNJacMjkMJKWTxTPgLt210fBSMvgSycxfh0yVXI=;
-        b=OY79MF/N8tYtw+exWoHVtpCuKzSe++gRB3jUFPCoZT/B0m7YffdkvHxyguDJH0OwXi
-         KwNGNqHuJ8/hT+u4eul2SSg7pQLGsHuhPNLXY2bprxd6F3ctz+XVf73Ed4yDhKkMBOsj
-         ZMg+Ihe7/5VqtH9MoPkxFWJSMpKEau+R2QJ7zcpHgALQeROkWNWtkb+ltwYST6oSLnFs
-         wYJ7wObxvaUzrj5vvWLe9tWmeg2mrMqL5j9XY14KNVkK9p/jBwi+dwlpGFZwKoc9YsHI
-         tyaPiYRXpPCZ0rGzRlY1S+alj4m4DFnCxJkPxiuoo8OzTfiYbSN9Bm6tkVCNuYaVPmhu
-         9xyw==
+        bh=OWl5LMlyWthCEsecxcscMjlc8//jLun1U4+HNkZP2EQ=;
+        b=uP8y/LziWCPvQnk7isxZu1yhkNU4fMAOvEeJBpxzG1hUwojItHcdqelLFdCjb+vXJl
+         VdYqUYnEuTe7F/sZ0mW45o+WXnEyj0KFG2EttqOFSnTGHFscKDpd/zWdDyLDVq753J1A
+         Wtp1poTat69yQymDjAaChATPzk6U8M1t7KVGxOJhBTNo26W1p4eocxQ0kTXHRXjQrrOj
+         gi7KUg8UD6eO2zu4BYA2GCtiOzONY2qMV0d1qjhzvNvdmrQWGrA2SVoM6vuQuStLfTts
+         H34wikchwvobC63jBu9jJjtnmLhWgBTmS34tnc+ncdGAdP+Se0sHHhVBNZdB4TxZJl9T
+         ao+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cQ9oVNJacMjkMJKWTxTPgLt210fBSMvgSycxfh0yVXI=;
-        b=X1asr3IJizeSRwj1Ib0Z3J6T8wBffag8RQD0abBr9ihYc85hpby2S+ycm5XRuiwXnV
-         if2ZP8lx/21zNPcN3waZ3JTHiwXMK3xEM8E558NcRGNszSSmTfPeHp4vrBwtvBiqArKy
-         /0WjLm6wk9Up5RW466w3+9suaqfFZuei97qJ9MQjAtsrunXEpV6TetLruo6ZnDd7LChM
-         /GtFoIj/sqLxSkQVMLAtLpnZv7s/Nc6JL1HxXtBR5c8LQS4YQW5i2gh4ITbPRmSWE2xk
-         VS4lOijU7yx4twVw4pp/WlvBN8LWm4fKjC3UJjm0reeXVnioSOFLQxonH0lEq1lj+/xI
-         oA/Q==
-X-Gm-Message-State: APjAAAUFWAL/k8qzS0+Zdf8bbvks/mnAWD7Mywko9zRZKPdtdgpoHnEn
-        ogDrjUy7egWb/pLueXXv7lEmuy9q
-X-Google-Smtp-Source: APXvYqyy6xNi5ggCOgagMRSD+wggG/3RbwYmamrUmls5ljxkQCK3mFIJW0/RFwRDj5KGb7p6XfvJSw==
-X-Received: by 2002:a17:90a:8a98:: with SMTP id x24mr315830pjn.113.1575309866724;
-        Mon, 02 Dec 2019 10:04:26 -0800 (PST)
+        bh=OWl5LMlyWthCEsecxcscMjlc8//jLun1U4+HNkZP2EQ=;
+        b=aYDqIRXz4rXiY9nR01d0mUoVXHHtrOoRhxXkfPOeorwUU6znUpou2dVElpP9jJQsoV
+         9JcjSphYajU9Je7S9vJ+N30Uq5+JNRIiJtMakK2evGpQ/DN8/9E3SoZAaDNbwSvBeYkX
+         wX8hvolAySMdDJ+3F+hEZy3+Df/xFEQlUSr6fldIzeg9NhBRU1nPfdOQT4DkSXfifZEM
+         R9Kg7qpKZ3+IRkPDXGL7ZwExKiS75Oift6pi87NWNlvnk6EXJ8y8YWf0Rqiw2YeN4vi+
+         LM5GuBfMDDKrU9dXFMVmC8pN/g889KVjPthXsr2SRPR+vbvsj98ew1aTmH/ry40NAZRi
+         ELmA==
+X-Gm-Message-State: APjAAAWi9B5EtwzO2iVjZhnjjbie9Gf4E62fzyiW661UidIuc7cnoQaq
+        dUTK2s3e4oezWfQb9Zpos5s=
+X-Google-Smtp-Source: APXvYqwb+PHDoFPOZYqIaZPMZD2O8EccPICF7fxGPPwMqJjvCNUXFL4eFf6NfxpqCyuQOKO87y/vjg==
+X-Received: by 2002:a17:90a:b304:: with SMTP id d4mr409661pjr.142.1575310258156;
+        Mon, 02 Dec 2019 10:10:58 -0800 (PST)
 Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id d26sm230000pgv.66.2019.12.02.10.04.25
+        by smtp.gmail.com with ESMTPSA id h185sm236616pgc.87.2019.12.02.10.10.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 10:04:25 -0800 (PST)
-Date:   Mon, 2 Dec 2019 10:04:23 -0800
+        Mon, 02 Dec 2019 10:10:57 -0800 (PST)
+Date:   Mon, 2 Dec 2019 10:10:54 -0800
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     robh+dt@kernel.org, andriy.shevchenko@linux.intel.com,
-        bparrot@ti.com, andy.shevchenko@gmail.com,
-        simon.budig@kernelconcepts.de, hdegoede@redhat.com, fcooper@ti.com,
-        mripard@kernel.org, alexandre.belloni@bootlin.com,
-        shawnguo@kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] Input: edt-ft5x06 - improve power management
- operations
-Message-ID: <20191202180423.GD50317@dtor-ws>
-References: <20191127120948.22251-1-m.felsch@pengutronix.de>
- <20191127120948.22251-6-m.felsch@pengutronix.de>
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marek Vasut <marex@denx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: ili210x - add ili2120 support
+Message-ID: <20191202181054.GF50317@dtor-ws>
+References: <20191119180543.120362-1-luca@z3ntu.xyz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191127120948.22251-6-m.felsch@pengutronix.de>
+In-Reply-To: <20191119180543.120362-1-luca@z3ntu.xyz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 01:09:48PM +0100, Marco Felsch wrote:
-> It is possible to bring the device into a deep sleep state. To exit this
-> state the reset or wakeup pin must be toggeled as documented in [1].
-> Because of the poor documentation I used the several downstream kernels
-> [2] and other applications notes [3] to indentify the related registers.
-> 
-> Furthermore I added the support to disable the device completely. This is
-> the most effective power-saving mechanism. Disabling the device don't
-> change the suspend logic because the hibernate mode needs a hardware
-> reset anyway.
-> 
-> [1] https://www.newhavendisplay.com/appnotes/datasheets/touchpanel/FT5x26.pdf
-> [2] https://github.com/linux-sunxi/linux-sunxi/blob/sunxi-3.4/drivers/input/touchscreen/ft5x_ts.c
->     https://github.com/Pablito2020/focaltech-touch-driver/blob/master/ft5336_driver.c
-> [3] https://www.newhavendisplay.com/appnotes/datasheets/touchpanel/FT5x16_registers.pdf
-> 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
-> v2:
-> - adapt commit message
-> - don't return errors during suspend/resume
-> - replace dev_err() by dev_warn()
-> - add support to disable the regulator too
-> 
->  drivers/input/touchscreen/edt-ft5x06.c | 49 ++++++++++++++++++++++++--
->  1 file changed, 47 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> index 8d2ec7947f0e..0bdd3440f684 100644
-> --- a/drivers/input/touchscreen/edt-ft5x06.c
-> +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> @@ -39,6 +39,9 @@
->  #define WORK_REGISTER_NUM_X		0x33
->  #define WORK_REGISTER_NUM_Y		0x34
->  
-> +#define PMOD_REGISTER_ACTIVE		0x00
-> +#define PMOD_REGISTER_HIBERNATE		0x03
-> +
->  #define M09_REGISTER_THRESHOLD		0x80
->  #define M09_REGISTER_GAIN		0x92
->  #define M09_REGISTER_OFFSET		0x93
-> @@ -54,6 +57,7 @@
->  
->  #define WORK_REGISTER_OPMODE		0x3c
->  #define FACTORY_REGISTER_OPMODE		0x01
-> +#define PMOD_REGISTER_OPMODE		0xa5
->  
->  #define TOUCH_EVENT_DOWN		0x00
->  #define TOUCH_EVENT_UP			0x01
-> @@ -1235,9 +1239,29 @@ static int edt_ft5x06_ts_remove(struct i2c_client *client)
->  static int __maybe_unused edt_ft5x06_ts_suspend(struct device *dev)
->  {
->  	struct i2c_client *client = to_i2c_client(dev);
-> +	struct edt_ft5x06_ts_data *tsdata = i2c_get_clientdata(client);
-> +	int ret;
->  
-> -	if (device_may_wakeup(dev))
-> +	if (device_may_wakeup(dev)) {
->  		enable_irq_wake(client->irq);
+Hi Luca,
 
-Can we start with preliminary patch dropping calls to enable_irq_wake()
-and disable_irq_wake() as device/PM core will tale care of configuring
-wake irqs properly for us, since we are now allowing I2C core to mark
-the interrupt as wake IRQ.
+On Tue, Nov 19, 2019 at 07:05:43PM +0100, Luca Weiss wrote:
+> This adds support for the Ilitek ili2120 touchscreen found in the
+> Fairphone 2 smartphone.
 
-So we need to do:
-
-	if (device_may_wakeup(dev))
-		return 0;
-
-	<execute power down sequence>
+The driver has been reworked recently, please update on top of the
+latest version.
 
 Thanks.
 
