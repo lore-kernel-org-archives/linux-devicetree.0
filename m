@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1456C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 19:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCC6C432C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 19:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67B18215E5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 19:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E377621774
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 19:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575314026;
-	bh=xPa0X6R5T4e6CEa2s0SLF/tQNyowSG/AuLe3v9UhiTU=;
+	s=default; t=1575314194;
+	bh=a6t1Y8SGT7pSf3rULBWUhEZkTYHWD3R+C5WYp9Mtkqw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lKwSRom0DFbviEAw2UAUY/l8yf6g1h1aRnSEOS8kUMY1gChVrHzKHOkLytLiN0K8e
-	 RjFTbXA2s59sfy1AbNoDyC1Sp9SQl4eWlzbWsTUo9gJtoasZSkhmw8dNZwYGbd1eQy
-	 oCFWEhneWJhHEQnaUhVhWxb7om9c+Uoue84PGx+k=
+	b=BkOaX3D89b1Jq50h7iYIFgorBUwslzBjjieowVM3Y5KblRwxCtKjyouUOvWPtoYle
+	 L6MtMfoZKUHZ8+zSV58c3w08EUFXjza2tCIDpjIs8wau5M+YK4XaM4SrWHH1NZd75O
+	 H7cWaSBHojezqOjLNvXJlyWoqwtlG8x8R2KC9SY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfLBTNp (ORCPT
+        id S1727730AbfLBTQd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 14:13:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48798 "EHLO mail.kernel.org"
+        Mon, 2 Dec 2019 14:16:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727580AbfLBTNp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Dec 2019 14:13:45 -0500
+        id S1727686AbfLBTQd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 14:16:33 -0500
 Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D9D420848;
-        Mon,  2 Dec 2019 19:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 493AF214AF;
+        Mon,  2 Dec 2019 19:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575314024;
-        bh=xPa0X6R5T4e6CEa2s0SLF/tQNyowSG/AuLe3v9UhiTU=;
+        s=default; t=1575314192;
+        bh=a6t1Y8SGT7pSf3rULBWUhEZkTYHWD3R+C5WYp9Mtkqw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OFfA4XXSIukBhUqFK/VHx0x3IEaSdakYD9V9S4aW89Q9zq5PeKYQWEONDx6t7Ze21
-         QBkk/jmZyCAKUK/lRxI6bex7+avShuMTRHoOJMBy4RO2DJIv//sUdG0ohk2zXOXLBG
-         Sm3vNETJvv8pNx6Ctq25FodpLb7DUWdyauDV8N2c=
-Date:   Mon, 2 Dec 2019 20:13:42 +0100
+        b=B2Qw9kdE+gwwP5bF0EJCih5sClV0MRDEfGH2vmu0pZD+l+jrBimZsJuztk5/991Ly
+         O251kVtz1NxT0EIr05Rf7TdQP5wwUdFeh5vB9/ZrhbT5HMZVijUUorG7SIdjYGMxnS
+         rQZ1PdHUKNI9lPCYhEjoGJ8ApOJ87xvVy1RrJ8pU=
+Date:   Mon, 2 Dec 2019 20:16:30 +0100
 From:   Maxime Ripard <mripard@kernel.org>
 To:     Stefan Mavrodiev <stefan@olimex.com>
 Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
@@ -48,51 +48,50 @@ Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>,
-        linux-sunxi@googlegroups.com, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] arm64: dts: allwinner: a64: olinuxino: Fix eMMC
- supply regulator
-Message-ID: <20191202191342.7ttegde7jewn4xra@gilmour.lan>
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 2/3] arm64: dts: allwinner: a64: olinuxino: Add bank
+ supply regulators
+Message-ID: <20191202191630.55itysenwpxdrhfj@gilmour.lan>
 References: <20191129113941.20170-1-stefan@olimex.com>
- <20191129113941.20170-2-stefan@olimex.com>
+ <20191129113941.20170-3-stefan@olimex.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="q764rlr5yjz4gv75"
+        protocol="application/pgp-signature"; boundary="e67e634t6wlkd7vk"
 Content-Disposition: inline
-In-Reply-To: <20191129113941.20170-2-stefan@olimex.com>
+In-Reply-To: <20191129113941.20170-3-stefan@olimex.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---q764rlr5yjz4gv75
+--e67e634t6wlkd7vk
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Nov 29, 2019 at 01:39:39PM +0200, Stefan Mavrodiev wrote:
-> A64-OLinuXino-eMMC uses 1.8V for eMMC supply. This is done via a triple
-> jumper, which sets VCC-PL to either 1.8V or 3.3V. This setting is different
-> for boards with and without eMMC.
+On Fri, Nov 29, 2019 at 01:39:40PM +0200, Stefan Mavrodiev wrote:
+> Allwinner A64 SoC has separate supplies for PC, PD, PE, PG and PL. This
+> patch adds regulators for them to the pinctrl node.
 >
-> This is not a big issue for DDR52 mode, however the eMMC will not work in
-> HS200/HS400, since these modes explicitly requires 1.8V.
+> Exception is PL which is used by the RSB bus. To avoid circular
+> dependencies, VCC-PL is omitted.
 >
-> Fixes: 94f68f3a4b2a ("arm64: dts: allwinner: a64: Add A64 OlinuXino board (with eMMC)")
-> Cc: stable@vger.kernel.org # v5.4
+> On boards with eMMC, VCC-PC is supplied by ELDO1, instead of DCDC1.
+>
 > Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
 
-Applied, thanks!
+Queued for 5.6, thanks!
 Maxime
 
---q764rlr5yjz4gv75
+--e67e634t6wlkd7vk
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXeViZgAKCRDj7w1vZxhR
-xVnqAQCN+/fEAa8RYdLvkoYtRzpPTIeiTCvNTyfWakMZS9YKvQEAnFfgnu6qHLWp
-6DXcmrsNxdL1AzYEYmpIY1KhpG4BdgQ=
-=ZRr1
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXeVjDgAKCRDj7w1vZxhR
+xS4NAQDZhesDivpERrXEzobJO+Q/JbNqNrZlcfOynVfPsfUvkAEAiDtcDNlVg4f3
+Bw029YZyhs6d/m38NqQXo2VJx6QRDwg=
+=6lca
 -----END PGP SIGNATURE-----
 
---q764rlr5yjz4gv75--
+--e67e634t6wlkd7vk--
