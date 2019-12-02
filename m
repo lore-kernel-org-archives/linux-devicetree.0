@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2D2C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 14:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7C7C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 14:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 400502071F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 14:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 956F22071F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 14:41:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oh/2eLfC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vd7wNQxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfLBOlZ (ORCPT
+        id S1727484AbfLBOl3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 09:41:25 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42666 "EHLO
+        Mon, 2 Dec 2019 09:41:29 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38567 "EHLO
         mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727362AbfLBOlZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 09:41:25 -0500
-Received: by mail-pf1-f195.google.com with SMTP id l22so6105691pff.9
-        for <devicetree@vger.kernel.org>; Mon, 02 Dec 2019 06:41:24 -0800 (PST)
+        with ESMTP id S1727362AbfLBOl3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 09:41:29 -0500
+Received: by mail-pf1-f195.google.com with SMTP id x185so5854059pfc.5
+        for <devicetree@vger.kernel.org>; Mon, 02 Dec 2019 06:41:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=w/Mrna2Khv21UvkkLKLf8+wkF9y7ELMmGnTl9xg6qEs=;
-        b=Oh/2eLfC0XDRjQkZGpdyye7rIWda5/CX+OOdOlDtTTmlKYcc4Z151RrD0lgc6af+/P
-         bDdjFqmEP9MYR9GDEMe8IgNDbrik5/U+h2iT92/LhRs0vDQW/CPTXti5P1iwUIG7H3nP
-         Lus0lG/bCoI6DuRRj4vJSP3PbzRNsOoP7RpxmTNrYLUwyXlDVSVj3zXTuc7A56WKF++o
-         2PRXYmECjryOUJsG+i4uOxe/QnTbDcxPTPSCFHNyl0wlk6UD6PzecAWDKLpK4+6ZRpPX
-         piR8gEa8pEBGlmbVXmuRwK4rDFGKcnzM3oUCO/cJolALucf6uH9U8ehH0RK8IjHv91Mg
-         sikA==
+        bh=ynHcIuOVTswBCOhsCj7rfF7reyKlOrh1x0LK0XaYbgU=;
+        b=Vd7wNQxLC70prHxTvnC6Kr+ZmcwgZkxRteFJKyH29YSmNlW9y0xzd09zWelHW0xX2Z
+         zO6mHnKhU6J3aZUgchesn/GRUKfZG5QHCmdyj/Jj1uOoDk1v2wJTv6kmpySFFT7FtPQK
+         T5QTz9xmOPGlkrBmiSt6FwHFln8bQpa7z3G41oXpa7GwesNR+BomXNeSl4MHu3arunrC
+         Y+8ojLmHJVwwbk5Gu+uYwp39EjaJ5p1xY7fzyOsCzyWjapN8ZTQ6/EfvO+uN7yJFuN/S
+         KHkWBmBaNIwplMLBYBNuUiLvpM/bIeeqL6EbHQB+wZTnPPX5HImtQ3atr+NOwR9BiLak
+         w12A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=w/Mrna2Khv21UvkkLKLf8+wkF9y7ELMmGnTl9xg6qEs=;
-        b=r250p/RVgzwyPN7sHjaBErDeRd7SLelFmaS3Py9ehub+uBUuOH40d726E3+MW+9Tt7
-         39ilOkleV24VOVVGGYRkpwRMubgc5h4TQmA1InPSoko1ZTskI5lw1bUY89XImOPsBZ+o
-         dQWtRhcmQ6iXnmDN/LrmQ+eQbqtu3vVJ22AJcb5adkuLYNidKCuR/CxK862d1cRbOBYK
-         6CuOumcczV70Vqqy/UZZ+nJ1kQuUjmQ+aIIouHsMmtxYFSbTl2AnoLLyZonNHVaHorZk
-         CYi6BA7WcKuOBcNF0RbNIvHAZAA85MWDGf6rej0mC0v046cJuDRxqo1aFsWe14IcCUp+
-         p0CQ==
-X-Gm-Message-State: APjAAAV2TaP/OLFEzsPBhzHcSaq3Mfe3zMmh5BZnMTVl84je/rl/DP0Y
-        L22Z1gGfEDgAHc/cm/5IWFq7hg==
-X-Google-Smtp-Source: APXvYqznAknYoi41MG6MIjzLzXVsivc5YQY7oG+bjnezRmsZh0eylJSvbqibyZiX/Ebx6EoUmXZMzg==
-X-Received: by 2002:aa7:91c7:: with SMTP id z7mr73521893pfa.111.1575297683922;
-        Mon, 02 Dec 2019 06:41:23 -0800 (PST)
+        bh=ynHcIuOVTswBCOhsCj7rfF7reyKlOrh1x0LK0XaYbgU=;
+        b=IOAA1PkiVU6YYP83QGGEjfGMdAYlD0SymniLXoW99r8c8O+F83JUVvoEIzp2ucg1/j
+         zhTAMYefemW5FlPB6S6U3weXkFKM+3jVTT161dLpMcBZhq10MMxXdHk9+TOG7cwpeCX7
+         BxmL3szJx7+EA/SUtTHfmlUzQhXQBHwUn3BGXhNkyx0xC8e3fFgDyWxptIS1nT07sKe8
+         M38YmiPPpdXbS3kUUOPM0t4BufHkGEkiiga6nUrYx00e/jiyBX6ZBEbtBTL3CvoYXniN
+         tJn7+mZb7ACMdxyo8Td+XcKznQHUE/ZrJIC3DNB95nSnXwNHXiv6CZKNd0HMM12uvAcn
+         R/fA==
+X-Gm-Message-State: APjAAAXXNjgCH7FTlolzI3ikGoqAKEQO1uPKXJ0qQwzQNTKxA7tVE0CK
+        3+ovnKvsfopxJKfMmu3zLZ70hS73U/8=
+X-Google-Smtp-Source: APXvYqyk+VIxjHsImpz7nqyjaZEmXbHiLmq4wAU1mqJMKNB+OT9pHjZLrrYW973O/FfxD/ct+oXvUQ==
+X-Received: by 2002:a62:1a97:: with SMTP id a145mr5768870pfa.244.1575297686889;
+        Mon, 02 Dec 2019 06:41:26 -0800 (PST)
 Received: from localhost.localdomain (li519-153.members.linode.com. [66.175.222.153])
-        by smtp.gmail.com with ESMTPSA id f30sm33985090pga.20.2019.12.02.06.41.21
+        by smtp.gmail.com with ESMTPSA id f30sm33985090pga.20.2019.12.02.06.41.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 06:41:23 -0800 (PST)
+        Mon, 02 Dec 2019 06:41:26 -0800 (PST)
 From:   Jun Nie <jun.nie@linaro.org>
 To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         adrian.hunter@intel.com, linux-mmc@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH 1/4] mmc: sdhci: Add delay after power off
-Date:   Mon,  2 Dec 2019 22:41:01 +0800
-Message-Id: <20191202144104.5069-2-jun.nie@linaro.org>
+Subject: [PATCH 2/4] mmc: sdhci: dt: Add DMA boundary and HS400 properties
+Date:   Mon,  2 Dec 2019 22:41:02 +0800
+Message-Id: <20191202144104.5069-3-jun.nie@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191202144104.5069-1-jun.nie@linaro.org>
 References: <20191202144104.5069-1-jun.nie@linaro.org>
@@ -69,48 +69,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add delay after power off to ensure that full power cycle is
-successful. Otherwise, some controllers, at lease for Hisilicon
-eMMC controller, may not be unstable sometimes for full power
-cycle operation.
+DMA memory cannot cross specific boundary on some controller, such as 128MB
+on SDHCI Designware. Add sdhci-dma-mem-boundary property to split DMA
+operation in such case.
+
+sdhci-ctrl-hs400 specify the HS400 mode setting for register
+SDHCI_HOST_CONTROL2(offset 0x3E:bit[2:0]). Because this value is not
+defined in SDHC Standard specification.
 
 Signed-off-by: Jun Nie <jun.nie@linaro.org>
 ---
- drivers/mmc/host/sdhci.c | 7 +++++++
- drivers/mmc/host/sdhci.h | 2 ++
- 2 files changed, 9 insertions(+)
+ Documentation/devicetree/bindings/mmc/sdhci.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 3140fe2e5dba..a654f0aeb438 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1761,6 +1761,13 @@ void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
- 		sdhci_writeb(host, 0, SDHCI_POWER_CONTROL);
- 		if (host->quirks2 & SDHCI_QUIRK2_CARD_ON_NEEDS_BUS_ON)
- 			sdhci_runtime_pm_bus_off(host);
-+
-+		/*
-+		 * Some controllers need an extra 100ms delay to secure
-+		 * full power cycle is successful.
-+		 */
-+		if (host->quirks2 & SDHCI_QUIRK2_DELAY_AFTER_POWER_OFF)
-+			msleep(100);
- 	} else {
- 		/*
- 		 * Spec says that we should clear the power reg before setting
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 0ed3e0eaef5f..0e6f97eaa796 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -482,6 +482,8 @@ struct sdhci_host {
-  * block count.
-  */
- #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
-+/* Controllers need an extra 100ms delay to make sure power off completely */
-+#define SDHCI_QUIRK2_DELAY_AFTER_POWER_OFF		(1<<19)
- 
- 	int irq;		/* Device IRQ */
- 	void __iomem *ioaddr;	/* Mapped address */
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci.txt b/Documentation/devicetree/bindings/mmc/sdhci.txt
+index 0e9923a64024..e6d7feb9a741 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci.txt
+@@ -11,3 +11,11 @@ Optional properties:
+ - sdhci-caps: The sdhci capabilities register is incorrect. This 64bit
+   property corresponds to the bits in the sdhci capability register. If the
+   bit is on in the property then the bit should be turned on.
++- sdhci-dma-mem-boundary: The sdhci controller DMA memory space boundary.
++  If the controller's DMA cannot cross a specific memory space boundary,
++  such as 128MB, set this value in dt and driver will split the DMA
++  operation when crossing such boundary.
++- sdhci-ctrl-hs400: The HS400 is not defined in SDHC Standard specification
++  for SDHCI_HOST_CONTROL2(offset 0x3E:bit[2:0]). Different controllers have
++  have different value for HS400 mode. If 0x5 is not the HS400 mode value
++  for your controller, you should specify the value with this property.
 -- 
 2.17.1
 
