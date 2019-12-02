@@ -2,63 +2,82 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FB6C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 266D1C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 562EA20865
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F5C21774
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:48:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="Qa0+r9Xi";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="Qa0+r9Xi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfLBRg2 (ORCPT
+        id S1727453AbfLBRsl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:36:28 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:45763 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727821AbfLBRg1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 12:36:27 -0500
-X-Originating-IP: 90.65.102.129
-Received: from localhost (lfbn-1-1480-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 9FC702000D;
-        Mon,  2 Dec 2019 17:36:25 +0000 (UTC)
-Date:   Mon, 2 Dec 2019 18:36:25 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Eugen.Hristev@microchip.com
-Cc:     Ludovic.Desroches@microchip.com, robh+dt@kernel.org,
-        Nicolas.Ferre@microchip.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: at91: sama5d27_som1_ek: add i2c filters
- properties
-Message-ID: <20191202173625.GG909634@piout.net>
-References: <1574674036-5589-1-git-send-email-eugen.hristev@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574674036-5589-1-git-send-email-eugen.hristev@microchip.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Mon, 2 Dec 2019 12:48:41 -0500
+Received: from node.akkea.ca ([192.155.83.177]:34684 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727420AbfLBRsl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 12:48:41 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id D24274E200E;
+        Mon,  2 Dec 2019 17:48:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1575308920; bh=qfKdNZ1HBtViTTD5XHaCa9z4hvXMR4eI/MrZct97QqY=;
+        h=From:To:Cc:Subject:Date;
+        b=Qa0+r9XiQhfbN0jBdjUEoNVNnhYSz41LKL/xNHwYfsxcZHN7V4F5B3vsUAacwh+ns
+         nADerYPHg1nVDYeHK8NLSEVFX/H4TDgEtEYWQUpqXIxxQrCRxmwki0NlCRTVZvjzVy
+         sOjekbkH75Cp9Ge7px6MdRYZg+ozDIJftgaFfPG8=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id JuvcBJccax_v; Mon,  2 Dec 2019 17:48:40 +0000 (UTC)
+Received: from thinkpad-tablet.cg.shawcable.net (S0106905851b613e9.cg.shawcable.net [70.77.244.40])
+        by node.akkea.ca (Postfix) with ESMTPSA id 825844E2003;
+        Mon,  2 Dec 2019 17:48:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1575308920; bh=qfKdNZ1HBtViTTD5XHaCa9z4hvXMR4eI/MrZct97QqY=;
+        h=From:To:Cc:Subject:Date;
+        b=Qa0+r9XiQhfbN0jBdjUEoNVNnhYSz41LKL/xNHwYfsxcZHN7V4F5B3vsUAacwh+ns
+         nADerYPHg1nVDYeHK8NLSEVFX/H4TDgEtEYWQUpqXIxxQrCRxmwki0NlCRTVZvjzVy
+         sOjekbkH75Cp9Ge7px6MdRYZg+ozDIJftgaFfPG8=
+From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
+To:     kernel@puri.sm
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>
+Subject: [PATCH 0/2] Add the broadmobi BM818
+Date:   Mon,  2 Dec 2019 10:48:29 -0700
+Message-Id: <20191202174831.13638-1-angus@akkea.ca>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 25/11/2019 09:27:41+0000, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Add properties for i2c filters for i2c0 and i2c1 on sama5d27_som1_ek.
-> Noise is affecting communication on i2c for example when connecting i2c
-> camera sensors.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
->  arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-Applied, thanks.
+The broadmobi uses slightly different parameters from the option modems
+so add the paramters and document them.
+
+Angus Ainslie (Purism) (2):
+  sound: codecs: gtm601: add Broadmobi bm818 sound profile
+  ASoC: gtm601: add the broadmobi interface
+
+ .../devicetree/bindings/sound/gtm601.txt      | 10 +++++--
+ sound/soc/codecs/gtm601.c                     | 29 +++++++++++++++++--
+ 2 files changed, 35 insertions(+), 4 deletions(-)
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.17.1
+
