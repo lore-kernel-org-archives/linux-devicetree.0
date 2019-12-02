@@ -2,153 +2,114 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE746C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 06:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A693C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 06:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F04520715
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 06:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB6E218AC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 06:12:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="ic8mng/k";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UFQ+ITXG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbfLBGBW (ORCPT
+        id S1725852AbfLBGMw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 01:01:22 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:20041 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfLBGBV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 01:01:21 -0500
-Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 2 Dec
- 2019 14:01:47 +0800
-Subject: Re: [PATCH v3 0/7] add Amlogic A1 clock controller driver
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191129144605.182774-1-jian.hu@amlogic.com>
- <1jwobi7lcy.fsf@starbuckisacylon.baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <63d776af-6ded-02d2-cc34-1b3733e2625b@amlogic.com>
-Date:   Mon, 2 Dec 2019 14:01:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 2 Dec 2019 01:12:52 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:41067 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725807AbfLBGMw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 01:12:52 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 85EBE22639;
+        Mon,  2 Dec 2019 01:12:50 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 02 Dec 2019 01:12:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=0RjErlsd2BgGPzWKY9035wj5+w
+        1sayMAH/KmpcDz7N0=; b=ic8mng/k1DqnwT6Gl3dHcq25QjL4puHw+CyRFrcjRO
+        SSY7IGpT8mmRmFsxz2qYv3Xc3b9vlyT4Xkfm99QJimK0YafQ+8HOHtAuZoqbNeCZ
+        G6u6uerhmJlfdm5cXkRHA+gZ3LjfIn0nzwUQW4PIRiFBXHXBFjuCm2+f/msR5ObV
+        /dod50vtchx47qZAvTxev57NgvkjflpWcE4NLA8KCW0Rd1iHWnFNCHBtRY/Rbpz8
+        s079MHvJo8fOtdV9CIzjlqTFeLxiwExMHhNBKnPMew7u9Na6/nb5L9FPqc4gOmFZ
+        laozeS1WEdrbw+/gAibQSjN2I1nvgcvhouLFBF/WjkjQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=0RjErlsd2BgGPzWKY
+        9035wj5+w1sayMAH/KmpcDz7N0=; b=UFQ+ITXGYvmYQjvyDNA2IYiO7w2MnBI1K
+        7x9B6Q0St7fwbUcJ4jsJuBKjdZxohm5U+ghYDuMkVWYnFyXPOFKINrbCKBZon5qP
+        RYkWFcK8cgT17qA+S3Ind7WAKDZ9Gpo6M6A4xHtTvlF/Czsugw8ZDXrxMYDf746t
+        1YXSc53OO7ZiM8d1VxLR7CJx5m7ztoNs2CTvVXc8NC6AciC/7A5qznHxBJIB6/Tv
+        1kllmuxdxY08QpsYdwPRM8gOIVaRp1WxYh+HFbpxXebk3L+oLRtLAXwSrrVTDXwH
+        xSVnOW8yl8mg+kAPJt63ldKiMlnKvk0eT+aZnfcdFGbUCUBcOGy1w==
+X-ME-Sender: <xms:YKvkXTtUo9MuWIb4KRGwNzRSB6KEmk60U2YiyaFwcq6-DNMnor8gww>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejgedgleegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
+    ihgurdgruheqnecukfhppeduudekrddvuddurdelvddrudefnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgep
+    td
+X-ME-Proxy: <xmx:YKvkXQ1ffOumc3312OXu_BO_dhduMphO8uo0uIZE0SeR5zU9UVX1xQ>
+    <xmx:YKvkXbO3ESr9sYNGBCOALc6hnrwD1rbGdkvonL0h7minx4vzuGinNQ>
+    <xmx:YKvkXQUez-46vBL-lcju1Yhmy76kz6jjcdnItmBN6EiH85gXdEvmJA>
+    <xmx:YqvkXdbwbi_GhewCX739IsuQ7ztsMluU8SB46CIkruCFZDo5Y3r35w>
+Received: from mistburn.lan (unknown [118.211.92.13])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AE8D080062;
+        Mon,  2 Dec 2019 01:12:45 -0500 (EST)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-gpio@vger.kernel.org
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] pinctrl: aspeed-g6: USB and pinconf support
+Date:   Mon,  2 Dec 2019 16:44:25 +1030
+Message-Id: <20191202061432.3996-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1jwobi7lcy.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.99]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hello,
 
+This series adds USB and pinconf support to the AST2600 pincontrol driver. The
+patches have largely been developed by Johnny Huang from ASPEED and have been
+used for bringup and verification of the chip. The were developed around the
+time of the 5.4 merge window but I got distracted for a while and haven't had
+an opportunity to send them until now. They've had a run in the OpenBMC kernel
+tree and so shouldn't cause any issues, but given where we are for 5.5 I'm just
+getting them in early for 5.6 so we don't miss another release.
 
-On 2019/11/29 23:28, Jerome Brunet wrote:
-> 
-> On Fri 29 Nov 2019 at 15:45, Jian Hu <jian.hu@amlogic.com> wrote:
-> 
->> add support for Amlogic A1 clock driver, the clock includes
->> three parts: peripheral clocks, pll clocks, CPU clocks.
->> sys pll and CPU clocks will be sent in next patch.
->>
->> Changes since v1 at [2]:
-> 
-> v2 or v1 ??
-It is v2 here, I will fix it in next version.
-> 
->> -add probe function for A1
->> -seperate the clock driver into two patch
->> -change some clock flags and ops
->> -add support for a1 PLL ops
->> -add A1 clock node
->>
->> Changes since v1 at [1]:
->> -place A1 config alphabetically
->> -add actual reason for RO ops, CLK_IS_CRITICAL, CLK_IGNORE_UNUSED
->> -separate the driver into two driver: peripheral and pll driver
->> -delete CLK_IGNORE_UNUSED flag for pwm b/c/d/e/f clock, dsp clock
->> -delete the change in Kconfig.platforms, address to Kevin alone
->> -remove the useless comments
->> -modify the meson pll driver to support A1 PLLs
->>
->> [1] https://lkml.kernel.org/r/1569411888-98116-1-git-send-email-jian.hu@amlogic.com
->> [2] https://lkml.kernel.org/r/1571382865-41978-1-git-send-email-jian.hu@amlogic.com
->>
->> Jian Hu (7):
->>    dt-bindings: clock: meson: add A1 PLL clock controller bindings
->>    clk: meson: add support for A1 PLL clock ops
->>    clk: meson: eeclk: refactor eeclk common driver to support A1
->>    clk: meson: a1: add support for Amlogic A1 PLL clock driver
->>    dt-bindings: clock: meson: add A1 peripheral clock controller bindings
->>    clk: meson: a1: add support for Amlogic A1 Peripheral clock driver
->>    arm64: dts: meson: add A1 PLL and periphs clock controller
-> 
-> The arm64 is for the DT maintainer. Please send it separately after this
-> series is applied (if it gets applied)
-> 
->> Please fix the underlying issue, then you can post your series again.
-> 
-> This was a comment on your v2. Did you fix the orphan/ordering issue ?
+Please review!
 
-> If you did, you probably should mention it here.
-Yes, I have fixed it in A1 periphs driver, not fixed it in CCF.
-I have realised a probe function for A1 periphs driver, Not using the 
-common probe interface in meson-eeclk.c. Skip registering xtal_fixedpll 
-and xtal_hifipll clocks when register all periphs clocks. And after the 
-provider registration. Registering xtal_fixedpll and xtal_hifipll clock 
-alone.
+Andrew Jeffery (1):
+  dt-bindings: pinctrl: aspeed-g6: Add USB functions and groups
 
-I will add some comments here about orphan issue.
+Johnny Huang (6):
+  pinctrl: aspeed-g6: Add AST2600 I3C1 and I3C2 pinmux config
+  pinctrl: aspeed-g6: Add support for the AST2600 USB pinmux
+  pinctrl: aspeed: Add ASPEED_SB_PINCONF() helper
+  pinctrl: aspeed: Move aspeed_pin_config_map to separate source file
+  pinctrl: aspeed: Use masks to describe pinconf bitfields
+  pinctrl: aspeed-g6: Add AST2600 pinconf support
 
-And I have noticed you have fixed it in CCF,  I will update the A1 
-periphs driver, drop the probe function in the next vertion.
-Could I send the v4 after your patch 'clk: walk orphan list on clock 
-provider registration' is applied? Or I can send v4 based on your patch now.
+ .../pinctrl/aspeed,ast2600-pinctrl.yaml       |   9 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c    | 170 ++++----
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c    | 212 +++++-----
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c    | 387 +++++++++++++++++-
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c       |  50 +--
+ drivers/pinctrl/aspeed/pinctrl-aspeed.h       |  38 +-
+ drivers/pinctrl/aspeed/pinmux-aspeed.h        |   1 +
+ 7 files changed, 640 insertions(+), 227 deletions(-)
 
-> If you did not, I'm probably not going to review this further until you do.
-> 
->>
->>   .../bindings/clock/amlogic,a1-clkc.yaml       |   70 +
->>   .../bindings/clock/amlogic,a1-pll-clkc.yaml   |   56 +
->>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |   26 +
->>   drivers/clk/meson/Kconfig                     |   20 +
->>   drivers/clk/meson/Makefile                    |    2 +
->>   drivers/clk/meson/a1-pll.c                    |  334 +++
->>   drivers/clk/meson/a1-pll.h                    |   56 +
->>   drivers/clk/meson/a1.c                        | 2309 +++++++++++++++++
->>   drivers/clk/meson/a1.h                        |  120 +
->>   drivers/clk/meson/clk-pll.c                   |   21 +
->>   drivers/clk/meson/clk-pll.h                   |    1 +
->>   drivers/clk/meson/meson-eeclk.c               |   59 +-
->>   drivers/clk/meson/meson-eeclk.h               |    2 +
->>   drivers/clk/meson/parm.h                      |    1 +
->>   include/dt-bindings/clock/a1-clkc.h           |   98 +
->>   include/dt-bindings/clock/a1-pll-clkc.h       |   16 +
->>   16 files changed, 3181 insertions(+), 10 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
->>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
->>   create mode 100644 drivers/clk/meson/a1-pll.c
->>   create mode 100644 drivers/clk/meson/a1-pll.h
->>   create mode 100644 drivers/clk/meson/a1.c
->>   create mode 100644 drivers/clk/meson/a1.h
->>   create mode 100644 include/dt-bindings/clock/a1-clkc.h
->>   create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
-> 
-> .
-> 
+-- 
+2.20.1
+
