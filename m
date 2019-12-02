@@ -2,126 +2,170 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D6AC432C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 16:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA307C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 16:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36AB52053B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 16:12:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ig1O7d6G"
+	by mail.kernel.org (Postfix) with ESMTP id 993712073C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 16:26:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575303985;
+	bh=yldwc/Z6MA1+VHq1mho9ORxlk97SJEe1yTyihqlVpb8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rw+r85fBBBeafWtCkT/+muZ5dCIFcyWiWQhE9NC/5AasVPOkEn251l5jYcMKXHS1g
+	 2QSzXkECxZhsWAzWwCkmOB9cXppsXT0IDgfxYPRjsf05gg2eY+CMminbgZUOxEowOt
+	 JnRpUmc/1Q43DJYo2e0z3/jSRjUpJsAYaR3Vc/KA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfLBQMR (ORCPT
+        id S1727502AbfLBQ0Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 11:12:17 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43798 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727471AbfLBQMR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 11:12:17 -0500
-Received: by mail-wr1-f67.google.com with SMTP id n1so45041802wra.10
-        for <devicetree@vger.kernel.org>; Mon, 02 Dec 2019 08:12:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7Xv8o+WsUdwWC7CiaXpsHd5QUxK044+HKFw9W9npptk=;
-        b=ig1O7d6GsDt4NBwP75X4Y5ujFXKgklak77SWNGcBuqnwXLGpk+P5XN90JKiEaf2DlT
-         WrVdXQtvxPygQzaAZx5Wyn09al6SJ3AefSjaSRjKH65+vqyjjGV3AAI7blYUMk6bxxNU
-         imZoAbvk8e7WIQaP2QJWb/dcdykPO0gubpktQ7rXHibDskvWbSc6e4RfKGeymd1SEHkQ
-         rN4NCNH9RCYgSR8vJIq6oJKWcWEeRYOub/IGzL0nHFyW8U+kqcHiSk1Jtzj7DgCmQ2b1
-         6mAr45FJYKlH47wLqjdCfiLeG38To+D9j+tZ1HBGdU1DBkzyDaikMHe5JMWjDCUZBREU
-         +AIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7Xv8o+WsUdwWC7CiaXpsHd5QUxK044+HKFw9W9npptk=;
-        b=OhymhxdQoSTOwP9IJAjh/ihIavVzESWk8yC/LwEcmSOUgpjh5nG7uph2O+mP7St2xz
-         GD9gUjzhjUPXPfIfJz40sWCmalpmhTw5eX9kXPHGZrmKKqbzGsjxWbpfgoRe5pT3j2sl
-         bYWYe4NeZaZBnNK5jDUmT5BPlH6lnam9jXtN5sZS7Ibqw7hGxdACMlLCLbX2pnJmJCx1
-         8NnAaEVqKFuYVshOpAMuAby6gi3+xvMWubAZfGsnp92LDj9KrraqMn8141gmElX00TqM
-         2DLul2GFMw0mVkYf8e0Jl9HXKT66URkmfDdz1mBKQakLU94jTkaaE8Hi8nZ7ebzMbEza
-         GY0A==
-X-Gm-Message-State: APjAAAVYayMmX4e9WTz9cRq3F+6RPbT+KvIFS8Cb95qWS/NxrlOdErE4
-        AnANIS8FNGMZ/FisJ93OII5493eJ9pe+0gY+g1V4tg==
-X-Google-Smtp-Source: APXvYqxqte31rdFQPjtRI2d0z8l6rqekmUjNbkTYkhGQNfoYXbCoNDt/WGK3fQmslUDfdpQIN0cF13ot7mHRN/DXrE0=
-X-Received: by 2002:a5d:5345:: with SMTP id t5mr34600649wrv.0.1575303135165;
- Mon, 02 Dec 2019 08:12:15 -0800 (PST)
+        Mon, 2 Dec 2019 11:26:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727484AbfLBQ0Z (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 11:26:25 -0500
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 144B12073C;
+        Mon,  2 Dec 2019 16:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575303984;
+        bh=yldwc/Z6MA1+VHq1mho9ORxlk97SJEe1yTyihqlVpb8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fqJ+7zLWZAgiTKrSRyHUV5V0bNtcQm1gNjjnXYlpESE9V6ZrADlt0rtVaNv8PboHD
+         HVQyUIrqjDxNUMBeTYHrpWC1yR/Z7pxyQHN4y65J+DslZdEAaFekavSMYzuhwEs5Xk
+         1CIlE95uCfuP8sRzTtZ4TAjlXdMnDYvgXLGCDIbc=
+Received: by mail-qk1-f181.google.com with SMTP id q28so28530qkn.10;
+        Mon, 02 Dec 2019 08:26:24 -0800 (PST)
+X-Gm-Message-State: APjAAAUgU5k62SDtdi/6F9lwfBvB3xRID/TYk1iSTNmZQxeYVK9eehKA
+        Gp18WdaHP3BSLcV3g9ttSzVyalLzf6XpDkW+Cw==
+X-Google-Smtp-Source: APXvYqy+Ji9mce4aB8DbJH5nRjKgp1CutJ2doJc952RWmxbZU8ura3b3pvFQQuFPyXDQLffIiY0xb+L15fjEIsfZvxA=
+X-Received: by 2002:a37:81c6:: with SMTP id c189mr33951032qkd.223.1575303983133;
+ Mon, 02 Dec 2019 08:26:23 -0800 (PST)
 MIME-Version: 1.0
-References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
- <1574864578-467-4-git-send-email-neal.liu@mediatek.com> <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
- <1575027046.24848.4.camel@mtkswgap22>
-In-Reply-To: <1575027046.24848.4.camel@mtkswgap22>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 2 Dec 2019 16:12:09 +0000
-Message-ID: <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
-To:     Neal Liu <neal.liu@mediatek.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>
-Cc:     Lars Persson <lists@bofh.nu>, Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?B?Q3J5c3RhbCBHdW8gKOmDreaZtik=?= <Crystal.Guo@mediatek.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
+References: <20191113171505.26128-1-miquel.raynal@bootlin.com>
+ <20191113171505.26128-4-miquel.raynal@bootlin.com> <20191118221341.GA30937@bogus>
+ <20191125151523.0766b3b7@xps13>
+In-Reply-To: <20191125151523.0766b3b7@xps13>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 2 Dec 2019 10:26:11 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJR1OLexi9bArn0ZjNYB+d7eRTYpi4q0-eU93oVcz1AMA@mail.gmail.com>
+Message-ID: <CAL_JsqJR1OLexi9bArn0ZjNYB+d7eRTYpi4q0-eU93oVcz1AMA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] dt-bindings: mtd: Describe mtd-concat devices
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Mark Brown <broonie@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bernhard Frauendienst <kernel@nospam.obeliks.de>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-(adding some more arm64 folks)
-
-On Fri, 29 Nov 2019 at 11:30, Neal Liu <neal.liu@mediatek.com> wrote:
+On Mon, Nov 25, 2019 at 8:15 AM Miquel Raynal <miquel.raynal@bootlin.com> w=
+rote:
 >
-> On Fri, 2019-11-29 at 18:02 +0800, Lars Persson wrote:
-> > Hi Neal,
-> >
-> > On Wed, Nov 27, 2019 at 3:23 PM Neal Liu <neal.liu@mediatek.com> wrote:
+> Hi Rob,
+>
+> Rob Herring <robh@kernel.org> wrote on Mon, 18 Nov 2019 16:13:41 -0600:
+>
+> > On Wed, Nov 13, 2019 at 06:15:04PM +0100, Miquel Raynal wrote:
+> > > From: Bernhard Frauendienst <kernel@nospam.obeliks.de>
 > > >
-> > > For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
-> > > entropy sources is not accessible from normal world (linux) and
-> > > rather accessible from secure world (ATF/TEE) only. This driver aims
-> > > to provide a generic interface to ATF rng service.
+> > > The main use case to concatenate MTD devices is probably SPI-NOR
+> > > flashes where the number of address bits is limited to 24, which can
+> > > access a range of 16MiB. Board manufacturers might want to double the
+> > > SPI storage size by adding a second flash asserted thanks to a second
+> > > chip selects which enhances the addressing capabilities to 25 bits,
+> > > 32MiB. Having two devices for twice the size is great but without mor=
+e
+> > > glue, we cannot define partition boundaries spread across the two
+> > > devices. This is the gap mtd-concat intends to address.
 > > >
+> > > There are two options to describe concatenated devices:
+> > > 1/ One flash chip is described in the DT with two CS;
+> > > 2/ Two flash chips are described in the DT with one CS each, a virtua=
+l
+> > > device is also created to describe the concatenation.
+> > >
+> > > Solution 1/ presents at least 3 issues:
+> > > * The hardware description is abused;
+> > > * The concatenation only works for SPI devices (while it could be
+> > >   helpful for any MTD);
+> > > * It would require a lot of rework in the SPI core as most of the
+> > >   logic assumes there is and there always will be only one CS per
+> > >   chip.
 > >
-> > I am working on several SoCs that also will need this kind of driver
-> > to get entropy from Arm trusted firmware.
-> > If you intend to make this a generic interface, please clean up the
-> > references to MediaTek and give it a more generic name. For example
-> > "Arm Trusted Firmware random number driver".
-> >
-> > It will also be helpful if the SMC call number is configurable.
-> >
-> > - Lars
+> > This seems ok if all the devices are identical.
 >
-> Yes, I'm trying to make this to a generic interface. I'll try to make
-> HW/platform related dependency to be configurable and let it more
-> generic.
-> Thanks for your suggestion.
+> This is not an option for Mark and I agree with him as we are faking
+> the reality: the two devices we want to virtually concatenate may be
+> two physically different devices. Binding them as one is lying.
 >
+> > > Solution 2/ also has caveats:
+> > > * The virtual device has no hardware reality;
+> > > * Possible optimizations at the hardware level will be hard to enable
+> > >   efficiently (ie. a common direct mapping abstracted by a SPI
+> > >   memories oriented controller).
+> >
+> > Something like this may be necessary if data is interleaved rather than
+> > concatinated.
+>
+> This is something that is gonna happen too, it is called "dual
+> parallel".
 
-I don't think it makes sense for each arm64 platform to expose an
-entropy source via SMC calls in a slightly different way, and model it
-as a h/w driver. Instead, we should try to standardize this, and
-perhaps expose it via the architectural helpers that already exist
-(get_random_seed_long() and friends), so they get plugged into the
-kernel random pool driver directly.
+Then it would be good to think about how that should look. Maybe
+there's overlap or maybe not.
 
-Note that in addition to drivers based on vendor SMC calls, we already
-have a RNG h/w driver based on OP-TEE as well, where the driver
-attaches to a standardized trusted OS interface identified by a UUID,
-and which also gets invoked via SMC calls into secure firmware.
+> > Solution 3
+> > Describe each device and partition separately and add link(s) from one
+> > partition to the next
+> >
+> > flash0 {
+> >   partitions {
+> >     compatible =3D "fixed-partitions";
+> >     concat-partition =3D <&flash1_partitions>;
+> >     ...
+> >   };
+> > };
+> >
+> > flash1 {
+> >   flash1_partition: partitions {
+> >     compatible =3D "fixed-partitions";
+> >     ...
+> >   };
+> > };
+>
+> I honestly don't see how this is different as solution 2/?
+
+It's a single new property rather than a whole binding for a virtual
+device. It's a minimal change to the DT. It would work with existing
+bootloaders (and other OSs and older kernels) without change except
+for the one concatenated partition.
+
+> In one case
+> we describe the partition concatenation in one subnode as a "link", in
+> the other we create a separate node to describe the link. Are you
+> strongly opposed as solution 2/?
+
+I'd prefer to not have virtual devices without good reason.
+
+> From a pure conceptual point of view,
+> is it really different than 3/?
+>
+>
+> Thanks,
+> Miqu=C3=A8l
