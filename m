@@ -2,605 +2,300 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208AFC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 09:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B0EC43215
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 09:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF8C20748
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 09:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAAEF21774
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 09:42:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="V4EK0qUs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfLBJjj (ORCPT
+        id S1726653AbfLBJmZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 04:39:39 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:43003 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfLBJjj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 04:39:39 -0500
-X-Originating-IP: 90.65.102.129
-Received: from localhost (lfbn-1-1480-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 9D30820012;
-        Mon,  2 Dec 2019 09:39:35 +0000 (UTC)
-Date:   Mon, 2 Dec 2019 10:39:35 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH v3 6/6] rtc: rtc-rc5t619: add ricoh rc5t619 RTC driver
-Message-ID: <20191202093935.GA909634@piout.net>
-References: <20191129212045.18325-1-andreas@kemnade.info>
- <20191129212045.18325-7-andreas@kemnade.info>
+        Mon, 2 Dec 2019 04:42:25 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:55688 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbfLBJmZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 04:42:25 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 81932DD;
+        Mon,  2 Dec 2019 10:42:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1575279741;
+        bh=CJ9EKy9GD3pmgiuuqszs9TmlcNonnvP01gpT9zZMShw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V4EK0qUsUWrspiB9A+zbhzHJgijD2tv2xBmg6vK0ZyUTrE55SygjtWGVe9qs1XXPV
+         Wr61yGx4Bon9ZNPPhIu9c7vA9UC4eslIyMhDCimsqn/JUewYnOoDvpphYucf4xs+GL
+         xMkd2GW6+g3EVAmCpGEEhns8KJ3IY7RItlmXE3fw=
+Date:   Mon, 2 Dec 2019 11:42:13 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Peter Rosin <peda@axentia.se>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v4 12/13] [HACK] drm/bridge: lvds-codec: Enforce device
+ specific compatible strings
+Message-ID: <20191202094213.GA4929@pendragon.ideasonboard.com>
+References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1573660292-10629-13-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20191119001616.GL5171@pendragon.ideasonboard.com>
+ <TY1PR01MB17706CE49FF46891A398C6A6C04C0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <20191119215155.GB17590@pendragon.ideasonboard.com>
+ <TY1PR01MB1770BF7EE9488A746632E1E0C04E0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <CAMuHMdVXu+yXyMbM0RtqAEgZbeu1gz4osjkEPjNQmqwbYM-pOg@mail.gmail.com>
+ <TY1PR01MB1770D82E521EBBCBE5F6D572C04A0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191129212045.18325-7-andreas@kemnade.info>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <TY1PR01MB1770D82E521EBBCBE5F6D572C04A0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 29/11/2019 22:20:45+0100, Andreas Kemnade wrote:
-> Add an RTC driver for the RTC device on Ricoh MFD rc5t619,
-> which is implemented as a variant of rn5t618.
-> 
-> rtc-range output:
-> Testing 2000-02-28 23:59:59.
-> OK
-> 
-> Testing 2038-01-19 03:14:07.
-> OK
-> 
-> Testing 2069-12-31 23:59:59.
-> OK
-> 
-> Testing 2099-12-31 23:59:59.
-> KO RTC_RD_TIME returned 22 (line 138)
-> 
-> Testing 2100-02-28 23:59:59.
-> KO RTC_SET_TIME returned 34 (line 122)
-> 
-> Testing 2106-02-07 06:28:15.
-> KO RTC_SET_TIME returned 34 (line 122)
-> 
-> Testing 2262-04-11 23:47:16.
-> KO RTC_SET_TIME returned 34 (line 122)
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Hi Fabrizio,
 
-> ---
-> - further output cleanup
-> - remove useless toggling of alarm flag in rtc probe
-> - alignment cleanup
+On Mon, Nov 25, 2019 at 11:17:25AM +0000, Fabrizio Castro wrote:
+> On 22 November 2019 08:17 Geert Uytterhoeven wrote:
+> > On Thu, Nov 21, 2019 at 5:00 PM Fabrizio Castro wrote:
+> >> On 19 November 2019 21:52 Laurent Pinchart wrote:
+> >>> On Tue, Nov 19, 2019 at 11:17:34AM +0000, Fabrizio Castro wrote:
+> >>>> On 19 November 2019 00:16 Laurent Pinchart wrote:
+> >>>>> On Wed, Nov 13, 2019 at 03:51:31PM +0000, Fabrizio Castro wrote:
+> >>>>>> The lvds-codec driver is a generic stub for transparent LVDS
+> >>>>>> encoders and decoders.
+> >>>>>> It's good practice to list a device specific compatible string
+> >>>>>> before the generic fallback (if any) in the DT node for the relevant
+> >>>>>> LVDS encoder/decoder, and it's also required by the dt-bindings.
+> >>>>>> A notable exception to the generic fallback mechanism is the case
+> >>>>>> of "thine,thc63lvdm83d", as documented in:
+> >>>>>> Documentation/devicetree/bindings/display/bridge/thine,thc63lvdm83d.txt
+> >>>>>> This patch enforces the adoption of a device specific compatible
+> >>>>>> string (as fist string in the list), by using markers for the
+> >>>>>> compatible string we match against and the index of the matching
+> >>>>>> compatible string in the list.
+> >>>>>>
+> >>>>>> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> >>>>>>
+> >>>>>> ---
+> >>>>>> Hi Laurent,
+> >>>>>>
+> >>>>>> I don't think we need to do anything in the driver to address your
+> >>>>>> comment, as we can "enforce" this with the bindings (please see the
+> >>>>>> next patch, as it would help with the "enforcing" of the compatible
+> >>>>>> string for the thine device).
+> >>>>>> I am sending this patch only so that you can see what a possible
+> >>>>>> solution in the driver could look like.
+> >>>>>>
+> >>>>>> v3->v4:
+> >>>>>> * New patch addressing the below comment from Laurent:
+> >>>>>> "I think the lvds-decoder driver should error out at probe time if only
+> >>>>>> one compatible string is listed."
+> >>>>>>
+> >>>>>> --- a/drivers/gpu/drm/bridge/lvds-codec.c
+> >>>>>> +++ b/drivers/gpu/drm/bridge/lvds-codec.c
+> >>>>>>
+> >>>>>> @@ -65,7 +70,30 @@ static int lvds_codec_probe(struct platform_device *pdev)
+> >>>>>>         if (!lvds_codec)
+> >>>>>>                 return -ENOMEM;
+> >>>>>>
+> >>>>>> -       lvds_codec->connector_type = (u32)of_device_get_match_data(&pdev->dev);
+> >>>>>> +       lvds_codec->data = of_device_get_match_data(&pdev->dev);
+> >>>>>> +       if (!lvds_codec->data)
+> >>>>>> +               return -EINVAL;
+> >>>>>> +
+> >>>>>> +       /*
+> >>>>>> +        * If we haven't matched a device specific compatible string, we need
+> >>>>>> +        * to work out if the generic compatible string we matched against was
+> >>>>>> +        * listed first in the compatible property.
+> >>>>>> +        */
+> >>>>>
+> >>>>> Can't we do this unconditionally, and thus drop the lvds_codec_data
+> >>>>> structure ?
+> >>>>
+> >>>> I don't think so, and the reason for this is that we have a corner case for
+> >>>> thine,thc63lvdm83d. Here is what's allowed (according to the documentation)
+> >>>> from what's supported upstream (+ this series):
+> >>>> "ti,ds90c185", "lvds-encoder"
+> >>>> "ti,ds90c187", "lvds-encoder"
+> >>>> "ti,sn75lvds83", "lvds-encoder"
+> >>>> "ti,ds90cf384a", "lvds-decoder"
+> >>>> "thine,thc63lvdm83d"
+> >>>>
+> >>>> As you can see from the examples above, in most cases it's enough to say it's
+> >>>> all good when we match a compatible string with index > 0, but for the thine
+> >>>> device you _have_ to match the string with index 0 as that's what's currently
+> >>>> documented (please see thine,thc63lvdm83d.txt) and that's what's supported
+> >>>> by device trees already (please see arch/arm/boot/dts/r8a7779-marzen.dts).
+> >>>
+> >>> How about the following logic ?
+> >>>
+> >>>       if (match_index("lvds-encoder") == 0 ||
+> >>>           match_index("lvds-decoder") == 0)
+> >>>               return -EINVAL;
+> >>>
+> >>>
+> >>
+> >> Now I see what you mean
+> >>
+> >>>> This patch "classifies" compatible strings, and it considers a good match
+> >>>> device specific compatible strings, or generic compatible strings as long
+> >>>> as they are not listed first.
+> >>>>
+> >>>> These days you can leverage the yaml files to validate the device trees,
+> >>>> therefore we should be focusing on writing yaml files in such a way we only
+> >>>> pass the checks we mean to, and by checks I mean:
+> >>>> make dtbs_check
+> >>>>
+> >>>> or more specifically, for this series:
+> >>>> make dtbs_check  DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> >>>>
+> >>>> and that's of course on top of make dt_binding_check.
+> >>>
+> >>> Sure, but that doesn't prevent anyone ignoring the validation.
+> >>>
+> >>>> It's a very common requirement to have a part number specific compatible
+> >>>> string first followed by a generic (fallback) compatible string in the device trees,
+> >>>> most drivers for Renesas SoCs have similar requirements.
+> >>>>
+> >>>> If we start doing this here, we'll end up doing it elsewhere as well, and I really
+> >>>> think we shouldn't, but others may see things differently, so I'll wait for others
+> >>>> (and yourself with further comments) to jump in before doing any more work
+> >>>> on this patch.
+> >>>
+> >>> I agree with this argument, it would set a precedent, and is probably
+> >>> not worth duplicating similar code in all drivers. I wonder if this is
+> >>> something we could handle with core helpers, but maybe it's overkill.
+> >>
+> >> I was hoping others would comment as well, but perhaps this topic is not too exciting.
+> >>
+> >> Geert, what do you think about this? Is this something we should enforce
+> >> in drivers?
+> > 
+> > So IIUIC, you want to enforce the presence of both specific and generic
+> > compatible values (in that order) in the driver (except for
+> > "thine,thc63lvdm83d", as that predates the introduction of the generic
+> > compatible value)?
 > 
-> Changes in v2:
-> - correct subject line
-> - reset pon flag not at probe but later
-> - initialize things only on pon
-> - 12h handling
-> - ranges
-> - style cleanup
-> - less magic values
+> Yeah, this is what Laurent would want ideally.
 > 
->  drivers/rtc/Kconfig       |  10 +
->  drivers/rtc/Makefile      |   1 +
->  drivers/rtc/rtc-rc5t619.c | 462 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 473 insertions(+)
->  create mode 100644 drivers/rtc/rtc-rc5t619.c
+> > However, the driver would not really care about the actual hardware-specific
+> > value, as it would still match against the generic one, and the
+> > hardware-specific one may not even be listed in the driver's match table?
 > 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index 1adf9f815652..b8e5bfa8efc6 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -600,6 +600,16 @@ config RTC_DRV_RC5T583
->  	  This driver can also be built as a module. If so, the module
->  	  will be called rtc-rc5t583.
->  
-> +config RTC_DRV_RC5T619
-> +	tristate "RICOH RC5T619 RTC driver"
-> +	depends on MFD_RN5T618
-> +	help
-> +	  If you say yes here you get support for the RTC on the
-> +	  RICOH RC5T619 chips.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called rtc-rc5t619.
-> +
->  config RTC_DRV_S35390A
->  	tristate "Seiko Instruments S-35390A"
->  	select BITREVERSE
-> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> index 4ac8f19fb631..7612912cdf00 100644
-> --- a/drivers/rtc/Makefile
-> +++ b/drivers/rtc/Makefile
-> @@ -137,6 +137,7 @@ obj-$(CONFIG_RTC_DRV_PXA)	+= rtc-pxa.o
->  obj-$(CONFIG_RTC_DRV_R7301)	+= rtc-r7301.o
->  obj-$(CONFIG_RTC_DRV_R9701)	+= rtc-r9701.o
->  obj-$(CONFIG_RTC_DRV_RC5T583)	+= rtc-rc5t583.o
-> +obj-$(CONFIG_RTC_DRV_RC5T619)	+= rtc-rc5t619.o
->  obj-$(CONFIG_RTC_DRV_RK808)	+= rtc-rk808.o
->  obj-$(CONFIG_RTC_DRV_RP5C01)	+= rtc-rp5c01.o
->  obj-$(CONFIG_RTC_DRV_RS5C313)	+= rtc-rs5c313.o
-> diff --git a/drivers/rtc/rtc-rc5t619.c b/drivers/rtc/rtc-rc5t619.c
-> new file mode 100644
-> index 000000000000..1860f3e7f6e7
-> --- /dev/null
-> +++ b/drivers/rtc/rtc-rc5t619.c
-> @@ -0,0 +1,462 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * drivers/rtc/rtc-rc5t619.c
-> + *
-> + * Real time clock driver for RICOH RC5T619 power management chip.
-> + *
-> + * Copyright (C) 2019 Andreas Kemnade
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/device.h>
-> +#include <linux/errno.h>
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/mfd/rn5t618.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/bcd.h>
-> +#include <linux/rtc.h>
-> +#include <linux/slab.h>
-> +#include <linux/irqdomain.h>
-> +
-> +struct rc5t619_rtc {
-> +	int			irq;
-> +	struct rtc_device	*rtc;
-> +	struct rn5t618 *rn5t618;
-> +};
-> +
-> +#define CTRL1_ALARM_ENABLED 0x40
-> +#define CTRL1_24HR 0x20
-> +#define CTRL1_PERIODIC_MASK 0xf
-> +
-> +#define CTRL2_PON 0x10
-> +#define CTRL2_ALARM_STATUS 0x80
-> +#define CTRL2_CTFG 0x4
-> +#define CTRL2_CTC 0x1
-> +
-> +#define MONTH_CENTFLAG 0x80
-> +#define HOUR_PMFLAG 0x20
-> +#define MDAY_DAL_EXT 0x80
-> +
-> +static uint8_t rtc5t619_12hour_bcd2bin(uint8_t hour)
-> +{
-> +	if (hour & HOUR_PMFLAG) {
-> +		hour = bcd2bin(hour & ~HOUR_PMFLAG);
-> +		return hour == 12 ? 12 : 12 + hour;
-> +	}
-> +
-> +	hour = bcd2bin(hour);
-> +	return hour == 12 ? 0 : hour;
-> +}
-> +
-> +static uint8_t rtc5t619_12hour_bin2bcd(uint8_t hour)
-> +{
-> +	if (!hour)
-> +		return 0x12;
-> +
-> +	if (hour < 12)
-> +		return bin2bcd(hour);
-> +
-> +	if (hour == 12)
-> +		return 0x12 | HOUR_PMFLAG;
-> +
-> +	return bin2bcd(hour - 12) | HOUR_PMFLAG;
-> +}
-> +
-> +static int rc5t619_rtc_periodic_disable(struct device *dev)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	int err;
-> +
-> +	/* disable function */
-> +	err = regmap_update_bits(rtc->rn5t618->regmap,
-> +				 RN5T618_RTC_CTRL1, CTRL1_PERIODIC_MASK, 0);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/* clear alarm flag and CTFG */
-> +	err = regmap_update_bits(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2,
-> +				 CTRL2_ALARM_STATUS | CTRL2_CTFG | CTRL2_CTC,
-> +				 0);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
-> +/* things to be done once after power on */
-> +static int rc5t619_rtc_pon_setup(struct device *dev)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	int err;
-> +	unsigned int reg_data;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, &reg_data);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/* clear VDET PON */
-> +	reg_data &= ~(CTRL2_PON | CTRL2_CTC | 0x4a);	/* 0101-1011 */
-> +	reg_data |= 0x20;	/* 0010-0000 */
-> +	err = regmap_write(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, reg_data);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/* clearing RTC Adjust register */
-> +	err = regmap_write(rtc->rn5t618->regmap, RN5T618_RTC_ADJUST, 0);
-> +	if (err)
-> +		return err;
-> +
-> +	return regmap_update_bits(rtc->rn5t618->regmap,
-> +					RN5T618_RTC_CTRL1,
-> +					CTRL1_24HR, CTRL1_24HR);
-> +}
-> +
-> +static int rc5t619_rtc_read_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	u8 buff[7];
-> +	int err;
-> +	int cent_flag;
-> +	unsigned int ctrl1;
-> +	unsigned int ctrl2;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, &ctrl2);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (ctrl2 & CTRL2_PON)
-> +		return -EINVAL;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &ctrl1);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	err = regmap_bulk_read(rtc->rn5t618->regmap, RN5T618_RTC_SECONDS,
-> +			       buff, sizeof(buff));
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (buff[5] & MONTH_CENTFLAG)
-> +		cent_flag = 1;
-> +	else
-> +		cent_flag = 0;
-> +
-> +	tm->tm_sec  = bcd2bin(buff[0]);
-> +	tm->tm_min  = bcd2bin(buff[1]);
-> +
-> +	if (ctrl1 & CTRL1_24HR)
-> +		tm->tm_hour = bcd2bin(buff[2]);
-> +	else
-> +		tm->tm_hour = rtc5t619_12hour_bcd2bin(buff[2]);
-> +
-> +	tm->tm_wday = bcd2bin(buff[3]);
-> +	tm->tm_mday = bcd2bin(buff[4]);
-> +	tm->tm_mon  = bcd2bin(buff[5] & 0x1f) - 1; /* back to system 0-11 */
-> +	tm->tm_year = bcd2bin(buff[6]) + 100 * cent_flag;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rc5t619_rtc_set_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	u8 buff[7];
-> +	int err;
-> +	int cent_flag;
-> +	unsigned int ctrl1;
-> +	unsigned int ctrl2;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, &ctrl2);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (ctrl2 & CTRL2_PON)
-> +		rc5t619_rtc_pon_setup(dev);
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &ctrl1);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (tm->tm_year >= 100)
-> +		cent_flag = 1;
-> +	else
-> +		cent_flag = 0;
-> +
-> +	buff[0] = bin2bcd(tm->tm_sec);
-> +	buff[1] = bin2bcd(tm->tm_min);
-> +
-> +	if (ctrl1 & CTRL1_24HR)
-> +		buff[2] = bin2bcd(tm->tm_hour);
-> +	else
-> +		buff[2] = rtc5t619_12hour_bin2bcd(tm->tm_hour);
-> +
-> +	buff[3] = bin2bcd(tm->tm_wday);
-> +	buff[4] = bin2bcd(tm->tm_mday);
-> +	buff[5] = bin2bcd(tm->tm_mon + 1);	/* system set 0-11 */
-> +	buff[6] = bin2bcd(tm->tm_year - cent_flag * 100);
-> +
-> +	if (cent_flag)
-> +		buff[5] |= MONTH_CENTFLAG;
-> +
-> +	err = regmap_bulk_write(rtc->rn5t618->regmap, RN5T618_RTC_SECONDS,
-> +				buff, sizeof(buff));
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to program new time: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int rc5t619_rtc_alarm_is_enabled(struct device *dev,  uint8_t *enabled)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	int err;
-> +	unsigned int reg_data;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &reg_data);
-> +	if (err)
-> +		return err;
-> +
-> +	if (reg_data & CTRL1_ALARM_ENABLED)
-> +		*enabled = 1;
-> +	else
-> +		*enabled = 0;
-> +
-> +	return err;
-> +}
-> +
-> +/* 0-disable, 1-enable */
-> +static int rc5t619_rtc_alarm_enable(struct device *dev, unsigned int enabled)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +
-> +	return regmap_update_bits(rtc->rn5t618->regmap,
-> +			RN5T618_RTC_CTRL1,
-> +			CTRL1_ALARM_ENABLED,
-> +			enabled ? CTRL1_ALARM_ENABLED : 0);
-> +}
-> +
-> +static int rc5t619_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	u8 buff[6];
-> +	unsigned int buff_cent;
-> +	int err;
-> +	int cent_flag;
-> +	unsigned int ctrl1;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &ctrl1);
-> +	if (err)
-> +		return err;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_MONTH, &buff_cent);
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to read time: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (buff_cent & MONTH_CENTFLAG)
-> +		cent_flag = 1;
-> +	else
-> +		cent_flag = 0;
-> +
-> +	err = regmap_bulk_read(rtc->rn5t618->regmap, RN5T618_RTC_ALARM_Y_SEC,
-> +			       buff, sizeof(buff));
-> +	if (err)
-> +		return err;
-> +
-> +	buff[3] = buff[3] & 0x3f;
-> +
-> +	alrm->time.tm_sec  = bcd2bin(buff[0]);
-> +	alrm->time.tm_min  = bcd2bin(buff[1]);
-> +
-> +	if (ctrl1 & CTRL1_24HR)
-> +		alrm->time.tm_hour = bcd2bin(buff[2]);
-> +	else
-> +		alrm->time.tm_hour = rtc5t619_12hour_bcd2bin(buff[2]);
-> +
-> +	alrm->time.tm_mday = bcd2bin(buff[3]);
-> +	alrm->time.tm_mon  = bcd2bin(buff[4]) - 1;
-> +	alrm->time.tm_year = bcd2bin(buff[5]) + 100 * cent_flag;
-> +	alrm->enabled = !!(ctrl1 & CTRL1_ALARM_ENABLED);
-> +	dev_dbg(dev, "read alarm: %ptR\n", &alrm->time);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rc5t619_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	u8 buff[6];
-> +	int err;
-> +	int cent_flag;
-> +	unsigned int ctrl1;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &ctrl1);
-> +	if (err)
-> +		return err;
-> +
-> +	err = rc5t619_rtc_alarm_enable(dev, 0);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (rtc->irq == -1)
-> +		return -EINVAL;
-> +
-> +	if (alrm->enabled == 0)
-> +		return 0;
-> +
-> +	if (alrm->time.tm_year >= 100)
-> +		cent_flag = 1;
-> +	else
-> +		cent_flag = 0;
-> +
-> +	alrm->time.tm_mon += 1;
-> +	buff[0] = bin2bcd(alrm->time.tm_sec);
-> +	buff[1] = bin2bcd(alrm->time.tm_min);
-> +
-> +	if (ctrl1 & CTRL1_24HR)
-> +		buff[2] = bin2bcd(alrm->time.tm_hour);
-> +	else
-> +		buff[2] = rtc5t619_12hour_bin2bcd(alrm->time.tm_hour);
-> +
-> +	buff[3] = bin2bcd(alrm->time.tm_mday);
-> +	buff[4] = bin2bcd(alrm->time.tm_mon);
-> +	buff[5] = bin2bcd(alrm->time.tm_year - 100 * cent_flag);
-> +	buff[3] |= MDAY_DAL_EXT;
-> +
-> +	err = regmap_bulk_write(rtc->rn5t618->regmap, RN5T618_RTC_ALARM_Y_SEC,
-> +				buff, sizeof(buff));
-> +	if (err < 0)
-> +		return err;
-> +
-> +	return rc5t619_rtc_alarm_enable(dev, alrm->enabled);
-> +}
-> +
-> +static const struct rtc_class_ops rc5t619_rtc_ops = {
-> +	.read_time	= rc5t619_rtc_read_time,
-> +	.set_time	= rc5t619_rtc_set_time,
-> +	.set_alarm	= rc5t619_rtc_set_alarm,
-> +	.read_alarm	= rc5t619_rtc_read_alarm,
-> +	.alarm_irq_enable = rc5t619_rtc_alarm_enable,
-> +};
-> +
-> +static int rc5t619_rtc_alarm_flag_clr(struct device *dev)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +
-> +	/* clear alarm-D status bits.*/
-> +	return regmap_update_bits(rtc->rn5t618->regmap,
-> +				RN5T618_RTC_CTRL2,
-> +				CTRL2_ALARM_STATUS | CTRL2_CTC, 0);
-> +}
-> +
-> +static irqreturn_t rc5t619_rtc_irq(int irq, void *data)
-> +{
-> +	struct device *dev = data;
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +
-> +	rc5t619_rtc_alarm_flag_clr(dev);
-> +
-> +	rtc_update_irq(rtc->rtc, 1, RTC_IRQF | RTC_AF);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int rc5t619_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
-> +	struct rc5t619_rtc *rtc;
-> +	unsigned int ctrl2;
-> +	int err;
-> +
-> +	rtc = devm_kzalloc(dev, sizeof(*rtc), GFP_KERNEL);
-> +	if (IS_ERR(rtc)) {
-> +		err = PTR_ERR(rtc);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	rtc->rn5t618 = rn5t618;
-> +
-> +	dev_set_drvdata(dev, rtc);
-> +	rtc->irq = -1;
-> +
-> +	if (rn5t618->irq_data)
-> +		rtc->irq = regmap_irq_get_virq(rn5t618->irq_data,
-> +					       RN5T618_IRQ_RTC);
-> +
-> +	if (rtc->irq  < 0)
-> +		rtc->irq = -1;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, &ctrl2);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/* disable rtc periodic function */
-> +	err = rc5t619_rtc_periodic_disable(&pdev->dev);
-> +	if (err)
-> +		return err;
-> +
-> +	if (ctrl2 & CTRL2_PON) {
-> +		err = rc5t619_rtc_alarm_flag_clr(&pdev->dev);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	rtc->rtc = devm_rtc_allocate_device(&pdev->dev);
-> +	if (IS_ERR(rtc->rtc)) {
-> +		err = PTR_ERR(rtc->rtc);
-> +		dev_err(dev, "RTC device register: err %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	rtc->rtc->ops = &rc5t619_rtc_ops;
-> +	rtc->rtc->range_min = RTC_TIMESTAMP_BEGIN_1900;
-> +	rtc->rtc->range_max = RTC_TIMESTAMP_END_2099;
-> +
-> +	/* set interrupt and enable it */
-> +	if (rtc->irq != -1) {
-> +		err = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
-> +						rc5t619_rtc_irq,
-> +						IRQF_ONESHOT,
-> +						"rtc-rc5t619",
-> +						&pdev->dev);
-> +		if (err < 0) {
-> +			dev_err(&pdev->dev, "request IRQ:%d fail\n", rtc->irq);
-> +			rtc->irq = -1;
-> +
-> +			err = rc5t619_rtc_alarm_enable(&pdev->dev, 0);
-> +			if (err)
-> +				return err;
-> +
-> +		} else {
-> +			/* enable wake */
-> +			device_init_wakeup(&pdev->dev, 1);
-> +			enable_irq_wake(rtc->irq);
-> +		}
-> +	} else {
-> +		/* system don't want to using alarm interrupt, so close it */
-> +		err = rc5t619_rtc_alarm_enable(&pdev->dev, 0);
-> +		if (err)
-> +			return err;
-> +
-> +		dev_warn(&pdev->dev, "rc5t619 interrupt is disabled\n");
-> +	}
-> +
-> +	return rtc_register_device(rtc->rtc);
-> +}
-> +
-> +static struct platform_driver rc5t619_rtc_driver = {
-> +	.driver	= {
-> +		.name	= "rc5t619-rtc",
-> +	},
-> +	.probe	= rc5t619_rtc_probe,
-> +};
-> +
-> +module_platform_driver(rc5t619_rtc_driver);
-> +MODULE_ALIAS("platform:rc5t619-rtc");
-> +MODULE_DESCRIPTION("RICOH RC5T619 RTC driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.20.1
+> Exactly.
 > 
+> > By definition, you can have one or more compatible values listed in a
+> > device node, from most-specific to least-specific.  Typically the driver
+> > cannot know if a more specific value is missing, but YAML DT binding
+> > validation can.
+> > 
+> > In this case it is a bit special, as there is a generic one involved, so
+> > you can assume there should be a more specific one, too.
+> > If you want to handle this in the core, you probably need to add an
+> > "is_generic" flag to struct of_device_id.
+> 
+> That's actually an interesting way of looking at this.
+> Laurent?
+
+I like the idea, it's better than doing it in each driver.
+
+> > Rob/Mark?
+
+Ping ?
+
+> >>>>>> +       if (!lvds_codec->data->device_specific) {
+> >>>>>> +               const struct of_device_id *match;
+> >>>>>> +               int compatible_index;
+> >>>>>> +
+> >>>>>> +               match = of_match_node(dev->driver->of_match_table,
+> >>>>>> +                                     dev->of_node);
+> >>>>>> +               compatible_index = of_property_match_string(dev->of_node,
+> >>>>>> +                                                           "compatible",
+> >>>>>> +                                                           match->compatible);
+> >>>>>> +               if (compatible_index == 0) {
+> >>>>>> +                       dev_err(dev, "Device specific compatible needed\n");
+> >>>>>> +                       return -EINVAL;
+> > 
+> > -ENODEV?
+> > So a "more generic" driver can take over?
+> > 
+> >>>>>> +               }
+> >>>>>> +       }
+> >>>>>> +
+> >>>>>>         lvds_codec->powerdown_gpio = devm_gpiod_get_optional(dev, "powerdown",
+> >>>>>>                                                              GPIOD_OUT_HIGH);
+> >>>>>>         if (IS_ERR(lvds_codec->powerdown_gpio)) {
+> >>>>>> @@ -92,7 +120,7 @@ static int lvds_codec_probe(struct platform_device *pdev)
+> >>>>>>
+> >>>>>>         lvds_codec->panel_bridge =
+> >>>>>>                 devm_drm_panel_bridge_add_typed(dev, panel,
+> >>>>>> -                                               lvds_codec->connector_type);
+> >>>>>> +                                       lvds_codec->data->connector_type);
+> >>>>>>         if (IS_ERR(lvds_codec->panel_bridge))
+> >>>>>>                 return PTR_ERR(lvds_codec->panel_bridge);
+> >>>>>>
+> >>>>>> @@ -119,18 +147,33 @@ static int lvds_codec_remove(struct platform_device *pdev)
+> >>>>>>         return 0;
+> >>>>>>  }
+> >>>>>>
+> >>>>>> +static const struct lvds_codec_data lvds_codec_decoder_data = {
+> >>>>>> +       .connector_type = DRM_MODE_CONNECTOR_DPI,
+> >>>>>> +       .device_specific = false,
+> >>>>>> +};
+> >>>>>> +
+> >>>>>> +static const struct lvds_codec_data lvds_codec_encoder_data = {
+> >>>>>> +       .connector_type = DRM_MODE_CONNECTOR_LVDS,
+> >>>>>> +       .device_specific = false,
+> >>>>>> +};
+> >>>>>> +
+> >>>>>> +static const struct lvds_codec_data lvds_codec_thc63lvdm83d_data = {
+> >>>>>> +       .connector_type = DRM_MODE_CONNECTOR_LVDS,
+> >>>>>> +       .device_specific = true,
+> >>>>>> +};
+> >>>>>> +
+> >>>>>>  static const struct of_device_id lvds_codec_match[] = {
+> >>>>>>         {
+> >>>>>>                 .compatible = "lvds-decoder",
+> >>>>>> -               .data = (void *)DRM_MODE_CONNECTOR_DPI,
+> >>>>>> +               .data = &lvds_codec_decoder_data,
+> >>>>>>         },
+> >>>>>>         {
+> >>>>>>                 .compatible = "lvds-encoder",
+> >>>>>> -               .data = (void *)DRM_MODE_CONNECTOR_LVDS,
+> >>>>>> +               .data = &lvds_codec_encoder_data,
+> >>>>>>         },
+> >>>>>>         {
+> >>>>>>                 .compatible = "thine,thc63lvdm83d",
+> >>>>>> -               .data = (void *)DRM_MODE_CONNECTOR_LVDS,
+> >>>>>> +               .data = &lvds_codec_thc63lvdm83d_data,
+> >>>>>>         },
+> >>>>>>         {},
+> >>>>>>  };
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Regards,
+
+Laurent Pinchart
