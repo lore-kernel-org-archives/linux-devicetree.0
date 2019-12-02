@@ -2,40 +2,48 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34AEC432C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 14:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46252C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 14:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5A320833
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 14:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1917F2146E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 14:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbfLBORI (ORCPT
+        id S1727401AbfLBO2m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 09:17:08 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43923 "EHLO
+        Mon, 2 Dec 2019 09:28:42 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52813 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727362AbfLBORH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 09:17:07 -0500
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.pengutronix.de.)
+        with ESMTP id S1727386AbfLBO2m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 09:28:42 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
         by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1ibmVd-0006gc-Qk; Mon, 02 Dec 2019 15:17:05 +0100
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de,
-        patchwork-lst@pengutronix.de
-Subject: [PATCH] ARM: dts: imx6: RDU2: link eDP bridge to panel
-Date:   Mon,  2 Dec 2019 15:17:05 +0100
-Message-Id: <20191202141705.31880-1-l.stach@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1ibmgp-0007e7-2S; Mon, 02 Dec 2019 15:28:39 +0100
+Message-ID: <3dff516c16dbb8c654293e16c49b4c59d29fd707.camel@pengutronix.de>
+Subject: Re: [PATCH 1/2] soc: imx: gpcv2: Add support for imx8mm
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Adam Ford <aford173@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Date:   Mon, 02 Dec 2019 15:28:38 +0100
+In-Reply-To: <20191129234108.12732-1-aford173@gmail.com>
+References: <20191129234108.12732-1-aford173@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
@@ -43,36 +51,73 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This makes the eDP bridge chip aware of the panel, so it properly
-advertises eDP instead of DP to userspace and allows for proper
-backlight control through the panel abstraction. This patch is just
-to add all the required nodes, actual linking of the display chain
-will be done by the bootloader depending on panel detection.
+On Fri, 2019-11-29 at 17:41 -0600, Adam Ford wrote:
+> The technical reference manual for both the i.MX8MQ and i.MX8M Mini
+> appear to show the same register definitions and locations for the
+> General Power Controller (GPC).
+> 
+> This patch expands the table of compatible SoC's to include
+> the i.MX8m Mini
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> 
+> diff --git a/drivers/soc/imx/gpcv2.c b/drivers/soc/imx/gpcv2.c
+> index b0dffb06c05d..67c54cbb6c81 100644
+> --- a/drivers/soc/imx/gpcv2.c
+> +++ b/drivers/soc/imx/gpcv2.c
+> @@ -641,6 +641,7 @@ static int imx_gpcv2_probe(struct platform_device *pdev)
+>  static const struct of_device_id imx_gpcv2_dt_ids[] = {
+>  	{ .compatible = "fsl,imx7d-gpc", .data = &imx7_pgc_domain_data, },
+>  	{ .compatible = "fsl,imx8mq-gpc", .data = &imx8m_pgc_domain_data, },
+> +	{ .compatible = "fsl,imx8mm-gpc", .data = &imx8m_pgc_domain_data, },
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
----
- arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+According to the 5.2.5.1 "PGC power domains" chapters in both the i.MX
+8M Dual/8M QuadLite/8M Quad and i.MX 8M Mini Applications Processor
+Reference Manuals (Rev.1), the two SoCs have a different list of power
+domains:
 
-diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-index 93be00a60c88..c4adbf66cc7c 100644
---- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-@@ -392,6 +392,14 @@
- 					remote-endpoint = <&disp0_out>;
- 				};
- 			};
-+
-+			port@2 {
-+				reg = <2>;
-+
-+				tc358767_out: endpoint {
-+					remote-endpoint = <&panel_in>;
-+				};
-+			};
- 		};
- 	};
- };
--- 
-2.20.1
+i.MX8MQ:
+	PGC_C0
+	PGC_C1
+	PGC_C2
+	PGC_C3
+	PGC_SCU
+	PGC_MF
+	PGC_OTG1
+	PGC_OTG2
+	PGC_PCIE
+	PGC_MIPI
+	PGC_DDR1
+	PGC_DDR2
+	PGC_VPU
+	PGC_GPU
+	PGC_HDMI
+	PGC_DISP
+	PGC_MIPI_CSI1
+	PGC_MIPI_CSI2
+	PGC_PCIE2
+
+i.MX8MM:
+	PGC_C0
+	PGC_C1
+	PGC_C2
+	PGC_C3
+	PGC_SCU
+	PGC_NOC
+	PGC_PCIE
+	PGC_OTG1
+	PGC_OTG2
+	PGC_DDR1
+	PGC_DISPMIX
+	GPC_MIPI
+	PGC_GPUMIX
+	PGC_GPU_3D
+	PGC_GPU_2D
+	PGC_VPUMIX
+	PGC_VPU_G1
+	PGC_VPU_G2
+	PGC_VPU_H1
+
+regards
+Philipp
 
