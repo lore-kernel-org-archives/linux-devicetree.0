@@ -2,205 +2,153 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E113BC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 05:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE746C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 06:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EFEE206DC
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 05:43:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rQinLrZ4"
+	by mail.kernel.org (Postfix) with ESMTP id 8F04520715
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 06:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725838AbfLBFn2 (ORCPT
+        id S1725977AbfLBGBW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 00:43:28 -0500
-Received: from mail-eopbgr20062.outbound.protection.outlook.com ([40.107.2.62]:53134
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725807AbfLBFn2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Dec 2019 00:43:28 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dcO9+ZGNEmSIcisQ5xSS3PhebMGsNw5Wbdtp7pUtpEDoEXYnbuf4b8a1GzVMJKr/bvQHgjmReoFRFUrMmAmEbpzGnR90pKvp0iZIma2hnjhIzt7f+i18t7BU5bOkTrr7Dilo4DdpfGSCeA75EkNGifEb8gHDvpe0ZX+n6/higM5E0VEJ1PDvTOEsA8u5KN27wHrtIqgu99GXb1SQ6FnnoP5sZsEM0jOFscF8qaapfrMaUKweGD7Iy/fr3FAnSGjccCQ271oU6WFFQBrn+Jb4Owq/kKctwfQaOg+G9Heil77TycL29edVGo26LiTXgasE0QMn4oVK6iOnnY4oggpStg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s0mGa9R5++e7rDSKn6rr1bc75KdorayaimobJ7+6+Ug=;
- b=cgXEZmGP5l9xuKiwQPPAAHYxFNVR4HDxwEUixkDaaCH6sDhjSLCjRJZ3VrPamAoa/GMA460dDJJY2UW2PgmlwPxFI1t84YHbMpxONsHr8KnAW98rKZ5zA6ibHPCeDZS6ohETKOD8QR/k5GAWLb5iPvA96pmxe9BKGLqu9YB6VBiBHcACoK2ERjbCQgH/tJTyWcz60fNyEywqu68arRCqgZxhNzJCcZaAyiAO0JBIPOYkovZlvHb2sMR0Opfx74FVVKzBCzitH3eMK65h5jTHFbJU+IVGheRyUEY0OITaH4w4wfxDHNzE8kwu+M0U92SHfekd/SasxrA/VnmcqOVEag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s0mGa9R5++e7rDSKn6rr1bc75KdorayaimobJ7+6+Ug=;
- b=rQinLrZ4doCMFz+52/rilIABPn6Lv7n3EfEU9BGRmnYM8kZCjuCI4QX3s9vXB579vhB9rfUepBg0glXWY1UBgTmVmh5BZZXEcfJ+DIT+ww99Vcq10PQGhZkv9KSfEa0CRfZHLVOV7YvdB3sqjEaruAY3WlX7/GFAXnu2vRK5RJk=
-Received: from AM0PR0402MB3556.eurprd04.prod.outlook.com (52.133.43.147) by
- AM0PR0402MB3569.eurprd04.prod.outlook.com (52.133.44.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.18; Mon, 2 Dec 2019 05:43:20 +0000
-Received: from AM0PR0402MB3556.eurprd04.prod.outlook.com
- ([fe80::e885:ac97:fca8:c4e]) by AM0PR0402MB3556.eurprd04.prod.outlook.com
- ([fe80::e885:ac97:fca8:c4e%3]) with mapi id 15.20.2495.014; Mon, 2 Dec 2019
- 05:43:20 +0000
-From:   Kuldeep Singh <kuldeep.singh@nxp.com>
-To:     Michael Walle <michael@walle.cc>
-CC:     "linux-arm-kernel@lists.infradead.org" 
+        Mon, 2 Dec 2019 01:01:22 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:20041 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfLBGBV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 01:01:21 -0500
+Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 2 Dec
+ 2019 14:01:47 +0800
+Subject: Re: [PATCH v3 0/7] add Amlogic A1 clock controller driver
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: RE: [EXT] [PATCH 3/4] arm64: dts: ls1028a: add FlexSPI node
-Thread-Topic: [EXT] [PATCH 3/4] arm64: dts: ls1028a: add FlexSPI node
-Thread-Index: AQHVojp/XO5z0jeXk0+aNgRvimpOIKedAjswgAA8FYCACSO5MA==
-Date:   Mon, 2 Dec 2019 05:43:20 +0000
-Message-ID: <AM0PR0402MB35568D79CBFDC28B32561085E0430@AM0PR0402MB3556.eurprd04.prod.outlook.com>
-References: <20191123201317.25861-1-michael@walle.cc>
- <20191123201317.25861-4-michael@walle.cc>
- <AM0PR0402MB3556804FB47D182173C6A7AAE0450@AM0PR0402MB3556.eurprd04.prod.outlook.com>
- <afde04b888418e9e4f4fdb946a579e70@walle.cc>
-In-Reply-To: <afde04b888418e9e4f4fdb946a579e70@walle.cc>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=kuldeep.singh@nxp.com; 
-x-originating-ip: [92.120.1.70]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7481655d-b4ca-4a14-3752-08d776ea89d2
-x-ms-traffictypediagnostic: AM0PR0402MB3569:|AM0PR0402MB3569:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR0402MB3569AB53833C5DAC733B3F98E0430@AM0PR0402MB3569.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2582;
-x-forefront-prvs: 0239D46DB6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(366004)(376002)(346002)(13464003)(199004)(189003)(5660300002)(966005)(54906003)(229853002)(4326008)(6436002)(66066001)(81166006)(8936002)(11346002)(52536014)(102836004)(186003)(26005)(6506007)(53546011)(76176011)(7696005)(14444005)(256004)(44832011)(71200400001)(71190400001)(76116006)(66946007)(66476007)(66556008)(64756008)(66446008)(14454004)(6246003)(55016002)(6116002)(3846002)(4001150100001)(446003)(86362001)(99286004)(316002)(7736002)(33656002)(6916009)(8676002)(81156014)(74316002)(305945005)(9686003)(6306002)(2906002)(25786009)(478600001)(45080400002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3569;H:AM0PR0402MB3556.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HgZdN5DE93MNvR3HO7CWqjsg1vxfhfplcYB/48z9mro+3EgBR531KekG+cSy+G/pLR0hBagZhJv5sn2Lkwb7Vj8KssPYXZSWL+zS59c3sO+vSBYM8WGCMsgn9deZZOlfcaS/1tvTztfaTQyVNkKwnfH0ZbswDyyBJQH64utckWNlbYstLjLA43DEHflod3iJieZVne/y79SNSArKgfhxsvQkvcS+7fzvTJ7H++HHBOp7uCtsoFZkqqe2hF2QseKHPyN1ft4Rtx2gRkT0/OJPXf0bhNB/iSitnSZivzaPeUgK9TEk7Otd0HVYA4AAzdcnttWFFq9RBv2UM68axdfemsKOnnop2FANfzigbeSm6Ae/KBCf70ofP2rgdiRQAXYb3kWe7j4q7JeYTFy2+tF2/T8GseGX3MmvzOkX9EeNRcDQuLQ5Zke1uSP0cdpZ2B6g
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20191129144605.182774-1-jian.hu@amlogic.com>
+ <1jwobi7lcy.fsf@starbuckisacylon.baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <63d776af-6ded-02d2-cc34-1b3733e2625b@amlogic.com>
+Date:   Mon, 2 Dec 2019 14:01:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7481655d-b4ca-4a14-3752-08d776ea89d2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2019 05:43:20.2215
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3ET/WXoyKIE3NktYwSfIxn3AG+RLmv8V8jE7Go88XrhzilqS7QYNxXGZyb5YEgQCVuPHk8Sn4ohPqVdccqc5rQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3569
+In-Reply-To: <1jwobi7lcy.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.99]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
 
-> -----Original Message-----
-> From: Michael Walle <michael@walle.cc>
-> Sent: Tuesday, November 26, 2019 3:38 PM
-> To: Kuldeep Singh <kuldeep.singh@nxp.com>
-> Cc: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> linux-kernel@vger.kernel.org; Shawn Guo <shawnguo@kernel.org>; Leo Li
-> <leoyang.li@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>
-> Subject: Re: [EXT] [PATCH 3/4] arm64: dts: ls1028a: add FlexSPI node
->=20
-> Caution: EXT Email
->=20
-> Hi Kuldeep,
->=20
-> Am 2019-11-26 07:40, schrieb Kuldeep Singh:
-> > Hi Michael,
-> >
-> >> -----Original Message-----
-> >> From: devicetree-owner@vger.kernel.org
-> >> <devicetree-owner@vger.kernel.org>
-> >> On Behalf Of Michael Walle
-> >> Sent: Sunday, November 24, 2019 1:43 AM
-> >> To: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> >> linux-
-> >> kernel@vger.kernel.org
-> >> Cc: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>;
-> Rob
-> >> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> >> Michael Walle <michael@walle.cc>
-> >> Subject: [EXT] [PATCH 3/4] arm64: dts: ls1028a: add FlexSPI node
-> >
-> > There's already a patch[1] sent upstream and is under review.
-> > It includes dts(i) entries for LS1028. I will be sending the next
-> > version
->=20
-> I've seen that, but there wasn't any reply for almost two months now.
-> But
-> if you're sending your next version, this patch can be dropped from this
-> series.
 
-Okay.
+On 2019/11/29 23:28, Jerome Brunet wrote:
+> 
+> On Fri 29 Nov 2019 at 15:45, Jian Hu <jian.hu@amlogic.com> wrote:
+> 
+>> add support for Amlogic A1 clock driver, the clock includes
+>> three parts: peripheral clocks, pll clocks, CPU clocks.
+>> sys pll and CPU clocks will be sent in next patch.
+>>
+>> Changes since v1 at [2]:
+> 
+> v2 or v1 ??
+It is v2 here, I will fix it in next version.
+> 
+>> -add probe function for A1
+>> -seperate the clock driver into two patch
+>> -change some clock flags and ops
+>> -add support for a1 PLL ops
+>> -add A1 clock node
+>>
+>> Changes since v1 at [1]:
+>> -place A1 config alphabetically
+>> -add actual reason for RO ops, CLK_IS_CRITICAL, CLK_IGNORE_UNUSED
+>> -separate the driver into two driver: peripheral and pll driver
+>> -delete CLK_IGNORE_UNUSED flag for pwm b/c/d/e/f clock, dsp clock
+>> -delete the change in Kconfig.platforms, address to Kevin alone
+>> -remove the useless comments
+>> -modify the meson pll driver to support A1 PLLs
+>>
+>> [1] https://lkml.kernel.org/r/1569411888-98116-1-git-send-email-jian.hu@amlogic.com
+>> [2] https://lkml.kernel.org/r/1571382865-41978-1-git-send-email-jian.hu@amlogic.com
+>>
+>> Jian Hu (7):
+>>    dt-bindings: clock: meson: add A1 PLL clock controller bindings
+>>    clk: meson: add support for A1 PLL clock ops
+>>    clk: meson: eeclk: refactor eeclk common driver to support A1
+>>    clk: meson: a1: add support for Amlogic A1 PLL clock driver
+>>    dt-bindings: clock: meson: add A1 peripheral clock controller bindings
+>>    clk: meson: a1: add support for Amlogic A1 Peripheral clock driver
+>>    arm64: dts: meson: add A1 PLL and periphs clock controller
+> 
+> The arm64 is for the DT maintainer. Please send it separately after this
+> series is applied (if it gets applied)
+> 
+>> Please fix the underlying issue, then you can post your series again.
+> 
+> This was a comment on your v2. Did you fix the orphan/ordering issue ?
 
---Kuldeep
->=20
-> -michael
->=20
-> >
-> > [1]
-> >
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatc
-> >
-> hwork.kernel.org%2Fpatch%2F11139365%2F&amp;data=3D02%7C01%7Ckuld
-> eep.sing
-> >
-> h%40nxp.com%7C327363e5ba97483c9add08d77258875d%7C686ea1d3bc2
-> b4c6fa92cd
-> >
-> 99c5c301635%7C0%7C0%7C637103596868168346&amp;sdata=3DyDJ1ggrIuR
-> v1%2Br%2F
-> > 9Ez1uvv0EpFB8Mns5%2Ffn%2F7zG5InA%3D&amp;reserved=3D0
-> >>
-> >> Caution: EXT Email
-> >>
-> >> Signed-off-by: Michael Walle <michael@walle.cc>
-> >> ---
-> >>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 13 +++++++++++++
-> >>  1 file changed, 13 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> >> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> >> index 6730922c2d47..650b277ddd66 100644
-> >> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> >> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> >> @@ -260,6 +260,19 @@
-> >>                         status =3D "disabled";
-> >>                 };
-> >>
-> >> +               fspi: spi@20c0000 {
-> >> +                       compatible =3D "nxp,lx2160a-fspi";
-> >> +                       #address-cells =3D <1>;
-> >> +                       #size-cells =3D <0>;
-> >> +                       reg =3D <0x0 0x20c0000 0x0 0x10000>,
-> >> +                             <0x0 0x20000000 0x0 0x10000000>;
-> >> +                       reg-names =3D "fspi_base", "fspi_mmap";
-> >> +                       interrupts =3D <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH=
->;
-> >> +                       clocks =3D <&clockgen 4 3>, <&clockgen 4 3>;
-> >> +                       clock-names =3D "fspi_en", "fspi";
-> >> +                       status =3D "disabled";
-> >> +               };
-> >> +
-> >>                 esdhc: mmc@2140000 {
-> >>                         compatible =3D "fsl,ls1028a-esdhc", "fsl,esdhc=
-";
-> >>                         reg =3D <0x0 0x2140000 0x0 0x10000>;
-> >> --
-> >> 2.20.1
-> >
-> > Regards
-> > Kuldeep
+> If you did, you probably should mention it here.
+Yes, I have fixed it in A1 periphs driver, not fixed it in CCF.
+I have realised a probe function for A1 periphs driver, Not using the 
+common probe interface in meson-eeclk.c. Skip registering xtal_fixedpll 
+and xtal_hifipll clocks when register all periphs clocks. And after the 
+provider registration. Registering xtal_fixedpll and xtal_hifipll clock 
+alone.
+
+I will add some comments here about orphan issue.
+
+And I have noticed you have fixed it in CCF,  I will update the A1 
+periphs driver, drop the probe function in the next vertion.
+Could I send the v4 after your patch 'clk: walk orphan list on clock 
+provider registration' is applied? Or I can send v4 based on your patch now.
+
+> If you did not, I'm probably not going to review this further until you do.
+> 
+>>
+>>   .../bindings/clock/amlogic,a1-clkc.yaml       |   70 +
+>>   .../bindings/clock/amlogic,a1-pll-clkc.yaml   |   56 +
+>>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |   26 +
+>>   drivers/clk/meson/Kconfig                     |   20 +
+>>   drivers/clk/meson/Makefile                    |    2 +
+>>   drivers/clk/meson/a1-pll.c                    |  334 +++
+>>   drivers/clk/meson/a1-pll.h                    |   56 +
+>>   drivers/clk/meson/a1.c                        | 2309 +++++++++++++++++
+>>   drivers/clk/meson/a1.h                        |  120 +
+>>   drivers/clk/meson/clk-pll.c                   |   21 +
+>>   drivers/clk/meson/clk-pll.h                   |    1 +
+>>   drivers/clk/meson/meson-eeclk.c               |   59 +-
+>>   drivers/clk/meson/meson-eeclk.h               |    2 +
+>>   drivers/clk/meson/parm.h                      |    1 +
+>>   include/dt-bindings/clock/a1-clkc.h           |   98 +
+>>   include/dt-bindings/clock/a1-pll-clkc.h       |   16 +
+>>   16 files changed, 3181 insertions(+), 10 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>>   create mode 100644 drivers/clk/meson/a1-pll.c
+>>   create mode 100644 drivers/clk/meson/a1-pll.h
+>>   create mode 100644 drivers/clk/meson/a1.c
+>>   create mode 100644 drivers/clk/meson/a1.h
+>>   create mode 100644 include/dt-bindings/clock/a1-clkc.h
+>>   create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+> 
+> .
+> 
