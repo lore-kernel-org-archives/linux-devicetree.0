@@ -2,175 +2,336 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A03C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 09:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61926C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 09:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B74892245C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 09:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3861E2231B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 09:12:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GGV3kQDC"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ETut1sO0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfLBJEC (ORCPT
+        id S1726254AbfLBJMV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 04:04:02 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:31231 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725977AbfLBJEC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 04:04:02 -0500
-X-UUID: c63f6da9ca17430e88cffc858eaf4327-20191202
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=77BHlXRq8SWcz9OZW4vRLcX/STRmZd2DJc8sv5irofo=;
-        b=GGV3kQDCulJBamveyTpo9shAObW0ycaCFw6qvys3g7qWlyUBtIsiHzxezbr+xHuVPkt1Hv/fZ9+rmkwih8CLJcSQqPFiM77hN2kr0a4J/7D/7K6AU6Mq3yvGMKHejtdAH4nesVC67RIQeVpazVewLLsvhe5dadz/ndAcM7gsZ5I=;
-X-UUID: c63f6da9ca17430e88cffc858eaf4327-20191202
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <yongqiang.niu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1023811263; Mon, 02 Dec 2019 17:03:52 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 2 Dec 2019 17:03:36 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 2 Dec 2019 17:03:34 +0800
-From:   <yongqiang.niu@mediatek.com>
-To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Mon, 2 Dec 2019 04:12:21 -0500
+Received: from mail-eopbgr140040.outbound.protection.outlook.com ([40.107.14.40]:6867
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726057AbfLBJMV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 04:12:21 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kxYSKdSp71zxbDWyvB+lUJ+YLkNgP1r/7HuMwFgce4JRY+Iv6cPlRo1BniBmurjDvF5N6Ssu/b8S/RjdFL4UBjpZ03uULB7tAmaCyWUwE+nDZrKS7F+pQ/VY6MhsJqvb/GwPaKYGSghySuj5E3hfVNbyA4QM8+6wJOFpq6F4zoikoe9RmSCo5t3kLhiWh/2mJaHN8R24it2mUrkocWc24YqzaH7+/3ofRfvm2+a3GeEDaAGlQl8LyudxVj7Xe1Jbu0+9Lhp23njoXsUlDm3ZrI0VsU6QS55Edu/xwqkI3Qh0epUeJCDRk4d6cwT9pg/fpSn2yLJaQNc3DhO4SDDTuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W1lAghbsehuGUkObX/2N39noCyI7M2frzmfou/uP8/s=;
+ b=D/L9wCZ5uCZHTTJiJAlmnOicIy0vouOaRWFD4Htzo6sQgvyZWKQGV+wvjQz915fCCOQJYi41HtlBQFxLS0vDSG0H9Biq494txj6s6CcFNs/YrQ/+cnjvSOfDz9ei+oKjXOMM9D9nUyLFZzHzJnuievm4ib7p6CeV6CN7Iawo9cafvzQXIBTEIjsL/JK8vqyEcjZZbEzGhHOtZGTYueuX38m5LgX+6+o9bNlhWFrlU2mtOwu9biN913UeLX9cpBZtNGEkqo/19OgvrP5/hK6C04btpnTpinEv5owklPJi5H5MuSYAWzn9LuoiudCr78Dtx3LB1HmR05DA/Npa3p+SrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W1lAghbsehuGUkObX/2N39noCyI7M2frzmfou/uP8/s=;
+ b=ETut1sO0AwpcCjz9auFQ9Nw7sKN0NKfMTRPk7fHkbAPfrTULLN/8dcYe/T5CLYMKWjA1uEBQasifp09Qw9k4Lu2Mqza/jbHnmhxDuYGmeDsc4WC8S0l/74YWkesNhFCOpDLPIYVLqr6IFYsxHWI/4aII+B1TX9P/QjoLzPJTxrM=
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
+ VI1PR04MB4224.eurprd04.prod.outlook.com (52.134.122.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.20; Mon, 2 Dec 2019 09:12:13 +0000
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::dd0c:72dc:e462:16b3]) by VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::dd0c:72dc:e462:16b3%5]) with mapi id 15.20.2495.014; Mon, 2 Dec 2019
+ 09:12:12 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+CC:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH v2] drm/mediatek: add ctm property support
-Date:   Mon, 2 Dec 2019 17:03:43 +0800
-Message-ID: <1575277423-31182-1-git-send-email-yongqiang.niu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
+        Michael Turquette <mturquette@baylibre.com>,
+        =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Angus Ainslie <angus@akkea.ca>,
+        Martin Kepplinger <martink@posteo.de>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 4/6] PM / devfreq: Add dynamic scaling for imx ddr
+ controller
+Thread-Topic: [PATCH v3 4/6] PM / devfreq: Add dynamic scaling for imx ddr
+ controller
+Thread-Index: AQHVkDU751yT9FzEn0iAYnZvaAii3w==
+Date:   Mon, 2 Dec 2019 09:12:12 +0000
+Message-ID: <VI1PR04MB70234400D6CF248C18321FDBEE430@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <cover.1572558427.git.leonard.crestez@nxp.com>
+ <5fcf829265ecde1af32cb1369528c97361c76992.1572558427.git.leonard.crestez@nxp.com>
+ <20191202053847.GC9767@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5718e995-a24e-4822-663a-08d77707b7e3
+x-ms-traffictypediagnostic: VI1PR04MB4224:|VI1PR04MB4224:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB42246E50A4262B5E61B861A5EE430@VI1PR04MB4224.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:289;
+x-forefront-prvs: 0239D46DB6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(136003)(396003)(39860400002)(199004)(189003)(316002)(2906002)(8936002)(54906003)(110136005)(305945005)(74316002)(81166006)(81156014)(7736002)(25786009)(3846002)(6116002)(99286004)(8676002)(26005)(66066001)(4326008)(44832011)(14444005)(256004)(446003)(14454004)(6436002)(71200400001)(71190400001)(33656002)(6246003)(186003)(86362001)(229853002)(478600001)(64756008)(966005)(66446008)(66556008)(66476007)(66946007)(76176011)(7696005)(76116006)(53546011)(91956017)(6506007)(102836004)(5660300002)(6306002)(55016002)(9686003)(52536014)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4224;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: A3zAas3Y0OC+W9ocksV5y89GwgG8A0kJXSxkR0mIulGXBLbQhzYcAzso35XQ3AxNktMDcFmkUNfYaLoLQ9UpyEHamENq29NGkGzJd0G7Sl+fhaaiABSyPRgXHZIf3QgJhAOEgLpxRtHDHpSo7k1fyANdiOPrKw5qJEY5FyvUqYVP7VpoHtKzrHPRn+Zs8LQ1GcTWCW4r48W964d+fXyn0jAG73F903XGaMuXDm0qBhzOHyIdG1oAaYifziLjBQqZ7v9zlV7yHyFfPIr5SzbWJtKh+zLiEfujF/l5XBqQ7YjpayNllstz4XZjFBgiAywTsmre6qp/VeFL7gaCWyVhCjBFsegwIsgiAXA+0Kgc8dsJsnOpTVHniNn4pbbaNrUX6rdrnMj/GTQuatnyMXJ11ISThVY8KP31wij6HiV32Ty/HBdwlIGO6OJ1H3DY/2vFk73xGnaEoYPS2MP0+m+sp6a8GER+6U8QuFiFW7hU2rA=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5718e995-a24e-4822-663a-08d77707b7e3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2019 09:12:12.8141
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UOrvi4VQh6iSbWirD49Ten+f5zibfkJMCsK88205W/Fips7VbB08GYhqU4j+77a8bjgLFMcpKU2HgDwr0Uli9w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4224
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQoNCmFkZCBj
-dG0gcHJvcGVydHkgc3VwcG9ydA0KDQpDaGFuZ2UtSWQ6IEk4MTExZGE3YjMwOWIxODA5YzYzMDJl
-Nzc0OGRkOWZkMDZkYzk3YmRlDQpTaWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcgTml1IDx5b25ncWlh
-bmcubml1QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZHJtX2NydGMuYyAgICAgfCAxNSArKysrKystDQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fZGRwX2NvbXAuYyB8IDYxICsrKysrKysrKysrKysrKysrKysrKysrKysrKystDQogZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCB8IDExICsrKysrKw0KIDMg
-ZmlsZXMgY2hhbmdlZCwgODQgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCg0KZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyBiL2RyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KaW5kZXggNGZiMzQ2Yy4uMTJkYzY4NCAx
-MDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KKysr
-IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQpAQCAtNjY2LDEwICs2
-NjYsMTMgQEAgc3RhdGljIHZvaWQgbXRrX2RybV9jcnRjX2F0b21pY19mbHVzaChzdHJ1Y3QgZHJt
-X2NydGMgKmNydGMsDQogCWludCBpOw0KIA0KIAlpZiAoY3J0Yy0+c3RhdGUtPmNvbG9yX21nbXRf
-Y2hhbmdlZCkNCi0JCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+ZGRwX2NvbXBfbnI7IGkrKykN
-CisJCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+ZGRwX2NvbXBfbnI7IGkrKykgew0KIAkJCW10
-a19kZHBfZ2FtbWFfc2V0KG10a19jcnRjLT5kZHBfY29tcFtpXSwNCiAJCQkJCSAgY3J0Yy0+c3Rh
-dGUsDQogCQkJCQkgIG10a19jcnRjX3N0YXRlLT5jbWRxX2hhbmRsZSk7DQorCQkJbXRrX2RkcF9j
-dG1fc2V0KG10a19jcnRjLT5kZHBfY29tcFtpXSwgY3J0Yy0+c3RhdGUpOw0KKwkJfQ0KKw0KICNp
-ZmRlZiBDT05GSUdfTVRLX0NNRFENCiAJaWYgKG10a19jcnRjLT5jbWRxX2NsaWVudCkgew0KIAkJ
-ZHJtX2F0b21pY19zdGF0ZV9nZXQob2xkX2F0b21pY19zdGF0ZSk7DQpAQCAtODE5LDYgKzgyMiw4
-IEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LA0K
-IAlpbnQgcGlwZSA9IHByaXYtPm51bV9waXBlczsNCiAJaW50IHJldDsNCiAJaW50IGk7DQorCWJv
-b2wgaGFzX2N0bSA9IGZhbHNlOw0KKwl1aW50IGdhbW1hX2x1dF9zaXplID0gMDsNCiANCiAJaWYg
-KCFwYXRoKQ0KIAkJcmV0dXJuIDA7DQpAQCAtODcwLDYgKzg3NSwxMiBAQCBpbnQgbXRrX2RybV9j
-cnRjX2NyZWF0ZShzdHJ1Y3QgZHJtX2RldmljZSAqZHJtX2RldiwNCiAJCX0NCiANCiAJCW10a19j
-cnRjLT5kZHBfY29tcFtpXSA9IGNvbXA7DQorDQorCQlpZiAoY29tcF9pZCA9PSBERFBfQ09NUE9O
-RU5UX0NDT1JSKQ0KKwkJCWhhc19jdG0gPSB0cnVlOw0KKw0KKwkJaWYgKGNvbXBfaWQgPT0gRERQ
-X0NPTVBPTkVOVF9HQU1NQSkNCisJCQlnYW1tYV9sdXRfc2l6ZSA9IE1US19MVVRfU0laRTsNCiAJ
-fQ0KIA0KIAlmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMtPmRkcF9jb21wX25yOyBpKyspDQpAQCAt
-ODkxLDcgKzkwMiw3IEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNl
-ICpkcm1fZGV2LA0KIAlpZiAocmV0IDwgMCkNCiAJCXJldHVybiByZXQ7DQogCWRybV9tb2RlX2Ny
-dGNfc2V0X2dhbW1hX3NpemUoJm10a19jcnRjLT5iYXNlLCBNVEtfTFVUX1NJWkUpOw0KLQlkcm1f
-Y3J0Y19lbmFibGVfY29sb3JfbWdtdCgmbXRrX2NydGMtPmJhc2UsIDAsIGZhbHNlLCBNVEtfTFVU
-X1NJWkUpOw0KKwlkcm1fY3J0Y19lbmFibGVfY29sb3JfbWdtdCgmbXRrX2NydGMtPmJhc2UsIDAs
-IGhhc19jdG0sIGdhbW1hX2x1dF9zaXplKTsNCiAJcHJpdi0+bnVtX3BpcGVzKys7DQogI2lmZGVm
-IENPTkZJR19NVEtfQ01EUQ0KIAltdGtfY3J0Yy0+Y21kcV9jbGllbnQgPQ0KZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jDQppbmRleCA5Y2MxMmFmLi4yZmQ1MmJh
-IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAu
-Yw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYw0KQEAg
-LTM4LDcgKzM4LDE1IEBADQogI2RlZmluZSBDQ09SUl9FTgkJCQlCSVQoMCkNCiAjZGVmaW5lIERJ
-U1BfQ0NPUlJfQ0ZHCQkJCTB4MDAyMA0KICNkZWZpbmUgQ0NPUlJfUkVMQVlfTU9ERQkJCUJJVCgw
-KQ0KKyNkZWZpbmUgQ0NPUlJfRU5HSU5FX0VOCQkJCUJJVCgxKQ0KKyNkZWZpbmUgQ0NPUlJfR0FN
-TUFfT0ZGCQkJCUJJVCgyKQ0KKyNkZWZpbmUgQ0NPUlJfV0dBTVVUX1NSQ19DTElQCQkJQklUKDMp
-DQogI2RlZmluZSBESVNQX0NDT1JSX1NJWkUJCQkJMHgwMDMwDQorI2RlZmluZSBESVNQX0NDT1JS
-X0NPRUZfMAkJCTB4MDA4MA0KKyNkZWZpbmUgRElTUF9DQ09SUl9DT0VGXzEJCQkweDAwODQNCisj
-ZGVmaW5lIERJU1BfQ0NPUlJfQ09FRl8yCQkJMHgwMDg4DQorI2RlZmluZSBESVNQX0NDT1JSX0NP
-RUZfMwkJCTB4MDA4Qw0KKyNkZWZpbmUgRElTUF9DQ09SUl9DT0VGXzQJCQkweDAwOTANCiANCiAj
-ZGVmaW5lIERJU1BfRElUSEVSX0VOCQkJCTB4MDAwMA0KICNkZWZpbmUgRElUSEVSX0VOCQkJCUJJ
-VCgwKQ0KQEAgLTE4Nyw3ICsxOTUsNyBAQCBzdGF0aWMgdm9pZCBtdGtfY2NvcnJfY29uZmlnKHN0
-cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsIHVuc2lnbmVkIGludCB3LA0KIAkJCSAgICAgdW5zaWdu
-ZWQgaW50IGJwYywgc3RydWN0IGNtZHFfcGt0ICpjbWRxX3BrdCkNCiB7DQogCW10a19kZHBfd3Jp
-dGUoY21kcV9wa3QsIGggPDwgMTYgfCB3LCBjb21wLCBESVNQX0NDT1JSX1NJWkUpOw0KLQltdGtf
-ZGRwX3dyaXRlKGNtZHFfcGt0LCBDQ09SUl9SRUxBWV9NT0RFLCBjb21wLCBESVNQX0NDT1JSX0NG
-Ryk7DQorCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIENDT1JSX0VOR0lORV9FTiwgY29tcCwgRElT
-UF9DQ09SUl9DRkcpOw0KIH0NCiANCiBzdGF0aWMgdm9pZCBtdGtfY2NvcnJfc3RhcnQoc3RydWN0
-IG10a19kZHBfY29tcCAqY29tcCkNCkBAIC0yMDAsNiArMjA4LDU2IEBAIHN0YXRpYyB2b2lkIG10
-a19jY29ycl9zdG9wKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXApDQogCXdyaXRlbF9yZWxheGVk
-KDB4MCwgY29tcC0+cmVncyArIERJU1BfQ0NPUlJfRU4pOw0KIH0NCiANCisvKiBDb252ZXJ0cyBh
-IERSTSBTMzEuMzIgdmFsdWUgdG8gdGhlIEhXIFMwLjExIGZvcm1hdC4gKi8NCitzdGF0aWMgdTE2
-IG10a19jdG1fczMxXzMyX3RvX3MwXzExKHU2NCBpbikNCit7DQorCXUxNiByOw0KKw0KKwkvKiBT
-aWduIGJpdC4gKi8NCisJciA9IGluICYgQklUX1VMTCg2MykgPyBCSVQoMTEpIDogMDsNCisNCisJ
-aWYgKChpbiAmIEdFTk1BU0tfVUxMKDYyLCAzMykpID4gMCkgew0KKwkJLyogV2UgaGF2ZSB6ZXJv
-IGludGVnZXIgYml0cyBzbyB3ZSBjYW4gb25seSBzYXR1cmF0ZSBoZXJlLiAqLw0KKwkJciB8PSBH
-RU5NQVNLKDEwLCAwKTsNCisJfSBlbHNlIHsNCisJCS8qIE90aGVyd2lzZSB0YWtlIHRoZSA5IG1v
-c3QgaW1wb3J0YW50IGZyYWN0aW9uYWwgYml0cy4gKi8NCisJCXIgfD0gKGluID4+IDIyKSAmIEdF
-Tk1BU0soMTAsIDApOw0KKwl9DQorDQorCXJldHVybiByOw0KK30NCisNCitzdGF0aWMgdm9pZCBt
-dGtfY2NvcnJfY3RtX3NldChzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLA0KKwkJCSAgICAgIHN0
-cnVjdCBkcm1fY3J0Y19zdGF0ZSAqc3RhdGUNCisJCQkgICAgICBzdHJ1Y3QgY21kcV9wa3QgKmNt
-ZHFfcGt0KQ0KK3sNCisJc3RydWN0IGRybV9wcm9wZXJ0eV9ibG9iICpibG9iID0gc3RhdGUtPmN0
-bTsNCisJc3RydWN0IGRybV9jb2xvcl9jdG0gKmN0bTsNCisJY29uc3QgdTY0ICppbnB1dDsNCisJ
-dWludDE2X3QgY29lZmZzWzldID0geyAwIH07DQorCWludCBpOw0KKw0KKwlpZiAoIWJsb2IpDQor
-CQlyZXR1cm47DQorDQorCWN0bSA9IChzdHJ1Y3QgZHJtX2NvbG9yX2N0bSAqKWJsb2ItPmRhdGE7
-DQorCWlucHV0ID0gY3RtLT5tYXRyaXg7DQorDQorCWZvciAoaSA9IDA7IGkgPCBBUlJBWV9TSVpF
-KGNvZWZmcyk7IGkrKykNCisJCWNvZWZmc1tpXSA9IG10a19jdG1fczMxXzMyX3RvX3MwXzExKGlu
-cHV0W2ldKTsNCisNCisJbXRrX2RkcF93cml0ZShjbWRxX3BrdCwgY29lZmZzWzBdIDw8IDE2IHwg
-Y29lZmZzWzFdLA0KKwkJICAgICAgY29tcCwgRElTUF9DQ09SUl9DT0VGXzApOw0KKwltdGtfZGRw
-X3dyaXRlKGNtZHFfcGt0LCBjb2VmZnNbMl0gPDwgMTYgfCBjb2VmZnNbM10sDQorCQkgICAgICBj
-b21wLCBESVNQX0NDT1JSX0NPRUZfMSk7DQorCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIGNvZWZm
-c1s0XSA8PCAxNiB8IGNvZWZmc1s1XSwNCisJCSAgICAgIGNvbXAsIERJU1BfQ0NPUlJfQ09FRl8y
-KTsNCisJbXRrX2RkcF93cml0ZShjbWRxX3BrdCwgY29lZmZzWzZdIDw8IDE2IHwgY29lZmZzWzdd
-LA0KKwkJICAgICAgY29tcCwgRElTUF9DQ09SUl9DT0VGXzMpOw0KKwltdGtfZGRwX3dyaXRlKGNt
-ZHFfcGt0LCBjb2VmZnNbOF0gPDwgMTYsDQorCQkgICAgICBjb21wLCBESVNQX0NDT1JSX0NPRUZf
-NCk7DQorfQ0KKw0KIHN0YXRpYyB2b2lkIG10a19kaXRoZXJfY29uZmlnKHN0cnVjdCBtdGtfZGRw
-X2NvbXAgKmNvbXAsIHVuc2lnbmVkIGludCB3LA0KIAkJCSAgICAgIHVuc2lnbmVkIGludCBoLCB1
-bnNpZ25lZCBpbnQgdnJlZnJlc2gsDQogCQkJICAgICAgdW5zaWduZWQgaW50IGJwYywgc3RydWN0
-IGNtZHFfcGt0ICpjbWRxX3BrdCkNCkBAIC0yNjksNiArMzI3LDcgQEAgc3RhdGljIHZvaWQgbXRr
-X2dhbW1hX3NldChzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLA0KIAkuY29uZmlnID0gbXRrX2Nj
-b3JyX2NvbmZpZywNCiAJLnN0YXJ0ID0gbXRrX2Njb3JyX3N0YXJ0LA0KIAkuc3RvcCA9IG10a19j
-Y29ycl9zdG9wLA0KKwkuY3RtX3NldCA9IG10a19jY29ycl9jdG1fc2V0LA0KIH07DQogDQogc3Rh
-dGljIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2NvbXBfZnVuY3MgZGRwX2RpdGhlciA9IHsNCmRpZmYg
-LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oIGIvZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KaW5kZXggNWIwYTNkNC4u
-NGUzZTVhYSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
-cF9jb21wLmgNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21w
-LmgNCkBAIC05NSw2ICs5NSw5IEBAIHN0cnVjdCBtdGtfZGRwX2NvbXBfZnVuY3Mgew0KIAkJCSAg
-c3RydWN0IGNtZHFfcGt0ICpjbWRxX3BrdCk7DQogCXZvaWQgKCpiZ2Nscl9pbl9vbikoc3RydWN0
-IG10a19kZHBfY29tcCAqY29tcCk7DQogCXZvaWQgKCpiZ2Nscl9pbl9vZmYpKHN0cnVjdCBtdGtf
-ZGRwX2NvbXAgKmNvbXApOw0KKwl2b2lkICgqY3RtX3NldCkoc3RydWN0IG10a19kZHBfY29tcCAq
-Y29tcCwNCisJCQlzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKnN0YXRlDQorCQkJc3RydWN0IGNtZHFf
-cGt0ICpjbWRxX3BrdCk7DQogfTsNCiANCiBzdHJ1Y3QgbXRrX2RkcF9jb21wIHsNCkBAIC0yMTMs
-NiArMjE2LDE0IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBtdGtfZGRwX2NvbXBfYmdjbHJfaW5fb2Zm
-KHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXApDQogCQljb21wLT5mdW5jcy0+YmdjbHJfaW5fb2Zm
-KGNvbXApOw0KIH0NCiANCitzdGF0aWMgaW5saW5lIHZvaWQgbXRrX2RkcF9jdG1fc2V0KHN0cnVj
-dCBtdGtfZGRwX2NvbXAgKmNvbXAsDQorCQkJCSAgIHN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAqc3Rh
-dGUNCisJCQkJICAgc3RydWN0IGNtZHFfcGt0ICpjbWRxX3BrdCkNCit7DQorCWlmIChjb21wLT5m
-dW5jcyAmJiBjb21wLT5mdW5jcy0+Y3RtX3NldCkNCisJCWNvbXAtPmZ1bmNzLT5jdG1fc2V0KGNv
-bXAsIHN0YXRlKTsNCit9DQorDQogaW50IG10a19kZHBfY29tcF9nZXRfaWQoc3RydWN0IGRldmlj
-ZV9ub2RlICpub2RlLA0KIAkJCWVudW0gbXRrX2RkcF9jb21wX3R5cGUgY29tcF90eXBlKTsNCiBp
-bnQgbXRrX2RkcF9jb21wX2luaXQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKmNvbXBfbm9kZSwNCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
-
+On 2019-12-02 7:39 AM, Shawn Guo wrote:=0A=
+> On Thu, Oct 31, 2019 at 11:50:25PM +0200, Leonard Crestez wrote:=0A=
+>> Add driver for dynamic scaling the DDR Controller on imx8m chips. Actual=
+=0A=
+>> frequency switching is implemented inside TF-A, this driver wraps the=0A=
+>> SMC calls and synchronizes the clk tree.=0A=
+>>=0A=
+>> The DRAM clocks on imx8m have the following structure (abridged):=0A=
+>>=0A=
+>>   +----------+       |\            +------+=0A=
+>>   | dram_pll |-------|M| dram_core |      |=0A=
+>>   +----------+       |U|---------->| D    |=0A=
+>>                   /--|X|           |  D   |=0A=
+>>     dram_alt_root |  |/            |   R  |=0A=
+>>                   |                |    C |=0A=
+>>              +---------+           |      |=0A=
+>>              |FIX DIV/4|           |      |=0A=
+>>              +---------+           |      |=0A=
+>>    composite:     |                |      |=0A=
+>>   +----------+    |                |      |=0A=
+>>   | dram_alt |----/                |      |=0A=
+>>   +----------+                     |      |=0A=
+>>   | dram_apb |-------------------->|      |=0A=
+>>   +----------+                     +------+=0A=
+>>=0A=
+>> The dram_pll is used for higher rates and dram_alt is used for lower=0A=
+>> rates. The dram_alt and dram_apb clocks are "imx composite" and their=0A=
+>> parent can also be modified.=0A=
+>>=0A=
+>> This driver will prepare/enable the new parents ahead of switching (so=
+=0A=
+>> that the expected roots are enabled) and afterwards it will call=0A=
+>> clk_set_parent to ensure the parents in clock framework are up-to-date.=
+=0A=
+>>=0A=
+>> The driver relies on dram_pll dram_alt and dram_apb being marked with=0A=
+>> CLK_GET_RATE_NOCACHE for rate updates.=0A=
+>>=0A=
+>> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
+=0A=
+A more recent version of this patch is already in next:=0A=
+=0A=
+https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/commit/?h=
+=3Ddevfreq-next&id=3D518e99e2a22e318944d531a92aab5082fabb4d38=0A=
+=0A=
+>>   drivers/devfreq/Makefile   |   1 +=0A=
+>>   drivers/devfreq/imx-ddrc.c | 430 +++++++++++++++++++++++++++++++++++++=
+=0A=
+>>   2 files changed, 431 insertions(+)=0A=
+>>   create mode 100644 drivers/devfreq/imx-ddrc.c=0A=
+=0A=
+>> +++ b/drivers/devfreq/imx-ddrc.c=0A=
+>> @@ -0,0 +1,430 @@=0A=
+>> +// SPDX-License-Identifier: GPL-2.0=0A=
+>> +/*=0A=
+>> + * Copyright 2019 NXP=0A=
+>> + */=0A=
+>> +=0A=
+>> +#include <linux/module.h>=0A=
+>> +#include <linux/device.h>=0A=
+>> +#include <linux/of_device.h>=0A=
+>> +#include <linux/platform_device.h>=0A=
+>> +#include <linux/devfreq.h>=0A=
+>> +#include <linux/pm_opp.h>=0A=
+>> +#include <linux/clk.h>=0A=
+>> +#include <linux/clk-provider.h>=0A=
+> =0A=
+> This is a header that should ideally be used by clock drivers only.=0A=
+> =0A=
+>> +#include <linux/arm-smccc.h>=0A=
+>> +=0A=
+>> +#define IMX_SIP_DDR_DVFS			0xc2000004=0A=
+>> +=0A=
+>> +/* Values starting from 0 switch to specific frequency */=0A=
+>> +#define IMX_SIP_DDR_FREQ_SET_HIGH		0x00=0A=
+>> +=0A=
+>> +/* Deprecated after moving IRQ handling to ATF */=0A=
+>> +#define IMX_SIP_DDR_DVFS_WAIT_CHANGE		0x0F=0A=
+> =0A=
+> These two defines are not used.  Will be?=0A=
+=0A=
+No, can post a separate patch to remove them.=0A=
+> =0A=
+>> +=0A=
+>> +/* Query available frequencies. */=0A=
+>> +#define IMX_SIP_DDR_DVFS_GET_FREQ_COUNT		0x10=0A=
+>> +#define IMX_SIP_DDR_DVFS_GET_FREQ_INFO		0x11=0A=
+>> +=0A=
+>> +/*=0A=
+>> + * This should be in a 1:1 mapping with devicetree OPPs but=0A=
+>> + * firmware provides additional info.=0A=
+>> + */=0A=
+>> +struct imx_ddrc_freq {=0A=
+>> +	unsigned long rate;=0A=
+>> +	unsigned long smcarg;=0A=
+>> +	int dram_core_parent_index;=0A=
+>> +	int dram_alt_parent_index;=0A=
+>> +	int dram_apb_parent_index;=0A=
+>> +};=0A=
+>> +=0A=
+>> +/* Hardware limitation */=0A=
+>> +#define IMX_DDRC_MAX_FREQ_COUNT 4=0A=
+>> +=0A=
+>> +/*=0A=
+>> + * imx DRAM controller=0A=
+>> + *=0A=
+>> + * imx DRAM controller clocks have the following structure (abridged):=
+=0A=
+>> + *=0A=
+>> + * +----------+       |\            +------+=0A=
+>> + * | dram_pll |-------|M| dram_core |      |=0A=
+>> + * +----------+       |U|---------->| D    |=0A=
+>> + *                 /--|X|           |  D   |=0A=
+>> + *   dram_alt_root |  |/            |   R  |=0A=
+>> + *                 |                |    C |=0A=
+>> + *            +---------+           |      |=0A=
+>> + *            |FIX DIV/4|           |      |=0A=
+>> + *            +---------+           |      |=0A=
+>> + *  composite:     |                |      |=0A=
+>> + * +----------+    |                |      |=0A=
+>> + * | dram_alt |----/                |      |=0A=
+>> + * +----------+                     |      |=0A=
+>> + * | dram_apb |-------------------->|      |=0A=
+>> + * +----------+                     +------+=0A=
+>> + *=0A=
+>> + * The dram_pll is used for higher rates and dram_alt is used for lower=
+ rates.=0A=
+>> + *=0A=
+>> + * Frequency switching is implemented in TF-A (via SMC call) and can ch=
+ange the=0A=
+>> + * configuration of the clocks, including mux parents. The dram_alt and=
+=0A=
+>> + * dram_apb clocks are "imx composite" and their parent can change too.=
+=0A=
+>> + *=0A=
+>> + * We need to prepare/enable the new mux parents head of switching and =
+update=0A=
+>> + * their information afterwards.=0A=
+>> + */=0A=
+>> +struct imx_ddrc {=0A=
+>> +	struct devfreq_dev_profile profile;=0A=
+>> +	struct devfreq *devfreq;=0A=
+>> +=0A=
+>> +	/* For frequency switching: */=0A=
+>> +	struct clk *dram_core;=0A=
+>> +	struct clk *dram_pll;=0A=
+>> +	struct clk *dram_alt;=0A=
+>> +	struct clk *dram_apb;=0A=
+>> +=0A=
+>> +	int freq_count;=0A=
+>> +	struct imx_ddrc_freq freq_table[IMX_DDRC_MAX_FREQ_COUNT];=0A=
+>> +};=0A=
+>> +=0A=
+=0A=
+... snip ...=0A=
+=0A=
+>> +static void imx_ddrc_smc_set_freq(int target_freq)=0A=
+>> +{=0A=
+>> +	struct arm_smccc_res res;=0A=
+>> +	u32 online_cpus =3D 0;=0A=
+>> +	int cpu;=0A=
+>> +=0A=
+>> +	local_irq_disable();=0A=
+>> +=0A=
+>> +	for_each_online_cpu(cpu)=0A=
+>> +		online_cpus |=3D (1 << (cpu * 8));=0A=
+> =0A=
+> Nit: one level of unnecessary parentheses.=0A=
+=0A=
+Yes=0A=
+=0A=
+>> +=0A=
+>> +	/* change the ddr freqency */=0A=
+>> +	arm_smccc_smc(IMX_SIP_DDR_DVFS, target_freq, online_cpus,=0A=
+>> +			0, 0, 0, 0, 0, &res);=0A=
+>> +=0A=
+>> +	local_irq_enable();=0A=
+>> +}=0A=
+>> +=0A=
+>> +struct clk *clk_get_parent_by_index(struct clk *clk, int index)=0A=
+>> +{=0A=
+>> +	struct clk_hw *hw;=0A=
+>> +=0A=
+>> +	hw =3D clk_hw_get_parent_by_index(__clk_get_hw(clk), index);=0A=
+> =0A=
+> Okay, this is why you need clk-provider.h.  But this=0A=
+> clk_get_parent_by_index() function looks completely generic, and should=
+=0A=
+> be proposed to clock core?=0A=
+=0A=
+There are very few driver users of clk_hw_get_parent_by_index:=0A=
+=0A=
+$ git grep -wl clk_hw_get_parent_by_index |grep -v drivers/clk=0A=
+arch/mips/alchemy/common/clock.c=0A=
+drivers/cpufreq/qoriq-cpufreq.c=0A=
+drivers/devfreq/imx8m-ddrc.c=0A=
+drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c=0A=
+drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c=0A=
+drivers/media/platform/atmel/atmel-isc-base.c=0A=
+drivers/rtc/rtc-ac100.c=0A=
+include/linux/clk-provider.h=0A=
+=0A=
+Even clk_get_parent has few users and it contains this strange comment:=0A=
+=0A=
+/* TODO: Create a per-user clk and change callers to call clk_put */=0A=
+=0A=
+That proposed change effectively creates a new API? I didn't want to add =
+=0A=
+a new clk core API with unclear semantics.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
