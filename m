@@ -2,107 +2,96 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAF2C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BF7C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62F6B20672
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F1B20833
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oGIDxy1G"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="kF36udmj";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="kF36udmj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfLBRT2 (ORCPT
+        id S1727471AbfLBRWL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:19:28 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37714 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727493AbfLBRT2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 12:19:28 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DCD9C309;
-        Mon,  2 Dec 2019 18:19:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575307167;
-        bh=1myNRC7SsLatx4Um/XtlYnXlHXwV+S/+jv3sPPcyRGM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oGIDxy1GY7K5W+sGA4pLqXht/OLU5+l+PsVZiMAWj+8UC1SLRQWNXj9CYnBzlDJOf
-         Iv3zBXEGXH598Iar3g2xrJ6KszGwn2Xmkg+P1w0aDRfsNkMNgT6VFpGVBfz5vjckpT
-         WEl3UZaRlwRE1ZPOyOCPpZgJRl/5WqYGc71OqC10=
-Date:   Mon, 2 Dec 2019 19:19:20 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
-        Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Clark <robdclark@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 20/21] dt-bindings: display: panel: Add the
- LTA089AC29000 variant
-Message-ID: <20191202171920.GT4929@pendragon.ideasonboard.com>
-References: <20191023154512.9762-1-boris.brezillon@collabora.com>
- <20191023154512.9762-21-boris.brezillon@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191023154512.9762-21-boris.brezillon@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 2 Dec 2019 12:22:11 -0500
+Received: from node.akkea.ca ([192.155.83.177]:60936 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727460AbfLBRWL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 12:22:11 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id B6C324E200E;
+        Mon,  2 Dec 2019 17:22:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1575307330; bh=Tay7PkRhxC2/HjsR27QnZoDpIHZRaRRBRVcxi/0JbN0=;
+        h=From:To:Cc:Subject:Date;
+        b=kF36udmj79PxzlmPMUv7izKr4qbE/7DwPB17XqS2jgooFuBBFM69CWI8ydDdYleWt
+         +knkMlQsBVrcSjYiHBglkllwofuDV+mL7OfyL9woBAIKtMe538ZXdFjVsx/s3KfGcB
+         EclPrSIiz5KJG9cJV4JAG9FSfrQkffOC8IFFRIIs=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id IzGH-TaFCzUL; Mon,  2 Dec 2019 17:22:10 +0000 (UTC)
+Received: from thinkpad-tablet.cg.shawcable.net (S0106905851b613e9.cg.shawcable.net [70.77.244.40])
+        by node.akkea.ca (Postfix) with ESMTPSA id 7E7054E2003;
+        Mon,  2 Dec 2019 17:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1575307330; bh=Tay7PkRhxC2/HjsR27QnZoDpIHZRaRRBRVcxi/0JbN0=;
+        h=From:To:Cc:Subject:Date;
+        b=kF36udmj79PxzlmPMUv7izKr4qbE/7DwPB17XqS2jgooFuBBFM69CWI8ydDdYleWt
+         +knkMlQsBVrcSjYiHBglkllwofuDV+mL7OfyL9woBAIKtMe538ZXdFjVsx/s3KfGcB
+         EclPrSIiz5KJG9cJV4JAG9FSfrQkffOC8IFFRIIs=
+From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
+To:     devicetree@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Guo Ren <guoren@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>
+Subject: [PATCH] dt-bindings: vendor-prefixes: Add a broadmobi entry
+Date:   Mon,  2 Dec 2019 10:22:03 -0700
+Message-Id: <20191202172203.11917-1-angus@akkea.ca>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+Add Shanghai Broadmobi Communication Technology Co.,Ltd. for their modem
+dts entries.
 
-Thank you for the patch.
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On Wed, Oct 23, 2019 at 05:45:11PM +0200, Boris Brezillon wrote:
-> The LTA089AC29000 and LT089AC29000 are not exactly the same. Let's add
-> a new compatible for the LTA variant.
-
-What is the difference ? :-)
-
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> ---
->  .../bindings/display/panel/toshiba,lt089ac29000.txt          | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt b/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
-> index 89826116628c..26ebfa098966 100644
-> --- a/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
-> +++ b/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
-> @@ -1,7 +1,10 @@
->  Toshiba 8.9" WXGA (1280x768) TFT LCD panel
->  
->  Required properties:
-> -- compatible: should be "toshiba,lt089ac29000"
-> +- compatible: should be one of the following
-> +	      "toshiba,lt089ac29000"
-> +	      "toshiba,lta089ac29000"
-> +
->  - power-supply: as specified in the base binding
->  
->  This binding is compatible with the simple-panel binding, which is specified
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 6046f4555852..fa657235dbda 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -149,6 +149,8 @@ patternProperties:
+     description: Bosch Sensortec GmbH
+   "^boundary,.*":
+     description: Boundary Devices Inc.
++  "^broadmobi,.*":
++    description: Shanghai Broadmobi Communication Technology Co.,Ltd.
+   "^brcm,.*":
+     description: Broadcom Corporation
+   "^buffalo,.*":
 -- 
-Regards,
+2.17.1
 
-Laurent Pinchart
