@@ -2,99 +2,143 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2153CC43215
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 16:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09100C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 16:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED23C20833
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 16:48:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575305295;
-	bh=YC1D92Q2/C1s5BHdiFIxUIytMAKtToyeLtGa1l/noTo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CblWkDkPR+P8mKzN4NbrjZyFws1lr0T01SIlfgExEhm51PRCcnVN2hXb74FW77+Lu
-	 iFCvGnaAumoJvBFVTCPVV4OHxNlazb2GQKGElxCkSqGA/xXwgrf2zvSYrq8FuVZv+T
-	 TcUxK9WPz3ODxtlrj35EIpqdZ9/j2u44EAB751nc=
+	by mail.kernel.org (Postfix) with ESMTP id D32B420848
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 16:49:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lk0Xviqh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfLBQsO (ORCPT
+        id S1727709AbfLBQtL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 11:48:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727438AbfLBQsO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Dec 2019 11:48:14 -0500
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49C4F2084F;
-        Mon,  2 Dec 2019 16:48:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575305293;
-        bh=YC1D92Q2/C1s5BHdiFIxUIytMAKtToyeLtGa1l/noTo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bykY119De2Dhrk6aOlyWBaRhw24DgNOII7pSeQbvYq6wu3HB8bZucLCeyDiyMphHb
-         waaA0naFVT+GSbvm42jVpSwMwWClCWu9aVLJjhdONOMfBEtPbh8DDN4Gg0dgfCKWQz
-         9uRWPv0Sk1cVyfOOCZjMHG+h5prDjgvLgkc+MIT4=
-Received: by mail-qk1-f170.google.com with SMTP id d124so145995qke.6;
-        Mon, 02 Dec 2019 08:48:13 -0800 (PST)
-X-Gm-Message-State: APjAAAXshZvn9lPzSco0kryhudLWxr0rR+BUs6OjoIhpbwX6inNy5B4G
-        5N7B8sWrTFzEx9bHsMb9VrieYsIDXGgQ/oRemg==
-X-Google-Smtp-Source: APXvYqzEf6nK0R9FJCeFAuVHbm+2+Z+yErAyrcxTHZY90AVZEGsjtOmw8+JlCpW8cD4sggibZAOibC9Zpx1Hu5OeO3U=
-X-Received: by 2002:a37:81c6:: with SMTP id c189mr34076068qkd.223.1575305292430;
- Mon, 02 Dec 2019 08:48:12 -0800 (PST)
+        Mon, 2 Dec 2019 11:49:11 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37266 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727435AbfLBQtL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 11:49:11 -0500
+Received: by mail-ed1-f67.google.com with SMTP id cy15so25221157edb.4;
+        Mon, 02 Dec 2019 08:49:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JCNF6tgwefhUIMTdjVdbK7yFqIKcfTu3pjPnwJ0a8Uo=;
+        b=lk0XviqhK/oQnxW7KxSv6xIA7fuGC1wjpikxD+6lZuj6OxvsoblVOz65xae/1GRzSN
+         Da8mMBMC9Vi0tO1p4z7dnjGEdNZFqPOr6FgK9U6Z0rdnx+3ZKep4j/ivuWPpDsko8+eh
+         ZBAidPmsZAIQA8cuxKIrCueFM4s8IucnbcWIbyCv+rfQEZF0HZ5zZM/FNQU31jqSxI15
+         6NvKe5D80gcGPM2KlO4EdMVeXxHqLVRh6tbPx3GVCxU4c9HHsMHw3uk7nkWajshX/7sm
+         cm7nB/kZ3S9y1nef7oTSxYlxPCwM2upuxZdGvfzFLpwknBL/zt9BeAnUHmdfGgCriWFN
+         9X5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JCNF6tgwefhUIMTdjVdbK7yFqIKcfTu3pjPnwJ0a8Uo=;
+        b=GPJ6e0vmGvLqQf87MOAEXDY+/qlx8ZNG9Ev/5Zd2fGiQGrIyycVnAsig9TP8j1m8wq
+         d8IVocai14/QzXMlZ/Qf+26wcJPutspd/kgRFyNk180qz70Y8JSV2hEA9O4JdbfjhV5F
+         GBkrmNbUIfHlnYzgvkXYsZom8fSHnDuRQn6sXDUDJkMT5DBe5L74TBrcS313MOEtsLIt
+         nAEfyCyC0o69zPqflszmcaCYKtPlCiEs7B7fHsGXlo20gOL3ERS0Xa1JdMuhDrMAHirM
+         P6zaSnGa5f8/JdxSCVgu0i8W4F0lPwgRRdd1bptK9ie0SHUx6pimCndXJmEJjtOYQTsJ
+         Tz3w==
+X-Gm-Message-State: APjAAAUuA5p8jGddCz95EfvM0Tgq9ULOPhGkqLghnsw2JCg438S9+zWt
+        ULq/tuUSHS/03Pm3uZ+uOd+a+kl5t7HkmGh/ZN8=
+X-Google-Smtp-Source: APXvYqwOkds5zFJUwr1u9M8V2LfokAmaX+ozape5Zik4y2kw1WrjcT4qQdtDQd32rn1gW2vmWsf3uHb2NXG6Oy8/oOQ=
+X-Received: by 2002:a50:fc85:: with SMTP id f5mr27812882edq.294.1575305349177;
+ Mon, 02 Dec 2019 08:49:09 -0800 (PST)
 MIME-Version: 1.0
-References: <20191116205026.dvlevawj5obq7weh@smtp.gmail.com>
- <CAL_JsqJzi_0eYj=rMxwQe+OTh_m3ngocOvcPZd-tykAwAJAw6g@mail.gmail.com> <20191123122548.54f0f529@archlinux>
-In-Reply-To: <20191123122548.54f0f529@archlinux>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 2 Dec 2019 10:48:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKOdmCn2cxGcjioUibXc=_2cTWtZb81nEx08CMv2fo6Pw@mail.gmail.com>
-Message-ID: <CAL_JsqKOdmCn2cxGcjioUibXc=_2cTWtZb81nEx08CMv2fo6Pw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: ad7292: Update SPDX identifier
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
-        Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
+References: <1575294437-6129-1-git-send-email-chandanu@codeaurora.org> <0101016ec6df0d33-edb8acfc-a6f1-486e-a8db-38ec498951ed-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016ec6df0d33-edb8acfc-a6f1-486e-a8db-38ec498951ed-000000@us-west-2.amazonses.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 2 Dec 2019 08:48:58 -0800
+Message-ID: <CAF6AEGtHkPSx8xU+CdomDtOqLr-cC2bgfHngWWZzx=8STAsQtA@mail.gmail.com>
+Subject: Re: [DPU PATCH v3 3/5] drm/msm/dp: add displayPort driver support
+To:     Chandan Uddaraju <chandanu@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Sean Paul <seanpaul@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>, nganji@codeaurora.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        "Kristian H. Kristensen" <hoegsberg@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 6:25 AM Jonathan Cameron <jic23@kernel.org> wrote:
+On Mon, Dec 2, 2019 at 5:48 AM Chandan Uddaraju <chandanu@codeaurora.org> wrote:
 >
-> On Fri, 22 Nov 2019 10:05:52 -0600
-> Rob Herring <robh@kernel.org> wrote:
+> Add the needed displayPort files to enable DP driver
+> on msm target.
 >
-> > On Sat, Nov 16, 2019 at 2:50 PM Marcelo Schmitt
-> > <marcelo.schmitt1@gmail.com> wrote:
-> > >
-> > > Update SPDX identifier to the preferred dual GPL-2.0 OR BSD-2-Clause
-> > > licensing.
-> > >
-> > > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > > ---
-> > > I split the changes into 2 different patches since they are about
-> > > different issues.
-> > >
-> > >  Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> I've applied this to the fixes-togreg branch so it'll go in during
-> the early RCs.  Nice not to have a release with a different
-> license, particularly as this was me running too fast at taking
-> patches.
+> "dp_display" module is the main module that calls into
+> other sub-modules. "dp_drm" file represents the interface
+> between DRM framework and DP driver.
+>
+> changes in v2:
+> -- Update copyright markings on all relevant files.
+> -- Change pr_err() to DRM_ERROR()
+> -- Use APIs directly instead of function pointers.
+> -- Use drm_display_mode structure to store link parameters in the driver.
+> -- Use macros for register definitions instead of hardcoded values.
+> -- Replace writel_relaxed/readl_relaxed with writel/readl
+>    and remove memory barriers.
+> -- Remove unnecessary NULL checks.
+> -- Use drm helper functions for dpcd read/write.
+> -- Use DRM_DEBUG_DP for debug msgs.
+>
+> changes in V3:
+> -- Removed changes in dpu_io_util.[ch]
+> -- Added locking around "is_connected" flag and removed atomic_set()
+> -- Removed the argument validation checks in all the static functions
+>    except initialization functions and few API calls across msm/dp files
+> -- Removed hardcoded values for register reads/writes
+> -- Removed vreg related generic structures.
+> -- Added return values where ever necessary.
+> -- Updated dp_ctrl_on function.
+> -- Calling the ctrl specific catalog functions directly instead of
+>    function pointers.
+> -- Added seperate change that adds standard value in drm_dp_helper file.
+> -- Added separate change in this list that is used to initialize
+>    displayport in DPU driver.
+> -- Added change to use drm_dp_get_adjust_request_voltage() function.
+>
+> Signed-off-by: Chandan Uddaraju <chandanu@codeaurora.org>
+> ---
 
-Please send patch 2 sooner rather than later. I would like 'make
-dt_binding_check' to pass in rc1 (or rc2 at the latest) rather than
-rc5/6 as happened in 5.4 cycle. It's hard to complain that patches
-fail it when mainline is already broken.
+[snip]
 
-Rob
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> index f96e142..29ac7d3 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> @@ -967,6 +967,9 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
+>
+>         trace_dpu_enc_mode_set(DRMID(drm_enc));
+>
+> +       if (drm_enc->encoder_type == DRM_MODE_ENCODER_TMDS && priv->dp)
+> +               msm_dp_display_mode_set(priv->dp, drm_enc, mode, adj_mode);
+> +
+
+for better or for worse, DSI and HDMI backends create an internal
+drm_bridge object to avoid all of these shunts over from the encoder.
+We might be still the only driver to do this, but IMHO it is better
+than making each encoder know about each backend, so we might as well
+stick with that.
+
+(same goes for the other 'if (drm_enc->encoder_type == DRM_MODE_ENCODER_TMDS)'s)
+
+BR,
+-R
+
+
+>         list_for_each_entry(conn_iter, connector_list, head)
+>                 if (conn_iter->encoder == drm_enc)
+>                         conn = conn_iter;
