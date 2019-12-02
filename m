@@ -2,37 +2,40 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C4EC432C0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE86CC43141
 	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 10:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE052070B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 10:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9277B2070B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 10:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfLBK3U (ORCPT
+        id S1727415AbfLBK3V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 05:29:20 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57468 "EHLO mx1.suse.de"
+        Mon, 2 Dec 2019 05:29:21 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57508 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726330AbfLBK3U (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Dec 2019 05:29:20 -0500
+        id S1726678AbfLBK3V (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 05:29:21 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BAD3EB220;
-        Mon,  2 Dec 2019 10:29:18 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 925BEB297;
+        Mon,  2 Dec 2019 10:29:19 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        James Tai <james.tai@realtek.com>
-Subject: [PATCH v2 0/9] arm64: dts: realtek: Initial RTD1395 and BPi-M4 / Lion Skin support
-Date:   Mon,  2 Dec 2019 11:29:01 +0100
-Message-Id: <20191202102910.26916-1-afaerber@suse.de>
+        Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
+Subject: [PATCH v2 2/9] arm64: dts: realtek: rtd129x: Use reserved-memory for RPC regions
+Date:   Mon,  2 Dec 2019 11:29:03 +0100
+Message-Id: <20191202102910.26916-3-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191202102910.26916-1-afaerber@suse.de>
+References: <20191202102910.26916-1-afaerber@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -41,76 +44,97 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+Move /reserved-memory node from RTD1295 to RTD129x DT.
+Convert RPC /memreserve/s into /reserved-memory nodes.
 
-This patch series adds initial Device Trees for Realtek RTD1395 SoC and
-Banana Pi BPI-M4 SBC and (new in v2) Realtek Lion Skin EVB.
+Fixes: 72a7786c0a0d ("ARM64: dts: Add Realtek RTD1295 and Zidoo X9S")
+Fixes: f8b3436dad5c ("arm64: dts: realtek: Factor out common RTD129x parts")
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ v1 -> v2: Unchanged
+ * Added Fixes headers
+ 
+ arch/arm64/boot/dts/realtek/rtd1295.dtsi | 13 +------------
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi | 23 ++++++++++++++++++++---
+ 2 files changed, 21 insertions(+), 15 deletions(-)
 
-It is based on my RTD1195 series and James' RTD1619 series.
-
-It starts with some refactorings to align the various SoCs and then
-introduces an r-bus node and goes on to properly shadow RAM areas.
-
-RTD1395 family seems pretty similar to RTD1295 family, but allows for more RAM,
-and it uses a different reserved memory region for RPC.
-RTD1295 resets appear sufficiently compatible for now (no documentation yet).
-
-More details at:
-https://en.opensuse.org/HCL:BananaPi_M4
-
-Latest experimental patches at:
-https://github.com/afaerber/linux/commits/rtd1295-next
-
-Have a lot of fun!
-
-Cheers,
-Andreas
-
-v1 -> v2:
-* RTD1195 patches squashed/moved into RTD1195 v3 series
-* Fixed RTD1295 r-bus size (James)
-* Use #address-cells/#size-cells of 1 (James)
-* Add/update patches to carve out boot ROM from RAM (Rob/James)
-* Add patches adding RTD1395 Lion Skin EVB
-
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: James Tai <james.tai@realtek.com>
-
-Andreas Färber (9):
-  arm64: dts: realtek: rtd129x: Fix GIC CPU masks for RTD1293
-  arm64: dts: realtek: rtd129x: Use reserved-memory for RPC regions
-  arm64: dts: realtek: rtd129x: Introduce r-bus
-  arm64: dts: realtek: rtd129x: Carve out boot ROM from memory
-  arm64: dts: realtek: rtd16xx: Carve out boot ROM from memory
-  dt-bindings: arm: realtek: Add RTD1395 and Banana Pi BPI-M4
-  arm64: dts: realtek: Add RTD1395 and BPi-M4
-  dt-bindings: arm: realtek: Add Realtek Lion Skin EVB
-  arm64: dts: realtek: rtd1395: Add Realtek Lion Skin EVB
-
- Documentation/devicetree/bindings/arm/realtek.yaml |   7 +
- arch/arm64/boot/dts/realtek/Makefile               |   3 +
- arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts     |   6 +-
- arch/arm64/boot/dts/realtek/rtd1293.dtsi           |  12 +-
- arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts    |   6 +-
- .../arm64/boot/dts/realtek/rtd1295-probox2-ava.dts |   6 +-
- arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts  |   4 +-
- arch/arm64/boot/dts/realtek/rtd1295.dtsi           |  21 +--
- arch/arm64/boot/dts/realtek/rtd1296-ds418.dts      |   4 +-
- arch/arm64/boot/dts/realtek/rtd1296.dtsi           |   8 +-
- arch/arm64/boot/dts/realtek/rtd129x.dtsi           | 170 ++++++++++++---------
- arch/arm64/boot/dts/realtek/rtd1395-bpi-m4.dts     |  30 ++++
- arch/arm64/boot/dts/realtek/rtd1395-lionskin.dts   |  36 +++++
- arch/arm64/boot/dts/realtek/rtd1395.dtsi           |  65 ++++++++
- arch/arm64/boot/dts/realtek/rtd139x.dtsi           | 142 +++++++++++++++++
- arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts    |   5 +-
- arch/arm64/boot/dts/realtek/rtd16xx.dtsi           |   4 +-
- 17 files changed, 417 insertions(+), 112 deletions(-)
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1395-bpi-m4.dts
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1395-lionskin.dts
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1395.dtsi
- create mode 100644 arch/arm64/boot/dts/realtek/rtd139x.dtsi
-
+diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+index 34f6cc6f16fe..1402abe80ea1 100644
+--- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+@@ -2,7 +2,7 @@
+ /*
+  * Realtek RTD1295 SoC
+  *
+- * Copyright (c) 2016-2017 Andreas Färber
++ * Copyright (c) 2016-2019 Andreas Färber
+  */
+ 
+ #include "rtd129x.dtsi"
+@@ -47,17 +47,6 @@
+ 		};
+ 	};
+ 
+-	reserved-memory {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		tee@10100000 {
+-			reg = <0x10100000 0xf00000>;
+-			no-map;
+-		};
+-	};
+-
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <GIC_PPI 13
+diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+index 4433114476f5..8d80cca945bc 100644
+--- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+@@ -2,14 +2,12 @@
+ /*
+  * Realtek RTD1293/RTD1295/RTD1296 SoC
+  *
+- * Copyright (c) 2016-2017 Andreas Färber
++ * Copyright (c) 2016-2019 Andreas Färber
+  */
+ 
+ /memreserve/	0x0000000000000000 0x0000000000030000;
+-/memreserve/	0x000000000001f000 0x0000000000001000;
+ /memreserve/	0x0000000000030000 0x00000000000d0000;
+ /memreserve/	0x0000000001b00000 0x00000000004be000;
+-/memreserve/	0x0000000001ffe000 0x0000000000004000;
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/reset/realtek,rtd1295.h>
+@@ -19,6 +17,25 @@
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		rpc_comm: rpc@1f000 {
++			reg = <0x1f000 0x1000>;
++		};
++
++		rpc_ringbuf: rpc@1ffe000 {
++			reg = <0x1ffe000 0x4000>;
++		};
++
++		tee: tee@10100000 {
++			reg = <0x10100000 0xf00000>;
++			no-map;
++		};
++	};
++
+ 	arm_pmu: arm-pmu {
+ 		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.16.4
 
