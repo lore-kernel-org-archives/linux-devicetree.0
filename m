@@ -2,29 +2,30 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E93C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 13:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC4CC43141
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 13:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 655352084F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 13:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C0302084F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 13:34:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfLBNeq (ORCPT
+        id S1727563AbfLBNer (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 08:34:46 -0500
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:45895 "EHLO
+        Mon, 2 Dec 2019 08:34:47 -0500
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:45897 "EHLO
         herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727503AbfLBNeq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 08:34:46 -0500
+        with ESMTP id S1727364AbfLBNer (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 08:34:47 -0500
 Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id xB2DYIxY015796;
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id xB2DYIfw015794;
         Mon, 2 Dec 2019 15:34:18 +0200
 Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id BD0986032E; Mon,  2 Dec 2019 15:34:18 +0200 (IST)
+        id B283F6026B; Mon,  2 Dec 2019 15:34:18 +0200 (IST)
 From:   amirmizi6@gmail.com
 To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
         oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
@@ -36,9 +37,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
         oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
         amir.mizinski@nuvoton.com, Amir Mizinski <amirmizi6@gmail.com>
-Subject: [PATCH v2 3/5] char: tpm: rewrite "tpm_tis_req_canceled()"
-Date:   Mon,  2 Dec 2019 15:33:30 +0200
-Message-Id: <20191202133332.178110-4-amirmizi6@gmail.com>
+Subject: [PATCH v2 1/5] char: tpm: Make implementation of read16 read32 write32 optional
+Date:   Mon,  2 Dec 2019 15:33:28 +0200
+Message-Id: <20191202133332.178110-2-amirmizi6@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20191202133332.178110-1-amirmizi6@gmail.com>
 References: <20191202133332.178110-1-amirmizi6@gmail.com>
@@ -51,40 +52,136 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Amir Mizinski <amirmizi6@gmail.com>
 
-Using this function while read/write data resulted in aborted operation.
-After investigating according to TCG TPM Profile (PTP) Specifications,
-i found cancel should happen only if TPM_STS.commandReady bit is lit
-and couldn't find a case when the current condition is valid.
-Also only cmdReady bit need to be compared instead of the full lower status register byte.
+Only tpm_tis has a faster way to access multiple bytes at once, every other
+driver will just fall back to read_bytes/write_bytes. Therefore, move this
+common code out of tpm_tis_spi into tpm_tis_core, so that it is
+automatically used when low-level drivers do not implement the specialized
+methods.
+
+This commit is based on previous work by Alexander Steffen.
 
 Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
 ---
- drivers/char/tpm/tpm_tis_core.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ drivers/char/tpm/tpm_tis_core.h | 38 +++++++++++++++++++++++++++++++++++---
+ drivers/char/tpm/tpm_tis_spi.c  | 41 -----------------------------------------
+ 2 files changed, 35 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-index 43784fd..924489c 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -631,17 +631,7 @@ static int probe_itpm(struct tpm_chip *chip)
- 
- static bool tpm_tis_req_canceled(struct tpm_chip *chip, u8 status)
+diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+index 7337819..d06c65b 100644
+--- a/drivers/char/tpm/tpm_tis_core.h
++++ b/drivers/char/tpm/tpm_tis_core.h
+@@ -122,13 +122,35 @@ static inline int tpm_tis_read8(struct tpm_tis_data *data, u32 addr, u8 *result)
+ static inline int tpm_tis_read16(struct tpm_tis_data *data, u32 addr,
+ 				 u16 *result)
  {
--	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
--
--	switch (priv->manufacturer_id) {
--	case TPM_VID_WINBOND:
--		return ((status == TPM_STS_VALID) ||
--			(status == (TPM_STS_VALID | TPM_STS_COMMAND_READY)));
--	case TPM_VID_STM:
--		return (status == (TPM_STS_VALID | TPM_STS_COMMAND_READY));
--	default:
--		return (status == TPM_STS_COMMAND_READY);
--	}
-+	return ((status & TPM_STS_COMMAND_READY) == TPM_STS_COMMAND_READY);
+-	return data->phy_ops->read16(data, addr, result);
++	__le16 result_le;
++	int rc;
++
++	if (data->phy_ops->read16)
++		return data->phy_ops->read16(data, addr, result);
++
++	rc = data->phy_ops->read_bytes(data, addr, sizeof(u16),
++				       (u8 *)&result_le);
++	if (!rc)
++		*result = le16_to_cpu(result_le);
++
++	return rc;
  }
  
- static irqreturn_t tis_int_handler(int dummy, void *dev_id)
+ static inline int tpm_tis_read32(struct tpm_tis_data *data, u32 addr,
+ 				 u32 *result)
+ {
+-	return data->phy_ops->read32(data, addr, result);
++	__le32 result_le;
++	int rc;
++
++	if (data->phy_ops->read32)
++		return data->phy_ops->read32(data, addr, result);
++
++	rc = data->phy_ops->read_bytes(data, addr, sizeof(u32),
++				       (u8 *)&result_le);
++	if (!rc)
++		*result = le32_to_cpu(result_le);
++
++	return rc;
+ }
+ 
+ static inline int tpm_tis_write_bytes(struct tpm_tis_data *data, u32 addr,
+@@ -145,7 +167,17 @@ static inline int tpm_tis_write8(struct tpm_tis_data *data, u32 addr, u8 value)
+ static inline int tpm_tis_write32(struct tpm_tis_data *data, u32 addr,
+ 				  u32 value)
+ {
+-	return data->phy_ops->write32(data, addr, value);
++	__le32 value_le;
++	int rc;
++
++	if (data->phy_ops->write32)
++		return data->phy_ops->write32(data, addr, value);
++
++	value_le = cpu_to_le32(value);
++	rc = data->phy_ops->write_bytes(data, addr, sizeof(u32),
++					(u8 *)&value_le);
++
++	return rc;
+ }
+ 
+ static inline bool is_bsw(void)
+diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
+index 19513e6..da82924 100644
+--- a/drivers/char/tpm/tpm_tis_spi.c
++++ b/drivers/char/tpm/tpm_tis_spi.c
+@@ -146,50 +146,9 @@ static int tpm_tis_spi_write_bytes(struct tpm_tis_data *data, u32 addr,
+ 	return tpm_tis_spi_transfer(data, addr, len, NULL, value);
+ }
+ 
+-static int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result)
+-{
+-	__le16 result_le;
+-	int rc;
+-
+-	rc = data->phy_ops->read_bytes(data, addr, sizeof(u16),
+-				       (u8 *)&result_le);
+-	if (!rc)
+-		*result = le16_to_cpu(result_le);
+-
+-	return rc;
+-}
+-
+-static int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result)
+-{
+-	__le32 result_le;
+-	int rc;
+-
+-	rc = data->phy_ops->read_bytes(data, addr, sizeof(u32),
+-				       (u8 *)&result_le);
+-	if (!rc)
+-		*result = le32_to_cpu(result_le);
+-
+-	return rc;
+-}
+-
+-static int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value)
+-{
+-	__le32 value_le;
+-	int rc;
+-
+-	value_le = cpu_to_le32(value);
+-	rc = data->phy_ops->write_bytes(data, addr, sizeof(u32),
+-					(u8 *)&value_le);
+-
+-	return rc;
+-}
+-
+ static const struct tpm_tis_phy_ops tpm_spi_phy_ops = {
+ 	.read_bytes = tpm_tis_spi_read_bytes,
+ 	.write_bytes = tpm_tis_spi_write_bytes,
+-	.read16 = tpm_tis_spi_read16,
+-	.read32 = tpm_tis_spi_read32,
+-	.write32 = tpm_tis_spi_write32,
+ };
+ 
+ static int tpm_tis_spi_probe(struct spi_device *dev)
 -- 
 2.7.4
 
