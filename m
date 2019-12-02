@@ -4,105 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29245C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 12:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264CFC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 12:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 071E920705
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 12:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E738920833
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 12:53:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfLBMrr (ORCPT
+        id S1727381AbfLBMxs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 07:47:47 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:50451 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727354AbfLBMrr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 07:47:47 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@misterjones.org>)
-        id 1ibl76-0000Yo-Ut; Mon, 02 Dec 2019 13:47:40 +0100
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host side
-X-PHP-Originating-Script: 0:main.inc
+        Mon, 2 Dec 2019 07:53:48 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58201 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727362AbfLBMxs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 07:53:48 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iblCv-0005Dy-AR; Mon, 02 Dec 2019 13:53:41 +0100
+Message-ID: <2498da189d5e21ae70fb6884df6fc16ecfee2087.camel@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] reset: simple: Add AST2600 compatibility string
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Joel Stanley <joel@jms.id.au>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Brad Bishop <bradleyb@fuzziesquirrel.com>,
+        Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Date:   Mon, 02 Dec 2019 13:53:37 +0100
+In-Reply-To: <20191129000827.650566-3-joel@jms.id.au>
+References: <20191129000827.650566-1-joel@jms.id.au>
+         <20191129000827.650566-3-joel@jms.id.au>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 02 Dec 2019 12:47:40 +0000
-From:   Marc Zyngier <maz@misterjones.org>
-Cc:     <robh+dt@kernel.org>, <frowand.list@gmail.com>,
-        <minghuan.lian@nxp.com>, <mingkai.hu@nxp.com>, <roy.zang@nxp.com>,
-        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
-        <bhelgaas@google.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <zhiqiang.hou@nxp.com>
-Organization: Metropolis
-In-Reply-To: <20191202104506.27916-1-xiaowei.bao@nxp.com>
-References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
-Message-ID: <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
-X-Sender: maz@misterjones.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: xiaowei.bao@nxp.com, robh+dt@kernel.org, frowand.list@gmail.com, minghuan.lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, andrew.murray@arm.com, bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhiqiang.hou@nxp.com
-X-SA-Exim-Mail-From: maz@misterjones.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-12-02 10:45, Xiaowei Bao wrote:
-> GIC get the map relations of devid and stream id from the msi-map
-> property of DTS, our platform add this property in u-boot base on
-> the PCIe device in the bus, but if enable the vf device in kernel,
-> the vf device msi-map will not set, so the vf device can't work,
-> this patch purpose is that manage the stream id and device id map
-> relations dynamically in kernel, and make the new PCIe device work
-> in kernel.
->
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+On Fri, 2019-11-29 at 10:38 +1030, Joel Stanley wrote:
+> From: Brad Bishop <bradleyb@fuzziesquirrel.com>
+> 
+> The AST2600 SoC contains the same LPC register set as the AST2500.
+
+If the LPC register set is exactly the same, shouldn't AST2600 reuse the
+AST2500 compatible, i.e.:
+	compatible = "aspeed,ast2600-lpc-reset", "aspeed,ast2500-lpc-reset";
+?
+
+> 
+> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+> Signed-off-by: Brad Bishop <bradleyb@fuzziesquirrel.com>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
 > ---
->  drivers/of/irq.c                            |  9 +++
->  drivers/pci/controller/dwc/pci-layerscape.c | 94
-> +++++++++++++++++++++++++++++
->  drivers/pci/probe.c                         |  6 ++
->  drivers/pci/remove.c                        |  6 ++
->  4 files changed, 115 insertions(+)
->
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index a296eaf..791e609 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -576,6 +576,11 @@ void __init of_irq_init(const struct
-> of_device_id *matches)
->  	}
->  }
->
-> +u32 __weak ls_pcie_streamid_fix(struct device *dev, u32 rid)
-> +{
-> +	return rid;
-> +}
-> +
->  static u32 __of_msi_map_rid(struct device *dev, struct device_node 
-> **np,
->  			    u32 rid_in)
->  {
-> @@ -590,6 +595,10 @@ static u32 __of_msi_map_rid(struct device *dev,
-> struct device_node **np,
->  		if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
->  				"msi-map-mask", np, &rid_out))
->  			break;
-> +
-> +	if (rid_out == rid_in)
-> +		rid_out = ls_pcie_streamid_fix(parent_dev, rid_in);
+>  drivers/reset/reset-simple.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
+> index 067e7e7b34f1..795c9063fe7b 100644
+> --- a/drivers/reset/reset-simple.c
+> +++ b/drivers/reset/reset-simple.c
+> @@ -125,6 +125,7 @@ static const struct of_device_id reset_simple_dt_ids[] = {
+>  		.data = &reset_simple_active_low },
+>  	{ .compatible = "aspeed,ast2400-lpc-reset" },
+>  	{ .compatible = "aspeed,ast2500-lpc-reset" },
+> +	{ .compatible = "aspeed,ast2600-lpc-reset" },
+>  	{ .compatible = "bitmain,bm1880-reset",
+>  		.data = &reset_simple_active_low },
+>  	{ .compatible = "snps,dw-high-reset" },
 
-Over my dead body. Get your firmware to properly program the LUT
-so that it presents the ITS with a reasonable topology. There is
-absolutely no way this kind of change makes it into the kernel.
+regards
+Philipp
 
-Thanks,
-
-         M.
--- 
-Who you jivin' with that Cosmik Debris?
