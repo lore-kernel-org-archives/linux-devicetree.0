@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E71DC432C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAF2C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F60A20672
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62F6B20672
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:19:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CvxYYvpQ"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oGIDxy1G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfLBRRe (ORCPT
+        id S1727628AbfLBRT2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:17:34 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37668 "EHLO
+        Mon, 2 Dec 2019 12:19:28 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37714 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbfLBRRd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 12:17:33 -0500
+        with ESMTP id S1727493AbfLBRT2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 12:19:28 -0500
 Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9D198309;
-        Mon,  2 Dec 2019 18:17:31 +0100 (CET)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DCD9C309;
+        Mon,  2 Dec 2019 18:19:26 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575307051;
-        bh=s7J25vEgjKQ7uxoOTPNljX92zYrKAqcEPb8GugLEtKc=;
+        s=mail; t=1575307167;
+        bh=1myNRC7SsLatx4Um/XtlYnXlHXwV+S/+jv3sPPcyRGM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CvxYYvpQEGQ2wAg7VTDGItUSAO2+4n/Fh61GcQkofU4QzuEPrnvknCP5928eTA21E
-         V9jZ8yq+3pvtijpYgIGngJQ+f3ChrCRHt+bEEeA0WeUL0UoYSfnwbdefUxaixwdhWZ
-         RFwHUReYF8AJzOwASZC0NlRXUHogvlMvrCfGn3ww=
-Date:   Mon, 2 Dec 2019 19:17:24 +0200
+        b=oGIDxy1GY7K5W+sGA4pLqXht/OLU5+l+PsVZiMAWj+8UC1SLRQWNXj9CYnBzlDJOf
+         Iv3zBXEGXH598Iar3g2xrJ6KszGwn2Xmkg+P1w0aDRfsNkMNgT6VFpGVBfz5vjckpT
+         WEl3UZaRlwRE1ZPOyOCPpZgJRl/5WqYGc71OqC10=
+Date:   Mon, 2 Dec 2019 19:19:20 +0200
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     Boris Brezillon <boris.brezillon@collabora.com>
 Cc:     dri-devel@lists.freedesktop.org,
@@ -55,15 +55,15 @@ Cc:     dri-devel@lists.freedesktop.org,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 19/21] drm/panel: simple: Add support for Toshiba
- LTA089AC29000 panel
-Message-ID: <20191202171724.GS4929@pendragon.ideasonboard.com>
+Subject: Re: [PATCH v3 20/21] dt-bindings: display: panel: Add the
+ LTA089AC29000 variant
+Message-ID: <20191202171920.GT4929@pendragon.ideasonboard.com>
 References: <20191023154512.9762-1-boris.brezillon@collabora.com>
- <20191023154512.9762-20-boris.brezillon@collabora.com>
+ <20191023154512.9762-21-boris.brezillon@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191023154512.9762-20-boris.brezillon@collabora.com>
+In-Reply-To: <20191023154512.9762-21-boris.brezillon@collabora.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -74,77 +74,33 @@ Hi Boris,
 
 Thank you for the patch.
 
-On Wed, Oct 23, 2019 at 05:45:10PM +0200, Boris Brezillon wrote:
-> Add a new entry for the Toshiba LTA089AC29000 panel.
-> 
+On Wed, Oct 23, 2019 at 05:45:11PM +0200, Boris Brezillon wrote:
+> The LTA089AC29000 and LT089AC29000 are not exactly the same. Let's add
+> a new compatible for the LTA variant.
+
+What is the difference ? :-)
+
 > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 > ---
-> Changes in v3:
-> * None
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 36 ++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
+>  .../bindings/display/panel/toshiba,lt089ac29000.txt          | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 5d487686d25c..27c92b44bd95 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -2937,6 +2937,39 @@ static const struct panel_desc toshiba_lt089ac29000 = {
->  	.connector_type = DRM_MODE_CONNECTOR_LVDS,
->  };
+> diff --git a/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt b/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
+> index 89826116628c..26ebfa098966 100644
+> --- a/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
+> +++ b/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
+> @@ -1,7 +1,10 @@
+>  Toshiba 8.9" WXGA (1280x768) TFT LCD panel
 >  
-> +static const struct drm_display_mode toshiba_lta089ac29000_mode = {
-> +	.clock = 79500,
-> +	.hdisplay = 1280,
-> +	.hsync_start = 1280 + 192,
-> +	.hsync_end = 1280 + 192 + 128,
-> +	.htotal = 1280 + 192 + 128 + 64,
-> +	.vdisplay = 768,
-> +	.vsync_start = 768 + 20,
-> +	.vsync_end = 768 + 20 + 7,
-> +	.vtotal = 768 + 20 + 7 + 3,
-> +	.vrefresh = 60,
-> +};
+>  Required properties:
+> -- compatible: should be "toshiba,lt089ac29000"
+> +- compatible: should be one of the following
+> +	      "toshiba,lt089ac29000"
+> +	      "toshiba,lta089ac29000"
 > +
-> +static const struct panel_desc toshiba_lta089ac29000 = {
-> +	.modes = &toshiba_lta089ac29000_mode,
-> +	.num_modes = 1,
-> +	.size = {
-> +		.width = 194,
-> +		.height = 116,
-> +	},
-> +	/*
-> +	 * FIXME:
-> +	 * The panel supports 2 bus formats: jeida-24 and jeida-18. The
-> +	 * mode is selected through the 8b6b_SEL pin. If anyone ever needs
-> +	 * support for jeida-18 we should probably parse the 'data-mapping'
-> +	 * property.
-> +	 * In the unlikely event where 8b6b_SEL is connected to a GPIO, we'd
-> +	 * need a new infra to allow bus format negotiation at the panel level.
-> +	 */
-> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
-> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
-> +};
-> +
->  static const struct drm_display_mode tpk_f07a_0102_mode = {
->  	.clock = 33260,
->  	.hdisplay = 800,
-> @@ -3392,6 +3425,9 @@ static const struct of_device_id platform_of_match[] = {
->  	}, {
->  		.compatible = "toshiba,lt089ac29000",
->  		.data = &toshiba_lt089ac29000,
-> +	}, {
-> +		.compatible = "toshiba,lta089ac29000",
-
-Is this really different than "toshiba,lt089ac29000" ? Both have the
-exact same timing, the only difference is .bus_format, and according to
-https://www.avnet-integrated.eu/fileadmin/user_upload/Files/Displays/Colour_TFT/LT089AC29000.pdf
-the "toshiba,lt089ac29000" is an LVDS panel.
-
-> +		.data = &toshiba_lta089ac29000,
->  	}, {
->  		.compatible = "tpk,f07a-0102",
->  		.data = &tpk_f07a_0102,
+>  - power-supply: as specified in the base binding
+>  
+>  This binding is compatible with the simple-panel binding, which is specified
 
 -- 
 Regards,
