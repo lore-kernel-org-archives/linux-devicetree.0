@@ -2,201 +2,116 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BD1C432C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 16:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47469C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 16:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9499524651
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 16:33:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UO3xDAmA"
+	by mail.kernel.org (Postfix) with ESMTP id 12DCF2071F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 16:39:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575304771;
+	bh=BOYd7FIUwuN3tAA+k+QFiEnMWMetmq+s99CxPTiHIaU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QOJlYSwo/T8pVUfMpbF3XM8qfEt5XnWZ6NOinc0+n669aKDBK8U16dSHeICaoAV0y
+	 BfaDFFt75CEfUIcBTtq0fmHSlhBSkQz4I7b4qEo6bmmIg7U6BbUobMotpnuTKDMXAr
+	 Ug8HcfrZ+H5lJlmlTCDb35Ahyy+R+aXRZToWDmYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfLBQdj (ORCPT
+        id S1727455AbfLBQja (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 11:33:39 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37788 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfLBQdj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 11:33:39 -0500
-Received: by mail-ed1-f65.google.com with SMTP id cy15so25169007edb.4;
-        Mon, 02 Dec 2019 08:33:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1KS+KvP47Q77DeKQ1RVvNxBt1950xGdbFy7LMtxP+Aw=;
-        b=UO3xDAmAH1XWqiwB/udhJbvusRdvCthj0syulr7aAQ9shvoFZj+QF0S6mE/E1/c1mC
-         G59/LzJorUkR5l6wVPyiFMRzzPBi4GpArlZyVMnGsHRVOjbrql5Vmd2cwtAK5waPDi8B
-         wubPQEexU5NaP71SQJ/g9AuM90RStnOTBqV07e0eUr2s7R7ayupXujlXvxxJgpgv2S6S
-         EA+ssZp3QrG/8heZXl3xk9I8UkqDAPLlbS76NKVDhZdeM0DGEHK9g1TTM0swFNx7HU2o
-         cVxCzvM9p23MZ7/3YTkV2oByyk+gH6w4a3KvQ3TOBFnS2V3I6Y+1M0ZOUEriq10oaCYi
-         gb5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1KS+KvP47Q77DeKQ1RVvNxBt1950xGdbFy7LMtxP+Aw=;
-        b=o7QXrHSNaoUWHD58Oni4skXkZDPN755oBL/y+vHnYTYY69f+QKD6XNR9jLyOWNzRls
-         DS+2Ww6rLJb2ZM+MdXxDrQnJKccASB+SePkXulVuI4tKbCCnnZCEu51PDrFfuWuL791Y
-         rAZ/ioccuan5fX+6rOvgXWQ5v70H8DO1rdbjNbMfMyZuUtuY2DhKYO+N9z/cFXfcA4HX
-         bcN6LA9X6jZljdkvOQNIb6GI6zTagtn1+pjMd564t3FF4JxzEdIDbK90ZIUZthjXgqOz
-         bS2oSzsvNZ8IFSvQOfiJG8cMgFyWj0AT8e8sdVMN47f1PTp6rNCCCs4KgHE04cvSRg/Q
-         8znA==
-X-Gm-Message-State: APjAAAW93XJFj0PPaxrGsEekGQK5DeKI26/7e9L+PJRGDuh278hPn8+D
-        93qJ7qD7dXWQrFGEzcOTqsJ8QZGM2QumTSrfwPQ=
-X-Google-Smtp-Source: APXvYqz7p+C0cGcHdy2+FJsusoCvcajzuDThRB0zyZgqumw6QTXSqEddCuf6o4nQaNNvlpZg5WFcGLUmV9eh/ndFx7Y=
-X-Received: by 2002:aa7:da03:: with SMTP id r3mr2985746eds.163.1575304416597;
- Mon, 02 Dec 2019 08:33:36 -0800 (PST)
+        Mon, 2 Dec 2019 11:39:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727418AbfLBQja (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 11:39:30 -0500
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3D0C20748;
+        Mon,  2 Dec 2019 16:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575304770;
+        bh=BOYd7FIUwuN3tAA+k+QFiEnMWMetmq+s99CxPTiHIaU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zm2zuNr9W2dNwDK5mUKR3imz9kS2EL/vujtjBzVLAd9K9LlJiT7e2rpwNtCW+qQkh
+         7trKeuBmMtlBlO4PiFNIxyT6iZMy7KaV77aqzH6YF/ucVdUQSngDxem1qQ4AHkO50P
+         bp/hQfTMYHp4DFxIQyhe45ziL3hs+7hpOOif3jmE=
+Received: by mail-qt1-f177.google.com with SMTP id n4so356189qte.2;
+        Mon, 02 Dec 2019 08:39:29 -0800 (PST)
+X-Gm-Message-State: APjAAAWeTF1XUN15ZRJNnK24As7gg2g7wcx/cEiEzyhl6Y+onK6vU223
+        Zeq7hSD0QRchqgLzEC2qsyiEaSMN48w3abiQ0A==
+X-Google-Smtp-Source: APXvYqwEfzQjYccT2wMEqMX5wDQatL2N4tHp4A7ns8FSpZxZv0Ca+4EE0DOAgrU16BLEIRXVuEDqcV+whmWoa1VfvRI=
+X-Received: by 2002:ac8:341d:: with SMTP id u29mr179567qtb.300.1575304769066;
+ Mon, 02 Dec 2019 08:39:29 -0800 (PST)
 MIME-Version: 1.0
-References: <0101016ec6ddc66f-2ff363f0-0a58-4196-ba95-8875dc837f45-000000@us-west-2.amazonses.com>
-In-Reply-To: <0101016ec6ddc66f-2ff363f0-0a58-4196-ba95-8875dc837f45-000000@us-west-2.amazonses.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 2 Dec 2019 08:33:25 -0800
-Message-ID: <CAF6AEGs-jB9toTp6JTNqczsTXCLqmUwi=VJcQhT9gEiH1o=48A@mail.gmail.com>
-Subject: Re: [DPU PATCH v3 0/5] List of patches for DP drivers on SnapDragon
-To:     Chandan Uddaraju <chandanu@codeaurora.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Sean Paul <seanpaul@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>, nganji@codeaurora.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        "Kristian H. Kristensen" <hoegsberg@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
+References: <20191126091946.7970-1-nsaenzjulienne@suse.de> <20191126091946.7970-3-nsaenzjulienne@suse.de>
+In-Reply-To: <20191126091946.7970-3-nsaenzjulienne@suse.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 2 Dec 2019 10:39:18 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ=xXWVmnEJc7=Hg_NXhbHnCgkCOUMKRfmq7CKiGzg3Hg@mail.gmail.com>
+Message-ID: <CAL_JsqJ=xXWVmnEJc7=Hg_NXhbHnCgkCOUMKRfmq7CKiGzg3Hg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] dt-bindings: PCI: Add bindings for brcmstb's PCIe device
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        james.quinlan@broadcom.com, Matthias Brugger <mbrugger@suse.com>,
+        Phil Elwell <phil@raspberrypi.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 5:47 AM Chandan Uddaraju <chandanu@codeaurora.org> wrote:
+On Tue, Nov 26, 2019 at 3:20 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
 >
-> These patches are to enable DisplayPort driver on SanpDragon.
+> From: Jim Quinlan <james.quinlan@broadcom.com>
 >
-> These patches have dependency on clock driver changes that
-> provide DP clock support.
+> The DT bindings description of the brcmstb PCIe device is described.
+> This node can only be used for now on the Raspberry Pi 4.
+>
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>
+> ---
+>
+> Changes since v2:
+>   - Add pci reference schema
+>   - Drop all default properties
+>   - Assume msi-controller and msi-parent are properly defined
+>   - Add num entries on multiple properties
+>   - use unevaluatedProperties
+>   - Update required properties
+>   - Fix license
+>
+> Changes since v1:
+>   - Fix commit Subject
+>   - Remove linux,pci-domain
+>
+> This was based on Jim's original submission[1], converted to yaml and
+> adapted to the RPi4 case.
+>
+> [1] https://patchwork.kernel.org/patch/10605937/
+>
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 97 +++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
 
-This looks like just a functional/runtime dependency?  Ie. it would
-only be the corresponding dt nodes that have compile time dependency
-on the clock driver?  (vidcc, I assume?)
-
-BR,
--R
-
->
-> Changes in V2:
->   Core Dp driver:
->      -- Update copyright markings on all relevant files.
->      -- Change pr_err() to DRM_ERROR()
->      -- Use APIs directly instead of function pointers.
->      -- Use drm_display_mode structure to store link parameters in the driver.
->      -- Use macros for register definitions instead of hardcoded values in dp_catalog.c file.
->      -- Replace writel_relaxed/readl_relaxed with writel/readl and remove memory barriers.
->      -- Remove unnecessary NULL checks.
->      -- Use drm helper functions for dpcd read/write.
->      -- Use DRM_DEBUG_DP for debug msgs.
->   DP PLL driver:
->      -- Update copyright markings on all relevant files.
->      -- Use DRM_DEBUG_DP for debug msgs.
->
-> Changes in V3:
->   Core Dp Driver:
->     -- Removed changes in dpu_io_util.[ch]
->     -- Added locking around "is_connected" flag and removed atomic_set()
->     -- Removed the argument validation checks in all the static functions
->        except initialization functions and few API calls across msm/dp files
->     -- Removed hardcoded values for register reads/writes
->     -- Removed vreg related generic structures.
->     -- Added return values where ever necessary.
->     -- Updated dp_ctrl_on function.
->     -- Calling the ctrl specific catalog functions directly instead of
->        function pointers.
->     -- Added seperate change that adds standard value in drm_dp_helper file.
->     -- Added separate change in this list that is used to initialize
->        displayport in DPU driver.
->     -- Added change to use drm_dp_get_adjust_request_voltage() function.
->
->
-> Chandan Uddaraju (4):
->   dt-bindings: msm/dp: add bindings of DP/DP-PLL driver for Snapdragon
->     845
->   drm: add constant N value in helper file
->   drm/msm/dp: add displayPort driver support
->   drm/msm/dp: add support for DP PLL driver
->
-> Jeykumar Sankaran (1):
->   drm/msm/dpu: add display port support in DPU
->
->  .../devicetree/bindings/display/msm/dp.txt         |  249 +++
->  .../devicetree/bindings/display/msm/dpu.txt        |   16 +-
->  drivers/gpu/drm/i915/display/intel_display.c       |    2 +-
->  drivers/gpu/drm/msm/Kconfig                        |   22 +
->  drivers/gpu/drm/msm/Makefile                       |   17 +
->  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        |   28 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   65 +-
->  drivers/gpu/drm/msm/dp/dp_aux.c                    |  548 +++++++
->  drivers/gpu/drm/msm/dp/dp_aux.h                    |   37 +
->  drivers/gpu/drm/msm/dp/dp_catalog.c                |  841 +++++++++++
->  drivers/gpu/drm/msm/dp/dp_catalog.h                |   84 ++
->  drivers/gpu/drm/msm/dp/dp_ctrl.c                   | 1590 ++++++++++++++++++++
->  drivers/gpu/drm/msm/dp/dp_ctrl.h                   |   34 +
->  drivers/gpu/drm/msm/dp/dp_display.c                |  997 ++++++++++++
->  drivers/gpu/drm/msm/dp/dp_display.h                |   32 +
->  drivers/gpu/drm/msm/dp/dp_drm.c                    |  173 +++
->  drivers/gpu/drm/msm/dp/dp_drm.h                    |   20 +
->  drivers/gpu/drm/msm/dp/dp_extcon.c                 |  216 +++
->  drivers/gpu/drm/msm/dp/dp_extcon.h                 |   84 ++
->  drivers/gpu/drm/msm/dp/dp_link.c                   | 1185 +++++++++++++++
->  drivers/gpu/drm/msm/dp/dp_link.h                   |  132 ++
->  drivers/gpu/drm/msm/dp/dp_panel.c                  |  450 ++++++
->  drivers/gpu/drm/msm/dp/dp_panel.h                  |   92 ++
->  drivers/gpu/drm/msm/dp/dp_parser.c                 |  496 ++++++
->  drivers/gpu/drm/msm/dp/dp_parser.h                 |  226 +++
->  drivers/gpu/drm/msm/dp/dp_power.c                  |  558 +++++++
->  drivers/gpu/drm/msm/dp/dp_power.h                  |   51 +
->  drivers/gpu/drm/msm/dp/dp_reg.h                    |  488 ++++++
->  drivers/gpu/drm/msm/dp/pll/dp_pll.c                |  135 ++
->  drivers/gpu/drm/msm/dp/pll/dp_pll.h                |   57 +
->  drivers/gpu/drm/msm/dp/pll/dp_pll_10nm.c           |  401 +++++
->  drivers/gpu/drm/msm/dp/pll/dp_pll_10nm.h           |   86 ++
->  drivers/gpu/drm/msm/dp/pll/dp_pll_10nm_util.c      |  494 ++++++
->  drivers/gpu/drm/msm/msm_drv.c                      |    2 +
->  drivers/gpu/drm/msm/msm_drv.h                      |   42 +
->  include/drm/drm_dp_helper.h                        |    1 +
->  36 files changed, 9931 insertions(+), 20 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dp.txt
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_aux.c
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_aux.h
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_catalog.c
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_catalog.h
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_ctrl.c
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_ctrl.h
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_display.c
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_display.h
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_drm.c
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_drm.h
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_extcon.c
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_extcon.h
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_link.c
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_link.h
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_panel.c
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_panel.h
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_parser.c
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_parser.h
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_power.c
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_power.h
->  create mode 100644 drivers/gpu/drm/msm/dp/dp_reg.h
->  create mode 100644 drivers/gpu/drm/msm/dp/pll/dp_pll.c
->  create mode 100644 drivers/gpu/drm/msm/dp/pll/dp_pll.h
->  create mode 100644 drivers/gpu/drm/msm/dp/pll/dp_pll_10nm.c
->  create mode 100644 drivers/gpu/drm/msm/dp/pll/dp_pll_10nm.h
->  create mode 100644 drivers/gpu/drm/msm/dp/pll/dp_pll_10nm_util.c
->
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
+Reviewed-by: Rob Herring <robh@kernel.org>
