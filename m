@@ -2,171 +2,94 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C31BC432C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 13:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0FEC432C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 13:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D67D217F5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 13:12:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575292330;
-	bh=meyClUUOM5Jc/rsPZdIT2wYbDynhpM5KxMTgwvSQFHQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V4/Cp+sJlcaE0Tpj9QTz9UWYxoKVqlSvoEhaC17Q/ztSHPkDqUq9YGzzzs0hbKlCJ
-	 Xuo/vCwt6ZwopTXPSyZW0Zf4gZLm3ZGW4tmGIHUHRUiZztJ021JYOaLKgPMnNIRoFP
-	 5vbbhQLiR64Qrj+JCa1i2UV92mgVLyfHCOsKzgWM=
+	by mail.kernel.org (Postfix) with ESMTP id 1F6412084F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 13:13:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GhTgliPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfLBNMJ (ORCPT
+        id S1727433AbfLBNNE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 08:12:09 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51046 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfLBNMJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 08:12:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HcdPKwqbVGtlgcTIZgCIi0isK2Mpc49YUdk5xlaJzq0=; b=eMgFjIw0NhQQ+Z5g2pVLfx0Z/
-        HPRbQ8VD6LzILID+Y2PhharPGvlPAq79MtFYP84MsnbUkInBOAEYpol69Cx+VUXES8ea6kBYRFoXI
-        9LA46DCwTHRcSsg1xO5EVf3HG00L+yJhLHtjGWdwDSMtyJRAyB4gSNFoWDpW4xEoUk1gs=;
-Received: from 188.31.173.115.threembb.co.uk ([188.31.173.115] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1iblUM-0003mu-7T; Mon, 02 Dec 2019 13:11:42 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id E6920D020A4; Mon,  2 Dec 2019 13:11:40 +0000 (GMT)
-Date:   Mon, 2 Dec 2019 13:11:40 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Message-ID: <20191202131140.GD1998@sirena.org.uk>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
- <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
- <20191118162502.GJ9761@sirena.org.uk>
- <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
- <20191119181325.GD3634@sirena.org.uk>
- <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
- <20191119193636.GH3634@sirena.org.uk>
- <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
- <20191129120925.GA5747@sirena.org.uk>
- <297fa021fb243072dbbb7bca455e57c13e8c6843.camel@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vni90+aGYgRvsTuO"
-Content-Disposition: inline
-In-Reply-To: <297fa021fb243072dbbb7bca455e57c13e8c6843.camel@fi.rohmeurope.com>
-X-Cookie: Cleanliness is next to impossible.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 2 Dec 2019 08:13:04 -0500
+Received: from mail-qt1-f170.google.com ([209.85.160.170]:46503 "EHLO
+        mail-qt1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfLBNNE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 08:13:04 -0500
+Received: by mail-qt1-f170.google.com with SMTP id 38so5333755qtb.13
+        for <devicetree@vger.kernel.org>; Mon, 02 Dec 2019 05:13:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ILsbkWyEUpe5k1jgYQVoQ+1hggPYkj8GB9hKLvJCPIc=;
+        b=GhTgliPEhfl+lmllKol5KPzzrhoA4qSpUltHr0hCVpna4jzwntn/PAPEsmYa80jqdz
+         +3+nzXYOEvMrwSRITrRoju2c3MOwTGTwwm/eldnaLTk3AeHEi5grDZ97VvBYu//Yv9Db
+         AjaOBud7RdMBtWoAiSoQ2bk0ADB6Aqli2NGELLxYyTa2zWDv1WV9dcY+NecTmpw4NHpT
+         KKrdnsNU+IqAxo9lYggVfhA8VN6C54WEMRet5NqDt6096FgFPqkAxJ4zSVNXi4Jz+V7C
+         Va03riVDE22EDT4Z5qiySxyXP2/dWxDrvHUKlsJ8wKOBfNkGqAU8Q1dpQBl0I7j+k3CO
+         qfzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ILsbkWyEUpe5k1jgYQVoQ+1hggPYkj8GB9hKLvJCPIc=;
+        b=W8aemrf4bV2dhY3vteNgGxv4934WCnJcQOkaHBkcZZH+0Qz+hh5ZmJ2p2/zd4tHH0O
+         KqPF5E3MAUL2JV+pZ7So7PVJX5QrvHulluSCIgOGBCUHJA12z8xG97otDhvGcqaFvqgy
+         Ym0EgeZ8usnAfoIw145CzsNdgghiWbmMqdVYizsRnbyjRQ4FLifdb/tN3h3av5NhHQjH
+         JEn8q/gep3U7HIu2oGYzJ7wEJUbLuAe3xBuRMXdkkh+Fek48d+LUrwb7xQPXfB1UL8l1
+         O6siGZdg7Cj0+b8uL4cYYfcRFctyGGYp2WrLzuoTfI0wPSkSGoZMFA14227z76bMxEjT
+         ko4w==
+X-Gm-Message-State: APjAAAUWCzdtQFFpWn9fAViDvQB3GkUKTadZ4Qw4GR858qBB3ynmXcML
+        jmYXkheqRAgLErnDL/A29DQ=
+X-Google-Smtp-Source: APXvYqwnkYYxhhPDxgh0V3hGM/8c9gN1A/GxyH0icE0kcTYmssvIYDqsIMGOrjtHsUIMahzTrtmR4g==
+X-Received: by 2002:ac8:22c4:: with SMTP id g4mr66408284qta.45.1575292382916;
+        Mon, 02 Dec 2019 05:13:02 -0800 (PST)
+Received: from fabio-Latitude-E5450.nxp.com ([177.221.114.206])
+        by smtp.gmail.com with ESMTPSA id x8sm14170893qki.60.2019.12.02.05.12.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 05:13:02 -0800 (PST)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     shawnguo@kernel.org
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH v2 RESEND 1/2] dt-bindings: arm: fsl: Document i.MX7ULP Embedded Artists COM board
+Date:   Mon,  2 Dec 2019 10:13:17 -0300
+Message-Id: <20191202131318.11404-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add an entry for the Embedded Artists i.MX7ULP COM board.
 
---vni90+aGYgRvsTuO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
+Changes since v1:
+- None
 
-On Mon, Dec 02, 2019 at 07:57:13AM +0000, Vaittinen, Matti wrote:
-> On Fri, 2019-11-29 at 12:09 +0000, Mark Brown wrote:
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > The regulator driver has a bunch fo set_suspend_ operations.
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index b08ae59cc57f..e75f03bf8fbb 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -234,6 +234,7 @@ properties:
+       - description: i.MX7ULP based Boards
+         items:
+           - enum:
++              - ea,imx7ulp-com           # i.MX7ULP Embedded Artists COM Board
+               - fsl,imx7ulp-evk           # i.MX7ULP Evaluation Kit
+           - const: fsl,imx7ulp
+ 
+-- 
+2.17.1
 
-> Hmm. I saw these. But unless I am mistaken linux only knows one
-> 'suspend' state whereas the PMIC has a few separate states I can see as
-> 'suspend' states. As far as I understood the set_suspend_voltage does
-> not allow setting separate suspend voltages depending on the "type of
-> suspend" (as there is only one 'suspend' state).
-
-No, look at the bindings - we support a bunch of different
-suspend states matching the different suspend states that the
-kernel as a whole supports.  We don't assume that the device will
-know this but you can always use the current suspend we're going
-for to decide where to update.
-
-> > > (RUN0, ... RUN3) could be mapped to regulator modes
-> > > REGULATOR_MODE_FAST, REGULATOR_MODE_NORMAL, REGULATOR_MODE_IDLE
-> > > and=20
-> > > REGULATOR_MODE_STANDBY. But regulators which are controlled by
-> > > these
-
-> > That doesn't make sense at all, the modes affect the quality of
-> > regulation not the voltage that is set.
-
-> Thanks. I misunderstood this. I thought these states could be used for
-> some adaptive voltages. My understanding is that the RUN0,...RUN3 are
-> designed for that - but I didn't know if regulator framework is
-> designed for this.
-
-The framework doesn't care how a device is controlled, that's up
-to the device.  Like I said I recommend figuring out what
-voltages are useful to have quick access to at runtime, for
-example it's likely that it's good to have quick access to the
-highest voltage that's been set (and/or the top of the
-constraints).
-
-> > The cpufreq code is all there in kernel - drivers/cpufreq.  I can't
-> > remember if Android still has a custom governor in their trees but it
-> > doesn't really make much difference in terms of how it interacts with
-> > the regulator drivers.
-
-> Right. I guess your answers mean that there is no "regulator group
-> control" for "adaptive voltage changes" supported by regulator
-
-I can't parse the above, sorry.  What is "regulator group
-control"?
-
---vni90+aGYgRvsTuO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3lDYkACgkQJNaLcl1U
-h9Amugf/QH6FoZOtAUIIujQELU4pGFVm5XkIvgjpWUWDlNK6CW+CKrdAc/iRcuch
-fpYcI7ht3Nd94mcruUECYYI5fTxj0ECj3mflGdL6c2nl7Sw3D3haNabXsa4XN5CT
-OUIi4NWGhuKUpFSLxgwdApBxJ5Tlri+TWW6Prv9Bf9IM1TMAHvCnIQD8rgSFrYga
-gxL160QzYsJoGI2KqLHFgo8ltWKjQO/jLHNoAL0awmx+Iujh30I8dlU1Laq3atoA
-siWbaqGqJKZLbfFOfaLQrga5DOJSd20ZY0R09niVgOr2xap2wxXaqVCLg7pnSBwV
-LD5cn4UcLr5v0sUXKwN908qjIvMxrg==
-=Fs54
------END PGP SIGNATURE-----
-
---vni90+aGYgRvsTuO--
