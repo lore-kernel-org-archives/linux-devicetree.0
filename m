@@ -2,155 +2,178 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A632C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 08:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9023C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 08:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1183B20833
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 08:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661B7215F1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 08:24:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XfBxgPD6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfLBIPq (ORCPT
+        id S1726339AbfLBIYK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 03:15:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53812 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726106AbfLBIPq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Dec 2019 03:15:46 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F3D59AE3C;
-        Mon,  2 Dec 2019 08:15:43 +0000 (UTC)
-Subject: Re: [PATCH 2/7] arm64: dts: realtek: rtd129x: Use reserved-memory for
- RPC regions
-To:     linux-realtek-soc@lists.infradead.org,
-        James Tai <james.tai@realtek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20191111030434.29977-1-afaerber@suse.de>
- <20191111030434.29977-3-afaerber@suse.de>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <1f25f2fc-5d31-1d74-b730-78ad7861ffce@suse.de>
-Date:   Mon, 2 Dec 2019 09:15:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 2 Dec 2019 03:24:10 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:63982 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726079AbfLBIYK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 03:24:10 -0500
+X-UUID: e7276bc7909944f5a59cfc8fe4ea77b0-20191202
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=o5kMsHwU3u3vpUlfVv1mkkdd3HG17OkXBDB3NzDn5no=;
+        b=XfBxgPD6O9pNwkN6mr9Vycof7k8Op2Xb2Hz2sr1dlw2Dpm1DUeWsaggXXeG+WxipUs0yKcycLgW8bP9rrt3Vg+iMzrgBTiy3DKXFuvhw2Zr9lx+H3prvy3yFHTIET04zzJfM072ahGRWwMQ/6pYOR2hnMvo4rmfQOyim1VAX8rM=;
+X-UUID: e7276bc7909944f5a59cfc8fe4ea77b0-20191202
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 986313440; Mon, 02 Dec 2019 16:24:02 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 2 Dec 2019 16:23:42 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 2 Dec 2019 16:23:15 +0800
+Message-ID: <1575275040.31913.1.camel@mtksdaap41>
+Subject: Re: [PATCH v1] drm/mediatek: add ctm property support
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Mon, 2 Dec 2019 16:24:00 +0800
+In-Reply-To: <1575271892-25117-1-git-send-email-yongqiang.niu@mediatek.com>
+References: <1575271892-25117-1-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20191111030434.29977-3-afaerber@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: 6AA511DC88AEAB659A9882B246DC1AC3ACBFE494F598993035A24C878F9B258A2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi James and Realtek colleagues,
+DQpIaSwgWW9uZ3FpYW5nOg0KDQpPbiBNb24sIDIwMTktMTItMDIgYXQgMTU6MzEgKzA4MDAsIHlv
+bmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tIHdyb3RlOg0KPiBGcm9tOiBZb25ncWlhbmcgTml1IDx5
+b25ncWlhbmcubml1QG1lZGlhdGVrLmNvbT4NCj4gDQo+IGFkZCBjdG0gcHJvcGVydHkgc3VwcG9y
+dA0KPiANCj4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRp
+YXRlay5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0
+Yy5jICAgICB8ICA3ICsrKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
+cF9jb21wLmMgfCA1OSArKysrKysrKysrKysrKysrKysrKysrKysrKysrLQ0KPiAgZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCB8ICA5ICsrKysrDQo+ICAzIGZpbGVz
+IGNoYW5nZWQsIDcyIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIGIvZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+IGluZGV4IDRmYjM0NmMuLmU3ZTNhYTkg
+MTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0K
+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gQEAgLTY2
+NiwxMCArNjY2LDEzIEBAIHN0YXRpYyB2b2lkIG10a19kcm1fY3J0Y19hdG9taWNfZmx1c2goc3Ry
+dWN0IGRybV9jcnRjICpjcnRjLA0KPiAgCWludCBpOw0KPiAgDQo+ICAJaWYgKGNydGMtPnN0YXRl
+LT5jb2xvcl9tZ210X2NoYW5nZWQpDQo+IC0JCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+ZGRw
+X2NvbXBfbnI7IGkrKykNCj4gKwkJZm9yIChpID0gMDsgaSA8IG10a19jcnRjLT5kZHBfY29tcF9u
+cjsgaSsrKSB7DQo+ICAJCQltdGtfZGRwX2dhbW1hX3NldChtdGtfY3J0Yy0+ZGRwX2NvbXBbaV0s
+DQo+ICAJCQkJCSAgY3J0Yy0+c3RhdGUsDQo+ICAJCQkJCSAgbXRrX2NydGNfc3RhdGUtPmNtZHFf
+aGFuZGxlKTsNCj4gKwkJCW10a19kZHBfY3RtX3NldChtdGtfY3J0Yy0+ZGRwX2NvbXBbaV0sIGNy
+dGMtPnN0YXRlKTsNCg0KVGhpcyBwYXRjaCBpcyBiYXNlZCBvbiBhbm90aGVyIHBhdGNoIHdoaWNo
+IHN1cHBvcnQgY21kcS4gU28gSSB0aGluayB0aGlzDQpwYXRjaCB3b3VsZCBhbHNvIHN1cHBvcnQg
+Y21kcS4NCg0KPiArCQl9DQo+ICsNCj4gICNpZmRlZiBDT05GSUdfTVRLX0NNRFENCj4gIAlpZiAo
+bXRrX2NydGMtPmNtZHFfY2xpZW50KSB7DQo+ICAJCWRybV9hdG9taWNfc3RhdGVfZ2V0KG9sZF9h
+dG9taWNfc3RhdGUpOw0KPiBAQCAtODkxLDcgKzg5NCw3IEBAIGludCBtdGtfZHJtX2NydGNfY3Jl
+YXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LA0KPiAgCWlmIChyZXQgPCAwKQ0KPiAgCQly
+ZXR1cm4gcmV0Ow0KPiAgCWRybV9tb2RlX2NydGNfc2V0X2dhbW1hX3NpemUoJm10a19jcnRjLT5i
+YXNlLCBNVEtfTFVUX1NJWkUpOw0KPiAtCWRybV9jcnRjX2VuYWJsZV9jb2xvcl9tZ210KCZtdGtf
+Y3J0Yy0+YmFzZSwgMCwgZmFsc2UsIE1US19MVVRfU0laRSk7DQo+ICsJZHJtX2NydGNfZW5hYmxl
+X2NvbG9yX21nbXQoJm10a19jcnRjLT5iYXNlLCAwLCB0cnVlLCBNVEtfTFVUX1NJWkUpOw0KDQpP
+bmx5IE1UODE4MyBoYXMgQ0NPUlIsIEkgdGhpbmsgeW91IHNob3VsZCBlbmFibGUgY3RtIGJ5IFNv
+Qy4gKGdhbW1hIGhhcw0KdGhlIHNhbWUgcHJvYmxlbSkNCg0KPiAgCXByaXYtPm51bV9waXBlcysr
+Ow0KPiAgI2lmZGVmIENPTkZJR19NVEtfQ01EUQ0KPiAgCW10a19jcnRjLT5jbWRxX2NsaWVudCA9
+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29t
+cC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYw0KPiBpbmRl
+eCA5Y2MxMmFmLi40YmJiYWM3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RybV9kZHBfY29tcC5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2RkcF9jb21wLmMNCj4gQEAgLTM4LDcgKzM4LDE1IEBADQo+ICAjZGVmaW5lIENDT1JS
+X0VOCQkJCUJJVCgwKQ0KPiAgI2RlZmluZSBESVNQX0NDT1JSX0NGRwkJCQkweDAwMjANCj4gICNk
+ZWZpbmUgQ0NPUlJfUkVMQVlfTU9ERQkJCUJJVCgwKQ0KPiArI2RlZmluZSBDQ09SUl9FTkdJTkVf
+RU4JCQkJQklUKDEpDQo+ICsjZGVmaW5lIENDT1JSX0dBTU1BX09GRgkJCQlCSVQoMikNCj4gKyNk
+ZWZpbmUgQ0NPUlJfV0dBTVVUX1NSQ19DTElQCQkJQklUKDMpDQo+ICAjZGVmaW5lIERJU1BfQ0NP
+UlJfU0laRQkJCQkweDAwMzANCj4gKyNkZWZpbmUgRElTUF9DQ09SUl9DT0VGXzAJCQkweDAwODAN
+Cj4gKyNkZWZpbmUgRElTUF9DQ09SUl9DT0VGXzEJCQkweDAwODQNCj4gKyNkZWZpbmUgRElTUF9D
+Q09SUl9DT0VGXzIJCQkweDAwODgNCj4gKyNkZWZpbmUgRElTUF9DQ09SUl9DT0VGXzMJCQkweDAw
+OEMNCj4gKyNkZWZpbmUgRElTUF9DQ09SUl9DT0VGXzQJCQkweDAwOTANCj4gIA0KPiAgI2RlZmlu
+ZSBESVNQX0RJVEhFUl9FTgkJCQkweDAwMDANCj4gICNkZWZpbmUgRElUSEVSX0VOCQkJCUJJVCgw
+KQ0KPiBAQCAtMTg3LDcgKzE5NSw3IEBAIHN0YXRpYyB2b2lkIG10a19jY29ycl9jb25maWcoc3Ry
+dWN0IG10a19kZHBfY29tcCAqY29tcCwgdW5zaWduZWQgaW50IHcsDQo+ICAJCQkgICAgIHVuc2ln
+bmVkIGludCBicGMsIHN0cnVjdCBjbWRxX3BrdCAqY21kcV9wa3QpDQo+ICB7DQo+ICAJbXRrX2Rk
+cF93cml0ZShjbWRxX3BrdCwgaCA8PCAxNiB8IHcsIGNvbXAsIERJU1BfQ0NPUlJfU0laRSk7DQo+
+IC0JbXRrX2RkcF93cml0ZShjbWRxX3BrdCwgQ0NPUlJfUkVMQVlfTU9ERSwgY29tcCwgRElTUF9D
+Q09SUl9DRkcpOw0KPiArCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIENDT1JSX0VOR0lORV9FTiwg
+Y29tcCwgRElTUF9DQ09SUl9DRkcpOw0KPiAgfQ0KPiAgDQo+ICBzdGF0aWMgdm9pZCBtdGtfY2Nv
+cnJfc3RhcnQoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCkNCj4gQEAgLTIwMCw2ICsyMDgsNTQg
+QEAgc3RhdGljIHZvaWQgbXRrX2Njb3JyX3N0b3Aoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCkN
+Cj4gIAl3cml0ZWxfcmVsYXhlZCgweDAsIGNvbXAtPnJlZ3MgKyBESVNQX0NDT1JSX0VOKTsNCj4g
+IH0NCj4gIA0KPiArLyogQ29udmVydHMgYSBEUk0gUzMxLjMyIHZhbHVlIHRvIHRoZSBIVyBTMC4x
+MSBmb3JtYXQuICovDQo+ICtzdGF0aWMgdTE2IG10a19jdG1fczMxXzMyX3RvX3MwXzExKHU2NCBp
+bikNCj4gK3sNCj4gKwl1MTYgcjsNCj4gKw0KPiArCS8qIFNpZ24gYml0LiAqLw0KPiArCXIgPSBp
+biAmIEJJVF9VTEwoNjMpID8gQklUKDExKSA6IDA7DQo+ICsNCj4gKwlpZiAoKGluICYgR0VOTUFT
+S19VTEwoNjIsIDMzKSkgPiAwKSB7DQoNCmlmICgoaW4gJiBHRU5NQVNLX1VMTCg2MiwgMzIpKSA+
+IDApIHsNCg0KPiArCQkvKiBXZSBoYXZlIHplcm8gaW50ZWdlciBiaXRzIHNvIHdlIGNhbiBvbmx5
+IHNhdHVyYXRlIGhlcmUuICovDQo+ICsJCXIgfD0gR0VOTUFTSygxMCwgMCk7DQo+ICsJfSBlbHNl
+IHsNCj4gKwkJLyogT3RoZXJ3aXNlIHRha2UgdGhlIDkgbW9zdCBpbXBvcnRhbnQgZnJhY3Rpb25h
+bCBiaXRzLiAqLw0KPiArCQlyIHw9IChpbiA+PiAyMikgJiBHRU5NQVNLKDEwLCAwKTsNCg0KciB8
+PSAoaW4gPj4gMjEpICYgR0VOTUFTSygxMCwgMCk7DQoNClJlZ2FyZHMsDQpDSw0KDQo+ICsJfQ0K
+PiArDQo+ICsJcmV0dXJuIHI7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyB2b2lkIG10a19jY29ycl9j
+dG1fc2V0KHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsDQo+ICsJCQkgICAgICBzdHJ1Y3QgZHJt
+X2NydGNfc3RhdGUgKnN0YXRlKQ0KPiArew0KPiArCXN0cnVjdCBkcm1fcHJvcGVydHlfYmxvYiAq
+YmxvYiA9IHN0YXRlLT5jdG07DQo+ICsJc3RydWN0IGRybV9jb2xvcl9jdG0gKmN0bTsNCj4gKwlj
+b25zdCB1NjQgKmlucHV0Ow0KPiArCXVpbnQxNl90IGNvZWZmc1s5XSA9IHsgMCB9Ow0KPiArCWlu
+dCBpOw0KPiArDQo+ICsJaWYgKCFibG9iKQ0KPiArCQlyZXR1cm47DQo+ICsNCj4gKwljdG0gPSAo
+c3RydWN0IGRybV9jb2xvcl9jdG0gKilibG9iLT5kYXRhOw0KPiArCWlucHV0ID0gY3RtLT5tYXRy
+aXg7DQo+ICsNCj4gKwlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShjb2VmZnMpOyBpKyspDQo+
+ICsJCWNvZWZmc1tpXSA9IG10a19jdG1fczMxXzMyX3RvX3MwXzExKGlucHV0W2ldKTsNCj4gKw0K
+PiArCXdyaXRlbF9yZWxheGVkKGNvZWZmc1swXSA8PCAxNiB8IGNvZWZmc1sxXSwNCj4gKwkJICAg
+ICAgIGNvbXAtPnJlZ3MgKyBESVNQX0NDT1JSX0NPRUZfMCk7DQo+ICsJd3JpdGVsX3JlbGF4ZWQo
+Y29lZmZzWzJdIDw8IDE2IHwgY29lZmZzWzNdLA0KPiArCQkgICAgICAgY29tcC0+cmVncyArIERJ
+U1BfQ0NPUlJfQ09FRl8xKTsNCj4gKwl3cml0ZWxfcmVsYXhlZChjb2VmZnNbNF0gPDwgMTYgfCBj
+b2VmZnNbNV0sDQo+ICsJCSAgICAgICBjb21wLT5yZWdzICsgRElTUF9DQ09SUl9DT0VGXzIpOw0K
+PiArCXdyaXRlbF9yZWxheGVkKGNvZWZmc1s2XSA8PCAxNiB8IGNvZWZmc1s3XSwNCj4gKwkJICAg
+ICAgIGNvbXAtPnJlZ3MgKyBESVNQX0NDT1JSX0NPRUZfMyk7DQo+ICsJd3JpdGVsX3JlbGF4ZWQo
+Y29lZmZzWzhdIDw8IDE2LCBjb21wLT5yZWdzICsgRElTUF9DQ09SUl9DT0VGXzQpOw0KPiArfQ0K
+PiArDQo+ICBzdGF0aWMgdm9pZCBtdGtfZGl0aGVyX2NvbmZpZyhzdHJ1Y3QgbXRrX2RkcF9jb21w
+ICpjb21wLCB1bnNpZ25lZCBpbnQgdywNCj4gIAkJCSAgICAgIHVuc2lnbmVkIGludCBoLCB1bnNp
+Z25lZCBpbnQgdnJlZnJlc2gsDQo+ICAJCQkgICAgICB1bnNpZ25lZCBpbnQgYnBjLCBzdHJ1Y3Qg
+Y21kcV9wa3QgKmNtZHFfcGt0KQ0KPiBAQCAtMjY5LDYgKzMyNSw3IEBAIHN0YXRpYyB2b2lkIG10
+a19nYW1tYV9zZXQoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwNCj4gIAkuY29uZmlnID0gbXRr
+X2Njb3JyX2NvbmZpZywNCj4gIAkuc3RhcnQgPSBtdGtfY2NvcnJfc3RhcnQsDQo+ICAJLnN0b3Ag
+PSBtdGtfY2NvcnJfc3RvcCwNCj4gKwkuY3RtX3NldCA9IG10a19jY29ycl9jdG1fc2V0LA0KPiAg
+fTsNCj4gIA0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2NvbXBfZnVuY3MgZGRwX2Rp
+dGhlciA9IHsNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
+X2RkcF9jb21wLmggYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5o
+DQo+IGluZGV4IDViMGEzZDQuLjUxMDBjM2QgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KPiBAQCAtOTUsNiArOTUsOCBAQCBzdHJ1Y3QgbXRr
+X2RkcF9jb21wX2Z1bmNzIHsNCj4gIAkJCSAgc3RydWN0IGNtZHFfcGt0ICpjbWRxX3BrdCk7DQo+
+ICAJdm9pZCAoKmJnY2xyX2luX29uKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wKTsNCj4gIAl2
+b2lkICgqYmdjbHJfaW5fb2ZmKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wKTsNCj4gKwl2b2lk
+ICgqY3RtX3NldCkoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwNCj4gKwkJCXN0cnVjdCBkcm1f
+Y3J0Y19zdGF0ZSAqc3RhdGUpOw0KPiAgfTsNCj4gIA0KPiAgc3RydWN0IG10a19kZHBfY29tcCB7
+DQo+IEBAIC0yMTMsNiArMjE1LDEzIEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBtdGtfZGRwX2NvbXBf
+YmdjbHJfaW5fb2ZmKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXApDQo+ICAJCWNvbXAtPmZ1bmNz
+LT5iZ2Nscl9pbl9vZmYoY29tcCk7DQo+ICB9DQo+ICANCj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBt
+dGtfZGRwX2N0bV9zZXQoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwNCj4gKwkJCQkgICBzdHJ1
+Y3QgZHJtX2NydGNfc3RhdGUgKnN0YXRlKQ0KPiArew0KPiArCWlmIChjb21wLT5mdW5jcyAmJiBj
+b21wLT5mdW5jcy0+Y3RtX3NldCkNCj4gKwkJY29tcC0+ZnVuY3MtPmN0bV9zZXQoY29tcCwgc3Rh
+dGUpOw0KPiArfQ0KPiArDQo+ICBpbnQgbXRrX2RkcF9jb21wX2dldF9pZChzdHJ1Y3QgZGV2aWNl
+X25vZGUgKm5vZGUsDQo+ICAJCQllbnVtIG10a19kZHBfY29tcF90eXBlIGNvbXBfdHlwZSk7DQo+
+ICBpbnQgbXRrX2RkcF9jb21wX2luaXQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNl
+X25vZGUgKmNvbXBfbm9kZSwNCg0KDQo=
 
-Am 11.11.19 um 04:04 schrieb Andreas Färber:
-> Move /reserved-memory node from RTD1295 to RTD129x DT.
-> Convert RPC /memreserve/s into /reserved-memory nodes.
-> 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  arch/arm64/boot/dts/realtek/rtd1295.dtsi | 13 +------------
->  arch/arm64/boot/dts/realtek/rtd129x.dtsi | 23 ++++++++++++++++++++---
->  2 files changed, 21 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-> index 34f6cc6f16fe..1402abe80ea1 100644
-> --- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-> +++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-> @@ -2,7 +2,7 @@
->  /*
->   * Realtek RTD1295 SoC
->   *
-> - * Copyright (c) 2016-2017 Andreas Färber
-> + * Copyright (c) 2016-2019 Andreas Färber
->   */
->  
->  #include "rtd129x.dtsi"
-> @@ -47,17 +47,6 @@
->  		};
->  	};
->  
-> -	reserved-memory {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		ranges;
-> -
-> -		tee@10100000 {
-> -			reg = <0x10100000 0xf00000>;
-> -			no-map;
-> -		};
-> -	};
-> -
->  	timer {
->  		compatible = "arm,armv8-timer";
->  		interrupts = <GIC_PPI 13
-> diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-> index 4433114476f5..8d80cca945bc 100644
-> --- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-> +++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-> @@ -2,14 +2,12 @@
->  /*
->   * Realtek RTD1293/RTD1295/RTD1296 SoC
->   *
-> - * Copyright (c) 2016-2017 Andreas Färber
-> + * Copyright (c) 2016-2019 Andreas Färber
->   */
->  
->  /memreserve/	0x0000000000000000 0x0000000000030000;
-> -/memreserve/	0x000000000001f000 0x0000000000001000;
->  /memreserve/	0x0000000000030000 0x00000000000d0000;
->  /memreserve/	0x0000000001b00000 0x00000000004be000;
-> -/memreserve/	0x0000000001ffe000 0x0000000000004000;
->  
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/reset/realtek,rtd1295.h>
-> @@ -19,6 +17,25 @@
->  	#address-cells = <1>;
->  	#size-cells = <1>;
->  
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		rpc_comm: rpc@1f000 {
-> +			reg = <0x1f000 0x1000>;
-> +		};
-> +
-> +		rpc_ringbuf: rpc@1ffe000 {
-> +			reg = <0x1ffe000 0x4000>;
-> +		};
-
-Have you reviewed this patch to be correct? I.e., are the above two
-regions reserved RAM (assumption above), or is this rather MMIO
-shadowing RAM? (then we would need to update the /memory reg and /soc
-ranges properties)
-
-That also affects RTD1619, which currently has neither.
-
-Thanks,
-Andreas
-
-> +
-> +		tee: tee@10100000 {
-> +			reg = <0x10100000 0xf00000>;
-> +			no-map;
-> +		};
-> +	};
-> +
->  	arm_pmu: arm-pmu {
->  		compatible = "arm,cortex-a53-pmu";
->  		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
