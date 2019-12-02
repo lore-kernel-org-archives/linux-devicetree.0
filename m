@@ -2,83 +2,69 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDC6C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 20:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29845C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 21:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA812071E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 20:48:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="b9opIgHR"
+	by mail.kernel.org (Postfix) with ESMTP id F07A6206ED
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 21:05:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575320732;
+	bh=KvuQvOeHf7073T7iqCk7/sH8hVp31zd1O+gMG3150OM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=jwhpYNJrhMPWJ+dLoW91xcf2ZsLgsEw0gqYrHzii0fK8OSS8r6BKFAhCzLorBbuMY
+	 LfexAF+ZE/nxiV3WyOvoR7ASXHuYUAB15kAgLq6WfWWZ0SDSLyK9z9hO2132h8jtQ7
+	 FIRbE+yy3JXljglo8/QY2GHggCBp5/6fsMg0CWbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725825AbfLBUsH (ORCPT
+        id S1727247AbfLBVFW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 15:48:07 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:53606 "EHLO mail.andi.de1.cc"
+        Mon, 2 Dec 2019 16:05:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbfLBUsG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Dec 2019 15:48:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=36x8kOQD1A+EaV2wnpbyrxx04DG69+sUUw8lPbX6jwg=; b=b9opIgHRJj1JrgkU2C/XFZLRHV
-        1tpe2oivJsRYn0SK63s60lOaUfttudXfPNyUZxw2LI9FJOKmX8lUy/Y6tfztTHumZyVev8lzaUkm4
-        b2ZAdNLxUxouspoomCPnHeGG0ALc3/EpTxBfH8VU3PdfgrTvU5aaWGcHCq9T5elr2mkc=;
-Received: from p200300ccff066f001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff06:6f00:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1ibsbu-0007pY-Dv; Mon, 02 Dec 2019 21:47:58 +0100
-Received: from andi by aktux with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1ibsbu-0001lB-63; Mon, 02 Dec 2019 21:47:58 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, letux-kernel@openphoenux.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH 1/2] media: dt-bindings: media: fsl-pxp: add missing imx6sll
-Date:   Mon,  2 Dec 2019 21:47:47 +0100
-Message-Id: <20191202204748.6718-2-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191202204748.6718-1-andreas@kemnade.info>
-References: <20191202204748.6718-1-andreas@kemnade.info>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1727244AbfLBVFW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 16:05:22 -0500
+Subject: Re: [GIT PULL] Devicetree updates for v5.5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575320722;
+        bh=KvuQvOeHf7073T7iqCk7/sH8hVp31zd1O+gMG3150OM=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=C4NBszpdP8aNgn/hfPRoDHKK9meF0m+nbkFoYxTYUEATWOqyIfg7vGUvCqzcmkJx/
+         KRqwwwjItoF/uCOgMgloO7VksveVIyWr8Df8/ycoO6RBiE2A9WqUjXTGo7VDVr3UP6
+         GU1yeGyphQfrfsRxoklEz+qKPZCO23lkk7EsfnEM=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191130051055.GA2987@bogus>
+References: <20191130051055.GA2987@bogus>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191130051055.GA2987@bogus>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+ tags/devicetree-for-5.5
+X-PR-Tracked-Commit-Id: a8de1304b7df30e3a14f2a8b9709bb4ff31a0385
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2c97b5ae83dca56718774e7b4bf9640f05d11867
+Message-Id: <157532072192.29263.13142208368791792538.pr-tracker-bot@kernel.org>
+Date:   Mon, 02 Dec 2019 21:05:21 +0000
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-i.MX6SLL also has a pxp, so mention it among others in the bindings doc.
+The pull request you sent on Fri, 29 Nov 2019 22:10:55 -0700:
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
- Documentation/devicetree/bindings/media/fsl-pxp.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-for-5.5
 
-diff --git a/Documentation/devicetree/bindings/media/fsl-pxp.txt b/Documentation/devicetree/bindings/media/fsl-pxp.txt
-index 2477e7f87381..f8090e06530d 100644
---- a/Documentation/devicetree/bindings/media/fsl-pxp.txt
-+++ b/Documentation/devicetree/bindings/media/fsl-pxp.txt
-@@ -8,7 +8,7 @@ i.MX SoCs from i.MX23 to i.MX7.
- 
- Required properties:
- - compatible: should be "fsl,<soc>-pxp", where SoC can be one of imx23, imx28,
--  imx6dl, imx6sl, imx6ul, imx6sx, imx6ull, or imx7d.
-+  imx6dl, imx6sl, imx6sll, imx6ul, imx6sx, imx6ull, or imx7d.
- - reg: the register base and size for the device registers
- - interrupts: the PXP interrupt, two interrupts for imx6ull and imx7d.
- - clock-names: should be "axi"
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2c97b5ae83dca56718774e7b4bf9640f05d11867
+
+Thank you!
+
 -- 
-2.20.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
