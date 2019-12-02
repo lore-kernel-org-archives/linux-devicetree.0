@@ -2,122 +2,123 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD741C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA60C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 947FE21774
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575306594;
-	bh=GkbsSdmQ4eR/q4AClvX3n4KtKQbJWCPbVsm/uxNan0E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ooC8pV1UAjyloXHuntWlvbgBvx40eY7herw/7VOUTL1tKAfSDCW4NXSuArtFfTOFm
-	 yImwMS8WqNfqdSDM1vpfKnw8PoSfzGU/+3ss0/pb37pweJh0fT2UesNM8aqmkbTyKD
-	 qWcYzq34yP8r31fQjiLy2/sR/I6WydlOWXlNy/HE=
+	by mail.kernel.org (Postfix) with ESMTP id E340E20833
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:11:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WYDlkz0F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfLBRJx (ORCPT
+        id S1727671AbfLBRLt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:09:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42278 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727724AbfLBRJx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Dec 2019 12:09:53 -0500
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F135A20833;
-        Mon,  2 Dec 2019 17:09:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575306592;
-        bh=GkbsSdmQ4eR/q4AClvX3n4KtKQbJWCPbVsm/uxNan0E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=O9xXSKg8S6lM7Iks/wTYvZ1NUVYF6WWGXCJkhky2yE71DNlpRkTRLzZhxrC6aZxkN
-         ToP5TwKHAJgs+QW1VaDoiA6W3a5kpzPcupLLKeHa+wllldyjGFH0H0P7EPUsSLAalA
-         9xQ7l+0h5xI37uH0Tl7CPLR65PoHhN633F6cpQQw=
-Received: by mail-qt1-f179.google.com with SMTP id k11so464235qtm.3;
-        Mon, 02 Dec 2019 09:09:51 -0800 (PST)
-X-Gm-Message-State: APjAAAVBF1FojDo1bliIp6ou+5kBv6NJiRndW+Mx1HTygBlcZqXRG+Dj
-        PNyEFajNgada9iq+yxSE8zdhVNPYDKKEGX949A==
-X-Google-Smtp-Source: APXvYqx0eGKoau2S6a0rZyzd5VHUrfCL9liT+60FFeUQX4HBFesTQx2qmA3e+5um+KvbMtTh9mBqfuVW9OHHwdbtYdQ=
-X-Received: by 2002:ac8:5513:: with SMTP id j19mr310765qtq.143.1575306591095;
- Mon, 02 Dec 2019 09:09:51 -0800 (PST)
+        Mon, 2 Dec 2019 12:11:49 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37616 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727618AbfLBRLt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 12:11:49 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6EF60309;
+        Mon,  2 Dec 2019 18:11:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1575306707;
+        bh=ez0gH51I6qgqPMXkNunJleNN5vTi8Yxzgob6Cd0I57o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WYDlkz0FLmNriDMNvtU7AA1Jg1mck8b1K80YvWKz+qwTOwsiDeZS2epsAZmEOe3Mp
+         ycr8rihRYkRCNOQfwX6v1HMTXAvN7fUkm+DQMTshAMyG1oI6VPxfJWnWXbe8NU6JlI
+         XXnWRjS8/APlLqEkvAJrU0WKD8FUXeL7+ttzv6cw=
+Date:   Mon, 2 Dec 2019 19:11:40 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
+        Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Clark <robdclark@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 17/21] dt-bindings: display: bridge: lvds-transmitter:
+ Add new props
+Message-ID: <20191202171140.GR4929@pendragon.ideasonboard.com>
+References: <20191023154512.9762-1-boris.brezillon@collabora.com>
+ <20191023154512.9762-18-boris.brezillon@collabora.com>
 MIME-Version: 1.0
-References: <20191021124428.2541-1-brgl@bgdev.pl> <20191021124428.2541-6-brgl@bgdev.pl>
- <20191111080837.GF18902@dell> <CAMRc=Me_b5c_e+qZ1s=TgTh7k_bQqrqthC8VTb7ak8+3AOEugg@mail.gmail.com>
- <20191112105035.GR3218@dell>
-In-Reply-To: <20191112105035.GR3218@dell>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 2 Dec 2019 11:09:40 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+cpPppgVg_42m55DKOwA5uk7CLV_juDyCCECJMuuZYeg@mail.gmail.com>
-Message-ID: <CAL_Jsq+cpPppgVg_42m55DKOwA5uk7CLV_juDyCCECJMuuZYeg@mail.gmail.com>
-Subject: Re: [PATCH v4 5/6] dt-bindings: mfd: max77650: convert the binding
- document to yaml
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191023154512.9762-18-boris.brezillon@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 4:50 AM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Mon, 11 Nov 2019, Bartosz Golaszewski wrote:
->
-> > pon., 11 lis 2019 o 09:08 Lee Jones <lee.jones@linaro.org> napisa=C5=82=
-(a):
-> > >
-> > > On Mon, 21 Oct 2019, Bartosz Golaszewski wrote:
-> > >
-> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > >
-> > > > Convert the binding document for MAX77650 core MFD module to YAML.
-> > > >
-> > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > ---
-> > > >  .../devicetree/bindings/mfd/max77650.txt      |  46 ------
-> > > >  .../devicetree/bindings/mfd/max77650.yaml     | 149 ++++++++++++++=
-++++
-> > > >  2 files changed, 149 insertions(+), 46 deletions(-)
-> > > >  delete mode 100644 Documentation/devicetree/bindings/mfd/max77650.=
-txt
-> > > >  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.=
-yaml
-> > >
-> > > Applied, thanks.
-> > >
-> >
-> > Hi Lee,
-> >
-> > FYI this series is already in next through Rob's DT tree.
->
-> Why don't I see an 'applied' email?
+Hi Boris,
 
-There was discussion about it in the cover letter.
+Thank you for the patch.
 
-With the schema for MFDs, we need to merge all the schema thru one
-tree because the main schema references the child node schemas.
-Otherwise, 'make dt_binding_check' will start failing (as Linus' tree
-is now). Perhaps we should encourage they be a single patche because
-1) child devices alone don't make sense and 2) it will be clear not to
-apply each separately.
+On Wed, Oct 23, 2019 at 05:45:08PM +0200, Boris Brezillon wrote:
+> Add the data-mapping property to describe the output bus format and
+> the bus-width property to describe the input bus format.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> ---
+> Changes in v3:
+> * New patch
+> ---
+>  .../bindings/display/bridge/lvds-transmitter.txt    | 13 +++++++++++++
 
-Rob
+Please note that lvds-transmitter has been renamed to lvds-codec and
+converted to YAML as part of a pull request I've recently sent ([1]).
+This patch will thus need to be rebased.
+
+[1] https://patchwork.freedesktop.org/patch/342754/
+
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+> index 60091db5dfa5..7b43b6f20279 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+> @@ -36,6 +36,19 @@ graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+>  - Video port 0 for parallel input
+>  - Video port 1 for LVDS output
+>  
+> +Optional port 0 node properties:
+> +
+> +- bus-width: number of data lines use to transmit the RGB data.
+> +	     Can be 18 or 24.
+> +
+> +Optional port 1 node properties:
+> +
+> +- data-mapping: see Documentation/devicetree/bindings/display/panel/lvds.yaml
+> +		for more details about this LVDS data-mapping property.
+> +		Supported values:
+> +		"jeida-18"
+> +		"jeida-24"
+> +		"vesa-24"
+>  
+>  Example
+>  -------
+
+-- 
+Regards,
+
+Laurent Pinchart
