@@ -2,134 +2,165 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AC5C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D086BC432C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4DB2071F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CAF320718
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:48:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575312481;
+	bh=DZobwyVTMIk2P8F6Y7+zlO1hthfFR4W+Are7ELcMZNk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iovjFmgC7RFPgb7/ZzQBnoCZrysBzWDg9VBFrVTc/+2NQ8CKmNMswbnE0PSYdPLGJ
+	 VWKWcygBsCljm4mWcfS64hDRu9d4REfB5hbjGyVbCItnGkJdg8gVGvAID7nVbSFjli
+	 Hfx0P04xEOvfCPBw3bnINVM7NOJ7/g2KyyahQ748=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfLBSXM (ORCPT
+        id S1727635AbfLBSsB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:23:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35906 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727858AbfLBSWP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Dec 2019 13:22:15 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CC072AE53;
-        Mon,  2 Dec 2019 18:22:13 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        James Tai <james.tai@realtek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH 01/14] ARM: dts: rtd1195: Introduce iso and misc syscon
-Date:   Mon,  2 Dec 2019 19:21:51 +0100
-Message-Id: <20191202182205.14629-2-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191202182205.14629-1-afaerber@suse.de>
-References: <20191202182205.14629-1-afaerber@suse.de>
+        Mon, 2 Dec 2019 13:48:01 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38345 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727556AbfLBSsB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 13:48:01 -0500
+Received: by mail-oi1-f195.google.com with SMTP id b8so659021oiy.5;
+        Mon, 02 Dec 2019 10:48:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mBpJM7Zj2wSiQOjSDmwoTTIZ3KSKjAbhhQOqtWInyn8=;
+        b=A7aMOrXpKhJy4fk39+qi/ANYq/TUy3hJ06XneZJ5oUT0OFi6rhHC9yRUlq9vS9iAFR
+         mHzY8wyQTwwGj2fVHFWlHn2l0PiT3mGWgVNMXxnPXTUC0y1MVqBKX7+nTMutffctrpd2
+         x8JOeWWdqz65qRlfbS25GyyDioj7MNgdSMp3VUIG9zri8nRaGJ7jn4y8n1Asprwfofrv
+         vDP9wBKSFeoybGjyfoHV+EwJHX/7iWbpZh/AHZgehJFNa9bpOdNBv5N/mbOdmgVhwjz1
+         YRXP7Xlyi2SQat1hID0fUq721cXvoRXXGYmntZ3ZdwGj10+rdZn9v0nEs3bw7CHW92SS
+         RwQA==
+X-Gm-Message-State: APjAAAX4YTCRhzP5CNeDWGhYr9adWNRwanVIknLUrT/UuKud7yTM4XRB
+        ieIV2x6UGNTVqSf8lpjJjQ==
+X-Google-Smtp-Source: APXvYqzdzdPrzk+OWMWznQdm93ETxyP6UWwf6N3cCEdAYlYM58GRWWErDRTEF83uYELHa89BF49evQ==
+X-Received: by 2002:aca:c38c:: with SMTP id t134mr354494oif.175.1575312479937;
+        Mon, 02 Dec 2019 10:47:59 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m133sm104652oia.29.2019.12.02.10.47.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2019 10:47:59 -0800 (PST)
+Date:   Mon, 2 Dec 2019 12:47:58 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Wen He <wen.he_1@nxp.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Walle <michael@walle.cc>, Li Yang <leoyang.li@nxp.com>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [v10 1/2] dt/bindings: clk: Add YAML schemas for LS1028A Display
+ Clock bindings
+Message-ID: <20191202184758.GA8408@bogus>
+References: <20191127101525.44516-1-wen.he_1@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127101525.44516-1-wen.he_1@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Group watchdog and UART0 into an Isolation syscon mfd node.
-Group UART1 into a Miscellaneous syscon mfd node.
+On Wed, Nov 27, 2019 at 06:15:24PM +0800, Wen He wrote:
+> LS1028A has a clock domain PXLCLK0 used for provide pixel clocks to Display
+> output interface. Add a YAML schema for this.
+> 
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+> change in v10:
+>         - Add optional feild 'vco-frequency'.
+> 
+>  .../devicetree/bindings/clock/fsl,plldig.yaml | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/fsl,plldig.yaml b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+> new file mode 100644
+> index 000000000000..ee5b5c61a471
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+> @@ -0,0 +1,54 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/clock/fsl,plldig.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP QorIQ Layerscape LS1028A Display PIXEL Clock Binding
+> +
+> +maintainers:
+> +  - Wen He <wen.he_1@nxp.com>
+> +
+> +description: |
+> +  NXP LS1028A has a clock domain PXLCLK0 used for the Display output
+> +  interface in the display core, as implemented in TSMC CLN28HPM PLL.
+> +  which generate and offers pixel clocks to Display.
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,ls1028a-plldig
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  '#clock-cells':
+> +    const: 0
+> +
+> +  vco-frequency:
 
-Cc: James Tai <james.tai@realtek.com>
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- arch/arm/boot/dts/rtd1195.dtsi | 58 +++++++++++++++++++++++++++++-------------
- 1 file changed, 40 insertions(+), 18 deletions(-)
+Needs vendor prefix and unit suffix:
 
-diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.dtsi
-index a8f7b9caacba..a74f530dc439 100644
---- a/arch/arm/boot/dts/rtd1195.dtsi
-+++ b/arch/arm/boot/dts/rtd1195.dtsi
-@@ -100,28 +100,22 @@
- 			#size-cells = <1>;
- 			ranges = <0x0 0x18000000 0x70000>;
- 
--			wdt: watchdog@7680 {
--				compatible = "realtek,rtd1295-watchdog";
--				reg = <0x7680 0x100>;
--				clocks = <&osc27M>;
--			};
--
--			uart0: serial@7800 {
--				compatible = "snps,dw-apb-uart";
--				reg = <0x7800 0x400>;
--				reg-shift = <2>;
-+			iso: syscon@7000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x7000 0x1000>;
- 				reg-io-width = <4>;
--				clock-frequency = <27000000>;
--				status = "disabled";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x7000 0x1000>;
- 			};
- 
--			uart1: serial@1b200 {
--				compatible = "snps,dw-apb-uart";
--				reg = <0x1b200 0x100>;
--				reg-shift = <2>;
-+			misc: syscon@1b000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x1b000 0x1000>;
- 				reg-io-width = <4>;
--				clock-frequency = <27000000>;
--				status = "disabled";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x1b000 0x1000>;
- 			};
- 		};
- 
-@@ -137,3 +131,31 @@
- 		};
- 	};
- };
-+
-+&iso {
-+	wdt: watchdog@680 {
-+		compatible = "realtek,rtd1295-watchdog";
-+		reg = <0x680 0x100>;
-+		clocks = <&osc27M>;
-+	};
-+
-+	uart0: serial@800 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x800 0x400>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		clock-frequency = <27000000>;
-+		status = "disabled";
-+	};
-+};
-+
-+&misc {
-+	uart1: serial@200 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x200 0x100>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		clock-frequency = <27000000>;
-+		status = "disabled";
-+	};
-+};
--- 
-2.16.4
+fsl,vco-hz
 
+Or you could perhaps just use 'clock-frequency'.
+
+> +     $ref: '/schemas/types.yaml#/definitions/uint32'
+> +     description: Optional for VCO frequency of the PLL in Hertz.
+> +        The VCO frequency of this PLL cannot be changed during runtime
+> +        only at startup. Therefore, the output frequencies are very
+> +        limited and might not even closely match the requested frequency.
+> +        To work around this restriction the user may specify its own
+> +        desired VCO frequency for the PLL. The frequency has to be in the
+> +        range of 650000000 to 1300000000.
+> +        If not set, the default frequency is 1188000000.
+
+A bunch of constraints you've listed here that should be schema rather 
+than freeform text:
+
+minimum: 650000000
+maximum: 1300000000
+default: 1188000000
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - '#clock-cells'
+> +
+> +examples:
+> +  # Display PIXEL Clock node:
+> +  - |
+> +    dpclk: clock-display@f1f0000 {
+> +        compatible = "fsl,ls1028a-plldig";
+> +        reg = <0x0 0xf1f0000 0x0 0xffff>;
+> +        #clock-cells = <0>;
+> +        clocks = <&osc_27m>;
+> +    };
+> +
+> +...
+> -- 
+> 2.17.1
+> 
