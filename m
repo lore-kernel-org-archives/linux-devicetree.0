@@ -2,97 +2,362 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C54C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 08:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64386C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 08:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0F20215F1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 08:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC792245C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 08:07:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GudKFDVk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XRIhVxFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726057AbfLBICI (ORCPT
+        id S1725977AbfLBIHj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 03:02:08 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38207 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfLBICI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 03:02:08 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y17so4293157wrh.5
-        for <devicetree@vger.kernel.org>; Mon, 02 Dec 2019 00:02:06 -0800 (PST)
+        Mon, 2 Dec 2019 03:07:39 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36747 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726374AbfLBIHi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 03:07:38 -0500
+Received: by mail-ed1-f68.google.com with SMTP id j17so14969301edp.3
+        for <devicetree@vger.kernel.org>; Mon, 02 Dec 2019 00:07:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eObgtd5YnXMirZPt7QMUEmAc3hSdu9SksehJdyatM0s=;
-        b=GudKFDVkIXgVvSEc21ZdU47PmDzbC+AedL8FhZIDDQ2X3zRURqR11cL9cNIOewQGn9
-         8Fs1cpG8fp/vW06dxPy88jXNqoTCLaGxLK+mfw2hmmb0IAa5bjiA22PoKZBPJwqSmRVm
-         bv2yqHLCd4UJOog0ulgaCrSUNV2GYyZ5FjiGkNeoiIXEZ+AMwcAJ/QGmAdmuE+oqlXZv
-         Mboqq5Yk5u5uzikJVyHdyCdbWN1lP8rnqKvUoXELfsMQ2CDp3d76B4C1yjnxmkD7A/lP
-         QZ7X30rqGRChjX/45dvwyiSgy98HhdDjdHSvAs75JIJqZGBoRJmNXZ0357DNMdeQRAJ7
-         NcGQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hB2nJ8CzTKjXCm6SOFfHQcbAJFeLp6+ruAS0J+kmEz4=;
+        b=XRIhVxFW2iDfWHxbVlSiSV4PpvApyRBnSh0jlF7EDk/saneQv8Jfys+8UXjIN+iVT4
+         UgPX8PYXfFfL+H21cq04VIyNM1HXjeB3XCMex9nIMrzxb/+DIUKLqHyR++nk5PkAgbmP
+         Z2E1/rUB/83oyoTGcmJ+ZjW0Yk279VnZIhn3Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eObgtd5YnXMirZPt7QMUEmAc3hSdu9SksehJdyatM0s=;
-        b=lBI/bbJCZS8NbLLyE1zzWfyzptb+OHXIJIYthg14f5CqECR9KmDmS7N4JpqMpumk15
-         aXAqQhPA8sjK4Q6jC/fEQ7+xrJZzbnxAHQ/ZVdSG71SjJm3LevDKnbgsTruddm3P9z1L
-         8xupJP/UD30hQEVIV2dtfqxfqHtrUU32hZTjSCzbyXqcfsGcvVwo/oy7e/Brf0e+VpS4
-         PEFwIOxKZE4hJgGZLo7el4H5+oQpXONP1lgBFxrb3vEhJ6hnE10s1BGo5CIFPhgISvSV
-         mP5fqU8U4rulb7IPB07on4/RmX3ySxRk+B81AoQyOjDJUVaavUjyXbamvfYRCm1Bji3u
-         rCiw==
-X-Gm-Message-State: APjAAAXDCIp3+NLaJ4XHldjIdwz7LAulRTJDzmUw3jTDut8IRnF1vQeL
-        pL0psQux8h3791ozmQv3Plc=
-X-Google-Smtp-Source: APXvYqzmon6W+H8JN4yolgbpixrbflgEV30ECY4FKu4nkuXowRbAy1fYbCsnX/8mSqthL7aEdJ8Ijw==
-X-Received: by 2002:a5d:4481:: with SMTP id j1mr5103360wrq.348.1575273726282;
-        Mon, 02 Dec 2019 00:02:06 -0800 (PST)
-Received: from localhost ([37.238.189.20])
-        by smtp.gmail.com with ESMTPSA id a64sm25450152wmc.18.2019.12.02.00.02.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 00:02:05 -0800 (PST)
-Date:   Mon, 2 Dec 2019 11:02:03 +0300
-From:   Mohammad Rasim <mohammad.rasim96@gmail.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 3/3] arm64: dts: meson-gxbb: add support for
- Videostrong KII Pro
-Message-ID: <20191202080203.js5fciajlf7qkgvw@manjaro.localdomain>
-References: <20191130195335.17740-1-mohammad.rasim96@gmail.com>
- <20191130195335.17740-4-mohammad.rasim96@gmail.com>
- <CAFBinCCYzThAM_DkQyDZ2LrF-6bJoxeNZDtfADmWOxLH+B3AUw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hB2nJ8CzTKjXCm6SOFfHQcbAJFeLp6+ruAS0J+kmEz4=;
+        b=emWtCfOB3/EOi64V9HEbin0Eas8QvDErnJUu2u2hIDUJTTr5M8U+A7rOFP/T2/7wRZ
+         h3gscsLzNnJGgSfM2FVapZZ2NyRtRjMbrfBndW4p2rsVNEzTSee7HAkbc+c7zLtMQOru
+         eh4wLlZdrV8WcVmRb7G2qvLoQxYP3rLpnWCr45adRT8ymeWmIqJRxxcKZfU/Op13H1W4
+         h2hSDp0dNvtUPraOrIggfzrufR/+Iy+HRwxsxBVV/QqwiY+wB/LqtUpJV1ucO/qAQeRX
+         xKQtlAVxXpR+idfOyuaR8JQfDy81ZUkdPEuWl4Hi1PBCydRfv86FC2rMCPTcwaDHHgUb
+         4r5Q==
+X-Gm-Message-State: APjAAAVFSpQob+sAB6ymj2lkUemvYh6hOeQZALKaptzKGv5pacIy8Ix6
+        DXJ847WMs71Oyl4ygMMs6qqINs7gtnuKgSXsRLjuNg==
+X-Google-Smtp-Source: APXvYqzDbZscQDJrs8HoXLTnIMKzHpXcUPG2LW45MmuMV7G7PnHlmrJzw50Qyt0vl90Wse02bh6Lo9CsDwS9zUUwCBU=
+X-Received: by 2002:a50:e00a:: with SMTP id e10mr6951207edl.119.1575274055153;
+ Mon, 02 Dec 2019 00:07:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFBinCCYzThAM_DkQyDZ2LrF-6bJoxeNZDtfADmWOxLH+B3AUw@mail.gmail.com>
+References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1566531931-9772-7-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1566531931-9772-7-git-send-email-hsin-hsiung.wang@mediatek.com>
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Date:   Mon, 2 Dec 2019 16:06:59 +0800
+Message-ID: <CANdKZ0eUDhhQPBBiOWZ0u03SFoFQM6b=ED9AGe+JtBSr_zeJKQ@mail.gmail.com>
+Subject: Re: [PATCH v5 06/10] mfd: Add support for the MediaTek MT6358 PMIC
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, srv_heupstream@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19/12/01 11:21PM, Martin Blumenstingl wrote:
-> [...]
-> > +       leds {
-> > +               compatible = "gpio-leds";
-> > +               status {
-> > +                       gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_LOW>;
-> > +                       default-state = "off";
-> > +                       color = <LED_COLOR_ID_RED>;
-> > +                       function = LED_FUNCTION_STATUS;
-> why is LED_FUNCTION_STATUS not enclosed in <> like color above?
->
-Well, the examples in the documentation enclose the color and don't
-enclose function
-https://github.com/torvalds/linux/blob/596cf45cbf6e4fa7bcb0df33e373a7d062b644b5/Documentation/devicetree/bindings/leds/common.txt#L140
+Hi,
 
-Regards
+On Fri, Aug 23, 2019 at 11:46 AM Hsin-Hsiung Wang
+<hsin-hsiung.wang@mediatek.com> wrote:
 >
-> Martin
+> This adds support for the MediaTek MT6358 PMIC. This is a
+> multifunction device with the following sub modules:
+>
+> - Regulator
+> - RTC
+> - Codec
+> - Interrupt
+>
+> It is interfaced to the host controller using SPI interface
+> by a proprietary hardware called PMIC wrapper or pwrap.
+> MT6358 MFD is a child device of the pwrap.
+>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/mfd/Makefile                 |   3 +-
+>  drivers/mfd/mt6358-irq.c             | 231 ++++++++++++++++++++++++++++
+>  drivers/mfd/mt6397-core.c            |  52 ++++++-
+>  include/linux/mfd/mt6358/core.h      | 158 ++++++++++++++++++++
+>  include/linux/mfd/mt6358/registers.h | 282 +++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/mt6397/core.h      |   3 +
+>  6 files changed, 727 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/mfd/mt6358-irq.c
+>  create mode 100644 include/linux/mfd/mt6358/core.h
+>  create mode 100644 include/linux/mfd/mt6358/registers.h
+> (...)
+> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
+> new file mode 100644
+> index 0000000..760b72f
+> --- /dev/null
+> +++ b/drivers/mfd/mt6358-irq.c
+> @@ -0,0 +1,231 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (c) 2019 MediaTek Inc.
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/mt6358/core.h>
+> +#include <linux/mfd/mt6358/registers.h>
+> +#include <linux/mfd/mt6397/core.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +static struct irq_top_t mt6358_ints[] = {
+> +       MT6358_TOP_GEN(BUCK),
+> +       MT6358_TOP_GEN(LDO),
+> +       MT6358_TOP_GEN(PSC),
+> +       MT6358_TOP_GEN(SCK),
+> +       MT6358_TOP_GEN(BM),
+> +       MT6358_TOP_GEN(HK),
+> +       MT6358_TOP_GEN(AUD),
+> +       MT6358_TOP_GEN(MISC),
+> +};
+> +
+> +static void pmic_irq_enable(struct irq_data *data)
+> +{
+> +       unsigned int hwirq = irqd_to_hwirq(data);
+> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct pmic_irq_data *irqd = chip->irq_data;
+> +
+> +       irqd->enable_hwirq[hwirq] = true;
+> +}
+> +
+> +static void pmic_irq_disable(struct irq_data *data)
+> +{
+> +       unsigned int hwirq = irqd_to_hwirq(data);
+> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct pmic_irq_data *irqd = chip->irq_data;
+> +
+> +       irqd->enable_hwirq[hwirq] = false;
+> +}
+> +
+> +static void pmic_irq_lock(struct irq_data *data)
+> +{
+> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+> +
+> +       mutex_lock(&chip->irqlock);
+> +}
+> +
+> +static void pmic_irq_sync_unlock(struct irq_data *data)
+> +{
+> +       unsigned int i, top_gp, en_reg, int_regs, shift;
+> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct pmic_irq_data *irqd = chip->irq_data;
+> +
+> +       for (i = 0; i < irqd->num_pmic_irqs; i++) {
+> +               if (irqd->enable_hwirq[i] == irqd->cache_hwirq[i])
+> +                       continue;
+> +
+> +               /* Find out the irq group */
+> +               top_gp = 0;
+> +               while ((top_gp + 1) < ARRAY_SIZE(mt6358_ints) &&
+> +                      i >= mt6358_ints[top_gp + 1].hwirq_base)
+> +                       top_gp++;
+> +
+> +               if (top_gp >= ARRAY_SIZE(mt6358_ints)) {
+
+Would this condition ever be true? The while loop before this always
+break when top_gp == ARRAY_SIZE(mt6358_ints) - 1.
+
+> +                       mutex_unlock(&chip->irqlock);
+> +                       dev_err(chip->dev,
+> +                               "Failed to get top_group: %d\n", top_gp);
+> +                       return;
+> +               }
+> +
+> +               /* Find the irq registers */
+> +               int_regs = (i - mt6358_ints[top_gp].hwirq_base) /
+> +                           MT6358_REG_WIDTH;
+> +               en_reg = mt6358_ints[top_gp].en_reg +
+> +                       mt6358_ints[top_gp].en_reg_shift * int_regs;
+> +               shift = (i - mt6358_ints[top_gp].hwirq_base) % MT6358_REG_WIDTH;
+> +               regmap_update_bits(chip->regmap, en_reg, BIT(shift),
+> +                                  irqd->enable_hwirq[i] << shift);
+> +               irqd->cache_hwirq[i] = irqd->enable_hwirq[i];
+> +       }
+> +       mutex_unlock(&chip->irqlock);
+> +}
+> +
+> +static struct irq_chip mt6358_irq_chip = {
+> +       .name = "mt6358-irq",
+> +       .flags = IRQCHIP_SKIP_SET_WAKE,
+> +       .irq_enable = pmic_irq_enable,
+> +       .irq_disable = pmic_irq_disable,
+> +       .irq_bus_lock = pmic_irq_lock,
+> +       .irq_bus_sync_unlock = pmic_irq_sync_unlock,
+> +};
+> +
+> +static void mt6358_irq_sp_handler(struct mt6397_chip *chip,
+> +                                 unsigned int top_gp)
+> +{
+> +       unsigned int sta_reg, irq_status;
+> +       unsigned int hwirq, virq;
+> +       int ret, i, j;
+> +
+> +       for (i = 0; i < mt6358_ints[top_gp].num_int_regs; i++) {
+> +               sta_reg = mt6358_ints[top_gp].sta_reg +
+> +                       mt6358_ints[top_gp].sta_reg_shift * i;
+> +               ret = regmap_read(chip->regmap, sta_reg, &irq_status);
+> +               if (ret) {
+> +                       dev_err(chip->dev,
+> +                               "Failed to read irq status: %d\n", ret);
+> +                       return;
+> +               }
+> +
+> +               if (!irq_status)
+> +                       continue;
+> +
+> +               for (j = 0; j < MT6358_REG_WIDTH ; j++) {
+> +                       if ((irq_status & BIT(j)) == 0)
+> +                               continue;
+> +                       hwirq = mt6358_ints[top_gp].hwirq_base +
+> +                               MT6358_REG_WIDTH * i + j;
+> +                       virq = irq_find_mapping(chip->irq_domain, hwirq);
+> +                       if (virq)
+> +                               handle_nested_irq(virq);
+> +               }
+> +
+> +               regmap_write(chip->regmap, sta_reg, irq_status);
+> +       }
+> +}
+> +
+> +static irqreturn_t mt6358_irq_handler(int irq, void *data)
+> +{
+> +       struct mt6397_chip *chip = data;
+> +       struct pmic_irq_data *mt6358_irq_data = chip->irq_data;
+> +       unsigned int top_irq_status;
+> +       unsigned int i;
+> +       int ret;
+> +
+> +       ret = regmap_read(chip->regmap,
+> +                         mt6358_irq_data->top_int_status_reg,
+> +                         &top_irq_status);
+> +       if (ret) {
+> +               dev_err(chip->dev, "Can't read TOP_INT_STATUS ret=%d\n", ret);
+> +               return IRQ_NONE;
+> +       }
+> +
+> +       for (i = 0; i < mt6358_irq_data->num_top; i++) {
+> +               if (top_irq_status & BIT(mt6358_ints[i].top_offset))
+> +                       mt6358_irq_sp_handler(chip, i);
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int pmic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+> +                              irq_hw_number_t hw)
+> +{
+> +       struct mt6397_chip *mt6397 = d->host_data;
+> +
+> +       irq_set_chip_data(irq, mt6397);
+> +       irq_set_chip_and_handler(irq, &mt6358_irq_chip, handle_level_irq);
+> +       irq_set_nested_thread(irq, 1);
+> +       irq_set_noprobe(irq);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct irq_domain_ops mt6358_irq_domain_ops = {
+> +       .map = pmic_irq_domain_map,
+> +       .xlate = irq_domain_xlate_twocell,
+> +};
+> +
+> +int mt6358_irq_init(struct mt6397_chip *chip)
+> +{
+> +       int i, j, ret;
+> +       struct pmic_irq_data *irqd;
+> +
+> +       irqd = devm_kzalloc(chip->dev, sizeof(struct pmic_irq_data *),
+> +                           GFP_KERNEL);
+> +       if (!irqd)
+> +               return -ENOMEM;
+> +
+> +       chip->irq_data = irqd;
+> +
+> +       mutex_init(&chip->irqlock);
+> +       irqd->top_int_status_reg = MT6358_TOP_INT_STATUS0;
+> +       irqd->num_pmic_irqs = MT6358_IRQ_NR;
+> +       irqd->num_top = ARRAY_SIZE(mt6358_ints);
+
+ARRAY_SIZE(mt6358_ints) is still used in pmic_irq_sync_unlock. Is this
+variable needed, or should the ARRAY_SIZE(mt6358_ints) in
+pmic_irq_sync_unlock be changed to irqd->num_top too?
+
+> +
+> +       irqd->enable_hwirq = devm_kcalloc(chip->dev,
+> +                                         irqd->num_pmic_irqs,
+> +                                         sizeof(bool),
+> +                                         GFP_KERNEL);
+> +       if (!irqd->enable_hwirq)
+> +               return -ENOMEM;
+> +
+> +       irqd->cache_hwirq = devm_kcalloc(chip->dev,
+> +                                        irqd->num_pmic_irqs,
+> +                                        sizeof(bool),
+> +                                        GFP_KERNEL);
+> +       if (!irqd->cache_hwirq)
+> +               return -ENOMEM;
+> +
+> +       /* Disable all interrupts for initializing */
+> +       for (i = 0; i < irqd->num_top; i++) {
+> +               for (j = 0; j < mt6358_ints[i].num_int_regs; j++)
+> +                       regmap_write(chip->regmap,
+> +                                    mt6358_ints[i].en_reg +
+> +                                    mt6358_ints[i].en_reg_shift * j, 0);
+> +       }
+> +
+> +       chip->irq_domain = irq_domain_add_linear(chip->dev->of_node,
+> +                                                irqd->num_pmic_irqs,
+> +                                                &mt6358_irq_domain_ops, chip);
+> +       if (!chip->irq_domain) {
+> +               dev_err(chip->dev, "could not create IRQ domain\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       ret = devm_request_threaded_irq(chip->dev, chip->irq, NULL,
+> +                                       mt6358_irq_handler, IRQF_ONESHOT,
+> +                                       mt6358_irq_chip.name, chip);
+> +       if (ret) {
+> +               dev_err(chip->dev, "failed to register irq=%d; err: %d\n",
+> +                       chip->irq, ret);
+> +               return ret;
+> +       }
+> +
+> +       enable_irq_wake(chip->irq);
+> +       return ret;
+> +}
+> (...)
