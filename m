@@ -2,118 +2,171 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5054C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 21:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1DFC432C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 21:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 824AA2070B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 21:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C968D20675
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 21:20:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YjS2Bjfg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfLBVRu (ORCPT
+        id S1726060AbfLBVUA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 16:17:50 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:39332 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbfLBVRt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 16:17:49 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id EA9133C0579;
-        Mon,  2 Dec 2019 22:17:46 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0ASiIrofYquI; Mon,  2 Dec 2019 22:17:40 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 540063C003B;
-        Mon,  2 Dec 2019 22:17:40 +0100 (CET)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Mon, 2 Dec 2019
- 22:17:39 +0100
-Date:   Mon, 2 Dec 2019 22:17:37 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v3 1/7] gpiolib: Add GPIOCHIP_NAME definition
-Message-ID: <20191202211737.GA27915@vmlxhi-102.adit-jv.com>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-2-geert+renesas@glider.be>
+        Mon, 2 Dec 2019 16:20:00 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45517 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfLBVUA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 16:20:00 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 59so848703otp.12
+        for <devicetree@vger.kernel.org>; Mon, 02 Dec 2019 13:19:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n2uB+/TzMRfuXTzQ7bU449yX1FcyufRJbPoSOJ+c3b0=;
+        b=YjS2BjfgIad+yr/+k7u+m/tqwJlSMc306BJTD1R5TazsQg2W7cfJ9FfJsaHT4l7CQO
+         jh1+EvC5J9CoSXHl14gwyx/ChCj3zGXoNYgOGCvs0mUTuuKDbNHUWXeFgZzuvnEOtbpD
+         ZzXIjnObv/CGwdOK/eDZTrsI9E/RcXoe41Ha4QozYVBFL6jFmAzqFHW4lLt27jb6Da9O
+         cEpHFCqT9zjgAqGnaYrn0jAUBNCxXDn+qhlswz+DhyfbIZ9NsOjVBJ01N2r++1D0zyLB
+         8HHSB6jb+5TX8T0Ma57wQTefq25AllLETsyab1+fAsPmRcB8XnrzpN4pMnLoxkTCmoIu
+         sVKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n2uB+/TzMRfuXTzQ7bU449yX1FcyufRJbPoSOJ+c3b0=;
+        b=unvMN+t1Euo2BCYH7LJF+M9NOMDAR74UacPRBqxECJOTUQA9LgwD5i0vxFW9eFLEPc
+         WHG7roOHo9e3NU8VafP3nm1TlY5OObFTK9k0ceeLC56CX2Aknp8uVbndOKBapDdZXzI+
+         0mMXtcGSPIBpQ8b3ExJ75hYkQ9y4MJJUs6i3m7g0+23vzV2GMeZYmzakl3kZYhR7xovA
+         glcxrHqDDyZ9eBPMuSFIyXfIaeGooAoLWyx/yIqskxjGEJ6knEtBpWCcRcQFAmrJerDg
+         E4ULhmHP4a0I0hxZrYWkXwJEV+pjPY59XSk6dPvm5MezpxXVkX4rE8nVubbju1FDqusB
+         pWPg==
+X-Gm-Message-State: APjAAAWi/MSRX30kpfapa3da6rPEtSW7mTTgKOXG5Lgr5k9M3ijfsXTt
+        Hjw2P/2Jzm9G7AD6zCC0fRLB5hperGEZFdP63Os03w==
+X-Google-Smtp-Source: APXvYqykoqTX4clV94B0+24/eTdmMzmP3M1dBPtTZhuddmIhYXFIEk7t4XfCzz/I6yQtBNdvOPcm4xoLtzhy9BkNS10=
+X-Received: by 2002:a9d:648f:: with SMTP id g15mr844588otl.195.1575321598246;
+ Mon, 02 Dec 2019 13:19:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191127084253.16356-2-geert+renesas@glider.be>
-User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
-X-Originating-IP: [10.72.93.184]
+References: <20191201150015.GC18573@shao2-debian>
+In-Reply-To: <20191201150015.GC18573@shao2-debian>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 2 Dec 2019 13:19:22 -0800
+Message-ID: <CAGETcx9r0u=-WSnQ2ZS1KmZSVQqKwvpnhO-w41=jk8iF6BdALA@mail.gmail.com>
+Subject: Re: 5e6669387e ("of/platform: Pause/resume sync state during init
+ .."): [ 3.192726] WARNING: CPU: 1 PID: 1 at drivers/base/core.c:688 device_links_supplier_sync_state_resume
+To:     Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LKP <lkp@lists.01.org>, kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+On Sun, Dec 1, 2019 at 7:00 AM kernel test robot <lkp@intel.com> wrote:
+>
+> Greetings,
+>
+> 0day kernel testing robot got the below dmesg and the first bad commit is
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>
+> commit 5e6669387e2287f25f09fd0abd279dae104cfa7e
+> Author:     Saravana Kannan <saravanak@google.com>
+> AuthorDate: Wed Sep 4 14:11:24 2019 -0700
+> Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> CommitDate: Fri Oct 4 17:30:19 2019 +0200
+>
+>     of/platform: Pause/resume sync state during init and of_platform_populate()
+>
+>     When all the top level devices are populated from DT during kernel
+>     init, the supplier devices could be added and probed before the
+>     consumer devices are added and linked to the suppliers. To avoid the
+>     sync_state() callback from being called prematurely, pause the
+>     sync_state() callbacks before populating the devices and resume them
+>     at late_initcall_sync().
+>
+>     Similarly, when children devices are populated from a module using
+>     of_platform_populate(), there could be supplier-consumer dependencies
+>     between the children devices that are populated. To avoid the same
+>     problem with sync_state() being called prematurely, pause and resume
+>     sync_state() callbacks across of_platform_populate().
+>
+>     Signed-off-by: Saravana Kannan <saravanak@google.com>
+>     Link: https://lore.kernel.org/r/20190904211126.47518-6-saravanak@google.com
+>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
+> fc5a251d0f  driver core: Add sync_state driver/bus callback
+> 5e6669387e  of/platform: Pause/resume sync state during init and of_platform_populate()
+> 81b6b96475  Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux; tag 'dma-mapping-5.5' of git://git.infradead.org/users/hch/dma-mapping
+> +-------------------------------------------------------------------------+------------+------------+------------+
+> |                                                                         | fc5a251d0f | 5e6669387e | 81b6b96475 |
+> +-------------------------------------------------------------------------+------------+------------+------------+
+> | boot_successes                                                          | 30         | 0          | 0          |
+> | boot_failures                                                           | 1          | 11         | 22         |
+> | Oops:#[##]                                                              | 1          |            |            |
+> | EIP:unmap_vmas                                                          | 1          |            |            |
+> | PANIC:double_fault                                                      | 1          |            |            |
+> | Kernel_panic-not_syncing:Fatal_exception                                | 1          |            |            |
+> | WARNING:at_drivers/base/core.c:#device_links_supplier_sync_state_resume | 0          | 11         | 22         |
+> | EIP:device_links_supplier_sync_state_resume                             | 0          | 11         | 22         |
+> +-------------------------------------------------------------------------+------------+------------+------------+
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+> [    3.186107] OF: /testcase-data/phandle-tests/consumer-b: #phandle-cells = 2 found -1
+> [    3.188595] platform testcase-data:testcase-device2: IRQ index 0 not found
+> [    3.191047] ### dt-test ### end of unittest - 199 passed, 0 failed
+> [    3.191932] ------------[ cut here ]------------
+> [    3.192571] Unmatched sync_state pause/resume!
+> [    3.192726] WARNING: CPU: 1 PID: 1 at drivers/base/core.c:688 device_links_supplier_sync_state_resume+0x27/0xc0
+> [    3.195084] Modules linked in:
+> [    3.195494] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G                T 5.4.0-rc1-00005-g5e6669387e228 #1
+> [    3.196674] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+> [    3.197693] EIP: device_links_supplier_sync_state_resume+0x27/0xc0
+> [    3.198680] Code: 00 00 00 3e 8d 74 26 00 57 56 31 d2 53 b8 a0 d0 d9 c1 e8 6c b6 38 00 a1 e4 d0 d9 c1 85 c0 75 13 68 84 ba c4 c1 e8 29 30 b1 ff <0f> 0b 58 eb 7f 8d 74 26 00 83 e8 01 85 c0 a3 e4 d0 d9 c1 75 6f 8b
+> [    3.201560] EAX: 00000022 EBX: 00000000 ECX: 00000000 EDX: 00000000
+> [    3.202466] ESI: 000001ab EDI: c02c7f80 EBP: c1e87d27 ESP: c02c7f20
+> [    3.203301] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010282
+> [    3.204258] CR0: 80050033 CR2: bfa1bf98 CR3: 01f28000 CR4: 00140690
+> [    3.205022] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+> [    3.205919] DR6: fffe0ff0 DR7: 00000400
+> [    3.206529] Call Trace:
+> [    3.207011]  ? of_platform_sync_state_init+0x13/0x16
+> [    3.207719]  ? do_one_initcall+0xda/0x260
+> [    3.208247]  ? kernel_init_freeable+0x110/0x197
+> [    3.208906]  ? rest_init+0x120/0x120
+> [    3.209369]  ? kernel_init+0xa/0x100
+> [    3.209775]  ? ret_from_fork+0x19/0x24
+> [    3.210283] ---[ end trace 81d0f2d2ee65199b ]---
+> [    3.210955] ALSA device list:
 
-On Wed, Nov 27, 2019 at 09:42:47AM +0100, Geert Uytterhoeven wrote:
-> The string literal "gpiochip" is used in several places.
-> Add a definition for it, and use it everywhere, to make sure everything
-> stays in sync.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v3:
->   - New.
-> ---
->  drivers/gpio/gpiolib-sysfs.c | 7 +++----
->  drivers/gpio/gpiolib.c       | 4 ++--
->  drivers/gpio/gpiolib.h       | 2 ++
->  3 files changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> index ca9bc1e4803c2979..a4a759920faa48ab 100644
-> --- a/drivers/gpio/gpiolib.h
-> +++ b/drivers/gpio/gpiolib.h
-> @@ -16,6 +16,8 @@
->  #include <linux/module.h>
->  #include <linux/cdev.h>
->  
-> +#define GPIOCHIP_NAME	"gpiochip"
+Rob/Frank,
 
-[.02$/nit] I wonder if GPIOCHIP_NAME is actually an essential
-part of kernel-user contract [1-2], in which case it could
-probably be moved to include/uapi/linux/gpio.h ?
+This seems to be an issue with the unit test code not properly
+cleaning up the state after it's done.
 
-Regardless:
-Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Specifically, unittest_data_add() setting up of_root on systems where
+there's no device tree (of_root == NULL). It doesn't clean up of_root
+after the tests are done. This affects the of_have_populated_dt() API
+that in turn affects calls to
+device_links_supplier_sync_state_pause/resume(). I think unittests
+shouldn't affect the of_have_populated_dt() API.
 
-[1] linux (v5.4) git grep '"gpiochip' -- tools/
-tools/gpio/lsgpio.c:                    if (check_prefix(ent->d_name, "gpiochip")) {
-tools/testing/selftests/gpio/gpio-mockup-chardev.c:             if (check_prefix(ent->d_name, "gpiochip")) {
+I was looking into writing a unittest patch to fix this, but I don't
+know enough about the FDT parsing code to make sure I don't leak any
+memory or free stuff that's in use. I'm not sure I can simply set
+of_root = NULL if it was NULL before the unittest started. Let me know
+how I should proceed or if you plan to write up a patch for this.
 
-[2] libgpiod (v1.4-76-g00418dfdfc8b) git grep '"gpiochip'
-lib/iter.c:	return !strncmp(dir->d_name, "gpiochip", 8);
-tests/mockup/gpio-mockup.c:	rv = sscanf(sysname, "gpiochip%u", &chip->num);
-tools/gpioget.c:		die("gpiochip must be specified");
-tools/gpiomon.c:		die("gpiochip must be specified");
-tools/gpioset.c:		die("gpiochip must be specified");
-
--- 
-Best Regards,
-Eugeniu
+Thanks,
+Saravana
