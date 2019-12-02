@@ -2,153 +2,179 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A15C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8732CC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97C92073C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7E720833
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eTB7v2lf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ye3Nquvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbfLBS5o (ORCPT
+        id S1727521AbfLBS7Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:57:44 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:45986 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727556AbfLBS5o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 13:57:44 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB2IvZEH037270;
-        Mon, 2 Dec 2019 12:57:35 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575313055;
-        bh=DWBbhnE6qXaM66hNWm292SwxJiicsKfBcrA4AX4NS6A=;
-        h=From:To:CC:Subject:Date;
-        b=eTB7v2lfyPJq2tA3EeQNWlMzZuvcPnGltujoflXNiLqLfDC+twyqJxeCYM3QCV3Jr
-         O9vPOq7gq7sm/0hUn+I1c5R4jRtNOOXNdgtsGGnrWzYZZ8+DhKBTj0VlBp9fDPPISw
-         20bw3sdBfQyqEUOU0HzqfkJvAq4Oa237RyTbm2ZU=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB2IvZae129273;
-        Mon, 2 Dec 2019 12:57:35 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Dec
- 2019 12:57:32 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 2 Dec 2019 12:57:32 -0600
-Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB2IvUI3057431;
-        Mon, 2 Dec 2019 12:57:30 -0600
-From:   Jyri Sarha <jsarha@ti.com>
-To:     <dri-devel@lists.freedesktop.org>, <tony@atomide.com>,
-        <bcousson@baylibre.com>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
-        <peter.ujfalusi@ti.com>, <bparrot@ti.com>
-Subject: [PATCH] ARM: dts: am335x-evm: Use drm simple-panel instead of tilcdc-panel
-Date:   Mon, 2 Dec 2019 20:57:29 +0200
-Message-ID: <20191202185729.12921-1-jsarha@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 2 Dec 2019 13:59:24 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35573 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbfLBS7X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 13:59:23 -0500
+Received: by mail-ed1-f66.google.com with SMTP id f8so472357edv.2;
+        Mon, 02 Dec 2019 10:59:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X63MMUhi8DWocLcKUjrI//Lp1UTjsR/8D+ptYNBBx6k=;
+        b=Ye3NquvkceMDlPIzVT0BDPeCOPvsuFj5W1hQaEsh8XypvNZDyuDS3awc8/7N1Rc1I0
+         Wk753JNnHXZzqXKqOSACQu9iU/X/mlKI96IsD4GsuxigZ3gr0BYHJic3o6c7d6L5QjsR
+         p/c9zZnrG+ifziQ/GlJ/dOwuy7TYoP61bfa6RlE2XVBXBG5hAxryxnKNGa7UYE1dz6yn
+         EKXJHIb0fU7ci+mmop4dhI/ZyuRPVGcdezClVZSS33n27eoTbDi7UxmHOOTOCWD4b09g
+         rLuFNFTPd8KoSRD1ABpsN/czyVLQKmtJ1gn/WRQNPqPKeytkWYXDikSAd9TNzQmIgTOE
+         756g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X63MMUhi8DWocLcKUjrI//Lp1UTjsR/8D+ptYNBBx6k=;
+        b=dDl0NO8+xWzZ8MZcVPFMPODWzoFdP9oPryYbyiT99MmPgWwrCuSe07Vm0MM36xBUVC
+         x2LGTIdgG+uvuHzrAbRn7x177mz3jZ/B8NgdaG2fvXIja7CJ52mza6izR72BYgFmswKO
+         Zt0mOS9cGa/9JKLUYwCVvBPQIxBg3u1hDppoWD2hjbCZKCF4R6Szfa6x0vveYHnRkRtt
+         3AkqI7Gp0kvK+hyWjkQBKD/ma7jQa0t7XQ50UCgtf4Ynj/R0MFgBSfG7Hhc4yCLATb+V
+         Ah09kO0iygiX14WQLKsoFOgTLi0kxwRzNe3Kv8lorY2PpuKfwZWA/LJjIYpo2BOAlSNv
+         pUew==
+X-Gm-Message-State: APjAAAUB8bAhntSTJA7sAU6pV+ByadLWGeHrowlLeHwmVkNdy11vIn8d
+        TiFSDB6Wx9m1R9Pe6Txq0oKNvdsED371w+lGFuQ=
+X-Google-Smtp-Source: APXvYqygAygqCx471dTqK0h+aHvSASYR1Fgph/UvNh3OSYFykwZqj+H2txbCq99UlrkFARPz20EXlokAvCmfLh8GXVs=
+X-Received: by 2002:aa7:d64f:: with SMTP id v15mr394370edr.71.1575313159548;
+ Mon, 02 Dec 2019 10:59:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1575294437-6129-1-git-send-email-chandanu@codeaurora.org> <0101016ec6df0d33-edb8acfc-a6f1-486e-a8db-38ec498951ed-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016ec6df0d33-edb8acfc-a6f1-486e-a8db-38ec498951ed-000000@us-west-2.amazonses.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 2 Dec 2019 10:59:08 -0800
+Message-ID: <CAF6AEGtJT+w3RRdc2=y8T0tOnX9E8T7zpQ7Pdy=biCbDGD9=6Q@mail.gmail.com>
+Subject: Re: [DPU PATCH v3 3/5] drm/msm/dp: add displayPort driver support
+To:     Chandan Uddaraju <chandanu@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Sean Paul <seanpaul@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>, nganji@codeaurora.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        "Kristian H. Kristensen" <hoegsberg@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Move to use the new drm panel support in tilcdc together with added
-"tfc,s9700rtwv43tr-01b"-panel support in drm panel-simple.
+On Mon, Dec 2, 2019 at 5:48 AM Chandan Uddaraju <chandanu@codeaurora.org> wrote:
+>
+> Add the needed displayPort files to enable DP driver
+> on msm target.
+>
+> "dp_display" module is the main module that calls into
+> other sub-modules. "dp_drm" file represents the interface
+> between DRM framework and DP driver.
+>
+> changes in v2:
+> -- Update copyright markings on all relevant files.
+> -- Change pr_err() to DRM_ERROR()
+> -- Use APIs directly instead of function pointers.
+> -- Use drm_display_mode structure to store link parameters in the driver.
+> -- Use macros for register definitions instead of hardcoded values.
+> -- Replace writel_relaxed/readl_relaxed with writel/readl
+>    and remove memory barriers.
+> -- Remove unnecessary NULL checks.
+> -- Use drm helper functions for dpcd read/write.
+> -- Use DRM_DEBUG_DP for debug msgs.
+>
+> changes in V3:
+> -- Removed changes in dpu_io_util.[ch]
+> -- Added locking around "is_connected" flag and removed atomic_set()
+> -- Removed the argument validation checks in all the static functions
+>    except initialization functions and few API calls across msm/dp files
+> -- Removed hardcoded values for register reads/writes
+> -- Removed vreg related generic structures.
+> -- Added return values where ever necessary.
+> -- Updated dp_ctrl_on function.
+> -- Calling the ctrl specific catalog functions directly instead of
+>    function pointers.
+> -- Added seperate change that adds standard value in drm_dp_helper file.
+> -- Added separate change in this list that is used to initialize
+>    displayport in DPU driver.
+> -- Added change to use drm_dp_get_adjust_request_voltage() function.
+>
+> Signed-off-by: Chandan Uddaraju <chandanu@codeaurora.org>
+> ---
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
----
-"tfc,s9700rtwv43tr-01b" in panel-simple has been in for some time now
-so it is about time to get this in too.
+[snip]
 
- arch/arm/boot/dts/am335x-evm.dts | 44 +++++++++++++-------------------
- 1 file changed, 18 insertions(+), 26 deletions(-)
+> +
+> +void dp_catalog_ctrl_config_msa(struct dp_catalog *dp_catalog,
+> +                                       u32 rate, u32 stream_rate_khz,
+> +                                       bool fixed_nvid)
+> +{
+> +       u32 pixel_m, pixel_n;
+> +       u32 mvid, nvid;
+> +       u64 mvid_calc;
+> +       struct dp_catalog_private *catalog = container_of(dp_catalog,
+> +                               struct dp_catalog_private, dp_catalog);
+> +
+> +       if (fixed_nvid) {
+> +               nvid = DP_LINK_CONSTANT_N_VALUE;
+> +               DRM_DEBUG_DP("use fixed NVID=0x%x\n", nvid);
+> +
+> +               /*
+> +                * For intermediate results, use 64 bit arithmetic to avoid
+> +                * loss of precision.
+> +                */
+> +               mvid_calc = (u64) stream_rate_khz * nvid;
+> +               mvid_calc = div_u64(mvid_calc, rate);
+> +
+> +               /*
+> +                * truncate back to 32 bits as this final divided value will
+> +                * always be within the range of a 32 bit unsigned int.
+> +                */
+> +               mvid = (u32) mvid_calc;
+> +               DRM_DEBUG_DP("link rate=%dkbps, stream_rate_khz=%uKhz",
+> +                       rate, stream_rate_khz);
+> +       } else {
+> +               pixel_m = dp_read_cc(catalog, MMSS_DP_PIXEL_M);
+> +               pixel_n = dp_read_cc(catalog, MMSS_DP_PIXEL_N);
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index a00145705c9b..0e286a1c9cc5 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -113,7 +113,7 @@
- 		};
- 	};
- 
--	backlight {
-+	backlight: backlight {
- 		compatible = "pwm-backlight";
- 		pwms = <&ecap0 0 50000 0>;
- 		brightness-levels = <0 51 53 56 62 75 101 152 255>;
-@@ -121,35 +121,19 @@
- 	};
- 
- 	panel {
--		compatible = "ti,tilcdc,panel";
-+		compatible = "tfc,s9700rtwv43tr-01b";
-+
- 		status = "okay";
-+
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&lcd_pins_s0>;
--		panel-info {
--			ac-bias           = <255>;
--			ac-bias-intrpt    = <0>;
--			dma-burst-sz      = <16>;
--			bpp               = <32>;
--			fdd               = <0x80>;
--			sync-edge         = <0>;
--			sync-ctrl         = <1>;
--			raster-order      = <0>;
--			fifo-th           = <0>;
--		};
- 
--		display-timings {
--			800x480p62 {
--				clock-frequency = <30000000>;
--				hactive = <800>;
--				vactive = <480>;
--				hfront-porch = <39>;
--				hback-porch = <39>;
--				hsync-len = <47>;
--				vback-porch = <29>;
--				vfront-porch = <13>;
--				vsync-len = <2>;
--				hsync-active = <1>;
--				vsync-active = <1>;
-+		backlight = <&backlight>;
-+		ports {
-+			port {
-+				panel_0: endpoint@0 {
-+					remote-endpoint = <&lcdc_0>;
-+				};
- 			};
- 		};
- 	};
-@@ -525,6 +509,14 @@
- 	status = "okay";
- 
- 	blue-and-red-wiring = "crossed";
-+
-+	ports {
-+		port {
-+			lcdc_0: endpoint@0 {
-+				remote-endpoint = <&panel_0>;
-+			};
-+		};
-+	};
- };
- 
- &elm {
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Can we just calculate m/n from the rate instead.  That gets rid of
+having to ioremap() the dispcc region, which is really ugly.
 
+BR,
+-R
+
+> +               DRM_DEBUG_DP("pixel_m=0x%x, pixel_n=0x%x\n", pixel_m, pixel_n);
+> +
+> +               mvid = (pixel_m & 0xFFFF) * 5;
+> +               nvid = (0xFFFF & (~pixel_n)) + (pixel_m & 0xFFFF);
+> +
+> +               DRM_DEBUG_DP("rate = %d\n", rate);
+> +
+> +               switch (drm_dp_link_rate_to_bw_code(rate)) {
+> +               case DP_LINK_BW_5_4:
+> +                       nvid *= 2;
+> +                       break;
+> +               case DP_LINK_BW_8_1:
+> +                       nvid *= 3;
+> +                       break;
+> +               default:
+> +                       break;
+> +               }
+> +       }
+> +
+> +       DRM_DEBUG_DP("mvid=0x%x, nvid=0x%x\n", mvid, nvid);
+> +       dp_write_link(catalog, REG_DP_SOFTWARE_MVID, mvid);
+> +       dp_write_link(catalog, REG_DP_SOFTWARE_NVID, nvid);
+> +}
