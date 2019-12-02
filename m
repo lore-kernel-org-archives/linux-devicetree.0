@@ -2,213 +2,112 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A587C43141
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 15:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB40C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 15:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C22217F9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 15:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D0A2084F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 15:39:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="t5BLnjPa";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="t5BLnjPa"
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="X39EcDwt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfLBPZa (ORCPT
+        id S1727522AbfLBPjO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 10:25:30 -0500
-Received: from node.akkea.ca ([192.155.83.177]:57674 "EHLO node.akkea.ca"
+        Mon, 2 Dec 2019 10:39:14 -0500
+Received: from smtpbgbr2.qq.com ([54.207.22.56]:33919 "EHLO smtpbgbr2.qq.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727362AbfLBPZa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Dec 2019 10:25:30 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id EFCF64E201A;
-        Mon,  2 Dec 2019 15:25:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1575300329; bh=LqAPQbYVfeKVn7R2gdkEAlFUdhksqtddhTQBsuYeTik=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=t5BLnjPaYhNY1EV3VqpeiR3CuSFcvVaBeL+ro/R9mWZTD1VHWg2NSzuld+jYtaNT4
-         i5YZ0TXPaKnPB8lInxk9B2UWiTRTCRdW+BJ7BG2lD/q/69TmARCeAuBK07DeuBkV4X
-         xgBAnG2AeG+Ol2GomCpP4HqPg0ewMZ8UYtjPYVck=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JVOeqvpIEaO1; Mon,  2 Dec 2019 15:25:29 +0000 (UTC)
-Received: from thinkpad-tablet.cg.shawcable.net (S0106905851b613e9.cg.shawcable.net [70.77.244.40])
-        by node.akkea.ca (Postfix) with ESMTPSA id 228AA4E2006;
-        Mon,  2 Dec 2019 15:25:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1575300329; bh=LqAPQbYVfeKVn7R2gdkEAlFUdhksqtddhTQBsuYeTik=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=t5BLnjPaYhNY1EV3VqpeiR3CuSFcvVaBeL+ro/R9mWZTD1VHWg2NSzuld+jYtaNT4
-         i5YZ0TXPaKnPB8lInxk9B2UWiTRTCRdW+BJ7BG2lD/q/69TmARCeAuBK07DeuBkV4X
-         xgBAnG2AeG+Ol2GomCpP4HqPg0ewMZ8UYtjPYVck=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     linux-pm@vger.kernel.org
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm, "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH 1/2] power: supply: max17042: add MAX17055 support
-Date:   Mon,  2 Dec 2019 08:25:19 -0700
-Message-Id: <20191202152520.27558-2-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191202152520.27558-1-angus@akkea.ca>
-References: <20191202152520.27558-1-angus@akkea.ca>
+        id S1727431AbfLBPjO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 10:39:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+        s=s201512; t=1575301134;
+        bh=qxhDF0663v1hbvbZByeK69uarzcMA+FhFaj7j+FZi1M=;
+        h=From:To:Subject:Date:Message-Id:MIME-Version;
+        b=X39EcDwtdvb1mbB0zPxP+C+ZyfwzT/uPbezVmrJk+6gY0Kwl838ZmbHNS4eyzBtLH
+         5Xbrg8xKbJ90MCH86H1eVvfaUEnVR3T0v6+LnT9gOiIb9nGyIP+6xno87v4mox4u18
+         kQnUEh/ft4hqmfes/UHOgK0+glCe5yHOwQGOnUHk=
+X-QQ-mid: esmtp4t1575301131t81f1i73m
+Received: from Home-PC.lan (unknown [39.180.30.185])
+        by esmtp4.qq.com (ESMTP) with 
+        id ; Mon, 02 Dec 2019 23:38:49 +0800 (CST)
+X-QQ-SSF: 0100000000000040C7101F00000000O
+X-QQ-FEAT: EUGmOqWjSYKrlczS1C5GpZ8p2d1quYLjG/gMMWe9CgTsVmZYPXb7FBtwYAbDH
+        B0wgDV/bUXf1oOmaOAuDJS347kNatFUsZjkHcMQIp92g7q/WDdD/7eAmRsWVK4TYJx5Dfrv
+        hDs60f4EYOEM9jI+mjaKtjTgD1be5qn+jau4+ZaF1q6Lf6uycP5d04KSzv2WVdzb/EudUb/
+        75M9jx2HUWY6bGlBdZrMGAMpv/j8F0g7/oeSF59eWuN5aoDiP6/7v1uwRL7pLcsnzOTt+7+
+        mbtaO2RkIfF4w4kJmbHS8StZOk7irllV8QsA==
+X-QQ-GoodBg: 0
+From:   Jack Chen <redchenjs@foxmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jack Chen <redchenjs@live.com>
+Subject: [PATCH] ARM: dts: rockchip: Add missing cpu operating points for rk3288-tinker
+Date:   Mon,  2 Dec 2019 23:35:40 +0800
+Message-Id: <20191202153540.26143-1-redchenjs@foxmail.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtp:foxmail.com:bgforeign:bgforeign11
+X-QQ-Bgrelay: 1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The MAX17055 is very similar to the MAX17042 so extend the driver.
+From: Jack Chen <redchenjs@live.com>
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+The Tinker Board / S devices use a special chip variant called rk3288-c
+and use different operating points with a higher max frequency.
+
+So add the missing operating points for Tinker Board / S devices, also
+increase the vdd_cpu regulator-max-microvolt to 1400000 uV so that the
+cpu can operate at 1.8 GHz.
+
+Signed-off-by: Jack Chen <redchenjs@live.com>
 ---
- drivers/power/supply/max17042_battery.c | 15 ++++++--
- include/linux/power/max17042_battery.h  | 48 ++++++++++++++++++++++++-
- 2 files changed, 59 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/rk3288-tinker.dtsi | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/max17042_battery.c b/drivers/power/supply/max17042_battery.c
-index 0dfad2cf13fe..cecf6e2d8329 100644
---- a/drivers/power/supply/max17042_battery.c
-+++ b/drivers/power/supply/max17042_battery.c
-@@ -282,6 +282,8 @@ static int max17042_get_property(struct power_supply *psy,
- 	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
- 		if (chip->chip_type == MAXIM_DEVICE_TYPE_MAX17042)
- 			ret = regmap_read(map, MAX17042_V_empty, &data);
-+		else if (chip->chip_type == MAXIM_DEVICE_TYPE_MAX17055)
-+			ret = regmap_read(map, MAX17055_V_empty, &data);
- 		else
- 			ret = regmap_read(map, MAX17047_V_empty, &data);
- 		if (ret < 0)
-@@ -627,7 +629,8 @@ static void max17042_write_config_regs(struct max17042_chip *chip)
- 			config->filter_cfg);
- 	regmap_write(map, MAX17042_RelaxCFG, config->relax_cfg);
- 	if (chip->chip_type == MAXIM_DEVICE_TYPE_MAX17047 ||
--			chip->chip_type == MAXIM_DEVICE_TYPE_MAX17050)
-+			chip->chip_type == MAXIM_DEVICE_TYPE_MAX17050 ||
-+			chip->chip_type == MAXIM_DEVICE_TYPE_MAX17055)
- 		regmap_write(map, MAX17047_FullSOCThr,
- 						config->full_soc_thresh);
- }
-@@ -758,6 +761,8 @@ static inline void max17042_override_por_values(struct max17042_chip *chip)
- 
- 	if (chip->chip_type == MAXIM_DEVICE_TYPE_MAX17042)
- 		max17042_override_por(map, MAX17042_V_empty, config->vempty);
-+	if (chip->chip_type == MAXIM_DEVICE_TYPE_MAX17055)
-+		max17042_override_por(map, MAX17055_V_empty, config->vempty);
- 	else
- 		max17042_override_por(map, MAX17047_V_empty, config->vempty);
- 	max17042_override_por(map, MAX17042_TempNom, config->temp_nom);
-@@ -765,7 +770,8 @@ static inline void max17042_override_por_values(struct max17042_chip *chip)
- 	max17042_override_por(map, MAX17042_FCTC, config->fctc);
- 	max17042_override_por(map, MAX17042_RCOMP0, config->rcomp0);
- 	max17042_override_por(map, MAX17042_TempCo, config->tcompc0);
--	if (chip->chip_type) {
-+	if (chip->chip_type &&
-+	    (chip->chip_type != MAXIM_DEVICE_TYPE_MAX17055)) {
- 		max17042_override_por(map, MAX17042_EmptyTempCo,
- 						config->empty_tempco);
- 		max17042_override_por(map, MAX17042_K_empty0,
-@@ -929,7 +935,8 @@ max17042_get_default_pdata(struct max17042_chip *chip)
- 	if (!pdata)
- 		return pdata;
- 
--	if (chip->chip_type != MAXIM_DEVICE_TYPE_MAX17042) {
-+	if (chip->chip_type != MAXIM_DEVICE_TYPE_MAX17042 &&
-+	    chip->chip_type != MAXIM_DEVICE_TYPE_MAX17055) {
- 		pdata->init_data = max17047_default_pdata_init_regs;
- 		pdata->num_init_data =
- 			ARRAY_SIZE(max17047_default_pdata_init_regs);
-@@ -1167,6 +1174,7 @@ static const struct of_device_id max17042_dt_match[] = {
- 	{ .compatible = "maxim,max17042" },
- 	{ .compatible = "maxim,max17047" },
- 	{ .compatible = "maxim,max17050" },
-+	{ .compatible = "maxim,max17055" },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, max17042_dt_match);
-@@ -1176,6 +1184,7 @@ static const struct i2c_device_id max17042_id[] = {
- 	{ "max17042", MAXIM_DEVICE_TYPE_MAX17042 },
- 	{ "max17047", MAXIM_DEVICE_TYPE_MAX17047 },
- 	{ "max17050", MAXIM_DEVICE_TYPE_MAX17050 },
-+	{ "max17055", MAXIM_DEVICE_TYPE_MAX17055 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, max17042_id);
-diff --git a/include/linux/power/max17042_battery.h b/include/linux/power/max17042_battery.h
-index 4badd5322949..d55c746ac56e 100644
---- a/include/linux/power/max17042_battery.h
-+++ b/include/linux/power/max17042_battery.h
-@@ -105,11 +105,56 @@ enum max17042_register {
- 
- 	MAX17042_OCV		= 0xEE,
- 
--	MAX17042_OCVInternal	= 0xFB,
-+	MAX17042_OCVInternal	= 0xFB,  /* MAX17055 VFOCV */
- 
- 	MAX17042_VFSOC		= 0xFF,
+diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+index 81e4e953d4a4..09e83b3d5e7d 100644
+--- a/arch/arm/boot/dts/rk3288-tinker.dtsi
++++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+@@ -113,6 +113,17 @@
+ 	cpu0-supply = <&vdd_cpu>;
  };
  
-+enum max17055_register {
-+	MAX17055_QRes		= 0x0C,
-+	MAX17055_TTF		= 0x20,
-+	MAX17055_V_empty	= 0x3A,
-+	MAX17055_TIMER		= 0x3E,
-+	MAX17055_USER_MEM	= 0x40,
-+	MAX17055_RGAIN		= 0x42,
-+
-+	MAX17055_ConvgCfg	= 0x49,
-+	MAX17055_VFRemCap	= 0x4A,
-+
-+	MAX17055_STATUS2	= 0xB0,
-+	MAX17055_POWER		= 0xB1,
-+	MAX17055_ID		= 0xB2,
-+	MAX17055_AvgPower	= 0xB3,
-+	MAX17055_IAlrtTh	= 0xB4,
-+	MAX17055_TTFCfg		= 0xB5,
-+	MAX17055_CVMixCap	= 0xB6,
-+	MAX17055_CVHalfTime	= 0xB7,
-+	MAX17055_CGTempCo	= 0xB8,
-+	MAX17055_Curve		= 0xB9,
-+	MAX17055_HibCfg		= 0xBA,
-+	MAX17055_Config2	= 0xBB,
-+	MAX17055_VRipple	= 0xBC,
-+	MAX17055_RippleCfg	= 0xBD,
-+	MAX17055_TimerH		= 0xBE,
-+
-+	MAX17055_RSense		= 0xD0,
-+	MAX17055_ScOcvLim	= 0xD1,
-+
-+	MAX17055_SOCHold	= 0xD3,
-+	MAX17055_MaxPeakPwr	= 0xD4,
-+	MAX17055_SusPeakPwr	= 0xD5,
-+	MAX17055_PackResistance	= 0xD6,
-+	MAX17055_SysResistance	= 0xD7,
-+	MAX17055_MinSysV	= 0xD8,
-+	MAX17055_MPPCurrent	= 0xD9,
-+	MAX17055_SPPCurrent	= 0xDA,
-+	MAX17055_ModelCfg	= 0xDB,
-+	MAX17055_AtQResidual	= 0xDC,
-+	MAX17055_AtTTE		= 0xDD,
-+	MAX17055_AtAvSOC	= 0xDE,
-+	MAX17055_AtAvCap	= 0xDF,
++&cpu_opp_table {
++	opp-1704000000 {
++		opp-hz = /bits/ 64 <1704000000>;
++		opp-microvolt = <1350000>;
++	};
++	opp-1800000000 {
++		opp-hz = /bits/ 64 <1800000000>;
++		opp-microvolt = <1400000>;
++	};
 +};
 +
- /* Registers specific to max17047/50 */
- enum max17047_register {
- 	MAX17047_QRTbl00	= 0x12,
-@@ -125,6 +170,7 @@ enum max170xx_chip_type {
- 	MAXIM_DEVICE_TYPE_MAX17042,
- 	MAXIM_DEVICE_TYPE_MAX17047,
- 	MAXIM_DEVICE_TYPE_MAX17050,
-+	MAXIM_DEVICE_TYPE_MAX17055,
- 
- 	MAXIM_DEVICE_TYPE_NUM
- };
+ &gmac {
+ 	assigned-clocks = <&cru SCLK_MAC>;
+ 	assigned-clock-parents = <&ext_gmac>;
+@@ -175,7 +186,7 @@
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-min-microvolt = <750000>;
+-				regulator-max-microvolt = <1350000>;
++				regulator-max-microvolt = <1400000>;
+ 				regulator-name = "vdd_arm";
+ 				regulator-ramp-delay = <6000>;
+ 				regulator-state-mem {
 -- 
-2.17.1
+2.24.0
+
+
 
