@@ -2,262 +2,151 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F17C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC247C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF7820848
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:03:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="apOvdzYF"
+	by mail.kernel.org (Postfix) with ESMTP id 89EB62084F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfLBRDr (ORCPT
+        id S1727650AbfLBREc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:03:47 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37456 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfLBRDr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 12:03:47 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4AE5E309;
-        Mon,  2 Dec 2019 18:03:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575306223;
-        bh=8B+MR8jgFupVuPJxryWnFCiBjXyLZ/cVdPkv8Ba1+qM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=apOvdzYFSdlagm+i+zqVCUMIKhvVQTzAhyK/NVntLaQyfQAfj1cUTyY85wattpfR5
-         bWJfCxdHdbYmaV86h4Bv1eHLjqak2qi1PzM4/ssWApc9ZUEGkDsHBr5oh0D/Ktxbzv
-         fPQdZ28aHvO/LUaJ4HHXfD6RrwN3+4qNCW21rS4k=
-Date:   Mon, 2 Dec 2019 19:03:36 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
-        Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Clark <robdclark@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 12/21] drm/bridge: Add an ->atomic_check() hook
-Message-ID: <20191202170336.GP4929@pendragon.ideasonboard.com>
-References: <20191023154512.9762-1-boris.brezillon@collabora.com>
- <20191023154512.9762-13-boris.brezillon@collabora.com>
+        Mon, 2 Dec 2019 12:04:32 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58575 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727601AbfLBREb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 12:04:31 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1ibp7Q-0007Zx-2p; Mon, 02 Dec 2019 18:04:16 +0100
+Message-ID: <cd0fae1a6b88a37e034876b53b350e79f58c654f.camel@pengutronix.de>
+Subject: Re: [PATCH 1/3] dt-bindings: clock: Update Hisilicon reset doc
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Jun Nie <jun.nie@linaro.org>, mturquette@baylibre.com,
+        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        xuwei5@hisilicon.com, opensource@jilayne.com, swinslow@gmail.com,
+        allison@lohutok.net, yuehaibing@huawei.com, tglx@linutronix.de,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, xuejiancheng@hisilicon.com
+Date:   Mon, 02 Dec 2019 18:04:11 +0100
+In-Reply-To: <20191202144524.5391-2-jun.nie@linaro.org>
+References: <20191202144524.5391-1-jun.nie@linaro.org>
+         <20191202144524.5391-2-jun.nie@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191023154512.9762-13-boris.brezillon@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi Jun,
 
-Thank you for the patch.
+I have a few questions and comments about these patches. I notice that
+the changed device trees only use the default setting. Are these new
+features something that is required for the present SoCs, or is this in
+preparation for a new SoC?
 
-On Wed, Oct 23, 2019 at 05:45:03PM +0200, Boris Brezillon wrote:
-> So that bridge drivers have a way to check/reject an atomic operation.
-> The drm_atomic_bridge_chain_check() (which is just a wrapper around
-> the ->atomic_check() hook) is called in place of
-> drm_bridge_chain_mode_fixup() (when ->atomic_check() is not implemented,
-> the core falls back on ->mode_fixup(), so the behavior should stay
-> the same for existing bridge drivers).
+On Mon, 2019-12-02 at 22:45 +0800, Jun Nie wrote:
+> Document the update of Hisilicon reset operation extension.
 > 
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Signed-off-by: Jun Nie <jun.nie@linaro.org>
 > ---
-> Changes in v3:
-> * None
+>  .../devicetree/bindings/clock/hisi-crg.txt    | 12 ++++----
+>  include/dt-bindings/reset/hisilicon-resets.h  | 28 +++++++++++++++++++
+>  2 files changed, 35 insertions(+), 5 deletions(-)
+>  create mode 100644 include/dt-bindings/reset/hisilicon-resets.h
 > 
-> Changes in v2:
-> * Clarify the fact that ->atomic_check() is replacing ->mode_fixup()
-> ---
->  drivers/gpu/drm/drm_atomic_helper.c | 12 +++---
->  drivers/gpu/drm/drm_bridge.c        | 62 +++++++++++++++++++++++++++++
->  include/drm/drm_bridge.h            | 29 +++++++++++++-
->  3 files changed, 96 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> index de985ba7ce2d..1d0a19511a0d 100644
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -437,12 +437,12 @@ mode_fixup(struct drm_atomic_state *state)
->  		funcs = encoder->helper_private;
+> diff --git a/Documentation/devicetree/bindings/clock/hisi-crg.txt b/Documentation/devicetree/bindings/clock/hisi-crg.txt
+> index cc60b3d423f3..fd8b0a964806 100644
+> --- a/Documentation/devicetree/bindings/clock/hisi-crg.txt
+> +++ b/Documentation/devicetree/bindings/clock/hisi-crg.txt
+> @@ -26,19 +26,21 @@ to specify the clock which they consume.
 >  
->  		bridge = drm_bridge_chain_get_first_bridge(encoder);
-> -		ret = drm_bridge_chain_mode_fixup(bridge,
-> -					&new_crtc_state->mode,
-> -					&new_crtc_state->adjusted_mode);
-> -		if (!ret) {
-> -			DRM_DEBUG_ATOMIC("Bridge fixup failed\n");
-> -			return -EINVAL;
-> +		ret = drm_atomic_bridge_chain_check(bridge,
-> +						    new_crtc_state,
-> +						    new_conn_state);
-> +		if (ret) {
-> +			DRM_DEBUG_ATOMIC("Bridge atomic check failed\n");
-> +			return ret;
->  		}
+>  All these identifier could be found in <dt-bindings/clock/hi3519-clock.h>.
 >  
->  		if (funcs && funcs->atomic_check) {
-> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> index 377866e3214f..990e056296bd 100644
-> --- a/drivers/gpu/drm/drm_bridge.c
-> +++ b/drivers/gpu/drm/drm_bridge.c
-> @@ -615,6 +615,68 @@ void drm_atomic_bridge_chain_enable(struct drm_bridge *bridge,
->  }
->  EXPORT_SYMBOL(drm_atomic_bridge_chain_enable);
+> -- #reset-cells: should be 2.
+> +- #reset-cells: should be 3.
 >  
-> +static int drm_atomic_bridge_check(struct drm_bridge *bridge,
-> +				   struct drm_crtc_state *crtc_state,
-> +				   struct drm_connector_state *conn_state)
-> +{
-> +	if (bridge->funcs->atomic_check) {
-> +		struct drm_bridge_state *bridge_state;
-> +		int ret;
+>  A reset signal can be controlled by writing a bit register in the CRG module.
+> -The reset specifier consists of two cells. The first cell represents the
+> +The reset specifier consists of three cells. The first cell represents the
+>  register offset relative to the base address. The second cell represents the
+> -bit index in the register.
+> +bit index in the register. The third represent the flags to operation type.
 > +
-> +		bridge_state = drm_atomic_get_new_bridge_state(crtc_state->state,
-> +							       bridge);
-> +		if (WARN_ON(!bridge_state))
-> +			return -EINVAL;
-> +
-> +		ret = bridge->funcs->atomic_check(bridge, bridge_state,
-> +						  crtc_state, conn_state);
-> +		if (ret)
-> +			return ret;
-> +	} else if (bridge->funcs->mode_fixup) {
-> +		if (!bridge->funcs->mode_fixup(bridge, &crtc_state->mode,
-> +					       &crtc_state->adjusted_mode))
-> +			return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * drm_atomic_bridge_chain_check() - Do an atomic check on the bridge chain
-> + * @bridge: bridge control structure
-> + * @crtc_state: new CRTC state
-> + * @conn_state: new connector state
+> +All reset flags could be found in <dt-bindings/reset/hisilicon-resets.h>
+>  
+>  Example: CRG nodes
+>  CRG: clock-reset-controller@12010000 {
+>  	compatible = "hisilicon,hi3519-crg";
+>  	reg = <0x12010000 0x10000>;
+>  	#clock-cells = <1>;
+> -	#reset-cells = <2>;
+> +	#reset-cells = <3>;
+>  };
+>  
+>  Example: consumer nodes
+> @@ -46,5 +48,5 @@ i2c0: i2c@12110000 {
+>  	compatible = "hisilicon,hi3519-i2c";
+>  	reg = <0x12110000 0x1000>;
+>  	clocks = <&CRG HI3519_I2C0_RST>;
+> -	resets = <&CRG 0xe4 0>;
+> +	resets = <&CRG 0xe4 0 (HISI_ASSERT_SET | HISI_DEASSERT_CLEAR)>;
+>  };
+> diff --git a/include/dt-bindings/reset/hisilicon-resets.h b/include/dt-bindings/reset/hisilicon-resets.h
+> new file mode 100644
+> index 000000000000..983e42a0c318
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/hisilicon-resets.h
+> @@ -0,0 +1,28 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Hisilicon Reset definitions
 > + *
-> + * Calls &drm_bridge_funcs.atomic_check() (falls back on
-> + * &drm_bridge_funcs.mode_fixup()) op for all the bridges in the encoder chain,
-> + * starting from the last bridge to the first. These are called before calling
-> + * &drm_encoder_helper_funcs.atomic_check()
-> + *
-> + * RETURNS:
-> + * 0 on success, a negative error code on failure
+> + * Copyright (c) 2019 HiSilicon Technologies Co., Ltd.
 > + */
-> +int drm_atomic_bridge_chain_check(struct drm_bridge *bridge,
-> +				  struct drm_crtc_state *crtc_state,
-> +				  struct drm_connector_state *conn_state)
-> +{
-> +	struct drm_encoder *encoder = bridge->encoder;
-> +	struct drm_bridge *iter;
 > +
-> +	list_for_each_entry_reverse(iter, &encoder->bridge_chain, chain_node) {
-> +		int ret;
+> +#ifndef __DT_BINDINGS_RESET_HISILICON_H__
+> +#define __DT_BINDINGS_RESET_HISILICON_H__
 > +
-> +		ret = drm_atomic_bridge_check(iter, crtc_state, conn_state);
-> +		if (ret)
-> +			return ret;
+> +/*
+> + * The reset does not support the feature and corresponding
+> + * values are not valid
+> + */
+> +#define HISI_ASSERT_NONE		(1 << 0)
+> +#define HISI_DEASSERT_NONE		(1 << 1)
+
+What is the purpose of these two? Surely a reset control that does
+nothing is not useful?
+
 > +
-> +		if (iter == bridge)
-> +			break;
-> +	}
+> +/* When set this function is activated by polling/setting/clearing this bit */
+> +#define HISI_ASSERT_SET		(1 << 2)
+> +#define HISI_DEASSERT_SET		(1 << 3)
+
+> +#define HISI_ASSERT_CLEAR		(0 << 4)
+> +#define HISI_DEASSERT_CLEAR		(0 << 5)
+> +#define HISI_ASSERT_POLL		(0 << 6)
+> +#define HISI_DEASSERT_POLL		(0 << 7)
+
+These are all zero, checking for them with an & operation in the code
+always returns false.
+
 > +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(drm_atomic_bridge_chain_check);
+> +#define HISI_RESET_DEFAULT		(HISI_ASSERT_SET | HISI_DEASSERT_CLEAR)
 > +
->  /**
->   * drm_atomic_helper_bridge_destroy_state() - Default destroy state helper
->   * @bridge: the bridge this state refers to
-> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index b1f557d8dba9..2beb1ef9a733 100644
-> --- a/include/drm/drm_bridge.h
-> +++ b/include/drm/drm_bridge.h
-> @@ -127,7 +127,9 @@ struct drm_bridge_funcs {
->  	 * this function passes all other callbacks must succeed for this
->  	 * configuration.
->  	 *
-> -	 * The @mode_fixup callback is optional.
-> +	 * The mode_fixup callback is optional. &drm_bridge_funcs.mode_fixup()
-> +	 * is not called when &drm_bridge_funcs.atomic_check() is implemented,
-> +	 * so only one of them should be provided.
->  	 *
->  	 * NOTE:
->  	 *
-> @@ -391,6 +393,28 @@ struct drm_bridge_funcs {
->  	void (*atomic_destroy_state)(struct drm_bridge *bridge,
->  				     struct drm_bridge_state *state);
->  
-> +	/**
-> +	 * @atomic_check:
-> +	 *
-> +	 * This method is responsible for checking bridge state correctness.
-> +	 * It can also check the state of the surrounding components in chain
-> +	 * to make sure the whole pipeline can work properly.
+> +#endif
 
-As explained in the review of the RFC, I think it's a mistake not to
-define the semantics of this operation precisely, and in particular not
-to define explictly what parameters bridge drivers are allowed to modify
-here. I however don't want to make this a prerequisite for your series,
-so
+regards
+Philipp
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-but I'm sure we'll regret this later when different bridges will have
-slightly incompatible implementations.
-
-> +	 *
-> +	 * &drm_bridge_funcs.atomic_check() hooks are called in reverse
-> +	 * order (from the last to the first bridge).
-> +	 *
-> +	 * This method is optional. &drm_bridge_funcs.mode_fixup() is not
-> +	 * called when &drm_bridge_funcs.atomic_check() is implemented, so only
-> +	 * one of them should be provided.
-> +	 *
-> +	 * RETURNS:
-> +	 * zero if the check passed, a negative error code otherwise.
-> +	 */
-> +	int (*atomic_check)(struct drm_bridge *bridge,
-> +			    struct drm_bridge_state *bridge_state,
-> +			    struct drm_crtc_state *crtc_state,
-> +			    struct drm_connector_state *conn_state);
-> +
->  	/**
->  	 * @atomic_reset:
->  	 *
-> @@ -542,6 +566,9 @@ void drm_bridge_chain_mode_set(struct drm_bridge *bridge,
->  void drm_bridge_chain_pre_enable(struct drm_bridge *bridge);
->  void drm_bridge_chain_enable(struct drm_bridge *bridge);
->  
-> +int drm_atomic_bridge_chain_check(struct drm_bridge *bridge,
-> +				  struct drm_crtc_state *crtc_state,
-> +				  struct drm_connector_state *conn_state);
->  void drm_atomic_bridge_chain_disable(struct drm_bridge *bridge,
->  				     struct drm_atomic_state *state);
->  void drm_atomic_bridge_chain_post_disable(struct drm_bridge *bridge,
-
--- 
-Regards,
-
-Laurent Pinchart
