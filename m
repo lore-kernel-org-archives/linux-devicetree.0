@@ -2,362 +2,155 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64386C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 08:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A632C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 08:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC792245C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 08:07:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XRIhVxFW"
+	by mail.kernel.org (Postfix) with ESMTP id 1183B20833
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 08:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbfLBIHj (ORCPT
+        id S1726115AbfLBIPq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 03:07:39 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36747 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbfLBIHi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 03:07:38 -0500
-Received: by mail-ed1-f68.google.com with SMTP id j17so14969301edp.3
-        for <devicetree@vger.kernel.org>; Mon, 02 Dec 2019 00:07:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hB2nJ8CzTKjXCm6SOFfHQcbAJFeLp6+ruAS0J+kmEz4=;
-        b=XRIhVxFW2iDfWHxbVlSiSV4PpvApyRBnSh0jlF7EDk/saneQv8Jfys+8UXjIN+iVT4
-         UgPX8PYXfFfL+H21cq04VIyNM1HXjeB3XCMex9nIMrzxb/+DIUKLqHyR++nk5PkAgbmP
-         Z2E1/rUB/83oyoTGcmJ+ZjW0Yk279VnZIhn3Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hB2nJ8CzTKjXCm6SOFfHQcbAJFeLp6+ruAS0J+kmEz4=;
-        b=emWtCfOB3/EOi64V9HEbin0Eas8QvDErnJUu2u2hIDUJTTr5M8U+A7rOFP/T2/7wRZ
-         h3gscsLzNnJGgSfM2FVapZZ2NyRtRjMbrfBndW4p2rsVNEzTSee7HAkbc+c7zLtMQOru
-         eh4wLlZdrV8WcVmRb7G2qvLoQxYP3rLpnWCr45adRT8ymeWmIqJRxxcKZfU/Op13H1W4
-         h2hSDp0dNvtUPraOrIggfzrufR/+Iy+HRwxsxBVV/QqwiY+wB/LqtUpJV1ucO/qAQeRX
-         xKQtlAVxXpR+idfOyuaR8JQfDy81ZUkdPEuWl4Hi1PBCydRfv86FC2rMCPTcwaDHHgUb
-         4r5Q==
-X-Gm-Message-State: APjAAAVFSpQob+sAB6ymj2lkUemvYh6hOeQZALKaptzKGv5pacIy8Ix6
-        DXJ847WMs71Oyl4ygMMs6qqINs7gtnuKgSXsRLjuNg==
-X-Google-Smtp-Source: APXvYqzDbZscQDJrs8HoXLTnIMKzHpXcUPG2LW45MmuMV7G7PnHlmrJzw50Qyt0vl90Wse02bh6Lo9CsDwS9zUUwCBU=
-X-Received: by 2002:a50:e00a:: with SMTP id e10mr6951207edl.119.1575274055153;
- Mon, 02 Dec 2019 00:07:35 -0800 (PST)
+        Mon, 2 Dec 2019 03:15:46 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53812 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726106AbfLBIPq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 03:15:46 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F3D59AE3C;
+        Mon,  2 Dec 2019 08:15:43 +0000 (UTC)
+Subject: Re: [PATCH 2/7] arm64: dts: realtek: rtd129x: Use reserved-memory for
+ RPC regions
+To:     linux-realtek-soc@lists.infradead.org,
+        James Tai <james.tai@realtek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20191111030434.29977-1-afaerber@suse.de>
+ <20191111030434.29977-3-afaerber@suse.de>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <1f25f2fc-5d31-1d74-b730-78ad7861ffce@suse.de>
+Date:   Mon, 2 Dec 2019 09:15:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1566531931-9772-7-git-send-email-hsin-hsiung.wang@mediatek.com>
-In-Reply-To: <1566531931-9772-7-git-send-email-hsin-hsiung.wang@mediatek.com>
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Date:   Mon, 2 Dec 2019 16:06:59 +0800
-Message-ID: <CANdKZ0eUDhhQPBBiOWZ0u03SFoFQM6b=ED9AGe+JtBSr_zeJKQ@mail.gmail.com>
-Subject: Re: [PATCH v5 06/10] mfd: Add support for the MediaTek MT6358 PMIC
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, srv_heupstream@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191111030434.29977-3-afaerber@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi James and Realtek colleagues,
 
-On Fri, Aug 23, 2019 at 11:46 AM Hsin-Hsiung Wang
-<hsin-hsiung.wang@mediatek.com> wrote:
->
-> This adds support for the MediaTek MT6358 PMIC. This is a
-> multifunction device with the following sub modules:
->
-> - Regulator
-> - RTC
-> - Codec
-> - Interrupt
->
-> It is interfaced to the host controller using SPI interface
-> by a proprietary hardware called PMIC wrapper or pwrap.
-> MT6358 MFD is a child device of the pwrap.
->
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Am 11.11.19 um 04:04 schrieb Andreas Färber:
+> Move /reserved-memory node from RTD1295 to RTD129x DT.
+> Convert RPC /memreserve/s into /reserved-memory nodes.
+> 
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
 > ---
->  drivers/mfd/Makefile                 |   3 +-
->  drivers/mfd/mt6358-irq.c             | 231 ++++++++++++++++++++++++++++
->  drivers/mfd/mt6397-core.c            |  52 ++++++-
->  include/linux/mfd/mt6358/core.h      | 158 ++++++++++++++++++++
->  include/linux/mfd/mt6358/registers.h | 282 +++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mt6397/core.h      |   3 +
->  6 files changed, 727 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/mfd/mt6358-irq.c
->  create mode 100644 include/linux/mfd/mt6358/core.h
->  create mode 100644 include/linux/mfd/mt6358/registers.h
-> (...)
-> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
-> new file mode 100644
-> index 0000000..760b72f
-> --- /dev/null
-> +++ b/drivers/mfd/mt6358-irq.c
-> @@ -0,0 +1,231 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (c) 2019 MediaTek Inc.
+>  arch/arm64/boot/dts/realtek/rtd1295.dtsi | 13 +------------
+>  arch/arm64/boot/dts/realtek/rtd129x.dtsi | 23 ++++++++++++++++++++---
+>  2 files changed, 21 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+> index 34f6cc6f16fe..1402abe80ea1 100644
+> --- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+> +++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+> @@ -2,7 +2,7 @@
+>  /*
+>   * Realtek RTD1295 SoC
+>   *
+> - * Copyright (c) 2016-2017 Andreas Färber
+> + * Copyright (c) 2016-2019 Andreas Färber
+>   */
+>  
+>  #include "rtd129x.dtsi"
+> @@ -47,17 +47,6 @@
+>  		};
+>  	};
+>  
+> -	reserved-memory {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		ranges;
+> -
+> -		tee@10100000 {
+> -			reg = <0x10100000 0xf00000>;
+> -			no-map;
+> -		};
+> -	};
+> -
+>  	timer {
+>  		compatible = "arm,armv8-timer";
+>  		interrupts = <GIC_PPI 13
+> diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+> index 4433114476f5..8d80cca945bc 100644
+> --- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+> +++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+> @@ -2,14 +2,12 @@
+>  /*
+>   * Realtek RTD1293/RTD1295/RTD1296 SoC
+>   *
+> - * Copyright (c) 2016-2017 Andreas Färber
+> + * Copyright (c) 2016-2019 Andreas Färber
+>   */
+>  
+>  /memreserve/	0x0000000000000000 0x0000000000030000;
+> -/memreserve/	0x000000000001f000 0x0000000000001000;
+>  /memreserve/	0x0000000000030000 0x00000000000d0000;
+>  /memreserve/	0x0000000001b00000 0x00000000004be000;
+> -/memreserve/	0x0000000001ffe000 0x0000000000004000;
+>  
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/reset/realtek,rtd1295.h>
+> @@ -19,6 +17,25 @@
+>  	#address-cells = <1>;
+>  	#size-cells = <1>;
+>  
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
 > +
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/mt6358/core.h>
-> +#include <linux/mfd/mt6358/registers.h>
-> +#include <linux/mfd/mt6397/core.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
+> +		rpc_comm: rpc@1f000 {
+> +			reg = <0x1f000 0x1000>;
+> +		};
 > +
-> +static struct irq_top_t mt6358_ints[] = {
-> +       MT6358_TOP_GEN(BUCK),
-> +       MT6358_TOP_GEN(LDO),
-> +       MT6358_TOP_GEN(PSC),
-> +       MT6358_TOP_GEN(SCK),
-> +       MT6358_TOP_GEN(BM),
-> +       MT6358_TOP_GEN(HK),
-> +       MT6358_TOP_GEN(AUD),
-> +       MT6358_TOP_GEN(MISC),
-> +};
-> +
-> +static void pmic_irq_enable(struct irq_data *data)
-> +{
-> +       unsigned int hwirq = irqd_to_hwirq(data);
-> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +       struct pmic_irq_data *irqd = chip->irq_data;
-> +
-> +       irqd->enable_hwirq[hwirq] = true;
-> +}
-> +
-> +static void pmic_irq_disable(struct irq_data *data)
-> +{
-> +       unsigned int hwirq = irqd_to_hwirq(data);
-> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +       struct pmic_irq_data *irqd = chip->irq_data;
-> +
-> +       irqd->enable_hwirq[hwirq] = false;
-> +}
-> +
-> +static void pmic_irq_lock(struct irq_data *data)
-> +{
-> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +
-> +       mutex_lock(&chip->irqlock);
-> +}
-> +
-> +static void pmic_irq_sync_unlock(struct irq_data *data)
-> +{
-> +       unsigned int i, top_gp, en_reg, int_regs, shift;
-> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +       struct pmic_irq_data *irqd = chip->irq_data;
-> +
-> +       for (i = 0; i < irqd->num_pmic_irqs; i++) {
-> +               if (irqd->enable_hwirq[i] == irqd->cache_hwirq[i])
-> +                       continue;
-> +
-> +               /* Find out the irq group */
-> +               top_gp = 0;
-> +               while ((top_gp + 1) < ARRAY_SIZE(mt6358_ints) &&
-> +                      i >= mt6358_ints[top_gp + 1].hwirq_base)
-> +                       top_gp++;
-> +
-> +               if (top_gp >= ARRAY_SIZE(mt6358_ints)) {
+> +		rpc_ringbuf: rpc@1ffe000 {
+> +			reg = <0x1ffe000 0x4000>;
+> +		};
 
-Would this condition ever be true? The while loop before this always
-break when top_gp == ARRAY_SIZE(mt6358_ints) - 1.
+Have you reviewed this patch to be correct? I.e., are the above two
+regions reserved RAM (assumption above), or is this rather MMIO
+shadowing RAM? (then we would need to update the /memory reg and /soc
+ranges properties)
 
-> +                       mutex_unlock(&chip->irqlock);
-> +                       dev_err(chip->dev,
-> +                               "Failed to get top_group: %d\n", top_gp);
-> +                       return;
-> +               }
-> +
-> +               /* Find the irq registers */
-> +               int_regs = (i - mt6358_ints[top_gp].hwirq_base) /
-> +                           MT6358_REG_WIDTH;
-> +               en_reg = mt6358_ints[top_gp].en_reg +
-> +                       mt6358_ints[top_gp].en_reg_shift * int_regs;
-> +               shift = (i - mt6358_ints[top_gp].hwirq_base) % MT6358_REG_WIDTH;
-> +               regmap_update_bits(chip->regmap, en_reg, BIT(shift),
-> +                                  irqd->enable_hwirq[i] << shift);
-> +               irqd->cache_hwirq[i] = irqd->enable_hwirq[i];
-> +       }
-> +       mutex_unlock(&chip->irqlock);
-> +}
-> +
-> +static struct irq_chip mt6358_irq_chip = {
-> +       .name = "mt6358-irq",
-> +       .flags = IRQCHIP_SKIP_SET_WAKE,
-> +       .irq_enable = pmic_irq_enable,
-> +       .irq_disable = pmic_irq_disable,
-> +       .irq_bus_lock = pmic_irq_lock,
-> +       .irq_bus_sync_unlock = pmic_irq_sync_unlock,
-> +};
-> +
-> +static void mt6358_irq_sp_handler(struct mt6397_chip *chip,
-> +                                 unsigned int top_gp)
-> +{
-> +       unsigned int sta_reg, irq_status;
-> +       unsigned int hwirq, virq;
-> +       int ret, i, j;
-> +
-> +       for (i = 0; i < mt6358_ints[top_gp].num_int_regs; i++) {
-> +               sta_reg = mt6358_ints[top_gp].sta_reg +
-> +                       mt6358_ints[top_gp].sta_reg_shift * i;
-> +               ret = regmap_read(chip->regmap, sta_reg, &irq_status);
-> +               if (ret) {
-> +                       dev_err(chip->dev,
-> +                               "Failed to read irq status: %d\n", ret);
-> +                       return;
-> +               }
-> +
-> +               if (!irq_status)
-> +                       continue;
-> +
-> +               for (j = 0; j < MT6358_REG_WIDTH ; j++) {
-> +                       if ((irq_status & BIT(j)) == 0)
-> +                               continue;
-> +                       hwirq = mt6358_ints[top_gp].hwirq_base +
-> +                               MT6358_REG_WIDTH * i + j;
-> +                       virq = irq_find_mapping(chip->irq_domain, hwirq);
-> +                       if (virq)
-> +                               handle_nested_irq(virq);
-> +               }
-> +
-> +               regmap_write(chip->regmap, sta_reg, irq_status);
-> +       }
-> +}
-> +
-> +static irqreturn_t mt6358_irq_handler(int irq, void *data)
-> +{
-> +       struct mt6397_chip *chip = data;
-> +       struct pmic_irq_data *mt6358_irq_data = chip->irq_data;
-> +       unsigned int top_irq_status;
-> +       unsigned int i;
-> +       int ret;
-> +
-> +       ret = regmap_read(chip->regmap,
-> +                         mt6358_irq_data->top_int_status_reg,
-> +                         &top_irq_status);
-> +       if (ret) {
-> +               dev_err(chip->dev, "Can't read TOP_INT_STATUS ret=%d\n", ret);
-> +               return IRQ_NONE;
-> +       }
-> +
-> +       for (i = 0; i < mt6358_irq_data->num_top; i++) {
-> +               if (top_irq_status & BIT(mt6358_ints[i].top_offset))
-> +                       mt6358_irq_sp_handler(chip, i);
-> +       }
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static int pmic_irq_domain_map(struct irq_domain *d, unsigned int irq,
-> +                              irq_hw_number_t hw)
-> +{
-> +       struct mt6397_chip *mt6397 = d->host_data;
-> +
-> +       irq_set_chip_data(irq, mt6397);
-> +       irq_set_chip_and_handler(irq, &mt6358_irq_chip, handle_level_irq);
-> +       irq_set_nested_thread(irq, 1);
-> +       irq_set_noprobe(irq);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct irq_domain_ops mt6358_irq_domain_ops = {
-> +       .map = pmic_irq_domain_map,
-> +       .xlate = irq_domain_xlate_twocell,
-> +};
-> +
-> +int mt6358_irq_init(struct mt6397_chip *chip)
-> +{
-> +       int i, j, ret;
-> +       struct pmic_irq_data *irqd;
-> +
-> +       irqd = devm_kzalloc(chip->dev, sizeof(struct pmic_irq_data *),
-> +                           GFP_KERNEL);
-> +       if (!irqd)
-> +               return -ENOMEM;
-> +
-> +       chip->irq_data = irqd;
-> +
-> +       mutex_init(&chip->irqlock);
-> +       irqd->top_int_status_reg = MT6358_TOP_INT_STATUS0;
-> +       irqd->num_pmic_irqs = MT6358_IRQ_NR;
-> +       irqd->num_top = ARRAY_SIZE(mt6358_ints);
+That also affects RTD1619, which currently has neither.
 
-ARRAY_SIZE(mt6358_ints) is still used in pmic_irq_sync_unlock. Is this
-variable needed, or should the ARRAY_SIZE(mt6358_ints) in
-pmic_irq_sync_unlock be changed to irqd->num_top too?
+Thanks,
+Andreas
 
 > +
-> +       irqd->enable_hwirq = devm_kcalloc(chip->dev,
-> +                                         irqd->num_pmic_irqs,
-> +                                         sizeof(bool),
-> +                                         GFP_KERNEL);
-> +       if (!irqd->enable_hwirq)
-> +               return -ENOMEM;
+> +		tee: tee@10100000 {
+> +			reg = <0x10100000 0xf00000>;
+> +			no-map;
+> +		};
+> +	};
 > +
-> +       irqd->cache_hwirq = devm_kcalloc(chip->dev,
-> +                                        irqd->num_pmic_irqs,
-> +                                        sizeof(bool),
-> +                                        GFP_KERNEL);
-> +       if (!irqd->cache_hwirq)
-> +               return -ENOMEM;
-> +
-> +       /* Disable all interrupts for initializing */
-> +       for (i = 0; i < irqd->num_top; i++) {
-> +               for (j = 0; j < mt6358_ints[i].num_int_regs; j++)
-> +                       regmap_write(chip->regmap,
-> +                                    mt6358_ints[i].en_reg +
-> +                                    mt6358_ints[i].en_reg_shift * j, 0);
-> +       }
-> +
-> +       chip->irq_domain = irq_domain_add_linear(chip->dev->of_node,
-> +                                                irqd->num_pmic_irqs,
-> +                                                &mt6358_irq_domain_ops, chip);
-> +       if (!chip->irq_domain) {
-> +               dev_err(chip->dev, "could not create IRQ domain\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       ret = devm_request_threaded_irq(chip->dev, chip->irq, NULL,
-> +                                       mt6358_irq_handler, IRQF_ONESHOT,
-> +                                       mt6358_irq_chip.name, chip);
-> +       if (ret) {
-> +               dev_err(chip->dev, "failed to register irq=%d; err: %d\n",
-> +                       chip->irq, ret);
-> +               return ret;
-> +       }
-> +
-> +       enable_irq_wake(chip->irq);
-> +       return ret;
-> +}
-> (...)
+>  	arm_pmu: arm-pmu {
+>  		compatible = "arm,cortex-a53-pmu";
+>  		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
