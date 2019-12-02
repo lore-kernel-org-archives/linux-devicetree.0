@@ -2,69 +2,118 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29845C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 21:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5054C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 21:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07A6206ED
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 21:05:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575320732;
-	bh=KvuQvOeHf7073T7iqCk7/sH8hVp31zd1O+gMG3150OM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=jwhpYNJrhMPWJ+dLoW91xcf2ZsLgsEw0gqYrHzii0fK8OSS8r6BKFAhCzLorBbuMY
-	 LfexAF+ZE/nxiV3WyOvoR7ASXHuYUAB15kAgLq6WfWWZ0SDSLyK9z9hO2132h8jtQ7
-	 FIRbE+yy3JXljglo8/QY2GHggCBp5/6fsMg0CWbA=
+	by mail.kernel.org (Postfix) with ESMTP id 824AA2070B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 21:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfLBVFW (ORCPT
+        id S1726810AbfLBVRu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 16:05:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727244AbfLBVFW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Dec 2019 16:05:22 -0500
-Subject: Re: [GIT PULL] Devicetree updates for v5.5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575320722;
-        bh=KvuQvOeHf7073T7iqCk7/sH8hVp31zd1O+gMG3150OM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=C4NBszpdP8aNgn/hfPRoDHKK9meF0m+nbkFoYxTYUEATWOqyIfg7vGUvCqzcmkJx/
-         KRqwwwjItoF/uCOgMgloO7VksveVIyWr8Df8/ycoO6RBiE2A9WqUjXTGo7VDVr3UP6
-         GU1yeGyphQfrfsRxoklEz+qKPZCO23lkk7EsfnEM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191130051055.GA2987@bogus>
-References: <20191130051055.GA2987@bogus>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191130051055.GA2987@bogus>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
- tags/devicetree-for-5.5
-X-PR-Tracked-Commit-Id: a8de1304b7df30e3a14f2a8b9709bb4ff31a0385
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2c97b5ae83dca56718774e7b4bf9640f05d11867
-Message-Id: <157532072192.29263.13142208368791792538.pr-tracker-bot@kernel.org>
-Date:   Mon, 02 Dec 2019 21:05:21 +0000
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
+        Mon, 2 Dec 2019 16:17:50 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:39332 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbfLBVRt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 16:17:49 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id EA9133C0579;
+        Mon,  2 Dec 2019 22:17:46 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0ASiIrofYquI; Mon,  2 Dec 2019 22:17:40 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 540063C003B;
+        Mon,  2 Dec 2019 22:17:40 +0100 (CET)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Mon, 2 Dec 2019
+ 22:17:39 +0100
+Date:   Mon, 2 Dec 2019 22:17:37 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v3 1/7] gpiolib: Add GPIOCHIP_NAME definition
+Message-ID: <20191202211737.GA27915@vmlxhi-102.adit-jv.com>
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-2-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191127084253.16356-2-geert+renesas@glider.be>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The pull request you sent on Fri, 29 Nov 2019 22:10:55 -0700:
+Hi Geert,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-for-5.5
+On Wed, Nov 27, 2019 at 09:42:47AM +0100, Geert Uytterhoeven wrote:
+> The string literal "gpiochip" is used in several places.
+> Add a definition for it, and use it everywhere, to make sure everything
+> stays in sync.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v3:
+>   - New.
+> ---
+>  drivers/gpio/gpiolib-sysfs.c | 7 +++----
+>  drivers/gpio/gpiolib.c       | 4 ++--
+>  drivers/gpio/gpiolib.h       | 2 ++
+>  3 files changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index ca9bc1e4803c2979..a4a759920faa48ab 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -16,6 +16,8 @@
+>  #include <linux/module.h>
+>  #include <linux/cdev.h>
+>  
+> +#define GPIOCHIP_NAME	"gpiochip"
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2c97b5ae83dca56718774e7b4bf9640f05d11867
+[.02$/nit] I wonder if GPIOCHIP_NAME is actually an essential
+part of kernel-user contract [1-2], in which case it could
+probably be moved to include/uapi/linux/gpio.h ?
 
-Thank you!
+Regardless:
+Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+
+[1] linux (v5.4) git grep '"gpiochip' -- tools/
+tools/gpio/lsgpio.c:                    if (check_prefix(ent->d_name, "gpiochip")) {
+tools/testing/selftests/gpio/gpio-mockup-chardev.c:             if (check_prefix(ent->d_name, "gpiochip")) {
+
+[2] libgpiod (v1.4-76-g00418dfdfc8b) git grep '"gpiochip'
+lib/iter.c:	return !strncmp(dir->d_name, "gpiochip", 8);
+tests/mockup/gpio-mockup.c:	rv = sscanf(sysname, "gpiochip%u", &chip->num);
+tools/gpioget.c:		die("gpiochip must be specified");
+tools/gpiomon.c:		die("gpiochip must be specified");
+tools/gpioset.c:		die("gpiochip must be specified");
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Best Regards,
+Eugeniu
