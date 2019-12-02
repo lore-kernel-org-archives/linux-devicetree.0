@@ -2,241 +2,155 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE16DC432C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 15:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E5AC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 15:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A86CB2146E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 15:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5E3020748
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 15:18:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="KhbYeHhw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbQcHztO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfLBPEL (ORCPT
+        id S1727417AbfLBPSP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 10:04:11 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27014 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727480AbfLBPEL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 10:04:11 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB2Eqcve006818;
-        Mon, 2 Dec 2019 16:03:57 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=TVle+DE3dnCA7IhmRgC1AN/Md8I3hWUb219+dQQGb4c=;
- b=KhbYeHhwb4lDOLTJQC8Ipqj5iCfMPlGEmXqeEMsxdSyx3+4yx0Sl6hOlixYI+qzy5aaz
- KY8BRCStBKfkRKl93rVv0R3nJf8cc9S+GVZvJEGt87WL5bwCxflG1BOvaN7XnpdBL19s
- SUwUjGNuQX7yRXwno+oGOyNP/NF9+7X3Q1gbzoQzalRv8ZMLtcPrtevWtpiBSZlQE8cp
- uZ1ZXSJincuEzfUQw7LwA6mvE3WQAQv1pXyH4fhqZfFCKmjLn75k3w/BnxW0uBgndgy5
- MUPg+FHzJjKKyfuZ6ZdL65WMDwRsxDbTXP44M07687NOA4moswH0M5svfka4oYuXBJPU kg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wkee9tk0a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Dec 2019 16:03:57 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DB08C10002A;
-        Mon,  2 Dec 2019 16:03:56 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag4node2.st.com [10.75.127.11])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BDD662D3783;
-        Mon,  2 Dec 2019 16:03:56 +0100 (CET)
-Received: from localhost (10.75.127.49) by SFHDAG4NODE2.st.com (10.75.127.11)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 2 Dec 2019 16:03:56
- +0100
-From:   <gabriel.fernandez@st.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Gabriel Fernandez <gabriel.fernandez@st.com>
-Subject: [PATCH] dt-bindings: rcc: Convert stm32mp1 rcc bindings to json-schema
-Date:   Mon, 2 Dec 2019 16:03:43 +0100
-Message-ID: <20191202150343.27854-1-gabriel.fernandez@st.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 2 Dec 2019 10:18:15 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:38576 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbfLBPSO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 10:18:14 -0500
+Received: by mail-il1-f195.google.com with SMTP id u17so33756442ilq.5;
+        Mon, 02 Dec 2019 07:18:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UjeogKFi5KS3aQSbHG8R3fUmgd8lYS9MSCQDuVh2WvE=;
+        b=lbQcHztOV2MzGE2/KhjJZaflYVbeXHPQxAJNZCKuilOJpGS/AL+QfBLYWsf5g0pPuQ
+         R1tdBxUr12jiCk5jhml3Brom5a+22HYlwD0V6DMGhXnD9QzJVKjqICeUZNhtI+DRQr50
+         zFAPz/L8DspLaKgjY+erR0pVe+6clAiGBomgAeaSmEpbXd4aGFX4GhZDvKBkVaU/V7hi
+         dcbzHUG6JGUNBo5tPspZRAywNzIq5UlWSt/+PGhtOv2kVuLGbXg7XdoHwa2e+RmE6xkN
+         bXeNX0iCQQ2HqrH5+JcIyNmi9SDrX6s7dUElLZvO2F7sxdqMBHoWfvPGO9qUuhlEfSgV
+         09Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UjeogKFi5KS3aQSbHG8R3fUmgd8lYS9MSCQDuVh2WvE=;
+        b=ZQNnpmgjRKCiODpScXr92QNL+LpyhXE/6CV6ctseQLA0bPXVz8vQj/UK/n5IN0rLeS
+         0da7BCbs0otPFWyEdG9mEOmg3L0FkdLpAWgl1flGW1FbslzO3LYopQWrnJPo3tIiFFD0
+         XM/yfuOP8H353hdIdXV09bYoyTWbXKOdtiGArshAS2/XZxSp+cYYorbBdNtFhIXrUqYz
+         +Ev11TdTGJU2YYKznqoksn3AWdrLRP9SOJvaVtU2GCbAXz9S2kBans9jp8xajnCTp4hm
+         l/HUfxrRerNdqb1DK+dVfCm4dJnLvfAOD5gpAOS6CIY3zMOfCPH/nZmcHcjZxr0CBMQm
+         pNKg==
+X-Gm-Message-State: APjAAAWXkTr7G3uckLhE/TEdNBcsS8sEvPJjm0YKDmK6kkDZTbVTimsF
+        F8ymJnfJ0SEGCcktesMLrk1JCI+ZFPW3QGIDll0=
+X-Google-Smtp-Source: APXvYqwcnblataYwOUw2bbo0E9yr/M4cASJ9KZg0wuqkBi3i3JEubcxY6cy5v/gLNt/N/fKvvHvkkA2vlVSHpYRwLX0=
+X-Received: by 2002:a92:1547:: with SMTP id v68mr24633087ilk.58.1575299892254;
+ Mon, 02 Dec 2019 07:18:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG4NODE2.st.com
- (10.75.127.11)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-02_02:2019-11-29,2019-12-02 signatures=0
+References: <20191129234108.12732-1-aford173@gmail.com> <3dff516c16dbb8c654293e16c49b4c59d29fd707.camel@pengutronix.de>
+In-Reply-To: <3dff516c16dbb8c654293e16c49b4c59d29fd707.camel@pengutronix.de>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 2 Dec 2019 09:17:59 -0600
+Message-ID: <CAHCN7x+LLBci7BJNGHkoGK7Ljgn0NbVJKitv9vR+vonrO9r2tg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] soc: imx: gpcv2: Add support for imx8mm
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+On Mon, Dec 2, 2019 at 8:28 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+>
+> On Fri, 2019-11-29 at 17:41 -0600, Adam Ford wrote:
+> > The technical reference manual for both the i.MX8MQ and i.MX8M Mini
+> > appear to show the same register definitions and locations for the
+> > General Power Controller (GPC).
+> >
+> > This patch expands the table of compatible SoC's to include
+> > the i.MX8m Mini
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> >
+> > diff --git a/drivers/soc/imx/gpcv2.c b/drivers/soc/imx/gpcv2.c
+> > index b0dffb06c05d..67c54cbb6c81 100644
+> > --- a/drivers/soc/imx/gpcv2.c
+> > +++ b/drivers/soc/imx/gpcv2.c
+> > @@ -641,6 +641,7 @@ static int imx_gpcv2_probe(struct platform_device *pdev)
+> >  static const struct of_device_id imx_gpcv2_dt_ids[] = {
+> >       { .compatible = "fsl,imx7d-gpc", .data = &imx7_pgc_domain_data, },
+> >       { .compatible = "fsl,imx8mq-gpc", .data = &imx8m_pgc_domain_data, },
+> > +     { .compatible = "fsl,imx8mm-gpc", .data = &imx8m_pgc_domain_data, },
+>
+> According to the 5.2.5.1 "PGC power domains" chapters in both the i.MX
+> 8M Dual/8M QuadLite/8M Quad and i.MX 8M Mini Applications Processor
+> Reference Manuals (Rev.1), the two SoCs have a different list of power
+> domains:
 
-Convert the STM32MP1 RCC binding to DT schema format using json-schema.
+Shoot.  I needed to go further down in the table.  I stopped after the
+first four.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- .../bindings/clock/st,stm32mp1-rcc.txt        | 60 --------------
- .../bindings/clock/st,stm32mp1-rcc.yaml       | 79 +++++++++++++++++++
- 2 files changed, 79 insertions(+), 60 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt
- create mode 100644 Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.yaml
+Sorry for the noise.
 
-diff --git a/Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt
-deleted file mode 100644
-index fb9495ea582c..000000000000
---- a/Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt
-+++ /dev/null
-@@ -1,60 +0,0 @@
--STMicroelectronics STM32 Peripheral Reset Clock Controller
--==========================================================
--
--The RCC IP is both a reset and a clock controller.
--
--RCC makes also power management (resume/supend and wakeup interrupt).
--
--Please also refer to reset.txt for common reset controller binding usage.
--
--Please also refer to clock-bindings.txt for common clock controller
--binding usage.
--
--
--Required properties:
--- compatible: "st,stm32mp1-rcc", "syscon"
--- reg: should be register base and length as documented in the datasheet
--- #clock-cells: 1, device nodes should specify the clock in their
--  "clocks" property, containing a phandle to the clock device node,
--  an index specifying the clock to use.
--- #reset-cells: Shall be 1
--- interrupts: Should contain a general interrupt line and a interrupt line
--  to the wake-up of processor (CSTOP).
--
--Example:
--	rcc: rcc@50000000 {
--		compatible = "st,stm32mp1-rcc", "syscon";
--		reg = <0x50000000 0x1000>;
--		#clock-cells = <1>;
--		#reset-cells = <1>;
--		interrupts = <GIC_SPI 5 IRQ_TYPE_NONE>,
--			     <GIC_SPI 145 IRQ_TYPE_NONE>;
--	};
--
--Specifying clocks
--=================
--
--All available clocks are defined as preprocessor macros in
--dt-bindings/clock/stm32mp1-clks.h header and can be used in device
--tree sources.
--
--Specifying softreset control of devices
--=======================================
--
--Device nodes should specify the reset channel required in their "resets"
--property, containing a phandle to the reset device node and an index specifying
--which channel to use.
--The index is the bit number within the RCC registers bank, starting from RCC
--base address.
--It is calculated as: index = register_offset / 4 * 32 + bit_offset.
--Where bit_offset is the bit offset within the register.
--
--For example on STM32MP1, for LTDC reset:
-- ltdc = APB4_RSTSETR_offset / 4 * 32 + LTDC_bit_offset
--      = 0x180 / 4 * 32 + 0 = 3072
--
--The list of valid indices for STM32MP1 is available in:
--include/dt-bindings/reset-controller/stm32mp1-resets.h
--
--This file implements defines like:
--#define LTDC_R	3072
-diff --git a/Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.yaml b/Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.yaml
-new file mode 100644
-index 000000000000..b8f91e444d2f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/clock/st,stm32mp1-rcc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Reset Clock Controller Binding
-+
-+maintainers:
-+  - Gabriel Fernandez <gabriel.fernandez@st.com>
-+
-+description: |
-+  The RCC IP is both a reset and a clock controller.
-+  RCC makes also power management (resume/supend and wakeup interrupt).
-+  Please also refer to reset.txt for common reset controller binding usage.
-+
-+  This binding uses common clock bindings
-+  Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+  Specifying clocks
-+  =================
-+
-+  All available clocks are defined as preprocessor macros in
-+  dt-bindings/clock/stm32mp1-clks.h header and can be used in device
-+  tree sources.
-+
-+  Specifying softreset control of devices
-+  =======================================
-+
-+  Device nodes should specify the reset channel required in their "resets"
-+  property, containing a phandle to the reset device node and an index specifying
-+  which channel to use.
-+  The index is the bit number within the RCC registers bank, starting from RCC
-+  base address.
-+  It is calculated as: index = register_offset / 4 * 32 + bit_offset.
-+  Where bit_offset is the bit offset within the register.
-+
-+  For example on STM32MP1, for LTDC reset:
-+     ltdc = APB4_RSTSETR_offset / 4 * 32 + LTDC_bit_offset
-+          = 0x180 / 4 * 32 + 0 = 3072
-+
-+  The list of valid indices for STM32MP1 is available in:
-+  include/dt-bindings/reset-controller/stm32mp1-resets.h
-+
-+  This file implements defines like:
-+  #define LTDC_R	3072
-+
-+properties:
-+  "#clock-cells":
-+    const: 1
-+
-+  "#reset-cells":
-+    const: 1
-+
-+  compatible:
-+    items:
-+      - const: st,stm32mp1-rcc
-+      - const: syscon
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - "#reset-cells"
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    rcc: rcc@50000000 {
-+        compatible = "st,stm32mp1-rcc", "syscon";
-+        reg = <0x50000000 0x1000>;
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+    };
-+...
--- 
-2.17.1
-
+adam
+>
+> i.MX8MQ:
+>         PGC_C0
+>         PGC_C1
+>         PGC_C2
+>         PGC_C3
+>         PGC_SCU
+>         PGC_MF
+>         PGC_OTG1
+>         PGC_OTG2
+>         PGC_PCIE
+>         PGC_MIPI
+>         PGC_DDR1
+>         PGC_DDR2
+>         PGC_VPU
+>         PGC_GPU
+>         PGC_HDMI
+>         PGC_DISP
+>         PGC_MIPI_CSI1
+>         PGC_MIPI_CSI2
+>         PGC_PCIE2
+>
+> i.MX8MM:
+>         PGC_C0
+>         PGC_C1
+>         PGC_C2
+>         PGC_C3
+>         PGC_SCU
+>         PGC_NOC
+>         PGC_PCIE
+>         PGC_OTG1
+>         PGC_OTG2
+>         PGC_DDR1
+>         PGC_DISPMIX
+>         GPC_MIPI
+>         PGC_GPUMIX
+>         PGC_GPU_3D
+>         PGC_GPU_2D
+>         PGC_VPUMIX
+>         PGC_VPU_G1
+>         PGC_VPU_G2
+>         PGC_VPU_H1
+>
+> regards
+> Philipp
+>
