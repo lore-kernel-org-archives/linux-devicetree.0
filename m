@@ -2,91 +2,109 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305D7C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FA3C432C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F298C20718
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:10:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uP8y/Lzi"
+	by mail.kernel.org (Postfix) with ESMTP id 52E1320865
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 18:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfLBSK7 (ORCPT
+        id S1727868AbfLBSWP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 13:10:59 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35668 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727670AbfLBSK7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 13:10:59 -0500
-Received: by mail-pj1-f66.google.com with SMTP id s8so74287pji.2;
-        Mon, 02 Dec 2019 10:10:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OWl5LMlyWthCEsecxcscMjlc8//jLun1U4+HNkZP2EQ=;
-        b=uP8y/LziWCPvQnk7isxZu1yhkNU4fMAOvEeJBpxzG1hUwojItHcdqelLFdCjb+vXJl
-         VdYqUYnEuTe7F/sZ0mW45o+WXnEyj0KFG2EttqOFSnTGHFscKDpd/zWdDyLDVq753J1A
-         Wtp1poTat69yQymDjAaChATPzk6U8M1t7KVGxOJhBTNo26W1p4eocxQ0kTXHRXjQrrOj
-         gi7KUg8UD6eO2zu4BYA2GCtiOzONY2qMV0d1qjhzvNvdmrQWGrA2SVoM6vuQuStLfTts
-         H34wikchwvobC63jBu9jJjtnmLhWgBTmS34tnc+ncdGAdP+Se0sHHhVBNZdB4TxZJl9T
-         ao+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OWl5LMlyWthCEsecxcscMjlc8//jLun1U4+HNkZP2EQ=;
-        b=aYDqIRXz4rXiY9nR01d0mUoVXHHtrOoRhxXkfPOeorwUU6znUpou2dVElpP9jJQsoV
-         9JcjSphYajU9Je7S9vJ+N30Uq5+JNRIiJtMakK2evGpQ/DN8/9E3SoZAaDNbwSvBeYkX
-         wX8hvolAySMdDJ+3F+hEZy3+Df/xFEQlUSr6fldIzeg9NhBRU1nPfdOQT4DkSXfifZEM
-         R9Kg7qpKZ3+IRkPDXGL7ZwExKiS75Oift6pi87NWNlvnk6EXJ8y8YWf0Rqiw2YeN4vi+
-         LM5GuBfMDDKrU9dXFMVmC8pN/g889KVjPthXsr2SRPR+vbvsj98ew1aTmH/ry40NAZRi
-         ELmA==
-X-Gm-Message-State: APjAAAWi9B5EtwzO2iVjZhnjjbie9Gf4E62fzyiW661UidIuc7cnoQaq
-        dUTK2s3e4oezWfQb9Zpos5s=
-X-Google-Smtp-Source: APXvYqwb+PHDoFPOZYqIaZPMZD2O8EccPICF7fxGPPwMqJjvCNUXFL4eFf6NfxpqCyuQOKO87y/vjg==
-X-Received: by 2002:a17:90a:b304:: with SMTP id d4mr409661pjr.142.1575310258156;
-        Mon, 02 Dec 2019 10:10:58 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id h185sm236616pgc.87.2019.12.02.10.10.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 10:10:57 -0800 (PST)
-Date:   Mon, 2 Dec 2019 10:10:54 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marek Vasut <marex@denx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: ili210x - add ili2120 support
-Message-ID: <20191202181054.GF50317@dtor-ws>
-References: <20191119180543.120362-1-luca@z3ntu.xyz>
+        Mon, 2 Dec 2019 13:22:15 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35890 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727671AbfLBSWP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 13:22:15 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 98844AD98;
+        Mon,  2 Dec 2019 18:22:13 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        James Tai <james.tai@realtek.com>
+Subject: [PATCH 00/14] ARM: dts: realtek: Introduce syscon
+Date:   Mon,  2 Dec 2019 19:21:50 +0100
+Message-Id: <20191202182205.14629-1-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119180543.120362-1-luca@z3ntu.xyz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Luca,
+Hello,
 
-On Tue, Nov 19, 2019 at 07:05:43PM +0100, Luca Weiss wrote:
-> This adds support for the Ilitek ili2120 touchscreen found in the
-> Fairphone 2 smartphone.
+This patch series factors out system controller multi-function device nodes
+for CRT, Iso, Misc, SB2 and SCPU Wrapper IP blocks.
 
-The driver has been reworked recently, please update on top of the
-latest version.
+It was inspired by my SoC info RFC, as discussed in its cover letter [1].
 
-Thanks.
+Goal of DT is to describe the hardware, and in previous patches we've already
+introduced Realtek's r-bus as node layer. The next step here is to model
+multi-function blocks as nodes. In order to cope with 80-character line limit,
+child nodes are added via reference rather than in-place.
+
+Also included is a patch adding a reset constant for the SB2 block added.
+We may need to follow up with bindings adding compatibles, clocks and resets.
+
+This series is based on my RTD1195 v4 [2] (except for reset, rebased here),
+my RTD1395 v2 [3] and James' modified RTD1619 v3 [4].
+
+The irq mux series v5 [5] has been rebased onto this series, v6 to be sent.
+The SoC info RFC series [1] is still being updated, v2 to be posted later.
+
+Latest experimental patches at:
+https://github.com/afaerber/linux/commits/rtd1295-next
+
+Have a lot of fun!
+
+Cheers,
+Andreas
+
+[1] https://patchwork.kernel.org/cover/11224261/
+[2] https://patchwork.kernel.org/cover/11258949/
+[3] https://patchwork.kernel.org/cover/11268955/
+[4] https://patchwork.kernel.org/patch/11239697/
+[5] https://patchwork.kernel.org/cover/11255291/
+
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: James Tai <james.tai@realtek.com>
+
+Andreas Färber (14):
+  ARM: dts: rtd1195: Introduce iso and misc syscon
+  arm64: dts: realtek: rtd129x: Introduce CRT, iso and misc syscon
+  arm64: dts: realtek: rtd139x: Introduce CRT, iso and misc syscon
+  arm64: dts: realtek: rtd16xx: Introduce iso and misc syscon
+  ARM: dts: rtd1195: Add CRT syscon node
+  dt-bindings: reset: Add Realtek RTD1195
+  ARM: dts: rtd1195: Add reset nodes
+  ARM: dts: rtd1195: Add UART resets
+  arm64: dts: realtek: rtd16xx: Add CRT syscon node
+  ARM: dts: rtd1195: Add SB2 and SCPU Wrapper syscon nodes
+  arm64: dts: realtek: rtd129x: Add SB2 and SCPU Wrapper syscon nodes
+  arm64: dts: realtek: rtd139x: Add SB2 and SCPU Wrapper syscon nodes
+  arm64: dts: realtek: rtd16xx: Add SB2 and SCPU Wrapper syscon nodes
+  dt-bindings: reset: rtd1295: Add SB2 reset
+
+ arch/arm/boot/dts/rtd1195.dtsi              | 110 ++++++++++++++++---
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi    | 157 ++++++++++++++++++----------
+ arch/arm64/boot/dts/realtek/rtd139x.dtsi    | 157 ++++++++++++++++++----------
+ arch/arm64/boot/dts/realtek/rtd16xx.dtsi    |  91 ++++++++++++----
+ include/dt-bindings/reset/realtek,rtd1195.h |  74 +++++++++++++
+ include/dt-bindings/reset/realtek,rtd1295.h |   3 +
+ 6 files changed, 449 insertions(+), 143 deletions(-)
+ create mode 100644 include/dt-bindings/reset/realtek,rtd1195.h
 
 -- 
-Dmitry
+2.16.4
+
