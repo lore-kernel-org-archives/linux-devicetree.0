@@ -2,300 +2,467 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B0EC43215
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 09:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CAFC43215
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 09:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAAEF21774
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 09:42:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="V4EK0qUs"
+	by mail.kernel.org (Postfix) with ESMTP id AA6F120833
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 09:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfLBJmZ (ORCPT
+        id S1726251AbfLBJsA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 04:42:25 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:55688 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbfLBJmZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 04:42:25 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 81932DD;
-        Mon,  2 Dec 2019 10:42:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575279741;
-        bh=CJ9EKy9GD3pmgiuuqszs9TmlcNonnvP01gpT9zZMShw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V4EK0qUsUWrspiB9A+zbhzHJgijD2tv2xBmg6vK0ZyUTrE55SygjtWGVe9qs1XXPV
-         Wr61yGx4Bon9ZNPPhIu9c7vA9UC4eslIyMhDCimsqn/JUewYnOoDvpphYucf4xs+GL
-         xMkd2GW6+g3EVAmCpGEEhns8KJ3IY7RItlmXE3fw=
-Date:   Mon, 2 Dec 2019 11:42:13 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Peter Rosin <peda@axentia.se>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: Re: [PATCH v4 12/13] [HACK] drm/bridge: lvds-codec: Enforce device
- specific compatible strings
-Message-ID: <20191202094213.GA4929@pendragon.ideasonboard.com>
-References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1573660292-10629-13-git-send-email-fabrizio.castro@bp.renesas.com>
- <20191119001616.GL5171@pendragon.ideasonboard.com>
- <TY1PR01MB17706CE49FF46891A398C6A6C04C0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <20191119215155.GB17590@pendragon.ideasonboard.com>
- <TY1PR01MB1770BF7EE9488A746632E1E0C04E0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <CAMuHMdVXu+yXyMbM0RtqAEgZbeu1gz4osjkEPjNQmqwbYM-pOg@mail.gmail.com>
- <TY1PR01MB1770D82E521EBBCBE5F6D572C04A0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+        Mon, 2 Dec 2019 04:48:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:51848 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726087AbfLBJsA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 04:48:00 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0ED68328;
+        Mon,  2 Dec 2019 01:47:59 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 271BE3F68E;
+        Mon,  2 Dec 2019 01:47:58 -0800 (PST)
+Subject: Re: [PATCH v5 09/14] coresight: cti: Add connection information to
+ sysfs
+To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     mathieu.poirier@linaro.org
+References: <20191119231912.12768-1-mike.leach@linaro.org>
+ <20191119231912.12768-10-mike.leach@linaro.org>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <ad75693c-8c6f-35fd-f9bb-0317c2b4dcd2@arm.com>
+Date:   Mon, 2 Dec 2019 09:47:57 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <TY1PR01MB1770D82E521EBBCBE5F6D572C04A0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191119231912.12768-10-mike.leach@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Fabrizio,
-
-On Mon, Nov 25, 2019 at 11:17:25AM +0000, Fabrizio Castro wrote:
-> On 22 November 2019 08:17 Geert Uytterhoeven wrote:
-> > On Thu, Nov 21, 2019 at 5:00 PM Fabrizio Castro wrote:
-> >> On 19 November 2019 21:52 Laurent Pinchart wrote:
-> >>> On Tue, Nov 19, 2019 at 11:17:34AM +0000, Fabrizio Castro wrote:
-> >>>> On 19 November 2019 00:16 Laurent Pinchart wrote:
-> >>>>> On Wed, Nov 13, 2019 at 03:51:31PM +0000, Fabrizio Castro wrote:
-> >>>>>> The lvds-codec driver is a generic stub for transparent LVDS
-> >>>>>> encoders and decoders.
-> >>>>>> It's good practice to list a device specific compatible string
-> >>>>>> before the generic fallback (if any) in the DT node for the relevant
-> >>>>>> LVDS encoder/decoder, and it's also required by the dt-bindings.
-> >>>>>> A notable exception to the generic fallback mechanism is the case
-> >>>>>> of "thine,thc63lvdm83d", as documented in:
-> >>>>>> Documentation/devicetree/bindings/display/bridge/thine,thc63lvdm83d.txt
-> >>>>>> This patch enforces the adoption of a device specific compatible
-> >>>>>> string (as fist string in the list), by using markers for the
-> >>>>>> compatible string we match against and the index of the matching
-> >>>>>> compatible string in the list.
-> >>>>>>
-> >>>>>> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >>>>>>
-> >>>>>> ---
-> >>>>>> Hi Laurent,
-> >>>>>>
-> >>>>>> I don't think we need to do anything in the driver to address your
-> >>>>>> comment, as we can "enforce" this with the bindings (please see the
-> >>>>>> next patch, as it would help with the "enforcing" of the compatible
-> >>>>>> string for the thine device).
-> >>>>>> I am sending this patch only so that you can see what a possible
-> >>>>>> solution in the driver could look like.
-> >>>>>>
-> >>>>>> v3->v4:
-> >>>>>> * New patch addressing the below comment from Laurent:
-> >>>>>> "I think the lvds-decoder driver should error out at probe time if only
-> >>>>>> one compatible string is listed."
-> >>>>>>
-> >>>>>> --- a/drivers/gpu/drm/bridge/lvds-codec.c
-> >>>>>> +++ b/drivers/gpu/drm/bridge/lvds-codec.c
-> >>>>>>
-> >>>>>> @@ -65,7 +70,30 @@ static int lvds_codec_probe(struct platform_device *pdev)
-> >>>>>>         if (!lvds_codec)
-> >>>>>>                 return -ENOMEM;
-> >>>>>>
-> >>>>>> -       lvds_codec->connector_type = (u32)of_device_get_match_data(&pdev->dev);
-> >>>>>> +       lvds_codec->data = of_device_get_match_data(&pdev->dev);
-> >>>>>> +       if (!lvds_codec->data)
-> >>>>>> +               return -EINVAL;
-> >>>>>> +
-> >>>>>> +       /*
-> >>>>>> +        * If we haven't matched a device specific compatible string, we need
-> >>>>>> +        * to work out if the generic compatible string we matched against was
-> >>>>>> +        * listed first in the compatible property.
-> >>>>>> +        */
-> >>>>>
-> >>>>> Can't we do this unconditionally, and thus drop the lvds_codec_data
-> >>>>> structure ?
-> >>>>
-> >>>> I don't think so, and the reason for this is that we have a corner case for
-> >>>> thine,thc63lvdm83d. Here is what's allowed (according to the documentation)
-> >>>> from what's supported upstream (+ this series):
-> >>>> "ti,ds90c185", "lvds-encoder"
-> >>>> "ti,ds90c187", "lvds-encoder"
-> >>>> "ti,sn75lvds83", "lvds-encoder"
-> >>>> "ti,ds90cf384a", "lvds-decoder"
-> >>>> "thine,thc63lvdm83d"
-> >>>>
-> >>>> As you can see from the examples above, in most cases it's enough to say it's
-> >>>> all good when we match a compatible string with index > 0, but for the thine
-> >>>> device you _have_ to match the string with index 0 as that's what's currently
-> >>>> documented (please see thine,thc63lvdm83d.txt) and that's what's supported
-> >>>> by device trees already (please see arch/arm/boot/dts/r8a7779-marzen.dts).
-> >>>
-> >>> How about the following logic ?
-> >>>
-> >>>       if (match_index("lvds-encoder") == 0 ||
-> >>>           match_index("lvds-decoder") == 0)
-> >>>               return -EINVAL;
-> >>>
-> >>>
-> >>
-> >> Now I see what you mean
-> >>
-> >>>> This patch "classifies" compatible strings, and it considers a good match
-> >>>> device specific compatible strings, or generic compatible strings as long
-> >>>> as they are not listed first.
-> >>>>
-> >>>> These days you can leverage the yaml files to validate the device trees,
-> >>>> therefore we should be focusing on writing yaml files in such a way we only
-> >>>> pass the checks we mean to, and by checks I mean:
-> >>>> make dtbs_check
-> >>>>
-> >>>> or more specifically, for this series:
-> >>>> make dtbs_check  DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-> >>>>
-> >>>> and that's of course on top of make dt_binding_check.
-> >>>
-> >>> Sure, but that doesn't prevent anyone ignoring the validation.
-> >>>
-> >>>> It's a very common requirement to have a part number specific compatible
-> >>>> string first followed by a generic (fallback) compatible string in the device trees,
-> >>>> most drivers for Renesas SoCs have similar requirements.
-> >>>>
-> >>>> If we start doing this here, we'll end up doing it elsewhere as well, and I really
-> >>>> think we shouldn't, but others may see things differently, so I'll wait for others
-> >>>> (and yourself with further comments) to jump in before doing any more work
-> >>>> on this patch.
-> >>>
-> >>> I agree with this argument, it would set a precedent, and is probably
-> >>> not worth duplicating similar code in all drivers. I wonder if this is
-> >>> something we could handle with core helpers, but maybe it's overkill.
-> >>
-> >> I was hoping others would comment as well, but perhaps this topic is not too exciting.
-> >>
-> >> Geert, what do you think about this? Is this something we should enforce
-> >> in drivers?
-> > 
-> > So IIUIC, you want to enforce the presence of both specific and generic
-> > compatible values (in that order) in the driver (except for
-> > "thine,thc63lvdm83d", as that predates the introduction of the generic
-> > compatible value)?
+On 19/11/2019 23:19, Mike Leach wrote:
+> Dynamically adds sysfs attributes for all connections defined in the CTI.
 > 
-> Yeah, this is what Laurent would want ideally.
+> Each connection has a triggers<N> sub-directory with name, in_signals,
+> in_types, out_signals and out_types as read-only parameters in the
+> directory. in_ or out_ parameters may be omitted if there are no in or
+> out signals for the connection.
 > 
-> > However, the driver would not really care about the actual hardware-specific
-> > value, as it would still match against the generic one, and the
-> > hardware-specific one may not even be listed in the driver's match table?
+> Additionally each device has a nr_cons in the connections sub-directory.
 > 
-> Exactly.
+> This allows clients to explore the connection and trigger signal details
+> without needing to refer to device tree or specification of the device.
 > 
-> > By definition, you can have one or more compatible values listed in a
-> > device node, from most-specific to least-specific.  Typically the driver
-> > cannot know if a more specific value is missing, but YAML DT binding
-> > validation can.
-> > 
-> > In this case it is a bit special, as there is a generic one involved, so
-> > you can assume there should be a more specific one, too.
-> > If you want to handle this in the core, you probably need to add an
-> > "is_generic" flag to struct of_device_id.
+> Standardised type information is provided for certain common functions -
+> e.g. snk_full for a trigger from a sink indicating full. Otherwise type
+> defaults to genio.
 > 
-> That's actually an interesting way of looking at this.
-> Laurent?
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> ---
+>   .../hwtracing/coresight/coresight-cti-sysfs.c | 376 +++++++++++++++++-
+>   drivers/hwtracing/coresight/coresight-cti.c   |  13 +-
+>   drivers/hwtracing/coresight/coresight-cti.h   |  11 +-
+>   3 files changed, 396 insertions(+), 4 deletions(-)
+> 
 
-I like the idea, it's better than doing it in each driver.
 
-> > Rob/Mark?
+The patch looks good overall, some minor comments below.
 
-Ping ?
 
-> >>>>>> +       if (!lvds_codec->data->device_specific) {
-> >>>>>> +               const struct of_device_id *match;
-> >>>>>> +               int compatible_index;
-> >>>>>> +
-> >>>>>> +               match = of_match_node(dev->driver->of_match_table,
-> >>>>>> +                                     dev->of_node);
-> >>>>>> +               compatible_index = of_property_match_string(dev->of_node,
-> >>>>>> +                                                           "compatible",
-> >>>>>> +                                                           match->compatible);
-> >>>>>> +               if (compatible_index == 0) {
-> >>>>>> +                       dev_err(dev, "Device specific compatible needed\n");
-> >>>>>> +                       return -EINVAL;
-> > 
-> > -ENODEV?
-> > So a "more generic" driver can take over?
-> > 
-> >>>>>> +               }
-> >>>>>> +       }
-> >>>>>> +
-> >>>>>>         lvds_codec->powerdown_gpio = devm_gpiod_get_optional(dev, "powerdown",
-> >>>>>>                                                              GPIOD_OUT_HIGH);
-> >>>>>>         if (IS_ERR(lvds_codec->powerdown_gpio)) {
-> >>>>>> @@ -92,7 +120,7 @@ static int lvds_codec_probe(struct platform_device *pdev)
-> >>>>>>
-> >>>>>>         lvds_codec->panel_bridge =
-> >>>>>>                 devm_drm_panel_bridge_add_typed(dev, panel,
-> >>>>>> -                                               lvds_codec->connector_type);
-> >>>>>> +                                       lvds_codec->data->connector_type);
-> >>>>>>         if (IS_ERR(lvds_codec->panel_bridge))
-> >>>>>>                 return PTR_ERR(lvds_codec->panel_bridge);
-> >>>>>>
-> >>>>>> @@ -119,18 +147,33 @@ static int lvds_codec_remove(struct platform_device *pdev)
-> >>>>>>         return 0;
-> >>>>>>  }
-> >>>>>>
-> >>>>>> +static const struct lvds_codec_data lvds_codec_decoder_data = {
-> >>>>>> +       .connector_type = DRM_MODE_CONNECTOR_DPI,
-> >>>>>> +       .device_specific = false,
-> >>>>>> +};
-> >>>>>> +
-> >>>>>> +static const struct lvds_codec_data lvds_codec_encoder_data = {
-> >>>>>> +       .connector_type = DRM_MODE_CONNECTOR_LVDS,
-> >>>>>> +       .device_specific = false,
-> >>>>>> +};
-> >>>>>> +
-> >>>>>> +static const struct lvds_codec_data lvds_codec_thc63lvdm83d_data = {
-> >>>>>> +       .connector_type = DRM_MODE_CONNECTOR_LVDS,
-> >>>>>> +       .device_specific = true,
-> >>>>>> +};
-> >>>>>> +
-> >>>>>>  static const struct of_device_id lvds_codec_match[] = {
-> >>>>>>         {
-> >>>>>>                 .compatible = "lvds-decoder",
-> >>>>>> -               .data = (void *)DRM_MODE_CONNECTOR_DPI,
-> >>>>>> +               .data = &lvds_codec_decoder_data,
-> >>>>>>         },
-> >>>>>>         {
-> >>>>>>                 .compatible = "lvds-encoder",
-> >>>>>> -               .data = (void *)DRM_MODE_CONNECTOR_LVDS,
-> >>>>>> +               .data = &lvds_codec_encoder_data,
-> >>>>>>         },
-> >>>>>>         {
-> >>>>>>                 .compatible = "thine,thc63lvdm83d",
-> >>>>>> -               .data = (void *)DRM_MODE_CONNECTOR_LVDS,
-> >>>>>> +               .data = &lvds_codec_thc63lvdm83d_data,
-> >>>>>>         },
-> >>>>>>         {},
-> >>>>>>  };
+> diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> index f800402f73da..91986732506f 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> @@ -8,6 +8,67 @@
 
--- 
-Regards,
 
-Laurent Pinchart
+> @@ -818,7 +890,306 @@ static struct attribute *coresight_cti_channel_attrs[] = {
+>   	NULL,
+>   };
+>   
+> -/* sysfs groups */
+> +/* Create the connections trigger groups and attrs dynamically */
+> +/*
+> + * Each connection has dynamic group triggers<N> + name, trigin/out sigs/types
+> + * attributes, + each device has static nr_trigger_cons giving the number
+> + * of groups. e.g. in sysfs:-
+> + * /cti_<name>/triggers0
+> + * /cti_<name>/triggers1
+> + * /cti_<name>/nr_trigger_cons
+> + * where nr_trigger_cons = 2
+> + */
+> +static ssize_t con_name_show(struct device *dev,
+> +			     struct device_attribute *attr,
+> +			     char *buf)
+> +{
+> +	struct dev_ext_attribute *ext_attr =
+> +		container_of(attr, struct dev_ext_attribute, attr);
+> +	struct cti_trig_con *con = (struct cti_trig_con *)ext_attr->var;
+> +
+> +	return scnprintf(buf, PAGE_SIZE, "%s\n", con->con_dev_name);
+> +}
+> +
+> +static ssize_t trigin_sig_show(struct device *dev,
+> +			       struct device_attribute *attr,
+> +			       char *buf)
+> +{
+> +	struct dev_ext_attribute *ext_attr =
+> +		container_of(attr, struct dev_ext_attribute, attr);
+> +	struct cti_trig_con *con = (struct cti_trig_con *)ext_attr->var;
+> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
+> +	struct cti_config *cfg = &drvdata->config;
+> +	unsigned long mask = con->con_in->used_mask;
+> +
+> +	return bitmap_print_to_pagebuf(true, buf, &mask, cfg->nr_trig_max);
+> +}
+> +
+> +static ssize_t trigout_sig_show(struct device *dev,
+> +				struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	struct dev_ext_attribute *ext_attr =
+> +		container_of(attr, struct dev_ext_attribute, attr);
+> +	struct cti_trig_con *con = (struct cti_trig_con *)ext_attr->var;
+> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
+> +	struct cti_config *cfg = &drvdata->config;
+> +	unsigned long mask = con->con_out->used_mask;
+> +
+> +	return bitmap_print_to_pagebuf(true, buf, &mask, cfg->nr_trig_max);
+> +}
+> +
+> +/* convert a sig type id to a name */
+> +static const char *
+> +cti_sig_type_name(struct cti_trig_con *con, int used_count, bool in)
+> +{
+> +	int idx = 0;
+> +	struct cti_trig_grp *grp = in ? con->con_in : con->con_out;
+> +
+> +	if (grp->sig_types) {
+> +		if (used_count < grp->nr_sigs)
+> +			idx = grp->sig_types[used_count];
+> +	}
+> +	return sig_type_names[idx];
+> +}
+> +
+> +static ssize_t trigin_type_show(struct device *dev,
+> +				struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	struct dev_ext_attribute *ext_attr =
+> +		container_of(attr, struct dev_ext_attribute, attr);
+> +	struct cti_trig_con *con = (struct cti_trig_con *)ext_attr->var;
+> +	int sig_idx, used = 0, b_sz = PAGE_SIZE;
+> +	const char *name;
+> +
+> +	for (sig_idx = 0; sig_idx < con->con_in->nr_sigs; sig_idx++) {
+> +		name = cti_sig_type_name(con, sig_idx, true);
+> +		used += scnprintf(buf + used, b_sz - used, "%s ", name);
+> +	}
+> +	used += scnprintf(buf + used, b_sz - used, "\n");
+> +	return used;
+> +}
+> +
+> +static ssize_t trigout_type_show(struct device *dev,
+> +				 struct device_attribute *attr,
+> +				 char *buf)
+> +{
+> +	struct dev_ext_attribute *ext_attr =
+> +		container_of(attr, struct dev_ext_attribute, attr);
+> +	struct cti_trig_con *con = (struct cti_trig_con *)ext_attr->var;
+> +	int sig_idx, used = 0, b_sz = PAGE_SIZE;
+> +	const char *name;
+> +
+> +	for (sig_idx = 0; sig_idx < con->con_out->nr_sigs; sig_idx++) {
+> +		name = cti_sig_type_name(con, sig_idx, false);
+> +		used += scnprintf(buf + used, b_sz - used, "%s ", name);
+> +	}
+> +	used += scnprintf(buf + used, b_sz - used, "\n");
+> +	return used;
+> +}
+> +
+> +/*
+> + * Array of show function names declared above to allow selection
+> + * for the connection attributes
+> + */
+> +static p_show_fn show_fns[CTI_CON_ATTR_MAX] = {
+> +	con_name_show,
+> +	trigin_sig_show,
+> +	trigout_sig_show,
+> +	trigin_type_show,
+> +	trigout_type_show,
+> +};
+> +
+> +static int cti_create_con_sysfs_attr(struct cti_trig_con *con,
+> +				     enum cti_conn_attr_type attr_type,
+> +				     int attr_idx)
+> +{
+> +	struct dev_ext_attribute *dev_ext_attr = 0;
+
+super minor nit: You may use "eattr" instead.
+
+
+> +	char *name = 0;
+> +
+> +	dev_ext_attr = kzalloc(sizeof(struct dev_ext_attribute), GFP_KERNEL);
+
+
+Could we not use devm_* alloc helpers everywhere ?
+
+> +	if (dev_ext_attr) {
+> +		name = kstrdup(con_attr_names[attr_type], GFP_KERNEL);
+> +		if (name) {
+> +			/* fill out the underlying attribute struct */
+> +			dev_ext_attr->attr.attr.name = name;
+> +			dev_ext_attr->attr.attr.mode = 0444;
+> +
+> +			/* now the device_attribute struct */
+> +			dev_ext_attr->attr.show = show_fns[attr_type];
+> +		} else {
+> +			kfree(dev_ext_attr);
+> +			return -ENOMEM;
+> +		}
+> +	} else {
+> +		return -ENOMEM;
+> +	}
+> +	dev_ext_attr->var = con;
+> +	con->con_attrs[attr_idx] = &dev_ext_attr->attr.attr;
+> +	return 0;
+> +}
+> +
+> +static struct attribute_group *
+> +cti_create_con_sysfs_group(struct cti_device *ctidev, int con_idx,
+> +			   struct cti_trig_con *con)
+> +{
+> +	struct attribute_group *group = NULL;
+> +
+> +	group = kzalloc(sizeof(struct attribute_group), GFP_KERNEL);
+> +	if (!group)
+> +		return NULL;
+> +
+> +	group->name = kasprintf(GFP_KERNEL, "triggers%d", con_idx);
+> +	if (!group->name) {
+> +		kfree(group);
+> +		return NULL;
+> +	}
+> +
+> +	ctidev->con_groups[con_idx + CORESIGHT_CTI_STATIC_GROUPS_MAX - 1]
+> +		= group;
+
+nit:
+	con_idx +=  CORESIGHT_CTI_STATIC_GROUPS_MAX - 1;
+	ctidev->con_groups[con_idx] = group;
+
+
+> +	con->attr_group = group;
+> +	return group;
+> +}
+> +
+> +/* create a triggers connection group and the attributes for that group */
+> +static int cti_create_con_attr_set(int con_idx, struct cti_device *ctidev,
+> +				   struct cti_trig_con *con)
+> +{
+> +	struct attribute_group *attr_group = NULL;
+> +	int attr_idx = 0;
+> +	int err = -ENOMEM;
+> +
+> +	attr_group = cti_create_con_sysfs_group(ctidev, con_idx, con);
+> +	if (!attr_group)
+> +		return -ENOMEM;
+> +
+> +	/* allocate NULL terminated array of attributes */
+> +	con->con_attrs = kcalloc(CTI_CON_ATTR_MAX + 1,
+> +				 sizeof(struct attribute *),
+> +				 GFP_KERNEL);
+
+Again why not devm_* allocations ? That takes the pain of freeing the
+memory away and helps prevent memory leaks.
+
+> +	if (!con->con_attrs)
+> +		return -ENOMEM;
+> +
+> +	err = cti_create_con_sysfs_attr(con, CTI_CON_ATTR_NAME, attr_idx++);
+> +	if (err)
+> +		return err;
+> +
+> +	if (con->con_in->nr_sigs > 0) {
+> +		err = cti_create_con_sysfs_attr(con, CTI_CON_ATTR_TRIGIN_SIG,
+> +						attr_idx++);
+> +		if (err)
+> +			return err;
+> +
+> +		err = cti_create_con_sysfs_attr(con, CTI_CON_ATTR_TRIGIN_TYPES,
+> +						attr_idx++);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	if (con->con_in->nr_sigs > 0) {
+> +		err = cti_create_con_sysfs_attr(con, CTI_CON_ATTR_TRIGOUT_SIG,
+> +						attr_idx++);
+> +		if (err)
+> +			return err;
+> +
+> +		err = cti_create_con_sysfs_attr(con, CTI_CON_ATTR_TRIGOUT_TYPES,
+> +						attr_idx++);
+> +		if (err)
+> +			return err;
+> +	}
+> +	attr_group->attrs = con->con_attrs;
+> +	return 0;
+> +}
+> +
+> +/* create the array of group pointers for the CTI sysfs groups */
+> +int cti_create_cons_groups(struct cti_device *ctidev)
+> +{
+> +	int i, nr_groups;
+> +
+> +	/* nr groups - dynamic + static + NULL terminator */
+> +	nr_groups = ctidev->nr_trig_con + CORESIGHT_CTI_STATIC_GROUPS_MAX;
+> +	ctidev->con_groups = kcalloc(nr_groups,
+> +				     sizeof(struct attribute_group *),
+> +				     GFP_KERNEL);
+> +	if (!ctidev->con_groups)
+> +		return -ENOMEM;
+> +
+> +	/* populate first locations with the static set of groups */
+> +	for (i = 0; i < (CORESIGHT_CTI_STATIC_GROUPS_MAX - 1); i++)
+> +		ctidev->con_groups[i] = coresight_cti_groups[i];
+> +
+> +	return 0;
+> +}
+> +
+
+To be frank, it doesn't make sense to have this split of populating
+the groups.
+
+> +int cti_create_cons_sysfs(struct cti_drvdata *drvdata)
+> +{
+> +	struct cti_device *ctidev = &drvdata->ctidev;
+> +	int err, con_idx = 0;
+> +	struct cti_trig_con *tc = NULL;
+> +
+> +	err = cti_create_cons_groups(ctidev);
+> +	if (err)
+> +		return err;
+> +
+> +	/* add dynamic set for each connection */
+> +	list_for_each_entry(tc, &ctidev->trig_cons, node) {
+> +		err = cti_create_con_attr_set(con_idx++, ctidev, tc);
+> +		if (err)
+> +			goto cons_sysfs_err;
+> +	}
+> +	return 0;
+> +
+> +cons_sysfs_err:
+> +	cti_destroy_cons_sysfs(ctidev);
+> +	return err;
+> +}
+> +
+> +void cti_free_con_attr(struct attribute *con_attr)
+> +{
+> +	struct device_attribute *dattr =
+> +		container_of(con_attr, struct device_attribute, attr);
+> +	struct dev_ext_attribute *dev_ext_attr =
+> +		container_of(dattr, struct dev_ext_attribute, attr);
+> +	kfree(con_attr->name);
+> +	kfree(dev_ext_attr);
+> +}
+> +
+> +void cti_free_con_group(struct attribute_group *attr_group)
+> +{
+> +	if (attr_group) {
+> +		kfree(attr_group->name);
+> +		kfree(attr_group);
+> +	}
+> +}
+> +
+> +void cti_destroy_cons_attr_set(int con_idx, struct cti_device *ctidev,
+> +			       struct cti_trig_con *con)
+> +{
+> +	int i;
+> +
+> +	if (con->con_attrs) {
+> +		for (i = 0; i < CTI_CON_ATTR_MAX; i++) {
+> +			if (con->con_attrs[i])
+> +				cti_free_con_attr(con->con_attrs[i]);
+> +		}
+> +		kfree(con->con_attrs);
+> +	}
+> +	cti_free_con_group(con->attr_group);
+> +}
+> +
+> +void cti_destroy_cons_sysfs(struct cti_device *ctidev)
+> +{
+> +	struct cti_trig_con *tc;
+
+minor nit: Please keep the variable name consistent if possible, helps a
+lot with the code following. i.e, tc vs con above in 
+cti_destroy_cons_attr_set().
+
+> +	int con_idx = 0;
+> +
+> +	list_for_each_entry(tc, &ctidev->trig_cons, node) {
+> +		cti_destroy_cons_attr_set(con_idx++, ctidev, tc);
+> +	}
+> +	kfree(ctidev->con_groups);
+> +}
+> +
+> +/* attribute and group sysfs tables. */
+>   static const struct attribute_group coresight_cti_group = {
+>   	.attrs = coresight_cti_attrs,
+>   };
+> @@ -838,7 +1209,8 @@ static const struct attribute_group coresight_cti_channels_group = {
+>   	.name = "channels",
+>   };
+>   
+> -const struct attribute_group *coresight_cti_groups[] = {
+> +const struct attribute_group *
+> +coresight_cti_groups[CORESIGHT_CTI_STATIC_GROUPS_MAX] = {
+>   	&coresight_cti_group,
+>   	&coresight_cti_mgmt_group,
+>   	&coresight_cti_regs_group,
+> diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
+> index cf116463149a..c3d63cc53bdd 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti.c
+> @@ -561,6 +561,9 @@ static void cti_device_release(struct device *dev)
+>   
+>   	mutex_lock(&ect_mutex);
+>   
+> +	/* clear the dynamic sysfs associate with connections */
+> +	cti_destroy_cons_sysfs(&drvdata->ctidev);
+> +
+>   	/* remove from the list */
+>   	list_for_each_entry_safe(ect_item, ect_tmp, &ect_net, node) {
+>   		if (ect_item == drvdata) {
+> @@ -636,12 +639,20 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
+>   		goto err_out;
+>   	}
+>   
+> +	/* create dynamic attributes for connections */
+> +	ret = cti_create_cons_sysfs(drvdata);
+> +	if (ret) {
+> +		pr_err("%s: create dynamic sysfs entries failed\n",
+> +		       cti_desc.name);
+
+nit: It may be a good idea to include the actual device name (rather 
+than just cti_xxx). so may be :
+
+  dev_err(dev, "%s:....", cti_desc.name) ?
+
+
+> +		goto err_out;
+> +	}
+
+
+Except for the devm_ alloc question, rest are fine.
+
+Suzuki
