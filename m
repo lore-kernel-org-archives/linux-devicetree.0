@@ -4,264 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97778C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 14:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA8AC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 14:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C66520833
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 14:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECD0A20833
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 14:56:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IL49D1OR"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="P2B78HtG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfLBOqG (ORCPT
+        id S1727436AbfLBO4X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 09:46:06 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:43095 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfLBOqF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 09:46:05 -0500
-Received: by mail-pj1-f65.google.com with SMTP id g4so4183722pjs.10
-        for <devicetree@vger.kernel.org>; Mon, 02 Dec 2019 06:46:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=EgBc9VM9B5hJ1sbfALHA6E1zLVyhAXo1MFpBabae6qw=;
-        b=IL49D1ORHBkEdylQCbcNyzrvk/s+gfJ3eVsYP6RsGiV7EE1k6MxMgfqF6jxlyIg9Mr
-         LuQMh32Ztk/TegedcU++/D2/w3wQeIS6OMSzufbBrS2nhUcS2Eu22wFKZq8bU15gvKma
-         PaecF9ntDUa12mIcfoQZVRwObp6W7NAuHDZypBEldvUa2hyxdgdySLETEhLGOxsGR3K5
-         2U/Pdm4XlZsgQC56HI928JmsRUEZ7HiTjjr5LEckMbFtB3RVeoD72m8VDt8+/LFLSPgp
-         9qyC5mxd8+89fRAQQCtZ2JDxc1MA9fRUbK4DTdoIe3RpOiImO4NRy99US2lTuRk8v6xt
-         iApg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=EgBc9VM9B5hJ1sbfALHA6E1zLVyhAXo1MFpBabae6qw=;
-        b=TXLlRnDH5P+P1ZIFMPBXm+ryuUZuTmLf2opzQNChztZSCzADMxyFrUsjh01a9X/x/o
-         DfAL4ZHgGuxgvhFy3HZroWe87PJzGM6MXKM21hXv3xUCATEALKNJr4yBQeCdffD7FUNS
-         VopNtP8mqwl7P3CBBPLe6HeTBWgw6AcYbpbydWDWah+MF02W1dJUADustsB+0PgsH+Uq
-         Dd7i6Uovgho++9hAY8Bw3V4OAQJEzPhGf05h/Yf1yD93GDyi1xAMh+LlWgAdmWhYwRS9
-         vFd8n/KIy3mYX/MsCUcsR4VN0cPEJKfufR9o2mHTmnyIdxXRgYFCXz4+En+0Gh8X82No
-         yEHg==
-X-Gm-Message-State: APjAAAUfoS7qgJkgukfu/azuoJT8sFCSF31mvTglgzq1spAHx4urMMBf
-        Zpxz/31Oql9S6CXaB3mjGiACxA==
-X-Google-Smtp-Source: APXvYqx4po8E82VeygFNfDxWOAhVE4Y4E3I4YFNShd+lN7Z3Y+pV99JNLF/PHhiBTzaj70JsQBmr1Q==
-X-Received: by 2002:a17:90a:353:: with SMTP id 19mr37365251pjf.128.1575297963291;
-        Mon, 02 Dec 2019 06:46:03 -0800 (PST)
-Received: from localhost.localdomain (li519-153.members.linode.com. [66.175.222.153])
-        by smtp.gmail.com with ESMTPSA id f10sm34347813pfd.28.2019.12.02.06.45.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 06:46:02 -0800 (PST)
-From:   Jun Nie <jun.nie@linaro.org>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, xuwei5@hisilicon.com, p.zabel@pengutronix.de,
-        opensource@jilayne.com, swinslow@gmail.com, jun.nie@linaro.org,
-        allison@lohutok.net, yuehaibing@huawei.com, tglx@linutronix.de,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, xuejiancheng@hisilicon.com
-Subject: [PATCH 3/3] ARM: dts: Update reset for hi3519 and hi3798cv200
-Date:   Mon,  2 Dec 2019 22:45:24 +0800
-Message-Id: <20191202144524.5391-4-jun.nie@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191202144524.5391-1-jun.nie@linaro.org>
-References: <20191202144524.5391-1-jun.nie@linaro.org>
+        Mon, 2 Dec 2019 09:56:23 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:51380 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727362AbfLBO4X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 09:56:23 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB2EqXHC018717;
+        Mon, 2 Dec 2019 15:56:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=sSH4hYZyJ+fBuXPL7aX02qrszJdNB5CLd0reHrC4urg=;
+ b=P2B78HtGWevh/e/1NZPL45ZzeOwIKlzmMdv06ho3x/wLHZXyX09QFV82aNPLFWXDH5O2
+ 9bu3CwHSDJPwfvB6zEd4P+7aA62gD9hCUExPyp4R8rsgreBbitV+n3e//SlQXhCNo7gi
+ vpqDAXayotOQr4TBNAS8UvoKfmoqWQJKg92XykaC+Grx9v2DTjbTkAY4kBQJdAQrx3eP
+ mXWzjz+16yLI3wyGGi9ujoF8ojuYPHJ5G+I+hYbGc6LFMHq2Kkg4o1B9uF+4m9q4BBzw
+ 76+MsEcFnajFOUa/0ISDeRJ6Si7oDbnTXsTeGp4bn2Z6EkLpNOSxonrSlaKhE+2sAy/G xg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wkg6ka6fe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Dec 2019 15:56:10 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 566F910002A;
+        Mon,  2 Dec 2019 15:56:10 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 42C582B1897;
+        Mon,  2 Dec 2019 15:56:10 +0100 (CET)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 2 Dec 2019 15:56:09
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <alexandre.torgue@st.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH 1/3] ARM: dts: stm32: remove useless clock-names from RTC node on stm32f429
+Date:   Mon, 2 Dec 2019 15:56:03 +0100
+Message-ID: <20191202145604.28872-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-02_02:2019-11-29,2019-12-02 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update reset for hi3519 and hi3798cv200 as driver is extended to
-support configurable reset operation type.
+On stm32f4 family RTC node doesn't need clock-names property.
 
-Signed-off-by: Jun Nie <jun.nie@linaro.org>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- arch/arm/boot/dts/hi3519.dtsi                 |  2 +-
- .../arm64/boot/dts/hisilicon/hi3798cv200.dtsi | 47 +++++++++++--------
- 2 files changed, 28 insertions(+), 21 deletions(-)
+ arch/arm/boot/dts/stm32f429.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/hi3519.dtsi b/arch/arm/boot/dts/hi3519.dtsi
-index 410409a0ed66..2335c8443d2d 100644
---- a/arch/arm/boot/dts/hi3519.dtsi
-+++ b/arch/arm/boot/dts/hi3519.dtsi
-@@ -37,7 +37,7 @@
- 	crg: clock-reset-controller@12010000 {
- 		compatible = "hisilicon,hi3519-crg";
- 		#clock-cells = <1>;
--		#reset-cells = <2>;
-+		#reset-cells = <3>;
- 		reg = <0x12010000 0x10000>;
- 	};
- 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-index 13821a0ff524..0a30aaae6bf2 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-@@ -9,8 +9,10 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/phy/phy.h>
-+#include <dt-bindings/reset/hisilicon-resets.h>
- #include <dt-bindings/reset/ti-syscon.h>
- 
-+
- / {
- 	compatible = "hisilicon,hi3798cv200";
- 	interrupt-parent = <&gic>;
-@@ -86,7 +88,7 @@
- 			compatible = "hisilicon,hi3798cv200-crg", "syscon", "simple-mfd";
- 			reg = <0x8a22000 0x1000>;
- 			#clock-cells = <1>;
--			#reset-cells = <2>;
-+			#reset-cells = <3>;
- 
- 			gmacphyrst: reset-controller {
- 				compatible = "ti,syscon-reset";
-@@ -103,7 +105,7 @@
- 			compatible = "hisilicon,hi3798cv200-sysctrl", "syscon";
- 			reg = <0x8000000 0x1000>;
- 			#clock-cells = <1>;
--			#reset-cells = <2>;
-+			#reset-cells = <3>;
- 		};
- 
- 		perictrl: peripheral-controller@8a20000 {
-@@ -118,20 +120,22 @@
- 				compatible = "hisilicon,hi3798cv200-usb2-phy";
- 				reg = <0x120 0x4>;
- 				clocks = <&crg HISTB_USB2_PHY1_REF_CLK>;
--				resets = <&crg 0xbc 4>;
-+				resets = <&crg 0xbc 4 HISI_RESET_DEFAULT>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
- 				usb2_phy1_port0: phy@0 {
- 					reg = <0>;
- 					#phy-cells = <0>;
--					resets = <&crg 0xbc 8>;
-+					resets = <&crg 0xbc 8
-+						  HISI_RESET_DEFAULT>;
- 				};
- 
- 				usb2_phy1_port1: phy@1 {
- 					reg = <1>;
- 					#phy-cells = <0>;
--					resets = <&crg 0xbc 9>;
-+					resets = <&crg 0xbc 9
-+						  HISI_RESET_DEFAULT>;
- 				};
- 			};
- 
-@@ -139,14 +143,15 @@
- 				compatible = "hisilicon,hi3798cv200-usb2-phy";
- 				reg = <0x124 0x4>;
- 				clocks = <&crg HISTB_USB2_PHY2_REF_CLK>;
--				resets = <&crg 0xbc 6>;
-+				resets = <&crg 0xbc 6 HISI_RESET_DEFAULT>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
- 				usb2_phy2_port0: phy@0 {
- 					reg = <0>;
- 					#phy-cells = <0>;
--					resets = <&crg 0xbc 10>;
-+					resets = <&crg 0xbc 10
-+						  HISI_RESET_DEFAULT>;
- 				};
- 			};
- 
-@@ -155,7 +160,7 @@
- 				reg = <0x850 0x8>;
- 				#phy-cells = <1>;
- 				clocks = <&crg HISTB_COMBPHY0_CLK>;
--				resets = <&crg 0x188 4>;
-+				resets = <&crg 0x188 4 HISI_RESET_DEFAULT>;
- 				assigned-clocks = <&crg HISTB_COMBPHY0_CLK>;
- 				assigned-clock-rates = <100000000>;
- 				hisilicon,fixed-mode = <PHY_TYPE_USB3>;
-@@ -166,7 +171,7 @@
- 				reg = <0x858 0x8>;
- 				#phy-cells = <1>;
- 				clocks = <&crg HISTB_COMBPHY1_CLK>;
--				resets = <&crg 0x188 12>;
-+				resets = <&crg 0x188 12 HISI_RESET_DEFAULT>;
- 				assigned-clocks = <&crg HISTB_COMBPHY1_CLK>;
- 				assigned-clock-rates = <100000000>;
- 				hisilicon,mode-select-bits = <0x0008 11 (0x3 << 11)>;
-@@ -306,7 +311,7 @@
- 			clocks = <&crg HISTB_SDIO0_CIU_CLK>,
- 				 <&crg HISTB_SDIO0_BIU_CLK>;
- 			clock-names = "ciu", "biu";
--			resets = <&crg 0x9c 4>;
-+			resets = <&crg 0x9c 4 HISI_RESET_DEFAULT>;
- 			reset-names = "reset";
- 			status = "disabled";
- 		};
-@@ -320,7 +325,7 @@
- 				 <&crg HISTB_MMC_SAMPLE_CLK>,
- 				 <&crg HISTB_MMC_DRV_CLK>;
- 			clock-names = "ciu", "biu", "ciu-sample", "ciu-drive";
--			resets = <&crg 0xa0 4>;
-+			resets = <&crg 0xa0 4 HISI_RESET_DEFAULT>;
- 			reset-names = "reset";
- 			status = "disabled";
- 		};
-@@ -525,8 +530,8 @@
- 			clocks = <&crg HISTB_ETH0_MAC_CLK>,
- 				 <&crg HISTB_ETH0_MACIF_CLK>;
- 			clock-names = "mac_core", "mac_ifc";
--			resets = <&crg 0xcc 8>,
--				 <&crg 0xcc 10>,
-+			resets = <&crg 0xcc 8 HISI_RESET_DEFAULT>,
-+				 <&crg 0xcc 10 HISI_RESET_DEFAULT>,
- 				 <&gmacphyrst 0>;
- 			reset-names = "mac_core", "mac_ifc", "phy";
- 			status = "disabled";
-@@ -540,8 +545,8 @@
- 			clocks = <&crg HISTB_ETH1_MAC_CLK>,
- 				 <&crg HISTB_ETH1_MACIF_CLK>;
- 			clock-names = "mac_core", "mac_ifc";
--			resets = <&crg 0xcc 9>,
--				 <&crg 0xcc 11>,
-+			resets = <&crg 0xcc 9 HISI_RESET_DEFAULT>,
-+				 <&crg 0xcc 11 HISI_RESET_DEFAULT>,
- 				 <&gmacphyrst 1>;
- 			reset-names = "mac_core", "mac_ifc", "phy";
- 			status = "disabled";
-@@ -578,7 +583,9 @@
- 				 <&crg HISTB_PCIE_SYS_CLK>,
- 				 <&crg HISTB_PCIE_BUS_CLK>;
- 			clock-names = "aux", "pipe", "sys", "bus";
--			resets = <&crg 0x18c 6>, <&crg 0x18c 5>, <&crg 0x18c 4>;
-+			resets = <&crg 0x18c 6 HISI_RESET_DEFAULT>,
-+				 <&crg 0x18c 5 HISI_RESET_DEFAULT>,
-+				 <&crg 0x18c 4 HISI_RESET_DEFAULT>;
- 			reset-names = "soft", "sys", "bus";
- 			phys = <&combphy1 PHY_TYPE_PCIE>;
- 			phy-names = "phy";
-@@ -593,7 +600,7 @@
- 				 <&crg HISTB_USB2_12M_CLK>,
- 				 <&crg HISTB_USB2_48M_CLK>;
- 			clock-names = "bus", "clk12", "clk48";
--			resets = <&crg 0xb8 12>;
-+			resets = <&crg 0xb8 12 HISI_RESET_DEFAULT>;
- 			reset-names = "bus";
- 			phys = <&usb2_phy1_port0>;
- 			phy-names = "usb";
-@@ -608,9 +615,9 @@
- 				 <&crg HISTB_USB2_PHY_CLK>,
- 				 <&crg HISTB_USB2_UTMI_CLK>;
- 			clock-names = "bus", "phy", "utmi";
--			resets = <&crg 0xb8 12>,
--				 <&crg 0xb8 16>,
--				 <&crg 0xb8 13>;
-+			resets = <&crg 0xb8 12 HISI_RESET_DEFAULT>,
-+				 <&crg 0xb8 16 HISI_RESET_DEFAULT>,
-+				 <&crg 0xb8 13 HISI_RESET_DEFAULT>;
- 			reset-names = "bus", "phy", "utmi";
- 			phys = <&usb2_phy1_port0>;
- 			phy-names = "usb";
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index 5c8a826b3195..ac9caaf4cf51 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -318,7 +318,6 @@
+ 			compatible = "st,stm32-rtc";
+ 			reg = <0x40002800 0x400>;
+ 			clocks = <&rcc 1 CLK_RTC>;
+-			clock-names = "ck_rtc";
+ 			assigned-clocks = <&rcc 1 CLK_RTC>;
+ 			assigned-clock-parents = <&rcc 1 CLK_LSE>;
+ 			interrupt-parent = <&exti>;
 -- 
-2.17.1
+2.15.0
 
