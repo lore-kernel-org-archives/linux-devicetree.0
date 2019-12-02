@@ -2,96 +2,108 @@ Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BF7C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A47C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F1B20833
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:22:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="kF36udmj";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="kF36udmj"
+	by mail.kernel.org (Postfix) with ESMTP id 28FF420848
+	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 17:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfLBRWL (ORCPT
+        id S1727453AbfLBRgR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 12:22:11 -0500
-Received: from node.akkea.ca ([192.155.83.177]:60936 "EHLO node.akkea.ca"
+        Mon, 2 Dec 2019 12:36:17 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:44818 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727460AbfLBRWL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Dec 2019 12:22:11 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id B6C324E200E;
-        Mon,  2 Dec 2019 17:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1575307330; bh=Tay7PkRhxC2/HjsR27QnZoDpIHZRaRRBRVcxi/0JbN0=;
-        h=From:To:Cc:Subject:Date;
-        b=kF36udmj79PxzlmPMUv7izKr4qbE/7DwPB17XqS2jgooFuBBFM69CWI8ydDdYleWt
-         +knkMlQsBVrcSjYiHBglkllwofuDV+mL7OfyL9woBAIKtMe538ZXdFjVsx/s3KfGcB
-         EclPrSIiz5KJG9cJV4JAG9FSfrQkffOC8IFFRIIs=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IzGH-TaFCzUL; Mon,  2 Dec 2019 17:22:10 +0000 (UTC)
-Received: from thinkpad-tablet.cg.shawcable.net (S0106905851b613e9.cg.shawcable.net [70.77.244.40])
-        by node.akkea.ca (Postfix) with ESMTPSA id 7E7054E2003;
-        Mon,  2 Dec 2019 17:22:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1575307330; bh=Tay7PkRhxC2/HjsR27QnZoDpIHZRaRRBRVcxi/0JbN0=;
-        h=From:To:Cc:Subject:Date;
-        b=kF36udmj79PxzlmPMUv7izKr4qbE/7DwPB17XqS2jgooFuBBFM69CWI8ydDdYleWt
-         +knkMlQsBVrcSjYiHBglkllwofuDV+mL7OfyL9woBAIKtMe538ZXdFjVsx/s3KfGcB
-         EclPrSIiz5KJG9cJV4JAG9FSfrQkffOC8IFFRIIs=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     devicetree@vger.kernel.org
+        id S1727670AbfLBRgR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 12:36:17 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ibpcL-000569-TZ; Mon, 02 Dec 2019 18:36:13 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Guo Ren <guoren@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH] dt-bindings: vendor-prefixes: Add a broadmobi entry
-Date:   Mon,  2 Dec 2019 10:22:03 -0700
-Message-Id: <20191202172203.11917-1-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
+        devicetree@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] arm64: dts: rockchip: Fix IOMMU second clock name
+Date:   Mon, 02 Dec 2019 18:36:13 +0100
+Message-ID: <2612427.5nXUCueWBK@diego>
+In-Reply-To: <20191202170028.26169-1-miquel.raynal@bootlin.com>
+References: <20191202170028.26169-1-miquel.raynal@bootlin.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Shanghai Broadmobi Communication Technology Co.,Ltd. for their modem
-dts entries.
+Hi Miquel,
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+Am Montag, 2. Dezember 2019, 18:00:28 CET schrieb Miquel Raynal:
+> By precedence, both the IOMMU driver and the bindings in the doc
+> impose two clocks to be filled in Rockchip device trees featuring an
+> IOMMU:
+> * The AXI clock called 'aclk'.
+> * The main peripheral bus clock (PCLK/HCL) called 'iface'.
+> 
+> Currently, the second clock in px30.dtsi is called 'hclk' and this
+> produces the following errors at boot:
+> 
+>         rk_iommu ff460f00.iommu: Failed to get clk 'iface': -2
+>         rk_iommu ff470f00.iommu: Failed to get clk 'iface': -2
+> 
+> Fix the PX30 device tree by renaming the second misnamed clock. The
+> issue has not been reported before probably because the clk_get() call
+> is optional for backward DT compatibility reasons.
+> 
+> Fixes: 7053e06b1422 ("arm64: dts: rockchip: add core dtsi file for PX30 SoCs")
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 6046f4555852..fa657235dbda 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -149,6 +149,8 @@ patternProperties:
-     description: Bosch Sensortec GmbH
-   "^boundary,.*":
-     description: Boundary Devices Inc.
-+  "^broadmobi,.*":
-+    description: Shanghai Broadmobi Communication Technology Co.,Ltd.
-   "^brcm,.*":
-     description: Broadcom Corporation
-   "^buffalo,.*":
--- 
-2.17.1
+A similar for that issue is already on its way into mainline for 5.5:
+https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/commit/?h=for-next&id=8e57eed2047b9361deb8c5dc4cc3d4e679c5ce50
+
+Heiko
+
+
+> ---
+>  arch/arm64/boot/dts/rockchip/px30.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> index eb992d60e6ba..1fd12bd09e83 100644
+> --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> @@ -831,7 +831,7 @@
+>  		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+>  		interrupt-names = "vopb_mmu";
+>  		clocks = <&cru ACLK_VOPB>, <&cru HCLK_VOPB>;
+> -		clock-names = "aclk", "hclk";
+> +		clock-names = "aclk", "iface";
+>  		power-domains = <&power PX30_PD_VO>;
+>  		#iommu-cells = <0>;
+>  		status = "disabled";
+> @@ -863,7 +863,7 @@
+>  		interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+>  		interrupt-names = "vopl_mmu";
+>  		clocks = <&cru ACLK_VOPL>, <&cru HCLK_VOPL>;
+> -		clock-names = "aclk", "hclk";
+> +		clock-names = "aclk", "iface";
+>  		power-domains = <&power PX30_PD_VO>;
+>  		#iommu-cells = <0>;
+>  		status = "disabled";
+> 
+
+
+
 
