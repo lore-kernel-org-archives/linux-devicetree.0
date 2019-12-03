@@ -2,183 +2,211 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C89CC43215
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 05:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA76C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 06:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6CE206E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 05:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF2B20684
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 06:38:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="NbCUwlha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfLCFvk (ORCPT
+        id S1727093AbfLCGiT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:51:40 -0500
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:6594 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfLCFvj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 00:51:39 -0500
-IronPort-SDR: o/j+Ri+xO4fWTIVCdgPBUzjtzOJlOQ4wmggRu6QZca0TCBOkHqE4ZMckMY0XgpgEFCwVAkOZdJ
- zH0Di0t2eFwTMoCX5+Dmbv/B30Kz8UeQbcwSlJRrRyvBRAArhUElLv2NMKH+zppw4ZC7dOxlWK
- AOMf3uRfAIM2u7Wk4Qq86K3+6lV5vqjvPpzQSFfW8sP63eqIdEg5mIdaN5zTAybmjTxgYgnNgL
- KxJgiYocZbKXHSbByjv5bF9N1WRypaYrkWAm9RhI0RIYJkMYks64vQIn8f/LUTdW04Df3YiDyu
- xKI=
-X-IronPort-AV: E=Sophos;i="5.69,272,1571731200"; 
-   d="scan'208";a="45589731"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 02 Dec 2019 21:51:38 -0800
-IronPort-SDR: i8krjONcTTsnPkHY7SRiGdPmITr+0xNAXFXEgjkJWTG1D1tRaDcT2sdw0OnXTIXhUqEDFgzvAR
- dttKo+ORd63AvM4to/DyzDuJF57oI5Vi7/iYpzrQEkc3xIqj3eJT457bxirU8BrDkuqz8apUvw
- JxXTyf13gnmnt2Ln1nepE0IY1Dr7ZC1/mxI+i6nWcNIcJmX2GgkCgi2Uo1v6wmGd1b+yqVAN9T
- 0VLnn5Y5apijUzN7Hq0gIyZaQmf5LOaoYKcT6i2bJwuZAsOGE6Kp5TQMK0MgNeNdOFviPXHdfV
- l0k=
-Subject: Re: [PATCH v3 4/7] dt-bindings: gpio: Add gpio-repeater bindings
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-CC:     Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-5-geert+renesas@glider.be>
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-Message-ID: <11ae473f-cee1-241b-174c-915dc46209b1@mentor.com>
-Date:   Tue, 3 Dec 2019 11:21:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 3 Dec 2019 01:38:19 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38384 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfLCGiS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 01:38:18 -0500
+Received: by mail-io1-f68.google.com with SMTP id u24so2445967iob.5
+        for <devicetree@vger.kernel.org>; Mon, 02 Dec 2019 22:38:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+wpTQKnkngieuqXuzL7uZpLiKACy2LcoAuQquti9jps=;
+        b=NbCUwlhamyMm8r7AOBEKPKTnKIR8a03HSnFaFm5T29JB6EoEHzTfUYuqeWVTovEJuR
+         PEi7n0RtUBpm5MP+F4XmS8zG/MtaaUPC4wP/N8wkWP+6nC5rZS1IdlTcS+wAa/1hrZO1
+         UZDjYdywaEr0Jq66vc3clKK8ZF6mQZ1KuGSP8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+wpTQKnkngieuqXuzL7uZpLiKACy2LcoAuQquti9jps=;
+        b=dUJBLzfxV4pVe+mowCLfS6yxhCZUWekkG3kXrUd/+KxT0nWMF6mp1vmKtdA9Zv7g5m
+         CxWxlcWSrw9xhTKLQNkOq9nfyXBcylr5EHnp4SwLWAcpFSY3blD3is9IRHaBHtaMoGjV
+         7QdLgjwcvT/ZgvpJu7abTQblyny3w33PjDORniUaeNCnzetdBBe1qSkSY5u1A4HsKL+L
+         jPPtjZqadXuhtDpcjfHqK48wiCfzgiqWA6CZCSKxIutZJoznEoOb/1p+ESohwwb/lgwO
+         hFk0SFtBtsJD0yMTz136OUC1OrCGrMrzjRYC4dG04Ad2kD/qN/mK9S6Bf0+fF9IqppYk
+         tuBg==
+X-Gm-Message-State: APjAAAUElHfGpGvV6J9GNuhw67Xm6NIxj8gedobYe0oKtWaAvIYAKC1J
+        j5pGl8En6M0USGOtX2E+2IkJnVZ5WvroyMj+u4Wb3A==
+X-Google-Smtp-Source: APXvYqzw5MRI9bLbpC8aBKtEMr/lv/4bW1UrRcpCmyT5f0lq7NP3QUXl7E1sr2Kqyin1ufYe3yt6t3462BRba831Hcg=
+X-Received: by 2002:a5d:804e:: with SMTP id b14mr1170073ior.77.1575355097154;
+ Mon, 02 Dec 2019 22:38:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191127084253.16356-5-geert+renesas@glider.be>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+References: <20191025175625.8011-1-jagan@amarulasolutions.com>
+ <20191025175625.8011-5-jagan@amarulasolutions.com> <20191028153427.pc3tnoz2d23filhx@hendrix>
+ <CAMty3ZCisTrFGjzHyqSofqFAsKSLV1n2xP5Li3Lonhdi0WUZVA@mail.gmail.com>
+ <20191029085401.gvqpwmmpyml75vis@hendrix> <CAMty3ZAWPZSHtAZDf_0Dpx588YGGv3pJX1cXMfkZus3+WF94cA@mail.gmail.com>
+ <20191103173227.GF7001@gilmour> <CAMty3ZD5uxU=xb0z7PWaXzodYbWRJkP9HjGX-HZYFT4bwk0GOg@mail.gmail.com>
+ <20191122181820.GQ4345@gilmour.lan> <CAMty3ZDePC=B-DgfCcjRhJTeciwZmSEU-c4u1=sN_Hs0RgbC7Q@mail.gmail.com>
+ <20191128175134.kcgtylfo4ax6ifz7@gilmour.lan>
+In-Reply-To: <20191128175134.kcgtylfo4ax6ifz7@gilmour.lan>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Tue, 3 Dec 2019 12:08:06 +0530
+Message-ID: <CAMty3ZBBkAk3==9u9XS3utms8GZD-5wPKu1WSR3byh5h-tY8aw@mail.gmail.com>
+Subject: Re: [PATCH v11 4/7] drm/sun4i: dsi: Handle bus clock explicitly
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Nov 28, 2019 at 11:21 PM Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> On Sat, Nov 23, 2019 at 01:20:21AM +0530, Jagan Teki wrote:
+> > > > Please have a look at this snippet, I have used your second
+> > > > suggestions. let me know if you have any comments?
+> > > >
+> > > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > > b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > > index 8fa90cfc2ac8..91c95e56d870 100644
+> > > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > > @@ -1109,24 +1109,36 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+> > > >          return PTR_ERR(dsi->regulator);
+> > > >      }
+> > > >
+> > > > -    dsi->regs = devm_regmap_init_mmio_clk(dev, "bus", base,
+> > > > -                          &sun6i_dsi_regmap_config);
+> > > > -    if (IS_ERR(dsi->regs)) {
+> > > > -        dev_err(dev, "Couldn't create the DSI encoder regmap\n");
+> > > > -        return PTR_ERR(dsi->regs);
+> > > > -    }
+> > > > -
+> > > >      dsi->reset = devm_reset_control_get_shared(dev, NULL);
+> > > >      if (IS_ERR(dsi->reset)) {
+> > > >          dev_err(dev, "Couldn't get our reset line\n");
+> > > >          return PTR_ERR(dsi->reset);
+> > > >      }
+> > > >
+> > > > +    dsi->regs = regmap_init_mmio(dev, base, &sun6i_dsi_regmap_config);
+> > >
+> > > You should use the devm variant here
+> >
+> > Sure.
+> >
+> > >
+> > > > +    if (IS_ERR(dsi->regs)) {
+> > > > +        dev_err(dev, "Couldn't init regmap\n");
+> > > > +        return PTR_ERR(dsi->regs);
+> > > > +    }
+> > > > +
+> > > > +    dsi->bus_clk = devm_clk_get(dev, NULL);
+> > >
+> > > I guess you still need to pass 'bus' here?
+> >
+> > But the idea here is not to specify clock name explicitly to support
+> > A64. otherwise A64 would fail as we are not specifying the clock-names
+> > explicitly on dsi node.
+>
+> Right. But you have no guarantee that the bus clock is going to be the
+> first one on the other SoCs either.
+>
+> What about something like that instead:
+>
+> char *clk_name = NULL;
+> if (dsi->has_mod_clk)
+>     clk_name = "bus";
+>
+> clk = devm_clk_get(dev, clk_name);
+> if (IS_ERR(clk))
+>     return PTR_ERR(clk));
+>
+> regmap_mmio_attach_clk(regmap, clk);
 
-On 27/11/19 2:12 PM, Geert Uytterhoeven wrote:
-> Add Device Tree bindings for a GPIO repeater, with optional translation
-> of physical signal properties.  This is useful for describing explicitly
-> the presence of e.g. an inverter on a GPIO line, and was inspired by the
-> non-YAML gpio-inverter bindings by Harish Jenny K N
-> <harish_kandiga@mentor.com>[1].
->
-> Note that this is different from a GPIO Nexus Node[2], which cannot do
-> physical signal property translation.
->
-> While an inverter can be described implicitly by exchanging the
-> GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags, this has its limitations.
-> Each GPIO line has only a single GPIO_ACTIVE_* flag, but applies to both
-> th provider and consumer sides:
->   1. The GPIO provider (controller) looks at the flags to know the
->      polarity, so it can translate between logical (active/not active)
->      and physical (high/low) signal levels.
->   2. While the signal polarity is usually fixed on the GPIO consumer
->      side (e.g. an LED is tied to either the supply voltage or GND),
->      it may be configurable on some devices, and both sides need to
->      agree.  Hence the GPIO_ACTIVE_* flag as seen by the consumer must
->      match the actual polarity.
->      There exists a similar issue with interrupt flags, where both the
->      interrupt controller and the device generating the interrupt need
->      to agree, which breaks in the presence of a physical inverter not
->      described in DT (see e.g. [3]).
->
-> [1] "[PATCH V4 2/2] gpio: inverter: document the inverter bindings"
->     https://lore.kernel.org/linux-gpio/1561699236-18620-3-git-send-email-harish_kandiga@mentor.com/
->
-> [2] Devicetree Specification v0.3-rc2, Section 2.5
->     https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3-rc2
->
-> [3] "[PATCH] wlcore/wl18xx: Add invert-irq OF property for physically
->     inverted IRQ"
->     https://lore.kernel.org/linux-renesas-soc/20190607172958.20745-1-erosca@de.adit-jv.com/
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v3:
->   - New.
-> ---
->  .../bindings/gpio/gpio-repeater.yaml          | 53 +++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml b/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
-> new file mode 100644
-> index 0000000000000000..efdee0c3be43f731
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/gpio-repeater.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: GPIO Repeater
-> +
-> +maintainers:
-> +  - Harish Jenny K N <harish_kandiga@mentor.com>
-> +  - Geert Uytterhoeven <geert+renesas@glider.be>
-> +
-> +description:
-> +  This represents a repeater for one or more GPIOs, possibly including physical
-> +  signal property translation (e.g. polarity inversion).
-> +
-> +properties:
-> +  compatible:
-> +    const: gpio-repeater
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  gpio-controller: true
-> +
-> +  gpios:
-> +    description:
-> +      Phandle and specifier, one for each repeated GPIO.
-> +
-> +  gpio-line-names:
-> +    description:
-> +      Strings defining the names of the GPIO lines going out of the GPIO
-> +      controller.
-> +
-> +required:
-> +  - compatible
-> +  - "#gpio-cells"
-> +  - gpio-controller
-> +  - gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # Device node describing a polarity inverter for a single GPIO
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    inverter: gpio-repeater {
-> +        compatible = "gpio-repeater";
-> +        #gpio-cells = <2>;
-> +        gpio-controller;
-> +        gpios = <&gpio 95 GPIO_ACTIVE_LOW>;
-> +    };
+This makes sense, thanks for your input. I have tested in A33, A64.
 
+>
+> >
+> > dsi: dsi@1ca0000 {
+> >        compatible = "allwinner,sun50i-a64-mipi-dsi";
+> >        reg = <0x01ca0000 0x1000>;
+> >        interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> >        clocks = <&ccu CLK_BUS_MIPI_DSI>;
+> >        resets = <&ccu RST_BUS_MIPI_DSI>;
+> >       phys = <&dphy>;
+> >       phy-names = "dphy";
+> > .....
+> > };
+> >
+> > >
+> > > > +    if (IS_ERR(dsi->bus_clk)) {
+> > > > +        dev_err(dev, "Couldn't get the DSI bus clock\n");
+> > > > +        ret = PTR_ERR(dsi->bus_clk);
+> > > > +        goto err_regmap;
+> > > > +    } else {
+> > > > +        printk("Jagan.. Got the BUS clock\n");
+> > > > +        ret = regmap_mmio_attach_clk(dsi->regs, dsi->bus_clk);
+> > > > +        if (ret)
+> > > > +            goto err_bus_clk;
+> > > > +    }
+> > > > +
+> > > >      if (dsi->variant->has_mod_clk) {
+> > > >          dsi->mod_clk = devm_clk_get(dev, "mod");
+> > > >          if (IS_ERR(dsi->mod_clk)) {
+> > > >              dev_err(dev, "Couldn't get the DSI mod clock\n");
+> > > > -            return PTR_ERR(dsi->mod_clk);
+> > > > +            ret = PTR_ERR(dsi->mod_clk);
+> > > > +            goto err_attach_clk;
+> > > >          }
+> > > >      }
+> > > >
+> > > > @@ -1167,6 +1179,14 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+> > > >  err_unprotect_clk:
+> > > >      if (dsi->variant->has_mod_clk)
+> > > >          clk_rate_exclusive_put(dsi->mod_clk);
+> > > > +err_attach_clk:
+> > > > +    if (!IS_ERR(dsi->bus_clk))
+> > > > +        regmap_mmio_detach_clk(dsi->regs);
+> > > > +err_bus_clk:
+> > > > +    if (!IS_ERR(dsi->bus_clk))
+> > > > +        clk_put(dsi->bus_clk);
+> > > > +err_regmap:
+> > > > +    regmap_exit(dsi->regs);
+> > > >      return ret;
+> > > >  }
+> > > >
+> > > > @@ -1181,6 +1201,13 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
+> > > >      if (dsi->variant->has_mod_clk)
+> > > >          clk_rate_exclusive_put(dsi->mod_clk);
+> > > >
+> > > > +    if (!IS_ERR(dsi->bus_clk)) {
+> > > > +        regmap_mmio_detach_clk(dsi->regs);
+> > > > +        clk_put(dsi->bus_clk);
+> > >
+> > > This will trigger a warning, you put down the reference twice
+> >
+> > You mean regmap_mmio_detach_clk will put the clk?
+>
+> No, devm_clk_get will.
 
-just a suggestion: giving a gpio-line-names in the example would look useful.
+Got it. Will update and send v12.
 
+Jagan.
