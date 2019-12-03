@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AE5C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF312C33CB5
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8CD2084B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18BE2146E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfLCOPb (ORCPT
+        id S1726505AbfLCOPb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Tue, 3 Dec 2019 09:15:31 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59008 "EHLO
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59036 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbfLCOPb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:15:31 -0500
+        with ESMTP id S1726298AbfLCOPa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:15:30 -0500
 Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C3DAC290682;
-        Tue,  3 Dec 2019 14:15:29 +0000 (GMT)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 61A4A290573;
+        Tue,  3 Dec 2019 14:15:28 +0000 (GMT)
 From:   Boris Brezillon <boris.brezillon@collabora.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Lucas Stach <l.stach@pengutronix.de>,
@@ -48,11 +48,10 @@ Cc:     Lucas Stach <l.stach@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v4 10/11] drm/bridge: Add an ->atomic_check() hook
-Date:   Tue,  3 Dec 2019 15:15:14 +0100
-Message-Id: <20191203141515.3597631-11-boris.brezillon@collabora.com>
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: [PATCH v4 08/11] drm/bridge: Add a drm_bridge_state object
+Date:   Tue,  3 Dec 2019 15:15:12 +0100
+Message-Id: <20191203141515.3597631-9-boris.brezillon@collabora.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191203141515.3597631-1-boris.brezillon@collabora.com>
 References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
@@ -63,181 +62,469 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-So that bridge drivers have a way to check/reject an atomic operation.
-The drm_atomic_bridge_chain_check() (which is just a wrapper around
-the ->atomic_check() hook) is called in place of
-drm_bridge_chain_mode_fixup() (when ->atomic_check() is not implemented,
-the core falls back on ->mode_fixup(), so the behavior should stay
-the same for existing bridge drivers).
+One of the last remaining objects to not have its atomic state.
+
+This is being motivated by our attempt to support runtime bus-format
+negotiation between elements of the bridge chain.
+This patch just paves the road for such a feature by adding a new
+drm_bridge_state object inheriting from drm_private_obj so we can
+re-use some of the existing state initialization/tracking logic.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
 Changes in v4:
-* Add R-bs
+* Fix the doc
+* Kill default helpers (inlined)
+* Fix drm_atomic_get_bridge_state() to check for an ERR_PTR()
+* Add Neil's R-b
 
 Changes in v3:
 * None
 
 Changes in v2:
-* Clarify the fact that ->atomic_check() is replacing ->mode_fixup()
+* Use drm_for_each_bridge_in_chain()
+* Rename helpers to be more consistent with the rest of the DRM API
+* Improve/fix the doc
 ---
- drivers/gpu/drm/drm_atomic_helper.c | 12 +++---
- drivers/gpu/drm/drm_bridge.c        | 62 +++++++++++++++++++++++++++++
- include/drm/drm_bridge.h            | 29 +++++++++++++-
- 3 files changed, 96 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/drm_atomic.c        |  39 +++++++++
+ drivers/gpu/drm/drm_atomic_helper.c |  20 +++++
+ drivers/gpu/drm/drm_bridge.c        | 118 ++++++++++++++++++++++++++--
+ include/drm/drm_atomic.h            |   3 +
+ include/drm/drm_bridge.h            | 116 +++++++++++++++++++++++++++
+ 5 files changed, 290 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/gpu/drm/drm_atomic.c b/drivers/gpu/drm/drm_atomic.c
+index 14aeaf736321..02f8034f5240 100644
+--- a/drivers/gpu/drm/drm_atomic.c
++++ b/drivers/gpu/drm/drm_atomic.c
+@@ -30,6 +30,7 @@
+ 
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_atomic_uapi.h>
++#include <drm/drm_bridge.h>
+ #include <drm/drm_debugfs.h>
+ #include <drm/drm_device.h>
+ #include <drm/drm_drv.h>
+@@ -1015,6 +1016,44 @@ static void drm_atomic_connector_print_state(struct drm_printer *p,
+ 		connector->funcs->atomic_print_state(p, state);
+ }
+ 
++/**
++ * drm_atomic_add_encoder_bridges - add bridges attached to an encoder
++ * @state: atomic state
++ * @encoder: DRM encoder
++ *
++ * This function adds all bridges attached to @encoder. This is needed to add
++ * bridge states to @state and make them available when
++ * &bridge_funcs.atomic_{check,pre_enable,enable,disable_post_disable}() are
++ * called
++ *
++ * Returns:
++ * 0 on success or can fail with -EDEADLK or -ENOMEM. When the error is EDEADLK
++ * then the w/w mutex code has detected a deadlock and the entire atomic
++ * sequence must be restarted. All other errors are fatal.
++ */
++int
++drm_atomic_add_encoder_bridges(struct drm_atomic_state *state,
++			       struct drm_encoder *encoder)
++{
++	struct drm_bridge_state *bridge_state;
++	struct drm_bridge *bridge;
++
++	if (!encoder)
++		return 0;
++
++	DRM_DEBUG_ATOMIC("Adding all bridges for [encoder:%d:%s] to %p\n",
++			 encoder->base.id, encoder->name, state);
++
++	drm_for_each_bridge_in_chain(encoder, bridge) {
++		bridge_state = drm_atomic_get_bridge_state(state, bridge);
++		if (IS_ERR(bridge_state))
++			return PTR_ERR(bridge_state);
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL(drm_atomic_add_encoder_bridges);
++
+ /**
+  * drm_atomic_add_affected_connectors - add connectors for crtc
+  * @state: atomic state
 diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index e2f7f336a2d2..a358f81670e9 100644
+index 29c3115bf9e2..e2f7f336a2d2 100644
 --- a/drivers/gpu/drm/drm_atomic_helper.c
 +++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -437,12 +437,12 @@ mode_fixup(struct drm_atomic_state *state)
- 		funcs = encoder->helper_private;
+@@ -730,6 +730,26 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
+ 			return ret;
+ 	}
  
- 		bridge = drm_bridge_chain_get_first_bridge(encoder);
--		ret = drm_bridge_chain_mode_fixup(bridge,
--					&new_crtc_state->mode,
--					&new_crtc_state->adjusted_mode);
--		if (!ret) {
--			DRM_DEBUG_ATOMIC("Bridge fixup failed\n");
--			return -EINVAL;
-+		ret = drm_atomic_bridge_chain_check(bridge,
-+						    new_crtc_state,
-+						    new_conn_state);
-+		if (ret) {
-+			DRM_DEBUG_ATOMIC("Bridge atomic check failed\n");
++	/*
++	 * Iterate over all connectors again, and add all affected bridges to
++	 * the state.
++	 */
++	for_each_oldnew_connector_in_state(state, connector,
++					   old_connector_state,
++					   new_connector_state, i) {
++		struct drm_encoder *encoder;
++
++		encoder = old_connector_state->best_encoder;
++		ret = drm_atomic_add_encoder_bridges(state, encoder);
++		if (ret)
 +			return ret;
- 		}
- 
- 		if (funcs && funcs->atomic_check) {
++
++		encoder = new_connector_state->best_encoder;
++		ret = drm_atomic_add_encoder_bridges(state, encoder);
++		if (ret)
++			return ret;
++	}
++
+ 	ret = mode_valid(state);
+ 	if (ret)
+ 		return ret;
 diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-index 15b21ff6f1fe..557c29cae51b 100644
+index b6517b4fa3d1..bf5a2243a115 100644
 --- a/drivers/gpu/drm/drm_bridge.c
 +++ b/drivers/gpu/drm/drm_bridge.c
-@@ -624,6 +624,68 @@ void drm_atomic_bridge_chain_enable(struct drm_bridge *bridge,
+@@ -25,6 +25,7 @@
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ 
++#include <drm/drm_atomic_state_helper.h>
+ #include <drm/drm_bridge.h>
+ #include <drm/drm_encoder.h>
+ 
+@@ -89,6 +90,48 @@ void drm_bridge_remove(struct drm_bridge *bridge)
+ }
+ EXPORT_SYMBOL(drm_bridge_remove);
+ 
++static struct drm_private_state *
++drm_bridge_atomic_duplicate_priv_state(struct drm_private_obj *obj)
++{
++	struct drm_bridge *bridge = drm_priv_to_bridge(obj);
++	struct drm_bridge_state *state;
++
++	if (bridge->funcs->atomic_duplicate_state) {
++		state = bridge->funcs->atomic_duplicate_state(bridge);
++
++		return state ? &state->base : NULL;
++	}
++
++	if (WARN_ON(!bridge->base.state))
++		return NULL;
++
++	state = kzalloc(sizeof(*state), GFP_KERNEL);
++	if (!state)
++		return NULL;
++
++	__drm_atomic_helper_bridge_duplicate_state(bridge, state);
++
++	return &state->base;
++}
++
++static void
++drm_bridge_atomic_destroy_priv_state(struct drm_private_obj *obj,
++				     struct drm_private_state *s)
++{
++	struct drm_bridge_state *state = drm_priv_to_bridge_state(s);
++	struct drm_bridge *bridge = drm_priv_to_bridge(obj);
++
++	if (bridge->funcs->atomic_destroy_state)
++		bridge->funcs->atomic_destroy_state(bridge, state);
++	else
++		kfree(state);
++}
++
++static const struct drm_private_state_funcs drm_bridge_priv_state_funcs = {
++	.atomic_duplicate_state = drm_bridge_atomic_duplicate_priv_state,
++	.atomic_destroy_state = drm_bridge_atomic_destroy_priv_state,
++};
++
+ /**
+  * drm_bridge_attach - attach the bridge to an encoder's chain
+  *
+@@ -114,6 +157,7 @@ EXPORT_SYMBOL(drm_bridge_remove);
+ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
+ 		      struct drm_bridge *previous)
+ {
++	struct drm_bridge_state *state;
+ 	int ret;
+ 
+ 	if (!encoder || !bridge)
+@@ -135,15 +179,40 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
+ 
+ 	if (bridge->funcs->attach) {
+ 		ret = bridge->funcs->attach(bridge);
+-		if (ret < 0) {
+-			list_del(&bridge->chain_node);
+-			bridge->dev = NULL;
+-			bridge->encoder = NULL;
+-			return ret;
+-		}
++		if (ret < 0)
++			goto err_reset_bridge;
+ 	}
+ 
++	if (bridge->funcs->atomic_reset) {
++		state = bridge->funcs->atomic_reset(bridge);
++	} else {
++		state = kzalloc(sizeof(*state), GFP_KERNEL);
++		if (state)
++			__drm_atomic_helper_bridge_reset(bridge, state);
++		else
++			state = ERR_PTR(-ENOMEM);
++	}
++
++	if (IS_ERR(state)) {
++		ret = PTR_ERR(state);
++		goto err_detach_bridge;
++	}
++
++	drm_atomic_private_obj_init(bridge->dev, &bridge->base,
++				    &state->base,
++				    &drm_bridge_priv_state_funcs);
++
+ 	return 0;
++
++err_detach_bridge:
++	if (bridge->funcs->detach)
++		bridge->funcs->detach(bridge);
++
++err_reset_bridge:
++	bridge->dev = NULL;
++	bridge->encoder = NULL;
++	list_del(&bridge->chain_node);
++	return ret;
+ }
+ EXPORT_SYMBOL(drm_bridge_attach);
+ 
+@@ -155,6 +224,8 @@ void drm_bridge_detach(struct drm_bridge *bridge)
+ 	if (WARN_ON(!bridge->dev))
+ 		return;
+ 
++	drm_atomic_private_obj_fini(&bridge->base);
++
+ 	if (bridge->funcs->detach)
+ 		bridge->funcs->detach(bridge);
+ 
+@@ -516,6 +587,41 @@ void drm_atomic_bridge_chain_enable(struct drm_bridge *bridge,
  }
  EXPORT_SYMBOL(drm_atomic_bridge_chain_enable);
  
-+static int drm_atomic_bridge_check(struct drm_bridge *bridge,
-+				   struct drm_crtc_state *crtc_state,
-+				   struct drm_connector_state *conn_state)
++/**
++ * __drm_atomic_helper_bridge_reset() - Initialize a bridge state to its
++ *					default
++ * @bridge: the bridge this state is refers to
++ * @state: bridge state to initialize
++ *
++ * Initialize the bridge state to default values. This is meant to be* called
++ * by the bridge &drm_plane_funcs.reset hook for bridges that subclass the
++ * bridge state.
++ */
++void __drm_atomic_helper_bridge_reset(struct drm_bridge *bridge,
++				      struct drm_bridge_state *state)
 +{
-+	if (bridge->funcs->atomic_check) {
-+		struct drm_bridge_state *bridge_state;
-+		int ret;
-+
-+		bridge_state = drm_atomic_get_new_bridge_state(crtc_state->state,
-+							       bridge);
-+		if (WARN_ON(!bridge_state))
-+			return -EINVAL;
-+
-+		ret = bridge->funcs->atomic_check(bridge, bridge_state,
-+						  crtc_state, conn_state);
-+		if (ret)
-+			return ret;
-+	} else if (bridge->funcs->mode_fixup) {
-+		if (!bridge->funcs->mode_fixup(bridge, &crtc_state->mode,
-+					       &crtc_state->adjusted_mode))
-+			return -EINVAL;
-+	}
-+
-+	return 0;
++	memset(state, 0, sizeof(*state));
++	state->bridge = bridge;
 +}
++EXPORT_SYMBOL(__drm_atomic_helper_bridge_reset);
 +
 +/**
-+ * drm_atomic_bridge_chain_check() - Do an atomic check on the bridge chain
-+ * @bridge: bridge control structure
-+ * @crtc_state: new CRTC state
-+ * @conn_state: new connector state
++ * __drm_atomic_helper_bridge_duplicate_state() - Copy atomic bridge state
++ * @bridge: bridge object
++ * @state: atomic bridge state
 + *
-+ * Calls &drm_bridge_funcs.atomic_check() (falls back on
-+ * &drm_bridge_funcs.mode_fixup()) op for all the bridges in the encoder chain,
-+ * starting from the last bridge to the first. These are called before calling
-+ * &drm_encoder_helper_funcs.atomic_check()
-+ *
-+ * RETURNS:
-+ * 0 on success, a negative error code on failure
++ * Copies atomic state from a bridge's current state and resets inferred values.
++ * This is useful for drivers that subclass the bridge state.
 + */
-+int drm_atomic_bridge_chain_check(struct drm_bridge *bridge,
-+				  struct drm_crtc_state *crtc_state,
-+				  struct drm_connector_state *conn_state)
++void __drm_atomic_helper_bridge_duplicate_state(struct drm_bridge *bridge,
++						struct drm_bridge_state *state)
 +{
-+	struct drm_encoder *encoder = bridge->encoder;
-+	struct drm_bridge *iter;
-+
-+	list_for_each_entry_reverse(iter, &encoder->bridge_chain, chain_node) {
-+		int ret;
-+
-+		ret = drm_atomic_bridge_check(iter, crtc_state, conn_state);
-+		if (ret)
-+			return ret;
-+
-+		if (iter == bridge)
-+			break;
-+	}
-+
-+	return 0;
++	__drm_atomic_helper_private_obj_duplicate_state(&bridge->base,
++							&state->base);
++	state->bridge = bridge;
 +}
-+EXPORT_SYMBOL(drm_atomic_bridge_chain_check);
++EXPORT_SYMBOL(__drm_atomic_helper_bridge_duplicate_state);
 +
+ #ifdef CONFIG_OF
  /**
-  * __drm_atomic_helper_bridge_reset() - Initialize a bridge state to its
-  *					default
+  * of_drm_find_bridge - find the bridge corresponding to the device node in
+diff --git a/include/drm/drm_atomic.h b/include/drm/drm_atomic.h
+index b6c73fd9f55a..e08582773d6c 100644
+--- a/include/drm/drm_atomic.h
++++ b/include/drm/drm_atomic.h
+@@ -660,6 +660,9 @@ __drm_atomic_get_current_plane_state(struct drm_atomic_state *state,
+ 	return plane->state;
+ }
+ 
++int __must_check
++drm_atomic_add_encoder_bridges(struct drm_atomic_state *state,
++			       struct drm_encoder *encoder);
+ int __must_check
+ drm_atomic_add_affected_connectors(struct drm_atomic_state *state,
+ 				   struct drm_crtc *crtc);
 diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index b80c3cac3203..8206ad90ad2d 100644
+index d7d714023050..db5fc18d49bd 100644
 --- a/include/drm/drm_bridge.h
 +++ b/include/drm/drm_bridge.h
-@@ -128,7 +128,9 @@ struct drm_bridge_funcs {
- 	 * this function passes all other callbacks must succeed for this
- 	 * configuration.
- 	 *
--	 * The @mode_fixup callback is optional.
-+	 * The mode_fixup callback is optional. &drm_bridge_funcs.mode_fixup()
-+	 * is not called when &drm_bridge_funcs.atomic_check() is implemented,
-+	 * so only one of them should be provided.
- 	 *
- 	 * NOTE:
- 	 *
-@@ -385,6 +387,28 @@ struct drm_bridge_funcs {
- 	void (*atomic_destroy_state)(struct drm_bridge *bridge,
- 				     struct drm_bridge_state *state);
+@@ -25,6 +25,8 @@
  
+ #include <linux/list.h>
+ #include <linux/ctype.h>
++
++#include <drm/drm_atomic.h>
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_mode_object.h>
+ #include <drm/drm_modes.h>
+@@ -33,6 +35,23 @@ struct drm_bridge;
+ struct drm_bridge_timings;
+ struct drm_panel;
+ 
++/**
++ * struct drm_bridge_state - Atomic bridge state object
++ * @base: inherit from &drm_private_state
++ * @bridge: the bridge this state refers to
++ */
++struct drm_bridge_state {
++	struct drm_private_state base;
++
++	struct drm_bridge *bridge;
++};
++
++static inline struct drm_bridge_state *
++drm_priv_to_bridge_state(struct drm_private_state *priv)
++{
++	return container_of(priv, struct drm_bridge_state, base);
++}
++
+ /**
+  * struct drm_bridge_funcs - drm_bridge control functions
+  */
+@@ -338,6 +357,49 @@ struct drm_bridge_funcs {
+ 	 */
+ 	void (*atomic_post_disable)(struct drm_bridge *bridge,
+ 				    struct drm_atomic_state *old_state);
++
 +	/**
-+	 * @atomic_check:
++	 * @atomic_duplicate_state:
 +	 *
-+	 * This method is responsible for checking bridge state correctness.
-+	 * It can also check the state of the surrounding components in chain
-+	 * to make sure the whole pipeline can work properly.
++	 * Duplicate the current bridge state object (which is guaranteed to be
++	 * non-NULL).
 +	 *
-+	 * &drm_bridge_funcs.atomic_check() hooks are called in reverse
-+	 * order (from the last to the first bridge).
-+	 *
-+	 * This method is optional. &drm_bridge_funcs.mode_fixup() is not
-+	 * called when &drm_bridge_funcs.atomic_check() is implemented, so only
-+	 * one of them should be provided.
++	 * The atomic_duplicate_state() is optional. When not implemented the
++	 * core allocates a drm_bridge_state object and calls
++	 * &__drm_atomic_helper_bridge_duplicate_state() to initialize it.
 +	 *
 +	 * RETURNS:
-+	 * zero if the check passed, a negative error code otherwise.
++	 * A valid drm_bridge_state object or NULL if the allocation fails.
 +	 */
-+	int (*atomic_check)(struct drm_bridge *bridge,
-+			    struct drm_bridge_state *bridge_state,
-+			    struct drm_crtc_state *crtc_state,
-+			    struct drm_connector_state *conn_state);
++	struct drm_bridge_state *(*atomic_duplicate_state)(struct drm_bridge *bridge);
 +
- 	/**
- 	 * @atomic_reset:
- 	 *
-@@ -552,6 +576,9 @@ void drm_bridge_chain_mode_set(struct drm_bridge *bridge,
- void drm_bridge_chain_pre_enable(struct drm_bridge *bridge);
- void drm_bridge_chain_enable(struct drm_bridge *bridge);
++	/**
++	 * @atomic_destroy_state:
++	 *
++	 * Destroy a bridge state object previously allocated by
++	 * &drm_bridge_funcs.atomic_duplicate_state().
++	 *
++	 * The atomic_destroy_state hook is optional. When not implemented the
++	 * core calls kfree() on the state.
++	 */
++	void (*atomic_destroy_state)(struct drm_bridge *bridge,
++				     struct drm_bridge_state *state);
++
++	/**
++	 * @atomic_reset:
++	 *
++	 * Reset the bridge to a predefined state (or retrieve its current
++	 * state) and return a &drm_bridge_state object matching this state.
++	 * This function is called at attach time.
++	 *
++	 * The atomic_reset hook is optional. When not implemented the core
++	 * allocates a new state and calls &__drm_atomic_helper_bridge_reset().
++	 *
++	 * RETURNS:
++	 * A valid drm_bridge_state object in case of success, an ERR_PTR()
++	 * giving the reason of the failure otherwise.
++	 */
++	struct drm_bridge_state *(*atomic_reset)(struct drm_bridge *bridge);
+ };
  
-+int drm_atomic_bridge_chain_check(struct drm_bridge *bridge,
-+				  struct drm_crtc_state *crtc_state,
-+				  struct drm_connector_state *conn_state);
- void drm_atomic_bridge_chain_disable(struct drm_bridge *bridge,
- 				     struct drm_atomic_state *state);
- void drm_atomic_bridge_chain_post_disable(struct drm_bridge *bridge,
+ /**
+@@ -380,6 +442,8 @@ struct drm_bridge_timings {
+  * struct drm_bridge - central DRM bridge control structure
+  */
+ struct drm_bridge {
++	/** @base: inherit from &drm_private_object */
++	struct drm_private_obj base;
+ 	/** @dev: DRM device this bridge belongs to */
+ 	struct drm_device *dev;
+ 	/** @encoder: encoder to which this bridge is connected */
+@@ -404,6 +468,12 @@ struct drm_bridge {
+ 	void *driver_private;
+ };
+ 
++static inline struct drm_bridge *
++drm_priv_to_bridge(struct drm_private_obj *priv)
++{
++	return container_of(priv, struct drm_bridge, base);
++}
++
+ void drm_bridge_add(struct drm_bridge *bridge);
+ void drm_bridge_remove(struct drm_bridge *bridge);
+ struct drm_bridge *of_drm_find_bridge(struct device_node *np);
+@@ -491,6 +561,52 @@ void drm_atomic_bridge_chain_pre_enable(struct drm_bridge *bridge,
+ void drm_atomic_bridge_chain_enable(struct drm_bridge *bridge,
+ 				    struct drm_atomic_state *state);
+ 
++void __drm_atomic_helper_bridge_reset(struct drm_bridge *bridge,
++				      struct drm_bridge_state *state);
++struct drm_bridge_state *
++drm_atomic_helper_bridge_reset(struct drm_bridge *bridge);
++void __drm_atomic_helper_bridge_duplicate_state(struct drm_bridge *bridge,
++						struct drm_bridge_state *new);
++
++static inline struct drm_bridge_state *
++drm_atomic_get_bridge_state(struct drm_atomic_state *state,
++			    struct drm_bridge *bridge)
++{
++	struct drm_private_state *obj_state;
++
++	obj_state = drm_atomic_get_private_obj_state(state, &bridge->base);
++	if (IS_ERR(obj_state))
++		return ERR_CAST(obj_state);
++
++	return drm_priv_to_bridge_state(obj_state);
++}
++
++static inline struct drm_bridge_state *
++drm_atomic_get_old_bridge_state(struct drm_atomic_state *state,
++				struct drm_bridge *bridge)
++{
++	struct drm_private_state *obj_state;
++
++	obj_state = drm_atomic_get_old_private_obj_state(state, &bridge->base);
++	if (!obj_state)
++		return NULL;
++
++	return drm_priv_to_bridge_state(obj_state);
++}
++
++static inline struct drm_bridge_state *
++drm_atomic_get_new_bridge_state(struct drm_atomic_state *state,
++				struct drm_bridge *bridge)
++{
++	struct drm_private_state *obj_state;
++
++	obj_state = drm_atomic_get_new_private_obj_state(state, &bridge->base);
++	if (!obj_state)
++		return NULL;
++
++	return drm_priv_to_bridge_state(obj_state);
++}
++
+ #ifdef CONFIG_DRM_PANEL_BRIDGE
+ struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel);
+ struct drm_bridge *drm_panel_bridge_add_typed(struct drm_panel *panel,
 -- 
 2.23.0
 
