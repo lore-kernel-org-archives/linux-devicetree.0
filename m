@@ -2,91 +2,112 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FF5C43215
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFD1C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A6E82073B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F8F20637
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:36:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfLCHcV (ORCPT
+        id S1727412AbfLCHgE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 02:32:21 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:60339 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727451AbfLCHcU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 02:32:20 -0500
-Received: from droid12-sz.software.amlogic (10.28.8.22) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Tue, 3 Dec 2019
- 15:32:44 +0800
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-To:     Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-CC:     Xingyu Chen <xingyu.chen@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>, <linux-iio@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>,
+        Tue, 3 Dec 2019 02:36:04 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:38837 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfLCHgE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 02:36:04 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xB37ZkLc014023, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xB37ZkLc014023
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 3 Dec 2019 15:35:46 +0800
+Received: from james-BS01.localdomain (172.21.190.33) by
+ RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server id
+ 14.3.468.0; Tue, 3 Dec 2019 15:35:45 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+CC:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH] arm64: dts: a1: add saradc controller
-Date:   Tue, 3 Dec 2019 15:32:12 +0800
-Message-ID: <1575358332-44866-1-git-send-email-xingyu.chen@amlogic.com>
-X-Mailer: git-send-email 2.7.4
+        <linux-mediatek@lists.infradead.org>,
+        Cheng-Yu Lee <cylee12@realtek.com>,
+        <devicetree@vger.kernel.org>
+Subject: [PATCH 0/6] arm64: Realtek RTD1619 clock and reset controllers
+Date:   Tue, 3 Dec 2019 15:35:34 +0800
+Message-ID: <20191203073540.9321-1-james.tai@realtek.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.28.8.22]
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The saradc controller in Meson-A1 is the same as the Meson-G12 series SoCs,
-so we use the same compatible string.
+Hi Andreas,
 
-Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+This series adds clock and reset controllers for the Realtek RTD1619 SoC.
 
----
-This patch is based on A1 clock patchset at [0].
+Cc: Andreas Färber <afaerber@suse.de>
+Cc: Cheng-Yu Lee <cylee12@realtek.com>
+Cc: devicetree@vger.kernel.org
 
-[0] https://lore.kernel.org/linux-amlogic/20191129144605.182774-1-jian.hu@amlogic.com
----
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+cylee12 (6):
+  dt-bindings: clock: add bindings for RTD1619 clocks
+  dt-bindings: reset: add bindings for rtd1619 reset controls
+  clk: realtek: add common clock support for Realtek SoCs
+  clk: realtek: add reset controller support for Realtek SoCs
+  clk: realtek: add rtd1619 controllers
+  dt-bindings: clk: realtek: add rtd1619 clock controller bindings
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index 7210ad0..cad1756 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -93,6 +93,21 @@
- 				clock-names = "xtal", "pclk", "baud";
- 				status = "disabled";
- 			};
-+
-+			saradc: adc@2c00 {
-+				compatible = "amlogic,meson-g12a-saradc",
-+					     "amlogic,meson-saradc";
-+				reg = <0x0 0x2c00 0x0 0x48>;
-+				#io-channel-cells = <1>;
-+				interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>,
-+					 <&clkc_periphs CLKID_SARADC>,
-+					 <&clkc_periphs CLKID_SARADC_CLK>,
-+					 <&clkc_periphs CLKID_SARADC_SEL>;
-+				clock-names = "clkin", "core", "adc_clk",
-+					      "adc_sel";
-+				status = "disabled";
-+			};
- 		};
- 
- 		gic: interrupt-controller@ff901000 {
+ .../bindings/clock/realtek,clocks.txt         |  38 ++
+ drivers/clk/Kconfig                           |   1 +
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/realtek/Kconfig                   |  21 +
+ drivers/clk/realtek/Makefile                  |  12 +
+ drivers/clk/realtek/clk-pll-dif.c             |  81 +++
+ drivers/clk/realtek/clk-pll-psaud.c           | 120 ++++
+ drivers/clk/realtek/clk-pll.c                 | 400 +++++++++++++
+ drivers/clk/realtek/clk-pll.h                 | 151 +++++
+ drivers/clk/realtek/clk-regmap-gate.c         |  89 +++
+ drivers/clk/realtek/clk-regmap-gate.h         |  26 +
+ drivers/clk/realtek/clk-regmap-mux.c          |  63 ++
+ drivers/clk/realtek/clk-regmap-mux.h          |  26 +
+ drivers/clk/realtek/clk-rtd1619-cc.c          | 553 ++++++++++++++++++
+ drivers/clk/realtek/clk-rtd1619-ic.c          | 112 ++++
+ drivers/clk/realtek/common.c                  | 320 ++++++++++
+ drivers/clk/realtek/common.h                  | 123 ++++
+ drivers/clk/realtek/reset.c                   | 107 ++++
+ drivers/clk/realtek/reset.h                   |  37 ++
+ include/dt-bindings/clock/rtk,clock-rtd1619.h |  88 +++
+ include/dt-bindings/reset/rtk,reset-rtd1619.h | 124 ++++
+ 21 files changed, 2493 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/realtek,clocks.txt
+ create mode 100644 drivers/clk/realtek/Kconfig
+ create mode 100644 drivers/clk/realtek/Makefile
+ create mode 100644 drivers/clk/realtek/clk-pll-dif.c
+ create mode 100644 drivers/clk/realtek/clk-pll-psaud.c
+ create mode 100644 drivers/clk/realtek/clk-pll.c
+ create mode 100644 drivers/clk/realtek/clk-pll.h
+ create mode 100644 drivers/clk/realtek/clk-regmap-gate.c
+ create mode 100644 drivers/clk/realtek/clk-regmap-gate.h
+ create mode 100644 drivers/clk/realtek/clk-regmap-mux.c
+ create mode 100644 drivers/clk/realtek/clk-regmap-mux.h
+ create mode 100644 drivers/clk/realtek/clk-rtd1619-cc.c
+ create mode 100644 drivers/clk/realtek/clk-rtd1619-ic.c
+ create mode 100644 drivers/clk/realtek/common.c
+ create mode 100644 drivers/clk/realtek/common.h
+ create mode 100644 drivers/clk/realtek/reset.c
+ create mode 100644 drivers/clk/realtek/reset.h
+ create mode 100644 include/dt-bindings/clock/rtk,clock-rtd1619.h
+ create mode 100644 include/dt-bindings/reset/rtk,reset-rtd1619.h
+
 -- 
-2.7.4
+2.24.0
 
