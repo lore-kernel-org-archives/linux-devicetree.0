@@ -2,200 +2,341 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7F1C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 13:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4436BC432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1923F20409
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 13:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B57B206DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:06:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="vlcZbDAv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p5GbzIue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726057AbfLCN7O (ORCPT
+        id S1726057AbfLCOGF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:59:14 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:53824 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725848AbfLCN7O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 08:59:14 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3DhODw010266;
-        Tue, 3 Dec 2019 08:56:29 -0500
-Received: from nam03-co1-obe.outbound.protection.outlook.com (mail-co1nam03lp2054.outbound.protection.outlook.com [104.47.40.54])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2wkk57rqq4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Dec 2019 08:56:29 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gMQyU2EvAdKD/QtMFIsusDxQS47/Q7Ghu+yPe6SpFMHoVUe334GNuKWnJkvrcWUpogvRXIHh/vOgU6CXfLvx0/uhih4cb01re8rEHmXZ+vw/lnCrj1kWdt8uOGvqoGjzI63fVtLkttP7hwTH8/zRDbBU+3EY0t9tExjmiYF+vbZANqo4LBvuvmHVw2oRzDKm4wIt2p6QWJDTYiRWB8wyrkAw+Tdi52Tx0N4tkZgLWtvJn53UyU91Tbx4kbL4JqHT30ixGpQKXy4EMxhboTaOZJHidXH16pOOKcVG5hcDNnv6kq5p+XWM7BViRjK55sawQf2mYZF1axpxM7AeEJ5g9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V+1ROGsajjfQJz2L3uK7kSFwtaG5TFqA7otMAggWe6s=;
- b=N59mDTmTo5Ik3DsuQM+nNKbG3ROcEO12PCtLITyIprvffFWmno9q/hGN4RQz3uu7Iw3t6ZSpr7stYwBp7bqSfe8FcOvjij2wLe+ouivqHtgNbjJfrcOmt1wb7/bzxX3dvbJyHaEUFj2R/mTJnWFMug2ZsU6y9E2ubr6LB85rbhIg+SE+W1se+9yy2N2CIT6tRwLQaqShEDjZXndSlbXmmS5I0LDmd9viqBJjUOYRbe2+Hg6YbFnTx06zNiiZEcUPLolUzBCg1k38N2GsZn8pc3X1Gv2tzWI1TkTjOCc7bzqTePa1Fl/wjox+XiVz5ajPF51Al0fefPzEzOl9s5keDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=suse.com smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
+        Tue, 3 Dec 2019 09:06:05 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:32918 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfLCOGF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:06:05 -0500
+Received: by mail-qk1-f196.google.com with SMTP id c124so3544088qkg.0
+        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 06:06:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V+1ROGsajjfQJz2L3uK7kSFwtaG5TFqA7otMAggWe6s=;
- b=vlcZbDAvH1LiSuGwPMmtcXsb2+TAfisX8emfaDEoPslu8yi8x18yBOOWtYcJ2LhVMCUC7D/iOgFaecckqZTT1kvNe6+Puj7hlO8cj8tHCZqr+/d+cTMmTCHfXkDRu9PD7kJ81YtF3hvVba0DDsQuDh+HJBsKzFnWMIj8oUheIyc=
-Received: from CY4PR03CA0006.namprd03.prod.outlook.com (2603:10b6:903:33::16)
- by DM6PR03MB5017.namprd03.prod.outlook.com (2603:10b6:5:1ee::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12; Tue, 3 Dec
- 2019 13:56:27 +0000
-Received: from BL2NAM02FT053.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::206) by CY4PR03CA0006.outlook.office365.com
- (2603:10b6:903:33::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.18 via Frontend
- Transport; Tue, 3 Dec 2019 13:56:26 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- BL2NAM02FT053.mail.protection.outlook.com (10.152.76.225) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Tue, 3 Dec 2019 13:56:25 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id xB3DuPT0007904
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Tue, 3 Dec 2019 05:56:25 -0800
-Received: from ben-Latitude-E6540.ad.analog.com (10.48.65.231) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 3 Dec 2019 08:56:25 -0500
-From:   Beniamin Bia <beniamin.bia@analog.com>
-To:     <linux-hwmon@vger.kernel.org>
-CC:     <Michael.Hennerich@analog.com>, <linux-kernel@vger.kernel.org>,
-        <jdelvare@suse.com>, <linux@roeck-us.net>, <mark.rutland@arm.com>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>,
-        Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH 2/3] dt-binding: iio: Add documentation for ADM1177
-Date:   Tue, 3 Dec 2019 15:57:10 +0200
-Message-ID: <20191203135711.13972-2-beniamin.bia@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191203135711.13972-1-beniamin.bia@analog.com>
-References: <20191203135711.13972-1-beniamin.bia@analog.com>
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QaWxqji1GXZS9GZ3miZ+5GcYvk93y478ZbMk70sfhJM=;
+        b=p5GbzIueeumLsEspv2SKXcoyF7RxHmPtcSVqOfigV2fvKLYWHdJnyEIjKhw1IBWGUE
+         eabQ4mUXcUhOfcaRMxwE4w+Bp3NZ1YxehMXUovOit0fvyLjPQd7L+BWkmWoE6F7BROkf
+         ALQ2vkMt4QH+fmL4foHDFWnb4/KcMFiX17V5u4qp4QGVOnH320a3X95zFX6GL3kxWC17
+         wCbqKmHk8kAK0mJ/OXmnd5IGN3VX2xHBPkZWO7ZLmhVRWHHZ72gVKf6Kuqf6kzBG/7LO
+         7AtjDGRPOA0Yq3a3RH4ma27KIvc8+BQqqpxpAJnTro8crQLmZRXXHf5M+9B1Gp5khhtU
+         ofvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QaWxqji1GXZS9GZ3miZ+5GcYvk93y478ZbMk70sfhJM=;
+        b=P76f6Xn+jQTtnz3usufwsVXkX0o3c3NT6J7blolNIOYrmPDuBpMnl4+cJFgGd+xkPa
+         rVvt/XbbjmoEvebFLMtlKsG/8c2Ie5fs8RnjVd7/feIz7cIXOcFC8mkOxbc+3p3Kad7J
+         9qr5xYT1Hx0bEMg9ncYw8Em6N0SmuHuagNDjbQpEXarNgpvoZbG6nhn2IERsGV3IF2is
+         OYXBPpn5+SUCLwOTyyM6u0ojyhaQaeQRfyYcn74Chrc4vA44KEhZB9q4QkWzpQiOiAao
+         LAkK5zXfj/A2P6bF9sGJm4v48gEIONsAYDlttCYMqDYV3uYHxanY74LsRAKKq+gcsYYu
+         UJlw==
+X-Gm-Message-State: APjAAAVhPZFEdu0I15heJ5Ag97Ms0rJKHsYfVlWoHZbKtC2DIwZTiGIb
+        aJr9nZV/cQ8BMUyYsR5QG9BF5N+ajNB4NHTaCTPtTg==
+X-Google-Smtp-Source: APXvYqz/H7RC/nEfD6JKV0UGDVVlpVw/rWzy+1BmBZtfC4k4BG3FwjwScrHcBjA+QLJpnpYSwDn/Wnn5aAS9swJTQQM=
+X-Received: by 2002:a37:62d2:: with SMTP id w201mr4993044qkb.445.1575381963784;
+ Tue, 03 Dec 2019 06:06:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(346002)(39860400002)(136003)(396003)(189003)(199004)(7636002)(6666004)(356004)(1076003)(2906002)(246002)(5660300002)(36756003)(6916009)(8676002)(50226002)(86362001)(305945005)(2351001)(8936002)(106002)(54906003)(107886003)(6306002)(26005)(186003)(446003)(426003)(2616005)(336012)(478600001)(48376002)(11346002)(51416003)(966005)(7696005)(316002)(16586007)(44832011)(50466002)(4326008)(70206006)(76176011)(70586007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB5017;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ff24f76f-51ba-41bb-7c95-08d777f8969a
-X-MS-TrafficTypeDiagnostic: DM6PR03MB5017:
-X-Microsoft-Antispam-PRVS: <DM6PR03MB50175279AD4728BE97D98D99F0420@DM6PR03MB5017.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 02408926C4
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GZ+AiZ+kTWYvo8j0fIQv/jxZSQrQ7Skl01YzV3H5zwr0/mOi8tRH5mq2JlCDAlEYL2aTEE1MnmPeqHMANmeeJ+L2BwduMSgifhfzI31tgZWoD5NqUYME3+OXU1f5vqBcPvwLZ+HZJoGqWRtvr94dYVSHTW38zi/DjQW6EPcopLAuq7gD+hsDAWrZNGE+yd9zx59njYwv6n3jb0XevBV2kZXbNVNdGgs4UKKnzn/1paQlkJqxp3ima2urnWXJap9YGJM+Zlbx3GcZZXEGk0GShd0Mxcw1nNjWCeHmz4H9sfSylwKtqKw4LVycoJqIdInufs4D5TtZiwdidwFwMbpQKAyoUmUZuahggG4/qoLn/CKWDj8eUsM8UApPRr14eeWoSyckCU6Vf8EZK8Kj8GMsKgYBljPNdvAY6ZNwznHL2JAnZcvvZP17FrytbCjddTZZkdMhHXZJB4RaBJWu1ya3DjXZTpxC3dmKMi5mX4O3q9c=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2019 13:56:25.7955
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff24f76f-51ba-41bb-7c95-08d777f8969a
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5017
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-03_03:2019-12-02,2019-12-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- adultscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0 phishscore=0
- priorityscore=1501 impostorscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912030108
+References: <20191119231912.12768-1-mike.leach@linaro.org> <20191119231912.12768-8-mike.leach@linaro.org>
+ <efac03bc-4a38-8f5c-46d5-9ffc58b2d2bb@arm.com>
+In-Reply-To: <efac03bc-4a38-8f5c-46d5-9ffc58b2d2bb@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Tue, 3 Dec 2019 14:05:52 +0000
+Message-ID: <CAJ9a7Vgce=i9JEV2JRThj74wKYRNcR24RBu5qKqnspcVcqhwiQ@mail.gmail.com>
+Subject: Re: [PATCH v5 07/14] coresight: cti: Add device tree support for
+ custom CTI.
+To:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Cc:     Coresight ML <coresight@lists.linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Documentation for ADM1177 was added.
+Hi Suzuki,
 
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
----
- .../bindings/hwmon/adi,adm1177.yaml           | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
+On Fri, 29 Nov 2019 at 14:18, Suzuki Kuruppassery Poulose
+<suzuki.poulose@arm.com> wrote:
+>
+> On 19/11/2019 23:19, Mike Leach wrote:
+> > Adds support for CTIs whose connections are implementation defined at
+> > hardware design time, and not constrained by v8 architecture.
+> >
+> > These CTIs have no standard connection setup, all the settings have to
+> > be defined in the device tree files. The patch creates a set of connections
+> > and trigger signals based on the information provided.
+> >
+> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> > ---
+> >   .../coresight/coresight-cti-platform.c        | 250 +++++++++++++++++-
+> >   .../hwtracing/coresight/coresight-cti-sysfs.c |  11 +
+> >   2 files changed, 257 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/hwtracing/coresight/coresight-cti-platform.c b/drivers/hwtracing/coresight/coresight-cti-platform.c
+> > index 790dd30b85f5..9c1ff432b487 100644
+> > --- a/drivers/hwtracing/coresight/coresight-cti-platform.c
+> > +++ b/drivers/hwtracing/coresight/coresight-cti-platform.c
+> > @@ -13,9 +13,19 @@
+> >   #define NR_V8PE_OUT_SIGS    3
+> >   #define NR_V8ETM_INOUT_SIGS 4
+> >
+> > +/* CTI device tree trigger connection node keyword */
+> > +#define CTI_DT_CONNS         "trig-conns"
+> > +
+> >   /* CTI device tree connection property keywords */
+> >   #define CTI_DT_V8ARCH               "arm,cti-v8-arch"
+> >   #define CTI_DT_CSDEV_ASSOC  "arm,cs-dev-assoc"
+> > +#define CTI_DT_TRIGIN_SIGS   "arm,trig-in-sigs"
+> > +#define CTI_DT_TRIGOUT_SIGS  "arm,trig-out-sigs"
+> > +#define CTI_DT_TRIGIN_TYPES  "arm,trig-in-types"
+> > +#define CTI_DT_TRIGOUT_TYPES "arm,trig-out-types"
+> > +#define CTI_DT_FILTER_OUT_SIGS       "arm,trig-filters"
+> > +#define CTI_DT_CONN_NAME     "arm,trig-conn-name"
+> > +#define CTI_DT_CTM_ID                "arm,cti-ctm-id"
+> >
+> >   /*
+> >    * Find a registered coresight device from a device fwnode.
+> > @@ -68,6 +78,12 @@ static const char *of_cti_get_node_name(const struct device_node *node)
+> >               return node->full_name;
+> >       return "unknown";
+> >   }
+> > +
+> > +static bool of_cti_node_name_eq(const struct device_node *node,
+> > +                             const char *name)
+> > +{
+> > +     return of_node_name_eq(node, name);
+> > +}
+> >   #else
+> >   static int of_cti_get_cpu_at_node(const struct device_node *node)
+> >   {
+> > @@ -78,6 +94,12 @@ static const char *of_cti_get_node_name(const struct device_node *node)
+> >   {
+> >       return "unknown";
+> >   }
+> > +
+> > +static bool of_cti_node_name_eq(const struct device_node *node,
+> > +                             const char *name)
+> > +{
+> > +     return false;
+> > +}
+> >   #endif
+>
+> nit: You don't need this wrapper of_node_name_eq() is already defined to
+> return false for !CONFIG_OF.
+>
+>
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml b/Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
-new file mode 100644
-index 000000000000..abd9354217ba
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/adi,adm1177.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADM1177 Hot Swap Controller and Digital Power Monitor
-+
-+maintainers:
-+  - Michael Hennerich <michael.hennerich@analog.com>
-+  - Beniamin Bia <beniamin.bia@analog.com>
-+
-+description: |
-+  Analog Devices ADM1177 Hot Swap Controller and Digital Power Monitor
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1177.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adm1177
-+
-+  reg:
-+    maxItems: 1
-+
-+  avcc-supply:
-+    description:
-+      Phandle to the Avcc power supply
-+
-+  adi,r-sense-micro-ohms:
-+    description:
-+      The value of curent sense resistor in microohms.
-+
-+  adi,shutdown-threshold-microamp:
-+    description:
-+      Specifies the current level at which an over current alert occurs.
-+
-+  adi,vrange-high-enable:
-+    description:
-+      Specifies which internal voltage divider to be used. A 1 selects
-+      a 7:2 voltage divider while a 0 selects a 14:1 voltage divider.
-+    type: boolean
-+
-+required:
-+  - compatible
-+  - reg
-+  - adi,r-sense-micro-ohms
-+  - adi,shutdown-threshold-microamp
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        pwmon@5a {
-+                compatible = "adi,adm1177";
-+                reg = <0x5a>;
-+                adi,r-sense-micro-ohms = <50000>; /* 50 mOhm */
-+                adi,shutdown-threshold-microamp = <1059000>; /* 1.059 A */
-+                adi,vrange-high-enable;
-+        };
-+    };
-+...
--- 
-2.17.1
+OK.
 
+> >
+> >   static int cti_plat_get_cpu_at_node(struct fwnode_handle *fwnode)
+> > @@ -94,6 +116,14 @@ static const char *cti_plat_get_node_name(struct fwnode_handle *fwnode)
+> >       return "unknown";
+> >   }
+> >
+> > +static bool cti_plat_node_name_eq(struct fwnode_handle *fwnode,
+> > +                               const char *name)
+> > +{
+> > +     if (is_of_node(fwnode))
+> > +             return of_cti_node_name_eq(to_of_node(fwnode), name);
+>
+> As mentioned above you could simply use of_node_name_eq() here.
+>
+> > +     return false;
+> > +}
+> > +
+> >   static int cti_plat_create_v8_etm_connection(struct device *dev,
+> >                                            struct cti_drvdata *drvdata)
+> >   {
+> > @@ -205,6 +235,214 @@ static int cti_plat_create_v8_connections(struct device *dev,
+> >       return ret;
+> >   }
+> >
+> > +static int cti_plat_count_sig_elements(const struct fwnode_handle *fwnode,
+> > +                                    const char *name)
+> > +{
+> > +     int nr_elem = fwnode_property_count_u32(fwnode, name);
+> > +
+> > +     return (nr_elem < 0 ? 0 : nr_elem);
+> > +}
+> > +
+> > +static int cti_plat_read_trig_group(struct cti_trig_grp *tgrp,
+> > +                                 const struct fwnode_handle *fwnode,
+> > +                                 const char *grp_name)
+> > +{
+> > +     int idx, err = 0;
+> > +     u32 *values;
+> > +
+> > +     if (!tgrp->nr_sigs)
+> > +             return 0;
+> > +
+> > +     values = kcalloc(tgrp->nr_sigs, sizeof(u32), GFP_KERNEL);
+> > +     if (!values)
+> > +             return -ENOMEM;
+> > +
+> > +     err = fwnode_property_read_u32_array(fwnode, grp_name,
+> > +                                          values, tgrp->nr_sigs);
+> > +
+> > +     if (!err) {
+> > +             /* set the signal usage mask */
+> > +             for (idx = 0; idx < tgrp->nr_sigs; idx++)
+> > +                     tgrp->used_mask |= BIT(values[idx]);
+> > +     }
+> > +
+> > +     kfree(values);
+> > +     return err;
+> > +}
+> > +
+> > +static int cti_plat_read_trig_types(struct cti_trig_grp *tgrp,
+> > +                                 const struct fwnode_handle *fwnode,
+> > +                                 const char *type_name)
+> > +{
+> > +     int items, used = 0, err = 0, nr_sigs;
+> > +     u32 *values = NULL, i;
+> > +
+> > +     /* allocate an array according to number of signals in connection */
+> > +     nr_sigs = tgrp->nr_sigs;
+> > +     if (!nr_sigs)
+> > +             return 0;
+> > +
+> > +     /* see if any types have been included in the device description */
+> > +     items = cti_plat_count_sig_elements(fwnode, type_name);
+> > +     if (items > nr_sigs)
+> > +             return -EINVAL;
+> > +
+> > +     /* need an array to store the values iff there are any */
+> > +     if (items) {
+> > +             values = kcalloc(items, sizeof(u32), GFP_KERNEL);
+> > +             if (!values)
+> > +                     return -ENOMEM;
+> > +
+> > +             err = fwnode_property_read_u32_array(fwnode, type_name,
+> > +                                                  values, items);
+> > +             if (err)
+> > +                     goto read_trig_types_out;
+> > +     }
+> > +
+> > +     /*
+> > +      * Match type id to signal index, 1st type to 1st index etc.
+> > +      * If fewer types than signals default remainder to GEN_IO.
+> > +      */
+> > +     for (i = 0; i < nr_sigs; i++) {
+> > +             if (used < items) {
+> > +                     tgrp->sig_types[i] =
+> > +                             values[i] < CTI_TRIG_MAX ? values[i] : GEN_IO;
+> > +                     used++;
+>
+> Do we really need "used" here ? Couldn't this be :
+>
+No we don't - I'll fix it.
+
+>                 if (i < items) {
+>
+>                 }
+>
+> > +             } else {
+>
+>    +                    /* Mark the undefined connections as GEN_IO */ ?
+>
+> > +                     tgrp->sig_types[i] = GEN_IO;
+> > +             }
+> > +     }
+>
+> ...
+>
+> > +
+> > +     /* read the connection name if set - may be overridden by later */
+> > +     fwnode_property_read_string(fwnode, CTI_DT_CONN_NAME, &assoc_name);
+> > +
+> > +     /* associated cpu ? */
+> > +     cpuid = cti_plat_get_cpu_at_node(fwnode);
+> > +     if (cpuid >= 0) {
+> > +             drvdata->ctidev.cpu = cpuid;
+> > +             scnprintf(cpu_name_str, sizeof(cpu_name_str), "cpu%d", cpuid);
+> > +             assoc_name = cpu_name_str;
+> > +     } else {
+> > +             /* associated device ? */
+> > +             cs_fwnode = fwnode_find_reference(fwnode,
+> > +                                               CTI_DT_CSDEV_ASSOC, 0);
+>
+> > +             if (!IS_ERR_OR_NULL(cs_fwnode)) {
+>
+> --- Cut - here --
+> > +                     csdev = cti_get_assoc_csdev_by_fwnode(cs_fwnode);
+> > +                     if (csdev) /* use device name if csdev found */
+> > +                             assoc_name = dev_name(&csdev->dev);
+> > +                     else  /* otherwise node name for later association */
+> > +                             assoc_name = cti_plat_get_node_name(cs_fwnode);
+>
+> --- end - here --
+>
+> I believe we do this for arm_v8 architected connections too. May be make
+> this a helper ?
+>
+OK
+
+> > +                     fwnode_handle_put(cs_fwnode);
+> > +             }
+> > +     }
+> > +     /* set up a connection */
+> > +     err = cti_add_connection_entry(dev, drvdata, tc, csdev, assoc_name);
+> > +
+> > +create_con_err:
+> > +     return err;
+> > +}
+> > +
+> > +static int cti_plat_create_impdef_connections(struct device *dev,
+> > +                                           struct cti_drvdata *drvdata)
+> > +{
+> > +     int rc = 0;
+> > +     struct fwnode_handle *fwnode = dev_fwnode(dev);
+> > +     struct fwnode_handle *child = NULL;
+> > +
+> > +     if (IS_ERR_OR_NULL(fwnode))
+> > +             return -EINVAL;
+> > +
+> > +     fwnode_for_each_child_node(fwnode, child) {
+> > +             if (cti_plat_node_name_eq(child, CTI_DT_CONNS))
+> > +                     rc = cti_plat_create_connection(dev, drvdata, child);
+> > +             if (rc != 0)
+> > +                     break;
+>
+> minor nit: To make it more obvious :
+>
+>                 if (cti_plat_node_name_eq(child, CTI_DT_CONNS)) {
+>                         rc = cti_plat_create_connection(dev, drvdata,
+>                                                         child);
+>                         if (rc)
+>                                 break;
+>                 }
+>
+> Suzuki
+
+Thanks
+
+
+Mike
+
+--
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
