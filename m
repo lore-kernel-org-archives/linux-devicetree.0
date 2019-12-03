@@ -2,725 +2,498 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CBDC432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402B9C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9D72071F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99F3206DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:03:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="KeUDQn2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfLCEC5 (ORCPT
+        id S1726651AbfLCEDb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 23:02:57 -0500
-Received: from pbmsgap01.intersil.com ([192.157.179.201]:34780 "EHLO
-        pbmsgap01.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfLCEC5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 23:02:57 -0500
-Received: from pps.filterd (pbmsgap01.intersil.com [127.0.0.1])
-        by pbmsgap01.intersil.com (8.16.0.27/8.16.0.27) with SMTP id xB33ka0g001879;
-        Mon, 2 Dec 2019 22:46:36 -0500
-Received: from pbmxdp01.intersil.corp (pbmxdp01.pb.intersil.com [132.158.200.222])
-        by pbmsgap01.intersil.com with ESMTP id 2wkmu327qc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 02 Dec 2019 22:46:35 -0500
-Received: from pbmxdp01.intersil.corp (132.158.200.222) by
- pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1531.3; Mon, 2 Dec 2019 22:46:34 -0500
-Received: from localhost.localdomain (132.158.202.109) by
- pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server id
- 15.1.1531.3 via Frontend Transport; Mon, 2 Dec 2019 22:46:33 -0500
-From:   Chris Brandt <chris.brandt@renesas.com>
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC:     <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 4/6] spi: Add SPIBSC driver
-Date:   Mon, 2 Dec 2019 22:45:17 -0500
-Message-ID: <20191203034519.5640-5-chris.brandt@renesas.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191203034519.5640-1-chris.brandt@renesas.com>
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
+        Mon, 2 Dec 2019 23:03:31 -0500
+Received: from ozlabs.org ([203.11.71.1]:57379 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726327AbfLCEDb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 23:03:31 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47RpHd0Ltkz9sPL;
+        Tue,  3 Dec 2019 15:03:25 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1575345805;
+        bh=RAD7zDxGO7bo8/pxUNwsyQf6S0CGEZrtpNTlNxtet6w=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=KeUDQn2UknEEXnsZQIAHDAs4nIBg5cmQpfbBAOpoaEu603Yk+9SI+iSgAQeIv0nVR
+         QPyzMaPGO1cW5m/XxByMso6zYXQWLVuoZ6Zs8wgaB8uLFkCbW1RcXH5yOhNmv3Mb0s
+         ODb0b/Feen77PNQW3a3xt9GXMC4UD8PCfr/1iNOF49OjOnEMyDvR5fO28OS8bNgrHl
+         q1I9rhdpKl1A0qxC32HLyVQ+0fH114gptlKYWqJYZ5o8f6DIptufGqpKwDRVy+Rc9R
+         MuswPfKopS1l8ajVZEsJpBk8DxTLRb9Mz5YXVewTrhOWjUGxkj7FgoKTcFt9VBVxx3
+         qI+908SFbcBFg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Subject: Re: [RFC] Efficiency of the phandle_cache on ppc64/SLOF
+In-Reply-To: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de>
+References: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de>
+Date:   Tue, 03 Dec 2019 15:03:22 +1100
+Message-ID: <87wobedpit.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-12-02_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911200000 definitions=main-1912030031
-X-Proofpoint-Spam-Reason: mlx
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a driver for the SPIBSC controller in Renesas SoC devices.
+Sebastian Andrzej Siewior <bigeasy@linutronix.de> writes:
+> I've been looking at phandle_cache and noticed the following: The raw
+> phandle value as generated by dtc starts at zero and is incremented by
+> one for each phandle entry. The qemu pSeries model is using Slof (which
+> is probably the same thing as used on real hardware) and this looks like
+> a poiner value for the phandle.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- drivers/spi/Kconfig      |   8 +
- drivers/spi/Makefile     |   1 +
- drivers/spi/spi-spibsc.c | 609 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 618 insertions(+)
- create mode 100644 drivers/spi/spi-spibsc.c
+We don't use SLOF on bare metal these days.
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 870f7797b56b..405d7e73963e 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -575,6 +575,14 @@ config SPI_RSPI
- 	help
- 	  SPI driver for Renesas RSPI and QSPI blocks.
- 
-+config SPI_SPIBSC
-+	tristate "Renesas SPI Multi I/O Bus Controller"
-+	depends on ARCH_R7S72100 || ARCH_R7S9210
-+	help
-+	  Also referred to as the SPI Bus Space Controller (SPIBSC).
-+	  This controller was designed specifically for accessing QSPI flash
-+	  devices.
-+
- config SPI_QCOM_QSPI
- 	tristate "QTI QSPI controller"
- 	depends on ARCH_QCOM
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index bb49c9e6d0a0..9525256c4d51 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -99,6 +99,7 @@ obj-$(CONFIG_SPI_SH_SCI)		+= spi-sh-sci.o
- obj-$(CONFIG_SPI_SIFIVE)		+= spi-sifive.o
- obj-$(CONFIG_SPI_SIRF)		+= spi-sirf.o
- obj-$(CONFIG_SPI_SLAVE_MT27XX)          += spi-slave-mt27xx.o
-+obj-$(CONFIG_SPI_SPIBSC)		+= spi-spibsc.o
- obj-$(CONFIG_SPI_SPRD)			+= spi-sprd.o
- obj-$(CONFIG_SPI_SPRD_ADI)		+= spi-sprd-adi.o
- obj-$(CONFIG_SPI_STM32) 		+= spi-stm32.o
-diff --git a/drivers/spi/spi-spibsc.c b/drivers/spi/spi-spibsc.c
-new file mode 100644
-index 000000000000..ac7e6c84417c
---- /dev/null
-+++ b/drivers/spi/spi-spibsc.c
-@@ -0,0 +1,609 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * SPI Bus Space Controller (SPIBSC) bus driver
-+ * Otherwise known as a SPI Multi I/O Bus Controller
-+ *
-+ * Copyright (C) 2019 Renesas Electronics
-+ *
-+ */
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/clk.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/io.h>
-+#include <linux/delay.h>
-+#include <linux/spi/spi.h>
-+
-+/* SPIBSC registers */
-+#define	CMNCR	0x00
-+#define	SSLDR	0x04
-+#define SPBCR	0x08
-+#define DRCR	0x0c
-+#define DRCMR	0x10
-+#define DREAR	0x14
-+#define DROPR	0x18
-+#define DRENR	0x1c
-+#define	SMCR	0x20
-+#define	SMCMR	0x24
-+#define	SMADR	0x28
-+#define	SMOPR	0x2c
-+#define	SMENR	0x30
-+#define SMRDR0	0x38
-+#define SMRDR1	0x3c
-+#define	SMWDR0	0x40
-+#define SMWDR1	0x44
-+#define	CMNSR	0x48
-+#define SMDMCR	0x60
-+#define SMDRENR	0x64
-+
-+/* CMNCR */
-+#define	CMNCR_MD	BIT(31)
-+#define	CMNCR_SFDE	BIT(24)
-+#define	CMNCR_MOIIO3(x)	(((u32)(x) & 0x3) << 22)
-+#define	CMNCR_MOIIO2(x)	(((u32)(x) & 0x3) << 20)
-+#define	CMNCR_MOIIO1(x)	(((u32)(x) & 0x3) << 18)
-+#define	CMNCR_MOIIO0(x)	(((u32)(x) & 0x3) << 16)
-+#define	CMNCR_IO3FV(x)	(((u32)(x) & 0x3) << 14)
-+#define	CMNCR_IO2FV(x)	(((u32)(x) & 0x3) << 12)
-+#define	CMNCR_IO0FV(x)	(((u32)(x) & 0x3) << 8)
-+#define	CMNCR_CPHAT	BIT(6)
-+#define	CMNCR_CPHAR	BIT(5)
-+#define	CMNCR_SSLP	BIT(4)
-+#define	CMNCR_CPOL	BIT(3)
-+#define	CMNCR_BSZ(n)	(((u32)(n) & 0x3) << 0)
-+#define	OUT_0		(0u)
-+#define	OUT_1		(1u)
-+#define	OUT_REV		(2u)
-+#define	OUT_HIZ		(3u)
-+#define	BSZ_SINGLE	(0)
-+#define	BSZ_DUAL	(1)
-+#define CMNCR_INIT	(CMNCR_MD | \
-+			CMNCR_SFDE | \
-+			CMNCR_MOIIO3(OUT_HIZ) | \
-+			CMNCR_MOIIO2(OUT_HIZ) | \
-+			CMNCR_MOIIO1(OUT_HIZ) | \
-+			CMNCR_MOIIO0(OUT_HIZ) | \
-+			CMNCR_IO3FV(OUT_HIZ) | \
-+			CMNCR_IO2FV(OUT_HIZ) | \
-+			CMNCR_IO0FV(OUT_HIZ) | \
-+			CMNCR_CPHAR | \
-+			CMNCR_BSZ(BSZ_SINGLE))
-+
-+/* SSLDR */
-+#define	SSLDR_SPNDL(x)	(((u32)(x) & 0x7) << 16)
-+#define	SSLDR_SLNDL(x)	(((u32)(x) & 0x7) << 8)
-+#define	SSLDR_SCKDL(x)	(((u32)(x) & 0x7) << 0)
-+#define	SSLDR_INIT	(SSLDR_SPNDL(3) | SSLDR_SLNDL(3) | SSLDR_SCKDL(3))
-+
-+/* SPBCR */
-+#define	SPBCR_SPBR(x)	(((u32)(x) & 0xff) << 8)
-+#define	SPBCR_BRDV(x)	(((u32)(x) & 0x3) << 0)
-+
-+/* DRCR (read mode) */
-+#define	DRCR_SSLN	BIT(24)
-+#define	DRCR_RBURST(x)	(((u32)(x) & 0xf) << 16)
-+#define	DRCR_RCF	BIT(9)
-+#define	DRCR_RBE	BIT(8)
-+#define	DRCR_SSLE	BIT(0)
-+
-+/* DROPR (read mode) */
-+#define	DROPR_OPD3(o)	(((u32)(o) & 0xff) << 24)
-+#define	DROPR_OPD2(o)	(((u32)(o) & 0xff) << 16)
-+#define	DROPR_OPD1(o)	(((u32)(o) & 0xff) << 8)
-+#define	DROPR_OPD0(o)	(((u32)(o) & 0xff) << 0)
-+
-+/* DRENR (read mode) */
-+#define	DRENR_CDE	BIT(14)
-+#define	DRENR_OCDE	BIT(12)
-+#define	DRENR_OPDE(o)	(((u32)(o) & 0xf) << 4)
-+
-+/* SMCR (spi mode) */
-+#define	SMCR_SSLKP	BIT(8)
-+#define	SMCR_SPIRE	BIT(2)
-+#define	SMCR_SPIWE	BIT(1)
-+#define	SMCR_SPIE	BIT(0)
-+
-+/* SMCMR (spi mode) */
-+#define	SMCMR_CMD(c)	(((u32)(c) & 0xff) << 16)
-+#define	SMCMR_OCMD(o)	(((u32)(o) & 0xff) << 0)
-+
-+/* SMENR (spi mode) */
-+#define	SMENR_SPIDE(b)	(((u32)(b) & 0xf) << 0)
-+#define	SPIDE_8BITS	(0x8)
-+#define	SPIDE_16BITS	(0xc)
-+#define	SPIDE_32BITS	(0xf)
-+
-+/* CMNSR (spi mode) */
-+#define	CMNSR_SSLF	BIT(1)
-+#define	CMNSR_TEND	BIT(0)
-+
-+#define MAX_CMD_LEN 6
-+
-+/* HW Option Flags */
-+#define HAS_SPBCR BIT(0)
-+
-+struct spibsc_priv {
-+	void __iomem *base;	/* register base */
-+	void __iomem *mmio;	/* memory mapped io space of SPI Flash */
-+	int mmio_size;
-+	struct spi_controller *master;
-+	struct device *dev;
-+	struct clk *clk;
-+	u8 last_xfer;
-+	u32 flags;
-+};
-+
-+static void spibsc_write(struct spibsc_priv *sbsc, int reg, u32 val)
-+{
-+	iowrite32(val, sbsc->base + reg);
-+}
-+static void spibsc_write8(struct spibsc_priv *sbsc, int reg, u8 val)
-+{
-+	iowrite8(val, sbsc->base + reg);
-+}
-+static void spibsc_write16(struct spibsc_priv *sbsc, int reg, u16 val)
-+{
-+	iowrite16(val, sbsc->base + reg);
-+}
-+static u32 spibsc_read(struct spibsc_priv *sbsc, int reg)
-+{
-+	return ioread32(sbsc->base + reg);
-+}
-+
-+static void spibsc_print_data(struct spibsc_priv *sbsc, u8 tx, const u8 *buf,
-+			      int len)
-+{
-+#if defined(DEBUG_PRINT_DATA)
-+	char line_buffer[3*16+1];
-+	int i, line_index = 0;
-+
-+	if (tx)
-+		pr_debug("spibsc: send data: ");
-+	else
-+		pr_debug("spibsc: recv data: ");
-+
-+	for (i = 0; i < len; ) {
-+		sprintf(line_buffer + line_index, " %02X", buf[i]);
-+		line_index += 3;
-+		i++;
-+		if (i % 16 == 0) {
-+			pr_debug(line_buffer);
-+			line_index = 0;
-+		}
-+	}
-+	if (i % 16 != 0)
-+		pr_debug(line_buffer);
-+	else
-+		pr_debug("\n");
-+#endif
-+}
-+
-+static int spibsc_wait_trans_completion(struct spibsc_priv *sbsc)
-+{
-+	int t = 256 * 100000;
-+
-+	while (t--) {
-+		if (spibsc_read(sbsc, CMNSR) & CMNSR_TEND)
-+			return 0;
-+		ndelay(1);
-+	}
-+
-+	dev_err(sbsc->dev, "Timeout waiting for TEND\n");
-+	return -ETIMEDOUT;
-+}
-+
-+/*
-+ * This function sends data using 'SPI operation mode'. It is intended to be
-+ * used only with SPI Flash commands that do not require any reading back from
-+ * the SPI flash.
-+ */
-+static int spibsc_send_data(struct spibsc_priv *sbsc, const u8 *data, int len)
-+{
-+	u32 smcr, smenr, smwdr0;
-+	int ret, unit, sslkp;
-+
-+	/* print data (for debugging) */
-+	spibsc_print_data(sbsc, 1, data, len);
-+
-+	while (len > 0) {
-+		if (len >= 4) {
-+			unit = 4;
-+			smenr = SMENR_SPIDE(SPIDE_32BITS);
-+		} else {
-+			unit = len;
-+			if (unit == 3)
-+				unit = 2;
-+
-+			if (unit >= 2)
-+				smenr = SMENR_SPIDE(SPIDE_16BITS);
-+			else
-+				smenr = SMENR_SPIDE(SPIDE_8BITS);
-+		}
-+
-+		/* set 4bytes data, bit stream */
-+		smwdr0 = *data++;
-+		if (unit >= 2)
-+			smwdr0 |= (u32)(*data++ << 8);
-+		if (unit >= 3)
-+			smwdr0 |= (u32)(*data++ << 16);
-+		if (unit >= 4)
-+			smwdr0 |= (u32)(*data++ << 24);
-+
-+		/* mask unwrite area */
-+		if (unit == 3)
-+			smwdr0 |= 0xFF000000;
-+		else if (unit == 2)
-+			smwdr0 |= 0xFFFF0000;
-+		else if (unit == 1)
-+			smwdr0 |= 0xFFFFFF00;
-+
-+		/* write send data. */
-+		if (unit == 2)
-+			spibsc_write16(sbsc, SMWDR0, (u16)smwdr0);
-+		else if (unit == 1)
-+			spibsc_write8(sbsc, SMWDR0, (u8)smwdr0);
-+		else
-+			spibsc_write(sbsc, SMWDR0, smwdr0);
-+
-+		len -= unit;
-+		if ((len <= 0) && sbsc->last_xfer)
-+			sslkp = 0;
-+		else
-+			sslkp = 1;
-+
-+		/* set params */
-+		spibsc_write(sbsc, SMCMR, 0);
-+		spibsc_write(sbsc, SMADR, 0);
-+		spibsc_write(sbsc, SMOPR, 0);
-+		spibsc_write(sbsc, SMENR, smenr);
-+
-+		/* start spi transfer */
-+		smcr = SMCR_SPIE|SMCR_SPIWE;
-+		if (sslkp)
-+			smcr |= SMCR_SSLKP;
-+		spibsc_write(sbsc, SMCR, smcr);
-+
-+		ret = spibsc_wait_trans_completion(sbsc);
-+		if (ret)
-+			return  ret;
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * This function uses 'Data Read' mode to send the command (and address) then
-+ * read data back out.
-+ * The HW was designed such that you program the registers with the command,
-+ * base address, additional command data, etc... But, that makes things too
-+ * difficult because it means this driver has to pick out those parameters from
-+ * the data stream that was passed.
-+ * Instead, we will ignore how the HW was 'supposed' to be used and just
-+ * blindly put the Tx data (commands) to send in the registers in the order
-+ * in which we know they will be transmitted:
-+ *
-+ * [DRCMR.CMD]+[DRCMR.OCMD]+[DROPR.OPD3]+[DROPR.OPD2]+[DROPR.OPD1]+[DROPR.OPD0]
-+ *
-+ * We can send up to 6 bytes this way.
-+ * We will tell the HW to skip sending the 'address' because we are secretly
-+ * including it in the "command" and that way we can leave the address registers
-+ * blank.
-+ *
-+ * Note that when reading data, the HW will read in 8-byte units which usually
-+ * is not an issue for SPI Flash devices.
-+ */
-+static int spibsc_send_recv_data(struct spibsc_priv *sbsc, u8 *tx_data,
-+				 int tx_len, u8 *rx_data, int rx_len)
-+{
-+	u32 drcmr, drenr, dropr;
-+	u8 opde;
-+
-+	dev_dbg(sbsc->dev, "%s (tx=%d, rx=%d)\n", __func__, tx_len, rx_len);
-+
-+	if (tx_len > MAX_CMD_LEN) {
-+		dev_err(sbsc->dev, "Command length too long (%d)", tx_len);
-+		return -EIO;
-+	}
-+
-+	if (rx_len > sbsc->mmio_size) {
-+		dev_err(sbsc->dev, "Receive length too long (%d)", rx_len);
-+		return -EIO;
-+	}
-+
-+	/* Setup Data Read mode
-+	 * Flush read cache and enable burst mode. Burst mode is required
-+	 * in order to keep chip select low between read transfers, but it
-+	 * also means data is read in 8-byte intervals.
-+	 */
-+	spibsc_write(sbsc, DRCR, DRCR_SSLN | DRCR_RCF | DRCR_RBE | DRCR_SSLE);
-+	spibsc_read(sbsc, DRCR);
-+
-+	/* Enter Data Read mode */
-+	spibsc_write(sbsc, CMNCR, 0x01FFF300);
-+	drcmr = 0;
-+	drenr = 0;
-+	dropr = 0;
-+	opde = 0;
-+
-+	if (tx_len >= 1) {
-+		/* Use 'Command' register for the 1st byte */
-+		drcmr |= SMCMR_CMD(tx_data[0]);
-+		drenr |= DRENR_CDE;
-+	}
-+
-+	if (tx_len >= 2) {
-+		/* Use 'Optional Command' register for the 2nd byte */
-+		drcmr |= SMCMR_OCMD(tx_data[1]);
-+		drenr |= DRENR_OCDE;
-+	}
-+
-+	/* Use 'Option Data' for 3rd-6th bytes */
-+	switch (tx_len) {
-+	case 6:
-+		dropr |= DROPR_OPD0(tx_data[5]);
-+		opde |= (1 << 0);
-+	case 5:
-+		dropr |= DROPR_OPD1(tx_data[4]);
-+		opde |= (1 << 1);
-+	case 4:
-+		dropr |= DROPR_OPD2(tx_data[3]);
-+		opde |= (1 << 2);
-+	case 3:
-+		dropr |= DROPR_OPD3(tx_data[2]);
-+		opde |= (1 << 3);
-+		drenr |= DRENR_OPDE(opde);
-+	}
-+
-+	spibsc_write(sbsc, DRCMR, drcmr);
-+	spibsc_write(sbsc, DROPR, dropr);
-+	spibsc_write(sbsc, DRENR, drenr);
-+
-+	/* This internal bus access is what will trigger the actual Tx/Rx
-+	 * operation. Remember, we don't care about the address.
-+	 */
-+	memcpy(rx_data, sbsc->mmio, rx_len);
-+
-+	/* Deactivate chip select */
-+	spibsc_write(sbsc, DRCR, DRCR_SSLN);
-+
-+	/* Print data (for debugging) */
-+	spibsc_print_data(sbsc, 1, tx_data, tx_len);
-+	spibsc_print_data(sbsc, 0, rx_data, rx_len);
-+
-+	return 0;
-+}
-+
-+static int spibsc_transfer_one_message(struct spi_controller *master,
-+				       struct spi_message *msg)
-+{
-+	struct spibsc_priv *sbsc = spi_controller_get_devdata(master);
-+	struct spi_transfer *t, *t_last;
-+	u8 tx_data[MAX_CMD_LEN];
-+	int tx_only;
-+	u8 tx_len;
-+	int ret;
-+
-+	t_last = list_last_entry(&msg->transfers, struct spi_transfer,
-+				 transfer_list);
-+	/* defaults */
-+	ret = 0;
-+	sbsc->last_xfer = 0;
-+	tx_only = 1;
-+
-+	/* Analyze the messages */
-+	t = list_first_entry(&msg->transfers, struct spi_transfer,
-+			     transfer_list);
-+	if (t->rx_buf) {
-+		dev_dbg(sbsc->dev, "Cannot Rx without Tx first!\n");
-+		return -EIO;
-+	}
-+	list_for_each_entry(t, &msg->transfers, transfer_list) {
-+		if (t->rx_buf) {
-+			tx_only = 0;
-+			if (t != t_last) {
-+				dev_dbg(sbsc->dev, "RX transaction is not the last transaction!\n");
-+				return -EIO;
-+			}
-+		}
-+		if (t->cs_change) {
-+			dev_err(sbsc->dev, "cs_change not supported");
-+			return -EIO;
-+		}
-+	}
-+
-+	/* Tx Only (SPI Mode is used) */
-+	if (tx_only == 1) {
-+
-+		dev_dbg(sbsc->dev, "%s: TX only\n", __func__);
-+
-+		/* Initialize for SPI Mode */
-+		spibsc_write(sbsc, CMNCR, CMNCR_INIT);
-+
-+		/* Send messages */
-+		list_for_each_entry(t, &msg->transfers, transfer_list) {
-+
-+			if (t == t_last)
-+				sbsc->last_xfer = 1;
-+
-+			ret = spibsc_send_data(sbsc, t->tx_buf, t->len);
-+			if (ret)
-+				break;
-+
-+			msg->actual_length += t->len;
-+		}
-+
-+		/* Done */
-+		msg->status = ret;
-+		spi_finalize_current_message(master);
-+		return ret;
-+	}
-+
-+	/* Tx, then RX (Data Read Mode is used) */
-+	dev_dbg(sbsc->dev, "%s: Tx then Rx\n", __func__);
-+
-+	/* Buffer up the transmit portion (cmd + addr) so we can send it all at
-+	 * once
-+	 */
-+	tx_len = 0;
-+	list_for_each_entry(t, &msg->transfers, transfer_list) {
-+		if (t->tx_buf) {
-+			if ((tx_len + t->len) > sizeof(tx_data)) {
-+				dev_dbg(sbsc->dev, "Command too big (%d)\n",
-+					tx_len + t->len);
-+				return -EIO;
-+			}
-+			memcpy(tx_data + tx_len, t->tx_buf, t->len);
-+			tx_len += t->len;
-+		}
-+
-+		if (t->rx_buf)
-+			ret = spibsc_send_recv_data(sbsc, tx_data, tx_len,
-+						    t->rx_buf,  t->len);
-+
-+		msg->actual_length += t->len;
-+	}
-+
-+	msg->status = ret;
-+	spi_finalize_current_message(master);
-+
-+	return ret;
-+}
-+
-+static int spibsc_setup(struct spi_device *spi)
-+{
-+	struct spibsc_priv *sbsc = spi_controller_get_devdata(spi->master);
-+	u32 max_speed_hz;
-+	unsigned long rate;
-+	u8 spbr;
-+	u8 div_ratio;
-+
-+	if (spi->bits_per_word != 8) {
-+		dev_err(sbsc->dev, "bits_per_word must be 8\n");
-+		return -EIO;
-+	}
-+
-+	if (sbsc->flags & HAS_SPBCR) {
-+		max_speed_hz = spi->max_speed_hz;
-+		rate = clk_get_rate(sbsc->clk);
-+
-+		div_ratio = 2;
-+		spbr = 1;
-+		while ((rate / div_ratio) > max_speed_hz) {
-+			spbr++;
-+			div_ratio += 2;
-+			if (spbr == 255)
-+				break;
-+		}
-+		spibsc_write(sbsc, SPBCR, SPBCR_SPBR(spbr) | SPBCR_BRDV(0));
-+		dev_dbg(sbsc->dev, "Clock set to %ld Hz\n", rate/div_ratio);
-+	}
-+
-+	return 0;
-+}
-+
-+static int spibsc_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	struct spi_controller *master;
-+	struct spibsc_priv *sbsc;
-+	int ret;
-+
-+	master = spi_alloc_master(&pdev->dev, sizeof(*sbsc));
-+	if (!master)
-+		return -ENOMEM;
-+
-+	sbsc = spi_controller_get_devdata(master);
-+	dev_set_drvdata(&pdev->dev, sbsc);
-+	sbsc->master	= master;
-+	sbsc->dev	= &pdev->dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	sbsc->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(sbsc->base)) {
-+		ret = PTR_ERR(sbsc->base);
-+		goto error;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	sbsc->mmio_size = resource_size(res);
-+	sbsc->mmio = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(sbsc->mmio)) {
-+		ret = PTR_ERR(sbsc->mmio);
-+		goto error;
-+	}
-+
-+	sbsc->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(sbsc->clk)) {
-+		dev_err(&pdev->dev, "cannot get clock\n");
-+		ret = PTR_ERR(sbsc->clk);
-+		goto error;
-+	}
-+	pm_runtime_enable(&pdev->dev);
-+	pm_runtime_get_sync(&pdev->dev);
-+
-+	sbsc->flags = (u32) of_device_get_match_data(&pdev->dev);
-+
-+	master->bus_num = pdev->id;
-+	master->num_chipselect	= 1;
-+	master->mode_bits		= SPI_CPOL | SPI_CPHA;
-+	master->setup			= spibsc_setup;
-+	master->transfer_one_message	= spibsc_transfer_one_message;
-+	master->dev.of_node		= pdev->dev.of_node;
-+
-+	/* Initialize HW */
-+	spibsc_write(sbsc, CMNCR, CMNCR_INIT);
-+	spibsc_write(sbsc, DRCR, DRCR_RCF);
-+	spibsc_write(sbsc, SSLDR, SSLDR_INIT);
-+
-+	ret = devm_spi_register_controller(&pdev->dev, master);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "spi_register_controller error.\n");
-+		goto error;
-+	}
-+
-+	dev_info(&pdev->dev, "probed\n");
-+
-+	return 0;
-+
-+error:
-+	pm_runtime_put(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+
-+	spi_controller_put(master);
-+
-+	return ret;
-+}
-+
-+static int spibsc_remove(struct platform_device *pdev)
-+{
-+	struct spibsc_priv *sbsc = dev_get_drvdata(&pdev->dev);
-+
-+	pm_runtime_put(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+	spi_unregister_controller(sbsc->master);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id of_spibsc_match[] = {
-+	{ .compatible = "renesas,spibsc"},
-+	{ .compatible = "renesas,r7s72100-spibsc", .data = (void *)HAS_SPBCR},
-+	{ .compatible = "renesas,r7s9210-spibsc"},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, of_spibsc_match);
-+
-+static struct platform_driver spibsc_driver = {
-+	.probe = spibsc_probe,
-+	.remove = spibsc_remove,
-+	.driver = {
-+		.name = "spibsc",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_spibsc_match,
-+	},
-+};
-+module_platform_driver(spibsc_driver);
-+
-+MODULE_DESCRIPTION("Renesas SPIBSC SPI Flash driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Chris Brandt");
--- 
-2.23.0
+I've certainly heard it said that on some OF's the phandle was just ==
+the address of the internal representation, and I guess maybe for SLOF
+that is true.
 
+They seem to vary wildly though, eg. on an Apple G5:
+
+  $ find /proc/device-tree/ -name phandle | xargs lsprop | head -10
+  /proc/device-tree/vsp@0,f9000000/veo@f9180000/phandle ff970848
+  /proc/device-tree/vsp@0,f9000000/phandle ff970360
+  /proc/device-tree/vsp@0,f9000000/veo@f9080000/phandle ff970730
+  /proc/device-tree/nvram@0,fff04000/phandle ff967fb8
+  /proc/device-tree/xmodem/phandle ff9655e8
+  /proc/device-tree/multiboot/phandle ff9504f0
+  /proc/device-tree/diagnostics/phandle ff965550
+  /proc/device-tree/options/phandle ff893cf0
+  /proc/device-tree/openprom/client-services/phandle ff8925b8
+  /proc/device-tree/openprom/phandle ff892458
+
+That machine does not have enough RAM for those to be 32-bit real
+addresses. I think Apple OF is running in virtual mode though (?), so
+maybe they are pointers?
+
+And on an IBM pseries machine they're a bit all over the place:
+
+  /proc/device-tree/cpus/PowerPC,POWER8@40/ibm,phandle 10000040
+  /proc/device-tree/cpus/l2-cache@2005/ibm,phandle 00002005
+  /proc/device-tree/cpus/PowerPC,POWER8@30/ibm,phandle 10000030
+  /proc/device-tree/cpus/PowerPC,POWER8@20/ibm,phandle 10000020
+  /proc/device-tree/cpus/PowerPC,POWER8@10/ibm,phandle 10000010
+  /proc/device-tree/cpus/l2-cache@2003/ibm,phandle 00002003
+  /proc/device-tree/cpus/l2-cache@200a/ibm,phandle 0000200a
+  /proc/device-tree/cpus/l3-cache@3108/ibm,phandle 00003108
+  /proc/device-tree/cpus/l2-cache@2001/ibm,phandle 00002001
+  /proc/device-tree/cpus/l3-cache@3106/ibm,phandle 00003106
+  /proc/device-tree/cpus/ibm,phandle fffffff8
+  /proc/device-tree/cpus/l3-cache@3104/ibm,phandle 00003104
+  /proc/device-tree/cpus/l2-cache@2008/ibm,phandle 00002008
+  /proc/device-tree/cpus/l3-cache@3102/ibm,phandle 00003102
+  /proc/device-tree/cpus/l2-cache@2006/ibm,phandle 00002006
+  /proc/device-tree/cpus/l3-cache@3100/ibm,phandle 00003100
+  /proc/device-tree/cpus/PowerPC,POWER8@8/ibm,phandle 10000008
+  /proc/device-tree/cpus/l2-cache@2004/ibm,phandle 00002004
+  /proc/device-tree/cpus/PowerPC,POWER8@48/ibm,phandle 10000048
+  /proc/device-tree/cpus/PowerPC,POWER8@38/ibm,phandle 10000038
+  /proc/device-tree/cpus/l2-cache@2002/ibm,phandle 00002002
+  /proc/device-tree/cpus/PowerPC,POWER8@28/ibm,phandle 10000028
+  /proc/device-tree/cpus/l3-cache@3107/ibm,phandle 00003107
+  /proc/device-tree/cpus/PowerPC,POWER8@18/ibm,phandle 10000018
+  /proc/device-tree/cpus/l2-cache@2000/ibm,phandle 00002000
+  /proc/device-tree/cpus/l3-cache@3105/ibm,phandle 00003105
+  /proc/device-tree/cpus/l3-cache@3103/ibm,phandle 00003103
+  /proc/device-tree/cpus/l3-cache@310a/ibm,phandle 0000310a
+  /proc/device-tree/cpus/PowerPC,POWER8@0/ibm,phandle 10000000
+  /proc/device-tree/cpus/l2-cache@2007/ibm,phandle 00002007
+  /proc/device-tree/cpus/l3-cache@3101/ibm,phandle 00003101
+  /proc/device-tree/pci@80000002000001b/ibm,phandle 2000001b
+
+
+> With
+> 	qemu-system-ppc64le -m 16G -machine pseries -smp 8 
+>
+> I got the following output:
+> | entries: 64
+> | phandle 7e732468 slot 28 hash c
+> | phandle 7e732ad0 slot 10 hash 27
+> | phandle 7e732ee8 slot 28 hash 3a
+> | phandle 7e734160 slot 20 hash 36
+> | phandle 7e734318 slot 18 hash 3a
+> | phandle 7e734428 slot 28 hash 33
+> | phandle 7e734538 slot 38 hash 2c
+> | phandle 7e734850 slot 10 hash e
+> | phandle 7e735220 slot 20 hash 2d
+> | phandle 7e735bf0 slot 30 hash d
+> | phandle 7e7365c0 slot 0 hash 2d
+> | phandle 7e736f90 slot 10 hash d
+> | phandle 7e737960 slot 20 hash 2d
+> | phandle 7e738330 slot 30 hash d
+> | phandle 7e738d00 slot 0 hash 2d
+> | phandle 7e739730 slot 30 hash 38
+> | phandle 7e73bd08 slot 8 hash 17
+> | phandle 7e73c2e0 slot 20 hash 32
+> | phandle 7e73c7f8 slot 38 hash 37
+> | phandle 7e782420 slot 20 hash 13
+> | phandle 7e782ed8 slot 18 hash 1b
+> | phandle 7e73ce28 slot 28 hash 39
+> | phandle 7e73d390 slot 10 hash 22
+> | phandle 7e73d9a8 slot 28 hash 1a
+> | phandle 7e73dc28 slot 28 hash 37
+> | phandle 7e73de00 slot 0 hash a
+> | phandle 7e73e028 slot 28 hash 0
+> | phandle 7e7621a8 slot 28 hash 36
+> | phandle 7e73e458 slot 18 hash 1e
+> | phandle 7e73e608 slot 8 hash 1e
+> | phandle 7e740078 slot 38 hash 28
+> | phandle 7e740180 slot 0 hash 1d
+> | phandle 7e740240 slot 0 hash 33
+> | phandle 7e740348 slot 8 hash 29
+> | phandle 7e740410 slot 10 hash 2
+> | phandle 7e740eb0 slot 30 hash 3e
+> | phandle 7e745390 slot 10 hash 33
+> | phandle 7e747b08 slot 8 hash c
+> | phandle 7e748528 slot 28 hash f
+> | phandle 7e74a6e0 slot 20 hash 18
+> | phandle 7e74aab0 slot 30 hash b
+> | phandle 7e74f788 slot 8 hash d
+> | Used entries: 8, hashed: 29
+>
+> So the hash array has 64 entries out which only 8 are populated. Using
+> hash_32() populates 29 entries.
+> Could someone with real hardware verify this?
+> I'm not sure how important this performance wise, it looks just like a
+> waste using only 1/8 of the array.
+
+On the G5 it's similarly inefficient:
+
+[    0.005444] OF: of_populate_phandle_cache(222) entries: 256
+[    0.005457] OF: of_populate_phandle_cache(231) phandle ff88e0c0 slot c0 hash da
+[    0.005469] OF: of_populate_phandle_cache(231) phandle ff890a20 slot 20 hash a3
+[    0.005480] OF: of_populate_phandle_cache(231) phandle ff890c88 slot 88 hash ed
+[    0.005499] OF: of_populate_phandle_cache(231) phandle ff891138 slot 38 hash 49
+[    0.005513] OF: of_populate_phandle_cache(231) phandle ff8920c0 slot c0 hash fc
+[    0.005528] OF: of_populate_phandle_cache(231) phandle ff892248 slot 48 hash b7
+[    0.005542] OF: of_populate_phandle_cache(231) phandle ff892458 slot 58 hash 64
+[    0.005557] OF: of_populate_phandle_cache(231) phandle ff8925b8 slot b8 hash d8
+[    0.005571] OF: of_populate_phandle_cache(231) phandle ff8938a8 slot a8 hash 9d
+[    0.005585] OF: of_populate_phandle_cache(231) phandle ff893a68 slot 68 hash bc
+[    0.005599] OF: of_populate_phandle_cache(231) phandle ff893c58 slot 58 hash 31
+[    0.005614] OF: of_populate_phandle_cache(231) phandle ff893cf0 slot f0 hash 40
+[    0.005628] OF: of_populate_phandle_cache(231) phandle ff893d88 slot 88 hash 4f
+[    0.005642] OF: of_populate_phandle_cache(231) phandle ff894178 slot 78 hash 55
+[    0.005657] OF: of_populate_phandle_cache(231) phandle ff894ac8 slot c8 hash f0
+[    0.005671] OF: of_populate_phandle_cache(231) phandle ff895548 slot 48 hash a9
+[    0.005685] OF: of_populate_phandle_cache(231) phandle ff8a0118 slot 18 hash e
+[    0.005700] OF: of_populate_phandle_cache(231) phandle ff8a09d0 slot d0 hash 9a
+[    0.005714] OF: of_populate_phandle_cache(231) phandle ff8a22f8 slot f8 hash 77
+[    0.005729] OF: of_populate_phandle_cache(231) phandle ff8a5470 slot 70 hash af
+[    0.005743] OF: of_populate_phandle_cache(231) phandle ff8aa718 slot 18 hash 15
+[    0.005757] OF: of_populate_phandle_cache(231) phandle ff8ad4b8 slot b8 hash 72
+[    0.005771] OF: of_populate_phandle_cache(231) phandle ff8ae2d0 slot d0 hash 94
+[    0.005786] OF: of_populate_phandle_cache(231) phandle ff8aff38 slot 38 hash 3c
+[    0.005800] OF: of_populate_phandle_cache(231) phandle ff8b0a10 slot 10 hash 93
+[    0.005815] OF: of_populate_phandle_cache(231) phandle ff8b3880 slot 80 hash 63
+[    0.005829] OF: of_populate_phandle_cache(231) phandle ff8b4288 slot 88 hash 46
+[    0.005843] OF: of_populate_phandle_cache(231) phandle ff8b61d0 slot d0 hash f
+[    0.005858] OF: of_populate_phandle_cache(231) phandle ff8b8d20 slot 20 hash 4c
+[    0.005872] OF: of_populate_phandle_cache(231) phandle ff8bba60 slot 60 hash fe
+[    0.005886] OF: of_populate_phandle_cache(231) phandle ff929568 slot 68 hash bd
+[    0.005901] OF: of_populate_phandle_cache(231) phandle ff92bb30 slot 30 hash 1d
+[    0.005915] OF: of_populate_phandle_cache(231) phandle ff92e180 slot 80 hash 6f
+[    0.005929] OF: of_populate_phandle_cache(231) phandle ff931b98 slot 98 hash 8
+[    0.005944] OF: of_populate_phandle_cache(231) phandle ff938788 slot 88 hash 85
+[    0.005958] OF: of_populate_phandle_cache(231) phandle ff938850 slot 50 hash e9
+[    0.005972] OF: of_populate_phandle_cache(231) phandle ff94f338 slot 38 hash 15
+[    0.005987] OF: of_populate_phandle_cache(231) phandle ff94f3f0 slot f0 hash 5d
+[    0.006001] OF: of_populate_phandle_cache(231) phandle ff94fb08 slot 8 hash 3
+[    0.006014] OF: of_populate_phandle_cache(231) phandle ff950058 slot 58 hash 7d
+[    0.006028] OF: of_populate_phandle_cache(231) phandle ff9504f0 slot f0 hash ae
+[    0.006043] OF: of_populate_phandle_cache(231) phandle ff965550 slot 50 hash 89
+[    0.006057] OF: of_populate_phandle_cache(231) phandle ff9655e8 slot e8 hash 98
+[    0.006071] OF: of_populate_phandle_cache(231) phandle ff967fb8 slot b8 hash 29
+[    0.006086] OF: of_populate_phandle_cache(231) phandle ff969740 slot 40 hash 1f
+[    0.006100] OF: of_populate_phandle_cache(231) phandle ff969a20 slot 20 hash 40
+[    0.006114] OF: of_populate_phandle_cache(231) phandle ff96a5b0 slot b0 hash df
+[    0.006129] OF: of_populate_phandle_cache(231) phandle ff96acb0 slot b0 hash 5a
+[    0.006143] OF: of_populate_phandle_cache(231) phandle ff96adf8 slot f8 hash a3
+[    0.006157] OF: of_populate_phandle_cache(231) phandle ff96b088 slot 88 hash 35
+[    0.006171] OF: of_populate_phandle_cache(231) phandle ff9c1100 slot 0 hash dd
+[    0.006186] OF: of_populate_phandle_cache(231) phandle ff9f0428 slot 28 hash 88
+[    0.006200] OF: of_populate_phandle_cache(231) phandle ff9f3c60 slot 60 hash c9
+[    0.006214] OF: of_populate_phandle_cache(231) phandle ff9f1230 slot 30 hash 8e
+[    0.006228] OF: of_populate_phandle_cache(231) phandle ff96c240 slot 40 hash ce
+[    0.006242] OF: of_populate_phandle_cache(231) phandle ff96d050 slot 50 hash e2
+[    0.006256] OF: of_populate_phandle_cache(231) phandle ff9bca00 slot 0 hash 3f
+[    0.006271] OF: of_populate_phandle_cache(231) phandle ff9f3080 slot 80 hash 9c
+[    0.006285] OF: of_populate_phandle_cache(231) phandle ff96e148 slot 48 hash 25
+[    0.006299] OF: of_populate_phandle_cache(231) phandle ff970960 slot 60 hash a4
+[    0.006313] OF: of_populate_phandle_cache(231) phandle ff972038 slot 38 hash 61
+[    0.006328] OF: of_populate_phandle_cache(231) phandle ff9723e0 slot e0 hash e6
+[    0.006342] OF: of_populate_phandle_cache(231) phandle ff972808 slot 8 hash 50
+[    0.006356] OF: of_populate_phandle_cache(231) phandle ff9729c0 slot c0 hash 60
+[    0.006370] OF: of_populate_phandle_cache(231) phandle ff972b78 slot 78 hash 71
+[    0.006385] OF: of_populate_phandle_cache(231) phandle ff972da8 slot a8 hash 58
+[    0.006399] OF: of_populate_phandle_cache(231) phandle ff972f00 slot 0 hash bd
+[    0.006414] OF: of_populate_phandle_cache(231) phandle ff973058 slot 58 hash 22
+[    0.006428] OF: of_populate_phandle_cache(231) phandle ff973210 slot 10 hash 33
+[    0.006442] OF: of_populate_phandle_cache(231) phandle ff973360 slot 60 hash 8a
+[    0.006456] OF: of_populate_phandle_cache(231) phandle ff973520 slot 20 hash a9
+[    0.006471] OF: of_populate_phandle_cache(231) phandle ff973670 slot 70 hash 0
+[    0.006485] OF: of_populate_phandle_cache(231) phandle ff973828 slot 28 hash 11
+[    0.006499] OF: of_populate_phandle_cache(231) phandle ff9739e0 slot e0 hash 22
+[    0.006513] OF: of_populate_phandle_cache(231) phandle ff973b40 slot 40 hash 95
+[    0.006528] OF: of_populate_phandle_cache(231) phandle ff973d88 slot 88 hash a7
+[    0.006542] OF: of_populate_phandle_cache(231) phandle ff973fb0 slot b0 hash 7f
+[    0.006556] OF: of_populate_phandle_cache(231) phandle ff974168 slot 68 hash 90
+[    0.006570] OF: of_populate_phandle_cache(231) phandle ff974320 slot 20 hash a1
+[    0.006584] OF: of_populate_phandle_cache(231) phandle ff974560 slot 60 hash a4
+[    0.006599] OF: of_populate_phandle_cache(231) phandle ff975178 slot 78 hash 35
+[    0.006613] OF: of_populate_phandle_cache(231) phandle ff975ce8 slot e8 hash 9a
+[    0.006628] OF: of_populate_phandle_cache(231) phandle ff9768a8 slot a8 hash 8f
+[    0.006642] OF: of_populate_phandle_cache(231) phandle ff976fa8 slot a8 hash a
+[    0.006656] OF: of_populate_phandle_cache(231) phandle ff9770a8 slot a8 hash d3
+[    0.006670] OF: of_populate_phandle_cache(231) phandle ff9772a0 slot a0 hash 56
+[    0.006685] OF: of_populate_phandle_cache(231) phandle ff977468 slot 68 hash 83
+[    0.006699] OF: of_populate_phandle_cache(231) phandle ff9f3710 slot 10 hash 50
+[    0.006713] OF: of_populate_phandle_cache(231) phandle ff977600 slot 0 hash 5a
+[    0.006728] OF: of_populate_phandle_cache(231) phandle ff977978 slot 78 hash 8a
+[    0.006742] OF: of_populate_phandle_cache(231) phandle ff994880 slot 80 hash 43
+[    0.006757] OF: of_populate_phandle_cache(231) phandle ff9f1f80 slot 80 hash 4b
+[    0.006771] OF: of_populate_phandle_cache(231) phandle ff9f2190 slot 90 hash f9
+[    0.006785] OF: of_populate_phandle_cache(231) phandle ff9f24b8 slot b8 hash 9a
+[    0.006800] OF: of_populate_phandle_cache(231) phandle ff9f2638 slot 38 hash 46
+[    0.006814] OF: of_populate_phandle_cache(231) phandle ff9f2980 slot 80 hash 20
+[    0.006828] OF: of_populate_phandle_cache(231) phandle ff99ccd0 slot d0 hash 37
+[    0.006843] OF: of_populate_phandle_cache(231) phandle ff9a5120 slot 20 hash 2b
+[    0.006857] OF: of_populate_phandle_cache(231) phandle ff96f258 slot 58 hash 92
+[    0.006872] OF: of_populate_phandle_cache(231) phandle ff9a5520 slot 20 hash 4d
+[    0.006886] OF: of_populate_phandle_cache(231) phandle ff9a6438 slot 38 hash 38
+[    0.006901] OF: of_populate_phandle_cache(231) phandle ff9a9340 slot 40 hash 16
+[    0.006915] OF: of_populate_phandle_cache(231) phandle ff9a99d0 slot d0 hash ca
+[    0.006929] OF: of_populate_phandle_cache(231) phandle ff9acba0 slot a0 hash 9f
+[    0.006944] OF: of_populate_phandle_cache(231) phandle ff9ad210 slot 10 hash 1a
+[    0.006959] OF: of_populate_phandle_cache(231) phandle ff970360 slot 60 hash f1
+[    0.006973] OF: of_populate_phandle_cache(231) phandle ff970730 slot 30 hash be
+[    0.006987] OF: of_populate_phandle_cache(231) phandle ff970848 slot 48 hash b1
+[    0.007002] OF: of_populate_phandle_cache(231) phandle ff977ab8 slot b8 hash c4
+[    0.007016] OF: of_populate_phandle_cache(231) phandle ff977c98 slot 98 hash 1c
+[    0.007030] OF: of_populate_phandle_cache(231) phandle ff97f300 slot 0 hash 44
+[    0.007044] OF: of_populate_phandle_cache(231) phandle ff97f4e8 slot e8 hash aa
+[    0.007059] OF: of_populate_phandle_cache(231) phandle ff97f708 slot 8 hash 74
+[    0.007073] OF: of_populate_phandle_cache(231) phandle ff97f920 slot 20 hash 30
+[    0.007087] OF: of_populate_phandle_cache(231) phandle ff97fb40 slot 40 hash fa
+[    0.007102] OF: of_populate_phandle_cache(231) phandle ff97fd18 slot 18 hash 44
+[    0.007116] OF: of_populate_phandle_cache(231) phandle ff97fee8 slot e8 hash 7f
+[    0.007130] OF: of_populate_phandle_cache(231) phandle ff9800c0 slot c0 hash c9
+[    0.007144] OF: of_populate_phandle_cache(231) phandle ff980298 slot 98 hash 13
+[    0.007158] OF: of_populate_phandle_cache(231) phandle ff980430 slot 30 hash ea
+[    0.007172] OF: of_populate_phandle_cache(231) phandle ff9806c8 slot c8 hash 8a
+[    0.007187] OF: of_populate_phandle_cache(231) phandle ff980898 slot 98 hash c6
+[    0.007201] OF: of_populate_phandle_cache(231) phandle ff980ba8 slot a8 hash 3c
+[    0.007215] OF: of_populate_phandle_cache(231) phandle ff982648 slot 48 hash b7
+[    0.007230] OF: of_populate_phandle_cache(231) phandle ff982df0 slot f0 hash 5e
+[    0.007244] OF: of_populate_phandle_cache(231) phandle ff98e7a0 slot a0 hash 81
+[    0.007259] OF: of_populate_phandle_cache(231) phandle ff98e998 slot 98 hash 4
+[    0.007273] OF: of_populate_phandle_cache(231) phandle ff98eb28 slot 28 hash cd
+[    0.007287] OF: of_populate_phandle_cache(231) phandle ff98ecb8 slot b8 hash 97
+[    0.007301] OF: of_populate_phandle_cache(231) phandle ff98ee50 slot 50 hash 6e
+[    0.007316] OF: of_populate_phandle_cache(231) phandle ff98efe8 slot e8 hash 46
+[    0.007330] OF: of_populate_phandle_cache(231) phandle ff98f178 slot 78 hash f
+[    0.007344] OF: of_populate_phandle_cache(231) phandle ff98f310 slot 10 hash e7
+[    0.007358] OF: of_populate_phandle_cache(231) phandle ff98f4a8 slot a8 hash be
+[    0.007379] OF: of_populate_phandle_cache(242) Used entries: 31, hashed: 111
+
+
+And some output from a "real" pseries machine (IBM OF), which is
+slightly better:
+
+[    0.129026] OF: of_populate_phandle_cache(222) entries: 128
+[    0.129030] OF: of_populate_phandle_cache(231) phandle ffffffff slot 7f hash 4f
+[    0.129034] OF: of_populate_phandle_cache(231) phandle cbffa0 slot 20 hash 2a
+[    0.129038] OF: of_populate_phandle_cache(231) phandle fffffff7 slot 77 hash 47
+[    0.129043] OF: of_populate_phandle_cache(231) phandle fffffff8 slot 78 hash 78
+[    0.129046] OF: of_populate_phandle_cache(231) phandle 10000000 slot 0 hash 38
+[    0.129050] OF: of_populate_phandle_cache(231) phandle 10000008 slot 8 hash 3f
+[    0.129055] OF: of_populate_phandle_cache(231) phandle 10000010 slot 10 hash 46
+[    0.129058] OF: of_populate_phandle_cache(231) phandle 10000018 slot 18 hash 4d
+[    0.129062] OF: of_populate_phandle_cache(231) phandle 10000020 slot 20 hash 54
+[    0.129066] OF: of_populate_phandle_cache(231) phandle 10000028 slot 28 hash 5b
+[    0.129070] OF: of_populate_phandle_cache(231) phandle 10000030 slot 30 hash 62
+[    0.129074] OF: of_populate_phandle_cache(231) phandle 10000038 slot 38 hash 69
+[    0.129078] OF: of_populate_phandle_cache(231) phandle 10000040 slot 40 hash 71
+[    0.129082] OF: of_populate_phandle_cache(231) phandle 10000048 slot 48 hash 78
+[    0.129086] OF: of_populate_phandle_cache(231) phandle 2000 slot 0 hash 8
+[    0.129089] OF: of_populate_phandle_cache(231) phandle 2001 slot 1 hash 39
+[    0.129093] OF: of_populate_phandle_cache(231) phandle 2002 slot 2 hash 6a
+[    0.129097] OF: of_populate_phandle_cache(231) phandle 2003 slot 3 hash 1b
+[    0.129100] OF: of_populate_phandle_cache(231) phandle 2004 slot 4 hash 4b
+[    0.129104] OF: of_populate_phandle_cache(231) phandle 2005 slot 5 hash 7c
+[    0.129108] OF: of_populate_phandle_cache(231) phandle 2006 slot 6 hash 2d
+[    0.129112] OF: of_populate_phandle_cache(231) phandle 2007 slot 7 hash 5e
+[    0.129115] OF: of_populate_phandle_cache(231) phandle 2008 slot 8 hash f
+[    0.129119] OF: of_populate_phandle_cache(231) phandle 200a slot a hash 71
+[    0.129123] OF: of_populate_phandle_cache(231) phandle 3100 slot 0 hash 30
+[    0.129127] OF: of_populate_phandle_cache(231) phandle 3101 slot 1 hash 61
+[    0.129130] OF: of_populate_phandle_cache(231) phandle 3102 slot 2 hash 12
+[    0.129134] OF: of_populate_phandle_cache(231) phandle 3103 slot 3 hash 43
+[    0.129138] OF: of_populate_phandle_cache(231) phandle 3104 slot 4 hash 74
+[    0.129141] OF: of_populate_phandle_cache(231) phandle 3105 slot 5 hash 25
+[    0.129145] OF: of_populate_phandle_cache(231) phandle 3106 slot 6 hash 56
+[    0.129148] OF: of_populate_phandle_cache(231) phandle 3107 slot 7 hash 7
+[    0.129152] OF: of_populate_phandle_cache(231) phandle 3108 slot 8 hash 37
+[    0.129156] OF: of_populate_phandle_cache(231) phandle 310a slot a hash 19
+[    0.129160] OF: of_populate_phandle_cache(231) phandle dd08a0 slot 20 hash 26
+[    0.129164] OF: of_populate_phandle_cache(231) phandle dd2a58 slot 58 hash 37
+[    0.129168] OF: of_populate_phandle_cache(231) phandle fffffff9 slot 79 hash 29
+[    0.129172] OF: of_populate_phandle_cache(231) phandle fffffff6 slot 76 hash 17
+[    0.129176] OF: of_populate_phandle_cache(231) phandle fffffff4 slot 74 hash 35
+[    0.129180] OF: of_populate_phandle_cache(231) phandle fffffff5 slot 75 hash 66
+[    0.129184] OF: of_populate_phandle_cache(231) phandle fffffff3 slot 73 hash 4
+[    0.129188] OF: of_populate_phandle_cache(231) phandle c9cca8 slot 28 hash 32
+[    0.129191] OF: of_populate_phandle_cache(231) phandle dd2bc8 slot 48 hash 7f
+[    0.129195] OF: of_populate_phandle_cache(231) phandle 25000015 slot 15 hash 24
+[    0.129199] OF: of_populate_phandle_cache(231) phandle 2500001b slot 1b hash 49
+[    0.129203] OF: of_populate_phandle_cache(231) phandle 2500001e slot 1e hash 5c
+[    0.129207] OF: of_populate_phandle_cache(231) phandle fffffffa slot 7a hash 5a
+[    0.129211] OF: of_populate_phandle_cache(231) phandle 80000100 slot 0 hash 24
+[    0.129215] OF: of_populate_phandle_cache(231) phandle 80000140 slot 40 hash 5d
+[    0.129219] OF: of_populate_phandle_cache(231) phandle fffffffe slot 7e hash 1e
+[    0.129223] OF: of_populate_phandle_cache(231) phandle fffffffb slot 7b hash b
+[    0.129227] OF: of_populate_phandle_cache(231) phandle c9ed48 slot 48 hash 49
+[    0.129231] OF: of_populate_phandle_cache(231) phandle db9740 slot 40 hash 4c
+[    0.129235] OF: of_populate_phandle_cache(231) phandle d609a0 slot 20 hash 34
+[    0.129238] OF: of_populate_phandle_cache(231) phandle dcd820 slot 20 hash 67
+[    0.129242] OF: of_populate_phandle_cache(231) phandle dae0a0 slot 20 hash 75
+[    0.129246] OF: of_populate_phandle_cache(231) phandle d21df0 slot 70 hash 44
+[    0.129250] OF: of_populate_phandle_cache(231) phandle cc2ec8 slot 48 hash 36
+[    0.129254] OF: of_populate_phandle_cache(231) phandle d6a2a8 slot 28 hash 27
+[    0.129258] OF: of_populate_phandle_cache(231) phandle d23330 slot 30 hash 37
+[    0.129262] OF: of_populate_phandle_cache(231) phandle dd0320 slot 20 hash 3e
+[    0.129266] OF: of_populate_phandle_cache(231) phandle dae248 slot 48 hash 6f
+[    0.129270] OF: of_populate_phandle_cache(231) phandle d981d8 slot 58 hash 2f
+[    0.129274] OF: of_populate_phandle_cache(231) phandle da3da8 slot 28 hash 26
+[    0.129278] OF: of_populate_phandle_cache(231) phandle d88480 slot 0 hash 4a
+[    0.129282] OF: of_populate_phandle_cache(231) phandle d8e118 slot 18 hash 5a
+[    0.129285] OF: of_populate_phandle_cache(231) phandle d8ff50 slot 50 hash 4c
+[    0.129289] OF: of_populate_phandle_cache(231) phandle e9da68 slot 68 hash 59
+[    0.129293] OF: of_populate_phandle_cache(231) phandle ebc460 slot 60 hash 3a
+[    0.129297] OF: of_populate_phandle_cache(231) phandle d91c48 slot 48 hash 20
+[    0.129301] OF: of_populate_phandle_cache(231) phandle d3b5f0 slot 70 hash f
+[    0.129305] OF: of_populate_phandle_cache(231) phandle d428d0 slot 50 hash 7d
+[    0.129309] OF: of_populate_phandle_cache(231) phandle d80ae0 slot 60 hash 58
+[    0.129313] OF: of_populate_phandle_cache(231) phandle d9a500 slot 0 hash 8
+[    0.129316] OF: of_populate_phandle_cache(231) phandle dacc78 slot 78 hash 7c
+[    0.129320] OF: of_populate_phandle_cache(231) phandle cc4930 slot 30 hash 42
+[    0.129324] OF: of_populate_phandle_cache(231) phandle db2510 slot 10 hash 7b
+[    0.129328] OF: of_populate_phandle_cache(231) phandle dcca28 slot 28 hash 73
+[    0.129332] OF: of_populate_phandle_cache(231) phandle d28488 slot 8 hash 3f
+[    0.129336] OF: of_populate_phandle_cache(231) phandle d589f8 slot 78 hash 61
+[    0.129340] OF: of_populate_phandle_cache(231) phandle ecf870 slot 70 hash 69
+[    0.129344] OF: of_populate_phandle_cache(231) phandle d97948 slot 48 hash d
+[    0.129348] OF: of_populate_phandle_cache(231) phandle d27720 slot 20 hash 4a
+[    0.129352] OF: of_populate_phandle_cache(231) phandle d513c8 slot 48 hash 7f
+[    0.129356] OF: of_populate_phandle_cache(231) phandle dd0228 slot 28 hash 61
+[    0.129360] OF: of_populate_phandle_cache(231) phandle d76568 slot 68 hash 4e
+[    0.129364] OF: of_populate_phandle_cache(231) phandle d4a390 slot 10 hash 70
+[    0.129368] OF: of_populate_phandle_cache(231) phandle cf3a10 slot 10 hash f
+[    0.129372] OF: of_populate_phandle_cache(231) phandle d0bc58 slot 58 hash 7c
+[    0.129376] OF: of_populate_phandle_cache(231) phandle 20000015 slot 15 hash 72
+[    0.129380] OF: of_populate_phandle_cache(231) phandle e21228 slot 28 hash 75
+[    0.129384] OF: of_populate_phandle_cache(231) phandle e33b48 slot 48 hash 64
+[    0.129388] OF: of_populate_phandle_cache(231) phandle e38f08 slot 8 hash 11
+[    0.129392] OF: of_populate_phandle_cache(231) phandle e3b8a0 slot 20 hash 27
+[    0.129396] OF: of_populate_phandle_cache(231) phandle e3e378 slot 78 hash 5b
+[    0.129400] OF: of_populate_phandle_cache(231) phandle e43740 slot 40 hash f
+[    0.129404] OF: of_populate_phandle_cache(231) phandle 2000001b slot 1b hash 18
+[    0.129408] OF: of_populate_phandle_cache(231) phandle e45fc8 slot 48 hash 32
+[    0.129412] OF: of_populate_phandle_cache(231) phandle e5be68 slot 68 hash 55
+[    0.129416] OF: of_populate_phandle_cache(231) phandle 2000001e slot 1e hash 2a
+[    0.129420] OF: of_populate_phandle_cache(231) phandle 2204001e slot 1e hash 7e
+[    0.129423] OF: of_populate_phandle_cache(231) phandle e6c880 slot 0 hash 18
+[    0.129427] OF: of_populate_phandle_cache(231) phandle e7bca0 slot 20 hash 45
+[    0.129431] OF: of_populate_phandle_cache(231) phandle e8b0c0 slot 40 hash 71
+[    0.129435] OF: of_populate_phandle_cache(231) phandle fffffffd slot 7d hash 6d
+[    0.129439] OF: of_populate_phandle_cache(231) phandle fffffffc slot 7c hash 3c
+[    0.129443] OF: of_populate_phandle_cache(231) phandle df1d80 slot 0 hash 49
+[    0.129447] OF: of_populate_phandle_cache(231) phandle df3488 slot 8 hash 52
+[    0.129451] OF: of_populate_phandle_cache(231) phandle df3d80 slot 0 hash 52
+[    0.129454] OF: of_populate_phandle_cache(231) phandle df3198 slot 18 hash 34
+[    0.129458] OF: of_populate_phandle_cache(231) phandle df2888 slot 8 hash 1f
+[    0.129462] OF: of_populate_phandle_cache(231) phandle 30000000 slot 0 hash 28
+[    0.129467] OF: of_populate_phandle_cache(242) Used entries: 39, hashed: 81
+
+
+
+So yeah using hash_32() is quite a bit better in both cases.
+
+And if I'm reading your patch right it would be a single line change to
+switch, so that seems like it's worth doing to me.
+
+cheers
+
+
+> The patch used for testing:
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 1d667eb730e19..2640d4bc81a9a 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -197,6 +197,7 @@ void of_populate_phandle_cache(void)
+>  	u32 cache_entries;
+>  	struct device_node *np;
+>  	u32 phandles = 0;
+> +	struct device_node **cache2;
+>  
+>  	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  
+> @@ -214,14 +215,32 @@ void of_populate_phandle_cache(void)
+>  
+>  	phandle_cache = kcalloc(cache_entries, sizeof(*phandle_cache),
+>  				GFP_ATOMIC);
+> +	cache2 = kcalloc(cache_entries, sizeof(*phandle_cache), GFP_ATOMIC);
+>  	if (!phandle_cache)
+>  		goto out;
+>  
+> +	pr_err("%s(%d) entries: %d\n", __func__, __LINE__, cache_entries);
+>  	for_each_of_allnodes(np)
+>  		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL) {
+> +			int slot;
+>  			of_node_get(np);
+>  			phandle_cache[np->phandle & phandle_cache_mask] = np;
+> +			slot = hash_32(np->phandle, __ffs(cache_entries));
+> +			cache2[slot] = np;
+> +			pr_err("%s(%d) phandle %x slot %x hash %x\n", __func__, __LINE__,
+> +			       np->phandle, np->phandle & phandle_cache_mask, slot);
+>  		}
+> +	{
+> +		int i, filled = 0, filled_hash = 0;
+> +
+> +		for (i = 0; i < cache_entries; i++) {
+> +			if (phandle_cache[i])
+> +				filled++;
+> +			if (cache2[i])
+> +				filled_hash++;
+> +		}
+> +		pr_err("%s(%d) Used entries: %d, hashed: %d\n", __func__, __LINE__, filled, filled_hash);
+> +	}
+>  
+>  out:
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>
+> Sebastian
