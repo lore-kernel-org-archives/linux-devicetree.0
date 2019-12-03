@@ -6,78 +6,87 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3019EC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964C8C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0051F20833
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DEA207DD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575400480;
-	bh=k+VwXob+rBuIqkK49laeUvkmESDlVa+WF1BieYyDSYw=;
+	s=default; t=1575400739;
+	bh=Da2P9GWo5UVPIActjFIbF9HD8tE/kPEcV68IN4uspcI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iVPWBr+wZgsvZNkTR9kMX72IOPkHzT89gLpkPMoNgi20tjpYluAmrJCt/yvD8cIiI
-	 jT5okJheJASOhCz4jhol/7/tZk4zrSpcohtJqbhNlpZExr39lVJ0JPofcfrsxQfO+i
-	 0JVzb+F4ZrY9S3qZVjZN5g554TffhTWforsLWXtc=
+	b=skqS4rbqyNwIqFQhjrh72soEtZnvmkOVwXwo411oG/rd8I4zhvF3lHA62e2qXySQg
+	 tH0A2RZNh6c3bLPJAkmcnkz1wQj8GvuOyHmnNAmkTsLpz4NjDuVhtcWzGHlXRmd8QY
+	 gfSDfZfXJNL8nq5QSEKs5pzPz9Kl2p29IqvaZxAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfLCTOj (ORCPT
+        id S1726932AbfLCTS6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 14:14:39 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40515 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfLCTOj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 14:14:39 -0500
-Received: by mail-oi1-f193.google.com with SMTP id 6so4386787oix.7;
-        Tue, 03 Dec 2019 11:14:38 -0800 (PST)
+        Tue, 3 Dec 2019 14:18:58 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39977 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfLCTS6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 14:18:58 -0500
+Received: by mail-ot1-f65.google.com with SMTP id i15so3970881oto.7;
+        Tue, 03 Dec 2019 11:18:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gRLlFC9D1u1hwI1d/EbEjZ94RjJCTsPp84ZAxR2T34c=;
-        b=ei6mwQVlV7G7iyCTc0pFj5HarMuHAiwmogb1A/NPsUU1ZJXNY8mT4osiFc3vqy49zQ
-         YNqF78SmPPfrCW70EXbkN8BxA7ZezbS4iAdDx+Z4FEh6p15xkSfCqayE22myO4nIyUWZ
-         18pok4LaYWazldY4u3356hMzOprFrMVY/1UDTavR+/Sfa0b98hOkanWa6E+Zaq36y4cH
-         cWQ4nAXjYSLJEB+QGVKnjWNMZ9PlQ6mHoZHymKjzSk2sc5GIfY7LKFHuslWVCBBungU8
-         X6F3bgv8OzBtsGcUu432gqjED13dqwVp94z3M3Q8/7zhMi88b1qq69vLbH02/A8NK1CL
-         Zn+g==
-X-Gm-Message-State: APjAAAUdwwRMMiRKRSJXqRoM7W8HkhdAKh59TQiZHv2IsuvbVn/n0wWf
-        vDWKJkX/MWgvfHxz5S7njA==
-X-Google-Smtp-Source: APXvYqwfW6cNdzLLtGnRM6Eeh4eI3J0OXPCG+lnr/0NSOIKOUhB/2E6cGltU8AStJzERHBVHvLKFWQ==
-X-Received: by 2002:aca:b2c5:: with SMTP id b188mr1686191oif.55.1575400477922;
-        Tue, 03 Dec 2019 11:14:37 -0800 (PST)
+        bh=FLXMRyKICPlNOZ05fFO5shGyYBI5uM+0oVnpeDhbnQM=;
+        b=AcQySzs4hoQCM2vdX4KzFNhCtwYcNHnNQd84c2LfrhNJo3wnFS9JPsxwh+aU/jkpff
+         Ogqb+/wBIwizJyiZCYstotHrxcDSbd3Ld4XBqyIjLfTG063acBdYoihc4zQ5jTPd8+qE
+         r9FKGJafK3b7NLykhu35BMRBRhsqZzdkxe7FCJ4Fk1ATgnbjCfnc4nvDu6j3Pat3GE3+
+         5LNrJE0jGNsOeQwYnRGmlXpDRnz70l2WIzU8Ju30Z2cUoBFnm8bg5tI6JEzBjYR1g7yf
+         5y8fM+o7OqTZcIlwl8BaO9Cki8VV+O1mwaL19fH9zDTMCYBtsqOu4ZbK+KRJUDPBV1/1
+         vI5w==
+X-Gm-Message-State: APjAAAUrIOCnzFqkZnPIRUqU7IBzIsF4jStfTuFGom/uC23r8ZJ8WVKg
+        V2XZYkawhVeeAPwvtfHguA==
+X-Google-Smtp-Source: APXvYqzfMXYRpS6RB54EALQSkRj1NegXLtdiWeUYH7IkLsa+ocFmXr6dZDyL/GCEN559Imx4AOyWZA==
+X-Received: by 2002:a9d:74d8:: with SMTP id a24mr4704586otl.100.1575400737646;
+        Tue, 03 Dec 2019 11:18:57 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w72sm1413333oie.49.2019.12.03.11.14.37
+        by smtp.gmail.com with ESMTPSA id z17sm1445722oib.3.2019.12.03.11.18.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 11:14:37 -0800 (PST)
-Date:   Tue, 3 Dec 2019 13:14:36 -0600
+        Tue, 03 Dec 2019 11:18:57 -0800 (PST)
+Date:   Tue, 3 Dec 2019 13:18:56 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     iommu@lists.linux-foundation.org, robin.murphy@arm.com,
-        will@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v2 1/8] dt-bindings: arm-smmu: Add Adreno GPU variant
-Message-ID: <20191203191436.GA11606@bogus>
-References: <1574465484-7115-1-git-send-email-jcrouse@codeaurora.org>
- <0101016e95751ea5-da4da251-ddba-4017-9258-b2cfd4e06f7f-000000@us-west-2.amazonses.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH v12 2/7] dt-bindings: sun6i-dsi: Add A64 DPHY compatible
+ (w/ A31 fallback)
+Message-ID: <20191203191856.GA17427@bogus>
+References: <20191203134816.5319-1-jagan@amarulasolutions.com>
+ <20191203134816.5319-3-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0101016e95751ea5-da4da251-ddba-4017-9258-b2cfd4e06f7f-000000@us-west-2.amazonses.com>
+In-Reply-To: <20191203134816.5319-3-jagan@amarulasolutions.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 11:31:51PM +0000, Jordan Crouse wrote:
-> Add a compatible string to identify SMMUs that are attached
-> to Adreno GPU devices that wish to support split pagetables.
+On Tue, Dec 03, 2019 at 07:18:11PM +0530, Jagan Teki wrote:
+> The MIPI DSI PHY controller on Allwinner A64 is similar
+> on the one on A31.
 > 
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> Add A64 compatible and append A31 compatible as fallback.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 > ---
+> Changes for v12:
+> - none
 > 
->  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml         | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
