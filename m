@@ -2,92 +2,144 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D068C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 17:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE65C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 18:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B7220848
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 17:22:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575393763;
-	bh=dcPKLCZ7klKSSsRhT4cf6oRbg04lRe9CTSbvV+NSuzk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EZS+U2Ar74lopenqme9heCz7kwQqzdUbl1p544lB+x6QQogwkWWfyyw1UtMDUPzBz
-	 WjGw8ObRMzaESS/U0BQwE8TxImGWMwEByFR25Bs7ppBM9hyrz2AobScXqyZ9HnctGf
-	 dlbTQyX/PScmMduQrTCVaCZmIdZBtZV+e9tXp2F0=
+	by mail.kernel.org (Postfix) with ESMTP id D13A0206DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 18:02:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eIscy6XJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfLCRWj (ORCPT
+        id S1726452AbfLCSCe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 12:22:39 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36026 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfLCRWi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 12:22:38 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i4so3642699otr.3;
-        Tue, 03 Dec 2019 09:22:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cMsreEXFeCso0tiE1Nbi7IoMG046yHL0rtrvdWFtaho=;
-        b=UdX++vU+W5shqKM2CmjSHC4mtV4/zkER5JPF8buavtxok+Yz6+S4oIUE0tFaVG9yEY
-         fP6Fqv3nNdtVjp6aqi/QTmwdAr9lS5u/zLYyz+G2ihNTc0u4t5qQmb+c4vgKrG1xCYdG
-         g3va18qjIAF3HTW0H9wRiBdgoouOvlOXihQwZREkV2Phre/RJkXG1lLo9mYRRJ7YAt3J
-         C/mQ/5pzroruHJ/yTOH0VUWW03nFEsceqxDA1l7GT8LsqXYjtAS73WLaYGOx7otZtIJV
-         Jw25F/qGrnV4NbZe0MHb8XXl8hYLYFv51+D862ZH/QSU890hI5mG8lXS2iao4hUqExT9
-         Z2CQ==
-X-Gm-Message-State: APjAAAV/oPafFWVF470SGZA45MJ1su4auVsJJyNiWFC8mZ5bRWJTh2Pt
-        YOKoonAyNRpi5JzRYJhtvfwHQGw=
-X-Google-Smtp-Source: APXvYqzdAeQkbqgwFi1RtJ6Rg4XHcx5KcXKSdBUUJgdow8E/nrkzuK5u2+pt9+kZAbkm25CI2cr0YQ==
-X-Received: by 2002:a05:6830:120c:: with SMTP id r12mr4093703otp.327.1575393757792;
-        Tue, 03 Dec 2019 09:22:37 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b81sm1376539oia.0.2019.12.03.09.22.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 09:22:36 -0800 (PST)
-Date:   Tue, 3 Dec 2019 11:22:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: msm: Rename cache-controller to
- system-cache-controller
-Message-ID: <20191203172235.GA18507@bogus>
-References: <cover.1573814758.git.saiprakash.ranjan@codeaurora.org>
- <83394ae827ce7c123228b749bcae2a2c470e88a4.1573814758.git.saiprakash.ranjan@codeaurora.org>
+        Tue, 3 Dec 2019 13:02:34 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:39294 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfLCSCe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 13:02:34 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 03B3E309;
+        Tue,  3 Dec 2019 19:02:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1575396151;
+        bh=m36J6IT7250D3XBj/8ZSZZRsiNcc0jchQ6du9m7Wnbk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eIscy6XJQ+KROvAxHpEQAp6dfxLbPL6Wd0AWK6S+YTU/VG0XvumtLxzstNedE6GwB
+         zs6pxR1dT6tSMVWFf4fXRWeseaLgyohDjjIU9CCofa9ynCDmlEp+DwSJMyttho5HBS
+         rlX0N3pDlSxggOulzXHuJo3kzWzDGRvsmvDmYlwI=
+Date:   Tue, 3 Dec 2019 20:02:23 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
+        Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Clark <robdclark@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v4 07/11] drm/bridge: Clarify the atomic enable/disable
+ hooks semantics
+Message-ID: <20191203180223.GS4730@pendragon.ideasonboard.com>
+References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
+ <20191203141515.3597631-8-boris.brezillon@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <83394ae827ce7c123228b749bcae2a2c470e88a4.1573814758.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <20191203141515.3597631-8-boris.brezillon@collabora.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 15 Nov 2019 16:29:11 +0530, Sai Prakash Ranjan wrote:
-> DT schema checks for the node name 'cache-controller' and enforces
-> that there has to be a cache-level associated with it. But LLCC is
-> a system cache and does not have a cache-level property and hence
-> the dt binding check fails. So let us rename the LLCC cache-controller
-> to system-cache-controller which is the proper description and also
-> makes the schema happy.
-> 
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/msm/qcom,llcc.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Hi Boris,
 
-Acked-by: Rob Herring <robh@kernel.org>
+Thanks for the patch.
+
+On Tue, Dec 03, 2019 at 03:15:11PM +0100, Boris Brezillon wrote:
+> The [pre_]enable/[post_]disable hooks are passed the old atomic state.
+> Update the doc and rename the arguments to make it clear.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+> Changes in v4:
+> * Drop the doc update (Laurent)
+
+I was referring to the doc updates in drm_bridge.h only. Is there a
+reason you dropped the changes from drm_bridge.c ? I think those were
+good.
+
+> * Add Rbs
+> 
+> Changes in v3:
+> * New patch
+> ---
+>  include/drm/drm_bridge.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> index bfb0385163f1..d7d714023050 100644
+> --- a/include/drm/drm_bridge.h
+> +++ b/include/drm/drm_bridge.h
+> @@ -263,7 +263,7 @@ struct drm_bridge_funcs {
+>  	 * The @atomic_pre_enable callback is optional.
+>  	 */
+>  	void (*atomic_pre_enable)(struct drm_bridge *bridge,
+> -				  struct drm_atomic_state *state);
+> +				  struct drm_atomic_state *old_state);
+>  
+>  	/**
+>  	 * @atomic_enable:
+> @@ -288,7 +288,7 @@ struct drm_bridge_funcs {
+>  	 * The @atomic_enable callback is optional.
+>  	 */
+>  	void (*atomic_enable)(struct drm_bridge *bridge,
+> -			      struct drm_atomic_state *state);
+> +			      struct drm_atomic_state *old_state);
+>  	/**
+>  	 * @atomic_disable:
+>  	 *
+> @@ -311,7 +311,7 @@ struct drm_bridge_funcs {
+>  	 * The @atomic_disable callback is optional.
+>  	 */
+>  	void (*atomic_disable)(struct drm_bridge *bridge,
+> -			       struct drm_atomic_state *state);
+> +			       struct drm_atomic_state *old_state);
+>  
+>  	/**
+>  	 * @atomic_post_disable:
+> @@ -337,7 +337,7 @@ struct drm_bridge_funcs {
+>  	 * The @atomic_post_disable callback is optional.
+>  	 */
+>  	void (*atomic_post_disable)(struct drm_bridge *bridge,
+> -				    struct drm_atomic_state *state);
+> +				    struct drm_atomic_state *old_state);
+>  };
+>  
+>  /**
+
+-- 
+Regards,
+
+Laurent Pinchart
