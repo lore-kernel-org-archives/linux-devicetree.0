@@ -2,166 +2,91 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360C1C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FF5C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C5A20684
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:29:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Leqg0R6Y"
+	by mail.kernel.org (Postfix) with ESMTP id 6A6E82073B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:32:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfLCH3l (ORCPT
+        id S1727386AbfLCHcV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 02:29:41 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:57262 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfLCH3l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 02:29:41 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C1BA7309;
-        Tue,  3 Dec 2019 08:29:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575358179;
-        bh=7cZbYLONLyPLh46EPhOTsWVY7T7ktT6/ScSQB9363YY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Leqg0R6YUsSnpROUbCxEy4cfmiGkOCfTGZM43r+n1uEKkbWIRkUzyiD+ZwmPZv+2D
-         bUxAHCy4NgvqVM4tmy418aSLwIEH3jYkFVeI6UtOl5Kfo6RKPrzEueYrqlskH8QzTu
-         o7Tzgq8KrwIdS85VsaLK+h90k3XWrbPCAGYKMn5c=
-Date:   Tue, 3 Dec 2019 09:29:32 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jyri Sarha <jsarha@ti.com>
-Cc:     dri-devel@lists.freedesktop.org, tony@atomide.com,
-        bcousson@baylibre.com, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, tomi.valkeinen@ti.com,
-        peter.ujfalusi@ti.com, bparrot@ti.com
-Subject: Re: [PATCH] ARM: dts: am335x-evm: Use drm simple-panel instead of
- tilcdc-panel
-Message-ID: <20191203072932.GL4730@pendragon.ideasonboard.com>
-References: <20191202185729.12921-1-jsarha@ti.com>
+        Tue, 3 Dec 2019 02:32:21 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:60339 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbfLCHcU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 02:32:20 -0500
+Received: from droid12-sz.software.amlogic (10.28.8.22) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Tue, 3 Dec 2019
+ 15:32:44 +0800
+From:   Xingyu Chen <xingyu.chen@amlogic.com>
+To:     Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+CC:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>, <linux-iio@vger.kernel.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH] arm64: dts: a1: add saradc controller
+Date:   Tue, 3 Dec 2019 15:32:12 +0800
+Message-ID: <1575358332-44866-1-git-send-email-xingyu.chen@amlogic.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191202185729.12921-1-jsarha@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.28.8.22]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jyri,
+The saradc controller in Meson-A1 is the same as the Meson-G12 series SoCs,
+so we use the same compatible string.
 
-Thank you for the patch.
+Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
 
-On Mon, Dec 02, 2019 at 08:57:29PM +0200, Jyri Sarha wrote:
-> Move to use the new drm panel support in tilcdc together with added
-> "tfc,s9700rtwv43tr-01b"-panel support in drm panel-simple.
-> 
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> ---
-> "tfc,s9700rtwv43tr-01b" in panel-simple has been in for some time now
-> so it is about time to get this in too.
-> 
->  arch/arm/boot/dts/am335x-evm.dts | 44 +++++++++++++-------------------
->  1 file changed, 18 insertions(+), 26 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-> index a00145705c9b..0e286a1c9cc5 100644
-> --- a/arch/arm/boot/dts/am335x-evm.dts
-> +++ b/arch/arm/boot/dts/am335x-evm.dts
-> @@ -113,7 +113,7 @@
->  		};
->  	};
->  
-> -	backlight {
-> +	backlight: backlight {
->  		compatible = "pwm-backlight";
->  		pwms = <&ecap0 0 50000 0>;
->  		brightness-levels = <0 51 53 56 62 75 101 152 255>;
-> @@ -121,35 +121,19 @@
->  	};
->  
->  	panel {
-> -		compatible = "ti,tilcdc,panel";
-> +		compatible = "tfc,s9700rtwv43tr-01b";
-> +
->  		status = "okay";
+---
+This patch is based on A1 clock patchset at [0].
 
-I think this can be dropped as it's implicit.
+[0] https://lore.kernel.org/linux-amlogic/20191129144605.182774-1-jian.hu@amlogic.com
+---
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-> +
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&lcd_pins_s0>;
-> -		panel-info {
-> -			ac-bias           = <255>;
-> -			ac-bias-intrpt    = <0>;
-> -			dma-burst-sz      = <16>;
-> -			bpp               = <32>;
-> -			fdd               = <0x80>;
-> -			sync-edge         = <0>;
-> -			sync-ctrl         = <1>;
-> -			raster-order      = <0>;
-> -			fifo-th           = <0>;
-> -		};
->  
-> -		display-timings {
-> -			800x480p62 {
-> -				clock-frequency = <30000000>;
-> -				hactive = <800>;
-> -				vactive = <480>;
-> -				hfront-porch = <39>;
-> -				hback-porch = <39>;
-> -				hsync-len = <47>;
-> -				vback-porch = <29>;
-> -				vfront-porch = <13>;
-> -				vsync-len = <2>;
-> -				hsync-active = <1>;
-> -				vsync-active = <1>;
-> +		backlight = <&backlight>;
-
-I would add a blank line here.
-
-> +		ports {
-> +			port {
-> +				panel_0: endpoint@0 {
-> +					remote-endpoint = <&lcdc_0>;
-> +				};
->  			};
->  		};
-
-The outter ports node isn't required if there's a single port, up to
-you.
-
->  	};
-> @@ -525,6 +509,14 @@
->  	status = "okay";
->  
->  	blue-and-red-wiring = "crossed";
-> +
-> +	ports {
-> +		port {
-> +			lcdc_0: endpoint@0 {
-> +				remote-endpoint = <&panel_0>;
-> +			};
-> +		};
-> +	};
-
-Same here.
-
-With the above issues addressed as applicable,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
->  };
->  
->  &elm {
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+index 7210ad0..cad1756 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+@@ -93,6 +93,21 @@
+ 				clock-names = "xtal", "pclk", "baud";
+ 				status = "disabled";
+ 			};
++
++			saradc: adc@2c00 {
++				compatible = "amlogic,meson-g12a-saradc",
++					     "amlogic,meson-saradc";
++				reg = <0x0 0x2c00 0x0 0x48>;
++				#io-channel-cells = <1>;
++				interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
++				clocks = <&xtal>,
++					 <&clkc_periphs CLKID_SARADC>,
++					 <&clkc_periphs CLKID_SARADC_CLK>,
++					 <&clkc_periphs CLKID_SARADC_SEL>;
++				clock-names = "clkin", "core", "adc_clk",
++					      "adc_sel";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		gic: interrupt-controller@ff901000 {
 -- 
-Regards,
+2.7.4
 
-Laurent Pinchart
