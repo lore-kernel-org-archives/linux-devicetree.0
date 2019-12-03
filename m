@@ -2,164 +2,89 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699D9C43215
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFB3C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BDEB2080A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5D82068E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725907AbfLCL2h (ORCPT
+        id S1725907AbfLCLqQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 06:28:37 -0500
-Received: from foss.arm.com ([217.140.110.172]:40702 "EHLO foss.arm.com"
+        Tue, 3 Dec 2019 06:46:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:40882 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbfLCL2h (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 06:28:37 -0500
+        id S1725773AbfLCLqQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 06:46:16 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D17AA30E;
-        Tue,  3 Dec 2019 03:28:34 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 11BDA3F68E;
-        Tue,  3 Dec 2019 03:28:33 -0800 (PST)
-Subject: Re: [PATCH v5 06/14] coresight: cti: Add device tree support for v8
- arch CTI
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     Coresight ML <coresight@lists.linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-References: <20191119231912.12768-1-mike.leach@linaro.org>
- <20191119231912.12768-7-mike.leach@linaro.org>
- <b2f640d3-c320-82d4-7399-172846820589@arm.com>
- <CAJ9a7VgkgoUTL0+_3kj53go_CKtAH3fO5xF9UNDPPz1se1SKSw@mail.gmail.com>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <ffda8aff-0904-7292-e2f1-93833b936c49@arm.com>
-Date:   Tue, 3 Dec 2019 11:28:32 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16FCB30E;
+        Tue,  3 Dec 2019 03:46:15 -0800 (PST)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 69F083F68E;
+        Tue,  3 Dec 2019 03:46:13 -0800 (PST)
+Date:   Tue, 3 Dec 2019 11:46:07 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v11 2/2] mailbox: introduce ARM SMC based mailbox
+Message-ID: <20191203114607.GA4171@bogus>
+References: <1575281525-1549-1-git-send-email-peng.fan@nxp.com>
+ <1575281525-1549-3-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJ9a7VgkgoUTL0+_3kj53go_CKtAH3fO5xF9UNDPPz1se1SKSw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575281525-1549-3-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 03/12/2019 10:59, Mike Leach wrote:
-> Hi Suzuki,
-> 
-> On Fri, 29 Nov 2019 at 11:33, Suzuki Kuruppassery Poulose
-> <suzuki.poulose@arm.com> wrote:
->>
->> On 19/11/2019 23:19, Mike Leach wrote:
->>> The v8 architecture defines the relationship between a PE, its optional ETM
->>> and a CTI. Unlike non-architectural CTIs which are implementation defined,
->>> this has a fixed set of connections which can therefore be represented as a
->>> simple tag in the device tree.
->>>
->>> This patch defines the tags needed to create an entry for this PE/ETM/CTI
->>> relationship, and provides functionality to implement the connection model
->>> in the CTI driver.
->>>
->>> Signed-off-by: Mike Leach <mike.leach@linaro.org>
->>> ---
+(+Viresh,Arnd)
 
+On Mon, Dec 02, 2019 at 10:14:43AM +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> This mailbox driver implements a mailbox which signals transmitted data
+> via an ARM smc (secure monitor call) instruction. The mailbox receiver
+> is implemented in firmware and can synchronously return data when it
+> returns execution to the non-secure world again.
+> An asynchronous receive path is not implemented.
+> This allows the usage of a mailbox to trigger firmware actions on SoCs
+> which either don't have a separate management processor or on which such
+> a core is not available. A user of this mailbox could be the SCP
+> interface.
+>
 
->>> +#ifdef CONFIG_OF
->>> +/*
->>> + * CTI can be bound to a CPU, or a system device.
->>> + * CPU can be declared at the device top level or in a connections node
->>> + * so need to check relative to node not device.
->>> + */
->>> +static int of_cti_get_cpu_at_node(const struct device_node *node)
->>> +{
->>> +     int cpu;
->>> +     struct device_node *dn;
->>> +
->>> +     if (node == NULL)
->>> +             return -1;
->>> +
->>> +     dn = of_parse_phandle(node, "cpu", 0);
->>> +     /* CTI affinity defaults to no cpu */
->>> +     if (!dn)
->>> +             return -1;
->>> +     cpu = of_cpu_node_to_id(dn);
->>> +     of_node_put(dn);
->>> +
->>> +     /* No Affinity  if no cpu nodes are found */
->>> +     return (cpu < 0) ? -1 : cpu;
->>> +}
->>> +
->>> +static const char *of_cti_get_node_name(const struct device_node *node)
->>> +{
->>> +     if (node)
->>> +             return node->full_name;
->>> +     return "unknown";
->>> +}
->>> +#else
->>> +static int of_cti_get_cpu_at_node(const struct device_node *node)
->>> +{
->>> +     return -1;
->>> +}
->>> +
->>> +static const char *of_cti_get_node_name(const struct device_node *node)
->>> +{
->>> +     return "unknown";
->>> +}
->>> +#endif
->>> +
->>> +static int cti_plat_get_cpu_at_node(struct fwnode_handle *fwnode)
->>> +{
->>
->> You may simply reuse coresight_get_cpu() below, instead of adding this
->> duplicate set of functions. See below.
->>
->>
-> 
-> No we can't. coresight_get_cpu gets the 'cpu' entry relative to the
-> device node, this gets the 'cpu' relative to the supplied node.
-> This is very important for the case where a none v8 architected PE is
-> attached to a CTI. This will use the devicetree form:-
-> 
-> cti@<addr> {
->      [ some stuff  ]
->     trig_conns@1 {
->            cpu = <&CPU0>
->            [trigger signal  connection info for this cpu]
->     }
-> }
-> 
-> trig_conns is a child node and we must look for 'cpu' relative to it.
+I would like to know all the use-cases for this driver ? Is this only for
+SCMI or will this get used with other protocols on the top. I assume the
+latter and hence it is preferred to keep this as a mailbox driver.
 
-Ok. May be we could refactor the function to find the 'CPU' node
-relative to the given "fwnode" and let the coresight_get_cpu() use it ?
+I am not against this approach but the reason I ask is to avoid duplication.
+Viresh has suggested abstraction of transport from SCMI driver to enable
+other transports[1]. Couple of transports that I am aware of is this SMC/HVC
+and the new(still in-concept) SPCI.
 
-int coresight_get_cpu(struct device *dev)
-{
-	return coresight_get_fwnode_cpu(dev_fwnode(dev));
-}
+So I am looking for opinions on that approach. Please feel free to comment
+here or as part of that patch.
 
-That way it is clear what we are dealing with. i.e, fwnode of any level
-(device or an intermediate node).
+--
+Regards,
+Sudeep
 
->>> +     csdev = cti_get_assoc_csdev_by_fwnode(cs_fwnode);
->>> +     if (csdev)
->>> +             assoc_name = dev_name(&csdev->dev);
->>
->> Does it make sense to defer the probing until the ETM device  turn up ?
->> Its fine either way.
->>
-> 
-> Not really as the ETM is optional but the PE still has a CTI.
-
-Ah, you're right. Please ignore my comment.
-
-Kind regards
-Suzuki
+[1] https://lore.kernel.org/lkml/5c545c2866ba075ddb44907940a1dae1d823b8a1.1575019719.git.viresh.kumar@linaro.org
