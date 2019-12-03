@@ -6,77 +6,76 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 486BBC432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 21:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CFFC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 21:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111832073B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 21:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F132073B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 21:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575409121;
-	bh=aG+I1BuybLB3PE8SzHytMjBBXTOl5w12yJQ0a09dNGc=;
+	s=default; t=1575409168;
+	bh=ph7nOgabFehWViEPV2iu1MGk252TAnG5IO5HryOi9Kw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XEbZImyO2fANRrH5UG5/tOVr1C2TgE1lCl7mNkikxzbZ091DkYu5nr0nJjz3oBmUR
-	 rmQqxSq0d3GqUhV944oFtFbmng6GmuT0vaJqQkcrhKViOcSSg5d/5dlxUg/78SfQMU
-	 i6CLLwbXKIDGg9oKKlZYOV46EG245P2CcfsTog4c=
+	b=WeC+1x1wBRh9DsklwfUTJMrDfRvvIj0/ByjGiANOTBL6DKsDKYqTysV3YFIETolZn
+	 S7bCdPTr/+XvFkgRlbJLMZOYXqyECugu+WTDLC+INd+s0wJ4mmQbA4lHvg7WNOsJbH
+	 7NGkDGpNA1SWj6E80WnPivcX4yEhXIYQBPLiPbuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfLCVik (ORCPT
+        id S1727466AbfLCVj1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 16:38:40 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37149 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727430AbfLCVik (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 16:38:40 -0500
-Received: by mail-oi1-f193.google.com with SMTP id x195so4821577oix.4
-        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 13:38:40 -0800 (PST)
+        Tue, 3 Dec 2019 16:39:27 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38182 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727457AbfLCVj1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 16:39:27 -0500
+Received: by mail-ot1-f65.google.com with SMTP id z25so4375301oti.5
+        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 13:39:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=F3uHqZbzedLUE0xuUfIMpIgrRc1NYArGkbcNIpnaHjU=;
-        b=dK4Fk3NZvnXPYX1s/DRzRPAMSHfCkZvjXX4eLM9NQiqHLyTWSmAvMBtIwJS5HKaEaC
-         cs6dXzhUjG7/n5gQIM3pOA/PQDoyyTnw4Q1VPXCugM2u6Thym2UsDaJsC/zjv03nAak9
-         IfVgPnJSEtOi7ElIieLRw45Yv6jnz32xZq39ro5GAcyyMREm1HvNqXb7e/5U+6t7luj4
-         ohL8O9IPwcfAk1zRpP6NiVt9bA3QT/9o918kzidYNS/reB2TjIy5LhGuO3E505AQgCbq
-         9zsUD2TzPrZrttM8eikhUFYdHzBW+rSQ+UCO4AKb07MRS3Kt5nbFrtHWrj5ZLL6aIZZ7
-         XSrg==
-X-Gm-Message-State: APjAAAXNWSmFO+0DomSp7Z3nI//OlZ4q/g9KlnOLDBudzXzQPerPVzLf
-        ilIiu0W2c2MV14MFWSZH8A==
-X-Google-Smtp-Source: APXvYqzrwgm/HxFVUZ352gIniGDYj8kl0CmjIYTrPSpfZC7zbhYc9s6vYb6cfEfd3T4Cfiq4raE4WQ==
-X-Received: by 2002:aca:889:: with SMTP id 131mr75288oii.3.1575409119897;
-        Tue, 03 Dec 2019 13:38:39 -0800 (PST)
+        bh=DuOA0zBLQcvKVkSQwZNftSyUaZTa7uOJ30XltITcLWM=;
+        b=G0jAJNHFeurN2KH9L7+UnqDGnzyvR2nTGEC27I9NkgMigo59Dyh8c/JaxuhpKFZVmt
+         6KEx0GLz66vBU73YiFQ/HAIhGXyKFQFdHSOZ/MSB7gx/Nu257ki5rJQrjdA5g0HKFKWK
+         A+B58ZRESubsp8irEUpmPMNd7pixsLeENWgouZkA2ibgTHwr/kcK+lKZVujSBxZ2QCCO
+         /ftlnwsTO48XWI0pGWTHoDF4QZYiyroZSAyNomdHUHIHux3Je2j6NiMiiUPoFP1xK/yK
+         eQPTGlgUvvTG9cey6QAaNsESBdnPdm2alMWmEbPRXpYPYezMwHa3s3qLna1CUGyHX3Aw
+         g2Gg==
+X-Gm-Message-State: APjAAAVVQxfsX9tNVxWw7vdNfVX5ceuLv6Tc8D3j6U/bMPCTixWpEHTy
+        7iqJ0+EGniuvacQI1kwwqw==
+X-Google-Smtp-Source: APXvYqz/YJVpzj5Ns4de7SfcrAw60fS1tPC0hInpJwwLL2VAApzqpGh6/6qNf4XX9VcVikm16HhBmQ==
+X-Received: by 2002:a05:6830:1251:: with SMTP id s17mr15158otp.108.1575409166858;
+        Tue, 03 Dec 2019 13:39:26 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o2sm1582504oih.19.2019.12.03.13.38.39
+        by smtp.gmail.com with ESMTPSA id o2sm1583188oih.19.2019.12.03.13.39.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 13:38:39 -0800 (PST)
-Date:   Tue, 3 Dec 2019 15:38:38 -0600
+        Tue, 03 Dec 2019 13:39:26 -0800 (PST)
+Date:   Tue, 3 Dec 2019 15:39:25 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Dong Aisheng <aisheng.dong@nxp.com>
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         dongas86@gmail.com, kernel@pengutronix.de, shawnguo@kernel.org,
         robh+dt@kernel.org, linux-imx@nxp.com,
         Dong Aisheng <aisheng.dong@nxp.com>
-Subject: Re: [PATCH 2/3] dt-bindings: serial: lpuart: add imx8qm compatible
- string
-Message-ID: <20191203213838.GA21567@bogus>
+Subject: Re: [PATCH 3/3] dt-bindings: i2c: lpi2c: add imx8qm compatible string
+Message-ID: <20191203213925.GA22895@bogus>
 References: <1573995530-14573-1-git-send-email-aisheng.dong@nxp.com>
- <1573995530-14573-2-git-send-email-aisheng.dong@nxp.com>
+ <1573995530-14573-3-git-send-email-aisheng.dong@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573995530-14573-2-git-send-email-aisheng.dong@nxp.com>
+In-Reply-To: <1573995530-14573-3-git-send-email-aisheng.dong@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 17 Nov 2019 20:58:49 +0800, Dong Aisheng wrote:
+On Sun, 17 Nov 2019 20:58:50 +0800, Dong Aisheng wrote:
 > Add imx8qm compatible string.
 > 
 > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 > ---
->  Documentation/devicetree/bindings/serial/fsl-lpuart.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Applied, thanks.
