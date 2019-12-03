@@ -2,695 +2,129 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC40C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 00:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B9EC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 01:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A217206ED
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 00:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC96820718
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 01:09:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PGPsMoJK"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qEZL/Jq6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725919AbfLCAHj (ORCPT
+        id S1725997AbfLCBJ2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 19:07:39 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:7757 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfLCAHj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 19:07:39 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de5a74b0001>; Mon, 02 Dec 2019 16:07:39 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 02 Dec 2019 16:07:35 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 02 Dec 2019 16:07:35 -0800
-Received: from [10.2.160.125] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Dec
- 2019 00:07:34 +0000
-Subject: Re: [PATCH v2 02/11] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
-        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
-        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
-        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
-        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
-        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
-        <josephl@nvidia.com>, <vidyas@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1574830773-14892-1-git-send-email-skomatineni@nvidia.com>
- <1574830773-14892-3-git-send-email-skomatineni@nvidia.com>
- <749de44c-ec59-3cab-c02e-7b8fcb1fb9f4@gmail.com>
- <3d1492a1-f2a5-2d56-5341-a28fcb73fe64@nvidia.com>
- <484cb1bb-4fb2-9e71-87be-2bd5bd5b2348@gmail.com>
- <e4ee58aa-c421-ea4b-a37b-574fc987c7c1@nvidia.com>
- <e5da42b8-bf21-4b57-8ae6-37ce6ca4210c@gmail.com>
- <bb4853a1-83d7-273d-50df-324570c4a4b8@nvidia.com>
- <bd979864-b3e8-02b1-e0b0-869ddfa8ac67@nvidia.com>
- <41508376-f30b-3761-47bf-c9c87db997dc@nvidia.com>
-Message-ID: <348e9382-9978-0c01-1493-4226c1cd70a3@nvidia.com>
-Date:   Mon, 2 Dec 2019 16:07:53 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <41508376-f30b-3761-47bf-c9c87db997dc@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Dec 2019 20:09:28 -0500
+Received: from mail-eopbgr140070.outbound.protection.outlook.com ([40.107.14.70]:29344
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725853AbfLCBJ2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 20:09:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W2NM4Q18+U6ML2fosbviXuV3I1kbw7Z8sMeLt1zepMRhjpQTEYYGpKEvIfVfIWufzF5ynx9vVi5DopnWDAQbZ/c34kEuciQQfXbDvmyEyQ4qJD8LLbNm04QarUPJ6yVCsgAbiZw+hKyLq9ghzquct1odOTjm1OISDOXqYgnBdC68u5Gooes7EVshjVqTYoobtDzmdY9G3fEkf8hb+ihl7W71W5HR9WpIlcYzrEenyeRAHi3hct3T6fgGBTrsiEuZMSVPpOzW3Yxbf9rDq7+36yNuaOQzqoQIEDkSJqN8vmnoO5NBMa6c4YoCIgAA+f140T6KqeTEBz8cEpCVNC2Zrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UlrGPbDjwjYFh5ed9OfJpmuV7eFiBxF2mk9g1RpC4o0=;
+ b=WJRl4s8jfvgdBFCn+EIgw5XsGfBY216R3U9hW6kZRLTPBkGQyH18orv57wcl+vG0Ww6mAffW7EGWoVYWBYEZQV7GflgQ5uTxeTHppdiihPieefSnpYyCvdC0wpS6IgIOW7fnj04q4X7H7U4mSaU+87uHq2no/sMZ4g/9Wu1j7oJHOtWGyQfbYdNytmXLRyP7kc6tk0ig5jeZGt+LQlc86eLCjpwXI5YayCvr7AL9ZE0a5JNWt1y8IXPsmkwMy616lGMQ+8cGyk+w3dh3xpOX8Ny7szFhzdg9e61rbpnmABbVJynNEQt8ExZh6mkaQ8eM/Z6SaisYU9UBRd0gwwsLtQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UlrGPbDjwjYFh5ed9OfJpmuV7eFiBxF2mk9g1RpC4o0=;
+ b=qEZL/Jq6tGAFhKJB/i2VGz9Vg//IKn1T8APBoBiYIh6UFezb7fJjX6DULblceEm31C79IuR3WQHZSN9ssODqJSkAG8Xdna2+4iy+LrgsD4qfT9s07WuiCd2PsBM1YuM9yhhX9MaFabDWbYugD15O31TZBkxCG9Re5nF3diP2KP4=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3660.eurprd04.prod.outlook.com (52.134.70.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.18; Tue, 3 Dec 2019 01:09:22 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::b8dd:75d4:49ea:6360]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::b8dd:75d4:49ea:6360%5]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
+ 01:09:22 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] ARM: dts: imx7ulp: Add cpu clock-frequency property
+Thread-Topic: [PATCH] ARM: dts: imx7ulp: Add cpu clock-frequency property
+Thread-Index: AQHVk3uAArm3im3y4kKhOJwaQWTXG6enBzSAgAC9zfA=
+Date:   Tue, 3 Dec 2019 01:09:22 +0000
+Message-ID: <DB3PR0402MB39164DF380E6B13558E758E7F5420@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1572918578-13544-1-git-send-email-Anson.Huang@nxp.com>
+ <20191202134748.GB21897@dragon>
+In-Reply-To: <20191202134748.GB21897@dragon>
+Accept-Language: en-US
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575331659; bh=m77bibBTob8XM4rXU/3+Upd+Zvzq0MrfojFg5C2MgVc=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=PGPsMoJK/+0N6gdKLdKv+h95b7Inf4OgUgJjpJBblYxPzhup1xCDVZlCRSgduIxmY
-         QGeUI3vi5w9psJWdbZwL4ftzKwntcmY1GlSr3WYwf120JapA8+JoN1KzvuOZcX/HHJ
-         RUm7ZpRCP51KWdcmwYm2MpAC2sC+HWbMb1WAKfVMqF3InQs825sXdD16yUkPVLwrr8
-         aictcBFi7b2PkEV/zRLE2om5EvtX/b5QBj01GKd2DVsS8V0uAHOdgM3C/bjCDcx9gm
-         IA/x1sRymi8eObgUYNJVPHOlrhB1oWaWfqg/Pj1DXyd0gXte6lAqWXSqDrFMg4K3nV
-         MJxmvvlDvAvWQ==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 79df1204-19db-430c-aac6-08d7778d6e95
+x-ms-traffictypediagnostic: DB3PR0402MB3660:|DB3PR0402MB3660:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3660EDEEEDDFB99E92853F7BF5420@DB3PR0402MB3660.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 02408926C4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(39860400002)(396003)(366004)(346002)(189003)(199004)(6116002)(71190400001)(478600001)(66066001)(74316002)(9686003)(33656002)(54906003)(7696005)(44832011)(14444005)(229853002)(4326008)(6436002)(86362001)(186003)(446003)(316002)(7736002)(25786009)(11346002)(305945005)(6506007)(3846002)(256004)(76116006)(5660300002)(55016002)(76176011)(14454004)(99286004)(71200400001)(52536014)(26005)(66946007)(102836004)(66476007)(66556008)(64756008)(66446008)(8676002)(81156014)(81166006)(6246003)(2906002)(6916009)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3660;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: sRRAga7zbonzYUQxKiiWXESrzRZV1IIydGzcAKawIA5jhEL8rNtZmiW6onMqTxi4EzPDPNTaSYT9ZVLsNabeIEhKe55WBizccAkdjLojltvWCLoaFbUENcaQLq0m6TM/PDr3tSEdKRiO80TLK3FvHv+qqedXyklQPVJKr9FQmpAdswiJqCVpZxARa/yy9qz4EYD1omoBZ+YzoFKlq9iZJOqejQUgPJA0jN4gGkUCEx4ZNSPA8YT01Y45NUpu7f7Jpap7hlu2pZ32mMK01VC1bTbCnKn9rUkhb11EM0yXqCL9gK2juLAX7Wa1F57j4bpG7VEBgnVO0U1phRyYtv2oJvqX+X2/xCCaqNBe5bMkj0dy3TVYvrqzTwgs+H3SLSqkq9dqVUytx/A9iT8O6m3xIm3YSq4F5iv3lblzL4M5PcZ9u/WRy7JfcTcqKIDkUojS
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79df1204-19db-430c-aac6-08d7778d6e95
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 01:09:22.5241
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SplTI36hhO0rIzdawBBipOVfjZcihOII+HYoerTErWHVv5pjAhmAKkL+xtxmj8nxnwTbg9fdLr46hFKFbipo+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3660
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On 12/2/19 3:14 PM, Sowjanya Komatineni wrote:
->
-> On 12/2/19 3:10 PM, Sowjanya Komatineni wrote:
->>
->> On 12/2/19 2:58 PM, Sowjanya Komatineni wrote:
->>>
->>> On 12/2/19 1:50 PM, Dmitry Osipenko wrote:
->>>> 02.12.2019 23:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> On 11/28/19 5:25 AM, Dmitry Osipenko wrote:
->>>>>> 28.11.2019 01:57, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
-:
->>>>>>> On 11/27/19 7:14 AM, Dmitry Osipenko wrote:
->>>>>>>> 27.11.2019 07:59, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>>> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2,=20
->>>>>>>>> clk_out_3 with
->>>>>>>>> mux and gate for each of these clocks.
->>>>>>>>>
->>>>>>>>> Currently these PMC clocks are registered by Tegra clock=20
->>>>>>>>> driver using
->>>>>>>>> clk_register_mux and clk_register_gate by passing PMC base=20
->>>>>>>>> address
->>>>>>>>> and register offsets and PMC programming for these clocks happens
->>>>>>>>> through direct PMC access by the clock driver.
->>>>>>>>>
->>>>>>>>> With this, when PMC is in secure mode any direct PMC access=20
->>>>>>>>> from the
->>>>>>>>> non-secure world does not go through and these clocks will not be
->>>>>>>>> functional.
->>>>>>>>>
->>>>>>>>> This patch adds these clocks registration with PMC as a clock=20
->>>>>>>>> provider
->>>>>>>>> for these clocks. clk_ops callback implementations for these=20
->>>>>>>>> clocks
->>>>>>>>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC
->>>>>>>>> programming
->>>>>>>>> in secure mode and non-secure mode.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>> ---
->>>>>>>>> =C2=A0=C2=A0=C2=A0 drivers/soc/tegra/pmc.c | 330
->>>>>>>>> ++++++++++++++++++++++++++++++++++++++++++++++++
->>>>>>>>> =C2=A0=C2=A0=C2=A0 1 file changed, 330 insertions(+)
->>>>>>>>>
->>>>>>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>>>>>>>> index ea0e11a09c12..a353f6d0a832 100644
->>>>>>>>> --- a/drivers/soc/tegra/pmc.c
->>>>>>>>> +++ b/drivers/soc/tegra/pmc.c
->>>>>>>>> @@ -13,6 +13,9 @@
->>>>>>>>> =C2=A0=C2=A0=C2=A0 =C2=A0 #include <linux/arm-smccc.h>
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #include <linux/clk.h>
->>>>>>>>> +#include <linux/clk-provider.h>
->>>>>>>>> +#include <linux/clkdev.h>
->>>>>>>>> +#include <linux/clk/clk-conf.h>
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #include <linux/clk/tegra.h>
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #include <linux/debugfs.h>
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #include <linux/delay.h>
->>>>>>>>> @@ -48,6 +51,7 @@
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #include <dt-bindings/pinctrl/pinctrl-tegra-io=
--pad.h>
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #include <dt-bindings/gpio/tegra186-gpio.h>
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #include <dt-bindings/gpio/tegra194-gpio.h>
->>>>>>>>> +#include <dt-bindings/soc/tegra-pmc.h>
->>>>>>>>> =C2=A0=C2=A0=C2=A0 =C2=A0 #define PMC_CNTRL=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #define=C2=A0 PMC_CNTRL_INTR_POLARITY=C2=A0=C2=
-=A0=C2=A0 BIT(17) /* inverts INTR
->>>>>>>>> polarity */
->>>>>>>>> @@ -100,6 +104,7 @@
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #define PMC_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 0x168
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #define PMC_SW_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 0x16c
->>>>>>>>> =C2=A0=C2=A0=C2=A0 +#define PMC_CLK_OUT_CNTRL=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 0x1a8
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #define PMC_SENSOR_CTRL=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1b0
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #define=C2=A0 PMC_SENSOR_CTRL_SCRATCH_WRITE BI=
-T(2)
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #define=C2=A0 PMC_SENSOR_CTRL_ENABLE_RST=C2=A0=
-=C2=A0=C2=A0 BIT(1)
->>>>>>>>> @@ -155,6 +160,91 @@
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #define=C2=A0 TEGRA_SMC_PMC_READ=C2=A0=C2=A0=
-=C2=A0 0xaa
->>>>>>>>> =C2=A0=C2=A0=C2=A0 #define=C2=A0 TEGRA_SMC_PMC_WRITE=C2=A0=C2=A0=
-=C2=A0 0xbb
->>>>>>>>> =C2=A0=C2=A0=C2=A0 +struct pmc_clk_mux {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw=C2=A0=C2=A0=C2=A0 hw;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0 offs;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- mask;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- shift;
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +#define to_pmc_clk_mux(_hw) container_of(_hw, struct=20
->>>>>>>>> pmc_clk_mux, hw)
->>>>>>>>> +
->>>>>>>>> +struct pmc_clk_gate {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw=C2=A0=C2=A0=C2=A0 hw;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0 offs;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- shift;
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +#define to_pmc_clk_gate(_hw) container_of(_hw, struct
->>>>>>>>> pmc_clk_gate, hw)
->>>>>>>>> +
->>>>>>>>> +struct pmc_clk_init_data {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 char *mux_name;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 char *gate_name;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 const char **parents;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 int num_parents;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 int mux_id;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 int gate_id;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 char *dev_name;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u8 mux_shift;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u8 gate_shift;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u8 init_parent_index;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 int init_state;
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +static const char *clk_out1_parents[] =3D { "clk_m", "clk_m_div2=
-",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 "clk_m_div4", "extern1",
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +static const char *clk_out2_parents[] =3D { "clk_m", "clk_m_div2=
-",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 "clk_m_div4", "extern2",
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +static const char *clk_out3_parents[] =3D { "clk_m", "clk_m_div2=
-",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 "clk_m_div4", "extern3",
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +static struct pmc_clk_init_data tegra_pmc_clks_data[] =3D {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_name =3D "clk_ou=
-t_1_mux",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_name =3D "clk_o=
-ut_1",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .parents =3D clk_out1=
-_parents,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .num_parents =3D ARRA=
-Y_SIZE(clk_out1_parents),
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_id =3D TEGRA_PMC=
-_CLK_OUT_1_MUX,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_id =3D TEGRA_PM=
-C_CLK_OUT_1,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .dev_name =3D "extern=
-1",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_shift =3D 6,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_shift =3D 2,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_parent_index =
-=3D 3,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_state =3D 1,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 },
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_name =3D "clk_ou=
-t_2_mux",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_name =3D "clk_o=
-ut_2",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .parents =3D clk_out2=
-_parents,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .num_parents =3D ARRA=
-Y_SIZE(clk_out2_parents),
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_id =3D TEGRA_PMC=
-_CLK_OUT_2_MUX,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_id =3D TEGRA_PM=
-C_CLK_OUT_2,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .dev_name =3D "extern=
-2",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_shift =3D 14,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_shift =3D 10,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_parent_index =
-=3D 0,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_state =3D 0,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 },
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_name =3D "clk_ou=
-t_3_mux",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_name =3D "clk_o=
-ut_3",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .parents =3D clk_out3=
-_parents,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .num_parents =3D ARRA=
-Y_SIZE(clk_out3_parents),
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_id =3D TEGRA_PMC=
-_CLK_OUT_3_MUX,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_id =3D TEGRA_PM=
-C_CLK_OUT_3,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .dev_name =3D "extern=
-3",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_shift =3D 22,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_shift =3D 18,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_parent_index =
-=3D 0,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_state =3D 0,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 },
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> =C2=A0=C2=A0=C2=A0 struct tegra_powergate {
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct generic_pm_doma=
-in genpd;
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_pmc *pmc;
->>>>>>>>> @@ -254,6 +344,9 @@ struct tegra_pmc_soc {
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct tegra_wak=
-e_event *wake_events;
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int num_wake_=
-events;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_init_data *pmc_clks_data;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int num_pmc_clks;
->>>>>>>>> =C2=A0=C2=A0=C2=A0 };
->>>>>>>>> =C2=A0=C2=A0=C2=A0 =C2=A0 static const char * const tegra186_rese=
-t_sources[] =3D {
->>>>>>>>> @@ -2163,6 +2256,228 @@ static int tegra_pmc_clk_notify_cb(struct
->>>>>>>>> notifier_block *nb,
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NOTIFY_OK;
->>>>>>>>> =C2=A0=C2=A0=C2=A0 }
->>>>>>>>> =C2=A0=C2=A0=C2=A0 +static void pmc_clk_fence_udelay(u32 offset)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_readl(pmc, offset);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 /* pmc clk propagation delay 2 us */
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(2);
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static u8 pmc_clk_mux_get_parent(struct clk_hw *hw)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_mux *mux =3D to_pmc_clk_mux(hw=
-);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 int num_parents =3D clk_hw_get_num_parents(hw=
-);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, mux->offs) >> mu=
-x->shift;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 val &=3D mux->mask;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (val >=3D num_parents)
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 return val;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static int pmc_clk_mux_set_parent(struct clk_hw *hw, u8 index)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_mux *mux =3D to_pmc_clk_mux(hw=
-);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, mux->offs);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 val &=3D ~(mux->mask << mux->shift);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 val |=3D index << mux->shift;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, val, mux->offs);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_fence_udelay(mux->offs);
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static const struct clk_ops pmc_clk_mux_ops =3D {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .get_parent =3D pmc_clk_mux_get_parent,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .set_parent =3D pmc_clk_mux_set_parent,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .determine_rate =3D __clk_mux_determine_rate,
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +static struct clk *
->>>>>>>>> +tegra_pmc_clk_mux_register(const char *name, const char * const
->>>>>>>>> *parent_names,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 int num_parents, unsigned long flags,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 unsigned long offset, u32 shift, u32 mask)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_init_data init;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_mux *mux;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 mux =3D kzalloc(sizeof(*mux), GFP_KERNEL);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!mux)
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ERR_PTR(-ENOME=
-M);
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.name =3D name;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.ops =3D &pmc_clk_mux_ops;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.parent_names =3D parent_names;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.num_parents =3D num_parents;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.flags =3D flags;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 mux->hw.init =3D &init;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 mux->offs =3D offset;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 mux->mask =3D mask;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 mux->shift =3D shift;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 return clk_register(NULL, &mux->hw);
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static int pmc_clk_is_enabled(struct clk_hw *hw)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_gate *gate =3D to_pmc_clk_gate=
-(hw);
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 return tegra_pmc_readl(pmc, gate->offs) &=20
->>>>>>>>> BIT(gate->shift) ? 1
->>>>>>>>> : 0;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static void pmc_clk_set_state(struct clk_hw *hw, int state)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_gate *gate =3D to_pmc_clk_gate=
-(hw);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, gate->offs);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D state ? (val | BIT(gate->shift)) : (v=
-al &
->>>>>>>>> ~BIT(gate->shift));
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, val, gate->offs);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_fence_udelay(gate->offs);
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static int pmc_clk_enable(struct clk_hw *hw)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_set_state(hw, 1);
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static void pmc_clk_disable(struct clk_hw *hw)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_set_state(hw, 0);
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static const struct clk_ops pmc_clk_gate_ops =3D {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .is_enabled =3D pmc_clk_is_enabled,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .enable =3D pmc_clk_enable,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .disable =3D pmc_clk_disable,
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +static struct clk *
->>>>>>>>> +tegra_pmc_clk_gate_register(const char *name, const char
->>>>>>>>> *parent_name,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long flags, unsigned long offset,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 shift)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_init_data init;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_gate *gate;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 gate =3D kzalloc(sizeof(*gate), GFP_KERNEL);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!gate)
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ERR_PTR(-ENOME=
-M);
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.name =3D name;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.ops =3D &pmc_clk_gate_ops;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.parent_names =3D &parent_name;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.num_parents =3D 1;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.flags =3D flags;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 gate->hw.init =3D &init;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 gate->offs =3D offset;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 gate->shift =3D shift;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 return clk_register(NULL, &gate->hw);
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static void tegra_pmc_clock_register(struct tegra_pmc *pmc,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device_nod=
-e *np)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk *clkmux, *clk, *parent;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_onecell_data *clk_data;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int num_clks;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 int i, ret;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 /* each pmc clock output has a mux and a gate=
- */
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 num_clks =3D pmc->soc->num_pmc_clks * 2;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!num_clks)
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 clk_data =3D kmalloc(sizeof(*clk_data), GFP_K=
-ERNEL);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!clk_data)
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 clk_data->clks =3D kcalloc(TEGRA_PMC_CLK_MAX,
->>>>>>>>> sizeof(*clk_data->clks),
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 GFP_KERNEL);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!clk_data->clks)
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto free_clkdata;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 clk_data->clk_num =3D num_clks;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < pmc->soc->num_pmc_clks; i++=
-) {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pmc_clk_init_d=
-ata *data;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data =3D pmc->soc->pm=
-c_clks_data + i;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clkmux =3D tegra_pmc_=
-clk_mux_register(data->mux_name,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 data->parents,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 data->num_parents,
->>>>>>>>> + CLK_SET_RATE_NO_REPARENT |
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 CLK_SET_RATE_PARENT,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 PMC_CLK_OUT_CNTRL,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 data->mux_shift, 3);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(clkmux))
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 goto free_clks;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_data->clks[data->=
-mux_id] =3D clkmux;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk =3D tegra_pmc_clk=
-_gate_register(data->gate_name,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 data->mux_name,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 CLK_SET_RATE_PARENT,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 PMC_CLK_OUT_CNTRL,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 data->gate_shift);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(clk))
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 goto free_clks;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_data->clks[data->=
-gate_id] =3D clk;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D clk_set_paren=
-t(clk, clkmux);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0) {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 pr_err("failed to set parent of %s to %s\n",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __func__, __clk_get_name(clk)=
-,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __clk_get_name(clkmux));
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_register_clkdev(c=
-lk, data->dev_name,=20
->>>>>>>>> data->gate_name);
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* configure initial =
-clock parent and state */
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 parent =3D clk_get_sy=
-s(data->gate_name,
->>>>>>>>> + data->parents[data->init_parent_index]);
->>>> Couldn't the default parent be defined using "assigned clock" in a
->>>> device-tree? Please see "Assigned clock parents and rates" in the doc.
->>>>
->>>> https://www.kernel.org/doc/Documentation/devicetree/bindings/clock/clo=
-ck-bindings.txt=20
->>>>
->>>>
->>>> Then you could simply use of_clk_set_defaults(pmc->dev->of_node,=20
->>>> true).
->>>
->>> Yes, of_clk_add_provider() does of_clk_set_defaults which sets based=20
->>> on assigned parents and clock rates.
->>>
->>> This need device tree to specify assigned clock parent properties.=20
->>> Will update device tree and remove init parent from the driver.
->>>
->> assigned-clock properties should be set in consumer node of these=20
->> clocks and currently these clocks are not used yet.
->>
->> So will just remove init parent from driver and when these clocks are=20
->> used device tree can be updated in corresponding consumer node with=20
->> these properties.
->>
-> How about default ON/OFF init state for the clocks? I see=20
-> assigned-clock properties for parent and rate only.
->
-> But based on existing clock-tegra-pmc driver, I see clk_out_1 is=20
-> default enabled with extern1 parent for T30 thru T210 platforms.
->
-> Peter/Thierry, What was the reason we enable clk_out_1 right from the=20
-> clock registration?
->
-clk_out_1 is for audio and its not required to be enabled during the=20
-boot and audio driver can enable/disable it.
-
-same with blink 32khz which is used for WIFI. WIFI driver can=20
-enable/disable during power up/down sequence and technically as per=20
-design we dont need to have it always on right from the boot.
-
-So can remove out clocks init states from driver once thierry also agree=20
-on this.
-
->>>>
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!IS_ERR(parent)) =
-{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 ret =3D clk_set_parent(clkmux, parent);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 if (ret < 0) {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_err("failed to set parent of %s to %s\n",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __fun=
-c__, __clk_get_name(clkmux),
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __clk=
-_get_name(parent));
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 WARN_ON(1);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 }
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (data->init_state)=
- {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 if (clk_prepare_enable(clk)) {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_err("failed to enable %s\n", __func__,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __clk=
-_get_name(clk));
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 WARN_ON(1);
->>>>>> Alternatively you could write it like this:
->>>>>>
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0err =3D clk_prepare_enable(clk);
->>>>>>
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0WARN_ON(err, "failed to enable %s: %d\=
-n",
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __clk_get_name(clk)=
-, err);
->>>>>>
->>>>>>>> Should be a bit better to move the WARN_ON to the end of errors
->>>>>>>> handling
->>>>>>>> in order to catch all possible errors:
->>>>>>>>
->>>>>>>> @@ -2510,6 +2510,7 @@ static void tegra_pmc_clock_register(struct
->>>>>>>> tegra_pmc *pmc,
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retur=
-n;
->>>>>>>>
->>>>>>>> =C2=A0=C2=A0=C2=A0 free_clks:
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 WARN_ON(1);
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree=
-(clk_data->clks);
->>>>>>>> =C2=A0=C2=A0=C2=A0 free_clkdata:
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree=
-(clk_data);
->>>>>>> Reason I had WARN_ON right during clk_set_parent failure is to=20
->>>>>>> have the
->>>>>>> loop continue for subsequence pmc clocks registration instead of
->>>>>>> terminating all pmc clocks registration.
->>>>>> Ah, okay. Nevertheless this WARN_ON in the end shouldn't be the=20
->>>>>> least
->>>>>> (IMO).
->>>>> Hi Dmitry, Just want to be clear on the above comment. Are you
->>>>> suggesting to add additional WARN_ON at the end?
->>>> Yes, it was my suggestion.
->>>>
->>>>> Thought WARN_ON right during corresponding clock failure with warn
->>>>> message showing clock names will be clear and also other clocks still
->>>>> should be registered.
->>>>>
->>>>> To add additional WARN_ON at the end need to track status of each=20
->>>>> clock
->>>>> and use that to as warn condition.
->>>> You could add a warning/error message to every point of failure.
->>>>
->>>> Primarily, it is important not to miss a error. Secondarily, it is
->>>> important to make diagnostic message meaningful.
->>>>
->>>> Realistically, I doubt that this chunk of code will ever fail once=20
->>>> it is
->>>> known to work well. So it will be nice to have a more detailed
->>>> diagnostics (just in a case), but it shouldn't be a must.
->>>
->>> OK, Will add additional WARN message "failed registering PMC clocks"=20
->>> at the end.
->>>
+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIEFSTTogZHRzOiBpbXg3dWxwOiBBZGQgY3B1IGNsb2Nr
+LWZyZXF1ZW5jeSBwcm9wZXJ0eQ0KPiANCj4gT24gVHVlLCBOb3YgMDUsIDIwMTkgYXQgMDk6NDk6
+MzhBTSArMDgwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gQWRkICJjbG9jay1mcmVxdWVuY3ki
+IHByb3BlcnR5IHRvIGF2b2lkIGJlbG93IHdhcm5pbmcgb24gaS5NWDdVTFA6DQo+ID4NCj4gPiBb
+ICAgIDAuMDExNzYyXSAvY3B1cy9jcHVAMCBtaXNzaW5nIGNsb2NrLWZyZXF1ZW5jeSBwcm9wZXJ0
+eQ0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5j
+b20+DQo+ID4gLS0tDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDd1bHAuZHRzaSB8IDEgKw0K
+PiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPg0KPiA+IGRpZmYgLS1naXQg
+YS9hcmNoL2FybS9ib290L2R0cy9pbXg3dWxwLmR0c2kNCj4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRz
+L2lteDd1bHAuZHRzaSBpbmRleCBkMzdhMTkyLi44N2IyMjM3IDEwMDY0NA0KPiA+IC0tLSBhL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2lteDd1bHAuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
+L2lteDd1bHAuZHRzaQ0KPiA+IEBAIC00MSw2ICs0MSw3IEBADQo+ID4gIAkJCWNvbXBhdGlibGUg
+PSAiYXJtLGNvcnRleC1hNyI7DQo+ID4gIAkJCWRldmljZV90eXBlID0gImNwdSI7DQo+ID4gIAkJ
+CXJlZyA9IDwwPjsNCj4gPiArCQkJY2xvY2stZnJlcXVlbmN5ID0gPDUwMDIxMDUyNj47DQo+IA0K
+PiBJIGNhbm5vdCBmaW5kIHRoZSBiaW5kaW5nIGRvYyBmb3IgdGhpcyBwcm9wZXJ0eS4gIFdoYXQg
+aXMgdGhlIGRlZmluaXRpb24gb2YgaXQsDQo+IHRoZSBtYXhpbXVtIGZyZXF1ZW5jeSB0aGF0IHRo
+ZSBjcHUgY291bGQgcG9zc2libHkgcnVuIGF0Pw0KDQoNClRoZSBjb2RlIGlzIGFzIGJlbG93LCBt
+YXliZSB0aGUgcHJvcGVydHkgaXMgbWlzc2luZyBmcm9tIHRoZSBiZWdpbm5pbmcgb2YgdGhpcyBj
+b2RlLA0KdGhpcyBwcm9wZXJ0eSBzaG91bGQgbWVhbiB0aGUgY3VycmVudCBmcmVxdWVuY3kgb2Yg
+Q1BVIHJ1bm5pbmcgYXQgSSB0aGluazoNCg0KYXJjaC9hcm0va2VybmVsL3RvcG9sb2d5LmMNCg0K
+MTIyICAgICAgICAgICAgICAgICByYXRlID0gb2ZfZ2V0X3Byb3BlcnR5KGNuLCAiY2xvY2stZnJl
+cXVlbmN5IiwgJmxlbik7DQoxMjMgICAgICAgICAgICAgICAgIGlmICghcmF0ZSB8fCBsZW4gIT0g
+NCkgew0KMTI0ICAgICAgICAgICAgICAgICAgICAgICAgIHByX2VycigiJXBPRiBtaXNzaW5nIGNs
+b2NrLWZyZXF1ZW5jeSBwcm9wZXJ0eVxuIiwgY24pOw0KMTI1ICAgICAgICAgICAgICAgICAgICAg
+ICAgIGNvbnRpbnVlOw0KMTI2ICAgICAgICAgICAgICAgICB9DQoNClRoYW5rcywNCkFuc29uDQo=
