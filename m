@@ -2,193 +2,155 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA906C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0942C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89EE52073C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A311520684
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575373872;
+	bh=zrwFlvXIoyYXgEDfGx6efgE7yp3Q9uDLj44V2/s7VgM=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=Nv4m9HbEkBOA0jMTYUJCxPMPLBkqZ0TrAb9Fke08gOTWCbpaNKBKgEC9wMndyRs0A
+	 zKLnQyJSqDplhP1o+SL2b/DuX9j/LQ/EpQt+nM1KmQUB2th8zwht3UY/aqyp/uLMqH
+	 QDUT+JYW/hqbCCy0uxJ7IY4+2w44Ja1EsLze6JBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfLCLsa (ORCPT
+        id S1725939AbfLCLvM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 06:48:30 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49446 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725907AbfLCLrx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 06:47:53 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 78EF7B168;
-        Tue,  3 Dec 2019 11:47:50 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, jeremy.linton@arm.com,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v4 1/8] dt-bindings: PCI: Add bindings for brcmstb's PCIe device
-Date:   Tue,  3 Dec 2019 12:47:34 +0100
-Message-Id: <20191203114743.1294-2-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191203114743.1294-1-nsaenzjulienne@suse.de>
-References: <20191203114743.1294-1-nsaenzjulienne@suse.de>
+        Tue, 3 Dec 2019 06:51:12 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:39275 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725907AbfLCLvM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 06:51:12 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ic6hv-0004Si-8u; Tue, 03 Dec 2019 12:51:07 +0100
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Date:   Tue, 03 Dec 2019 11:51:07 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <robh+dt@kernel.org>, <frowand.list@gmail.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
+        <bhelgaas@google.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>
+In-Reply-To: <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
+ <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
+ <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
+Message-ID: <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: xiaowei.bao@nxp.com, robh+dt@kernel.org, frowand.list@gmail.com, minghuan.lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, andrew.murray@arm.com, bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhiqiang.hou@nxp.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jim Quinlan <james.quinlan@broadcom.com>
+On 2019-12-03 01:42, Xiaowei Bao wrote:
+>> -----Original Message-----
+>> From: Marc Zyngier <maz@misterjones.org>
+>> Sent: 2019年12月2日 20:48
+>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
+>> Cc: robh+dt@kernel.org; frowand.list@gmail.com; M.h. Lian
+>> <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy Zang
+>> <roy.zang@nxp.com>; lorenzo.pieralisi@arm.com; 
+>> andrew.murray@arm.com;
+>> bhelgaas@google.com; devicetree@vger.kernel.org;
+>> linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org;
+>> linux-arm-kernel@lists.infradead.org; Z.q. Hou 
+>> <zhiqiang.hou@nxp.com>
+>> Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host 
+>> side
+>>
+>> On 2019-12-02 10:45, Xiaowei Bao wrote:
+>> > GIC get the map relations of devid and stream id from the msi-map
+>> > property of DTS, our platform add this property in u-boot base on 
+>> the
+>> > PCIe device in the bus, but if enable the vf device in kernel, the 
+>> vf
+>> > device msi-map will not set, so the vf device can't work, this 
+>> patch
+>> > purpose is that manage the stream id and device id map relations
+>> > dynamically in kernel, and make the new PCIe device work in 
+>> kernel.
+>> >
+>> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+>> > ---
+>> >  drivers/of/irq.c                            |  9 +++
+>> >  drivers/pci/controller/dwc/pci-layerscape.c | 94
+>> > +++++++++++++++++++++++++++++
+>> >  drivers/pci/probe.c                         |  6 ++
+>> >  drivers/pci/remove.c                        |  6 ++
+>> >  4 files changed, 115 insertions(+)
+>> >
+>> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c index
+>> > a296eaf..791e609 100644
+>> > --- a/drivers/of/irq.c
+>> > +++ b/drivers/of/irq.c
+>> > @@ -576,6 +576,11 @@ void __init of_irq_init(const struct 
+>> of_device_id
+>> > *matches)
+>> >  	}
+>> >  }
+>> >
+>> > +u32 __weak ls_pcie_streamid_fix(struct device *dev, u32 rid) {
+>> > +	return rid;
+>> > +}
+>> > +
+>> >  static u32 __of_msi_map_rid(struct device *dev, struct 
+>> device_node
+>> > **np,
+>> >  			    u32 rid_in)
+>> >  {
+>> > @@ -590,6 +595,10 @@ static u32 __of_msi_map_rid(struct device 
+>> *dev,
+>> > struct device_node **np,
+>> >  		if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
+>> >  				"msi-map-mask", np, &rid_out))
+>> >  			break;
+>> > +
+>> > +	if (rid_out == rid_in)
+>> > +		rid_out = ls_pcie_streamid_fix(parent_dev, rid_in);
+>>
+>> Over my dead body. Get your firmware to properly program the LUT so 
+>> that it
+>> presents the ITS with a reasonable topology. There is absolutely no 
+>> way this
+>> kind of change makes it into the kernel.
+>
+> Sorry for this, I know it is not reasonable, but I have no other way,
+> as I know, ARM
+> get the mapping of stream ID to request ID from the msi-map property
+> of DTS, if
+> add a new device which need the stream ID and try to get it from the
+> msi-map of DTS,
+> it will failed and not work, yes? So could you give me a better
+> advice to fix this issue,
+> I would really appreciate any comments or suggestions, thanks a lot.
 
-The DT bindings description of the brcmstb PCIe device is described.
-This node can only be used for now on the Raspberry Pi 4.
+Why can't firmware expose an msi-map/msi-map-mask that has a large
+enough range to ensure mapping of VFs? What are the limitations of
+the LUT that would prevent this from being configured before the
+kernel boots?
 
-Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks,
 
----
-
-Changes since v2:
-  - Add pci reference schema
-  - Drop all default properties
-  - Assume msi-controller and msi-parent are properly defined
-  - Add num entries on multiple properties
-  - use unevaluatedProperties
-  - Update required properties
-  - Fix license
-
-Changes since v1:
-  - Fix commit Subject
-  - Remove linux,pci-domain
-
-This was based on Jim's original submission[1], converted to yaml and
-adapted to the RPi4 case.
-
-[1] https://patchwork.kernel.org/patch/10605937/
-
- .../bindings/pci/brcm,stb-pcie.yaml           | 97 +++++++++++++++++++
- 1 file changed, 97 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-
-diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-new file mode 100644
-index 000000000000..77d3e81a437b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Brcmstb PCIe Host Controller Device Tree Bindings
-+
-+maintainers:
-+  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+
-+properties:
-+  compatible:
-+    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: PCIe host controller
-+      - description: builtin MSI controller
-+
-+  interrupt-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: pcie
-+      - const: msi
-+
-+  ranges:
-+    maxItems: 1
-+
-+  dma-ranges:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: sw_pcie
-+
-+  msi-controller:
-+    description: Identifies the node as an MSI controller.
-+
-+  msi-parent:
-+    description: MSI controller the device is capable of using.
-+
-+  brcm,enable-ssc:
-+    description: Indicates usage of spread-spectrum clocking.
-+    type: boolean
-+
-+required:
-+  - reg
-+  - dma-ranges
-+  - "#interrupt-cells"
-+  - interrupts
-+  - interrupt-names
-+  - interrupt-map-mask
-+  - interrupt-map
-+  - msi-controller
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    scb {
-+            #address-cells = <2>;
-+            #size-cells = <1>;
-+            pcie0: pcie@7d500000 {
-+                    compatible = "brcm,bcm2711-pcie";
-+                    reg = <0x0 0x7d500000 0x9310>;
-+                    device_type = "pci";
-+                    #address-cells = <3>;
-+                    #size-cells = <2>;
-+                    #interrupt-cells = <1>;
-+                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-+                    interrupt-names = "pcie", "msi";
-+                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-+                    msi-parent = <&pcie0>;
-+                    msi-controller;
-+                    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
-+                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-+                    brcm,enable-ssc;
-+            };
-+    };
+         M.
 -- 
-2.24.0
-
+Jazz is not dead. It just smells funny...
