@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE64C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0764C43141
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3107C2146E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C14842146E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfLCOP1 (ORCPT
+        id S1726564AbfLCOP3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:15:27 -0500
+        Tue, 3 Dec 2019 09:15:29 -0500
 Received: from bhuna.collabora.co.uk ([46.235.227.227]:58978 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbfLCOP1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:15:27 -0500
+        with ESMTP id S1726086AbfLCOP2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:15:28 -0500
 Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id DC4A9290572;
-        Tue,  3 Dec 2019 14:15:24 +0000 (GMT)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id AD9532905DE;
+        Tue,  3 Dec 2019 14:15:27 +0000 (GMT)
 From:   Boris Brezillon <boris.brezillon@collabora.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Lucas Stach <l.stach@pengutronix.de>,
@@ -50,9 +50,9 @@ Cc:     Lucas Stach <l.stach@pengutronix.de>,
         devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>,
         Boris Brezillon <boris.brezillon@collabora.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v4 03/11] drm: Stop accessing encoder->bridge directly
-Date:   Tue,  3 Dec 2019 15:15:07 +0100
-Message-Id: <20191203141515.3597631-4-boris.brezillon@collabora.com>
+Subject: [PATCH v4 07/11] drm/bridge: Clarify the atomic enable/disable hooks semantics
+Date:   Tue,  3 Dec 2019 15:15:11 +0100
+Message-Id: <20191203141515.3597631-8-boris.brezillon@collabora.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191203141515.3597631-1-boris.brezillon@collabora.com>
 References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
@@ -63,289 +63,63 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We are about to replace the single-linked bridge list by a double-linked
-one based on list.h, leading to the suppression of the encoder->bridge
-field. But before we can do that we must provide a
-drm_bridge_chain_get_first_bridge() bridge helper and patch all drivers
-and core helpers to use it instead of directly accessing encoder->bridge.
-
-Note that we still have 2 drivers (VC4 and Exynos) manipulating the
-encoder->bridge field directly because they need to cut the bridge chain
-in order to control the enable/disable sequence. This is definitely
-not something we want to encourage, so let's keep those 2 oddities
-around until we find a better solution.
+The [pre_]enable/[post_]disable hooks are passed the old atomic state.
+Update the doc and rename the arguments to make it clear.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
 Changes in v4:
-* Coding style issues
+* Drop the doc update (Laurent)
 * Add Rbs
-* Adjust the commit message to explain why VC4 and exynos still
-  access encoder->bridge directly
 
 Changes in v3:
-* None
-
-Changes in v2:
-* None
+* New patch
 ---
- drivers/gpu/drm/drm_atomic_helper.c    | 26 +++++++++++++++++---------
- drivers/gpu/drm/drm_encoder.c          |  3 ++-
- drivers/gpu/drm/drm_probe_helper.c     |  4 +++-
- drivers/gpu/drm/msm/edp/edp_bridge.c   | 10 ++++++++--
- drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 10 +++++++---
- include/drm/drm_bridge.h               | 15 +++++++++++++++
- 6 files changed, 52 insertions(+), 16 deletions(-)
+ include/drm/drm_bridge.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index cf678be58fa4..29c3115bf9e2 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -419,6 +419,7 @@ mode_fixup(struct drm_atomic_state *state)
- 	for_each_new_connector_in_state(state, connector, new_conn_state, i) {
- 		const struct drm_encoder_helper_funcs *funcs;
- 		struct drm_encoder *encoder;
-+		struct drm_bridge *bridge;
- 
- 		WARN_ON(!!new_conn_state->best_encoder != !!new_conn_state->crtc);
- 
-@@ -435,7 +436,8 @@ mode_fixup(struct drm_atomic_state *state)
- 		encoder = new_conn_state->best_encoder;
- 		funcs = encoder->helper_private;
- 
--		ret = drm_bridge_chain_mode_fixup(encoder->bridge,
-+		bridge = drm_bridge_chain_get_first_bridge(encoder);
-+		ret = drm_bridge_chain_mode_fixup(bridge,
- 					&new_crtc_state->mode,
- 					&new_crtc_state->adjusted_mode);
- 		if (!ret) {
-@@ -493,6 +495,7 @@ static enum drm_mode_status mode_valid_path(struct drm_connector *connector,
- 					    struct drm_crtc *crtc,
- 					    const struct drm_display_mode *mode)
- {
-+	struct drm_bridge *bridge;
- 	enum drm_mode_status ret;
- 
- 	ret = drm_encoder_mode_valid(encoder, mode);
-@@ -502,7 +505,8 @@ static enum drm_mode_status mode_valid_path(struct drm_connector *connector,
- 		return ret;
- 	}
- 
--	ret = drm_bridge_chain_mode_valid(encoder->bridge, mode);
-+	bridge = drm_bridge_chain_get_first_bridge(encoder);
-+	ret = drm_bridge_chain_mode_valid(bridge, mode);
- 	if (ret != MODE_OK) {
- 		DRM_DEBUG_ATOMIC("[BRIDGE] mode_valid() failed\n");
- 		return ret;
-@@ -985,6 +989,7 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
- 	for_each_oldnew_connector_in_state(old_state, connector, old_conn_state, new_conn_state, i) {
- 		const struct drm_encoder_helper_funcs *funcs;
- 		struct drm_encoder *encoder;
-+		struct drm_bridge *bridge;
- 
- 		/* Shut down everything that's in the changeset and currently
- 		 * still on. So need to check the old, saved state. */
-@@ -1021,7 +1026,8 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
- 		 * Each encoder has at most one connector (since we always steal
- 		 * it away), so we won't call disable hooks twice.
- 		 */
--		drm_atomic_bridge_chain_disable(encoder->bridge, old_state);
-+		bridge = drm_bridge_chain_get_first_bridge(encoder);
-+		drm_atomic_bridge_chain_disable(bridge, old_state);
- 
- 		/* Right function depends upon target state. */
- 		if (funcs) {
-@@ -1035,8 +1041,7 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
- 				funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
- 		}
- 
--		drm_atomic_bridge_chain_post_disable(encoder->bridge,
--						     old_state);
-+		drm_atomic_bridge_chain_post_disable(bridge, old_state);
- 	}
- 
- 	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
-@@ -1190,6 +1195,7 @@ crtc_set_mode(struct drm_device *dev, struct drm_atomic_state *old_state)
- 		const struct drm_encoder_helper_funcs *funcs;
- 		struct drm_encoder *encoder;
- 		struct drm_display_mode *mode, *adjusted_mode;
-+		struct drm_bridge *bridge;
- 
- 		if (!new_conn_state->best_encoder)
- 			continue;
-@@ -1217,8 +1223,8 @@ crtc_set_mode(struct drm_device *dev, struct drm_atomic_state *old_state)
- 			funcs->mode_set(encoder, mode, adjusted_mode);
- 		}
- 
--		drm_bridge_chain_mode_set(encoder->bridge, mode,
--					  adjusted_mode);
-+		bridge = drm_bridge_chain_get_first_bridge(encoder);
-+		drm_bridge_chain_mode_set(bridge, mode, adjusted_mode);
- 	}
- }
- 
-@@ -1317,6 +1323,7 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
- 	for_each_new_connector_in_state(old_state, connector, new_conn_state, i) {
- 		const struct drm_encoder_helper_funcs *funcs;
- 		struct drm_encoder *encoder;
-+		struct drm_bridge *bridge;
- 
- 		if (!new_conn_state->best_encoder)
- 			continue;
-@@ -1335,7 +1342,8 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
- 		 * Each encoder has at most one connector (since we always steal
- 		 * it away), so we won't call enable hooks twice.
- 		 */
--		drm_atomic_bridge_chain_pre_enable(encoder->bridge, old_state);
-+		bridge = drm_bridge_chain_get_first_bridge(encoder);
-+		drm_atomic_bridge_chain_pre_enable(bridge, old_state);
- 
- 		if (funcs) {
- 			if (funcs->atomic_enable)
-@@ -1346,7 +1354,7 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
- 				funcs->commit(encoder);
- 		}
- 
--		drm_atomic_bridge_chain_enable(encoder->bridge, old_state);
-+		drm_atomic_bridge_chain_enable(bridge, old_state);
- 	}
- 
- 	drm_atomic_helper_commit_writebacks(dev, old_state);
-diff --git a/drivers/gpu/drm/drm_encoder.c b/drivers/gpu/drm/drm_encoder.c
-index fcd3af1ac432..a2cc7e7241a9 100644
---- a/drivers/gpu/drm/drm_encoder.c
-+++ b/drivers/gpu/drm/drm_encoder.c
-@@ -167,9 +167,10 @@ void drm_encoder_cleanup(struct drm_encoder *encoder)
- 	 */
- 
- 	if (encoder->bridge) {
--		struct drm_bridge *bridge = encoder->bridge;
-+		struct drm_bridge *bridge;
- 		struct drm_bridge *next;
- 
-+		bridge = drm_bridge_chain_get_first_bridge(encoder);
- 		while (bridge) {
- 			next = drm_bridge_get_next_bridge(bridge);
- 			drm_bridge_detach(bridge);
-diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
-index c3ea722065c4..576b4b7dcd89 100644
---- a/drivers/gpu/drm/drm_probe_helper.c
-+++ b/drivers/gpu/drm/drm_probe_helper.c
-@@ -101,6 +101,7 @@ drm_mode_validate_pipeline(struct drm_display_mode *mode,
- 
- 	/* Step 2: Validate against encoders and crtcs */
- 	drm_connector_for_each_possible_encoder(connector, encoder) {
-+		struct drm_bridge *bridge;
- 		struct drm_crtc *crtc;
- 
- 		ret = drm_encoder_mode_valid(encoder, mode);
-@@ -112,7 +113,8 @@ drm_mode_validate_pipeline(struct drm_display_mode *mode,
- 			continue;
- 		}
- 
--		ret = drm_bridge_chain_mode_valid(encoder->bridge, mode);
-+		bridge = drm_bridge_chain_get_first_bridge(encoder);
-+		ret = drm_bridge_chain_mode_valid(bridge, mode);
- 		if (ret != MODE_OK) {
- 			/* There is also no point in continuing for crtc check
- 			 * here. */
-diff --git a/drivers/gpu/drm/msm/edp/edp_bridge.c b/drivers/gpu/drm/msm/edp/edp_bridge.c
-index 2950bba4aca9..b65b5cc2dba2 100644
---- a/drivers/gpu/drm/msm/edp/edp_bridge.c
-+++ b/drivers/gpu/drm/msm/edp/edp_bridge.c
-@@ -55,8 +55,14 @@ static void edp_bridge_mode_set(struct drm_bridge *bridge,
- 	DBG("set mode: " DRM_MODE_FMT, DRM_MODE_ARG(mode));
- 
- 	list_for_each_entry(connector, &dev->mode_config.connector_list, head) {
--		if ((connector->encoder != NULL) &&
--			(connector->encoder->bridge == bridge)) {
-+		struct drm_encoder *encoder = connector->encoder;
-+		struct drm_bridge *first_bridge;
-+
-+		if (!connector->encoder)
-+			continue;
-+
-+		first_bridge = drm_bridge_chain_get_first_bridge(encoder);
-+		if (bridge == first_bridge) {
- 			msm_edp_ctrl_timing_cfg(edp->ctrl,
- 				adjusted_mode, &connector->display_info);
- 			break;
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-index 2da46e3dc4ae..f2ae4c410244 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-@@ -14,6 +14,7 @@
- 
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
-+#include <drm/drm_bridge.h>
- #include <drm/drm_crtc.h>
- #include <drm/drm_device.h>
- #include <drm/drm_fb_cma_helper.h>
-@@ -680,9 +681,10 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
- 			rcdu->encoders[RCAR_DU_OUTPUT_LVDS0 + rcrtc->index];
- 		const struct drm_display_mode *mode =
- 			&crtc->state->adjusted_mode;
-+		struct drm_bridge *bridge;
- 
--		rcar_lvds_clk_enable(encoder->base.bridge,
--				     mode->clock * 1000);
-+		bridge = drm_bridge_chain_get_first_bridge(&encoder->base);
-+		rcar_lvds_clk_enable(bridge, mode->clock * 1000);
- 	}
- 
- 	rcar_du_crtc_start(rcrtc);
-@@ -702,12 +704,14 @@ static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
- 	    rstate->outputs == BIT(RCAR_DU_OUTPUT_DPAD0)) {
- 		struct rcar_du_encoder *encoder =
- 			rcdu->encoders[RCAR_DU_OUTPUT_LVDS0 + rcrtc->index];
-+		struct drm_bridge *bridge;
- 
- 		/*
- 		 * Disable the LVDS clock output, see
- 		 * rcar_du_crtc_atomic_enable().
- 		 */
--		rcar_lvds_clk_disable(encoder->base.bridge);
-+		bridge = drm_bridge_chain_get_first_bridge(&encoder->base);
-+		rcar_lvds_clk_disable(bridge);
- 	}
- 
- 	spin_lock_irq(&crtc->dev->event_lock);
 diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index 46fc17c63a44..bd78c256b1ed 100644
+index bfb0385163f1..d7d714023050 100644
 --- a/include/drm/drm_bridge.h
 +++ b/include/drm/drm_bridge.h
-@@ -25,6 +25,7 @@
+@@ -263,7 +263,7 @@ struct drm_bridge_funcs {
+ 	 * The @atomic_pre_enable callback is optional.
+ 	 */
+ 	void (*atomic_pre_enable)(struct drm_bridge *bridge,
+-				  struct drm_atomic_state *state);
++				  struct drm_atomic_state *old_state);
  
- #include <linux/list.h>
- #include <linux/ctype.h>
-+#include <drm/drm_encoder.h>
- #include <drm/drm_mode_object.h>
- #include <drm/drm_modes.h>
+ 	/**
+ 	 * @atomic_enable:
+@@ -288,7 +288,7 @@ struct drm_bridge_funcs {
+ 	 * The @atomic_enable callback is optional.
+ 	 */
+ 	void (*atomic_enable)(struct drm_bridge *bridge,
+-			      struct drm_atomic_state *state);
++			      struct drm_atomic_state *old_state);
+ 	/**
+ 	 * @atomic_disable:
+ 	 *
+@@ -311,7 +311,7 @@ struct drm_bridge_funcs {
+ 	 * The @atomic_disable callback is optional.
+ 	 */
+ 	void (*atomic_disable)(struct drm_bridge *bridge,
+-			       struct drm_atomic_state *state);
++			       struct drm_atomic_state *old_state);
  
-@@ -422,6 +423,20 @@ drm_bridge_get_next_bridge(struct drm_bridge *bridge)
- 	return bridge->next;
- }
+ 	/**
+ 	 * @atomic_post_disable:
+@@ -337,7 +337,7 @@ struct drm_bridge_funcs {
+ 	 * The @atomic_post_disable callback is optional.
+ 	 */
+ 	void (*atomic_post_disable)(struct drm_bridge *bridge,
+-				    struct drm_atomic_state *state);
++				    struct drm_atomic_state *old_state);
+ };
  
-+/**
-+ * drm_bridge_chain_get_first_bridge() - Get the first bridge in the chain
-+ * @encoder: encoder object
-+ *
-+ * RETURNS:
-+ * the first bridge in the chain, or NULL if @encoder has no bridge attached
-+ * to it.
-+ */
-+static inline struct drm_bridge *
-+drm_bridge_chain_get_first_bridge(struct drm_encoder *encoder)
-+{
-+	return encoder->bridge;
-+}
-+
- bool drm_bridge_chain_mode_fixup(struct drm_bridge *bridge,
- 				 const struct drm_display_mode *mode,
- 				 struct drm_display_mode *adjusted_mode);
+ /**
 -- 
 2.23.0
 
