@@ -2,131 +2,155 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 853E6C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 09:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A80C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 09:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4576720661
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 09:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9E420803
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 09:11:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="GgImHakZ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l3jVpkgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbfLCJF1 (ORCPT
+        id S1726182AbfLCJLc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:05:27 -0500
-Received: from mail-eopbgr740040.outbound.protection.outlook.com ([40.107.74.40]:52642
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725773AbfLCJF1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:05:27 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Fpz+9/7m9MW+8P5Z/4jRdv1ZnThEC+wpIonY7hUkY7brrgaeq5uyHTudTqknwt/m/A0RFJBVgHLxIGHQBX/5V6iscKgpdA4ishdV383caLaaqrECFw36cUal2mbbpvqatVNj816/9xGNXyXGrrgnZQIMVmWORXOndsWyuA0hsxBGcK2i4LUvDIRcqRTCqQ2Wivo7K57EoIT9gUK9OC2u5NJWnX3OhAgbxUNA2ao+/gisDn62CgNDZDyXSQEjJU0TjJxgdZeXi5cmD7dsWveWWcCsY6nkUlrj6NsBwGRlxRPLjU7Td7nT2fS9GS/jlJ1poHi/PGyMVg+TCRs+fIHLWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8lIOeaQGbLpqXrt2JvWyUvXrDLgSWozGA9otpJH7PWc=;
- b=e7XzBqMiTmAdonSQYkZiWM3WWFUAgUteg6oGmlwipwxI4nia0CS47ks8TsZ9IdcUvbhImxUsXjutyqFCMwzN6Y5g8VVC02UZVUMzQvop3g1booppg4f7aweTN6tien3K3DFlBS3bPQUyzf+ocI7nIfdbZz4BVOcYHYf50/U2+wiSVhs7JGnFpncGhz4kB8t3rNja5m/yjWceziSdhGh+wdQUUm8uO0Cd7S0v94TAY5XtGA2fKqh5OXZWcKSeQC0KADuxHAAl8kIaK+AI7pLGsVjMOKHs3i4GzaUM5CqjvxyE+W6BeQ2nM1Qzj7xvhFxb2akQpbYiWn5ZCVXD+hH2Wg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8lIOeaQGbLpqXrt2JvWyUvXrDLgSWozGA9otpJH7PWc=;
- b=GgImHakZ44eVgXoFMsIzC60wJZLlVcnf6vPCSLS/q8751NttOol/8kHbyhuctSKaXoqejuOrsRLd/jMK2F/UM/T++NKEDiPRk7++hWbsslSPv8djQzQ4SKP5h5u+YS19FDI/eg/7H5DNWQhwuflNBtrMZAGUK6Z6nFsN5dgBjlY=
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.93.213) by
- BYAPR03MB4598.namprd03.prod.outlook.com (20.179.92.208) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.20; Tue, 3 Dec 2019 09:05:24 +0000
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::708d:91cc:79a7:9b9a]) by BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::708d:91cc:79a7:9b9a%6]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
- 09:05:24 +0000
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Jun Nie <jun.nie@linaro.org>, Christoph Hellwig <hch@infradead.org>
-CC:     "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 4/4] mmc: sdhci: Add DMA memory boundary workaround
-Thread-Topic: [PATCH 4/4] mmc: sdhci: Add DMA memory boundary workaround
-Thread-Index: AQHVqR6bSNy8xcyAyESfm+a1vx+I5KensdkAgAAQtICAAFjjgA==
-Date:   Tue, 3 Dec 2019 09:05:23 +0000
-Message-ID: <20191203165123.4e6f9e28@xhacker.debian>
-References: <20191202144104.5069-1-jun.nie@linaro.org>
-        <20191202144104.5069-5-jun.nie@linaro.org>
-        <20191203103320.273a7309@xhacker.debian>
-        <CABymUCMVi_N2Mt82YDt7wrys4Z_vnXYEu15-YBa+S1CejT9iZw@mail.gmail.com>
-In-Reply-To: <CABymUCMVi_N2Mt82YDt7wrys4Z_vnXYEu15-YBa+S1CejT9iZw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [124.74.246.114]
-x-clientproxiedby: TYAPR03CA0007.apcprd03.prod.outlook.com
- (2603:1096:404:14::19) To BYAPR03MB4773.namprd03.prod.outlook.com
- (2603:10b6:a03:139::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b35c800b-ee77-42a0-5ef0-08d777cfee4a
-x-ms-traffictypediagnostic: BYAPR03MB4598:
-x-microsoft-antispam-prvs: <BYAPR03MB45980A6E1D275FFD26ECB9B0ED420@BYAPR03MB4598.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02408926C4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(39860400002)(376002)(366004)(346002)(189003)(199004)(51914003)(6436002)(6486002)(26005)(110136005)(11346002)(446003)(186003)(9686003)(66946007)(66476007)(86362001)(66446008)(64756008)(66556008)(386003)(102836004)(76176011)(229853002)(52116002)(6506007)(6512007)(81156014)(1076003)(81166006)(71200400001)(71190400001)(5660300002)(99286004)(316002)(50226002)(54906003)(256004)(8936002)(4326008)(478600001)(25786009)(6246003)(2906002)(3846002)(6116002)(8676002)(14454004)(7736002)(305945005)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4598;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aj+IW1DLdStsALzDNpjsZtjdjf7U+CajgHjrAxd9ZwQERYsa4MYvNZoFMNlmzJ/cr34SEggyXvLhHWh0M6OR810aSuQ+Baw4dyBkKM745afuE8BproS24KDbonvMYys3QmmEK2w662FwjZmxMvrkx2gkuOE0DMxuLDdfIbpH/U+mYJwlYKgtF9oFGM70QHld8WTLONXUNgoRzH+ECXIU2XJryCLb7wDO9V2ys1uLbPoKVqiHpxNDtfRruZr8vfnE02Lsoh4laMiCDOzkg0fX8XBQIEL/Wv4jZrIGEpaaPOswkYhhrIQgsJbHU3rGzl/wU4Yk/w1se1hNCGgmUJ9xuHnor5Bl0af+lplhriezaQX3oAAJUcgA+Xn4FodQDU1TWzWc//5hnNSzS2lM0qokg0Bdv1dy9HYBQJiRn1orRW2/5SV7uERwvQdzwxzE/qYt
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <440789C5C920DC4288D62DC7C75D6252@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 3 Dec 2019 04:11:32 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47394 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfLCJLb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 04:11:31 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB39BNQ9103282;
+        Tue, 3 Dec 2019 03:11:23 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575364283;
+        bh=Bw2S3+Umha1Z+hIKv1Ph4zlTyHuhz/OeMZsRMtvyaT0=;
+        h=From:To:CC:Subject:Date;
+        b=l3jVpkgGW5wzF2yD1eS723IXh3tU+ZCoftOOz2WiUYJllu/CYvU3PbYCzpvcWE8ze
+         OfDSrBVnJLK0cqE/ZpTn+Mv1bLQxYgk8pAhiLArRrrf5DyOF1ghLJ85NTiDLr0xvj1
+         k2KVkZkzCYrtV5WHAk4mUtkikEYb5Pc+GElyVaKM=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB39BNM1129780;
+        Tue, 3 Dec 2019 03:11:23 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Dec
+ 2019 03:11:22 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 3 Dec 2019 03:11:22 -0600
+Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB39BJNg090065;
+        Tue, 3 Dec 2019 03:11:20 -0600
+From:   Jyri Sarha <jsarha@ti.com>
+To:     <dri-devel@lists.freedesktop.org>, <tony@atomide.com>,
+        <bcousson@baylibre.com>, <devicetree@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
+        <peter.ujfalusi@ti.com>, <bparrot@ti.com>
+Subject: [PATCH v2] ARM: dts: am335x-evm: Use drm simple-panel instead of tilcdc-panel
+Date:   Tue, 3 Dec 2019 11:11:19 +0200
+Message-ID: <20191203091119.3352-1-jsarha@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b35c800b-ee77-42a0-5ef0-08d777cfee4a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 09:05:23.9329
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: K4y/4XNjZpoL1pZc/TZ81N6BStDbwu9tRDxQhMiYrYmfKALP1BpZGLzfMVrDxSqYPltCa/2zAwuIPHLoT79eVQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4598
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-KyBDaHJpc3RvcGgNCg0KT24gVHVlLCAzIERlYyAyMDE5IDExOjMzOjE1ICswODAwIEp1biBOaWUg
-d3JvdGU6DQoNCj4gDQo+IA0KPiBKaXNoZW5nIFpoYW5nIDxKaXNoZW5nLlpoYW5nQHN5bmFwdGlj
-cy5jb20+IOS6jjIwMTnlubQxMuaciDPml6Xlkajkuowg5LiK5Y2IMTA6NDflhpnpgZPvvJoNCj4g
-Pg0KPiA+IE9uIE1vbiwgIDIgRGVjIDIwMTkgMjI6NDE6MDQgKzA4MDAgSnVuIE5pZSB3cm90ZToN
-Cj4gPg0KPiA+ICANCj4gPiA+DQo+ID4gPg0KPiA+ID4gRE1BIG1lbW9yeSBjYW5ub3QgY3Jvc3Mg
-c3BlY2lmaWMgYm91bmRhcnkgZm9yIHNvbWUgU0RIQ0kgY29udHJvbGxlciwNCj4gPiA+IHN1Y2gg
-YXMgRGVzaWduV2FyZSBTREhDSSBjb250cm9sbGVyLiBBZGQgRE1BIG1lbW9yeSBib3VuZGFyeSBk
-dA0KPiA+ID4gcHJvcGVydHkgYW5kIHdvcmthcm91bmQgdGhlIGxpbWl0YXRpb24uICANCj4gPg0K
-PiA+IElNSE8sIHRoZSB3b3JrYXJvdW5kIGNvdWxkIGJlIGltcGxlbWVudGVkIGluIGVhY2ggU0RI
-Q0kgaG9zdCBkcml2ZXIuDQo+ID4NCj4gPiBlZy4gZHJpdmVycy9tbWMvaG9zdC9zZGhjaS1vZi1k
-d2Ntc2hjLmMNCj4gPiAgDQo+IFRoYW5rcyBmb3IgdGhlIHN1Z2dlc3Rpb24hIENocmlzdG9waCdz
-IHN1Z2dlc3Rpb24gY2FuIHByZXZlbnQgdGhlIHRoZSBpc3N1ZQ0KPiBmcm9tIHRoZSBibG9jayBs
-YXllciwgdGh1cyB0aGUgY29kZSBjYW4gYmUgc2hhcmVkIGFjcm9zcyBhbGwNCg0KVG8gYmUgaG9u
-ZXN0LCBJIGRpZCBjb25zaWRlciBzaW1pbGFyIHNvbHV0aW9uIGZyb20gYmxvY2sgbGF5ZXIsIEku
-RSBzZXQNCnRoZSBzZWdfYm91bmRhcnlfbWFzaywgd2hlbiBzdWJtaXR0aW5nIHRoZSB3b3JrYXJv
-dW5kIGxhc3QgeWVhciwgYnV0IHBlcg0KbXkgdW5kZXJzdGFuZGluZywgU0RIQ0kgbGltaXRhdGlv
-biBpcyB0aGUgcGh5c2ljYWwgRE1BIGFkZHIgY2FuJ3Qgc3BhbiBvbmUNCnNwZWNpZmljIGJvdW5k
-YXJ5LCBzbyBzZXR0aW5nIHNlZ19ib3VuZGFyeV9tYXNrIHcvIGJsa19xdWV1ZV9zZWdtZW50X2Jv
-dW5kYXJ5DQpjYW4ndCB3b3JrLiBJJ20gbm90IHN1cmUgSSB1bmRlcnN0YW5kIGJsa19xdWV1ZV9z
-ZWdtZW50X2JvdW5kYXJ5KCkgcHJvcGVybHkuDQpNYXkgQ2hyaXN0b3BoIGhlbHAgdG8gY2xhcmlm
-eT8NCg0KRnJvbSBhbm90aGVyIHNpZGUsIGRyaXZlcnMvYXRhL2xpYmF0YS1zZmYuYyBhbHNvIHdv
-cmthcm91bmQgdGhlIDY0SyBwaHkgRE1BDQpib3VuZGFyeSBsaW1pdGF0aW9uIGl0c2VsZiByYXRo
-ZXIgdGhhbiBmcm9tIGJsb2NrIGxheWVyLg0KDQpUaGFua3MNCg0KPiBjb250cm9sbGVycy4gSSBw
-cmVmZXINCj4gaGlzIHN1Z2dlc3Rpb25zLg0KPiANCj4gSnVuDQoNCg==
+Move to use the new drm panel support in tilcdc together with added
+"tfc,s9700rtwv43tr-01b"-panel support in drm panel-simple.
+
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+"tfc,s9700rtwv43tr-01b" in panel-simple has been in for some time now
+so it is about time to get this in too.
+
+Since first version:
+- drop status = "okay";
+- blank line before port node
+- drop ports node
+- drop Tomi's reviewed-by because of above changes
+- add Laurent's reviewed-by
+
+ arch/arm/boot/dts/am335x-evm.dts | 40 +++++++++++---------------------
+ 1 file changed, 13 insertions(+), 27 deletions(-)
+
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index a00145705c9b..84dfc40af7c5 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -113,7 +113,7 @@
+ 		};
+ 	};
+ 
+-	backlight {
++	backlight: backlight {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&ecap0 0 50000 0>;
+ 		brightness-levels = <0 51 53 56 62 75 101 152 255>;
+@@ -121,35 +121,15 @@
+ 	};
+ 
+ 	panel {
+-		compatible = "ti,tilcdc,panel";
+-		status = "okay";
++		compatible = "tfc,s9700rtwv43tr-01b";
++
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&lcd_pins_s0>;
+-		panel-info {
+-			ac-bias           = <255>;
+-			ac-bias-intrpt    = <0>;
+-			dma-burst-sz      = <16>;
+-			bpp               = <32>;
+-			fdd               = <0x80>;
+-			sync-edge         = <0>;
+-			sync-ctrl         = <1>;
+-			raster-order      = <0>;
+-			fifo-th           = <0>;
+-		};
++		backlight = <&backlight>;
+ 
+-		display-timings {
+-			800x480p62 {
+-				clock-frequency = <30000000>;
+-				hactive = <800>;
+-				vactive = <480>;
+-				hfront-porch = <39>;
+-				hback-porch = <39>;
+-				hsync-len = <47>;
+-				vback-porch = <29>;
+-				vfront-porch = <13>;
+-				vsync-len = <2>;
+-				hsync-active = <1>;
+-				vsync-active = <1>;
++		port {
++			panel_0: endpoint@0 {
++				remote-endpoint = <&lcdc_0>;
+ 			};
+ 		};
+ 	};
+@@ -525,6 +505,12 @@
+ 	status = "okay";
+ 
+ 	blue-and-red-wiring = "crossed";
++
++	port {
++		lcdc_0: endpoint@0 {
++			remote-endpoint = <&panel_0>;
++		};
++	};
+ };
+ 
+ &elm {
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
