@@ -2,29 +2,29 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D501C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 248A0C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE562146E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 064202154A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfLCOPZ (ORCPT
+        id S1726516AbfLCOP0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:15:25 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58886 "EHLO
+        Tue, 3 Dec 2019 09:15:26 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58948 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfLCOPZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:15:25 -0500
+        with ESMTP id S1726418AbfLCOP0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:15:26 -0500
 Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id D199C27FB0C;
-        Tue,  3 Dec 2019 14:15:22 +0000 (GMT)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 388A52800D3;
+        Tue,  3 Dec 2019 14:15:24 +0000 (GMT)
 From:   Boris Brezillon <boris.brezillon@collabora.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Lucas Stach <l.stach@pengutronix.de>,
@@ -48,11 +48,14 @@ Cc:     Lucas Stach <l.stach@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Subject: [PATCH v4 00/11] drm: Add support for bus-format negotiation
-Date:   Tue,  3 Dec 2019 15:15:04 +0100
-Message-Id: <20191203141515.3597631-1-boris.brezillon@collabora.com>
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v4 02/11] drm/bridge: Introduce drm_bridge_get_next_bridge()
+Date:   Tue,  3 Dec 2019 15:15:06 +0100
+Message-Id: <20191203141515.3597631-3-boris.brezillon@collabora.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191203141515.3597631-1-boris.brezillon@collabora.com>
+References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -60,65 +63,123 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch series aims at adding support for runtime bus-format
-negotiation between all elements of the
-'encoder -> bridges -> connector/display' section of the pipeline.
+And use it in drivers accessing the bridge->next field directly.
+This is part of our attempt to make the bridge chain a double-linked list
+based on the generic list helpers.
 
-In order to support that, we need drm bridges to fully take part in the
-atomic state validation process, which requires adding a
-drm_bridge_state and a new drm_bridge_funcs.atomic_check() hook.
-Once those basic building blocks are in place, we can add new hooks to
-allow bus format negotiation (those are called just before
-->atomic_check()). The bus format selection is done at runtime by
-testing all possible combinations across the whole bridge chain until
-one is reported to work.
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+Changes in v4:
+* Rename the helper
+* Add R-bs
 
-No Major changes in this v4. I think I addressed all comments I got
-from Neil and Laurent (thanks for the detailed reviews BTW). Note that
-this version only contains core changes. Once those changes are merged
-I'll send the imx/panel/lvds-codec specific bits.
+Changes in v3:
+* Inline drm_bridge_chain_get_next_bridge() (Suggested by Laurent)
 
-A more detailed changelog is provided in each patch.
+Changes in v2:
+* Kill the last/first helpers (they're not really needed)
+* Drop the !bridge || !bridge->encoder test
+---
+ drivers/gpu/drm/drm_encoder.c          |  2 +-
+ drivers/gpu/drm/mediatek/mtk_hdmi.c    |  6 ++++--
+ drivers/gpu/drm/omapdrm/omap_drv.c     |  4 ++--
+ drivers/gpu/drm/omapdrm/omap_encoder.c |  3 ++-
+ include/drm/drm_bridge.h               | 13 +++++++++++++
+ 5 files changed, 22 insertions(+), 6 deletions(-)
 
-This patch series is also available here [1].
-
-Thanks,
-
-Boris
-
-[1]https://github.com/bbrezillon/linux-0day/commits/drm-bridge-busfmt-v4
-
-Boris Brezillon (11):
-  drm/bridge: Rename bridge helpers targeting a bridge chain
-  drm/bridge: Introduce drm_bridge_get_next_bridge()
-  drm: Stop accessing encoder->bridge directly
-  drm/bridge: Make the bridge chain a double-linked list
-  drm/bridge: Add the drm_for_each_bridge_in_chain() helper
-  drm/bridge: Add the drm_bridge_get_prev_bridge() helper
-  drm/bridge: Clarify the atomic enable/disable hooks semantics
-  drm/bridge: Add a drm_bridge_state object
-  drm/bridge: Patch atomic hooks to take a drm_bridge_state
-  drm/bridge: Add an ->atomic_check() hook
-  drm/bridge: Add the necessary bits to support bus format negotiation
-
- .../drm/bridge/analogix/analogix_dp_core.c    |  41 +-
- drivers/gpu/drm/drm_atomic.c                  |  39 +
- drivers/gpu/drm/drm_atomic_helper.c           |  53 +-
- drivers/gpu/drm/drm_bridge.c                  | 756 +++++++++++++++---
- drivers/gpu/drm/drm_encoder.c                 |  15 +-
- drivers/gpu/drm/drm_probe_helper.c            |   4 +-
- drivers/gpu/drm/exynos/exynos_drm_dsi.c       |  13 +-
- drivers/gpu/drm/mediatek/mtk_hdmi.c           |   8 +-
- drivers/gpu/drm/msm/edp/edp_bridge.c          |  10 +-
- drivers/gpu/drm/omapdrm/omap_drv.c            |   4 +-
- drivers/gpu/drm/omapdrm/omap_encoder.c        |   3 +-
- drivers/gpu/drm/rcar-du/rcar_du_crtc.c        |  10 +-
- drivers/gpu/drm/vc4/vc4_dsi.c                 |  18 +-
- include/drm/drm_atomic.h                      |   3 +
- include/drm/drm_bridge.h                      | 404 +++++++++-
- include/drm/drm_encoder.h                     |   7 +-
- 16 files changed, 1174 insertions(+), 214 deletions(-)
-
+diff --git a/drivers/gpu/drm/drm_encoder.c b/drivers/gpu/drm/drm_encoder.c
+index 80d88a55302e..fcd3af1ac432 100644
+--- a/drivers/gpu/drm/drm_encoder.c
++++ b/drivers/gpu/drm/drm_encoder.c
+@@ -171,7 +171,7 @@ void drm_encoder_cleanup(struct drm_encoder *encoder)
+ 		struct drm_bridge *next;
+ 
+ 		while (bridge) {
+-			next = bridge->next;
++			next = drm_bridge_get_next_bridge(bridge);
+ 			drm_bridge_detach(bridge);
+ 			bridge = next;
+ 		}
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+index ee3a5e9c10c4..5e4a4dbda443 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+@@ -1238,16 +1238,18 @@ static int mtk_hdmi_conn_mode_valid(struct drm_connector *conn,
+ 				    struct drm_display_mode *mode)
+ {
+ 	struct mtk_hdmi *hdmi = hdmi_ctx_from_conn(conn);
++	struct drm_bridge *next_bridge;
+ 
+ 	dev_dbg(hdmi->dev, "xres=%d, yres=%d, refresh=%d, intl=%d clock=%d\n",
+ 		mode->hdisplay, mode->vdisplay, mode->vrefresh,
+ 		!!(mode->flags & DRM_MODE_FLAG_INTERLACE), mode->clock * 1000);
+ 
+-	if (hdmi->bridge.next) {
++	next_bridge = drm_bridge_get_next_bridge(&hdmi->bridge);
++	if (next_bridge) {
+ 		struct drm_display_mode adjusted_mode;
+ 
+ 		drm_mode_copy(&adjusted_mode, mode);
+-		if (!drm_bridge_chain_mode_fixup(hdmi->bridge.next, mode,
++		if (!drm_bridge_chain_mode_fixup(next_bridge, mode,
+ 						 &adjusted_mode))
+ 			return MODE_BAD;
+ 	}
+diff --git a/drivers/gpu/drm/omapdrm/omap_drv.c b/drivers/gpu/drm/omapdrm/omap_drv.c
+index b3e22c890c51..d2750f60f519 100644
+--- a/drivers/gpu/drm/omapdrm/omap_drv.c
++++ b/drivers/gpu/drm/omapdrm/omap_drv.c
+@@ -217,8 +217,8 @@ static int omap_display_id(struct omap_dss_device *output)
+ 	} else if (output->bridge) {
+ 		struct drm_bridge *bridge = output->bridge;
+ 
+-		while (bridge->next)
+-			bridge = bridge->next;
++		while (drm_bridge_get_next_bridge(bridge))
++			bridge = drm_bridge_get_next_bridge(bridge);
+ 
+ 		node = bridge->of_node;
+ 	} else if (output->panel) {
+diff --git a/drivers/gpu/drm/omapdrm/omap_encoder.c b/drivers/gpu/drm/omapdrm/omap_encoder.c
+index 24bbe9f2a32e..4f2165a37795 100644
+--- a/drivers/gpu/drm/omapdrm/omap_encoder.c
++++ b/drivers/gpu/drm/omapdrm/omap_encoder.c
+@@ -126,7 +126,8 @@ static void omap_encoder_mode_set(struct drm_encoder *encoder,
+ 	for (dssdev = output; dssdev; dssdev = dssdev->next)
+ 		omap_encoder_update_videomode_flags(&vm, dssdev->bus_flags);
+ 
+-	for (bridge = output->bridge; bridge; bridge = bridge->next) {
++	for (bridge = output->bridge; bridge;
++	     bridge = drm_bridge_get_next_bridge(bridge)) {
+ 		if (!bridge->timings)
+ 			continue;
+ 
+diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+index 726435baf4ad..46fc17c63a44 100644
+--- a/include/drm/drm_bridge.h
++++ b/include/drm/drm_bridge.h
+@@ -409,6 +409,19 @@ struct drm_bridge *of_drm_find_bridge(struct device_node *np);
+ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
+ 		      struct drm_bridge *previous);
+ 
++/**
++ * drm_bridge_get_next_bridge() - Get the next bridge in the chain
++ * @bridge: bridge object
++ *
++ * RETURNS:
++ * the next bridge in the chain after @bridge, or NULL if @bridge is the last.
++ */
++static inline struct drm_bridge *
++drm_bridge_get_next_bridge(struct drm_bridge *bridge)
++{
++	return bridge->next;
++}
++
+ bool drm_bridge_chain_mode_fixup(struct drm_bridge *bridge,
+ 				 const struct drm_display_mode *mode,
+ 				 struct drm_display_mode *adjusted_mode);
 -- 
 2.23.0
 
