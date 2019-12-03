@@ -2,276 +2,107 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 810CEC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16F8C432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559D92070A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8079F2073F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:05:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="EpZg4MNf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbfLCPzS (ORCPT
+        id S1726955AbfLCQFD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:55:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:44676 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbfLCPzR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 10:55:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2A2131B;
-        Tue,  3 Dec 2019 07:55:16 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 59A683F52E;
-        Tue,  3 Dec 2019 07:55:16 -0800 (PST)
-Date:   Tue, 3 Dec 2019 15:55:14 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Tue, 3 Dec 2019 11:05:03 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36709 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfLCQFD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 11:05:03 -0500
+Received: by mail-lj1-f196.google.com with SMTP id r19so4470902ljg.3
+        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 08:05:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:references:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ISxgLk82KYg9gcCYMQW4c3ORz6YkAHuAhHBO9CgaMTE=;
+        b=EpZg4MNfgVquGvO4fH/X5H+3P+UFIyXs1dvDST18rfRasIrdEob3Vz7delQ08QikL9
+         HwLUZjCnZcsKyEi3G8SToHRvBaZdnFFcsPnG4k/5YWG/cwZB1DsyOMnn3iHOgJ5jBhRF
+         0/tv0b27SOMfdHAAS9uvvyzYHSvJz29jXZ8Ghn8P74JIXgbqiQ8Xmf3E7xd0IOJWjYpt
+         v9k8TskKjI/UpljG8OYXfqRkCLbkH8b4DSia7T8a+v1EfZoGxKC3CBVYnqYDmqJFopMg
+         3Xur2LBWPfoAUY+YgoW9CnTNt3+RV4Uwq2EleIYU8L5WljjTjJj4DuITTMBVU0AW9mEM
+         J5uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ISxgLk82KYg9gcCYMQW4c3ORz6YkAHuAhHBO9CgaMTE=;
+        b=Tty9O9clrSvpLUj7cIp5NSKvhWU+e3xtiCy6rvNZ1hZbZNiNY9kmPb+cTMcj54tQCF
+         1C+kGTRsEEERpD0Py6wVtX8HCHYm4zXsBKfDZBUquV0SnT53TXDDXsHuDKrlWB7lytjV
+         MNjRGawaL4HpKZ8HDynUI357TDKYqzFnXVa4xJjJkxpBsNRnnuJJ8sIVs50lTnGfYQYM
+         t85QKDh+heKsNlLL3VzgOicesinbFw0CZwLYVZEG2Ow4+gObqRxX4j9QBmWIXJK4pjjT
+         pr/BLD2kACOMjjbLjPE8RWB5DFGAQEpK1IN+LTh2JRhpDfV4/OPuR6oPJqR2krEGNtvd
+         58kw==
+X-Gm-Message-State: APjAAAVpJYal5qXjfh6oyWguFxBIgVUbp+15NUqNe9ptr1WHBaHxah8G
+        BLwdC5399tyWyY9cFofMjE1kLw==
+X-Google-Smtp-Source: APXvYqwyp3PFALxnKddtKsL8vY1KS7etYmE6Qhye0Iq2Sqts4Tc5bj5UbJeYQy+vhfctVJQU7uj6RA==
+X-Received: by 2002:a2e:85d5:: with SMTP id h21mr3018520ljj.243.1575389101408;
+        Tue, 03 Dec 2019 08:05:01 -0800 (PST)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:6d1:3848:12e:c7de:68cf:5575])
+        by smtp.gmail.com with ESMTPSA id y192sm1791884lfa.63.2019.12.03.08.04.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Dec 2019 08:05:00 -0800 (PST)
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
+To:     Chris Brandt <Chris.Brandt@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v3 2/6] PCI: iproc: Add INTx support with better modeling
-Message-ID: <20191203155514.GE18399@e119886-lin.cambridge.arm.com>
-References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
- <1575349026-8743-3-git-send-email-srinath.mannam@broadcom.com>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>
+References: <20191203034519.5640-1-chris.brandt@renesas.com>
+ <20191203034519.5640-7-chris.brandt@renesas.com>
+ <17e66541-41fb-26ed-c87b-15c59ab57bef@cogentembedded.com>
+ <TY1PR01MB156262E8D33A0624457CAE248A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+Organization: Cogent Embedded
+Message-ID: <6c2cb15b-896c-e749-8b33-02da46fbc222@cogentembedded.com>
+Date:   Tue, 3 Dec 2019 19:04:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575349026-8743-3-git-send-email-srinath.mannam@broadcom.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <TY1PR01MB156262E8D33A0624457CAE248A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 10:27:02AM +0530, Srinath Mannam wrote:
-> From: Ray Jui <ray.jui@broadcom.com>
+On 12/03/2019 04:27 PM, Chris Brandt wrote:
+
+>>> +- flash: should be represented by a subnode of the SPIBSC node,
+>>> +	 its "compatible" property contains "jedec,spi-nor" if SPI is used.
+>>
+>>     Are any other flash variants supported?
 > 
-> Add PCIe legacy interrupt INTx support to the iProc PCIe driver by
-> modeling it with its own IRQ domain. All 4 interrupts INTA, INTB, INTC,
-> INTD share the same interrupt line connected to the GIC in the system,
-> while the status of each INTx can be obtained through the INTX CSR
-> register
-> 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-iproc.c | 100 +++++++++++++++++++++++++++++++++++-
->  drivers/pci/controller/pcie-iproc.h |   6 +++
->  2 files changed, 104 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> index 2d457bf..e90c22e 100644
-> --- a/drivers/pci/controller/pcie-iproc.c
-> +++ b/drivers/pci/controller/pcie-iproc.c
-> @@ -14,6 +14,7 @@
->  #include <linux/delay.h>
->  #include <linux/interrupt.h>
->  #include <linux/irqchip/arm-gic-v3.h>
-> +#include <linux/irqchip/chained_irq.h>
->  #include <linux/platform_device.h>
->  #include <linux/of_address.h>
->  #include <linux/of_pci.h>
-> @@ -270,6 +271,7 @@ enum iproc_pcie_reg {
->  
->  	/* enable INTx */
->  	IPROC_PCIE_INTX_EN,
-> +	IPROC_PCIE_INTX_CSR,
->  
->  	/* outbound address mapping */
->  	IPROC_PCIE_OARR0,
-> @@ -314,6 +316,7 @@ static const u16 iproc_pcie_reg_paxb_bcma[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_LINK_STATUS]	= 0xf0c,
->  };
->  
-> @@ -325,6 +328,7 @@ static const u16 iproc_pcie_reg_paxb[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_OARR0]		= 0xd20,
->  	[IPROC_PCIE_OMAP0]		= 0xd40,
->  	[IPROC_PCIE_OARR1]		= 0xd28,
-> @@ -341,6 +345,7 @@ static const u16 iproc_pcie_reg_paxb_v2[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_OARR0]		= 0xd20,
->  	[IPROC_PCIE_OMAP0]		= 0xd40,
->  	[IPROC_PCIE_OARR1]		= 0xd28,
-> @@ -846,9 +851,95 @@ static int iproc_pcie_check_link(struct iproc_pcie *pcie)
->  	return link_is_active ? 0 : -ENODEV;
->  }
->  
-> -static void iproc_pcie_enable(struct iproc_pcie *pcie)
-> +static int iproc_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
-> +			       irq_hw_number_t hwirq)
->  {
-> +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
-> +	irq_set_chip_data(irq, domain->host_data);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops intx_domain_ops = {
-> +	.map = iproc_pcie_intx_map,
-> +};
-> +
-> +static void iproc_pcie_isr(struct irq_desc *desc)
-> +{
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	struct iproc_pcie *pcie;
-> +	struct device *dev;
-> +	unsigned long status;
-> +	u32 bit, virq;
-> +
-> +	chained_irq_enter(chip, desc);
-> +	pcie = irq_desc_get_handler_data(desc);
-> +	dev = pcie->dev;
-> +
-> +	/* go through INTx A, B, C, D until all interrupts are handled */
-> +	do {
-> +		status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
+> Do you mean other types of SPI flash?
 
-By performing this read once and outside of the do/while loop you may improve
-performance. I wonder how probable it is to get another INTx whilst handling
-one?
+   No, I mean flashes connected via different buses, like HyperBus with the gen3 SoC RPC-IF.
+If SPI's the only bu supported, there's no point saying "if SPI is used".
 
+[...]
+> Chris
 
-> +		for_each_set_bit(bit, &status, PCI_NUM_INTX) {
-> +			virq = irq_find_mapping(pcie->irq_domain, bit);
-> +			if (virq)
-> +				generic_handle_irq(virq);
-> +			else
-> +				dev_err(dev, "unexpected INTx%u\n", bit);
-> +		}
-> +	} while ((status & SYS_RC_INTX_MASK) != 0);
-> +
-> +	chained_irq_exit(chip, desc);
-> +}
-> +
-> +static int iproc_pcie_intx_enable(struct iproc_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->dev;
-> +	struct device_node *node;
-> +	int ret;
-> +
->  	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, SYS_RC_INTX_MASK);
-> +	/*
-> +	 * BCMA devices do not map INTx the same way as platform devices. All
-> +	 * BCMA needs is the above code to enable INTx
-> +	 */
-
-NIT: Move this comment above the line of code?
-
-
-> +
-> +	node = of_get_compatible_child(dev->of_node, "brcm,iproc-intc");
-
-As the interrupt controller is built into the PCI controller, what is the
-rationale for representing this as a separate device tree device?
-
-Thanks,
-
-Andrew Murray
-
-> +	if (node)
-> +		pcie->irq = of_irq_get(node, 0);
-> +
-> +	if (!node || pcie->irq <= 0)
-> +		return 0;
-> +
-> +	/* set IRQ handler */
-> +	irq_set_chained_handler_and_data(pcie->irq, iproc_pcie_isr, pcie);
-> +
-> +	/* add IRQ domain for INTx */
-> +	pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
-> +						 &intx_domain_ops, pcie);
-> +	if (!pcie->irq_domain) {
-> +		dev_err(dev, "failed to add INTx IRQ domain\n");
-> +		ret = -ENOMEM;
-> +		goto err_rm_handler_data;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_rm_handler_data:
-> +	of_node_put(node);
-> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
-> +
-> +	return ret;
-> +}
-> +
-> +static void iproc_pcie_intx_disable(struct iproc_pcie *pcie)
-> +{
-> +	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, 0x0);
-> +
-> +	if (pcie->irq <= 0)
-> +		return;
-> +
-> +	irq_domain_remove(pcie->irq_domain);
-> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
->  }
->  
->  static inline bool iproc_pcie_ob_is_valid(struct iproc_pcie *pcie,
-> @@ -1537,7 +1628,11 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
->  		goto err_power_off_phy;
->  	}
->  
-> -	iproc_pcie_enable(pcie);
-> +	ret = iproc_pcie_intx_enable(pcie);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable INTx\n");
-> +		goto err_power_off_phy;
-> +	}
->  
->  	if (IS_ENABLED(CONFIG_PCI_MSI))
->  		if (iproc_pcie_msi_enable(pcie))
-> @@ -1582,6 +1677,7 @@ int iproc_pcie_remove(struct iproc_pcie *pcie)
->  	pci_remove_root_bus(pcie->root_bus);
->  
->  	iproc_pcie_msi_disable(pcie);
-> +	iproc_pcie_intx_disable(pcie);
->  
->  	phy_power_off(pcie->phy);
->  	phy_exit(pcie->phy);
-> diff --git a/drivers/pci/controller/pcie-iproc.h b/drivers/pci/controller/pcie-iproc.h
-> index 4f03ea5..103e568 100644
-> --- a/drivers/pci/controller/pcie-iproc.h
-> +++ b/drivers/pci/controller/pcie-iproc.h
-> @@ -74,6 +74,9 @@ struct iproc_msi;
->   * @ib: inbound mapping related parameters
->   * @ib_map: outbound mapping region related parameters
->   *
-> + * @irq: interrupt line wired to the generic GIC for INTx
-> + * @irq_domain: IRQ domain for INTx
-> + *
->   * @need_msi_steer: indicates additional configuration of the iProc PCIe
->   * controller is required to steer MSI writes to external interrupt controller
->   * @msi: MSI data
-> @@ -102,6 +105,9 @@ struct iproc_pcie {
->  	struct iproc_pcie_ib ib;
->  	const struct iproc_pcie_ib_map *ib_map;
->  
-> +	int irq;
-> +	struct irq_domain *irq_domain;
-> +
->  	bool need_msi_steer;
->  	struct iproc_msi *msi;
->  };
-> -- 
-> 2.7.4
-> 
+MBR, Sergei
