@@ -7,118 +7,154 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9760C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 22:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD7DC43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 22:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9012053B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 22:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7057D20684
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 22:22:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="c5bT86/L"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bn3QlKL7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbfLCWTT (ORCPT
+        id S1727574AbfLCWWg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:19:19 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12841 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbfLCWTT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 17:19:19 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de6df570000>; Tue, 03 Dec 2019 14:19:03 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 03 Dec 2019 14:19:17 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 03 Dec 2019 14:19:17 -0800
-Received: from [10.2.160.125] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Dec
- 2019 22:19:15 +0000
-Subject: Re: [PATCH v1 03/17] dt-bindings: soc: tegra-pmc: Add Tegra PMC clock
- ids
-To:     Rob Herring <robh@kernel.org>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
-        <tglx@linutronix.de>, <mark.rutland@arm.com>,
-        <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
-        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
-        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
-        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
-        <josephl@nvidia.com>, <vidyas@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1574146234-3871-1-git-send-email-skomatineni@nvidia.com>
- <1574146234-3871-4-git-send-email-skomatineni@nvidia.com>
- <20191203220850.GB22716@bogus>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <50f7db27-a1bd-6e2a-0994-82740b4ef6cb@nvidia.com>
-Date:   Tue, 3 Dec 2019 14:19:37 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 3 Dec 2019 17:22:36 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36472 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727194AbfLCWWg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 17:22:36 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k13so2296578pgh.3
+        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 14:22:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WUFFntsV9GWQxH2xEiMtMGTiHEnUItioA0CI190kL8o=;
+        b=bn3QlKL7vQGhK8lGFIzeXVQeOlnmkW/WGjIxexoPzjAeijuRHQXjl0M/udzBuAI6cW
+         QCaVRG5f/+Ls5qE8X9irTu+6QP+a9IvZ+SYeA7nmk9Pe4nU1ZBCK1MHX2YPQCvIseMS3
+         iiHYDyWjBtXGx+TKbfqCahbY+bU12y33YOblo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WUFFntsV9GWQxH2xEiMtMGTiHEnUItioA0CI190kL8o=;
+        b=HKbdfZRD3gye3VPQ4wWz8D8IaFc5crPLT5iq4RMYUXl8jElUEf4mDY2+7ffVV1OZeg
+         1by7ysJaQvSGW0VUvgpTPLG/9IDbwpCGJE30rGVRC/LCb0QC5CL8/b6s2QlnATwrhMkz
+         O1KKf8binr5ZTZeZfZ8dB7cSWYyGMpV0byLInURliXsik4uVRo9RYISiJi2GYfjWo7kc
+         G7v8VupziA4SSpJt6CA9y1oUOnZnQBcO/MXoQxcRBkjtgJLRhkExIPsWAgrNAjhecxg1
+         O3P0N5oChBcGS9CIBbONzjci8p1ljY7LreXPnmFBjS/PDqI6LZGM2r+pp+ZCg/5p8dzo
+         MTKA==
+X-Gm-Message-State: APjAAAWQEmz+j46xugrn//MHDn5LWPBRN9RfosZjGsOfANYFAz9ZU3nM
+        Oc1YHwHDoiIGZCDmy3XJQ7b5CQpyO7iaJw==
+X-Google-Smtp-Source: APXvYqyWX3GXr5G09PtL3d5pS+d902L2fj13z6zE3hBT0ixPruP16jvHAkG9yTWgiA2y8zHopTszAw==
+X-Received: by 2002:a65:5c0a:: with SMTP id u10mr7846832pgr.258.1575411755669;
+        Tue, 03 Dec 2019 14:22:35 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id l9sm4444155pgh.34.2019.12.03.14.22.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Dec 2019 14:22:35 -0800 (PST)
+Date:   Tue, 3 Dec 2019 14:22:32 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        abhinavk@codeaurora.org, jsanka@codeaurora.org,
+        chandanu@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [PATCH v1] drm/msm: add support for 2.4.1 DSI version for sc7180
+ soc
+Message-ID: <20191203222232.GG228856@google.com>
+References: <1575011105-28172-1-git-send-email-harigovi@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20191203220850.GB22716@bogus>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575411543; bh=0IKNAVktirUsylXHSyz6GuS3zjLJXwqxN2fIYWCdxn0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=c5bT86/Lv5nwl2ZV/7cNK6nZUqNWH+hTofWP+zr42J7cZxRwZaDohpOZXOBESZgSZ
-         +iLN7mElqBL1NvU1sgN23Aq1PeloHw+ehrQoNT1lXidQxMXxT4Mm9896JWpAyNEsuu
-         fUdZ22RXQLrky3mP2Cgpcq4q5chC3D9ijEh/ejsStO59IbUVIFUGGT530na4AhjcMM
-         nxB3rMtqFIGmshurtdKOIJfCD7mee0YVo4D6ansUoakxTdeY2TVLVRfN/2L2sbAx1/
-         XH2UfVAUFzdMn2z6TZMmQtOaO2DIgjSunkFOv/rmZwnJRWzkTNzRcJRk2dsqXgVTLz
-         q26YdTfOyF5ew==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1575011105-28172-1-git-send-email-harigovi@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
-On 12/3/19 2:08 PM, Rob Herring wrote:
-> On Mon, Nov 18, 2019 at 10:50:20PM -0800, Sowjanya Komatineni wrote:
->> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 clocks and each of
->> these clocks has mux and a gate as a part of PMC controller.
->>
->> This patch adds ids for each of these PMC clock mux and gates to
->> use with the devicetree.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   include/dt-bindings/soc/tegra-pmc.h | 16 ++++++++++++++++
->>   1 file changed, 16 insertions(+)
->>   create mode 100644 include/dt-bindings/soc/tegra-pmc.h
-> This should be part of the binding patch.
-ok, will combine in v3
->> diff --git a/include/dt-bindings/soc/tegra-pmc.h b/include/dt-bindings/soc/tegra-pmc.h
->> new file mode 100644
->> index 000000000000..fa1ccfc2514b
->> --- /dev/null
->> +++ b/include/dt-bindings/soc/tegra-pmc.h
->> @@ -0,0 +1,16 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * Copyright (c) 2019-2020, NVIDIA CORPORATION.  All rights reserved.
->> + */
->> +
->> +#ifndef _DT_BINDINGS_SOC_TEGRA_PMC_H
->> +#define _DT_BINDINGS_SOC_TEGRA_PMC_H
->> +
->> +#define TEGRA_PMC_CLK_OUT_1_MUX		0
->> +#define TEGRA_PMC_CLK_OUT_1		1
->> +#define TEGRA_PMC_CLK_OUT_2_MUX		2
->> +#define TEGRA_PMC_CLK_OUT_2		3
->> +#define TEGRA_PMC_CLK_OUT_3_MUX		4
->> +#define TEGRA_PMC_CLK_OUT_3		5
->> +
->> +#endif	/* _DT_BINDINGS_SOC_TEGRA_PMC_H */
->> -- 
->> 2.7.4
->>
+On Fri, Nov 29, 2019 at 12:35:05PM +0530, Harigovindan P wrote:
+> Changes in v1:
+> 	-Modify commit text to indicate DSI version and SOC detail(Jeffrey Hugo).
+> 	-Splitting visionox panel driver code out into a
+> 	 different patch(set), since panel drivers are merged into
+> 	 drm-next via a different tree(Rob Clark).
+
+The change log shouldn't be part of the commit message, please place it
+after the '---' separator.
+
+I think at least a one line commit message besides the subject is
+mandatory, so if you move the change log down you'll have to add
+some short summary.
+
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ---
+>  drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
+>  drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
+>  2 files changed, 22 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> index b7b7c1a..7b967dd 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> @@ -133,6 +133,10 @@ static const char * const dsi_sdm845_bus_clk_names[] = {
+>  	"iface", "bus",
+>  };
+>  
+> +static const char * const dsi_sc7180_bus_clk_names[] = {
+> +	"iface", "bus",
+> +};
+> +
+>  static const struct msm_dsi_config sdm845_dsi_cfg = {
+>  	.io_offset = DSI_6G_REG_SHIFT,
+>  	.reg_cfg = {
+> @@ -147,6 +151,20 @@ static const struct msm_dsi_config sdm845_dsi_cfg = {
+>  	.num_dsi = 2,
+>  };
+>  
+> +static const struct msm_dsi_config sc7180_dsi_cfg = {
+> +	.io_offset = DSI_6G_REG_SHIFT,
+> +	.reg_cfg = {
+> +		.num = 1,
+> +		.regs = {
+> +			{"vdda", 21800, 4 },	/* 1.2 V */
+> +		},
+> +	},
+> +	.bus_clk_names = dsi_sc7180_bus_clk_names,
+> +	.num_bus_clks = ARRAY_SIZE(dsi_sc7180_bus_clk_names),
+> +	.io_start = { 0xae94000 },
+> +	.num_dsi = 1,
+> +};
+> +
+>  const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
+>  	.link_clk_enable = dsi_link_clk_enable_v2,
+>  	.link_clk_disable = dsi_link_clk_disable_v2,
+> @@ -201,6 +219,9 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
+>  		&msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+>  	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
+>  		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+> +	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_1,
+> +		&sc7180_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+> +
+>  };
+>  
+>  const struct msm_dsi_cfg_handler *msm_dsi_cfg_get(u32 major, u32 minor)
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> index e2b7a7d..9919536 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> @@ -19,6 +19,7 @@
+>  #define MSM_DSI_6G_VER_MINOR_V1_4_1	0x10040001
+>  #define MSM_DSI_6G_VER_MINOR_V2_2_0	0x20000000
+>  #define MSM_DSI_6G_VER_MINOR_V2_2_1	0x20020001
+> +#define MSM_DSI_6G_VER_MINOR_V2_4_1	0x20040001
+>  
+>  #define MSM_DSI_V2_VER_MINOR_8064	0x0
+>  
+> -- 
+> 2.7.4
+> 
