@@ -2,141 +2,296 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E30C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 18:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B45AC43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 18:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB7220661
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 18:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="p+CtxNTA"
+	by mail.kernel.org (Postfix) with ESMTP id 0594A2080F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 18:28:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfLCSTf (ORCPT
+        id S1726741AbfLCS2l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 13:19:35 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:39498 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbfLCSTf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 13:19:35 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E4DF9309;
-        Tue,  3 Dec 2019 19:19:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575397173;
-        bh=cBB4j+7hkCsBm/IXK9DIP4kp1uIXKZ/+DCGVNlsPr1s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p+CtxNTA+gZlqDwPLyEEK72fUFWR6FFq+hD+tZWz+BO1CzlktoMonO5K4T3zidB7M
-         A2enTxKE2ptJsvNpZvTRmx6W6cJiRywD4zuM0bUJLS+S29A6q3sjaG536wsYu5EsHC
-         bDMhzubkXiE65TD0MfV/NEfC53sAbDC3BjytcPtQ=
-Date:   Tue, 3 Dec 2019 20:19:24 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
-        Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Clark <robdclark@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v4 00/11] drm: Add support for bus-format negotiation
-Message-ID: <20191203181924.GU4730@pendragon.ideasonboard.com>
-References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
+        Tue, 3 Dec 2019 13:28:41 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46559 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbfLCS2l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 13:28:41 -0500
+Received: by mail-ot1-f65.google.com with SMTP id g18so3781308otj.13;
+        Tue, 03 Dec 2019 10:28:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fv7hK3dsMSAwX5HCuemGK+Z9KDZWWG/xHQo0UQoD8U4=;
+        b=HJL38RMz5qzH4XVcXnp9hnuarM9hIWZd4BMFknfuTz5mKQp5U6Gb9WzJmSUTXtb/43
+         r+h93BHg/QnXC8yh4zvoMCNNwyMSdczGqhbYBGuJkanX3E1sX/WCtz6hOBeY468g2V83
+         YIoA5lKpGaX0UZjtswxgRuqtlyH1YGd/p2jZYt6K53PkdpWX6h9eCW5GM5PDlZe5GF+6
+         ilS5NhBAfcvd61WVvAM3K/FKMj5n64zQ0+iqNst7jlykRzjnApGv/CS56nZLw430TtwF
+         TQSCFLiS3UgJxc0FjNqEcpkQ49g5cyZNnQBTrTGLqEI1SeU40BX1nmEF5Ot/kw0TASY5
+         TRJQ==
+X-Gm-Message-State: APjAAAU1/UKzg7n/0+IAjlYjcoqPe5aNV+r5mlGiPFuf6GxfVWScdHjM
+        bPwtNGcl2eRLxRP3N7bDuK3RRpbw+jeC2sd7s94uumu/
+X-Google-Smtp-Source: APXvYqyA+DCAs3/VI5MgeLMWcYKSuUIqmCJm5Yyj2zed+M3ncd0J3s5tbB++PhJ2nC7OuPqasfdaf/2CpX7Z/mP3f6w=
+X-Received: by 2002:a9d:2073:: with SMTP id n106mr4258154ota.145.1575397719725;
+ Tue, 03 Dec 2019 10:28:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191203141515.3597631-1-boris.brezillon@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191203034519.5640-1-chris.brandt@renesas.com> <20191203034519.5640-5-chris.brandt@renesas.com>
+In-Reply-To: <20191203034519.5640-5-chris.brandt@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 3 Dec 2019 19:28:18 +0100
+Message-ID: <CAMuHMdVAZOa7OmT0s=RsVJsny9NujDzpdg4T+QoUXGe0kJjOTw@mail.gmail.com>
+Subject: Re: [PATCH 4/6] spi: Add SPIBSC driver
+To:     Chris Brandt <chris.brandt@renesas.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi Chris,
 
-On Tue, Dec 03, 2019 at 03:15:04PM +0100, Boris Brezillon wrote:
-> This patch series aims at adding support for runtime bus-format
-> negotiation between all elements of the
-> 'encoder -> bridges -> connector/display' section of the pipeline.
-> 
-> In order to support that, we need drm bridges to fully take part in the
-> atomic state validation process, which requires adding a
-> drm_bridge_state and a new drm_bridge_funcs.atomic_check() hook.
-> Once those basic building blocks are in place, we can add new hooks to
-> allow bus format negotiation (those are called just before
-> ->atomic_check()). The bus format selection is done at runtime by
-> testing all possible combinations across the whole bridge chain until
-> one is reported to work.
-> 
-> No Major changes in this v4. I think I addressed all comments I got
-> from Neil and Laurent (thanks for the detailed reviews BTW). Note that
-> this version only contains core changes. Once those changes are merged
-> I'll send the imx/panel/lvds-codec specific bits.
+On Tue, Dec 3, 2019 at 4:46 AM Chris Brandt <chris.brandt@renesas.com> wrote:
+> Add a driver for the SPIBSC controller in Renesas SoC devices.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-I think it would make sense to fast-track patches 01 to 07 (a bit
-selfishly as I would have a need for them in omapdrm :-)), but starting
-from 08 I wonder if it wouldn't make more sense to merge them with the
-imx/panel/lvds-codec bits to have a user.
+Thanks for your patch!
 
-> A more detailed changelog is provided in each patch.
-> 
-> This patch series is also available here [1].
-> 
-> Thanks,
-> 
-> Boris
-> 
-> [1]https://github.com/bbrezillon/linux-0day/commits/drm-bridge-busfmt-v4
-> 
-> Boris Brezillon (11):
->   drm/bridge: Rename bridge helpers targeting a bridge chain
->   drm/bridge: Introduce drm_bridge_get_next_bridge()
->   drm: Stop accessing encoder->bridge directly
->   drm/bridge: Make the bridge chain a double-linked list
->   drm/bridge: Add the drm_for_each_bridge_in_chain() helper
->   drm/bridge: Add the drm_bridge_get_prev_bridge() helper
->   drm/bridge: Clarify the atomic enable/disable hooks semantics
->   drm/bridge: Add a drm_bridge_state object
->   drm/bridge: Patch atomic hooks to take a drm_bridge_state
->   drm/bridge: Add an ->atomic_check() hook
->   drm/bridge: Add the necessary bits to support bus format negotiation
-> 
->  .../drm/bridge/analogix/analogix_dp_core.c    |  41 +-
->  drivers/gpu/drm/drm_atomic.c                  |  39 +
->  drivers/gpu/drm/drm_atomic_helper.c           |  53 +-
->  drivers/gpu/drm/drm_bridge.c                  | 756 +++++++++++++++---
->  drivers/gpu/drm/drm_encoder.c                 |  15 +-
->  drivers/gpu/drm/drm_probe_helper.c            |   4 +-
->  drivers/gpu/drm/exynos/exynos_drm_dsi.c       |  13 +-
->  drivers/gpu/drm/mediatek/mtk_hdmi.c           |   8 +-
->  drivers/gpu/drm/msm/edp/edp_bridge.c          |  10 +-
->  drivers/gpu/drm/omapdrm/omap_drv.c            |   4 +-
->  drivers/gpu/drm/omapdrm/omap_encoder.c        |   3 +-
->  drivers/gpu/drm/rcar-du/rcar_du_crtc.c        |  10 +-
->  drivers/gpu/drm/vc4/vc4_dsi.c                 |  18 +-
->  include/drm/drm_atomic.h                      |   3 +
->  include/drm/drm_bridge.h                      | 404 +++++++++-
->  include/drm/drm_encoder.h                     |   7 +-
->  16 files changed, 1174 insertions(+), 214 deletions(-)
+> --- /dev/null
+> +++ b/drivers/spi/spi-spibsc.c
+> @@ -0,0 +1,609 @@
+> +// SPDX-License-Identifier: GPL-2.0
 
--- 
-Regards,
+GPL-2.0-only
 
-Laurent Pinchart
+> +static void spibsc_print_data(struct spibsc_priv *sbsc, u8 tx, const u8 *buf,
+> +                             int len)
+> +{
+> +#if defined(DEBUG_PRINT_DATA)
+> +       char line_buffer[3*16+1];
+> +       int i, line_index = 0;
+> +
+> +       if (tx)
+> +               pr_debug("spibsc: send data: ");
+> +       else
+> +               pr_debug("spibsc: recv data: ");
+> +
+> +       for (i = 0; i < len; ) {
+> +               sprintf(line_buffer + line_index, " %02X", buf[i]);
+> +               line_index += 3;
+> +               i++;
+> +               if (i % 16 == 0) {
+> +                       pr_debug(line_buffer);
+> +                       line_index = 0;
+> +               }
+> +       }
+> +       if (i % 16 != 0)
+> +               pr_debug(line_buffer);
+> +       else
+> +               pr_debug("\n");
+> +#endif
+
+print_hex_dump_debug()?
+
+> +}
+> +
+> +static int spibsc_wait_trans_completion(struct spibsc_priv *sbsc)
+> +{
+> +       int t = 256 * 100000;
+> +
+> +       while (t--) {
+> +               if (spibsc_read(sbsc, CMNSR) & CMNSR_TEND)
+> +                       return 0;
+> +               ndelay(1);
+> +       }
+
+So this may busy loop for up to 25.6 ms? Oops...
+
+Can you use the interrupt (SPIHF) instead, signalling a completion?
+
+> +
+> +       dev_err(sbsc->dev, "Timeout waiting for TEND\n");
+> +       return -ETIMEDOUT;
+> +}
+
+
+> +       /* Use 'Option Data' for 3rd-6th bytes */
+> +       switch (tx_len) {
+> +       case 6:
+> +               dropr |= DROPR_OPD0(tx_data[5]);
+> +               opde |= (1 << 0);
+
+Both checkpatch and gcc tell you to add fallthrough coments.
+
+> +       case 5:
+> +               dropr |= DROPR_OPD1(tx_data[4]);
+> +               opde |= (1 << 1);
+> +       case 4:
+> +               dropr |= DROPR_OPD2(tx_data[3]);
+> +               opde |= (1 << 2);
+> +       case 3:
+> +               dropr |= DROPR_OPD3(tx_data[2]);
+> +               opde |= (1 << 3);
+> +               drenr |= DRENR_OPDE(opde);
+> +       }
+
+> +static int spibsc_transfer_one_message(struct spi_controller *master,
+> +                                      struct spi_message *msg)
+> +{
+> +       struct spibsc_priv *sbsc = spi_controller_get_devdata(master);
+> +       struct spi_transfer *t, *t_last;
+> +       u8 tx_data[MAX_CMD_LEN];
+> +       int tx_only;
+> +       u8 tx_len;
+> +       int ret;
+> +
+> +       t_last = list_last_entry(&msg->transfers, struct spi_transfer,
+> +                                transfer_list);
+> +       /* defaults */
+> +       ret = 0;
+> +       sbsc->last_xfer = 0;
+> +       tx_only = 1;
+> +
+> +       /* Analyze the messages */
+> +       t = list_first_entry(&msg->transfers, struct spi_transfer,
+> +                            transfer_list);
+> +       if (t->rx_buf) {
+> +               dev_dbg(sbsc->dev, "Cannot Rx without Tx first!\n");
+> +               return -EIO;
+> +       }
+> +       list_for_each_entry(t, &msg->transfers, transfer_list) {
+> +               if (t->rx_buf) {
+> +                       tx_only = 0;
+> +                       if (t != t_last) {
+> +                               dev_dbg(sbsc->dev, "RX transaction is not the last transaction!\n");
+> +                               return -EIO;
+> +                       }
+> +               }
+> +               if (t->cs_change) {
+> +                       dev_err(sbsc->dev, "cs_change not supported");
+> +                       return -EIO;
+> +               }
+> +       }
+
+If you would do the checks above in .prepare_message()
+(like e.g. rspi does)...
+
+> +
+> +       /* Tx Only (SPI Mode is used) */
+> +       if (tx_only == 1) {
+> +
+> +               dev_dbg(sbsc->dev, "%s: TX only\n", __func__);
+> +
+> +               /* Initialize for SPI Mode */
+> +               spibsc_write(sbsc, CMNCR, CMNCR_INIT);
+> +
+> +               /* Send messages */
+> +               list_for_each_entry(t, &msg->transfers, transfer_list) {
+> +
+> +                       if (t == t_last)
+> +                               sbsc->last_xfer = 1;
+> +
+> +                       ret = spibsc_send_data(sbsc, t->tx_buf, t->len);
+> +                       if (ret)
+> +                               break;
+> +
+> +                       msg->actual_length += t->len;
+> +               }
+> +
+> +               /* Done */
+> +               msg->status = ret;
+> +               spi_finalize_current_message(master);
+> +               return ret;
+> +       }
+> +
+> +       /* Tx, then RX (Data Read Mode is used) */
+> +       dev_dbg(sbsc->dev, "%s: Tx then Rx\n", __func__);
+> +
+> +       /* Buffer up the transmit portion (cmd + addr) so we can send it all at
+> +        * once
+> +        */
+> +       tx_len = 0;
+> +       list_for_each_entry(t, &msg->transfers, transfer_list) {
+> +               if (t->tx_buf) {
+> +                       if ((tx_len + t->len) > sizeof(tx_data)) {
+> +                               dev_dbg(sbsc->dev, "Command too big (%d)\n",
+> +                                       tx_len + t->len);
+> +                               return -EIO;
+> +                       }
+> +                       memcpy(tx_data + tx_len, t->tx_buf, t->len);
+> +                       tx_len += t->len;
+> +               }
+> +
+> +               if (t->rx_buf)
+> +                       ret = spibsc_send_recv_data(sbsc, tx_data, tx_len,
+> +                                                   t->rx_buf,  t->len);
+> +
+> +               msg->actual_length += t->len;
+> +       }
+> +
+> +       msg->status = ret;
+> +       spi_finalize_current_message(master);
+
+... can't you just use .transfer_one(), instead of duplicating the logic
+from spi_transfer_one_message()?
+Or is there some special detail that's not obvious to the casual reviewer?
+
+
+> +static const struct of_device_id of_spibsc_match[] = {
+> +       { .compatible = "renesas,spibsc"},
+> +       { .compatible = "renesas,r7s72100-spibsc", .data = (void *)HAS_SPBCR},
+> +       { .compatible = "renesas,r7s9210-spibsc"},
+
+Do you need to match against all 3 in the driver?
+Does SPIBSC work on RZ/A1 when not setting HAS_SPBCR?
+If not, the fallback to "renesas,spibsc" is not valid for RZ/A1.
+
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, of_spibsc_match);
+> +
+> +static struct platform_driver spibsc_driver = {
+> +       .probe = spibsc_probe,
+> +       .remove = spibsc_remove,
+> +       .driver = {
+> +               .name = "spibsc",
+> +               .owner = THIS_MODULE,
+> +               .of_match_table = of_spibsc_match,
+> +       },
+> +};
+> +module_platform_driver(spibsc_driver);
+> +
+> +MODULE_DESCRIPTION("Renesas SPIBSC SPI Flash driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Chris Brandt");
+> --
+> 2.23.0
+>
+
+
+--
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
