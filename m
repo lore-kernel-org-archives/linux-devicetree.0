@@ -2,128 +2,201 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C772AC43215
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402DAC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDC120803
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:54:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="uoPG9cTR"
+	by mail.kernel.org (Postfix) with ESMTP id 06E41207DD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575392210;
+	bh=2lYntF80jSmeqB4A/DzJDtoIs7czCONpon40J9pdHrQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VjEgyWzwCW5NutrTUShb6dXmdOOh/FUWtS+gyqvr2QgKSPxoEGP/jHdYljD7SUuTV
+	 0MbDvZ0bXIns+6URlbI5PqTUFF9UldXD4QqAZjYeS5QQJlZZXHq0zofWrlVIGdYMqO
+	 GchmONn/8ZB438zzwZJiXcy5WInlcxGt3R+q8TgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfLCQyK (ORCPT
+        id S1726388AbfLCQ4t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:54:10 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:45698 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbfLCQyK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 11:54:10 -0500
-Received: by mail-vk1-f194.google.com with SMTP id b127so1247098vkh.12
-        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 08:54:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AcM7UEIp8ymleTTTyVFIALYBt+4goDjQpS4y6N2B+wI=;
-        b=uoPG9cTRt/hqq0DuB5ne0h2K4POk21yL2O8Fa6xz0FrVObCVI0zSRWTUcGvf4krFI/
-         asiNumPnrPNLb7J4jVBdwacvkkz384DBFcnw7JLMkl7zvQNAImvxP21kiwvtk4e2XxeN
-         9kI7AnlY7SAN8D7iwzo6JmHQGvQHxHq7oeT/P1vwBRWUmuNX/MSDJAk8mJKiOA9QTqhS
-         JqeP6vA6UUUt7PMLJCfMTubv/VQLY3QEn8i/RNiwvMVecT/NMo1BCqWJVavnYqYI6Ogv
-         4pYiZcgGDJzgVPPp7Mfu4D8R5AFJNSw18GYlBT8lM77MTOqjwLCKpCZ6pJAKjrwCOpq7
-         JC7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AcM7UEIp8ymleTTTyVFIALYBt+4goDjQpS4y6N2B+wI=;
-        b=YM5wTae0Oz3l7JBePscQwzwTgtNq0x3UzN0+DgrZuxlXbitLsdNoWFfUrn0Qa8CSp2
-         ItsfYODn6zSG697HC6lshX0ImqrMdNqffJtds9aXrYhD7bjb273odcbGHeaFrMSSG89T
-         F+glDqmC3+odVqkV4OH1Hki3/q9J3TzC0ih1nEcK5vsA+/4kiEcaqL4PPKqlZ7kXTPAl
-         xrgvnYD1LuqYzMC5S/1F0W301PW47wPfzbGoP/VDrtW8DtHJaeVWONMrMdgnVlvz77/L
-         9hZ9L6j5oQzDrC6yW+5siOC36HcogCAWPZdgnnZJNszmf8d6qyEOYDDviRifyGLQ9+3c
-         gdFQ==
-X-Gm-Message-State: APjAAAXzly/+uv/z8/3S+eKeMhoXEWO0hym1TJItNT8Zm9eDQTdIYTwB
-        bxDRRO3rr3wKMtPWmtdAeEeJ6bRhRJ+pET53aRA8cg==
-X-Google-Smtp-Source: APXvYqwWfxtECH6IzRO2KWDRHz/G7gB6OReuBEbvIF27Ze3wf/2BXsYSC4Slvqkh+Z8aSkU/Vruvxo83JKiIBbSncWs=
-X-Received: by 2002:a1f:bdd0:: with SMTP id n199mr4259634vkf.86.1575392048634;
- Tue, 03 Dec 2019 08:54:08 -0800 (PST)
+        Tue, 3 Dec 2019 11:56:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45450 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbfLCQ4t (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 11:56:49 -0500
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2159020803
+        for <devicetree@vger.kernel.org>; Tue,  3 Dec 2019 16:56:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575392208;
+        bh=2lYntF80jSmeqB4A/DzJDtoIs7czCONpon40J9pdHrQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WpZaeT3vOrSLGx/La/YG4mHSjjm7A1zScT2JhFKy37HwVp4dCnJpzi5ldpvaOhFkS
+         1aujn56DN2oxsV5NMsvTKfrPfKurAAsxwii7C5H7F95IrBKOX0zCYF7ck8l+xwrCXr
+         FapbYWeHFr1e2m4RY7m6O8HZl59y51i9LJMulFmc=
+Received: by mail-qt1-f170.google.com with SMTP id k11so4481002qtm.3
+        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 08:56:48 -0800 (PST)
+X-Gm-Message-State: APjAAAUnZbJQX3gXq9VeBEYLKxViodjyUwn3ptVqb3ZX7ytqcP3Y2u9o
+        NUuXrx5rjZ98z+/AJrH6evQ41p+za7Suk+NAKQ==
+X-Google-Smtp-Source: APXvYqzuIgD9VwLAeCUG8AaPW3sC2UvyTHw3WE6Wjkbwac76yQtEuRAQ7GTea2JOUFUx5bLLNGHf7iWk9TvTrFvVUko=
+X-Received: by 2002:ac8:2cd0:: with SMTP id 16mr4561326qtx.136.1575392206992;
+ Tue, 03 Dec 2019 08:56:46 -0800 (PST)
 MIME-Version: 1.0
-References: <1568859503-19725-1-git-send-email-thara.gopinath@linaro.org> <1568859503-19725-2-git-send-email-thara.gopinath@linaro.org>
-In-Reply-To: <1568859503-19725-2-git-send-email-thara.gopinath@linaro.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Tue, 3 Dec 2019 22:23:57 +0530
-Message-ID: <CAHLCerMif4ZyUwO-r04Ds3AZuRQNtw5bfFjWa9nOhTovMxVYOA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: thermal: Introduce monitor-falling
- parameter to thermal trip point binding
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de>
+ <e1f232f5-3847-a519-5cce-95a26512e82b@gmail.com> <87tv6idp37.fsf@mpe.ellerman.id.au>
+ <67e1da87-7f5a-3972-bc16-28bae2350c12@gmail.com>
+In-Reply-To: <67e1da87-7f5a-3972-bc16-28bae2350c12@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 3 Dec 2019 10:56:35 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKieG5=teL7gABPKbJOQfvoS9s-ZPF-=R0yEE_LUoy-Kw@mail.gmail.com>
+Message-ID: <CAL_JsqKieG5=teL7gABPKbJOQfvoS9s-ZPF-=R0yEE_LUoy-Kw@mail.gmail.com>
+Subject: Re: [RFC] Efficiency of the phandle_cache on ppc64/SLOF
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        devicetree@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 7:48 AM Thara Gopinath
-<thara.gopinath@linaro.org> wrote:
+On Mon, Dec 2, 2019 at 10:28 PM Frank Rowand <frowand.list@gmail.com> wrote:
 >
-> Introduce a new binding parameter to thermal trip point description
-> to indicate whether the temperature level specified by the trip point
-> is monitored for a rise or fall in temperature.
+> On 12/2/19 10:12 PM, Michael Ellerman wrote:
+> > Frank Rowand <frowand.list@gmail.com> writes:
+> >> On 11/29/19 9:10 AM, Sebastian Andrzej Siewior wrote:
+> >>> I've been looking at phandle_cache and noticed the following: The raw
+> >>> phandle value as generated by dtc starts at zero and is incremented by
+> >>> one for each phandle entry. The qemu pSeries model is using Slof (which
+> >>> is probably the same thing as used on real hardware) and this looks like
+> >>> a poiner value for the phandle.
+> >>> With
+> >>>     qemu-system-ppc64le -m 16G -machine pseries -smp 8
+> >>>
+> >>> I got the following output:
+> >>> | entries: 64
+> >>> | phandle 7e732468 slot 28 hash c
+> >>> | phandle 7e732ad0 slot 10 hash 27
+> >>> | phandle 7e732ee8 slot 28 hash 3a
+> >>> | phandle 7e734160 slot 20 hash 36
+> >>> | phandle 7e734318 slot 18 hash 3a
+> >>> | phandle 7e734428 slot 28 hash 33
+> >>> | phandle 7e734538 slot 38 hash 2c
+> >>> | phandle 7e734850 slot 10 hash e
+> >>> | phandle 7e735220 slot 20 hash 2d
+> >>> | phandle 7e735bf0 slot 30 hash d
+> >>> | phandle 7e7365c0 slot 0 hash 2d
+> >>> | phandle 7e736f90 slot 10 hash d
+> >>> | phandle 7e737960 slot 20 hash 2d
+> >>> | phandle 7e738330 slot 30 hash d
+> >>> | phandle 7e738d00 slot 0 hash 2d
+> >>> | phandle 7e739730 slot 30 hash 38
+> >>> | phandle 7e73bd08 slot 8 hash 17
+> >>> | phandle 7e73c2e0 slot 20 hash 32
+> >>> | phandle 7e73c7f8 slot 38 hash 37
+> >>> | phandle 7e782420 slot 20 hash 13
+> >>> | phandle 7e782ed8 slot 18 hash 1b
+> >>> | phandle 7e73ce28 slot 28 hash 39
+> >>> | phandle 7e73d390 slot 10 hash 22
+> >>> | phandle 7e73d9a8 slot 28 hash 1a
+> >>> | phandle 7e73dc28 slot 28 hash 37
+> >>> | phandle 7e73de00 slot 0 hash a
+> >>> | phandle 7e73e028 slot 28 hash 0
+> >>> | phandle 7e7621a8 slot 28 hash 36
+> >>> | phandle 7e73e458 slot 18 hash 1e
+> >>> | phandle 7e73e608 slot 8 hash 1e
+> >>> | phandle 7e740078 slot 38 hash 28
+> >>> | phandle 7e740180 slot 0 hash 1d
+> >>> | phandle 7e740240 slot 0 hash 33
+> >>> | phandle 7e740348 slot 8 hash 29
+> >>> | phandle 7e740410 slot 10 hash 2
+> >>> | phandle 7e740eb0 slot 30 hash 3e
+> >>> | phandle 7e745390 slot 10 hash 33
+> >>> | phandle 7e747b08 slot 8 hash c
+> >>> | phandle 7e748528 slot 28 hash f
+> >>> | phandle 7e74a6e0 slot 20 hash 18
+> >>> | phandle 7e74aab0 slot 30 hash b
+> >>> | phandle 7e74f788 slot 8 hash d
+> >>> | Used entries: 8, hashed: 29
+> >>>
+> >>> So the hash array has 64 entries out which only 8 are populated. Using
+> >>> hash_32() populates 29 entries.
+> >>> Could someone with real hardware verify this?
+> >>> I'm not sure how important this performance wise, it looks just like a
+> >>> waste using only 1/8 of the array.
+> >>
+> >> The hash used is based on the assumptions you noted, and as stated in the
+> >> code, that phandle property values are in a contiguous range of 1..n
+> >> (not starting from zero), which is what dtc generates.
+> >
+> >> We knew that for systems that do not match the assumptions that the hash
+> >> will not be optimal.
+> >
+> > If we're going to have the phandle cache it should at least make some
+> > attempt to work across the systems that Linux supports.
+> >
+> >> Unless there is a serious performance problem for
+> >> such systems, I do not want to make the phandle hash code more complicated
+> >> to optimize for these cases.  And the pseries have been performing ok
+> >> without phandle related performance issues that I remember hearing since
+> >> before the cache was added, which could have only helped the performance.
+> >> Yes, if your observations are correct, some memory is being wasted, but
+> >> a 64 entry cache is not very large on a pseries.
+> >
+> > A single line change to use an actual hash function is hardly
+> > complicating it, compared to the amount of code already there.
 >
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
->  Documentation/devicetree/bindings/thermal/thermal.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> With a dtc generated devicetree, the hash is perfect, with no
+> misses.  That single line change then makes the hash bad for
+> dtc generated devicetrees.
+
+To quantify that, I did some tests with the hash algo and it's about a
+10% collision rate using phandle values of 1-$cache_size. There's
+never more than 2 phandles colliding in a slot. The actual impact
+would be less given 100% thrashing seems unlikely.
+
+> The cache was added to address a problem with a system with a
+> dtc generated devicetree.
+
+The cache was added to address a problem with a system with a large
+number of nodes and phandles (814 phandles in the reported case). dtc
+happens to be used in that case.
+
+> I had not heard of any phandle
+> lookup performance issues on ppc systems.  An imperfect hash
+> for ppc should not make the ppc performance worse (unless
+> every single phandle value hashes to a single bucket).  So
+> the ppc performance is likely better than it was before
+> the hash was added, even without an optimal hash algorithm.
 >
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
-> index ca14ba9..849a2a9 100644
-> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-> @@ -90,6 +90,14 @@ Required properties:
->         "critical":     Hardware not reliable.
->    Type: string
+> So the change would not be a single line change.  It would
+> be a change to use different hash algorithms for dtc
+> generated device trees versus other device trees.
 >
-> +Optional property:
-> +- monitor-falling:     Indicate whether the system action is kick
+> Another possibility would be to make the cache be dependent
+> upon not CONFIG_PPC.  It might be possible to disable the
+> cache with a minimal code change.
 
-Stray space after :
+I'd rather not do that.
 
-> +  Type: boolean                started when the temperature falls below or rises
+And yes, as mentioned earlier I don't like the complexity. I didn't
+from the start and I'm  I'm still of the opinion we should have a
+fixed or 1 time sized true cache (i.e. smaller than total # of
+phandles). That would solve the RT memory allocation and locking issue
+too.
 
-Unnecessary tab after boolean (I'll fix up the rest of the file in the
-yaml conversion)
+For reference, the performance difference between the current
+implementation (assuming fixes haven't regressed it) was ~400ms vs. a
+~340ms improvement with a 64 entry cache (using a mask, not a hash).
+IMO, 340ms improvement was good enough.
 
-I suggest not making this boolean. Just use the property as a flag by
-itself to denote a falling trip point. No need to deal with true/false
-values.
-
-Similarly, the sysfs file would show up only in case of a trip that
-sets this flag and just contain a 1, for example.
-
-> +                       above the trip temperature level indicated in
-> +                       "temperature".If true, the trip point is monitored
-
-Add space after full stop.
-
-
-> +                       for falling temperature else the trip point is
-> +                       monitored for rising temperature.
-> +
->  * Cooling device maps
->
->  The cooling device maps node is a node to describe how cooling devices
-> --
-> 2.1.4
->
+Rob
