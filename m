@@ -2,105 +2,79 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC287C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D896BC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD5E420640
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:27:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWtDNKTC"
+	by mail.kernel.org (Postfix) with ESMTP id A9B1720848
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:27:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575401279;
+	bh=sdWBCZZhvF86A2PP9Gn0gNoyQBix4n2lEgFUNdG6vpw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jV3oxcxSCp8oIAAbCbpa3+IJ+CRw1ZTqt9lBVt9r36NhXgcJKd9ONZFn4Pvgdl2Pf
+	 rJ7ShnpjO4znZqnN+fc3KyiF6wg6YmyytaeG+FWyiLtSYGCb1oN8U9hArwrbntYw1V
+	 hNz7euzZ+/1XxY3pyQnadDOUodYmeIARzXRfBQ1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbfLCT1l (ORCPT
+        id S1727010AbfLCT17 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 14:27:41 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40969 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfLCT1l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 14:27:41 -0500
-Received: by mail-pj1-f66.google.com with SMTP id ca19so1901482pjb.8;
-        Tue, 03 Dec 2019 11:27:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0PgT9Sm6MTMXuNLnykZQsd6rodt9b9uQNxM2B4NE8NA=;
-        b=DWtDNKTCoDd8AVCIaKWfQfjF6A4gU6y0pXYZm1LWLNrAeN5pJ9Y396tGvuAKw2+hjS
-         9I0LbSyqQ7l9MmBlbcleBIcWLxNqWH2bsVLpQ+ej/42KKf0q3gq/rnkxuw6tkqD5Iju4
-         MAlpnzmxV8tZ8LLrVN/c+JoRc0dk9pz8WRgp/Y+xcIAGODoylB4pay2xzNuzBhRz2VsS
-         95AyBS/cKU80PT2U9kwEHMkM1ATpRNwkmL30hBQckrBKSZq3//5quE+bwi0lOB6eXZMt
-         2akPUnbWrXS8XxcfKD5SXmiaP6FvnzlR+5jSGWF7M3GKsCanmAcbZgk34LXmIxqC9Lpv
-         2IyQ==
+        Tue, 3 Dec 2019 14:27:59 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44178 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfLCT17 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 14:27:59 -0500
+Received: by mail-oi1-f194.google.com with SMTP id d62so4377680oia.11
+        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 11:27:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0PgT9Sm6MTMXuNLnykZQsd6rodt9b9uQNxM2B4NE8NA=;
-        b=lVPPJLKx2uAkeBeV9JvW/RIcaWuIkjlVZnGf5yI6zvI9jjCzvLBCLDCEcPB71D3Kpy
-         nByuIoC23mdxSldcTjIeXeap/7F9g9whCJf78haWWtlHO6ImALCo/0aTpMMLXLPwcNSo
-         WkqjCVy6yR1m2wItoy43SzdfqmkL1m7erob4epyJwlmkSEgA2t3ofu3LLSKVLBGaIhxy
-         DVWCfOOEVsaf7CYdXatnpDb+0wUnZvzpQYLIGhMFAmomrzbtYQigG3TMyVZPBmjYT+BX
-         xdsYtn/RdVerN2PfU9HPPszGSPc9fuiUiiHwznmZ+YaLDWrd1MMdrK/9mcCn/+vdaWZC
-         kF6w==
-X-Gm-Message-State: APjAAAXmp/QKxDq6vRQj+gMWkYcEL9sXP5tC6LNOIwU0fYL095bUbzsF
-        CWfE2rDXuppe3er9n6SciygcPp8UCjktsf42w0c=
-X-Google-Smtp-Source: APXvYqwc1SheFyTjSmLHWhBW+YXY6ussA8W4aKKbrfYIk26KUHYQylX/y9/Hfdg+UU5PNMTEH5UyuW8U8XCJn2rOjDc=
-X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr7346216pjb.30.1575401260458;
- Tue, 03 Dec 2019 11:27:40 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HP/XS4lIgFeGIfCqiXtNeLKC0699AGqVSeMl324T2Ik=;
+        b=HbkH4lZ4mswqCbhRxGHNd8MmQRqNxsgRKJUosfN8/yCjK0KF8Wu3PZ5gTTDPgus6H3
+         jHeUgOjVnZRCUTr3JKAPt1LNquaQYrCnkrTiy+TVMixo0LY50HKsggkfderwtcMc65jj
+         UYn4Rc9srn9I7kKhwhF6eGZRCSTZ7jZx5Za7FkYxR+JPyRZtxjWgikbhcBuoNsq5AYbo
+         gPz3uUNbTj8dO/meEMoUUA9ZzqGPRRjkfYavZ4vjuAX3dpaW2u7kE9iXncy1nQwzHtXR
+         2rHrdJcnPahzHEYKqY9l8ylFCVwGtZxgaHcYHpqZG1GpKbKzD48z9vicPRyReWTFvSSo
+         cYAA==
+X-Gm-Message-State: APjAAAUAjjDy8QZxBuBlGDHCO4x0FU1uBdOjHiqp5e2a9Ht7Cog+tBpW
+        0hzTNYgoQQgmPLF9FpSg1YcrrnI=
+X-Google-Smtp-Source: APXvYqy0KoeigJ/g+387l+3eFZkkjDJ1VN7OIPFFIQnkeaHpUi5XcqNurGlEInb0iPQfuiS5/pCQpg==
+X-Received: by 2002:a05:6808:8f9:: with SMTP id d25mr5062297oic.49.1575401278291;
+        Tue, 03 Dec 2019 11:27:58 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f142sm1443810oig.48.2019.12.03.11.27.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 11:27:57 -0800 (PST)
+Date:   Tue, 3 Dec 2019 13:27:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     robh+dt@kernel.org, KCHSU0@nuvoton.com, broonie@kernel.org,
+        thomas.fehrenbacher@siedle.de, kernel@pengutronix.de,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: ASoC: add nau8812 documentation
+Message-ID: <20191203192757.GA32491@bogus>
+References: <20191115160819.15557-1-m.felsch@pengutronix.de>
+ <20191115160819.15557-2-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
- <1575349026-8743-3-git-send-email-srinath.mannam@broadcom.com> <20191203155514.GE18399@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20191203155514.GE18399@e119886-lin.cambridge.arm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 3 Dec 2019 21:27:30 +0200
-Message-ID: <CAHp75Vf7d=Gw24MTq2q3BKspkLEDDM24GVK4Zh_4zfZEzVuZjw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] PCI: iproc: Add INTx support with better modeling
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ray Jui <ray.jui@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115160819.15557-2-m.felsch@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 5:55 PM Andrew Murray <andrew.murray@arm.com> wrote:
-> On Tue, Dec 03, 2019 at 10:27:02AM +0530, Srinath Mannam wrote:
+On Fri, 15 Nov 2019 17:08:17 +0100, Marco Felsch wrote:
+> Add dt-bindings for the nau8812 device.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+>  Documentation/devicetree/bindings/sound/nau8810.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-> > +     /* go through INTx A, B, C, D until all interrupts are handled */
-> > +     do {
-> > +             status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
->
-> By performing this read once and outside of the do/while loop you may improve
-> performance. I wonder how probable it is to get another INTx whilst handling
-> one?
-
-May I ask how it can be improved?
-One read will be needed any way, and so does this code.
-
-> > +             for_each_set_bit(bit, &status, PCI_NUM_INTX) {
-> > +                     virq = irq_find_mapping(pcie->irq_domain, bit);
-> > +                     if (virq)
-> > +                             generic_handle_irq(virq);
-> > +                     else
-> > +                             dev_err(dev, "unexpected INTx%u\n", bit);
-> > +             }
-> > +     } while ((status & SYS_RC_INTX_MASK) != 0);
-
--- 
-With Best Regards,
-Andy Shevchenko
+Acked-by: Rob Herring <robh@kernel.org>
