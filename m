@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0764C43141
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246C4C33CA0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C14842146E
+	by mail.kernel.org (Postfix) with ESMTP id F0B8C2146E
 	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfLCOP3 (ORCPT
+        id S1726086AbfLCOP3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Tue, 3 Dec 2019 09:15:29 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58978 "EHLO
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59046 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfLCOP2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:15:28 -0500
+        with ESMTP id S1726505AbfLCOP3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:15:29 -0500
 Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id AD9532905DE;
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0840B290595;
         Tue,  3 Dec 2019 14:15:27 +0000 (GMT)
 From:   Boris Brezillon <boris.brezillon@collabora.com>
 To:     dri-devel@lists.freedesktop.org
@@ -50,9 +50,9 @@ Cc:     Lucas Stach <l.stach@pengutronix.de>,
         devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>,
         Boris Brezillon <boris.brezillon@collabora.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v4 07/11] drm/bridge: Clarify the atomic enable/disable hooks semantics
-Date:   Tue,  3 Dec 2019 15:15:11 +0100
-Message-Id: <20191203141515.3597631-8-boris.brezillon@collabora.com>
+Subject: [PATCH v4 06/11] drm/bridge: Add the drm_bridge_get_prev_bridge() helper
+Date:   Tue,  3 Dec 2019 15:15:10 +0100
+Message-Id: <20191203141515.3597631-7-boris.brezillon@collabora.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191203141515.3597631-1-boris.brezillon@collabora.com>
 References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
@@ -63,63 +63,56 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The [pre_]enable/[post_]disable hooks are passed the old atomic state.
-Update the doc and rename the arguments to make it clear.
+The drm_bridge_get_prev_bridge() helper will be useful for bridge
+drivers that want to do bus format negotiation with their neighbours.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
 Changes in v4:
-* Drop the doc update (Laurent)
+* Change the helper name to be consistent with the _next_bridge() helper
+* Update the commit message
 * Add Rbs
 
 Changes in v3:
-* New patch
+* Inline drm_bridge_chain_get_prev_bridge()
+* Fix the doc
+
+Changes in v2:
+* Fix the kerneldoc
+* Drop the !bridge || !bridge->encoder check
 ---
- include/drm/drm_bridge.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/drm/drm_bridge.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index bfb0385163f1..d7d714023050 100644
+index 1eb854025a20..bfb0385163f1 100644
 --- a/include/drm/drm_bridge.h
 +++ b/include/drm/drm_bridge.h
-@@ -263,7 +263,7 @@ struct drm_bridge_funcs {
- 	 * The @atomic_pre_enable callback is optional.
- 	 */
- 	void (*atomic_pre_enable)(struct drm_bridge *bridge,
--				  struct drm_atomic_state *state);
-+				  struct drm_atomic_state *old_state);
+@@ -426,6 +426,22 @@ drm_bridge_get_next_bridge(struct drm_bridge *bridge)
+ 	return list_next_entry(bridge, chain_node);
+ }
  
- 	/**
- 	 * @atomic_enable:
-@@ -288,7 +288,7 @@ struct drm_bridge_funcs {
- 	 * The @atomic_enable callback is optional.
- 	 */
- 	void (*atomic_enable)(struct drm_bridge *bridge,
--			      struct drm_atomic_state *state);
-+			      struct drm_atomic_state *old_state);
- 	/**
- 	 * @atomic_disable:
- 	 *
-@@ -311,7 +311,7 @@ struct drm_bridge_funcs {
- 	 * The @atomic_disable callback is optional.
- 	 */
- 	void (*atomic_disable)(struct drm_bridge *bridge,
--			       struct drm_atomic_state *state);
-+			       struct drm_atomic_state *old_state);
- 
- 	/**
- 	 * @atomic_post_disable:
-@@ -337,7 +337,7 @@ struct drm_bridge_funcs {
- 	 * The @atomic_post_disable callback is optional.
- 	 */
- 	void (*atomic_post_disable)(struct drm_bridge *bridge,
--				    struct drm_atomic_state *state);
-+				    struct drm_atomic_state *old_state);
- };
- 
++/**
++ * drm_bridge_get_prev_bridge() - Get the previous bridge in the chain
++ * @bridge: bridge object
++ *
++ * RETURNS:
++ * the previous bridge in the chain, or NULL if @bridge is the first.
++ */
++static inline struct drm_bridge *
++drm_bridge_get_prev_bridge(struct drm_bridge *bridge)
++{
++	if (list_is_first(&bridge->chain_node, &bridge->encoder->bridge_chain))
++		return NULL;
++
++	return list_prev_entry(bridge, chain_node);
++}
++
  /**
+  * drm_bridge_chain_get_first_bridge() - Get the first bridge in the chain
+  * @encoder: encoder object
 -- 
 2.23.0
 
