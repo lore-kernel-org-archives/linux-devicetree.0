@@ -7,70 +7,70 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5556C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4810EC43141
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA67206DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FEB9206DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="KnHFG1qs";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Rm3MmifX"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="HoCUb2TW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wqHg7fkM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfLCMDh (ORCPT
+        id S1726881AbfLCMDY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 07:03:37 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:38383 "EHLO
+        Tue, 3 Dec 2019 07:03:24 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:43291 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726008AbfLCMDh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 07:03:37 -0500
+        by vger.kernel.org with ESMTP id S1726107AbfLCMDX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 07:03:23 -0500
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id C3E8C22083;
-        Tue,  3 Dec 2019 07:03:35 -0500 (EST)
+        by mailout.nyi.internal (Postfix) with ESMTP id 8DB13223F7;
+        Tue,  3 Dec 2019 07:03:22 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 03 Dec 2019 07:03:35 -0500
+  by compute4.internal (MEProxy); Tue, 03 Dec 2019 07:03:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
         :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=tDbn2lnY4YnA7
-        5X5LYWz7jhosHuxo/9hHasNksDYQ9E=; b=KnHFG1qsnC0CBWROzsm9lLVGD4yXX
-        yXsn8x7JfmL1iMicxQ9Bv29H1/ImfJvpNNvzhqUVtwD2RU7NyxFfelvNu+fLskbn
-        R12c4F9x3IlOJb6aK2ahWGEbb4lGMHuTrirLaboXsWZFQBl7zPcxfqdmHpEWMZVt
-        xpLjzL3SQX5VcS43sOAeMFSagogwYb3QpG4R3TlFORjm2TDCa5DA4Ix/+QPwDAZA
-        qeLMZLn54OPBQiQy7d/S1QJKBNQ/WkQG2fZta5QFvAmeX5jmcU3jsM6Sufue3B1Q
-        qIVoSx0E04zhNhHYiDWgWHM8UQKLiNyN0/ByOcmIGpPgg0OZgG0Zxl+fA==
+        :mime-version:content-transfer-encoding; s=fm1; bh=Gipm7m4Tc0Hwk
+        IsIKnuKaGFXgVbJL2mzXRy4PtSExJI=; b=HoCUb2TWOTVibuL05Jm1oaRGlSGtg
+        anpaCsVMsx3JjzSnZf9vAWQyatpWsS4IHPOwWKVQ9v+gm6hizuq/6BTC5MGEJ49b
+        HH1LVCTQCQPTGlTUYd6sFUv3ZncIb2RbB2LkfD+dmNyAeA5LOacJ5dMBo27YHSj/
+        R9I2k3rOjgQuEbEg4MSo8sCxkoaML0rW10KqydX3ccbhcNHiK0xlW7LOaYaeoVtr
+        Db4II82AFBcnoQzUGoRarsD+9gA32klz6ogodIJNsIvsLXmHI0LtNLLOKzupVNp6
+        ZjLOygeD4JANhlX34YF4dtbGfzAryB3qDZHusaRDHVtbz2YA1I7te09Ow==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=tDbn2lnY4YnA75X5LYWz7jhosHuxo/9hHasNksDYQ9E=; b=Rm3MmifX
-        jeHEre1+PElzDzsddqxc2BTQrHIWquaWQ+1Swf87C07BWCxVYqya0CDpBd4R6Hwz
-        G94AKvElbOT6ewWpHGCOYwKrLZxVDvsKMaInhyYJHDO7eHIju+E4po2DmCcdh1MR
-        jOh8qu6uzqTmNaHSMOZQxgaRljylYsT/JihlbVBF/7X6lQ1j2fiwnn/2ppEl7twB
-        ZddbSeCZWi+cetEpaufHo+IJMs2vE/h6wBDhSRThSoUaEMFz2rFRLY4ccZPFq808
-        urA9uTyKEShr2ZU9ODPWGn0Lx2VV0KkYhfzAO3l/I3wDyvaDXwU1rcsfHA4N12st
-        qGApoVMc/nxrCg==
-X-ME-Sender: <xms:F0_mXUYOT_MKjOxhU5H2gjlKPh-NZCOSBwDnL_WzOpb1jlOqHXwY7w>
+        fm1; bh=Gipm7m4Tc0HwkIsIKnuKaGFXgVbJL2mzXRy4PtSExJI=; b=wqHg7fkM
+        +LAArarWwgpH3wAUwS/iy0YCbbx0QbNLfc7AxWD6pF+zOlGg/I6ehJXnLBkuoyL6
+        RSQ7sl5nyho5xe38zSHRA52atiHeUXGz8PWEVIUn5RW2f/7u56bQrCpN5bxlSUsb
+        ffKa/8O4nP4ZC3j6/rtCMin0LkKoTaG2/BLbeaTj+MHNitoDluM0/jieTuOlR3P6
+        B2tr6L8w7vaNoV5bv3QQmTKEkP0s01s13X6Eu1u2AajGLFxw+f7cyG2MSM50ppid
+        qL/zBPXlNWFxO3lNTrRFkqxtClblHDo831qU5qiiQyd19wCgjyvcgCKb8XLq9g2+
+        XK6533wK5j8Hpw==
+X-ME-Sender: <xms:Ck_mXVdxgy51DcjeMGXlPKit4e9E0zpPRl7YWmqaypJL1N5lDJ_OQQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejjedgfeejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
     dtredttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegr
     jhdrihgurdgruheqnecukfhppeduudekrddvuddurdelvddrudefnecurfgrrhgrmhepmh
     grihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihii
-    vgepudef
-X-ME-Proxy: <xmx:F0_mXZqVPzaBlE9vSyCRRDplhbuuqGw8cMn2T36O9LTbCvZttfhpOw>
-    <xmx:F0_mXQvddJzgU4CqVnAzs4k7xGJh3V921k6hJciCtfjQRjYGHvz1ig>
-    <xmx:F0_mXTNFpNdOoll9xKxb7AAI3cUWHOuuSPQJIvRXNsZzYL3Z7JVzVw>
-    <xmx:F0_mXXJfGDDVZlPr89JXlnzVgi2cAAwhyNrjUe530FXhl5FK2ZrjaQ>
+    vgeple
+X-ME-Proxy: <xmx:Ck_mXSzs0qyhOIWNMF1_j8MuLqmkiwnQAlibFb7X0Kid_oU1hX2SJA>
+    <xmx:Ck_mXZW9glxsbglXYM0PMp0lHirRkDayCZNaPHOtB8bKxkoIi247ZQ>
+    <xmx:Ck_mXcYl367aqQf7g1AfrDTW8ojElgyfL3V56LOETuINIGJdkNQkxw>
+    <xmx:Ck_mXXc-6VWjTAP4rq4qSUuV8jIoYSdBmvbwFMVpEiCBvrdIO3Sg3g>
 Received: from mistburn.lan (unknown [118.211.92.13])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B435530600D2;
-        Tue,  3 Dec 2019 07:03:32 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 035D130600EA;
+        Tue,  3 Dec 2019 07:03:18 -0500 (EST)
 From:   Andrew Jeffery <andrew@aj.id.au>
 To:     linux-aspeed@lists.ozlabs.org
 Cc:     joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 14/14] ARM: dts: ibm-power9-dual: Add a unit address for OCC nodes
-Date:   Tue,  3 Dec 2019 22:34:15 +1030
-Message-Id: <895711a51b34e0618761cb9e6594e6734769e1cc.1575369656.git-series.andrew@aj.id.au>
+Subject: [PATCH 10/14] ARM: dts: aspeed: Cleanup lpc-ctrl and snoop regs
+Date:   Tue,  3 Dec 2019 22:34:11 +1030
+Message-Id: <c7b124576dc133cc03119507e472dec18c048438.1575369656.git-series.andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
 References: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
@@ -81,40 +81,60 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-These temporarily have a unit address until userspace is fixed up as
-noted in comments elsewhere in the dtsi.
+Fix the following warning:
 
-Fixes the following warning:
-
-    arch/arm/boot/dts/ibm-power9-dual.dtsi:89.18-91.6: Warning (unit_address_vs_reg): /gpio-fsi/cfam@0,0/sbefifo@2400/occ: node has a reg or ranges property, but no unit name
-    arch/arm/boot/dts/ibm-power9-dual.dtsi:190.18-192.6: Warning (unit_address_vs_reg): /gpio-fsi/cfam@0,0/hub@3400/cfam@1,0/sbefifo@2400/occ: node has a reg or ranges property, but no unit name
+    arch/arm/boot/dts/aspeed-g5.dtsi:409.27-414.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-host@80/lpc-ctrl@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-host@80/lpc-snoop@0)
 
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Reviewed-by: Joel Stanley <joel@jms.id.au>
 ---
- arch/arm/boot/dts/ibm-power9-dual.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/aspeed-g4.dtsi | 6 +++---
+ arch/arm/boot/dts/aspeed-g5.dtsi | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ibm-power9-dual.dtsi b/arch/arm/boot/dts/ibm-power9-dual.dtsi
-index 2abc42eda7b0..a0fa65b44b0f 100644
---- a/arch/arm/boot/dts/ibm-power9-dual.dtsi
-+++ b/arch/arm/boot/dts/ibm-power9-dual.dtsi
-@@ -86,7 +86,7 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+index 46c0891aac5a..e1d4af06c217 100644
+--- a/arch/arm/boot/dts/aspeed-g4.dtsi
++++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+@@ -346,14 +346,14 @@
  
--			fsi_occ0: occ {
-+			fsi_occ0: occ@1 {
- 				compatible = "ibm,p9-occ";
- 			};
- 		};
-@@ -187,7 +187,7 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+ 					lpc_ctrl: lpc-ctrl@0 {
+ 						compatible = "aspeed,ast2400-lpc-ctrl";
+-						reg = <0x0 0x80>;
++						reg = <0x0 0x10>;
+ 						clocks = <&syscon ASPEED_CLK_GATE_LCLK>;
+ 						status = "disabled";
+ 					};
  
--			fsi_occ1: occ {
-+			fsi_occ1: occ@2 {
- 				compatible = "ibm,p9-occ";
- 			};
- 		};
+-					lpc_snoop: lpc-snoop@0 {
++					lpc_snoop: lpc-snoop@10 {
+ 						compatible = "aspeed,ast2400-lpc-snoop";
+-						reg = <0x0 0x80>;
++						reg = <0x10 0x8>;
+ 						interrupts = <8>;
+ 						status = "disabled";
+ 					};
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index 5757d3f0e947..013d1f98ecf1 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -458,14 +458,14 @@
+ 
+ 					lpc_ctrl: lpc-ctrl@0 {
+ 						compatible = "aspeed,ast2500-lpc-ctrl";
+-						reg = <0x0 0x80>;
++						reg = <0x0 0x10>;
+ 						clocks = <&syscon ASPEED_CLK_GATE_LCLK>;
+ 						status = "disabled";
+ 					};
+ 
+-					lpc_snoop: lpc-snoop@0 {
++					lpc_snoop: lpc-snoop@10 {
+ 						compatible = "aspeed,ast2500-lpc-snoop";
+-						reg = <0x0 0x80>;
++						reg = <0x10 0x8>;
+ 						interrupts = <8>;
+ 						status = "disabled";
+ 					};
 -- 
 git-series 0.9.1
