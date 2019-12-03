@@ -1,537 +1,696 @@
-Return-Path: <SRS0=pYa2=ZY=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC92C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 23:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC40C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 00:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F04620848
-	for <linux-devicetree@archiver.kernel.org>; Mon,  2 Dec 2019 23:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A217206ED
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 00:07:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="aLnyZtqY"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PGPsMoJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfLBXcC (ORCPT
+        id S1725919AbfLCAHj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 18:32:02 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40891 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbfLBXcB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 18:32:01 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c14so1381686wrn.7
-        for <devicetree@vger.kernel.org>; Mon, 02 Dec 2019 15:31:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=7bA0wr97LqwcBpFMQg40IolNNRZsB70r6ecQBvUWz1c=;
-        b=aLnyZtqYf17pz8HbugUJpJa0L3D9VwE0nvQbaIz5ANGqMnOFLZxUHONLWYv/c0w/Dt
-         2X3WKN30YICBbTmxYd8GUMyns/H5d0tCsEcHHP6vX9P3/qWfi6jbLyzPO8Ceo4bRNArL
-         edLkMlyaB4kIoFXoZIagGYe1HcLnGTJf4PEsg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=7bA0wr97LqwcBpFMQg40IolNNRZsB70r6ecQBvUWz1c=;
-        b=S10cGvUTQxHl7H/74J2phNF1qEKbK7XxORdakI1lvRs4NRluwKnWFE9+y8vHvZqBWt
-         cyVrRAZhxiK5lFdqZdh4pVHq7zSH0LKIxOIe0YfuZlJKLHGnoKgpzVhgZuJoBVLEztc4
-         Mo+KQ9dpG1DaNeW1Tp+YvUQCWNGHSqlRmdcPsCLbwZGF+msKu5XcgaGxLE7CmD7bVIeB
-         9eJL8xDzzI7v/lMMPh/vDWjJN4aF5al+u6z9B9UShWyZwKkpIC57UZcSo7ambVTJ5nT9
-         pDPG/CIS15Lrdb93xY3TQcqjp/LceTg49xpKmgt5ildE+NjWdIZOeZgw58FJjpx/1gjY
-         /xdQ==
-X-Gm-Message-State: APjAAAXlDWIzYLN8CMAIU5eWg7sBRpJ3gkp5zCVTTmA+ZN0G8vTIu8lV
-        k07JMdrrUDxdVOfOPipqvz1fbg==
-X-Google-Smtp-Source: APXvYqwxZlLuwGvV4wau3iD7S5xV/NUtSFw2dWxv3bETZRFb4MtmMDgHFz6WBI4pGq/5uT8CPO0WIg==
-X-Received: by 2002:adf:ef4e:: with SMTP id c14mr1763245wrp.142.1575329518559;
-        Mon, 02 Dec 2019 15:31:58 -0800 (PST)
-Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id c72sm1066197wmd.11.2019.12.02.15.31.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2019 15:31:57 -0800 (PST)
-From:   Ray Jui <ray.jui@broadcom.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>
-Subject: [PATCH 2/2] soc: bcm: iproc: Add Broadcom iProc IDM driver
-Date:   Mon,  2 Dec 2019 15:31:27 -0800
-Message-Id: <20191202233127.31160-3-ray.jui@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191202233127.31160-1-ray.jui@broadcom.com>
-References: <20191202233127.31160-1-ray.jui@broadcom.com>
+        Mon, 2 Dec 2019 19:07:39 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:7757 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfLCAHj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 19:07:39 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5de5a74b0001>; Mon, 02 Dec 2019 16:07:39 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 02 Dec 2019 16:07:35 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 02 Dec 2019 16:07:35 -0800
+Received: from [10.2.160.125] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Dec
+ 2019 00:07:34 +0000
+Subject: Re: [PATCH v2 02/11] soc: tegra: Add Tegra PMC clock registrations
+ into PMC driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
+        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
+        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
+        <josephl@nvidia.com>, <vidyas@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1574830773-14892-1-git-send-email-skomatineni@nvidia.com>
+ <1574830773-14892-3-git-send-email-skomatineni@nvidia.com>
+ <749de44c-ec59-3cab-c02e-7b8fcb1fb9f4@gmail.com>
+ <3d1492a1-f2a5-2d56-5341-a28fcb73fe64@nvidia.com>
+ <484cb1bb-4fb2-9e71-87be-2bd5bd5b2348@gmail.com>
+ <e4ee58aa-c421-ea4b-a37b-574fc987c7c1@nvidia.com>
+ <e5da42b8-bf21-4b57-8ae6-37ce6ca4210c@gmail.com>
+ <bb4853a1-83d7-273d-50df-324570c4a4b8@nvidia.com>
+ <bd979864-b3e8-02b1-e0b0-869ddfa8ac67@nvidia.com>
+ <41508376-f30b-3761-47bf-c9c87db997dc@nvidia.com>
+Message-ID: <348e9382-9978-0c01-1493-4226c1cd70a3@nvidia.com>
+Date:   Mon, 2 Dec 2019 16:07:53 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <41508376-f30b-3761-47bf-c9c87db997dc@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575331659; bh=m77bibBTob8XM4rXU/3+Upd+Zvzq0MrfojFg5C2MgVc=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=PGPsMoJK/+0N6gdKLdKv+h95b7Inf4OgUgJjpJBblYxPzhup1xCDVZlCRSgduIxmY
+         QGeUI3vi5w9psJWdbZwL4ftzKwntcmY1GlSr3WYwf120JapA8+JoN1KzvuOZcX/HHJ
+         RUm7ZpRCP51KWdcmwYm2MpAC2sC+HWbMb1WAKfVMqF3InQs825sXdD16yUkPVLwrr8
+         aictcBFi7b2PkEV/zRLE2om5EvtX/b5QBj01GKd2DVsS8V0uAHOdgM3C/bjCDcx9gm
+         IA/x1sRymi8eObgUYNJVPHOlrhB1oWaWfqg/Pj1DXyd0gXte6lAqWXSqDrFMg4K3nV
+         MJxmvvlDvAvWQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Broadcom iProc IDM driver that controls that IDM devices available
-on various iProc based SoCs for bus transaction timeout monitoring and
-error logging.
 
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
----
- drivers/soc/bcm/Kconfig           |  10 +
- drivers/soc/bcm/Makefile          |   1 +
- drivers/soc/bcm/iproc/Kconfig     |   6 +
- drivers/soc/bcm/iproc/Makefile    |   1 +
- drivers/soc/bcm/iproc/iproc-idm.c | 390 ++++++++++++++++++++++++++++++
- 5 files changed, 408 insertions(+)
- create mode 100644 drivers/soc/bcm/iproc/Kconfig
- create mode 100644 drivers/soc/bcm/iproc/Makefile
- create mode 100644 drivers/soc/bcm/iproc/iproc-idm.c
+On 12/2/19 3:14 PM, Sowjanya Komatineni wrote:
+>
+> On 12/2/19 3:10 PM, Sowjanya Komatineni wrote:
+>>
+>> On 12/2/19 2:58 PM, Sowjanya Komatineni wrote:
+>>>
+>>> On 12/2/19 1:50 PM, Dmitry Osipenko wrote:
+>>>> 02.12.2019 23:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> On 11/28/19 5:25 AM, Dmitry Osipenko wrote:
+>>>>>> 28.11.2019 01:57, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
+:
+>>>>>>> On 11/27/19 7:14 AM, Dmitry Osipenko wrote:
+>>>>>>>> 27.11.2019 07:59, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:
+>>>>>>>>> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2,=20
+>>>>>>>>> clk_out_3 with
+>>>>>>>>> mux and gate for each of these clocks.
+>>>>>>>>>
+>>>>>>>>> Currently these PMC clocks are registered by Tegra clock=20
+>>>>>>>>> driver using
+>>>>>>>>> clk_register_mux and clk_register_gate by passing PMC base=20
+>>>>>>>>> address
+>>>>>>>>> and register offsets and PMC programming for these clocks happens
+>>>>>>>>> through direct PMC access by the clock driver.
+>>>>>>>>>
+>>>>>>>>> With this, when PMC is in secure mode any direct PMC access=20
+>>>>>>>>> from the
+>>>>>>>>> non-secure world does not go through and these clocks will not be
+>>>>>>>>> functional.
+>>>>>>>>>
+>>>>>>>>> This patch adds these clocks registration with PMC as a clock=20
+>>>>>>>>> provider
+>>>>>>>>> for these clocks. clk_ops callback implementations for these=20
+>>>>>>>>> clocks
+>>>>>>>>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC
+>>>>>>>>> programming
+>>>>>>>>> in secure mode and non-secure mode.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>>>> ---
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 drivers/soc/tegra/pmc.c | 330
+>>>>>>>>> ++++++++++++++++++++++++++++++++++++++++++++++++
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 1 file changed, 330 insertions(+)
+>>>>>>>>>
+>>>>>>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>>>>>>>> index ea0e11a09c12..a353f6d0a832 100644
+>>>>>>>>> --- a/drivers/soc/tegra/pmc.c
+>>>>>>>>> +++ b/drivers/soc/tegra/pmc.c
+>>>>>>>>> @@ -13,6 +13,9 @@
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 =C2=A0 #include <linux/arm-smccc.h>
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #include <linux/clk.h>
+>>>>>>>>> +#include <linux/clk-provider.h>
+>>>>>>>>> +#include <linux/clkdev.h>
+>>>>>>>>> +#include <linux/clk/clk-conf.h>
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #include <linux/clk/tegra.h>
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #include <linux/debugfs.h>
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #include <linux/delay.h>
+>>>>>>>>> @@ -48,6 +51,7 @@
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #include <dt-bindings/pinctrl/pinctrl-tegra-io=
+-pad.h>
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #include <dt-bindings/gpio/tegra186-gpio.h>
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #include <dt-bindings/gpio/tegra194-gpio.h>
+>>>>>>>>> +#include <dt-bindings/soc/tegra-pmc.h>
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 =C2=A0 #define PMC_CNTRL=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #define=C2=A0 PMC_CNTRL_INTR_POLARITY=C2=A0=C2=
+=A0=C2=A0 BIT(17) /* inverts INTR
+>>>>>>>>> polarity */
+>>>>>>>>> @@ -100,6 +104,7 @@
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #define PMC_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 0x168
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #define PMC_SW_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 0x16c
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 +#define PMC_CLK_OUT_CNTRL=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 0x1a8
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #define PMC_SENSOR_CTRL=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1b0
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #define=C2=A0 PMC_SENSOR_CTRL_SCRATCH_WRITE BI=
+T(2)
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #define=C2=A0 PMC_SENSOR_CTRL_ENABLE_RST=C2=A0=
+=C2=A0=C2=A0 BIT(1)
+>>>>>>>>> @@ -155,6 +160,91 @@
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #define=C2=A0 TEGRA_SMC_PMC_READ=C2=A0=C2=A0=
+=C2=A0 0xaa
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 #define=C2=A0 TEGRA_SMC_PMC_WRITE=C2=A0=C2=A0=
+=C2=A0 0xbb
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 +struct pmc_clk_mux {
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw=C2=A0=C2=A0=C2=A0 hw;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0 offs;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ mask;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ shift;
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +#define to_pmc_clk_mux(_hw) container_of(_hw, struct=20
+>>>>>>>>> pmc_clk_mux, hw)
+>>>>>>>>> +
+>>>>>>>>> +struct pmc_clk_gate {
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw=C2=A0=C2=A0=C2=A0 hw;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0 offs;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ shift;
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +#define to_pmc_clk_gate(_hw) container_of(_hw, struct
+>>>>>>>>> pmc_clk_gate, hw)
+>>>>>>>>> +
+>>>>>>>>> +struct pmc_clk_init_data {
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 char *mux_name;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 char *gate_name;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 const char **parents;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 int num_parents;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 int mux_id;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 int gate_id;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 char *dev_name;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u8 mux_shift;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u8 gate_shift;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u8 init_parent_index;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 int init_state;
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static const char *clk_out1_parents[] =3D { "clk_m", "clk_m_div2=
+",
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 "clk_m_div4", "extern1",
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static const char *clk_out2_parents[] =3D { "clk_m", "clk_m_div2=
+",
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 "clk_m_div4", "extern2",
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static const char *clk_out3_parents[] =3D { "clk_m", "clk_m_div2=
+",
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 "clk_m_div4", "extern3",
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct pmc_clk_init_data tegra_pmc_clks_data[] =3D {
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 {
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_name =3D "clk_ou=
+t_1_mux",
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_name =3D "clk_o=
+ut_1",
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .parents =3D clk_out1=
+_parents,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .num_parents =3D ARRA=
+Y_SIZE(clk_out1_parents),
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_id =3D TEGRA_PMC=
+_CLK_OUT_1_MUX,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_id =3D TEGRA_PM=
+C_CLK_OUT_1,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .dev_name =3D "extern=
+1",
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_shift =3D 6,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_shift =3D 2,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_parent_index =
+=3D 3,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_state =3D 1,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 },
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 {
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_name =3D "clk_ou=
+t_2_mux",
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_name =3D "clk_o=
+ut_2",
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .parents =3D clk_out2=
+_parents,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .num_parents =3D ARRA=
+Y_SIZE(clk_out2_parents),
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_id =3D TEGRA_PMC=
+_CLK_OUT_2_MUX,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_id =3D TEGRA_PM=
+C_CLK_OUT_2,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .dev_name =3D "extern=
+2",
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_shift =3D 14,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_shift =3D 10,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_parent_index =
+=3D 0,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_state =3D 0,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 },
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 {
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_name =3D "clk_ou=
+t_3_mux",
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_name =3D "clk_o=
+ut_3",
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .parents =3D clk_out3=
+_parents,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .num_parents =3D ARRA=
+Y_SIZE(clk_out3_parents),
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_id =3D TEGRA_PMC=
+_CLK_OUT_3_MUX,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_id =3D TEGRA_PM=
+C_CLK_OUT_3,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .dev_name =3D "extern=
+3",
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_shift =3D 22,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_shift =3D 18,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_parent_index =
+=3D 0,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_state =3D 0,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 struct tegra_powergate {
+>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct generic_pm_doma=
+in genpd;
+>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_pmc *pmc;
+>>>>>>>>> @@ -254,6 +344,9 @@ struct tegra_pmc_soc {
+>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct tegra_wak=
+e_event *wake_events;
+>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int num_wake_=
+events;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_init_data *pmc_clks_data;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int num_pmc_clks;
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 };
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 =C2=A0 static const char * const tegra186_rese=
+t_sources[] =3D {
+>>>>>>>>> @@ -2163,6 +2256,228 @@ static int tegra_pmc_clk_notify_cb(struct
+>>>>>>>>> notifier_block *nb,
+>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NOTIFY_OK;
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 }
+>>>>>>>>> =C2=A0=C2=A0=C2=A0 +static void pmc_clk_fence_udelay(u32 offset)
+>>>>>>>>> +{
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_readl(pmc, offset);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 /* pmc clk propagation delay 2 us */
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(2);
+>>>>>>>>> +}
+>>>>>>>>> +
+>>>>>>>>> +static u8 pmc_clk_mux_get_parent(struct clk_hw *hw)
+>>>>>>>>> +{
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_mux *mux =3D to_pmc_clk_mux(hw=
+);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 int num_parents =3D clk_hw_get_num_parents(hw=
+);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, mux->offs) >> mu=
+x->shift;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 val &=3D mux->mask;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (val >=3D num_parents)
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return val;
+>>>>>>>>> +}
+>>>>>>>>> +
+>>>>>>>>> +static int pmc_clk_mux_set_parent(struct clk_hw *hw, u8 index)
+>>>>>>>>> +{
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_mux *mux =3D to_pmc_clk_mux(hw=
+);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, mux->offs);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 val &=3D ~(mux->mask << mux->shift);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 val |=3D index << mux->shift;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, val, mux->offs);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_fence_udelay(mux->offs);
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>>>> +}
+>>>>>>>>> +
+>>>>>>>>> +static const struct clk_ops pmc_clk_mux_ops =3D {
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .get_parent =3D pmc_clk_mux_get_parent,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .set_parent =3D pmc_clk_mux_set_parent,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .determine_rate =3D __clk_mux_determine_rate,
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct clk *
+>>>>>>>>> +tegra_pmc_clk_mux_register(const char *name, const char * const
+>>>>>>>>> *parent_names,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 int num_parents, unsigned long flags,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 unsigned long offset, u32 shift, u32 mask)
+>>>>>>>>> +{
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_init_data init;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_mux *mux;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 mux =3D kzalloc(sizeof(*mux), GFP_KERNEL);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!mux)
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ERR_PTR(-ENOME=
+M);
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.name =3D name;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.ops =3D &pmc_clk_mux_ops;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.parent_names =3D parent_names;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.num_parents =3D num_parents;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.flags =3D flags;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 mux->hw.init =3D &init;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 mux->offs =3D offset;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 mux->mask =3D mask;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 mux->shift =3D shift;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return clk_register(NULL, &mux->hw);
+>>>>>>>>> +}
+>>>>>>>>> +
+>>>>>>>>> +static int pmc_clk_is_enabled(struct clk_hw *hw)
+>>>>>>>>> +{
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_gate *gate =3D to_pmc_clk_gate=
+(hw);
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return tegra_pmc_readl(pmc, gate->offs) &=20
+>>>>>>>>> BIT(gate->shift) ? 1
+>>>>>>>>> : 0;
+>>>>>>>>> +}
+>>>>>>>>> +
+>>>>>>>>> +static void pmc_clk_set_state(struct clk_hw *hw, int state)
+>>>>>>>>> +{
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_gate *gate =3D to_pmc_clk_gate=
+(hw);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, gate->offs);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D state ? (val | BIT(gate->shift)) : (v=
+al &
+>>>>>>>>> ~BIT(gate->shift));
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, val, gate->offs);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_fence_udelay(gate->offs);
+>>>>>>>>> +}
+>>>>>>>>> +
+>>>>>>>>> +static int pmc_clk_enable(struct clk_hw *hw)
+>>>>>>>>> +{
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_set_state(hw, 1);
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>>>> +}
+>>>>>>>>> +
+>>>>>>>>> +static void pmc_clk_disable(struct clk_hw *hw)
+>>>>>>>>> +{
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_set_state(hw, 0);
+>>>>>>>>> +}
+>>>>>>>>> +
+>>>>>>>>> +static const struct clk_ops pmc_clk_gate_ops =3D {
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .is_enabled =3D pmc_clk_is_enabled,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .enable =3D pmc_clk_enable,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .disable =3D pmc_clk_disable,
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct clk *
+>>>>>>>>> +tegra_pmc_clk_gate_register(const char *name, const char
+>>>>>>>>> *parent_name,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long flags, unsigned long offset,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 shift)
+>>>>>>>>> +{
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_init_data init;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_gate *gate;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 gate =3D kzalloc(sizeof(*gate), GFP_KERNEL);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!gate)
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ERR_PTR(-ENOME=
+M);
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.name =3D name;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.ops =3D &pmc_clk_gate_ops;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.parent_names =3D &parent_name;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.num_parents =3D 1;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.flags =3D flags;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 gate->hw.init =3D &init;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 gate->offs =3D offset;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 gate->shift =3D shift;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return clk_register(NULL, &gate->hw);
+>>>>>>>>> +}
+>>>>>>>>> +
+>>>>>>>>> +static void tegra_pmc_clock_register(struct tegra_pmc *pmc,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device_nod=
+e *np)
+>>>>>>>>> +{
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk *clkmux, *clk, *parent;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_onecell_data *clk_data;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int num_clks;
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 int i, ret;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 /* each pmc clock output has a mux and a gate=
+ */
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 num_clks =3D pmc->soc->num_pmc_clks * 2;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!num_clks)
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 clk_data =3D kmalloc(sizeof(*clk_data), GFP_K=
+ERNEL);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!clk_data)
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 clk_data->clks =3D kcalloc(TEGRA_PMC_CLK_MAX,
+>>>>>>>>> sizeof(*clk_data->clks),
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 GFP_KERNEL);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!clk_data->clks)
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto free_clkdata;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 clk_data->clk_num =3D num_clks;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < pmc->soc->num_pmc_clks; i++=
+) {
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pmc_clk_init_d=
+ata *data;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data =3D pmc->soc->pm=
+c_clks_data + i;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clkmux =3D tegra_pmc_=
+clk_mux_register(data->mux_name,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 data->parents,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 data->num_parents,
+>>>>>>>>> + CLK_SET_RATE_NO_REPARENT |
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 CLK_SET_RATE_PARENT,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 PMC_CLK_OUT_CNTRL,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 data->mux_shift, 3);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(clkmux))
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 goto free_clks;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_data->clks[data->=
+mux_id] =3D clkmux;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk =3D tegra_pmc_clk=
+_gate_register(data->gate_name,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 data->mux_name,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 CLK_SET_RATE_PARENT,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 PMC_CLK_OUT_CNTRL,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 data->gate_shift);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(clk))
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 goto free_clks;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_data->clks[data->=
+gate_id] =3D clk;
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D clk_set_paren=
+t(clk, clkmux);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0) {
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 pr_err("failed to set parent of %s to %s\n",
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __func__, __clk_get_name(clk)=
+,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __clk_get_name(clkmux));
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_register_clkdev(c=
+lk, data->dev_name,=20
+>>>>>>>>> data->gate_name);
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* configure initial =
+clock parent and state */
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 parent =3D clk_get_sy=
+s(data->gate_name,
+>>>>>>>>> + data->parents[data->init_parent_index]);
+>>>> Couldn't the default parent be defined using "assigned clock" in a
+>>>> device-tree? Please see "Assigned clock parents and rates" in the doc.
+>>>>
+>>>> https://www.kernel.org/doc/Documentation/devicetree/bindings/clock/clo=
+ck-bindings.txt=20
+>>>>
+>>>>
+>>>> Then you could simply use of_clk_set_defaults(pmc->dev->of_node,=20
+>>>> true).
+>>>
+>>> Yes, of_clk_add_provider() does of_clk_set_defaults which sets based=20
+>>> on assigned parents and clock rates.
+>>>
+>>> This need device tree to specify assigned clock parent properties.=20
+>>> Will update device tree and remove init parent from the driver.
+>>>
+>> assigned-clock properties should be set in consumer node of these=20
+>> clocks and currently these clocks are not used yet.
+>>
+>> So will just remove init parent from driver and when these clocks are=20
+>> used device tree can be updated in corresponding consumer node with=20
+>> these properties.
+>>
+> How about default ON/OFF init state for the clocks? I see=20
+> assigned-clock properties for parent and rate only.
+>
+> But based on existing clock-tegra-pmc driver, I see clk_out_1 is=20
+> default enabled with extern1 parent for T30 thru T210 platforms.
+>
+> Peter/Thierry, What was the reason we enable clk_out_1 right from the=20
+> clock registration?
+>
+clk_out_1 is for audio and its not required to be enabled during the=20
+boot and audio driver can enable/disable it.
 
-diff --git a/drivers/soc/bcm/Kconfig b/drivers/soc/bcm/Kconfig
-index 648e32693b7e..30cf0c390c4e 100644
---- a/drivers/soc/bcm/Kconfig
-+++ b/drivers/soc/bcm/Kconfig
-@@ -33,6 +33,16 @@ config SOC_BRCMSTB
- 
- 	  If unsure, say N.
- 
-+config SOC_BRCM_IPROC
-+	bool "Broadcom iProc SoC drivers"
-+	depends on ARCH_BCM_IPROC || COMPILE_TEST
-+	default ARCH_BCM_IPROC
-+	help
-+	  Enable SoC drivers for Broadcom iProc based chipsets
-+
-+	  If unsure, say N.
-+
- source "drivers/soc/bcm/brcmstb/Kconfig"
-+source "drivers/soc/bcm/iproc/Kconfig"
- 
- endmenu
-diff --git a/drivers/soc/bcm/Makefile b/drivers/soc/bcm/Makefile
-index d92268a829a9..9db23ab5dacc 100644
---- a/drivers/soc/bcm/Makefile
-+++ b/drivers/soc/bcm/Makefile
-@@ -2,3 +2,4 @@
- obj-$(CONFIG_BCM2835_POWER)	+= bcm2835-power.o
- obj-$(CONFIG_RASPBERRYPI_POWER)	+= raspberrypi-power.o
- obj-$(CONFIG_SOC_BRCMSTB)	+= brcmstb/
-+obj-$(CONFIG_SOC_BRCM_IPROC)	+= iproc/
-diff --git a/drivers/soc/bcm/iproc/Kconfig b/drivers/soc/bcm/iproc/Kconfig
-new file mode 100644
-index 000000000000..205e0ebbf99c
---- /dev/null
-+++ b/drivers/soc/bcm/iproc/Kconfig
-@@ -0,0 +1,6 @@
-+config IPROC_IDM
-+	bool "Broadcom iProc IDM driver"
-+	depends on (ARCH_BCM_IPROC || COMPILE_TEST) && OF
-+	default ARCH_BCM_IPROC
-+	help
-+	  Enables support for iProc Interconnect and Device Management (IDM) control and monitoring
-diff --git a/drivers/soc/bcm/iproc/Makefile b/drivers/soc/bcm/iproc/Makefile
-new file mode 100644
-index 000000000000..de54aef66097
---- /dev/null
-+++ b/drivers/soc/bcm/iproc/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_IPROC_IDM)	+= iproc-idm.o
-diff --git a/drivers/soc/bcm/iproc/iproc-idm.c b/drivers/soc/bcm/iproc/iproc-idm.c
-new file mode 100644
-index 000000000000..5f3b04dbe80a
---- /dev/null
-+++ b/drivers/soc/bcm/iproc/iproc-idm.c
-@@ -0,0 +1,390 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Broadcom
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+
-+#define IDM_CTRL_OFFSET              0x000
-+#define IDM_CTRL_TIMEOUT_ENABLE      BIT(9)
-+#define IDM_CTRL_TIMEOUT_EXP_SHIFT   4
-+#define IDM_CTRL_TIMEOUT_EXP_MASK    (0x1f << 4)
-+#define IDM_CTRL_TIMEOUT_IRQ         BIT(3)
-+#define IDM_CTRL_TIMEOUT_RESET       BIT(2)
-+#define IDM_CTRL_BUS_ERR_IRQ         BIT(1)
-+#define IDM_CTRL_BUS_ERR_RESET       BIT(0)
-+
-+#define IDM_COMP_OFFSET              0x004
-+#define IDM_COMP_OVERFLOW            BIT(1)
-+#define IDM_COMP_ERR                 BIT(0)
-+
-+#define IDM_STATUS_OFFSET            0x008
-+#define IDM_STATUS_OVERFLOW          BIT(2)
-+#define IDM_STATUS_CAUSE_MASK        0x03
-+
-+#define IDM_ADDR_LSB_OFFSET          0x00c
-+#define IDM_ADDR_MSB_OFFSET          0x010
-+#define IDM_ID_OFFSET                0x014
-+#define IDM_FLAGS_OFFSET             0x01c
-+
-+#define IDM_ISR_STATUS_OFFSET        0x100
-+#define IDM_ISR_STATUS_TIMEOUT       BIT(1)
-+#define IDM_ISR_STATUS_ERR_LOG       BIT(0)
-+
-+#define ELOG_SIG_OFFSET              0x00
-+#define ELOG_SIG_VAL                 0x49444d45
-+
-+#define ELOG_CUR_OFFSET              0x04
-+#define ELOG_LEN_OFFSET              0x08
-+#define ELOG_HEADER_LEN              12
-+#define ELOG_EVENT_LEN               64
-+
-+#define ELOG_IDM_NAME_OFFSET         0x00
-+#define ELOG_IDM_ADDR_LSB_OFFSET     0x10
-+#define ELOG_IDM_ADDR_MSB_OFFSET     0x14
-+#define ELOG_IDM_ID_OFFSET           0x18
-+#define ELOG_IDM_CAUSE_OFFSET        0x20
-+#define ELOG_IDM_FLAG_OFFSET         0x28
-+
-+#define ELOG_IDM_MAX_NAME_LEN        16
-+
-+#define ELOG_IDM_COMPAT_STR          "brcm,iproc-idm-elog"
-+
-+struct iproc_idm_elog {
-+	struct device *dev;
-+	void __iomem *buf;
-+	u32 len;
-+	spinlock_t lock;
-+
-+	int (*idm_event_log)(struct iproc_idm_elog *elog, const char *name,
-+			     u32 cause, u32 addr_lsb, u32 addr_msb, u32 id,
-+			     u32 flag);
-+};
-+
-+struct iproc_idm {
-+	struct device *dev;
-+	struct iproc_idm_elog *elog;
-+	void __iomem *base;
-+	const char *name;
-+	bool no_panic;
-+};
-+
-+static ssize_t no_panic_store(struct device *dev, struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct iproc_idm *idm = platform_get_drvdata(pdev);
-+	unsigned int no_panic;
-+	int ret;
-+
-+	ret = kstrtouint(buf, 0, &no_panic);
-+	if (ret)
-+		return ret;
-+
-+	idm->no_panic = no_panic ? true : false;
-+
-+	return count;
-+}
-+
-+static ssize_t no_panic_show(struct device *dev, struct device_attribute *attr,
-+			     char *buf)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct iproc_idm *idm = platform_get_drvdata(pdev);
-+
-+	return sprintf(buf, "%u\n", idm->no_panic ? 1 : 0);
-+}
-+
-+static DEVICE_ATTR_RW(no_panic);
-+
-+static int iproc_idm_event_log(struct iproc_idm_elog *elog, const char *name,
-+			       u32 cause, u32 addr_lsb, u32 addr_msb, u32 id,
-+			       u32 flag)
-+{
-+	u32 val, cur, len;
-+	void *event;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&elog->lock, flags);
-+
-+	/*
-+	 * Check if signature is already there. If not, clear and restart
-+	 * everything
-+	 */
-+	val = readl(elog->buf + ELOG_SIG_OFFSET);
-+	if (val != ELOG_SIG_VAL) {
-+		memset_io(elog->buf, 0, elog->len);
-+		writel(ELOG_SIG_VAL, elog->buf + ELOG_SIG_OFFSET);
-+		writel(ELOG_HEADER_LEN, elog->buf + ELOG_CUR_OFFSET);
-+		writel(0, elog->buf + ELOG_LEN_OFFSET);
-+	}
-+
-+	/* determine offset and length */
-+	cur = readl(elog->buf + ELOG_CUR_OFFSET);
-+	len = readl(elog->buf + ELOG_LEN_OFFSET);
-+
-+	/*
-+	 * Based on the design and how kernel panic is triggered after an IDM
-+	 * event, it's practically impossible for the storage to be full. In
-+	 * case if it does happen, we can simply bail out since it's likely
-+	 * the same category of events that have already been logged
-+	 */
-+	if (cur + ELOG_EVENT_LEN > elog->len) {
-+		dev_warn(elog->dev, "IDM ELOG buffer is now full\n");
-+		spin_unlock_irqrestore(&elog->lock, flags);
-+		return -ENOMEM;
-+	}
-+
-+	/* now log the IDM event */
-+	event = elog->buf + cur;
-+	memcpy_toio(event + ELOG_IDM_NAME_OFFSET, name, ELOG_IDM_MAX_NAME_LEN);
-+	writel(addr_lsb, event + ELOG_IDM_ADDR_LSB_OFFSET);
-+	writel(addr_msb, event + ELOG_IDM_ADDR_MSB_OFFSET);
-+	writel(id, event + ELOG_IDM_ID_OFFSET);
-+	writel(cause, event + ELOG_IDM_CAUSE_OFFSET);
-+	writel(flag, event + ELOG_IDM_FLAG_OFFSET);
-+
-+	cur += ELOG_EVENT_LEN;
-+	len += ELOG_EVENT_LEN;
-+
-+	/* update offset and length */
-+	writel(cur, elog->buf + ELOG_CUR_OFFSET);
-+	writel(len, elog->buf + ELOG_LEN_OFFSET);
-+
-+	spin_unlock_irqrestore(&elog->lock, flags);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t iproc_idm_irq_handler(int irq, void *data)
-+{
-+	struct iproc_idm *idm = data;
-+	struct device *dev = idm->dev;
-+	const char *name = idm->name;
-+	u32 isr_status, log_status, lsb, msb, id, flag;
-+	struct iproc_idm_elog *elog = idm->elog;
-+
-+	isr_status = readl(idm->base + IDM_ISR_STATUS_OFFSET);
-+	log_status = readl(idm->base + IDM_STATUS_OFFSET);
-+
-+	/* quit if the interrupt is not for IDM */
-+	if (!isr_status)
-+		return IRQ_NONE;
-+
-+	/* ACK the interrupt */
-+	if (log_status & IDM_STATUS_OVERFLOW)
-+		writel(IDM_COMP_OVERFLOW, idm->base + IDM_COMP_OFFSET);
-+
-+	if (log_status & IDM_STATUS_CAUSE_MASK)
-+		writel(IDM_COMP_ERR, idm->base + IDM_COMP_OFFSET);
-+
-+	/* dump critical IDM information */
-+	if (isr_status & IDM_ISR_STATUS_TIMEOUT)
-+		dev_err(dev, "[%s] IDM timeout\n", name);
-+
-+	if (isr_status & IDM_ISR_STATUS_ERR_LOG)
-+		dev_err(dev, "[%s] IDM error log\n", name);
-+
-+	lsb = readl(idm->base + IDM_ADDR_LSB_OFFSET);
-+	msb = readl(idm->base + IDM_ADDR_MSB_OFFSET);
-+	id = readl(idm->base + IDM_ID_OFFSET);
-+	flag = readl(idm->base + IDM_FLAGS_OFFSET);
-+
-+	dev_err(dev, "Cause: 0x%08x; Address LSB: 0x%08x; Address MSB: 0x%08x; Master ID: 0x%08x; Flag: 0x%08x\n",
-+		log_status, lsb, msb, id, flag);
-+
-+	/* if elog service is available, log the event */
-+	if (elog) {
-+		elog->idm_event_log(elog, name, log_status, lsb, msb, id, flag);
-+		dev_err(dev, "IDM event logged\n\n");
-+	}
-+
-+	/* IDM timeout is fatal and non-recoverable. Panic the kernel */
-+	if (!idm->no_panic)
-+		panic("Fatal bus error detected by IDM");
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int iproc_idm_dev_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct platform_device *elog_pdev;
-+	struct device_node *elog_np;
-+	struct iproc_idm *idm;
-+	const char *name;
-+	int ret;
-+	u32 val;
-+
-+	idm = devm_kzalloc(dev, sizeof(*idm), GFP_KERNEL);
-+	if (!idm)
-+		return -ENOMEM;
-+
-+	ret = of_property_read_string(np, "brcm,iproc-idm-bus", &name);
-+	if (ret) {
-+		dev_err(dev, "Unable to parse IDM bus name\n");
-+		return ret;
-+	}
-+	idm->name = name;
-+
-+	platform_set_drvdata(pdev, idm);
-+	idm->dev = dev;
-+
-+	idm->base = of_iomap(np, 0);
-+	if (!idm->base) {
-+		dev_err(dev, "Unable to map I/O\n");
-+		ret = -ENOMEM;
-+		goto err_exit;
-+	}
-+
-+	ret = of_irq_get(np, 0);
-+	if (ret <= 0) {
-+		dev_err(dev, "Unable to find IRQ number. ret=%d\n", ret);
-+		goto err_iounmap;
-+	}
-+
-+	ret = devm_request_irq(dev, ret, iproc_idm_irq_handler, IRQF_SHARED,
-+			       idm->name, idm);
-+	if (ret < 0) {
-+		dev_err(dev, "Unable to request irq. ret=%d\n", ret);
-+		goto err_iounmap;
-+	}
-+
-+	/*
-+	 * ELOG phandle is optional. If ELOG phandle is specified, it indicates
-+	 * ELOG logging needs to be enabled
-+	 */
-+	elog_np = of_parse_phandle(dev->of_node, ELOG_IDM_COMPAT_STR, 0);
-+	if (elog_np) {
-+		elog_pdev = of_find_device_by_node(elog_np);
-+		if (!elog_pdev) {
-+			dev_err(dev, "Unable to find IDM ELOG device\n");
-+			ret = -ENODEV;
-+			goto err_iounmap;
-+		}
-+
-+		idm->elog = platform_get_drvdata(elog_pdev);
-+		if (!idm->elog) {
-+			dev_err(dev, "Unable to get IDM ELOG driver data\n");
-+			ret = -EINVAL;
-+			goto err_iounmap;
-+		}
-+	}
-+
-+	/* enable IDM timeout and its interrupt */
-+	val = readl(idm->base + IDM_CTRL_OFFSET);
-+	val |= IDM_CTRL_TIMEOUT_EXP_MASK | IDM_CTRL_TIMEOUT_ENABLE |
-+	       IDM_CTRL_TIMEOUT_IRQ;
-+	writel(val, idm->base + IDM_CTRL_OFFSET);
-+
-+	ret = device_create_file(dev, &dev_attr_no_panic);
-+	if (ret < 0)
-+		goto err_iounmap;
-+
-+	of_node_put(np);
-+
-+	pr_info("iProc IDM device %s registered\n", idm->name);
-+
-+	return 0;
-+
-+err_iounmap:
-+	iounmap(idm->base);
-+
-+err_exit:
-+	of_node_put(np);
-+	return ret;
-+}
-+
-+static int iproc_idm_elog_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct iproc_idm_elog *elog;
-+	struct resource *res;
-+	u32 val;
-+
-+	elog = devm_kzalloc(dev, sizeof(*elog), GFP_KERNEL);
-+	if (!elog)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	elog->buf = (void __iomem *)devm_memremap(dev, res->start,
-+						  resource_size(res),
-+						  MEMREMAP_WB);
-+	if (IS_ERR(elog->buf)) {
-+		dev_err(dev, "Unable to map ELOG buffer\n");
-+		return PTR_ERR(elog->buf);
-+	}
-+
-+	elog->dev = dev;
-+	elog->len = resource_size(res);
-+	elog->idm_event_log = iproc_idm_event_log;
-+
-+	/*
-+	 * Check if signature is already there. Only clear memory if there's
-+	 * no signature detected
-+	 */
-+	val = readl(elog->buf + ELOG_SIG_OFFSET);
-+	if (val != ELOG_SIG_VAL)
-+		memset_io(elog->buf, 0, elog->len);
-+
-+	spin_lock_init(&elog->lock);
-+	platform_set_drvdata(pdev, elog);
-+
-+	dev_info(dev, "iProc IDM ELOG registered\n");
-+
-+	return 0;
-+}
-+
-+static int iproc_idm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	int ret;
-+
-+	if (of_device_is_compatible(np, ELOG_IDM_COMPAT_STR))
-+		ret = iproc_idm_elog_probe(pdev);
-+	else
-+		ret = iproc_idm_dev_probe(pdev);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id iproc_idm_of_match[] = {
-+	{ .compatible = "brcm,iproc-idm", },
-+	{ .compatible = ELOG_IDM_COMPAT_STR, },
-+	{ }
-+};
-+
-+static struct platform_driver iproc_idm_driver = {
-+	.probe = iproc_idm_probe,
-+	.driver = {
-+		.name = "iproc-idm",
-+		.of_match_table = of_match_ptr(iproc_idm_of_match),
-+	},
-+};
-+
-+static int __init iproc_idm_init(void)
-+{
-+	return platform_driver_register(&iproc_idm_driver);
-+}
-+arch_initcall(iproc_idm_init);
-+
-+static void __exit iproc_idm_exit(void)
-+{
-+	platform_driver_unregister(&iproc_idm_driver);
-+}
-+module_exit(iproc_idm_exit);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Broadcom");
-+MODULE_DESCRIPTION("iProc IDM driver");
--- 
-2.17.1
+same with blink 32khz which is used for WIFI. WIFI driver can=20
+enable/disable during power up/down sequence and technically as per=20
+design we dont need to have it always on right from the boot.
 
+So can remove out clocks init states from driver once thierry also agree=20
+on this.
+
+>>>>
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!IS_ERR(parent)) =
+{
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 ret =3D clk_set_parent(clkmux, parent);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 if (ret < 0) {
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_err("failed to set parent of %s to %s\n",
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __fun=
+c__, __clk_get_name(clkmux),
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __clk=
+_get_name(parent));
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 WARN_ON(1);
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 }
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>>>> +
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (data->init_state)=
+ {
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 if (clk_prepare_enable(clk)) {
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_err("failed to enable %s\n", __func__,
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __clk=
+_get_name(clk));
+>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 WARN_ON(1);
+>>>>>> Alternatively you could write it like this:
+>>>>>>
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0err =3D clk_prepare_enable(clk);
+>>>>>>
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0WARN_ON(err, "failed to enable %s: %d\=
+n",
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __clk_get_name(clk)=
+, err);
+>>>>>>
+>>>>>>>> Should be a bit better to move the WARN_ON to the end of errors
+>>>>>>>> handling
+>>>>>>>> in order to catch all possible errors:
+>>>>>>>>
+>>>>>>>> @@ -2510,6 +2510,7 @@ static void tegra_pmc_clock_register(struct
+>>>>>>>> tegra_pmc *pmc,
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retur=
+n;
+>>>>>>>>
+>>>>>>>> =C2=A0=C2=A0=C2=A0 free_clks:
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 WARN_ON(1);
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree=
+(clk_data->clks);
+>>>>>>>> =C2=A0=C2=A0=C2=A0 free_clkdata:
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree=
+(clk_data);
+>>>>>>> Reason I had WARN_ON right during clk_set_parent failure is to=20
+>>>>>>> have the
+>>>>>>> loop continue for subsequence pmc clocks registration instead of
+>>>>>>> terminating all pmc clocks registration.
+>>>>>> Ah, okay. Nevertheless this WARN_ON in the end shouldn't be the=20
+>>>>>> least
+>>>>>> (IMO).
+>>>>> Hi Dmitry, Just want to be clear on the above comment. Are you
+>>>>> suggesting to add additional WARN_ON at the end?
+>>>> Yes, it was my suggestion.
+>>>>
+>>>>> Thought WARN_ON right during corresponding clock failure with warn
+>>>>> message showing clock names will be clear and also other clocks still
+>>>>> should be registered.
+>>>>>
+>>>>> To add additional WARN_ON at the end need to track status of each=20
+>>>>> clock
+>>>>> and use that to as warn condition.
+>>>> You could add a warning/error message to every point of failure.
+>>>>
+>>>> Primarily, it is important not to miss a error. Secondarily, it is
+>>>> important to make diagnostic message meaningful.
+>>>>
+>>>> Realistically, I doubt that this chunk of code will ever fail once=20
+>>>> it is
+>>>> known to work well. So it will be nice to have a more detailed
+>>>> diagnostics (just in a case), but it shouldn't be a must.
+>>>
+>>> OK, Will add additional WARN message "failed registering PMC clocks"=20
+>>> at the end.
+>>>
