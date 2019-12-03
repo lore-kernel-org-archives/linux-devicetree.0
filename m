@@ -2,112 +2,111 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9341C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA23CC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAD5F2073C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0B82068E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:36:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="GaEpkJws";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xFPyLaDo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfLCM3L (ORCPT
+        id S1726017AbfLCMgq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 07:29:11 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:42532 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbfLCM3L (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 07:29:11 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9F166200376;
-        Tue,  3 Dec 2019 13:29:09 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 20643200367;
-        Tue,  3 Dec 2019 13:29:05 +0100 (CET)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B4AF9402F3;
-        Tue,  3 Dec 2019 20:28:58 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, ran.wang_1@nxp.com
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
-Subject: [v5 3/3] Documentation: dt: binding: fsl: Add 'fsl,ippdexpcr1-alt-addr' property
-Date:   Tue,  3 Dec 2019 20:28:18 +0800
-Message-Id: <20191203122818.21941-3-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191203122818.21941-1-biwen.li@nxp.com>
-References: <20191203122818.21941-1-biwen.li@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 3 Dec 2019 07:36:46 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:57873 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725997AbfLCMgp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 07:36:45 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 9E1836C3C;
+        Tue,  3 Dec 2019 07:36:44 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 03 Dec 2019 07:36:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=SOZUq2rJD0QJ8mJKAc7oPLyCtR
+        nzRzApgEKAYYPVX5g=; b=GaEpkJwswsN6B+BGMOIDa5Y6tqbkL7hfWZU0irBbo6
+        KG7zMnNrZiKbtXUzRio3ugQJH0Mc8PtKOBg9L2Q8MTDBI94egRoQJYQRgWAfZI38
+        QPm94qCHFqNHdh1ijPsAqPMmsD4PGZDea6kbqHqURcKfojeuhpG1DTe452JoCzwd
+        UIJZy5ugYhfrRJPnGr5Y3cuA5vZnKUFhps63+HxcNlgXOL6uvUfHK2ML1bPKJq9D
+        AZ7HmMaVQypnu6Nno37etiafDus0S/3FMC9WFiixik3hm27Yp5EYU6RP27LaKEGy
+        5mC3MX8p5f3AzN1/SktTJpkTlS4x84qn1DoZn3/7Cmlw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=SOZUq2rJD0QJ8mJKA
+        c7oPLyCtRnzRzApgEKAYYPVX5g=; b=xFPyLaDoMhBRQSvKGkUUA6EiRHXRfh3Zj
+        zVnkyYOFS87Q8NUOnirCTnkRn0DCd+vuF2AZO+EncBWI6h/rTVkanfFUQoO9ur2f
+        nvLEuOSahNShxbVLUTHd6GD/k58prnFj4VmjtZlLA1HlPOSsSHZ/Qz75TKjuwT0E
+        GRHVTMecdCCO6uXxA+u0912m4q9IpCysrr6wC22UOjOQ8WD3EG0bjEN7dfROSll6
+        yoGA2e9mDcjOuzpLhMlsEXI58WTGN+ChMX5BXIEY9ybgOJRZTne7oFqtXGvq24W3
+        sWejt/OyRnMh3a9NBeyn8wkgxJh40K6bBMVAhx34+mraxSZ0TXVFQ==
+X-ME-Sender: <xms:2lbmXS5ZXg7wiN3SZzGBlY9uTCy7VzlWXnir2E-XQkH4LJAtT6DCWQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejjedggeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
+    ihgurdgruheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddukedrvd
+    duuddrledvrddufeenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdr
+    ihgurdgruhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:2lbmXQAgd4zEB8DN8VWm1DnXLPqX67BYXO7D7CcrvPVy3l1ZKI5LLA>
+    <xmx:2lbmXdBfqZgbkxOogcYRNi8dXTx-6YZg5nleIKJN72ruCi4Tm7Hpfw>
+    <xmx:2lbmXRYv-WHhjjXQRna92ewaKh7nE9_y4RRpU1NJjpVLi-CdTw0g8Q>
+    <xmx:3FbmXZ0J4rAA31er-T2wgfz3nONrmvnaA0EuEKbC8cdyf1hiuyqxmw>
+Received: from mistburn.lan (unknown [118.211.92.13])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0E6363060158;
+        Tue,  3 Dec 2019 07:36:37 -0500 (EST)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     openipmi-developer@lists.sourceforge.net
+Cc:     minyard@acm.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        joel@jms.id.au, arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] ipmi: kcs-bmc: Rework bindings to clean up DT warnings
+Date:   Tue,  3 Dec 2019 23:08:22 +1030
+Message-Id: <cover.5630f63168ad5cddf02e9796106f8e086c196907.1575376664.git-series.andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The 'fsl,ippdexpcr1-alt-addr' property is used to handle an errata A-008646
-on LS1021A
+Hello,
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v5:
-	- none
+This is a short series reworking the devicetree binding and driver for the
+ASPEED BMC KCS devices. With the number of supported ASPEED BMC devicetrees the
+changes enable removal of more than 100 lines of warning output from dtc.
 
-Change in v4:
-	- rename property name
-	  fsl,ippdexpcr-alt-addr -> fsl,ippdexpcr1-alt-addr
+These changes are extracted from an RFC series posted previously, which can be
+found here:
 
-Change in v3:
-  	- rename property name
-	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
+https://lore.kernel.org/lkml/20190726053959.2003-1-andrew@aj.id.au/
 
-Change in v2:
-  	- update desc of the property
-	  'fsl,rcpm-scfg'
+Haiyue has already reviewed the driver patches in that thread so the re-posting
+carries his tags. Since the original series the patches have been rebased on
+top of char-misc/master with no further changes. However, please take a look to
+make sure the patches are still sane.
 
- .../devicetree/bindings/soc/fsl/rcpm.txt      | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Cheers,
 
-diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-index 5a33619d881d..751a7655b694 100644
---- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-+++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-@@ -34,6 +34,13 @@ Chassis Version		Example Chips
- Optional properties:
-  - little-endian : RCPM register block is Little Endian. Without it RCPM
-    will be Big Endian (default case).
-+ - fsl,ippdexpcr1-alt-addr : The property is related to a hardware issue
-+   on SoC LS1021A and only needed on SoC LS1021A.
-+   Must include 1 + 2 entries.
-+   The first entry must be a link to the SCFG device node.
-+   The non-first entry must be offset of registers of SCFG.
-+   The second and third entry compose an alt offset address
-+   for IPPDEXPCR1(SCFG_SPARECR8)
- 
- Example:
- The RCPM node for T4240:
-@@ -43,6 +50,20 @@ The RCPM node for T4240:
- 		#fsl,rcpm-wakeup-cells = <2>;
- 	};
- 
-+The RCPM node for LS1021A:
-+	rcpm: rcpm@1ee2140 {
-+		compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+		reg = <0x0 0x1ee2140 0x0 0x8>;
-+		#fsl,rcpm-wakeup-cells = <2>;
-+
-+		/*
-+		 * The second and third entry compose an alt offset
-+		 * address for IPPDEXPCR1(SCFG_SPARECR8)
-+		 */
-+		fsl,ippdexpcr1-alt-addr = <&scfg 0x0 0x51c>;
-+	};
-+
-+
- * Freescale RCPM Wakeup Source Device Tree Bindings
- -------------------------------------------
- Required fsl,rcpm-wakeup property should be added to a device node if the device
+Andrew
+
+Andrew Jeffery (3):
+  dt-bindings: ipmi: aspeed: Introduce a v2 binding for KCS
+  ipmi: kcs: Finish configuring ASPEED KCS device before enable
+  ipmi: kcs: aspeed: Implement v2 bindings
+
+ Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt |  20 +-
+ drivers/char/ipmi/kcs_bmc_aspeed.c                        | 151 +++++--
+ 2 files changed, 139 insertions(+), 32 deletions(-)
+
+base-commit: 937d6eefc716a9071f0e3bada19200de1bb9d048
 -- 
-2.17.1
-
+git-series 0.9.1
