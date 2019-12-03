@@ -2,201 +2,139 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402DAC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02F7C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 17:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E41207DD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575392210;
-	bh=2lYntF80jSmeqB4A/DzJDtoIs7czCONpon40J9pdHrQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VjEgyWzwCW5NutrTUShb6dXmdOOh/FUWtS+gyqvr2QgKSPxoEGP/jHdYljD7SUuTV
-	 0MbDvZ0bXIns+6URlbI5PqTUFF9UldXD4QqAZjYeS5QQJlZZXHq0zofWrlVIGdYMqO
-	 GchmONn/8ZB438zzwZJiXcy5WInlcxGt3R+q8TgM=
+	by mail.kernel.org (Postfix) with ESMTP id C3E142068E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 17:04:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="SjVDebo2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfLCQ4t (ORCPT
+        id S1727079AbfLCREu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:56:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45450 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbfLCQ4t (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:56:49 -0500
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2159020803
-        for <devicetree@vger.kernel.org>; Tue,  3 Dec 2019 16:56:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575392208;
-        bh=2lYntF80jSmeqB4A/DzJDtoIs7czCONpon40J9pdHrQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WpZaeT3vOrSLGx/La/YG4mHSjjm7A1zScT2JhFKy37HwVp4dCnJpzi5ldpvaOhFkS
-         1aujn56DN2oxsV5NMsvTKfrPfKurAAsxwii7C5H7F95IrBKOX0zCYF7ck8l+xwrCXr
-         FapbYWeHFr1e2m4RY7m6O8HZl59y51i9LJMulFmc=
-Received: by mail-qt1-f170.google.com with SMTP id k11so4481002qtm.3
-        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 08:56:48 -0800 (PST)
-X-Gm-Message-State: APjAAAUnZbJQX3gXq9VeBEYLKxViodjyUwn3ptVqb3ZX7ytqcP3Y2u9o
-        NUuXrx5rjZ98z+/AJrH6evQ41p+za7Suk+NAKQ==
-X-Google-Smtp-Source: APXvYqzuIgD9VwLAeCUG8AaPW3sC2UvyTHw3WE6Wjkbwac76yQtEuRAQ7GTea2JOUFUx5bLLNGHf7iWk9TvTrFvVUko=
-X-Received: by 2002:ac8:2cd0:: with SMTP id 16mr4561326qtx.136.1575392206992;
- Tue, 03 Dec 2019 08:56:46 -0800 (PST)
+        Tue, 3 Dec 2019 12:04:50 -0500
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:44998 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfLCREu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 12:04:50 -0500
+Received: by mail-vk1-f194.google.com with SMTP id u189so1263574vkf.11
+        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 09:04:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uKEl7qNFIi9X+QXW3XmiWYr6gtYvjeFPeIzark7e3Kc=;
+        b=SjVDebo2l6qnq7mYoXHOBDv0TSRRFcvV4BhItzIdS86qcLi/YIVmYbcnMxfknlqYhD
+         H52BgHICLzr/0f1O9mYTSo7jipwh5XdXG2e43ThUq/cg5K/QXemoWUoN1FeNo0mJ7jbH
+         NbX3nBYGI//sD+fqG/anKzbDV+iTxAlPVbm/OMzcNs7NqScICyX16MbERmNKyg37k6b6
+         7ypUIEYiPBPmYNlPgSBSN0mANQvs4b+JZgWjrUVRSN7+oqZSY5Z+qmmnBgf8J0rGztgl
+         odsRuDHvduZxdG4alX06JadsjaAZ0e6hbxAWq9Tu4Bv9CU0R7G1vkNXBxt4M9VDoyt+p
+         O+Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uKEl7qNFIi9X+QXW3XmiWYr6gtYvjeFPeIzark7e3Kc=;
+        b=NCFW/4F+3gM06+RlUCAiO61Cv9RWqkW0V4la7hvs7C6lXZNJTX/zRrbdAKgKNa7KaV
+         i5kWvQ03zYBUOj4Lq3Mro2f+JVDqm4aO76Rp6TV69AzYFXxABwhpJ+HJAPhiB7SW5DdR
+         9Cs45uzRQHxPZ6Ugxa8aXGZELSODpcelH+AmsUTiS6dAU3ZtTGCB1rFZFYeZ1YU4VK+x
+         KXA4KInZZ7yYus9j+dlR6wc5sNcwvgbl+MFF7lgkQtqkvOdXUAuKtmEpn42cI61NwqKv
+         E2xo4cCKaYSm8knM6zbpk/M1swD/uuBNYy/3Y/QkUugMmHGnaAHpbOIhjl88sROr4SB/
+         jmIA==
+X-Gm-Message-State: APjAAAWJ7sIP55hlSykFuUZtPAcmok4ymoozKJUKxdPuBYbxMnjagtit
+        fC6TZfS/GmTGWhefRizsox7lYrd6MOAOk4LjvCd4MA==
+X-Google-Smtp-Source: APXvYqwKm8MpMl1siagRD/fOyBMzpEUip8dDd1vpjLe8Sx3Hl6Aa61T3XqlZpKdBWWKGOA+Cc/OEYNbwz3q/Vz2Kliw=
+X-Received: by 2002:ac5:c4f8:: with SMTP id b24mr3242890vkl.79.1575392688846;
+ Tue, 03 Dec 2019 09:04:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de>
- <e1f232f5-3847-a519-5cce-95a26512e82b@gmail.com> <87tv6idp37.fsf@mpe.ellerman.id.au>
- <67e1da87-7f5a-3972-bc16-28bae2350c12@gmail.com>
-In-Reply-To: <67e1da87-7f5a-3972-bc16-28bae2350c12@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 3 Dec 2019 10:56:35 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKieG5=teL7gABPKbJOQfvoS9s-ZPF-=R0yEE_LUoy-Kw@mail.gmail.com>
-Message-ID: <CAL_JsqKieG5=teL7gABPKbJOQfvoS9s-ZPF-=R0yEE_LUoy-Kw@mail.gmail.com>
-Subject: Re: [RFC] Efficiency of the phandle_cache on ppc64/SLOF
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        devicetree@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>
+References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org> <1571254641-13626-4-git-send-email-thara.gopinath@linaro.org>
+In-Reply-To: <1571254641-13626-4-git-send-email-thara.gopinath@linaro.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Tue, 3 Dec 2019 22:34:37 +0530
+Message-ID: <CAHLCerOCt9VBizAHu+y+CmzFmz-ktqCJgcB_NeC3WC4W9YBvAQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] thermal: core: Add late init hook to cooling
+ device ops
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Eduardo Valentin <edubezval@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 10:28 PM Frank Rowand <frowand.list@gmail.com> wrote:
+On Thu, Oct 17, 2019 at 1:07 AM Thara Gopinath
+<thara.gopinath@linaro.org> wrote:
 >
-> On 12/2/19 10:12 PM, Michael Ellerman wrote:
-> > Frank Rowand <frowand.list@gmail.com> writes:
-> >> On 11/29/19 9:10 AM, Sebastian Andrzej Siewior wrote:
-> >>> I've been looking at phandle_cache and noticed the following: The raw
-> >>> phandle value as generated by dtc starts at zero and is incremented by
-> >>> one for each phandle entry. The qemu pSeries model is using Slof (which
-> >>> is probably the same thing as used on real hardware) and this looks like
-> >>> a poiner value for the phandle.
-> >>> With
-> >>>     qemu-system-ppc64le -m 16G -machine pseries -smp 8
-> >>>
-> >>> I got the following output:
-> >>> | entries: 64
-> >>> | phandle 7e732468 slot 28 hash c
-> >>> | phandle 7e732ad0 slot 10 hash 27
-> >>> | phandle 7e732ee8 slot 28 hash 3a
-> >>> | phandle 7e734160 slot 20 hash 36
-> >>> | phandle 7e734318 slot 18 hash 3a
-> >>> | phandle 7e734428 slot 28 hash 33
-> >>> | phandle 7e734538 slot 38 hash 2c
-> >>> | phandle 7e734850 slot 10 hash e
-> >>> | phandle 7e735220 slot 20 hash 2d
-> >>> | phandle 7e735bf0 slot 30 hash d
-> >>> | phandle 7e7365c0 slot 0 hash 2d
-> >>> | phandle 7e736f90 slot 10 hash d
-> >>> | phandle 7e737960 slot 20 hash 2d
-> >>> | phandle 7e738330 slot 30 hash d
-> >>> | phandle 7e738d00 slot 0 hash 2d
-> >>> | phandle 7e739730 slot 30 hash 38
-> >>> | phandle 7e73bd08 slot 8 hash 17
-> >>> | phandle 7e73c2e0 slot 20 hash 32
-> >>> | phandle 7e73c7f8 slot 38 hash 37
-> >>> | phandle 7e782420 slot 20 hash 13
-> >>> | phandle 7e782ed8 slot 18 hash 1b
-> >>> | phandle 7e73ce28 slot 28 hash 39
-> >>> | phandle 7e73d390 slot 10 hash 22
-> >>> | phandle 7e73d9a8 slot 28 hash 1a
-> >>> | phandle 7e73dc28 slot 28 hash 37
-> >>> | phandle 7e73de00 slot 0 hash a
-> >>> | phandle 7e73e028 slot 28 hash 0
-> >>> | phandle 7e7621a8 slot 28 hash 36
-> >>> | phandle 7e73e458 slot 18 hash 1e
-> >>> | phandle 7e73e608 slot 8 hash 1e
-> >>> | phandle 7e740078 slot 38 hash 28
-> >>> | phandle 7e740180 slot 0 hash 1d
-> >>> | phandle 7e740240 slot 0 hash 33
-> >>> | phandle 7e740348 slot 8 hash 29
-> >>> | phandle 7e740410 slot 10 hash 2
-> >>> | phandle 7e740eb0 slot 30 hash 3e
-> >>> | phandle 7e745390 slot 10 hash 33
-> >>> | phandle 7e747b08 slot 8 hash c
-> >>> | phandle 7e748528 slot 28 hash f
-> >>> | phandle 7e74a6e0 slot 20 hash 18
-> >>> | phandle 7e74aab0 slot 30 hash b
-> >>> | phandle 7e74f788 slot 8 hash d
-> >>> | Used entries: 8, hashed: 29
-> >>>
-> >>> So the hash array has 64 entries out which only 8 are populated. Using
-> >>> hash_32() populates 29 entries.
-> >>> Could someone with real hardware verify this?
-> >>> I'm not sure how important this performance wise, it looks just like a
-> >>> waste using only 1/8 of the array.
-> >>
-> >> The hash used is based on the assumptions you noted, and as stated in the
-> >> code, that phandle property values are in a contiguous range of 1..n
-> >> (not starting from zero), which is what dtc generates.
-> >
-> >> We knew that for systems that do not match the assumptions that the hash
-> >> will not be optimal.
-> >
-> > If we're going to have the phandle cache it should at least make some
-> > attempt to work across the systems that Linux supports.
-> >
-> >> Unless there is a serious performance problem for
-> >> such systems, I do not want to make the phandle hash code more complicated
-> >> to optimize for these cases.  And the pseries have been performing ok
-> >> without phandle related performance issues that I remember hearing since
-> >> before the cache was added, which could have only helped the performance.
-> >> Yes, if your observations are correct, some memory is being wasted, but
-> >> a 64 entry cache is not very large on a pseries.
-> >
-> > A single line change to use an actual hash function is hardly
-> > complicating it, compared to the amount of code already there.
+> Add a hook in thermal_cooling_device_ops to be called after
+> the cooling device has been initialized and registered
+> but before binding it to a thermal zone.
 >
-> With a dtc generated devicetree, the hash is perfect, with no
-> misses.  That single line change then makes the hash bad for
-> dtc generated devicetrees.
-
-To quantify that, I did some tests with the hash algo and it's about a
-10% collision rate using phandle values of 1-$cache_size. There's
-never more than 2 phandles colliding in a slot. The actual impact
-would be less given 100% thrashing seems unlikely.
-
-> The cache was added to address a problem with a system with a
-> dtc generated devicetree.
-
-The cache was added to address a problem with a system with a large
-number of nodes and phandles (814 phandles in the reported case). dtc
-happens to be used in that case.
-
-> I had not heard of any phandle
-> lookup performance issues on ppc systems.  An imperfect hash
-> for ppc should not make the ppc performance worse (unless
-> every single phandle value hashes to a single bucket).  So
-> the ppc performance is likely better than it was before
-> the hash was added, even without an optimal hash algorithm.
+> In this patch series it is used to hook up a power domain
+> to the device pointer of cooling device.
 >
-> So the change would not be a single line change.  It would
-> be a change to use different hash algorithms for dtc
-> generated device trees versus other device trees.
+> It can be used for any other relevant late initializations
+> of a cooling device as well.
+
+Please describe WHY this hook is needed.
+
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>  drivers/thermal/thermal_core.c | 13 +++++++++++++
+>  include/linux/thermal.h        |  1 +
+>  2 files changed, 14 insertions(+)
 >
-> Another possibility would be to make the cache be dependent
-> upon not CONFIG_PPC.  It might be possible to disable the
-> cache with a minimal code change.
-
-I'd rather not do that.
-
-And yes, as mentioned earlier I don't like the complexity. I didn't
-from the start and I'm  I'm still of the opinion we should have a
-fixed or 1 time sized true cache (i.e. smaller than total # of
-phandles). That would solve the RT memory allocation and locking issue
-too.
-
-For reference, the performance difference between the current
-implementation (assuming fixes haven't regressed it) was ~400ms vs. a
-~340ms improvement with a 64 entry cache (using a mask, not a hash).
-IMO, 340ms improvement was good enough.
-
-Rob
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index 886e8fa..c2ecb73 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -994,6 +994,19 @@ __thermal_cooling_device_register(struct device_node *np,
+>         list_add(&cdev->node, &thermal_cdev_list);
+>         mutex_unlock(&thermal_list_lock);
+>
+> +       /* Call into cdev late initialization if defined */
+> +       if (cdev->ops->late_init) {
+> +               result = cdev->ops->late_init(cdev);
+> +               if (result) {
+> +                       ida_simple_remove(&thermal_cdev_ida, cdev->id);
+> +                       put_device(&cdev->device);
+> +                       mutex_lock(&thermal_list_lock);
+> +                       list_del(&cdev->node);
+> +                       mutex_unlock(&thermal_list_lock);
+> +                       return ERR_PTR(result);
+> +               }
+> +       }
+> +
+>         /* Update binding information for 'this' new cdev */
+>         bind_cdev(cdev);
+>
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index e45659c..e94b3de 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -125,6 +125,7 @@ struct thermal_cooling_device_ops {
+>                            struct thermal_zone_device *, unsigned long, u32 *);
+>         int (*power2state)(struct thermal_cooling_device *,
+>                            struct thermal_zone_device *, u32, unsigned long *);
+> +       int (*late_init)(struct thermal_cooling_device *);
+>  };
+>
+>  struct thermal_cooling_device {
+> --
+> 2.1.4
+>
