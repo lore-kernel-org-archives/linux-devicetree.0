@@ -2,122 +2,126 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8430C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 03:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20CBC43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC903206E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 03:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F111206E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:02:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfLCD5F (ORCPT
+        id S1726763AbfLCECV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 22:57:05 -0500
-Received: from regular1.263xmail.com ([211.150.70.198]:57056 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfLCD5F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 22:57:05 -0500
-Received: from localhost (unknown [192.168.167.69])
-        by regular1.263xmail.com (Postfix) with ESMTP id 099C026F;
-        Tue,  3 Dec 2019 11:56:53 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [192.168.60.65] (unknown [103.29.142.67])
-        by smtp.263.net (postfix) whith ESMTP id P29215T140217218479872S1575345404246238_;
-        Tue, 03 Dec 2019 11:56:52 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <4be8404cf90eb1e5f1c309438c807949>
-X-RL-SENDER: kever.yang@rock-chips.com
-X-SENDER: yk@rock-chips.com
-X-LOGIN-NAME: kever.yang@rock-chips.com
-X-FST-TO: linux-arm-kernel@lists.infradead.org
-X-SENDER-IP: 103.29.142.67
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH] ARM: dts: rockchip: Add missing cpu operating points for
- rk3288-tinker
-To:     Jack Chen <redchenjs@foxmail.com>, heiko@sntech.de
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        robh+dt@kernel.org, Jack Chen <redchenjs@live.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20191202153540.26143-1-redchenjs@foxmail.com>
-From:   Kever Yang <kever.yang@rock-chips.com>
-Message-ID: <e94676c8-b759-6a30-8ef3-285fc0ba10a4@rock-chips.com>
-Date:   Tue, 3 Dec 2019 11:56:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 2 Dec 2019 23:02:21 -0500
+Received: from pbmsgap02.intersil.com ([192.157.179.202]:52988 "EHLO
+        pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfLCECU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 23:02:20 -0500
+X-Greylist: delayed 971 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Dec 2019 23:02:20 EST
+Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
+        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id xB33j4fw008837;
+        Mon, 2 Dec 2019 22:46:17 -0500
+Received: from pbmxdp03.intersil.corp (pbmxdp03.pb.intersil.com [132.158.200.224])
+        by pbmsgap02.intersil.com with ESMTP id 2wkkffj004-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 02 Dec 2019 22:46:17 -0500
+Received: from pbmxdp01.intersil.corp (132.158.200.222) by
+ pbmxdp03.intersil.corp (132.158.200.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.1531.3; Mon, 2 Dec 2019 22:46:15 -0500
+Received: from localhost.localdomain (132.158.202.109) by
+ pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server id
+ 15.1.1531.3 via Frontend Transport; Mon, 2 Dec 2019 22:46:14 -0500
+From:   Chris Brandt <chris.brandt@renesas.com>
+To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH 2/6] ARM: dts: r7s72100: Add SPIBSC clocks
+Date:   Mon, 2 Dec 2019 22:45:15 -0500
+Message-ID: <20191203034519.5640-3-chris.brandt@renesas.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191203034519.5640-1-chris.brandt@renesas.com>
+References: <20191203034519.5640-1-chris.brandt@renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20191202153540.26143-1-redchenjs@foxmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-12-02_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=785
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911200000 definitions=main-1912030031
+X-Proofpoint-Spam-Reason: mlx
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jack,
+The SPIBSC-0 clock is marked as critical because for XIP systems, this
+is the SPI flash controller it will boot from and the kernel will also
+be running from so it cannot be turned off.
 
-On 2019/12/2 下午11:35, Jack Chen wrote:
-> From: Jack Chen <redchenjs@live.com>
->
-> The Tinker Board / S devices use a special chip variant called rk3288-c
-> and use different operating points with a higher max frequency.
->
-> So add the missing operating points for Tinker Board / S devices, also
-> increase the vdd_cpu regulator-max-microvolt to 1400000 uV so that the
-> cpu can operate at 1.8 GHz.
->
-> Signed-off-by: Jack Chen <redchenjs@live.com>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+---
+ arch/arm/boot/dts/r7s72100.dtsi | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-This patch looks good to me,
-
-
-Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
-
-Thanks,
-- Kever
-> ---
->   arch/arm/boot/dts/rk3288-tinker.dtsi | 13 ++++++++++++-
->   1 file changed, 12 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
-> index 81e4e953d4a4..09e83b3d5e7d 100644
-> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
-> @@ -113,6 +113,17 @@
->   	cpu0-supply = <&vdd_cpu>;
->   };
->   
-> +&cpu_opp_table {
-> +	opp-1704000000 {
-> +		opp-hz = /bits/ 64 <1704000000>;
-> +		opp-microvolt = <1350000>;
-> +	};
-> +	opp-1800000000 {
-> +		opp-hz = /bits/ 64 <1800000000>;
-> +		opp-microvolt = <1400000>;
-> +	};
-> +};
-> +
->   &gmac {
->   	assigned-clocks = <&cru SCLK_MAC>;
->   	assigned-clock-parents = <&ext_gmac>;
-> @@ -175,7 +186,7 @@
->   				regulator-always-on;
->   				regulator-boot-on;
->   				regulator-min-microvolt = <750000>;
-> -				regulator-max-microvolt = <1350000>;
-> +				regulator-max-microvolt = <1400000>;
->   				regulator-name = "vdd_arm";
->   				regulator-ramp-delay = <6000>;
->   				regulator-state-mem {
-
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index d03dcd919d6f..a422bbe872bc 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -101,6 +101,26 @@
+ 		#size-cells = <1>;
+ 		ranges;
+ 
++		spibsc0: spi@3fefa000 {
++			compatible = "renesas,r7s72100-spibsc", "renesas,spibsc";
++			reg = <0x3fefa000 0x100>, <0x18000000 0x4000000>;
++			clocks = <&mstp9_clks R7S72100_CLK_SPIBSC0>;
++			power-domains = <&cpg_clocks>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		spibsc1: spi@3fefb000 {
++			compatible = "renesas,r7s72100-spibsc", "renesas,spibsc";
++			reg = <0x3fefb000 0x100>, <0x1c000000 0x4000000>;
++			clocks = <&mstp9_clks R7S72100_CLK_SPIBSC1>;
++			power-domains = <&cpg_clocks>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
+ 		L2: cache-controller@3ffff000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0x3ffff000 0x1000>;
+@@ -467,11 +487,13 @@
+ 			#clock-cells = <1>;
+ 			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+ 			reg = <0xfcfe0438 4>;
+-			clocks = <&p0_clk>, <&p0_clk>, <&p0_clk>, <&p0_clk>;
++			clocks = <&p0_clk>, <&p0_clk>, <&p0_clk>, <&p0_clk>, <&b_clk>, <&b_clk>;
+ 			clock-indices = <
+ 				R7S72100_CLK_I2C0 R7S72100_CLK_I2C1 R7S72100_CLK_I2C2 R7S72100_CLK_I2C3
++				R7S72100_CLK_SPIBSC0 R7S72100_CLK_SPIBSC1
+ 			>;
+-			clock-output-names = "i2c0", "i2c1", "i2c2", "i2c3";
++			clock-output-names = "i2c0", "i2c1", "i2c2", "i2c3", "spibsc0", "spibsc1";
++			clock-critical = <4>; /* spibsc0 */
+ 		};
+ 
+ 		mstp10_clks: mstp10_clks@fcfe043c {
+-- 
+2.23.0
 
