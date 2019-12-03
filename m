@@ -2,121 +2,114 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328CDC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5842C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 098712073B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:35:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ni8lmd5K"
+	by mail.kernel.org (Postfix) with ESMTP id BD631205ED
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575391144;
+	bh=HUL2+wzCcz0N4ZxqNAEEY4Hwqo2ACb+lRXYZkwg4Lm8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hMu6xON4c7piiMMijSMr8jyO9VrC/yoawEcIrt0QEBNHb4xa5Z6j9PuhbGVcdR/8Y
+	 CVt2OLYcFHFmKj3wub7us0NuTaU0VLUVX8U+LQvWj+C0Kl+t+n4m8EmwnN1bL7F2TK
+	 cG9+s/TLPWsQituQZlBvCj0ovk7W1PrOcpwWq6M0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfLCQfn (ORCPT
+        id S1726707AbfLCQjE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:35:43 -0500
-Received: from mail-eopbgr1400117.outbound.protection.outlook.com ([40.107.140.117]:11489
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726105AbfLCQfn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:35:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dJ+jjv5wxr78SOOkKxCOAbRApNa5QmWb2dVI52+RQzVMcW4yBLxroztel0Qz/xwHs7KqXOk6R6Vn/lH4cxo3dUUReuZMNSDsWCS7yftVU7/TG2HcUt2c7yKJmBBYjGjmskKufd7mhbF2sjP694A/0aZ5Lxcvc+6zJKbf/96ppslWNPm8BAn95O+MzP/rso3Mv/5svhdiWZPa3ZKllGm+zA2k1D2SQx6s0uVmS9+N20iy2G1olGOqj53feMnE1Ug9pkQqwAYzTQ/5XWsk/5H9mR11WOIZDbANX2N58JGv1s12kbSthr/oIqjZMFPvnQ2S1n/odR4ZmQPDIesarqTrqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rx1i0f/Bqyc/K8pskulnB02d9PcGtshw0+86LciV2xI=;
- b=KE9Gh2ru0ryYDwBwn2Tu65Ys8pgAIzHBVb9/Mqsidy6UyNR5Wlr3UvZ07Cm1Z2+dspIr9hysYomwG3vDwO91yVgecy+hr9Ncs89J1IHrFeAsIiOzfEzLoX/gFH9kRWTozWZzvmG6IxSPOygjt/pt+XEmXzcdpR8/r27PZubla7pzoaTT2Pjmx0Gysfzq83q15XGy9GWrCWMu0M3sTCPGtlifAoslm8BM0gWCFYR1tb6mdYT0GEif6fzmoOAriK4MX4b9F8ZpZBMB1WDxWkcEqyyCUbsiT0MqjQVdLk7IObp4aaL8qO4omkHQo1FW3gVBCqbuBIYVYPV8UG2f8/XGVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rx1i0f/Bqyc/K8pskulnB02d9PcGtshw0+86LciV2xI=;
- b=ni8lmd5KjCtLOiuXl/+PTDaEdQu0xZFbUAMbhjxFLRoNpCJnEuKzmlChPuIYysR0PMBFkcbDErYsYqhkI1axyt+uVRyvcvj3+LwquegRKbo9Q8JGkBP4ECpflyWcJ21mxWsdl6CtjK3MOi9c68OWLXKJELRyrCsxqgaU+BLVhv0=
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
- TY1PR01MB1658.jpnprd01.prod.outlook.com (52.133.162.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.12; Tue, 3 Dec 2019 16:35:40 +0000
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2516.003; Tue, 3 Dec 2019
- 16:35:40 +0000
-From:   Chris Brandt <Chris.Brandt@renesas.com>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        Tue, 3 Dec 2019 11:39:04 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51634 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfLCQjE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 11:39:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7Kcuy/fn6cSz/SJB4bZWplLo8InyBESqnNDB0HH+CV8=; b=su4IqbsC0yREzmmrtcBG8C4NJ
+        jwHmKeSMVKlOq7kOKOB6G4d6NJpXJO5ZFZIYz5JpTgyikZR9Y9xQIqAK2Hc8hiI8azARrelzowpyb
+        VYvG+AQ0HD9EuV0UESrOcdBACQFiWJC5Fuyz/H10BlOsHdtazC3MxKaVLcsJv4ju1mAAg=;
+Received: from fw-tnat-cam1.arm.com ([217.140.106.49] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1icBCN-0003Hr-DU; Tue, 03 Dec 2019 16:38:51 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id E42A5D003B4; Tue,  3 Dec 2019 16:38:50 +0000 (GMT)
+Date:   Tue, 3 Dec 2019 16:38:50 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "rodrigorsdc@gmail.com" <rodrigorsdc@gmail.com>,
+        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: RE: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
-Thread-Topic: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
-Thread-Index: AQHVqYxRjjQT6EPsk0uhvsHduSJ+e6eoIQoAgAA7ZYCAADdKAIAABRSg
-Date:   Tue, 3 Dec 2019 16:35:40 +0000
-Message-ID: <TY1PR01MB156225E0916668BA4F05F2948A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
- <20191203034519.5640-7-chris.brandt@renesas.com>
- <17e66541-41fb-26ed-c87b-15c59ab57bef@cogentembedded.com>
- <TY1PR01MB156262E8D33A0624457CAE248A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <6c2cb15b-896c-e749-8b33-02da46fbc222@cogentembedded.com>
-In-Reply-To: <6c2cb15b-896c-e749-8b33-02da46fbc222@cogentembedded.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctZWY5YmMyODktMTVlYS0xMWVhLWFhNTEtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XGVmOWJjMjhhLTE1ZWEtMTFlYS1hYTUxLTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iNjE2IiB0PSIxMzIxOTg2NDUzODUzNDI4MDIiIGg9IlBxSituRHNvKzdrQXdSam04MkQ1QUxvNWNNOD0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Brandt@renesas.com; 
-x-originating-ip: [75.60.247.61]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ccb9904e-b360-40d3-298b-08d7780ed576
-x-ms-traffictypediagnostic: TY1PR01MB1658:
-x-microsoft-antispam-prvs: <TY1PR01MB165839652C96C2945C2EF26C8A420@TY1PR01MB1658.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 02408926C4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(39860400002)(396003)(376002)(366004)(199004)(189003)(99286004)(66946007)(86362001)(256004)(229853002)(76176011)(478600001)(54906003)(7696005)(186003)(316002)(52536014)(110136005)(6436002)(446003)(66556008)(64756008)(66446008)(76116006)(11346002)(66476007)(25786009)(7416002)(6246003)(4744005)(102836004)(6116002)(8936002)(81166006)(81156014)(26005)(3846002)(2906002)(8676002)(7736002)(305945005)(33656002)(74316002)(9686003)(55016002)(14454004)(5660300002)(6506007)(71190400001)(71200400001)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1658;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vut12ucPpQ0beKwrTh0mRAaFewua5KOoN9wQBip+XsxX8csXE2S49eOLtw0BR6Rp3w34K5tffa14JpMqRDaKNOa3v0aEUVDniJ8VuQcwF8dF3U+nm5C+dEaKR09ikNmwg0ExqUAjfb/W21WzDjfzoBVY1RT8HP4ZaCZyGuUlRA27Kl3auNeh9ZfRsxdG2FF+RPIqSnMDTOjiLRyzlrzguO2XqAw2ozxSumhkM+o2bENvlenN5Ku/JdMrZ5wTNcurMwIuxyVSHE/AkTWg+K6+5xAOZwqat72kYtQB9TgYyy8l1THYl5DHdYtzrAwIvtUhyFUlyx/PVyEfbPm+7TwtQHVRoE5CTCHGUhR5kVkZnMflMt4ycwMwfLLeEA4POlsva452CgrIJLX3aPE71KyjxpJHlbdc4+pyYwbgCGf0nj1yj+6CCRXvZHjBCc3mgfig
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>
+Subject: Re: [PATCH v4] dt-bindings: iio: accel: add binding documentation
+ for ADIS16240
+Message-ID: <20191203163850.GN1998@sirena.org.uk>
+References: <20191123051927.5016-1-rodrigorsdc@gmail.com>
+ <20191123114119.7b0c3447@archlinux>
+ <a55b9c576eded8c91a985aabbba89180561ab156.camel@analog.com>
+ <20191201114032.1a972dda@archlinux>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ccb9904e-b360-40d3-298b-08d7780ed576
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 16:35:40.0471
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VfnDTXM0ZDarLJYneKu9PSMR+RKIJlVxciYAucGM+WsjTnWdaUd7G0JY9dgypljIufwgyACHSwKKVJNm/Z5IbrrHzbh5Wp5rKF93wjvak+4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1658
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Ll0BBk1HBk/f94B0"
+Content-Disposition: inline
+In-Reply-To: <20191201114032.1a972dda@archlinux>
+X-Cookie: Cleanliness is next to impossible.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVHVlLCBEZWMgMywgMjAxOSAxLCBTZXJnZWkgU2h0eWx5b3Ygd3JvdGU6DQo+ID4gRG8geW91
-IG1lYW4gb3RoZXIgdHlwZXMgb2YgU1BJIGZsYXNoPw0KPiANCj4gICAgTm8sIEkgbWVhbiBmbGFz
-aGVzIGNvbm5lY3RlZCB2aWEgZGlmZmVyZW50IGJ1c2VzLCBsaWtlIEh5cGVyQnVzIHdpdGggdGhl
-DQo+IGdlbjMgU29DIFJQQy1JRi4NCj4gSWYgU1BJJ3MgdGhlIG9ubHkgYnUgc3VwcG9ydGVkLCB0
-aGVyZSdzIG5vIHBvaW50IHNheWluZyAiaWYgU1BJIGlzIHVzZWQiLg0KDQpPSywgSSBzZWUgeW91
-ciBwb2ludC4gSSB3aWxsIHJlbW92ZSB0aGUgJ2lmJy4NCg0KVGhlIGhhcmR3YXJlIGluIFJaL0Ey
-IGFsc28gc3VwcG9ydHMgSHlwZXJGbGFzaCBhbmQgT2N0YUZsYXNoIChzYW1lIGFzIGdlbjMpLCBi
-dXQNClJaL0ExIG9ubHkgc3VwcG9ydHMgU1BJIGZsYXNoLg0KVGhlcmVmb3JlIHRoaXMgZHJpdmVy
-IGRvZXMgbm90IHRvdWNoIFBIWUNOVC5QSFlNRU0gYW5kIGFzc3VtZXMgaXQgaXMgYXQgMC4NCg0K
-Q2hyaXMNCg==
+
+--Ll0BBk1HBk/f94B0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sun, Dec 01, 2019 at 11:40:32AM +0000, Jonathan Cameron wrote:
+
+> +CC Mark as we probably need a more general view point on
+> the question of whether SPI mode should be enforced by binding
+> or in the driver.
+
+Not sure I see the question here, I think I was missing a bit of
+the conversation?  It's perfectly fine for a driver to specify a
+mode, if the hardware always uses some unusual mode then there's
+no sense in forcing every single DT to set the same mode.  On the
+other hand if there's some configuration for the driver that was
+handling some board specific configuration that there's already
+some generic SPI support for setting then it seems odd to have a
+custom driver specific configuration mechanism.
+
+--Ll0BBk1HBk/f94B0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3mj5oACgkQJNaLcl1U
+h9C/sgf/QxvazMVP9zm49jfiS4yHBJmRZeuDac6ZLwJIaSFBBjGWId42DRoQBXU+
+1gZ9GH+tgeT7lGT1w+JXAky7yrNuwA0ERHAOQ1TzT0VF9DKqY+omAYwzBNC1P3A/
+pldGP1I/5VsTcsJLVQemowwMzsNo4i3QTDDr07ENM5HAM4IvGVmCwJEfcCy9/q/8
+fCpigQGTQRkfA12KD+KnN/87eUKwV93DB3mQ/Hgo9HvE3/BWF7Ra8TvfPCt0EKlV
+NZQ4ohTyRRkuu8mwQnwJj5XhEAOa2+ueFH2WLhODhGDz58smKbv3cNASdq+t3Jg7
+skZw6qsqmI38m+TAhRr33Kps+gZ8+g==
+=JKhy
+-----END PGP SIGNATURE-----
+
+--Ll0BBk1HBk/f94B0--
