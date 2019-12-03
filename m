@@ -2,58 +2,57 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36459C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2CCC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7022073C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C1720661
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575384247;
-	bh=Vb5aXB2aX+gF6f+cuazczJG4nAEA8YenYXVOkT2E0yI=;
+	s=default; t=1575384475;
+	bh=qoEpR+iz5sa+F9skDmBKFFgJNfBR3Zy5GUGd1/9m/gQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=iWRw4ipwhqmyUvnXMZ7I38tpuixET5xahmeJyxnUiplT41EqB//KYb6yW6CVJrrcc
-	 T9ZT6E3cFtDCoY8uGYnZhqHsD2eMzjVugR8JqZkWLzE3B71Qv0rmtir1J544SzOlOM
-	 fTsMPCF0xtwQ5Qoz5if0TFVukOhj36vEPanVWnT4=
+	b=LcEGNhsYBgyLnJ+y7qFxoQcJmZ8RpeW0Ws2IncA2C/uizGhKh1UIqywwH8BHGOWIR
+	 V05barB0CMlFUGKyw3Pj8zLsW1I4MpWF5/OgTIpy5MYwjIHOOIZAiHBA7u1SsRrI/+
+	 S6hQATmgARbFsCxQhjBi637MPS4cXhVM+Fy9NlLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726075AbfLCOoG (ORCPT
+        id S1726350AbfLCOry (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:44:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56170 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 09:47:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfLCOoG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 09:44:06 -0500
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        id S1725848AbfLCOry (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 09:47:54 -0500
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBA0520848;
-        Tue,  3 Dec 2019 14:44:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7EB82070A;
+        Tue,  3 Dec 2019 14:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575384244;
-        bh=Vb5aXB2aX+gF6f+cuazczJG4nAEA8YenYXVOkT2E0yI=;
+        s=default; t=1575384472;
+        bh=qoEpR+iz5sa+F9skDmBKFFgJNfBR3Zy5GUGd1/9m/gQ=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=i4SZp7OR5A3xUaJTwT2SQ34ZFbE8HZJAylsqj+shAJpk7PBjc0zmRBE2W2r4mttpF
-         leE4RRIEGsoLvHNT51Cg9ew4RBq0WZGHbQK/o/CrxP++AGOuXC4oknzMoHXJuq8/Ej
-         /yT1BIpgmwEjvZR0ytVgAtBRo5IvSqouapJkMqY4=
-Received: by mail-qt1-f175.google.com with SMTP id s8so768560qte.2;
-        Tue, 03 Dec 2019 06:44:04 -0800 (PST)
-X-Gm-Message-State: APjAAAVKf7zHD2RxqkQCf/T/6nGoOEuU+NwhjOlY5YZzj3qXVdmBJ6Fl
-        vgzOCp/IKxFBqchVhq60G66PY8/r3IMZgpy4zQ==
-X-Google-Smtp-Source: APXvYqwtexQ5zo9ZimQeqDp9BS65TDnucMrw2I96L1AtL1jBY6DHB8RwSL6Mo2Z5PWeDgBxoOukGgcq4zG7e9CQKVtY=
-X-Received: by 2002:ac8:6747:: with SMTP id n7mr5304524qtp.224.1575384243826;
- Tue, 03 Dec 2019 06:44:03 -0800 (PST)
+        b=Yk3+kwHbCw67Q8MsoMwGkrd5CTloi+Cgz+s8OJTz8fohj85dg//2UtKabMoqyzHSX
+         lRhvnd9AvR6nddhBsnDYT7SIiQlgDLIm3XBrklMlrRWwZ4TrrHg7DMh4T8RTSMgsBR
+         S3dUK+58xtFa6ZyeTbtri6zHy807ej67tLHjKfjM=
+Received: by mail-qv1-f53.google.com with SMTP id p2so1582533qvo.10;
+        Tue, 03 Dec 2019 06:47:52 -0800 (PST)
+X-Gm-Message-State: APjAAAVVMbqNxprwq8bxRB66/KcOtXd3wZiKNDQZcnnhcDV2FC+UhJl2
+        /12UYRb9djvrXDEEz4KCeDn2Kzdh2TW/f7l/DA==
+X-Google-Smtp-Source: APXvYqxrMnC94tLm+z/m6J/edWdsA+e9+yTSEaG1G1r+Sc9Beij7suS2pnqDw5WIbatRieWqQvxMMTtm91WsEIvREJ0=
+X-Received: by 2002:ad4:450a:: with SMTP id k10mr5131884qvu.136.1575384471940;
+ Tue, 03 Dec 2019 06:47:51 -0800 (PST)
 MIME-Version: 1.0
 References: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
- <141f068d10b94413a6d0ca73fe07f8e961380e7b.1575369656.git-series.andrew@aj.id.au>
-In-Reply-To: <141f068d10b94413a6d0ca73fe07f8e961380e7b.1575369656.git-series.andrew@aj.id.au>
+In-Reply-To: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 3 Dec 2019 08:43:52 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ8p-zs2F-mXkO_egoBtZ8WymM4O-2AaDJMZYeCFS3sLg@mail.gmail.com>
-Message-ID: <CAL_JsqJ8p-zs2F-mXkO_egoBtZ8WymM4O-2AaDJMZYeCFS3sLg@mail.gmail.com>
-Subject: Re: [PATCH 05/14] ARM: dts: aspeed-g5: Fix aspeed,external-nodes description
+Date:   Tue, 3 Dec 2019 08:47:40 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLMs1MsNXMFTCVdrkNNx5ktg0_Q=zf6xgiTkeys-T+CNg@mail.gmail.com>
+Message-ID: <CAL_JsqLMs1MsNXMFTCVdrkNNx5ktg0_Q=zf6xgiTkeys-T+CNg@mail.gmail.com>
+Subject: Re: [PATCH 00/14] ARM: dts: aspeed: Cleanup dtc warnings
 To:     Andrew Jeffery <andrew@aj.id.au>
 Cc:     linux-aspeed@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -61,97 +60,80 @@ Cc:     linux-aspeed@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>,
         "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Adriana Kobylak <anoo@us.ibm.com>,
-        Brian Yang <yang.brianc.w@inventec.com>,
-        John Wang <wangzqbj@inspur.com>,
-        Ken Chen <chen.kenyy@inventec.com>, Tao Ren <taoren@fb.com>,
-        Xo Wang <xow@google.com>, Yuan Yao <yao.yuan@linaro.org>
+        a.filippov@yadro.com, anoo@us.ibm.com,
+        Ken Chen <chen.kenyy@inventec.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stefan M Schaeckeler <sschaeck@cisco.com>, taoren@fb.com,
+        Patrick Venture <venture@google.com>,
+        John Wang <wangzqbj@inspur.com>, Xo Wang <xow@google.com>,
+        =?UTF-8?B?QnJpYW5DLlcg5qWK5ZiJ5YGJIFRBTyBZYW5n?= 
+        <yang.brianc.w@inventec.com>, yao.yuan@linaro.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 6:03 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+On Tue, Dec 3, 2019 at 6:02 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 >
-> The existing approach lead to an error from the dtbs_check:
+> Hello,
 >
->     pinctrl: aspeed,external-nodes: [[8, 9]] is too short
+> This series is based on an RFC-ish series I sent quite some time ago to which I
+> have only just been able to circle back. The previous discussion can be found
+> here:
+>
+> https://lore.kernel.org/lkml/20190726053959.2003-1-andrew@aj.id.au/
+>
+> I've split, shuffled and rebased the series a little, with at least one extra
+> cleanup for the g6 dtsi. This series is just the devicetree changes, the IPMI
+> KCS changes will be posted separately shortly.
+>
+> Combined with the KCS changes we achieve similar stats to the RFC series,
+> reducing 264 warnings to 6.
+>
+> I've added each patches' tags from last time, but please glance over them
+> again.
+>
+> Cheers,
+>
+> Andrew
+>
+> Andrew Jeffery (14):
+>   dt-bindings: pinctrl: aspeed: Add reg property as a hint
+>   dt-bindings: misc: Document reg for aspeed,p2a-ctrl nodes
+>   ARM: dts: aspeed-g5: Move EDAC node to APB
+>   ARM: dts: aspeed-g5: Use recommended generic node name for SDMC
+>   ARM: dts: aspeed-g5: Fix aspeed,external-nodes description
+>   ARM: dts: vesnin: Add unit address for memory node
+>   ARM: dts: fp5280g2: Cleanup gpio-keys-polled properties
+>   ARM: dts: swift: Cleanup gpio-keys-polled properties
+>   ARM: dts: witherspoon: Cleanup gpio-keys-polled properties
+>   ARM: dts: aspeed: Cleanup lpc-ctrl and snoop regs
+>   ARM: dts: aspeed: Add reg hints to syscon children
+>   ARM: dts: aspeed-g5: Sort LPC child nodes by unit address
+>   ARM: dts: aspeed-g6: Cleanup watchdog unit address
+>   ARM: dts: ibm-power9-dual: Add a unit address for OCC nodes
+>
+>  Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt            |  1 +
+>  Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml |  3 +++
+>  Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml |  3 +++
+>  arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts                  |  4 ----
+>  arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts              |  4 ----
+>  arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts                      | 11 +++++++----
+>  arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts                        |  4 ----
+>  arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts                          |  4 ----
+>  arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts                          |  4 ----
+>  arch/arm/boot/dts/aspeed-bmc-opp-swift.dts                            |  6 ------
+>  arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts                           |  2 +-
+>  arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts                      |  6 ------
+>  arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts                            |  2 --
+>  arch/arm/boot/dts/aspeed-g4.dtsi                                      | 21 ++++++++++++---------
+>  arch/arm/boot/dts/aspeed-g5.dtsi                                      | 49 ++++++++++++++++++++++++++-----------------------
+>  arch/arm/boot/dts/aspeed-g6.dtsi                                      |  2 +-
+>  arch/arm/boot/dts/ibm-power9-dual.dtsi                                |  4 ++--
+>  17 files changed, 56 insertions(+), 74 deletions(-)
 
-This one where we have list of phandles is fixed in dtc. I need to
-update the kernel's copy.
+Other than patch 5, for the series:
 
-> Cc: Adriana Kobylak <anoo@us.ibm.com>
-> Cc: Brian Yang <yang.brianc.w@inventec.com>
-> Cc: Joel Stanley <joel@jms.id.au>
-> Cc: John Wang <wangzqbj@inspur.com>
-> Cc: Ken Chen <chen.kenyy@inventec.com>
-> Cc: Tao Ren <taoren@fb.com>
-> Cc: Xo Wang <xow@google.com>
-> Cc: Yuan Yao <yao.yuan@linaro.org>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> Reviewed-by: Joel Stanley <joel@jms.id.au>
-> ---
->  arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts     |  4 +----
->  arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts |  4 +----
->  arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts         |  9 +++++++--
->  arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts           |  4 +----
->  arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts             |  4 +----
->  arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts             |  4 +----
->  arch/arm/boot/dts/aspeed-bmc-opp-swift.dts               |  4 +----
->  arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts         |  4 +----
->  arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts               |  2 +--
->  arch/arm/boot/dts/aspeed-g5.dtsi                         |  3 +--
->  10 files changed, 8 insertions(+), 34 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts b/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
-> index c2ece0b91885..de9612e49c69 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
-> @@ -211,10 +211,6 @@
->         status = "okay";
->  };
->
-> -&pinctrl {
-> -       aspeed,external-nodes = <&gfx &lhc>;
-> -};
-> -
->  &gpio {
->         pin_gpio_c7 {
->                 gpio-hog;
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts b/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
-> index 2c29ac037d32..022d0744d786 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
-> @@ -200,10 +200,6 @@
->         status = "okay";
->  };
->
-> -&pinctrl {
-> -       aspeed,external-nodes = <&gfx &lhc>;
-> -};
-> -
->  &gpio {
->         pin_gpio_c7 {
->                 gpio-hog;
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts b/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts
-> index c17bb7fce7ff..d69da58476fe 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts
-> @@ -782,8 +782,13 @@
->         memory-region = <&gfx_memory>;
->  };
->
-> -&pinctrl {
-> -       aspeed,external-nodes = <&gfx &lhc>;
-> +&gpio {
-> +       pin_gpio_b7 {
-> +               gpio-hog;
-> +               gpios = <ASPEED_GPIO(B,7) GPIO_ACTIVE_LOW>;
-> +               output-high;
-> +               line-name = "BMC_INIT_OK";
-> +       };
-
-Seems like an unrelated change?
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
