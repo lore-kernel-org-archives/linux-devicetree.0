@@ -2,390 +2,134 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0F2C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9952FC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB55206F0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 656892073B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:12:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eb/s68g8"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kKEnSUAm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725829AbfLCLAD (ORCPT
+        id S1725939AbfLCLMC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 06:00:03 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41786 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfLCLAD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 06:00:03 -0500
-Received: by mail-qk1-f194.google.com with SMTP id g15so2942741qka.8
-        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 03:00:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EWBAJXc6VmZPvFymEbCvvEBg7Re43Tz8rygktUPmfdM=;
-        b=eb/s68g8l1nh3EpPuEraD4O6BvxqhO2mnWdCufdUjvqarr7qmrzIfwfvJRilR5MYjz
-         ombe1QuZB118EeQfnfozS+2PJrIVncbTR2Qr4xUfYu5KYaCRE9uo7rNMYbwIzjY8Dgw2
-         ujCp/cEdGCeNXb+E9Od+amzwP9mQdXwCXStUpmaSNY5X7qTAij+LOUqqLUYdHSTil6xL
-         vIA8ri6fPUIMOvbW2jNfWMKztnoHp1zm/OhYdse6bGg5nniJ2NDYEE/SrtPzTYg/+MtX
-         MXFWrcpz8nCYYIQRhf8JpK9mHOwjV+VT3mKb2Vz9wdSFoeQkJWSiNFnB/piAfZCXD/ka
-         YCfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EWBAJXc6VmZPvFymEbCvvEBg7Re43Tz8rygktUPmfdM=;
-        b=EUpgcsWaX0tPMXKI1rOaw/KbXiiahPyXEi6tI+lbo++nFq3C4PpvVS+s+UwQ7V6kkP
-         B/Rcrx9OzZySVDbzomOkE8R1AySoiwkI7vmQkpOA0rMf1bFlvQddb5dm4rO61CmEfxCK
-         gyabzj/RQY/Xjd6+83VCVCix3OFENg8Z+UtMirgLz1gQyQzom3nBTSuAaZcj7EXrOYIA
-         of497IwIG/RIIRZJcx2PvTJMX9DJsdLjre/z8YISjgCXa1RHo+OSMHSshJbV3xvmTqKW
-         APnh8Os5dEj98zNgJNuqzilWuD6Awo0deNojLzzVqGhav8U6gTe22sCaS3Cd5pZcKynk
-         L+lA==
-X-Gm-Message-State: APjAAAVLXETM7cGXUKMx4blXCIJl3H7hW51Kho88GL+gA/I5Wk9cWPcm
-        SPg+WU4CxoeeDsOnemnw2XTjkSndqj7SiE5mpA6YmQ==
-X-Google-Smtp-Source: APXvYqxR967AtFzYAEY6ZcCvVfk7QLyQym15XW4NBQgMNFk+lFWlDM/XbYy0dFgW3j695MmmUZrbnOCqex+sL9U68fo=
-X-Received: by 2002:a37:62d2:: with SMTP id w201mr4181845qkb.445.1575370802100;
- Tue, 03 Dec 2019 03:00:02 -0800 (PST)
+        Tue, 3 Dec 2019 06:12:02 -0500
+Received: from mail-eopbgr80070.outbound.protection.outlook.com ([40.107.8.70]:18205
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725838AbfLCLMC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 06:12:02 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CL9XRPnXdrBMietaZfDR/nAAg7Y8XKp5sMeDPmq60ryeDoH6nJHHEXMPbDXnO3xkh8NBoEaGVAQGUeCWHt7VczwihhudItJoW1Y+W2pYaJqTegAvJeRuoSnkNeZBrCgutWl+8vE7grfiU+E/s8Z5DzM5W8PY4/LIOPQkjY1CRPnntf0MBGMlUBA0aY/f78DCxV2sgvWU6pz2oXjzpDhC1YqGnRs5l9b/V0egr3zuSWMPSG7TWZwbXcjnbuSrSO/ZbuKBPD+dBKZ9Ez32orgBWMJvYGPY3pmUJbZchqEpxDnjO3XFLJXCiuOt8wZVDKFSgPL/uapVdIDn+aH1BpPlTg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NJ7qwtDvIqSZv9u1Hhvcud5fBSfqRjp+An9nAV2Y3YQ=;
+ b=O140DnWxiC9f3pip+IDGdAP4RxA8KRwpRDN51PSbFwmAM3Q9uFmvIKqP5mBJknUfdUdni8RAipzcH1B4VszBZgan+eja3SBH/fwky56aOYAm6zo4a4OGoI/uLUrmetGtC7XvJ+ABxbYMVi6yIGhWf4HgNjKeNxAbtqxVFJxTvWSISxNIu9mr/6zR7oxa/UjqoI1a+zJjEMJQPd7a8NtvmOzUjmXl1GwD7tfBRu7Rqx7Ps67tqZXEZTS8XiGAzQcr98xy0X6nZFtY4PGOZUm5Q5wpvljWXuYWsLP938vSuxAVsTfYdn+yZ/m+qCCP7/Y+4dyilKjD+Rx5mTTOiufpPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NJ7qwtDvIqSZv9u1Hhvcud5fBSfqRjp+An9nAV2Y3YQ=;
+ b=kKEnSUAmW6qrclsjmAoTjY5GFml8oEjBwFA5+OHIWmspv4QI6uZCjHOtbQFIUCpJgULfxhXG5n/cfKDtrRXt5E+KF4HU65YitbjPttwH2TLIHeS7a7fXt3iZG4M2gyZlS1oMSV6ui0pLnAGCcgsqSFa1DhfGUy16u24/ZY5RVWY=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB3979.eurprd04.prod.outlook.com (52.134.107.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.21; Tue, 3 Dec 2019 11:11:58 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4182:4692:ffbd:43a0]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4182:4692:ffbd:43a0%6]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
+ 11:11:57 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "peda@axentia.se" <peda@axentia.se>, Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [EXT] Re: [v6,1/3] dt-bindings: i2c: support property idle-state
+Thread-Topic: [EXT] Re: [v6,1/3] dt-bindings: i2c: support property idle-state
+Thread-Index: AQHVppaRicWJy7UzukKbBemDeMZ+taenf6oAgADIACA=
+Date:   Tue, 3 Dec 2019 11:11:57 +0000
+Message-ID: <DB7PR04MB4490BD480231CD8EA46C01C08F420@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20191129092222.2706-1-biwen.li@nxp.com>
+ <20191202231544.GA19159@bogus>
+In-Reply-To: <20191202231544.GA19159@bogus>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7fad6be9-bfd0-49e5-835d-08d777e19ce3
+x-ms-traffictypediagnostic: DB7PR04MB3979:|DB7PR04MB3979:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB3979744693FA89B3F7755B018F420@DB7PR04MB3979.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02408926C4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(346002)(136003)(39860400002)(366004)(199004)(189003)(14454004)(81156014)(81166006)(305945005)(7736002)(478600001)(71190400001)(71200400001)(64756008)(66556008)(66446008)(9686003)(52536014)(74316002)(66476007)(66946007)(99286004)(316002)(54906003)(8676002)(86362001)(6916009)(8936002)(229853002)(25786009)(6506007)(55016002)(44832011)(2906002)(256004)(14444005)(186003)(6116002)(3846002)(26005)(102836004)(11346002)(446003)(33656002)(76116006)(6436002)(76176011)(7696005)(4744005)(4326008)(6246003)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB3979;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3wEmjkjuxFCuF35i2M9b/DEEZYRlRzgQ0llSVyitwY1oyqW0+tbvq4/Kr5VEFmcNcfaF2doLFseI3yxvayXjgKhgLmwLZS8Nk6LLhIe0p+bfbPoWmNzqq4PxspLcSprzyJ8Eradf7+m98ntehcBLul8zzJ9kiwZ1tW0vzG/Wd2t7DFFra7sB6tJQPGMoVj6pn7xgXvoYsAaNMDp3fS0s5OJ//VPtCgc8Ue6oZiArdPzNf08bvEL0qvhpmuSsiTDQJPfHWOgJGDjqwWcquZvFpjs5fvN6fBpGeVvL/OppbKQgMwngWylOcCqg52YeB5LV72wnByLE/9bAO8KW9QK3Py3tuiqSCRmHD6aesN+wRFtb4UeWz1qRlk5GagaAUMXYdWx42vlYVgRJ8hxKYcqinmMfTbcLnp5at8eS1PAcNB94Xieb4iRg75i0t4y/DH73
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20191119231912.12768-1-mike.leach@linaro.org> <20191119231912.12768-7-mike.leach@linaro.org>
- <b2f640d3-c320-82d4-7399-172846820589@arm.com>
-In-Reply-To: <b2f640d3-c320-82d4-7399-172846820589@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Tue, 3 Dec 2019 10:59:49 +0000
-Message-ID: <CAJ9a7VgkgoUTL0+_3kj53go_CKtAH3fO5xF9UNDPPz1se1SKSw@mail.gmail.com>
-Subject: Re: [PATCH v5 06/14] coresight: cti: Add device tree support for v8
- arch CTI
-To:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Cc:     Coresight ML <coresight@lists.linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7fad6be9-bfd0-49e5-835d-08d777e19ce3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 11:11:57.8298
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: g+fyrdodse+a31LU+cFIA8N+l/cN+vn7CX2+Y9OvMDRdJwe1D7JEHJl/K1V96zDLxFrVABmIE+iR4riFg5BVVw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB3979
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Suzuki,
-
-On Fri, 29 Nov 2019 at 11:33, Suzuki Kuruppassery Poulose
-<suzuki.poulose@arm.com> wrote:
->
-> On 19/11/2019 23:19, Mike Leach wrote:
-> > The v8 architecture defines the relationship between a PE, its optional ETM
-> > and a CTI. Unlike non-architectural CTIs which are implementation defined,
-> > this has a fixed set of connections which can therefore be represented as a
-> > simple tag in the device tree.
+>=20
+> Caution: EXT Email
+>=20
+> On Fri, 29 Nov 2019 17:22:20 +0800, Biwen Li wrote:
+> > This supports property idle-state
 > >
-> > This patch defines the tags needed to create an entry for this PE/ETM/CTI
-> > relationship, and provides functionality to implement the connection model
-> > in the CTI driver.
-> >
-> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
 > > ---
-> >   .../coresight/coresight-cti-platform.c        | 205 ++++++++++++++++++
-> >   1 file changed, 205 insertions(+)
+> > Change in v6:
+> >       - none
 > >
-> > diff --git a/drivers/hwtracing/coresight/coresight-cti-platform.c b/drivers/hwtracing/coresight/coresight-cti-platform.c
-> > index 665be86c585d..790dd30b85f5 100644
-> > --- a/drivers/hwtracing/coresight/coresight-cti-platform.c
-> > +++ b/drivers/hwtracing/coresight/coresight-cti-platform.c
-> > @@ -3,10 +3,208 @@
-> >    * Copyright (c) 2019, The Linaro Limited. All rights reserved.
-> >    */
+> > Change in v5:
+> >       - none
 > >
-> > +#include <dt-bindings/arm/coresight-cti-dt.h>
-> >   #include <linux/of.h>
+> > Change in v4:
+> >       - none
 > >
-> >   #include "coresight-cti.h"
+> > Change in v3:
+> >       - update subject and description
+> >       - add some information for property idle-state
 > >
-> > +/* Number of CTI signals in the v8 architecturally defined connection */
-> > +#define NR_V8PE_IN_SIGS              2
-> > +#define NR_V8PE_OUT_SIGS     3
-> > +#define NR_V8ETM_INOUT_SIGS  4
-> > +
-> > +/* CTI device tree connection property keywords */
-> > +#define CTI_DT_V8ARCH                "arm,cti-v8-arch"
-> > +#define CTI_DT_CSDEV_ASSOC   "arm,cs-dev-assoc"
-> > +
-> > +/*
-> > + * Find a registered coresight device from a device fwnode.
-> > + * The node info is associated with the AMBA parent, but the
-> > + * csdev keeps a copy so iterate round the coresight bus to
-> > + * find the device.
-> > + */
-> > +static struct coresight_device *
-> > +cti_get_assoc_csdev_by_fwnode(struct fwnode_handle *r_fwnode)
->
-> To be frank this has nothing to do with the CTI and is in a way
-> a good candidate for a CoreSight generic function. We do similar
-> stuff in coresight_fixup_device_conns(). So this could be :
->
-> struct coresight_device *
-> coresight_find_device_by_fwnode(const struct fwnode_handle *fwnode)
->
-> > +{
-> > +     struct device *dev;
-> > +     struct coresight_device *csdev = NULL;
-> > +
-> > +     dev = bus_find_device_by_fwnode(&coresight_bustype, r_fwnode);
-> > +     if (dev) {
-> > +             csdev = to_coresight_device(dev);
-> > +             put_device(dev);
-> > +     }
-> > +     return csdev;
-> > +}
-> > +
->
-> And used in coresight_fixup_conns().
->
-
-OK - I'll look at that.
-
-> > +#ifdef CONFIG_OF
-> > +/*
-> > + * CTI can be bound to a CPU, or a system device.
-> > + * CPU can be declared at the device top level or in a connections node
-> > + * so need to check relative to node not device.
-> > + */
-> > +static int of_cti_get_cpu_at_node(const struct device_node *node)
-> > +{
-> > +     int cpu;
-> > +     struct device_node *dn;
-> > +
-> > +     if (node == NULL)
-> > +             return -1;
-> > +
-> > +     dn = of_parse_phandle(node, "cpu", 0);
-> > +     /* CTI affinity defaults to no cpu */
-> > +     if (!dn)
-> > +             return -1;
-> > +     cpu = of_cpu_node_to_id(dn);
-> > +     of_node_put(dn);
-> > +
-> > +     /* No Affinity  if no cpu nodes are found */
-> > +     return (cpu < 0) ? -1 : cpu;
-> > +}
-> > +
-> > +static const char *of_cti_get_node_name(const struct device_node *node)
-> > +{
-> > +     if (node)
-> > +             return node->full_name;
-> > +     return "unknown";
-> > +}
-> > +#else
-> > +static int of_cti_get_cpu_at_node(const struct device_node *node)
-> > +{
-> > +     return -1;
-> > +}
-> > +
-> > +static const char *of_cti_get_node_name(const struct device_node *node)
-> > +{
-> > +     return "unknown";
-> > +}
-> > +#endif
-> > +
-> > +static int cti_plat_get_cpu_at_node(struct fwnode_handle *fwnode)
-> > +{
->
-> You may simply reuse coresight_get_cpu() below, instead of adding this
-> duplicate set of functions. See below.
->
->
-
-No we can't. coresight_get_cpu gets the 'cpu' entry relative to the
-device node, this gets the 'cpu' relative to the supplied node.
-This is very important for the case where a none v8 architected PE is
-attached to a CTI. This will use the devicetree form:-
-
-cti@<addr> {
-    [ some stuff  ]
-   trig_conns@1 {
-          cpu = <&CPU0>
-          [trigger signal  connection info for this cpu]
-   }
-}
-
-trig_conns is a child node and we must look for 'cpu' relative to it.
-
-
-> > +static int cti_plat_create_v8_etm_connection(struct device *dev,
-> > +                                          struct cti_drvdata *drvdata)
-> > +{
-> > +     int ret = -ENOMEM, i;
-> > +     struct fwnode_handle *root_fwnode, *cs_fwnode;
-> > +     const char *assoc_name = NULL;
-> > +     struct coresight_device *csdev;
-> > +     struct cti_trig_con *tc = NULL;
-> > +
-> > +     root_fwnode = dev_fwnode(dev);
-> > +     if (IS_ERR_OR_NULL(root_fwnode))
-> > +             return -EINVAL;
-> > +
-> > +     /* Can optionally have an etm node - return if not  */
-> > +     cs_fwnode = fwnode_find_reference(root_fwnode, CTI_DT_CSDEV_ASSOC, 0);
-> > +     if (IS_ERR_OR_NULL(cs_fwnode))
-> > +             return 0;
-> > +
-> > +     /* allocate memory */
-> > +     tc = cti_allocate_trig_con(dev, NR_V8ETM_INOUT_SIGS,
-> > +                                NR_V8ETM_INOUT_SIGS);
-> > +     if (!tc)
-> > +             goto create_v8_etm_out;
-> > +
-> > +     /* build connection data */
-> > +     tc->con_in->used_mask = 0xF0; /* sigs <4,5,6,7> */
-> > +     tc->con_out->used_mask = 0xF0; /* sigs <4,5,6,7> */
-> > +
-> > +     /*
-> > +      * The EXTOUT type signals from the ETM are connected to a set of input
-> > +      * triggers on the CTI, the EXTIN being connected to output triggers.
-> > +      */
-> > +     for (i = 0; i < NR_V8ETM_INOUT_SIGS; i++) {
-> > +             tc->con_in->sig_types[i] = ETM_EXTOUT;
-> > +             tc->con_out->sig_types[i] = ETM_EXTIN;
-> > +     }
-> > +
-> > +     /*
-> > +      * We look to see if the ETM coresight device associated with this
-> > +      * handle has been registered with the system - i.e. probed before
-> > +      * this CTI. If so csdev will be non NULL and we can use the device
-> > +      * name and pass the csdev to the connection entry function where
-> > +      * the association will be recorded.
-> > +      * If not, then simply record the name in the connection data, the
-> > +      * probing of the ETM will call into the CTI driver API to update the
-> > +      * association then.
-> > +      */
-> > +     csdev = cti_get_assoc_csdev_by_fwnode(cs_fwnode);
-> > +     if (csdev)
-> > +             assoc_name = dev_name(&csdev->dev);
->
-> Does it make sense to defer the probing until the ETM device  turn up ?
-> Its fine either way.
->
-
-Not really as the ETM is optional but the PE still has a CTI.
-
-> > +     else
-> > +             assoc_name = cti_plat_get_node_name(cs_fwnode);
-> > +     ret = cti_add_connection_entry(dev, drvdata, tc, csdev, assoc_name);
-> > +
-> > +create_v8_etm_out:
-> > +     fwnode_handle_put(cs_fwnode);
-> > +     return ret;
-> > +}
-> > +
-> > +/*
-> > + * Create an architecturally defined v8 connection
-> > + * must have a cpu, can have an ETM.
-> > + */
-> > +static int cti_plat_create_v8_connections(struct device *dev,
-> > +                                       struct cti_drvdata *drvdata)
-> > +{
-> > +     struct cti_device *cti_dev = &drvdata->ctidev;
-> > +     struct cti_trig_con *tc = NULL;
-> > +     int cpuid = 0;
-> > +     char cpu_name_str[16];
-> > +     int ret = -ENOMEM;
-> > +
-> > +     /* Must have a cpu node */
-> > +     cpuid = cti_plat_get_cpu_at_node(dev_fwnode(dev));
->
-> Could we reuse coresight_get_cpu(dev) instead ? I understand that the
-> ACPI bindings have not been defined and it may be slightly different
-> from what we have now for the ETMs (i.e, ETM node as child of the CPU
-> node). But I don't see why we can't force it for the CTIs either.
-> In the worst case, you could still reuse the of_coresgith_get_cpu(dev)
-> instead of writing your own for the OF case.
->
-
-See comments above - in theory here we could use coresight_get_cpu(),
-but for consistency it is better to use that same function throughout
-in case someone decided to "fix" it later.
-I probably need to beef up the comments around
-cti_plat_get_cpu_at_node / of_cti_get_cpu_at_node.
-
->
-> > +     if (cpuid < 0) {
-> > +             dev_warn(dev, "CTI v8 DT binding no cpu\n");
->
-> This may be better off without mentioning the DT. e.g,
->
-> "CTI Arm v8 architected connection: missing CPU\n"
->
-OK
->
-> > +             return -EINVAL;
-> > +     }
-> > +     cti_dev->cpu = cpuid;
-> > +
-> > +     /* Allocate the v8 cpu connection memory */
-> > +     tc = cti_allocate_trig_con(dev, NR_V8PE_IN_SIGS, NR_V8PE_OUT_SIGS);
-> > +     if (!tc)
-> > +             goto of_create_v8_out;
-> > +
-> > +     /* Set the v8 PE CTI connection data */
-> > +     tc->con_in->used_mask = 0x3; /* sigs <0 1> */
-> > +     tc->con_in->sig_types[0] = PE_DBGTRIGGER;
-> > +     tc->con_in->sig_types[1] = PE_PMUIRQ;
-> > +     tc->con_out->used_mask = 0x7; /* sigs <0 1 2 > */
-> > +     tc->con_out->sig_types[0] = PE_EDBGREQ;
-> > +     tc->con_out->sig_types[1] = PE_DBGRESTART;
-> > +     tc->con_out->sig_types[2] = PE_CTIIRQ;
-> > +     scnprintf(cpu_name_str, sizeof(cpu_name_str), "cpu%d", cpuid);
-> > +
-> > +     ret = cti_add_connection_entry(dev, drvdata, tc, NULL, cpu_name_str);
-> > +     if (ret)
-> > +             goto of_create_v8_out;
-> > +
-> > +     /* Create the v8 ETM associated connection */
-> > +     ret = cti_plat_create_v8_etm_connection(dev, drvdata);
-> > +     if (ret)
-> > +             goto of_create_v8_out;
-> > +
-> > +     /* filter pe_edbgreq - PE trigout sig <0> */
-> > +     drvdata->config.trig_out_filter |= 0x1;
-> > +
-> > +of_create_v8_out:
-> > +     return ret;
-> > +}
-> > +
-> >   /* get the hardware configuration & connection data. */
-> >   int cti_plat_get_hw_data(struct device *dev,
-> >                        struct cti_drvdata *drvdata)
-> > @@ -14,6 +212,13 @@ int cti_plat_get_hw_data(struct device *dev,
-> >       int rc = 0;
-> >       struct cti_device *cti_dev = &drvdata->ctidev;
+> > Change in v2:
+> >       - update subject and description
+> >       - add property idle-state
 > >
-> > +     /* check for a v8 architectural CTI device */
-> minor nit: Check for Arm v8 architected CTI connection ?
->
-> > +     if (device_property_read_bool(dev, CTI_DT_V8ARCH)) {
-> > +             rc = cti_plat_create_v8_connections(dev, drvdata);
-> > +             if (rc)
-> > +                     return rc;
-> > +     }
-> > +
-> >       /* if no connections, just add a single default based on max IN-OUT */
-> >       if (cti_dev->nr_trig_con == 0)
-> >               rc = cti_add_default_connection(dev, drvdata);
+> >  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
 > >
->
->
-> Suzuki
-
-Thanks
-
-
-Mike
-
---
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+>=20
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+>=20
+> If a tag was not added on purpose, please state why and what changed.
+Okay, got it, thanks.
