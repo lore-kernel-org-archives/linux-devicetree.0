@@ -2,123 +2,82 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D902EC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3019EC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFCB82080F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0051F20833
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:14:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575400480;
+	bh=k+VwXob+rBuIqkK49laeUvkmESDlVa+WF1BieYyDSYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iVPWBr+wZgsvZNkTR9kMX72IOPkHzT89gLpkPMoNgi20tjpYluAmrJCt/yvD8cIiI
+	 jT5okJheJASOhCz4jhol/7/tZk4zrSpcohtJqbhNlpZExr39lVJ0JPofcfrsxQfO+i
+	 0JVzb+F4ZrY9S3qZVjZN5g554TffhTWforsLWXtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfLCTNF (ORCPT
+        id S1727406AbfLCTOj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 14:13:05 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:32962 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfLCTNF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 14:13:05 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v140so4270351oie.0;
-        Tue, 03 Dec 2019 11:13:04 -0800 (PST)
+        Tue, 3 Dec 2019 14:14:39 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40515 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfLCTOj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 14:14:39 -0500
+Received: by mail-oi1-f193.google.com with SMTP id 6so4386787oix.7;
+        Tue, 03 Dec 2019 11:14:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F26wCNW27bN+CS8oKU3vjyLCmYsJ9NtipxSsUBLuM1A=;
-        b=cesUQCuFtKKWzinejUsq/+5cNOjODdg7HvdLgtL2EsuUhWljgHaBjiwZ+k+n7yTArb
-         BGZAt+VZlHnvRVigx6/ISIkU5TjgnF/ffAH0LlsFz51nIpPisWdizBPk1LKehFDDPEW/
-         aSsBDXs9y52nm1fx9Em/23WAcWCEMlABjrhGKj0JMsGq51td1X21lukDJY6bTSYwyJc2
-         LammTAcvR4kWDi3kNEMWUWSS7LDWQmKk2qBTaZah5Fl2pVVxE2rMUp6or8h2J5y2Pifl
-         d+9CEXOUr85EvUI94tOjhhjrfmT1Mwt4mtjAsvLmBUlABdl6uL+9gzc7YqlUL8lzblVG
-         44GQ==
-X-Gm-Message-State: APjAAAUGOE/9y3cb2BkdT3lmPYFphdwdkg+oIDiIA8XT3Uu+4vVdtFFv
-        hLCyM5znAzW/4SDE4iEo4Z/7SfGKpfGM22AYCnA=
-X-Google-Smtp-Source: APXvYqxQD7kk+gZxKNIBAfXeUmnZjMliGYUDOV75sXqpyapXI5e2P3dxB2rBWDuBAN0JRcIhgU3Qpsa5WdaWNwK3i0E=
-X-Received: by 2002:aca:3a86:: with SMTP id h128mr4803048oia.131.1575400384046;
- Tue, 03 Dec 2019 11:13:04 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gRLlFC9D1u1hwI1d/EbEjZ94RjJCTsPp84ZAxR2T34c=;
+        b=ei6mwQVlV7G7iyCTc0pFj5HarMuHAiwmogb1A/NPsUU1ZJXNY8mT4osiFc3vqy49zQ
+         YNqF78SmPPfrCW70EXbkN8BxA7ZezbS4iAdDx+Z4FEh6p15xkSfCqayE22myO4nIyUWZ
+         18pok4LaYWazldY4u3356hMzOprFrMVY/1UDTavR+/Sfa0b98hOkanWa6E+Zaq36y4cH
+         cWQ4nAXjYSLJEB+QGVKnjWNMZ9PlQ6mHoZHymKjzSk2sc5GIfY7LKFHuslWVCBBungU8
+         X6F3bgv8OzBtsGcUu432gqjED13dqwVp94z3M3Q8/7zhMi88b1qq69vLbH02/A8NK1CL
+         Zn+g==
+X-Gm-Message-State: APjAAAUdwwRMMiRKRSJXqRoM7W8HkhdAKh59TQiZHv2IsuvbVn/n0wWf
+        vDWKJkX/MWgvfHxz5S7njA==
+X-Google-Smtp-Source: APXvYqwfW6cNdzLLtGnRM6Eeh4eI3J0OXPCG+lnr/0NSOIKOUhB/2E6cGltU8AStJzERHBVHvLKFWQ==
+X-Received: by 2002:aca:b2c5:: with SMTP id b188mr1686191oif.55.1575400477922;
+        Tue, 03 Dec 2019 11:14:37 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w72sm1413333oie.49.2019.12.03.11.14.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 11:14:37 -0800 (PST)
+Date:   Tue, 3 Dec 2019 13:14:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     iommu@lists.linux-foundation.org, robin.murphy@arm.com,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v2 1/8] dt-bindings: arm-smmu: Add Adreno GPU variant
+Message-ID: <20191203191436.GA11606@bogus>
+References: <1574465484-7115-1-git-send-email-jcrouse@codeaurora.org>
+ <0101016e95751ea5-da4da251-ddba-4017-9258-b2cfd4e06f7f-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
- <20191203034519.5640-3-chris.brandt@renesas.com> <CAMuHMdXUVdG_PMQEpz=QWLCaabfK8Mc41zFiymXJ4Rx_C2gzdg@mail.gmail.com>
- <TY1PR01MB1562F44E4FB80788922CE9BE8A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY1PR01MB1562F44E4FB80788922CE9BE8A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 3 Dec 2019 20:12:52 +0100
-Message-ID: <CAMuHMdX_sD+UHnOF+bdbT99zfK1V92+1kVzGnb9JXJyBd-Y5-w@mail.gmail.com>
-Subject: Re: [PATCH 2/6] ARM: dts: r7s72100: Add SPIBSC clocks
-To:     Chris Brandt <Chris.Brandt@renesas.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Lee Jones <lee.jones@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0101016e95751ea5-da4da251-ddba-4017-9258-b2cfd4e06f7f-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Chris,
+On Fri, Nov 22, 2019 at 11:31:51PM +0000, Jordan Crouse wrote:
+> Add a compatible string to identify SMMUs that are attached
+> to Adreno GPU devices that wish to support split pagetables.
+> 
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+> 
+>  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-CC Lee (for clock-critical)
-
-On Tue, Dec 3, 2019 at 7:58 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Tue, Dec 3, 2019, Geert Uytterhoeven wrote:
-> > > +                       reg = <0x3fefa000 0x100>, <0x18000000
-> > > + 0x4000000>;
-> >
-> > The second region conflicts with the XIP flash@18000000 in
-> > arch/arm/boot/dts/r7s72100-gr-peach.dts.
-> > Yes, I know it is the same device ;-)
->
-> Is that just an FYI?? Or do you have some suggestion??
-
-Can the flash subnode be compatible with "mtd-rom", even if the parent node
-is kept disabled?
-
-> > > +                       clock-critical = <4>; /* spibsc0 */
-> >
-> > Iff we go this clock-critical route, I think this should be specified in the
-> > board-specific .dts instead of in the SoC-specific .dtsi.
->
-> OK, that's fine. It makes more sense to be in the .dts because it's a board
-> design decision. I will remove it from the patch.
->
-> The one 'tricky' thing is that the <4> is the index into the number of clocks.
->
-> So in the Renesas BSP where it includes the VDC5 LCD controllers,
->
-> clock-output-names = "i2c0", "i2c1", "i2c2", "i2c3", "vdc50", "vdc51", "spibsc0", "spibsc1";
->
-> the <4> needs to become a <6>.
-
-Unless you pass "clkidx" instead of "i" to of_clk_detect_critical() in [1],
-and use "clock-critical = <R7S72100_CLK_SPIBSC0>" in DT?
-
-Unfortunately the exact semantics of clock-critical were never documented.
-Lee?
-
-Thanks!
-
-[1] "[PATCH 1/6] clk: renesas: mstp: Add critical clock from device
-tree support"
-    https://lore.kernel.org/linux-renesas-soc/20191203034519.5640-2-chris.brandt@renesas.com/
-
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Rob Herring <robh@kernel.org>
