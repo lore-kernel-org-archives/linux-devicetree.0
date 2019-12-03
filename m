@@ -2,155 +2,143 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0942C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47320C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A311520684
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575373872;
-	bh=zrwFlvXIoyYXgEDfGx6efgE7yp3Q9uDLj44V2/s7VgM=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=Nv4m9HbEkBOA0jMTYUJCxPMPLBkqZ0TrAb9Fke08gOTWCbpaNKBKgEC9wMndyRs0A
-	 zKLnQyJSqDplhP1o+SL2b/DuX9j/LQ/EpQt+nM1KmQUB2th8zwht3UY/aqyp/uLMqH
-	 QDUT+JYW/hqbCCy0uxJ7IY4+2w44Ja1EsLze6JBo=
+	by mail.kernel.org (Postfix) with ESMTP id 179B7206DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:02:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="mvRcSmjJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BKeODkHb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbfLCLvM (ORCPT
+        id S1725997AbfLCMCr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 06:51:12 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:39275 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725907AbfLCLvM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 06:51:12 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ic6hv-0004Si-8u; Tue, 03 Dec 2019 12:51:07 +0100
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH] PCI: layerscape: Add the SRIOV support in host side
-X-PHP-Originating-Script: 0:main.inc
+        Tue, 3 Dec 2019 07:02:47 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:45143 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725939AbfLCMCr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 07:02:47 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id DD154D04;
+        Tue,  3 Dec 2019 07:02:45 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 03 Dec 2019 07:02:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=ztq7FLHlrns5zu/XcOJ2JlDLPY
+        qZhl4Q876ZoCQ+iMU=; b=mvRcSmjJQh0CRMvAcEkW9kerL29X7umeGBKg/+gbPu
+        2LoTDXE79vt69JFJbwznqTXvEc7fsEWMmtQAS4KV1ME094Z+gQoBy4oBJ76Qdd7l
+        RpzIrgWbLI8ogu6UqBDkAoOqt55DkxOvI2blo8WIWT20GfEsWJ9UopeMd6WaOhG2
+        bpbRoiDd2Fay8bbe7wEztgU6z5JIYOC6KRg+7IkfXxN4mfW/ku0LjgtrwfI/KqfK
+        Xz4w2IDJa+PPVv4DUFycF7+2HXRR90+/HvRf0xPR1PasF9ypO6ZV8Sf4skCCGwqq
+        J2kjnNTyYwjAuO0MMtUKSbtQ9oB0n7aRuN+2+uR1pkDA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=ztq7FLHlrns5zu/Xc
+        OJ2JlDLPYqZhl4Q876ZoCQ+iMU=; b=BKeODkHb4W0FDe04Sxq6J57Op9FbaHVGp
+        3FAQX6K5SH+qqo7dNp/xenvGryg8yB7isLaaPXJczEET9KJejDdGyy8qBWCCZNQU
+        0jXEBswKRW2Ta41C6Y48NiwyTuULRbfTkOJf0Su/F4/vM1e0eNd8iK+y2GtAhtag
+        Jj+grfGA1KJBvUVtXmFEi0PoR+TnA9u8uq9gsaO7w4PI6098oLwpnzkYhPyW00jk
+        4WBEP3U55pEbo+6UbQy84nlY+7MleTuSgsK4tTJjGY2PdYTmYsuLGmyOhWc+uxLN
+        /Uh2JioCG1Dv5puImHWf+sgNRsezI1ayvQMoaPWyYaeLdnBgkXmdw==
+X-ME-Sender: <xms:407mXWaFPcTpZik5e3BkQWVrt8snnAJJrRNX-g_hggdEG8OZV3dxeQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejjedgfeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
+    ihgurdgruheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddukedrvd
+    duuddrledvrddufeenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdr
+    ihgurdgruhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:407mXaXuS35u7D7UWegYnTOzGj9sNKYYUmSsryisssIRuo7Ufnrs1g>
+    <xmx:407mXRTghfOJ0UqP0hKAv_PzLbm2Dz4kcgpn6weMCcdgfoW9TTdqeA>
+    <xmx:407mXXEqRI_xwvbFpt3JiRbJqP_dtAab5HKNdXWH_zcWMwy4CQfMkw>
+    <xmx:5U7mXe_N_BAFOfuorW227HAYtguJjMdZltqXMAzzltXw98SN-bgYbw>
+Received: from mistburn.lan (unknown [118.211.92.13])
+        by mail.messagingengine.com (Postfix) with ESMTPA id BF15730600AA;
+        Tue,  3 Dec 2019 07:02:36 -0500 (EST)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, a.filippov@yadro.com,
+        anoo@us.ibm.com, chen.kenyy@inventec.com,
+        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
+        sschaeck@cisco.com, taoren@fb.com, venture@google.com,
+        wangzqbj@inspur.com, xow@google.com, yang.brianc.w@inventec.com,
+        yao.yuan@linaro.org
+Subject: [PATCH 00/14] ARM: dts: aspeed: Cleanup dtc warnings
+Date:   Tue,  3 Dec 2019 22:34:01 +1030
+Message-Id: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
 Content-Transfer-Encoding: 8bit
-Date:   Tue, 03 Dec 2019 11:51:07 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <robh+dt@kernel.org>, <frowand.list@gmail.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
-        <bhelgaas@google.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-In-Reply-To: <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
- <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
- <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
-Message-ID: <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: xiaowei.bao@nxp.com, robh+dt@kernel.org, frowand.list@gmail.com, minghuan.lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, andrew.murray@arm.com, bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhiqiang.hou@nxp.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-12-03 01:42, Xiaowei Bao wrote:
->> -----Original Message-----
->> From: Marc Zyngier <maz@misterjones.org>
->> Sent: 2019年12月2日 20:48
->> To: Xiaowei Bao <xiaowei.bao@nxp.com>
->> Cc: robh+dt@kernel.org; frowand.list@gmail.com; M.h. Lian
->> <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy Zang
->> <roy.zang@nxp.com>; lorenzo.pieralisi@arm.com; 
->> andrew.murray@arm.com;
->> bhelgaas@google.com; devicetree@vger.kernel.org;
->> linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org;
->> linux-arm-kernel@lists.infradead.org; Z.q. Hou 
->> <zhiqiang.hou@nxp.com>
->> Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host 
->> side
->>
->> On 2019-12-02 10:45, Xiaowei Bao wrote:
->> > GIC get the map relations of devid and stream id from the msi-map
->> > property of DTS, our platform add this property in u-boot base on 
->> the
->> > PCIe device in the bus, but if enable the vf device in kernel, the 
->> vf
->> > device msi-map will not set, so the vf device can't work, this 
->> patch
->> > purpose is that manage the stream id and device id map relations
->> > dynamically in kernel, and make the new PCIe device work in 
->> kernel.
->> >
->> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
->> > ---
->> >  drivers/of/irq.c                            |  9 +++
->> >  drivers/pci/controller/dwc/pci-layerscape.c | 94
->> > +++++++++++++++++++++++++++++
->> >  drivers/pci/probe.c                         |  6 ++
->> >  drivers/pci/remove.c                        |  6 ++
->> >  4 files changed, 115 insertions(+)
->> >
->> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c index
->> > a296eaf..791e609 100644
->> > --- a/drivers/of/irq.c
->> > +++ b/drivers/of/irq.c
->> > @@ -576,6 +576,11 @@ void __init of_irq_init(const struct 
->> of_device_id
->> > *matches)
->> >  	}
->> >  }
->> >
->> > +u32 __weak ls_pcie_streamid_fix(struct device *dev, u32 rid) {
->> > +	return rid;
->> > +}
->> > +
->> >  static u32 __of_msi_map_rid(struct device *dev, struct 
->> device_node
->> > **np,
->> >  			    u32 rid_in)
->> >  {
->> > @@ -590,6 +595,10 @@ static u32 __of_msi_map_rid(struct device 
->> *dev,
->> > struct device_node **np,
->> >  		if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
->> >  				"msi-map-mask", np, &rid_out))
->> >  			break;
->> > +
->> > +	if (rid_out == rid_in)
->> > +		rid_out = ls_pcie_streamid_fix(parent_dev, rid_in);
->>
->> Over my dead body. Get your firmware to properly program the LUT so 
->> that it
->> presents the ITS with a reasonable topology. There is absolutely no 
->> way this
->> kind of change makes it into the kernel.
->
-> Sorry for this, I know it is not reasonable, but I have no other way,
-> as I know, ARM
-> get the mapping of stream ID to request ID from the msi-map property
-> of DTS, if
-> add a new device which need the stream ID and try to get it from the
-> msi-map of DTS,
-> it will failed and not work, yes? So could you give me a better
-> advice to fix this issue,
-> I would really appreciate any comments or suggestions, thanks a lot.
+Hello,
 
-Why can't firmware expose an msi-map/msi-map-mask that has a large
-enough range to ensure mapping of VFs? What are the limitations of
-the LUT that would prevent this from being configured before the
-kernel boots?
+This series is based on an RFC-ish series I sent quite some time ago to which I
+have only just been able to circle back. The previous discussion can be found
+here:
 
-Thanks,
+https://lore.kernel.org/lkml/20190726053959.2003-1-andrew@aj.id.au/
 
-         M.
+I've split, shuffled and rebased the series a little, with at least one extra
+cleanup for the g6 dtsi. This series is just the devicetree changes, the IPMI
+KCS changes will be posted separately shortly.
+
+Combined with the KCS changes we achieve similar stats to the RFC series,
+reducing 264 warnings to 6.
+
+I've added each patches' tags from last time, but please glance over them
+again.
+
+Cheers,
+
+Andrew
+
+Andrew Jeffery (14):
+  dt-bindings: pinctrl: aspeed: Add reg property as a hint
+  dt-bindings: misc: Document reg for aspeed,p2a-ctrl nodes
+  ARM: dts: aspeed-g5: Move EDAC node to APB
+  ARM: dts: aspeed-g5: Use recommended generic node name for SDMC
+  ARM: dts: aspeed-g5: Fix aspeed,external-nodes description
+  ARM: dts: vesnin: Add unit address for memory node
+  ARM: dts: fp5280g2: Cleanup gpio-keys-polled properties
+  ARM: dts: swift: Cleanup gpio-keys-polled properties
+  ARM: dts: witherspoon: Cleanup gpio-keys-polled properties
+  ARM: dts: aspeed: Cleanup lpc-ctrl and snoop regs
+  ARM: dts: aspeed: Add reg hints to syscon children
+  ARM: dts: aspeed-g5: Sort LPC child nodes by unit address
+  ARM: dts: aspeed-g6: Cleanup watchdog unit address
+  ARM: dts: ibm-power9-dual: Add a unit address for OCC nodes
+
+ Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt            |  1 +
+ Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml |  3 +++
+ Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml |  3 +++
+ arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts                  |  4 ----
+ arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts              |  4 ----
+ arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts                      | 11 +++++++----
+ arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts                        |  4 ----
+ arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts                          |  4 ----
+ arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts                          |  4 ----
+ arch/arm/boot/dts/aspeed-bmc-opp-swift.dts                            |  6 ------
+ arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts                           |  2 +-
+ arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts                      |  6 ------
+ arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts                            |  2 --
+ arch/arm/boot/dts/aspeed-g4.dtsi                                      | 21 ++++++++++++---------
+ arch/arm/boot/dts/aspeed-g5.dtsi                                      | 49 ++++++++++++++++++++++++++-----------------------
+ arch/arm/boot/dts/aspeed-g6.dtsi                                      |  2 +-
+ arch/arm/boot/dts/ibm-power9-dual.dtsi                                |  4 ++--
+ 17 files changed, 56 insertions(+), 74 deletions(-)
+
+base-commit: 3eca037f2dfce07a31da0a837ac35d6d846614b0
 -- 
-Jazz is not dead. It just smells funny...
+git-series 0.9.1
