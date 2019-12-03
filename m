@@ -2,122 +2,158 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDF9C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05D9C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 827AE20659
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A6620659
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575383538;
-	bh=teoj+pkX+uo820ZTvfymdlQ0pgxY7JClf8CSBm/VZYk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=REMUVsZFnDGok3nFzqkmpA99L4Eb+KqJ9KWsm7qAqpaA6A489/PVUcH9bRR10ET7u
-	 XsXzUtNkLMeaXlFw0spRxcQmi6juhnQyqkmLQ89WYflQFGS0DsqLPoEwcdSwILyl1b
-	 EyjJHcHLafE5mix0sj2cj9ElV6pOxid5KYqCAB4U=
+	s=default; t=1575383653;
+	bh=OFnrcsoM6jb2LYxF1LQQVYOCGLEg/Zcy/bnMdtx5wts=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Rm3p76BMfGwSL5B/2wzw56TC2M5fapPeY6ifEwxx+QHxdfKEZOAXF+SEA6TQFhe2h
+	 PimAIKVVJ8o2gPqoyUflKD5wzaHgCk/XpAEtlOlLq8PuazwdlMioTpUVEr1TuUmsLw
+	 plvqFxgE4ONDwbJSQXv5Lc7Ke7SOOQWc5eNgfmFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfLCOcR (ORCPT
+        id S1726319AbfLCOeN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:32:17 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36220 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfLCOcR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:32:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lHp+myS6pf4Jfc7A7zQQjP81X0wvMHMx0CwGmN1oWK0=; b=egqYvhOEsxCp5bOxO2pnJLKuL
-        ftuVLFeE1d5MsyaRITrv3FZ+fkI3ZWV0QwMMVogTy6OGYULANmJ0rt3JYeBXul2zFPwlwwTAPxwKv
-        FGu0H5HTmkIPyfOqt4xRQqFIB8MStA3U3DlyKGEhp1SKJUP+8NODfTKF7N+xlRQ7kuN90=;
-Received: from fw-tnat-cam1.arm.com ([217.140.106.49] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1ic9Df-0002kh-GP; Tue, 03 Dec 2019 14:32:03 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 36491D002FA; Tue,  3 Dec 2019 14:32:03 +0000 (GMT)
-Date:   Tue, 3 Dec 2019 14:32:03 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     kernel@puri.sm, Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sound: codecs: gtm601: add Broadmobi bm818 sound
- profile
-Message-ID: <20191203143203.GK1998@sirena.org.uk>
-Mail-Followup-To: "Angus Ainslie (Purism)" <angus@akkea.ca>, kernel@puri.sm,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191202174831.13638-1-angus@akkea.ca>
- <20191202174831.13638-2-angus@akkea.ca>
+        Tue, 3 Dec 2019 09:34:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfLCOeN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 09:34:13 -0500
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D42132070A
+        for <devicetree@vger.kernel.org>; Tue,  3 Dec 2019 14:34:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575383652;
+        bh=OFnrcsoM6jb2LYxF1LQQVYOCGLEg/Zcy/bnMdtx5wts=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=C2EPNV7xvtzIfY0ZEyPja749MwjkU5yRWhPdy00YrCIkzebZmUseJSyvILzxmn+HO
+         14tiUhz0NmptoYLh5P+Tw0z+63F7XK56hdtIkFCh4teNO39CoU4+zmhEpRKAq/Uy7B
+         XnlrrjZ2ne/gx5wSc/4kETRAZAyQNCdVfMuM4M5A=
+Received: by mail-qt1-f181.google.com with SMTP id 38so3882693qtb.13
+        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 06:34:11 -0800 (PST)
+X-Gm-Message-State: APjAAAU40Xy539yw/hHGA+3NHTW2kopVHM3os4GLp8Uq8NU8+bScPKax
+        8rUWhjOLssbhrTpbfn147pncdj1907yLgrYwaQ==
+X-Google-Smtp-Source: APXvYqzqpQedMbavclQCDpAKdZV2g9SzpRmf+5I1HXmhmWOyCfe5GUdl8a/3qynrHsWa5JoqUOGqZFN/dv32V+OmMuI=
+X-Received: by 2002:ac8:341d:: with SMTP id u29mr5403725qtb.300.1575383651020;
+ Tue, 03 Dec 2019 06:34:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YZQs1kEQY307C4ut"
-Content-Disposition: inline
-In-Reply-To: <20191202174831.13638-2-angus@akkea.ca>
-X-Cookie: Cleanliness is next to impossible.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191126114319.2755-1-ardb@kernel.org> <20191126114319.2755-7-ardb@kernel.org>
+In-Reply-To: <20191126114319.2755-7-ardb@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 3 Dec 2019 08:33:58 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+jQcaqSEOhDnvJpyJSqx-em49Gr2cqM9dm2apj57rtUA@mail.gmail.com>
+Message-ID: <CAL_Jsq+jQcaqSEOhDnvJpyJSqx-em49Gr2cqM9dm2apj57rtUA@mail.gmail.com>
+Subject: Re: [PATCH v2 6/8] dt: amd-seattle: add description of the SATA/CCP SMMUs
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Brijesh Singh <brijeshkumar.singh@amd.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---YZQs1kEQY307C4ut
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Dec 02, 2019 at 10:48:30AM -0700, Angus Ainslie (Purism) wrote:
-
-> +	if (np && of_device_is_compatible(np, "broadmobi,bm818"))
-> +		dai_driver = &bm818_dai;
-
-Rather than having a tree of these it'd be better if...
-
->  #if defined(CONFIG_OF)
->  static const struct of_device_id gtm601_codec_of_match[] = {
->  	{ .compatible = "option,gtm601", },
-> +	{ .compatible = "broadmobi,bm818", },
->  	{},
+On Tue, Nov 26, 2019 at 5:43 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> Add descriptions of the SMMUs that cover the SATA controller(s)
+> on the AMD Seattle SOC. The CCP crypto accelerator shares its
+> SMMU with the second SATA controller, which is only enabled on
+> B1 silicon.
+>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dts |  4 ++++
+>  arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dts |  5 +++++
+>  arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi     | 22 ++++++++++++++++++++
+>  3 files changed, 31 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dts b/arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dts
+> index 8e341be9a399..be8db5758c94 100644
+> --- a/arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dts
+> +++ b/arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dts
+> @@ -60,6 +60,10 @@
+>         status = "ok";
 >  };
+>
+> +&sata0 {
+> +       iommus = <&sata0_smmu 0x0a>, <&sata0_smmu 0x0b>, <&sata0_smmu 0x1a>;
+> +};
+> +
+>  &spi0 {
+>         status = "ok";
+>  };
+> diff --git a/arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dts b/arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dts
+> index 92cef05c6b74..1661544eb0af 100644
+> --- a/arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dts
+> +++ b/arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dts
+> @@ -60,7 +60,12 @@
+>         status = "ok";
+>  };
+>
+> +&sata0 {
+> +       iommus = <&sata0_smmu 0x0e>, <&sata0_smmu 0x0f>, <&sata0_smmu 0x1e>;
+> +};
+> +
+>  &sata1 {
+> +       iommus = <&sata1_smmu 0x0e>, <&sata1_smmu 0x0f>, <&sata1_smmu 0x1e>;
+>         status = "ok";
+>  };
+>
+> diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+> index 7484ea695262..eac241c98ff0 100644
+> --- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+> +++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+> @@ -83,6 +83,24 @@
+>                         dma-coherent;
+>                 };
+>
+> +               sata0_smmu: smmu@e0200000 {
 
-...this used the data you can provide along with the of_match as
-the dai_driver so the probe function doesn't have to know about
-the individual variants.
+Nit: iommu@...
 
---YZQs1kEQY307C4ut
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3mceIACgkQJNaLcl1U
-h9D6eQf/T/YMXLxjUSaHDNc3AzKq7rmVZaiaaG+DgfkilPDOorbOBrcpI9of4xTG
-59U9JeM9TLU3DNyTPO1aTK37vDTDq8y3wmkw5H2IRqldu46zxbSPqwzkeHdwBdNZ
-XPWhtvtg1pcAfPR3hqSvKQOk5+rKWDQxXthiVH5sukuB+p4kavijAnJWamv+D7QU
-LrSnZB9IQP17L2CfxVSKXouPphsnvD7sd8f/H+iElMtzDvYBB4iTFcnIBhpa9v6K
-rbR2dFgEc+egWZCVY+OVeFh/NGRDTu9CgcLz+D7rkivTNXjcbmoUCQ9ijEEF/sRk
-fdjT/0UJKPykUJvMEDbsmafVaq4J5g==
-=XMui
------END PGP SIGNATURE-----
-
---YZQs1kEQY307C4ut--
+> +                       compatible = "arm,mmu-401";
+> +                       reg = <0 0xe0200000 0 0x10000>;
+> +                       #global-interrupts = <1>;
+> +                       interrupts = <0 332 4>, <0 332 4>;
+> +                       #iommu-cells = <1>;
+> +                       dma-coherent;
+> +               };
+> +
+> +               sata1_smmu: smmu@e0c00000 {
+> +                       compatible = "arm,mmu-401";
+> +                       reg = <0 0xe0c00000 0 0x10000>;
+> +                       #global-interrupts = <1>;
+> +                       interrupts = <0 331 4>, <0 331 4>;
+> +                       #iommu-cells = <1>;
+> +                       dma-coherent;
+> +               };
+> +
+>                 i2c0: i2c@e1000000 {
+>                         status = "disabled";
+>                         compatible = "snps,designware-i2c";
+> @@ -201,6 +219,10 @@
+>                         reg = <0 0xe0100000 0 0x10000>;
+>                         interrupts = <0 3 4>;
+>                         dma-coherent;
+> +                       iommus = <&sata1_smmu 0x00>,
+> +                                <&sata1_smmu 0x02>,
+> +                                <&sata1_smmu 0x40>,
+> +                                <&sata1_smmu 0x42>;
+>                 };
+>
+>                 pcie0: pcie@f0000000 {
+> --
+> 2.17.1
+>
