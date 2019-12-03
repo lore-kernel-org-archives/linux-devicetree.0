@@ -2,145 +2,303 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2C1C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 08:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF281C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 08:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE8A4206DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 08:26:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FgzhNmvW"
+	by mail.kernel.org (Postfix) with ESMTP id C2BA120640
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 08:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725774AbfLCI0E (ORCPT
+        id S1726008AbfLCIqL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 03:26:04 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:51070 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725773AbfLCI0E (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 03:26:04 -0500
-X-UUID: 0eacfa51b8664429b9008ecda088dff9-20191203
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Q2EnrRAMwmQvs3z2Y9NW1LlhZHGyGeQTCplIkYb1FCo=;
-        b=FgzhNmvWLLUteopNz/qfaJxCw2Tdnt4zKRMCeAhIUKFGHHoaWvo8+BZ8Q+dsOvNIw8lwpaUGhzCfnXKaa4b3hndvj+ZiwmwqAQfR8R4fIQzDVsH2pmR3rxM/pOc7GPy0ppf5MzVZF31aGATlMvsPagek2xc7axZOCAiXtUjekCs=;
-X-UUID: 0eacfa51b8664429b9008ecda088dff9-20191203
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1439469269; Tue, 03 Dec 2019 16:25:53 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 3 Dec 2019 16:25:42 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 3 Dec 2019 16:25:25 +0800
-Message-ID: <1575361546.17950.1.camel@mtksdaap41>
-Subject: Re: [PATCH v1, 1/2] drm/mediatek: Fixup external display black
- screen issue
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Tue, 3 Dec 2019 16:25:46 +0800
-In-Reply-To: <1575359027.10160.2.camel@mhfsdcap03>
-References: <1574817475-22378-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1574817475-22378-2-git-send-email-yongqiang.niu@mediatek.com>
-         <1575352101.2457.8.camel@mtksdaap41> <1575359027.10160.2.camel@mhfsdcap03>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 3 Dec 2019 03:46:11 -0500
+Received: from retiisi.org.uk ([95.216.213.190]:45614 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725845AbfLCIqL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 03:46:11 -0500
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 43FBF634C87;
+        Tue,  3 Dec 2019 10:45:21 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1ic3o8-0001N9-Ne; Tue, 03 Dec 2019 10:45:20 +0200
+Date:   Tue, 3 Dec 2019 10:45:20 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
+        a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH 1/5] media: i2c: imx290: Add support for 2 data lanes
+Message-ID: <20191203084520.GP833@valkosipuli.retiisi.org.uk>
+References: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
+ <20191129190541.30315-2-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 5C730EAB590D19C2DF8D014B791E170B5ADEEEA52FF9340D2E16167DCF71586A2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191129190541.30315-2-manivannan.sadhasivam@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoNCg0KT24gVHVlLCAyMDE5LTEyLTAzIGF0IDE1OjQzICswODAwLCBZb25n
-cWlhbmcgTml1IHdyb3RlOg0KPiBPbiBUdWUsIDIwMTktMTItMDMgYXQgMTM6NDggKzA4MDAsIENL
-IEh1IHdyb3RlOg0KPiA+IEhpLCBZb25ncWlhbmc6DQo+ID4gDQo+ID4gT24gV2VkLCAyMDE5LTEx
-LTI3IGF0IDA5OjE3ICswODAwLCB5b25ncWlhbmcubml1QG1lZGlhdGVrLmNvbSB3cm90ZToNCj4g
-PiA+IEZyb206IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPg0KPiA+
-ID4gDQo+ID4gPiBQcm9ibGVtOg0KPiA+ID4gb3ZlcmxheSBoYW5ndXAgd2hlbiBleHRlcm5hbCBk
-aXNwbGF5IGhvdHBsdXQgdGVzdA0KPiA+ID4gDQo+ID4gPiBGaXg6DQo+ID4gPiBkaXNhYmxlIG92
-ZXJsYXkgd2hlbiBjcnRjIGRpc2FibGUNCj4gPiANCj4gPiBJIHRoaW5rIHlvdSBkbyB0d28gdGhp
-bmdzIGluIHRoaXMgcGF0Y2guIFRoZSBmaXJzdCBpcyB0byBjb25maWcgbGF5ZXINCj4gPiBiZWZv
-cmUgY29tcG9uZW50IHN0YXJ0LCBhbmQgdGhlIHNlY29uZCBpcyBkaXNhYmxlIGxheWVyIHdoZW4g
-Y3J0Yw0KPiA+IGRpc2FibGUuIFNvIHNlcGFyYXRlIHRvIHR3byBwYXRjaGVzLg0KPiA+IA0KPiA+
-ID4gDQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcgTml1IDx5b25ncWlhbmcubml1QG1l
-ZGlhdGVrLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
-dGtfZHJtX2NydGMuYyB8IDM5ICsrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLQ0KPiA+
-ID4gIDEgZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMoLSkNCj4g
-PiA+IA0KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiA+ID4g
-aW5kZXggNGZiMzQ2Yy4uN2VjYTAyZiAxMDA2NDQNCj4gPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiA+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+ID4gPiBAQCAtMzY5LDYgKzM2OSwyMCBAQCBzdGF0aWMg
-aW50IG10a19jcnRjX2RkcF9od19pbml0KHN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRjKQ0K
-PiA+ID4gIAltdGtfZGlzcF9tdXRleF9hZGRfY29tcChtdGtfY3J0Yy0+bXV0ZXgsIG10a19jcnRj
-LT5kZHBfY29tcFtpXS0+aWQpOw0KPiA+ID4gIAltdGtfZGlzcF9tdXRleF9lbmFibGUobXRrX2Ny
-dGMtPm11dGV4KTsNCj4gPiA+ICANCj4gPiA+ICsJLyogSW5pdGlhbGx5IGNvbmZpZ3VyZSBhbGwg
-cGxhbmVzICovDQo+ID4gPiArCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+bGF5ZXJfbnI7IGkr
-Kykgew0KPiA+ID4gKwkJc3RydWN0IGRybV9wbGFuZSAqcGxhbmUgPSAmbXRrX2NydGMtPnBsYW5l
-c1tpXTsNCj4gPiA+ICsJCXN0cnVjdCBtdGtfcGxhbmVfc3RhdGUgKnBsYW5lX3N0YXRlOw0KPiA+
-ID4gKwkJc3RydWN0IG10a19kZHBfY29tcCAqY29tcDsNCj4gPiA+ICsJCXVuc2lnbmVkIGludCBs
-b2NhbF9sYXllcjsNCj4gPiA+ICsNCj4gPiA+ICsJCXBsYW5lX3N0YXRlID0gdG9fbXRrX3BsYW5l
-X3N0YXRlKHBsYW5lLT5zdGF0ZSk7DQo+ID4gPiArCQljb21wID0gbXRrX2RybV9kZHBfY29tcF9m
-b3JfcGxhbmUoY3J0YywgcGxhbmUsICZsb2NhbF9sYXllcik7DQo+ID4gPiArCQlpZiAoY29tcCkN
-Cj4gPiA+ICsJCQltdGtfZGRwX2NvbXBfbGF5ZXJfY29uZmlnKGNvbXAsIGxvY2FsX2xheWVyLA0K
-PiA+ID4gKwkJCQkJCSAgcGxhbmVfc3RhdGUsIE5VTEwpOw0KPiA+ID4gKwl9DQo+ID4gPiArDQo+
-ID4gPiAgCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+ZGRwX2NvbXBfbnI7IGkrKykgew0KPiA+
-ID4gIAkJc3RydWN0IG10a19kZHBfY29tcCAqY29tcCA9IG10a19jcnRjLT5kZHBfY29tcFtpXTsN
-Cj4gPiA+ICAJCWVudW0gbXRrX2RkcF9jb21wX2lkIHByZXY7DQo+ID4gPiBAQCAtMzg1LDIwICsz
-OTksNiBAQCBzdGF0aWMgaW50IG10a19jcnRjX2RkcF9od19pbml0KHN0cnVjdCBtdGtfZHJtX2Ny
-dGMgKm10a19jcnRjKQ0KPiA+ID4gIAkJbXRrX2RkcF9jb21wX3N0YXJ0KGNvbXApOw0KPiA+ID4g
-IAl9DQo+ID4gPiAgDQo+ID4gPiAtCS8qIEluaXRpYWxseSBjb25maWd1cmUgYWxsIHBsYW5lcyAq
-Lw0KPiA+ID4gLQlmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMtPmxheWVyX25yOyBpKyspIHsNCj4g
-PiA+IC0JCXN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lID0gJm10a19jcnRjLT5wbGFuZXNbaV07DQo+
-ID4gPiAtCQlzdHJ1Y3QgbXRrX3BsYW5lX3N0YXRlICpwbGFuZV9zdGF0ZTsNCj4gPiA+IC0JCXN0
-cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXA7DQo+ID4gPiAtCQl1bnNpZ25lZCBpbnQgbG9jYWxfbGF5
-ZXI7DQo+ID4gPiAtDQo+ID4gPiAtCQlwbGFuZV9zdGF0ZSA9IHRvX210a19wbGFuZV9zdGF0ZShw
-bGFuZS0+c3RhdGUpOw0KPiA+ID4gLQkJY29tcCA9IG10a19kcm1fZGRwX2NvbXBfZm9yX3BsYW5l
-KGNydGMsIHBsYW5lLCAmbG9jYWxfbGF5ZXIpOw0KPiA+ID4gLQkJaWYgKGNvbXApDQo+ID4gPiAt
-CQkJbXRrX2RkcF9jb21wX2xheWVyX2NvbmZpZyhjb21wLCBsb2NhbF9sYXllciwNCj4gPiA+IC0J
-CQkJCQkgIHBsYW5lX3N0YXRlLCBOVUxMKTsNCj4gPiA+IC0JfQ0KPiA+ID4gLQ0KPiA+ID4gIAly
-ZXR1cm4gMDsNCj4gPiA+ICANCj4gPiA+ICBlcnJfbXV0ZXhfdW5wcmVwYXJlOg0KPiA+ID4gQEAg
-LTYwNywxMCArNjA3LDIxIEBAIHN0YXRpYyB2b2lkIG10a19kcm1fY3J0Y19hdG9taWNfZGlzYWJs
-ZShzdHJ1Y3QgZHJtX2NydGMgKmNydGMsDQo+ID4gPiAgCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0
-Yy0+bGF5ZXJfbnI7IGkrKykgew0KPiA+ID4gIAkJc3RydWN0IGRybV9wbGFuZSAqcGxhbmUgPSAm
-bXRrX2NydGMtPnBsYW5lc1tpXTsNCj4gPiA+ICAJCXN0cnVjdCBtdGtfcGxhbmVfc3RhdGUgKnBs
-YW5lX3N0YXRlOw0KPiA+ID4gKwkJc3RydWN0IG10a19kZHBfY29tcCAqY29tcCA9IG10a19jcnRj
-LT5kZHBfY29tcFswXTsNCj4gPiA+ICsJCXVuc2lnbmVkIGludCBjb21wX2xheWVyX25yID0gbXRr
-X2RkcF9jb21wX2xheWVyX25yKGNvbXApOw0KPiA+ID4gKwkJdW5zaWduZWQgaW50IGxvY2FsX2xh
-eWVyOw0KPiA+ID4gIA0KPiA+ID4gIAkJcGxhbmVfc3RhdGUgPSB0b19tdGtfcGxhbmVfc3RhdGUo
-cGxhbmUtPnN0YXRlKTsNCj4gPiA+ICAJCXBsYW5lX3N0YXRlLT5wZW5kaW5nLmVuYWJsZSA9IGZh
-bHNlOw0KPiA+ID4gIAkJcGxhbmVfc3RhdGUtPnBlbmRpbmcuY29uZmlnID0gdHJ1ZTsNCj4gPiA+
-ICsNCj4gPiA+ICsJCWlmIChpID49IGNvbXBfbGF5ZXJfbnIpIHsNCj4gPiA+ICsJCQljb21wID0g
-bXRrX2NydGMtPmRkcF9jb21wWzFdOw0KPiA+ID4gKwkJCWxvY2FsX2xheWVyID0gaSAtIGNvbXBf
-bGF5ZXJfbnI7DQo+ID4gPiArCQl9IGVsc2UNCj4gPiA+ICsJCQlsb2NhbF9sYXllciA9IGk7DQo+
-ID4gPiArCQltdGtfZGRwX2NvbXBfbGF5ZXJfY29uZmlnKGNvbXAsIGxvY2FsX2xheWVyLA0KPiA+
-ID4gKwkJCQkJICBwbGFuZV9zdGF0ZSwgTlVMTCk7DQo+ID4gDQo+ID4gSSdtIGNvbmZ1c2VkIHdp
-dGggdGhpcyBwYXJ0LiBUaGUgZGVzaWduIG9mIHRoaXMgbG9vcCBpcyB0byBzZXQNCj4gPiBwbGFu
-ZV9zdGF0ZS0+cGVuZGluZy5lbmFibGUgPSBmYWxzZSBhbmQgd2FpdCBmb3IgaXJxIGhhbmRsZXIg
-dG8gd3JpdGUNCj4gPiByZWdpc3Rlci4gV2h5IGRvIHlvdSBkaXJlY3RseSB3cml0ZSByZWdpc3Rl
-cj8NCj4gPiANCj4gPiBSZWdhcmRzLA0KPiA+IENLDQo+IA0KPiB3aGVuIGNtZHEgZW5hYmxlLCBt
-dGtfY3J0Yy0+Y21kcV9jbGllbnQgd2lsbCBiZSBhbHdheXMgdHJ1ZSB3aGVuIGNydGMNCj4gY3Jl
-YXRlLCB0aGVyZSBpcyBubyBjaGFuY2UgZm9yIG10a19jcnRjX2RkcF9jb25maWcgcHJvY2VzcyBp
-biBkZHAgaXJxIA0KPiBjYWxsYmFjayBmdW5jdGlvbg0KDQpJIHRoaW5rIHRoaXMgaXMgYSBidWcg
-b2YgcGF0Y2ggWzFdIHdoaWNoIGhhcyBub3QgYmVlbiB1cHN0cmVhbSB5ZXQuIFNvDQp0aGlzIHBh
-cnQgc2hvdWxkIGJlIG1vdmVkIHRvIHRoYXQgcGF0Y2guDQoNClsxXSBodHRwczovL3BhdGNod29y
-ay5rZXJuZWwub3JnL3BhdGNoLzExMjcwNjM3Lw0KDQo+ID4gDQo+ID4gPiAgCX0NCj4gPiA+ICAJ
-bXRrX2NydGMtPnBlbmRpbmdfcGxhbmVzID0gdHJ1ZTsNCj4gPiA+ICANCj4gPiANCj4gPiANCj4g
-DQo+IA0KDQo=
+Hi Manivannan,
 
+Thanks for the patchset.
+
+On Sat, Nov 30, 2019 at 12:35:37AM +0530, Manivannan Sadhasivam wrote:
+> The IMX290 sensor can output frames with 2/4 CSI2 data lanes. This commit
+> adds support for 2 lane mode in addition to the 4 lane and also
+> configuring the data lane settings in the driver based on system
+> configuration.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/media/i2c/imx290.c | 130 ++++++++++++++++++++++++++++++++++---
+>  1 file changed, 121 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+> index f7678e5a5d87..1d49910937fb 100644
+> --- a/drivers/media/i2c/imx290.c
+> +++ b/drivers/media/i2c/imx290.c
+> @@ -25,7 +25,18 @@
+>  #define IMX290_STANDBY 0x3000
+>  #define IMX290_REGHOLD 0x3001
+>  #define IMX290_XMSTA 0x3002
+> +#define IMX290_FR_FDG_SEL 0x3009
+>  #define IMX290_GAIN 0x3014
+> +#define IMX290_HMAX_LOW 0x301c
+> +#define IMX290_HMAX_HIGH 0x301d
+> +#define IMX290_PHY_LANE_NUM 0x3407
+> +#define IMX290_CSI_LANE_MODE 0x3443
+> +
+> +/* HMAX fields */
+> +#define IMX290_HMAX_2_1920 0x1130
+> +#define IMX290_HMAX_4_1920 0x0898
+> +#define IMX290_HMAX_2_720 0x19C8
+> +#define IMX290_HMAX_4_720 0x0CE4
+>  
+>  #define IMX290_DEFAULT_LINK_FREQ 445500000
+>  
+> @@ -56,6 +67,7 @@ struct imx290 {
+>  	struct device *dev;
+>  	struct clk *xclk;
+>  	struct regmap *regmap;
+> +	int nlanes;
+
+You're using u8 for another small (unsigned) integer later. How about u8
+here?
+
+>  
+>  	struct v4l2_subdev sd;
+>  	struct v4l2_fwnode_endpoint ep;
+> @@ -89,14 +101,11 @@ static const struct regmap_config imx290_regmap_config = {
+>  
+>  static const struct imx290_regval imx290_global_init_settings[] = {
+>  	{ 0x3007, 0x00 },
+> -	{ 0x3009, 0x00 },
+>  	{ 0x3018, 0x65 },
+>  	{ 0x3019, 0x04 },
+>  	{ 0x301a, 0x00 },
+> -	{ 0x3443, 0x03 },
+>  	{ 0x3444, 0x20 },
+>  	{ 0x3445, 0x25 },
+> -	{ 0x3407, 0x03 },
+>  	{ 0x303a, 0x0c },
+>  	{ 0x3040, 0x00 },
+>  	{ 0x3041, 0x00 },
+> @@ -169,7 +178,6 @@ static const struct imx290_regval imx290_1080p_settings[] = {
+>  	{ 0x3164, 0x1a },
+>  	{ 0x3480, 0x49 },
+>  	/* data rate settings */
+> -	{ 0x3009, 0x01 },
+>  	{ 0x3405, 0x10 },
+>  	{ 0x3446, 0x57 },
+>  	{ 0x3447, 0x00 },
+> @@ -187,8 +195,6 @@ static const struct imx290_regval imx290_1080p_settings[] = {
+>  	{ 0x3453, 0x00 },
+>  	{ 0x3454, 0x17 },
+>  	{ 0x3455, 0x00 },
+> -	{ 0x301c, 0x98 },
+> -	{ 0x301d, 0x08 },
+>  };
+>  
+>  static const struct imx290_regval imx290_720p_settings[] = {
+> @@ -210,7 +216,6 @@ static const struct imx290_regval imx290_720p_settings[] = {
+>  	{ 0x3164, 0x1a },
+>  	{ 0x3480, 0x49 },
+>  	/* data rate settings */
+> -	{ 0x3009, 0x01 },
+>  	{ 0x3405, 0x10 },
+>  	{ 0x3446, 0x4f },
+>  	{ 0x3447, 0x00 },
+> @@ -228,8 +233,6 @@ static const struct imx290_regval imx290_720p_settings[] = {
+>  	{ 0x3453, 0x00 },
+>  	{ 0x3454, 0x17 },
+>  	{ 0x3455, 0x00 },
+> -	{ 0x301c, 0xe4 },
+> -	{ 0x301d, 0x0c },
+>  };
+>  
+>  static const struct imx290_regval imx290_10bit_settings[] = {
+> @@ -522,6 +525,25 @@ static int imx290_write_current_format(struct imx290 *imx290,
+>  	return 0;
+>  }
+>  
+> +static int imx290_set_hmax(struct imx290 *imx290, u32 val)
+> +{
+> +	int ret;
+> +
+> +	ret = imx290_write_reg(imx290, IMX290_HMAX_LOW, (val & 0xff));
+> +	if (ret) {
+> +		dev_err(imx290->dev, "Error setting HMAX register\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = imx290_write_reg(imx290, IMX290_HMAX_HIGH, ((val >> 8) & 0xff));
+> +	if (ret) {
+> +		dev_err(imx290->dev, "Error setting HMAX register\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /* Start streaming */
+>  static int imx290_start_streaming(struct imx290 *imx290)
+>  {
+> @@ -551,6 +573,40 @@ static int imx290_start_streaming(struct imx290 *imx290)
+>  		return ret;
+>  	}
+>  
+> +	switch (imx290->nlanes) {
+> +	case 2:
+> +		if (imx290->current_mode->width == 1920) {
+> +			ret = imx290_set_hmax(imx290, IMX290_HMAX_2_1920);
+> +			if (ret < 0)
+> +				return ret;
+> +		} else {
+> +			ret = imx290_set_hmax(imx290, IMX290_HMAX_2_720);
+> +			if (ret < 0)
+> +				return ret;
+> +		}
+> +
+> +		break;
+> +	case 4:
+> +		if (imx290->current_mode->width == 1920) {
+> +			ret = imx290_set_hmax(imx290, IMX290_HMAX_4_1920);
+> +			if (ret < 0)
+> +				return ret;
+> +		} else {
+> +			ret = imx290_set_hmax(imx290, IMX290_HMAX_4_720);
+> +			if (ret < 0)
+> +				return ret;
+> +		}
+> +
+> +		break;
+> +	default:
+> +		/*
+> +		 * We should never hit this since the data lane count is
+> +		 * validated in probe itself
+> +		 */
+> +		dev_err(imx290->dev, "Lane configuration not supported\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	/* Apply customized values from user */
+>  	ret = v4l2_ctrl_handler_setup(imx290->sd.ctrl_handler);
+>  	if (ret) {
+> @@ -607,6 +663,49 @@ static int imx290_get_regulators(struct device *dev, struct imx290 *imx290)
+>  				       imx290->supplies);
+>  }
+>  
+> +static int imx290_set_data_lanes(struct imx290 *imx290)
+> +{
+> +	int ret = 0, laneval, frsel;
+> +
+> +	switch (imx290->nlanes) {
+> +	case 2:
+> +		laneval = 0x01;
+> +		frsel = 0x02;
+> +		break;
+> +	case 4:
+> +		laneval = 0x03;
+> +		frsel = 0x01;
+> +		break;
+> +	default:
+> +		/*
+> +		 * We should never hit this since the data lane count is
+> +		 * validated in probe itself
+> +		 */
+> +		dev_err(imx290->dev, "Lane configuration not supported\n");
+> +		ret = -EINVAL;
+> +		goto exit;
+> +	}
+> +
+> +	ret = imx290_write_reg(imx290, IMX290_PHY_LANE_NUM, laneval);
+> +	if (ret) {
+> +		dev_err(imx290->dev, "Error setting Physical Lane number register\n");
+> +		goto exit;
+> +	}
+> +
+> +	ret = imx290_write_reg(imx290, IMX290_CSI_LANE_MODE, laneval);
+> +	if (ret) {
+> +		dev_err(imx290->dev, "Error setting CSI Lane mode register\n");
+> +		goto exit;
+> +	}
+> +
+> +	ret = imx290_write_reg(imx290, IMX290_FR_FDG_SEL, frsel);
+> +	if (ret)
+> +		dev_err(imx290->dev, "Error setting FR/FDG SEL register\n");
+> +
+> +exit:
+> +	return ret;
+> +}
+> +
+>  static int imx290_power_on(struct device *dev)
+>  {
+>  	struct i2c_client *client = to_i2c_client(dev);
+> @@ -703,6 +802,16 @@ static int imx290_probe(struct i2c_client *client)
+>  		goto free_err;
+>  	}
+>  
+> +	/* Get number of data lanes */
+> +	imx290->nlanes = imx290->ep.bus.mipi_csi2.num_data_lanes;
+> +	if (imx290->nlanes != 2 && imx290->nlanes != 4) {
+> +		dev_err(dev, "Invalid data lanes: %d\n", imx290->nlanes);
+> +		ret = -EINVAL;
+> +		goto free_err;
+> +	}
+> +
+> +	dev_dbg(dev, "Using %u data lanes\n", imx290->nlanes);
+> +
+>  	if (!imx290->ep.nr_of_link_frequencies) {
+>  		dev_err(dev, "link-frequency property not found in DT\n");
+>  		ret = -EINVAL;
+> @@ -822,6 +931,9 @@ static int imx290_probe(struct i2c_client *client)
+>  		goto free_entity;
+>  	}
+>  
+> +	/* Set data lane count */
+> +	imx290_set_data_lanes(imx290);
+
+The sensor is likely (but not necessarily) about to be powered off here.
+Wouldn't this also belong to be put to the power on sequence?
+
+> +
+>  	pm_runtime_set_active(dev);
+>  	pm_runtime_enable(dev);
+>  	pm_runtime_idle(dev);
+
+-- 
+Regards,
+
+Sakari Ailus
