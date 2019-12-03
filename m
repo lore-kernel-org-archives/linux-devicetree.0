@@ -2,130 +2,120 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C082CC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 13:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7C1C432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 13:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 943E220684
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 13:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 939F520803
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 13:27:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="k6KAI49q"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ANmDGJCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbfLCNWx (ORCPT
+        id S1726139AbfLCN1p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:22:53 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37172 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfLCNWw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 08:22:52 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4821D309;
-        Tue,  3 Dec 2019 14:22:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575379369;
-        bh=JpHuU7B1YlnxGZyUy1Mq/44OB8mK0NSeVUkhBs9yFv8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k6KAI49qneV2kbHO+NuPIV227baWlP9abEnvgQ1TzzUCku+zGWuLAwdkGex/2klEr
-         mCtZJA5cQMOkEH/SXFYUN1pdo7MgJFu5m+6X4phmmj8OQhmY1nDBq+hTLMEJYhyItQ
-         evRDBOPQaH9kt6rmF0355QUrZQNkvE25Uew5SONE=
-Date:   Tue, 3 Dec 2019 15:22:41 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
-        Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Clark <robdclark@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Tue, 3 Dec 2019 08:27:45 -0500
+Received: from mail-eopbgr1400121.outbound.protection.outlook.com ([40.107.140.121]:34209
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726086AbfLCN1o (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 08:27:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JatFMizwGImVXjvDJbkSZnUreVzkUiqy+rZ6bMTZ5GbFVMJvB5w5WbuCBDsbsk9/deNKuNgS6KHOPpsZ0XDt+2m5ag2lXMc7OWDjHXoSzlos9la/bbV7IX6XY0OCUrGcTHGfUY5eL8grBlbdF62IFZ3zC7w0b/I/7zTCl+mzeB/Z9IcmnrHCDy+pvDtlL7aSWwR8dwvLKoQzXxP4x+7yVHPF8lZeGV8McwCkQNsBsMa07Q3Uvptk9UgsgpwR5xWU6SFwQkQR3nH0UvjxIikHMYKJsPp/lVzyupfYIWOL0b4bwNcCmIG/IJ8PbvYys272TQfT2m5kRnkZtyWnI7N78Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E6iqdCRYte3HB+lK+qyaQjUGwN5HP9VlAZ5gNuMz5mA=;
+ b=ZgwBYVAFgN1w1ElyOE5/j8MyrJPMAlIiHfcnSkiC1YaCAsYu8xGUrwAA1hUdCl+LRX3rLVfV/C6w6giHtVCYbgMVQjb7/pk4dEFgjPYMk5PdpuNWEOXs2FykPfxgeFd7TnpeJ7+sUgjap9kJriR51LKskqP/7ZPooG8IlREsIGCWpO5m3Ddpk26Xy8vOBfnZadEJjofeM8OLcbKdGgXgmul+SNt6kMLPKyQQ8YYNla2QhEpb5Iob4Hz0GWrs/LAd2N8XgFJtgdZKTwf5C+s3ZURVfMg7iRAfrq983KCDZtm0CiWydgCu/auod0z9t9y702lM1lWtqhmfFSOmTjyykQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E6iqdCRYte3HB+lK+qyaQjUGwN5HP9VlAZ5gNuMz5mA=;
+ b=ANmDGJCQk3jSmec7QnPtO1uy7X4sh+kzz+O/wuzUxs5fd+AovaWgs6oTzEL0q2HXRZMFz22ongKtzC75B4jL6xMVHX82++xAYcvn2dOO2Hq7dSzsj2t2HJcd7Ppqd+e7dF+ePEi/0Ec7iLd4fs1/t4m5cj5O4F3p6dxLZIfHaSs=
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
+ TY1SPR01MB2.jpnprd01.prod.outlook.com (52.133.161.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.12; Tue, 3 Dec 2019 13:27:40 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2516.003; Tue, 3 Dec 2019
+ 13:27:39 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 17/21] dt-bindings: display: bridge: lvds-transmitter:
- Add new props
-Message-ID: <20191203132241.GQ4730@pendragon.ideasonboard.com>
-References: <20191023154512.9762-1-boris.brezillon@collabora.com>
- <20191023154512.9762-18-boris.brezillon@collabora.com>
- <20191202171140.GR4929@pendragon.ideasonboard.com>
- <20191203133843.32cab43e@collabora.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: RE: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
+Thread-Topic: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
+Thread-Index: AQHVqYxRjjQT6EPsk0uhvsHduSJ+e6eoIQoAgAA7ZYA=
+Date:   Tue, 3 Dec 2019 13:27:39 +0000
+Message-ID: <TY1PR01MB156262E8D33A0624457CAE248A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20191203034519.5640-1-chris.brandt@renesas.com>
+ <20191203034519.5640-7-chris.brandt@renesas.com>
+ <17e66541-41fb-26ed-c87b-15c59ab57bef@cogentembedded.com>
+In-Reply-To: <17e66541-41fb-26ed-c87b-15c59ab57bef@cogentembedded.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctYWJkMjliMjMtMTVkMC0xMWVhLWFhNTEtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XGFiZDI5YjI0LTE1ZDAtMTFlYS1hYTUxLTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iNjk2IiB0PSIxMzIxOTg1MzI1Nzg5ODY2OTgiIGg9ImJTaFlmT3U3bUZmWDBxL0Jtbks1NUFhSlYybz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [75.60.247.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1947f291-f0a1-42e0-7c66-08d777f491e0
+x-ms-traffictypediagnostic: TY1SPR01MB2:
+x-microsoft-antispam-prvs: <TY1SPR01MB2F7B2FF101FF1A03AEA618A420@TY1SPR01MB2.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 02408926C4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(366004)(376002)(396003)(136003)(199004)(189003)(7416002)(7736002)(305945005)(74316002)(8676002)(71190400001)(81156014)(8936002)(446003)(71200400001)(11346002)(25786009)(81166006)(52536014)(316002)(76116006)(5660300002)(66946007)(478600001)(54906003)(102836004)(26005)(6246003)(99286004)(4326008)(9686003)(76176011)(7696005)(6506007)(110136005)(4744005)(55016002)(33656002)(256004)(2906002)(186003)(14454004)(6436002)(66556008)(3846002)(6116002)(66446008)(66476007)(64756008)(86362001)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1SPR01MB2;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9KXwGIDSGdFEgQABHZ4Hkls6+ZaJgDc2I8mzDrO12b6cEohJ/DY+AkTvPCPGU6yR/xeXlf8i1zNDPxlhSx+KmsyUJQ4RWxw3ujSy8VtHkh1JvZZz0uy+wBCwOS9YnxZ1y48bOeIkWhsGsP0vCw86OXWR8sk3X9p5CmBu6f6EhQutGIpknomrEAK09cTjnUE+m3M3vM87PkKiPUPjWXlwyKJf+zGuq35tPzxUi3aOX/CNS/W52diSFdUWLEoJsDRtK9keeaRkUayxbBBnknIZqJ7K+bCLDjSoE2Dsk+3+S6Kf+/ucYCNSZoBUIblcLyVvO1yXMJkve/pWuf5ABl5qhCd/yO12URLsK5YL9M3vkH5oWG9EfPrRBuars6PWcCSWK4mPz3unKbm15SRRf26NNtA5bfzbtYlAYjKXilsOSSBZLNaQ0qubHgO6MTmXrDti
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191203133843.32cab43e@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1947f291-f0a1-42e0-7c66-08d777f491e0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 13:27:39.8089
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tPnjXvmGvnBqZ5vRniYYFOEpW72iGcpN/fAJCvcN1oyBvHT3HWsPH8QwMjOvdxYDFq+I+JlDswxzuNUgN+gY6MZMjl/7JUZI7yTQoz0O/Zs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1SPR01MB2
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
-
-On Tue, Dec 03, 2019 at 01:38:43PM +0100, Boris Brezillon wrote:
-> On Mon, 2 Dec 2019 19:11:40 +0200 Laurent Pinchart wrote:
-> > On Wed, Oct 23, 2019 at 05:45:08PM +0200, Boris Brezillon wrote:
-> > > Add the data-mapping property to describe the output bus format and
-> > > the bus-width property to describe the input bus format.
-> > > 
-> > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > > ---
-> > > Changes in v3:
-> > > * New patch
-> > > ---
-> > >  .../bindings/display/bridge/lvds-transmitter.txt    | 13 +++++++++++++  
-> > 
-> > Please note that lvds-transmitter has been renamed to lvds-codec and
-> > converted to YAML as part of a pull request I've recently sent ([1]).
-> > This patch will thus need to be rebased.
-> 
-> Let me know when it's been merged, I'll ask for a drm-next ->
-> drm-misc-next backmerge.
-
-I expect Dave to merge it when the merge window will close.
-
-> > [1] https://patchwork.freedesktop.org/patch/342754/
-> > 
-> > >  1 file changed, 13 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-> > > index 60091db5dfa5..7b43b6f20279 100644
-> > > --- a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-> > > +++ b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-> > > @@ -36,6 +36,19 @@ graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-> > >  - Video port 0 for parallel input
-> > >  - Video port 1 for LVDS output
-> > >  
-> > > +Optional port 0 node properties:
-> > > +
-> > > +- bus-width: number of data lines use to transmit the RGB data.
-> > > +	     Can be 18 or 24.
-> > > +
-> > > +Optional port 1 node properties:
-> > > +
-> > > +- data-mapping: see Documentation/devicetree/bindings/display/panel/lvds.yaml
-> > > +		for more details about this LVDS data-mapping property.
-> > > +		Supported values:
-> > > +		"jeida-18"
-> > > +		"jeida-24"
-> > > +		"vesa-24"
-> > >  
-> > >  Example
-> > >  -------  
-
--- 
-Regards,
-
-Laurent Pinchart
+T24gVHVlLCBEZWMgMywgMjAxOSwgU2VyZ2VpIFNodHlseW92IHdyb3RlOg0KPiAgICAgVGhhdCdz
+IG9ubHkgMiBhcmVhcywgbm90IDMuIDotKQ0KVGhhbmsgeW91IQ0KDQo+ID4gKy0gZmxhc2g6IHNo
+b3VsZCBiZSByZXByZXNlbnRlZCBieSBhIHN1Ym5vZGUgb2YgdGhlIFNQSUJTQyBub2RlLA0KPiA+
+ICsJIGl0cyAiY29tcGF0aWJsZSIgcHJvcGVydHkgY29udGFpbnMgImplZGVjLHNwaS1ub3IiIGlm
+IFNQSSBpcyB1c2VkLg0KPiANCj4gICAgIEFyZSBhbnkgb3RoZXIgZmxhc2ggdmFyaWFudHMgc3Vw
+cG9ydGVkPw0KDQpEbyB5b3UgbWVhbiBvdGhlciB0eXBlcyBvZiBTUEkgZmxhc2g/DQpJJ3ZlIG9u
+bHkgdXNlZCBTUEkgZmxhc2ggZGV2aWNlcyB0aGF0IGFyZSBhdXRvIGRldGVjdGVkIHVzaW5nIA0K
+ImplZGVjLHNwaS1ub3IiLg0KSW4gdGhlb3J5LCB5b3UgY291bGQgdXNlIG90aGVyIHR5cGVzIG9m
+IFNQSSBmbGFzaCBsaWtlICJhdG1lbCxhdDQ1IiwgYnV0DQpubyBvbmUgaGFzIGV2ZXJ5IHRyaWVk
+IGl0LCBtb3N0bHkgYmVjYXVzZSB0aGUgU29DIHdpbGwgb25seSBib290IGZyb20NCkpFREVDIGNv
+bXBhdGlibGUgU1BJIGZsYXNoLg0KDQpDaHJpcw0K
