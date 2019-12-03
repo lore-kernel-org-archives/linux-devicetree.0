@@ -2,37 +2,37 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFB4C43141
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8638C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD3520722
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86FAE206DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfLCEEV (ORCPT
+        id S1726651AbfLCEE5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 23:04:21 -0500
-Received: from pbmsgap02.intersil.com ([192.157.179.202]:53104 "EHLO
-        pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbfLCEEV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 23:04:21 -0500
-Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
-        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id xB33hRn4007650;
-        Mon, 2 Dec 2019 22:46:47 -0500
-Received: from pbmxdp03.intersil.corp (pbmxdp03.pb.intersil.com [132.158.200.224])
-        by pbmsgap02.intersil.com with ESMTP id 2wkkffj00a-1
+        Mon, 2 Dec 2019 23:04:57 -0500
+Received: from pbmsgap01.intersil.com ([192.157.179.201]:34908 "EHLO
+        pbmsgap01.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfLCEE5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 23:04:57 -0500
+Received: from pps.filterd (pbmsgap01.intersil.com [127.0.0.1])
+        by pbmsgap01.intersil.com (8.16.0.27/8.16.0.27) with SMTP id xB33hWLh032292;
+        Mon, 2 Dec 2019 22:45:51 -0500
+Received: from pbmxdp01.intersil.corp (pbmxdp01.pb.intersil.com [132.158.200.222])
+        by pbmsgap01.intersil.com with ESMTP id 2wkmu327q4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 02 Dec 2019 22:46:47 -0500
+        Mon, 02 Dec 2019 22:45:51 -0500
 Received: from pbmxdp01.intersil.corp (132.158.200.222) by
- pbmxdp03.intersil.corp (132.158.200.224) with Microsoft SMTP Server
+ pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1531.3; Mon, 2 Dec 2019 22:46:45 -0500
+ 15.1.1531.3; Mon, 2 Dec 2019 22:45:49 -0500
 Received: from localhost.localdomain (132.158.202.109) by
  pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server id
- 15.1.1531.3 via Frontend Transport; Mon, 2 Dec 2019 22:46:44 -0500
+ 15.1.1531.3 via Frontend Transport; Mon, 2 Dec 2019 22:45:48 -0500
 From:   Chris Brandt <chris.brandt@renesas.com>
 To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         "Mark Rutland" <mark.rutland@arm.com>,
@@ -44,12 +44,10 @@ CC:     <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
         Mason Yang <masonccyang@mxic.com.tw>,
         Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
         Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 5/6] ARM: dts: r7s9210: Add SPIBSC Device support
-Date:   Mon, 2 Dec 2019 22:45:18 -0500
-Message-ID: <20191203034519.5640-6-chris.brandt@renesas.com>
+Subject: [PATCH 0/6] spi: Add Renesas SPIBSC controller
+Date:   Mon, 2 Dec 2019 22:45:13 -0500
+Message-ID: <20191203034519.5640-1-chris.brandt@renesas.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191203034519.5640-1-chris.brandt@renesas.com>
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -65,34 +63,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add SPIBSC Device support for RZ/A2.
+The Renesas SPI Bus Space Controller (SPIBSC) HW was specifically designed for
+accessing SPI flash devices. In the hardware manuals, it is almost always
+labeled as the "Renesas SPI Multi I/O Bus Controller". However, the HW IP is
+usually referred to within Renesas as the "SPIBSC" block.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- arch/arm/boot/dts/r7s9210.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+This driver has been tested on an RZ/A1H RSK and RZ/A2M EVB.
 
-diff --git a/arch/arm/boot/dts/r7s9210.dtsi b/arch/arm/boot/dts/r7s9210.dtsi
-index 72b79770e336..ac4949c9e47a 100644
---- a/arch/arm/boot/dts/r7s9210.dtsi
-+++ b/arch/arm/boot/dts/r7s9210.dtsi
-@@ -68,6 +68,16 @@
- 			cache-level = <2>;
- 		};
- 
-+		spibsc: spi@1f800000 {
-+			compatible = "renesas,r7s9210-spibsc", "renesas,spibsc";
-+			reg = <0x1f800000 0x8c>, <0x20000000 0x10000000 >;
-+			clocks = <&cpg CPG_MOD 83>;
-+			power-domains = <&cpg>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		scif0: serial@e8007000 {
- 			compatible = "renesas,scif-r7s9210";
- 			reg = <0xe8007000 0x18>;
+The testing mostly consisted of formatting an area as JFFS2 and doing copying
+of files and such.
+
+While the HW changed a little between the RZ/A1 and RZ/A2 generations, the IP
+block in the RZ/A2M was taken from the R-Car H3 design, so in theory this
+driver should work for R-Car Gen3 as well.
+
+
+
+Chris Brandt (6):
+  clk: renesas: mstp: Add critical clock from device tree support
+  ARM: dts: r7s72100: Add SPIBSC clocks
+  clk: renesas: r7s9210: Add SPIBSC clock
+  spi: Add SPIBSC driver
+  ARM: dts: r7s9210: Add SPIBSC Device support
+  dt-bindings: spi: Document Renesas SPIBSC bindings
+
+ .../bindings/spi/spi-renesas-spibsc.txt       |  48 ++
+ arch/arm/boot/dts/r7s72100.dtsi               |  26 +-
+ arch/arm/boot/dts/r7s9210.dtsi                |  10 +
+ drivers/clk/renesas/clk-mstp.c                |  16 +-
+ drivers/clk/renesas/r7s9210-cpg-mssr.c        |   9 +
+ drivers/spi/Kconfig                           |   8 +
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-spibsc.c                      | 609 ++++++++++++++++++
+ 8 files changed, 719 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-renesas-spibsc.txt
+ create mode 100644 drivers/spi/spi-spibsc.c
+
 -- 
 2.23.0
 
