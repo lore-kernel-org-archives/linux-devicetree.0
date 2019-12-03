@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5F8C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAF5C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A595020803
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54ED32073C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575386594;
-	bh=NaCEN7DJRgw9XbI89MhLbH0ZEOc5T0E9kQGhCcD1tqo=;
+	s=default; t=1575386596;
+	bh=6pW/HR0Z4Qg481mA2feeya881OuopJ+Y8DDGuFlu1Gs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ISpi+H1i+lLNO26IF+J28eYpgNKntbbJYxBKVFF1tlFKiFAszoTtXPmTNs3O7YTn7
-	 1H63I8q2GLOpdmmunUX+xjCcY7RLK+aKGIyZkeGqTm8zMBjq0N5H/dHJ/2ROJogxVK
-	 Vrj30qJiJ6aYlYcjS+cBetitS8ULGnrZWMAnrfKg=
+	b=rgWSEXvZ8cjaMiQP8jfgiBmy8Vs+A91IncyLnILbDzue1i1iC/EqBS94cuGCERyR1
+	 cbD/Y2FZVjpEW6fpO0UbRjGsK7y3xhOtDJQWYZzYpWOE29SHSPMaTNA5gPh+UJWjXv
+	 LucIdaVxqlMGZHqYT+vnNPGO76rh4f0tmYP7X0fU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbfLCPXO (ORCPT
+        id S1726673AbfLCPXQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:23:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41394 "EHLO mail.kernel.org"
+        Tue, 3 Dec 2019 10:23:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbfLCPXO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 10:23:14 -0500
+        id S1725997AbfLCPXP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 10:23:15 -0500
 Received: from e123331-lin.cambridge.arm.com (fw-tnat-cam5.arm.com [217.140.106.53])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42D79207DD;
-        Tue,  3 Dec 2019 15:23:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D81422080A;
+        Tue,  3 Dec 2019 15:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575386593;
-        bh=NaCEN7DJRgw9XbI89MhLbH0ZEOc5T0E9kQGhCcD1tqo=;
+        s=default; t=1575386595;
+        bh=6pW/HR0Z4Qg481mA2feeya881OuopJ+Y8DDGuFlu1Gs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yQhfN4C8pOf4nDoy6XHqhRhQUa4/fhlFxkyzmYCZFXLEwmW4pk0j2AKb+DPPkohDn
-         7dXcic6Xq4YlxcZE4puWx36bd8OHGHXvkH5Czn2TzI4GVQTYX09EvHGQOP4BXuSKMS
-         5ZQ/+Cw1jxVdheLTlB7/4Y6IHL/tX7Ee4RhlgNyw=
+        b=qGf3UgpqEhrXVXtmY312vyAgkVCaffcP2xQshMXaXujuVB0LVRCbj4S/B3wCUm1Eu
+         N6CR356pbr8Qq/kh1+sU4dmgXLn0yW89D8C0/BsWHswGbKjuDd+0fTAUKGybPhB6c/
+         gBdBvH0tk+g9TOJBmWV6m0yGR7LgvCn5u4IuBHkQ=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     devicetree@vger.kernel.org
 Cc:     Ard Biesheuvel <ardb@kernel.org>,
@@ -47,9 +47,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v3 2/8] dt: amd-seattle: remove Overdrive revision A0 support
-Date:   Tue,  3 Dec 2019 15:23:00 +0000
-Message-Id: <20191203152306.7839-3-ardb@kernel.org>
+Subject: [PATCH v3 3/8] dt: amd-seattle: upgrade AMD Seattle XGBE to new SMMU binding
+Date:   Tue,  3 Dec 2019 15:23:01 +0000
+Message-Id: <20191203152306.7839-4-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191203152306.7839-1-ardb@kernel.org>
 References: <20191203152306.7839-1-ardb@kernel.org>
@@ -58,98 +58,71 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Support for AMD Seattle silicon revision A0 is no longer relevant,
-since we no longer have a driver for the network controller, and
-the PCIe on these boards was very unreliable. So drop the DTS
-description of the A0 version of the overdrive board.
+Upgrade the DT descriptions of the AMD Seattle XGBE network
+controllers to use the current SMMU bindings.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/arm64/boot/dts/amd/Makefile          |  3 +-
- arch/arm64/boot/dts/amd/amd-overdrive.dts | 66 --------------------
- 2 files changed, 1 insertion(+), 68 deletions(-)
+ arch/arm64/boot/dts/amd/amd-seattle-xgbe-b.dtsi | 22 +++++++-------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amd/Makefile b/arch/arm64/boot/dts/amd/Makefile
-index 5e27bc0321e9..68103a8b0ef5 100644
---- a/arch/arm64/boot/dts/amd/Makefile
-+++ b/arch/arm64/boot/dts/amd/Makefile
-@@ -1,3 +1,2 @@
- # SPDX-License-Identifier: GPL-2.0
--dtb-$(CONFIG_ARCH_SEATTLE) += amd-overdrive.dtb \
--			amd-overdrive-rev-b0.dtb amd-overdrive-rev-b1.dtb
-+dtb-$(CONFIG_ARCH_SEATTLE) += amd-overdrive-rev-b0.dtb amd-overdrive-rev-b1.dtb
-diff --git a/arch/arm64/boot/dts/amd/amd-overdrive.dts b/arch/arm64/boot/dts/amd/amd-overdrive.dts
-deleted file mode 100644
-index 41b3a6c0993d..000000000000
---- a/arch/arm64/boot/dts/amd/amd-overdrive.dts
-+++ /dev/null
-@@ -1,66 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * DTS file for AMD Seattle Overdrive Development Board
-- *
-- * Copyright (C) 2014 Advanced Micro Devices, Inc.
-- */
+diff --git a/arch/arm64/boot/dts/amd/amd-seattle-xgbe-b.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-xgbe-b.dtsi
+index d97498361ce3..9259e547e2e8 100644
+--- a/arch/arm64/boot/dts/amd/amd-seattle-xgbe-b.dtsi
++++ b/arch/arm64/boot/dts/amd/amd-seattle-xgbe-b.dtsi
+@@ -55,7 +55,7 @@
+ 		clocks = <&xgmacclk0_dma_250mhz>, <&xgmacclk0_ptp_250mhz>;
+ 		clock-names = "dma_clk", "ptp_clk";
+ 		phy-mode = "xgmii";
+-		#stream-id-cells = <16>;
++		iommus = <&xgmac0_smmu 0x00 0x17>; /* 0-7, 16-23 */
+ 		dma-coherent;
+ 	};
+ 
+@@ -81,11 +81,11 @@
+ 		clocks = <&xgmacclk1_dma_250mhz>, <&xgmacclk1_ptp_250mhz>;
+ 		clock-names = "dma_clk", "ptp_clk";
+ 		phy-mode = "xgmii";
+-		#stream-id-cells = <16>;
++		iommus = <&xgmac1_smmu 0x00 0x17>; /* 0-7, 16-23 */
+ 		dma-coherent;
+ 	};
+ 
+-	xgmac0_smmu: smmu@e0600000 {
++	xgmac0_smmu: iommu@e0600000 {
+ 		 compatible = "arm,mmu-401";
+ 		 reg = <0 0xe0600000 0 0x10000>;
+ 		 #global-interrupts = <1>;
+@@ -94,14 +94,11 @@
+ 			       */
+ 			      <0 336 4>,
+ 			      <0 336 4>;
 -
--/dts-v1/;
+-		 mmu-masters = <&xgmac0
+-			  0  1  2  3  4  5  6  7
+-			 16 17 18 19 20 21 22 23
+-		 >;
++		#iommu-cells = <2>;
++		dma-coherent;
+ 	 };
+ 
+-	 xgmac1_smmu: smmu@e0800000 {
++	 xgmac1_smmu: iommu@e0800000 {
+ 		 compatible = "arm,mmu-401";
+ 		 reg = <0 0xe0800000 0 0x10000>;
+ 		 #global-interrupts = <1>;
+@@ -110,9 +107,6 @@
+ 			       */
+ 			      <0 335 4>,
+ 			      <0 335 4>;
 -
--/include/ "amd-seattle-soc.dtsi"
--
--/ {
--	model = "AMD Seattle Development Board (Overdrive)";
--	compatible = "amd,seattle-overdrive", "amd,seattle";
--
--	chosen {
--		stdout-path = &serial0;
--	};
--};
--
--&ccp0 {
--	status = "ok";
--};
--
--&gpio0 {
--	status = "ok";
--};
--
--&gpio1 {
--	status = "ok";
--};
--
--&i2c0 {
--	status = "ok";
--};
--
--&pcie0 {
--	status = "ok";
--};
--
--&spi0 {
--	status = "ok";
--};
--
--&spi1 {
--	status = "ok";
--	sdcard0: sdcard@0 {
--		compatible = "mmc-spi-slot";
--		reg = <0>;
--		spi-max-frequency = <20000000>;
--		voltage-ranges = <3200 3400>;
--		gpios = <&gpio0 7 0>;
--		interrupt-parent = <&gpio0>;
--		interrupts = <7 3>;
--		pl022,hierarchy = <0>;
--		pl022,interface = <0>;
--		pl022,com-mode = <0x0>;
--		pl022,rx-level-trig = <0>;
--		pl022,tx-level-trig = <0>;
--	};
--};
--
--&v2m0 {
--	arm,msi-base-spi = <64>;
--	arm,msi-num-spis = <256>;
--};
+-		 mmu-masters = <&xgmac1
+-			  0  1  2  3  4  5  6  7
+-			 16 17 18 19 20 21 22 23
+-		 >;
++		#iommu-cells = <2>;
++		dma-coherent;
+ 	 };
 -- 
 2.17.1
 
