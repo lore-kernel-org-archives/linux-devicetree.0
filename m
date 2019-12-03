@@ -2,127 +2,161 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D8AC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 13:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA56C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 13:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB6B206EC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 13:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DE52073B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 13:48:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C1wT1exz"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="O7md203+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfLCNkc (ORCPT
+        id S1726339AbfLCNsa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:40:32 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:38995 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfLCNkc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 08:40:32 -0500
-Received: by mail-yb1-f194.google.com with SMTP id o22so968423ybg.6;
-        Tue, 03 Dec 2019 05:40:31 -0800 (PST)
+        Tue, 3 Dec 2019 08:48:30 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34765 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbfLCNsa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 08:48:30 -0500
+Received: by mail-pl1-f195.google.com with SMTP id h13so1735725plr.1
+        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 05:48:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PWU/7wWJMqFgQOzJgxgiFIVxjVPFwmXizK0TOekZqDg=;
-        b=C1wT1exzI2+JnqAQvtk5yzcIapZj8L6gj8q4NmvEZU6boLKk35ngTnivJE6SSaWttN
-         thEPw+fkAmaa6Ye7t/7fSQav4HsPD5z+u1qy01HvbBGa7bc7lyCUNgTm4Xh6D8KK2XbG
-         eq8GR+xu6toCsxCSrw9fi02f42jNOlCOdJIUnr3qJ5MQrNmpULkuYoUHL5Hfog4ZA7nq
-         DEIH3S3pHNNVfS82/mabk7UDpPbdOIPqA8YkiXlWWA7L6g+mhWT+IFpu856wVa4gPQEu
-         rAZ3iSXNY2Sm+PVEAO/drBgBFSK5ubZoyANNhnL+FHbH3v/sn6MTRnKR1KPLy/12jJ12
-         g5Hw==
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7fyH+2F2a+rl1kectMRnZFlHTKNuWeTnYPoVBXe5Db4=;
+        b=O7md203+f98TyLan33Yz4aeIVna2Ip1fUra9eSfxZt0oM+104KLRNIYxIR3+igDF91
+         ZSIlXuIuSFdOCRwQA6VRzSsU2uUWuWRdGZ3LpLOzawoqqBUauMRZWt0AH5gcrW+KIbbg
+         TGcdTj7F2aaAZV+V9yBZPetyHggQ+sa8SJ5gI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=PWU/7wWJMqFgQOzJgxgiFIVxjVPFwmXizK0TOekZqDg=;
-        b=QKi+pCQZZSS/fBH606M8K6SfVyvYdoUwZwUp016qvTYPZ5qxzQgw/OEVYOZVhfbrN4
-         IJLs7ketHjeSVg0FaGxPCCs742pVVMApHixRQsYm2lK7TzI7yq45pcerm3oiiYWuH/wo
-         Nisqg7yeInMl/mPctXsn5CiK0DruVddqFEf6wp8jB/MQJzpF3SQjqKaZf3tqolS9MhRz
-         4Y61K3biY+bXBlauQvMjdSz3vqnSmJEo69vjkPJj9+h5DwBVB/I2QhvLZdXNp6Dy7IAk
-         s5P/Sl/WMeRgCp55YlEtRoXaAj3UV+2x3aB3FkJ+/eoPEc+Vpa4SGPyRmkfF83154obr
-         iIcg==
-X-Gm-Message-State: APjAAAXPEuJLW7bY0Lk6pjfPEx1FGXqgzyRJAFEp7PHFe0HR0ljJq8Ow
-        b5DN4YiIKJupmQzqe6OY3w==
-X-Google-Smtp-Source: APXvYqzlVb+uzUqOoJ7sKz3DGqmH2x4xZFKhoXvP+qn/NpgdBgUv9H8D7Fy3Mg2T7hXTvflhiXmg6A==
-X-Received: by 2002:a25:d052:: with SMTP id h79mr4265588ybg.345.1575380429014;
-        Tue, 03 Dec 2019 05:40:29 -0800 (PST)
-Received: from serve.minyard.net ([47.184.136.59])
-        by smtp.gmail.com with ESMTPSA id u2sm1451301ywi.61.2019.12.03.05.40.28
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7fyH+2F2a+rl1kectMRnZFlHTKNuWeTnYPoVBXe5Db4=;
+        b=cQYmOP599axPf+jOsi0tH8H5QXqw7U9SGKTwgnEr1WvAlmzSYFzcOyIqN9OAnrRqEV
+         B1TBLXCxpgDzQZ4gUqxoTpCiHqyeqb9lGxDSIFYf4kZWD6h3JjXoijljpD9wtB+NVpvp
+         pUmlB2cGmD+DdRQbC4o0oC511xZYmpTEPKZmmKjYVJAOhCWweTzU0wk2fjwdX6btt65E
+         mzcZmRcglE91ncyfX2nV6hXPaY3kZWkFbttHKBMOXDnLkg4m0GiT2XpmGsNtS0TB4NrL
+         bXFBno73gDJii70KNsGylkekz5aXWgncVhiVC2A7UOhEIi+L0koY7FZqpWS73tLFxnvX
+         P5MQ==
+X-Gm-Message-State: APjAAAWpJeHhfSY0UJ8MBz5Xuyfi9zqs+Je3lWDu3p/77j5yLWSRwB6W
+        3yeujeJCNFxDtnKJ7GLlHP9n8g==
+X-Google-Smtp-Source: APXvYqzbpkPoRAjx7jYyIBTmDtEHbDTA8NmXpToYJsChd3LnIUvBCuRXvE+x3s8pofxO0AXSfe7fjg==
+X-Received: by 2002:a17:902:fe12:: with SMTP id g18mr4992444plj.20.1575380908885;
+        Tue, 03 Dec 2019 05:48:28 -0800 (PST)
+Received: from localhost.localdomain ([115.97.190.29])
+        by smtp.gmail.com with ESMTPSA id y144sm4397892pfb.188.2019.12.03.05.48.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 05:40:28 -0800 (PST)
-Received: from minyard.net (unknown [192.168.27.180])
-        by serve.minyard.net (Postfix) with ESMTPSA id 95ED9180059;
-        Tue,  3 Dec 2019 13:40:27 +0000 (UTC)
-Date:   Tue, 3 Dec 2019 07:40:26 -0600
-From:   Corey Minyard <minyard@acm.org>
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     openipmi-developer@lists.sourceforge.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, joel@jms.id.au, arnd@arndb.de,
-        gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Haiyue Wang <haiyue.wang@linux.intel.com>
-Subject: Re: [PATCH 2/3] ipmi: kcs: Finish configuring ASPEED KCS device
- before enable
-Message-ID: <20191203134026.GI18165@minyard.net>
-Reply-To: minyard@acm.org
-References: <cover.5630f63168ad5cddf02e9796106f8e086c196907.1575376664.git-series.andrew@aj.id.au>
- <84315a29b453068373c096c03433e3a326731988.1575376664.git-series.andrew@aj.id.au>
+        Tue, 03 Dec 2019 05:48:28 -0800 (PST)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v12 0/7] drm/sun4i: Allwinner A64 MIPI-DSI support
+Date:   Tue,  3 Dec 2019 19:18:09 +0530
+Message-Id: <20191203134816.5319-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84315a29b453068373c096c03433e3a326731988.1575376664.git-series.andrew@aj.id.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 11:08:24PM +1030, Andrew Jeffery wrote:
-> The currently interrupts are configured after the channel was enabled.
+This is v12 version for Allwinner A64 MIPI-DSI support
+and here is the previous version set[1]
 
-How about:
+Changes for v12:
+- use enum insted of oneOf+const
+- handle bus clock using regmap attach clk
+- tested on A64, A33 boards.
+Changes for v11:
+- fix dt-bindings for dphy
+- fix dt-bindings for dsi controller
+- add bus clock handling code
+- tested on A64, A33 boards.
+Changes for v10:
+- updated dt-bindings as per .yaml format
+- rebased on drm-misc/for-linux-next
+Changes for v9:
+- moved dsi fixes in separate series on top of A33
+- rebase on linux-next
+Changes for v8:
+- rebased on drm-misc change along with linux-next
+- reworked video start delay patch
+- tested on 4 different dsi panels
+- reworked commit messages
+Changes for v7:
+- moved vcc-dsi binding to required filed.
+- drop quotes on fallback dphy bindings.
+- drop min_rate clock pll-mipi patches.
+- introduce dclk divider computation as like A64 BSP.
+- add A64 DSI quark patches.
+- fixed A64 DSI pipeline.
+- add proper commit messages.
+- collect Merlijn Wajer Tested-by credits.
+Changes for v6:
+- dropped unneeded changes, patches
+- fixed all burst mode patches as per previous version comments
+- rebase on master
+- update proper commit message
+- dropped unneeded comments
+- order the patches that make review easy
+Changes for v5:
+- collect Rob, Acked-by
+- droped "Fix VBP size calculation" patch
+- updated vblk timing calculation.
+- droped techstar, bananapi dsi panel drivers which may require
+  bridge or other setup. it's under discussion.
+Changes for v4:
+- droppoed untested CCU_FEATURE_FIXED_POSTDIV check code in
+  nkm min, max rate patches
+- create two patches for "Add Allwinner A64 MIPI DSI support"
+  one for has_mod_clk quirk and other one for A64 support
+- use existing driver code construct for hblk computation
+- dropped "Increase hfp packet overhead" patch [2], though BSP added
+  this but we have no issues as of now.
+  (no issues on panel side w/o this change)
+- create separate function for vblk computation 
+- enable vcc-dsi regulator in dsi_runtime_resume
+- collect Rob, Acked-by
+- update MAINTAINERS file for panel drivers
+- cleanup commit messages
+- fixed checkpatch warnings/errors
 
-The interrupts were configured after the channel was enabled, configure
-them before so they will work.
+[1] https://patchwork.freedesktop.org/series/68579/
 
--corey
+Any inputs?
+Jagan.
 
-> 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> Reviewed-by: Joel Stanley <joel@jms.id.au>
-> Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
-> ---
->  drivers/char/ipmi/kcs_bmc_aspeed.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/char/ipmi/kcs_bmc_aspeed.c b/drivers/char/ipmi/kcs_bmc_aspeed.c
-> index 3c955946e647..e3dd09022589 100644
-> --- a/drivers/char/ipmi/kcs_bmc_aspeed.c
-> +++ b/drivers/char/ipmi/kcs_bmc_aspeed.c
-> @@ -268,13 +268,14 @@ static int aspeed_kcs_probe(struct platform_device *pdev)
->  	kcs_bmc->io_inputb = aspeed_kcs_inb;
->  	kcs_bmc->io_outputb = aspeed_kcs_outb;
->  
-> +	rc = aspeed_kcs_config_irq(kcs_bmc, pdev);
-> +	if (rc)
-> +		return rc;
-> +
->  	dev_set_drvdata(dev, kcs_bmc);
->  
->  	aspeed_kcs_set_address(kcs_bmc, addr);
->  	aspeed_kcs_enable_channel(kcs_bmc, true);
-> -	rc = aspeed_kcs_config_irq(kcs_bmc, pdev);
-> -	if (rc)
-> -		return rc;
->  
->  	rc = misc_register(&kcs_bmc->miscdev);
->  	if (rc) {
-> -- 
-> git-series 0.9.1
+Jagan Teki (7):
+  dt-bindings: sun6i-dsi: Document A64 MIPI-DSI controller
+  dt-bindings: sun6i-dsi: Add A64 DPHY compatible (w/ A31 fallback)
+  drm/sun4i: dsi: Add has_mod_clk quirk
+  drm/sun4i: dsi: Handle bus clock via regmap_mmio_attach_clk
+  drm/sun4i: dsi: Add Allwinner A64 MIPI DSI support
+  arm64: dts: allwinner: a64: Add MIPI DSI pipeline
+  [DO NOT MERGE] arm64: dts: allwinner: bananapi-m64: Enable Bananapi S070WV20-CT16 DSI panel
+
+ .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 20 ++++-
+ .../phy/allwinner,sun6i-a31-mipi-dphy.yaml    |  6 +-
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 31 +++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 37 ++++++++
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c        | 86 +++++++++++++++----
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h        |  5 ++
+ 6 files changed, 164 insertions(+), 21 deletions(-)
+
+-- 
+2.18.0.321.gffc6fa0e3
+
