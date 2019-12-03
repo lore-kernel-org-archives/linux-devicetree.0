@@ -2,112 +2,110 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35239C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 05:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 101E1C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 05:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D40920866
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 05:24:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kfohgtuo"
+	by mail.kernel.org (Postfix) with ESMTP id DC53E206DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 05:39:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfLCFYM (ORCPT
+        id S1726928AbfLCFjC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:24:12 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35214 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727290AbfLCFYL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 00:24:11 -0500
-Received: by mail-pl1-f196.google.com with SMTP id s10so1219035plp.2
-        for <devicetree@vger.kernel.org>; Mon, 02 Dec 2019 21:24:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=XTs9jOzk9TL0hbRB6PjchZQOiZjWYWm9M+GqSi78t2E=;
-        b=Kfohgtuot4VMjzMiYs1RTN4CFr9Jv/O7n0D/sGYRNzskj2k00jCBksRHVQfvnqUxAA
-         2IbaRwkzM9ZN4Ci0TmKQ5Q2rUPnUKyEP8UtqkpfbOdifaxkbf92SIpyTA6bGOPeCHzku
-         g5zteQaD96IhVul8m2Qn2/GwP1eh8em5lJ6jLEQzFmP6bc7XWnohjp2YYIyeZbkbE3MI
-         ZnE3VIXaj3BwDiLB7VM60MzzpHGCZ0qMfHYlziNEzGnNBj15NuHbf035kLSiPA80k74E
-         pWvKpE4Ql/uLYJ3e4ggEFrEVbGcTigkR+E8s/rYckZ+ZT++oeDFcO/pG/zALFSPy+oAL
-         t0MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=XTs9jOzk9TL0hbRB6PjchZQOiZjWYWm9M+GqSi78t2E=;
-        b=fIqAzpD8yeeYyS/l3C4OJJTCXfVyf2NMtBuN/4qEjA3j20ZOHxiz1IBW6Nrhs+CzoI
-         5Zmuk3sIUC8tYAMFXzNSKlqHvi4qSZWC0zXfDHV4vlOYclFNNjFcGTZJUpE/15d3SidD
-         kM3YsuRcdpTtjuCsKNWxDafnlOepA63UQPonkEIxXNMNIx00k4Mu1iAV+fM+r+UM+/Tv
-         P9JuHWIJBwfo7HKwkZJoJf2IHvb9/TrGEh606RYgJVsV8kYHNagaubaoHX7wyOx6bJ+N
-         gLrLxSsNsu3PwQXq9fCJU/vPA++f2fA7H30V54t3PCPbYi655p7uU3ZaQZ7yYFlefh3d
-         SQ9Q==
-X-Gm-Message-State: APjAAAUolOYk4sp1theLzKs9FCqkZ621awlXcIW0RnJ76h9sMnubOAMZ
-        ZcTXUrwcp3C92QRfFswZSoJHEQ==
-X-Google-Smtp-Source: APXvYqy8GFCzB0hsgDh30sxoG3uiLFI3/zW3FYzh5VBo//Uenr05GQzjstP9U+bCmlG9zacc6MVthg==
-X-Received: by 2002:a17:902:bd97:: with SMTP id q23mr3255257pls.310.1575350650547;
-        Mon, 02 Dec 2019 21:24:10 -0800 (PST)
-Received: from localhost ([14.96.109.134])
-        by smtp.gmail.com with ESMTPSA id j17sm1449689pfr.2.2019.12.02.21.24.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Dec 2019 21:24:10 -0800 (PST)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, swboyd@chromium.org,
-        sivaa@codeaurora.org, Andy Gross <agross@kernel.org>
-Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v2 9/9] arm64: dts: msm8998: thermal: Add critical interrupt support
-Date:   Tue,  3 Dec 2019 10:53:30 +0530
-Message-Id: <3ef309a98ca6445c1982ec3ff1a70db39b18f415.1575349416.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1575349416.git.amit.kucheria@linaro.org>
-References: <cover.1575349416.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1575349416.git.amit.kucheria@linaro.org>
-References: <cover.1575349416.git.amit.kucheria@linaro.org>
+        Tue, 3 Dec 2019 00:39:02 -0500
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:21416 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfLCFjB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 00:39:01 -0500
+IronPort-SDR: 6mbYc1zHsRIcVTA+RPogE1J9l48OEKLVgud4X5TTOBQZu9nriiIs78Py38/1VSXgHOEndNhKqc
+ oGR4q/xWmIqKf/ptaVZGE0vj2AFOf+nhPO7heK6VQdI3Uxt9+WI4USGNx8+E5t1Dt0mCkvbmn5
+ ALjoGbC1qWF1a714v5yO9mhWRalUWATrbim5TwiO1WL5Lu5guGyjTdDYsJqmaoIdRVioyW6gFR
+ 3vdtXIf9k8NsyVjr3fpvNKZHyINpsYRtnA24BKd3u8vUMxmKxiuFehQgcE2xknenXvTtRAXBx1
+ PkY=
+X-IronPort-AV: E=Sophos;i="5.69,272,1571731200"; 
+   d="scan'208";a="43706940"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa3.mentor.iphmx.com with ESMTP; 02 Dec 2019 21:39:00 -0800
+IronPort-SDR: CS+/PFfMeBEEboWNM9uO8MfkB5+1Jw2If93U9GqifcEak1hYwSyMqw80qtlCDQyGVTVWHHxfc0
+ dY4fx5qx2hZcVWxqPasbVxOpZ5KBOx9wobtkmaFZHTfSfZIaS44+kQa5mxpJK+f6B0Y9I7hoVb
+ aDUNpiduLHuKhhgObPo0fTv8wecaxveAm95henyvT9wLZMHJEBeHvhTt8XZg022fv0uUPzg31S
+ WCX584OWrpCdgRRgexlrBpxMsnWLw19LLxA9T7wb421CTBowqE1cySEw4pDt5Gfq78kmgRknUE
+ XnQ=
+Subject: Re: [PATCH v3 7/7] MAINTAINERS: Add GPIO Aggregator/Repeater section
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+CC:     Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-8-geert+renesas@glider.be>
+From:   Harish Jenny K N <harish_kandiga@mentor.com>
+Message-ID: <58717a28-8599-5f2b-a4fa-de1cce93e975@mentor.com>
+Date:   Tue, 3 Dec 2019 11:08:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191127084253.16356-8-geert+renesas@glider.be>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) To
+ svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Register critical interrupts for each of the two tsens controllers
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+On 27/11/19 2:12 PM, Geert Uytterhoeven wrote:
+> Add a maintainership section for the GPIO Aggregator/Repeater, covering
+> documentation, Device Tree bindings, and driver source code.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Harish: Do you want to be listed as maintainer, too?
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index fc7838ea9a010..4b786b8651a90 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -817,8 +817,9 @@
- 			reg = <0x010ab000 0x1000>, /* TM */
- 			      <0x010aa000 0x1000>; /* SROT */
- 			#qcom,sensors = <14>;
--			interrupts = <GIC_SPI 458 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "uplow";
-+			interrupts = <GIC_SPI 458 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "uplow", "critical";
- 			#thermal-sensor-cells = <1>;
- 		};
- 
-@@ -827,8 +828,9 @@
- 			reg = <0x010ae000 0x1000>, /* TM */
- 			      <0x010ad000 0x1000>; /* SROT */
- 			#qcom,sensors = <8>;
--			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "uplow";
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 430 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "uplow", "critical";
- 			#thermal-sensor-cells = <1>;
- 		};
- 
--- 
-2.17.1
 
+Yes. please.
+
+>
+> v3:
+>   - New.
+> ---
+>  MAINTAINERS | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e5949b6827b72f2b..0f12ebdaa8faa76b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7043,6 +7043,14 @@ S:	Maintained
+>  F:	Documentation/firmware-guide/acpi/gpio-properties.rst
+>  F:	drivers/gpio/gpiolib-acpi.c
+>  
+> +GPIO AGGREGATOR/REPEATER
+> +M:	Geert Uytterhoeven <geert+renesas@glider.be>
+> +L:	linux-gpio@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/admin-guide/gpio/gpio-aggregator.rst
+> +F:	Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
+> +F:	drivers/gpio/gpio-aggregator.c
+> +
+>  GPIO IR Transmitter
+>  M:	Sean Young <sean@mess.org>
+>  L:	linux-media@vger.kernel.org
