@@ -2,107 +2,143 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16F8C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB92FC43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8079F2073F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:05:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="EpZg4MNf"
+	by mail.kernel.org (Postfix) with ESMTP id CA9F22053B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfLCQFD (ORCPT
+        id S1726139AbfLCQGv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:05:03 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36709 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfLCQFD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 11:05:03 -0500
-Received: by mail-lj1-f196.google.com with SMTP id r19so4470902ljg.3
-        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 08:05:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:references:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ISxgLk82KYg9gcCYMQW4c3ORz6YkAHuAhHBO9CgaMTE=;
-        b=EpZg4MNfgVquGvO4fH/X5H+3P+UFIyXs1dvDST18rfRasIrdEob3Vz7delQ08QikL9
-         HwLUZjCnZcsKyEi3G8SToHRvBaZdnFFcsPnG4k/5YWG/cwZB1DsyOMnn3iHOgJ5jBhRF
-         0/tv0b27SOMfdHAAS9uvvyzYHSvJz29jXZ8Ghn8P74JIXgbqiQ8Xmf3E7xd0IOJWjYpt
-         v9k8TskKjI/UpljG8OYXfqRkCLbkH8b4DSia7T8a+v1EfZoGxKC3CBVYnqYDmqJFopMg
-         3Xur2LBWPfoAUY+YgoW9CnTNt3+RV4Uwq2EleIYU8L5WljjTjJj4DuITTMBVU0AW9mEM
-         J5uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ISxgLk82KYg9gcCYMQW4c3ORz6YkAHuAhHBO9CgaMTE=;
-        b=Tty9O9clrSvpLUj7cIp5NSKvhWU+e3xtiCy6rvNZ1hZbZNiNY9kmPb+cTMcj54tQCF
-         1C+kGTRsEEERpD0Py6wVtX8HCHYm4zXsBKfDZBUquV0SnT53TXDDXsHuDKrlWB7lytjV
-         MNjRGawaL4HpKZ8HDynUI357TDKYqzFnXVa4xJjJkxpBsNRnnuJJ8sIVs50lTnGfYQYM
-         t85QKDh+heKsNlLL3VzgOicesinbFw0CZwLYVZEG2Ow4+gObqRxX4j9QBmWIXJK4pjjT
-         pr/BLD2kACOMjjbLjPE8RWB5DFGAQEpK1IN+LTh2JRhpDfV4/OPuR6oPJqR2krEGNtvd
-         58kw==
-X-Gm-Message-State: APjAAAVpJYal5qXjfh6oyWguFxBIgVUbp+15NUqNe9ptr1WHBaHxah8G
-        BLwdC5399tyWyY9cFofMjE1kLw==
-X-Google-Smtp-Source: APXvYqwyp3PFALxnKddtKsL8vY1KS7etYmE6Qhye0Iq2Sqts4Tc5bj5UbJeYQy+vhfctVJQU7uj6RA==
-X-Received: by 2002:a2e:85d5:: with SMTP id h21mr3018520ljj.243.1575389101408;
-        Tue, 03 Dec 2019 08:05:01 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:6d1:3848:12e:c7de:68cf:5575])
-        by smtp.gmail.com with ESMTPSA id y192sm1791884lfa.63.2019.12.03.08.04.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Dec 2019 08:05:00 -0800 (PST)
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
-To:     Chris Brandt <Chris.Brandt@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
- <20191203034519.5640-7-chris.brandt@renesas.com>
- <17e66541-41fb-26ed-c87b-15c59ab57bef@cogentembedded.com>
- <TY1PR01MB156262E8D33A0624457CAE248A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-Organization: Cogent Embedded
-Message-ID: <6c2cb15b-896c-e749-8b33-02da46fbc222@cogentembedded.com>
-Date:   Tue, 3 Dec 2019 19:04:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Tue, 3 Dec 2019 11:06:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51528 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725848AbfLCQGv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 11:06:51 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AD9186A2F7;
+        Tue,  3 Dec 2019 16:06:47 +0000 (UTC)
+Message-ID: <d1c87c83f38e74f0c6b0692248fe88dfd2bdec3e.camel@suse.de>
+Subject: Re: [PATCH v4 8/8] linux/log2.h: Use roundup/dow_pow_two() on 64bit
+ calculations
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        james.quinlan@broadcom.com, Matthias Brugger <mbrugger@suse.com>,
+        Phil Elwell <phil@raspberrypi.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-acpi@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>
+Date:   Tue, 03 Dec 2019 17:06:43 +0100
+In-Reply-To: <CAL_JsqLMCXdnZag3jihV_dzuR+wFaVKFb7q_PdKTxTg0LVA6cw@mail.gmail.com>
+References: <20191203114743.1294-1-nsaenzjulienne@suse.de>
+         <20191203114743.1294-9-nsaenzjulienne@suse.de>
+         <CAL_JsqLMCXdnZag3jihV_dzuR+wFaVKFb7q_PdKTxTg0LVA6cw@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-VHC+bPmpbRjqhnK2ykxw"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-In-Reply-To: <TY1PR01MB156262E8D33A0624457CAE248A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/03/2019 04:27 PM, Chris Brandt wrote:
 
->>> +- flash: should be represented by a subnode of the SPIBSC node,
->>> +	 its "compatible" property contains "jedec,spi-nor" if SPI is used.
->>
->>     Are any other flash variants supported?
-> 
-> Do you mean other types of SPI flash?
+--=-VHC+bPmpbRjqhnK2ykxw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-   No, I mean flashes connected via different buses, like HyperBus with the gen3 SoC RPC-IF.
-If SPI's the only bu supported, there's no point saying "if SPI is used".
+Hi Rob,
 
-[...]
-> Chris
+On Tue, 2019-12-03 at 09:53 -0600, Rob Herring wrote:
+> On Tue, Dec 3, 2019 at 5:48 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > The function now is safe to use while expecting a 64bit value. Use it
+> > where relevant.
+>=20
+> What was wrong with the existing code? This is missing some context.
 
-MBR, Sergei
+You're right, I'll update it.
+
+For most of files changed the benefit here is factoring out a common patter=
+n
+using the standard function roundup/down_pow_two() which now provides corre=
+ct
+64bit results.
+
+As for of/device.c and arm64/iort.c it's more of a readability enhancement.=
+ I
+consider it's easier to understand than the current calculation as it abstr=
+acts
+the math.
+
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >  drivers/acpi/arm64/iort.c                        | 2 +-
+> >  drivers/net/ethernet/mellanox/mlx4/en_clock.c    | 3 ++-
+> >  drivers/of/device.c                              | 3 ++-
+>=20
+> In any case,
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
+>=20
+
+Thanks!
+
+Regards,
+Nicolas
+
+
+--=-VHC+bPmpbRjqhnK2ykxw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3miBMACgkQlfZmHno8
+x/5s+Af/a2icSd66GHrsABoMtUfJXpQclSae81ThRP5Bfx6+mK4Ty4en3T+IxOK+
+NPmneod0gjSfyqqQniFbEcmlKAd8wXyUnBCCi6urRvuqOWcw65h10DA3fQCivaOt
+NWn3FRWMlPZbBIAYr/XOcsdOOkbD+VaFE/PaBYmxU/rWaCLGMWpYYBhF/Vcm+ASd
+VPQ4g8AfxyGvQW9EgbmRTMC0k7kMP6qrpmgIjNWvUPyJ+8ytD2Zly2xvbVf9TqhX
+/PP/t19fWayTqhsg+B04K0aN0oriRqSFX44yvCOApKhLBSsF6Nyc40m2sreqKMYY
+98kwrOrux/Fb3OeV/Wzdhhh8VhH+Sg==
+=4wmf
+-----END PGP SIGNATURE-----
+
+--=-VHC+bPmpbRjqhnK2ykxw--
+
