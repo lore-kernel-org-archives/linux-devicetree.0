@@ -2,38 +2,37 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19331C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FFCC43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E61AA20726
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944F82068E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:02:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfLCECn (ORCPT
+        id S1726780AbfLCECz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 23:02:43 -0500
-Received: from pbmsgap02.intersil.com ([192.157.179.202]:53004 "EHLO
-        pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfLCECn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 23:02:43 -0500
-Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
-        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id xB33ipI7008708;
-        Mon, 2 Dec 2019 22:46:25 -0500
-Received: from pbmxdp03.intersil.corp (pbmxdp03.pb.intersil.com [132.158.200.224])
-        by pbmsgap02.intersil.com with ESMTP id 2wkkffj009-1
+        Mon, 2 Dec 2019 23:02:55 -0500
+Received: from pbmsgap01.intersil.com ([192.157.179.201]:34770 "EHLO
+        pbmsgap01.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfLCECz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 23:02:55 -0500
+Received: from pps.filterd (pbmsgap01.intersil.com [127.0.0.1])
+        by pbmsgap01.intersil.com (8.16.0.27/8.16.0.27) with SMTP id xB33hWLi032292;
+        Mon, 2 Dec 2019 22:46:56 -0500
+Received: from pbmxdp01.intersil.corp (pbmxdp01.pb.intersil.com [132.158.200.222])
+        by pbmsgap01.intersil.com with ESMTP id 2wkmu327qh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 02 Dec 2019 22:46:25 -0500
+        Mon, 02 Dec 2019 22:46:56 -0500
 Received: from pbmxdp01.intersil.corp (132.158.200.222) by
- pbmxdp03.intersil.corp (132.158.200.224) with Microsoft SMTP Server
+ pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1531.3; Mon, 2 Dec 2019 22:46:24 -0500
+ 15.1.1531.3; Mon, 2 Dec 2019 22:46:54 -0500
 Received: from localhost.localdomain (132.158.202.109) by
  pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server id
- 15.1.1531.3 via Frontend Transport; Mon, 2 Dec 2019 22:46:23 -0500
+ 15.1.1531.3 via Frontend Transport; Mon, 2 Dec 2019 22:46:53 -0500
 From:   Chris Brandt <chris.brandt@renesas.com>
 To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         "Mark Rutland" <mark.rutland@arm.com>,
@@ -45,9 +44,9 @@ CC:     <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
         Mason Yang <masonccyang@mxic.com.tw>,
         Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
         Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 3/6] clk: renesas: r7s9210: Add SPIBSC clock
-Date:   Mon, 2 Dec 2019 22:45:16 -0500
-Message-ID: <20191203034519.5640-4-chris.brandt@renesas.com>
+Subject: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
+Date:   Mon, 2 Dec 2019 22:45:19 -0500
+Message-ID: <20191203034519.5640-7-chris.brandt@renesas.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191203034519.5640-1-chris.brandt@renesas.com>
 References: <20191203034519.5640-1-chris.brandt@renesas.com>
@@ -57,7 +56,7 @@ Content-Type:   text/plain; charset=US-ASCII
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-12-02_06:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=888
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911200000 definitions=main-1912030031
 X-Proofpoint-Spam-Reason: mlx
@@ -66,48 +65,68 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The SPIBSC clocks are marked as critical because for XIP systems, the
-kernel will be running from QSPI flash and cannot be turned off.
+Document the bindings used by the Renesas SPI bus space controller.
 
 Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 ---
- drivers/clk/renesas/r7s9210-cpg-mssr.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ .../bindings/spi/spi-renesas-spibsc.txt       | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-renesas-spibsc.txt
 
-diff --git a/drivers/clk/renesas/r7s9210-cpg-mssr.c b/drivers/clk/renesas/r7s9210-cpg-mssr.c
-index 14093503c085..153d3a49eee0 100644
---- a/drivers/clk/renesas/r7s9210-cpg-mssr.c
-+++ b/drivers/clk/renesas/r7s9210-cpg-mssr.c
-@@ -93,6 +93,7 @@ static const struct mssr_mod_clk r7s9210_mod_clks[] __initconst = {
- 	DEF_MOD_STB("ether1",	 64,	R7S9210_CLK_B),
- 	DEF_MOD_STB("ether0",	 65,	R7S9210_CLK_B),
- 
-+	DEF_MOD_STB("spibsc",	 83,	R7S9210_CLK_P1),
- 	DEF_MOD_STB("i2c3",	 84,	R7S9210_CLK_P1),
- 	DEF_MOD_STB("i2c2",	 85,	R7S9210_CLK_P1),
- 	DEF_MOD_STB("i2c1",	 86,	R7S9210_CLK_P1),
-@@ -112,6 +113,10 @@ static const struct mssr_mod_clk r7s9210_mod_clks[] __initconst = {
- 	DEF_MOD_STB("vdc6",	 81,	R7S9210_CLK_P1),
- };
- 
-+static const unsigned int r7s9210_crit_mod_clks[] __initconst = {
-+	MOD_CLK_ID_10(83),	/* SPIBSC */
-+};
+diff --git a/Documentation/devicetree/bindings/spi/spi-renesas-spibsc.txt b/Documentation/devicetree/bindings/spi/spi-renesas-spibsc.txt
+new file mode 100644
+index 000000000000..b5f7081d2d1e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-renesas-spibsc.txt
+@@ -0,0 +1,48 @@
++Renesas SPI Bus Space Controller (SPIBSC) Device Tree Bindings
 +
- /* The clock dividers in the table vary based on DT and register settings */
- static void __init r7s9210_update_clk_table(struct clk *extal_clk,
- 					    void __iomem *base)
-@@ -213,6 +218,10 @@ const struct cpg_mssr_info r7s9210_cpg_mssr_info __initconst = {
- 	.num_mod_clks = ARRAY_SIZE(r7s9210_mod_clks),
- 	.num_hw_mod_clks = 11 * 32, /* includes STBCR0 which doesn't exist */
- 
-+	/* Critical Module Clocks */
-+	.crit_mod_clks = r7s9210_crit_mod_clks,
-+	.num_crit_mod_clks = ARRAY_SIZE(r7s9210_crit_mod_clks),
++Otherwise referred to as the "SPI Multi I/O Bus Controller" in SoC hardware
++manuals. This controller was designed specifically for accessing SPI flash
++devices.
 +
- 	/* Callbacks */
- 	.cpg_clk_register = rza2_cpg_clk_register,
- 
++Required properties:
++- compatible: should be an SoC-specific compatible value, followed by
++		"renesas,spibsc" as a fallback.
++		supported SoC-specific values are:
++		"renesas,r7s72100-spibsc"	(RZ/A1)
++		"renesas,r7s9210-spibsc"	(RZ/A2)
++- reg: should contain three register areas:
++       first for the base address of SPIBSC registers,
++       second for the direct mapping read mode
++- clocks: should contain the clock phandle/specifier pair for the module clock.
++- power-domains: should contain the power domain phandle/specifier pair.
++- #address-cells: should be 1
++- #size-cells: should be 0
++- flash: should be represented by a subnode of the SPIBSC node,
++	 its "compatible" property contains "jedec,spi-nor" if SPI is used.
++
++Example:
++
++	spibsc: spi@1f800000 {
++		compatible = "renesas,r7s9210-spibsc", "renesas,spibsc";
++		reg = <0x1f800000 0x8c>, <0x20000000 0x10000000 >;
++		clocks = <&cpg CPG_MOD 83>;
++		power-domains = <&cpg>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		flash@0 {
++			compatible = "jedec,spi-nor";
++			reg = <0>;
++			spi-max-frequency = <40000000>;
++
++			partitions {
++				compatible = "fixed-partitions";
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				partition@0000000 {
++					label = "u-boot";
++					reg = <0x00000000 0x80000>;
++				};
++			};
++		};
 -- 
 2.23.0
 
