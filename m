@@ -2,199 +2,100 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8114CC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20998C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5370720833
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF72720684
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:27:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfLCHNp (ORCPT
+        id S1727392AbfLCH1t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 02:13:45 -0500
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:62540 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727372AbfLCHNp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 02:13:45 -0500
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: NBb0poChIeNC2g1/pnmYb12a4nso2OzZoC3QHgHdbzwTLpzTj+1VhA6MtmStdfI/rvmfXnmcCb
- pZxIRfYXKCmE5CAtiiwL+wr1n5Rm4yfD5+zk2Zq/X9bOfalkcii/IAcI2wCAOVSt9+7rpPDzjY
- n+IKIyWIFFshpYdihDcwsXNpAqC42yMINrjN1vxVJKHfKLLp45wYy1THgozqsn67MNGHqhXPPI
- 8qRD/jvBGp5IjXQaY9SkyLit0tKzQOt0DHiH8Xeq0AhLqwEE7s5OLUCShtTzd8CnzHOdopg0bk
- 8Bo=
+        Tue, 3 Dec 2019 02:27:49 -0500
+Received: from mga07.intel.com ([134.134.136.100]:20359 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727389AbfLCH1t (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 02:27:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 23:27:48 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,272,1571727600"; 
-   d="scan'208";a="60401245"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Dec 2019 00:13:43 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 3 Dec 2019 00:13:42 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Tue, 3 Dec 2019 00:13:41 -0700
-Date:   Tue, 3 Dec 2019 08:13:32 +0100
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peda@axentia.se" <peda@axentia.se>,
-        "Codrin Ciubotariu - M19940" <Codrin.Ciubotariu@microchip.com>,
-        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH 3/3] i2c: at91: remote default value initialization
-Message-ID: <20191203071332.zwpmeb65g7e7ckmj@M43218.corp.atmel.com>
-Mail-Followup-To: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peda@axentia.se" <peda@axentia.se>,
-        Codrin Ciubotariu - M19940 <Codrin.Ciubotariu@microchip.com>,
-        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
-References: <1575276957-5615-1-git-send-email-eugen.hristev@microchip.com>
- <1575276957-5615-3-git-send-email-eugen.hristev@microchip.com>
+   d="scan'208";a="213328497"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.95]) ([10.237.72.95])
+  by orsmga003.jf.intel.com with ESMTP; 02 Dec 2019 23:27:46 -0800
+Subject: Re: [PATCH 1/4] mmc: sdhci: Add delay after power off
+To:     Jun Nie <jun.nie@linaro.org>, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
+References: <20191202144104.5069-1-jun.nie@linaro.org>
+ <20191202144104.5069-2-jun.nie@linaro.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <7f95d66f-9d40-93ae-828d-ecae88463a9b@intel.com>
+Date:   Tue, 3 Dec 2019 09:26:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1575276957-5615-3-git-send-email-eugen.hristev@microchip.com>
+In-Reply-To: <20191202144104.5069-2-jun.nie@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 09:56:41AM +0100, Eugen Hristev - M18282 wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
+On 2/12/19 4:41 pm, Jun Nie wrote:
+> Add delay after power off to ensure that full power cycle is
+> successful. Otherwise, some controllers, at lease for Hisilicon
+> eMMC controller, may not be unstable sometimes for full power
+> cycle operation.
 > 
-> Platform data structs are initialized by default with zero values.
-> Thus it becomes redundant to initialize them manually to zero (false).
-> Remove extra false initialization for field members in structs.
-> 
-> Suggested-by: Wolfram Sang <wsa@the-dreams.de>
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-
-Honestly, I prefer an explicit description than saving lines of code, in
-a glance you have all the details, don't need to go back to the
-structure definition.
-
-As it's a personal belief, I won't argue about it.
-Reviewed-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-
+> Signed-off-by: Jun Nie <jun.nie@linaro.org>
 > ---
->  drivers/i2c/busses/i2c-at91-core.c | 39 --------------------------------------
->  1 file changed, 39 deletions(-)
+>  drivers/mmc/host/sdhci.c | 7 +++++++
+>  drivers/mmc/host/sdhci.h | 2 ++
+>  2 files changed, 9 insertions(+)
 > 
-> diff --git a/drivers/i2c/busses/i2c-at91-core.c b/drivers/i2c/busses/i2c-at91-core.c
-> index 5137e62..3da1a8a 100644
-> --- a/drivers/i2c/busses/i2c-at91-core.c
-> +++ b/drivers/i2c/busses/i2c-at91-core.c
-> @@ -66,55 +66,26 @@ static struct at91_twi_pdata at91rm9200_config = {
->  	.clk_max_div = 5,
->  	.clk_offset = 3,
->  	.has_unre_flag = true,
-> -	.has_alt_cmd = false,
-> -	.has_hold_field = false,
-> -	.has_dig_filtr = false,
-> -	.has_adv_dig_filtr = false,
-> -	.has_ana_filtr = false,
->  };
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 3140fe2e5dba..a654f0aeb438 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1761,6 +1761,13 @@ void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
+>  		sdhci_writeb(host, 0, SDHCI_POWER_CONTROL);
+>  		if (host->quirks2 & SDHCI_QUIRK2_CARD_ON_NEEDS_BUS_ON)
+>  			sdhci_runtime_pm_bus_off(host);
+> +
+> +		/*
+> +		 * Some controllers need an extra 100ms delay to secure
+> +		 * full power cycle is successful.
+> +		 */
+> +		if (host->quirks2 & SDHCI_QUIRK2_DELAY_AFTER_POWER_OFF)
+> +			msleep(100);
+
+Please use the ->set_power() callback and do this in your own driver.
+
+>  	} else {
+>  		/*
+>  		 * Spec says that we should clear the power reg before setting
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 0ed3e0eaef5f..0e6f97eaa796 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -482,6 +482,8 @@ struct sdhci_host {
+>   * block count.
+>   */
+>  #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
+> +/* Controllers need an extra 100ms delay to make sure power off completely */
+> +#define SDHCI_QUIRK2_DELAY_AFTER_POWER_OFF		(1<<19)
 >  
->  static struct at91_twi_pdata at91sam9261_config = {
->  	.clk_max_div = 5,
->  	.clk_offset = 4,
-> -	.has_unre_flag = false,
-> -	.has_alt_cmd = false,
-> -	.has_hold_field = false,
-> -	.has_dig_filtr = false,
-> -	.has_adv_dig_filtr = false,
-> -	.has_ana_filtr = false,
->  };
->  
->  static struct at91_twi_pdata at91sam9260_config = {
->  	.clk_max_div = 7,
->  	.clk_offset = 4,
-> -	.has_unre_flag = false,
-> -	.has_alt_cmd = false,
-> -	.has_hold_field = false,
-> -	.has_dig_filtr = false,
-> -	.has_adv_dig_filtr = false,
-> -	.has_ana_filtr = false,
->  };
->  
->  static struct at91_twi_pdata at91sam9g20_config = {
->  	.clk_max_div = 7,
->  	.clk_offset = 4,
-> -	.has_unre_flag = false,
-> -	.has_alt_cmd = false,
-> -	.has_hold_field = false,
-> -	.has_dig_filtr = false,
-> -	.has_adv_dig_filtr = false,
-> -	.has_ana_filtr = false,
->  };
->  
->  static struct at91_twi_pdata at91sam9g10_config = {
->  	.clk_max_div = 7,
->  	.clk_offset = 4,
-> -	.has_unre_flag = false,
-> -	.has_alt_cmd = false,
-> -	.has_hold_field = false,
-> -	.has_dig_filtr = false,
-> -	.has_adv_dig_filtr = false,
-> -	.has_ana_filtr = false,
->  };
->  
->  static const struct platform_device_id at91_twi_devtypes[] = {
-> @@ -142,23 +113,13 @@ static const struct platform_device_id at91_twi_devtypes[] = {
->  static struct at91_twi_pdata at91sam9x5_config = {
->  	.clk_max_div = 7,
->  	.clk_offset = 4,
-> -	.has_unre_flag = false,
-> -	.has_alt_cmd = false,
-> -	.has_hold_field = false,
-> -	.has_dig_filtr = false,
-> -	.has_adv_dig_filtr = false,
-> -	.has_ana_filtr = false,
->  };
->  
->  static struct at91_twi_pdata sama5d4_config = {
->  	.clk_max_div = 7,
->  	.clk_offset = 4,
-> -	.has_unre_flag = false,
-> -	.has_alt_cmd = false,
->  	.has_hold_field = true,
->  	.has_dig_filtr = true,
-> -	.has_adv_dig_filtr = false,
-> -	.has_ana_filtr = false,
->  };
->  
->  static struct at91_twi_pdata sama5d2_config = {
-> -- 
-> 2.7.4
+>  	int irq;		/* Device IRQ */
+>  	void __iomem *ioaddr;	/* Mapped address */
 > 
+
