@@ -4,74 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7E9C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE71C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19E6B2068E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D872073B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="TyQTwPFh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kXWM650D"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Gu15yB4S";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JiOOrFvL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfLCMC7 (ORCPT
+        id S1726363AbfLCMCx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 07:02:59 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:49521 "EHLO
+        Tue, 3 Dec 2019 07:02:53 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:34011 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725954AbfLCMC7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 07:02:59 -0500
+        by vger.kernel.org with ESMTP id S1725954AbfLCMCv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 07:02:51 -0500
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 5A6242237A;
-        Tue,  3 Dec 2019 07:02:58 -0500 (EST)
+        by mailout.nyi.internal (Postfix) with ESMTP id 426612238E;
+        Tue,  3 Dec 2019 07:02:51 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 03 Dec 2019 07:02:58 -0500
+  by compute4.internal (MEProxy); Tue, 03 Dec 2019 07:02:51 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
         :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=jm30yheMpSomj
-        rpkWzReiyBbV2WMRj2TirNvmaUSIp4=; b=TyQTwPFhVMdXHf+7WolpbPFfUTAOA
-        Pdy42plpu8GtDEYyY2+WL32jg/QmINT9wLAPPi+8sX0PeSsIbyrxiiqM6844/nug
-        ihDvzMJTB48O950sroHoeSbEFWNymyS2N99ihvuSdaKcUrAUEXoKfxnr9y3cjjc4
-        m6x7G1BmpOJTdEWXk10WQBupkuTzTA6IQMN2pbk2LFlZB7Znais6QgU1398SZ/lP
-        GGwbb51x8OETwStsVTwfjgWD3cdeU7ibqintvTJSxY00/BtMnsbqPtX/eUjryt+V
-        rBgcK3q9/6UUG4GBbZ7leX8rgI0d41hfmj5SsExuMbhp7btRGzzFG69Bg==
+        :mime-version:content-transfer-encoding; s=fm1; bh=dBjUWt2kgJuEQ
+        ixLajR6K5ymul+LldyLVlWi+jU9gCE=; b=Gu15yB4Sy7GB58K1q3i0PMJWpnqoX
+        Xi51bwbSGnkCkl1ygTCcBzhO/obbzcJ40UZbYyU2PF3tdSRwUA/5wqIUXR0VJXTV
+        FQOhSDtJ6h8Tk2F70XNHChTe1oto3vasDK1CqtaIyu0nbbNosTWgmfd7edRpnpZ7
+        jV4gcyIm+Seq1MQs8ArlCh7s6kHWbDnAysG5BBILTOVri7I1HvEAxccYqkP4aBEO
+        nN5QHVBeUvBJDkct9zysisxpwSSQnSVCpxzq8mfqtfNWSBG4ZgFxk0NmPverMaKp
+        GwLg4F+BOWaBe9llDmDRi+ZmUrFOLWxpWiViL/7YUs3jo69bn9NdC1bkg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=jm30yheMpSomjrpkWzReiyBbV2WMRj2TirNvmaUSIp4=; b=kXWM650D
-        pK2kod/FLmXZJFV/Hxbc71i8z89ybmHfGDZmSmfxy5Le005htDfrrWylETR4/rOV
-        Ziuxv1KEkg25ypGB1OPImFRbL5rI9m+xAi6Qlhb0N3bqbCEcKoOzvf1LpI1Wx5rY
-        k0+VidZKri1EWnb6pTUAZtudD9MeKJ0sCptxvPokLufoeMmqPsr1wJY1XWoYBg26
-        irlVm1BRr5tkClhiye74ksz1hYfw9GT68hQpLvBYOECCzjAy8dBKmFWrR4tdRBA7
-        PDC/wHsyMeiq0gZhSCbido7Rn4TiUyisoh5NJBhrCMLSugrPrqFO01maHz1KrjDB
-        WVCcz7kcUEZvpA==
-X-ME-Sender: <xms:8k7mXbscz4FaJIyES5A5kWth5HppQOQufM4w5z6i3WDxkLQyMN2ihw>
+        fm1; bh=dBjUWt2kgJuEQixLajR6K5ymul+LldyLVlWi+jU9gCE=; b=JiOOrFvL
+        ib0zt0MfG8kUMKe8CRjg0Y3zOhJWup6vzRlGlfsShrf16lvyxm6ynVyt3YKVFDqs
+        D6Ke8IwOc8bGLe3hsEugGJuV0NR2vpg868djMauzH1E5rtM2rguwD0BJGHUIIsjW
+        5+HmBRSBX0R9OQzbVtQCIsTK7lJRCF4YdX2/UhKIvUyQh0XOo9w0X7mcJsbf5KuR
+        JUooZoXjSWieax3cYsOb2A0EGtriZPiEB2HqO5TDH53RaLgrTSty8wx+k4DGvHHS
+        regUm3qltUY9u1o3ZQzJ4snQhxwqLSRqQslUbL9AYjIIhv+aNYAolTZIdXn0nGRJ
+        3i2a2jSMUKgxLw==
+X-ME-Sender: <xms:607mXRj3jPDC45uNbtSTaYhh4VYwwcKUzVtby0NyZvACzqvFU0ds3Q>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejjedgfeejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeetnhgurhgv
     ficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfkphepudduke
     drvdduuddrledvrddufeenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegr
-    jhdrihgurdgruhenucevlhhushhtvghrufhiiigvpeef
-X-ME-Proxy: <xmx:8k7mXcKrG6EBQCI2BULgXWIywLn0-wXsj6V2G2kW5szo8VK3WYPADw>
-    <xmx:8k7mXUsgjvaXqKZxqGZtA7EycLncmWjYzrT5wMwbTWVBTcIoFwePOw>
-    <xmx:8k7mXUfeUrKBlhIX2JnVO41T6E_lrkbs7Zp0MpiVaSlogN_TNy5Ynw>
-    <xmx:8k7mXfZqyAHvvVbKcB6Ur1yB0vE5pZE5afabjHicgKKVy7G2gvxvsQ>
+    jhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:607mXaRhH3rIYT__z_RYfofT-puBbiEWW5Gv151FJfncRwHUSkagMA>
+    <xmx:607mXUrelm7Fff-hX0olrUnEKuvB0sliP6RFh7JcVPE74RMvNmI71w>
+    <xmx:607mXVYyVxIm1WIDU655V6HgP2t1JrUtI053gvP5AdM9e0YX_xs0zw>
+    <xmx:607mXaAOcyKA6KazU9jplqMkGy7aV4YB8KeI6NxrjEJL-TT5IE-rVw>
 Received: from mistburn.lan (unknown [118.211.92.13])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3EAE5306010D;
-        Tue,  3 Dec 2019 07:02:54 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9A811306010D;
+        Tue,  3 Dec 2019 07:02:47 -0500 (EST)
 From:   Andrew Jeffery <andrew@aj.id.au>
 To:     linux-aspeed@lists.ozlabs.org
 Cc:     joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Stefan M Schaeckeler <sschaeck@cisco.com>
-Subject: [PATCH 04/14] ARM: dts: aspeed-g5: Use recommended generic node name for SDMC
-Date:   Tue,  3 Dec 2019 22:34:05 +1030
-Message-Id: <f6963e3de99508b1053e7d96e4dbb05cb4bef3be.1575369656.git-series.andrew@aj.id.au>
+        linux-kernel@vger.kernel.org, Patrick Venture <venture@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 02/14] dt-bindings: misc: Document reg for aspeed,p2a-ctrl nodes
+Date:   Tue,  3 Dec 2019 22:34:03 +1030
+Message-Id: <17ccbf7c6f9f7b81543eabee06d81e137c8759c6.1575369656.git-series.andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
 References: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
@@ -82,29 +82,30 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The EDAC is a sub-function of the SDRAM Memory Controller. Rename the
-node to the appropriate generic node name.
+The P2A controller node sits under a syscon device, and can assume
+offsets from the base of the syscon based on the compatible. However,
+for devicetree correctness allow a reg property to be specified, which
+an associated driver may choose to use to discover associated resources.
 
-Cc: Stefan M Schaeckeler <sschaeck@cisco.com>
+Cc: Patrick Venture <venture@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 Reviewed-by: Joel Stanley <joel@jms.id.au>
-Reviewed-by: Stefan Schaeckeler <sschaeck@cisco.com>
 ---
- arch/arm/boot/dts/aspeed-g5.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index edad1fd78925..d8d358e23d78 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -206,7 +206,7 @@
- 			#size-cells = <1>;
- 			ranges;
+diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+index 0e1fa5bc6a30..f2e2e28b317c 100644
+--- a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
++++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+@@ -18,6 +18,7 @@ Required properties:
+ Optional properties:
+ ===================
  
--			edac: sdram@1e6e0000 {
-+			edac: memory-controller@1e6e0000 {
- 				compatible = "aspeed,ast2500-sdram-edac";
- 				reg = <0x1e6e0000 0x174>;
- 				interrupts = <0>;
++- reg: A hint for the memory regions associated with the P2A controller
+ - memory-region: A phandle to a reserved_memory region to be used for the PCI
+ 		to AHB mapping
+ 
 -- 
 git-series 0.9.1
