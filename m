@@ -2,116 +2,134 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B779C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AD2C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EECA206EC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C1020659
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575383331;
-	bh=5ihwZB0xAlXCWMCf82w3KT7baRbNzpvA9U92qm68+z8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dTjco2I+mdMrvNEecQp+Zk+mzjAhKtbyXm0up7UeTAQAM6O6/49CdTArpZpEz3U5i
-	 dVKY20Yup+cmpCFjwXXEJxhViTSVrY2wIJkxymH0CLbzEL0KtZgUTCzi1Nstxu4qMW
-	 Uvb/BV3PO31oxnGCcugxQqjvNXFK2Ylh4oxFgRXg=
+	s=default; t=1575383489;
+	bh=paDjy7hZsmQkcUp7jKSH70ftPLffSgdTsEFpUetgz24=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hN0pSZuZ7VP0f3BAmuuNSftfZGjkzpx5cQHZuYmFXetjbMgulr2mUSHz0VyVzRtHb
+	 huToMNvYmYdMkS6dejl4YFHAd6NDKu/9y+RQskpFpf8hrS4U3as0kl4vKwXjsgqRwz
+	 WHeR6I3MPDYUCikGgA/jr7Ei5Wt9dicLiONrEzIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725957AbfLCO2v (ORCPT
+        id S1726024AbfLCOb3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:28:51 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58630 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfLCO2u (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:28:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VxYjLGtwCDTcs4bHOoBqIWPW0QFsGBkBnVZ5soEijWE=; b=BXzB3IPmvuG64kDV9JxcPH47i
-        /glTDJZBPWA2NVSO6v17ptumVhif/XbTMWuiKgdAQqEOA3HNTChL+nIvs8vamiueXHY+5Xty2C7tY
-        VUXZ1vOX6We3Q22QAhW35qO+tLrTgJHMg+XnTdhhZLIy49ZJXBBj7RgKWGHEDqBAhh1Tw=;
-Received: from fw-tnat-cam1.arm.com ([217.140.106.49] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1ic99j-0002jt-VK; Tue, 03 Dec 2019 14:28:00 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 7D184D002FA; Tue,  3 Dec 2019 14:27:59 +0000 (GMT)
-Date:   Tue, 3 Dec 2019 14:27:59 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     kernel@puri.sm, Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Add the broadmobi BM818
-Message-ID: <20191203142759.GJ1998@sirena.org.uk>
-Mail-Followup-To: "Angus Ainslie (Purism)" <angus@akkea.ca>, kernel@puri.sm,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191202174831.13638-1-angus@akkea.ca>
+        Tue, 3 Dec 2019 09:31:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfLCOb2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 09:31:28 -0500
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 488E220659;
+        Tue,  3 Dec 2019 14:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575383487;
+        bh=paDjy7hZsmQkcUp7jKSH70ftPLffSgdTsEFpUetgz24=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KZ3PkNnslqc7BEkuj8s892JHiyp111mpjo13oyKF2LEIsAAcH/hc5JifebD94uck3
+         nvVaUSye1Jaz8ajRoUANeZarO5PaXCebynHCFsWg9UsJyvHq5vbTBbBh+fkKJlWy4n
+         ygD9D5lhomlPo1jbX8Cgfpm0LyJHYR996Q4klzU0=
+Received: by mail-qv1-f44.google.com with SMTP id o18so1579749qvf.1;
+        Tue, 03 Dec 2019 06:31:27 -0800 (PST)
+X-Gm-Message-State: APjAAAX6siZ28IpYyeoB3c/o2qRLnuo9Wg30ZnPj1yXqUYOrwEaagzCE
+        U9MCCDpKb2WB+zZn94r4sH/h7CZZ61hN5lHs1A==
+X-Google-Smtp-Source: APXvYqxDBnGQNKjTk3qSKKiOvMvxPKQPV7m6ur08FqhiSl9j9w8DAHBF3481M9puWdGG8hXS2X7yJKuiKlMAjUfp4E0=
+X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr5420247qvv.85.1575383483847;
+ Tue, 03 Dec 2019 06:31:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ofZMSlrAVk9bLeVm"
-Content-Disposition: inline
-In-Reply-To: <20191202174831.13638-1-angus@akkea.ca>
-X-Cookie: Cleanliness is next to impossible.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.5630f63168ad5cddf02e9796106f8e086c196907.1575376664.git-series.andrew@aj.id.au>
+ <3da2492c244962c27b21aad87bfa6bf74f568f1d.1575376664.git-series.andrew@aj.id.au>
+In-Reply-To: <3da2492c244962c27b21aad87bfa6bf74f568f1d.1575376664.git-series.andrew@aj.id.au>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 3 Dec 2019 08:31:10 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+3qXJbTu9G42g11PLJH-A0XeSQmJKj0obO32QFna3dEA@mail.gmail.com>
+Message-ID: <CAL_Jsq+3qXJbTu9G42g11PLJH-A0XeSQmJKj0obO32QFna3dEA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: ipmi: aspeed: Introduce a v2 binding for KCS
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     openipmi-developer@lists.sourceforge.net,
+        Corey Minyard <minyard@acm.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Dec 3, 2019 at 6:36 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> The v2 binding utilises reg and renames some of the v1 properties.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt | 20 +++++---
+>  1 file changed, 14 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt b/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
+> index d98a9bf45d6c..76b180ebbde4 100644
+> --- a/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
+> +++ b/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
+> @@ -1,9 +1,10 @@
+> -* Aspeed KCS (Keyboard Controller Style) IPMI interface
+> +# Aspeed KCS (Keyboard Controller Style) IPMI interface
+>
+>  The Aspeed SOCs (AST2400 and AST2500) are commonly used as BMCs
+>  (Baseboard Management Controllers) and the KCS interface can be
+>  used to perform in-band IPMI communication with their host.
+>
+> +## v1
+>  Required properties:
+>  - compatible : should be one of
+>      "aspeed,ast2400-kcs-bmc"
+> @@ -12,14 +13,21 @@ Required properties:
+>  - kcs_chan : The LPC channel number in the controller
+>  - kcs_addr : The host CPU IO map address
+>
+> +## v2
+> +Required properties:
+> +- compatible : should be one of
+> +    "aspeed,ast2400-kcs-bmc-v2"
+> +    "aspeed,ast2500-kcs-bmc-v2"
+> +- reg : The address and size of the IDR, ODR and STR registers
+> +- interrupts : interrupt generated by the controller
+> +- slave-reg : The host CPU IO map address
 
---ofZMSlrAVk9bLeVm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+aspeed,slave-reg
 
-On Mon, Dec 02, 2019 at 10:48:29AM -0700, Angus Ainslie (Purism) wrote:
+>
+>  Example:
+>
+> -    kcs3: kcs3@0 {
+> -        compatible = "aspeed,ast2500-kcs-bmc";
+> -        reg = <0x0 0x80>;
+> +    kcs3: kcs@24 {
+> +        compatible = "aspeed,ast2500-kcs-bmc-v2";
+> +        reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
 
->   sound: codecs: gtm601: add Broadmobi bm818 sound profile
->   ASoC: gtm601: add the broadmobi interface
+What are the other registers in this address space? I'm not so sure
+this is an improvement if you end up with a bunch of nodes with single
+registers.
 
-These subject styles don't even agree with each other :( - please
-try to be consistent with the style for the subsystem (the latter
-one matches, the first one doesn't).
-
-Please also try to think about your CC lists when sending
-patches, try to understand why everyone you're sending them to is
-getting a copy - kernel maintainers get a lot of mail and sending
-not obviously relevant patches to random people adds to that.
-
---ofZMSlrAVk9bLeVm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3mcO4ACgkQJNaLcl1U
-h9DGXgf/SJ8t7hSPglwZzxnDVxAte2xNoAVezgY5OPF4s1sm2k7U/h+ivay63+br
-Yb0uVbL8I61TWMN8GAcMIRA2lsjzD20/oTcxPMamHvWE+91yTdxvBrWoRpqF3LcI
-P8a2CJx3PYIH4nbyML6r53ZnzIF2rc9pGLB3t740Yu3xU87iKqWBWO5Fw3bbA824
-BLl2+XQLYFPZ+oLLkpz6BR7xhDpgJ02aO2Fw3LlPtdD82VreneMOCmGYbavz26EN
-A9c7HPAiqsyAbJ/t2dHPpIoZ0wihaRr8gPKy4py1EH43ScBAVvWMT0ca+0zpWt++
-4aGCqa/WdIz0DOggZWP4JDtiux7z/Q==
-=Br5V
------END PGP SIGNATURE-----
-
---ofZMSlrAVk9bLeVm--
+>          interrupts = <8>;
+> -        kcs_chan = <3>;
+> -        kcs_addr = <0xCA2>;
+> +        slave-reg = <0xca2>;
+>          status = "okay";
+>      };
+> --
+> git-series 0.9.1
