@@ -2,168 +2,155 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E2EC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3671FC432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC57206EC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:07:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OcOLLSM2"
+	by mail.kernel.org (Postfix) with ESMTP id 0EEB22080A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:15:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575386127;
+	bh=+JqMigEUmtKPTqcnM6ZbCi/YuA1GoQgvuShVp0TQOLY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=ZBGFG8S4ZJI8t5eojitR3OgXKhbInMBy0hTsZfvd+kmSiBC5ln6fiSQPyHvHa8rlZ
+	 aQHADNd1jG+EuDvpec9eAck6r62Nu59u6g9AYGctR4uqVBh7K9qmPojyuj15nnE+9f
+	 /tAiZYmVKRWkvwf1mo5t1fkIj1uhnCwLAM1V9fQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfLCPG6 (ORCPT
+        id S1726298AbfLCPP0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:06:58 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42250 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfLCPG5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 10:06:57 -0500
-Received: by mail-pl1-f196.google.com with SMTP id x13so1799706plr.9;
-        Tue, 03 Dec 2019 07:06:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vuBgxT+Qbk3ubYCJQymif0bEiJiXCbEoz1v3OhqyqTo=;
-        b=OcOLLSM21Dry/Jx7rBKSDi7fbfayCR6F2Sw71nKmjXhnewkuGLaC0KJrTWbvJE+Qgn
-         LoM5gF9ZC9LoP2bKmW7ZZo2XqW+NAHswxmzSSNJC2SFez7Z5Xyy1Kr3OApohGUgSo+jH
-         99JfMsHOXyx8V/Ki5WAX2TUTlJAUb1IG5vMllxIE7HlDTe/LWz7C3WgDDJgFyhDeE8Si
-         3rEM1WdOamqJ3J2k/PkcIhAPqnCqE+CEYipSHaPpQaIEx1R0DOg5gRHQqrRyHVK2Hvdd
-         7TTv/fekDOShV9LqmOYQfVVOckKdbfcub4iPGqO2WT3HGeHu+rC+EyB+gMLDfaVjkZJX
-         lvyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vuBgxT+Qbk3ubYCJQymif0bEiJiXCbEoz1v3OhqyqTo=;
-        b=m5rGHEZUClpizcaq+UiP7ayhIBGDy+l2HUKjW+uEAx/IFCTfIYZzS8zBXNLXKo2Cmd
-         Srt/mWjJJQ9nLq3pBRjkVhuEXoetSLy5T0zf+2aZzvx26eKGOld1tDaVGO0uzwr9Mrg7
-         gugcRPyCiX1iXQ5dhs2QdHh470WmcDUIfeKSStvQ+Qug4MwZFEgpPztmrRaYY1Qr7R9Q
-         eRdi/tNI0V270K4rdO6x2yfWt/43LS2lldMbpaU5klgzoJRpZghtjPN0O1BAJT8L/8FJ
-         wXcVuklm69Lix+YHHPedtyek7E7/Glv8XIwAznWg3cagg9P4QWEwH4/DlOw9E7RAbRct
-         78+Q==
-X-Gm-Message-State: APjAAAXG0hjClAsjUGZxnXBRRwa6XWMoTM1ieOQa5TdR96n50tArtI0r
-        3jbixgbMQp4DEPQPp6bzrd4=
-X-Google-Smtp-Source: APXvYqwVUWuvtmoCjjOpXTlhawPaCTM77lQIg8WunkiWSQ50Jtsh07rKO8SxbQZFvar0S/rIQmrtMw==
-X-Received: by 2002:a17:902:8498:: with SMTP id c24mr5227759plo.223.1575385616912;
-        Tue, 03 Dec 2019 07:06:56 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r6sm1925649pfh.91.2019.12.03.07.06.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Dec 2019 07:06:55 -0800 (PST)
-Subject: Re: [PATCH 2/3] dt-binding: iio: Add documentation for ADM1177
-To:     Beniamin Bia <beniamin.bia@analog.com>, linux-hwmon@vger.kernel.org
-Cc:     Michael.Hennerich@analog.com, linux-kernel@vger.kernel.org,
-        jdelvare@suse.com, mark.rutland@arm.com, lgirdwood@gmail.com,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        biabeniamin@outlook.com
-References: <20191203135711.13972-1-beniamin.bia@analog.com>
- <20191203135711.13972-2-beniamin.bia@analog.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <b7402a4f-1918-1922-a779-c9914be27f1b@roeck-us.net>
-Date:   Tue, 3 Dec 2019 07:06:54 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 3 Dec 2019 10:15:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbfLCPP0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 10:15:26 -0500
+Received: from [192.168.1.31] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E00A42073C;
+        Tue,  3 Dec 2019 15:15:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575386124;
+        bh=+JqMigEUmtKPTqcnM6ZbCi/YuA1GoQgvuShVp0TQOLY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=IK/Vv0oJltH1/SQcCB9uNZ+1oGSxUksJq2j9TRAg6+PuJ97y38INjE12t7POU5kCH
+         +cKZVyKeehrpkZS/TFAmn18P6M7MZSQATdh6HBo622xdbj/ivycdvNF34koqO42nva
+         5IFD/mXxlT9GIkzw5+WaCG4uWoLaRP9GdW3M5AjA=
+Subject: Re: [PATCH 2/2] clk: socfpga: agilex: add clock driver for the Agilex
+ platform
+To:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, mturquette@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org
+References: <20190918013459.15966-1-dinguyen@kernel.org>
+ <20190918013459.15966-2-dinguyen@kernel.org>
+ <20190918050010.74B4021848@mail.kernel.org>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4726f580-fe88-5b20-e869-4e31bd63c6e3@kernel.org>
+Date:   Tue, 3 Dec 2019 09:15:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191203135711.13972-2-beniamin.bia@analog.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190918050010.74B4021848@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/3/19 5:57 AM, Beniamin Bia wrote:
-> Documentation for ADM1177 was added.
+Hi Stephen,
+
+On 9/18/19 12:00 AM, Stephen Boyd wrote:
+> Quoting Dinh Nguyen (2019-09-17 18:34:59)
+>> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+>> index 0cad76021297..ef2c96c0f1e0 100644
+>> --- a/drivers/clk/Makefile
+>> +++ b/drivers/clk/Makefile
+>> @@ -18,6 +18,7 @@ endif
+>>  
+
+<snip>
+
+>> +struct clk *agilex_register_pll(const char *name,
+>> +                               const char * const *parent_names,
+>> +                               u8 num_parents, unsigned long flags,
+>> +                               void __iomem *reg, unsigned long offset)
+>> +{
+>> +       struct clk *clk;
+>> +       struct socfpga_pll *pll_clk;
+>> +       struct clk_init_data init;
+>> +
+>> +       pll_clk = kzalloc(sizeof(*pll_clk), GFP_KERNEL);
+>> +       if (WARN_ON(!pll_clk))
+>> +               return NULL;
+>> +
+>> +       pll_clk->hw.reg = reg + offset;
+>> +
+>> +       if (streq(name, SOCFPGA_BOOT_CLK))
+>> +               init.ops = &clk_boot_ops;
+>> +       else
+>> +               init.ops = &agilex_clk_pll_ops;
+>> +
+>> +       init.name = name;
+>> +       init.flags = flags;
+>> +
+>> +       init.num_parents = num_parents;
+>> +       init.parent_names = parent_names;
+> 
+> Is it possible to use the new way of specifying clk parents here so that
+> we don't have to keep using strings to describe the clk topology?
 > 
 
-Subject still points to iio.
+Can you point me to what you mean here? Perhaps a driver that is using
+this new way of specifying clk parents?
 
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> ---
->   .../bindings/hwmon/adi,adm1177.yaml           | 65 +++++++++++++++++++
->   1 file changed, 65 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml b/Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
-> new file mode 100644
-> index 000000000000..abd9354217ba
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hwmon/adi,adm1177.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADM1177 Hot Swap Controller and Digital Power Monitor
-> +
-> +maintainers:
-> +  - Michael Hennerich <michael.hennerich@analog.com>
-> +  - Beniamin Bia <beniamin.bia@analog.com>
-> +
-> +description: |
-> +  Analog Devices ADM1177 Hot Swap Controller and Digital Power Monitor
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1177.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,adm1177
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  avcc-supply:
-> +    description:
-> +      Phandle to the Avcc power supply
-> +
-> +  adi,r-sense-micro-ohms:
-> +    description:
-> +      The value of curent sense resistor in microohms.
-
-There is a standard property for that (shunt-resistor-micro-ohms).
-
-> +
-> +  adi,shutdown-threshold-microamp:
-> +    description:
-> +      Specifies the current level at which an over current alert occurs.
-> +
-> +  adi,vrange-high-enable:
-> +    description:
-> +      Specifies which internal voltage divider to be used. A 1 selects
-> +      a 7:2 voltage divider while a 0 selects a 14:1 voltage divider.
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - adi,r-sense-micro-ohms
-> +  - adi,shutdown-threshold-microamp
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        pwmon@5a {
-> +                compatible = "adi,adm1177";
-> +                reg = <0x5a>;
-> +                adi,r-sense-micro-ohms = <50000>; /* 50 mOhm */
-> +                adi,shutdown-threshold-microamp = <1059000>; /* 1.059 A */
-> +                adi,vrange-high-enable;
-> +        };
-> +    };
-> +...
-> 
+Thanks,
+Dinh
 
