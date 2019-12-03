@@ -2,107 +2,114 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8906BC432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 10:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFC7C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 10:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB5B206F0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 10:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4F3206F0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 10:15:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Yh9CIC75"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G226RTXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725957AbfLCKPq (ORCPT
+        id S1726469AbfLCKPn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:15:46 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:32894 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfLCKPp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 05:15:45 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 95F77309;
-        Tue,  3 Dec 2019 11:15:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575368143;
-        bh=IVjK8/i+nUnppQ/CIcHWTcjPI3l6ji3A4nJKjmHK8yo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Yh9CIC75iZWShzztTl8a4pNolc5OLR+UhoRSwH7JGWrwQhZKXVASfzBKX0a5A8Wjz
-         k3ObQUJRIxTtCKDoDpTrO7gzol9qYMVcUddfj2JfT2Smes/ASPt9BgAcO5UNql2tct
-         Yluk4X7jUpbO99J6tniahgQiouHVyZgGXVTlJ/8s=
-Date:   Tue, 3 Dec 2019 12:15:37 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
-        Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Clark <robdclark@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 12/21] drm/bridge: Add an ->atomic_check() hook
-Message-ID: <20191203101537.GO4730@pendragon.ideasonboard.com>
-References: <20191023154512.9762-1-boris.brezillon@collabora.com>
- <20191023154512.9762-13-boris.brezillon@collabora.com>
- <20191202170336.GP4929@pendragon.ideasonboard.com>
- <20191203111151.28d86f53@collabora.com>
+        Tue, 3 Dec 2019 05:15:43 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34429 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbfLCKPm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 05:15:42 -0500
+Received: by mail-pf1-f193.google.com with SMTP id n13so1635999pff.1
+        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 02:15:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=la8F/ukOCmlxZOPSk03ZdEI5AybzNjyoXK4eemJfXxE=;
+        b=G226RTXHw3qcB+VS063+Ay6A/MbQWClSU74oKAEWlESOOxPKzIsw6XIGv1bELVqcNg
+         jmYzwjk2ghqoJSwOP6SlpYxj33qgOQyzC2jq3UkuNRyXEsJNFzg0z+zIMQ9IZJ448EZd
+         ctOO2I5biTxKUYaUd8ePhb5JWZ4NK5eJwEbOs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=la8F/ukOCmlxZOPSk03ZdEI5AybzNjyoXK4eemJfXxE=;
+        b=ZGlvf6/YX7iOZCeV14rCtTgGIZYMhA6+6yeawVvwSwKGWGuX9cYd4gUa1lqXXGI3Td
+         QAAQgGxslyuOllbth1zm3ihHaXQwuuBForExydISo/y08ED5GJxHBybsGk6IUfFPBozF
+         BY432YIaBTzNfrBmFe/EPpsNFP9K+JbbbJ5OZ+Zx/Mfi8mua50vCeCBlVIUdE50psA02
+         81xe9GoQwRSWE//6Bf1qnCN4Z/xGoVcrM7KPOOfLMz5Ewj3A3A0x7TR6muxP5Gswn7DE
+         Dg4iPvB88REDT8UFPMIDxoSp+ok1/LBVb4qpmGT/QupYfhCOX/TO2qFRZCmlHES2PRhf
+         Inww==
+X-Gm-Message-State: APjAAAUBze+Ct2oh9tSDBqu4EgNcG03Vr7w0bAYCTESW9M8MAnQlbnjH
+        s1XbquriVFt5SXlkI0AAwDZJUWMnBWyDpw==
+X-Google-Smtp-Source: APXvYqxi6mHP/CPl92Tl/wfPvYWI3JtJFadHEo9LlGyht/c7K25YTpYXkaeEZu0Y3pG5p+MUZJWu0Q==
+X-Received: by 2002:a62:b504:: with SMTP id y4mr3894348pfe.251.1575368141054;
+        Tue, 03 Dec 2019 02:15:41 -0800 (PST)
+Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:254e:2b40:ef8:ee17])
+        by smtp.gmail.com with ESMTPSA id x11sm2943131pfn.53.2019.12.03.02.15.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 02:15:40 -0800 (PST)
+From:   Ikjoon Jang <ikjn@chromium.org>
+To:     devicetree@vger.kernel.org
+Cc:     GregKroah-Hartman <gregkh@linuxfoundation.org>,
+        RobHerring <robh+dt@kernel.org>,
+        MarkRutland <mark.rutland@arm.com>,
+        AlanStern <stern@rowland.harvard.edu>,
+        SuwanKim <suwan.kim027@gmail.com>,
+        "GustavoA . R . Silva" <gustavo@embeddedor.com>,
+        IkjoonJang <ikjn@chromium.org>, JohanHovold <johan@kernel.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        drinkcat@chromium.org
+Subject: [PATCH v4 1/2] dt-bindings: usb: add "hub,interval" property
+Date:   Tue,  3 Dec 2019 18:15:36 +0800
+Message-Id: <20191203101536.199222-1-ikjn@chromium.org>
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191203111151.28d86f53@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+Add "hub,interval" property to usb-device, so hub device can override
+endpoint descriptor's bInterval.
 
-On Tue, Dec 03, 2019 at 11:11:51AM +0100, Boris Brezillon wrote:
-> On Mon, 2 Dec 2019 19:03:36 +0200 Laurent Pinchart wrote:
-> 
-> > > +	/**
-> > > +	 * @atomic_check:
-> > > +	 *
-> > > +	 * This method is responsible for checking bridge state correctness.
-> > > +	 * It can also check the state of the surrounding components in chain
-> > > +	 * to make sure the whole pipeline can work properly.  
-> > 
-> > As explained in the review of the RFC, I think it's a mistake not to
-> > define the semantics of this operation precisely, and in particular not
-> > to define explictly what parameters bridge drivers are allowed to modify
-> > here. I however don't want to make this a prerequisite for your series,
-> > so
-> > 
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > 
-> > but I'm sure we'll regret this later when different bridges will have
-> > slightly incompatible implementations.
-> 
-> Nothing prevents us from working on this clarification after the patch
-> series has been merged. I just said I couldn't come up with a good
-> set of rules on my own, as I don't really know what bridge->mode_fixup()
-> allows us to modify in the first place.
+When we know reducing autosuspend delay for built-in HIDs is better for
+power saving, we can reduce it to the optimal value. But if a parent hub
+has a long bInterval, mouse lags a lot from more frequent autosuspend.
+So this enables overriding bInterval for a hard wired hub device only
+when we know that reduces the power consumption.
 
-We can of course work on it later, but we both know it won't happen for
-some time, until different bridges will behave differently and we'll
-have to sort a really big mess :-)
+Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+---
+ Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+index 036be172b1ae..44bef2ff2704 100644
+--- a/Documentation/devicetree/bindings/usb/usb-device.txt
++++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+@@ -66,6 +66,9 @@ Required properties for host-controller nodes with device nodes:
+ - #size-cells: shall be 0
+ 
+ 
++Optional properties for hub nodes
++- hub,interval: bInterval of status change endpoint. The range is 1-255.
++
+ Example:
+ 
+ &usb1 {	/* host controller */
+@@ -75,6 +78,7 @@ Example:
+ 	hub@1 {		/* hub connected to port 1 */
+ 		compatible = "usb5e3,608";
+ 		reg = <1>;
++		hub,interval = <8>;
+ 	};
+ 
+ 	device@2 {	/* device connected to port 2 */
 -- 
-Regards,
+2.24.0.393.g34dc348eaf-goog
 
-Laurent Pinchart
