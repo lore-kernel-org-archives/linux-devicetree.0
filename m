@@ -6,62 +6,73 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0C8C43141
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B779C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94A0B2154A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EECA206EC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575382795;
-	bh=2ZaCRWOeRuWd4ETKS3qPMNz4JcB0cp4ZP9Vi2p3cGu4=;
+	s=default; t=1575383331;
+	bh=5ihwZB0xAlXCWMCf82w3KT7baRbNzpvA9U92qm68+z8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Aul8NqjORssbvWAWZohFeShg0jgBQcRQkKL9fbRkP52UQmNCR4PEjvzCgf18OR06V
-	 YO+OduwhnxK9lwpthBPTyR+/l1QTqqihT4cNu4/Bju4T3tAC8ghDp2QCrHdkavDP63
-	 6M9b1jSyFuBNwZkNIbDWiDuwz4Kba1rVvqwT86qs=
+	b=dTjco2I+mdMrvNEecQp+Zk+mzjAhKtbyXm0up7UeTAQAM6O6/49CdTArpZpEz3U5i
+	 dVKY20Yup+cmpCFjwXXEJxhViTSVrY2wIJkxymH0CLbzEL0KtZgUTCzi1Nstxu4qMW
+	 Uvb/BV3PO31oxnGCcugxQqjvNXFK2Ylh4oxFgRXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbfLCOTy (ORCPT
+        id S1725957AbfLCO2v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:19:54 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43568 "EHLO
+        Tue, 3 Dec 2019 09:28:51 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58630 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfLCOTy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:19:54 -0500
+        with ESMTP id S1725848AbfLCO2u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:28:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
         MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/CDlfnPoepj5xBGb25Vr91OKvHcFns89CSr5ZTmJxuo=; b=HUIIRWozvP+6ahxe+WI0KkGLU
-        0xPE74mDFqOrPvPvIYwrU0XsMydq8dlnSxVfd9q2F+brAVeBRFAKmnvtV4MkVC7mxPAv8ImKV+cM5
-        U8gtFs0EszaslwMUDaT6Ce3ew2MQBuO9nrEznQ5F9kfs7FnRPVfG8fx5KLwxbx1EiRLwM=;
+         bh=VxYjLGtwCDTcs4bHOoBqIWPW0QFsGBkBnVZ5soEijWE=; b=BXzB3IPmvuG64kDV9JxcPH47i
+        /glTDJZBPWA2NVSO6v17ptumVhif/XbTMWuiKgdAQqEOA3HNTChL+nIvs8vamiueXHY+5Xty2C7tY
+        VUXZ1vOX6We3Q22QAhW35qO+tLrTgJHMg+XnTdhhZLIy49ZJXBBj7RgKWGHEDqBAhh1Tw=;
 Received: from fw-tnat-cam1.arm.com ([217.140.106.49] helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1ic91l-0002iA-AB; Tue, 03 Dec 2019 14:19:45 +0000
+        id 1ic99j-0002jt-VK; Tue, 03 Dec 2019 14:28:00 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id CEFD6D002FA; Tue,  3 Dec 2019 14:19:44 +0000 (GMT)
-Date:   Tue, 3 Dec 2019 14:19:44 +0000
+        id 7D184D002FA; Tue,  3 Dec 2019 14:27:59 +0000 (GMT)
+Date:   Tue, 3 Dec 2019 14:27:59 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Chris Brandt <chris.brandt@renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     kernel@puri.sm, Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 4/6] spi: Add SPIBSC driver
-Message-ID: <20191203141944.GI1998@sirena.org.uk>
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
- <20191203034519.5640-5-chris.brandt@renesas.com>
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Add the broadmobi BM818
+Message-ID: <20191203142759.GJ1998@sirena.org.uk>
+Mail-Followup-To: "Angus Ainslie (Purism)" <angus@akkea.ca>, kernel@puri.sm,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191202174831.13638-1-angus@akkea.ca>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Op27XXJsWz80g3oF"
+        protocol="application/pgp-signature"; boundary="ofZMSlrAVk9bLeVm"
 Content-Disposition: inline
-In-Reply-To: <20191203034519.5640-5-chris.brandt@renesas.com>
+In-Reply-To: <20191202174831.13638-1-angus@akkea.ca>
 X-Cookie: Cleanliness is next to impossible.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
@@ -70,132 +81,37 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---Op27XXJsWz80g3oF
+--ofZMSlrAVk9bLeVm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Dec 02, 2019 at 10:45:17PM -0500, Chris Brandt wrote:
+On Mon, Dec 02, 2019 at 10:48:29AM -0700, Angus Ainslie (Purism) wrote:
 
-> +config SPI_SPIBSC
-> +	tristate "Renesas SPI Multi I/O Bus Controller"
-> +	depends on ARCH_R7S72100 || ARCH_R7S9210
+>   sound: codecs: gtm601: add Broadmobi bm818 sound profile
+>   ASoC: gtm601: add the broadmobi interface
 
-I'm not seeing any build dependency here, please add an ||
-COMPILE_TEST for build coverage.
+These subject styles don't even agree with each other :( - please
+try to be consistent with the style for the subsystem (the latter
+one matches, the first one doesn't).
 
-> +++ b/drivers/spi/spi-spibsc.c
-> @@ -0,0 +1,609 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * SPI Bus Space Controller (SPIBSC) bus driver
+Please also try to think about your CC lists when sending
+patches, try to understand why everyone you're sending them to is
+getting a copy - kernel maintainers get a lot of mail and sending
+not obviously relevant patches to random people adds to that.
 
-Please make the entire comment block here a C++ one so things
-look more intentional.
-
-> +static void spibsc_write(struct spibsc_priv *sbsc, int reg, u32 val)
-> +{
-> +	iowrite32(val, sbsc->base + reg);
-> +}
-> +static void spibsc_write8(struct spibsc_priv *sbsc, int reg, u8 val)
-
-Blank likes between functions, please see coding-style.rst.
-Looking at a bunch of the stuff here it looks like you could
-benefit from regmap, it's got lots of debug infrastructure.
-
-> +	if (tx)
-> +		pr_debug("spibsc: send data: ");
-> +	else
-> +		pr_debug("spibsc: recv data: ");
-
-dev_dbg() if you're going to do tis.
-
-> +
-> +	for (i = 0; i < len; ) {
-> +		sprintf(line_buffer + line_index, " %02X", buf[i]);
-
-snprintf()!
-
-> +static int spibsc_transfer_one_message(struct spi_controller *master,
-> +				       struct spi_message *msg)
-> +{
-> +	struct spibsc_priv *sbsc = spi_controller_get_devdata(master);
-> +	struct spi_transfer *t, *t_last;
-> +	u8 tx_data[MAX_CMD_LEN];
-> +	int tx_only;
-> +	u8 tx_len;
-> +	int ret;
-> +
-> +	t_last = list_last_entry(&msg->transfers, struct spi_transfer,
-> +				 transfer_list);
-> +	/* defaults */
-> +	ret = 0;
-> +	sbsc->last_xfer = 0;
-> +	tx_only = 1;
-> +
-> +	/* Analyze the messages */
-> +	t = list_first_entry(&msg->transfers, struct spi_transfer,
-> +			     transfer_list);
-> +	if (t->rx_buf) {
-> +		dev_dbg(sbsc->dev, "Cannot Rx without Tx first!\n");
-> +		return -EIO;
-
-These errors should probably be -EINVAL, you're failing on
-validation here.
-
-> +	}
-> +	list_for_each_entry(t, &msg->transfers, transfer_list) {
-
-Blank line here please as well.
-
-> +	if (spi->bits_per_word != 8) {
-> +		dev_err(sbsc->dev, "bits_per_word must be 8\n");
-> +		return -EIO;
-> +	}
-
-The core will validate this for you.
-
-> +	master->num_chipselect	= 1;
-> +	master->mode_bits		= SPI_CPOL | SPI_CPHA;
-> +	master->setup			= spibsc_setup;
-> +	master->transfer_one_message	= spibsc_transfer_one_message;
-
-Set bits_per_word_mask here.
-
-> +	dev_info(&pdev->dev, "probed\n");
-> +
-
-Remove this, it's just noise.
-
-> +static int spibsc_remove(struct platform_device *pdev)
-> +{
-> +	struct spibsc_priv *sbsc = dev_get_drvdata(&pdev->dev);
-> +
-> +	pm_runtime_put(&pdev->dev);
-> +	pm_runtime_disable(&pdev->dev);
-
-There seems to be no purpose in the runtime PM code in this
-driver, there's no PM operations of any kind and the driver holds
-a runtime PM reference for the entire lifetime of the device.
-
-> +	spi_unregister_controller(sbsc->master);
-
-You registered the controller with devm_, there's no need to
-unregister it and if you do you need to use a matching devm_
-unregiser.
-
---Op27XXJsWz80g3oF
+--ofZMSlrAVk9bLeVm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3mbwAACgkQJNaLcl1U
-h9Dzcgf/bPKKtl+0UszS1c1X9/HBdRfcH6vnPEp8R9IbwYRR71OmtqteR27re0WC
-rUf5W3IKQ9q8jPd5zUsBBLifHg3Oj8WCuMogg4E946QUMdsnY/517wlBQ6cavxhq
-q+Ky2Dp3Iz29lLyiwTOMSUkHndbhY3Q7oHmpx8akowtcVcdegBrg+gNaYU6152+C
-l+Zy+fG4R8FndhiGgUMto1kkvq6NZXfGzKzFvY5ANrPtD2N4Vd5m0RVYmBxjO3r5
-hGjQPPrJ3LQ5JhWr9MZhXEzf3X1zd1z9tQFFnx9nMU8AZeCgKyedNoA1cCLTxgt6
-vkN5C/dBQyj2EzWI/D3UhVTY9t/Wvg==
-=7Jzf
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3mcO4ACgkQJNaLcl1U
+h9DGXgf/SJ8t7hSPglwZzxnDVxAte2xNoAVezgY5OPF4s1sm2k7U/h+ivay63+br
+Yb0uVbL8I61TWMN8GAcMIRA2lsjzD20/oTcxPMamHvWE+91yTdxvBrWoRpqF3LcI
+P8a2CJx3PYIH4nbyML6r53ZnzIF2rc9pGLB3t740Yu3xU87iKqWBWO5Fw3bbA824
+BLl2+XQLYFPZ+oLLkpz6BR7xhDpgJ02aO2Fw3LlPtdD82VreneMOCmGYbavz26EN
+A9c7HPAiqsyAbJ/t2dHPpIoZ0wihaRr8gPKy4py1EH43ScBAVvWMT0ca+0zpWt++
+4aGCqa/WdIz0DOggZWP4JDtiux7z/Q==
+=Br5V
 -----END PGP SIGNATURE-----
 
---Op27XXJsWz80g3oF--
+--ofZMSlrAVk9bLeVm--
