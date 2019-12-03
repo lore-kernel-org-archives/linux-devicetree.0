@@ -2,128 +2,183 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A42AC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 05:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C89CC43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 05:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F34AA206DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 05:48:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sxCKlzdj"
+	by mail.kernel.org (Postfix) with ESMTP id 7E6CE206E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 05:51:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfLCFs3 (ORCPT
+        id S1727022AbfLCFvk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 00:48:29 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:63933 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725907AbfLCFs3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 00:48:29 -0500
-X-UUID: dc3af342ec4e472da01a7151a6f7f794-20191203
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=6DCb7uPyQXGO0SVO2IKAV+0ziUuW5YDj4cnCAfRju/o=;
-        b=sxCKlzdjfRHL6C5d8mPBdmgCaPRG8xjIUtRb6McV9mH32ecfeulKjIynWzGQUmJEHDmVgjoamv1qz6TO/yf6BcAJjw9mpAZKfdXAHl1cpZ5/0Y9iQxtnQtuRGbvjvnul8X1NWfYl0CnutkbcPJZcHx6XZzfeTBAf+XjKhcLcHMk=;
-X-UUID: dc3af342ec4e472da01a7151a6f7f794-20191203
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1988541687; Tue, 03 Dec 2019 13:48:22 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 3 Dec 2019 13:47:58 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 3 Dec 2019 13:48:03 +0800
-Message-ID: <1575352101.2457.8.camel@mtksdaap41>
-Subject: Re: [PATCH v1, 1/2] drm/mediatek: Fixup external display black
- screen issue
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Tue, 3 Dec 2019 00:51:40 -0500
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:6594 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfLCFvj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 00:51:39 -0500
+IronPort-SDR: o/j+Ri+xO4fWTIVCdgPBUzjtzOJlOQ4wmggRu6QZca0TCBOkHqE4ZMckMY0XgpgEFCwVAkOZdJ
+ zH0Di0t2eFwTMoCX5+Dmbv/B30Kz8UeQbcwSlJRrRyvBRAArhUElLv2NMKH+zppw4ZC7dOxlWK
+ AOMf3uRfAIM2u7Wk4Qq86K3+6lV5vqjvPpzQSFfW8sP63eqIdEg5mIdaN5zTAybmjTxgYgnNgL
+ KxJgiYocZbKXHSbByjv5bF9N1WRypaYrkWAm9RhI0RIYJkMYks64vQIn8f/LUTdW04Df3YiDyu
+ xKI=
+X-IronPort-AV: E=Sophos;i="5.69,272,1571731200"; 
+   d="scan'208";a="45589731"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa1.mentor.iphmx.com with ESMTP; 02 Dec 2019 21:51:38 -0800
+IronPort-SDR: i8krjONcTTsnPkHY7SRiGdPmITr+0xNAXFXEgjkJWTG1D1tRaDcT2sdw0OnXTIXhUqEDFgzvAR
+ dttKo+ORd63AvM4to/DyzDuJF57oI5Vi7/iYpzrQEkc3xIqj3eJT457bxirU8BrDkuqz8apUvw
+ JxXTyf13gnmnt2Ln1nepE0IY1Dr7ZC1/mxI+i6nWcNIcJmX2GgkCgi2Uo1v6wmGd1b+yqVAN9T
+ 0VLnn5Y5apijUzN7Hq0gIyZaQmf5LOaoYKcT6i2bJwuZAsOGE6Kp5TQMK0MgNeNdOFviPXHdfV
+ l0k=
+Subject: Re: [PATCH v3 4/7] dt-bindings: gpio: Add gpio-repeater bindings
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Tue, 3 Dec 2019 13:48:21 +0800
-In-Reply-To: <1574817475-22378-2-git-send-email-yongqiang.niu@mediatek.com>
-References: <1574817475-22378-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1574817475-22378-2-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+CC:     Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-5-geert+renesas@glider.be>
+From:   Harish Jenny K N <harish_kandiga@mentor.com>
+Message-ID: <11ae473f-cee1-241b-174c-915dc46209b1@mentor.com>
+Date:   Tue, 3 Dec 2019 11:21:26 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: ECDA7C700F230F49CC04960EDF378BA1B224B8EBA5C76FADE77E7DC3A6A045032000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20191127084253.16356-5-geert+renesas@glider.be>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) To
+ svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoNCg0KT24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjE3ICswODAwLCB5b25n
-cWlhbmcubml1QG1lZGlhdGVrLmNvbSB3cm90ZToNCj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9u
-Z3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQo+IA0KPiBQcm9ibGVtOg0KPiBvdmVybGF5IGhhbmd1
-cCB3aGVuIGV4dGVybmFsIGRpc3BsYXkgaG90cGx1dCB0ZXN0DQo+IA0KPiBGaXg6DQo+IGRpc2Fi
-bGUgb3ZlcmxheSB3aGVuIGNydGMgZGlzYWJsZQ0KDQpJIHRoaW5rIHlvdSBkbyB0d28gdGhpbmdz
-IGluIHRoaXMgcGF0Y2guIFRoZSBmaXJzdCBpcyB0byBjb25maWcgbGF5ZXINCmJlZm9yZSBjb21w
-b25lbnQgc3RhcnQsIGFuZCB0aGUgc2Vjb25kIGlzIGRpc2FibGUgbGF5ZXIgd2hlbiBjcnRjDQpk
-aXNhYmxlLiBTbyBzZXBhcmF0ZSB0byB0d28gcGF0Y2hlcy4NCg0KPiANCj4gU2lnbmVkLW9mZi1i
-eTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQo+IC0tLQ0KPiAg
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIHwgMzkgKysrKysrKysrKysr
-KysrKysrKysrLS0tLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygr
-KSwgMTQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcm1fY3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
-Y3J0Yy5jDQo+IGluZGV4IDRmYjM0NmMuLjdlY2EwMmYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gQEAgLTM2OSw2ICszNjksMjAgQEAgc3RhdGljIGlu
-dCBtdGtfY3J0Y19kZHBfaHdfaW5pdChzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YykNCj4g
-IAltdGtfZGlzcF9tdXRleF9hZGRfY29tcChtdGtfY3J0Yy0+bXV0ZXgsIG10a19jcnRjLT5kZHBf
-Y29tcFtpXS0+aWQpOw0KPiAgCW10a19kaXNwX211dGV4X2VuYWJsZShtdGtfY3J0Yy0+bXV0ZXgp
-Ow0KPiAgDQo+ICsJLyogSW5pdGlhbGx5IGNvbmZpZ3VyZSBhbGwgcGxhbmVzICovDQo+ICsJZm9y
-IChpID0gMDsgaSA8IG10a19jcnRjLT5sYXllcl9ucjsgaSsrKSB7DQo+ICsJCXN0cnVjdCBkcm1f
-cGxhbmUgKnBsYW5lID0gJm10a19jcnRjLT5wbGFuZXNbaV07DQo+ICsJCXN0cnVjdCBtdGtfcGxh
-bmVfc3RhdGUgKnBsYW5lX3N0YXRlOw0KPiArCQlzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wOw0K
-PiArCQl1bnNpZ25lZCBpbnQgbG9jYWxfbGF5ZXI7DQo+ICsNCj4gKwkJcGxhbmVfc3RhdGUgPSB0
-b19tdGtfcGxhbmVfc3RhdGUocGxhbmUtPnN0YXRlKTsNCj4gKwkJY29tcCA9IG10a19kcm1fZGRw
-X2NvbXBfZm9yX3BsYW5lKGNydGMsIHBsYW5lLCAmbG9jYWxfbGF5ZXIpOw0KPiArCQlpZiAoY29t
-cCkNCj4gKwkJCW10a19kZHBfY29tcF9sYXllcl9jb25maWcoY29tcCwgbG9jYWxfbGF5ZXIsDQo+
-ICsJCQkJCQkgIHBsYW5lX3N0YXRlLCBOVUxMKTsNCj4gKwl9DQo+ICsNCj4gIAlmb3IgKGkgPSAw
-OyBpIDwgbXRrX2NydGMtPmRkcF9jb21wX25yOyBpKyspIHsNCj4gIAkJc3RydWN0IG10a19kZHBf
-Y29tcCAqY29tcCA9IG10a19jcnRjLT5kZHBfY29tcFtpXTsNCj4gIAkJZW51bSBtdGtfZGRwX2Nv
-bXBfaWQgcHJldjsNCj4gQEAgLTM4NSwyMCArMzk5LDYgQEAgc3RhdGljIGludCBtdGtfY3J0Y19k
-ZHBfaHdfaW5pdChzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YykNCj4gIAkJbXRrX2RkcF9j
-b21wX3N0YXJ0KGNvbXApOw0KPiAgCX0NCj4gIA0KPiAtCS8qIEluaXRpYWxseSBjb25maWd1cmUg
-YWxsIHBsYW5lcyAqLw0KPiAtCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+bGF5ZXJfbnI7IGkr
-Kykgew0KPiAtCQlzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSA9ICZtdGtfY3J0Yy0+cGxhbmVzW2ld
-Ow0KPiAtCQlzdHJ1Y3QgbXRrX3BsYW5lX3N0YXRlICpwbGFuZV9zdGF0ZTsNCj4gLQkJc3RydWN0
-IG10a19kZHBfY29tcCAqY29tcDsNCj4gLQkJdW5zaWduZWQgaW50IGxvY2FsX2xheWVyOw0KPiAt
-DQo+IC0JCXBsYW5lX3N0YXRlID0gdG9fbXRrX3BsYW5lX3N0YXRlKHBsYW5lLT5zdGF0ZSk7DQo+
-IC0JCWNvbXAgPSBtdGtfZHJtX2RkcF9jb21wX2Zvcl9wbGFuZShjcnRjLCBwbGFuZSwgJmxvY2Fs
-X2xheWVyKTsNCj4gLQkJaWYgKGNvbXApDQo+IC0JCQltdGtfZGRwX2NvbXBfbGF5ZXJfY29uZmln
-KGNvbXAsIGxvY2FsX2xheWVyLA0KPiAtCQkJCQkJICBwbGFuZV9zdGF0ZSwgTlVMTCk7DQo+IC0J
-fQ0KPiAtDQo+ICAJcmV0dXJuIDA7DQo+ICANCj4gIGVycl9tdXRleF91bnByZXBhcmU6DQo+IEBA
-IC02MDcsMTAgKzYwNywyMSBAQCBzdGF0aWMgdm9pZCBtdGtfZHJtX2NydGNfYXRvbWljX2Rpc2Fi
-bGUoc3RydWN0IGRybV9jcnRjICpjcnRjLA0KPiAgCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+
-bGF5ZXJfbnI7IGkrKykgew0KPiAgCQlzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSA9ICZtdGtfY3J0
-Yy0+cGxhbmVzW2ldOw0KPiAgCQlzdHJ1Y3QgbXRrX3BsYW5lX3N0YXRlICpwbGFuZV9zdGF0ZTsN
-Cj4gKwkJc3RydWN0IG10a19kZHBfY29tcCAqY29tcCA9IG10a19jcnRjLT5kZHBfY29tcFswXTsN
-Cj4gKwkJdW5zaWduZWQgaW50IGNvbXBfbGF5ZXJfbnIgPSBtdGtfZGRwX2NvbXBfbGF5ZXJfbnIo
-Y29tcCk7DQo+ICsJCXVuc2lnbmVkIGludCBsb2NhbF9sYXllcjsNCj4gIA0KPiAgCQlwbGFuZV9z
-dGF0ZSA9IHRvX210a19wbGFuZV9zdGF0ZShwbGFuZS0+c3RhdGUpOw0KPiAgCQlwbGFuZV9zdGF0
-ZS0+cGVuZGluZy5lbmFibGUgPSBmYWxzZTsNCj4gIAkJcGxhbmVfc3RhdGUtPnBlbmRpbmcuY29u
-ZmlnID0gdHJ1ZTsNCj4gKw0KPiArCQlpZiAoaSA+PSBjb21wX2xheWVyX25yKSB7DQo+ICsJCQlj
-b21wID0gbXRrX2NydGMtPmRkcF9jb21wWzFdOw0KPiArCQkJbG9jYWxfbGF5ZXIgPSBpIC0gY29t
-cF9sYXllcl9ucjsNCj4gKwkJfSBlbHNlDQo+ICsJCQlsb2NhbF9sYXllciA9IGk7DQo+ICsJCW10
-a19kZHBfY29tcF9sYXllcl9jb25maWcoY29tcCwgbG9jYWxfbGF5ZXIsDQo+ICsJCQkJCSAgcGxh
-bmVfc3RhdGUsIE5VTEwpOw0KDQpJJ20gY29uZnVzZWQgd2l0aCB0aGlzIHBhcnQuIFRoZSBkZXNp
-Z24gb2YgdGhpcyBsb29wIGlzIHRvIHNldA0KcGxhbmVfc3RhdGUtPnBlbmRpbmcuZW5hYmxlID0g
-ZmFsc2UgYW5kIHdhaXQgZm9yIGlycSBoYW5kbGVyIHRvIHdyaXRlDQpyZWdpc3Rlci4gV2h5IGRv
-IHlvdSBkaXJlY3RseSB3cml0ZSByZWdpc3Rlcj8NCg0KUmVnYXJkcywNCkNLDQoNCj4gIAl9DQo+
-ICAJbXRrX2NydGMtPnBlbmRpbmdfcGxhbmVzID0gdHJ1ZTsNCj4gIA0KDQo=
+
+On 27/11/19 2:12 PM, Geert Uytterhoeven wrote:
+> Add Device Tree bindings for a GPIO repeater, with optional translation
+> of physical signal properties.  This is useful for describing explicitly
+> the presence of e.g. an inverter on a GPIO line, and was inspired by the
+> non-YAML gpio-inverter bindings by Harish Jenny K N
+> <harish_kandiga@mentor.com>[1].
+>
+> Note that this is different from a GPIO Nexus Node[2], which cannot do
+> physical signal property translation.
+>
+> While an inverter can be described implicitly by exchanging the
+> GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags, this has its limitations.
+> Each GPIO line has only a single GPIO_ACTIVE_* flag, but applies to both
+> th provider and consumer sides:
+>   1. The GPIO provider (controller) looks at the flags to know the
+>      polarity, so it can translate between logical (active/not active)
+>      and physical (high/low) signal levels.
+>   2. While the signal polarity is usually fixed on the GPIO consumer
+>      side (e.g. an LED is tied to either the supply voltage or GND),
+>      it may be configurable on some devices, and both sides need to
+>      agree.  Hence the GPIO_ACTIVE_* flag as seen by the consumer must
+>      match the actual polarity.
+>      There exists a similar issue with interrupt flags, where both the
+>      interrupt controller and the device generating the interrupt need
+>      to agree, which breaks in the presence of a physical inverter not
+>      described in DT (see e.g. [3]).
+>
+> [1] "[PATCH V4 2/2] gpio: inverter: document the inverter bindings"
+>     https://lore.kernel.org/linux-gpio/1561699236-18620-3-git-send-email-harish_kandiga@mentor.com/
+>
+> [2] Devicetree Specification v0.3-rc2, Section 2.5
+>     https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3-rc2
+>
+> [3] "[PATCH] wlcore/wl18xx: Add invert-irq OF property for physically
+>     inverted IRQ"
+>     https://lore.kernel.org/linux-renesas-soc/20190607172958.20745-1-erosca@de.adit-jv.com/
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v3:
+>   - New.
+> ---
+>  .../bindings/gpio/gpio-repeater.yaml          | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml b/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
+> new file mode 100644
+> index 0000000000000000..efdee0c3be43f731
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/gpio-repeater.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: GPIO Repeater
+> +
+> +maintainers:
+> +  - Harish Jenny K N <harish_kandiga@mentor.com>
+> +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> +
+> +description:
+> +  This represents a repeater for one or more GPIOs, possibly including physical
+> +  signal property translation (e.g. polarity inversion).
+> +
+> +properties:
+> +  compatible:
+> +    const: gpio-repeater
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  gpios:
+> +    description:
+> +      Phandle and specifier, one for each repeated GPIO.
+> +
+> +  gpio-line-names:
+> +    description:
+> +      Strings defining the names of the GPIO lines going out of the GPIO
+> +      controller.
+> +
+> +required:
+> +  - compatible
+> +  - "#gpio-cells"
+> +  - gpio-controller
+> +  - gpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  # Device node describing a polarity inverter for a single GPIO
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    inverter: gpio-repeater {
+> +        compatible = "gpio-repeater";
+> +        #gpio-cells = <2>;
+> +        gpio-controller;
+> +        gpios = <&gpio 95 GPIO_ACTIVE_LOW>;
+> +    };
+
+
+just a suggestion: giving a gpio-line-names in the example would look useful.
 
