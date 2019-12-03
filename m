@@ -2,159 +2,104 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD7DC43215
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 22:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFB1C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 22:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7057D20684
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 22:22:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bn3QlKL7"
+	by mail.kernel.org (Postfix) with ESMTP id 9FC8D2080F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 22:29:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575412144;
+	bh=ZDwlZcEh4OnMpDgXDfGnbemvackMvCJ/D0nXnz0P1Ow=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Pdm/udUDQb+yNzYw9qPwS2D9TBvWtY85lVIey9Xv47WXGWb/oqJLhgj8+lGi16+Uj
+	 /SaUMGWHHo0UzLBpxUvv2rjODFdeiSRQuLskH3tZB/yQJCb/2wbihUssr99qKqV/jI
+	 8s2q6k7PFOlMmMD+rem5JOdGLP9FM+X/zYFKGkHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfLCWWg (ORCPT
+        id S1727194AbfLCW3E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:22:36 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36472 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727194AbfLCWWg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 17:22:36 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k13so2296578pgh.3
-        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 14:22:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WUFFntsV9GWQxH2xEiMtMGTiHEnUItioA0CI190kL8o=;
-        b=bn3QlKL7vQGhK8lGFIzeXVQeOlnmkW/WGjIxexoPzjAeijuRHQXjl0M/udzBuAI6cW
-         QCaVRG5f/+Ls5qE8X9irTu+6QP+a9IvZ+SYeA7nmk9Pe4nU1ZBCK1MHX2YPQCvIseMS3
-         iiHYDyWjBtXGx+TKbfqCahbY+bU12y33YOblo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WUFFntsV9GWQxH2xEiMtMGTiHEnUItioA0CI190kL8o=;
-        b=HKbdfZRD3gye3VPQ4wWz8D8IaFc5crPLT5iq4RMYUXl8jElUEf4mDY2+7ffVV1OZeg
-         1by7ysJaQvSGW0VUvgpTPLG/9IDbwpCGJE30rGVRC/LCb0QC5CL8/b6s2QlnATwrhMkz
-         O1KKf8binr5ZTZeZfZ8dB7cSWYyGMpV0byLInURliXsik4uVRo9RYISiJi2GYfjWo7kc
-         G7v8VupziA4SSpJt6CA9y1oUOnZnQBcO/MXoQxcRBkjtgJLRhkExIPsWAgrNAjhecxg1
-         O3P0N5oChBcGS9CIBbONzjci8p1ljY7LreXPnmFBjS/PDqI6LZGM2r+pp+ZCg/5p8dzo
-         MTKA==
-X-Gm-Message-State: APjAAAWQEmz+j46xugrn//MHDn5LWPBRN9RfosZjGsOfANYFAz9ZU3nM
-        Oc1YHwHDoiIGZCDmy3XJQ7b5CQpyO7iaJw==
-X-Google-Smtp-Source: APXvYqyWX3GXr5G09PtL3d5pS+d902L2fj13z6zE3hBT0ixPruP16jvHAkG9yTWgiA2y8zHopTszAw==
-X-Received: by 2002:a65:5c0a:: with SMTP id u10mr7846832pgr.258.1575411755669;
-        Tue, 03 Dec 2019 14:22:35 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id l9sm4444155pgh.34.2019.12.03.14.22.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Dec 2019 14:22:35 -0800 (PST)
-Date:   Tue, 3 Dec 2019 14:22:32 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, jsanka@codeaurora.org,
-        chandanu@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [PATCH v1] drm/msm: add support for 2.4.1 DSI version for sc7180
- soc
-Message-ID: <20191203222232.GG228856@google.com>
-References: <1575011105-28172-1-git-send-email-harigovi@codeaurora.org>
+        Tue, 3 Dec 2019 17:29:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727131AbfLCW3D (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 17:29:03 -0500
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F9442073B;
+        Tue,  3 Dec 2019 22:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575412143;
+        bh=ZDwlZcEh4OnMpDgXDfGnbemvackMvCJ/D0nXnz0P1Ow=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cM957qncrcp7ghV2Fqz53oQOIB+zquJzFTZDg7axDyXoQLJHILOfBseyNF9yTQmPc
+         IM0lweyB+cBA4xdv4I9iciu57pL3EfY5zs35YakuareM5lKXAQLfQaX1M8RSJFXE8d
+         0Vjtw+KLAdDpCSdtD5o7cp20feLCIcRUc0qhbNHc=
+Received: by mail-qk1-f178.google.com with SMTP id d124so5190051qke.6;
+        Tue, 03 Dec 2019 14:29:03 -0800 (PST)
+X-Gm-Message-State: APjAAAUI5tq8Jjaun2U16AiDiNamb5AUHpJ6sedIXu6GMn7dOZu43D6V
+        alzexj5cwjKYhN+92F6Tq3c79DjqUTtW0vXwKA==
+X-Google-Smtp-Source: APXvYqy48vLvDIG0rC+yzxuPzMvN5G+2IkpyHG90OUQ5OAN24HZI4iXG5QbUFNLup+OAMp3ErXCIG11O3mwffMrXkwM=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr7985272qkg.152.1575412142251;
+ Tue, 03 Dec 2019 14:29:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1575011105-28172-1-git-send-email-harigovi@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191119194623.23854-1-robh@kernel.org> <46d7e474-d2b0-10e4-d9dc-f7783c49e699@gmail.com>
+In-Reply-To: <46d7e474-d2b0-10e4-d9dc-f7783c49e699@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 3 Dec 2019 16:28:51 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKEmEm+XULPEyxP9O+H6dwtD_B+yYaJbeZPWXn_NJhZWg@mail.gmail.com>
+Message-ID: <CAL_JsqKEmEm+XULPEyxP9O+H6dwtD_B+yYaJbeZPWXn_NJhZWg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: leds: Convert common LED binding to schema
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Sat, Nov 23, 2019 at 10:46 AM Jacek Anaszewski
+<jacek.anaszewski@gmail.com> wrote:
+>
+> Hi Rob,
+>
+> On 11/19/19 8:46 PM, Rob Herring wrote:
+> > Convert the common LEDs properties bindings to a schema. As trigger source
+> > providers are different nodes, we need to split trigger source properties
+> > to a separate file.
+> >
+> > Bindings for LED controllers can reference the common schema for the LED
+> > child nodes:
+> >
+> > patternProperties:
+> >   "^led@[0-4]":
+> >     type: object
+> >     allOf:
+> >       - $ref: common.yaml#
+> >
+> > Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> > Cc: Pavel Machek <pavel@ucw.cz>
+> > Cc: Dan Murphy <dmurphy@ti.com>
+> > Cc: linux-leds@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../devicetree/bindings/leds/common.txt       | 174 +------------
+> >  .../devicetree/bindings/leds/common.yaml      | 228 ++++++++++++++++++
+> >  .../bindings/leds/trigger-source.yaml         |  24 ++
+> >  3 files changed, 253 insertions(+), 173 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/leds/common.yaml
+> >  create mode 100644 Documentation/devicetree/bindings/leds/trigger-source.yaml
+>
+> For both 1/2 an 2/2:
+>
+> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 
-On Fri, Nov 29, 2019 at 12:35:05PM +0530, Harigovindan P wrote:
-> Changes in v1:
-> 	-Modify commit text to indicate DSI version and SOC detail(Jeffrey Hugo).
-> 	-Splitting visionox panel driver code out into a
-> 	 different patch(set), since panel drivers are merged into
-> 	 drm-next via a different tree(Rob Clark).
+Thanks. You should take these in case there are other changes during the cycle.
 
-The change log shouldn't be part of the commit message, please place it
-after the '---' separator.
-
-I think at least a one line commit message besides the subject is
-mandatory, so if you move the change log down you'll have to add
-some short summary.
-
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
->  drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
->  2 files changed, 22 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-> index b7b7c1a..7b967dd 100644
-> --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-> +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-> @@ -133,6 +133,10 @@ static const char * const dsi_sdm845_bus_clk_names[] = {
->  	"iface", "bus",
->  };
->  
-> +static const char * const dsi_sc7180_bus_clk_names[] = {
-> +	"iface", "bus",
-> +};
-> +
->  static const struct msm_dsi_config sdm845_dsi_cfg = {
->  	.io_offset = DSI_6G_REG_SHIFT,
->  	.reg_cfg = {
-> @@ -147,6 +151,20 @@ static const struct msm_dsi_config sdm845_dsi_cfg = {
->  	.num_dsi = 2,
->  };
->  
-> +static const struct msm_dsi_config sc7180_dsi_cfg = {
-> +	.io_offset = DSI_6G_REG_SHIFT,
-> +	.reg_cfg = {
-> +		.num = 1,
-> +		.regs = {
-> +			{"vdda", 21800, 4 },	/* 1.2 V */
-> +		},
-> +	},
-> +	.bus_clk_names = dsi_sc7180_bus_clk_names,
-> +	.num_bus_clks = ARRAY_SIZE(dsi_sc7180_bus_clk_names),
-> +	.io_start = { 0xae94000 },
-> +	.num_dsi = 1,
-> +};
-> +
->  const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
->  	.link_clk_enable = dsi_link_clk_enable_v2,
->  	.link_clk_disable = dsi_link_clk_disable_v2,
-> @@ -201,6 +219,9 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
->  		&msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
->  	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
->  		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
-> +	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_1,
-> +		&sc7180_dsi_cfg, &msm_dsi_6g_v2_host_ops},
-> +
->  };
->  
->  const struct msm_dsi_cfg_handler *msm_dsi_cfg_get(u32 major, u32 minor)
-> diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-> index e2b7a7d..9919536 100644
-> --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-> +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-> @@ -19,6 +19,7 @@
->  #define MSM_DSI_6G_VER_MINOR_V1_4_1	0x10040001
->  #define MSM_DSI_6G_VER_MINOR_V2_2_0	0x20000000
->  #define MSM_DSI_6G_VER_MINOR_V2_2_1	0x20020001
-> +#define MSM_DSI_6G_VER_MINOR_V2_4_1	0x20040001
->  
->  #define MSM_DSI_V2_VER_MINOR_8064	0x0
->  
-> -- 
-> 2.7.4
-> 
+Rob
