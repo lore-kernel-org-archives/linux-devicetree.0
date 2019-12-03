@@ -7,71 +7,74 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE71C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBF4C43141
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D872073B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8192D206EC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 12:03:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Gu15yB4S";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JiOOrFvL"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="JgbUk9pw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m4gl3uVy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbfLCMCx (ORCPT
+        id S1726567AbfLCMDF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 07:02:53 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:34011 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725954AbfLCMCv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 07:02:51 -0500
+        Tue, 3 Dec 2019 07:03:05 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:37729 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725954AbfLCMDE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 07:03:04 -0500
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 426612238E;
-        Tue,  3 Dec 2019 07:02:51 -0500 (EST)
+        by mailnew.nyi.internal (Postfix) with ESMTP id CB16E1F79;
+        Tue,  3 Dec 2019 07:03:03 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 03 Dec 2019 07:02:51 -0500
+  by compute4.internal (MEProxy); Tue, 03 Dec 2019 07:03:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
         :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=dBjUWt2kgJuEQ
-        ixLajR6K5ymul+LldyLVlWi+jU9gCE=; b=Gu15yB4Sy7GB58K1q3i0PMJWpnqoX
-        Xi51bwbSGnkCkl1ygTCcBzhO/obbzcJ40UZbYyU2PF3tdSRwUA/5wqIUXR0VJXTV
-        FQOhSDtJ6h8Tk2F70XNHChTe1oto3vasDK1CqtaIyu0nbbNosTWgmfd7edRpnpZ7
-        jV4gcyIm+Seq1MQs8ArlCh7s6kHWbDnAysG5BBILTOVri7I1HvEAxccYqkP4aBEO
-        nN5QHVBeUvBJDkct9zysisxpwSSQnSVCpxzq8mfqtfNWSBG4ZgFxk0NmPverMaKp
-        GwLg4F+BOWaBe9llDmDRi+ZmUrFOLWxpWiViL/7YUs3jo69bn9NdC1bkg==
+        :mime-version:content-transfer-encoding; s=fm1; bh=q5fsQR57WMUw8
+        v/diLecW7Z/022zvctgEjYQGcu9mYk=; b=JgbUk9pwtHe8CKSY99Sxnrzky6Iai
+        r55Pug8hdDiTecmOd4Oo4Tw9ikoiwK/btOQBtwURRk+allOphZJeTsUXk+fGDOa3
+        rusGq96wtVuOBYR0UCrw+lj911LWUi59MprF0KTGXgUpLLfKyZT3XdjVh4jKUYaG
+        sPzAuns4j2WT+HfGW8zXUPWROrvppnUY+Ra5XkbbkinfKa9vqrfKRf2z2oqa8rRI
+        nIADW27wTW1XzicgCjp0tP3JkjGPU8ufwIdwboum16cHLWKzk+tXXTm9W3AFSa6g
+        0YdS8om8KC4oWc7QoHo0Zn6hfW7mAbdxAOpQbuXaf3Lg8a/+hwJgStEQQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=dBjUWt2kgJuEQixLajR6K5ymul+LldyLVlWi+jU9gCE=; b=JiOOrFvL
-        ib0zt0MfG8kUMKe8CRjg0Y3zOhJWup6vzRlGlfsShrf16lvyxm6ynVyt3YKVFDqs
-        D6Ke8IwOc8bGLe3hsEugGJuV0NR2vpg868djMauzH1E5rtM2rguwD0BJGHUIIsjW
-        5+HmBRSBX0R9OQzbVtQCIsTK7lJRCF4YdX2/UhKIvUyQh0XOo9w0X7mcJsbf5KuR
-        JUooZoXjSWieax3cYsOb2A0EGtriZPiEB2HqO5TDH53RaLgrTSty8wx+k4DGvHHS
-        regUm3qltUY9u1o3ZQzJ4snQhxwqLSRqQslUbL9AYjIIhv+aNYAolTZIdXn0nGRJ
-        3i2a2jSMUKgxLw==
-X-ME-Sender: <xms:607mXRj3jPDC45uNbtSTaYhh4VYwwcKUzVtby0NyZvACzqvFU0ds3Q>
+        fm1; bh=q5fsQR57WMUw8v/diLecW7Z/022zvctgEjYQGcu9mYk=; b=m4gl3uVy
+        rRR4tvvt2v3IkwoT0dryNqrKAlwX3BMOlnChDM5qAePMasDQWYq4YtUCi0NFCdfj
+        r7LKe8DtVdK4ZFhpgJW3aom81HPJCU1vUrHLyfzx0+MzpkBO0KcnP8hzyMq6X58c
+        aq2/1AMDBzQadBGJWz/Je4sAuy7uyTy631T+J2Cj+M17Fa6jl3qwP+6S65nlfOL0
+        /wDwBRQeCQIV6J/t5xlj+1V6RtUtIfIBliL8MixITKK2QJ9jcwm2O0RTCCAyac3A
+        Ox1gyQgEZxhg44B9ylX5iH38E9pVkxG3oEsUOGGXHfNqrRjoDGZyUXk2lAYHnbXH
+        5G+RgyisZVj47g==
+X-ME-Sender: <xms:907mXQ0GiOvSALqXKSkDIAG95AWdCrXXsvb-9q2z9oDeDc2PFqc_TA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudejjedgfeejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeetnhgurhgv
     ficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfkphepudduke
     drvdduuddrledvrddufeenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegr
-    jhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:607mXaRhH3rIYT__z_RYfofT-puBbiEWW5Gv151FJfncRwHUSkagMA>
-    <xmx:607mXUrelm7Fff-hX0olrUnEKuvB0sliP6RFh7JcVPE74RMvNmI71w>
-    <xmx:607mXVYyVxIm1WIDU655V6HgP2t1JrUtI053gvP5AdM9e0YX_xs0zw>
-    <xmx:607mXaAOcyKA6KazU9jplqMkGy7aV4YB8KeI6NxrjEJL-TT5IE-rVw>
+    jhdrihgurdgruhenucevlhhushhtvghrufhiiigvpeef
+X-ME-Proxy: <xmx:907mXVfGzEw6vZcNN6maLZSn9Hdaj6VrTE3V9EbNPCjHggYj4kKUEg>
+    <xmx:907mXZrYFz24HlkekUpCg-rPZmY9PLEyvM4z-afsPLiwI4ZSk41ahg>
+    <xmx:907mXXWoU5TWy0iOeBXgLKUcUND9EXwJnNj_BEwVXFvcaltlR4o_Bg>
+    <xmx:907mXV81iyFgpYODxjE1RdgWHqX_BNQCr4-kinJ8xeF1X4F4wJUneg>
 Received: from mistburn.lan (unknown [118.211.92.13])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9A811306010D;
-        Tue,  3 Dec 2019 07:02:47 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id CD3E730600EA;
+        Tue,  3 Dec 2019 07:02:58 -0500 (EST)
 From:   Andrew Jeffery <andrew@aj.id.au>
 To:     linux-aspeed@lists.ozlabs.org
 Cc:     joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Patrick Venture <venture@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 02/14] dt-bindings: misc: Document reg for aspeed,p2a-ctrl nodes
-Date:   Tue,  3 Dec 2019 22:34:03 +1030
-Message-Id: <17ccbf7c6f9f7b81543eabee06d81e137c8759c6.1575369656.git-series.andrew@aj.id.au>
+        linux-kernel@vger.kernel.org, Adriana Kobylak <anoo@us.ibm.com>,
+        Brian Yang <yang.brianc.w@inventec.com>,
+        John Wang <wangzqbj@inspur.com>,
+        Ken Chen <chen.kenyy@inventec.com>, Tao Ren <taoren@fb.com>,
+        Xo Wang <xow@google.com>, Yuan Yao <yao.yuan@linaro.org>
+Subject: [PATCH 05/14] ARM: dts: aspeed-g5: Fix aspeed,external-nodes description
+Date:   Tue,  3 Dec 2019 22:34:06 +1030
+Message-Id: <141f068d10b94413a6d0ca73fe07f8e961380e7b.1575369656.git-series.andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
 References: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
@@ -82,30 +85,184 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The P2A controller node sits under a syscon device, and can assume
-offsets from the base of the syscon based on the compatible. However,
-for devicetree correctness allow a reg property to be specified, which
-an associated driver may choose to use to discover associated resources.
+The existing approach lead to an error from the dtbs_check:
 
-Cc: Patrick Venture <venture@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    pinctrl: aspeed,external-nodes: [[8, 9]] is too short
+
+Cc: Adriana Kobylak <anoo@us.ibm.com>
+Cc: Brian Yang <yang.brianc.w@inventec.com>
+Cc: Joel Stanley <joel@jms.id.au>
+Cc: John Wang <wangzqbj@inspur.com>
+Cc: Ken Chen <chen.kenyy@inventec.com>
+Cc: Tao Ren <taoren@fb.com>
+Cc: Xo Wang <xow@google.com>
+Cc: Yuan Yao <yao.yuan@linaro.org>
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 Reviewed-by: Joel Stanley <joel@jms.id.au>
 ---
- Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts     |  4 +----
+ arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts |  4 +----
+ arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts         |  9 +++++++--
+ arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts           |  4 +----
+ arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts             |  4 +----
+ arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts             |  4 +----
+ arch/arm/boot/dts/aspeed-bmc-opp-swift.dts               |  4 +----
+ arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts         |  4 +----
+ arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts               |  2 +--
+ arch/arm/boot/dts/aspeed-g5.dtsi                         |  3 +--
+ 10 files changed, 8 insertions(+), 34 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-index 0e1fa5bc6a30..f2e2e28b317c 100644
---- a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-+++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-@@ -18,6 +18,7 @@ Required properties:
- Optional properties:
- ===================
+diff --git a/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts b/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
+index c2ece0b91885..de9612e49c69 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
+@@ -211,10 +211,6 @@
+ 	status = "okay";
+ };
  
-+- reg: A hint for the memory regions associated with the P2A controller
- - memory-region: A phandle to a reserved_memory region to be used for the PCI
- 		to AHB mapping
+-&pinctrl {
+-	aspeed,external-nodes = <&gfx &lhc>;
+-};
+-
+ &gpio {
+ 	pin_gpio_c7 {
+ 		gpio-hog;
+diff --git a/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts b/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
+index 2c29ac037d32..022d0744d786 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
+@@ -200,10 +200,6 @@
+ 	status = "okay";
+ };
  
+-&pinctrl {
+-	aspeed,external-nodes = <&gfx &lhc>;
+-};
+-
+ &gpio {
+ 	pin_gpio_c7 {
+ 		gpio-hog;
+diff --git a/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts b/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts
+index c17bb7fce7ff..d69da58476fe 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts
+@@ -782,8 +782,13 @@
+ 	memory-region = <&gfx_memory>;
+ };
+ 
+-&pinctrl {
+-	aspeed,external-nodes = <&gfx &lhc>;
++&gpio {
++	pin_gpio_b7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(B,7) GPIO_ACTIVE_LOW>;
++		output-high;
++		line-name = "BMC_INIT_OK";
++	};
+ };
+ 
+ &wdt1 {
+diff --git a/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts b/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts
+index 1deb30ec912c..8a9782b7e1af 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts
+@@ -118,10 +118,6 @@
+ 	status = "okay";
+ };
+ 
+-&pinctrl {
+-	aspeed,external-nodes = <&gfx &lhc>;
+-};
+-
+ &pwm_tacho {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
+index 42b37a204241..a875e873bd47 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
+@@ -263,10 +263,6 @@
+ 	status = "okay";
+ };
+ 
+-&pinctrl {
+-	aspeed,external-nodes = <&gfx &lhc>;
+-};
+-
+ &gpio {
+ 	pin_gpio_b0 {
+ 		gpio-hog;
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+index edfa44fe1f75..270184cb0577 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+@@ -260,10 +260,6 @@
+ 	memory-region = <&gfx_memory>;
+ };
+ 
+-&pinctrl {
+-	aspeed,external-nodes = <&gfx &lhc>;
+-};
+-
+ &pwm_tacho {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
+index b8fdd2a8a2c9..0831bc1f5a4c 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
+@@ -940,10 +940,6 @@
+ 	memory-region = <&gfx_memory>;
+ };
+ 
+-&pinctrl {
+-	aspeed,external-nodes = <&gfx &lhc>;
+-};
+-
+ &wdt1 {
+ 	aspeed,reset-type = "none";
+ 	aspeed,external-signal;
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+index 569dad93e162..39ba4d5a787e 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+@@ -623,10 +623,6 @@
+ 	memory-region = <&gfx_memory>;
+ };
+ 
+-&pinctrl {
+-	aspeed,external-nodes = <&gfx &lhc>;
+-};
+-
+ &wdt1 {
+ 	aspeed,reset-type = "none";
+ 	aspeed,external-signal;
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+index bc60ec291681..7795248ba188 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+@@ -466,8 +466,6 @@
+ };
+ 
+ &pinctrl {
+-	aspeed,external-nodes = <&gfx &lhc>;
+-
+ 	pinctrl_gpioh_unbiased: gpioi_unbiased {
+ 		pins = "A8", "C7", "B7", "A7", "D7", "B6", "A6", "E7";
+ 		bias-disable;
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index d8d358e23d78..5757d3f0e947 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -223,8 +223,7 @@
+ 
+ 				pinctrl: pinctrl {
+ 					compatible = "aspeed,ast2500-pinctrl";
+-					aspeed,external-nodes = <&gfx &lhc>;
+-
++					aspeed,external-nodes = <&gfx>, <&lhc>;
+ 				};
+ 
+ 				p2a: p2a-control {
 -- 
 git-series 0.9.1
