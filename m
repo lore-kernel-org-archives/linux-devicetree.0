@@ -2,100 +2,166 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20998C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 360C1C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF72720684
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C5A20684
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 07:29:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Leqg0R6Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfLCH1t (ORCPT
+        id S1727417AbfLCH3l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 02:27:49 -0500
-Received: from mga07.intel.com ([134.134.136.100]:20359 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727389AbfLCH1t (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 02:27:49 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 23:27:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,272,1571727600"; 
-   d="scan'208";a="213328497"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.95]) ([10.237.72.95])
-  by orsmga003.jf.intel.com with ESMTP; 02 Dec 2019 23:27:46 -0800
-Subject: Re: [PATCH 1/4] mmc: sdhci: Add delay after power off
-To:     Jun Nie <jun.nie@linaro.org>, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
-References: <20191202144104.5069-1-jun.nie@linaro.org>
- <20191202144104.5069-2-jun.nie@linaro.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <7f95d66f-9d40-93ae-828d-ecae88463a9b@intel.com>
-Date:   Tue, 3 Dec 2019 09:26:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 3 Dec 2019 02:29:41 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57262 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfLCH3l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 02:29:41 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C1BA7309;
+        Tue,  3 Dec 2019 08:29:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1575358179;
+        bh=7cZbYLONLyPLh46EPhOTsWVY7T7ktT6/ScSQB9363YY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Leqg0R6YUsSnpROUbCxEy4cfmiGkOCfTGZM43r+n1uEKkbWIRkUzyiD+ZwmPZv+2D
+         bUxAHCy4NgvqVM4tmy418aSLwIEH3jYkFVeI6UtOl5Kfo6RKPrzEueYrqlskH8QzTu
+         o7Tzgq8KrwIdS85VsaLK+h90k3XWrbPCAGYKMn5c=
+Date:   Tue, 3 Dec 2019 09:29:32 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jyri Sarha <jsarha@ti.com>
+Cc:     dri-devel@lists.freedesktop.org, tony@atomide.com,
+        bcousson@baylibre.com, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, tomi.valkeinen@ti.com,
+        peter.ujfalusi@ti.com, bparrot@ti.com
+Subject: Re: [PATCH] ARM: dts: am335x-evm: Use drm simple-panel instead of
+ tilcdc-panel
+Message-ID: <20191203072932.GL4730@pendragon.ideasonboard.com>
+References: <20191202185729.12921-1-jsarha@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20191202144104.5069-2-jun.nie@linaro.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20191202185729.12921-1-jsarha@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/12/19 4:41 pm, Jun Nie wrote:
-> Add delay after power off to ensure that full power cycle is
-> successful. Otherwise, some controllers, at lease for Hisilicon
-> eMMC controller, may not be unstable sometimes for full power
-> cycle operation.
+Hi Jyri,
+
+Thank you for the patch.
+
+On Mon, Dec 02, 2019 at 08:57:29PM +0200, Jyri Sarha wrote:
+> Move to use the new drm panel support in tilcdc together with added
+> "tfc,s9700rtwv43tr-01b"-panel support in drm panel-simple.
 > 
-> Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 > ---
->  drivers/mmc/host/sdhci.c | 7 +++++++
->  drivers/mmc/host/sdhci.h | 2 ++
->  2 files changed, 9 insertions(+)
+> "tfc,s9700rtwv43tr-01b" in panel-simple has been in for some time now
+> so it is about time to get this in too.
 > 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 3140fe2e5dba..a654f0aeb438 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1761,6 +1761,13 @@ void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
->  		sdhci_writeb(host, 0, SDHCI_POWER_CONTROL);
->  		if (host->quirks2 & SDHCI_QUIRK2_CARD_ON_NEEDS_BUS_ON)
->  			sdhci_runtime_pm_bus_off(host);
-> +
-> +		/*
-> +		 * Some controllers need an extra 100ms delay to secure
-> +		 * full power cycle is successful.
-> +		 */
-> +		if (host->quirks2 & SDHCI_QUIRK2_DELAY_AFTER_POWER_OFF)
-> +			msleep(100);
-
-Please use the ->set_power() callback and do this in your own driver.
-
->  	} else {
->  		/*
->  		 * Spec says that we should clear the power reg before setting
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 0ed3e0eaef5f..0e6f97eaa796 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -482,6 +482,8 @@ struct sdhci_host {
->   * block count.
->   */
->  #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
-> +/* Controllers need an extra 100ms delay to make sure power off completely */
-> +#define SDHCI_QUIRK2_DELAY_AFTER_POWER_OFF		(1<<19)
+>  arch/arm/boot/dts/am335x-evm.dts | 44 +++++++++++++-------------------
+>  1 file changed, 18 insertions(+), 26 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+> index a00145705c9b..0e286a1c9cc5 100644
+> --- a/arch/arm/boot/dts/am335x-evm.dts
+> +++ b/arch/arm/boot/dts/am335x-evm.dts
+> @@ -113,7 +113,7 @@
+>  		};
+>  	};
 >  
->  	int irq;		/* Device IRQ */
->  	void __iomem *ioaddr;	/* Mapped address */
-> 
+> -	backlight {
+> +	backlight: backlight {
+>  		compatible = "pwm-backlight";
+>  		pwms = <&ecap0 0 50000 0>;
+>  		brightness-levels = <0 51 53 56 62 75 101 152 255>;
+> @@ -121,35 +121,19 @@
+>  	};
+>  
+>  	panel {
+> -		compatible = "ti,tilcdc,panel";
+> +		compatible = "tfc,s9700rtwv43tr-01b";
+> +
+>  		status = "okay";
 
+I think this can be dropped as it's implicit.
+
+> +
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&lcd_pins_s0>;
+> -		panel-info {
+> -			ac-bias           = <255>;
+> -			ac-bias-intrpt    = <0>;
+> -			dma-burst-sz      = <16>;
+> -			bpp               = <32>;
+> -			fdd               = <0x80>;
+> -			sync-edge         = <0>;
+> -			sync-ctrl         = <1>;
+> -			raster-order      = <0>;
+> -			fifo-th           = <0>;
+> -		};
+>  
+> -		display-timings {
+> -			800x480p62 {
+> -				clock-frequency = <30000000>;
+> -				hactive = <800>;
+> -				vactive = <480>;
+> -				hfront-porch = <39>;
+> -				hback-porch = <39>;
+> -				hsync-len = <47>;
+> -				vback-porch = <29>;
+> -				vfront-porch = <13>;
+> -				vsync-len = <2>;
+> -				hsync-active = <1>;
+> -				vsync-active = <1>;
+> +		backlight = <&backlight>;
+
+I would add a blank line here.
+
+> +		ports {
+> +			port {
+> +				panel_0: endpoint@0 {
+> +					remote-endpoint = <&lcdc_0>;
+> +				};
+>  			};
+>  		};
+
+The outter ports node isn't required if there's a single port, up to
+you.
+
+>  	};
+> @@ -525,6 +509,14 @@
+>  	status = "okay";
+>  
+>  	blue-and-red-wiring = "crossed";
+> +
+> +	ports {
+> +		port {
+> +			lcdc_0: endpoint@0 {
+> +				remote-endpoint = <&panel_0>;
+> +			};
+> +		};
+> +	};
+
+Same here.
+
+With the above issues addressed as applicable,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  };
+>  
+>  &elm {
+
+-- 
+Regards,
+
+Laurent Pinchart
