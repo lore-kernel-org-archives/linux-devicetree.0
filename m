@@ -2,103 +2,105 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B692C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC287C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C17220803
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:27:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575401256;
-	bh=Jp12xL/q3X4tITxAgZn2nPi7Ls3/U09vhmfrLbRRoeY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a4c7+R2pYKc9FP9cX0OH4MYMl66QBpC80ww6yADQ3ljXyyfuEkdiL6wuw+KUSxYCo
-	 3UokB6UHd5GPFA2SGZjI9b21lRiQlSP4bbqo/3Y1/Emvr3aryamwECTOO8TJZLXD5V
-	 QB0vQ3TGYp9a15LXebYPgy24vY69YTLkcgikFwBQ=
+	by mail.kernel.org (Postfix) with ESMTP id AD5E420640
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:27:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWtDNKTC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfLCT1f (ORCPT
+        id S1727081AbfLCT1l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 14:27:35 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42844 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfLCT1f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 14:27:35 -0500
-Received: by mail-oi1-f194.google.com with SMTP id j22so4417483oij.9;
-        Tue, 03 Dec 2019 11:27:34 -0800 (PST)
+        Tue, 3 Dec 2019 14:27:41 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:40969 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfLCT1l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 14:27:41 -0500
+Received: by mail-pj1-f66.google.com with SMTP id ca19so1901482pjb.8;
+        Tue, 03 Dec 2019 11:27:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0PgT9Sm6MTMXuNLnykZQsd6rodt9b9uQNxM2B4NE8NA=;
+        b=DWtDNKTCoDd8AVCIaKWfQfjF6A4gU6y0pXYZm1LWLNrAeN5pJ9Y396tGvuAKw2+hjS
+         9I0LbSyqQ7l9MmBlbcleBIcWLxNqWH2bsVLpQ+ej/42KKf0q3gq/rnkxuw6tkqD5Iju4
+         MAlpnzmxV8tZ8LLrVN/c+JoRc0dk9pz8WRgp/Y+xcIAGODoylB4pay2xzNuzBhRz2VsS
+         95AyBS/cKU80PT2U9kwEHMkM1ATpRNwkmL30hBQckrBKSZq3//5quE+bwi0lOB6eXZMt
+         2akPUnbWrXS8XxcfKD5SXmiaP6FvnzlR+5jSGWF7M3GKsCanmAcbZgk34LXmIxqC9Lpv
+         2IyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Zr7PO32uOy5D8YwNgomoY3arozHA4IfHGCcBotb054w=;
-        b=WNsFZZgWQ/iKULntAYhjPgeKtcNsSUTdxkPgKw1rx1iiw+Qr9617Su4T1qDp1cEf5p
-         GEGXYAVj53XDQALcD0Y45TJ0wH0tymJJpIrGuYFuo+EEAFjwHCojkE91rdQdb3Z+5vq9
-         /VJ4dNJKV9E7sgyM2Put8Ghe8hUatjmX99muzz1vyVPSYpUUVHsup8e2hI8JGQ676DMK
-         a9HhRGMyDTY9MrqaVuGiDDfZIgzASWGI3PRjcAstDNfMKIZvqHbTEjdmVbIfWvGxr2sw
-         NxM6OZsU3RB55yb+kR7B6bZLniJc2W/9a2LvAa1IwOkihQLEucmfwBAjz9+DCUmCZ55h
-         F7iQ==
-X-Gm-Message-State: APjAAAXajg8E+wSmM6S2jNl/u2oKy8iD15RtCY3JSAyETDtp5cicQPyI
-        GIDFwYIMmtTswl2vGOeHCw==
-X-Google-Smtp-Source: APXvYqwBpLszr2ZMq6k6wfrz9fB2KVZNnhLtQp0sCvxzYzi2F8Zrz1hDWGG5mcQQI84DY/guTt2fOA==
-X-Received: by 2002:aca:5dd7:: with SMTP id r206mr5215502oib.3.1575401254447;
-        Tue, 03 Dec 2019 11:27:34 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u26sm414885otk.0.2019.12.03.11.27.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 11:27:33 -0800 (PST)
-Date:   Tue, 3 Dec 2019 13:27:33 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     haibo.chen@nxp.com
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, mark.rutland@arm.com,
-        kernel@pengutronix.de, devicetree@vger.kernel.org,
-        festevam@gmail.com, linux-mmc@vger.kernel.org, linux-imx@nxp.com
-Subject: Re: [PATCH 12/14] doc: dt: fsl-imx-esdhc: add auto-cmd23-broken
- binding
-Message-ID: <20191203192733.GA24286@bogus>
-References: <1573816606-26779-1-git-send-email-haibo.chen@nxp.com>
- <1573816606-26779-2-git-send-email-haibo.chen@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0PgT9Sm6MTMXuNLnykZQsd6rodt9b9uQNxM2B4NE8NA=;
+        b=lVPPJLKx2uAkeBeV9JvW/RIcaWuIkjlVZnGf5yI6zvI9jjCzvLBCLDCEcPB71D3Kpy
+         nByuIoC23mdxSldcTjIeXeap/7F9g9whCJf78haWWtlHO6ImALCo/0aTpMMLXLPwcNSo
+         WkqjCVy6yR1m2wItoy43SzdfqmkL1m7erob4epyJwlmkSEgA2t3ofu3LLSKVLBGaIhxy
+         DVWCfOOEVsaf7CYdXatnpDb+0wUnZvzpQYLIGhMFAmomrzbtYQigG3TMyVZPBmjYT+BX
+         xdsYtn/RdVerN2PfU9HPPszGSPc9fuiUiiHwznmZ+YaLDWrd1MMdrK/9mcCn/+vdaWZC
+         kF6w==
+X-Gm-Message-State: APjAAAXmp/QKxDq6vRQj+gMWkYcEL9sXP5tC6LNOIwU0fYL095bUbzsF
+        CWfE2rDXuppe3er9n6SciygcPp8UCjktsf42w0c=
+X-Google-Smtp-Source: APXvYqwc1SheFyTjSmLHWhBW+YXY6ussA8W4aKKbrfYIk26KUHYQylX/y9/Hfdg+UU5PNMTEH5UyuW8U8XCJn2rOjDc=
+X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr7346216pjb.30.1575401260458;
+ Tue, 03 Dec 2019 11:27:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573816606-26779-2-git-send-email-haibo.chen@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
+ <1575349026-8743-3-git-send-email-srinath.mannam@broadcom.com> <20191203155514.GE18399@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20191203155514.GE18399@e119886-lin.cambridge.arm.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 3 Dec 2019 21:27:30 +0200
+Message-ID: <CAHp75Vf7d=Gw24MTq2q3BKspkLEDDM24GVK4Zh_4zfZEzVuZjw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] PCI: iproc: Add INTx support with better modeling
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ray Jui <ray.jui@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 07:16:46PM +0800, haibo.chen@nxp.com wrote:
-> From: Haibo Chen <haibo.chen@nxp.com>
-> 
-> Add fsl,auto-cmd23-broken binding.
-> 
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> ---
->  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> index d50144f5f1d2..a776f418a028 100644
-> --- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> @@ -43,6 +43,14 @@ Optional properties:
->    property allows user to change the delay target for the strobe input read clock.
->    If not use this property, driver default set the delay target to value 7.
->    Only eMMC HS400 mode need to take care of this property.
-> +- fsl,auto-cmd23-broken: disable the ACMD23 function of USDHC.
-> +  This is required for eMMC on imx6qpdl/imx6sx/imx7d when it use ADMA mode. Because
-> +  for these SoC, it do not support the ACMD23 completely, only take the 16 bit block
-> +  count from the 0x4 register (BLK_ATT) as argument for the ACMD23, the upper 16 bit
-> +  of the CMD23's argument is ignored. This will impact the reliable write operation
-> +  and the RPMB block write operation, because these operations need to set the bit 31
-> +  of the CMD23's argument. SDMA mode will default disable the ACMD23 mode. SD card do
-> +  not has this limitation on these SoCs.
+On Tue, Dec 3, 2019 at 5:55 PM Andrew Murray <andrew.murray@arm.com> wrote:
+> On Tue, Dec 03, 2019 at 10:27:02AM +0530, Srinath Mannam wrote:
 
-Use the compatible string or perhaps the version register like the 
-sdhci-esdhc driver does.
+> > +     /* go through INTx A, B, C, D until all interrupts are handled */
+> > +     do {
+> > +             status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
+>
+> By performing this read once and outside of the do/while loop you may improve
+> performance. I wonder how probable it is to get another INTx whilst handling
+> one?
 
-Rob
+May I ask how it can be improved?
+One read will be needed any way, and so does this code.
+
+> > +             for_each_set_bit(bit, &status, PCI_NUM_INTX) {
+> > +                     virq = irq_find_mapping(pcie->irq_domain, bit);
+> > +                     if (virq)
+> > +                             generic_handle_irq(virq);
+> > +                     else
+> > +                             dev_err(dev, "unexpected INTx%u\n", bit);
+> > +             }
+> > +     } while ((status & SYS_RC_INTX_MASK) != 0);
+
+-- 
+With Best Regards,
+Andy Shevchenko
