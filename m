@@ -2,45 +2,57 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A2EC43215
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D501C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974E02070A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BE562146E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfLCON1 (ORCPT
+        id S1726473AbfLCOPZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:13:27 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:44833 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbfLCONN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:13:13 -0500
-X-Originating-IP: 90.76.211.102
-Received: from localhost.localdomain (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id AF50E60015;
-        Tue,  3 Dec 2019 14:13:11 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Tue, 3 Dec 2019 09:15:25 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58886 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfLCOPZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 09:15:25 -0500
+Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id D199C27FB0C;
+        Tue,  3 Dec 2019 14:15:22 +0000 (GMT)
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
+        Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Clark <robdclark@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v5 3/4] dt-bindings: gpio: Document the Xylon LogiCVC GPIO controller
-Date:   Tue,  3 Dec 2019 15:12:42 +0100
-Message-Id: <20191203141243.251058-4-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191203141243.251058-1-paul.kocialkowski@bootlin.com>
-References: <20191203141243.251058-1-paul.kocialkowski@bootlin.com>
+        devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: [PATCH v4 00/11] drm: Add support for bus-format negotiation
+Date:   Tue,  3 Dec 2019 15:15:04 +0100
+Message-Id: <20191203141515.3597631-1-boris.brezillon@collabora.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -48,91 +60,65 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Xylon LogiCVC display controller exports some GPIOs, which are
-exposed as a separate entity.
+This patch series aims at adding support for runtime bus-format
+negotiation between all elements of the
+'encoder -> bridges -> connector/display' section of the pipeline.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/gpio/xylon,logicvc-gpio.yaml     | 69 +++++++++++++++++++
- 1 file changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
+In order to support that, we need drm bridges to fully take part in the
+atomic state validation process, which requires adding a
+drm_bridge_state and a new drm_bridge_funcs.atomic_check() hook.
+Once those basic building blocks are in place, we can add new hooks to
+allow bus format negotiation (those are called just before
+->atomic_check()). The bus format selection is done at runtime by
+testing all possible combinations across the whole bridge chain until
+one is reported to work.
 
-diff --git a/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml b/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
-new file mode 100644
-index 000000000000..d102888c1be7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Bootlin
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/gpio/xylon,logicvc-gpio.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Xylon LogiCVC GPIO controller
-+
-+maintainers:
-+  - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-+
-+description: |
-+  The LogiCVC GPIO describes the GPIO block included in the LogiCVC display
-+  controller. These are meant to be used for controlling display-related
-+  signals.
-+
-+  The controller exposes GPIOs from the display and power control registers,
-+  which are mapped by the driver as follows:
-+  - GPIO[4:0] (display control) mapped to index 0-4
-+  - EN_BLIGHT (power control) mapped to index 5
-+  - EN_VDD (power control) mapped to index 6
-+  - EN_VEE (power control) mapped to index 7
-+  - V_EN (power control) mapped to index 8
-+
-+properties:
-+  $nodename:
-+    pattern: "^gpio@[0-9a-f]+$"
-+
-+  compatible:
-+    enum:
-+      - xylon,logicvc-3.02.a-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  gpio-line-names:
-+    minItems: 1
-+    maxItems: 9
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#gpio-cells"
-+  - gpio-controller
-+
-+examples:
-+  - |
-+    logicvc: logicvc@43c00000 {
-+      compatible = "xylon,logicvc-3.02.a", "syscon", "simple-mfd";
-+      reg = <0x43c00000 0x6000>;
-+
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+
-+      logicvc_gpio: gpio@40 {
-+        compatible = "xylon,logicvc-3.02.a-gpio";
-+        reg = <0x40 0x40>;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        gpio-line-names = "GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4",
-+               "EN_BLIGHT", "EN_VDD", "EN_VEE", "V_EN";
-+      };
-+    };
+No Major changes in this v4. I think I addressed all comments I got
+from Neil and Laurent (thanks for the detailed reviews BTW). Note that
+this version only contains core changes. Once those changes are merged
+I'll send the imx/panel/lvds-codec specific bits.
+
+A more detailed changelog is provided in each patch.
+
+This patch series is also available here [1].
+
+Thanks,
+
+Boris
+
+[1]https://github.com/bbrezillon/linux-0day/commits/drm-bridge-busfmt-v4
+
+Boris Brezillon (11):
+  drm/bridge: Rename bridge helpers targeting a bridge chain
+  drm/bridge: Introduce drm_bridge_get_next_bridge()
+  drm: Stop accessing encoder->bridge directly
+  drm/bridge: Make the bridge chain a double-linked list
+  drm/bridge: Add the drm_for_each_bridge_in_chain() helper
+  drm/bridge: Add the drm_bridge_get_prev_bridge() helper
+  drm/bridge: Clarify the atomic enable/disable hooks semantics
+  drm/bridge: Add a drm_bridge_state object
+  drm/bridge: Patch atomic hooks to take a drm_bridge_state
+  drm/bridge: Add an ->atomic_check() hook
+  drm/bridge: Add the necessary bits to support bus format negotiation
+
+ .../drm/bridge/analogix/analogix_dp_core.c    |  41 +-
+ drivers/gpu/drm/drm_atomic.c                  |  39 +
+ drivers/gpu/drm/drm_atomic_helper.c           |  53 +-
+ drivers/gpu/drm/drm_bridge.c                  | 756 +++++++++++++++---
+ drivers/gpu/drm/drm_encoder.c                 |  15 +-
+ drivers/gpu/drm/drm_probe_helper.c            |   4 +-
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c       |  13 +-
+ drivers/gpu/drm/mediatek/mtk_hdmi.c           |   8 +-
+ drivers/gpu/drm/msm/edp/edp_bridge.c          |  10 +-
+ drivers/gpu/drm/omapdrm/omap_drv.c            |   4 +-
+ drivers/gpu/drm/omapdrm/omap_encoder.c        |   3 +-
+ drivers/gpu/drm/rcar-du/rcar_du_crtc.c        |  10 +-
+ drivers/gpu/drm/vc4/vc4_dsi.c                 |  18 +-
+ include/drm/drm_atomic.h                      |   3 +
+ include/drm/drm_bridge.h                      | 404 +++++++++-
+ include/drm/drm_encoder.h                     |   7 +-
+ 16 files changed, 1174 insertions(+), 214 deletions(-)
+
 -- 
-2.24.0
+2.23.0
 
