@@ -2,98 +2,120 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7F9C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2CAC432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C61020661
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD272073C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575388407;
+	bh=cKUlQJxyEbNNE534SxNpTQSfjp4RJhfRU1TUcm+QH08=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PJcQ/Y/NFlpqBHRHwln3WWbGQUcwnlOetOUCn5ZJ9+0tiS+BnnnsBh6Fl09Oo3fEZ
+	 V3MmIcY54SnIhTQkF7Y+G/1vcy+9ajHlraAfsBA4au+FgwuserkxeFKKwWpKTsbjiV
+	 bS1Aqmd9rNQYOlmmUZ54nAcHzirBcr4mJKPlbGM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfLCPX7 (ORCPT
+        id S1726318AbfLCPxV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:23:59 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:46532 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726115AbfLCPX6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 10:23:58 -0500
-Received: (qmail 2007 invoked by uid 2102); 3 Dec 2019 10:23:57 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 3 Dec 2019 10:23:57 -0500
-Date:   Tue, 3 Dec 2019 10:23:57 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Ikjoon Jang <ikjn@chromium.org>
-cc:     linux-usb@vger.kernel.org,
-        GregKroah-Hartman <gregkh@linuxfoundation.org>,
-        RobHerring <robh+dt@kernel.org>,
-        MarkRutland <mark.rutland@arm.com>,
-        SuwanKim <suwan.kim027@gmail.com>,
-        "GustavoA . R . Silva" <gustavo@embeddedor.com>,
-        JohanHovold <johan@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <drinkcat@chromium.org>
-Subject: Re: [PATCH v4 2/2] usb: overridable hub bInterval by device node
-In-Reply-To: <20191203101552.199339-1-ikjn@chromium.org>
-Message-ID: <Pine.LNX.4.44L0.1912031021120.1505-100000@iolanthe.rowland.org>
+        Tue, 3 Dec 2019 10:53:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbfLCPxV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 10:53:21 -0500
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05A6D2073F;
+        Tue,  3 Dec 2019 15:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575388400;
+        bh=cKUlQJxyEbNNE534SxNpTQSfjp4RJhfRU1TUcm+QH08=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Nm1H73YFEpWiEJ7OcGsNEJd3BOuiFHQOpmau/UXVgeM0A3bJ4zEmI/hHgl2R62C1y
+         Ms62vpk7yOnX3u1BuWQss6CwRWnVQXsDzid8yYPpfAB1VJO4Tgm8AGk7nzJRGSJKld
+         i6dHTj8CNyyW9bPfXgUO/tMXqTZtxcPv3D8aWTdQ=
+Received: by mail-qv1-f52.google.com with SMTP id t9so1680702qvh.13;
+        Tue, 03 Dec 2019 07:53:19 -0800 (PST)
+X-Gm-Message-State: APjAAAVJ49WG1m4rnxIDzV6bZNgvIYDKKpBsv2NUCEBJIK1euNEkDUZm
+        7u/8oY6z25IWCMPjFJ4zKb1FAEq1P/tWCDr4HA==
+X-Google-Smtp-Source: APXvYqyICjW3HYnUPFqTgR4rEp2A1uuQE3BOephqhDMI2H3gFhNk2aTw/xPKbNHQEIKUpgOnuSfcOdrza+JvE1yn/H8=
+X-Received: by 2002:ad4:450a:: with SMTP id k10mr5459306qvu.136.1575388397912;
+ Tue, 03 Dec 2019 07:53:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <20191203114743.1294-1-nsaenzjulienne@suse.de> <20191203114743.1294-9-nsaenzjulienne@suse.de>
+In-Reply-To: <20191203114743.1294-9-nsaenzjulienne@suse.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 3 Dec 2019 09:53:05 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLMCXdnZag3jihV_dzuR+wFaVKFb7q_PdKTxTg0LVA6cw@mail.gmail.com>
+Message-ID: <CAL_JsqLMCXdnZag3jihV_dzuR+wFaVKFb7q_PdKTxTg0LVA6cw@mail.gmail.com>
+Subject: Re: [PATCH v4 8/8] linux/log2.h: Use roundup/dow_pow_two() on 64bit calculations
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        james.quinlan@broadcom.com, Matthias Brugger <mbrugger@suse.com>,
+        Phil Elwell <phil@raspberrypi.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-acpi@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 3 Dec 2019, Ikjoon Jang wrote:
+On Tue, Dec 3, 2019 at 5:48 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> The function now is safe to use while expecting a 64bit value. Use it
+> where relevant.
 
-> This patch enables hub device to override its own endpoint descriptor's
-> bInterval when the hub has a device node with "hub,interval" property.
-> 
-> When we know reducing autosuspend delay for built-in HIDs is better for
-> power saving, we can reduce it to the optimal value. But if a parent hub
-> has a long bInterval, mouse lags a lot from more frequent autosuspend.
-> So this enables overriding bInterval for a hard wired hub device only
-> when we know that reduces the power consumption.
-> 
-> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-> Acked-by: Alan Stern <stern@rowland.harvard.edu>
+What was wrong with the existing code? This is missing some context.
+
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 > ---
->  drivers/usb/core/config.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
-> index 5f40117e68e7..95ec5af42a1c 100644
-> --- a/drivers/usb/core/config.c
-> +++ b/drivers/usb/core/config.c
-> @@ -6,6 +6,7 @@
->  #include <linux/usb.h>
->  #include <linux/usb/ch9.h>
->  #include <linux/usb/hcd.h>
-> +#include <linux/usb/of.h>
->  #include <linux/usb/quirks.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
-> @@ -257,6 +258,14 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
->  	memcpy(&endpoint->desc, d, n);
->  	INIT_LIST_HEAD(&endpoint->urb_list);
->  
-> +	/* device node property overrides bInterval */
-> +	if (usb_of_has_combined_node(to_usb_device(ddev))) {
-> +		u32 interval = 0;
+>  drivers/acpi/arm64/iort.c                        | 2 +-
+>  drivers/net/ethernet/mellanox/mlx4/en_clock.c    | 3 ++-
+>  drivers/of/device.c                              | 3 ++-
 
-Coding style: there should be a blank line here.  Also, you don't need 
-the "= 0" initializer.
+In any case,
 
-Otherwise okay.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Alan Stern
-
-> +		if (!of_property_read_u32(ddev->of_node, "hub,interval",
-> +				    &interval))
-> +			d->bInterval = min_t(u8, interval, 255);
-> +	}
-> +
->  	/*
->  	 * Fix up bInterval values outside the legal range.
->  	 * Use 10 or 8 ms if no proper value can be guessed.
-
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 ++-
+>  drivers/pci/controller/cadence/pcie-cadence.c    | 3 ++-
+>  drivers/pci/controller/pcie-brcmstb.c            | 3 ++-
+>  drivers/pci/controller/pcie-rockchip-ep.c        | 5 +++--
+>  kernel/dma/direct.c                              | 2 +-
+>  8 files changed, 15 insertions(+), 9 deletions(-)
