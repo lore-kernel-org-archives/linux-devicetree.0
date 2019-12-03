@@ -2,201 +2,155 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11619C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A69C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD4E9206EC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:17:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ku24QkMi";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="OtxmGkAP"
+	by mail.kernel.org (Postfix) with ESMTP id E8FE0206EC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:20:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfLCPRu (ORCPT
+        id S1726214AbfLCPUb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:17:50 -0500
-Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:54316
-        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726057AbfLCPRu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 10:17:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575386269;
-        h=From:To:Cc:Subject:Date:Message-Id;
-        bh=a+ZeEDIVNB9eGTEKRl0WtwhCV5OviwdJ9UgvQi9PSGI=;
-        b=Ku24QkMiUR55PMFye3EJu2CWrR0x1yak5hlD8jLefVGuHED5vDiXk+636Efv27+R
-        y33LBKtpEOZ3OLd3TpDHzMBVi3euOnFeG0bdZvHD3Nel07DzMFbNHVS8/YwWVV75xXU
-        L6kElSq/QkYGY8TdQEd/ykaNeDfCwwQu9CbCQtgU=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575386269;
-        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
-        bh=a+ZeEDIVNB9eGTEKRl0WtwhCV5OviwdJ9UgvQi9PSGI=;
-        b=OtxmGkAPxZq7KX+8Aa7Zm6R7Xg/1t5MIqQq0FjaseRLAzDNVqXOEz+Jpjgp+E8yp
-        Mvq1ZBmbhPEx8hg4PEynwICOumL0IYaUOz0x0N5mtdKJmDU+3/SZxJz9jqT/hlxd9O+
-        lfVtrzbOAbBq9byFQe8Kv/rl9rCu0AF64hTaob/M=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 99223C447A0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
-From:   Sharat Masetty <smasetty@codeaurora.org>
-To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        Sharat Masetty <smasetty@codeaurora.org>
-Subject: [PATCH] arm: dts: sc7180: Add A618 gpu dt blob
-Date:   Tue, 3 Dec 2019 15:17:49 +0000
-Message-ID: <0101016ecc56c5c5-ab66c0ce-da45-4d8e-9cac-8f6be69001d3-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 1.9.1
-X-SES-Outgoing: 2019.12.03-54.240.27.11
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Tue, 3 Dec 2019 10:20:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:44236 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbfLCPUb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 10:20:31 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C73F31B;
+        Tue,  3 Dec 2019 07:20:30 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 686E23F52E;
+        Tue,  3 Dec 2019 07:20:28 -0800 (PST)
+Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+To:     Marc Zyngier <maz@kernel.org>, Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     Roy Zang <roy.zang@nxp.com>, lorenzo.pieralisi@arm.com,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>, linux-kernel@vger.kernel.org,
+        "M.h. Lian" <minghuan.lian@nxp.com>, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, bhelgaas@google.com,
+        andrew.murray@arm.com, frowand.list@gmail.com,
+        Mingkai Hu <mingkai.hu@nxp.com>
+References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
+ <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
+ <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <8f56c2d9-ab01-a91e-902f-a61def0e8ce8@arm.com>
+Date:   Tue, 3 Dec 2019 15:20:27 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds the required dt nodes and properties
-to enabled A618 GPU.
+On 03/12/2019 11:51 am, Marc Zyngier wrote:
+> On 2019-12-03 01:42, Xiaowei Bao wrote:
+>>> -----Original Message-----
+>>> From: Marc Zyngier <maz@misterjones.org>
+>>> Sent: 2019年12月2日 20:48
+>>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
+>>> Cc: robh+dt@kernel.org; frowand.list@gmail.com; M.h. Lian
+>>> <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy Zang
+>>> <roy.zang@nxp.com>; lorenzo.pieralisi@arm.com; andrew.murray@arm.com;
+>>> bhelgaas@google.com; devicetree@vger.kernel.org;
+>>> linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org;
+>>> linux-arm-kernel@lists.infradead.org; Z.q. Hou <zhiqiang.hou@nxp.com>
+>>> Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+>>>
+>>> On 2019-12-02 10:45, Xiaowei Bao wrote:
+>>> > GIC get the map relations of devid and stream id from the msi-map
+>>> > property of DTS, our platform add this property in u-boot base on the
+>>> > PCIe device in the bus, but if enable the vf device in kernel, the vf
+>>> > device msi-map will not set, so the vf device can't work, this patch
+>>> > purpose is that manage the stream id and device id map relations
+>>> > dynamically in kernel, and make the new PCIe device work in kernel.
+>>> >
+>>> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+>>> > ---
+>>> >  drivers/of/irq.c                            |  9 +++
+>>> >  drivers/pci/controller/dwc/pci-layerscape.c | 94
+>>> > +++++++++++++++++++++++++++++
+>>> >  drivers/pci/probe.c                         |  6 ++
+>>> >  drivers/pci/remove.c                        |  6 ++
+>>> >  4 files changed, 115 insertions(+)
+>>> >
+>>> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c index
+>>> > a296eaf..791e609 100644
+>>> > --- a/drivers/of/irq.c
+>>> > +++ b/drivers/of/irq.c
+>>> > @@ -576,6 +576,11 @@ void __init of_irq_init(const struct of_device_id
+>>> > *matches)
+>>> >      }
+>>> >  }
+>>> >
+>>> > +u32 __weak ls_pcie_streamid_fix(struct device *dev, u32 rid) {
+>>> > +    return rid;
+>>> > +}
+>>> > +
+>>> >  static u32 __of_msi_map_rid(struct device *dev, struct device_node
+>>> > **np,
+>>> >                  u32 rid_in)
+>>> >  {
+>>> > @@ -590,6 +595,10 @@ static u32 __of_msi_map_rid(struct device *dev,
+>>> > struct device_node **np,
+>>> >          if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
+>>> >                  "msi-map-mask", np, &rid_out))
+>>> >              break;
+>>> > +
+>>> > +    if (rid_out == rid_in)
+>>> > +        rid_out = ls_pcie_streamid_fix(parent_dev, rid_in);
+>>>
+>>> Over my dead body. Get your firmware to properly program the LUT so 
+>>> that it
+>>> presents the ITS with a reasonable topology. There is absolutely no 
+>>> way this
+>>> kind of change makes it into the kernel.
+>>
+>> Sorry for this, I know it is not reasonable, but I have no other way,
+>> as I know, ARM
+>> get the mapping of stream ID to request ID from the msi-map property
+>> of DTS, if
+>> add a new device which need the stream ID and try to get it from the
+>> msi-map of DTS,
+>> it will failed and not work, yes? So could you give me a better
+>> advice to fix this issue,
+>> I would really appreciate any comments or suggestions, thanks a lot.
+> 
+> Why can't firmware expose an msi-map/msi-map-mask that has a large
+> enough range to ensure mapping of VFs? What are the limitations of
+> the LUT that would prevent this from being configured before the
+> kernel boots?
 
-Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 116 +++++++++++++++++++++++++++++++++++
- 1 file changed, 116 insertions(+)
+Furthermore, note that this attempt isn't doing anything for the SMMU 
+Stream IDs, so the moment anyone tries to assign those VFs they're still 
+going to go bang anyway. Any firmware-based fixup for ID mappings, 
+config space addresses, etc. needs to be SR-IOV-aware and account for 
+all *possible* BDFs.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index c3db2e5..31223d0 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -18,6 +18,8 @@
- #include <dt-bindings/reset/qcom,sdm845-pdc.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- #include <dt-bindings/phy/phy-qcom-qusb2.h>
-+#include <dt-bindings/clock/qcom,gpucc-sc7180.h>
-+#include <dt-bindings/power/qcom-rpmpd.h>
+On LS2085 at least, IIRC you can configure a single LUT entry to just 
+translate the Bus:Device identifier and pass some or all of the Function 
+bits straight through as the LSBs of the Stream ID, so I don't believe 
+the relatively limited number of LUT registers should be too much of an 
+issue. For example, last time I hacked on that I apparently had it set 
+up statically like this:
 
- / {
- 	interrupt-parent = <&intc>;
-@@ -733,6 +735,120 @@
- 			#power-domain-cells = <1>;
- 		};
+&pcie3 {
+	/* Squash 8:5:3 BDF down to 2:2:3 */
+	msi-map-mask = <0x031f>;
+	msi-map = <0x000 &its 0x00 0x20>,
+		  <0x100 &its 0x20 0x20>,
+		  <0x200 &its 0x40 0x20>,
+		  <0x300 &its 0x60 0x20>;
+};
 
-+		gpu: gpu@5000000 {
-+			compatible = "qcom,adreno-618.0", "qcom,adreno";
-+			#stream-id-cells = <16>;
-+			reg = <0 0x5000000 0 0x40000>, <0 0x509e000 0 0x1000>,
-+				<0 0x5061000 0 0x800>;
-+			reg-names = "kgsl_3d0_reg_memory", "cx_mem", "cx_dbgc";
-+
-+			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			iommus = <&adreno_smmu 0>;
-+
-+			operating-points-v2 = <&gpu_opp_table>;
-+
-+			interconnects = <&gem_noc 35 &mc_virt 512>;
-+
-+			qcom,gmu = <&gmu>;
-+
-+			gpu_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-800000000 {
-+					opp-hz = /bits/ 64 <800000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-+				};
-+
-+				opp-650000000 {
-+					opp-hz = /bits/ 64 <650000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-+				};
-+
-+				opp-565000000 {
-+					opp-hz = /bits/ 64 <565000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-+				};
-+
-+				opp-430000000 {
-+					opp-hz = /bits/ 64 <430000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+				};
-+
-+                                opp-355000000 {
-+					opp-hz = /bits/ 64 <355000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+				};
-+
-+                                opp-267000000 {
-+					opp-hz = /bits/ 64 <267000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+				};
-+
-+				opp-180000000 {
-+					opp-hz = /bits/ 64 <180000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-+				};
-+			};
-+		};
-+
-+		adreno_smmu: iommu@5040000 {
-+			compatible = "qcom,sc7180-smmu-v2", "qcom,smmu-v2";
-+			reg = <0 0x5040000 0 0x10000>;
-+			#iommu-cells = <1>;
-+			#global-interrupts = <2>;
-+			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 231 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 364 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 365 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 366 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 367 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 368 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 369 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 370 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 371 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
-+				<&gcc GCC_GPU_CFG_AHB_CLK>,
-+				<&gcc GCC_DDRSS_GPU_AXI_CLK>;
-+
-+			clock-names = "bus", "iface", "mem_iface_clk";
-+			power-domains = <&gpucc CX_GDSC>;
-+		};
-+
-+		gmu: gmu@506a000 {
-+			compatible="qcom,adreno-gmu-618", "qcom,adreno-gmu";
-+
-+			reg = 	<0 0x506a000 0 0x31000>,
-+				<0 0xb290000 0 0x10000>,
-+				<0 0xb490000 0 0x10000>;
-+			reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
-+
-+			interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-+				   <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hfi", "gmu";
-+
-+			clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
-+			       <&gpucc GPU_CC_CXO_CLK>,
-+			       <&gcc GCC_DDRSS_GPU_AXI_CLK>,
-+			       <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
-+			clock-names = "gmu", "cxo", "axi", "memnoc";
-+
-+			power-domains = <&gpucc CX_GDSC>;
-+
-+			iommus = <&adreno_smmu 5>;
-+
-+			operating-points-v2 = <&gmu_opp_table>;
-+
-+			gmu_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-200000000 {
-+					opp-hz = /bits/ 64 <200000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-+				};
-+			};
-+		};
-+
- 		apps_smmu: iommu@15000000 {
- 			compatible = "qcom,sc7180-smmu-500", "arm,mmu-500";
- 			reg = <0 0x15000000 0 0x100000>;
---
-1.9.1
-
+Robin.
