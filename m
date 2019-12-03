@@ -2,80 +2,123 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 769FEC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 22:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9760C432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 22:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3962F2073C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 22:12:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575411125;
-	bh=2+mUxustzPlC5CGQyGryca6Be+OVrhgg9b66NAQUyRw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tyOJ7x9oi+3Kxzfs/ArDUyQxyNqP+PfORV6BuAP9CDYHeMoMoLO24CnvykBfAMCI5
-	 sKFRe5WLP8qELjxDKGg+9n02c3jwc9GYDP8yybpQXZZKhleraztLw2jxIKmOpvkARg
-	 8ay9nUlCB5egjC7GgMN6qwpJs+tjbvVWLUo2ZhJU=
+	by mail.kernel.org (Postfix) with ESMTP id BC9012053B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 22:19:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="c5bT86/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbfLCWMD (ORCPT
+        id S1727539AbfLCWTT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 17:12:03 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45487 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727502AbfLCWMD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 17:12:03 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v10so2836722oiv.12;
-        Tue, 03 Dec 2019 14:12:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pldoBT5ORXz4aapzHPt3ccAwmiFN0lj2178c3XaiQRo=;
-        b=GHII+SPUGu61cq9f9EygA+sDBDn/nUowmErILj25N/vyTM2TKzfHzFtC3snhf5x+3o
-         AoY/IIWvnNhP2NCUSR9kUC2yyczFC4KaSYgIByXOOavpd4KNrW9BOz+rXO97e/O5ulES
-         fUVyyiNkycrSI1JrmV8SCWzNdOix3ln74IUfMw7Uu56ZPoehCKMUE0ZcTJ/6BYWriACk
-         HoVOvCvufJnBBOrIunyfgQG8troB4jwmsBqtln2xxXHEfdFIPt54drxQSev3MA4wReK4
-         EbHd5B/XhOH4zIEOEI3jUfTJC7BUF5pVGzRuCac1W7yTaZhDGJyGOqONfJtATVsG/JPh
-         RWug==
-X-Gm-Message-State: APjAAAWQZWXuuJfJq1Qpxp9kp0yA1OtplPjRx7JuAU+Kd2HFIqW1IKmT
-        P847k0YOdigz4R5XSx4qFA==
-X-Google-Smtp-Source: APXvYqysvr90M90SJ2c9VBE2qhNi1oQIbDw7W8BDqJAjL+rSeTywUX/kbsja7PlOsf7oL6ErQP69kA==
-X-Received: by 2002:aca:4ad8:: with SMTP id x207mr208772oia.148.1575411122893;
-        Tue, 03 Dec 2019 14:12:02 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w12sm1486360otk.75.2019.12.03.14.12.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 14:12:02 -0800 (PST)
-Date:   Tue, 3 Dec 2019 16:12:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/6] dt-bindings: display/ingenic: Add compatible string
- for JZ4770
-Message-ID: <20191203221201.GA3201@bogus>
-References: <20191119141736.74607-1-paul@crapouillou.net>
+        Tue, 3 Dec 2019 17:19:19 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12841 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727480AbfLCWTT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 17:19:19 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5de6df570000>; Tue, 03 Dec 2019 14:19:03 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 03 Dec 2019 14:19:17 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 03 Dec 2019 14:19:17 -0800
+Received: from [10.2.160.125] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Dec
+ 2019 22:19:15 +0000
+Subject: Re: [PATCH v1 03/17] dt-bindings: soc: tegra-pmc: Add Tegra PMC clock
+ ids
+To:     Rob Herring <robh@kernel.org>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <tglx@linutronix.de>, <mark.rutland@arm.com>,
+        <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
+        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
+        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
+        <josephl@nvidia.com>, <vidyas@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1574146234-3871-1-git-send-email-skomatineni@nvidia.com>
+ <1574146234-3871-4-git-send-email-skomatineni@nvidia.com>
+ <20191203220850.GB22716@bogus>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <50f7db27-a1bd-6e2a-0994-82740b4ef6cb@nvidia.com>
+Date:   Tue, 3 Dec 2019 14:19:37 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119141736.74607-1-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191203220850.GB22716@bogus>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575411543; bh=0IKNAVktirUsylXHSyz6GuS3zjLJXwqxN2fIYWCdxn0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=c5bT86/Lv5nwl2ZV/7cNK6nZUqNWH+hTofWP+zr42J7cZxRwZaDohpOZXOBESZgSZ
+         +iLN7mElqBL1NvU1sgN23Aq1PeloHw+ehrQoNT1lXidQxMXxT4Mm9896JWpAyNEsuu
+         fUdZ22RXQLrky3mP2Cgpcq4q5chC3D9ijEh/ejsStO59IbUVIFUGGT530na4AhjcMM
+         nxB3rMtqFIGmshurtdKOIJfCD7mee0YVo4D6ansUoakxTdeY2TVLVRfN/2L2sbAx1/
+         XH2UfVAUFzdMn2z6TZMmQtOaO2DIgjSunkFOv/rmZwnJRWzkTNzRcJRk2dsqXgVTLz
+         q26YdTfOyF5ew==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 19 Nov 2019 15:17:31 +0100, Paul Cercueil wrote:
-> Add a compatible string for the LCD controller found in the JZ4770 SoC.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  Documentation/devicetree/bindings/display/ingenic,lcd.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+On 12/3/19 2:08 PM, Rob Herring wrote:
+> On Mon, Nov 18, 2019 at 10:50:20PM -0800, Sowjanya Komatineni wrote:
+>> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 clocks and each of
+>> these clocks has mux and a gate as a part of PMC controller.
+>>
+>> This patch adds ids for each of these PMC clock mux and gates to
+>> use with the devicetree.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   include/dt-bindings/soc/tegra-pmc.h | 16 ++++++++++++++++
+>>   1 file changed, 16 insertions(+)
+>>   create mode 100644 include/dt-bindings/soc/tegra-pmc.h
+> This should be part of the binding patch.
+ok, will combine in v3
+>> diff --git a/include/dt-bindings/soc/tegra-pmc.h b/include/dt-bindings/soc/tegra-pmc.h
+>> new file mode 100644
+>> index 000000000000..fa1ccfc2514b
+>> --- /dev/null
+>> +++ b/include/dt-bindings/soc/tegra-pmc.h
+>> @@ -0,0 +1,16 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (c) 2019-2020, NVIDIA CORPORATION.  All rights reserved.
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_SOC_TEGRA_PMC_H
+>> +#define _DT_BINDINGS_SOC_TEGRA_PMC_H
+>> +
+>> +#define TEGRA_PMC_CLK_OUT_1_MUX		0
+>> +#define TEGRA_PMC_CLK_OUT_1		1
+>> +#define TEGRA_PMC_CLK_OUT_2_MUX		2
+>> +#define TEGRA_PMC_CLK_OUT_2		3
+>> +#define TEGRA_PMC_CLK_OUT_3_MUX		4
+>> +#define TEGRA_PMC_CLK_OUT_3		5
+>> +
+>> +#endif	/* _DT_BINDINGS_SOC_TEGRA_PMC_H */
+>> -- 
+>> 2.7.4
+>>
