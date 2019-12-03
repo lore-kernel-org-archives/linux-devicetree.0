@@ -2,155 +2,201 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3671FC432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11619C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEB22080A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:15:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575386127;
-	bh=+JqMigEUmtKPTqcnM6ZbCi/YuA1GoQgvuShVp0TQOLY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=ZBGFG8S4ZJI8t5eojitR3OgXKhbInMBy0hTsZfvd+kmSiBC5ln6fiSQPyHvHa8rlZ
-	 aQHADNd1jG+EuDvpec9eAck6r62Nu59u6g9AYGctR4uqVBh7K9qmPojyuj15nnE+9f
-	 /tAiZYmVKRWkvwf1mo5t1fkIj1uhnCwLAM1V9fQ0=
+	by mail.kernel.org (Postfix) with ESMTP id CD4E9206EC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:17:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ku24QkMi";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="OtxmGkAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfLCPP0 (ORCPT
+        id S1726738AbfLCPRu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 10:15:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbfLCPP0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 10:15:26 -0500
-Received: from [192.168.1.31] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E00A42073C;
-        Tue,  3 Dec 2019 15:15:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575386124;
-        bh=+JqMigEUmtKPTqcnM6ZbCi/YuA1GoQgvuShVp0TQOLY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=IK/Vv0oJltH1/SQcCB9uNZ+1oGSxUksJq2j9TRAg6+PuJ97y38INjE12t7POU5kCH
-         +cKZVyKeehrpkZS/TFAmn18P6M7MZSQATdh6HBo622xdbj/ivycdvNF34koqO42nva
-         5IFD/mXxlT9GIkzw5+WaCG4uWoLaRP9GdW3M5AjA=
-Subject: Re: [PATCH 2/2] clk: socfpga: agilex: add clock driver for the Agilex
- platform
-To:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, mturquette@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org
-References: <20190918013459.15966-1-dinguyen@kernel.org>
- <20190918013459.15966-2-dinguyen@kernel.org>
- <20190918050010.74B4021848@mail.kernel.org>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4726f580-fe88-5b20-e869-4e31bd63c6e3@kernel.org>
-Date:   Tue, 3 Dec 2019 09:15:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20190918050010.74B4021848@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 3 Dec 2019 10:17:50 -0500
+Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:54316
+        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726057AbfLCPRu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 10:17:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575386269;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=a+ZeEDIVNB9eGTEKRl0WtwhCV5OviwdJ9UgvQi9PSGI=;
+        b=Ku24QkMiUR55PMFye3EJu2CWrR0x1yak5hlD8jLefVGuHED5vDiXk+636Efv27+R
+        y33LBKtpEOZ3OLd3TpDHzMBVi3euOnFeG0bdZvHD3Nel07DzMFbNHVS8/YwWVV75xXU
+        L6kElSq/QkYGY8TdQEd/ykaNeDfCwwQu9CbCQtgU=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575386269;
+        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
+        bh=a+ZeEDIVNB9eGTEKRl0WtwhCV5OviwdJ9UgvQi9PSGI=;
+        b=OtxmGkAPxZq7KX+8Aa7Zm6R7Xg/1t5MIqQq0FjaseRLAzDNVqXOEz+Jpjgp+E8yp
+        Mvq1ZBmbhPEx8hg4PEynwICOumL0IYaUOz0x0N5mtdKJmDU+3/SZxJz9jqT/hlxd9O+
+        lfVtrzbOAbBq9byFQe8Kv/rl9rCu0AF64hTaob/M=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 99223C447A0
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+From:   Sharat Masetty <smasetty@codeaurora.org>
+To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        Sharat Masetty <smasetty@codeaurora.org>
+Subject: [PATCH] arm: dts: sc7180: Add A618 gpu dt blob
+Date:   Tue, 3 Dec 2019 15:17:49 +0000
+Message-ID: <0101016ecc56c5c5-ab66c0ce-da45-4d8e-9cac-8f6be69001d3-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 1.9.1
+X-SES-Outgoing: 2019.12.03-54.240.27.11
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephen,
+This patch adds the required dt nodes and properties
+to enabled A618 GPU.
 
-On 9/18/19 12:00 AM, Stephen Boyd wrote:
-> Quoting Dinh Nguyen (2019-09-17 18:34:59)
->> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
->> index 0cad76021297..ef2c96c0f1e0 100644
->> --- a/drivers/clk/Makefile
->> +++ b/drivers/clk/Makefile
->> @@ -18,6 +18,7 @@ endif
->>  
+Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 116 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 116 insertions(+)
 
-<snip>
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index c3db2e5..31223d0 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -18,6 +18,8 @@
+ #include <dt-bindings/reset/qcom,sdm845-pdc.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+ #include <dt-bindings/phy/phy-qcom-qusb2.h>
++#include <dt-bindings/clock/qcom,gpucc-sc7180.h>
++#include <dt-bindings/power/qcom-rpmpd.h>
 
->> +struct clk *agilex_register_pll(const char *name,
->> +                               const char * const *parent_names,
->> +                               u8 num_parents, unsigned long flags,
->> +                               void __iomem *reg, unsigned long offset)
->> +{
->> +       struct clk *clk;
->> +       struct socfpga_pll *pll_clk;
->> +       struct clk_init_data init;
->> +
->> +       pll_clk = kzalloc(sizeof(*pll_clk), GFP_KERNEL);
->> +       if (WARN_ON(!pll_clk))
->> +               return NULL;
->> +
->> +       pll_clk->hw.reg = reg + offset;
->> +
->> +       if (streq(name, SOCFPGA_BOOT_CLK))
->> +               init.ops = &clk_boot_ops;
->> +       else
->> +               init.ops = &agilex_clk_pll_ops;
->> +
->> +       init.name = name;
->> +       init.flags = flags;
->> +
->> +       init.num_parents = num_parents;
->> +       init.parent_names = parent_names;
-> 
-> Is it possible to use the new way of specifying clk parents here so that
-> we don't have to keep using strings to describe the clk topology?
-> 
+ / {
+ 	interrupt-parent = <&intc>;
+@@ -733,6 +735,120 @@
+ 			#power-domain-cells = <1>;
+ 		};
 
-Can you point me to what you mean here? Perhaps a driver that is using
-this new way of specifying clk parents?
-
-Thanks,
-Dinh
++		gpu: gpu@5000000 {
++			compatible = "qcom,adreno-618.0", "qcom,adreno";
++			#stream-id-cells = <16>;
++			reg = <0 0x5000000 0 0x40000>, <0 0x509e000 0 0x1000>,
++				<0 0x5061000 0 0x800>;
++			reg-names = "kgsl_3d0_reg_memory", "cx_mem", "cx_dbgc";
++
++			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
++
++			iommus = <&adreno_smmu 0>;
++
++			operating-points-v2 = <&gpu_opp_table>;
++
++			interconnects = <&gem_noc 35 &mc_virt 512>;
++
++			qcom,gmu = <&gmu>;
++
++			gpu_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-800000000 {
++					opp-hz = /bits/ 64 <800000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
++				};
++
++				opp-650000000 {
++					opp-hz = /bits/ 64 <650000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
++				};
++
++				opp-565000000 {
++					opp-hz = /bits/ 64 <565000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
++				};
++
++				opp-430000000 {
++					opp-hz = /bits/ 64 <430000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
++				};
++
++                                opp-355000000 {
++					opp-hz = /bits/ 64 <355000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
++				};
++
++                                opp-267000000 {
++					opp-hz = /bits/ 64 <267000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
++				};
++
++				opp-180000000 {
++					opp-hz = /bits/ 64 <180000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
++				};
++			};
++		};
++
++		adreno_smmu: iommu@5040000 {
++			compatible = "qcom,sc7180-smmu-v2", "qcom,smmu-v2";
++			reg = <0 0x5040000 0 0x10000>;
++			#iommu-cells = <1>;
++			#global-interrupts = <2>;
++			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 231 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 364 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 365 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 366 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 367 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 368 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 369 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 370 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 371 IRQ_TYPE_EDGE_RISING>;
++			clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
++				<&gcc GCC_GPU_CFG_AHB_CLK>,
++				<&gcc GCC_DDRSS_GPU_AXI_CLK>;
++
++			clock-names = "bus", "iface", "mem_iface_clk";
++			power-domains = <&gpucc CX_GDSC>;
++		};
++
++		gmu: gmu@506a000 {
++			compatible="qcom,adreno-gmu-618", "qcom,adreno-gmu";
++
++			reg = 	<0 0x506a000 0 0x31000>,
++				<0 0xb290000 0 0x10000>,
++				<0 0xb490000 0 0x10000>;
++			reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
++
++			interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
++				   <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hfi", "gmu";
++
++			clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
++			       <&gpucc GPU_CC_CXO_CLK>,
++			       <&gcc GCC_DDRSS_GPU_AXI_CLK>,
++			       <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
++			clock-names = "gmu", "cxo", "axi", "memnoc";
++
++			power-domains = <&gpucc CX_GDSC>;
++
++			iommus = <&adreno_smmu 5>;
++
++			operating-points-v2 = <&gmu_opp_table>;
++
++			gmu_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-200000000 {
++					opp-hz = /bits/ 64 <200000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
++				};
++			};
++		};
++
+ 		apps_smmu: iommu@15000000 {
+ 			compatible = "qcom,sc7180-smmu-500", "arm,mmu-500";
+ 			reg = <0 0x15000000 0 0x100000>;
+--
+1.9.1
 
