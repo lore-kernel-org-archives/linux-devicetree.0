@@ -2,126 +2,120 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126D7C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 08:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D90C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 08:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51412064B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 08:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8888A20659
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 08:18:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbfLCIQN (ORCPT
+        id S1726139AbfLCISL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 03:16:13 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56075 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfLCIQN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 03:16:13 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ic3Lk-0002Ds-MK; Tue, 03 Dec 2019 09:16:00 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ic3Lj-0006Xc-Gp; Tue, 03 Dec 2019 09:15:59 +0100
-Date:   Tue, 3 Dec 2019 09:15:59 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     robh+dt@kernel.org, andriy.shevchenko@linux.intel.com,
-        bparrot@ti.com, andy.shevchenko@gmail.com,
-        simon.budig@kernelconcepts.de, hdegoede@redhat.com, fcooper@ti.com,
-        mripard@kernel.org, alexandre.belloni@bootlin.com,
-        shawnguo@kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-input@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 1/5] Input: edt-ft5x06: work around first register
- access error
-Message-ID: <20191203081559.rchykgk22aoygfef@pengutronix.de>
-References: <20191127120948.22251-1-m.felsch@pengutronix.de>
- <20191127120948.22251-2-m.felsch@pengutronix.de>
- <20191202175851.GB50317@dtor-ws>
+        Tue, 3 Dec 2019 03:18:11 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39478 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfLCISK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 03:18:10 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 77so2148995oty.6;
+        Tue, 03 Dec 2019 00:18:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gBtOE1GdWf2jzATlRbrF8r8Pac6d5nQ4OzH7cwGAR94=;
+        b=b+m13b3CkvQfHjFMmIRLCWHuM3weg+qEBDCakTYL5msGW+URm18UNn563N0Kqw0ut0
+         xP+lH3/HGq2BMU+spjBBYcC9Cb+78tpW7yy3ySLggmRmVByCMwTFY/4Ucgo7Akiw1A75
+         mKq37EDgN3klAjpfcS9hSaEsn9XhutvYasivZbdaNzFibSZb9eIiq/vjmdYT4bGqye72
+         69xqvTZx6uZbXcVaAdCu+pl7J5bICfLM9oM9eT7tn7grjfm7cRGDm/txW5VVZiZgdymC
+         7cmXLlpLlGXahovpcl0/xVYTkBbjErfggae43lJxfDghOHpRjJJGJmo0ixWOGHuKJ+vc
+         ZRPQ==
+X-Gm-Message-State: APjAAAVRpMyApozG4Ibe0l5j8+hA7Rzmk6Tvm+WtGxmLkU6Kbl8uBdd3
+        jMSNYPA4mZ0hGvW5CIcvZwYnulIG/ppA1P/HhL8=
+X-Google-Smtp-Source: APXvYqzBuvWMWrwsEDDhZ2tcNfeX7um84g4QQ5ld7WP0VV8LQtkLVFpjZhnV4oe+jaJ4tYQpo65700XzoJh4+uCOqZU=
+X-Received: by 2002:a9d:3a37:: with SMTP id j52mr2353717otc.39.1575361089532;
+ Tue, 03 Dec 2019 00:18:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191202175851.GB50317@dtor-ws>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:15:29 up 17 days, 23:34, 26 users,  load average: 0.07, 0.03,
- 0.05
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-6-geert+renesas@glider.be> <585c4ad9-31fc-e87e-07c4-b8d6aa09c7e4@mentor.com>
+In-Reply-To: <585c4ad9-31fc-e87e-07c4-b8d6aa09c7e4@mentor.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 3 Dec 2019 09:17:58 +0100
+Message-ID: <CAMuHMdW-n8ao7t7156WYxRg7v8+ojXsRgHGUOax=9nBo2F5xOw@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
+To:     Harish Jenny K N <harish_kandiga@mentor.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19-12-02 09:58, Dmitry Torokhov wrote:
-> On Wed, Nov 27, 2019 at 01:09:44PM +0100, Marco Felsch wrote:
-> > From: Philipp Zabel <p.zabel@pengutronix.de>
-> > 
-> > The EP0700MLP1 returns bogus data on the first register read access
-> > (reading the threshold parameter from register 0x00):
-> > 
-> >     edt_ft5x06 2-0038: crc error: 0xfc expected, got 0x40
-> > 
-> > It ignores writes until then. This patch adds a dummy read after which
-> > the number of sensors and parameter read/writes work correctly.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> 
-> Need your signed-off-by as well.
+Hi Harish,
 
-Damn, you're right.. I fix this in the next version.
-
-> 
-> > ---
-> >  drivers/input/touchscreen/edt-ft5x06.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> > index d61731c0037d..b87b1e074f62 100644
-> > --- a/drivers/input/touchscreen/edt-ft5x06.c
-> > +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> > @@ -1050,6 +1050,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
-> >  {
-> >  	const struct edt_i2c_chip_data *chip_data;
-> >  	struct edt_ft5x06_ts_data *tsdata;
-> > +	u8 buf[2] = { 0xfc, 0x00 };
-> >  	struct input_dev *input;
-> >  	unsigned long irq_flags;
-> >  	int error;
-> > @@ -1140,6 +1141,12 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
-> >  		return error;
-> >  	}
-> >  
-> > +	/*
-> > +	 * Dummy read access. EP0700MLP1 returns bogus data on the first
-> > +	 * register read access and ignores writes.
-> > +	 */
-> > +	edt_ft5x06_ts_readwrite(tsdata->client, 2, buf, 2, buf);
+On Tue, Dec 3, 2019 at 6:42 AM Harish Jenny K N
+<harish_kandiga@mentor.com> wrote:
+> > +static int gpio_aggregator_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev = &pdev->dev;
+> > +     struct gpio_desc **descs;
+> > +     struct gpiochip_fwd *fwd;
+> > +     int i, n;
 > > +
-> >  	edt_ft5x06_ts_set_regs(tsdata);
-> >  	edt_ft5x06_ts_get_defaults(&client->dev, tsdata);
-> >  	edt_ft5x06_ts_get_parameters(tsdata);
-> > -- 
-> > 2.20.1
-> > 
-> 
-> -- 
-> Dmitry
-> 
+> > +     n = gpiod_count(dev, NULL);
+> > +     if (n < 0)
+> > +             return n;
+> > +
+> > +     descs = devm_kmalloc_array(dev, n, sizeof(*descs), GFP_KERNEL);
+> > +     if (!descs)
+> > +             return -ENOMEM;
+> > +
+> > +     for (i = 0; i < n; i++) {
+> > +             descs[i] = devm_gpiod_get_index(dev, NULL, i, GPIOD_ASIS);
+>
+> can you please add this check as well as we need to return EPROBE_DEFER.
+>
+> if (desc[i] == ERR_PTR(-ENOENT))
+> <                 return -EPROBE_DEFER;
+
+So gpiod_get_index() nevers return -EPROBE_DEFER, but returns -ENOENT
+instead?
+How can a driver distinguish between "GPIO not found" and "gpiochip driver
+not yet initialized"?
+Worse, so the *_optional() variants will return NULL in both cases, too, so
+the caller will always fall back to optional GPIO not present?
+
+Or am I missing something?
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
