@@ -6,92 +6,79 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A895C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BDBC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD08207DD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D7E2080F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 19:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575400755;
-	bh=Bf1TGgT+hkTT+k99zlKZwnqpp8q3VkvdLcp109SebHU=;
+	s=default; t=1575400906;
+	bh=sSZVvnwxGi6r+DICjO6NBpSurQa9LDj99+RP9KSQWGE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bvk+ZnAeAzIDsQsGZea30jWik8DFHCeE1SSckGa79AuLrte9Ewg+5xS1gZwHOP9HR
-	 j/wgyvsYEYQnaOenwJEB/5Eqz8kbzjEKvJyO/X9jZEPuPN1iu8dGlt9QCJg4Uzrty/
-	 aMsI3ptl90alLQXwvY4YCzcwkDCk2tSLtVu6QE/0=
+	b=FjSuVaVZNZCOFigqK9oahfJNGADsKnGLQf+G3/Lp4Qi6wyf4Cptu7/tKLSylxz5pJ
+	 CHFsQspOh7HBQxh93wXuTp/y0ek6q47FHUwrWDusF7bYBfHg5R0hjyX+k1FnXRj8ok
+	 0I8SErnEcCn4LtfVZ45QNp7IIwGJTp7hisQxYABk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfLCTTP (ORCPT
+        id S1727024AbfLCTVq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 14:19:15 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35828 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727411AbfLCTTP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 14:19:15 -0500
-Received: by mail-oi1-f194.google.com with SMTP id k196so4429574oib.2;
-        Tue, 03 Dec 2019 11:19:14 -0800 (PST)
+        Tue, 3 Dec 2019 14:21:46 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36047 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726995AbfLCTVq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 14:21:46 -0500
+Received: by mail-oi1-f195.google.com with SMTP id c16so4427313oic.3;
+        Tue, 03 Dec 2019 11:21:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VhGuCOSgKbP4988nwTLXWSOEoYXbGs7dSJ2jvNBuhT4=;
-        b=gFrPoz3RmIy0EbzRdL0hnjFQ9UL/00ObT7O9bi3dwtJFEOu2y3DwZ7FvqqMG+aV7jP
-         6VF2QposcD/tp6/1GKcHxu1THC5wnQdGCwp1tk1WtkQCpgk62SboBFt+IKoiZpAFF9Q2
-         ePl+57KVzUUDRV4jSjsn+aGDShR5qUfb1PC4uHGe0rzuvkkU5Kdc+I4eJ+UuOThujjSX
-         +oBMVuCQdFiSsLagik6m59YAXpD1GSGzru6/DiZA24HH35mWadmbVqCkexycazznETzx
-         I7LEycLDsVyVOAdLwwM6nng6d52HWvNCHjljFGB4WRyMRqsUciNwgWwUxo3vB6GPUXpZ
-         /QDw==
-X-Gm-Message-State: APjAAAV1XynyQXZ0JqtNWQmG5doANztH5dK1earvFeMSJ6V2+6C6V/Yp
-        zTlHhPP2hsNk/aftdFz1tw==
-X-Google-Smtp-Source: APXvYqwXMVbFZmRe8QxF27h0Kfw3uND3v8OqThcJ1mrg8to0o6bWBoF0eqOAN8t4mfWgef6ZruT5hA==
-X-Received: by 2002:a05:6808:b2d:: with SMTP id t13mr5046037oij.83.1575400754268;
-        Tue, 03 Dec 2019 11:19:14 -0800 (PST)
+        bh=cdQMfe7gqO6u8R+MtPZjybUjPu5whVykoij0oQ0zinw=;
+        b=H6yO9VjBYxqdfa4I+IF9DDnAIKGZJ1/jxGwzB2sRSB/SjxqVskWVwARlv7a7wG7wDt
+         yfbcMmjIAJTF5p6qjj5OU1siEDeiyhqYA/FQHHwNayn1EcG6RmFAJjqaI6nrVffJhwGM
+         aLEsppTN5qbUteAMnnxnV4ZHlZiEoI8ndz6xRBAdoBE3DnhZq6M4Va4F5gN2gL6CEugV
+         /QoNeNBIW6g+LEMveqP3A8bh8aOccL0zN26HfSVBrtmVtNq+TE0RuVs33gb4KVpDPsZ6
+         Wg5ZzJe4VsIOqhOD1bUmhwVwz6Tz4I61HzWO9jyJtPmHUACCxDTp4Z35DdI/koA45zz1
+         mzug==
+X-Gm-Message-State: APjAAAUJfx6o8hElgoaBRqQpAXxTC+wQjXZkPrPbDq9Nxly3c/jB7igP
+        0B7TMtRYQ9tpjOAdOO1X6Q==
+X-Google-Smtp-Source: APXvYqzczdsECXTX4WiTyARZIQ+hRWtQiR09aXTBjDZGGX5IVsolMehakbG7gD0IhC6Ot6FJmXx3WA==
+X-Received: by 2002:aca:ed81:: with SMTP id l123mr5124773oih.129.1575400905290;
+        Tue, 03 Dec 2019 11:21:45 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y16sm1345750otq.60.2019.12.03.11.19.13
+        by smtp.gmail.com with ESMTPSA id p1sm463894otl.1.2019.12.03.11.21.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 11:19:13 -0800 (PST)
-Date:   Tue, 3 Dec 2019 13:19:13 -0600
+        Tue, 03 Dec 2019 11:21:44 -0800 (PST)
+Date:   Tue, 3 Dec 2019 13:21:43 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: pci: Update iProc PCI binding for
- INTx support
-Message-ID: <20191203191913.GA20024@bogus>
-References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
- <1575349026-8743-2-git-send-email-srinath.mannam@broadcom.com>
+To:     haibo.chen@nxp.com
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
+        mark.rutland@arm.com, kernel@pengutronix.de,
+        devicetree@vger.kernel.org, festevam@gmail.com,
+        linux-mmc@vger.kernel.org, linux-imx@nxp.com, haibo.chen@nxp.com
+Subject: Re: [PATCH 08/14] doc: dt: fsl-imx-esdhc: add
+ strobe-dll-delay-target binding
+Message-ID: <20191203192143.GA24098@bogus>
+References: <1573816606-26779-1-git-send-email-haibo.chen@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575349026-8743-2-git-send-email-srinath.mannam@broadcom.com>
+In-Reply-To: <1573816606-26779-1-git-send-email-haibo.chen@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue,  3 Dec 2019 10:27:01 +0530, Srinath Mannam wrote:
-> From: Ray Jui <ray.jui@broadcom.com>
+On Fri, 15 Nov 2019 19:16:45 +0800, haibo.chen@nxp.com wrote:
+> From: Haibo Chen <haibo.chen@nxp.com>
 > 
-> Update the iProc PCIe binding document for better modeling of the legacy
-> interrupt (INTx) support
+> Add fsl,strobe-dll-delay-target binding.
 > 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
 > ---
->  .../devicetree/bindings/pci/brcm,iproc-pcie.txt    | 48 ++++++++++++++++++----
->  1 file changed, 41 insertions(+), 7 deletions(-)
+>  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+Reviewed-by: Rob Herring <robh@kernel.org>
