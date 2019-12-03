@@ -2,117 +2,132 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9740BC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7E3C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F132070A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F52207DD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 16:53:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575391981;
+	bh=9lhZiHfm0cFNL65g+4OVMkdlfm0IqJwsTBHm9mt3QQc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SQjrB9RUBtF2Cl7RxdpeW9ZhepqGaDZ6PMG/OCYFRjZwVpdOHg8Ctyqe4YmRjRIJD
+	 67gCPbTtMBnzN+finAGArCvRiJGkh/cb14FAREwb9U5Admc2o4c9DQTmborTCqqZnr
+	 QwWvh0tyTmnCqm4YM0J9rD+We6t2xe6dlvESoI58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfLCQwA (ORCPT
+        id S1726928AbfLCQw5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 11:52:00 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2152 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726473AbfLCQv7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 11:51:59 -0500
-Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id D941CE4FB6CFD69213C3;
-        Tue,  3 Dec 2019 16:51:57 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 3 Dec 2019 16:51:57 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 3 Dec 2019
- 16:51:57 +0000
-Date:   Tue, 3 Dec 2019 16:51:54 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "rodrigorsdc@gmail.com" <rodrigorsdc@gmail.com>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>
-Subject: Re: [PATCH v4] dt-bindings: iio: accel: add binding documentation
- for ADIS16240
-Message-ID: <20191203165154.00005793@Huawei.com>
-In-Reply-To: <20191203163850.GN1998@sirena.org.uk>
-References: <20191123051927.5016-1-rodrigorsdc@gmail.com>
-        <20191123114119.7b0c3447@archlinux>
-        <a55b9c576eded8c91a985aabbba89180561ab156.camel@analog.com>
-        <20191201114032.1a972dda@archlinux>
-        <20191203163850.GN1998@sirena.org.uk>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 3 Dec 2019 11:52:57 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40664 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfLCQw5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 11:52:57 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y5so3569173lfy.7;
+        Tue, 03 Dec 2019 08:52:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CINu8kwJ3/pozCYLOw1eHYh+k5bZA/5ppRAlDtMjvfg=;
+        b=d4yeZutzdxhWfKAG1Q6/BMv2Skmai4ykwX8zAN58WR0pZoT3lvvrGGMZxMRJnbXZPP
+         zooBLs5bIOvccAb4cNzpCnnkEGmJEf+qq0QEpyfqxHxTP7RlNrN8BuKzzakB/lJPQgAU
+         yaUODYNJ6FgVkNGnjLScXoSadRx+VKdyWo+mvgS0qZeNBB/9SMJQeEnhmz3MIPVGA2kd
+         W+beDR06MAExXRL9wmfGHHuB6EdcwzlSByoty/fnO5FaNmSy8tJeFMgQ7VBWNPcLAVKQ
+         YGGjoLHThj3vzpSGPlAYtMGP1Q/QrlQB+JS9kozZVdJkL/vKoXMHCFClO9fMYhaM1bcL
+         kjwQ==
+X-Gm-Message-State: APjAAAW+rdWzM0lVoDCWlXAGFUvX8qZ3v/v9lmUCWE1L7qgdAI7M48a9
+        x319OPhUJcTEUa6A2xMs4Ys=
+X-Google-Smtp-Source: APXvYqx41aguGS+jp/QeI9IlKVT+iM1RPBrdRSa2hyDW+XXcFW87LhZHMu5KFyPepTNf1XrQRA5UFg==
+X-Received: by 2002:ac2:5195:: with SMTP id u21mr3322208lfi.141.1575391974516;
+        Tue, 03 Dec 2019 08:52:54 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id g14sm1659970ljj.37.2019.12.03.08.52.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 08:52:53 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1icBQ5-000409-47; Tue, 03 Dec 2019 17:53:01 +0100
+Date:   Tue, 3 Dec 2019 17:53:01 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     linux-usb@vger.kernel.org,
+        GregKroah-Hartman <gregkh@linuxfoundation.org>,
+        RobHerring <robh+dt@kernel.org>,
+        MarkRutland <mark.rutland@arm.com>,
+        AlanStern <stern@rowland.harvard.edu>,
+        SuwanKim <suwan.kim027@gmail.com>,
+        "GustavoA . R . Silva" <gustavo@embeddedor.com>,
+        JohanHovold <johan@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, drinkcat@chromium.org
+Subject: Re: [PATCH v4 2/2] usb: overridable hub bInterval by device node
+Message-ID: <20191203165301.GH10631@localhost>
+References: <20191203101552.199339-1-ikjn@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml718-chm.china.huawei.com (10.201.108.69) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203101552.199339-1-ikjn@chromium.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 3 Dec 2019 16:38:50 +0000
-Mark Brown <broonie@kernel.org> wrote:
-
-> On Sun, Dec 01, 2019 at 11:40:32AM +0000, Jonathan Cameron wrote:
+On Tue, Dec 03, 2019 at 06:15:52PM +0800, Ikjoon Jang wrote:
+> This patch enables hub device to override its own endpoint descriptor's
+> bInterval when the hub has a device node with "hub,interval" property.
 > 
-> > +CC Mark as we probably need a more general view point on
-> > the question of whether SPI mode should be enforced by binding
-> > or in the driver.  
+> When we know reducing autosuspend delay for built-in HIDs is better for
+> power saving, we can reduce it to the optimal value. But if a parent hub
+> has a long bInterval, mouse lags a lot from more frequent autosuspend.
+> So this enables overriding bInterval for a hard wired hub device only
+> when we know that reduces the power consumption.
+
+I think I saw you argue about why this shouldn't simply be configured at
+runtime. Please include that here too, I can't seem to remember why...
+
+> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> Acked-by: Alan Stern <stern@rowland.harvard.edu>
+> ---
+>  drivers/usb/core/config.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> Not sure I see the question here, I think I was missing a bit of
-> the conversation?  It's perfectly fine for a driver to specify a
-> mode, if the hardware always uses some unusual mode then there's
-> no sense in forcing every single DT to set the same mode.  On the
-> other hand if there's some configuration for the driver that was
-> handling some board specific configuration that there's already
-> some generic SPI support for setting then it seems odd to have a
-> custom driver specific configuration mechanism.
-> 
+> diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
+> index 5f40117e68e7..95ec5af42a1c 100644
+> --- a/drivers/usb/core/config.c
+> +++ b/drivers/usb/core/config.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/usb.h>
+>  #include <linux/usb/ch9.h>
+>  #include <linux/usb/hcd.h>
+> +#include <linux/usb/of.h>
+>  #include <linux/usb/quirks.h>
+>  #include <linux/module.h>
+>  #include <linux/slab.h>
+> @@ -257,6 +258,14 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
+>  	memcpy(&endpoint->desc, d, n);
+>  	INIT_LIST_HEAD(&endpoint->urb_list);
+>  
+> +	/* device node property overrides bInterval */
+> +	if (usb_of_has_combined_node(to_usb_device(ddev))) {
 
-If the driver picks a mode because that's what it says on the datasheet
-it prevents odd board configurations from working.  The question
-becomes whether it makes sense in general to assume those odd board
-conditions don't exist until we actually have one, or to assume that
-they might and push the burden on to all DT files.
+Not only hubs have combined nodes so you probably need to check
+bDeviceClass here instead.
 
-Traditionally in IIO at least we've mostly taken the view the DT
-should be right and complete and had bindings state what normal
-parameters must be for it to work (assuming no inverters etc)
+> +		u32 interval = 0;
+> +		if (!of_property_read_u32(ddev->of_node, "hub,interval",
+> +				    &interval))
+> +			d->bInterval = min_t(u8, interval, 255);
 
-If we encode it in the driver, and we later meet such a board we
-end up with a custom dance to query the DT parameters again and
-only override if present.
+You want min_t(u32, ...) here to avoid surprises when someone specifies
+a value > 255.
 
-We can't rely on the core SPI handling because I don't think
-there is any means of specifying a default.
+> +	}
+> +
+>  	/*
+>  	 * Fix up bInterval values outside the legal range.
+>  	 * Use 10 or 8 ms if no proper value can be guessed.
 
-We can adopt the view that in general these weird boards with inverters
-are weird and just handle them when they occur.  Sounds like that is your
-preference, at least for new parts.
-
-For old ones we have no idea if there are boards out there using
-them with inverters so easiest is probably to just carry on putting them
-in the DT bindings.
-
-Jonathan
-
-
+Johan
