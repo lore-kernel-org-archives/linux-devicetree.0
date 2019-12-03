@@ -2,157 +2,164 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA16C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 699D9C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3242073B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:17:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575371874;
-	bh=LKL5qFCaQ/9gDnq61aKOGRRiw5gUf1VdSIOtRAlGWuM=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=OL5xcR9GkEwotbCEAzxUysl8zIA93dYQ7Dy1eA04Dsta9jo9HZznNyDFPkS571R2v
-	 nvGLT+E62tp1OsgSA7E9cuQDfuFVbb/s8ZRrIUc3G9DXBakG9Xaw/ZjOq4POMik9ic
-	 44OHwkcBO8jsyEbjjwnMKfMw5Fp2qYRns7bLL1AQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4BDEB2080A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 11:28:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfLCLRt (ORCPT
+        id S1725907AbfLCL2h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 06:17:49 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:45023 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725954AbfLCLRt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 06:17:49 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ic6Bb-0003tJ-76; Tue, 03 Dec 2019 12:17:43 +0100
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
-X-PHP-Originating-Script: 0:main.inc
+        Tue, 3 Dec 2019 06:28:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:40702 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbfLCL2h (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 06:28:37 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D17AA30E;
+        Tue,  3 Dec 2019 03:28:34 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 11BDA3F68E;
+        Tue,  3 Dec 2019 03:28:33 -0800 (PST)
+Subject: Re: [PATCH v5 06/14] coresight: cti: Add device tree support for v8
+ arch CTI
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Coresight ML <coresight@lists.linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+References: <20191119231912.12768-1-mike.leach@linaro.org>
+ <20191119231912.12768-7-mike.leach@linaro.org>
+ <b2f640d3-c320-82d4-7399-172846820589@arm.com>
+ <CAJ9a7VgkgoUTL0+_3kj53go_CKtAH3fO5xF9UNDPPz1se1SKSw@mail.gmail.com>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <ffda8aff-0904-7292-e2f1-93833b936c49@arm.com>
+Date:   Tue, 3 Dec 2019 11:28:32 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+In-Reply-To: <CAJ9a7VgkgoUTL0+_3kj53go_CKtAH3fO5xF9UNDPPz1se1SKSw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 03 Dec 2019 11:17:42 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>, <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neal Liu <neal.liu@mediatek.com>,
-        <linux-crypto@vger.kernel.org>, Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?Q?Crystal_Guo_=28=E9=83=AD=E6=99=B6=29?= 
-        <crystal.guo@mediatek.com>, Will Deacon <will@kernel.org>,
-        Lars Persson <lists@bofh.nu>,
-        <linux-arm-kernel@lists.infradead.org>
-In-Reply-To: <299029b0-0689-c2c4-4656-36ced31ed513@gmail.com>
-References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
- <1574864578-467-4-git-send-email-neal.liu@mediatek.com>
- <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
- <1575027046.24848.4.camel@mtkswgap22>
- <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
- <20191202191146.79e6368c@why>
- <299029b0-0689-c2c4-4656-36ced31ed513@gmail.com>
-Message-ID: <b7043e932211911a81383274e0cc983d@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: f.fainelli@gmail.com, ard.biesheuvel@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, wsd_upstream@mediatek.com, catalin.marinas@arm.com, sean.wang@kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, neal.liu@mediatek.com, linux-crypto@vger.kernel.org, mpm@selenic.com, matthias.bgg@gmail.com, crystal.guo@mediatek.com, will@kernel.org, lists@bofh.nu, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-12-03 04:16, Florian Fainelli wrote:
-> On 12/2/2019 11:11 AM, Marc Zyngier wrote:
->> On Mon, 2 Dec 2019 16:12:09 +0000
->> Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+On 03/12/2019 10:59, Mike Leach wrote:
+> Hi Suzuki,
+> 
+> On Fri, 29 Nov 2019 at 11:33, Suzuki Kuruppassery Poulose
+> <suzuki.poulose@arm.com> wrote:
 >>
->>> (adding some more arm64 folks)
+>> On 19/11/2019 23:19, Mike Leach wrote:
+>>> The v8 architecture defines the relationship between a PE, its optional ETM
+>>> and a CTI. Unlike non-architectural CTIs which are implementation defined,
+>>> this has a fixed set of connections which can therefore be represented as a
+>>> simple tag in the device tree.
 >>>
->>> On Fri, 29 Nov 2019 at 11:30, Neal Liu <neal.liu@mediatek.com> 
->>> wrote:
->>>>
->>>> On Fri, 2019-11-29 at 18:02 +0800, Lars Persson wrote:
->>>>> Hi Neal,
->>>>>
->>>>> On Wed, Nov 27, 2019 at 3:23 PM Neal Liu <neal.liu@mediatek.com> 
->>>>> wrote:
->>>>>>
->>>>>> For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals 
->>>>>> like
->>>>>> entropy sources is not accessible from normal world (linux) and
->>>>>> rather accessible from secure world (ATF/TEE) only. This driver 
->>>>>> aims
->>>>>> to provide a generic interface to ATF rng service.
->>>>>>
->>>>>
->>>>> I am working on several SoCs that also will need this kind of 
->>>>> driver
->>>>> to get entropy from Arm trusted firmware.
->>>>> If you intend to make this a generic interface, please clean up 
->>>>> the
->>>>> references to MediaTek and give it a more generic name. For 
->>>>> example
->>>>> "Arm Trusted Firmware random number driver".
->>>>>
->>>>> It will also be helpful if the SMC call number is configurable.
->>>>>
->>>>> - Lars
->>>>
->>>> Yes, I'm trying to make this to a generic interface. I'll try to 
->>>> make
->>>> HW/platform related dependency to be configurable and let it more
->>>> generic.
->>>> Thanks for your suggestion.
->>>>
+>>> This patch defines the tags needed to create an entry for this PE/ETM/CTI
+>>> relationship, and provides functionality to implement the connection model
+>>> in the CTI driver.
 >>>
->>> I don't think it makes sense for each arm64 platform to expose an
->>> entropy source via SMC calls in a slightly different way, and model 
->>> it
->>> as a h/w driver. Instead, we should try to standardize this, and
->>> perhaps expose it via the architectural helpers that already exist
->>> (get_random_seed_long() and friends), so they get plugged into the
->>> kernel random pool driver directly.
+>>> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+>>> ---
+
+
+>>> +#ifdef CONFIG_OF
+>>> +/*
+>>> + * CTI can be bound to a CPU, or a system device.
+>>> + * CPU can be declared at the device top level or in a connections node
+>>> + * so need to check relative to node not device.
+>>> + */
+>>> +static int of_cti_get_cpu_at_node(const struct device_node *node)
+>>> +{
+>>> +     int cpu;
+>>> +     struct device_node *dn;
+>>> +
+>>> +     if (node == NULL)
+>>> +             return -1;
+>>> +
+>>> +     dn = of_parse_phandle(node, "cpu", 0);
+>>> +     /* CTI affinity defaults to no cpu */
+>>> +     if (!dn)
+>>> +             return -1;
+>>> +     cpu = of_cpu_node_to_id(dn);
+>>> +     of_node_put(dn);
+>>> +
+>>> +     /* No Affinity  if no cpu nodes are found */
+>>> +     return (cpu < 0) ? -1 : cpu;
+>>> +}
+>>> +
+>>> +static const char *of_cti_get_node_name(const struct device_node *node)
+>>> +{
+>>> +     if (node)
+>>> +             return node->full_name;
+>>> +     return "unknown";
+>>> +}
+>>> +#else
+>>> +static int of_cti_get_cpu_at_node(const struct device_node *node)
+>>> +{
+>>> +     return -1;
+>>> +}
+>>> +
+>>> +static const char *of_cti_get_node_name(const struct device_node *node)
+>>> +{
+>>> +     return "unknown";
+>>> +}
+>>> +#endif
+>>> +
+>>> +static int cti_plat_get_cpu_at_node(struct fwnode_handle *fwnode)
+>>> +{
 >>
->> Absolutely. I'd love to see a standard, ARM-specified, virtualizable
->> RNG that is abstracted from the HW.
->
-> Do you think we could use virtio-rng on top of a modified virtio-mmio
-> which instead of being backed by a hardware mailbox, could use 
-> hvc/smc
-> calls to signal writes to shared memory and get notifications via an
-> interrupt? This would also open up the doors to other virtio uses 
-> cases
-> beyond just RNG (e.g.: console, block devices?). If this is 
-> completely
-> stupid, then please disregard this comment.
+>> You may simply reuse coresight_get_cpu() below, instead of adding this
+>> duplicate set of functions. See below.
+>>
+>>
+> 
+> No we can't. coresight_get_cpu gets the 'cpu' entry relative to the
+> device node, this gets the 'cpu' relative to the supplied node.
+> This is very important for the case where a none v8 architected PE is
+> attached to a CTI. This will use the devicetree form:-
+> 
+> cti@<addr> {
+>      [ some stuff  ]
+>     trig_conns@1 {
+>            cpu = <&CPU0>
+>            [trigger signal  connection info for this cpu]
+>     }
+> }
+> 
+> trig_conns is a child node and we must look for 'cpu' relative to it.
 
-The problem with a virtio device is that it is a ... device. What we 
-want
-is to be able to have access to an entropy source extremely early in 
-the
-kernel life, and devices tend to be available pretty late in the game.
-This means we cannot plug them in the architectural helpers that Ard
-mentions above.
+Ok. May be we could refactor the function to find the 'CPU' node
+relative to the given "fwnode" and let the coresight_get_cpu() use it ?
 
-What you're suggesting looks more like a new kind of virtio transport,
-which is interesting, in a remarkably twisted way... ;-)
+int coresight_get_cpu(struct device *dev)
+{
+	return coresight_get_fwnode_cpu(dev_fwnode(dev));
+}
 
-Thanks,
+That way it is clear what we are dealing with. i.e, fwnode of any level
+(device or an intermediate node).
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+>>> +     csdev = cti_get_assoc_csdev_by_fwnode(cs_fwnode);
+>>> +     if (csdev)
+>>> +             assoc_name = dev_name(&csdev->dev);
+>>
+>> Does it make sense to defer the probing until the ETM device  turn up ?
+>> Its fine either way.
+>>
+> 
+> Not really as the ETM is optional but the PE still has a CTI.
+
+Ah, you're right. Please ignore my comment.
+
+Kind regards
+Suzuki
