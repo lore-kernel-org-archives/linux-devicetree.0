@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D3EC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 13:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4B4C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 13:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0822080F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 13:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20CE12080F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 13:49:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="N5hZ67OM"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="YCejDFsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfLCNtB (ORCPT
+        id S1726916AbfLCNtH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 08:49:01 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:32995 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbfLCNtB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 08:49:01 -0500
-Received: by mail-pf1-f193.google.com with SMTP id y206so1904208pfb.0
-        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 05:49:00 -0800 (PST)
+        Tue, 3 Dec 2019 08:49:07 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:46284 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbfLCNtH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 08:49:07 -0500
+Received: by mail-pj1-f65.google.com with SMTP id z21so1533781pjq.13
+        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 05:49:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Ke4tL+lHXK0j3bKO8x1UNBlk4yZ+cYr66D3IUPPUdkM=;
-        b=N5hZ67OMW5NuOOqE/NDh0govtD9Sh3TvScmIgM02xJ3rDzZEn+fnlKfiPMhsOVb1rn
-         g3sCxJHkQpAGiV393wdy0S80Ak21VRYMGbCV0KqGV2WIcBnPkOnu12dWsJi5Rpq3Y+w4
-         TXl5GGpQL95s7YsAdjU284KNNVjHwIQ+8rAhQ=
+        bh=OCWpHuwLWEhr7hIE1xHLzHS/SChie+3Ub/J71wXFl6s=;
+        b=YCejDFszbgh/fsLnX6AJBgPdhu8ZsJzFunj9aKQmZvh+wCvve+g5aHlIuMfa+1ynz0
+         prFZM453x5/N7rFzc1qbyovEO9ayK07RdlfHONJYvbK3jIpI6vzgEDPHWlNpGi59EnxL
+         5QVzChQLI6OzT7gWd5eLQJ8b3CnY9cJF3ckaE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Ke4tL+lHXK0j3bKO8x1UNBlk4yZ+cYr66D3IUPPUdkM=;
-        b=C/YMjQN680/RCOUgwlrf669wCnRZPmmQzosLmwJWtgVG9I3HdpFf/X8HulmXs9Wpf4
-         OYjhllF7Q/SYD6QIWFErqGNlVYT1Gh38UAZ3Z+Gg0cA+enLmNCfNGJG3MGV6LgaWrgMl
-         /iJ1GbjhXo5TOjzy8meDeoZrfByij79ASZX6HPArHsZnq/bdj6JTjeXrWH9wZs7VM22n
-         w6tGY2Rpw0bNEpirQRHLSmThiq4RdjWXCA09Il2NXKlM34/xdjPkkJIUcKCKhtVeJqok
-         M2Fy6XTiQJtlHO0MnBzdLMb8/CH5bpqR5A5lfr92OGg2yRQJyjInoi3gbkVIN7+yVXUr
-         oKkg==
-X-Gm-Message-State: APjAAAWbgQ/tAZ4bkXlW3V87/rWCng0PwuPjQtznBlaQRUIcYlXAX0JQ
-        c9Lfs2c2Ktq85RUPLtQnOWXBsg==
-X-Google-Smtp-Source: APXvYqyIJZHBzy4Ips/O+tLpiqsHSAYb0yd7QO+j8JCAANrcld28OPDSbFiPDZGh4m/TpJVtuLBS9Q==
-X-Received: by 2002:a63:c849:: with SMTP id l9mr5543294pgi.330.1575380940429;
-        Tue, 03 Dec 2019 05:49:00 -0800 (PST)
+        bh=OCWpHuwLWEhr7hIE1xHLzHS/SChie+3Ub/J71wXFl6s=;
+        b=FDuBHNWFmAXqzPCc+P5tszxkh6okXchM7X1b6bWpAXLZSMHj4J+8WsFKH1t93wIpBM
+         q2Vduxu1l290C7HT0rUsiWamhDpuMTvr4SazJGih2b3uTeieg6VIEkQmPqSxb8BokSZ5
+         mI/wO+qz1hLSF7jrlpVFidZggkneDxzCTg0vinpsCKIm1TdLcsqViE/h2Rw2+kbIfgG1
+         XAC5xaDcwAbaVyGq/b1Rmp5IKxdbbLvvyuwJNnBCkz1K18JoG6sJJO1AAZDKn/b6ZoHI
+         J+R7YniGd9q0p+wIzqvbwWkzoa2nDo7GdLTg6jwVvgmXPR5E6uX9caEQLj7HaURWOzYh
+         XpkQ==
+X-Gm-Message-State: APjAAAVyOiLz5gM4TlVvF77Rbsxoi/kxYfNlAk5A8N0bzf4xejhGTTk7
+        L55xsY0ByV8T7In0r7TFwVTgJA==
+X-Google-Smtp-Source: APXvYqxyjJik0DwefsyvMQoynNr131hjpVdWIN2ZYDMEUJp5dwOWSvM6iaWt5R1OJTMvh7CpsJ1lDA==
+X-Received: by 2002:a17:902:760c:: with SMTP id k12mr4928882pll.33.1575380946137;
+        Tue, 03 Dec 2019 05:49:06 -0800 (PST)
 Received: from localhost.localdomain ([115.97.190.29])
-        by smtp.gmail.com with ESMTPSA id y144sm4397892pfb.188.2019.12.03.05.48.56
+        by smtp.gmail.com with ESMTPSA id y144sm4397892pfb.188.2019.12.03.05.49.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 05:48:59 -0800 (PST)
+        Tue, 03 Dec 2019 05:49:05 -0800 (PST)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         David Airlie <airlied@linux.ie>,
@@ -64,9 +64,9 @@ Cc:     michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v12 6/7] arm64: dts: allwinner: a64: Add MIPI DSI pipeline
-Date:   Tue,  3 Dec 2019 19:18:15 +0530
-Message-Id: <20191203134816.5319-7-jagan@amarulasolutions.com>
+Subject: [DO NOT MERGE] [PATCH v12 7/7] arm64: dts: allwinner: bananapi-m64: Enable Bananapi S070WV20-CT16 DSI panel
+Date:   Tue,  3 Dec 2019 19:18:16 +0530
+Message-Id: <20191203134816.5319-8-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20191203134816.5319-1-jagan@amarulasolutions.com>
 References: <20191203134816.5319-1-jagan@amarulasolutions.com>
@@ -77,78 +77,87 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add MIPI DSI pipeline for Allwinner A64.
+This patch add support for Bananapi S070WV20-CT16 DSI panel to
+BPI-M64 board.
 
-- dsi node, with A64 compatible since it doesn't support
-  DSI_SCLK gating unlike A33
-- dphy node, with A64 compatible with A33 fallback since
-  DPHY on A64 and A33 is similar
-- finally, attach the dsi_in to tcon0 for complete MIPI DSI
+DSI panel connected via board DSI port with,
+- DLDO1 as VCC-DSI supply
+- DCDC1 as VDD supply
+- PD7 gpio for lcd enable pin
+- PD6 gpio for lcd reset pin
+- PD5 gpio for backlight enable pin
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-Tested-by: Merlijn Wajer <merlijn@wizzup.org>
 ---
 Changes for v12:
 - none
 
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 27e48234f1c2..1db8378f59a4 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -382,6 +382,12 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
- 					reg = <1>;
-+
-+					tcon0_out_dsi: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&dsi_in_tcon0>;
-+						allwinner,tcon-channel = <1>;
-+					};
- 				};
- 			};
- 		};
-@@ -1014,6 +1020,37 @@
- 			status = "disabled";
- 		};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+index 208373efee49..6beaecdd802a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+@@ -45,6 +45,7 @@
+ #include "sun50i-a64.dtsi"
  
-+		dsi: dsi@1ca0000 {
-+			compatible = "allwinner,sun50i-a64-mipi-dsi";
-+			reg = <0x01ca0000 0x1000>;
-+			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_MIPI_DSI>;
-+			resets = <&ccu RST_BUS_MIPI_DSI>;
-+			phys = <&dphy>;
-+			phy-names = "dphy";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pwm/pwm.h>
+ 
+ / {
+ 	model = "BananaPi-M64";
+@@ -56,6 +57,14 @@
+ 		serial1 = &uart1;
+ 	};
+ 
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
++		brightness-levels = <1 2 4 8 16 32 64 128 255>;
++		default-brightness-level = <2>;
++		enable-gpios = <&pio 3 5 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PD5 */
++	};
 +
-+			port {
-+				dsi_in_tcon0: endpoint {
-+					remote-endpoint = <&tcon0_out_dsi>;
-+				};
-+			};
-+		};
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+@@ -116,6 +125,24 @@
+ 	status = "okay";
+ };
+ 
++&dphy {
++	status = "okay";
++};
 +
-+		dphy: d-phy@1ca1000 {
-+			compatible = "allwinner,sun50i-a64-mipi-dphy",
-+				     "allwinner,sun6i-a31-mipi-dphy";
-+			reg = <0x01ca1000 0x1000>;
-+			clocks = <&ccu CLK_BUS_MIPI_DSI>,
-+				 <&ccu CLK_DSI_DPHY>;
-+			clock-names = "bus", "mod";
-+			resets = <&ccu RST_BUS_MIPI_DSI>;
-+			status = "disabled";
-+			#phy-cells = <0>;
-+		};
++&dsi {
++	vcc-dsi-supply = <&reg_dldo1>;		/* VCC3V3-DSI */
++	status = "okay";
 +
- 		hdmi: hdmi@1ee0000 {
- 			compatible = "allwinner,sun50i-a64-dw-hdmi",
- 				     "allwinner,sun8i-a83t-dw-hdmi";
++	panel@0 {
++		compatible = "bananapi,s070wv20-ct16-icn6211";
++		reg = <0>;
++		enable-gpios = <&pio 3 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PD7 */
++		reset-gpios = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD6 */
++		vdd-supply = <&reg_dcdc1>;
++		backlight = <&backlight>;
++	};
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -206,6 +233,10 @@
+ 	status = "okay";
+ };
+ 
++&r_pwm {
++	status = "okay";
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
 -- 
 2.18.0.321.gffc6fa0e3
 
