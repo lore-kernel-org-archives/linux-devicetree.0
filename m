@@ -2,138 +2,130 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2CCC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6F5C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15C1720661
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 14:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575384475;
-	bh=qoEpR+iz5sa+F9skDmBKFFgJNfBR3Zy5GUGd1/9m/gQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LcEGNhsYBgyLnJ+y7qFxoQcJmZ8RpeW0Ws2IncA2C/uizGhKh1UIqywwH8BHGOWIR
-	 V05barB0CMlFUGKyw3Pj8zLsW1I4MpWF5/OgTIpy5MYwjIHOOIZAiHBA7u1SsRrI/+
-	 S6hQATmgARbFsCxQhjBi637MPS4cXhVM+Fy9NlLs=
+	by mail.kernel.org (Postfix) with ESMTP id 03B9B2080A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 15:00:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Aj7LsSXi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfLCOry (ORCPT
+        id S1726079AbfLCPAM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 09:47:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfLCOry (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 09:47:54 -0500
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7EB82070A;
-        Tue,  3 Dec 2019 14:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575384472;
-        bh=qoEpR+iz5sa+F9skDmBKFFgJNfBR3Zy5GUGd1/9m/gQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Yk3+kwHbCw67Q8MsoMwGkrd5CTloi+Cgz+s8OJTz8fohj85dg//2UtKabMoqyzHSX
-         lRhvnd9AvR6nddhBsnDYT7SIiQlgDLIm3XBrklMlrRWwZ4TrrHg7DMh4T8RTSMgsBR
-         S3dUK+58xtFa6ZyeTbtri6zHy807ej67tLHjKfjM=
-Received: by mail-qv1-f53.google.com with SMTP id p2so1582533qvo.10;
-        Tue, 03 Dec 2019 06:47:52 -0800 (PST)
-X-Gm-Message-State: APjAAAVVMbqNxprwq8bxRB66/KcOtXd3wZiKNDQZcnnhcDV2FC+UhJl2
-        /12UYRb9djvrXDEEz4KCeDn2Kzdh2TW/f7l/DA==
-X-Google-Smtp-Source: APXvYqxrMnC94tLm+z/m6J/edWdsA+e9+yTSEaG1G1r+Sc9Beij7suS2pnqDw5WIbatRieWqQvxMMTtm91WsEIvREJ0=
-X-Received: by 2002:ad4:450a:: with SMTP id k10mr5131884qvu.136.1575384471940;
- Tue, 03 Dec 2019 06:47:51 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
-In-Reply-To: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 3 Dec 2019 08:47:40 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLMs1MsNXMFTCVdrkNNx5ktg0_Q=zf6xgiTkeys-T+CNg@mail.gmail.com>
-Message-ID: <CAL_JsqLMs1MsNXMFTCVdrkNNx5ktg0_Q=zf6xgiTkeys-T+CNg@mail.gmail.com>
-Subject: Re: [PATCH 00/14] ARM: dts: aspeed: Cleanup dtc warnings
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     linux-aspeed@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>,
+        Tue, 3 Dec 2019 10:00:12 -0500
+Received: from mail-eopbgr1410115.outbound.protection.outlook.com ([40.107.141.115]:36791
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726057AbfLCPAM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 10:00:12 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YJwc3CQWEioQqqT6pbi8AZmpxeLNMN64zkshGga58z0v6cdIyq9LCOoZL9f9Kr3Ttn0S1s40eJfZHaGb/zUe/oQy3HdISIiaV0zw5m1CWSy8d/plOwzIxIIVnitKEc4wRkJLmp3aQ0vWWoDJ5VMg4BaiMerQK+jANL2VPYP2b11qx5bL2ocdsCGjBRY3HLTTrdvp/xVnyZ98kneCsXbNAKnx07Y1hn97UD0j4xV0KRCLezLgn6lcqa8qzmhClmXNc+9zhqCaM8RsP2CRuiZJQ+Cgg46HZZRvlV67GvErFl+QITW2bnuHsvzHnOwpSwm/SCQVTUWQCGL+ErSVERSm2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zwsRmqi7yk04w9kf/0aqpJt18YPZLQH/5HrPnbwDYCc=;
+ b=O1o+eYLjHQ5YsrehwBuNKqUgLXu3QZNgGt3H9pTU3WwoTdWSDsUpjf0aXvPhvJDaNXQ7HUm8XRv7ntvFZgDInnStFKs3USIkcBT0y7jaZXHMEEWCX52eIBb5ndt0VsGIb6cXgzsU6r0NrD9EJQNWDKjsL2NJOfuRKOgt+tRop9ORb+nUJkCyCoTzf/W73OrENvV7T1036krV+GuaIDFSM0cTmd8ST+KZla5yqm/g9Sv7IXAoOUPxe4W+sXRdnBx1/z0ogwCnDPyVoQLnLT0SPiMWxygwwgAZbHKwHkDSKlYcU8gRBvhQs7dKE+6J/8K5v9+QJ0bG+5KQ78mwOleOYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zwsRmqi7yk04w9kf/0aqpJt18YPZLQH/5HrPnbwDYCc=;
+ b=Aj7LsSXilsjqcna+VEvKO6WIDhU1c6FCJVRzaxSfTu8EbLsfJI/3BoI0pSx4M9/y6PPH5CFEfeHsrWhRbdfQIAR7aZCHGdv4zqf4hNqVvr/NMNgi1qy8apltR2VMK1xlNDR4NJO590RGd4iA1CUeF3ptH6q081059Ouf2gKPc38=
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
+ TY1PR01MB1561.jpnprd01.prod.outlook.com (52.133.161.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.22; Tue, 3 Dec 2019 15:00:08 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2516.003; Tue, 3 Dec 2019
+ 15:00:08 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        a.filippov@yadro.com, anoo@us.ibm.com,
-        Ken Chen <chen.kenyy@inventec.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stefan M Schaeckeler <sschaeck@cisco.com>, taoren@fb.com,
-        Patrick Venture <venture@google.com>,
-        John Wang <wangzqbj@inspur.com>, Xo Wang <xow@google.com>,
-        =?UTF-8?B?QnJpYW5DLlcg5qWK5ZiJ5YGJIFRBTyBZYW5n?= 
-        <yang.brianc.w@inventec.com>, yao.yuan@linaro.org
-Content-Type: text/plain; charset="UTF-8"
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: RE: [PATCH 4/6] spi: Add SPIBSC driver
+Thread-Topic: [PATCH 4/6] spi: Add SPIBSC driver
+Thread-Index: AQHVqYxFvw0/++3CUEK7207HpOVVR6eodlIAgAAIHbA=
+Date:   Tue, 3 Dec 2019 15:00:08 +0000
+Message-ID: <TY1PR01MB15627FA556E5B8CE03D535118A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20191203034519.5640-1-chris.brandt@renesas.com>
+ <20191203034519.5640-5-chris.brandt@renesas.com>
+ <20191203141944.GI1998@sirena.org.uk>
+In-Reply-To: <20191203141944.GI1998@sirena.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctOTczY2M1ZTUtMTVkZC0xMWVhLWFhNTEtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XDk3M2NjNWU2LTE1ZGQtMTFlYS1hYTUxLTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iNTYxIiB0PSIxMzIxOTg1ODgwNjgyMjc3NDEiIGg9InRqWHhsWGF1cTdFYTkvK01YT0kwcEE1QzJoUT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [75.60.247.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 37432c48-a07e-4dae-4320-08d778017d1a
+x-ms-traffictypediagnostic: TY1PR01MB1561:
+x-microsoft-antispam-prvs: <TY1PR01MB1561B19FAF44DA872A64CBD08A420@TY1PR01MB1561.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02408926C4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(366004)(346002)(136003)(376002)(199004)(189003)(7696005)(14454004)(186003)(7416002)(25786009)(33656002)(2906002)(55016002)(8936002)(102836004)(6916009)(316002)(76176011)(52536014)(11346002)(256004)(446003)(4326008)(6246003)(86362001)(99286004)(6436002)(3846002)(54906003)(6116002)(4744005)(478600001)(5660300002)(71190400001)(71200400001)(74316002)(66446008)(76116006)(64756008)(9686003)(305945005)(66476007)(66946007)(7736002)(229853002)(8676002)(81156014)(6506007)(66556008)(81166006)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1561;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: u5nEvTE+JsO+kE+BcpCz3ZXLNU7iZlb9zCA2pJXPyRVZxdgaIddjkDYpWVLWKsjngg+yeMhGkUvAQ7G+F8Xhqq4LWtaoHGUH1djt7zan1AOXAHXzaI/M8pCCmoF1OCqNVmDcpWJDgJkWFqZgXw1HjG0Nk49PK7xhfP4LzymJsqC6ZEMJjPJOn7d5eAZWUYtwOW0J8GUEVeB0Sbyjyw4aBf6tNxKXJyPgyJGROaeBB3OHHGzbqnQc4nmvP8EGclw+w9oBgdhSyI+BFPuuQZC9q+V7fu1e0UTOuWmdThOSucity5LzLx0mwXA0fgus6TBNkGnNKfEjsLp0qVTUJ/E+4/mOrOThPKD0ItIK/EjyM+PxiSuRFgOvz0fbQ7nMoTjCb7L3PWE2a4yu1GXxWd8no0LSU91myiv+R1RoMlFatUDDQR9oNMWd6dJjXP4pkf1b
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 37432c48-a07e-4dae-4320-08d778017d1a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 15:00:08.4408
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: v4naSS+qoaCwkbVyInLyH4Jl+pqqmjLjJ3IhmTcnf/ExrKJCYGj/9d0m5asLQ9w8EWOtw/9ShPpfqFIaZZ7t+ikZBIQkqi/CtFZDEZ2sFeY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1561
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 6:02 AM Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> Hello,
->
-> This series is based on an RFC-ish series I sent quite some time ago to which I
-> have only just been able to circle back. The previous discussion can be found
-> here:
->
-> https://lore.kernel.org/lkml/20190726053959.2003-1-andrew@aj.id.au/
->
-> I've split, shuffled and rebased the series a little, with at least one extra
-> cleanup for the g6 dtsi. This series is just the devicetree changes, the IPMI
-> KCS changes will be posted separately shortly.
->
-> Combined with the KCS changes we achieve similar stats to the RFC series,
-> reducing 264 warnings to 6.
->
-> I've added each patches' tags from last time, but please glance over them
-> again.
->
-> Cheers,
->
-> Andrew
->
-> Andrew Jeffery (14):
->   dt-bindings: pinctrl: aspeed: Add reg property as a hint
->   dt-bindings: misc: Document reg for aspeed,p2a-ctrl nodes
->   ARM: dts: aspeed-g5: Move EDAC node to APB
->   ARM: dts: aspeed-g5: Use recommended generic node name for SDMC
->   ARM: dts: aspeed-g5: Fix aspeed,external-nodes description
->   ARM: dts: vesnin: Add unit address for memory node
->   ARM: dts: fp5280g2: Cleanup gpio-keys-polled properties
->   ARM: dts: swift: Cleanup gpio-keys-polled properties
->   ARM: dts: witherspoon: Cleanup gpio-keys-polled properties
->   ARM: dts: aspeed: Cleanup lpc-ctrl and snoop regs
->   ARM: dts: aspeed: Add reg hints to syscon children
->   ARM: dts: aspeed-g5: Sort LPC child nodes by unit address
->   ARM: dts: aspeed-g6: Cleanup watchdog unit address
->   ARM: dts: ibm-power9-dual: Add a unit address for OCC nodes
->
->  Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt            |  1 +
->  Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml |  3 +++
->  Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml |  3 +++
->  arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts                  |  4 ----
->  arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts              |  4 ----
->  arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts                      | 11 +++++++----
->  arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts                        |  4 ----
->  arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts                          |  4 ----
->  arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts                          |  4 ----
->  arch/arm/boot/dts/aspeed-bmc-opp-swift.dts                            |  6 ------
->  arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts                           |  2 +-
->  arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts                      |  6 ------
->  arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts                            |  2 --
->  arch/arm/boot/dts/aspeed-g4.dtsi                                      | 21 ++++++++++++---------
->  arch/arm/boot/dts/aspeed-g5.dtsi                                      | 49 ++++++++++++++++++++++++++-----------------------
->  arch/arm/boot/dts/aspeed-g6.dtsi                                      |  2 +-
->  arch/arm/boot/dts/ibm-power9-dual.dtsi                                |  4 ++--
->  17 files changed, 56 insertions(+), 74 deletions(-)
+Hello Mark,
 
-Other than patch 5, for the series:
+On Tue, Dec 3, 2019, Mark Brown wrote:
+> On Mon, Dec 02, 2019 at 10:45:17PM -0500, Chris Brandt wrote:
+>=20
+> > +config SPI_SPIBSC
+> > +	tristate "Renesas SPI Multi I/O Bus Controller"
+> > +	depends on ARCH_R7S72100 || ARCH_R7S9210
+>=20
+> I'm not seeing any build dependency here, please add an || COMPILE_TEST f=
+or
+> build coverage.
+(snip)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thank you for your review!
+
+I have no complaints about your comments so I will make the changes and
+send out a v2.
+
+Chris
+
