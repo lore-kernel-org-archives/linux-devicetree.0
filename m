@@ -2,120 +2,114 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5E4C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 10:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95198C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 10:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 729FB2068E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 10:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65EFB206DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 10:17:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f2J3JfSj"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kTzLTcnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLCKP6 (ORCPT
+        id S1725774AbfLCKRj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 05:15:58 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:44380 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfLCKP5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 05:15:57 -0500
-Received: by mail-pj1-f65.google.com with SMTP id w5so1326327pjh.11
-        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 02:15:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YrHITFCHdeD4+yA1cax6B7EYeghey89WnNbNyeOQhYw=;
-        b=f2J3JfSjMMQW4lP+yVzQFbEn4Aiben8OJjuINWOcR5DXVhob+s2ix0xLzjwfNxGkyR
-         jCx6fz/TB9QQ4IoJ56yCtbbtAOTmG4FEYzyh0B5MDRwDDDDrGrUJrzDjVCCddfzNVECR
-         GcVsk8Mc5sv8YOkbWdtvY80b8aAQ7At6I5U3Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YrHITFCHdeD4+yA1cax6B7EYeghey89WnNbNyeOQhYw=;
-        b=Iyp1BJh0tOkv+XJrJAZfG+EWOuNWAC28K4fWYE80vXd4kZf0CSl2/Ii+pucem7fo35
-         0oLy/63fbUG8fHcyjponolceiat47YvL5kfgRuzCE+rwWboizLsi3yvsRmXMYxv4JYhB
-         25E/Bu840GQhUTqgyW6vVVyGPmW2ukl6iivw5QMz/eo41TBXidy2AlU86uV4sDp06w7/
-         PCgGbAJXLEIpfN62vGUyoEa/YClkCvSAyOiRzKyc1nFjiXFonGg2EcMseTO8a+UIJkEV
-         ALKd9pz/HIoclg2XuJlUaUTBCRtgzhLxlVWq86SFC0lsFTmGqsojQlwDta0Bz9Y82Ini
-         8JiA==
-X-Gm-Message-State: APjAAAXcNyWIU6QN0L8Ey3b9ssRtqK5GjoKVZzsZ3nsy9cXwIklYfh20
-        1VyyKB3goNmBFoGLfx0DQe2WMw==
-X-Google-Smtp-Source: APXvYqwy1Cn4JTSApVIsHMb6V6BA1uS11JBgw/FaCROu8sNlG7sAcc2JMQI0h0RMKGl+scq8u+oxXw==
-X-Received: by 2002:a17:902:8d83:: with SMTP id v3mr4100209plo.205.1575368156923;
-        Tue, 03 Dec 2019 02:15:56 -0800 (PST)
-Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:254e:2b40:ef8:ee17])
-        by smtp.gmail.com with ESMTPSA id 129sm3070545pfw.71.2019.12.03.02.15.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 02:15:56 -0800 (PST)
-From:   Ikjoon Jang <ikjn@chromium.org>
-To:     linux-usb@vger.kernel.org
-Cc:     GregKroah-Hartman <gregkh@linuxfoundation.org>,
-        RobHerring <robh+dt@kernel.org>,
-        MarkRutland <mark.rutland@arm.com>,
-        AlanStern <stern@rowland.harvard.edu>,
-        SuwanKim <suwan.kim027@gmail.com>,
-        "GustavoA . R . Silva" <gustavo@embeddedor.com>,
-        IkjoonJang <ikjn@chromium.org>, JohanHovold <johan@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        drinkcat@chromium.org
-Subject: [PATCH v4 2/2] usb: overridable hub bInterval by device node
-Date:   Tue,  3 Dec 2019 18:15:52 +0800
-Message-Id: <20191203101552.199339-1-ikjn@chromium.org>
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+        Tue, 3 Dec 2019 05:17:39 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:32948 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfLCKRj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 05:17:39 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D9628309;
+        Tue,  3 Dec 2019 11:17:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1575368257;
+        bh=oT8aVb9gFuG6LRGtXmKix4LSGzY7LvR7mDNzrD/+yns=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kTzLTcnGXMWM4h61u/SIO3Yz8OFrRHkkF25jr033tOTzqQByAd2tS0T9ZNDXcyJWG
+         Ukz5kOQbtIf8Zxx0YJoJ3wFK6rZmQegNF0huN693flPsXmRmHSGJTT/QMX7TbdC4YS
+         D7d0nzyeLYGvTCg1VY33eEsI8KXneqlL7aHxLIx4=
+Date:   Tue, 3 Dec 2019 12:17:30 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
+        Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Clark <robdclark@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 18/21] drm/bridge: panel: Propage bus format/flags
+Message-ID: <20191203101730.GP4730@pendragon.ideasonboard.com>
+References: <20191023154512.9762-1-boris.brezillon@collabora.com>
+ <20191023154512.9762-19-boris.brezillon@collabora.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191023154512.9762-19-boris.brezillon@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch enables hub device to override its own endpoint descriptor's
-bInterval when the hub has a device node with "hub,interval" property.
+Hi Boris,
 
-When we know reducing autosuspend delay for built-in HIDs is better for
-power saving, we can reduce it to the optimal value. But if a parent hub
-has a long bInterval, mouse lags a lot from more frequent autosuspend.
-So this enables overriding bInterval for a hard wired hub device only
-when we know that reduces the power consumption.
+Thank you for the patch.
 
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
----
- drivers/usb/core/config.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On Wed, Oct 23, 2019 at 05:45:09PM +0200, Boris Brezillon wrote:
+> So that the previous bridge element in the chain knows which input
+> format the panel bridge expects.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> ---
+> Changes in v3:
+> * Adjust things to match the new bus-format negotiation approach
+> * Use drm_atomic_helper_bridge_propagate_bus_fmt
+> * Don't implement ->atomic_check() (the core now takes care of bus
+>   flags propagation)
+> 
+> Changes in v2:
+> * Adjust things to match the new bus-format negotiation approach
+> ---
+>  drivers/gpu/drm/bridge/panel.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+> index f4e293e7cf64..a70c363a2bd0 100644
+> --- a/drivers/gpu/drm/bridge/panel.c
+> +++ b/drivers/gpu/drm/bridge/panel.c
+> @@ -127,6 +127,7 @@ static const struct drm_bridge_funcs panel_bridge_bridge_funcs = {
+>  	.enable = panel_bridge_enable,
+>  	.disable = panel_bridge_disable,
+>  	.post_disable = panel_bridge_post_disable,
+> +	.atomic_get_input_bus_fmts = drm_atomic_helper_bridge_propagate_bus_fmt,
 
-diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
-index 5f40117e68e7..95ec5af42a1c 100644
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -6,6 +6,7 @@
- #include <linux/usb.h>
- #include <linux/usb/ch9.h>
- #include <linux/usb/hcd.h>
-+#include <linux/usb/of.h>
- #include <linux/usb/quirks.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-@@ -257,6 +258,14 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
- 	memcpy(&endpoint->desc, d, n);
- 	INIT_LIST_HEAD(&endpoint->urb_list);
- 
-+	/* device node property overrides bInterval */
-+	if (usb_of_has_combined_node(to_usb_device(ddev))) {
-+		u32 interval = 0;
-+		if (!of_property_read_u32(ddev->of_node, "hub,interval",
-+				    &interval))
-+			d->bInterval = min_t(u8, interval, 255);
-+	}
-+
- 	/*
- 	 * Fix up bInterval values outside the legal range.
- 	 * Use 10 or 8 ms if no proper value can be guessed.
+Shouldn't the format be retrieved from the panel instead of from the
+connector ? We're moving towards removing connector creation from
+bridges, so I think it would be more future-proof.
+
+>  };
+>  
+>  /**
+
 -- 
-2.24.0.393.g34dc348eaf-goog
+Regards,
 
+Laurent Pinchart
