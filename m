@@ -2,203 +2,138 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D1AC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 09:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13D5C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 09:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42A2920640
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 09:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BC3620661
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 09:49:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="m+Es4aNK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725829AbfLCJcQ (ORCPT
+        id S1726214AbfLCJtj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 04:32:16 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46220 "EHLO mx1.suse.de"
+        Tue, 3 Dec 2019 04:49:39 -0500
+Received: from mail-eopbgr720078.outbound.protection.outlook.com ([40.107.72.78]:51450
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725773AbfLCJcQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:32:16 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E96CBAF13;
-        Tue,  3 Dec 2019 09:32:13 +0000 (UTC)
-Subject: Re: [PATCH 1/6] dt-bindings: clock: add bindings for RTD1619 clocks
-To:     James Tai <james.tai@realtek.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-realtek-soc@lists.infradead.org,
-        cylee12 <cylee12@realtek.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-References: <20191203074513.9416-1-james.tai@realtek.com>
- <20191203074513.9416-2-james.tai@realtek.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <f069747b-7f10-f47c-684d-11138b8fd129@suse.de>
-Date:   Tue, 3 Dec 2019 10:32:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191203074513.9416-2-james.tai@realtek.com>
-Content-Type: text/plain; charset=utf-8
+        id S1725907AbfLCJti (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 04:49:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IWr/mGqxJf+6QqdvGxVVNuVTooLtJLt6xufjp+p/CcgIKB3OHivkSBKVMYTDOUx7xD/ch8WEByQs8O2s3o/P4mbrNmrGRaRLQdy5ziV6g2rRYSodU4KJ0n5epW+OZmDlDC1odoRiaTguY3QRb2ysSr8KSWSjZL9Z5IHx4jP+vQbGem/OkeU/jir6BUjcw4s4Pam97Emfpojr0G2RXxe7oNsYIhLXau/06045gEvwpSLC2Wx656hqvBnwaLjD3ssZEyne4V5HspQmPFqtANWKYSko3OZEx+i+qElD1CP/GuKm4vIbOukzj1rG6tjW7q+eTNysInuSSeAgim72tK0rmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QOKjV2WeOdvoTsuQVXD1zoQmhjPX30sRIp+sl3jFRPM=;
+ b=I5iCXsrmio+YzvQRXkWrdx9M6gyxo7yEHKA7Ezjr0QRRFfK+ppym3KnSHCiyv0WVJ8wLNnBcQvYvpxXjiYPJMysesPca2IfjjEFQdXFh0aioCSYJFRAI1Ud79X7E0Wo6L3PK9t/z4KiRp3cJdISwEyBoKcnAbTHUc8F04lh16efywUVxF9Abcw6z7YN/Pr3N9Q0XJWPJDF3EedFnboW++d7bn5wq/h+60UZQcg5ZZGnur2KhTC/P49v81yDydHb7Jm9yjiY1qn2YfI50p3QNJ7EkjX3gdjsgOU7RYqqhMT4zDAZKdGK58jCqW+hzTxikRBFbGtRQoIRxSTls/N69tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QOKjV2WeOdvoTsuQVXD1zoQmhjPX30sRIp+sl3jFRPM=;
+ b=m+Es4aNKVqkk1ceFKHLpq+8MguPKnqh0bXBzq+gShbg78/TkiHYW6CKfttTqLCJ+4eKNE2oJ9VU7bNjPpPTcJU4bBRmVWW+k/AYPvKLru85dtCpU56Q65XT+2S+Yn7peSLcwG0CGx2TnWhZHGdmzaPxOp1PVwfjap2YSbFj27+A=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.93.213) by
+ BYAPR03MB3669.namprd03.prod.outlook.com (52.135.214.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.21; Tue, 3 Dec 2019 09:49:34 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::708d:91cc:79a7:9b9a]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::708d:91cc:79a7:9b9a%6]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
+ 09:49:33 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Jun Nie <jun.nie@linaro.org>, Christoph Hellwig <hch@infradead.org>
+CC:     "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 4/4] mmc: sdhci: Add DMA memory boundary workaround
+Thread-Topic: [PATCH 4/4] mmc: sdhci: Add DMA memory boundary workaround
+Thread-Index: AQHVqR6bSNy8xcyAyESfm+a1vx+I5KensdkAgAAQtICAAFjjgIAADGsA
+Date:   Tue, 3 Dec 2019 09:49:33 +0000
+Message-ID: <20191203173256.55f527d5@xhacker.debian>
+References: <20191202144104.5069-1-jun.nie@linaro.org>
+        <20191202144104.5069-5-jun.nie@linaro.org>
+        <20191203103320.273a7309@xhacker.debian>
+        <CABymUCMVi_N2Mt82YDt7wrys4Z_vnXYEu15-YBa+S1CejT9iZw@mail.gmail.com>
+        <20191203165123.4e6f9e28@xhacker.debian>
+In-Reply-To: <20191203165123.4e6f9e28@xhacker.debian>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TY2PR0101CA0037.apcprd01.prod.exchangelabs.com
+ (2603:1096:404:8000::23) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:139::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 942a79b4-8fe2-4fc1-a584-08d777d619ba
+x-ms-traffictypediagnostic: BYAPR03MB3669:
+x-microsoft-antispam-prvs: <BYAPR03MB3669D6CAA05A200B88FFCEAFED420@BYAPR03MB3669.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02408926C4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39850400004)(346002)(376002)(136003)(199004)(189003)(51914003)(186003)(6116002)(2906002)(66556008)(50226002)(25786009)(26005)(99286004)(81156014)(8676002)(8936002)(110136005)(6486002)(54906003)(14454004)(316002)(305945005)(7736002)(6436002)(5660300002)(71200400001)(256004)(102836004)(76176011)(11346002)(446003)(81166006)(4326008)(229853002)(478600001)(3846002)(71190400001)(6246003)(6512007)(9686003)(86362001)(52116002)(1076003)(66476007)(66446008)(64756008)(66946007)(6506007)(386003)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3669;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UUSrYvMMXsGhtc5PYG0YMsZTMIIkcWzUAHW9cYHDslmlnioqQx5Xh27P0lRb3Epc52cMYIqo5jNTt70TcdHHASzcgB+ChvV78kLhNXm/Mr+LN3a1jF3PSuPDkU1NzSkJfRX74uDcPYnlLzW2xr5LNhSheEK0en0z752hQ/ID14YPE3ULReq2L8UjfEHc9/tyx7R2BNTcLma704tisQDm2NCetW2kneQqolYm+CInPXnVutov9nS8nsoyEBai7au/wq0oEq0c7Lz4tSNF00sbDZNscu/iey4MwkHqaPLg2y38HHBCIQbNBlZahi+FETzIDPMZTIXs849WvJA/FEeQYb55oy66HhzQMidR7bZN1RJBqXpGXyE2DuHAfitVLF4E8fvhtoTMV6g4UNgamq/4pJxOsaBBlT9tT9bnH1aM0aSe3DmzodvXjJWil3XJZAZs
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3597E13CE4D6F84B9443F1A9B6708237@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 942a79b4-8fe2-4fc1-a584-08d777d619ba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 09:49:33.7352
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Py+8xzNmFosoPEMTiY1jGlbFir3xT38nLOLUPs+KqpZnV1d6PWobV4N3DF1tzhkitQj/pFSUp442jrq/sZ57mA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3669
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi James and Cheng-Yu,
-
-Am 03.12.19 um 08:45 schrieb James Tai:
-> From: cylee12 <cylee12@realtek.com>
-
-Please fix the author (git commit --amend --author="...") and use an
-appropriate git config setting (and communication to your team) to avoid
-this reoccurring for new commits - already pointed out to James.
-
-BTW I wonder why we have so many seemingly unrelated people in CC
-(Mediatek, RISC-V) that the patches and responses keep hanging in
-mailing list moderation?
-
-> 
-> Add devicetree binding for Realtek RTD1619 clocks.
-> 
-> Signed-off-by: Cheng-Yu Lee <cylee12@realtek.com>
-> Signed-off-by: James Tai <james.tai@realtek.com>
-> ---
->  include/dt-bindings/clock/rtk,clock-rtd1619.h | 88 +++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 include/dt-bindings/clock/rtk,clock-rtd1619.h
-> 
-> diff --git a/include/dt-bindings/clock/rtk,clock-rtd1619.h b/include/dt-bindings/clock/rtk,clock-rtd1619.h
-> new file mode 100644
-> index 000000000000..497f9b914857
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/rtk,clock-rtd1619.h
-
-NAK for the filename. "rtk," is not a registered vendor prefix [1], so
-you cannot use it anywhere in bindings. Please use the registered prefix
-"realtek," and compare the other Realtek bindings headers that got
-accepted already. The order of SoC vs. name seems wrong.
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/vendor-prefixes.yaml
-
-> @@ -0,0 +1,88 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-
-Why restrict these trivial numbers to GPLv2? Please compare the .dtsi
-and .yaml files where this may get #include'd, and keep non-Linux OSes
-such as BSDs in mind for any DT bindings; it's supposed to be an
-OS-neutral interface contract that anyone can implement.
-
-> +#ifndef __DT_BINDINGS_RTK_CLOCK_RTD1619_H
-> +#define __DT_BINDINGS_RTK_CLOCK_RTD1619_H
-
-May need adjustments based on the filename, same for the #endif.
-
-> +
-> +#define CC_PLL_SCPU 0
-> +#define CC_PLL_BUS 2
-
-Please tab-indent the indices for readability.
-
-> +#define CC_CLK_SYS 3
-> +#define CC_CLK_SYS_SB2 4
-> +#define CC_PLL_DCSB 5
-> +#define CC_CLK_SYSH 6
-> +#define CC_PLL_DDSA 7
-> +#define CC_PLL_DDSB 8
-> +#define CC_PLL_GPU 9
-> +#define CC_CLK_GPU 10
-> +#define CC_PLL_VE1 11
-> +#define CC_PLL_VE2 12
-> +#define CC_CLK_VE1 13
-> +#define CC_CLK_VE2 14
-> +#define CC_CLK_VE3 15
-> +#define CC_CLK_VE2_BPU 16
-> +#define CC_PLL_DIF 17
-> +#define CC_PLL_PSAUD1A 18
-> +#define CC_PLL_PSAUD2A 19
-> +
-> +#define CC_CKE_MISC 33
-> +#define CC_CKE_PCIE0 34
-> +#define CC_CKE_GSPI 35
-> +#define CC_CKE_SDS 36
-> +#define CC_CKE_HDMI 37
-> +#define CC_CKE_LSADC 38
-> +#define CC_CKE_SE 39
-> +#define CC_CKE_CP 40
-> +#define CC_CKE_MD 41
-> +#define CC_CKE_TP 42
-> +#define CC_CKE_RSA 43
-> +#define CC_CKE_NF 44
-> +#define CC_CKE_EMMC 45
-> +#define CC_CKE_SD 46
-> +#define CC_CKE_SDIO_IP 47
-> +#define CC_CKE_MIPI 48
-> +#define CC_CKE_EMMC_IP 49
-> +#define CC_CKE_SDIO 50
-> +#define CC_CKE_SD_IP 51
-> +#define CC_CKE_CABLERX 52
-> +#define CC_CKE_TPB 53
-> +#define CC_CKE_SC1 54
-> +#define CC_CKE_I2C3 55
-> +#define CC_CKE_JPEG 56
-> +#define CC_CKE_SC0 57
-> +#define CC_CKE_HDMIRX 58
-> +#define CC_CKE_HSE 59
-> +#define CC_CKE_UR2 60
-> +#define CC_CKE_UR1 61
-> +#define CC_CKE_FAN 62
-> +#define CC_CKE_SATA_WRAP_SYS 63
-> +#define CC_CKE_SATA_WRAP_SYSH 64
-> +#define CC_CKE_SATA_MAC_SYSH 65
-> +#define CC_CKE_R2RDSC 66
-> +#define CC_CKE_PCIE1 67
-> +#define CC_CKE_I2C4 68
-> +#define CC_CKE_I2C5 69
-> +#define CC_CKE_EDP 70
-> +#define CC_CKE_TSIO_TRX 71
-> +#define CC_CKE_TVE 72
-> +#define CC_CKE_VO 73
-> +
-> +#define CC_CLK_MAX 74
-> +
-> +
-> +#define IC_CKE_CEC0 2
-> +#define IC_CKE_CBUSRX_SYS 3
-> +#define IC_CKE_CBUSTX_SYS 4
-> +#define IC_CKE_CBUS_SYS 5
-> +#define IC_CKE_CBUS_OSC 6
-> +#define IC_CKE_IR 7
-> +#define IC_CKE_UR0 8
-> +#define IC_CKE_I2C0 9
-> +#define IC_CKE_I2C1 10
-> +#define IC_CKE_ETN_250M 11
-> +#define IC_CKE_ETN_SYS 12
-> +#define IC_CKE_USB_DRD 13
-> +#define IC_CKE_USB_HOST 14
-> +#define IC_CKE_USB_U3_HOST 15
-> +#define IC_CKE_USB 16
-> +#define IC_CLK_MAX 17
-> +
-> +#endif /* __DT_BINDINGS_RTK_CLOCK_RTD1619_H */
-> +
-
-Trailing empty line.
-
-Regards,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+T24gVHVlLCAzIERlYyAyMDE5IDA5OjA1OjIzICswMDAwIEppc2hlbmcgWmhhbmcgd3JvdGU6DQoN
+Cg0KPiANCj4gKyBDaHJpc3RvcGgNCj4gDQo+IE9uIFR1ZSwgMyBEZWMgMjAxOSAxMTozMzoxNSAr
+MDgwMCBKdW4gTmllIHdyb3RlOg0KPiANCj4gPg0KPiA+DQo+ID4gSmlzaGVuZyBaaGFuZyA8Smlz
+aGVuZy5aaGFuZ0BzeW5hcHRpY3MuY29tPiDkuo4yMDE55bm0MTLmnIgz5pel5ZGo5LqMIOS4iuWN
+iDEwOjQ35YaZ6YGT77yaICANCj4gPiA+DQo+ID4gPiBPbiBNb24sICAyIERlYyAyMDE5IDIyOjQx
+OjA0ICswODAwIEp1biBOaWUgd3JvdGU6DQo+ID4gPg0KPiA+ID4gIA0KPiA+ID4gPg0KPiA+ID4g
+Pg0KPiA+ID4gPiBETUEgbWVtb3J5IGNhbm5vdCBjcm9zcyBzcGVjaWZpYyBib3VuZGFyeSBmb3Ig
+c29tZSBTREhDSSBjb250cm9sbGVyLA0KPiA+ID4gPiBzdWNoIGFzIERlc2lnbldhcmUgU0RIQ0kg
+Y29udHJvbGxlci4gQWRkIERNQSBtZW1vcnkgYm91bmRhcnkgZHQNCj4gPiA+ID4gcHJvcGVydHkg
+YW5kIHdvcmthcm91bmQgdGhlIGxpbWl0YXRpb24uICANCj4gPiA+DQo+ID4gPiBJTUhPLCB0aGUg
+d29ya2Fyb3VuZCBjb3VsZCBiZSBpbXBsZW1lbnRlZCBpbiBlYWNoIFNESENJIGhvc3QgZHJpdmVy
+Lg0KPiA+ID4NCj4gPiA+IGVnLiBkcml2ZXJzL21tYy9ob3N0L3NkaGNpLW9mLWR3Y21zaGMuYw0K
+PiA+ID4gIA0KPiA+IFRoYW5rcyBmb3IgdGhlIHN1Z2dlc3Rpb24hIENocmlzdG9waCdzIHN1Z2dl
+c3Rpb24gY2FuIHByZXZlbnQgdGhlIHRoZSBpc3N1ZQ0KPiA+IGZyb20gdGhlIGJsb2NrIGxheWVy
+LCB0aHVzIHRoZSBjb2RlIGNhbiBiZSBzaGFyZWQgYWNyb3NzIGFsbCAgDQo+IA0KPiBUbyBiZSBo
+b25lc3QsIEkgZGlkIGNvbnNpZGVyIHNpbWlsYXIgc29sdXRpb24gZnJvbSBibG9jayBsYXllciwg
+SS5FIHNldA0KPiB0aGUgc2VnX2JvdW5kYXJ5X21hc2ssIHdoZW4gc3VibWl0dGluZyB0aGUgd29y
+a2Fyb3VuZCBsYXN0IHllYXIsIGJ1dCBwZXINCj4gbXkgdW5kZXJzdGFuZGluZywgU0RIQ0kgbGlt
+aXRhdGlvbiBpcyB0aGUgcGh5c2ljYWwgRE1BIGFkZHIgY2FuJ3Qgc3BhbiBvbmUNCj4gc3BlY2lm
+aWMgYm91bmRhcnksIHNvIHNldHRpbmcgc2VnX2JvdW5kYXJ5X21hc2sgdy8gYmxrX3F1ZXVlX3Nl
+Z21lbnRfYm91bmRhcnkNCj4gY2FuJ3Qgd29yay4gSSdtIG5vdCBzdXJlIEkgdW5kZXJzdGFuZCBi
+bGtfcXVldWVfc2VnbWVudF9ib3VuZGFyeSgpIHByb3Blcmx5Lg0KPiBNYXkgQ2hyaXN0b3BoIGhl
+bHAgdG8gY2xhcmlmeT8NCg0Kd2hhdCdzIG1vcmUsIG5vdCBhbGwgc2NhdHRlcmxpc3QgaW4gbW1j
+IGFyZSBmcm9tIGJsb2NrIGxheWVyLCBmb3IgZXhhbXBsZSwgDQpfX21tY19ibGtfaW9jdGxfY21k
+KCksIG1tY190ZXN0LmMgZXRjLi4NCg0KSG93IGRvIHdlIGVuc3VyZSB0aGUgYm91bmRhcnkgaXMg
+ZmluZSBpbiB0aGVzZSBjYXNlcz8NCg0KPiANCj4gRnJvbSBhbm90aGVyIHNpZGUsIGRyaXZlcnMv
+YXRhL2xpYmF0YS1zZmYuYyBhbHNvIHdvcmthcm91bmQgdGhlIDY0SyBwaHkgRE1BDQo+IGJvdW5k
+YXJ5IGxpbWl0YXRpb24gaXRzZWxmIHJhdGhlciB0aGFuIGZyb20gYmxvY2sgbGF5ZXIuDQoNCj4g
+VGhhbmtzDQo+IA0KPiA+IGNvbnRyb2xsZXJzLiBJIHByZWZlcg0KPiA+IGhpcyBzdWdnZXN0aW9u
+cy4NCj4gPg0KPiA+IEp1biAgDQo+IA0KDQo=
