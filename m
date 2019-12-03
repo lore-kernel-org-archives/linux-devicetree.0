@@ -2,161 +2,131 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C8DC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 08:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FCEC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 08:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B0E20640
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 08:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB8220659
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 08:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725829AbfLCItk (ORCPT
+        id S1725848AbfLCIve (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 03:49:40 -0500
-Received: from retiisi.org.uk ([95.216.213.190]:45658 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725773AbfLCItk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 03:49:40 -0500
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 3856E634C87;
-        Tue,  3 Dec 2019 10:48:51 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1ic3rW-0001NT-PP; Tue, 03 Dec 2019 10:48:50 +0200
-Date:   Tue, 3 Dec 2019 10:48:50 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
-        a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH 2/5] media: i2c: imx290: Add support for test pattern
- generation
-Message-ID: <20191203084850.GA5282@valkosipuli.retiisi.org.uk>
-References: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
- <20191129190541.30315-3-manivannan.sadhasivam@linaro.org>
+        Tue, 3 Dec 2019 03:51:34 -0500
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:63297 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfLCIve (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 03:51:34 -0500
+IronPort-SDR: dsSR1wFM82w41QEe91uCLCS3a93jGz8SCMS1FIQofYoPqq9j2vabdlMnkkUnO85HGlOE3JlEWx
+ hxZzpZh/lfzIdFDWw1Li1pvIT8RCb1JqeuWvpdSjEtjz06NWapo6dAdKmHkbsCB09eUqGJrEEW
+ 5dDpCEyM5CAwO8OxKNrGBjQGqSC2WDdqJPOVcL1IwxvsYX7a9svPcg0UwfrgXWpCB6LFjHu6fZ
+ HEHTIKV5Mabg+/ydxLFir7TdQp1aPxfB5g6X0OGItiVvdrVchRx3M1Nq5MB0RwkDJWk4BCtyVp
+ 7+w=
+X-IronPort-AV: E=Sophos;i="5.69,272,1571731200"; 
+   d="scan'208";a="45593533"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa1.mentor.iphmx.com with ESMTP; 03 Dec 2019 00:51:33 -0800
+IronPort-SDR: V31aPAlTL4Jd77N/4vFkI/ULg0cF5PBYkzlUKlSwB5TqW2oengXeZXGIIUezjAPeS45uGXetRj
+ k8fdcbh6lAth0z2rEc/o8A8Yjx1Gs9FJcj8ClHn/v7e9trEbTEqyktunDgxc+NGMNzDE3uUt+H
+ tVPkPMHeGKWmqIn4OYYFVSQrHux/WyXhsdu22AjmEmoi5aXIBAP1OBiJIM2OD+5+c39ZCXjbpa
+ 5nlSWx1IxowCPCDsJce0jzoNxMJv4XdCFGcMxbpF2S+x4ddCnnoky/Je4mZZIOCotBY7rKE4oJ
+ 6+w=
+Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-6-geert+renesas@glider.be>
+ <585c4ad9-31fc-e87e-07c4-b8d6aa09c7e4@mentor.com>
+ <CAMuHMdW-n8ao7t7156WYxRg7v8+ojXsRgHGUOax=9nBo2F5xOw@mail.gmail.com>
+From:   Harish Jenny K N <harish_kandiga@mentor.com>
+Message-ID: <d44598a5-184e-078c-1d6c-a99b522f7e26@mentor.com>
+Date:   Tue, 3 Dec 2019 14:21:21 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191129190541.30315-3-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMuHMdW-n8ao7t7156WYxRg7v8+ojXsRgHGUOax=9nBo2F5xOw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: svr-ies-mbx-05.mgc.mentorg.com (139.181.222.5) To
+ svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Manivannan,
 
-On Sat, Nov 30, 2019 at 12:35:38AM +0530, Manivannan Sadhasivam wrote:
-> Add support for generating following test patterns by IMX290:
-> 
-> * Sequence Pattern 1
-> * Horizontal Color-bar Chart
-> * Vertical Color-bar Chart
-> * Sequence Pattern 2
-> * Gradation Pattern 1
-> * Gradation Pattern 2
-> * 000/555h Toggle Pattern
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/media/i2c/imx290.c | 41 +++++++++++++++++++++++++++++++++++++-
->  1 file changed, 40 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> index 1d49910937fb..e218c959a729 100644
-> --- a/drivers/media/i2c/imx290.c
-> +++ b/drivers/media/i2c/imx290.c
-> @@ -26,12 +26,19 @@
->  #define IMX290_REGHOLD 0x3001
->  #define IMX290_XMSTA 0x3002
->  #define IMX290_FR_FDG_SEL 0x3009
-> +#define IMX290_BLKLEVEL_LOW 0x300a
-> +#define IMX290_BLKLEVEL_HIGH 0x300b
->  #define IMX290_GAIN 0x3014
->  #define IMX290_HMAX_LOW 0x301c
->  #define IMX290_HMAX_HIGH 0x301d
-> +#define IMX290_PGCTRL 0x308c
->  #define IMX290_PHY_LANE_NUM 0x3407
->  #define IMX290_CSI_LANE_MODE 0x3443
->  
-> +#define IMX290_PGCTRL_REGEN BIT(0)
-> +#define IMX290_PGCTRL_THRU BIT(1)
-> +#define IMX290_PGCTRL_MODE(n) ((n) << 4)
-> +
->  /* HMAX fields */
->  #define IMX290_HMAX_2_1920 0x1130
->  #define IMX290_HMAX_4_1920 0x0898
-> @@ -99,6 +106,17 @@ static const struct regmap_config imx290_regmap_config = {
->  	.cache_type = REGCACHE_RBTREE,
->  };
->  
-> +static const char * const imx290_test_pattern_menu[] = {
-> +	"Disabled",
-> +	"Sequence Pattern 1",
-> +	"Horizontal Color-bar Chart",
-> +	"Vertical Color-bar Chart",
-> +	"Sequence Pattern 2",
-> +	"Gradation Pattern 1",
-> +	"Gradation Pattern 2",
-> +	"000/555h Toggle Pattern",
-> +};
-> +
->  static const struct imx290_regval imx290_global_init_settings[] = {
->  	{ 0x3007, 0x00 },
->  	{ 0x3018, 0x65 },
-> @@ -394,6 +412,22 @@ static int imx290_set_ctrl(struct v4l2_ctrl *ctrl)
->  	case V4L2_CID_GAIN:
->  		ret = imx290_set_gain(imx290, ctrl->val);
->  		break;
-> +	case V4L2_CID_TEST_PATTERN:
-> +		if (ctrl->val) {
-> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x00);
-> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
-> +			mdelay(10);
+On 03/12/19 1:47 PM, Geert Uytterhoeven wrote:
+> Hi Harish,
+>
+> On Tue, Dec 3, 2019 at 6:42 AM Harish Jenny K N
+> <harish_kandiga@mentor.com> wrote:
+>>> +static int gpio_aggregator_probe(struct platform_device *pdev)
+>>> +{
+>>> +     struct device *dev = &pdev->dev;
+>>> +     struct gpio_desc **descs;
+>>> +     struct gpiochip_fwd *fwd;
+>>> +     int i, n;
+>>> +
+>>> +     n = gpiod_count(dev, NULL);
+>>> +     if (n < 0)
+>>> +             return n;
+>>> +
+>>> +     descs = devm_kmalloc_array(dev, n, sizeof(*descs), GFP_KERNEL);
+>>> +     if (!descs)
+>>> +             return -ENOMEM;
+>>> +
+>>> +     for (i = 0; i < n; i++) {
+>>> +             descs[i] = devm_gpiod_get_index(dev, NULL, i, GPIOD_ASIS);
+>> can you please add this check as well as we need to return EPROBE_DEFER.
+>>
+>> if (desc[i] == ERR_PTR(-ENOENT))
+>> <                 return -EPROBE_DEFER;
+> So gpiod_get_index() nevers return -EPROBE_DEFER, but returns -ENOENT
+> instead?
+> How can a driver distinguish between "GPIO not found" and "gpiochip driver
+> not yet initialized"?
+> Worse, so the *_optional() variants will return NULL in both cases, too, so
+> the caller will always fall back to optional GPIO not present?
+>
+> Or am I missing something?
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
 
-Any particular reason for a busy loop instead of sleeping? Same below.
 
-> +			imx290_write_reg(imx290, IMX290_PGCTRL,
-> +					 (u8)(IMX290_PGCTRL_REGEN |
-> +					 IMX290_PGCTRL_THRU |
-> +					 IMX290_PGCTRL_MODE(ctrl->val)));
-> +		} else {
-> +			imx290_write_reg(imx290, IMX290_PGCTRL, 0x00);
-> +			mdelay(10);
-> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x3c);
-> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
-> +		}
-> +		break;
->  	default:
->  		ret = -EINVAL;
->  		break;
-> @@ -878,7 +912,7 @@ static int imx290_probe(struct i2c_client *client)
->  
->  	mutex_init(&imx290->lock);
->  
-> -	v4l2_ctrl_handler_init(&imx290->ctrls, 3);
-> +	v4l2_ctrl_handler_init(&imx290->ctrls, 4);
->  
->  	v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
->  			  V4L2_CID_GAIN, 0, 72, 1, 0);
-> @@ -896,6 +930,11 @@ static int imx290_probe(struct i2c_client *client)
->  					       INT_MAX, 1,
->  					       imx290_modes[0].pixel_rate);
->  
-> +	v4l2_ctrl_new_std_menu_items(&imx290->ctrls, &imx290_ctrl_ops,
-> +				     V4L2_CID_TEST_PATTERN,
-> +				     ARRAY_SIZE(imx290_test_pattern_menu) - 1,
-> +				     0, 0, imx290_test_pattern_menu);
-> +
->  	imx290->sd.ctrl_handler = &imx290->ctrls;
->  
->  	if (imx290->ctrls.error) {
+We had earlier tested our changes on 4.14 kernel and the explicit return of -EPROBE_DEFER was needed in the inverter driver.
 
--- 
-Sakari Ailus
+probably the commit 6662ae6af82df10259a70c7569b4c12ea7f3ba93 ( gpiolib: Keep returning EPROBE_DEFER when we should)
+
+has fixed the issue and now it returns -EPROBE_DEFER.  you can ignore this comment as of now. I will test and let you know if needed.
+
+
+Thanks,
+
+Harish
+
