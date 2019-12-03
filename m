@@ -2,127 +2,143 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B631EC43215
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8E8C432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974A22071F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3018120665
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 04:12:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="TYjO+1/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfLCEHp (ORCPT
+        id S1726651AbfLCEMr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 2 Dec 2019 23:07:45 -0500
-Received: from pbmsgap01.intersil.com ([192.157.179.201]:35032 "EHLO
-        pbmsgap01.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfLCEHo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Dec 2019 23:07:44 -0500
-Received: from pps.filterd (pbmsgap01.intersil.com [127.0.0.1])
-        by pbmsgap01.intersil.com (8.16.0.27/8.16.0.27) with SMTP id xB33k3qb001850;
-        Mon, 2 Dec 2019 22:46:03 -0500
-Received: from pbmxdp01.intersil.corp (pbmxdp01.pb.intersil.com [132.158.200.222])
-        by pbmsgap01.intersil.com with ESMTP id 2wkmu327q7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 02 Dec 2019 22:46:03 -0500
-Received: from pbmxdp01.intersil.corp (132.158.200.222) by
- pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1531.3; Mon, 2 Dec 2019 22:46:01 -0500
-Received: from localhost.localdomain (132.158.202.109) by
- pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server id
- 15.1.1531.3 via Frontend Transport; Mon, 2 Dec 2019 22:46:00 -0500
-From:   Chris Brandt <chris.brandt@renesas.com>
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC:     <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 1/6] clk: renesas: mstp: Add critical clock from device tree support
-Date:   Mon, 2 Dec 2019 22:45:14 -0500
-Message-ID: <20191203034519.5640-2-chris.brandt@renesas.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191203034519.5640-1-chris.brandt@renesas.com>
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
+        Mon, 2 Dec 2019 23:12:47 -0500
+Received: from ozlabs.org ([203.11.71.1]:44331 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726592AbfLCEMr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 2 Dec 2019 23:12:47 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47RpVN4pdRz9sPJ;
+        Tue,  3 Dec 2019 15:12:44 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1575346364;
+        bh=mDwLrVfgNbGCj+6i+eyO23EDw2kXl4PKfhu8/4hlKgg=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=TYjO+1/BsSLC8QH5cQ4nIy6TTdq7oCVNhmNJM4w26lSN0Adil1BeTrNK+bvfPxyrn
+         xcoiLiS5Uh4p2Jn4g1fz9sO15gN6E1Wq6BTNFBB1XjmJCZVC866wDTWi+IC2U1CYw/
+         BH27FipUBzp+sRxh12CtUS6fCHzO34PGahDlPXpfOSBJCyHJseQuGsImb/Y7+wi1Bk
+         pQWbf9MAyIuOpIf0iBLIXvOwfnqeX4j8rgtcn+GDBvPuTAvPO1IU37ARrOsfpO8olS
+         +jJ4gXl15CCjcfhRZRlAUoJXOWCwgw4nvmji30hSKzYP9B0vprST7KH2fOlKEA/kt+
+         SKfK5Et0KDW5w==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Frank Rowand <frowand.list@gmail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [RFC] Efficiency of the phandle_cache on ppc64/SLOF
+In-Reply-To: <e1f232f5-3847-a519-5cce-95a26512e82b@gmail.com>
+References: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de> <e1f232f5-3847-a519-5cce-95a26512e82b@gmail.com>
+Date:   Tue, 03 Dec 2019 15:12:44 +1100
+Message-ID: <87tv6idp37.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-12-02_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911200000 definitions=main-1912030031
-X-Proofpoint-Spam-Reason: mlx
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Allow critical clocks to be specified in the Device Tree.
+Frank Rowand <frowand.list@gmail.com> writes:
+> On 11/29/19 9:10 AM, Sebastian Andrzej Siewior wrote:
+>> I've been looking at phandle_cache and noticed the following: The raw
+>> phandle value as generated by dtc starts at zero and is incremented by
+>> one for each phandle entry. The qemu pSeries model is using Slof (which
+>> is probably the same thing as used on real hardware) and this looks like
+>> a poiner value for the phandle.
+>> With
+>> 	qemu-system-ppc64le -m 16G -machine pseries -smp 8 
+>> 
+>> I got the following output:
+>> | entries: 64
+>> | phandle 7e732468 slot 28 hash c
+>> | phandle 7e732ad0 slot 10 hash 27
+>> | phandle 7e732ee8 slot 28 hash 3a
+>> | phandle 7e734160 slot 20 hash 36
+>> | phandle 7e734318 slot 18 hash 3a
+>> | phandle 7e734428 slot 28 hash 33
+>> | phandle 7e734538 slot 38 hash 2c
+>> | phandle 7e734850 slot 10 hash e
+>> | phandle 7e735220 slot 20 hash 2d
+>> | phandle 7e735bf0 slot 30 hash d
+>> | phandle 7e7365c0 slot 0 hash 2d
+>> | phandle 7e736f90 slot 10 hash d
+>> | phandle 7e737960 slot 20 hash 2d
+>> | phandle 7e738330 slot 30 hash d
+>> | phandle 7e738d00 slot 0 hash 2d
+>> | phandle 7e739730 slot 30 hash 38
+>> | phandle 7e73bd08 slot 8 hash 17
+>> | phandle 7e73c2e0 slot 20 hash 32
+>> | phandle 7e73c7f8 slot 38 hash 37
+>> | phandle 7e782420 slot 20 hash 13
+>> | phandle 7e782ed8 slot 18 hash 1b
+>> | phandle 7e73ce28 slot 28 hash 39
+>> | phandle 7e73d390 slot 10 hash 22
+>> | phandle 7e73d9a8 slot 28 hash 1a
+>> | phandle 7e73dc28 slot 28 hash 37
+>> | phandle 7e73de00 slot 0 hash a
+>> | phandle 7e73e028 slot 28 hash 0
+>> | phandle 7e7621a8 slot 28 hash 36
+>> | phandle 7e73e458 slot 18 hash 1e
+>> | phandle 7e73e608 slot 8 hash 1e
+>> | phandle 7e740078 slot 38 hash 28
+>> | phandle 7e740180 slot 0 hash 1d
+>> | phandle 7e740240 slot 0 hash 33
+>> | phandle 7e740348 slot 8 hash 29
+>> | phandle 7e740410 slot 10 hash 2
+>> | phandle 7e740eb0 slot 30 hash 3e
+>> | phandle 7e745390 slot 10 hash 33
+>> | phandle 7e747b08 slot 8 hash c
+>> | phandle 7e748528 slot 28 hash f
+>> | phandle 7e74a6e0 slot 20 hash 18
+>> | phandle 7e74aab0 slot 30 hash b
+>> | phandle 7e74f788 slot 8 hash d
+>> | Used entries: 8, hashed: 29
+>> 
+>> So the hash array has 64 entries out which only 8 are populated. Using
+>> hash_32() populates 29 entries.
+>> Could someone with real hardware verify this?
+>> I'm not sure how important this performance wise, it looks just like a
+>> waste using only 1/8 of the array.
+>
+> The hash used is based on the assumptions you noted, and as stated in the
+> code, that phandle property values are in a contiguous range of 1..n
+> (not starting from zero), which is what dtc generates.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- drivers/clk/renesas/clk-mstp.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+> We knew that for systems that do not match the assumptions that the hash
+> will not be optimal.
 
-diff --git a/drivers/clk/renesas/clk-mstp.c b/drivers/clk/renesas/clk-mstp.c
-index 003e9ce45757..8e28e9671265 100644
---- a/drivers/clk/renesas/clk-mstp.c
-+++ b/drivers/clk/renesas/clk-mstp.c
-@@ -148,7 +148,7 @@ static const struct clk_ops cpg_mstp_clock_ops = {
- 
- static struct clk * __init cpg_mstp_clock_register(const char *name,
- 	const char *parent_name, unsigned int index,
--	struct mstp_clock_group *group)
-+	struct mstp_clock_group *group, unsigned long flags)
- {
- 	struct clk_init_data init;
- 	struct mstp_clock *clock;
-@@ -160,12 +160,12 @@ static struct clk * __init cpg_mstp_clock_register(const char *name,
- 
- 	init.name = name;
- 	init.ops = &cpg_mstp_clock_ops;
--	init.flags = CLK_SET_RATE_PARENT;
-+	init.flags = CLK_SET_RATE_PARENT | flags;
- 	/* INTC-SYS is the module clock of the GIC, and must not be disabled */
--	if (!strcmp(name, "intc-sys")) {
--		pr_debug("MSTP %s setting CLK_IS_CRITICAL\n", name);
-+	if (!strcmp(name, "intc-sys"))
- 		init.flags |= CLK_IS_CRITICAL;
--	}
-+	if (init.flags & CLK_IS_CRITICAL)
-+		pr_debug("MSTP %s setting CLK_IS_CRITICAL\n", name);
- 	init.parent_names = &parent_name;
- 	init.num_parents = 1;
- 
-@@ -187,6 +187,7 @@ static void __init cpg_mstp_clocks_init(struct device_node *np)
- 	const char *idxname;
- 	struct clk **clks;
- 	unsigned int i;
-+	unsigned long flags;
- 
- 	group = kzalloc(struct_size(group, clks, MSTP_MAX_CLOCKS), GFP_KERNEL);
- 	if (!group)
-@@ -239,8 +240,11 @@ static void __init cpg_mstp_clocks_init(struct device_node *np)
- 			continue;
- 		}
- 
-+		flags = 0;
-+		of_clk_detect_critical(np, i, &flags);
-+
- 		clks[clkidx] = cpg_mstp_clock_register(name, parent_name,
--						       clkidx, group);
-+						       clkidx, group, flags);
- 		if (!IS_ERR(clks[clkidx])) {
- 			group->data.clk_num = max(group->data.clk_num,
- 						  clkidx + 1);
--- 
-2.23.0
+If we're going to have the phandle cache it should at least make some
+attempt to work across the systems that Linux supports.
 
+> Unless there is a serious performance problem for
+> such systems, I do not want to make the phandle hash code more complicated
+> to optimize for these cases.  And the pseries have been performing ok
+> without phandle related performance issues that I remember hearing since
+> before the cache was added, which could have only helped the performance.
+> Yes, if your observations are correct, some memory is being wasted, but
+> a 64 entry cache is not very large on a pseries.
+
+A single line change to use an actual hash function is hardly
+complicating it, compared to the amount of code already there.
+
+cheers
