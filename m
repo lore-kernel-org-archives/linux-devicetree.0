@@ -2,188 +2,123 @@ Return-Path: <SRS0=0idb=ZZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9386C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 18:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F56C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 18:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D9420833
-	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 18:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26F62084B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  3 Dec 2019 18:57:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfLCSz2 (ORCPT
+        id S1726766AbfLCS5e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 13:55:28 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55568 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726057AbfLCSz2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 13:55:28 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0884CB12D;
-        Tue,  3 Dec 2019 18:55:26 +0000 (UTC)
-Subject: Re: [PATCH 6/6] dt-bindings: clk: realtek: add rtd1619 clock
- controller bindings
-To:     James Tai <james.tai@realtek.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-realtek-soc@lists.infradead.org,
-        cylee12 <cylee12@realtek.com>,
+        Tue, 3 Dec 2019 13:57:34 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46028 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfLCS5d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 13:57:33 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v10so2264651oiv.12;
+        Tue, 03 Dec 2019 10:57:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QbBA1xUeDWozSALaq+ZgoDJg/avbhvBYLtHk3XaCifw=;
+        b=lsEzUPIx61+IoHiy8JrfhUXUZVGP/ZWFjLn6AqNtKxl6iD4RbfSQEkk7Fkwt3bg4Wk
+         UAJX/OxaeKOS/HX7z/IjgB5YfdUCC9HN0r/nYkznbSrQqG9og6S248ij0i2wFKTiaEhg
+         QrhAKfNPtUXulJfTHXFe+cM4PdFFPnebMNOGSoyA0KuyUN3OvKRVEcFTTTif6Xneu9MP
+         uvKpfT1dSejPwT3J85mFuJuXqCbLHsUAgJRWRVtpwD44fDMUB9piyrjVpPWuBkbRv5WV
+         T/dfcEWa6fs7OvS6kFslantWWcK/0id8xuViWrlJo6pKcbOuyGiW8/KEj0qf51EoYExN
+         hO2Q==
+X-Gm-Message-State: APjAAAU9/SmzCLbb9/VwSnfi6RdbkaG0N/QrSCuNnhSt4lKqyBBSrH76
+        bP5/HglNvrKbvbLUfuF7xao5bnfdhTrCiaRZJ8w=
+X-Google-Smtp-Source: APXvYqyKgyiMygfjiXO8XcBZrxs1x7n6N0Y2SMTF6gDNv+MIgPG02RwFvT17WjD20296e3XHU/UN+EWiy7fHSp6VNgs=
+X-Received: by 2002:aca:48cd:: with SMTP id v196mr5098702oia.102.1575399452736;
+ Tue, 03 Dec 2019 10:57:32 -0800 (PST)
+MIME-Version: 1.0
+References: <20191203034519.5640-1-chris.brandt@renesas.com> <20191203034519.5640-7-chris.brandt@renesas.com>
+In-Reply-To: <20191203034519.5640-7-chris.brandt@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 3 Dec 2019 19:57:21 +0100
+Message-ID: <CAMuHMdVBYpuoK7hcyNLK-mAdpTQz3ohTGXuYdFPHdpU5RoPr6Q@mail.gmail.com>
+Subject: Re: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
+To:     Chris Brandt <chris.brandt@renesas.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
-References: <20191203074513.9416-1-james.tai@realtek.com>
- <20191203074513.9416-7-james.tai@realtek.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <f16bc1ef-8b69-feb4-bf1a-b015d7f8618e@suse.de>
-Date:   Tue, 3 Dec 2019 19:55:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191203074513.9416-7-james.tai@realtek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi James,
+Hi Chris,
 
-[dropping Palmer, adding Philipp]
+On Tue, Dec 3, 2019 at 4:47 AM Chris Brandt <chris.brandt@renesas.com> wrote:
+> Document the bindings used by the Renesas SPI bus space controller.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-Am 03.12.19 um 08:45 schrieb James Tai:
-> From: cylee12 <cylee12@realtek.com>
+Thanks for your patch!
 
-Author.
-
-$subject: clk vs. clock prefix
-
-Lacking a commit message here.
-
-> 
-> Signed-off-by: Cheng-Yu Lee <cylee12@realtek.com>
-> Signed-off-by: James Tai <james.tai@realtek.com>
-> ---
->  .../bindings/clock/realtek,clocks.txt         | 38 +++++++++++++++++++
-
-Please use YAML schema for any new bindings.
-
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/realtek,clocks.txt
-
-This patch needs to be ordered before patches using the binding in a
-driver or DT. In this case it should've been squashed into 1/6.
-
-> diff --git a/Documentation/devicetree/bindings/clock/realtek,clocks.txt b/Documentation/devicetree/bindings/clock/realtek,clocks.txt
-> new file mode 100644
-> index 000000000000..db101508ac6a
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/realtek,clocks.txt
-> @@ -0,0 +1,38 @@
-> +Realtek Clock/Reset Controller
-> +==============================
+> +++ b/Documentation/devicetree/bindings/spi/spi-renesas-spibsc.txt
+
+Checkpatch.pl says:
+WARNING: DT bindings should be in DT schema format. See:
+Documentation/devicetree/writing-schema.rst
+
+> @@ -0,0 +1,48 @@
+> +Renesas SPI Bus Space Controller (SPIBSC) Device Tree Bindings
 > +
-> +Realtek CRT/ISO controller device-tree binding for Realtek Platforms.
+> +Otherwise referred to as the "SPI Multi I/O Bus Controller" in SoC hardware
+> +manuals. This controller was designed specifically for accessing SPI flash
+> +devices.
 > +
-> +This binding uses the common clock binding[1].
-> +
-> +The controller node should be the child of a syscon node with the required
-> +propertise:
-> +
-> +- compatible :
-> +	should contain only one of the following:
-> +		"realtek,rtd1619-cc" for RTD1619 CRT clock controller,
-> +		"realtek,rtd1619-ic" for RTD1619 ISO clock controller,
+> +Required properties:
+> +- compatible: should be an SoC-specific compatible value, followed by
+> +               "renesas,spibsc" as a fallback.
+> +               supported SoC-specific values are:
+> +               "renesas,r7s72100-spibsc"       (RZ/A1)
+> +               "renesas,r7s9210-spibsc"        (RZ/A2)
 
--ic does not strike me as the best name, can we go with -iso-something
-for consistency?
+Is the fallback valid for RZ/A1, which has its own special match entry
+in the driver?
+Will it be valid for R-Car Gen3?
+If not, you may want to drop it completely.
 
-> +
-> +- #clock-cells : should be 1.
-> +
-> +- #reset-cells : should be 1.
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Example:
-> +
-> +	crt@98000000 {
+> +- reg: should contain three register areas:
+> +       first for the base address of SPIBSC registers,
+> +       second for the direct mapping read mode
+> +- clocks: should contain the clock phandle/specifier pair for the module clock.
+> +- power-domains: should contain the power domain phandle/specifier pair.
+> +- #address-cells: should be 1
+> +- #size-cells: should be 0
+> +- flash: should be represented by a subnode of the SPIBSC node,
+> +        its "compatible" property contains "jedec,spi-nor" if SPI is used.
 
-crt: syscon@...
+What about the "mtd-rom" use for e.g. XIP?
 
-Always prefer generic node names when possible.
+interrupts? RZ/A2M seems to have an SPIBSC interrupt, RZ/A1 hasn't.
 
-> +		compatible = "realtek,rtd1619-crt", "simple-mfd", "syscon";
+Gr{oetje,eeting}s,
 
-1) You must not use undefined compatible strings in your example! If we
-want to use such compatibles (which I agree with in principle), then we
-need to post separate bindings patches before you do so. The big issue
-there is how to name them to work across SoC families. For that reason
-my syscon series did not include dt-bindings, to not hold us up with
-them. Drop it here for now?
-
-2) You must retain the valid order, here defined by the syscon binding.
-Like I said for the Mjolnir .dts. If we consequently use YAML schemas,
-then you can check your .dts files with make dtbs_check and hopefully
-notice it yourself before I complain. .dtsi patches are sadly missing in
-this series, so you could only run limited make dt_binding_check.
-
-> +		reg = <0x98000000 0x1000>;
-> +
-> +		cc: cc@98000000 {
-
-cc: clock-controller@...
-
-But you must not give a unit address in absence of reg.
-
-> +			compatible = "realtek,rtd1619-cc";
-
-reg missing. When you add it, you need #address-cells and #size-cells
-above, too. Also ranges for completeness. In YAML it gets compile-tested
-and should not sprout warnings.
-
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-
-BTW given the complex mappings that you attempt, wouldn't it be easier
-to use #reset-cells = <2>? In that case one could again argue that a
-per-bank node/driver will be easier.
-
-> +		};
-> +	};
-
-Haven't tested this yet, but I wonder whether we could just use
-"realtek,rtd1619-crt" for the clock controller directly and still use
-the same node as syscon mfd? If not, it might be nice to describe in the
-child node's reg what exactly is covered instead of just <0x0 0x1000>.
-
-My point here is that the DT describes the hardware, but that does not
-dictate how the Linux drivers bind to DT. clk is no platform_driver, so
-you can have clk and reset drivers binding to the same DT compatible.
-Did that for STM32 CRT once. However, don't hide the binding under clock
-if it's really mfd - someone looking for reset bindings is going to have
-a hard time finding them under clock.
-
-> +
-> +	consumer {
-> +		clocks = <&cc CC_CKE_GSPI>;
-> +	};
-> +
-
-Regards,
-Andreas
+                        Geert
 
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
