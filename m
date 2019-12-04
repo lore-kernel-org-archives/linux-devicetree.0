@@ -2,126 +2,85 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4715C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30853C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9287D20640
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 046AA20661
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sX5L4odf"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="N8TeMnNZ";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="IuRCd0pO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbfLDJPy (ORCPT
+        id S1727268AbfLDJUT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:15:54 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:53698 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbfLDJPy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 04:15:54 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 21FF12E5;
-        Wed,  4 Dec 2019 10:15:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575450951;
-        bh=doXYPCSvABgiJK88FVctcozTFTsD7J1hmZz7i3MphpI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sX5L4odfl4lUqYjF83Ubr63SnJ+3IJsFwBDWGYFCDsEcP00+XFTF6zqOzOIJWCP/s
-         ZxeTpTMHc+Lq4af3GqzaGV+9T6l7JihRlM4swQ+bHERplRM2rhE5UvrOeTAt40G4iE
-         6JLLALQhE9vnRN5cme6tPUNqssCc2N8jh74akw/U=
-Date:   Wed, 4 Dec 2019 11:15:44 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
-        Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Clark <robdclark@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v4 00/11] drm: Add support for bus-format negotiation
-Message-ID: <20191204091544.GC6705@pendragon.ideasonboard.com>
-References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
- <20191203181924.GU4730@pendragon.ideasonboard.com>
- <20191204100957.15406559@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191204100957.15406559@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 4 Dec 2019 04:20:19 -0500
+Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:58730
+        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725922AbfLDJUT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 04:20:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575451218;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=p2y2RwyPERJGQCVp0lw0O6oIy5a8Ly1gvR0t4JSILNE=;
+        b=N8TeMnNZGoQJ6jCM0Eer7/bGIUOq0MTpfnlqbsRYy8ku+gRCvMZvQ0od8ketXH6+
+        Jwvxetnnyw7Iy8fGg1eIzECR7HkkXMRtHDAIKBFKvFejvuMPIQwaQ5/54AyYrMObdiw
+        CZMu7+KrShZqW48W4AMWqY0HZD59x2hD63j9k/kU=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575451218;
+        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
+        bh=p2y2RwyPERJGQCVp0lw0O6oIy5a8Ly1gvR0t4JSILNE=;
+        b=IuRCd0pOOFphhQxZsqT/1E48O0Y2q/hjVW6GMNFd5Xf7cCavYQ3sI3JMge4uzwe8
+        bNXrGuU/geN58u9gqtVUSM9UaKbYNBmIUhCrZ4bqDPTsSLXlc6tXQvRd3rwADHAu4sE
+        x4ZNCJvbyQvVHeLezOtXJmg1cQzILQj42Rpkke50=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9CB94C447A4
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: sc7180: Make MSA memory fixed for wifi
+Date:   Wed, 4 Dec 2019 09:20:18 +0000
+Message-ID: <0101016ed035d185-20f04863-0f38-41b7-b88d-76bc36e4dcf9-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.7.4
+X-SES-Outgoing: 2019.12.04-54.240.27.188
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+The MSA memory is at a fixed offset, which will be
+a part of reserved memory. Add this flag to indicate
+that wifi in sc7180 will use a fixed memory for MSA.
 
-On Wed, Dec 04, 2019 at 10:09:57AM +0100, Boris Brezillon wrote:
-> On Tue, 3 Dec 2019 20:19:24 +0200 Laurent Pinchart wrote:
-> > On Tue, Dec 03, 2019 at 03:15:04PM +0100, Boris Brezillon wrote:
-> > > This patch series aims at adding support for runtime bus-format
-> > > negotiation between all elements of the
-> > > 'encoder -> bridges -> connector/display' section of the pipeline.
-> > > 
-> > > In order to support that, we need drm bridges to fully take part in the
-> > > atomic state validation process, which requires adding a
-> > > drm_bridge_state and a new drm_bridge_funcs.atomic_check() hook.
-> > > Once those basic building blocks are in place, we can add new hooks to
-> > > allow bus format negotiation (those are called just before  
-> > > ->atomic_check()). The bus format selection is done at runtime by  
-> > > testing all possible combinations across the whole bridge chain until
-> > > one is reported to work.
-> > > 
-> > > No Major changes in this v4. I think I addressed all comments I got
-> > > from Neil and Laurent (thanks for the detailed reviews BTW). Note that
-> > > this version only contains core changes. Once those changes are merged
-> > > I'll send the imx/panel/lvds-codec specific bits.  
-> > 
-> > I think it would make sense to fast-track patches 01 to 07 (a bit
-> > selfishly as I would have a need for them in omapdrm :-))
-> 
-> Will do that end of this week.
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+---
+This patchet is dependent on the below changes
+arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node (https://lore.kernel.org/patchwork/patch/1162434/)
+dt: bindings: add dt entry flag to skip SCM call for msa region (https://patchwork.ozlabs.org/patch/1192725/)
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thank you.
-
-> >, but starting
-> > from 08 I wonder if it wouldn't make more sense to merge them with the
-> > imx/panel/lvds-codec bits to have a user.
-> 
-> I'd really like to see that happen early in this release cycle so we
-> can catch bugs before those commits reach Linus' tree,
-
-I have no issue merging all your patches early in the release cycle,
-including the imx/panel/lvds-codec bits. Given the rebase required for
-lvds-codec it may take a bit of time though, so I'm OK if you prefer
-merging the core first, but I'm not sure it will help catching bugs if
-it's unused :-)
-
-> and the
-> lvds-codec changes depend on your PR. Can we make sure this one is
-> merged just after the MW has closed and the drm-next -> drm-misc-next
-> back merge done just after that?
-
-I've sent the pull request already, as soon as Dave or Daniel handles
-it, you'll have the necessary dependencies.
-
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 8a6a760..b2ca143f 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -250,6 +250,7 @@
+ 
+ &wifi {
+ 	status = "okay";
++	qcom,msa_fixed_perm;
+ };
+ 
+ /* PINCTRL - additions to nodes defined in sc7180.dtsi */
 -- 
-Regards,
+2.7.4
 
-Laurent Pinchart
