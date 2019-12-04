@@ -4,134 +4,161 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAA0C3E8AF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 07:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A5CC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 07:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B241120661
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 07:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5972084F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 07:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575444098;
-	bh=Q7UQtyjeL4VxDdPZbdi+q/RbmUIJQHrhYLQLjTPSM8w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vQPkEIDUVybiBqBtu4SHQks2HfHYyd5k+ccUkD1yKYTMf1oiVFmWAKfaF9NMydxM3
-	 CZRMqb/DIhViYbHiQzIyUbLk8/kvp2yTr4UOil8jgQbLg/+bZ7LG3l82GzQ5kIyesF
-	 Huiay3j0imq1mxkjU3EmsHtTZy0OLnptvxbWZj9Y=
+	s=default; t=1575446130;
+	bh=Lb3nemcb9R7mljnWpkCKv1Yn0oxJJhwN6/4ioz1hZ5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MU2YuKtLl3McTDiCT1rokyTsGQS2aOf5WC7J9GYwRpJlv2rSmztGTDK+dCveDYHwO
+	 aisYh4SuTJ//BbPxD6h733Gn9tX+rJtjUS8BjjP9kEnMZvNDz68GCfM++S7i3hnWoE
+	 ZEpRAy+uII0SeTBDZ5F5Uw5hQnR+HlyQR2zvbwnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfLDHVi (ORCPT
+        id S1727219AbfLDHza (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:21:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbfLDHVi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Dec 2019 02:21:38 -0500
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABE8C207DD;
-        Wed,  4 Dec 2019 07:21:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575444097;
-        bh=Q7UQtyjeL4VxDdPZbdi+q/RbmUIJQHrhYLQLjTPSM8w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=scjli08YhzbQ71a5MiUEEXeyW3ha1zKopSZljr0w79UvE+JTYeSW7guqDE4URontH
-         cY4S1vi9qNsekE213yRoedqvPleTmgApZFv+7aVcKRsKsIet2wXlvZhif8eBGkljHu
-         jedJV77FMHCj0FOG0ax9xRsOg+D3AIIVckXKlZu4=
-Received: by mail-lj1-f180.google.com with SMTP id d20so6759750ljc.12;
-        Tue, 03 Dec 2019 23:21:36 -0800 (PST)
-X-Gm-Message-State: APjAAAUCHuefyBShJ8ntz8fW/idFBVfOmOIytUtDJZcbfAzQBSX1AHgY
-        cvCgWn6Oet7LKliXGab1CIe+bVMJgR4/DHT42/Y=
-X-Google-Smtp-Source: APXvYqwNNK1x1NLVWqTX1pUtd2l/D+1CGp50LeHoWr4EsfqECHGq9Ol2fRGuTlaaBQ9PWKKVzxVNQbuhTjUQLBKNMoM=
-X-Received: by 2002:a2e:9d9a:: with SMTP id c26mr981936ljj.225.1575444094869;
- Tue, 03 Dec 2019 23:21:34 -0800 (PST)
+        Wed, 4 Dec 2019 02:55:30 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45880 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbfLDHza (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 02:55:30 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 203so5284457lfa.12;
+        Tue, 03 Dec 2019 23:55:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HtkivZBfXW8xPuS5rhk5w6nuW6W4kAYRPy9pdM4dJ+E=;
+        b=btrEjsK+1YjS66nqCBcUA8vnICeA+hjizys7/ZujzuHIiNl7HH3Bxik8h3axHHIxUW
+         7QQ11YfImJLjWULvDmNj6po/N8Aq31lSCLU9Ky3OPqXoGnSUg7sbJ8U+7gZBBZftmFIc
+         mNJn6dOHliFL6PIVwVbOitHy9PbA9HuKixRODy9u0ALsAsq0Wd3cSWrcIEzoQhI05K6y
+         7K2m5xA5NEeHZHBLBVxD4LeoNOPFbHcCVvES8d4SO688FP8A5rqyLOrSn+vQPeuBmn4H
+         5xGi5ZLLnlKrH/XJKHDArIfHE6/tR2UmHzoAry1M0BEzIUoCxZpP44aeTEJwbcaKKBls
+         sLmQ==
+X-Gm-Message-State: APjAAAW7u6976Yk/5q/Q/3RvWUvYNoWgPfWGCLJ4lj6Xam9rsdoeVVjW
+        z+XEmQ86zhPzFdr1e+dkfiw=
+X-Google-Smtp-Source: APXvYqxTYNz2ToQ6maz5hD/npVXS7ml7RLVheYsAoH5Vcd+r/fnc/M7OrTdKeax3pCn5eMxYCrglrQ==
+X-Received: by 2002:ac2:48b6:: with SMTP id u22mr1281287lfg.164.1575446127352;
+        Tue, 03 Dec 2019 23:55:27 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id u2sm2752309lfd.4.2019.12.03.23.55.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2019 23:55:26 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1icPVV-0003JY-2n; Wed, 04 Dec 2019 08:55:33 +0100
+Date:   Wed, 4 Dec 2019 08:55:33 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org,
+        GregKroah-Hartman <gregkh@linuxfoundation.org>,
+        RobHerring <robh+dt@kernel.org>,
+        MarkRutland <mark.rutland@arm.com>,
+        AlanStern <stern@rowland.harvard.edu>,
+        SuwanKim <suwan.kim027@gmail.com>,
+        "GustavoA . R . Silva" <gustavo@embeddedor.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas Boichat <drinkcat@chromium.org>
+Subject: Re: [PATCH v4 2/2] usb: overridable hub bInterval by device node
+Message-ID: <20191204075533.GI10631@localhost>
+References: <20191203101552.199339-1-ikjn@chromium.org>
+ <20191203165301.GH10631@localhost>
+ <CAATdQgCqYrd_aXN5GDsso+F3WadNx3DQKK3Efk3tgkrv2VXjyw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191202152520.27558-1-angus@akkea.ca> <20191202152520.27558-2-angus@akkea.ca>
-In-Reply-To: <20191202152520.27558-2-angus@akkea.ca>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 4 Dec 2019 15:21:23 +0800
-X-Gmail-Original-Message-ID: <CAJKOXPcpW_uK=Y5+S0YmabrkAQ87vQZrjC5g3cB7WENbW49nPg@mail.gmail.com>
-Message-ID: <CAJKOXPcpW_uK=Y5+S0YmabrkAQ87vQZrjC5g3cB7WENbW49nPg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] power: supply: max17042: add MAX17055 support
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel@puri.sm
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAATdQgCqYrd_aXN5GDsso+F3WadNx3DQKK3Efk3tgkrv2VXjyw@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 2 Dec 2019 at 23:27, Angus Ainslie (Purism) <angus@akkea.ca> wrote:
->
-> The MAX17055 is very similar to the MAX17042 so extend the driver.
->
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> ---
->  drivers/power/supply/max17042_battery.c | 15 ++++++--
->  include/linux/power/max17042_battery.h  | 48 ++++++++++++++++++++++++-
->  2 files changed, 59 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/power/supply/max17042_battery.c b/drivers/power/supply/max17042_battery.c
-> index 0dfad2cf13fe..cecf6e2d8329 100644
-> --- a/drivers/power/supply/max17042_battery.c
-> +++ b/drivers/power/supply/max17042_battery.c
-> @@ -282,6 +282,8 @@ static int max17042_get_property(struct power_supply *psy,
->         case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
->                 if (chip->chip_type == MAXIM_DEVICE_TYPE_MAX17042)
->                         ret = regmap_read(map, MAX17042_V_empty, &data);
-> +               else if (chip->chip_type == MAXIM_DEVICE_TYPE_MAX17055)
-> +                       ret = regmap_read(map, MAX17055_V_empty, &data);
->                 else
->                         ret = regmap_read(map, MAX17047_V_empty, &data);
->                 if (ret < 0)
-> @@ -627,7 +629,8 @@ static void max17042_write_config_regs(struct max17042_chip *chip)
->                         config->filter_cfg);
->         regmap_write(map, MAX17042_RelaxCFG, config->relax_cfg);
->         if (chip->chip_type == MAXIM_DEVICE_TYPE_MAX17047 ||
-> -                       chip->chip_type == MAXIM_DEVICE_TYPE_MAX17050)
-> +                       chip->chip_type == MAXIM_DEVICE_TYPE_MAX17050 ||
-> +                       chip->chip_type == MAXIM_DEVICE_TYPE_MAX17055)
->                 regmap_write(map, MAX17047_FullSOCThr,
->                                                 config->full_soc_thresh);
->  }
-> @@ -758,6 +761,8 @@ static inline void max17042_override_por_values(struct max17042_chip *chip)
->
->         if (chip->chip_type == MAXIM_DEVICE_TYPE_MAX17042)
->                 max17042_override_por(map, MAX17042_V_empty, config->vempty);
-> +       if (chip->chip_type == MAXIM_DEVICE_TYPE_MAX17055)
-> +               max17042_override_por(map, MAX17055_V_empty, config->vempty);
->         else
->                 max17042_override_por(map, MAX17047_V_empty, config->vempty);
->         max17042_override_por(map, MAX17042_TempNom, config->temp_nom);
-> @@ -765,7 +770,8 @@ static inline void max17042_override_por_values(struct max17042_chip *chip)
->         max17042_override_por(map, MAX17042_FCTC, config->fctc);
->         max17042_override_por(map, MAX17042_RCOMP0, config->rcomp0);
->         max17042_override_por(map, MAX17042_TempCo, config->tcompc0);
-> -       if (chip->chip_type) {
-> +       if (chip->chip_type &&
-> +           (chip->chip_type != MAXIM_DEVICE_TYPE_MAX17055)) {
+On Wed, Dec 04, 2019 at 03:04:53PM +0800, Ikjoon Jang wrote:
+> On Wed, Dec 4, 2019 at 12:52 AM Johan Hovold <johan@kernel.org> wrote:
+> >
+> > On Tue, Dec 03, 2019 at 06:15:52PM +0800, Ikjoon Jang wrote:
+> > > This patch enables hub device to override its own endpoint descriptor's
+> > > bInterval when the hub has a device node with "hub,interval" property.
+> > >
+> > > When we know reducing autosuspend delay for built-in HIDs is better for
+> > > power saving, we can reduce it to the optimal value. But if a parent hub
+> > > has a long bInterval, mouse lags a lot from more frequent autosuspend.
+> > > So this enables overriding bInterval for a hard wired hub device only
+> > > when we know that reduces the power consumption.
+> >
+> > I think I saw you argue about why this shouldn't simply be configured at
+> > runtime. Please include that here too, I can't seem to remember why...
+> 
+> Okay.
+> 
+> >
+> > > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> > > Acked-by: Alan Stern <stern@rowland.harvard.edu>
+> > > ---
+> > >  drivers/usb/core/config.c | 9 +++++++++
+> > >  1 file changed, 9 insertions(+)
+> > >
+> > > diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
+> > > index 5f40117e68e7..95ec5af42a1c 100644
+> > > --- a/drivers/usb/core/config.c
+> > > +++ b/drivers/usb/core/config.c
+> > > @@ -6,6 +6,7 @@
+> > >  #include <linux/usb.h>
+> > >  #include <linux/usb/ch9.h>
+> > >  #include <linux/usb/hcd.h>
+> > > +#include <linux/usb/of.h>
+> > >  #include <linux/usb/quirks.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/slab.h>
+> > > @@ -257,6 +258,14 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
+> > >       memcpy(&endpoint->desc, d, n);
+> > >       INIT_LIST_HEAD(&endpoint->urb_list);
+> > >
+> > > +     /* device node property overrides bInterval */
+> > > +     if (usb_of_has_combined_node(to_usb_device(ddev))) {
+> >
+> > Not only hubs have combined nodes so you probably need to check
+> > bDeviceClass here instead.
+> 
+> yes, you're right, I didn't think of that case:
+> if (to_usb_device(ddev)->descriptor.bDeviceClass == USB_CLASS_HUB &&
+> ddev->of_node && !of_property_read_u32(...))
+> 
+> Or is it better to check bInterfaceClass, for composite devices with a
+> hub interface inside?
+> if (ifp->desc.bInterfaceClass == USB_CLASS_HUB && ddev->of_node &&
+> !of_property_read_u32(...))
+> 
+> I think checking bInterfaceClass is better.
 
-Since the list is growing, I would prefer here similar approach as in
-max17042_write_config_regs() - explicitly list devices (white list,
-not black list).
+Yep, that seems better (but please use two conditionals for
+readability).
 
->                 max17042_override_por(map, MAX17042_EmptyTempCo,
->                                                 config->empty_tempco);
->                 max17042_override_por(map, MAX17042_K_empty0,
-> @@ -929,7 +935,8 @@ max17042_get_default_pdata(struct max17042_chip *chip)
->         if (!pdata)
->                 return pdata;
->
-> -       if (chip->chip_type != MAXIM_DEVICE_TYPE_MAX17042) {
-> +       if (chip->chip_type != MAXIM_DEVICE_TYPE_MAX17042 &&
-> +           chip->chip_type != MAXIM_DEVICE_TYPE_MAX17055) {
+But related to my question above, why do you need to do this during
+enumeration? Why not just set the lower interval value in the hub
+driver?
 
-The same.
+> > > +             u32 interval = 0;
+> > > +             if (!of_property_read_u32(ddev->of_node, "hub,interval",
+> > > +                                 &interval))
+> > > +                     d->bInterval = min_t(u8, interval, 255);
+> >
+> > You want min_t(u32, ...) here to avoid surprises when someone specifies
+> > a value > 255.
+> 
+> yes, thanks.
 
-Best regards,
-Krzysztof
+And I guess you should really be honouring bInterval as a maximum value,
+right?
+
+> > > +     }
+> > > +
+> > >       /*
+> > >        * Fix up bInterval values outside the legal range.
+> > >        * Use 10 or 8 ms if no proper value can be guessed.
+
+Johan
