@@ -2,134 +2,116 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5455FC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 16:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1F6C2BD09
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 16:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2769020659
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 16:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25CC2084B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 16:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575477513;
-	bh=/wviLduOKfotQNHoow8ik4YY1EhJSDMCv16xIJ/WrXc=;
+	s=default; t=1575478218;
+	bh=n2TpjN/OptBYY/G/BcEkXA4jaPFSNlIuaHlzaeouaPg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e8qX3x5VWJYfTfWEmekhcOsDtbrA65S/pIWURY057BjJMB7HpmBN6jvcEJnuhTK7S
-	 juSnkc6d1OWybFsEbeZb2YoO1ZCJFQubfEUfmGJaBQnjomR144AJUrgDFF+pkSRvlS
-	 RGypbR+XF87MMw3Gc+zwQI2x5Lv6rjN+Ehc1/78A=
+	b=RwSCZFgCbeoV0r1iVpHC4jEsWd9ZRMsdNdfc4QqFsqhFdxpPrJ0cmxK5uDM2M2xaC
+	 EjS0QdoEKLD1gHuILWyWWlCaQPZakFEf1e91P/8Vmei/R/s1Kzrzwm/SmdTivM7Qjj
+	 ianasQYq887/GuZiPQ5/AsS3v7ThOM0Flp28M300=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbfLDQic (ORCPT
+        id S1727912AbfLDQuR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 11:38:32 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36511 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbfLDQic (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 11:38:32 -0500
-Received: by mail-ot1-f67.google.com with SMTP id i4so6907778otr.3;
-        Wed, 04 Dec 2019 08:38:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h5BttVEUcYGpQSrvsT4n5KQf35QjinvPiKmGQoO8bAg=;
-        b=JE+IMD1ynEnR5wGXadYYBVfg54Quf73yOjmE2MVJA1jzocRq90yPImOp9Rt3pHaZbS
-         VzSs5qoZldDKCFVOm82Hq4H7XWAi8+JNF3wGrdgleE5mRibT53TkpAGDJv49C+u3X/18
-         D1biNSfkz+aIYd3YMh4C3xGDEhMzB2I3BjAYLV04hExRgnCUl4/wOpxYp+hcVTkiR5e0
-         2Jw1L4upLIE/NEGLYoLb7/M0Gv/QOSn7FA0TrLL97X3wvDxSbKUJtF5Qpe0U1j39k1tn
-         6nyGHnLqstCLdinXhzylYS7Y2OjuJd+eZV6gxf57mQ6VlXUDJ/srzVMQ2wTr6XoX5J+A
-         ETNQ==
-X-Gm-Message-State: APjAAAWFPqvkT6w4bdba5/oye2/8pFa/1BGOREZqKbP6bo3FxKeXoyl/
-        J19Us3Ur0AZJ1944OThXPg==
-X-Google-Smtp-Source: APXvYqw74QgKZdUqI36Owvtd1W7xjNdWgYkr0dTvzlP87KiM77D3wtHoSardHE5weZfCy0fKjH/pVg==
-X-Received: by 2002:a9d:ea6:: with SMTP id 35mr3055549otj.106.1575477511579;
-        Wed, 04 Dec 2019 08:38:31 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n16sm2328821otk.25.2019.12.04.08.38.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 08:38:30 -0800 (PST)
-Date:   Wed, 4 Dec 2019 10:38:30 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Orson Zhai <orson.zhai@unisoc.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
+        Wed, 4 Dec 2019 11:50:17 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33770 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbfLDQuR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 11:50:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=n2TpjN/OptBYY/G/BcEkXA4jaPFSNlIuaHlzaeouaPg=; b=WMWH7NGdkGTZzxQg9+gxsMtVB
+        y/0M2EFDget8RQRmOCU5Yf8U1nJ0hHmrDbtxavFx1rl7q8RM6/uMeJwJTWAtU1LFjznXK8yK/RG/3
+        tKbFKNgjtTIzT0p9RICpiVnv0yEfVjJ+A1KWmB8Fa5iGVI6IN1xKIVlOY7pFqZHqXBcVA=;
+Received: from fw-tnat-cam6.arm.com ([217.140.106.54] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1icXqq-0001IV-CM; Wed, 04 Dec 2019 16:50:08 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 02A22D00466; Wed,  4 Dec 2019 16:49:57 +0000 (GMT)
+Date:   Wed, 4 Dec 2019 16:49:56 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Chris Brandt <Chris.Brandt@renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kevin.tang@unisoc.com,
-        baolin.wang@unisoc.com, chunyan.zhang@unisoc.com
-Subject: Re: [PATCH V2 1/2] dt-bindings: syscon: Add syscon-names to refer to
- syscon easily
-Message-ID: <20191204163830.GA25135@bogus>
-References: <20191120154148.22067-1-orson.zhai@unisoc.com>
- <20191120154148.22067-2-orson.zhai@unisoc.com>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 4/6] spi: Add SPIBSC driver
+Message-ID: <20191204164956.GW1998@sirena.org.uk>
+References: <20191203034519.5640-1-chris.brandt@renesas.com>
+ <20191203034519.5640-5-chris.brandt@renesas.com>
+ <20191203141944.GI1998@sirena.org.uk>
+ <TY1PR01MB1562C00B477C60A6C264F2A28A5D0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Y974o0GblB/Ae/yP"
 Content-Disposition: inline
-In-Reply-To: <20191120154148.22067-2-orson.zhai@unisoc.com>
+In-Reply-To: <TY1PR01MB1562C00B477C60A6C264F2A28A5D0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+X-Cookie: Cleanliness is next to impossible.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 11:41:47PM +0800, Orson Zhai wrote:
-> Make life easier when syscon consumer want to access multiple syscon
-> nodes with dozens of items.
-> Add syscon-names and relative properties to help to manage different
-> cases when accessing more than one syscon node even with arguments.
-> 
-> Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
-> ---
->  .../devicetree/bindings/mfd/syscon.txt        | 43 +++++++++++++++++++
->  1 file changed, 43 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-> index 25d9e9c2fd53..4c7bdb74bb0a 100644
-> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
-> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-> @@ -30,3 +30,46 @@ hwlock1: hwspinlock@40500000 {
->         reg = <0x40500000 0x1000>;
->         #hwlock-cells = <1>;
->  };
-> +
-> +
-> +
-> +==Syscon Name==
-> +
-> +Syscon name is a helper to be used in consumer nodes who refer to system
-> +controller node. It provides a way to refer to syscon node by names with
-> +phandle args in syscon consumer node. It will help people who have a lot
-> +of syscon references to be managed. It is not a must feature and has no
-> +effect to syscon node itself at all.
-> +
-> +Required properties:
-> +- syscons: List of phandles and any number of arguments if needed. Arguments
-> +  is specific to differnet vendors and its usage should be described at each
-> +  vendor's bindings. For example: In Unisoc SoCs, the 1st arg will be treated
-> +  as register address offset and the 2nd is bit mask.
-> +
-> +- syscon-names:        List of syscon node name strings sorted in the same order as
-> +  what it represents in property syscons.
-> +
-> +Optional property:
-> +- #.*-cells: Represents the number of arguments in single phandle in syscons
-> +  list. ".*" is vendor specific. If this property is not set, default value
-> +  will be 0.
 
-This breaks the normal pattern of how '#.*-cells' works. While Arnd 
-suggests removing it, I don't think that works well either with having a 
-generic 'syscons' property. That means every syscon in a system has to 
-have the same number of cells.
+--Y974o0GblB/Ae/yP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I don't really want to see syscon binding expanded. Really, I'd like 
-'syscon' to go away. It's nothing more than a flag to create a regmap.
+On Wed, Dec 04, 2019 at 03:51:48PM +0000, Chris Brandt wrote:
+> On Tue, Dec 3, 2019, Mark Brown wrote:
 
-I think it is better to keep the property names specific to exactly what 
-the functionality is for each syscon phandle rather than a generic 
-binding.
+> > Looking at a bunch of the stuff here it looks like you could benefit fr=
+om
+> > regmap, it's got lots of debug infrastructure.
 
-What are the eamples of where you want to use this? Keep in mind that 
-this sort of connection should *only* be used for things that have no 
-other binding and kernel subsystem.
+> Thank you for the suggestion, but I looked into using regmap, and there=
+=20
+> are a lot of drivers that use it, but I don't think it's going to work=20
+> well for me.
+> Regmap assumes that all the registers will be the same size. I have to=20
+> have functions that write with different widths (8/16/32) for a reason.
 
-Rob
+You *can* have more than one regmap for a device, or if it really
+only is one or two registers open code accesses to just those
+registers.
+
+--Y974o0GblB/Ae/yP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3n47IACgkQJNaLcl1U
+h9Be3wf/WcxNfLSB6o1qW6xEZEOwlzwVHkE9O/D4Er+nOK513sA9f2VcM1ApH5Zu
+ZQR0no8iK2XQgLRnuaKp7MjoI4tuWCR8LBYAC4eqsrgFXmaklbzHuzAnA/sVJgPA
+bVk/FbV0XZzqLgKH8V7D1sdpSbWGgU4rb61/8vCAfEz1P4zF6HGcoDNDD14RAeEa
+9ZIWAHioZc9JhnijqqJZiWjSUQH5aUShFqvtuCfpl3IYb0hQ97uZWkw34SK+TV4G
+5cJsV52wGp22whXzizQpxUweaTQPRlMyMK6uVo9IlWRjTSdoiVF+T2v1taFo81tC
+G6nx9Uxh9iA2HQmB2Rjd1ypWgKPV3g==
+=rw0F
+-----END PGP SIGNATURE-----
+
+--Y974o0GblB/Ae/yP--
