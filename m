@@ -2,93 +2,186 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90833C0044D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 07:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68581C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 08:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD552154A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 07:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 332DC20675
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 08:14:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575447242;
+	bh=yguauI0IayAymFt04WWVObdEb9zbkaHw3KCapf9TULg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jjP6NmSVs5hL44SsEr9fKnLOLPo5MdMEneWRMSGID1kMyvhYGYHhJuSWThFR/1Elw
+	 9JXvyH54dwBiYO3tXZ+Xsu/oBRDPVKwm+FQ1AkpMV/ab6fg44Q/v0+fDHE9SxR4oWZ
+	 sKQJl+j8nbmHYMZO5dfhOU68ATm5CfVWT3MzCGCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfLDH5n (ORCPT
+        id S1726679AbfLDIN6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:57:43 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45962 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfLDH5n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 02:57:43 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v10so3948377oiv.12;
-        Tue, 03 Dec 2019 23:57:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O4LalYjsnfEaSEeb2Zehe/J93R0bKGaAEEsomnP7Lc4=;
-        b=PRvqFkHg9bv4mpYaE8XKLbG5GEGz7O2LmBAOb0awr22hFcyxza1O0PDVjIJpdGdVHk
-         d31/MqFt7uNNCkMexqygSi45B6yBlCTTN8VAWs8aQ8LbcklnBxASRl4esqhDjxVaxJIe
-         QeU/SGP+0L9wqy5L77nm4gcZSSk1DPyn4ozhi+Yll0tK/lomRrPwwOeLm8LgUAY4yAOx
-         jMD1BFVXNc7xqYEkLlGqh14jceyBAVx/n0hTDOvWaSAGZSQRXov0bIvVEHB4hkX4bPlW
-         27yZSoJ6+f+MRkI/fsHwGb9eFrEPPkYY1+4LzUL1AtULQ0+jX4R0691fggYv+4ZMoiDx
-         t8KA==
-X-Gm-Message-State: APjAAAX8MT75CbnQsq+QicFbCqVwwfCeYx053cIbgIcVlv57jPrHZiVv
-        nVwk1dlI4i7uFyi+/2AvQiVVgtDHL3TFK4azgClJAg==
-X-Google-Smtp-Source: APXvYqzjyb4FJbVQHtyhh2tGF9RdLiHEpGR+02icu52LShy7lvntJoGkd+WARmtOCmx9JC+h7OytDime9XYsdUgzjLY=
-X-Received: by 2002:aca:4e87:: with SMTP id c129mr1455643oib.153.1575446262417;
- Tue, 03 Dec 2019 23:57:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
- <20191203034519.5640-6-chris.brandt@renesas.com> <CAMuHMdXS_dSEGdMzHFuYraP=dU5WQFM+9DbPW1rFYH2reG2QhA@mail.gmail.com>
- <TY1PR01MB1562E550DD31E799446F0FD48A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY1PR01MB1562E550DD31E799446F0FD48A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 4 Dec 2019 08:57:31 +0100
-Message-ID: <CAMuHMdVO2ud70cxVUHpCpvvZiMidHG1091bg3iOoOnFGOqpqWQ@mail.gmail.com>
-Subject: Re: [PATCH 5/6] ARM: dts: r7s9210: Add SPIBSC Device support
-To:     Chris Brandt <Chris.Brandt@renesas.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 4 Dec 2019 03:13:58 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:45862 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726053AbfLDIN6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 03:13:58 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1icPnH-000632-3q; Wed, 04 Dec 2019 09:13:55 +0100
+Date:   Wed, 04 Dec 2019 08:13:53 +0000
+Message-ID: <86k17czewu.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, Roy Zang <roy.zang@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "frowand.list@gmail.com" <frowand.list@gmail.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>
+Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+In-Reply-To: <AM5PR04MB3299BFC34A4666B7A9C12B13F55D0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
+        <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
+        <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
+        <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
+        <8f56c2d9-ab01-a91e-902f-a61def0e8ce8@arm.com>
+        <AM5PR04MB3299BFC34A4666B7A9C12B13F55D0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: xiaowei.bao@nxp.com, robin.murphy@arm.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, zhiqiang.hou@nxp.com, linux-kernel@vger.kernel.org, minghuan.lian@nxp.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, bhelgaas@google.com, andrew.murray@arm.com, frowand.list@gmail.com, mingkai.hu@nxp.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Chris,
+On Wed, 04 Dec 2019 04:34:32 +0000,
+Xiaowei Bao <xiaowei.bao@nxp.com> wrote:
+> 
+> 
+> 
+> > -----Original Message-----
+> > From: Robin Murphy <robin.murphy@arm.com>
+> > Sent: 2019年12月3日 23:20
+> > To: Marc Zyngier <maz@kernel.org>; Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: Roy Zang <roy.zang@nxp.com>; lorenzo.pieralisi@arm.com;
+> > devicetree@vger.kernel.org; linux-pci@vger.kernel.org; Z.q. Hou
+> > <zhiqiang.hou@nxp.com>; linux-kernel@vger.kernel.org; M.h. Lian
+> > <minghuan.lian@nxp.com>; robh+dt@kernel.org;
+> > linux-arm-kernel@lists.infradead.org; bhelgaas@google.com;
+> > andrew.murray@arm.com; frowand.list@gmail.com; Mingkai Hu
+> > <mingkai.hu@nxp.com>
+> > Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+> > 
+> > On 03/12/2019 11:51 am, Marc Zyngier wrote:
+> > > On 2019-12-03 01:42, Xiaowei Bao wrote:
+> > >>> -----Original Message-----
+> > >>> From: Marc Zyngier <maz@misterjones.org>
+> > >>> Sent: 2019年12月2日 20:48
+> > >>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > >>> Cc: robh+dt@kernel.org; frowand.list@gmail.com; M.h. Lian
+> > >>> <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > Zang
+> > >>> <roy.zang@nxp.com>; lorenzo.pieralisi@arm.com;
+> > >>> andrew.murray@arm.com; bhelgaas@google.com;
+> > >>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > >>> linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > >>> Z.q. Hou <zhiqiang.hou@nxp.com>
+> > >>> Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host
+> > >>> side
+> > >>>
+> > >>> On 2019-12-02 10:45, Xiaowei Bao wrote:
+> > >>> > GIC get the map relations of devid and stream id from the msi-map
+> > >>> > property of DTS, our platform add this property in u-boot base on
+> > >>> > the PCIe device in the bus, but if enable the vf device in kernel,
+> > >>> > the vf device msi-map will not set, so the vf device can't work,
+> > >>> > this patch purpose is that manage the stream id and device id map
+> > >>> > relations dynamically in kernel, and make the new PCIe device work in
+> > kernel.
+> > >>> >
+> > >>> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > >>> > ---
+> > >>> >  drivers/of/irq.c                            |  9 +++
+> > >>> >  drivers/pci/controller/dwc/pci-layerscape.c | 94
+> > >>> > +++++++++++++++++++++++++++++
+> > >>> >  drivers/pci/probe.c                         |  6 ++
+> > >>> >  drivers/pci/remove.c                        |  6 ++
+> > >>> >  4 files changed, 115 insertions(+)
+> > >>> >
+> > >>> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c index
+> > >>> > a296eaf..791e609 100644
+> > >>> > --- a/drivers/of/irq.c
+> > >>> > +++ b/drivers/of/irq.c
+> > >>> > @@ -576,6 +576,11 @@ void __init of_irq_init(const struct
+> > >>> >of_device_id
+> > >>> > *matches)
+> > >>> >      }
+> > >>> >  }
+> > >>> >
+> > >>> > +u32 __weak ls_pcie_streamid_fix(struct device *dev, u32 rid) {
+> > >>> > +    return rid;
+> > >>> > +}
+> > >>> > +
+> > >>> >  static u32 __of_msi_map_rid(struct device *dev, struct
+> > >>> >device_node  **np,
+> > >>> >                  u32 rid_in)
+> > >>> >  {
+> > >>> > @@ -590,6 +595,10 @@ static u32 __of_msi_map_rid(struct device
+> > >>> >*dev,  struct device_node **np,
+> > >>> >          if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
+> > >>> >                  "msi-map-mask", np, &rid_out))
+> > >>> >              break;
+> > >>> > +
+> > >>> > +    if (rid_out == rid_in)
+> > >>> > +        rid_out = ls_pcie_streamid_fix(parent_dev, rid_in);
+> > >>>
+> > >>> Over my dead body. Get your firmware to properly program the LUT so
+> > >>> that it presents the ITS with a reasonable topology. There is
+> > >>> absolutely no way this kind of change makes it into the kernel.
+> > >>
+> > >> Sorry for this, I know it is not reasonable, but I have no other way,
+> > >> as I know, ARM get the mapping of stream ID to request ID from the
+> > >> msi-map property of DTS, if add a new device which need the stream ID
+> > >> and try to get it from the msi-map of DTS, it will failed and not
+> > >> work, yes? So could you give me a better advice to fix this issue, I
+> > >> would really appreciate any comments or suggestions, thanks a lot.
+> > >
+> > > Why can't firmware expose an msi-map/msi-map-mask that has a large
+> > > enough range to ensure mapping of VFs? What are the limitations of the
+> > > LUT that would prevent this from being configured before the kernel
+> > > boots?
+> 
+> Thanks for your comments, yes, this is the root cause, we only have
+> 16 stream IDs for PCIe domain, this is the hardware limitation, if
+> there have enough stream IDs, we can expose an msi-map/msi-map-mask
+> for all PCIe devices in system, unfortunately, the stream IDs is not
+> enough, I think other ARM vendor have same issue that they don't
+> have enough stream IDs.
 
-On Tue, Dec 3, 2019 at 11:38 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Tue, Dec 3, 2019, Geert Uytterhoeven wrote:
-> > > +                       reg = <0x1f800000 0x8c>, <0x20000000
-> > > + 0x10000000 >;
-> >
-> > Any specific reason you're using 0x8c, not 0x100?
->
-> Because....I keep forgetting what is the latest 'correct' size:
->   A. The exact size of the register range
-> or
->   B. The size rounded up to look nicer
+Not that I know off.
 
-C. The size used by the on-chip address decoder providing the module's
-   select signal? I doubt that's not a power of two ;-)
+I'm using a number of ARM-based, SMMU-equipped HW that works just
+fine. SR-IOV is perfectly functional on these platforms, and it seems
+that only FSL/NXP HW requires hacks of this sort.
 
-Gr{oetje,eeting}s,
-
-                        Geert
+	M.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Jazz is not dead, it just smells funny.
