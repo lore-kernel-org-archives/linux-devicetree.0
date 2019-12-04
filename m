@@ -2,691 +2,124 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3483BC2BC73
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 14:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 255CBC2BD09
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7EF6205F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 14:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EECBE2084B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:14:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575472472;
+	bh=1ybAm1ALf3cAvtTcV4k+XXr/muJrjJDFhDi9LQbvSlQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=THALEh5X6CSmPi4xeN50vH/VAVA54eR2pFSFFK5VNdn9UZLoBYPtIZ5VUdAPB7ZGg
+	 xGvbyELza5X5e34TKWCrlITJ718U7mzXhY2IYVzTE3cFovt2l6yQLfB5iIy9+hiNph
+	 mXl7932f29hoQL8gPGm8iJEjO1HQSwjSOPaqEU64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbfLDOnI (ORCPT
+        id S1728086AbfLDPO2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 09:43:08 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:56411 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727850AbfLDOnI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 09:43:08 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: /WOh9tf8YTAYFhmPYA/XYL+qcHgseytw+HPncWZTJOl2qeVNT52foJIMYuwmsMnP1uLxReC55r
- Qu/YySdALnIzGZzYWr/AUoK45UFgt3wJbygTkmSnZd++zoFQSkUEzsaORk6XcToh/3V3RPntdn
- NRak8sen6kQJ+tIbVPof+NWamkwFjqDdFmvskDSOJlkNW+ZQTROfNtw+Wf5iXB0epyxXC1iSxH
- d2FvkN8fyhG1NtHJf0v2k+UU+s+YGw4wulswYwfmWx/E7Pl1pAwNiPx0HS7QGLKXK2QGIE6DLZ
- rnU=
-X-IronPort-AV: E=Sophos;i="5.69,277,1571727600"; 
-   d="scan'208";a="56592311"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Dec 2019 07:42:48 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 4 Dec 2019 07:42:47 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 4 Dec 2019 07:42:45 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <daniel.lezcano@linaro.org>,
-        <tglx@linutronix.de>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v3 2/2] clocksource/drivers/timer-microchip-pit64b: add Microchip PIT64B support
-Date:   Wed, 4 Dec 2019 16:42:29 +0200
-Message-ID: <1575470549-702-3-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1575470549-702-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1575470549-702-1-git-send-email-claudiu.beznea@microchip.com>
+        Wed, 4 Dec 2019 10:14:28 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44708 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727828AbfLDPO1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 10:14:27 -0500
+Received: by mail-ot1-f67.google.com with SMTP id x3so6575165oto.11;
+        Wed, 04 Dec 2019 07:14:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=o+hFN8IqKVNoUmQrkJu8TMIhc+FtW0Kt3XLH9BBCFME=;
+        b=RC+VQrvdq6Fn2W/J4LSNsOim5dSVmWu9zfGe8uUuYd2PaD279V+zCLMJ1fgohT2726
+         pk5MdA82NF9Alf5PsgB4kuLt2L6Z4X3o69D+PcBBB2Us+o0ZuDm5d1DfiB8uZzWvIqOU
+         Ry2afhImrVRV7l2K4/mJnDySW9hPoEEdy8iFlRxg/pKICupbRBkvKGgSa7yhgjAM6ZoO
+         Qh4PxZjebk9qKRLuxzCjtk8gmjFm7xQi6Y6Im+G0l1uBpHdan1m8RF1wYLwyXIh9d1PB
+         xpRO6n4Ply4xoLWyhobTsqCvvkZ3/5q30eqcZsTvgg0Cc9nCzFW7udWqLUxVbI/d2eHw
+         rR2Q==
+X-Gm-Message-State: APjAAAVme4igybeYnlrVcSYCNZHuNTo9L38KxuKULrPwtb1pkfdX0qEL
+        o/2bahStyJ+kyGFSji1oDxekvdE=
+X-Google-Smtp-Source: APXvYqyDpd68LHA7Vc9YToHmwTS2jPtEct42aCrQlGcX6wCzwAM7xJgp3Zq+bIy220TGHyd0vLRcsg==
+X-Received: by 2002:a9d:5c88:: with SMTP id a8mr992823oti.348.1575472466619;
+        Wed, 04 Dec 2019 07:14:26 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r13sm2372907oic.52.2019.12.04.07.14.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 07:14:25 -0800 (PST)
+Date:   Wed, 4 Dec 2019 09:14:24 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Khouloud Touil <ktouil@baylibre.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        baylibre-upstreaming@groups.io,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: nvmem: new optional property
+ write-protect-gpios
+Message-ID: <20191204151424.GA20683@bogus>
+References: <20191120142038.30746-1-ktouil@baylibre.com>
+ <20191120142038.30746-2-ktouil@baylibre.com>
+ <CACRpkdaZrvPObjyN4kasARzKZ9=PiAcvTzXzWkmC7R+Ay5tU8w@mail.gmail.com>
+ <CAMpxmJWSgYjcGdR7Zrj-=nA+H8cYfZUriHQPxN=8zgPDvD-wTA@mail.gmail.com>
+ <CACRpkdaW82pgQivc0VVgqqVv4fgXxMyGD3Lo8YHcMK7aGPDKaw@mail.gmail.com>
+ <CAMpxmJU_0MzroyD_ZF5WOxpZz3dkADLOmW7aKpWdJ7GCvo-RnA@mail.gmail.com>
+ <CACRpkdaPQKxfC66yhG=xdmCOGGd9PjDVCwZquKb+4HmuS_=kNA@mail.gmail.com>
+ <CALL1Z1xpcGyh_f3ooRT+gGApoAnS7YBMd2hUKqnt+pTcAFoeAg@mail.gmail.com>
+ <CACRpkdYEEypRZOaO3Ta9aDgizNeLyUOSraBEhKaZcHaJV+o0gQ@mail.gmail.com>
+ <CAMRc=MfVod5ODvsQbVBny1+Yvre1F971uR_DqsvoiYATvUfoXw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MfVod5ODvsQbVBny1+Yvre1F971uR_DqsvoiYATvUfoXw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add driver for Microchip PIT64B timer. Timer could be used in continuous
-mode or oneshot mode. The hardware has 2x32 bit registers for period
-emulating a 64 bit timer. The LSB_PR and MSB_PR registers are used to
-set the period value (compare value). TLSB and TMSB keeps the current
-value of the counter. After a compare the TLSB and TMSB register resets.
-The driver uses PIT64B timer for clocksource or clockevent. First
-requested timer would be registered as clockevent, second one would be
-registered as clocksource. Individual PIT64B hardware resources were used
-for clocksource and clockevent to be able to support high resolution
-timers with this hardware implementation.
+On Fri, Nov 29, 2019 at 09:47:01AM +0100, Bartosz Golaszewski wrote:
+> czw., 28 lis 2019 o 14:45 Linus Walleij <linus.walleij@linaro.org> napisał(a):
+> >
+> > On Tue, Nov 26, 2019 at 4:18 PM Khouloud Touil <ktouil@baylibre.com> wrote:
+> >
+> > > [Me]
+> > >> 4. The code still need to be modified to set the value
+> > >>    to "1" to assert the line since the gpiolib now handles
+> > >>    the inversion semantics.
+> >
+> > > By saying "assert the wp" do you mean enable the write operation or
+> > > block it ?
+> >
+> > Yeah one more layer of confusion, sorry :/
+> >
+> > By "asserting WP" I mean driving the line to a state where
+> > writing to the EEPROM is enabled, i.e. the default state is
+> > that the EEPROM is write protected and when you "assert"
+> > WP it becomes writable.
+> >
+> > If you feel the inverse semantics are more intuitive (such that
+> > WP comes up asserted and thus write protected), be my
+> > guest :D
+> >
+> 
+> Ha! I've always assumed that "to assert the write-protect pin" means
+> to *protect* the EEPROM from writing. That's why it comes up as
+> asserted (logical '1' in the driver) and we need to deassert it (drive
+> it low, logical '0' in the driver) to enable writing. This is the
+> current behavior and I'd say in this case it's just a matter of very
+> explicit statement that this is how it works in the DT binding?
+> 
+> Rob: any thoughts on this?
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
+I agree with you. If it was called write-enable-gpios, then assert would 
+be to enable writing.
 
-Changes in v3:
-- rework data structures:
-	- timer related data structure is called now mchp_pit64b_timer embedding
-	  base iomem, clocks, interrupt, prescaler value
-	- introduced struct mchp_pit64b_clksrc and struct mchp_pit64b_clkevt
-	  instead of mchp_pit64b_clksrc_data and mchp_pit64b_clkevt_data
-	- use container_of() to retrieve mchp_pit64b_timer objects on
-	  clocksource/clockevent specific APIs
-	- document data structures
-- use raw_local_irq_save()/raw_local_irq_restore() when reading
-  MCHP_PIT64B_TLSBR and MCHP_PIT64B_TMSBR in mchp_pit64b_get_period()
-- get rid of mchp_pit64b_read(), mchp_pit64b_write() and use instead
-  readl_relaxed(), writel_relaxed()
-- get rid of mchp_pit64b_set_period() and inlined its instructions in
-  mchp_pit64b_reset()
-- mchp_pit64b_reset() gets now as arguments an object of type
-  struct mchp_pit64b_timer, cycles to program and mode
-- remove static struct clocksource mchp_pit64b_clksrc and
-  static struct clock_event_device mchp_pit64b_clkevt and instead allocate
-  and fill them in mchp_pit64b_dt_init_clksrc() and
-  mchp_pit64b_dt_init_clkevt()
-- call mchp_pit64b_reset() in mchp_pit64b_clkevt_set_next_event() and
-  program clockevent timer with SMOD=0; if SMOD=1 the timer's period could
-  be reprogrammed also if writting TLSB, TMSB if it is running. In cases
-  were its period expired START bit still has to be set in control register.
-  In case the programming sequence is like in v2, with SMOD=1:
-	- program MSB_PR
-	- program LSB_PR
-	- program START bit in control register
-  for short programmed periods we may start the timer twice with this
-  programming sequence, 1st time after LSB_PR is updated (and due to SMOD=1),
-  2nd time after programming START bit in control register and in case
-  programmed period already expire
-- simplify mchp_pit64b_interrupt() by just reading ISR register, to clear the
-  received interrupt, and just call irq_data->clkevt->event_handler(irq_data->clkevt);
-- in mchp_pit64b_pres_compute() chose the bigest prescaler in case a good
-  one not found
-- document mchp_pit64b_pres_prepare() and simplified it a bit
-- enforce gclk as mandatory
-- introduce mchp_pit64b_timer_init() and mchp_pit64b_timer_cleanup()
-- keep the clocksource timer base address in a mchp_pit64b_cs_base variable so
-  that it could be used by mchp_pit64b_sched_read_clk()
-- rework mchp_pit64b_dt_init() and return -EINVAL in case it was called
-  more than two times: one for initialization of clockevent, one for
-  initialization of clocksource
-- introduce MCHP_PIT64B_MR_ONE_SHOT define
-- move the new lines introduced in Makefile and Kconfig at the end of files
-- collect Rob's Reviewed-by tag on patch 1/2
-- review the commit message of patch 2/2
-
-Changes in v2:
-- remove clock-frequency DT binding and hardcoded it in the driver
-- initialize best_pres variable in mchp_pit64b_pres_prepare()
-- remove MCHP_PIT64B_DEF_FREQ 
-- get rid of patches 3-5 from v1 [1] since there is no entry in MAINTAINERS file
-  for this entry. It was removed in
-  commit 44015a8181a5 ("MAINTAINERS: at91: remove the TC entry")
-
-[1] https://lore.kernel.org/lkml/1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com/
-
- drivers/clocksource/Kconfig                  |   6 +
- drivers/clocksource/Makefile                 |   1 +
- drivers/clocksource/timer-microchip-pit64b.c | 501 +++++++++++++++++++++++++++
- 3 files changed, 508 insertions(+)
- create mode 100644 drivers/clocksource/timer-microchip-pit64b.c
-
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 5fdd76cb1768..eaadbc42ce4a 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -697,4 +697,10 @@ config INGENIC_TIMER
- 	help
- 	  Support for the timer/counter unit of the Ingenic JZ SoCs.
- 
-+config MICROCHIP_PIT64B
-+	bool "Microchip PIT64B support"
-+	depends on OF || COMPILE_TEST
-+	help
-+	  This option enables Microchip PIT64B timer.
-+
- endmenu
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 4dfe4225ece7..713686faa549 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -88,3 +88,4 @@ obj-$(CONFIG_RISCV_TIMER)		+= timer-riscv.o
- obj-$(CONFIG_CSKY_MP_TIMER)		+= timer-mp-csky.o
- obj-$(CONFIG_GX6605S_TIMER)		+= timer-gx6605s.o
- obj-$(CONFIG_HYPERV_TIMER)		+= hyperv_timer.o
-+obj-$(CONFIG_MICROCHIP_PIT64B)		+= timer-microchip-pit64b.o
-diff --git a/drivers/clocksource/timer-microchip-pit64b.c b/drivers/clocksource/timer-microchip-pit64b.c
-new file mode 100644
-index 000000000000..293e1ab39729
---- /dev/null
-+++ b/drivers/clocksource/timer-microchip-pit64b.c
-@@ -0,0 +1,501 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * 64-bit Periodic Interval Timer driver
-+ *
-+ * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries
-+ *
-+ * Author: Claudiu Beznea <claudiu.beznea@microchip.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clockchips.h>
-+#include <linux/interrupt.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/sched_clock.h>
-+#include <linux/slab.h>
-+
-+#define MCHP_PIT64B_CR			0x00	/* Control Register */
-+#define MCHP_PIT64B_CR_START		BIT(0)
-+#define MCHP_PIT64B_CR_SWRST		BIT(8)
-+
-+#define MCHP_PIT64B_MR			0x04	/* Mode Register */
-+#define MCHP_PIT64B_MR_CONT		BIT(0)
-+#define MCHP_PIT64B_MR_ONE_SHOT		(0)
-+#define MCHP_PIT64B_MR_SGCLK		BIT(3)
-+#define MCHP_PIT64B_MR_PRES		GENMASK(11, 8)
-+
-+#define MCHP_PIT64B_LSB_PR		0x08	/* LSB Period Register */
-+
-+#define MCHP_PIT64B_MSB_PR		0x0C	/* MSB Period Register */
-+
-+#define MCHP_PIT64B_IER			0x10	/* Interrupt Enable Register */
-+#define MCHP_PIT64B_IER_PERIOD		BIT(0)
-+
-+#define MCHP_PIT64B_ISR			0x1C	/* Interrupt Status Register */
-+#define MCHP_PIT64B_ISR_PERIOD		BIT(0)
-+
-+#define MCHP_PIT64B_TLSBR		0x20	/* Timer LSB Register */
-+
-+#define MCHP_PIT64B_TMSBR		0x24	/* Timer MSB Register */
-+
-+#define MCHP_PIT64B_PRES_MAX		0x10
-+#define MCHP_PIT64B_LSBMASK		GENMASK_ULL(31, 0)
-+#define MCHP_PIT64B_PRESCALER(p)	(MCHP_PIT64B_MR_PRES & ((p) << 8))
-+#define MCHP_PIT64B_DEF_CS_FREQ		5000000UL	/* 5 MHz */
-+#define MCHP_PIT64B_DEF_CE_FREQ		32768		/* 32 KHz */
-+
-+#define MCHP_PIT64B_NAME		"pit64b"
-+
-+/**
-+ * struct mchp_pit64b_timer - PIT64B timer data structure
-+ * @base: base address of PIT64B hardware block
-+ * @pclk: PIT64B's peripheral clock
-+ * @gclk: PIT64B's generic clock
-+ * @cycles: timer's number of cycles
-+ * @irq: PIT64B's Linux IRQ number
-+ * @pres: prescaler value for the chosen clock
-+ */
-+struct mchp_pit64b_timer {
-+	void __iomem	*base;
-+	struct clk	*pclk;
-+	struct clk	*gclk;
-+	u64		cycles;
-+	u32		irq;
-+	u8		pres;
-+};
-+
-+/**
-+ * mchp_pit64b_clksrc - PIT64B clocksource data structure
-+ * @timer: PIT64B timer
-+ * @clksrc: clocksource
-+ */
-+struct mchp_pit64b_clksrc {
-+	struct mchp_pit64b_timer	timer;
-+	struct clocksource		clksrc;
-+};
-+
-+#define clksrc_to_mchp_pit64b_timer(x) \
-+	(&(container_of(x, struct mchp_pit64b_clksrc, clksrc))->timer)
-+
-+/**
-+ * mchp_pit64b_clkevt - PIT64B clockevent data structure
-+ * @timer: PIT64B timer
-+ * @clkevt: clockevent
-+ */
-+struct mchp_pit64b_clkevt {
-+	struct mchp_pit64b_timer	timer;
-+	struct clock_event_device	clkevt;
-+};
-+
-+#define clkevt_to_mchp_pit64b_timer(x) \
-+	(&(container_of(x, struct mchp_pit64b_clkevt, clkevt))->timer)
-+
-+static void __iomem *mchp_pit64b_cs_base;
-+
-+static inline u64 mchp_pit64b_get_period(void __iomem *base)
-+{
-+	unsigned long	flags;
-+	u32		low, high;
-+
-+	raw_local_irq_save(flags);
-+	/*
-+	 * When using a 64 bit period TLSB must be read first, followed by the
-+	 * read of TMSB. This sequence generates an atomic read of the 64 bit
-+	 * timer value whatever the lapse of time between the accesses.
-+	 */
-+	low = readl_relaxed(base + MCHP_PIT64B_TLSBR);
-+	high = readl_relaxed(base + MCHP_PIT64B_TMSBR);
-+	raw_local_irq_restore(flags);
-+
-+	return (((u64)high << 32) | low);
-+}
-+
-+static inline void mchp_pit64b_reset(struct mchp_pit64b_timer *timer,
-+				     u64 cycles, u32 mode)
-+{
-+	u32 low, high;
-+
-+	low = cycles & MCHP_PIT64B_LSBMASK;
-+	high = cycles >> 32;
-+
-+	mode |= MCHP_PIT64B_PRESCALER(timer->pres);
-+	if (timer->gclk)
-+		mode |= MCHP_PIT64B_MR_SGCLK;
-+
-+	writel_relaxed(MCHP_PIT64B_CR_SWRST, timer->base + MCHP_PIT64B_CR);
-+	writel_relaxed(mode, timer->base + MCHP_PIT64B_MR);
-+	writel_relaxed(high, timer->base + MCHP_PIT64B_MSB_PR);
-+	writel_relaxed(low, timer->base + MCHP_PIT64B_LSB_PR);
-+	if (timer->irq) {
-+		writel_relaxed(MCHP_PIT64B_IER_PERIOD,
-+			       timer->base + MCHP_PIT64B_IER);
-+	}
-+	writel_relaxed(MCHP_PIT64B_CR_START, timer->base + MCHP_PIT64B_CR);
-+}
-+
-+static u64 mchp_pit64b_clksrc_read(struct clocksource *cs)
-+{
-+	struct mchp_pit64b_timer *timer = clksrc_to_mchp_pit64b_timer(cs);
-+
-+	return mchp_pit64b_get_period(timer->base);
-+}
-+
-+static u64 mchp_pit64b_sched_read_clk(void)
-+{
-+	return mchp_pit64b_get_period(mchp_pit64b_cs_base);
-+}
-+
-+static int mchp_pit64b_clkevt_shutdown(struct clock_event_device *cedev)
-+{
-+	struct mchp_pit64b_timer *timer = clkevt_to_mchp_pit64b_timer(cedev);
-+
-+	writel_relaxed(MCHP_PIT64B_CR_SWRST, timer->base + MCHP_PIT64B_CR);
-+
-+	return 0;
-+}
-+
-+static int mchp_pit64b_clkevt_set_periodic(struct clock_event_device *cedev)
-+{
-+	struct mchp_pit64b_timer *timer = clkevt_to_mchp_pit64b_timer(cedev);
-+
-+	mchp_pit64b_reset(timer, timer->cycles, MCHP_PIT64B_MR_CONT);
-+
-+	return 0;
-+}
-+
-+static int mchp_pit64b_clkevt_set_oneshot(struct clock_event_device *cedev)
-+{
-+	struct mchp_pit64b_timer *timer = clkevt_to_mchp_pit64b_timer(cedev);
-+
-+	mchp_pit64b_reset(timer, timer->cycles, MCHP_PIT64B_MR_ONE_SHOT);
-+
-+	return 0;
-+}
-+
-+static int mchp_pit64b_clkevt_set_next_event(unsigned long evt,
-+					     struct clock_event_device *cedev)
-+{
-+	struct mchp_pit64b_timer *timer = clkevt_to_mchp_pit64b_timer(cedev);
-+
-+	mchp_pit64b_reset(timer, evt, MCHP_PIT64B_MR_ONE_SHOT);
-+
-+	return 0;
-+}
-+
-+static void mchp_pit64b_clkevt_suspend(struct clock_event_device *cedev)
-+{
-+	struct mchp_pit64b_timer *timer = clkevt_to_mchp_pit64b_timer(cedev);
-+
-+	writel_relaxed(MCHP_PIT64B_CR_SWRST, timer->base + MCHP_PIT64B_CR);
-+	if (timer->gclk)
-+		clk_disable_unprepare(timer->gclk);
-+	clk_disable_unprepare(timer->pclk);
-+}
-+
-+static void mchp_pit64b_clkevt_resume(struct clock_event_device *cedev)
-+{
-+	struct mchp_pit64b_timer *timer = clkevt_to_mchp_pit64b_timer(cedev);
-+	u32 mode = MCHP_PIT64B_MR_ONE_SHOT;
-+
-+	clk_prepare_enable(timer->pclk);
-+	if (timer->gclk)
-+		clk_prepare_enable(timer->gclk);
-+
-+	if (clockevent_state_periodic(cedev))
-+		mode = MCHP_PIT64B_MR_CONT;
-+
-+	mchp_pit64b_reset(timer, timer->cycles, mode);
-+}
-+
-+static irqreturn_t mchp_pit64b_interrupt(int irq, void *dev_id)
-+{
-+	struct mchp_pit64b_clkevt *irq_data = dev_id;
-+
-+	/* Need to clear the interrupt. */
-+	readl_relaxed(irq_data->timer.base + MCHP_PIT64B_ISR);
-+
-+	irq_data->clkevt.event_handler(&irq_data->clkevt);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void __init mchp_pit64b_pres_compute(u32 *pres, u32 clk_rate,
-+					    u32 max_rate)
-+{
-+	u32 tmp;
-+
-+	for (*pres = 0; *pres < MCHP_PIT64B_PRES_MAX; (*pres)++) {
-+		tmp = clk_rate / (*pres + 1);
-+		if (tmp <= max_rate)
-+			break;
-+	}
-+
-+	/* Use the bigest prescaler if we didn't match one. */
-+	if (*pres == MCHP_PIT64B_PRES_MAX)
-+		*pres = MCHP_PIT64B_PRES_MAX - 1;
-+}
-+
-+/**
-+ * mchp_pit64b_pres_prepare - prepare PIT64B clocks and internal prescaler
-+ *
-+ * PIT64B timer may be fed by gclk or pclk. When gclk is used its rate has to
-+ * be at least 3 times lower that pclk's rate. pclk rate is fixed, gclk rate
-+ * could be changed via clock APIs. The chosen clock (pclk or gclk) could be
-+ * divided by the internal PIT64B's divider.
-+ *
-+ * This function, first tries to use GCLK by requesting the desired rate from
-+ * PMC and then using the internal PIT64B prescaller, if any, to reach the
-+ * requested rate. If PCLK/GCLK < 3 (condition requested by PIT64B hardware)
-+ * then the function falls back on using PCLK as clock source for PIT64B timer
-+ * choosing the highest prescaler in case it doesn't locate one to match the
-+ * requested frequency.
-+ *
-+ * Below is presented the PIT64B block in relation with PMC:
-+ *
-+ *                                PIT64B
-+ *  PMC             +------------------------------------+
-+ * +----+           |   +-----+                          |
-+ * |    |-->gclk -->|-->|     |    +---------+  +-----+  |
-+ * |    |           |   | MUX |--->| Divider |->|timer|  |
-+ * |    |-->pclk -->|-->|     |    +---------+  +-----+  |
-+ * +----+           |   +-----+                          |
-+ *                  |      ^                             |
-+ *                  |     sel                            |
-+ *                  +------------------------------------+
-+ *
-+ * Where:
-+ *	- gclk rate <= pclk rate/3
-+ *	- gclk rate could be requested from PMC
-+ *	- pclk rate is fixed (cannot be requested from PMC)
-+ */
-+static int __init mchp_pit64b_pres_prepare(struct mchp_pit64b_timer *timer,
-+					   unsigned long max_rate)
-+{
-+	unsigned long pclk_rate, diff = 0, best_diff = ULONG_MAX;
-+	long gclk_round = 0;
-+	u32 pres, best_pres = 0;
-+
-+	pclk_rate = clk_get_rate(timer->pclk);
-+	if (!pclk_rate)
-+		return -EINVAL;
-+
-+	/* Try using GCLK. */
-+	gclk_round = clk_round_rate(timer->gclk, max_rate);
-+	if (gclk_round < 0)
-+		goto pclk;
-+
-+	if (pclk_rate / gclk_round < 3)
-+		goto pclk;
-+
-+	mchp_pit64b_pres_compute(&pres, gclk_round, max_rate);
-+	best_diff = abs(gclk_round / (pres + 1) - max_rate);
-+	best_pres = pres;
-+
-+	if (!best_diff)
-+		goto done;
-+
-+pclk:
-+	/* Check if requested rate could be obtained using PCLK. */
-+	mchp_pit64b_pres_compute(&pres, pclk_rate, max_rate);
-+	diff = abs(pclk_rate / (pres + 1) - max_rate);
-+
-+	if (best_diff > diff) {
-+		/* Use PCLK. */
-+		timer->gclk = NULL;
-+		best_pres = pres;
-+	} else {
-+		/* Use GCLK. */
-+		clk_set_rate(timer->gclk, gclk_round);
-+	}
-+
-+done:
-+	timer->pres = best_pres;
-+	pr_info("PIT64B: using clk=%s with prescaler %u, freq=%lu [Hz]\n",
-+		timer->gclk ? "gclk" : "pclk", timer->pres,
-+		timer->gclk ? gclk_round / (timer->pres + 1)
-+			    : pclk_rate / (timer->pres + 1));
-+
-+	return 0;
-+}
-+
-+static int __init mchp_pit64b_timer_init(struct device_node *node,
-+					 struct mchp_pit64b_timer *timer,
-+					 u32 freq, bool is_clkevt)
-+{
-+	int ret;
-+
-+	timer->pclk = of_clk_get_by_name(node, "pclk");
-+	if (IS_ERR(timer->pclk))
-+		return PTR_ERR(timer->pclk);
-+
-+	timer->gclk = of_clk_get_by_name(node, "gclk");
-+	if (IS_ERR(timer->gclk))
-+		return PTR_ERR(timer->gclk);
-+
-+	timer->base = of_iomap(node, 0);
-+	if (!timer->base)
-+		return -ENXIO;
-+
-+	if (is_clkevt) {
-+		timer->irq = irq_of_parse_and_map(node, 0);
-+		if (!timer->irq) {
-+			ret = -ENODEV;
-+			goto io_unmap;
-+		}
-+	}
-+
-+	ret = mchp_pit64b_pres_prepare(timer, freq);
-+	if (ret)
-+		goto irq_unmap;
-+
-+	ret = clk_prepare_enable(timer->pclk);
-+	if (ret)
-+		goto irq_unmap;
-+
-+	if (timer->gclk) {
-+		ret = clk_prepare_enable(timer->gclk);
-+		if (ret)
-+			goto pclk_unprepare;
-+	}
-+
-+	return 0;
-+
-+pclk_unprepare:
-+	clk_disable_unprepare(timer->pclk);
-+irq_unmap:
-+	irq_dispose_mapping(timer->irq);
-+io_unmap:
-+	iounmap(timer->base);
-+
-+	return ret;
-+}
-+
-+static void __init mchp_pit64b_timer_cleanup(struct mchp_pit64b_timer *timer)
-+{
-+	if (timer->gclk)
-+		clk_disable_unprepare(timer->gclk);
-+	clk_disable_unprepare(timer->pclk);
-+	irq_dispose_mapping(timer->irq);
-+	iounmap(timer->base);
-+}
-+
-+static int __init mchp_pit64b_dt_init_clksrc(struct device_node *node)
-+{
-+	struct mchp_pit64b_clksrc *cs;
-+	unsigned long clk_rate;
-+	int ret;
-+
-+	cs = kzalloc(sizeof(*cs), GFP_KERNEL);
-+	if (!cs)
-+		return -ENOMEM;
-+
-+	ret = mchp_pit64b_timer_init(node, &cs->timer, MCHP_PIT64B_DEF_CS_FREQ,
-+				     false);
-+	if (ret)
-+		goto free;
-+
-+	if (cs->timer.gclk)
-+		clk_rate = clk_get_rate(cs->timer.gclk);
-+	else
-+		clk_rate = clk_get_rate(cs->timer.pclk);
-+
-+	clk_rate = clk_rate / (cs->timer.pres + 1);
-+	cs->timer.cycles = ULLONG_MAX;
-+	mchp_pit64b_reset(&cs->timer, cs->timer.cycles, MCHP_PIT64B_MR_CONT);
-+
-+	cs->clksrc.name = MCHP_PIT64B_NAME;
-+	cs->clksrc.mask = CLOCKSOURCE_MASK(64);
-+	cs->clksrc.flags = CLOCK_SOURCE_IS_CONTINUOUS;
-+	cs->clksrc.rating = 210;
-+	cs->clksrc.read = mchp_pit64b_clksrc_read;
-+
-+	ret = clocksource_register_hz(&cs->clksrc, clk_rate);
-+	if (ret) {
-+		pr_debug("clksrc: Failed to register PIT64B clocksource!\n");
-+		goto timer_cleanup;
-+	}
-+
-+	mchp_pit64b_cs_base = cs->timer.base;
-+	sched_clock_register(mchp_pit64b_sched_read_clk, 64, clk_rate);
-+
-+	return 0;
-+
-+timer_cleanup:
-+	mchp_pit64b_timer_cleanup(&cs->timer);
-+free:
-+	kfree(cs);
-+	return ret;
-+}
-+
-+static int __init mchp_pit64b_dt_init_clkevt(struct device_node *node)
-+{
-+	struct mchp_pit64b_clkevt *ce;
-+	unsigned long clk_rate;
-+	int ret;
-+
-+	ce = kzalloc(sizeof(*ce), GFP_KERNEL);
-+	if (!ce)
-+		return -ENOMEM;
-+
-+	ret = mchp_pit64b_timer_init(node, &ce->timer, MCHP_PIT64B_DEF_CE_FREQ,
-+				     true);
-+	if (ret)
-+		goto free;
-+
-+	if (ce->timer.gclk)
-+		clk_rate = clk_get_rate(ce->timer.gclk);
-+	else
-+		clk_rate = clk_get_rate(ce->timer.pclk);
-+
-+	clk_rate = clk_rate / (ce->timer.pres + 1);
-+	ce->timer.cycles = DIV_ROUND_CLOSEST(clk_rate, HZ);
-+
-+	ce->clkevt.name = MCHP_PIT64B_NAME;
-+	ce->clkevt.features = CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_PERIODIC;
-+	ce->clkevt.rating = 150;
-+	ce->clkevt.set_state_shutdown = mchp_pit64b_clkevt_shutdown;
-+	ce->clkevt.set_state_periodic = mchp_pit64b_clkevt_set_periodic;
-+	ce->clkevt.set_state_oneshot = mchp_pit64b_clkevt_set_oneshot;
-+	ce->clkevt.set_next_event = mchp_pit64b_clkevt_set_next_event;
-+	ce->clkevt.suspend = mchp_pit64b_clkevt_suspend;
-+	ce->clkevt.resume = mchp_pit64b_clkevt_resume;
-+	ce->clkevt.cpumask = cpumask_of(0);
-+	ce->clkevt.irq = ce->timer.irq;
-+
-+	ret = request_irq(ce->timer.irq, mchp_pit64b_interrupt, IRQF_TIMER,
-+			  "pit64b_tick", ce);
-+	if (ret) {
-+		pr_debug("clkevt: Failed to setup PIT64B IRQ\n");
-+		goto timer_cleanup;
-+	}
-+
-+	clockevents_config_and_register(&ce->clkevt, clk_rate, 1, ULONG_MAX);
-+
-+	return 0;
-+
-+timer_cleanup:
-+	mchp_pit64b_timer_cleanup(&ce->timer);
-+free:
-+	kfree(ce);
-+	return ret;
-+}
-+
-+static int __init mchp_pit64b_dt_init(struct device_node *node)
-+{
-+	static int inits;
-+
-+	switch (inits++) {
-+	case 0:
-+		/* 1st request, register clockevent. */
-+		return mchp_pit64b_dt_init_clkevt(node);
-+	case 1:
-+		/* 2nd request, register clocksource. */
-+		return mchp_pit64b_dt_init_clksrc(node);
-+	}
-+
-+	/* The rest, don't care. */
-+	return -EINVAL;
-+}
-+
-+TIMER_OF_DECLARE(mchp_pit64b, "microchip,sam9x60-pit64b", mchp_pit64b_dt_init);
--- 
-2.7.4
-
+Rob
