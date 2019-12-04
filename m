@@ -2,95 +2,146 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D855BC2BD09
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C882C2BD09
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEAEC20833
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3295920863
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G4LQ6Sqc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TRXATRf5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfLDRq3 (ORCPT
+        id S1728081AbfLDRxX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:46:29 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40691 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbfLDRq3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 12:46:29 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so24530plp.7;
-        Wed, 04 Dec 2019 09:46:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+Ef0Di1Mlcu80Pa6OnzfRhYDxxXa3qHYCdrx2xSTUmc=;
-        b=G4LQ6SqcaxFkJGoL1gpd4ycNNviowxOzXjMa51EICkpxjrYYKiJD3loZwTL+Gkv4It
-         8tnh8Jh31009rAnHy7t5m5o9L4JQhj8UnsU/g/TZX+KIIy7cF4uxsqWlPNw14XbfGt5L
-         ZfMFGGCNIBRexdOkiAXYyvTNGmrQRg1Ekd0r1RaXg1PWZBupfKwBcjUCD9n0bIG3JdN2
-         /uZc71iqkVP4G/1nsUfAbPkpEpXihYZ2kT1OSmLohRYMzGE0oONmwZ79plxW1S9qLJDm
-         e6wmAkszZTetCNq+go9X7sZJxsGFbn1A+Y21YkkSpp0UCJO3nHHsetNaD51Gd59goGP5
-         ei9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+Ef0Di1Mlcu80Pa6OnzfRhYDxxXa3qHYCdrx2xSTUmc=;
-        b=sTndvu00bd62VfRAT3e0Z792RxLVXA5QZNESEXgFZgL+5B+dXkKoRgFdewu2JzdOs0
-         SNPFM0hP2MoId3c5PG9U353WYuJYlGlORIgGPrXbRWkfm8U8APBobWB+22bzndSiB384
-         4H7eN/2z40dEbhnT9+SlgfaTpKXY/ckFb2YwK8maQkwxHhO3B5MpcRFaPZwE2IizvcpT
-         QwMZWAMKKOjj3ajNI1/urofloQ0anvPN2gAKIBp2CnBt9OBqXJwg05G4X0U3P55UKwvj
-         ydbBwEL2tbWaCv1TGSuxkWXZZsk7R/g7AX0DtVad3F6cQPwrGk4MZNgiR+8lakGP1q0C
-         PkFA==
-X-Gm-Message-State: APjAAAW5IDu3lWaguT4Dn5ySM3jVgOkVdHIT8qLkMOCwazL8mFSSamgN
-        pCT5t3KGsVEoL5F2DZxmvdg+mwjzidmrLZKIiBA=
-X-Google-Smtp-Source: APXvYqxiM25mDXDKoFbGOZwJwH0bs15OaVwiQHsUdLywdLhGhJgTIeOLfUI/3u70DWdr0QFAtP0DkmvBfaWiUg2YCwo=
-X-Received: by 2002:a17:902:9308:: with SMTP id bc8mr4717449plb.18.1575481588283;
- Wed, 04 Dec 2019 09:46:28 -0800 (PST)
+        Wed, 4 Dec 2019 12:53:23 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50742 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbfLDRxW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 12:53:22 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4HrFpX079687;
+        Wed, 4 Dec 2019 11:53:15 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575481995;
+        bh=AnC853RFFoxs00i8fMk3eDa7i0nyPwZrTi1e2WCpjj8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=TRXATRf5F6o/rVNB7WveJsgTC6EOTmznGk1WH/p4zF4NDAyRamYyJetXDo2rKhno6
+         4/ohZEpEXJPbR8fYIXHx4OGUwf5nZJZem5qYJc6gUY2hMpsGuWp/UHT1RhHp/JWQqb
+         VtNMDs2gU38WZxfEeiZoHTqzA+5/NoG85pOMxIXk=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4HrF2D040848
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 4 Dec 2019 11:53:15 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
+ 2019 11:53:15 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Dec 2019 11:53:15 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4HrFp4034157;
+        Wed, 4 Dec 2019 11:53:15 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <mkl@pengutronix.de>
+CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        Sean Nyekjaer <sean@geanix.com>
+Subject: [PATCH 2/2] net: m_can: Make wake-up gpio an optional
+Date:   Wed, 4 Dec 2019 11:51:12 -0600
+Message-ID: <20191204175112.7308-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191204175112.7308-1-dmurphy@ti.com>
+References: <20191204175112.7308-1-dmurphy@ti.com>
 MIME-Version: 1.0
-References: <20191204101042.4275-1-cleger@kalray.eu> <CAHp75VcMm3PPAgfFPLzVwg_RN7_vQfRmufvWiPOkYaErdGiNsw@mail.gmail.com>
- <2116673293.95313020.1575466238935.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <2116673293.95313020.1575466238935.JavaMail.zimbra@kalray.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 4 Dec 2019 19:46:18 +0200
-Message-ID: <CAHp75VdrsM8hzKdOo0AnRoEeTK-KKy-A-Aj_7yuEp9ZMNUjZ7g@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Add pinctrl support for dwapb gpio driver
-To:     =?UTF-8?Q?Cl=C3=A9ment_Leger?= <cleger@kalray.eu>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 3:30 PM Cl=C3=A9ment Leger <cleger@kalray.eu> wrote:
-> ----- On 4 Dec, 2019, at 13:24, Andy Shevchenko andy.shevchenko@gmail.com=
- wrote:
-> > On Wed, Dec 4, 2019 at 12:13 PM Clement Leger <cleger@kalray.eu> wrote:
+The device has the ability to disable the wake-up pin option.
+The wake-up pin can be either force to GND or Vsup and does not have to
+be tied to a GPIO.  In order for the device to not use the wake-up feature
+write the register to disable the WAKE_CONFIG option.
 
-> > This series misses at least GPIO ACPI maintainers to be Cc'ed to for
-> > the certain changes.
-> > Moreover, I would like to see entire series in the future in my mailbox=
-.
->
-> Sorry, I messed up with get_maintainer.pl while sending the serie.
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+CC: Sean Nyekjaer <sean@geanix.com>
+---
+ drivers/net/can/m_can/tcan4x5x.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
-It's not your fault. I sent a patch to update MAINTAINERS to include
-header file under GPIO ACPI record.
+diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
+index 3db619209fe1..6e37c3fd87af 100644
+--- a/drivers/net/can/m_can/tcan4x5x.c
++++ b/drivers/net/can/m_can/tcan4x5x.c
+@@ -101,6 +101,8 @@
+ #define TCAN4X5X_MODE_STANDBY BIT(6)
+ #define TCAN4X5X_MODE_NORMAL BIT(7)
+ 
++#define TCAN4X5X_DISABLE_WAKE_MSK	(BIT(31) | BIT(30))
++
+ #define TCAN4X5X_SW_RESET BIT(2)
+ 
+ #define TCAN4X5X_MCAN_CONFIGURED BIT(5)
+@@ -338,6 +340,15 @@ static int tcan4x5x_init(struct m_can_classdev *cdev)
+ 	return ret;
+ }
+ 
++static int tcan4x5x_disable_wake(struct m_can_classdev *cdev)
++{
++	struct tcan4x5x_priv *tcan4x5x = cdev->device_data;
++
++	return regmap_update_bits(tcan4x5x->regmap, TCAN4X5X_CONFIG,
++				  TCAN4X5X_DISABLE_WAKE_MSK, 0x00);
++
++}
++
+ static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
+ {
+ 	struct tcan4x5x_priv *tcan4x5x = cdev->device_data;
+@@ -345,8 +356,10 @@ static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
+ 	tcan4x5x->device_wake_gpio = devm_gpiod_get(cdev->dev, "device-wake",
+ 						    GPIOD_OUT_HIGH);
+ 	if (IS_ERR(tcan4x5x->device_wake_gpio)) {
+-		dev_err(cdev->dev, "device-wake gpio not defined\n");
+-		return -EINVAL;
++		if (PTR_ERR(tcan4x5x->power) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		tcan4x5x_disable_wake(cdev);
+ 	}
+ 
+ 	tcan4x5x->reset_gpio = devm_gpiod_get_optional(cdev->dev, "reset",
+@@ -428,10 +441,6 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
+ 
+ 	spi_set_drvdata(spi, priv);
+ 
+-	ret = tcan4x5x_parse_config(mcan_class);
+-	if (ret)
+-		goto out_clk;
+-
+ 	/* Configure the SPI bus */
+ 	spi->bits_per_word = 32;
+ 	ret = spi_setup(spi);
+@@ -441,6 +450,10 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
+ 	priv->regmap = devm_regmap_init(&spi->dev, &tcan4x5x_bus,
+ 					&spi->dev, &tcan4x5x_regmap);
+ 
++	ret = tcan4x5x_parse_config(mcan_class);
++	if (ret)
++		goto out_clk;
++
+ 	tcan4x5x_power_enable(priv->power, 1);
+ 
+ 	ret = m_can_class_register(mcan_class);
+-- 
+2.23.0
 
-> I can resend it properly if needed.
-
-
---=20
-With Best Regards,
-Andy Shevchenko
