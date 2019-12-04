@@ -6,91 +6,90 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CCEC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 18:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BBEC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 19:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A558206DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 18:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 687C8206DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 19:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575485896;
-	bh=McCwFHhSRAQuk8yqV0NAsm3QnK1YvRkL9WsIakZl/eg=;
+	s=default; t=1575486051;
+	bh=kdaXtWn3Cct2aWhfMg/TIE+X3NfFrEC4qPtmAeDBDas=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IYhgb8wO4Tt+CXNlnXEEFG1An2TabnTt4aHYtlCIJZgcY80Jr3Qo6ejz7YyoaPmTw
-	 1IpcRnGWvuQLNGYZJ3O5xqXTTIL3JpCVonhQfw7c7dCjIGhV0vV6yqtw4EiKLjF6gr
-	 7ktJRFzTBdfzL2an3HU0q2eT1wc3A96wLzFbg1b8=
+	b=00h1u7VjFgSi71dmjpiaMz2kCyG4jCRSoq10TsR7KMAkcfoIdmwnUwvqSsZduu69r
+	 aFzwFmAbS0wxsx+IhduWM/4H4fpZatb1GQqcd/+5amA4QBU9JhmwUGmVDsLMqktcex
+	 TYRtBFjptsQMc7UJ8KfY2lyJ46YTzaMeiy48pjms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbfLDS6Q (ORCPT
+        id S1728133AbfLDTAv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:58:16 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33679 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfLDS6P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 13:58:15 -0500
-Received: by mail-ot1-f68.google.com with SMTP id d17so263814otc.0;
-        Wed, 04 Dec 2019 10:58:15 -0800 (PST)
+        Wed, 4 Dec 2019 14:00:51 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40808 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727978AbfLDTAu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 14:00:50 -0500
+Received: by mail-ot1-f65.google.com with SMTP id i15so226989oto.7;
+        Wed, 04 Dec 2019 11:00:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bhAw5EIrwwGC1eqIzLBcurAl7dDZA4dCCIXam/BMZgA=;
-        b=G3uAdrZgBx5I7Y/Xw2v6uUKz6XsuLJ2njfif0yqpNHFKKGIpt81sulEBlkSTmeq6In
-         bdG/0jE5ojWz86HQqPxV5aiFS5C5XNkhoQoQaacsoThT2um0VmW8+HEzg579HYaPtMT1
-         gfZ1aRgekgOYPPqZ4c2WNpAjZheKcSICuSHlx2lrMtJ5Hz0eSLXQAVt6otw1liWbQR7p
-         5UokoCuYETlbDq0JmDl5Nv7J+/eOb5AnBiON3p7g7FeY7AE0Jib7tA42DuqLjjJj/jqZ
-         po+JLJZtwV7f5dboU4Q/NabW3Jv+0kblbeZbeyYRqoqI/KpnID3YWSWHXWfMllEL0En2
-         jYfQ==
-X-Gm-Message-State: APjAAAUrvxMWYgLhpTabvvcx4lYRdrp/3SLgXiqdkbP5DNaryTzjAVAb
-        dL82aBc6VNaiEk3TalG0DA==
-X-Google-Smtp-Source: APXvYqyhikx3yghkHjt5R9cmpYpMgQpTzsJXnZPaFUw1zHqWLWzLrAfwaR2k5BK5VzCtPrWZ+QpwoQ==
-X-Received: by 2002:a9d:630d:: with SMTP id q13mr3480338otk.31.1575485894893;
-        Wed, 04 Dec 2019 10:58:14 -0800 (PST)
+        bh=NH9P71jaSYwbdiuvHT3KsqpBTP1sBzRBr3S4xZfrqbs=;
+        b=taR/08V6NmRQ51ByzAW4WRWmJUsZQDGXTjXGqioLUso3bsBAozyeE7NUx53dsmZV/5
+         JvLinkdloNOO0MnqcQde8QDqgl6oSkvw4xcd5rp4pdELmqBzT5k1SGIBsPHZmVs2M+i2
+         YKs0/ahOq2hGLZk2V04jDd6y1yNkB0ahg6SofBOXpC0vyAy8EbMRziPusP7obdLDhmEz
+         6JEIup0dL7uc6jAGyrVlGfpK+gcxF9+5gW2nwupe1uu7o+dVogDddlNvmmMcp+YsN6cC
+         b8ymgl22thP3z7bDTeXhFxQEWR96Sck7vLIAzOj5PT61i8d+0ND6ssKuU9J4SPXzXHcX
+         fJcg==
+X-Gm-Message-State: APjAAAX0QgqlzH8Y/Quxfw6hfS1iTSdY3bz3+PVzxLPW3tvPamjIjxyB
+        dlIB5trzzcu4EjXaoMkQoHmaE/o=
+X-Google-Smtp-Source: APXvYqzblcedlB6VcbjUSVI+aOesYy+s6U2KKJdMQ/zRFaTgEEQAiavskZ46/ytzN8GzzTKG4671vQ==
+X-Received: by 2002:a05:6830:154c:: with SMTP id l12mr3676333otp.275.1575486049903;
+        Wed, 04 Dec 2019 11:00:49 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v24sm2456801ote.38.2019.12.04.10.58.14
+        by smtp.gmail.com with ESMTPSA id l81sm1705081oih.5.2019.12.04.11.00.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 10:58:14 -0800 (PST)
-Date:   Wed, 4 Dec 2019 12:58:13 -0600
+        Wed, 04 Dec 2019 11:00:49 -0800 (PST)
+Date:   Wed, 4 Dec 2019 13:00:48 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
-Cc:     hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com,
-        tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org,
-        pihsun@chromium.org, yuzhao@chromium.org, zwisler@chromium.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com,
-        sj.huang@mediatek.com, christie.yu@mediatek.com,
-        frederic.chen@mediatek.com, Jerry-ch.Chen@mediatek.com,
-        jungo.lin@mediatek.com, Rynn.Wu@mediatek.com,
-        linux-media@vger.kernel.org, srv_heupstream@mediatek.com,
-        devicetree@vger.kernel.org,
-        Jerry-ch Chen <jerry-ch.chen@mediatek.com>
-Subject: Re: [RFC PATCH V4 2/4] dt-bindings: mt8183: Added FD dt-bindings
-Message-ID: <20191204185813.GA23184@bogus>
-References: <20191204124732.10932-1-Jerry-Ch.chen@mediatek.com>
- <20191204124732.10932-3-Jerry-Ch.chen@mediatek.com>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
+Subject: Re: [PATCH v2 1/4] dt-bindings: vendor-prefixes: Add yet another for
+ ST-Ericsson
+Message-ID: <20191204190048.GA28062@bogus>
+References: <20191120181857.97174-1-stephan@gerhold.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191204124732.10932-3-Jerry-Ch.chen@mediatek.com>
+In-Reply-To: <20191120181857.97174-1-stephan@gerhold.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 4 Dec 2019 20:47:30 +0800, Jerry-ch Chen wrote:
-> From: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
+On Wed, 20 Nov 2019 19:18:54 +0100, Stephan Gerhold wrote:
+> Unfortunately the vendor prefix for ST-Ericsson is used very
+> inconsistently. "ste," and "stericsson," are already documented,
+> but some things in the kernel use "st-ericsson," which is not
+> documented yet.
 > 
-> This patch adds DT binding documentation for the Face Detection (FD)
-> unit of the Mediatek's mt8183 SoC.
+> st-ericsson,u8500 is documented in bindings/arm/ux500/boards.txt,
+> and is used to match the machine code and the generic DT cpufreq
+> driver.
 > 
-> Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
+> Add it to the list of vendor prefixes.
+> 
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 > ---
->  .../bindings/media/mediatek,mt8183-fd.txt     | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
+> Changes in v2: none, added new patch to deprecate other vendor prefixes
+> v1: https://lore.kernel.org/linux-devicetree/20191120121720.72845-1-stephan@gerhold.net/
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Applied, thanks.
 
-If a tag was not added on purpose, please state why and what changed.
+Rob
