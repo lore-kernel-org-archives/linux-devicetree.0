@@ -2,114 +2,146 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86664C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 20:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0945C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 20:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F349205ED
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 20:10:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PlGbgDEQ"
+	by mail.kernel.org (Postfix) with ESMTP id 8D649207DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 20:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbfLDUKM (ORCPT
+        id S1727887AbfLDUPA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 15:10:12 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44674 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfLDUKL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 15:10:11 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4KA8SP060994;
-        Wed, 4 Dec 2019 14:10:08 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575490208;
-        bh=Uz5fI0J8NJ5UZT+CHleC9Mtyt2vhsOtwW5oQaddVU38=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=PlGbgDEQqimL4s0qwbQdGXDtGEN4MODdEBwJ26eSDJTKft4y0i+EjJzWeL61NQm5w
-         0dQNjBWsuMRQvnboR0gIaGf4KsJFk22JgJsoxmw2ehUjKmjrmQE8yspM1wvHaSA2GJ
-         im5ngtu40sIORcZROrKSnzMc64unXJuuCtPBasGQ=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4KA8uu105254
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Dec 2019 14:10:08 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
- 2019 14:10:07 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Dec 2019 14:10:07 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4KA551001603;
-        Wed, 4 Dec 2019 14:10:05 -0600
-Subject: Re: [PATCH] ARM: dts: am335x-icev2: Add support for OSD9616P0899-10
- at i2c0
-To:     Jyri Sarha <jsarha@ti.com>, <tony@atomide.com>,
-        <bcousson@baylibre.com>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-CC:     <peter.ujfalusi@ti.com>, <bparrot@ti.com>
-References: <20191204144024.16021-1-jsarha@ti.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <edde771f-8780-e342-3e1b-e30eefac5e4f@ti.com>
-Date:   Wed, 4 Dec 2019 22:10:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 4 Dec 2019 15:15:00 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:50772 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfLDUPA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 15:15:00 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 572C120067;
+        Wed,  4 Dec 2019 21:14:54 +0100 (CET)
+Date:   Wed, 4 Dec 2019 21:14:52 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] dt-bindings: display: Convert a bunch of panels to DT
+ schema
+Message-ID: <20191204201452.GA30193@ravnborg.org>
+References: <20191119231309.18295-1-robh@kernel.org>
+ <20191130194337.GE24722@ravnborg.org>
+ <CAL_Jsq+AsCOQh89t1foJjDFFoQzfx5NythgdcbQGYNxRHRjB2A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191204144024.16021-1-jsarha@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+AsCOQh89t1foJjDFFoQzfx5NythgdcbQGYNxRHRjB2A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=VwQbUJbxAAAA:8 a=zu6OG0ZhAAAA:8 a=pGLkceISAAAA:8 a=ak7PtswyECe1Mw--VqQA:9
+        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=pAN39diAhXWuPx0-Vjn3:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 04/12/2019 16:40, Jyri Sarha wrote:
-> Add support for OSD9616P0899-10 96x16 passive matrix display. The
-> pre-charge period parameters are taken form a OSD9616P0899-10
-> document, but the display works fine with the default values too.
-> 
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> ---
->   arch/arm/boot/dts/am335x-icev2.dts | 13 +++++++++++++
->   1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am335x-icev2.dts b/arch/arm/boot/dts/am335x-icev2.dts
-> index 204bccfcc110..021eb57261fe 100644
-> --- a/arch/arm/boot/dts/am335x-icev2.dts
-> +++ b/arch/arm/boot/dts/am335x-icev2.dts
-> @@ -287,6 +287,19 @@
->   		gpio-controller;
->   		#gpio-cells = <2>;
->   	};
-> +
-> +	/* osd9616p0899-10 */
-> +	display@3c {
-> +		compatible = "solomon,ssd1306fb-i2c";
-> +		reg = <0x3c>;
-> +		solomon,height = <16>;
-> +		solomon,width = <96>;
-> +		solomon,com-seq;
-> +		solomon,com-invdir;
-> +		solomon,page-offset = <0>;
-> +		solomon,prechargep1 = <2>;
-> +		solomon,prechargep2 = <13>;
-> +	};
->   };
->   
->   &spi0 {
-> 
+Hi Rob.
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+On Mon, Dec 02, 2019 at 08:38:39AM -0600, Rob Herring wrote:
+> On Sat, Nov 30, 2019 at 1:43 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> >
+> > Hi Rob.
+> >
+> > Thanks for doing this boring, trivial and tiresome task.
+> 
+> It was somewhat scripted at least...
+> 
+> > On Tue, Nov 19, 2019 at 05:13:09PM -0600, Rob Herring wrote:
+> > > Convert all the 'simple' panels which either use the single
+> > > 'power-supply' property or don't say and just reference
+> > > simple-panel.txt. In the later case, bindings are clear as to which
+> > > properties are required or unused.
+> > >
+> > > Cc: Maxime Ripard <mripard@kernel.org>
+> > > Cc: Chen-Yu Tsai <wens@csie.org>
+> > > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > > Cc: Sam Ravnborg <sam@ravnborg.org>
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> >
+> > So Thierry and I ended up as Maintianes for them all.
+> > I gues thats OK as we look after the panel stuff anyway.
+> >
+> > > ---
+> > > We could perhaps consolidate a bunch of these, but I have no idea how
+> > > accurate some of these are WRT what's required or not. Seems strange
+> > > that 'backlight' is optional unless the backlight is tied full on for
+> > > example. If that's the case, then should backlight ever be required?
+> > I do not really follow you here.
+> > Looking through the patch set things looks normal to me.
+> >
+> > What do I miss here?
+> 
+> I'm saying a bunch of these could just be a single schema doc with a
+> long list of compatibles. The variation is in what properties are
+> required or not.
 
-  Tomi
+It would be just wonderful if we could have only a few
+dt-bindings for the simple panels.
+Like you I cannot see why enable-gpios should be required.
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+We could end up with something like three classes of bindings:
+
++required:
++  - compatible
++  - power-supply
+
++required:
++  - compatible
++  - port
++  - power-supply
+
++required:
++  - backlight
++  - compatible
++  - port
++  - power-supply
+
+The port part is to my best understanding a way to
+connect the panel to the display driver.
+So it should be more how the connect in the binding
+that decides if port is used or not.
+And the panel should not require it.
+
+I may use it with display drivers that do not support it
+in their binding.
+
+And then we have backlight - which can hardly be mandatory.
+The panel could hard-wire it to provide backligt if it wanted
+and the binding should continue to work.
+I think you had the same argument.
+
+So we are down to two required properties:
++required:
++  - compatible
++  - power-supply
+
+Could we put all simple panels in one binding file
+with only this - that would be great.
+Hopefully scripted somehow...
+
+Then adding new simple panels would be a matter of
+adding a new compatible.
+And if they are sorted this should not cause many merge issues either.
+
+I hope I understood you correct.
+
+	Sam
