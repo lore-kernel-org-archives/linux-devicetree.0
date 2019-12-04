@@ -2,89 +2,94 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E00BC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94956C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 335AA20862
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A2920637
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:46:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hk5xGXTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfLDMiI (ORCPT
+        id S1727883AbfLDMqB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:38:08 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:54902 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfLDMiI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 07:38:08 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id D52311C25E0; Wed,  4 Dec 2019 13:38:06 +0100 (CET)
-Date:   Wed, 4 Dec 2019 13:38:06 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn@kryo.se>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 2/2] leds: meter: add leds-meter binding
-Message-ID: <20191204123806.GB29179@duo.ucw.cz>
-References: <1571756812-19005-1-git-send-email-akinobu.mita@gmail.com>
- <1571756812-19005-3-git-send-email-akinobu.mita@gmail.com>
- <CAL_JsqJ3+Ys5_JD0qnf7acS5wXUpAyU=Wdbfigud4p6fT1f9eg@mail.gmail.com>
+        Wed, 4 Dec 2019 07:46:01 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35246 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727848AbfLDMqB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 07:46:01 -0500
+Received: by mail-pl1-f193.google.com with SMTP id s10so3149349plp.2;
+        Wed, 04 Dec 2019 04:46:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7KRyugQkUo1uugWvFUnJA54Xc08BpIiKwl8qPG7HyXI=;
+        b=Hk5xGXTlyDmBDUPDKmXASJB5PmhzzcuKE+nEmqt9PciCUeNJJQVFgIl7W7TGqr17GR
+         a49gzV5UP20H961EF6e+CNubW4ctF5diI8L2q3bQ4z/FW9/t7hHZ+M28MJmSATQhYdy2
+         CieHfUXgz7glYYd27j4iQRiniB5IGXdpdmVCw7mOgX4MW6xVAexnZdYxDYUhWmMOrqOe
+         bCZeZ0fNCqR4x7+Q+WWEfExljhS0pTapWWerIrf9eb5EOTw0upfUhgOz9O8rcVUcucxz
+         /g9PbIK0mMHTrP6nZOTtdlsg0CSTKoR6pxn7WrMlt7XWd5r2J61KjTxYiWlr8FslOy8q
+         WKrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7KRyugQkUo1uugWvFUnJA54Xc08BpIiKwl8qPG7HyXI=;
+        b=Qd5YTX8flTEeyA2B9bnIPuceGq8/LYKF9VJTBrHGi2l/n5gM2FQ0arJQsZay4IOkh+
+         8QF5GkeIoNiqQJiWkeyJxwkrYD0cwP21Uwp9P3wn7f7KBNVrk2gsPeT0of9dicsy1oia
+         WMWkwDpmfAwct98Qy65wBRgwoYXfKN7HcugGKbaAjNAkQflCoH6K/lkaantL7P9R7dkV
+         FxGppZGRt1ylXex7EGXW+PSM3lZ2l/C3RlSbhfE/aalOtkXW0rb3dnHprewqr8NX591c
+         rRILQZa3YYT46EXm5VpAK2pa9vmHb1bfe5GvW5wipLt5ndFqsJTOV1GjPGaukyf2EM5f
+         jENw==
+X-Gm-Message-State: APjAAAWKWrRoz+vnDv/oObWceOblUCDU96Ufch7hHyAniiQMWzOzFULR
+        WO10kPNqfLjKnrP6HfTngEXLfCtJzxeCGYPdcFg=
+X-Google-Smtp-Source: APXvYqx5iQSiV1wQnkV4BNF3rmbOCPq+eI8fHf5jbJrBDG2+C4r89XluCNntE3UR+ht2Yoe7YWM3aa6is42jDhhTFKg=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr3195916pjq.132.1575463560991;
+ Wed, 04 Dec 2019 04:46:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="adJ1OR3c6QgCpb/j"
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ3+Ys5_JD0qnf7acS5wXUpAyU=Wdbfigud4p6fT1f9eg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191204101042.4275-6-cleger@kalray.eu>
+In-Reply-To: <20191204101042.4275-6-cleger@kalray.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 4 Dec 2019 14:45:51 +0200
+Message-ID: <CAHp75VcqqqAv1iiwjNqGVcadmdzbjHt8f_ap7DKd3LWC=wwkhw@mail.gmail.com>
+Subject: Re: [PATCH 5/5] dt-bindings: pinctrl: dw: move sps,dwapb-gpio.txt to pinctrl
+To:     Clement Leger <cleger@kalray.eu>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Dec 4, 2019 at 12:13 PM Clement Leger <cleger@kalray.eu> wrote:
+>
+> Since the driver has been moved to pinctrl and now supports it, move the
+> documentation into pinctrl folder. In the same time, add documentation
+> for pinctrl properties such has snps,has-pinctrl and description of pin
+> alternate functions.
 
---adJ1OR3c6QgCpb/j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +- snps,has-pinctrl : If present, register the pinctrl controller.
 
-On Wed 2019-10-23 09:56:03, Rob Herring wrote:
-> On Tue, Oct 22, 2019 at 10:07 AM Akinobu Mita <akinobu.mita@gmail.com> wr=
-ote:
-> >
-> > Add DT binding for leds-meter.
->=20
-> What's an leds meter? Need a better explanation to understand if this
-> makes sense at all, but some comments on the schema below.
+I'm wondering why we can't always assume pin control?
 
-It groups several LEDs into one "virtual" LED.
+> -F:     Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> +F:     Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
 
-I'm not sure I like it. What is it good for?
+I guess this should be a part of patch 2 when you move driver w/o
+changes to a new folder.
 
-We do not have many triggers that dim the LEDs, and if it is only used
-=66rom userspace, it can stay in userspace...?
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---adJ1OR3c6QgCpb/j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXeeorgAKCRAw5/Bqldv6
-8rX7AKCfFNZstUnytqFhPWiVHS5USwHH5gCguiizcO24mmi2COmPy7igzck4b+o=
-=8pXm
------END PGP SIGNATURE-----
-
---adJ1OR3c6QgCpb/j--
+-- 
+With Best Regards,
+Andy Shevchenko
