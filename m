@@ -2,89 +2,113 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3151C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 11:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9963C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 11:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7E52077B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 11:33:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575459197;
-	bh=/JHiz2KIdlsuSMIGuTWB++APfysh52tpv3cjf0DfXIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dIcurLlkf9INqrmVuismrytkmT8LpB0nkGGjTxOdWrRXyUhyz9TyeKvnX92Y4TKwz
-	 MO9stWuWQ0iR8OOXO3esNTdPjrSBcoi8nSSj03KVS+JZQFFlvfTuESKMqEnGWX0Y4/
-	 aYheI4O0P4qLUh2gO9LwA0IpIWRBUYxYlK2tsQCY=
+	by mail.kernel.org (Postfix) with ESMTP id AA3082054F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 11:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfLDLdR (ORCPT
+        id S1727710AbfLDLiu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 06:33:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727268AbfLDLdR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Dec 2019 06:33:17 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        Wed, 4 Dec 2019 06:38:50 -0500
+Received: from skedge03.snt-world.com ([91.208.41.68]:34632 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbfLDLiu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 06:38:50 -0500
+Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 701C020637;
-        Wed,  4 Dec 2019 11:33:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575459196;
-        bh=/JHiz2KIdlsuSMIGuTWB++APfysh52tpv3cjf0DfXIs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vQFAdRPVtLGN6tVS4n8E+qoQTrGa7zC4pyb1tB2ytI54dTK+7rCiFuPKQV9vgRIS6
-         +cCkba4E+ihxTkHZK8VVubQL5UGy5UWmdsE/KxjnAcjBjMudaENEODAkH7ZwYDj40S
-         xw4GTwtiyRM/gEN/ZW6yEPpjWPwv2OueJTLTvCAc=
-Date:   Wed, 4 Dec 2019 19:33:09 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Bobby Jones <rjones@gateworks.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        by skedge03.snt-world.com (Postfix) with ESMTPS id A91FB67B181;
+        Wed,  4 Dec 2019 12:38:46 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
+ (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 4 Dec 2019
+ 12:38:46 +0100
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Wed, 4 Dec 2019 12:38:46 +0100
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Adam Ford <aford173@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
         Fabio Estevam <festevam@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        =?utf-8?B?SG9yaWEgR2VhbnTEgw==?= <horia.geanta@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx: ventana: add fxos8700 on gateworks boards
-Message-ID: <20191204113307.GH3365@dragon>
-References: <20191021205426.28825-1-rjones@gateworks.com>
- <CALAE=UAEFobA2SXOTJWAqexg+VNN_VTXGLGH+VwqqjKkuFwddg@mail.gmail.com>
+        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2] crypto: caam: Change the i.MX8MQ check support all
+ i.MX8M variants
+Thread-Topic: [PATCH 1/2] crypto: caam: Change the i.MX8MQ check support all
+ i.MX8M variants
+Thread-Index: AQHVp9kQe4CI+Rf8yUmun0IOEuspVqepzk4A
+Date:   Wed, 4 Dec 2019 11:38:46 +0000
+Message-ID: <e8e429dd-4508-9835-fd01-825d2de8871e@kontron.de>
+References: <20191130225153.30111-1-aford173@gmail.com>
+In-Reply-To: <20191130225153.30111-1-aford173@gmail.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E8132CB5151D4E48A2A1202728C1E995@snt-world.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALAE=UAEFobA2SXOTJWAqexg+VNN_VTXGLGH+VwqqjKkuFwddg@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: A91FB67B181.A1F6F
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: aford173@gmail.com, aymen.sghaier@nxp.com,
+        davem@davemloft.net, devicetree@vger.kernel.org, festevam@gmail.com,
+        herbert@gondor.apana.org.au, horia.geanta@nxp.com,
+        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 11:10:19AM -0800, Bobby Jones wrote:
-> Hello Shawn,
-> 
-> I just wanted to follow up with this and see if you had a chance to
-> look at this. I submitted this after responding to Marco on my initial
-> submission but haven't heard anything since and didn't want it to fall
-> through the cracks. It may be worth mentioning that both the bindings
-> for the fxos8700 and lsm9ds1 have been accepted by iio.
-> 
-> In addition to this submission I have the following that I'd like to
-> check in on as well:
-> 
-> [PATCH] ARM: dts: imx: imx6qdl-gw553x.dtsi: add lsm9ds1 iio imu/magn support
-> [PATCH] ARM: dts: imx: Add GW5907
-> [PATCH] ARM: dts: imx: Add GW5912
-> [PATCH] ARM: dts: imx: Add GW5913
-> [PATCH] ARM: dts: imx: Add GW5910
-> 
-> Please let me know if there's anything I can do. Thanks!
-
-Hmm, did you copy me on those patches?  I cannot find them in my
-mailbox.
-
-Shawn
+SGkgQWRhbSwNCg0KT24gMzAuMTEuMTkgMjM6NTEsIEFkYW0gRm9yZCB3cm90ZToNCj4gVGhlIGku
+TVg4TSBNaW5pIHVzZXMgdGhlIHNhbWUgY3J5cHRvIGVuZ2luZSBhcyB0aGUgaS5NWDhNUSwgYnV0
+DQo+IHRoZSBkcml2ZXIgaXMgcmVzdHJpY3RpbmcgdGhlIGNoZWNrIHRvIGp1c3QgdGhlIGkuTVg4
+TVEuDQo+IA0KPiBUaGlzIHBhdGNoIGxldHMgdGhlIGRyaXZlciBzdXBwb3J0IGFsbCBpLk1YOE0g
+VmFyaWFudHMgaWYgZW5hYmxlZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFkYW0gRm9yZCA8YWZv
+cmQxNzNAZ21haWwuY29tPg0KDQpXaGF0IGFib3V0IHRoZSBmb2xsb3dpbmcgbGluZXMgaW4gcnVu
+X2Rlc2NyaXB0b3JfZGVjbzAoKT8gRG9lcyB0aGlzIA0KY29uZGl0aW9uIGFsc28gYXBwbHkgdG8g
+aS5NWDhNTT8NCg0KZHJpdmVycy9jcnlwdG8vY2FhbS9jdHJsLmM6DQoNCglpZiAoY3RybHByaXYt
+PnZpcnRfZW4gPT0gMSB8fA0KCSAgICAvKg0KCSAgICAgKiBBcHBhcmVudGx5IG9uIGkuTVg4TVEg
+aXQgZG9lc24ndCBtYXR0ZXIgaWYgdmlydF9lbiA9PSAxDQoJICAgICAqIGFuZCB0aGUgZm9sbG93
+aW5nIHN0ZXBzIHNob3VsZCBiZSBwZXJmb3JtZWQgcmVnYXJkbGVzcw0KCSAgICAgKi8NCgkgICAg
+b2ZfbWFjaGluZV9pc19jb21wYXRpYmxlKCJmc2wsaW14OG1xIikpIHsNCgkJY2xyc2V0Yml0c18z
+MigmY3RybC0+ZGVjb19yc3IsIDAsIERFQ09SU1JfSlIwKTsNCg0KCQl3aGlsZSAoIShyZF9yZWcz
+MigmY3RybC0+ZGVjb19yc3IpICYgREVDT1JTUl9WQUxJRCkgJiYNCgkJICAgICAgIC0tdGltZW91
+dCkNCgkJCWNwdV9yZWxheCgpOw0KDQoJCXRpbWVvdXQgPSAxMDAwMDA7DQoJfQ0KDQpSZWdhcmRz
+LA0KRnJpZWRlcg0KDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jcnlwdG8vY2FhbS9jdHJs
+LmMgYi9kcml2ZXJzL2NyeXB0by9jYWFtL2N0cmwuYw0KPiBpbmRleCBkYjIyNzc3ZDU5YjQuLjFj
+ZTAzZjg5NjFiNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9jcnlwdG8vY2FhbS9jdHJsLmMNCj4g
+KysrIGIvZHJpdmVycy9jcnlwdG8vY2FhbS9jdHJsLmMNCj4gQEAgLTUyNyw3ICs1MjcsNyBAQCBz
+dGF0aWMgY29uc3Qgc3RydWN0IHNvY19kZXZpY2VfYXR0cmlidXRlIGNhYW1faW14X3NvY190YWJs
+ZVtdID0gew0KPiAgIAl7IC5zb2NfaWQgPSAiaS5NWDZVTCIsIC5kYXRhID0gJmNhYW1faW14NnVs
+X2RhdGEgfSwNCj4gICAJeyAuc29jX2lkID0gImkuTVg2KiIsICAuZGF0YSA9ICZjYWFtX2lteDZf
+ZGF0YSB9LA0KPiAgIAl7IC5zb2NfaWQgPSAiaS5NWDcqIiwgIC5kYXRhID0gJmNhYW1faW14N19k
+YXRhIH0sDQo+IC0JeyAuc29jX2lkID0gImkuTVg4TVEiLCAuZGF0YSA9ICZjYWFtX2lteDdfZGF0
+YSB9LA0KPiArCXsgLnNvY19pZCA9ICJpLk1YOE0qIiwgLmRhdGEgPSAmY2FhbV9pbXg3X2RhdGEg
+fSwNCj4gICAJeyAuZmFtaWx5ID0gIkZyZWVzY2FsZSBpLk1YIiB9LA0KPiAgIAl7IC8qIHNlbnRp
+bmVsICovIH0NCj4gICB9Ow0KPiA=
