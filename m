@@ -2,99 +2,141 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D69BC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F411C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F070A205ED
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C9B20675
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:11:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="MZ7NMmHE"
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="MIsRZrhb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfLDKK5 (ORCPT
+        id S1727600AbfLDKLG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:10:57 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:56576 "EHLO
+        Wed, 4 Dec 2019 05:11:06 -0500
+Received: from zimbra2.kalray.eu ([92.103.151.219]:56818 "EHLO
         zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbfLDKK5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 05:10:57 -0500
+        with ESMTP id S1727606AbfLDKLF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 05:11:05 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id CDC9D27E0A05;
-        Wed,  4 Dec 2019 11:10:55 +0100 (CET)
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 43E8B27E1514;
+        Wed,  4 Dec 2019 11:11:04 +0100 (CET)
 Received: from zimbra2.kalray.eu ([127.0.0.1])
         by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id d58SyFKbqL4u; Wed,  4 Dec 2019 11:10:55 +0100 (CET)
+        with ESMTP id 91PZJiDiSQRY; Wed,  4 Dec 2019 11:11:03 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 6D7ED27E0E3A;
-        Wed,  4 Dec 2019 11:10:55 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 6D7ED27E0E3A
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 9FBF327E0E3A;
+        Wed,  4 Dec 2019 11:11:03 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 9FBF327E0E3A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1575454255;
-        bh=tm1bz/38l5nlWepy+IT4YdTVC5S4emIIOh/grEnMF+w=;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1575454263;
+        bh=49GmeuQtl5iQNzkiGn2NTlC0kJCfQvjsNi37acIHiZU=;
         h=From:To:Date:Message-Id;
-        b=MZ7NMmHEpRCaQ865e6RwFE55yZG1FCzmVZpIqnUyy7/Cbj9oJInEju9n/GCIf7j4L
-         NFY/LiY/BDznTa1YxUQJLkvHv0s6IJiK3vdQ4fixmqrk36LwFUeQANuwAboiGB22zm
-         J2b7x0ubuHRxrtIct1BNH91qp1JK1J7fl0BBwiPQ=
+        b=MIsRZrhbuhD4YYRWSmWNJQ9Z/+VlYRcCOHZMAQlWqr6F89Xjmc4Dq3ogSHvH7iEJB
+         zyzQzUKNkX5kijbEZ3togmASSYAvIU8ETTegK+Jur8AVWL+4HE4e7beW9LV2B9S5aL
+         iD6vNxCEKxOg0bOHSbQg2bBxAnu8lKkzyGXjyj5w=
 X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
 Received: from zimbra2.kalray.eu ([127.0.0.1])
         by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id nJS6I94fpCeJ; Wed,  4 Dec 2019 11:10:55 +0100 (CET)
+        with ESMTP id x_Wo29Vgnq5b; Wed,  4 Dec 2019 11:11:03 +0100 (CET)
 Received: from triton.lin.mbt.kalray.eu (unknown [192.168.37.25])
-        by zimbra2.kalray.eu (Postfix) with ESMTPSA id 48BB027E0A05;
-        Wed,  4 Dec 2019 11:10:55 +0100 (CET)
+        by zimbra2.kalray.eu (Postfix) with ESMTPSA id 7DB6C27E0A05;
+        Wed,  4 Dec 2019 11:11:03 +0100 (CET)
 From:   Clement Leger <cleger@kalray.eu>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+To:     linux-kernel@vger.kernel.org
+Cc:     Clement Leger <cleger@kalray.eu>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Hoan Tran <hoan@os.amperecomputing.com>,
-        linux-gpio@vger.kernel.org
-Cc:     Clement Leger <cleger@kalray.eu>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/5] Add pinctrl support for dwapb gpio driver
-Date:   Wed,  4 Dec 2019 11:10:34 +0100
-Message-Id: <20191204101042.4275-1-cleger@kalray.eu>
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH 5/5] dt-bindings: pinctrl: dw: move sps,dwapb-gpio.txt to pinctrl
+Date:   Wed,  4 Dec 2019 11:10:39 +0100
+Message-Id: <20191204101042.4275-6-cleger@kalray.eu>
 X-Mailer: git-send-email 2.15.0.276.g89ea799
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Synopsys DWAPB IP includes support for pin control. This control is basic
-and allows to switch between a hardware and a software function.
-Software function is when driving GPIOs from IP and hardware is controlled
-by external signals.
-This serie export necessary interface to be able to move the driver to
-pinctrl folder and then implement the pinctrl support which is based on the
-digicolor driver. The idea is to avoid hardcoding pins in driver since
-this IP is a generic one available on multiple SoC.
+Since the driver has been moved to pinctrl and now supports it, move the
+documentation into pinctrl folder. In the same time, add documentation
+for pinctrl properties such has snps,has-pinctrl and description of pin
+alternate functions.
 
-Clement Leger (5):
-  gpio: export acpi_gpiochip_request_interrupts in gpio/driver.h
-  pinctrl: dw: move gpio-dwapb.c to pinctrl folder
-  pinctrl: dw: use devm_gpiochip_add_data
-  pinctrl: dw: add pinctrl support for dwapb gpio driver
-  dt-bindings: pinctrl: dw: move sps,dwapb-gpio.txt to pinctrl
-
- .../bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt |  21 +-
- MAINTAINERS                                        |   6 +-
- drivers/gpio/Kconfig                               |   8 -
- drivers/gpio/Makefile                              |   1 -
- drivers/gpio/gpiolib-acpi.h                        |   4 -
- drivers/pinctrl/Kconfig                            |   1 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/dw/Kconfig                         |  11 +
- drivers/pinctrl/dw/Makefile                        |   4 +
- .../gpio-dwapb.c => pinctrl/dw/pinctrl-dwapb.c}    | 277 +++++++++++++++++++--
- include/linux/gpio/driver.h                        |  12 +
- include/linux/platform_data/gpio-dwapb.h           |   1 +
- 12 files changed, 310 insertions(+), 37 deletions(-)
+Signed-off-by: Clement Leger <cleger@kalray.eu>
+---
+ .../bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt  | 21 ++++++++++++++++++++-
+ MAINTAINERS                                         |  2 +-
+ 2 files changed, 21 insertions(+), 2 deletions(-)
  rename Documentation/devicetree/bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt (76%)
- create mode 100644 drivers/pinctrl/dw/Kconfig
- create mode 100644 drivers/pinctrl/dw/Makefile
- rename drivers/{gpio/gpio-dwapb.c => pinctrl/dw/pinctrl-dwapb.c} (77%)
 
+diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
+similarity index 76%
+rename from Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+rename to Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
+index 839dd32ffe11..4fb1b754a2bd 100644
+--- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
++++ b/Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
+@@ -1,4 +1,4 @@
+-* Synopsys DesignWare APB GPIO controller
++* Synopsys DesignWare APB GPIO & pinmux controller
+ 
+ Required properties:
+ - compatible : Should contain "snps,dw-apb-gpio"
+@@ -33,8 +33,16 @@ controller.
+   use the interrupts-extended property to specify the interrupts and set the
+   interrupt controller handle for unused interrupts to 0.
+ - snps,nr-gpios : The number of pins in the port, a single cell.
++- snps,has-pinctrl : If present, register the pinctrl controller.
+ - resets : Reset line for the controller.
+ 
++Required properties for pin configuration node:
++- function: string representing a function to mux for pins
++    dw apb controller only has two functions for each pins (sw and hw). When set
++    in software mode, the gpio controller controls the pin output. When
++    configured in hardware mode, an external peripheral controls the pin signal.
++- pins: string array of pins to be muxed.
++
+ Example:
+ 
+ gpio: gpio@20000 {
+@@ -60,6 +68,17 @@ gpio: gpio@20000 {
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		snps,nr-gpios = <8>;
++		snps,has-pinctrl;
+ 		reg = <1>;
++
++		uart0_pins: pinmux_uart0_pins {
++			function = "hw";
++			pins = "pin0", "pin1";
++		};
++
++		uart1_pins: pinmux_uart1_pins {
++			function = "hw";
++			pins = "pin2", "pin3";
++		};
+ 	};
+ };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 35b90ad9f594..e8f9e827d687 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15873,7 +15873,7 @@ M:	Hoan Tran <hoan@os.amperecomputing.com>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
+ F:	drivers/pinctrl/dw/pinctrl-dwapb.c
+-F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
++F:	Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
+ 
+ SYNOPSYS DESIGNWARE AXI DMAC DRIVER
+ M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 -- 
 2.15.0.276.g89ea799
 
