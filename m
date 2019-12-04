@@ -5,59 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429B6C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2559C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1799A2081B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A232073B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C2b+auW9"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gPv5tYmP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfLDRxV (ORCPT
+        id S1728226AbfLDRxy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:53:21 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:53190 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbfLDRxV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 12:53:21 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4HrFnI109065;
-        Wed, 4 Dec 2019 11:53:15 -0600
+        Wed, 4 Dec 2019 12:53:54 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50782 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728120AbfLDRxy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 12:53:54 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4HrR3P079725;
+        Wed, 4 Dec 2019 11:53:27 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575481995;
-        bh=iL2XbLmD+TrHNi/uMsELiJCOuYQfFmOUVnCynnFZPdc=;
-        h=From:To:CC:Subject:Date;
-        b=C2b+auW9hcSaC/m3uLidmaCMnA7SYbKMHz9xjCuYyd+VJauLtN1SQUIfHtEotKs5f
-         P3CPluvvS+cg6l+mop5hs8VIxwoB4H7dsiutq7LWDfuRZ5lBqhcSKOu/ZRRbyqBTDI
-         5cEsEVwxSllLgn9nu7/Ve6zwtjFOlgOUP9/AWcSM=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4HrFI7040834
+        s=ti-com-17Q1; t=1575482007;
+        bh=F0nt7Pmnh68/O5Kde/RiIQN8BvHVUZTNfgFgZMTCYBA=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=gPv5tYmPE1KQ25A9KFhR+W/RUdD4u5Y+xbYFN5sivADptIxq8DU56lOlH19oAAh3n
+         4MA827H5nsAum7axEp5scWPXKIRFuD8VcgJrv/UXdaXdPfrUOkNbcncgpINt1zewQ8
+         wg4kaVpr0+DoRXEHXIGFk1dfSBv/TbgV++j7N0vI=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4HrR1t125780
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Dec 2019 11:53:15 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 4 Dec 2019 11:53:27 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
- 2019 11:53:15 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ 2019 11:53:20 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
  (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Dec 2019 11:53:15 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4HrF6Y012761;
-        Wed, 4 Dec 2019 11:53:15 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <mkl@pengutronix.de>
-CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/2] dt-bindings: tcan4x5x: Make wake-gpio an optional gpio
-Date:   Wed, 4 Dec 2019 11:51:11 -0600
-Message-ID: <20191204175112.7308-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.23.0
+ Frontend Transport; Wed, 4 Dec 2019 11:53:20 -0600
+Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4HrBuB048941;
+        Wed, 4 Dec 2019 11:53:17 -0600
+From:   Jyri Sarha <jsarha@ti.com>
+To:     <dri-devel@lists.freedesktop.org>, <tony@atomide.com>,
+        <sam@ravnborg.org>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
+        <peter.ujfalusi@ti.com>, <bparrot@ti.com>
+Subject: [PATCH 2/2] dt-bindings: display: Add obsolete note to "ti,tilcdc,panel" binding
+Date:   Wed, 4 Dec 2019 19:53:11 +0200
+Message-ID: <eabe78184ea7125dcff50826a0ee12a892443017.1575481630.git.jsarha@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1575481630.git.jsarha@ti.com>
+References: <cover.1575481630.git.jsarha@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
@@ -65,36 +67,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The wake-up of the device can be configured as an optional
-feature of the device.  Move the wake-up gpio from a requried
-property to an optional property.
+The "ti,tilcdc,panel" binding should not be used anymore, since tilcdc
+is fully capable of using generic drm panels like panel-simple and
+panel-common binding. However, the obsolete binding is still widely
+used in many mainline supported platforms that I do not have access to
+and who knows how many custom platforms. So I am afraid we have to
+keep the old bundled tilcdc panel driver around.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Rob Herring <robh@kernel.org>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- Documentation/devicetree/bindings/net/can/tcan4x5x.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/display/tilcdc/panel.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
-index 27e1b4cebfbd..7cf5ef7acba4 100644
---- a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
-+++ b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
-@@ -10,7 +10,6 @@ Required properties:
- 	- #size-cells: 0
- 	- spi-max-frequency: Maximum frequency of the SPI bus the chip can
- 			     operate at should be less than or equal to 18 MHz.
--	- device-wake-gpios: Wake up GPIO to wake up the TCAN device.
- 	- interrupt-parent: the phandle to the interrupt controller which provides
-                     the interrupt.
- 	- interrupts: interrupt specification for data-ready.
-@@ -23,6 +22,7 @@ Optional properties:
- 		       reset.
- 	- device-state-gpios: Input GPIO that indicates if the device is in
- 			      a sleep state or if the device is active.
-+	- device-wake-gpios: Wake up GPIO to wake up the TCAN device.
+diff --git a/Documentation/devicetree/bindings/display/tilcdc/panel.txt b/Documentation/devicetree/bindings/display/tilcdc/panel.txt
+index 808216310ea2..54963f9173cc 100644
+--- a/Documentation/devicetree/bindings/display/tilcdc/panel.txt
++++ b/Documentation/devicetree/bindings/display/tilcdc/panel.txt
+@@ -1,5 +1,11 @@
+ Device-Tree bindings for tilcdc DRM generic panel output driver
  
- Example:
- tcan4x5x: tcan4x5x@0 {
++NOTE: This binding (and the related driver) is obsolete and should not
++      be used anymore. Please refer to drm panel-common binding (and
++      to a generic drm panel driver like panel-simple).
++      Documentation/devicetree/bindings/display/panel/panel-common.yaml
++      (drivers/gpu/drm/panel/panel-simple.c)
++
+ Required properties:
+  - compatible: value should be "ti,tilcdc,panel".
+  - panel-info: configuration info to configure LCDC correctly for the panel
 -- 
-2.23.0
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
