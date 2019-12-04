@@ -2,103 +2,95 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C22C2BD09
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 18:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CCEC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 18:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B60C2077B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 18:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A558206DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 18:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575485876;
-	bh=tZxI1dUVWV8eBDheOf3hqB6QZPFtWFcd+3y4NEeujmQ=;
+	s=default; t=1575485896;
+	bh=McCwFHhSRAQuk8yqV0NAsm3QnK1YvRkL9WsIakZl/eg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i6Rof0JsKaxlfeBhCwEf/ZBPWSvw46lld+X1OXgZg2Ev1olez4RGCpAydEkMs9re0
-	 qaUDk63qGZi2kIIhiqdOEp4zh5o/15+Zw/BJGe+0x8LPV5BfVFUO12ACM9WX5u5VPH
-	 MsHL3x8naxsIEPer1dxLUi3iUWjBqtOJ4LuiBODo=
+	b=IYhgb8wO4Tt+CXNlnXEEFG1An2TabnTt4aHYtlCIJZgcY80Jr3Qo6ejz7YyoaPmTw
+	 1IpcRnGWvuQLNGYZJ3O5xqXTTIL3JpCVonhQfw7c7dCjIGhV0vV6yqtw4EiKLjF6gr
+	 7ktJRFzTBdfzL2an3HU0q2eT1wc3A96wLzFbg1b8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbfLDS54 (ORCPT
+        id S1728011AbfLDS6Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:57:56 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33650 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfLDS5z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 13:57:55 -0500
-Received: by mail-ot1-f67.google.com with SMTP id d17so262972otc.0;
-        Wed, 04 Dec 2019 10:57:55 -0800 (PST)
+        Wed, 4 Dec 2019 13:58:16 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33679 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfLDS6P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 13:58:15 -0500
+Received: by mail-ot1-f68.google.com with SMTP id d17so263814otc.0;
+        Wed, 04 Dec 2019 10:58:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TyFlWZtZeRnOIyikDPfUJupGzxrSsorOBrT8gOUOV5w=;
-        b=UUZaNQowzSRR2f2MZOIqeklA5y9J6oI+kHQSsEezq4NzzwXLtJ743wl4MXGz7Ax6au
-         1m22x+9gvTH3hfdtFdzk7KLiSo2cmW0EZyamdEKUO6JaFWDE3VibmjhNbbeqhskyx14x
-         coaPdasAcYCP1HIIgW3s8hFhMN5FmcjHgZGeq3AMjtXUGxXU33ibN+k1/9CaJnlKhpzd
-         TqcCdA5rsuSSPQUoD2hsjDJG1cEaN7mKpjAgKuxWHA0zN3RkvTxrwIek2hWxNYGLNxgQ
-         hCjpASN+YZhlVJMUs6ty46VuMVWcRz/+y5QBrdtJUJ+fdxBnjC9cBbmFUjiMrKYP0YHg
-         Gx2Q==
-X-Gm-Message-State: APjAAAU/Kn8SSlg4Oc26o6aoPwBtouny/GvIlbR8CPYmO1/F5l74rCk1
-        u3cfhg9Syz/J5o0lZhPtHA==
-X-Google-Smtp-Source: APXvYqzLrsljAw6xaQR9Yy1mWF3DkGaOVeVWuG61van3Eri4fGDE3iohUXta2mlOKmmOk1xZ5gGWuw==
-X-Received: by 2002:a05:6830:1cf:: with SMTP id r15mr3876151ota.231.1575485874840;
-        Wed, 04 Dec 2019 10:57:54 -0800 (PST)
+        bh=bhAw5EIrwwGC1eqIzLBcurAl7dDZA4dCCIXam/BMZgA=;
+        b=G3uAdrZgBx5I7Y/Xw2v6uUKz6XsuLJ2njfif0yqpNHFKKGIpt81sulEBlkSTmeq6In
+         bdG/0jE5ojWz86HQqPxV5aiFS5C5XNkhoQoQaacsoThT2um0VmW8+HEzg579HYaPtMT1
+         gfZ1aRgekgOYPPqZ4c2WNpAjZheKcSICuSHlx2lrMtJ5Hz0eSLXQAVt6otw1liWbQR7p
+         5UokoCuYETlbDq0JmDl5Nv7J+/eOb5AnBiON3p7g7FeY7AE0Jib7tA42DuqLjjJj/jqZ
+         po+JLJZtwV7f5dboU4Q/NabW3Jv+0kblbeZbeyYRqoqI/KpnID3YWSWHXWfMllEL0En2
+         jYfQ==
+X-Gm-Message-State: APjAAAUrvxMWYgLhpTabvvcx4lYRdrp/3SLgXiqdkbP5DNaryTzjAVAb
+        dL82aBc6VNaiEk3TalG0DA==
+X-Google-Smtp-Source: APXvYqyhikx3yghkHjt5R9cmpYpMgQpTzsJXnZPaFUw1zHqWLWzLrAfwaR2k5BK5VzCtPrWZ+QpwoQ==
+X-Received: by 2002:a9d:630d:: with SMTP id q13mr3480338otk.31.1575485894893;
+        Wed, 04 Dec 2019 10:58:14 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i7sm2571659oib.42.2019.12.04.10.57.53
+        by smtp.gmail.com with ESMTPSA id v24sm2456801ote.38.2019.12.04.10.58.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 10:57:54 -0800 (PST)
-Date:   Wed, 4 Dec 2019 12:57:53 -0600
+        Wed, 04 Dec 2019 10:58:14 -0800 (PST)
+Date:   Wed, 4 Dec 2019 12:58:13 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc:     jic23@kernel.org, dragos.bogdan@analog.com,
-        alexandru.ardelean@analog.com, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: ad7292: fix channel
- constraint
-Message-ID: <20191204185753.GA19409@bogus>
-References: <20191204155918.5ot4tplceqjeul6a@smtp.gmail.com>
+To:     Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
+Cc:     hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com,
+        tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org,
+        pihsun@chromium.org, yuzhao@chromium.org, zwisler@chromium.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com,
+        sj.huang@mediatek.com, christie.yu@mediatek.com,
+        frederic.chen@mediatek.com, Jerry-ch.Chen@mediatek.com,
+        jungo.lin@mediatek.com, Rynn.Wu@mediatek.com,
+        linux-media@vger.kernel.org, srv_heupstream@mediatek.com,
+        devicetree@vger.kernel.org,
+        Jerry-ch Chen <jerry-ch.chen@mediatek.com>
+Subject: Re: [RFC PATCH V4 2/4] dt-bindings: mt8183: Added FD dt-bindings
+Message-ID: <20191204185813.GA23184@bogus>
+References: <20191204124732.10932-1-Jerry-Ch.chen@mediatek.com>
+ <20191204124732.10932-3-Jerry-Ch.chen@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191204155918.5ot4tplceqjeul6a@smtp.gmail.com>
+In-Reply-To: <20191204124732.10932-3-Jerry-Ch.chen@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 12:59:23PM -0300, Marcelo Schmitt wrote:
-> Change items property of AD7292 channels to correctly constrain their
-> quantity.
+On Wed, 4 Dec 2019 20:47:30 +0800, Jerry-ch Chen wrote:
+> From: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
 > 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> This patch adds DT binding documentation for the Face Detection (FD)
+> unit of the Mediatek's mt8183 SoC.
+> 
+> Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
 > ---
-> Changelog V2
-> - Shortened the message to make it closer to 50 columns.
+>  .../bindings/media/mediatek,mt8183-fd.txt     | 34 +++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
 > 
->  Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
 
-I think Jonathan already applied this series.
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> index b68be3aaf587..18f1032b86f3 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> @@ -53,7 +53,8 @@ patternProperties:
->          description: |
->            The channel number. It can have up to 8 channels numbered from 0 to 7.
->          items:
-> -          maximum: 7
-> +          - minimum: 0
-> +            maximum: 7
->  
->        diff-channels:
->          description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-> -- 
-> 2.23.0
-> 
+If a tag was not added on purpose, please state why and what changed.
