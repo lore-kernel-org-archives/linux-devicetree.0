@@ -2,112 +2,112 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76660C432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 02:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAC0C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 02:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC2C2068E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 02:22:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QOHYHgfv"
+	by mail.kernel.org (Postfix) with ESMTP id 9F1952068E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 02:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575427172;
+	bh=gzYyVFtj2t/t6DxxRUeD141hKdVGvS4D0XfbvzUCn3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CWuMt0qQVJXoqccMRHyN+cNf7keHkyanp1LdxSKCaLBbp2w7FPFx0+/SHAdPLz8Qc
+	 +yiUqjDp1B4WPaL8uSiWAUxwW6Ih8tYRR2f/xHUHnZb9rktcITZ2i/QwdQgw7R3htv
+	 GY8s7arLFQg+vNjNLE18R6kp0gx1MyJRqAllZ55M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfLDCWV (ORCPT
+        id S1726291AbfLDCjc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 21:22:21 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:29015 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726179AbfLDCWV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 21:22:21 -0500
-X-UUID: 68ec0c3ab67948ca9baeb7e60e3fa6c4-20191204
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=gASy9TDuVsH5zwpxeW0BE8bxVb8mYW76DT6995xQhXA=;
-        b=QOHYHgfvSFD8m0DDWMic4GaD7zRffTP057Ws/SsQ1lzOhPCh3ga0IqjcmI/q4SbsWBKQZETxYEECbKtQFrKxv++xGGl9RZ7/J8ZXJdIbkji55JlP82QR1jYNIWi1oqgTPlTwy1VxLGwLqfEtrtULsmD3/Cv4N6yU+hnZYI5ienI=;
-X-UUID: 68ec0c3ab67948ca9baeb7e60e3fa6c4-20191204
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1382334364; Wed, 04 Dec 2019 10:22:16 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 4 Dec 2019 10:22:03 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 4 Dec 2019 10:21:56 +0800
-Message-ID: <1575426135.31411.2.camel@mtksdaap41>
-Subject: Re: [PATCH] soc: mediatek: cmdq: avoid racing condition with mutex
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        "Nicolas Boichat" <drinkcat@chromium.org>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>
-Date:   Wed, 4 Dec 2019 10:22:15 +0800
-In-Reply-To: <20191121072910.31665-1-bibby.hsieh@mediatek.com>
-References: <20191121072910.31665-1-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 3 Dec 2019 21:39:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbfLDCjc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 21:39:32 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8642E20640;
+        Wed,  4 Dec 2019 02:39:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575427171;
+        bh=gzYyVFtj2t/t6DxxRUeD141hKdVGvS4D0XfbvzUCn3k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yXPip5TDdP4yZuS4AAiHPCD50dWrLL1pUnMg00G06iErfCaqOK0cAzlSSkxSnfOZc
+         2ObTZdorEKBXOY0timyFw44f+soGrTj734MCby4EOOpzsUFgeFvPODVGLekueE8Jp1
+         yi8Tu1rARAUT7R6lWdPGHLSvvodk3VaBwz6DabRk=
+Date:   Wed, 4 Dec 2019 10:39:21 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH 3/3] ARM: dts: imx6sll: Add Rev A board support
+Message-ID: <20191204023920.GO9767@dragon>
+References: <1573033650-11848-1-git-send-email-Anson.Huang@nxp.com>
+ <1573033650-11848-3-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573033650-11848-3-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIEphc3NpOg0KDQpBcmUgbWJveF9zZW5kX21lc3NhZ2UoKSBhbmQgbWJveF9jbGllbnRfdHhk
-b25lKCkgdGhyZWFkLXNhZmU/IElmIHRoZXNlDQp0d28gYXJlIHRocmVhZC1zYWZlLCB0aGlzIGJ1
-ZyBzaG91bGQgYmUgZml4ZWQgaW4gbWFpbGJveCBjb3JlIG5vdA0KY2xpZW50Lg0KDQpSZWdhcmRz
-LA0KQ0sNCg0KT24gVGh1LCAyMDE5LTExLTIxIGF0IDE1OjI5ICswODAwLCBCaWJieSBIc2llaCB3
-cm90ZToNCj4gSWYgY21kcSBjbGllbnQgaXMgbXVsdGkgdGhyZWFkIHVzZXIsIHJhY2luZyB3aWxs
-IG9jY3VyIHdpdGhvdXQgbXV0ZXgNCj4gcHJvdGVjdGlvbi4gSXQgd2lsbCBtYWtlIHRoZSBDIG1l
-c3NhZ2UgcXVldWVkIGluIG1haWxib3gncyBxdWV1ZQ0KPiBhbHdheXMgbmVlZCBEIG1lc3NhZ2Un
-cyB0cmlnZ2VyaW5nLg0KPiANCj4gVGhyZWFkIEEJCVRocmVhZCBCCQkgIFRocmVhZCBDCQlUaHJl
-YWQgRC4uLg0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiBtYm94X3NlbmRfbWVzc2Fn
-ZSgpDQo+IAlzZW5kX2RhdGEoKQ0KPiAJCQltYm94X3NlbmRfbWVzc2FnZSgpDQo+IAkJCQkqZXhp
-dA0KPiAJCQkJCQltYm94X3NlbmRfbWVzc2FnZSgpDQo+IAkJCQkJCQkqZXhpdA0KPiBtYm94X2Ns
-aWVudF90eGRvbmUoKQ0KPiAJdHhfdGljaygpDQo+IAkJCW1ib3hfY2xpZW50X3R4ZG9uZSgpDQo+
-IAkJCQl0eF90aWNrKCkNCj4gCQkJCQkJbWJveF9jbGllbnRfdHhkb25lKCkNCj4gCQkJCQkJCXR4
-X3RpY2soKQ0KPiBtc2dfc3VibWl0KCkNCj4gCXNlbmRfZGF0YSgpDQo+IAkJCW1zZ19zdWJtaXQo
-KQ0KPiAJCQkJKmV4aXQNCj4gCQkJCQkJbXNnX3N1Ym1pdCgpDQo+IAkJCQkJCQkqZXhpdA0KPiAt
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiANCj4gU2lnbmVkLW9mZi1ieTogQmliYnkgSHNp
-ZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3NvYy9tZWRp
-YXRlay9tdGstY21kcS1oZWxwZXIuYyB8IDMgKysrDQo+ICBpbmNsdWRlL2xpbnV4L3NvYy9tZWRp
-YXRlay9tdGstY21kcS5oICB8IDEgKw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
-KykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxw
-ZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IGluZGV4IDlh
-ZGQwZmQ1ZmE2Yy4uOWUzNWUwYmVmZmFhIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9tZWRp
-YXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGst
-Y21kcS1oZWxwZXIuYw0KPiBAQCAtODEsNiArODEsNyBAQCBzdHJ1Y3QgY21kcV9jbGllbnQgKmNt
-ZHFfbWJveF9jcmVhdGUoc3RydWN0IGRldmljZSAqZGV2LCBpbnQgaW5kZXgsIHUzMiB0aW1lb3V0
-KQ0KPiAgCWNsaWVudC0+Y2xpZW50LmRldiA9IGRldjsNCj4gIAljbGllbnQtPmNsaWVudC50eF9i
-bG9jayA9IGZhbHNlOw0KPiAgCWNsaWVudC0+Y2hhbiA9IG1ib3hfcmVxdWVzdF9jaGFubmVsKCZj
-bGllbnQtPmNsaWVudCwgaW5kZXgpOw0KPiArCW11dGV4X2luaXQoJmNsaWVudC0+bXV0ZXgpOw0K
-PiAgDQo+ICAJaWYgKElTX0VSUihjbGllbnQtPmNoYW4pKSB7DQo+ICAJCWxvbmcgZXJyOw0KPiBA
-QCAtMzUyLDkgKzM1MywxMSBAQCBpbnQgY21kcV9wa3RfZmx1c2hfYXN5bmMoc3RydWN0IGNtZHFf
-cGt0ICpwa3QsIGNtZHFfYXN5bmNfZmx1c2hfY2IgY2IsDQo+ICAJCXNwaW5fdW5sb2NrX2lycXJl
-c3RvcmUoJmNsaWVudC0+bG9jaywgZmxhZ3MpOw0KPiAgCX0NCj4gIA0KPiArCW11dGV4X2xvY2so
-JmNsaWVudC0+bXV0ZXgpOw0KPiAgCW1ib3hfc2VuZF9tZXNzYWdlKGNsaWVudC0+Y2hhbiwgcGt0
-KTsNCj4gIAkvKiBXZSBjYW4gc2VuZCBuZXh0IHBhY2tldCBpbW1lZGlhdGVseSwgc28ganVzdCBj
-YWxsIHR4ZG9uZS4gKi8NCj4gIAltYm94X2NsaWVudF90eGRvbmUoY2xpZW50LT5jaGFuLCAwKTsN
-Cj4gKwltdXRleF91bmxvY2soJmNsaWVudC0+bXV0ZXgpOw0KPiAgDQo+ICAJcmV0dXJuIDA7DQo+
-ICB9DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5o
-IGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiBpbmRleCBhNzRjMWQ1
-YWNkZjMuLjBmOTA3MWNkMWJjNyAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9zb2MvbWVk
-aWF0ZWsvbXRrLWNtZHEuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGst
-Y21kcS5oDQo+IEBAIC0yOCw2ICsyOCw3IEBAIHN0cnVjdCBjbWRxX2NsaWVudCB7DQo+ICAJc3Ry
-dWN0IG1ib3hfY2hhbiAqY2hhbjsNCj4gIAlzdHJ1Y3QgdGltZXJfbGlzdCB0aW1lcjsNCj4gIAl1
-MzIgdGltZW91dF9tczsgLyogaW4gdW5pdCBvZiBtaWNyb3NlY29uZCAqLw0KPiArCXN0cnVjdCBt
-dXRleCBtdXRleDsNCj4gIH07DQo+ICANCj4gIC8qKg0KDQo=
+On Wed, Nov 06, 2019 at 05:47:30PM +0800, Anson Huang wrote:
+> i.MX6SLL EVK Rev A board is same with latest i.MX6SLL EVK board except
+> eMMC can ONLY run at HS200 mode, add support for this board.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  arch/arm/boot/dts/Makefile             |  1 +
+>  arch/arm/boot/dts/imx6sll-evk-reva.dts | 12 ++++++++++++
+>  2 files changed, 13 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6sll-evk-reva.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 71f08e7..3845bbf 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -557,6 +557,7 @@ dtb-$(CONFIG_SOC_IMX6SL) += \
+>  	imx6sl-warp.dtb
+>  dtb-$(CONFIG_SOC_IMX6SLL) += \
+>  	imx6sll-evk.dtb \
+> +	imx6sll-evk-reva.dtb \
+>  	imx6sll-kobo-clarahd.dtb
+>  dtb-$(CONFIG_SOC_IMX6SX) += \
+>  	imx6sx-nitrogen6sx.dtb \
+> diff --git a/arch/arm/boot/dts/imx6sll-evk-reva.dts b/arch/arm/boot/dts/imx6sll-evk-reva.dts
+> new file mode 100644
+> index 0000000..7ca2563
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6sll-evk-reva.dts
+> @@ -0,0 +1,12 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/*
+> + * Copyright 2016 Freescale Semiconductor, Inc.
+> + * Copyright 2017-2019 NXP.
+> + *
+> + */
+> +
+> +#include "imx6sll-evk.dts"
+> +
+> +&usdhc2 {
+> +	compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
 
+It looks odd to me that we need to deal with a board level difference
+with a SoC level compatible.  The USDHC compatible should be solely
+determined by the IP programming model, not the board level capability.
+
+Shawn
+
+> +};
+> -- 
+> 2.7.4
+> 
