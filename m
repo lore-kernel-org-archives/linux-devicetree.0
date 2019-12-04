@@ -2,146 +2,104 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39787C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A29C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF342073B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:38:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="KmCelkED"
+	by mail.kernel.org (Postfix) with ESMTP id 7D18120637
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:42:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfLDJiy (ORCPT
+        id S1725971AbfLDJmN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:38:54 -0500
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:42356 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfLDJiy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 04:38:54 -0500
-Received: by mail-vk1-f195.google.com with SMTP id u123so1926778vkb.9
-        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 01:38:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kBM+7sKdP9ujCe9ALp3o3fbTa5VggqfmCZsELUt7gmY=;
-        b=KmCelkEDW//pN0sIHhURzAdIgLRrtV4W3ZvTphxbkEmsYa1UnJ8NBPQ6XL/j0Bldte
-         kJyRTSZQ+yPMegb0hHGLLP/ToYjBXYveq8S5Swj1BjlkIp3xFREhO+MPg+AiRGAiqibI
-         p1TqIRD0ZqDISySdUxlmYNiOhjm3vULrjvK394FDYqQym+DAcYdt61u2UBwvkjBm2J0V
-         Yo4ZP5rt0xsVN6qBRHM4UkVQX/Qo2ZiEHo0Ipxym4ZMYrruHY2nBXI0odgsaghVkmVtV
-         rsEMmkg4qNTOwmkU5ESS+kg0giexdzQjnQ9Qd2EAPb35bPQRkSChyoHVSMRHqmOKCPuG
-         g3BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kBM+7sKdP9ujCe9ALp3o3fbTa5VggqfmCZsELUt7gmY=;
-        b=sbi23OrcUKfRTbm3DbmtjSAGAXFIBQsx986YNjVVWXHZwGQTTTjQYLphVo9l8nMk1C
-         ikWdPOCO4ihtt3xHTMvpjZy41RA9sSY8Gk++iU3VTD6kkxkFmVnxa9+/bjGbeRFYvMHD
-         ld51+s9KQYFFi1N4mG3DwIzdngSFlGSSVq+9AunaXdzv/6k9Mznw3tHW3B6Yg3CPdroZ
-         xBB+U+282odawZFRa4tTXlRWTFphJCM/CcBVauPzFqQEjHPWPdJ0lUw7NNkEIjR7n0Ly
-         XUPhc9do9d/Bi1flAznfRwtnuWczlno8tU8ZdTVGpDa397/XfGNyF1imal9IMeqoRmX9
-         A4/Q==
-X-Gm-Message-State: APjAAAXnQzwXbatrecR1ZgyOqG2+ZcPYCjS4ULpLc3RVrMpUtimV/9rv
-        OriHlvfENhtlX1bcZieDSCU5L7Sz+WBhiZu+yYvKjw==
-X-Google-Smtp-Source: APXvYqwiUoUoPZvgpG+ifopwxSLWwG1iOG5+9d9DmpNIKyb1VOCcZCyapnluKjwiXLoMcJdRA6EYd8bNW2NVGYtZ3eU=
-X-Received: by 2002:ac5:c4f8:: with SMTP id b24mr1401815vkl.79.1575452333245;
- Wed, 04 Dec 2019 01:38:53 -0800 (PST)
-MIME-Version: 1.0
-References: <20191030182132.25763-1-f.fainelli@gmail.com> <20191030182132.25763-7-f.fainelli@gmail.com>
-In-Reply-To: <20191030182132.25763-7-f.fainelli@gmail.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 4 Dec 2019 15:08:41 +0530
-Message-ID: <CAHLCerPyJxsLs5at4dQ7GdDXpC85UijNNhJbKSoDsdLW2do00w@mail.gmail.com>
-Subject: Re: [PATCH 6/6] thermal: brcmstb_thermal: Register different ops per process
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Markus Mayer <mmayer@broadcom.com>,
-        "maintainer:BROADCOM STB AVS TMON DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Wed, 4 Dec 2019 04:42:13 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48282 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfLDJmN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 04:42:13 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 5889C290EFA;
+        Wed,  4 Dec 2019 09:42:10 +0000 (GMT)
+Date:   Wed, 4 Dec 2019 10:42:07 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
+        Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Clark <robdclark@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:BROADCOM STB AVS TMON DRIVER" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v4 08/11] drm/bridge: Add a drm_bridge_state object
+Message-ID: <20191204104207.38367944@collabora.com>
+In-Reply-To: <20191204091255.GB6705@pendragon.ideasonboard.com>
+References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
+        <20191203141515.3597631-9-boris.brezillon@collabora.com>
+        <20191203181705.GT4730@pendragon.ideasonboard.com>
+        <20191204100302.38096544@collabora.com>
+        <20191204091255.GB6705@pendragon.ideasonboard.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 11:52 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> Since we do not have interrupts on BCM7216, we cannot have trip point
-> crossing, the thermal subsystem expects us to provide a NULL set_trips
-> operation in that case, so make it possible to provide per-process
-> thermal_zone_of_device_ops
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On Wed, 4 Dec 2019 11:12:55 +0200
+Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Hi Boris,
+> 
+> On Wed, Dec 04, 2019 at 10:03:02AM +0100, Boris Brezillon wrote:
+> > On Tue, 3 Dec 2019 20:17:05 +0200 Laurent Pinchart wrote:  
+> > > On Tue, Dec 03, 2019 at 03:15:12PM +0100, Boris Brezillon wrote:  
+> > > > One of the last remaining objects to not have its atomic state.
+> > > > 
+> > > > This is being motivated by our attempt to support runtime bus-format
+> > > > negotiation between elements of the bridge chain.
+> > > > This patch just paves the road for such a feature by adding a new
+> > > > drm_bridge_state object inheriting from drm_private_obj so we can
+> > > > re-use some of the existing state initialization/tracking logic.
+> > > > 
+> > > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > > > Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> > > > ---
+> > > > Changes in v4:
+> > > > * Fix the doc
+> > > > * Kill default helpers (inlined)    
+> > > 
+> > > I liked the default helpers, inlining their content makes the code more
+> > > difficult to follow in my opinion.  
+> > 
+> > I'll go back to this approach then. Should I keep the original helper
+> > names even though they're not globally visible (and should probably
+> > never be)?  
+> 
+> I agree they should probably never be visible, and I trust your
+> judgement on naming. Please double-check the documentation though, to
+> ensure that it matches the implementation.
+> 
 
-> ---
->  drivers/thermal/broadcom/brcmstb_thermal.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/thermal/broadcom/brcmstb_thermal.c b/drivers/thermal/broadcom/brcmstb_thermal.c
-> index 64f715053ce9..a75a335d1bb3 100644
-> --- a/drivers/thermal/broadcom/brcmstb_thermal.c
-> +++ b/drivers/thermal/broadcom/brcmstb_thermal.c
-> @@ -96,6 +96,7 @@ static struct avs_tmon_trip avs_tmon_trips[] = {
->  struct brcmstb_thermal_params {
->         unsigned int offset;
->         unsigned int mult;
-> +       const struct thermal_zone_of_device_ops *of_ops;
->  };
->
->  struct brcmstb_thermal_priv {
-> @@ -278,19 +279,25 @@ static int brcmstb_set_trips(void *data, int low, int high)
->         return 0;
->  }
->
-> -static const struct thermal_zone_of_device_ops of_ops = {
-> +static const struct thermal_zone_of_device_ops brcmstb_16nm_of_ops = {
->         .get_temp       = brcmstb_get_temp,
-> -       .set_trips      = brcmstb_set_trips,
->  };
->
->  static const struct brcmstb_thermal_params brcmstb_16nm_params = {
->         .offset = 457829,
->         .mult   = 557,
-> +       .of_ops = &brcmstb_16nm_of_ops,
-> +};
-> +
-> +static const struct thermal_zone_of_device_ops brcmstb_28nm_of_ops = {
-> +       .get_temp       = brcmstb_get_temp,
-> +       .set_trips      = brcmstb_set_trips,
->  };
->
->  static const struct brcmstb_thermal_params brcmstb_28nm_params = {
->         .offset = 410040,
->         .mult   = 487,
-> +       .of_ops = &brcmstb_28nm_of_ops,
->  };
->
->  static const struct of_device_id brcmstb_thermal_id_table[] = {
-> @@ -329,7 +336,7 @@ static int brcmstb_thermal_probe(struct platform_device *pdev)
->         platform_set_drvdata(pdev, priv);
->
->         thermal = devm_thermal_zone_of_sensor_register(&pdev->dev, 0, priv,
-> -                                                      &of_ops);
-> +                                                      priv->temp_params.of_ops);
->         if (IS_ERR(thermal)) {
->                 ret = PTR_ERR(thermal);
->                 dev_err(&pdev->dev, "could not register sensor: %d\n", ret);
-> --
-> 2.17.1
->
+Is there any point keeping the documentation if they're not exposed?
