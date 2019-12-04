@@ -2,146 +2,102 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0945C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 20:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32FBC2D0BE
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 20:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D649207DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 20:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 958372081B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 20:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbfLDUPA (ORCPT
+        id S1727989AbfLDUPD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 15:15:00 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:50772 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfLDUPA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 15:15:00 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 572C120067;
-        Wed,  4 Dec 2019 21:14:54 +0100 (CET)
-Date:   Wed, 4 Dec 2019 21:14:52 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
+        Wed, 4 Dec 2019 15:15:03 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:48418 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727033AbfLDUPD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 4 Dec 2019 15:15:03 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1icb2t-0001Zb-KG; Wed, 04 Dec 2019 21:14:47 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
 To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] dt-bindings: display: Convert a bunch of panels to DT
- schema
-Message-ID: <20191204201452.GA30193@ravnborg.org>
-References: <20191119231309.18295-1-robh@kernel.org>
- <20191130194337.GE24722@ravnborg.org>
- <CAL_Jsq+AsCOQh89t1foJjDFFoQzfx5NythgdcbQGYNxRHRjB2A@mail.gmail.com>
+Cc:     Jagan Teki <jagan@amarulasolutions.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Akash Gajjar <akash@openedev.com>, Tom Cubie <tom@radxa.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH v2 1/5] dt-bindings: arm: rockchip: Add VMARC RK3399Pro SOM binding
+Date:   Wed, 04 Dec 2019 21:14:46 +0100
+Message-ID: <5408424.xnnVrITuBQ@diego>
+In-Reply-To: <20191204193240.GA6772@bogus>
+References: <20191121141445.28712-1-jagan@amarulasolutions.com> <20191121141445.28712-2-jagan@amarulasolutions.com> <20191204193240.GA6772@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+AsCOQh89t1foJjDFFoQzfx5NythgdcbQGYNxRHRjB2A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=VwQbUJbxAAAA:8 a=zu6OG0ZhAAAA:8 a=pGLkceISAAAA:8 a=ak7PtswyECe1Mw--VqQA:9
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=pAN39diAhXWuPx0-Vjn3:22
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob.
-
-On Mon, Dec 02, 2019 at 08:38:39AM -0600, Rob Herring wrote:
-> On Sat, Nov 30, 2019 at 1:43 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> >
-> > Hi Rob.
-> >
-> > Thanks for doing this boring, trivial and tiresome task.
+Am Mittwoch, 4. Dezember 2019, 20:32:40 CET schrieb Rob Herring:
+> On Thu, Nov 21, 2019 at 07:44:41PM +0530, Jagan Teki wrote:
+> > VMARC RK3399Pro SOM is a standard SMARC SOM design with
+> > Rockchip RK3399Pro SoC, which is designed by Vamrs.
+> > 
+> > Since it is a standard SMARC design, it can be easily
+> > mounted on the supporting Carrier board. Radxa has
+> > suitable carrier board to mount and use it as a final
+> > version board.
+> > 
+> > Add dt-bindings for it.
+> > 
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> > Changes for v2:
+> > - none
+> > 
+> >  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > index 45728fd22af8..51aa458833a9 100644
+> > --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > @@ -526,4 +526,9 @@ properties:
+> >          items:
+> >            - const: tronsmart,orion-r68-meta
+> >            - const: rockchip,rk3368
+> > +
+> > +      - description: Vamrs VMARC RK3399Pro SOM
+> > +        items:
+> > +          - const: vamrs,rk3399pro-vmarc-som
 > 
-> It was somewhat scripted at least...
-> 
-> > On Tue, Nov 19, 2019 at 05:13:09PM -0600, Rob Herring wrote:
-> > > Convert all the 'simple' panels which either use the single
-> > > 'power-supply' property or don't say and just reference
-> > > simple-panel.txt. In the later case, bindings are clear as to which
-> > > properties are required or unused.
-> > >
-> > > Cc: Maxime Ripard <mripard@kernel.org>
-> > > Cc: Chen-Yu Tsai <wens@csie.org>
-> > > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > > Cc: Sam Ravnborg <sam@ravnborg.org>
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> >
-> > So Thierry and I ended up as Maintianes for them all.
-> > I gues thats OK as we look after the panel stuff anyway.
-> >
-> > > ---
-> > > We could perhaps consolidate a bunch of these, but I have no idea how
-> > > accurate some of these are WRT what's required or not. Seems strange
-> > > that 'backlight' is optional unless the backlight is tied full on for
-> > > example. If that's the case, then should backlight ever be required?
-> > I do not really follow you here.
-> > Looking through the patch set things looks normal to me.
-> >
-> > What do I miss here?
-> 
-> I'm saying a bunch of these could just be a single schema doc with a
-> long list of compatibles. The variation is in what properties are
-> required or not.
+> Why do you need this? You just override it in your dts files, so it is 
+> not really used. Perhaps the top-level should have all 3 compatibles? If 
+> so, then the schemas are wrong.
 
-It would be just wonderful if we could have only a few
-dt-bindings for the simple panels.
-Like you I cannot see why enable-gpios should be required.
+In the past we had SOMs that _could_ function alone, but looking at the
+announcement for this one [0] suggests that the SOM always needs a carrier
+board, so I don't think the SOM actually needs a separate entry but instead
+should be part of the carrier-board compatible list, as Rob suggested.
 
-We could end up with something like three classes of bindings:
+So I guess we should only have (from patch 3):
+  - description: Radxa ROCK Pi N10
+        items:
+          - const: radxa,rockpi-n10
+          - const: vamrs,rk3399pro-vmarc-som
+          - const: rockchip,rk3399pro
 
-+required:
-+  - compatible
-+  - power-supply
 
-+required:
-+  - compatible
-+  - port
-+  - power-supply
+Heiko
 
-+required:
-+  - backlight
-+  - compatible
-+  - port
-+  - power-supply
+[0] https://www.96rocks.com/blog/2019/09/11/introduce-vamrc-rk3399pro-som-and-ficus2-carrier-board/
 
-The port part is to my best understanding a way to
-connect the panel to the display driver.
-So it should be more how the connect in the binding
-that decides if port is used or not.
-And the panel should not require it.
 
-I may use it with display drivers that do not support it
-in their binding.
-
-And then we have backlight - which can hardly be mandatory.
-The panel could hard-wire it to provide backligt if it wanted
-and the binding should continue to work.
-I think you had the same argument.
-
-So we are down to two required properties:
-+required:
-+  - compatible
-+  - power-supply
-
-Could we put all simple panels in one binding file
-with only this - that would be great.
-Hopefully scripted somehow...
-
-Then adding new simple panels would be a matter of
-adding a new compatible.
-And if they are sorted this should not cause many merge issues either.
-
-I hope I understood you correct.
-
-	Sam
