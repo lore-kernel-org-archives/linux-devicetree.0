@@ -2,136 +2,132 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C0FC0044D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 08:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A90C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 08:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC2C1206DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 08:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 447DB2068E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 08:48:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UGNmUdgF";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="KcEMuMmT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfLDInr (ORCPT
+        id S1725840AbfLDIsj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:43:47 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36302 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbfLDInq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 03:43:46 -0500
-Received: by mail-oi1-f196.google.com with SMTP id c16so6144408oic.3;
-        Wed, 04 Dec 2019 00:43:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jMNDNoGogs0zIVx0MUjgyWFHFtVdl2mqSYxmc3Nnc/A=;
-        b=ka4CFhdtgXo0SNJV6BwCMJGGTkMyvAzoMgOvQ+5leQlx51WergqpYyBK6NJpgNkaFv
-         vLHb+yZEzpE/xpmWGpmLyXoiZkoTvH3B5rG8wDxWbp9GyPYtHDB/Shqt2xJDTLcveNCn
-         H+/FOurmuGonq1YMKbKc1kUPZxoM9wZZXkFmg9OWMboBD0CH/1DkYTobzcCx4//0Z352
-         CCEYUfhKQgLPDSk081W7HIqQROaWRdv8nVQ0WtcFhImySFrCmfqLuD2siWY73yggCYy7
-         +IbZN09TtaEraVGtV0YtPDGAzJKv3UsvoPBdEs2w7e6+ky7i9anuUUpcs3rQj4S1jJaz
-         jWeQ==
-X-Gm-Message-State: APjAAAXEFWUu+PgcI4t68E3E0rn+WcKfdMsTK6sABRYW7keSqQuewM5d
-        Oj2iS+qpOkiz6c84Lh5nFoEzg7L2nKEeXsu+NZ4=
-X-Google-Smtp-Source: APXvYqyTjUqAw5gnC/dN6OVvFFm1xVywx9M+aTiRF7Kq1tQO+ntIrmuya+yV20NM+jRqU59d2JeUMXa2oYIWMweHYzs=
-X-Received: by 2002:aca:3a86:: with SMTP id h128mr1555087oia.131.1575449025576;
- Wed, 04 Dec 2019 00:43:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
- <20191203034519.5640-7-chris.brandt@renesas.com> <CAMuHMdVBYpuoK7hcyNLK-mAdpTQz3ohTGXuYdFPHdpU5RoPr6Q@mail.gmail.com>
- <TY1PR01MB15622365FCCC3C1CB052FD0E8A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY1PR01MB15622365FCCC3C1CB052FD0E8A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 4 Dec 2019 09:43:34 +0100
-Message-ID: <CAMuHMdXKSWeBdCDc6u5KWE67nD_9FStr9A_vb_5K=qpQ_y8bSw@mail.gmail.com>
-Subject: Re: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
-To:     Chris Brandt <Chris.Brandt@renesas.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 4 Dec 2019 03:48:39 -0500
+Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:51888
+        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725830AbfLDIsi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 03:48:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575449318;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=gEB6uBMOOwAhGK0idGqw2RrciO9bPtivwYCZYr9wQvM=;
+        b=UGNmUdgFhvrubZ08jwkeEPE8otrb4+Wnt6+TjQsqooSx4YXL3Ql4avPfMtcVEDxP
+        4VQgQGKorF4k3Pho5Q5EXSHkur3Xletx263Zl7C3sRFRSYV2YwqQ2M2SFlWINchMYAE
+        Lc75zWY6mKYEVxn9Jt7qLnVXYUj22HUa2ujZBK+Y=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575449318;
+        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
+        bh=gEB6uBMOOwAhGK0idGqw2RrciO9bPtivwYCZYr9wQvM=;
+        b=KcEMuMmTJQkU4GXtaW9h3FZLAm8jNA727TRFaf18r/L907pz1fcu36gjhTL4hJMA
+        Pj9J069xA2rpEH/Hszyv/Du7qAeFLEIA+p0F70QLySAP0GXoO/NiaAiJEmPmJLap/uV
+        wBCWkHVFmnd0FlEUx7VJOYhxKwOeEd227kvybEBE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 64DF8C447AE
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Wed, 4 Dec 2019 08:48:37 +0000
+Message-ID: <0101016ed018d194-4a3955e4-106f-4943-8edc-6506b5a421e4-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.7.4
+X-SES-Outgoing: 2019.12.04-54.240.27.11
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Chris,
+Add device node for the ath10k SNOC platform driver probe
+and add resources required for WCN3990 on sc7180 soc.
 
-On Tue, Dec 3, 2019 at 11:33 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Tue, Dec 3, 2019, Geert Uytterhoeven wrote:
-> > > +++ b/Documentation/devicetree/bindings/spi/spi-renesas-spibsc.txt
-> > > +Required properties:
-> > > +- compatible: should be an SoC-specific compatible value, followed by
-> > > +               "renesas,spibsc" as a fallback.
-> > > +               supported SoC-specific values are:
-> > > +               "renesas,r7s72100-spibsc"       (RZ/A1)
-> > > +               "renesas,r7s9210-spibsc"        (RZ/A2)
-> >
-> > Is the fallback valid for RZ/A1, which has its own special match entry in the
-> > driver?
-> > Will it be valid for R-Car Gen3?
-> > If not, you may want to drop it completely.
->
-> The fallback would still work for RZ/A1, you just would not be able to
-> set the baud rate. But, I have no problem dropping the fallback. I'm fine
-> with having a compatible string for each SoC that is known to work for.
->
-> I have not tried it with Gen3, but I would guess there will be some minor
-> difference that will needed to be accounted for.
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+---
+This change is dependent on the below set of changes
+arm64: dts: sc7180: Add qupv3_0 and qupv3_1 (https://lore.kernel.org/patchwork/patch/1150367/)
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts |  4 ++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27 +++++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+)
 
-OK.
-
-> > > +- reg: should contain three register areas:
-> > > +       first for the base address of SPIBSC registers,
-> > > +       second for the direct mapping read mode
-> > > +- clocks: should contain the clock phandle/specifier pair for the module
-> > clock.
-> > > +- power-domains: should contain the power domain phandle/specifier pair.
-> > > +- #address-cells: should be 1
-> > > +- #size-cells: should be 0
-> > > +- flash: should be represented by a subnode of the SPIBSC node,
-> > > +        its "compatible" property contains "jedec,spi-nor" if SPI is used.
-> >
-> > What about the "mtd-rom" use for e.g. XIP?
->
-> But "mtd-rom" doesn't really have anything to do with the functionality of the
-> driver when it is being used in "SPI mode".
-
-Correct. But DT describes hardware.  If the FLASH is used in direct mapped
-mode, that should be described in DT.
-
-> Maybe I just remove any mention of this for now.
->
-> > interrupts? RZ/A2M seems to have an SPIBSC interrupt, RZ/A1 hasn't.
->
-> There was never any interrupts in the SPIBSC.
-> But it looks like when they added HyperFlash and OctaFlash support, they put
-> in some interrupts for that.
-> And now that I look at it, they are for pins labeled RPC_INT, RPC_WC, RPC_RESET.
-> (I just realized that "RPC" stands for "Reduced Pin Count")
->
-> So....am I supposed to add in that interrupt even though I'm not planning on using
-> it??
-
-DT describes hardware, not driver limitations.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 189254f..8a6a760 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -248,6 +248,10 @@
+ 	status = "okay";
+ };
+ 
++&wifi {
++	status = "okay";
++};
++
+ /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+ 
+ &qup_i2c2_default {
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 666e9b9..40c9971 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -42,6 +42,12 @@
+ 			compatible = "qcom,cmd-db";
+ 			no-map;
+ 		};
++
++		wlan_fw_mem: wlan_fw_region@93900000 {
++			compatible = "removed-dma-pool";
++			no-map;
++			reg = <0 0x93900000 0 0x200000>;
++		};
+ 	};
+ 
+ 	cpus {
+@@ -1119,6 +1125,27 @@
+ 				#clock-cells = <1>;
+ 			};
+ 		};
++
++		wifi: wifi@18800000 {
++			status = "disabled";
++			compatible = "qcom,wcn3990-wifi";
++			reg = <0 0x18800000 0 0x800000>;
++			reg-names = "membase";
++			interrupts =
++				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
++				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
++				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
++				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
++				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
++				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
++				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
++				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
++				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
++				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
++				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
++				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
++			memory-region = <&wlan_fw_mem>;
++		};
+ 	};
+ 
+ 	timer {
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.7.4
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
