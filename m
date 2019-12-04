@@ -7,111 +7,105 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 515C6C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 19:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666C6C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 19:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 230122073C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 19:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 368BF20409
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 19:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575487963;
-	bh=ne28C0RDZjeeVfqTsFNAVxvyneTG7Ah8xDOfsTR36pA=;
+	s=default; t=1575488064;
+	bh=A3sOYG3OPgTtbY92bXyzmg3KcJIG0Bs4QOjP9d3ZRsA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=os/apjtQX77dtX7kxPFirr8kICQvorOMlxbffUu4+VOZ2meEJ7kZrUjeibN5vM/7U
-	 MX1cwdfARmpdeIb7gF4WXJDaEQ3Wgnikrq29H1i9JyJ1UP6+zqTesHVO8XFtRGsYpe
-	 /ioa8GMnce0zh/XoPKpoXRh2bog90iqCVrJ9KBhs=
+	b=jEbkkOuhNQHpMpb9cO0UjTLrJWLzF7BIw8vpNRRszBOIx1I39ztTic8+S+xm/ifX4
+	 8GZ614DBOTO4JtR12dz7DHl5j4kHOPnYf+5wbmmmvzjac67tSbyzrTQtWSe4D2otm5
+	 hHAHNvngmZ8Rs0iv4fVsKITLz12ankoyiyuUkqmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbfLDTcm (ORCPT
+        id S1728326AbfLDTeX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 14:32:42 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46207 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbfLDTcm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 14:32:42 -0500
-Received: by mail-oi1-f195.google.com with SMTP id a124so304849oii.13;
-        Wed, 04 Dec 2019 11:32:41 -0800 (PST)
+        Wed, 4 Dec 2019 14:34:23 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41418 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728325AbfLDTeX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 14:34:23 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r27so316363otc.8;
+        Wed, 04 Dec 2019 11:34:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VIykNz8gTrjJYYcuHvCZ7rZIZIyIF9AyyoN6mQ8XTak=;
-        b=Wx+Pthfb7oeHeq89StbB3kh4fgVgIAhdfUvZRN8RlQ3nSFp3e+i4CYA+yLzreDVrBa
-         IoO/NP7PzWMxo2eZcIHE3jo+zDzh73XBgPVi+ZQBRy2I7DkK7tGLesVJgmOkCX0Fqzka
-         d5BYSJ996yway/Ekb6mhyvDidYHlVjwfqcG33gAU7zK1wnC8q2kz2ryLn16LWbKjeLad
-         m2zL/CDnByg4GIyLL6z13JRz6EXy6CjBYZGx7wq0NOeg5qFdFjSVazlT0WnRcM6s3wW1
-         ag18iT6mAAF+5+b2xU1jjetGryiThx922mLrlGm+tjoZ0IFeRT8uI6/4YL2rJ50OO2Eq
-         nzjA==
-X-Gm-Message-State: APjAAAWbNIOb3JPCvd0Jv+UFQXD3DUHsQ6QRPZj3jrtfoiKfDpUoHPDN
-        sj3GmOMt5e8pLpiOnQPGYw==
-X-Google-Smtp-Source: APXvYqyL9rITgSoXHv8RFYgfyg9XG3viSLqSKUMigSf5Mv7C3OVPAyHFxBK3gRgkRj3Xsvy21/dcQw==
-X-Received: by 2002:a54:4781:: with SMTP id o1mr3877662oic.117.1575487961356;
-        Wed, 04 Dec 2019 11:32:41 -0800 (PST)
+        bh=p4mxuGM2xEKk8KHZKZzmKSi85GUqaLcMWhdk6rGaIpI=;
+        b=azZih2Z1i6qMkH4ULhxNYAhAIj5WN9R+X2iuS23vHW7/IhrlTmfqz83UckQzyrF27i
+         f/wHZOO0R5k6p2hTRfDNIHSiSnU7s9YMbsOQhlwI/+ze41g1Zqmjjrg8CiEJvRjzk8WD
+         3IT+UJMkLnbvh6uLg3UkzTB86jp5hJhT1PanD36P7smb8yiWxkairAF1ZlTjk/4Af7gW
+         BAkALOgu7mhW4R40CENzCy6xItTkY4fPdECZFuUSdSW1l698gYb07Fk6pDvat+tVZ2WI
+         SUBCNU1KAwUujjjyigYGOdURr8d1QmLNnJyMbquXuR1qySOa3PTkUncI2vMhn6UL7ZdR
+         7RuQ==
+X-Gm-Message-State: APjAAAUnz7rLx4NpMTI+WaLSSRUin+Crkw16Z6neJNRj1W2HRAvuj4Pb
+        D17yXN3cuDVRRqKbBGqyzQ==
+X-Google-Smtp-Source: APXvYqw5eOGbBaVPH+ueyOZw91fxjIVeOFdA2MP/nej8yeBJ149jFgcf0lgk+mRtwmYNmoKC2nf59w==
+X-Received: by 2002:a9d:3b8:: with SMTP id f53mr3946935otf.180.1575488062646;
+        Wed, 04 Dec 2019 11:34:22 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j25sm2483560otl.71.2019.12.04.11.32.40
+        by smtp.gmail.com with ESMTPSA id s83sm1691648oif.33.2019.12.04.11.34.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 11:32:40 -0800 (PST)
-Date:   Wed, 4 Dec 2019 13:32:40 -0600
+        Wed, 04 Dec 2019 11:34:22 -0800 (PST)
+Date:   Wed, 4 Dec 2019 13:34:21 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
+To:     Jason Kridner <jkridner@gmail.com>
+Cc:     devicetree@vger.kernel.org,
+        Robert Nelson <robertcnelson@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Akash Gajjar <akash@openedev.com>, Tom Cubie <tom@radxa.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amarula@amarulasolutions.com
-Subject: Re: [PATCH v2 1/5] dt-bindings: arm: rockchip: Add VMARC RK3399Pro
- SOM binding
-Message-ID: <20191204193240.GA6772@bogus>
-References: <20191121141445.28712-1-jagan@amarulasolutions.com>
- <20191121141445.28712-2-jagan@amarulasolutions.com>
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jyri Sarha <jsarha@ti.com>, linux-kernel@vger.kernel.org,
+        Caleb Robey <c-robey@ti.com>, Jason Kridner <jdk@ti.com>
+Subject: Re: [PATCH v2] dt-bindings: Add vendor prefix for BeagleBoard.org
+Message-ID: <20191204193421.GA15784@bogus>
+References: <20191122000926.19408-1-jdk@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191121141445.28712-2-jagan@amarulasolutions.com>
+In-Reply-To: <20191122000926.19408-1-jdk@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 07:44:41PM +0530, Jagan Teki wrote:
-> VMARC RK3399Pro SOM is a standard SMARC SOM design with
-> Rockchip RK3399Pro SoC, which is designed by Vamrs.
+On Thu, Nov 21, 2019 at 07:09:26PM -0500, Jason Kridner wrote:
+> Add vendor prefix for BeagleBoard.org Foundation
 > 
-> Since it is a standard SMARC design, it can be easily
-> mounted on the supporting Carrier board. Radxa has
-> suitable carrier board to mount and use it as a final
-> version board.
-> 
-> Add dt-bindings for it.
-> 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Signed-off-by: Jason Kridner <jdk@ti.com>
 > ---
-> Changes for v2:
-> - none
-> 
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> index 45728fd22af8..51aa458833a9 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> @@ -526,4 +526,9 @@ properties:
->          items:
->            - const: tronsmart,orion-r68-meta
->            - const: rockchip,rk3368
-> +
-> +      - description: Vamrs VMARC RK3399Pro SOM
-> +        items:
-> +          - const: vamrs,rk3399pro-vmarc-som
+> Changes in v2:
+>   - Use 'beagle' rather than 'beagleboard.org' to be shorter and avoid
+>     needing to quote within a yaml regular expression.
+>   - Assign 'from' to author e-mail address.
 
-Why do you need this? You just override it in your dts files, so it is 
-not really used. Perhaps the top-level should have all 3 compatibles? If 
-so, then the schemas are wrong.
+Still not right...
 
-> +          - const: rockchip,rk3399pro
->  ...
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 967e78c5ec0a..1cce6641b21b 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -139,6 +139,8 @@ patternProperties:
+>      description: Shenzhen AZW Technology Co., Ltd.
+>    "^bananapi,.*":
+>      description: BIPAI KEJI LIMITED
+> +  "^beagle,.*":
+> +    description: BeagleBoard.org Foundation
+>    "^bhf,.*":
+>      description: Beckhoff Automation GmbH & Co. KG
+>    "^bitmain,.*":
 > -- 
-> 2.18.0.321.gffc6fa0e3
+> 2.17.1
 > 
