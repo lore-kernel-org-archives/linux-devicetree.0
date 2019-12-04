@@ -2,287 +2,112 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18699C43215
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 02:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76660C432C3
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 02:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB72C2073F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 02:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC2C2068E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 02:22:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bBeWPND6"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QOHYHgfv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbfLDCKJ (ORCPT
+        id S1726189AbfLDCWV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 21:10:09 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:40051 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbfLDCKJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 21:10:09 -0500
-Received: by mail-il1-f193.google.com with SMTP id b15so5193987ila.7
-        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 18:10:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CcksHrnDnvCw+7cPZSrlt/H4ilYewkHtwZbwPDwidps=;
-        b=bBeWPND6kv9FMp5OE1CKADmvH0Mvtix+Wp7qsdAnZaLiqCAjo93NfmUHKxGfnYACab
-         3VNXSiFr/Etto47AMIByMYYcmrvOz9rnEpJiDhI6JXegMMXChCJP3FSyr0istRHRWJUi
-         a2omfRzO7ZCicvXfA2rc0mRkg7Ko6fwbLdjI/cXvwtmcIYhoaUPz5zL9EpVQ0+3ve9Hx
-         vQEjc3ehiySCt1R1nQ2ezpl17NN7yXtIifTYKtapY7Akrh+ydFmLq07Iu3epfoHY0UUn
-         cF3TPcQqR/VXYOuMB35CI5pjSPJXPGBnXfP0nvnfdgdUfMRv0Tv5u3KuHP+qLoCf2i2/
-         Zz3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CcksHrnDnvCw+7cPZSrlt/H4ilYewkHtwZbwPDwidps=;
-        b=pyW/xVhBdLBvXQ7Qz4V3jj1t1vkbcJa/xaFEMLA8proXU3B+9GZOr+PP/baZeBpOna
-         oOpYhdsQp2IY7Z2mG+FTCoe+RUJIxAMHFN5S08d5K1o/6rEG5wH9D7rxwFd7JjoPFlnD
-         +tlRTU6Xix1+Db1rRmJjliT7zxksdKOxZovWaPHQYmMnEIzK3G3p7u3xuItVtouYfuiZ
-         jAMt1ANzng7V3TkOU3t68jhl3x0EtvJlNz3HU+TDWgttIRNGaAHvKcVDwyL93wzgUxd/
-         jBPqbPnCLvBb2hLR6UUgxg9eSE4ZD9cZsuk2OlA1a29hkmiAB0Vruu690Hg5BJgyD4zp
-         kLBQ==
-X-Gm-Message-State: APjAAAUjMziZZnApuphoCGsMolB7AUHXHg1famtHeukvM9vUBcZ6T65s
-        0Xegm4tKRqXIAY3JuTyeUNRSLo0eWVEQAmKRDWuSbQ==
-X-Google-Smtp-Source: APXvYqzCZgn+KTJMjfGfBVGRFGUk1RS7lUrI4vWwPucNKhPjo/MAabpBRco4G6J359xprZ2xHp/LW9zVjUB0Eqlfn1o=
-X-Received: by 2002:a92:1547:: with SMTP id v68mr1331380ilk.58.1575425407814;
- Tue, 03 Dec 2019 18:10:07 -0800 (PST)
-MIME-Version: 1.0
-References: <1571668177-3766-1-git-send-email-rampraka@codeaurora.org>
- <CAPDyKFoZEc-m7NMnaAa5bjtCSp4wyJqic3cLHk95xracoWcCUA@mail.gmail.com>
- <5c78cc29-deb1-4cea-5b30-6f7538ca4703@codeaurora.org> <CAD=FV=W+JbeF7yKk6Vup=5-MSbYC8qq5rm176hZk2WdiFwA3qg@mail.gmail.com>
- <0101016eb635d158-5e87498b-b906-4ec2-813f-83275cab3555-000000@us-west-2.amazonses.com>
-In-Reply-To: <0101016eb635d158-5e87498b-b906-4ec2-813f-83275cab3555-000000@us-west-2.amazonses.com>
-From:   Doug Anderson <dianders@google.com>
-Date:   Tue, 3 Dec 2019 18:09:54 -0800
-Message-ID: <CAD=FV=Xm2mAfnS2mvddxejgD1sV58FRaQmkO_sN8DxoJhOynUQ@mail.gmail.com>
-Subject: Re: [RFC 0/6] mmc: Add clock scaling support for mmc driver
-To:     Ram Prakash Gupta <rampraka@codeaurora.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Sayali Lokhande <sayalil@codeaurora.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        cang@codeaurora.org, ppvk@codeaurora.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>
+        Tue, 3 Dec 2019 21:22:21 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:29015 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726179AbfLDCWV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 21:22:21 -0500
+X-UUID: 68ec0c3ab67948ca9baeb7e60e3fa6c4-20191204
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=gASy9TDuVsH5zwpxeW0BE8bxVb8mYW76DT6995xQhXA=;
+        b=QOHYHgfvSFD8m0DDWMic4GaD7zRffTP057Ws/SsQ1lzOhPCh3ga0IqjcmI/q4SbsWBKQZETxYEECbKtQFrKxv++xGGl9RZ7/J8ZXJdIbkji55JlP82QR1jYNIWi1oqgTPlTwy1VxLGwLqfEtrtULsmD3/Cv4N6yU+hnZYI5ienI=;
+X-UUID: 68ec0c3ab67948ca9baeb7e60e3fa6c4-20191204
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1382334364; Wed, 04 Dec 2019 10:22:16 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 4 Dec 2019 10:22:03 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 4 Dec 2019 10:21:56 +0800
+Message-ID: <1575426135.31411.2.camel@mtksdaap41>
+Subject: Re: [PATCH] soc: mediatek: cmdq: avoid racing condition with mutex
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Nicolas Boichat" <drinkcat@chromium.org>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>
+Date:   Wed, 4 Dec 2019 10:22:15 +0800
+In-Reply-To: <20191121072910.31665-1-bibby.hsieh@mediatek.com>
+References: <20191121072910.31665-1-bibby.hsieh@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+SGksIEphc3NpOg0KDQpBcmUgbWJveF9zZW5kX21lc3NhZ2UoKSBhbmQgbWJveF9jbGllbnRfdHhk
+b25lKCkgdGhyZWFkLXNhZmU/IElmIHRoZXNlDQp0d28gYXJlIHRocmVhZC1zYWZlLCB0aGlzIGJ1
+ZyBzaG91bGQgYmUgZml4ZWQgaW4gbWFpbGJveCBjb3JlIG5vdA0KY2xpZW50Lg0KDQpSZWdhcmRz
+LA0KQ0sNCg0KT24gVGh1LCAyMDE5LTExLTIxIGF0IDE1OjI5ICswODAwLCBCaWJieSBIc2llaCB3
+cm90ZToNCj4gSWYgY21kcSBjbGllbnQgaXMgbXVsdGkgdGhyZWFkIHVzZXIsIHJhY2luZyB3aWxs
+IG9jY3VyIHdpdGhvdXQgbXV0ZXgNCj4gcHJvdGVjdGlvbi4gSXQgd2lsbCBtYWtlIHRoZSBDIG1l
+c3NhZ2UgcXVldWVkIGluIG1haWxib3gncyBxdWV1ZQ0KPiBhbHdheXMgbmVlZCBEIG1lc3NhZ2Un
+cyB0cmlnZ2VyaW5nLg0KPiANCj4gVGhyZWFkIEEJCVRocmVhZCBCCQkgIFRocmVhZCBDCQlUaHJl
+YWQgRC4uLg0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiBtYm94X3NlbmRfbWVzc2Fn
+ZSgpDQo+IAlzZW5kX2RhdGEoKQ0KPiAJCQltYm94X3NlbmRfbWVzc2FnZSgpDQo+IAkJCQkqZXhp
+dA0KPiAJCQkJCQltYm94X3NlbmRfbWVzc2FnZSgpDQo+IAkJCQkJCQkqZXhpdA0KPiBtYm94X2Ns
+aWVudF90eGRvbmUoKQ0KPiAJdHhfdGljaygpDQo+IAkJCW1ib3hfY2xpZW50X3R4ZG9uZSgpDQo+
+IAkJCQl0eF90aWNrKCkNCj4gCQkJCQkJbWJveF9jbGllbnRfdHhkb25lKCkNCj4gCQkJCQkJCXR4
+X3RpY2soKQ0KPiBtc2dfc3VibWl0KCkNCj4gCXNlbmRfZGF0YSgpDQo+IAkJCW1zZ19zdWJtaXQo
+KQ0KPiAJCQkJKmV4aXQNCj4gCQkJCQkJbXNnX3N1Ym1pdCgpDQo+IAkJCQkJCQkqZXhpdA0KPiAt
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiANCj4gU2lnbmVkLW9mZi1ieTogQmliYnkgSHNp
+ZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3NvYy9tZWRp
+YXRlay9tdGstY21kcS1oZWxwZXIuYyB8IDMgKysrDQo+ICBpbmNsdWRlL2xpbnV4L3NvYy9tZWRp
+YXRlay9tdGstY21kcS5oICB8IDEgKw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
+KykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxw
+ZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IGluZGV4IDlh
+ZGQwZmQ1ZmE2Yy4uOWUzNWUwYmVmZmFhIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9tZWRp
+YXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGst
+Y21kcS1oZWxwZXIuYw0KPiBAQCAtODEsNiArODEsNyBAQCBzdHJ1Y3QgY21kcV9jbGllbnQgKmNt
+ZHFfbWJveF9jcmVhdGUoc3RydWN0IGRldmljZSAqZGV2LCBpbnQgaW5kZXgsIHUzMiB0aW1lb3V0
+KQ0KPiAgCWNsaWVudC0+Y2xpZW50LmRldiA9IGRldjsNCj4gIAljbGllbnQtPmNsaWVudC50eF9i
+bG9jayA9IGZhbHNlOw0KPiAgCWNsaWVudC0+Y2hhbiA9IG1ib3hfcmVxdWVzdF9jaGFubmVsKCZj
+bGllbnQtPmNsaWVudCwgaW5kZXgpOw0KPiArCW11dGV4X2luaXQoJmNsaWVudC0+bXV0ZXgpOw0K
+PiAgDQo+ICAJaWYgKElTX0VSUihjbGllbnQtPmNoYW4pKSB7DQo+ICAJCWxvbmcgZXJyOw0KPiBA
+QCAtMzUyLDkgKzM1MywxMSBAQCBpbnQgY21kcV9wa3RfZmx1c2hfYXN5bmMoc3RydWN0IGNtZHFf
+cGt0ICpwa3QsIGNtZHFfYXN5bmNfZmx1c2hfY2IgY2IsDQo+ICAJCXNwaW5fdW5sb2NrX2lycXJl
+c3RvcmUoJmNsaWVudC0+bG9jaywgZmxhZ3MpOw0KPiAgCX0NCj4gIA0KPiArCW11dGV4X2xvY2so
+JmNsaWVudC0+bXV0ZXgpOw0KPiAgCW1ib3hfc2VuZF9tZXNzYWdlKGNsaWVudC0+Y2hhbiwgcGt0
+KTsNCj4gIAkvKiBXZSBjYW4gc2VuZCBuZXh0IHBhY2tldCBpbW1lZGlhdGVseSwgc28ganVzdCBj
+YWxsIHR4ZG9uZS4gKi8NCj4gIAltYm94X2NsaWVudF90eGRvbmUoY2xpZW50LT5jaGFuLCAwKTsN
+Cj4gKwltdXRleF91bmxvY2soJmNsaWVudC0+bXV0ZXgpOw0KPiAgDQo+ICAJcmV0dXJuIDA7DQo+
+ICB9DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5o
+IGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiBpbmRleCBhNzRjMWQ1
+YWNkZjMuLjBmOTA3MWNkMWJjNyAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9zb2MvbWVk
+aWF0ZWsvbXRrLWNtZHEuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGst
+Y21kcS5oDQo+IEBAIC0yOCw2ICsyOCw3IEBAIHN0cnVjdCBjbWRxX2NsaWVudCB7DQo+ICAJc3Ry
+dWN0IG1ib3hfY2hhbiAqY2hhbjsNCj4gIAlzdHJ1Y3QgdGltZXJfbGlzdCB0aW1lcjsNCj4gIAl1
+MzIgdGltZW91dF9tczsgLyogaW4gdW5pdCBvZiBtaWNyb3NlY29uZCAqLw0KPiArCXN0cnVjdCBt
+dXRleCBtdXRleDsNCj4gIH07DQo+ICANCj4gIC8qKg0KDQo=
 
-On Fri, Nov 29, 2019 at 12:10 AM <rampraka@codeaurora.org> wrote:
->
-> > I am slightly baffled about why this would save energy unless it
-> > allows you to lower the voltage to the controller.  I know you _can_
-> > sometimes lower the voltage to the controller on Qualcomm parts, but
-> > you are arguing that it is useful even on systems that can't lower the
-> > voltage.  That feels slightly questionable.  I would expect that
-> > racing to idle (with the right tuning parameters) would be a better
-> > way to go.
->
-> Sorry, if my explanation was misleading before. MMC driver is not
-> changing
-> card/controller voltage but by lowering clock frequency of card and
-> controller brings down _bus_ and _system_ voltage corners of device
-> which
-> helps in saving power consumption.
-
-Yes, I understood.  You are able to lower the voltage supplied to the
-controller itself, not to the card.  ...but that is not something that
-all SoCs can do.  I think here you are arguing that your feature is
-useful to everyone--even if they can't ever lower the voltage of the
-controller.  I am questioning that.
-
-
-> > As a specific example, let's imagine we want to transfer 1000 MB of
-> > data and we have 20 seconds with which to do it.  We can achieve this
-> > by transferring 50 MB/s for the whole 20 seconds.  Alternatively, we
-> > could transfer at 400 MB/s 2.5 seconds and then fully power gate the
-> > eMMC for the next 17.5 seconds.
-> >
-> > In that example, I'd wonder ask is more power efficient.  Presumably
-> > the 2nd.  This is the whole "race to idle" concept as I understand it.
-> >
-> > The "race to idle" is talked about a lot in the context of CPU
-> > frequency decisions.  Presumably you'll point out that "race to idle"
-> > is NOT the right thing to do for choosing a CPU frequency.  As I
-> > understand it, this is primarily true because we need to raise the CPU
-> > voltage to run at faster speeds.  This would lead me to believe that
-> > the only case you'd want to do frequency scaling like this is if it
-> > allows you to lower the voltage provided to the eMMC controller.  As
-> > you said, for Qualcomm it _does_ allow you to do this, but most other
-> > SoCs don't.  ...so unless there's a flaw in my logic (always
-> > possible!) this patch series should be amended to say it's only useful
-> > if it allows you to down-volt the controller.
-> >
-> > Just to think a little bit more about my logic: of course, you might
-> > argue that we can't just do a 1000 MB data transfer.  We can break
-> > that down into two cases:
-> >
-> > a) For writing, presumably the data is produced over time and you
-> > don't want to buffer the whole 1000 MB and delay 17.5 seconds before
-> > you start writing.  ...but presumably you could do _some_ buffering
-> > and then break things into chunks where you ungate the clock to the
-> > card, write a chunk out, and then re-gate the clock.  There will
-> > obviously be some overhead with each clock gate/ungate, but
-> > (hopefully) not too much.  ...and there will be time when data is in
-> > RAM and not on the disk so you'd worry about power failure, but if you
-> > want to get data on the disk ASAP why are you scaling the clock (and
-> > thus delaying the data from getting to the disk) at all?  Maybe some
-> > math?  How long does it take to ungate/gate the clocks.  1 ms?  It's
-> > just flipping a bit, right?  ...and does assuming we can allocate a 40
-> > MB write buffer seem sane?  So we eat 1 ms to ungate, 100 ms to
-> > transfer 40 MB, 1 ms to gate.  Compared to transferring at 50 MB/sec
-> > (w/ no gating), we'd transfer the same 40 MB in 800 ms.  So we either
-> > keep the clock on at 50 MHz for 800 ms or we keep it on at 200 MHz for
-> > 102 ms and gate it for 698 ms.
-> >
->
-> "race to idle" helps but this feature was implemented with focus on
-> video
-> playback case, where data transfer request to mmc driver spans over
-> entire
-> playback time of video. In this case, running device in low speed mode
-> helps.
-
-It doesn't matter if you've got a long playback.  A properly tuned
-"race to idle" should still be better unless you are seriously saving
-a lot of power by never bringing the voltage up.  The above example is
-with a fixed size transfer, but just imagine the same thing over and
-over again and you've got the video playback case.
-
-
-> > b) If you're reading data then hopefully the system has some sort of
-> > readahead going on.  In the "video playback" case the system should
-> > have no problem predicting that if you've just read bytes
-> > 1,000,000,000 - 2,000,000,000 of a file over the last 10 seconds that
-> > you're likely to keep reading the same file.  Presumably it wouldn't
-> > be totally insane to read 40 MB ahead of time and then we can do the
-> > same math as a).  If 40 MB is too much for readahead, then shrink it
-> > and redo the math.  Even with much smaller numbers the "race to idle"
-> > wins because gating / ungating clocks is fast.  ...or do you know some
-> > reason why gating / ungating clocks needs to be slow?  If so, how
-> > slow?
-> >
->
-> I have performed one experiment by increasing read ahead size, but that
-> is
-> not helping. And I don't observe much difference in data request pattern
-> generated in video playback case.
-
-You have to make sure that you are proactively gating the card clock
-in conjunction.  If you aren't gating the card clock quickly enough
-(and aren't lowering the controller voltage when the card clock is
-gated) then you won't notice the savings.
-
-
-> >> Test case used are 1080p and 4k video playback use case. Please find
-> >> below
-> >> test case information and power impact data. In both the below video
-> >> playback
-> >> cases, a considerable amount of power savings can be observed with
-> >> clock scaling
-> >> feature.
-> >>
-> >> Use cases Delta at battery (mA) Power impact %
-> >> 30 fps at HD 1080p decode 20 Mbps 10 mA 11%
-> >> 30 fps at UHD 8b H.264 42 Mbps 20.93 mA 19%
-> >
-> > Numbers like this are exactly what is needed to justify your patch
-> > series.  ...but I'd be super curious to how it would compare to:
-> >
-> > 1) Tuning the runtime PM auto-suspend delay.  If you have your
-> > auto-suspend delay set wrong (like 500 ms) then all the math above is
-> > totally wrong.  We'll keep clocking at 400 MHz needlessly even though
-> > there is no data to transfer.  If autosuspend is just gating clocks
-> > then it feels like you could set it to 1 ms, or 10 ms.  NOTE: if
-> > autosuspend for you is something more major (fully turning off power
-> > rails to the eMMC) then maybe you need another level where you just
-> > turn off the clocks.  Seems like we could find some way to make that
-> > work.
->
-> Gating / Ungating can be fine tuned to help bring down power consumption
-> too. I will share power numbers with tuned parameters in next
-> communication.
-
-Thanks, I think this is critical for the discussion.  Please make sure
-that when you are gating you code it up in a way that you can remove
-the vote for the higher controller voltage.
-
-
-> > 2) Tuning any readached mechanism in your system.  If your system
-> > somehow does zero readahead then obviously all my arguments don't work
-> > for reads.  ...but why would you not have readahead?
-> >
-> > 3) Tuning any write buffering in your system.  Same argument as #2.
->
-> This feature is specific to video playback use case from storage device.
-> Not sure, which buffering can be tuned. Can you point out any buffering
-> used?
-
-If you're only testing video playback then I guess you don't care so
-much here.  I was assuming you cared about video record too, but maybe
-that's not such an important use case for saving power.
-
-
-> > 4) Making sure that when the MMC card clock is gated that you request
-> > the lowest voltage level for the controller (and set the controller's
-> > bus clock to the lowest level since it's not doing anything).
-> >
-> >
-> > I would also be very interested to know how much of those savings are
-> > achieved if you keep the voltage to the MMC controller the same.  In
-> > other words do something that arbitrarily keeps the MMC controller
-> > requesting the same voltage level from the rest of the system and then
-> > do your power measurements.  How much do your savings change?
-> >
-> >
-> > I will also note that aggressive clock gating is exactly what the
-> > dw_mmc controller does automatically (except for SDIO, but that's a
-> > different story).  Seeing that the controller itself can stop the
-> > clock in dw_mmc gives further credence that gating / ungating the
-> > clock is a very lightweight operation and 1 ms is probably an
-> > over-estimation of how long it takes.
-> >
-> >
-> > I guess one very last note is that I spent most of the time above
-> > arguing that the clock scaling concept is probably not useful for any
-> > SoCs where you can't adjust the voltage provided to the MMC
-> > controller.  That doesn't necessarily mean that your patch series is
-> > useful for SoCs where you can.  Specifically you'd need to do math to
-> > see how much more power the MMC controller takes at the higher
-> > voltage.  Then you can calculate a "perf per watt".  If the watts to
-> > transfer data at 400 MB/s aren't 8 times more than the watts to
-> > transfer at 50 MB/s then that's a ding against your idea.  You'd also
-> > don't have a dedicated voltage rail, right?  So you'd have to see what
-> > percentage of the time the MMC controller was the only thing in the
-> > system that was requesting the higher voltage.  If it happened that
-> > something else in the system was keeping the voltage higher anyway
-> > then it would be better for you to run faster and race to idle.
-> > Really I guess the case you're most worried about is if the MMC
-> > controller is causing other components in the system to be at a higher
-> > voltage point (and thus take up more power)...
-> >
->
-> Rail is not dedicated for eMMC device. So during video playback its mmc
-> votes only, which keeps device in higher voltage corners. So for a three
-> hours of a video playback, power consumption due to mmc vote would be
-> quite
-> considerable.
-
-You should be able to remove your vote whenever the card clock is
-gated.  Maybe this is what you're missing?
-
--Doug
