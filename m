@@ -2,113 +2,109 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C92C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 22:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26F9C2D0BE
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 22:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3709206DB
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 22:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9851D2245C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 22:59:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575500347;
+	bh=Ysf1J+BSQwUnFJHhUpB/ZT36dXA4hNeM8yJmqNkFhDc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KeASeRLf6A6A40tnnMQerSlHyZZPSZPBh9UFAyIYMMEatbqsf48QRDswydq3h9H/O
+	 /5Yymx+UkbNVQ3ohoQM4V2UqWCjtBwDr2CPnnSZiKuIoDyQLr6zSbcEXkDllVnrjlR
+	 QTHEge55SiPz35Yd6e2bsghD6VvGPQqYXajRBt6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbfLDWgM (ORCPT
+        id S1728098AbfLDW7E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 17:36:12 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40086 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728053AbfLDWgM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 17:36:12 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4MZtcw079935;
-        Wed, 4 Dec 2019 17:35:55 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wnej0veca-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Dec 2019 17:30:58 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB4MOnnk012691;
-        Wed, 4 Dec 2019 22:29:08 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma02dal.us.ibm.com with ESMTP id 2wkg273hkx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Dec 2019 22:29:08 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB4MT7Np24838566
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Dec 2019 22:29:07 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D19A3B205F;
-        Wed,  4 Dec 2019 22:29:07 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E102AB2065;
-        Wed,  4 Dec 2019 22:29:06 +0000 (GMT)
-Received: from ltc.linux.ibm.com (unknown [9.16.170.189])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Dec 2019 22:29:06 +0000 (GMT)
+        Wed, 4 Dec 2019 17:59:04 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40747 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbfLDW7D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 17:59:03 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 6so889315oix.7;
+        Wed, 04 Dec 2019 14:59:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hqWdSoHcQzyTJkL7Mf3rYI2CqKq7GxVmoPtx9Wj/NUQ=;
+        b=HeeqcbTXIDcg1+EgDquum9Gbc+rK+sg/vwkSEMV7s6Jgb7mrLTGYzIzlP9ba2GjAKd
+         qc1HCRGBW17kPOVYcKC1Iru94DEnxak5qGbiU4ciNkWWg8vQGPCubtRstceKUc7BoNil
+         PVbwEgTGGtfOBdA++mpW4YJTyAH2Rt8RO2rDBqXC2W1GZ+o3B/ATDrWq+NEYbtWsUlVt
+         WBwQgvJ/zzxVp0xwfofvv/+ypqBcdC73t4bJ8MzFOMnwYjpLwtVjeQ1UYJ6V7yTFXHfH
+         wMQRjXRAz50+aEPBSPBzF/2yQH9ouK49D3Updpm2egJxwDwY+LX/f8EctHqbo9jw1aCI
+         9VJw==
+X-Gm-Message-State: APjAAAWXoSnc+ioG/xqExlZotU+sIBG0F+7FLrofM80o4SKYrP/BgDiO
+        s03CFzvqBckJTiuUU6JRnQ==
+X-Google-Smtp-Source: APXvYqzIMPoCRlaPXBAfjx/AI4iavLfiFcz3CpUIlhsCYXfOEc8f3duMXCd6ObvZG8FDt5/AHwWi0w==
+X-Received: by 2002:a05:6808:f:: with SMTP id u15mr4639374oic.164.1575500342713;
+        Wed, 04 Dec 2019 14:59:02 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f11sm2842044oij.8.2019.12.04.14.59.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 14:59:02 -0800 (PST)
+Date:   Wed, 4 Dec 2019 16:59:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jim Wright <wrightj@linux.vnet.ibm.com>
+Cc:     jdelvare@suse.com, linux@roeck-us.net, mark.rutland@arm.com,
+        corbet@lwn.net, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jim Wright <jlwright@us.ibm.com>
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon/pmbus: Add UCD90320 power
+ sequencer
+Message-ID: <20191204225901.GA20804@bogus>
+References: <20191122222542.29661-1-wrightj@linux.vnet.ibm.com>
+ <20191122222542.29661-2-wrightj@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 04 Dec 2019 16:29:49 -0600
-From:   Adriana Kobylak <anoo@linux.ibm.com>
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     linux-aspeed@lists.ozlabs.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, Adriana Kobylak <anoo@us.ibm.com>,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linux-aspeed 
-        <linux-aspeed-bounces+anoo=linux.ibm.com@lists.ozlabs.org>
-Subject: Re: [PATCH 08/14] ARM: dts: swift: Cleanup gpio-keys-polled
- properties
-In-Reply-To: <78ea3e17108c7c8fded921f5673777fc415cd66e.1575369656.git-series.andrew@aj.id.au>
-References: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
- <78ea3e17108c7c8fded921f5673777fc415cd66e.1575369656.git-series.andrew@aj.id.au>
-Message-ID: <450addb633e8572a019ccaec5fd48248@linux.vnet.ibm.com>
-X-Sender: anoo@linux.ibm.com
-User-Agent: Roundcube Webmail/1.0.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 spamscore=0 adultscore=0 malwarescore=0 bulkscore=0
- suspectscore=0 impostorscore=0 mlxlogscore=999 priorityscore=1501
- mlxscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912040187
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122222542.29661-2-wrightj@linux.vnet.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-12-03 06:04, Andrew Jeffery wrote:
-> dtbs_check gave the following warning:
+On Fri, Nov 22, 2019 at 04:25:41PM -0600, Jim Wright wrote:
+> From: Jim Wright <jlwright@us.ibm.com>
 > 
->     Warning (avoid_unnecessary_addr_size): /gpio-keys-polled:
-> unnecessary #address-cells/#size-cells without "ranges" or child "reg"
-> property
+> Document the UCD90320 device tree binding.
 > 
-> Cc: Adriana Kobylak <anoo@us.ibm.com>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> Reviewed-by: Joel Stanley <joel@jms.id.au>
-
-Reviewed-by: Adriana Kobylak <anoo@us.ibm.com>
-Tested-by: Adriana Kobylak <anoo@us.ibm.com>
-
+> Signed-off-by: Jim Wright <jlwright@us.ibm.com>
 > ---
->  arch/arm/boot/dts/aspeed-bmc-opp-swift.dts | 2 --
->  1 file changed, 2 deletions(-)
+>  .../devicetree/bindings/hwmon/pmbus/ucd90320.txt    | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/ucd90320.txt
+
+Can you make this a schema. See 
+Documentation/devicetree/writing-schema.rst.
+
 > 
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-> b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-> index 0831bc1f5a4c..555d79405884 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-> @@ -82,8 +82,6 @@
+> diff --git a/Documentation/devicetree/bindings/hwmon/pmbus/ucd90320.txt b/Documentation/devicetree/bindings/hwmon/pmbus/ucd90320.txt
+> new file mode 100644
+> index 000000000000..e1c1057c6292
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/pmbus/ucd90320.txt
+> @@ -0,0 +1,13 @@
+> +UCD90320 power sequencer
+> +-------------------------
+> +
+> +Requires node properties:
+> +- compatible : "ti,ucd90320"
+> +- reg : the I2C address of the device. This is 0x11, 0x13, 0x17, 0x31, 0x33,
+> +        0x37, 0x71, 0x73, or 0x77.
+> +
+> +Example:
+> +	ucd90320@11 {
+> +		compatible = "ti,ucd90320";
+> +		reg = <0x11>;
+> +	};
+> -- 
+> 2.17.1
 > 
->  	gpio-keys-polled {
->  		compatible = "gpio-keys-polled";
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
->  		poll-interval = <1000>;
-> 
->  		scm0-presence {
