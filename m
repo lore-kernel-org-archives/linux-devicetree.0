@@ -2,85 +2,116 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC40C2BD09
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 19:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 515C6C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 19:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67E172077B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 19:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230122073C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 19:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575487639;
-	bh=I6SdtuIbO8QUIY060PxUJX+HLgNyMagfnSVzqoPeO8Q=;
+	s=default; t=1575487963;
+	bh=ne28C0RDZjeeVfqTsFNAVxvyneTG7Ah8xDOfsTR36pA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BvATaeZeD4RMvT3ZfZdTWgCBCi7XSdDk9po9wn7AKPSb+BVHIZIjsyZZlwiWH3jru
-	 DX/qeJmJLGutGn6xdIDbaFKDX0pGlbb5dZ/IL5GD1i4XO2P6eP1o1pegk7vqgTcFUw
-	 SxoJ9fajI3YMsOYElnRR7w58+h2sJx9kk5Kf6xCw=
+	b=os/apjtQX77dtX7kxPFirr8kICQvorOMlxbffUu4+VOZ2meEJ7kZrUjeibN5vM/7U
+	 MX1cwdfARmpdeIb7gF4WXJDaEQ3Wgnikrq29H1i9JyJ1UP6+zqTesHVO8XFtRGsYpe
+	 /ioa8GMnce0zh/XoPKpoXRh2bog90iqCVrJ9KBhs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbfLDT1O (ORCPT
+        id S1727989AbfLDTcm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 14:27:14 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41724 "EHLO
+        Wed, 4 Dec 2019 14:32:42 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46207 "EHLO
         mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728110AbfLDT1O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 14:27:14 -0500
-Received: by mail-oi1-f195.google.com with SMTP id i1so320692oie.8;
-        Wed, 04 Dec 2019 11:27:14 -0800 (PST)
+        with ESMTP id S1727978AbfLDTcm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 14:32:42 -0500
+Received: by mail-oi1-f195.google.com with SMTP id a124so304849oii.13;
+        Wed, 04 Dec 2019 11:32:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LV4dBd+pyosFpb8ZOXcuCmQqFB/Z1VrnDg7zb35XO+A=;
-        b=IBJ8+w0w7Sa3A4inFuSw7YQfyliV6mVwaRIYAhRjYePzoZRfYGM/lCXspQwfIfPcgU
-         Ojtf+vG5RR683jq5DXTjcy3VEw3woTNYXRfOgTcZCNIBWPBgVLQSMtPu4y265p8oZkBI
-         r7AByAlKUlBrO7AV/ZYT109qeTVviDki1VCPmJ6Zh1Ew1XTpS82KfVyh5pDB+EiLBjZt
-         S70OwCFSDmLMWUGcf0HAEjlf+e/kLBva2o/wsAl40W9NbS9mcMfXh0jjXD44M5x0TR8q
-         UG6HESkiZCNbop8k4IMQGaM3iwyYE9mfyUr/A8lAUq7TYVYgkFfRaWCS9Q8EVF1tHUgS
-         GzPQ==
-X-Gm-Message-State: APjAAAW1DM7xx4rg/PHHFHnbMzioa1uVBYR1z2POyqRKWum1OB35YI2t
-        uB8pgBoj//olgy7Z8NCipA==
-X-Google-Smtp-Source: APXvYqyWJX9gBPsev6B4b8T+yjKHMepyHXDfO09PT+6reBKfa28zaBZj1dCvX8NyEatzxLKyG/Veng==
-X-Received: by 2002:aca:3012:: with SMTP id w18mr4151923oiw.33.1575487633657;
-        Wed, 04 Dec 2019 11:27:13 -0800 (PST)
+        bh=VIykNz8gTrjJYYcuHvCZ7rZIZIyIF9AyyoN6mQ8XTak=;
+        b=Wx+Pthfb7oeHeq89StbB3kh4fgVgIAhdfUvZRN8RlQ3nSFp3e+i4CYA+yLzreDVrBa
+         IoO/NP7PzWMxo2eZcIHE3jo+zDzh73XBgPVi+ZQBRy2I7DkK7tGLesVJgmOkCX0Fqzka
+         d5BYSJ996yway/Ekb6mhyvDidYHlVjwfqcG33gAU7zK1wnC8q2kz2ryLn16LWbKjeLad
+         m2zL/CDnByg4GIyLL6z13JRz6EXy6CjBYZGx7wq0NOeg5qFdFjSVazlT0WnRcM6s3wW1
+         ag18iT6mAAF+5+b2xU1jjetGryiThx922mLrlGm+tjoZ0IFeRT8uI6/4YL2rJ50OO2Eq
+         nzjA==
+X-Gm-Message-State: APjAAAWbNIOb3JPCvd0Jv+UFQXD3DUHsQ6QRPZj3jrtfoiKfDpUoHPDN
+        sj3GmOMt5e8pLpiOnQPGYw==
+X-Google-Smtp-Source: APXvYqyL9rITgSoXHv8RFYgfyg9XG3viSLqSKUMigSf5Mv7C3OVPAyHFxBK3gRgkRj3Xsvy21/dcQw==
+X-Received: by 2002:a54:4781:: with SMTP id o1mr3877662oic.117.1575487961356;
+        Wed, 04 Dec 2019 11:32:41 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v25sm2037370otk.51.2019.12.04.11.27.12
+        by smtp.gmail.com with ESMTPSA id j25sm2483560otl.71.2019.12.04.11.32.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 11:27:13 -0800 (PST)
-Date:   Wed, 4 Dec 2019 13:27:12 -0600
+        Wed, 04 Dec 2019 11:32:40 -0800 (PST)
+Date:   Wed, 4 Dec 2019 13:32:40 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     mjourdan@baylibre.com, devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: media: amlogic,gx-vdec: add bindings
- for SM1 family
-Message-ID: <20191204192712.GA6599@bogus>
-References: <20191121101429.23831-1-narmstrong@baylibre.com>
- <20191121101429.23831-2-narmstrong@baylibre.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Akash Gajjar <akash@openedev.com>, Tom Cubie <tom@radxa.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH v2 1/5] dt-bindings: arm: rockchip: Add VMARC RK3399Pro
+ SOM binding
+Message-ID: <20191204193240.GA6772@bogus>
+References: <20191121141445.28712-1-jagan@amarulasolutions.com>
+ <20191121141445.28712-2-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191121101429.23831-2-narmstrong@baylibre.com>
+In-Reply-To: <20191121141445.28712-2-jagan@amarulasolutions.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 21 Nov 2019 11:14:27 +0100, Neil Armstrong wrote:
-> Add bindings to support the Amlogic Video Decoder on the Amlogic SM1 family.
+On Thu, Nov 21, 2019 at 07:44:41PM +0530, Jagan Teki wrote:
+> VMARC RK3399Pro SOM is a standard SMARC SOM design with
+> Rockchip RK3399Pro SoC, which is designed by Vamrs.
 > 
-> SM1 has a slightly different power management handling, thus needing a
-> separate compatible.
+> Since it is a standard SMARC design, it can be easily
+> mounted on the supporting Carrier board. Radxa has
+> suitable carrier board to mount and use it as a final
+> version board.
 > 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Add dt-bindings for it.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 > ---
->  Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> Changes for v2:
+> - none
 > 
+>  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> index 45728fd22af8..51aa458833a9 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> @@ -526,4 +526,9 @@ properties:
+>          items:
+>            - const: tronsmart,orion-r68-meta
+>            - const: rockchip,rk3368
+> +
+> +      - description: Vamrs VMARC RK3399Pro SOM
+> +        items:
+> +          - const: vamrs,rk3399pro-vmarc-som
 
-Acked-by: Rob Herring <robh@kernel.org>
+Why do you need this? You just override it in your dts files, so it is 
+not really used. Perhaps the top-level should have all 3 compatibles? If 
+so, then the schemas are wrong.
+
+> +          - const: rockchip,rk3399pro
+>  ...
+> -- 
+> 2.18.0.321.gffc6fa0e3
+> 
