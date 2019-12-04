@@ -2,123 +2,100 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E91C2D0BE
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2188C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74E420862
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:25:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5d/2aUm"
+	by mail.kernel.org (Postfix) with ESMTP id 7554020803
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:36:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575463017;
+	bh=IEViihsXqnNjLA7qY7TBVTr1iIuoipkvM1Y0xCsQOiI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GR5ouROv1Ne8e312+J2vESWbtjyTpW5/1ZzG/1OryRUQjVTrhaakaImDfB4eQt8Jx
+	 bQ2SV3aAr2eO+cwT0xZmGve0cPqj1E9ysB0dVGT0BwkC2q04UgfZsjv6EuS1T+yySC
+	 R4KcvXiOKEc9ekSauRq0Drll1ZOYzI6EJbNR78qU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfLDMZJ (ORCPT
+        id S1726604AbfLDMg4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:25:09 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42351 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727469AbfLDMZJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 07:25:09 -0500
-Received: by mail-pg1-f194.google.com with SMTP id i5so3308417pgj.9;
-        Wed, 04 Dec 2019 04:25:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=74DpMf6mDc9+B5MlAH6Y1HnnZ4oNYZutTjoMwerFER4=;
-        b=Z5d/2aUmDmAiXuIlzS0/rbPqK4K55gOXAdXFRhLm6wZvdbwdN1bAgX71EXM6HXeBOJ
-         EIdY0ZQtK3Vst1H2ruzjNOjK0LpXXg9RWYcVK7Y5+5XzFTGkNur4Wp67yzCNpFXn+oA+
-         gFr+FyKLp5b2La2502/efx5VLLBTCoAq3s3J4dvpL3zuZybtYc8j6CILkPeKJZJUu8fh
-         Mqc0pVBoipofh2fc2XBJPLDIv1VzpxT8KUzHHRNYZXbTCLRcsPn2VbQ7qyBqd66bRDkv
-         qQ7TRj31Kb6H2GV2tTeI4UQxDPbjR3lhJG/0IUC0ntJuLMmbTfsm7SKz1jFFOl+ZceF/
-         R0cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=74DpMf6mDc9+B5MlAH6Y1HnnZ4oNYZutTjoMwerFER4=;
-        b=bqb+rqgql4O6njq+Pjw8eRvzygqzbxpPiRjV1UykBmue4jKvwC9SDCLbIBnkjFZZZr
-         B/do6ayM/G+GJIoRqp/74JCVZ6uG0mD15/QnJwwCDeiNNxYwP+ThieWURk9/LMeBFKZu
-         nma+g4Qpz5tlTMoX3wqlOlvgeS5dNaLGwj+t04JChIex8WSJazgYysJ/2rbwdHAgDNRZ
-         RyzKyuSKehMrn0k+4MFdhnfb8zJd/Dt93Wp/eM0rM+hdWnhqhS6+EOHydRr8sNG4kmeZ
-         nOamT6sizZios0jDq8Kh2t0BPkOU59PgsoqLQxx5PnVw+C7rfpPrLI9O9pR+PqnXPpWz
-         q5aQ==
-X-Gm-Message-State: APjAAAUj1K9/yGQ1JbolaZTiaju0EdP68svJg4z3NM7IYT0zcR2tRWKK
-        8oZq5iZyMJ6kl+SlXJiZ7oNoDncDU8ZIfh0FLuTJHKBX
-X-Google-Smtp-Source: APXvYqyCnQkr0xElgusO0C3qIThRUs5uow3MZrryyIUtM3q04ZTsWoj5gxZNNLPWe6eEGnUAUrhluz9fUdcXVcAN8/I=
-X-Received: by 2002:a62:1944:: with SMTP id 65mr3279668pfz.151.1575462308225;
- Wed, 04 Dec 2019 04:25:08 -0800 (PST)
+        Wed, 4 Dec 2019 07:36:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbfLDMg4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 4 Dec 2019 07:36:56 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1B172077B;
+        Wed,  4 Dec 2019 12:36:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575463016;
+        bh=IEViihsXqnNjLA7qY7TBVTr1iIuoipkvM1Y0xCsQOiI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NixFrMHiAyrafH7vOuLQuynqWv63B7yq3UGMsHHw3XdazZbYIrxadrALygMKPK7VA
+         Ap9Vi4rdWr4bsQhrqb1XggvkMLG2RfJTwv+DQv+gNn/Lhn6jpmmToAXlwMFW0ZYA7s
+         76P2lngyF3sWm+mvDEBj1dTFt32rr2QooPwkWdNY=
+Date:   Wed, 4 Dec 2019 20:36:47 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "H . Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH] ARM: dts: e60k02: fix power button
+Message-ID: <20191204123645.GL3365@dragon>
+References: <20191111202959.24189-1-andreas@kemnade.info>
 MIME-Version: 1.0
-References: <20191204101042.4275-1-cleger@kalray.eu>
-In-Reply-To: <20191204101042.4275-1-cleger@kalray.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 4 Dec 2019 14:24:58 +0200
-Message-ID: <CAHp75VcMm3PPAgfFPLzVwg_RN7_vQfRmufvWiPOkYaErdGiNsw@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Add pinctrl support for dwapb gpio driver
-To:     Clement Leger <cleger@kalray.eu>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111202959.24189-1-andreas@kemnade.info>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 12:13 PM Clement Leger <cleger@kalray.eu> wrote:
->
-> Synopsys DWAPB IP includes support for pin control. This control is basic
-> and allows to switch between a hardware and a software function.
-> Software function is when driving GPIOs from IP and hardware is controlled
-> by external signals.
-> This serie export necessary interface to be able to move the driver to
-> pinctrl folder and then implement the pinctrl support which is based on the
-> digicolor driver. The idea is to avoid hardcoding pins in driver since
-> this IP is a generic one available on multiple SoC.
->
+On Mon, Nov 11, 2019 at 09:29:59PM +0100, Andreas Kemnade wrote:
+> The power button was only producing irqs, but no key events,
+> Forced power down with long key press works, so probably
+> only a short spike arrives at the SoC.
+> Further investigation shows that LDORTC2 is off after boot
+> of the vendor kernel. LDORTC2 is shared with a GPIO at the pmic
+> which probably transfers the button press to the SoC.
+> That regulator off at boot, so "regulator-boot-on" is definitively
+> wrong. So remove that.
+> 
+> Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 
-This series misses at least GPIO ACPI maintainers to be Cc'ed to for
-the certain changes.
-Moreover, I would like to see entire series in the future in my mailbox.
+Do you want this go into 5.5-rc as a fix?  In that case, we may need a
+Fixes tag here.
 
-I will look at v1 closer anyway.
+Shawn
 
-> Clement Leger (5):
->   gpio: export acpi_gpiochip_request_interrupts in gpio/driver.h
->   pinctrl: dw: move gpio-dwapb.c to pinctrl folder
->   pinctrl: dw: use devm_gpiochip_add_data
->   pinctrl: dw: add pinctrl support for dwapb gpio driver
->   dt-bindings: pinctrl: dw: move sps,dwapb-gpio.txt to pinctrl
->
->  .../bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt |  21 +-
->  MAINTAINERS                                        |   6 +-
->  drivers/gpio/Kconfig                               |   8 -
->  drivers/gpio/Makefile                              |   1 -
->  drivers/gpio/gpiolib-acpi.h                        |   4 -
->  drivers/pinctrl/Kconfig                            |   1 +
->  drivers/pinctrl/Makefile                           |   1 +
->  drivers/pinctrl/dw/Kconfig                         |  11 +
->  drivers/pinctrl/dw/Makefile                        |   4 +
->  .../gpio-dwapb.c => pinctrl/dw/pinctrl-dwapb.c}    | 277 +++++++++++++++++++--
->  include/linux/gpio/driver.h                        |  12 +
->  include/linux/platform_data/gpio-dwapb.h           |   1 +
->  12 files changed, 310 insertions(+), 37 deletions(-)
->  rename Documentation/devicetree/bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt (76%)
->  create mode 100644 drivers/pinctrl/dw/Kconfig
->  create mode 100644 drivers/pinctrl/dw/Makefile
->  rename drivers/{gpio/gpio-dwapb.c => pinctrl/dw/pinctrl-dwapb.c} (77%)
->
-> --
-> 2.15.0.276.g89ea799
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+> ---
+>  arch/arm/boot/dts/e60k02.dtsi | 5 -----
+>  1 file changed, 5 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/e60k02.dtsi b/arch/arm/boot/dts/e60k02.dtsi
+> index a0ade2ba7a21..33e02bd2b59d 100644
+> --- a/arch/arm/boot/dts/e60k02.dtsi
+> +++ b/arch/arm/boot/dts/e60k02.dtsi
+> @@ -356,11 +356,6 @@
+>  				regulator-name = "LDORTC1";
+>  				regulator-boot-on;
+>  			};
+> -
+> -			ldortc2_reg: LDORTC2 {
+> -				regulator-name = "LDORTC2";
+> -				regulator-boot-on;
+> -			};
+>  		};
+>  	};
+>  };
+> -- 
+> 2.20.1
+> 
