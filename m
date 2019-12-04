@@ -2,163 +2,93 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A5CC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 07:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90833C0044D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 07:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5972084F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 07:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575446130;
-	bh=Lb3nemcb9R7mljnWpkCKv1Yn0oxJJhwN6/4ioz1hZ5A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MU2YuKtLl3McTDiCT1rokyTsGQS2aOf5WC7J9GYwRpJlv2rSmztGTDK+dCveDYHwO
-	 aisYh4SuTJ//BbPxD6h733Gn9tX+rJtjUS8BjjP9kEnMZvNDz68GCfM++S7i3hnWoE
-	 ZEpRAy+uII0SeTBDZ5F5Uw5hQnR+HlyQR2zvbwnM=
+	by mail.kernel.org (Postfix) with ESMTP id 6CD552154A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 07:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfLDHza (ORCPT
+        id S1726632AbfLDH5n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 02:55:30 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45880 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfLDHza (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 02:55:30 -0500
-Received: by mail-lf1-f66.google.com with SMTP id 203so5284457lfa.12;
-        Tue, 03 Dec 2019 23:55:28 -0800 (PST)
+        Wed, 4 Dec 2019 02:57:43 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45962 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfLDH5n (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 02:57:43 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v10so3948377oiv.12;
+        Tue, 03 Dec 2019 23:57:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HtkivZBfXW8xPuS5rhk5w6nuW6W4kAYRPy9pdM4dJ+E=;
-        b=btrEjsK+1YjS66nqCBcUA8vnICeA+hjizys7/ZujzuHIiNl7HH3Bxik8h3axHHIxUW
-         7QQ11YfImJLjWULvDmNj6po/N8Aq31lSCLU9Ky3OPqXoGnSUg7sbJ8U+7gZBBZftmFIc
-         mNJn6dOHliFL6PIVwVbOitHy9PbA9HuKixRODy9u0ALsAsq0Wd3cSWrcIEzoQhI05K6y
-         7K2m5xA5NEeHZHBLBVxD4LeoNOPFbHcCVvES8d4SO688FP8A5rqyLOrSn+vQPeuBmn4H
-         5xGi5ZLLnlKrH/XJKHDArIfHE6/tR2UmHzoAry1M0BEzIUoCxZpP44aeTEJwbcaKKBls
-         sLmQ==
-X-Gm-Message-State: APjAAAW7u6976Yk/5q/Q/3RvWUvYNoWgPfWGCLJ4lj6Xam9rsdoeVVjW
-        z+XEmQ86zhPzFdr1e+dkfiw=
-X-Google-Smtp-Source: APXvYqxTYNz2ToQ6maz5hD/npVXS7ml7RLVheYsAoH5Vcd+r/fnc/M7OrTdKeax3pCn5eMxYCrglrQ==
-X-Received: by 2002:ac2:48b6:: with SMTP id u22mr1281287lfg.164.1575446127352;
-        Tue, 03 Dec 2019 23:55:27 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id u2sm2752309lfd.4.2019.12.03.23.55.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 23:55:26 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1icPVV-0003JY-2n; Wed, 04 Dec 2019 08:55:33 +0100
-Date:   Wed, 4 Dec 2019 08:55:33 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Ikjoon Jang <ikjn@chromium.org>
-Cc:     Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org,
-        GregKroah-Hartman <gregkh@linuxfoundation.org>,
-        RobHerring <robh+dt@kernel.org>,
-        MarkRutland <mark.rutland@arm.com>,
-        AlanStern <stern@rowland.harvard.edu>,
-        SuwanKim <suwan.kim027@gmail.com>,
-        "GustavoA . R . Silva" <gustavo@embeddedor.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [PATCH v4 2/2] usb: overridable hub bInterval by device node
-Message-ID: <20191204075533.GI10631@localhost>
-References: <20191203101552.199339-1-ikjn@chromium.org>
- <20191203165301.GH10631@localhost>
- <CAATdQgCqYrd_aXN5GDsso+F3WadNx3DQKK3Efk3tgkrv2VXjyw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O4LalYjsnfEaSEeb2Zehe/J93R0bKGaAEEsomnP7Lc4=;
+        b=PRvqFkHg9bv4mpYaE8XKLbG5GEGz7O2LmBAOb0awr22hFcyxza1O0PDVjIJpdGdVHk
+         d31/MqFt7uNNCkMexqygSi45B6yBlCTTN8VAWs8aQ8LbcklnBxASRl4esqhDjxVaxJIe
+         QeU/SGP+0L9wqy5L77nm4gcZSSk1DPyn4ozhi+Yll0tK/lomRrPwwOeLm8LgUAY4yAOx
+         jMD1BFVXNc7xqYEkLlGqh14jceyBAVx/n0hTDOvWaSAGZSQRXov0bIvVEHB4hkX4bPlW
+         27yZSoJ6+f+MRkI/fsHwGb9eFrEPPkYY1+4LzUL1AtULQ0+jX4R0691fggYv+4ZMoiDx
+         t8KA==
+X-Gm-Message-State: APjAAAX8MT75CbnQsq+QicFbCqVwwfCeYx053cIbgIcVlv57jPrHZiVv
+        nVwk1dlI4i7uFyi+/2AvQiVVgtDHL3TFK4azgClJAg==
+X-Google-Smtp-Source: APXvYqzjyb4FJbVQHtyhh2tGF9RdLiHEpGR+02icu52LShy7lvntJoGkd+WARmtOCmx9JC+h7OytDime9XYsdUgzjLY=
+X-Received: by 2002:aca:4e87:: with SMTP id c129mr1455643oib.153.1575446262417;
+ Tue, 03 Dec 2019 23:57:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAATdQgCqYrd_aXN5GDsso+F3WadNx3DQKK3Efk3tgkrv2VXjyw@mail.gmail.com>
+References: <20191203034519.5640-1-chris.brandt@renesas.com>
+ <20191203034519.5640-6-chris.brandt@renesas.com> <CAMuHMdXS_dSEGdMzHFuYraP=dU5WQFM+9DbPW1rFYH2reG2QhA@mail.gmail.com>
+ <TY1PR01MB1562E550DD31E799446F0FD48A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB1562E550DD31E799446F0FD48A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 4 Dec 2019 08:57:31 +0100
+Message-ID: <CAMuHMdVO2ud70cxVUHpCpvvZiMidHG1091bg3iOoOnFGOqpqWQ@mail.gmail.com>
+Subject: Re: [PATCH 5/6] ARM: dts: r7s9210: Add SPIBSC Device support
+To:     Chris Brandt <Chris.Brandt@renesas.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 03:04:53PM +0800, Ikjoon Jang wrote:
-> On Wed, Dec 4, 2019 at 12:52 AM Johan Hovold <johan@kernel.org> wrote:
+Hi Chris,
+
+On Tue, Dec 3, 2019 at 11:38 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Tue, Dec 3, 2019, Geert Uytterhoeven wrote:
+> > > +                       reg = <0x1f800000 0x8c>, <0x20000000
+> > > + 0x10000000 >;
 > >
-> > On Tue, Dec 03, 2019 at 06:15:52PM +0800, Ikjoon Jang wrote:
-> > > This patch enables hub device to override its own endpoint descriptor's
-> > > bInterval when the hub has a device node with "hub,interval" property.
-> > >
-> > > When we know reducing autosuspend delay for built-in HIDs is better for
-> > > power saving, we can reduce it to the optimal value. But if a parent hub
-> > > has a long bInterval, mouse lags a lot from more frequent autosuspend.
-> > > So this enables overriding bInterval for a hard wired hub device only
-> > > when we know that reduces the power consumption.
-> >
-> > I think I saw you argue about why this shouldn't simply be configured at
-> > runtime. Please include that here too, I can't seem to remember why...
-> 
-> Okay.
-> 
-> >
-> > > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-> > > Acked-by: Alan Stern <stern@rowland.harvard.edu>
-> > > ---
-> > >  drivers/usb/core/config.c | 9 +++++++++
-> > >  1 file changed, 9 insertions(+)
-> > >
-> > > diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
-> > > index 5f40117e68e7..95ec5af42a1c 100644
-> > > --- a/drivers/usb/core/config.c
-> > > +++ b/drivers/usb/core/config.c
-> > > @@ -6,6 +6,7 @@
-> > >  #include <linux/usb.h>
-> > >  #include <linux/usb/ch9.h>
-> > >  #include <linux/usb/hcd.h>
-> > > +#include <linux/usb/of.h>
-> > >  #include <linux/usb/quirks.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/slab.h>
-> > > @@ -257,6 +258,14 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
-> > >       memcpy(&endpoint->desc, d, n);
-> > >       INIT_LIST_HEAD(&endpoint->urb_list);
-> > >
-> > > +     /* device node property overrides bInterval */
-> > > +     if (usb_of_has_combined_node(to_usb_device(ddev))) {
-> >
-> > Not only hubs have combined nodes so you probably need to check
-> > bDeviceClass here instead.
-> 
-> yes, you're right, I didn't think of that case:
-> if (to_usb_device(ddev)->descriptor.bDeviceClass == USB_CLASS_HUB &&
-> ddev->of_node && !of_property_read_u32(...))
-> 
-> Or is it better to check bInterfaceClass, for composite devices with a
-> hub interface inside?
-> if (ifp->desc.bInterfaceClass == USB_CLASS_HUB && ddev->of_node &&
-> !of_property_read_u32(...))
-> 
-> I think checking bInterfaceClass is better.
+> > Any specific reason you're using 0x8c, not 0x100?
+>
+> Because....I keep forgetting what is the latest 'correct' size:
+>   A. The exact size of the register range
+> or
+>   B. The size rounded up to look nicer
 
-Yep, that seems better (but please use two conditionals for
-readability).
+C. The size used by the on-chip address decoder providing the module's
+   select signal? I doubt that's not a power of two ;-)
 
-But related to my question above, why do you need to do this during
-enumeration? Why not just set the lower interval value in the hub
-driver?
+Gr{oetje,eeting}s,
 
-> > > +             u32 interval = 0;
-> > > +             if (!of_property_read_u32(ddev->of_node, "hub,interval",
-> > > +                                 &interval))
-> > > +                     d->bInterval = min_t(u8, interval, 255);
-> >
-> > You want min_t(u32, ...) here to avoid surprises when someone specifies
-> > a value > 255.
-> 
-> yes, thanks.
+                        Geert
 
-And I guess you should really be honouring bInterval as a maximum value,
-right?
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> > > +     }
-> > > +
-> > >       /*
-> > >        * Fix up bInterval values outside the legal range.
-> > >        * Use 10 or 8 ms if no proper value can be guessed.
-
-Johan
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
