@@ -2,129 +2,211 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDC9C2BC73
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3390CC2BC73
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80799206DB
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0038B2084F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:53:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="INyhWzQK"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ypCjrP56"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfLDPvz (ORCPT
+        id S1728159AbfLDPxw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:51:55 -0500
-Received: from mail-eopbgr1400097.outbound.protection.outlook.com ([40.107.140.97]:24704
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727878AbfLDPvz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:51:55 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=khs1XFJb6HFawv1YXAYS8u8EmRVBY/vjiwRiEno2A5ClLuINrwiDHEa1JWeUYYYvvkIswDKZtKf3toJ+dxxFrguYoKhGdIlyOW2TFYeAVHCHH/QkqYzsKgYtoAKCIu2eO5xOruwlkCMnWtoF5eJCi8wKSTqKPAELd2YwfsqOeV+LgxURWtrTmlI9Bm4vVH0tNjkelJDlRaDGV6ldGvl2U8d+OvIcVdIdHwhgESIwp6pGUBzC/Ksu+eFAfboeIfmzFPlQFsiou1MMH5jdRSDyZXLc0pBt9ikEA7cR/DZA94/TjEmIVYLBhMfgvhiusknRxt+DOHlwQbB77r4zRskE3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k3BvTf3mhpXF/vFDNk8NhNyFxgQW4Y+/Df7sqiH+BFk=;
- b=agmR3orkzjfMcNv+jrpT8wWET9ACv4Zr21QZzO3RcJ28mGHuqb2QVgDAPiwWNbW9LNNIWESu/yE84bV2TeB6DskhtjbQQCsjZYiEAMWxfoUBBJIANH0PcYn8Kvre98gCfcG2xeSJVseq26TeESJGycQKHdk9viiBZ+Jl6/pG9Jc7M68nqgvcxnWmX+EVIYn87G2u7RzqqVh5a+H4qlDDB/Z1rJ95NzX85m1C29xAR+y3k5MjDAA4h2VVQCDZRVZD5EFYFdpQMU9Sz2MjyCdoTTGMAOoHQMQcNUQCiUZ5QNeAHcx7Z15J+xJ9kHSbANWIjdVYpYnm3wtSXuUMvxOfCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k3BvTf3mhpXF/vFDNk8NhNyFxgQW4Y+/Df7sqiH+BFk=;
- b=INyhWzQKYVgJsEY/UfC4PvnykoJ56W7q8d5zSvdckaFwdkXWq2Fkj4csdEVDCJe5eES7hI+WXJsDSf6NQz8WVrxZyl7/xjip8cGIPTcLNBrxNYdH8y29olJ4XWMn5+xsWs4lg2p7AIXjbU7GQJz2jmIOGbh+0kVndqoZyUJUbbs=
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
- TY1PR01MB1658.jpnprd01.prod.outlook.com (52.133.162.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.12; Wed, 4 Dec 2019 15:51:49 +0000
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2516.003; Wed, 4 Dec 2019
- 15:51:49 +0000
-From:   Chris Brandt <Chris.Brandt@renesas.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: RE: [PATCH 4/6] spi: Add SPIBSC driver
-Thread-Topic: [PATCH 4/6] spi: Add SPIBSC driver
-Thread-Index: AQHVqYxFvw0/++3CUEK7207HpOVVR6eodlIAgAGlkoA=
-Date:   Wed, 4 Dec 2019 15:51:48 +0000
-Message-ID: <TY1PR01MB1562C00B477C60A6C264F2A28A5D0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
- <20191203034519.5640-5-chris.brandt@renesas.com>
- <20191203141944.GI1998@sirena.org.uk>
-In-Reply-To: <20191203141944.GI1998@sirena.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctZjkzZGI4NzctMTZhZC0xMWVhLWFhNTEtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XGY5M2RiODc4LTE2YWQtMTFlYS1hYTUxLTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iNzgxIiB0PSIxMzIxOTk0ODMwNjU1NTU5MDMiIGg9IjRhdURweG5uL2NzSG9IdGJtc2x4UStrOU02bz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Brandt@renesas.com; 
-x-originating-ip: [75.60.247.61]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 64a21164-114d-4210-e733-08d778d1df93
-x-ms-traffictypediagnostic: TY1PR01MB1658:
-x-microsoft-antispam-prvs: <TY1PR01MB1658E2EF49B51F37B09C15CA8A5D0@TY1PR01MB1658.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0241D5F98C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(376002)(39860400002)(136003)(366004)(189003)(199004)(8936002)(6116002)(2906002)(55016002)(74316002)(8676002)(102836004)(81156014)(3846002)(305945005)(7416002)(25786009)(81166006)(6246003)(4744005)(33656002)(71190400001)(26005)(71200400001)(4326008)(14454004)(5660300002)(9686003)(6506007)(6916009)(7736002)(86362001)(99286004)(76116006)(11346002)(66946007)(229853002)(76176011)(66476007)(6436002)(478600001)(66556008)(66446008)(64756008)(54906003)(7696005)(316002)(186003)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1658;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WilyjND4GrSGTTDahDL6R4WUCn4FU7XQMJKztFgIp8G739nHAGO3VrBPqCl05gMHh7eYY+E5t9eSEpy2z44GNsq73dFon09Y5dAclXA0hDtinJ7PILQWDHEDHQXlx/CjKZN8hSQ2ewAKh6athKysz/86hXpywrPnCFte1KbMjRBrTN4nuvY+RkICRBpda4Mkm7dcs8xTN5rbUDdcHsmCIurtXMSDH6GlZE38CKGq7UYMWo5tCkMS4lO25oDVmvXlM8HYRSpv2QzuKUCOhTQG//EsNq8/jAk/DP0XEDXElcpPioFw3goKZfR2asusiHAFhpjV368OB5N1mh3mJLD5QJgeXJCew03GmgcVuR2Qvc8DFHR/AcEZRUpuRV/XhEy5x2GTg29+0UD47CNdOUvmLMVMiFtLWDye+SS1JvFZU3QuCZRuG+WvxTk77Z20TuDc
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 4 Dec 2019 10:53:52 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:39380 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728064AbfLDPxw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 10:53:52 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4Fq1IX010918;
+        Wed, 4 Dec 2019 16:53:42 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=8MNwfG4b6i8MMlPxotaeWe9xESO4fyKyl25cfaHgznU=;
+ b=ypCjrP56ZBX8lIRj4GMz/aDIEGTzfwfVMa1f/AaA9Ni3R/aTc+8LcJdH+4EGcUe5U0Lx
+ Hol7Z1iDO2LPCSzQgCyqngmH+CwHDhld3YxpGykXe+4skHbC0sfUSgcSHY27CQ5KGrgK
+ S/IxrCagXM7YMY3acNBrRxRyABPMDOfWK+YNZSrZCuBh6Bl51wfw1bN4MLXR/tP3dkCx
+ ZpKATcNF5l1ZkXfJj5fAp4dDOTIcyxw/YkM8Szvws7c3g+mPx+XQmkXOfd8vJY93GADr
+ FoQruYQfBb1GtthPcb/uBJplliywqx1wlG72Y/bNVqxl2N3CSXDf5BhQD4uuUuSgbGJk fA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wkes2x0em-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Dec 2019 16:53:42 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 730EB10002A;
+        Wed,  4 Dec 2019 16:53:42 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 470762C7E89;
+        Wed,  4 Dec 2019 16:53:42 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 4 Dec 2019 16:53:41
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <alexandre.torgue@st.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v2] ARM: dts: stm32: remove "@" and "_" from stm32f4 pinmux groups
+Date:   Wed, 4 Dec 2019 16:53:32 +0100
+Message-ID: <20191204155333.25401-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64a21164-114d-4210-e733-08d778d1df93
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 15:51:48.9615
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AZ/TgplNo8na3q22vK+EU/AoBbR0AQ4KLk3/wr3Za2pD+Sp/8jerWahZrsVQT0eeTwC9MI47Hmf13QxGpAjN/7q8AbQc90xf+FoxXa6MiWk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1658
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Mark,
+Replace all "@" and "_" by "-" in pinmux groups for stm32f4 family.
+This avoid errors when using yaml to check the bindings.
 
-On Tue, Dec 3, 2019, Mark Brown wrote:
-> > +static void spibsc_write(struct spibsc_priv *sbsc, int reg, u32 val)
-> > +{
-> > +	iowrite32(val, sbsc->base + reg);
-> > +}
-> > +static void spibsc_write8(struct spibsc_priv *sbsc, int reg, u8 val)
->=20
-> Looking at a bunch of the stuff here it looks like you could benefit from
-> regmap, it's got lots of debug infrastructure.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+changes in version 2:
+- replace @ and _ by -
 
-Thank you for the suggestion, but I looked into using regmap, and there=20
-are a lot of drivers that use it, but I don't think it's going to work=20
-well for me.
-Regmap assumes that all the registers will be the same size. I have to=20
-have functions that write with different widths (8/16/32) for a reason.
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
+diff --git a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+index 35202896c093..392fa143ce07 100644
+--- a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+@@ -163,7 +163,7 @@
+ 				st,bank-name = "GPIOK";
+ 			};
+ 
+-			usart1_pins_a: usart1@0 {
++			usart1_pins_a: usart1-0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('A', 9, AF7)>; /* USART1_TX */
+ 					bias-disable;
+@@ -176,7 +176,7 @@
+ 				};
+ 			};
+ 
+-			usart3_pins_a: usart3@0 {
++			usart3_pins_a: usart3-0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('B', 10, AF7)>; /* USART3_TX */
+ 					bias-disable;
+@@ -189,7 +189,7 @@
+ 				};
+ 			};
+ 
+-			usbotg_fs_pins_a: usbotg_fs@0 {
++			usbotg_fs_pins_a: usbotg-fs-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('A', 10, AF10)>, /* OTG_FS_ID */
+ 						 <STM32_PINMUX('A', 11, AF10)>, /* OTG_FS_DM */
+@@ -200,7 +200,7 @@
+ 				};
+ 			};
+ 
+-			usbotg_fs_pins_b: usbotg_fs@1 {
++			usbotg_fs_pins_b: usbotg-fs-1 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('B', 12, AF12)>, /* OTG_HS_ID */
+ 						 <STM32_PINMUX('B', 14, AF12)>, /* OTG_HS_DM */
+@@ -211,7 +211,7 @@
+ 				};
+ 			};
+ 
+-			usbotg_hs_pins_a: usbotg_hs@0 {
++			usbotg_hs_pins_a: usbotg-hs-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('H', 4, AF10)>, /* OTG_HS_ULPI_NXT*/
+ 						 <STM32_PINMUX('I', 11, AF10)>, /* OTG_HS_ULPI_DIR */
+@@ -231,7 +231,7 @@
+ 				};
+ 			};
+ 
+-			ethernet_mii: mii@0 {
++			ethernet_mii: mii-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('G', 13, AF11)>, /* ETH_MII_TXD0_ETH_RMII_TXD0 */
+ 						 <STM32_PINMUX('G', 14, AF11)>, /* ETH_MII_TXD1_ETH_RMII_TXD1 */
+@@ -251,13 +251,13 @@
+ 				};
+ 			};
+ 
+-			adc3_in8_pin: adc@200 {
++			adc3_in8_pin: adc-200 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('F', 10, ANALOG)>;
+ 				};
+ 			};
+ 
+-			pwm1_pins: pwm@1 {
++			pwm1_pins: pwm-1 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('A', 8, AF1)>, /* TIM1_CH1 */
+ 						 <STM32_PINMUX('B', 13, AF1)>, /* TIM1_CH1N */
+@@ -265,14 +265,14 @@
+ 				};
+ 			};
+ 
+-			pwm3_pins: pwm@3 {
++			pwm3_pins: pwm-3 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('B', 4, AF2)>, /* TIM3_CH1 */
+ 						 <STM32_PINMUX('B', 5, AF2)>; /* TIM3_CH2 */
+ 				};
+ 			};
+ 
+-			i2c1_pins: i2c1@0 {
++			i2c1_pins: i2c1-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('B', 9, AF4)>, /* I2C1_SDA */
+ 						 <STM32_PINMUX('B', 6, AF4)>; /* I2C1_SCL */
+@@ -282,7 +282,7 @@
+ 				};
+ 			};
+ 
+-			ltdc_pins: ltdc@0 {
++			ltdc_pins: ltdc-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('I', 12, AF14)>, /* LCD_HSYNC */
+ 						 <STM32_PINMUX('I', 13, AF14)>, /* LCD_VSYNC */
+@@ -316,7 +316,7 @@
+ 				};
+ 			};
+ 
+-			dcmi_pins: dcmi@0 {
++			dcmi_pins: dcmi-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('A', 4, AF13)>, /* DCMI_HSYNC */
+ 						 <STM32_PINMUX('B', 7, AF13)>, /* DCMI_VSYNC */
+@@ -339,7 +339,7 @@
+ 				};
+ 			};
+ 
+-			sdio_pins: sdio_pins@0 {
++			sdio_pins: sdio-pins-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDIO_D0 */
+ 						 <STM32_PINMUX('C', 9, AF12)>, /* SDIO_D1 */
+@@ -352,7 +352,7 @@
+ 				};
+ 			};
+ 
+-			sdio_pins_od: sdio_pins_od@0 {
++			sdio_pins_od: sdio-pins-od-0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDIO_D0 */
+ 						 <STM32_PINMUX('C', 9, AF12)>, /* SDIO_D1 */
+-- 
+2.15.0
 
-Chris
