@@ -2,147 +2,235 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDC3C432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 02:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EE0C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 03:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22582080F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 02:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D322073C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 03:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ZSlOnhxy"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Qt4CM0CI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfLDCzD (ORCPT
+        id S1726917AbfLDDHg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 21:55:03 -0500
-Received: from mail-eopbgr1400134.outbound.protection.outlook.com ([40.107.140.134]:54752
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        Tue, 3 Dec 2019 22:07:36 -0500
+Received: from mail-eopbgr80043.outbound.protection.outlook.com ([40.107.8.43]:32950
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726521AbfLDCzC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 3 Dec 2019 21:55:02 -0500
+        id S1726593AbfLDDHf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 22:07:35 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C0P6Yk/aqtvprczokOqe/u6u6/zjBY+dI8EdXkkeC0xqpwnUfSVZn+EHh5bOaFXf7tkiWE40qfPPAZxye5dMqrAzgGtTmKJqxqo4OBRl+wvah7RV4jxocg+Iq3iJfC+UtM5YteRkwrjH+6IS6aseVAPA9UrnzSAwjh3t3m6q7lC7OzJybM6N2CS0oBBN+89648f7ctEVatYLSQxoy4hah58EhauL60kXC33Q5U1Ax0ujrDSglckkPAELkThVbVgDY8FRX75ScIQFpIiNndSpMdzknoZ03Q4wRIdpuyIhLN7UGFGIxZhwiYZxqoYOA5rTk1/qJKxtCyIvcwt4lpj0/g==
+ b=OT73inbMPAFneFm7OfBT+h/SFHBplUVGyX0fVmR3+LcJzYtnE/oWHOUuxOYdqwdwwt4P9wSrNriQaIMzq3l7/g1kGIIZbmZPdwNFRG5AoKAEI1mllowOkgiW0IYNwbEZd682xgaMryuhO+Z6++JKRKwnWMEFj9oceCiGloIId/Bohp7KJUtD5cS1I2/MVmJM1yymAiSUbXRxZ1IdO01xz/X+4BFVhiy71dsIk2bUcVPlR5bGHtIr6UfWiUkJMvDbWX6mXXL1PktWDZhs9613I0b2waQkSeyzfUFiOvyhNZvRz2ibgCBj5LnDgv2fgoxG/g3jH+jVO/CXedc4HpGeRA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8/bhdnwNImrqcuWIU8y5gMX1WvVCn4Lw1hW8cc0KXYg=;
- b=IpXkDXI1L1WAyJCKMv8j5h0oH7hahbYA9j8p4T9CYrnZdudL8LYNjfe0jKqB55aLHQ//hxhXkggigcGd1u3O520UHOJC46CpZgSufuOPpAM+U00zuDFVHTgGoFjmvhpM7DtwY/2BSCHPT8Whd0Uob52CDAJjFMy1pnvbqBL0Gm0sXQAY9Uz20nln2MJDkc4tRc4dVw1NwIJ6SMVZfB967RyKrOuzxA/KtuRQyuseV/L5g94CPIs+Vc1eeLL5+rZxWr6bHbfmAcYtUc/EQLQkjPmGBrs+b2sn/fklWwxSYgmab1idJguoZqcaU0VGUF8numNK2lkpf0rRkRJm+I3NYQ==
+ bh=5ETdrMXm01AuDMAhP/wWeoy9H4GnLYdPoiI05f0/p08=;
+ b=dLjLRGw08G0INYbjmO8ZML5pH4/hG4jTcvtD6XI5u7D8tbTQvcn2dx6ZWaZTa53B/RjMpsxC4DP22NkE2YjpsgSNnS1Xec2bPUSFq+EgBf39/6GTN4gpXkly20VTXhBQBqXek+FQ9pJ/T5U/g7hiuG8Phq6YJw0rui2/OOGjxIRWJ44DdUhC4fwONR9dzqf+AlU+iFs4fpEErh8uPPpyk84J4b8N73ZxcKrtxw8dEX/9sj8Dr9T1N6DL+rrPNgwGhYIZUfHom3icO0IP8ODAI77UFfs7GjE7SomYzQvS/wOqVmlOCDSbLFoBemaIjmUUHQ4xIN4dchUiIDTymp4DUg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8/bhdnwNImrqcuWIU8y5gMX1WvVCn4Lw1hW8cc0KXYg=;
- b=ZSlOnhxywHMgEG7PeUfQCuh3N+31osh9ZisCiDwSVJH43BGdSk+exDh6MxBLwdoNmQOv77uQ1x6xDXaglhSroTow04Q2GbCrcOOGYvTZ7ZYKhv/OiYFmJQc4ZgR0P0gG0KBs1rJueyAAftZKgKu+MMX3QsurILQyqt7VpnYc4Yk=
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
- TY1PR01MB1593.jpnprd01.prod.outlook.com (52.133.163.16) with Microsoft SMTP
+ bh=5ETdrMXm01AuDMAhP/wWeoy9H4GnLYdPoiI05f0/p08=;
+ b=Qt4CM0CICS1pmAGucwMMTDVkkfNFXOGWhGFve1OKh3Z+COujHX2YnXpDhM6GTQgC1zKOsAaYReiTCarIvTugdu0PPx6ZXnbW3QYqYPJwE/O+EXS6QGUvkc1oGKYUqWN/qYZuwOmRFVtUGbhM0/Vus8ZrCkY43P0w1F1P7NYpZWo=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB4041.eurprd04.prod.outlook.com (52.134.110.156) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.21; Wed, 4 Dec 2019 02:54:58 +0000
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2516.003; Wed, 4 Dec 2019
- 02:54:58 +0000
-From:   Chris Brandt <Chris.Brandt@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: RE: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
-Thread-Topic: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
-Thread-Index: AQHVqYxRjjQT6EPsk0uhvsHduSJ+e6eow+OAgAAcgACAACHMAA==
-Date:   Wed, 4 Dec 2019 02:54:57 +0000
-Message-ID: <TY1PR01MB1562A6AFD8D0807B345B7A208A5D0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
- <20191203034519.5640-7-chris.brandt@renesas.com>
- <CAMuHMdVBYpuoK7hcyNLK-mAdpTQz3ohTGXuYdFPHdpU5RoPr6Q@mail.gmail.com>
- <CAMuHMdV7XY7FB9pBsxuWxGsqYaD9n1Y+XZXEJO5OsuigjjUgpw@mail.gmail.com>
-In-Reply-To: <CAMuHMdV7XY7FB9pBsxuWxGsqYaD9n1Y+XZXEJO5OsuigjjUgpw@mail.gmail.com>
-Accept-Language: en-US
+ 15.20.2495.22; Wed, 4 Dec 2019 03:07:30 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4182:4692:ffbd:43a0]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4182:4692:ffbd:43a0%6]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 03:07:29 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Biwen Li <biwen.li@nxp.com>, Leo Li <leoyang.li@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Ran Wang <ran.wang_1@nxp.com>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [v5 1/3] soc: fsl: handle RCPM errata A-008646 on SoC LS1021A
+Thread-Topic: [v5 1/3] soc: fsl: handle RCPM errata A-008646 on SoC LS1021A
+Thread-Index: AQHVqdVCo9UDQyyZQEuy2dNMI/fYS6epStNw
+Date:   Wed, 4 Dec 2019 03:07:29 +0000
+Message-ID: <DB7PR04MB4490FBD7321BD39AE83E37D68F5D0@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20191203122818.21941-1-biwen.li@nxp.com>
+In-Reply-To: <20191203122818.21941-1-biwen.li@nxp.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctNzMyMjZjMDEtMTY0MS0xMWVhLWFhNTEtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XDczMjI2YzAyLTE2NDEtMTFlYS1hYTUxLTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iMjE2OCIgdD0iMTMyMTk5MDE2OTU5MjAwNjk3IiBoPSJoYmhUNkVpWDBGbUJFcDY3YWgzM0lNdHBRaTg9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Brandt@renesas.com; 
-x-originating-ip: [75.60.247.61]
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 04e07cc7-ab2a-4631-45f6-08d778655955
-x-ms-traffictypediagnostic: TY1PR01MB1593:
-x-microsoft-antispam-prvs: <TY1PR01MB15939D9DEC21D7591E241D318A5D0@TY1PR01MB1593.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-office365-filtering-correlation-id: 5288d75e-3d78-4874-f34c-08d778671968
+x-ms-traffictypediagnostic: DB7PR04MB4041:|DB7PR04MB4041:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB404133991C6178CDAF5F5BF58F5D0@DB7PR04MB4041.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:785;
 x-forefront-prvs: 0241D5F98C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(136003)(376002)(39860400002)(396003)(199004)(189003)(76176011)(2906002)(99286004)(52536014)(316002)(33656002)(256004)(5024004)(7696005)(66556008)(66476007)(66446008)(54906003)(11346002)(446003)(229853002)(478600001)(66946007)(6506007)(76116006)(6436002)(86362001)(186003)(64756008)(26005)(102836004)(6116002)(9686003)(14454004)(7416002)(55016002)(6916009)(8676002)(7736002)(81166006)(81156014)(6246003)(5660300002)(8936002)(3846002)(71190400001)(25786009)(4326008)(74316002)(71200400001)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1593;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(39860400002)(346002)(376002)(189003)(199004)(53754006)(7736002)(66476007)(55016002)(76116006)(66446008)(66556008)(229853002)(966005)(66946007)(81156014)(316002)(7696005)(74316002)(305945005)(64756008)(8676002)(6636002)(14444005)(256004)(86362001)(6116002)(33656002)(2501003)(3846002)(2906002)(5660300002)(14454004)(71200400001)(52536014)(76176011)(9686003)(8936002)(6306002)(81166006)(4326008)(478600001)(6506007)(446003)(26005)(25786009)(11346002)(6246003)(71190400001)(44832011)(6436002)(102836004)(99286004)(54906003)(110136005)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4041;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ERuiCWUUOiVRDRXkPoWLnBwT7Gf04CSu/Q/l+IcOtSfWR10Ycr6XB/EVSsdQDtUfQ46q3LYpb1kcUa4BZcxI4yCe0C/UA9HmFogTubmSCqBceShC25yqTEfQbAF0YQd7BDC/mUTSxZo1OsFe7Yzh3m/Wks/rwniUN/jYt6oyr3RaDJ34p5eLqInkLea0NJX/hFcKRfOd63G2ZDcp1HetS4+3CaSE1N1CQUlrtm9D5T7DI1lezAJFzCWl/6sx6XDYFYZ48ts4RE5r0qyhwt6vgYRXWFDsmW+Eqn5LfTwDLUzhdr3t4FdtCq1meIa1PCcq4omhf/uO5jACAiSMAvaxVEnN9DniLhvEcDiw4zr1rMdpelkdWPm0w7jgPpez0fC5i4T0ZZ9sV8A2+RtIAFqYh7FygJua/huq2/yHJOp2fXMwrEXMW7zJ3PaHNSWTehJv
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: JaeS3+MArT0ri0dDm2lhm5ncEyqF5uS8YPgJwzwSigNBpJCner4JtjUd36HBIG1oinXZZGI9DMt/OKPFxjy1uWowDeLrYZsR6CNV2c2OU+QMYtKng+hFun1MFB7I6XzQsXhyVNE1JyJmQLB373sZX0NOccgMJLDbkSmPdvvANrXIEtsREfXrWM6wmgBno/2FIIDQGaBHAXJLACFZoJ5jIOXk/tPluD+tcQKSD9Q+Q7K7MU2F/jtlYLDRYYGt9+i9hF/UNzaSQW0Hcq5+BXNjmDS9NqvTj05e5G9kIaWbsJ/kZGiqgDQDh5fTW7/j0N65eChTn8qop4keM1qidTZv6ktnbwLdrXGiqaKh23eCAlrrwYYOOvFBMI9BTxmGuAOyBIweZ5t611w7IYuwdKCJ81WafnPh1YbJZS/rcaG/PN/Ub7Bgzq6Shm3GuHIL5kZrEdyUgXY0gAKxWEegUKfvFEg8jdoGLzWnq163dFmSUE9D6HWEZ387vS9NMaga3+7aEPwrG5tuNLg7ClE9VQJwS9YLgI5kn3IAZdxsFALBaR8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04e07cc7-ab2a-4631-45f6-08d778655955
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 02:54:58.0246
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5288d75e-3d78-4874-f34c-08d778671968
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 03:07:29.8777
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xgj5ZyctljKgCzM004kckOu3vKK2C7ALlftHYUE/TA4RpgZpDAGiUaBNp5UnzSJycWymlqmfSZf8BFBUmsqYkbiES8Qihva2Sv9NP5LDzqQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1593
+X-MS-Exchange-CrossTenant-userprincipalname: XZC6whAQWB6FYq6rrqyPDEs9DDav07G4mfGPykzUyivXdsngyxdeCxs8Eb+YzOm2RomL3W/Y6Lc4tbzYFyjdhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4041
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIFR1ZSwgRGVjIDMsIDIwMTksIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90
-ZToNCj4gPiBXaGF0IGFib3V0IHRoZSAibXRkLXJvbSIgdXNlIGZvciBlLmcuIFhJUD8NCj4gDQo+
-IEkgZ2F2ZSB0aGlzIHNvbWUgbW9yZSB0aG91Z2h0LiBCYXNpY2FsbHkgdGhlcmUgYXJlIHR3byBt
-b2RlczogU1BJIEZMQVNIIGFuZA0KPiBkaXJlY3QgbWFwcGVkIGVtdWxhdGlvbiAoSHlwZXJGTEFT
-SCBjb3VsZCBiZSBhIHRoaXJkIG1vZGUpLg0KPiBUaGUgYmluZGluZ3MgZGVzY3JpYmVkIGFib3Zl
-IGFyZSBmb3IgdGhlIFNQSSBGTEFTSCB1c2UtY2FzZS4NCg0KSSB3b3VsZCBzYXkgaW4gZ2VuZXJh
-bCwgdGhlcmUgYXJlIGp1c3QgdHdvIG1vZGVzICJTUEkgTW9kZSIgd2hpY2ggd2FzIA0KaW50ZW5k
-ZWQgdG8gZG8gdGhpbmdzIGxpa2UgZGlzY292ZXIgdGhlIGF0dGFjaGVkIGZsYXNoIGFuZCBlcmFz
-ZS93cml0aW5nLg0KQW5kIGRpcmVjdCBtYXBwZWQgd2hpY2ggd2FzIGludGVuZGVkIG9ubHkgZm9y
-IHJlYWRpbmcuIEJvdGggb2YgdGhvc2UgDQptb2RlcyB3ZXJlIGludGVuZGVkIHRvIGJlIHVzZWQg
-Zm9yIFFTUEkgZmxhc2gsIEh5cGVyRmxhc2ggb3IgT2N0YUZsYXNoLiANClRoZXJlJ3MgYSByZWdp
-c3RlciBiaXQgeW91IHNldCB0byB0ZWxsIHRoZSBQSFkgd2hhdCB5b3UgYXJlIHRhbGtpbmcgdG8u
-DQoNCg0KPiBPbiB0aGUgZHJpdmVyIHNpZGUsIGlmIHlvdXIgc3BpYnNjIGRyaXZlciBkb2VzIG5v
-dCBmaW5kIGEgZmxhc2ggc3Vibm9kZSB0aGF0DQo+IGlzIGNvbXBhdGlibGUgd2l0aCAiamVkZWMs
-c3BpLW5vciIsIGl0IHNob3VsZCByZXR1cm4gLUVOT0RFViwgc28NCj4gZHJpdmVycy9idXMvc2lt
-cGxlLXBtLWJ1cy5jIGNhbiB0YWtlIG92ZXIgZm9yIHRoZSBzZWNvbmQgbW9kZSwgaWYgbmVlZGVk
-Lg0KDQpJIHRoaW5rIGhlcmUgaXMgdGhlIGJpZ2dlciBpc3N1ZS9xdWVzdGlvbi9kZWNpc2lvbi4N
-Cg0KVGhpcyBvbmUgSVAgYmxvY2sgc3VwcG9ydHMgMyBkaWZmZXJlbnQgdHlwZXMgb2YgRmxhc2g6
-IFFTUEksIEh5cGVyLCBPY3RhLg0KQWxzbywgaXQgcnVucyBpbiAyIG1vZGU6DQogIlNQSSBNb2Rl
-IiBmb3Igd3JpdGluZyBhbmQgb3RoZXIgc3R1ZmYNCiAiRGlyZWN0IE1vZGUiIFJlYWQgb25seSwg
-YnV0IGZhc3RlciBhbmQgZGlyZWN0bHkgYWNjZXNzaWJsZS4NCg0KIChRU1BJIGFsc28gc3VwcG9y
-dHMgMS1iaXQsMi1iaXQsNC1iaXQsIGFuZCA4LWJpdChkdWFsKS4uLi5idXQgd2UnbGwNCiAgZm9y
-Z2V0IGFib3V0IHRoYXQgZm9yIG5vdyApDQoNClNvIHRoZSBxdWVzdGlvbiBpcyBpZiBzb21lb25l
-IHJlYWxseSB3YW50cyB0byB1c2UgaXQgaW4gImRpcmVjdCBtb2RlIiANCm1vc3Qgb2YgdGhlIHRp
-bWUsIGJ1dCBhbHNvIG5lZWQgdG8gc3dpdGNoIGJhY2sgaW50byAiU1BJIG1vZGUiIHRvIHJld3Jp
-dGUgDQp0aGUgZmxhc2gsIHNob3VsZCB0aGlzIGRyaXZlciBoYW5kbGUgYm90aCBjYXNlcz8NCg0K
-QmFzaWNhbGx5LCBpdCdzIGxpa2UgdGhlICdyb2xlIHN3aXRjaCcgaW4gdGhlIFVTQiBPVEcgZHJp
-dmVycy4NCg0KVGhpcyBkcml2ZXIgSSBjcmVhdGVkIHdhcyBqdXN0IGF0dGVtcHRpbmcgdG8gY292
-ZXIgdGhlICJTUEkgbW9kZSIgY2FzZSANCmZvciB0aG9zZSB0aGF0IHdhbnQgdG8gYmUgYWJsZSB0
-byByZS13cml0ZSB1LWJvb3QgYXQgcnVuLXRpbWUuIEFuZCwgaXQgDQpjb3VsZCBiZSBleHRlbmRl
-ZCB0byBzdXBwb3J0IEh5cGVyRmxhc2ggYW5kIE9jdGFGbGFzaCBpbiBTUEkgbW9kZSBhcyB3ZWxs
-IA0KKHlvdSB1c2UgdGhlIHNhbWUgcmVnaXN0ZXJzLCBidXQgdGhlIGNvbW1hbmRzIGFyZSBkaWZm
-ZXJlbnQpLg0KDQpTbyBteSBzdWdnZXN0aW9uIGlzIHRvIGZvcmdldCBhYm91dCB0cnlpbmcgdG8g
-J3N1cHBvcnQnIGRpcmVjdCBtb2RlIGluIA0KdGhpcyBkcml2ZXIgYXQgdGhlIG1vbWVudC4gSWYg
-eW91J3JlIHVzaW5nIHRoaXMgSFcgZm9yIHNvbWV0aGluZyBsaWtlIA0KWElQLCB0aGVuIGRvbid0
-IGVuYWJsZSB0aGlzIGRyaXZlciBhdCBhbGwgKHdoaWNoIGlzIHdoYXQgd2UgaGF2ZSBiZWVuIA0K
-ZG9pbmcpLg0KDQpDaHJpcw0KDQo=
+Hi All,
+
+1.Need apply below patches before apply these patches.
+1.1 Flextimer dts
+https://lore.kernel.org/patchwork/series/405653/mbox/ (https://lore.kernel.=
+org/patchwork/patch/1112493/)
+1.2 RCPM driver
+https://lore.kernel.org/patchwork/patch/1143809/mbox/ [v10,1/3] PM: wakeup:=
+ Add routine to help fetch wakeup source object)
+https://lore.kernel.org/patchwork/patch/1143810/mbox/ ([v10,2/3] Documentat=
+ion: dt: binding: fsl: Add 'little-endian' and update Chassis define)
+https://lore.kernel.org/patchwork/patch/1143811/mbox/ ([v10,3/3] soc: fsl: =
+add RCPM driver)
+
+> Subject: [v5 1/3] soc: fsl: handle RCPM errata A-008646 on SoC LS1021A
+>=20
+> Description:
+> 	- Reading configuration register RCPM_IPPDEXPCR1
+> 	  always return zero
+>=20
+> Workaround:
+> 	- Save register RCPM_IPPDEXPCR1's value to
+> 	  register SCFG_SPARECR8.(uboot's psci also
+> 	  need reading value from the register SCFG_SPARECR8
+> 	  to set register RCPM_IPPDEXPCR1)
+>=20
+> Impact:
+> 	- FlexTimer module will cannot wakeup system in
+> 	  deep sleep on SoC LS1021A
+>=20
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v5:
+> 	- update the patch, because of rcpm driver has updated.
+>=20
+> Change in v4:
+> 	- rename property name
+> 	  fsl,ippdexpcr-alt-addr -> fsl,ippdexpcr1-alt-addr
+>=20
+> Change in v3:
+> 	- update commit message
+> 	- rename property name
+> 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
+>=20
+> Change in v2:
+>   	- fix stype problems
+>=20
+>  drivers/soc/fsl/rcpm.c | 47
+> ++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 45 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c index
+> a093dbe6d2cb..775c618f0456 100644
+> --- a/drivers/soc/fsl/rcpm.c
+> +++ b/drivers/soc/fsl/rcpm.c
+> @@ -6,13 +6,16 @@
+>  //
+>  // Author: Ran Wang <ran.wang_1@nxp.com>
+>=20
+> +#include <linux/acpi.h>
+>  #include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/syscon.h>
+>  #include <linux/module.h>
+> -#include <linux/platform_device.h>
+>  #include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+>  #include <linux/slab.h>
+>  #include <linux/suspend.h>
+> -#include <linux/kernel.h>
+>=20
+>  #define RCPM_WAKEUP_CELL_MAX_SIZE	7
+>=20
+> @@ -37,6 +40,9 @@ static int rcpm_pm_prepare(struct device *dev)
+>  	struct device_node	*np =3D dev->of_node;
+>  	u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
+>  	u32 setting[RCPM_WAKEUP_CELL_MAX_SIZE] =3D {0};
+> +	struct regmap *scfg_addr_regmap =3D NULL;
+> +	u32 reg_offset[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
+> +	u32 reg_value =3D 0;
+>=20
+>  	rcpm =3D dev_get_drvdata(dev);
+>  	if (!rcpm)
+> @@ -90,6 +96,43 @@ static int rcpm_pm_prepare(struct device *dev)
+>  			tmp |=3D ioread32be(address);
+>  			iowrite32be(tmp, address);
+>  		}
+> +		/*
+> +		 * Workaround of errata A-008646 on SoC LS1021A:
+> +		 * There is a bug of register ippdexpcr1.
+> +		 * Reading configuration register RCPM_IPPDEXPCR1
+> +		 * always return zero. So save ippdexpcr1's value
+> +		 * to register SCFG_SPARECR8.And the value of
+> +		 * ippdexpcr1 will be read from SCFG_SPARECR8.
+> +		 */
+> +		if (device_property_present(dev, "fsl,ippdexpcr1-alt-addr")) {
+> +			if (dev_of_node(dev)) {
+> +				scfg_addr_regmap =3D
+> syscon_regmap_lookup_by_phandle(np,
+> +
+> "fsl,ippdexpcr1-alt-addr");
+> +			} else if (is_acpi_node(dev->fwnode)) {
+> +				dev_err(dev, "not support acpi for rcpm\n");
+> +				continue;
+> +			}
+> +
+> +			if (scfg_addr_regmap && (i =3D=3D 1)) {
+> +				if (device_property_read_u32_array(dev,
+> +				    "fsl,ippdexpcr1-alt-addr",
+> +				    reg_offset,
+> +				    1 + sizeof(u64)/sizeof(u32))) {
+> +					scfg_addr_regmap =3D NULL;
+> +					continue;
+> +				}
+> +				/* Read value from register SCFG_SPARECR8 */
+> +				regmap_read(scfg_addr_regmap,
+> +					    (u32)(((u64)(reg_offset[1] << (sizeof(u32) * 8) |
+> +					    reg_offset[2])) & 0xffffffff),
+> +					    &reg_value);
+> +				/* Write value to register SCFG_SPARECR8 */
+> +				regmap_write(scfg_addr_regmap,
+> +					     (u32)(((u64)(reg_offset[1] << (sizeof(u32) * 8) |
+> +					     reg_offset[2])) & 0xffffffff),
+> +					     tmp | reg_value);
+> +			}
+> +		}
+>  	}
+>=20
+>  	return 0;
+> --
+> 2.17.1
+
