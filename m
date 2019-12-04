@@ -4,139 +4,167 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F411C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA1FC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C9B20675
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EFAC205ED
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:12:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="MIsRZrhb"
+	dkim=pass (2048-bit key) header.d=avl.com header.i=@avl.com header.b="I0s59Pxo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbfLDKLG (ORCPT
+        id S1727445AbfLDKMN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:11:06 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:56818 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727606AbfLDKLF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 05:11:05 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 43E8B27E1514;
-        Wed,  4 Dec 2019 11:11:04 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 91PZJiDiSQRY; Wed,  4 Dec 2019 11:11:03 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 9FBF327E0E3A;
-        Wed,  4 Dec 2019 11:11:03 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 9FBF327E0E3A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1575454263;
-        bh=49GmeuQtl5iQNzkiGn2NTlC0kJCfQvjsNi37acIHiZU=;
-        h=From:To:Date:Message-Id;
-        b=MIsRZrhbuhD4YYRWSmWNJQ9Z/+VlYRcCOHZMAQlWqr6F89Xjmc4Dq3ogSHvH7iEJB
-         zyzQzUKNkX5kijbEZ3togmASSYAvIU8ETTegK+Jur8AVWL+4HE4e7beW9LV2B9S5aL
-         iD6vNxCEKxOg0bOHSbQg2bBxAnu8lKkzyGXjyj5w=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id x_Wo29Vgnq5b; Wed,  4 Dec 2019 11:11:03 +0100 (CET)
-Received: from triton.lin.mbt.kalray.eu (unknown [192.168.37.25])
-        by zimbra2.kalray.eu (Postfix) with ESMTPSA id 7DB6C27E0A05;
-        Wed,  4 Dec 2019 11:11:03 +0100 (CET)
-From:   Clement Leger <cleger@kalray.eu>
-To:     linux-kernel@vger.kernel.org
-Cc:     Clement Leger <cleger@kalray.eu>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 5/5] dt-bindings: pinctrl: dw: move sps,dwapb-gpio.txt to pinctrl
-Date:   Wed,  4 Dec 2019 11:10:39 +0100
-Message-Id: <20191204101042.4275-6-cleger@kalray.eu>
-X-Mailer: git-send-email 2.15.0.276.g89ea799
+        Wed, 4 Dec 2019 05:12:13 -0500
+Received: from mx07-002cda01.pphosted.com ([185.132.180.122]:16188 "EHLO
+        mx07-002cda01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727351AbfLDKMN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 05:12:13 -0500
+Received: from pps.filterd (m0135535.ppops.net [127.0.0.1])
+        by mx07-002cda01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4A292L015151;
+        Wed, 4 Dec 2019 10:03:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=avl.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=08102019; bh=K5tNEdnBxAlxUCd+/rv0lf5SXzwX97+D5pqy1mjYJDs=;
+ b=I0s59Pxoa8ms+y6D2pvwsb4oNNZgyKidLJ6ejlnL2v3QRyEGR0YH+PDbVk1OwYen8PZ+
+ ohDm3SypCMfpmr3RFQwdz/vpN7rPtNVJW8j8g1hhJGdhUwKcOu57Fe/W9ySkJwkPbqj4
+ SLJykGd14xtXRde5xlqyxXSgrHe8MftsW9Xlfv7dpApJ/VQdv+NPz3lsWXVDBFQgZFdf
+ F96b5f6mg7gAVjl+xL9mFb1nYTNqjJYu89Tg9Szidg921pBK2IsfXsTEaJnwW1mg501B
+ 4JGvc8l1cGfJCG8IsbaUZRgZRGlZ1lZc7/nreChdd/ib+vOL0//bc3bghTUuQppPZdTn BA== 
+Received: from atgrzso2833.avl01.avlcorp.lan ([192.102.17.76])
+        by mx07-002cda01.pphosted.com with ESMTP id 2wnja3thf1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Dec 2019 10:03:56 +0000
+Received: from pps.filterd (atgrzso2833.avl01.avlcorp.lan [127.0.0.1])
+        by atgrzso2833.avl01.avlcorp.lan (8.16.0.27/8.16.0.27) with SMTP id xB49xhBu028880;
+        Wed, 4 Dec 2019 11:03:56 +0100
+Received: from atgrzsw1696.avl01.avlcorp.lan ([10.13.100.86])
+        by atgrzso2833.avl01.avlcorp.lan with ESMTP id 2wkh0psxe6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 04 Dec 2019 11:03:55 +0100
+Received: from atgrzsw3272.avl01.avlcorp.lan (10.12.65.158) by
+ atgrzsw1696.avl01.avlcorp.lan (10.12.64.164) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 4 Dec 2019 11:03:55 +0100
+Received: from atgrzsw1696.avl01.avlcorp.lan (10.12.64.164) by
+ atgrzsw3272.avl01.avlcorp.lan (10.12.65.158) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 4 Dec 2019 11:03:55 +0100
+Received: from ATGRZWN210214.avl01.avlcorp.lan (10.12.100.12) by
+ atgrzsw1696.avl01.avlcorp.lan (10.12.64.164) with Microsoft SMTP Server id
+ 15.0.1497.2 via Frontend Transport; Wed, 4 Dec 2019 11:03:55 +0100
+From:   <tomislav.denis@avl.com>
+To:     <jic23@kernel.org>
+CC:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <tomislav.denis@avl.com>
+Subject: [PATCH v3 3/3] bindings: iio: pressure: Add dlh-i2c documentation
+Date:   Wed, 4 Dec 2019 11:03:54 +0100
+Message-ID: <20191204100354.16652-4-tomislav.denis@avl.com>
+X-Mailer: git-send-email 2.10.1.windows.1
+In-Reply-To: <20191204100354.16652-1-tomislav.denis@avl.com>
+References: <20191204100354.16652-1-tomislav.denis@avl.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: f9e74532-fb7d-4806-8539-2b9574eafa9a
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-12-04_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=778
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912040077
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 malwarescore=0
+ mlxlogscore=838 adultscore=0 bulkscore=0 priorityscore=1501
+ impostorscore=0 mlxscore=0 clxscore=1015 phishscore=0 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912040077
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since the driver has been moved to pinctrl and now supports it, move the
-documentation into pinctrl folder. In the same time, add documentation
-for pinctrl properties such has snps,has-pinctrl and description of pin
-alternate functions.
+From: Tomislav Denis <tomislav.denis@avl.com>
 
-Signed-off-by: Clement Leger <cleger@kalray.eu>
+Add a device tree binding documentation for DLH series pressure
+sensors.
+
+Signed-off-by: Tomislav Denis <tomislav.denis@avl.com>
 ---
- .../bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt  | 21 ++++++++++++++++++++-
- MAINTAINERS                                         |  2 +-
- 2 files changed, 21 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt (76%)
+ .../bindings/iio/pressure/asc,dlh-i2c.yaml         | 51 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/pressure/asc,dlh-i2c.yaml
 
-diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
-similarity index 76%
-rename from Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-rename to Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
-index 839dd32ffe11..4fb1b754a2bd 100644
---- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
-@@ -1,4 +1,4 @@
--* Synopsys DesignWare APB GPIO controller
-+* Synopsys DesignWare APB GPIO & pinmux controller
- 
- Required properties:
- - compatible : Should contain "snps,dw-apb-gpio"
-@@ -33,8 +33,16 @@ controller.
-   use the interrupts-extended property to specify the interrupts and set the
-   interrupt controller handle for unused interrupts to 0.
- - snps,nr-gpios : The number of pins in the port, a single cell.
-+- snps,has-pinctrl : If present, register the pinctrl controller.
- - resets : Reset line for the controller.
- 
-+Required properties for pin configuration node:
-+- function: string representing a function to mux for pins
-+    dw apb controller only has two functions for each pins (sw and hw). When set
-+    in software mode, the gpio controller controls the pin output. When
-+    configured in hardware mode, an external peripheral controls the pin signal.
-+- pins: string array of pins to be muxed.
+diff --git a/Documentation/devicetree/bindings/iio/pressure/asc,dlh-i2c.yaml b/Documentation/devicetree/bindings/iio/pressure/asc,dlh-i2c.yaml
+new file mode 100644
+index 0000000..5de2277
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/pressure/asc,dlh-i2c.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/pressure/dlh-i2c.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- Example:
- 
- gpio: gpio@20000 {
-@@ -60,6 +68,17 @@ gpio: gpio@20000 {
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		snps,nr-gpios = <8>;
-+		snps,has-pinctrl;
- 		reg = <1>;
++title: All Sensors DLH series low voltage digital pressure sensors
 +
-+		uart0_pins: pinmux_uart0_pins {
-+			function = "hw";
-+			pins = "pin0", "pin1";
-+		};
++maintainers:
++  - Tomislav Denis <tomislav.denis@avl.com>
 +
-+		uart1_pins: pinmux_uart1_pins {
-+			function = "hw";
-+			pins = "pin2", "pin3";
-+		};
- 	};
- };
++description: |
++  Bindings for the All Sensors DLH series pressure sensors.
++
++  Specifications about the sensors can be found at:
++    http://www.allsensors.com/cad/DS-0355_Rev_B.PDF
++
++properties:
++  compatible:
++    enum:
++      - asc,dlhl60d
++      - asc,dlhl60g
++
++  reg:
++    description: I2C device address
++    maxItems: 1
++
++  interrupts:
++    description: interrupt mapping for EOC(data ready) pin
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      pressure@29 {
++          compatible = "asc,dlhl60d";
++          reg = <0x29>;
++          interrupt-parent = <&gpio0>;
++          interrupts = <10 IRQ_TYPE_EDGE_RISING>;
++      };
++    };
++...
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 35b90ad9f594..e8f9e827d687 100644
+index 39d6f0f..8f0eab0 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -15873,7 +15873,7 @@ M:	Hoan Tran <hoan@os.amperecomputing.com>
- L:	linux-gpio@vger.kernel.org
+@@ -674,6 +674,7 @@ W:	http://www.allsensors.com/
  S:	Maintained
- F:	drivers/pinctrl/dw/pinctrl-dwapb.c
--F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-+F:	Documentation/devicetree/bindings/pinctrl/snps-dwapb-gpio.txt
+ L:	linux-iio@vger.kernel.org
+ F:	drivers/iio/pressure/dlh-i2c.c
++F:	Documentation/devicetree/bindings/iio/pressure/dlh-i2c.yaml
  
- SYNOPSYS DESIGNWARE AXI DMAC DRIVER
- M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+ ALLEGRO DVT VIDEO IP CORE DRIVER
+ M:	Michael Tretter <m.tretter@pengutronix.de>
 -- 
-2.15.0.276.g89ea799
+2.7.4
 
