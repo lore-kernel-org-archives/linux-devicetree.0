@@ -2,138 +2,105 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB39C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0410EC2BD09
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23C26206DB
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:16:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="QeS7Ngnx"
+	by mail.kernel.org (Postfix) with ESMTP id CC8392081B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575472962;
+	bh=+LyWKcoTaC83hFLYOVOLmtxAK1M+52+ZOKXak1ih5Tk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OXrQ5/450kL4nK7zz7EDiiPXSHcCEGVfyc2ke7IavTlrBfWtaPrwfSk2cWDAPlGn/
+	 uWPLeX0HOO/v4/Jmp3lzkkYQ1CUFNbUWQK1Ud56vOgAYxTYsHL/UfREHjyUyIEQes3
+	 zPU5CS7l9m3pNR3UQbSJmgWnG7bqct8hfggsanis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbfLDPQA (ORCPT
+        id S1728197AbfLDPWi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:16:00 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:42140 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727828AbfLDPQA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 10:16:00 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4FBqIn030960;
-        Wed, 4 Dec 2019 16:15:45 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=mi6sicS/6WmqRtJHRFBWFt0P7fH4La+GpgRzv4TMpAY=;
- b=QeS7NgnxeWH6y67qc90NxJ+EvWDr1Xf5L0eBiExsnYmb+sSqtL9d9+SfAkfNqGXWCwWF
- mjcdnK74mUSiW++ng/bMLVgi5x6LymSxphtsB2Kc8gMF4VFOpC+wWHdMypAWSxJxQcQx
- +zPICe6JBQ3BK/OyoLnI4XOO2gnpDoIdBh+G5foKYSeraKiEk0bULzhzCQKZ90qjkm73
- +WMr8TxWv++JP/0D6VaUM9wjwdEDJ9oJVsexbRt/uWIYm4ENIkBU7LRU2z97o26PU9F3
- r1FZSSQkrmeLI1+Oj3ye3q6GM/csjW4MxyV/cGSD0U2Kf37kySC3K3qpTgX5h8YlXDrv WQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wkg6knqqc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Dec 2019 16:15:45 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C5CFC10002A;
-        Wed,  4 Dec 2019 16:15:44 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9398C2C144D;
-        Wed,  4 Dec 2019 16:15:44 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 4 Dec
- 2019 16:15:43 +0100
-Subject: Re: [PATCH v2 0/6] STM32 DT: Updates for SOC diversity
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>, <arnd@arndb.de>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-References: <20191129180602.28470-1-alexandre.torgue@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <a88cb8e2-052e-5c1b-9e64-9f937030b3fe@st.com>
-Date:   Wed, 4 Dec 2019 16:15:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 4 Dec 2019 10:22:38 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46805 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727828AbfLDPWi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 10:22:38 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a124so7129800oii.13;
+        Wed, 04 Dec 2019 07:22:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6sPha/wbJhMAM5wPncZACHp8KjMdGhsy8S0M1rRpaf8=;
+        b=gsNNINqimOgoSGUwTJcVOyF7p1n+l9fsQ3+4gcj9pUpuhR6ChUtK4Aq/bDAyc1LvzX
+         RriT5wsksI/51e1+1YgYoIvFpolFxPkaVAelpKHEzKBIzrRBvCo9kg7OSU6TmfC6bfWZ
+         gU6N1zua9Xxae+xEQLBQwv4owbBcBHM3VpK11H94wt5P1cUARTQlrEmOs9esI6J42rtK
+         21ITaiPpYsbPU0ZrCEVf4FG3imFC1kqpQ1SOk/BCIKei5F/j+AWsnbv0TPRFcHcUa2/g
+         ZiUP4z5xWvMTLON+0P6gUCKyYYjTdb+WlgmBeigtm7SrDo9DKlr+75Tm8YFYwGyDpHyX
+         Ie8A==
+X-Gm-Message-State: APjAAAXIrs2UZacmwlkf+oavtZanFIaK+7UEjHbydGKG1bA7N+zCYxIa
+        8hJAbbsCqgwvHE/PxyK9BA==
+X-Google-Smtp-Source: APXvYqw8kKCWJtpWF4IZtXkjbDj7ihw7FUCSOym5glyPaxqeYYa79GKcja0rok7LmHGBYe7QPSY9CA==
+X-Received: by 2002:aca:b986:: with SMTP id j128mr3137425oif.16.1575472957574;
+        Wed, 04 Dec 2019 07:22:37 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c204sm2388795oia.14.2019.12.04.07.22.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 07:22:37 -0800 (PST)
+Date:   Wed, 4 Dec 2019 09:22:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Khouloud Touil <ktouil@baylibre.com>
+Cc:     bgolaszewski@baylibre.com, mark.rutland@arm.com,
+        srinivas.kandagatla@linaro.org, baylibre-upstreaming@groups.io,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linus.walleij@linaro.org
+Subject: Re: [PATCH 3/4] dt-bindings: at24: remove the optional property
+ write-protect-gpios
+Message-ID: <20191204152236.GA22464@bogus>
+References: <20191120142038.30746-1-ktouil@baylibre.com>
+ <20191120142038.30746-4-ktouil@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20191129180602.28470-1-alexandre.torgue@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120142038.30746-4-ktouil@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi
+On Wed, Nov 20, 2019 at 03:20:37PM +0100, Khouloud Touil wrote:
+> NVMEM framework is an interface for the at24 EEPROMs as well as for
+> other drivers, instead of passing the wp-gpios over the different
+> drivers each time, it would be better to pass it over the NVMEM
+> subsystem once and for all.
+> 
+> Removing the optional property form the device tree binding document.
+> 
+> Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/eeprom/at24.yaml | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> index e8778560d966..9894237ac432 100644
+> --- a/Documentation/devicetree/bindings/eeprom/at24.yaml
+> +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> @@ -145,11 +145,6 @@ properties:
+>        over reads to the next slave address. Please consult the manual of
+>        your device.
+>  
+> -  wp-gpios:
+> -    description:
+> -      GPIO to which the write-protect pin of the chip is connected.
+> -    maxItems: 1
+> -
 
-On 11/29/19 7:05 PM, Alexandre Torgue wrote:
-> Changes since v1:
->   -According to Arnd comment, move chosen and aliases nodes to dts board file.
-> 
-> 
-> This series updates stm32mp device tree files in order to handle the STM32MP15
-> part numbers diversity. STM32MP15 part numbers are built in this way:
-> 
-> -STM32MP15X: X = [1, 3, 7] for IPs diversity:
->   -STM32MP151 = basic part
->   -STM32MP153 = STM32MP151  + a second CPU A7 + MCAN(x2)
->   -STM32MP157 = STM32MP153 + DSI + GPU
-> 
-> -STMM32MP15xY: Y = [a, c] for security diversity:
->   -STM32MP15xA: basic part.
->   -STM32MP15xC: adds crypto IP.
-> 
-> -STM32MP15xxZZ: ZZ = [aa, ab, ac, ad] for packages (IO) diversity:
->   -STM32MP15xxAA: TFBGA448 18x18
->   -STM32MP15xxAB: LFBGA354 16x16
->   -STM32MP15xxAC: TFBGA361 12x12
->   -STM32MP15xxAD: TFBGA257 10x10
-> 
-> New device tree files are created and some existing are renamed to match with
-> this split.
-> 
-> In this way it is easy to assemble (by inclusion) those files to match with the
-> SOC partnumber used on board, and then it's simpler for users to create their
-> own device tree board file using the correct SOC.
-> 
-> For more details:
-> 
-> See STM32MP151 [1], STM32MP153 [2], STM32MP157 [3] reference manuals:
->   [1] https://www.st.com/resource/en/reference_manual/dm00366349.pdf
->   [2] https://www.st.com/resource/en/reference_manual/dm00366355.pdf
->   [3] https://www.st.com/resource/en/reference_manual/dm00327659.pdf
-> 
-> Product family:
->   https://www.st.com/en/microcontrollers-microprocessors/stm32-arm-cortex-mpus.html#products
-> 
-> regards
-> Alex
-> 
-> Alexandre Torgue (6):
->    ARM: dts: stm32: Adapt stm32mp157 pinctrl to manage STM32MP15xx SOCs
->      family
->    ARM: dts: stm32: Update stm32mp157 pinctrl files
->    ARM: dts: stm32: Introduce new STM32MP15 SOCs: STM32MP151 and
->      STM32MP153
->    ARM: dts: stm32: Manage security diversity for STM32M15x SOCs
->    ARM: dts: stm32: Adapt STM32MP157 DK boards to stm32 DT diversity
->    ARM: dts: stm32: Adapt STM32MP157C ED1 board to STM32 DT diversity
->
+At least 'wp-gpios: true' is still needed or you need to reference the 
+common definition in nvmem.yaml. The reason being is every possible 
+property (and child node) needs to be listed so we can have errors on 
+any that aren't.
 
-Series applied on stm32-next.
-
-Regards
-Alex
-
-
+Rob
