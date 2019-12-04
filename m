@@ -2,110 +2,88 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 666C6C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 19:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CE5C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 19:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368BF20409
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 19:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B11A320409
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 19:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575488064;
-	bh=A3sOYG3OPgTtbY92bXyzmg3KcJIG0Bs4QOjP9d3ZRsA=;
+	s=default; t=1575488178;
+	bh=F2V3gpnNLXjqwX4FzsGXRbeG71q5Xdh+QnwJNYibD1U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jEbkkOuhNQHpMpb9cO0UjTLrJWLzF7BIw8vpNRRszBOIx1I39ztTic8+S+xm/ifX4
-	 8GZ614DBOTO4JtR12dz7DHl5j4kHOPnYf+5wbmmmvzjac67tSbyzrTQtWSe4D2otm5
-	 hHAHNvngmZ8Rs0iv4fVsKITLz12ankoyiyuUkqmM=
+	b=yZsAWTS39EG2l8Mw+aiWwSCANywdmTN5kDEjZlAV/jcdmk6mRjxVmtshwTytDYZfI
+	 pl0nc6Z0uwOdQ6JIXMe5XPa0pzcDZ8hv+Odsi33xW0u7snT2kOoypkUxg7R2x6vEcU
+	 UYFMyeE8raWN4Dold3ChOFdUvANVDSGXylzGmB4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbfLDTeX (ORCPT
+        id S1728030AbfLDTgS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 14:34:23 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41418 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728325AbfLDTeX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 14:34:23 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r27so316363otc.8;
-        Wed, 04 Dec 2019 11:34:23 -0800 (PST)
+        Wed, 4 Dec 2019 14:36:18 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41998 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727982AbfLDTgR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 14:36:17 -0500
+Received: by mail-oi1-f196.google.com with SMTP id j22so337965oij.9;
+        Wed, 04 Dec 2019 11:36:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p4mxuGM2xEKk8KHZKZzmKSi85GUqaLcMWhdk6rGaIpI=;
-        b=azZih2Z1i6qMkH4ULhxNYAhAIj5WN9R+X2iuS23vHW7/IhrlTmfqz83UckQzyrF27i
-         f/wHZOO0R5k6p2hTRfDNIHSiSnU7s9YMbsOQhlwI/+ze41g1Zqmjjrg8CiEJvRjzk8WD
-         3IT+UJMkLnbvh6uLg3UkzTB86jp5hJhT1PanD36P7smb8yiWxkairAF1ZlTjk/4Af7gW
-         BAkALOgu7mhW4R40CENzCy6xItTkY4fPdECZFuUSdSW1l698gYb07Fk6pDvat+tVZ2WI
-         SUBCNU1KAwUujjjyigYGOdURr8d1QmLNnJyMbquXuR1qySOa3PTkUncI2vMhn6UL7ZdR
-         7RuQ==
-X-Gm-Message-State: APjAAAUnz7rLx4NpMTI+WaLSSRUin+Crkw16Z6neJNRj1W2HRAvuj4Pb
-        D17yXN3cuDVRRqKbBGqyzQ==
-X-Google-Smtp-Source: APXvYqw5eOGbBaVPH+ueyOZw91fxjIVeOFdA2MP/nej8yeBJ149jFgcf0lgk+mRtwmYNmoKC2nf59w==
-X-Received: by 2002:a9d:3b8:: with SMTP id f53mr3946935otf.180.1575488062646;
-        Wed, 04 Dec 2019 11:34:22 -0800 (PST)
+        bh=4l/JtwjXT1qBF416IXv0Ieqm2uxNXQ8tl4ay1L+NPDw=;
+        b=LW73LAQFfDiK4SOItykcM2bw5lvrfKW2sCQlh3mkdStsDutkGWLTvdcdZbcBohHnyr
+         0ywTA/nHRoOwkVOf9hAqp23y1WVzSUNrvWpaL3NXh2rxHFk2x/gvQZBANCqhC17Vv1gF
+         SuQhBEkCenZH9tQJ5sXzMVWLXJYLmeblOB47z8b1S3mv/gW65yaDqM+vSsK7ngtUme+O
+         GD0zF71qNo5GC6G7iO/wbbIpmjsey5YD+OqJB8NMO9aQmKudwrtJHp1VP5LmuimYWTqb
+         f4TeOJRPaGKqmXVen4/aVCWrOrE9xKbIXAaXqTDErN6d07dH34Mbpwh59EKF04yFcjEC
+         BPGQ==
+X-Gm-Message-State: APjAAAVgnbR3bg8G6RAyNyc56PK6XI/CwfVFT96CUJrve98jHF1I9L0A
+        /88EkG71l2EuHSkiUpmh8A==
+X-Google-Smtp-Source: APXvYqwbYbRZksHTtKqsDfJTwU2S/KsK6vdSez9yw9Sp1yFW45VcbvaETJUBHHTwFZidWzmuVFrCmg==
+X-Received: by 2002:a05:6808:b26:: with SMTP id t6mr3792135oij.123.1575488176840;
+        Wed, 04 Dec 2019 11:36:16 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s83sm1691648oif.33.2019.12.04.11.34.21
+        by smtp.gmail.com with ESMTPSA id m68sm2634826oig.50.2019.12.04.11.36.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 11:34:22 -0800 (PST)
-Date:   Wed, 4 Dec 2019 13:34:21 -0600
+        Wed, 04 Dec 2019 11:36:16 -0800 (PST)
+Date:   Wed, 4 Dec 2019 13:36:15 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jason Kridner <jkridner@gmail.com>
-Cc:     devicetree@vger.kernel.org,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jyri Sarha <jsarha@ti.com>, linux-kernel@vger.kernel.org,
-        Caleb Robey <c-robey@ti.com>, Jason Kridner <jdk@ti.com>
-Subject: Re: [PATCH v2] dt-bindings: Add vendor prefix for BeagleBoard.org
-Message-ID: <20191204193421.GA15784@bogus>
-References: <20191122000926.19408-1-jdk@ti.com>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org,
+        airlied@linux.ie, daniel@ffwll.ch, jcrouse@codeaurora.org,
+        dianders@chromium.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: drm/msm/gpu: document second
+ interconnect
+Message-ID: <20191204193615.GA20880@bogus>
+References: <20191122012645.7430-1-masneyb@onstation.org>
+ <20191122012645.7430-2-masneyb@onstation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191122000926.19408-1-jdk@ti.com>
+In-Reply-To: <20191122012645.7430-2-masneyb@onstation.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 07:09:26PM -0500, Jason Kridner wrote:
-> Add vendor prefix for BeagleBoard.org Foundation
+On Thu, 21 Nov 2019 20:26:42 -0500, Brian Masney wrote:
+> Some A3xx and all A4xx Adreno GPUs do not have GMEM inside the GPU core
+> and must use the On Chip MEMory (OCMEM) in order to be functional.
+> There's a separate interconnect path that needs to be setup to OCMEM.
+> Let's document this second interconnect path that's available. Since
+> there's now two available interconnects, let's add the
+> interconnect-names property.
 > 
-> Signed-off-by: Jason Kridner <jdk@ti.com>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 > ---
-> Changes in v2:
->   - Use 'beagle' rather than 'beagleboard.org' to be shorter and avoid
->     needing to quote within a yaml regular expression.
->   - Assign 'from' to author e-mail address.
-
-Still not right...
-
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/display/msm/gpu.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 967e78c5ec0a..1cce6641b21b 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -139,6 +139,8 @@ patternProperties:
->      description: Shenzhen AZW Technology Co., Ltd.
->    "^bananapi,.*":
->      description: BIPAI KEJI LIMITED
-> +  "^beagle,.*":
-> +    description: BeagleBoard.org Foundation
->    "^bhf,.*":
->      description: Beckhoff Automation GmbH & Co. KG
->    "^bitmain,.*":
-> -- 
-> 2.17.1
-> 
+
+Acked-by: Rob Herring <robh@kernel.org>
