@@ -2,177 +2,217 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8F2C2BD09
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F17B5C2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32E52084F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:47:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575463661;
-	bh=YhBNn2pIe/XfuGHUHPcwfE5cePX6v0rmcKrFXfekw34=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jBaJlvsgazihVGpF2YzLUHaOVhjO8+BS6PrpooCB5tl67zqDOhkVZJeGxL+Iifr3O
-	 M7czRQwmaGGLPXHT/3monR7UYvgolp/I90D0XRw4SlNijHfgiVtd/uIkrsLdayIBUd
-	 CgdvK9sFnb0N8yhcoQ4Owv9LxGkbZbzIMn8X3KoA=
+	by mail.kernel.org (Postfix) with ESMTP id C84A020862
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:47:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="l9JzWrF9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfLDMrk (ORCPT
+        id S1726215AbfLDMrn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:47:40 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49656 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfLDMrk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 07:47:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wvspINbC0rd5pzrtB6IdbMhDRhq0Gg7sBdygu5GhV/g=; b=xXhDP38bEFkCILphtkcyG2GaF
-        jidMnvmM6z0sQcofRm5Aly/bnCMFa4fyoRZ3t1zviZvzBW8vHhdofmGYIIvsI0HWA7sUyoO7fpHO1
-        dmDDWh8zmi2YVI2jdiU9VV335soA8GuPDJYV1Epa55tPSvam/KNjhcpvcvPkwY3bhqWtY=;
-Received: from fw-tnat-cam3.arm.com ([217.140.106.51] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1icU3p-0000LL-Hi; Wed, 04 Dec 2019 12:47:17 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 10DC4D003B4; Wed,  4 Dec 2019 12:47:17 +0000 (GMT)
-Date:   Wed, 4 Dec 2019 12:47:17 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Message-ID: <20191204124717.GR1998@sirena.org.uk>
-References: <20191118162502.GJ9761@sirena.org.uk>
- <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
- <20191119181325.GD3634@sirena.org.uk>
- <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
- <20191119193636.GH3634@sirena.org.uk>
- <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
- <20191129120925.GA5747@sirena.org.uk>
- <297fa021fb243072dbbb7bca455e57c13e8c6843.camel@fi.rohmeurope.com>
- <20191202131140.GD1998@sirena.org.uk>
- <72a1f4c5768b8c08c2669ea01e60d1b614095a43.camel@fi.rohmeurope.com>
+        Wed, 4 Dec 2019 07:47:43 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:39963 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726832AbfLDMrn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 07:47:43 -0500
+X-UUID: b6f36a78d48241b1aa44667a8493c234-20191204
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=ZJ4kkueZ5M1fVXPW34E8ZBOmqDHVewldVKMweLBs5DU=;
+        b=l9JzWrF9OqyRA1W5sV7jsp3BBuweo/Kdae4X6lmwRR0lce+c4+38W68KgyrYqRjdW/nJceROPkrJn9Oyi5vLNY+eO9dnz/BMVyCVgdflTeCFHjh7RGgXkVowL+3eGucrOYMV02EksH+5K71Gbb0TIoGXjkdjxenFtbOfllFz17I=;
+X-UUID: b6f36a78d48241b1aa44667a8493c234-20191204
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <jerry-ch.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1462201680; Wed, 04 Dec 2019 20:47:37 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 4 Dec 2019 20:47:30 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 4 Dec 2019 20:46:40 +0800
+From:   Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
+To:     <hans.verkuil@cisco.com>,
+        <laurent.pinchart+renesas@ideasonboard.com>, <tfiga@chromium.org>,
+        <matthias.bgg@gmail.com>, <mchehab@kernel.org>
+CC:     <pihsun@chromium.org>, <yuzhao@chromium.org>,
+        <zwisler@chromium.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <Sean.Cheng@mediatek.com>,
+        <sj.huang@mediatek.com>, <christie.yu@mediatek.com>,
+        <frederic.chen@mediatek.com>, <Jerry-ch.Chen@mediatek.com>,
+        <jungo.lin@mediatek.com>, <Rynn.Wu@mediatek.com>,
+        <linux-media@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <devicetree@vger.kernel.org>
+Subject: [RFC PATCH V4 0/4] media: platform: Add support for Face Detection (FD) on mt8183 SoC
+Date:   Wed, 4 Dec 2019 20:47:28 +0800
+Message-ID: <20191204124732.10932-1-Jerry-Ch.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="r7tUYVWcdYzDJoZW"
-Content-Disposition: inline
-In-Reply-To: <72a1f4c5768b8c08c2669ea01e60d1b614095a43.camel@fi.rohmeurope.com>
-X-Cookie: Cleanliness is next to impossible.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+SGVsbG8sDQoNClRoaXMgUkZDIHBhdGNoIHNlcmllcyBpcyBhZGRpbmcgRmFjZSBEZXRlY3Rpb24g
+KEZEKSBkcml2ZXIgb24gTWVkaWF0ZWsNCm10ODE4MyBTb0MuIEl0IGJlbG9uZ3MgdG8gdGhlIGZp
+cnN0IE1lZGlhdGVrJ3MgY2FtZXJhIGRyaXZlciBzZXJpZXMgYmFzZWQNCm9uIFY0TDIgYW5kIG1l
+ZGlhIGNvbnRyb2xsZXIgZnJhbWV3b3JrLiBJIHBvc3RlZCB0aGUgbWFpbiBwYXJ0IG9mIHRoZSBG
+RA0KZHJpdmVyIGFzIFJGQyB0byBkaXNjdXNzIGZpcnN0IGFuZCB3b3VsZCBsaWtlIHNvbWUgcmV2
+aWV3IGNvbW1lbnRzLg0KDQo9PT09PT09PT09PT09PQ0KSW50cm9kdWN0aW9uDQo9PT09PT09PT09
+PT09PQ0KDQpGYWNlIERldGVjdGlvbiAoRkQpIHVuaXQgcHJvdmlkZXMgaGFyZHdhcmUgYWNjZWxl
+cmF0ZWQgZmFjZSBkZXRlY3Rpb24NCmZlYXR1cmUuIEl0IGNhbiBkZXRlY3QgZGlmZmVyZW50IHNp
+emVzIG9mIGZhY2VzIGluIGEgZ2l2ZW4gaW1hZ2UuDQoNClRoZSBkcml2ZXIgaXMgaW1wbGVtZW50
+ZWQgYXMgYSBub3JtYWwgVjRMMiBtZW1vcnktdG8tbWVtb3J5IGRldmljZSBhbmQNCnN1cHBvcnRz
+IFY0TDIgY29udHJvbHMgZm9yIGRldGVjdGlvbiBzZXR0aW5ncy4gSXQgaGFzIHR3byBidWZmZXIg
+cXVldWVzLg0KDQoxLiBWaWRlbyBvdXRwdXQgYnVmZmVyOiBSQVcgaW1hZ2UgZm9yIGZhY2UgZGV0
+ZWN0aW9uLg0KDQoyLiBNZXRhIGNhcHR1cmUgYnVmZmVyOiBSZXN1bHQgb2YgdGhlIGRldGVjdGVk
+IGZhY2VzLg0KDQo9PT09PT09PT09PT09PT09PT0NCkNoYW5nZXMgaW4gdjQNCj09PT09PT09PT09
+PT09PT09PQ0KDQpSRkMgdjQgaW5jbHVkZXMgdGhlIGZvbGxvd2luZyBtb2RpZmljYXRpb246DQox
+LiBJbmNsdWRlcyB2NGwyLW1lbTJtZW0gY2hhbmdlczogYWRkIHY0bDJfbTJtX3N1c3BlbmQsIHY0
+bDJfbTJtX3Jlc3VtZQ0KDQoyLiBNb3ZlIEZEIFY0TDIgY29udHJvbCBpZHMgYmFjayBpbnNpZGUg
+RkQgZHJpdmVyDQoNCjMuIERlcGVuZCBvbiBuZXdlciBTQ1AgZHJpdmVyIGFwaQ0KDQo0LiBBZGQg
+ZXhpdCBodyBmbG93IGZvciBGRCBkcml2ZXINCg0KNS4gQWRkIGhhcmR3YXJlIHRpbWVvdXQgaGFu
+ZGxpbmcgaW4gdGhlIEZEIGZpcm13YXJlDQoNCjYuIE1vdmUgYWxsb2NhdGlvbiBvZiBkbWEgYnVm
+ZmVyIGZyb20gY29ubmVjdCAvIGRpc2Nvbm5lY3QgdG8gZHJpdmVyIHByb2JlDQovIHJlbW92ZQ0K
+DQpUb2RvOg0KIC0gQWRkIHY0bDIgY29udHJvbCBtZW51cyBmb3IgcHJpdmF0ZSBtdGsgZmQgY29u
+dHJvbA0KPT09PT09PT09PT09PT09PT09DQpDaGFuZ2VzIGluIHYzDQo9PT09PT09PT09PT09PT09
+PT0NCg0KUkZDIHYzIGluY2x1ZGVzIHRoZSBmb2xsb3dpbmcgbW9kaWZpY2F0aW9uOg0KMS4gQWRq
+dXN0IHRoZSBwcml2YXRlIGNvbnRyb2wgaWRzIGFuZCBwbGFjZSB0aGVtIGluDQogaW5jbHVkZS91
+YXBpL2xpbnV4L210ay1mZC12NGwyLWNvbnRyb2xzLmgNCg0KMi4gTWVyZ2Ugc3RydWN0IG10a19m
+ZF9odyBpbmZvIHN0cnVjdCBtdGtfZmRfZGV2DQoNCjMuIERlZmluZSBGRCBtZXRhIGNhcHR1cmUg
+YnVmZmVyIGluIGluY2x1ZGUvdWFwaS9saW51eC92aWRlb2RldjIuaA0KDQo0LiBSZW1vdmUgdGhl
+IHVzYWdlIG9mIGdldF9yZXNlcnZlZF9tZW1vcnkgYnkgc2NwIGRyaXZlciwNCiB1c2UgZG1hX2Fs
+bG9jIGFwaSBpbnN0ZWFkDQoNClRvZG86DQogLSBBZGQgdjRsMiBjb250cm9sIG1lbnVzIGZvciBw
+cml2YXRlIG10ayBmZCBjb250cm9sDQogLSBSZWZpbmUgdGhlIGpvYiBmaW5pc2ggZmxvdyB3aGVu
+IHN5c3RlbSBzdXNwZW5kDQo9PT09PT09PT09PT09PT09PT0NCkNoYW5nZXMgaW4gdjINCj09PT09
+PT09PT09PT09PT09PQ0KDQpSRkMgdjIgaW5jbHVkZXMgdGhlIGZvbGxvd2luZyBtb2RpZmljYXRp
+b246DQoxLiBJbXBsZW1lbnQgRkQgYXMgYSBWNEwyIG1lbTJtZW0gZHJpdmVyDQoNCjIuIFJlcGxh
+Y2UgbWV0YSBpbnB1dCB3aXRoIFY0TDIgY29udHJvbHMNCg0KPT09PT09PT09PT09PT09PT09DQpD
+aGFuZ2VzIGluIHYxDQo9PT09PT09PT09PT09PT09PT0NCg0KUkZDIHYxIGluY2x1ZGVzIHRoZSBm
+b2xsb3dpbmcgbW9kaWZpY2F0aW9uOg0KMS4gVXNlcyBSZXF1ZXN0IEFQSSBpbnN0ZWFkIG9mIEZE
+J3MgYnVmZmVyIGNvbGxlY3Rpb24gZGVzaWduDQoNCjIuIHJlbW92ZWQgdW5uZWNlc3NhcnkgYWJz
+dHJhY3Rpb24gc3RydWN0dXJhbGx5LCBpbmNsdWRpbmcgbXRrX2ZkX2N0eCBhbmQNCnJlbGF0ZWQg
+b3BzDQoNCjMuIHJlbW92ZWQgdGhlIGZkX3NtZW0gbm9kZSBmcm9tIGRldmljZSB0cmVlDQoNCjQu
+IEZpeGVkIHRoZSBjb21tb24gaXNzdWVzIFRvbWFzeiBjb21tZW50ZWQgb24gTWVkaWF0ZWsgSVNQ
+IFBhc3MgMSdzIFJGQyB2MA0KcGF0Y2ggc2VyaWVzDQoNCj09PT09PT09PT09PT09PT09PQ0KRGVw
+ZW5kZW50IHBhdGNoDQo9PT09PT09PT09PT09PT09PT0NCg0KRkQgZHJpdmVyIGRlcGVuZHMgb24g
+U0NQIGRyaXZlci4gVGhlIHBhdGNoZXMgYXJlIGFzIGZvbGxvd2luZzoNCg0KWzFdLiBBZGQgc3Vw
+cG9ydCBmb3IgbXQ4MTgzIFNDUA0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9jb3Zlci8x
+MTUyMzUwLw0KDQo9PT09PT09PT09PT09PT09PT0NCkNvbXBsaWFuY2UgdGVzdA0KPT09PT09PT09
+PT09PT09PT09DQoNCiogVmVyc2lvbjogaHR0cHM6Ly9naXQubGludXh0di5vcmcvdjRsLXV0aWxz
+LmdpdC9jb21taXQvP2lkPWIxNmY5ZTk0NWQ3NGFhNQ0KKiBOb3RlOiBTb21lIGZhaWx1cmVzIGFy
+ZSBjYXVzZWQgYnkgdGhlIGltcGxlbWVudGF0aW9uIG9mIEZEIGRyaXZlciwNCiAgICAgICAgd2hp
+YyBpcyBhIG0ybSBkZXZpY2Ugd2l0aCBWSURFT19PVVQgYW5kIE1FVEFfQ0FQVFVSRSBxdWV1ZXMs
+DQogICAgICAgIHRoZXJlZm9yZSB3ZSBjYW4ndCBzZXQgVjRMMl9DQVBfVklERU9fTTJNIGluIGRl
+dmljZSBjYXBhYmlsaXR5LCBhbmQNCiAgICAgICAgZmFpbCBpbiBzb21lIG5vbi1tMm0gdjRsMiB0
+ZXN0IGNhc2VzLg0KKiBUZXN0IGNvbW1hbmQ6IHY0bDItY29tcGxpYW5jZSAtbSAyDQoqIHRlc3Qg
+b3V0cHV0Og0KDQp2NGwyLWNvbXBsaWFuY2UgU0hBOiBub3QgYXZhaWxhYmxlLCAzMiBiaXRzDQoN
+CkNvbXBsaWFuY2UgdGVzdCBmb3IgbXRrLWZkLTQuMCBkZXZpY2UgL2Rldi9tZWRpYTI6DQoNCk1l
+ZGlhIERyaXZlciBJbmZvOg0KICAgICAgICBEcml2ZXIgbmFtZSAgICAgIDogbXRrLWZkLTQuMA0K
+ICAgICAgICBNb2RlbCAgICAgICAgICAgIDogbXRrLWZkLTQuMA0KICAgICAgICBTZXJpYWwgICAg
+ICAgICAgIDoNCiAgICAgICAgQnVzIGluZm8gICAgICAgICA6IHBsYXRmb3JtOjE1MDJiMDAwLmZk
+DQogICAgICAgIE1lZGlhIHZlcnNpb24gICAgOiA0LjE5Ljg0DQogICAgICAgIEhhcmR3YXJlIHJl
+dmlzaW9uOiAweDAwMDAwMDAwICgwKQ0KICAgICAgICBEcml2ZXIgdmVyc2lvbiAgIDogNC4xOS44
+NA0KDQpSZXF1aXJlZCBpb2N0bHM6DQogICAgICAgIHRlc3QgTUVESUFfSU9DX0RFVklDRV9JTkZP
+OiBPSw0KDQpBbGxvdyBmb3IgbXVsdGlwbGUgb3BlbnM6DQogICAgICAgIHRlc3Qgc2Vjb25kIC9k
+ZXYvbWVkaWEyIG9wZW46IE9LDQogICAgICAgIHRlc3QgTUVESUFfSU9DX0RFVklDRV9JTkZPOiBP
+Sw0KICAgICAgICB0ZXN0IGZvciB1bmxpbWl0ZWQgb3BlbnM6IE9LDQoNCk1lZGlhIENvbnRyb2xs
+ZXIgaW9jdGxzOg0KICAgICAgICB0ZXN0IE1FRElBX0lPQ19HX1RPUE9MT0dZOiBPSw0KICAgICAg
+ICBFbnRpdGllczogMyBJbnRlcmZhY2VzOiAxIFBhZHM6IDQgTGlua3M6IDQNCiAgICAgICAgdGVz
+dCBNRURJQV9JT0NfRU5VTV9FTlRJVElFUy9MSU5LUzogT0sNCiAgICAgICAgdGVzdCBNRURJQV9J
+T0NfU0VUVVBfTElOSzogT0sNCg0KVG90YWwgZm9yIG10ay1mZC00LjAgZGV2aWNlIC9kZXYvbWVk
+aWEyOiA3LCBTdWNjZWVkZWQ6IDcsIEZhaWxlZDogMCwgV2FybmluZ3M6IDANCi0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tDQpDb21wbGlhbmNlIHRlc3QgZm9yIG10ay1mZC00LjAgZGV2aWNlIC9kZXYv
+dmlkZW8zMjoNCg0KRHJpdmVyIEluZm86DQogICAgICAgIERyaXZlciBuYW1lICAgICAgOiBtdGst
+ZmQtNC4wDQogICAgICAgIENhcmQgdHlwZSAgICAgICAgOiBtdGstZmQtNC4wDQogICAgICAgIEJ1
+cyBpbmZvICAgICAgICAgOiBwbGF0Zm9ybToxNTAyYjAwMC5mZA0KICAgICAgICBEcml2ZXIgdmVy
+c2lvbiAgIDogNC4xOS44NA0KICAgICAgICBDYXBhYmlsaXRpZXMgICAgIDogMHg4NGEwMjAwMA0K
+ICAgICAgICAgICAgICAgIFZpZGVvIE91dHB1dCBNdWx0aXBsYW5hcg0KICAgICAgICAgICAgICAg
+IE1ldGFkYXRhIENhcHR1cmUNCiAgICAgICAgICAgICAgICBTdHJlYW1pbmcNCiAgICAgICAgICAg
+ICAgICBFeHRlbmRlZCBQaXggRm9ybWF0DQogICAgICAgICAgICAgICAgRGV2aWNlIENhcGFiaWxp
+dGllcw0KICAgICAgICBEZXZpY2UgQ2FwcyAgICAgIDogMHgwNGEwMjAwMA0KICAgICAgICAgICAg
+ICAgIFZpZGVvIE91dHB1dCBNdWx0aXBsYW5hcg0KICAgICAgICAgICAgICAgIE1ldGFkYXRhIENh
+cHR1cmUNCiAgICAgICAgICAgICAgICBTdHJlYW1pbmcNCiAgICAgICAgICAgICAgICBFeHRlbmRl
+ZCBQaXggRm9ybWF0DQpNZWRpYSBEcml2ZXIgSW5mbzoNCiAgICAgICAgRHJpdmVyIG5hbWUgICAg
+ICA6IG10ay1mZC00LjANCiAgICAgICAgTW9kZWwgICAgICAgICAgICA6IG10ay1mZC00LjANCiAg
+ICAgICAgU2VyaWFsICAgICAgICAgICA6DQogICAgICAgIEJ1cyBpbmZvICAgICAgICAgOiBwbGF0
+Zm9ybToxNTAyYjAwMC5mZA0KICAgICAgICBNZWRpYSB2ZXJzaW9uICAgIDogNC4xOS44NA0KICAg
+ICAgICBIYXJkd2FyZSByZXZpc2lvbjogMHgwMDAwMDAwMCAoMCkNCiAgICAgICAgRHJpdmVyIHZl
+cnNpb24gICA6IDQuMTkuODQNCkludGVyZmFjZSBJbmZvOg0KICAgICAgICBJRCAgICAgICAgICAg
+ICAgIDogMHgwMzAwMDAwYw0KICAgICAgICBUeXBlICAgICAgICAgICAgIDogVjRMIFZpZGVvDQpF
+bnRpdHkgSW5mbzoNCiAgICAgICAgSUQgICAgICAgICAgICAgICA6IDB4MDAwMDAwMDEgKDEpDQog
+ICAgICAgIE5hbWUgICAgICAgICAgICAgOiBtdGstZmQtNC4wLXNvdXJjZQ0KICAgICAgICBGdW5j
+dGlvbiAgICAgICAgIDogVjRMMiBJL08NCiAgICAgICAgUGFkIDB4MDEwMDAwMDIgICA6IDA6IFNv
+dXJjZQ0KICAgICAgICAgIExpbmsgMHgwMjAwMDAwODogdG8gcmVtb3RlIHBhZCAweDEwMDAwMDUg
+b2YgZW50aXR5ICdtdGstZmQtNC4wLXByb2MnOiBEYXRhLCBFbmFibGVkLCBJbW11dGFibGUNCg0K
+UmVxdWlyZWQgaW9jdGxzOg0KICAgICAgICB0ZXN0IE1DIGluZm9ybWF0aW9uIChzZWUgJ01lZGlh
+IERyaXZlciBJbmZvJyBhYm92ZSk6IE9LDQogICAgICAgICAgICAgICAgZmFpbDogdjRsMi1jb21w
+bGlhbmNlLmNwcCg2NjgpOiBkY2FwcyAmIG91dHB1dF9jYXBzDQogICAgICAgIHRlc3QgVklESU9D
+X1FVRVJZQ0FQOiBGQUlMDQoNCkFsbG93IGZvciBtdWx0aXBsZSBvcGVuczoNCiAgICAgICAgdGVz
+dCBzZWNvbmQgL2Rldi92aWRlbzMyIG9wZW46IE9LDQogICAgICAgICAgICAgICAgZmFpbDogdjRs
+Mi1jb21wbGlhbmNlLmNwcCg2NjgpOiBkY2FwcyAmIG91dHB1dF9jYXBzDQogICAgICAgIHRlc3Qg
+VklESU9DX1FVRVJZQ0FQOiBGQUlMDQogICAgICAgIHRlc3QgVklESU9DX0cvU19QUklPUklUWTog
+T0sNCiAgICAgICAgdGVzdCBmb3IgdW5saW1pdGVkIG9wZW5zOiBPSw0KDQpEZWJ1ZyBpb2N0bHM6
+DQogICAgICAgIHRlc3QgVklESU9DX0RCR19HL1NfUkVHSVNURVI6IE9LIChOb3QgU3VwcG9ydGVk
+KQ0KICAgICAgICB0ZXN0IFZJRElPQ19MT0dfU1RBVFVTOiBPSyAoTm90IFN1cHBvcnRlZCkNCg0K
+SW5wdXQgaW9jdGxzOg0KICAgICAgICB0ZXN0IFZJRElPQ19HL1NfVFVORVIvRU5VTV9GUkVRX0JB
+TkRTOiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAgdGVzdCBWSURJT0NfRy9TX0ZSRVFVRU5D
+WTogT0sgKE5vdCBTdXBwb3J0ZWQpDQogICAgICAgIHRlc3QgVklESU9DX1NfSFdfRlJFUV9TRUVL
+OiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAgdGVzdCBWSURJT0NfRU5VTUFVRElPOiBPSyAo
+Tm90IFN1cHBvcnRlZCkNCiAgICAgICAgdGVzdCBWSURJT0NfRy9TL0VOVU1JTlBVVDogT0sgKE5v
+dCBTdXBwb3J0ZWQpDQogICAgICAgIHRlc3QgVklESU9DX0cvU19BVURJTzogT0sgKE5vdCBTdXBw
+b3J0ZWQpDQogICAgICAgIElucHV0czogMCBBdWRpbyBJbnB1dHM6IDAgVHVuZXJzOiAwDQoNCk91
+dHB1dCBpb2N0bHM6DQogICAgICAgIHRlc3QgVklESU9DX0cvU19NT0RVTEFUT1I6IE9LIChOb3Qg
+U3VwcG9ydGVkKQ0KICAgICAgICB0ZXN0IFZJRElPQ19HL1NfRlJFUVVFTkNZOiBPSyAoTm90IFN1
+cHBvcnRlZCkNCiAgICAgICAgdGVzdCBWSURJT0NfRU5VTUFVRE9VVDogT0sgKE5vdCBTdXBwb3J0
+ZWQpDQogICAgICAgIHRlc3QgVklESU9DX0cvUy9FTlVNT1VUUFVUOiBPSyAoTm90IFN1cHBvcnRl
+ZCkNCiAgICAgICAgdGVzdCBWSURJT0NfRy9TX0FVRE9VVDogT0sgKE5vdCBTdXBwb3J0ZWQpDQog
+ICAgICAgIE91dHB1dHM6IDAgQXVkaW8gT3V0cHV0czogMCBNb2R1bGF0b3JzOiAwDQoNCklucHV0
+L091dHB1dCBjb25maWd1cmF0aW9uIGlvY3RsczoNCiAgICAgICAgdGVzdCBWSURJT0NfRU5VTS9H
+L1MvUVVFUllfU1REOiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAgdGVzdCBWSURJT0NfRU5V
+TS9HL1MvUVVFUllfRFZfVElNSU5HUzogT0sgKE5vdCBTdXBwb3J0ZWQpDQogICAgICAgIHRlc3Qg
+VklESU9DX0RWX1RJTUlOR1NfQ0FQOiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAgdGVzdCBW
+SURJT0NfRy9TX0VESUQ6IE9LIChOb3QgU3VwcG9ydGVkKQ0KDQpDb250cm9sIGlvY3RsczoNCiAg
+ICAgICAgdGVzdCBWSURJT0NfUVVFUllfRVhUX0NUUkwvUVVFUllNRU5VOiBPSw0KICAgICAgICB0
+ZXN0IFZJRElPQ19RVUVSWUNUUkw6IE9LDQogICAgICAgIHRlc3QgVklESU9DX0cvU19DVFJMOiBP
+Sw0KICAgICAgICB0ZXN0IFZJRElPQ19HL1MvVFJZX0VYVF9DVFJMUzogT0sNCiAgICAgICAgdGVz
+dCBWSURJT0NfKFVOKVNVQlNDUklCRV9FVkVOVC9EUUVWRU5UOiBPSw0KICAgICAgICB0ZXN0IFZJ
+RElPQ19HL1NfSlBFR0NPTVA6IE9LIChOb3QgU3VwcG9ydGVkKQ0KICAgICAgICBTdGFuZGFyZCBD
+b250cm9sczogMSBQcml2YXRlIENvbnRyb2xzOiA2DQoNCkZvcm1hdCBpb2N0bHM6DQogICAgICAg
+IHRlc3QgVklESU9DX0VOVU1fRk1UL0ZSQU1FU0laRVMvRlJBTUVJTlRFUlZBTFM6IE9LDQogICAg
+ICAgIHRlc3QgVklESU9DX0cvU19QQVJNOiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAgdGVz
+dCBWSURJT0NfR19GQlVGOiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAgICAgICAgICBmYWls
+OiB2NGwyLXRlc3QtZm9ybWF0cy5jcHAoNDU3KTogcGl4ZWxmb3JtYXQgMDAwMDAwMDAgKCkgZm9y
+IGJ1ZnR5cGUgMTAgbm90IHJlcG9ydGVkIGJ5IEVOVU1fRk1UDQogICAgICAgIHRlc3QgVklESU9D
+X0dfRk1UOiBGQUlMDQogICAgICAgICAgICAgICAgZmFpbDogdjRsMi10ZXN0LWZvcm1hdHMuY3Bw
+KDQ1Nyk6IHBpeGVsZm9ybWF0IDAwMDAwMDAwICgpIGZvciBidWZ0eXBlIDEwIG5vdCByZXBvcnRl
+ZCBieSBFTlVNX0ZNVA0KICAgICAgICB0ZXN0IFZJRElPQ19UUllfRk1UOiBGQUlMDQogICAgICAg
+ICAgICAgICAgZmFpbDogdjRsMi10ZXN0LWZvcm1hdHMuY3BwKDQ1Nyk6IHBpeGVsZm9ybWF0IGZm
+ZmZmZmZmICgtQkUpIGZvciBidWZ0eXBlIDEwIG5vdCByZXBvcnRlZCBieSBFTlVNX0ZNVA0KICAg
+ICAgICB0ZXN0IFZJRElPQ19TX0ZNVDogRkFJTA0KICAgICAgICB0ZXN0IFZJRElPQ19HX1NMSUNF
+RF9WQklfQ0FQOiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAgdGVzdCBDcm9wcGluZzogT0sg
+KE5vdCBTdXBwb3J0ZWQpDQogICAgICAgIHRlc3QgQ29tcG9zaW5nOiBPSyAoTm90IFN1cHBvcnRl
+ZCkNCiAgICAgICAgdGVzdCBTY2FsaW5nOiBPSyAoTm90IFN1cHBvcnRlZCkNCg0KQ29kZWMgaW9j
+dGxzOg0KICAgICAgICB0ZXN0IFZJRElPQ18oVFJZXylFTkNPREVSX0NNRDogT0sgKE5vdCBTdXBw
+b3J0ZWQpDQogICAgICAgIHRlc3QgVklESU9DX0dfRU5DX0lOREVYOiBPSyAoTm90IFN1cHBvcnRl
+ZCkNCiAgICAgICAgdGVzdCBWSURJT0NfKFRSWV8pREVDT0RFUl9DTUQ6IE9LIChOb3QgU3VwcG9y
+dGVkKQ0KDQpCdWZmZXIgaW9jdGxzOg0KICAgICAgICAgICAgICAgIGZhaWw6IHY0bDItdGVzdC1i
+dWZmZXJzLmNwcCg2NjcpOiBxMi5yZXFidWZzKG5vZGUtPm5vZGUyLCAxKSAhPSBFQlVTWQ0KICAg
+ICAgICB0ZXN0IFZJRElPQ19SRVFCVUZTL0NSRUFURV9CVUZTL1FVRVJZQlVGOiBGQUlMDQogICAg
+ICAgIHRlc3QgVklESU9DX0VYUEJVRjogT0sNCiAgICAgICAgdGVzdCBSZXF1ZXN0czogT0sNCg0K
+VG90YWwgZm9yIG10ay1mZC00LjAgZGV2aWNlIC9kZXYvdmlkZW8zMjogNDUsIFN1Y2NlZWRlZDog
+MzksIEZhaWxlZDogNiwgV2FybmluZ3M6IDANCg0KR3JhbmQgVG90YWwgZm9yIG10ay1mZC00LjAg
+ZGV2aWNlIC9kZXYvbWVkaWEyOiA1MiwgU3VjY2VlZGVkOiA0NiwgRmFpbGVkOiA2LCBXYXJuaW5n
+czogMA0K
 
---r7tUYVWcdYzDJoZW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Dec 02, 2019 at 02:02:41PM +0000, Vaittinen, Matti wrote:
-> On Mon, 2019-12-02 at 13:11 +0000, Mark Brown wrote:
-
-> > No, look at the bindings - we support a bunch of different
-> > suspend states matching the different suspend states that the
-> > kernel as a whole supports.  We don't assume that the device will
-> > know this but you can always use the current suspend we're going
-> > for to decide where to update.
-
-> Hm. So if I understand this correctly, you mean user should set the
-> suspend 'target' - and then call the set_suspend_voltage for this
-> state. To set voltages for all states one should do loop
-
-The general idea is that we set the suspend state during the
-process of suspending rather than in advance - that way when the
-hardware doesn't understand different types of suspsend things
-work fine.
-
-> get_current_mode()
-
-> for_all_modes() {
-> 	set_mode()
-> 	set_voltage()
-> }
-
-> restore_original_mode()
-
-> am I on a right track? I'll try to see if I can find some examples of
-> this - thanks.
-
-I don't understand the save and restore of mode?  If setting the
-suspend configuration affects the runtime state then the hardware
-doesn't support suspend configuration.
-
-> > The framework doesn't care how a device is controlled, that's up
-> > to the device.  Like I said I recommend figuring out what
-> > voltages are useful to have quick access to at runtime, for
-> > example it's likely that it's good to have quick access to the
-> > highest voltage that's been set (and/or the top of the
-> > constraints).
-
-> Problem is that the run-level controlled regulator can't be
-> individually controlled (unless it is only regulator in the group). I
-
-Regulators that have to be controlled en masse aren't really
-supported by the API, it only understands regulators that are
-individually controllable.
-
-> But just to confirm, I meant for example assigning bucks 1,2,6 and 7
-> into a group which 'state' is changed via GPIO line. Say 'states' are
-> RUN0, RUN1. For each of these bucks we can define a voltage and
-> enable/disable status which is to be used on RUN0, and another
-> voltage/state tuple for RUN1.
-
-So you could also just create a group consisting of a single
-regulator?  That would be fine for the API.
-
---r7tUYVWcdYzDJoZW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3nqtQACgkQJNaLcl1U
-h9DtkQf/ZOvqt/xvJrkjQ2zSreCV2pRVglwsGchtoOcrs1gS/5iuRXJb8Fic/clC
-BMt7wBK5Zqeu6q2A3oqQ85hPjYMipgmMfwDQzNCGMTHN+EpVvmYX0R8PXWM5yEiP
-SJJ3ZVZHk2TqOIhiGwFbBpYnm3u/J5AbHeHXPXKVMuyMap2OVfXFx2DNexM1vC4X
-Kj70z8B9MA7Hv+VBbmOK/+nsQiRVkr8FyZjoefUdmIF1vPHqMWXA9S8+jziZoyZS
-6QZ5EJFXS99omTKYYeOL4R6RlrMW/Ln5HWRWWuXVNV8uvt3xqQNln9QMSNYzHGAn
-3fl1ynbYU1UiEsY07AKvLnboLE0iDA==
-=9lBU
------END PGP SIGNATURE-----
-
---r7tUYVWcdYzDJoZW--
