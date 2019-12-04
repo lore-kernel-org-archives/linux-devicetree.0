@@ -2,189 +2,115 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E4CC2D0BE
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 21:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28988C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 21:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A834224F8
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 21:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575495828;
-	bh=b+fknypKp6VY8bzDUqlqNwGiBWbwLdMkmOCG0uZkk28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UUb4Q2ZPofYgRK4APUZMlWoFNHBTXHqngQo/++VNX40taDGdYsRiarIs7V2F3SSEU
-	 Z1eeYL2ErzdzDAi9DDyJFTsYLvYJjDf4LbJTh+xswCS6Cf3C837jPIqf8tjYZqviHO
-	 b0ALwSwgSW2rPQm7M9wfo1BE1aXutcNABglOMHM8=
+	by mail.kernel.org (Postfix) with ESMTP id E3A0A21823
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 21:59:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHbjuMkc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbfLDVno (ORCPT
+        id S1728311AbfLDV76 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 16:43:44 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38625 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727982AbfLDVno (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 16:43:44 -0500
-Received: by mail-oi1-f196.google.com with SMTP id b8so719776oiy.5;
-        Wed, 04 Dec 2019 13:43:43 -0800 (PST)
+        Wed, 4 Dec 2019 16:59:58 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:35321 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfLDV76 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 16:59:58 -0500
+Received: by mail-vk1-f193.google.com with SMTP id o187so478866vka.2;
+        Wed, 04 Dec 2019 13:59:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pKw4WEjtZZ+ACrJvt8REFVw2T1voAJU2FAajhV3nbNM=;
+        b=IHbjuMkcZRvwD6xr8tpR8Fw6a1bd47WRYIsOp8XZY82ivdoauVqCTkQDURYAOgfRt0
+         0ybeNBsSQ+wKn+UALDsjm51m1MNsA4oMT2VE3QBdljChIN891+fXUtKjCiH/oxY8KOSx
+         RBTSggyxcr9sYZ8m4DIp1OsDFbsI484ct/LTj9LvEwpcjjQbVVLDeOPgGpEHzxcOLVGL
+         gAu/fP8LkNflcKBbrh7jV2by42AJVCYGY8KgB3OjcAxM9QsIcTi6xJn9FtEgH5QpzR6B
+         8REUVgXuZeX/4Cy6QCaCITTKDmu4BLeA5B7rkGn65pHgPujliGc4ik7eKcRIkQ1GlDPz
+         pmlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hABuLyLlW7TcxVWkvZf3nO3Hi6ZwFOub8qWuGq9BCbQ=;
-        b=LBnCQDzvNHLTddQGRKQxsW2wwCNorRGty79TWa5SI/WHCpCOc3kxpWI1FD/OxjsiFV
-         m8ubaNkWlfuq7RD/qqAMPp1WBQD7tnHO41a+3LMb6uCw0NFqknCcaoAr3OSuusxx2KDR
-         +JDqwM4Xnv4Wl9rTNbkANKdnriJm1G17XX71jfi5fzT5qziLyItJm9kKl52IhP//olHs
-         5aHO23BFNEtcUQnrATWkhWARm//4uCBNq3LjGCauLMDiR5PuVvJmDazUKMdHRlgJdBSB
-         HbYr1BWAWk+WY+uic1/NHCBxJaafBep8MC9+bTN35MARvlIyIN+woLiXI2Q8/sjcKfEU
-         nndw==
-X-Gm-Message-State: APjAAAVoO0f1NDtFbr3XHJl28xgqMdwFQDpyfi4Q8D29s6ZReE4GkgKV
-        BDaQlRLbnb/GfhJL8rfoow==
-X-Google-Smtp-Source: APXvYqydpyiFhBHUk9G2NGy/lkyg3GJFVvBnB4xOjBz25Td/upZ30oDDP5FIdEIl+CLltXw19xjaOA==
-X-Received: by 2002:aca:eb0f:: with SMTP id j15mr4311383oih.6.1575495822532;
-        Wed, 04 Dec 2019 13:43:42 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h20sm2670429otr.35.2019.12.04.13.43.41
+        bh=pKw4WEjtZZ+ACrJvt8REFVw2T1voAJU2FAajhV3nbNM=;
+        b=oLxgiismnapPl3hh1LDZHuM5bOkG+sBwidRyjUCuVjo9qPSUBw9pSk+Ah52yVZPnxb
+         I7YBoXAybBmDLJvI4Y+SFIfHktix1BsK4TEjtUzQ1Vy3NQ4OWp7uf1j69dcKTEcXjNxz
+         yHybHJoO4Mewz4+UnKPlFkf8XrfF4kzSm5xNmSiPHMuSunx/iWrWiEk6PSRFBdXkT6LM
+         jPxsvosqGqeJqwmqpaU8KCp7UJVliPGNlYmpiaSYhc6IG6jOzqudECVN3CT2LjaXfhfF
+         SH8x6LinlZaLXghUNKPj2kEcXRHXcqzlr/rhsQ/ryygPVQw5v37qpsXNl4NbedsOkBEq
+         thVQ==
+X-Gm-Message-State: APjAAAXhhCddfgQoTiZM56w56Uo5LTlt773k0L3WaGmqm/BZmclqbI1s
+        UykiO/XE51Azit/l60/0JmQ=
+X-Google-Smtp-Source: APXvYqxyKYTN6LNLmiTZDvYFxhKu2IirTtOTFhUAzjcl98Cz3zJ4dbSCd+11Ii/p63J9ZE3PxGYJMA==
+X-Received: by 2002:a1f:8f0c:: with SMTP id r12mr3868068vkd.78.1575496796827;
+        Wed, 04 Dec 2019 13:59:56 -0800 (PST)
+Received: from smtp.gmail.com (gwcrusp.semfio.usp.br. [143.107.150.86])
+        by smtp.gmail.com with ESMTPSA id a63sm2627634vka.30.2019.12.04.13.59.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 13:43:41 -0800 (PST)
-Date:   Wed, 4 Dec 2019 15:43:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, jonathanh@nvidia.com, andrew.murray@arm.com,
-        kishon@ti.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH 2/6] dt-bindings: PCI: tegra: Add DT support for PCIe EP
- nodes in Tegra194
-Message-ID: <20191204214340.GA19088@bogus>
-References: <20191122104505.8986-1-vidyas@nvidia.com>
- <20191122104505.8986-3-vidyas@nvidia.com>
- <20191122131931.GB1315704@ulmo>
+        Wed, 04 Dec 2019 13:59:56 -0800 (PST)
+Date:   Wed, 4 Dec 2019 18:59:52 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     jic23@kernel.org, dragos.bogdan@analog.com,
+        alexandru.ardelean@analog.com, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: ad7292: fix channel
+ constraint
+Message-ID: <20191204215951.n5sfpej2thk37ipc@smtp.gmail.com>
+References: <20191204155918.5ot4tplceqjeul6a@smtp.gmail.com>
+ <20191204185753.GA19409@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191122131931.GB1315704@ulmo>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191204185753.GA19409@bogus>
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 02:19:31PM +0100, Thierry Reding wrote:
-> On Fri, Nov 22, 2019 at 04:15:01PM +0530, Vidya Sagar wrote:
-> > Add support for PCIe controllers that can operate in endpoint mode
-> > in Tegra194.
+I see now that I had misunderstood part of the last thread.
+Sorry for the unnecessary spamming. Please, ignore this V2 series.
+
+On 12/04, Rob Herring wrote:
+> On Wed, Dec 04, 2019 at 12:59:23PM -0300, Marcelo Schmitt wrote:
+> > Change items property of AD7292 channels to correctly constrain their
+> > quantity.
 > > 
-> > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 > > ---
-> >  .../bindings/pci/nvidia,tegra194-pcie-ep.txt  | 138 ++++++++++++++++++
-> >  1 file changed, 138 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.txt
+> > Changelog V2
+> > - Shortened the message to make it closer to 50 columns.
+> > 
+> >  Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> The vast majority of this is a duplication of the host mode device tree
-> bindings. I think it'd be best to combine both and only highlight where
-> both modes differ.
-
-That will not work so well as a schema because all the common PCI bus 
-related properties don't apply. Child nodes if any for an EP aren't PCI 
-devices either. Though you could have 3 files with common properties, 
-host binding and ep bindings. 
-
-While we don't have anything in terms of common PCI EP bindings, I 
-somewhat expect that to change. There's been something for how to define 
-multiple EP functions for example.
-
-> The designware-pcie.txt binding does something similar.
+> I think Jonathan already applied this series.
 > 
-> > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.txt
-> > new file mode 100644
-> > index 000000000000..4676ccf7dfa5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.txt
-> > @@ -0,0 +1,138 @@
-> > +NVIDIA Tegra PCIe Endpoint mode controller (Synopsys DesignWare Core based)
-> > +
-> > +Some of the PCIe controllers which are based on Synopsys DesignWare PCIe IP
-> > +are dual mode i.e. they can work in root port mode or endpoint mode but one
-> > + at a time. Since they are based on DesignWare IP, they inherit all the common
-> > +properties defined in designware-pcie.txt.
-> > +
-> > +Required properties:
-> > +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
-> 
-> The device tree snippets that you added have "nvidia,tegra194-pcie-ep"
-> for EP mode controllers. So either this is wrong or the DTS files are
-> wrong.
-> 
-> This device tree binding describes the exact same hardware, so I don't
-> think we necessarily need two different compatible strings. It's fairly
-> easy to distinguish between which mode to run in by looking at which
-> properties exist. EP mode for example is the only one that uses the
-> "addr_space" reg entry.
-> 
-> Rob, do you know why a different compatible string was chosen for the EP
-> mode? Looking at the driver, there are only a handful of differences in
-> the programming, but most of the driver remains identical. An extra DT
-> compatible string seems a bit exaggerated since it suggests that this is
-> actually different hardware, where it clearly isn't.
-
-Whether the driver shares a lot of code or not, it's fundamentally a 
-different device and driver stack.
-
-> > +  Tegra194: Only C0, C4 & C5 controllers are dual mode controllers.
-> > +- power-domains: A phandle to the node that controls power to the respective
-> > +  PCIe controller and a specifier name for the PCIe controller. Following are
-> > +  the specifiers for the different PCIe controllers
-> > +    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
-> > +    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
-> > +    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
-> > +  these specifiers are defined in
-> > +  "include/dt-bindings/power/tegra194-powergate.h" file.
-> > +- reg: A list of physical base address and length pairs for each set of
-> > +  controller registers. Must contain an entry for each entry in the reg-names
-> > +  property.
-> > +- reg-names: Must include the following entries:
-> > +  "appl": Controller's application logic registers
-> > +  "atu_dma": iATU and DMA registers. This is where the iATU (internal Address
-> > +             Translation Unit) registers of the PCIe core are made available
-> > +             for SW access.
-> > +  "dbi": The aperture where root port's own configuration registers are
-> > +         available
-> > +  "addr_space": Used to map remote RC address space
-> > +- interrupts: A list of interrupt outputs of the controller. Must contain an
-> > +  entry for each entry in the interrupt-names property.
-> > +- interrupt-names: Must include the following entry:
-> > +  "intr": The Tegra interrupt that is asserted for controller interrupts
-> > +- clocks: Must contain an entry for each entry in clock-names.
-> > +  See ../clocks/clock-bindings.txt for details.
-> > +- clock-names: Must include the following entries:
-> > +  - core
-> > +- resets: Must contain an entry for each entry in reset-names.
-> > +  See ../reset/reset.txt for details.
-> > +- reset-names: Must include the following entries:
-> > +  - apb
-> > +  - core
-> > +- phys: Must contain a phandle to P2U PHY for each entry in phy-names.
-> > +- phy-names: Must include an entry for each active lane.
-> > +  "p2u-N": where N ranges from 0 to one less than the total number of lanes
-> > +- nvidia,bpmp: Must contain a pair of phandle to BPMP controller node followed
-> > +  by controller-id. Following are the controller ids for each controller.
-> > +    0: C0
-> > +    4: C4
-> > +    5: C5
-> > +- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
-> > +- nvidia,pex-rst-gpio: Must contain a phandle to a GPIO controller followed by
-> > +  GPIO that is being used as PERST signal
-> 
-> Why is this NVIDIA specific? Do other instantiations of the DW IP not
-> also need a means to define which GPIO is the reset?
-
-'reset-gpios' is used for PERST. Though in this case it's an input 
-rather than output.
-
-Rob
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> > index b68be3aaf587..18f1032b86f3 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> > @@ -53,7 +53,8 @@ patternProperties:
+> >          description: |
+> >            The channel number. It can have up to 8 channels numbered from 0 to 7.
+> >          items:
+> > -          maximum: 7
+> > +          - minimum: 0
+> > +            maximum: 7
+> >  
+> >        diff-channels:
+> >          description: see Documentation/devicetree/bindings/iio/adc/adc.txt
+> > -- 
+> > 2.23.0
+> > 
