@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7F2C2BBE2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAD3C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB3D206DB
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCD25206DB
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:09:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfLDJJA (ORCPT
+        id S1727212AbfLDJJH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:09:00 -0500
-Received: from relay11.mail.gandi.net ([217.70.178.231]:35299 "EHLO
+        Wed, 4 Dec 2019 04:09:07 -0500
+Received: from relay11.mail.gandi.net ([217.70.178.231]:33565 "EHLO
         relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfLDJJA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 04:09:00 -0500
+        with ESMTP id S1725922AbfLDJJH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 04:09:07 -0500
 Received: from uno.lan (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
         (Authenticated sender: jacopo@jmondi.org)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 4B2BF100013;
-        Wed,  4 Dec 2019 09:08:55 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id D8B01100002;
+        Wed,  4 Dec 2019 09:09:00 +0000 (UTC)
 From:   Jacopo Mondi <jacopo@jmondi.org>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
@@ -32,10 +32,10 @@ To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
 Cc:     Jacopo Mondi <jacopo@jmondi.org>,
         linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE
         (V4L/DVB)), devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>, Tomasz Figa <tfiga@chromium.org>
-Subject: [PATCH v6 01/11] dt-bindings: video-interfaces: Document 'location' property
-Date:   Wed,  4 Dec 2019 10:10:46 +0100
-Message-Id: <20191204091056.4842-2-jacopo@jmondi.org>
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v6 03/11] dt-bindings: video-interface: Expand rotation description
+Date:   Wed,  4 Dec 2019 10:10:48 +0100
+Message-Id: <20191204091056.4842-4-jacopo@jmondi.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191204091056.4842-1-jacopo@jmondi.org>
 References: <20191204091056.4842-1-jacopo@jmondi.org>
@@ -46,39 +46,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the 'location' device property, used to specify a device mounting
-position. The property is particularly meaningful for mobile devices
-with a well defined usage orientation.
+Expand the 'rotation' property description to define the direction and
+orientation of the axis around which the device mounting rotation is
+expressed.
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Tomasz Figa <tfiga@chromium.org>
 Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
 ---
- .../devicetree/bindings/media/video-interfaces.txt    | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../devicetree/bindings/media/video-interfaces.txt        | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index f884ada0bffc..1211bdf80722 100644
+index 1211bdf80722..58b87a3f1fa4 100644
 --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
 +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -89,6 +89,17 @@ Optional properties
-   but a number of degrees counter clockwise. Typical values are 0 and 180
-   (upside down).
+@@ -85,9 +85,11 @@ Optional properties
 
-+- location: The mount location of a device (typically an image sensor or a flash
-+  LED) expressed as a position relative to the usage orientation of the system
-+  where the device is installed on.
-+  Possible values are:
-+  0 - Front. The device is mounted on the front facing side of the system.
-+  For mobile devices such as smartphones, tablets and laptops the front side is
-+  the user facing side.
-+  1 - Back. The device is mounted on the back side of the system, which is
-+  defined as the opposite side of the front facing one.
-+  2 - External. The device is not attached directly to the system but is
-+  attached in a way that allows it to move freely.
+ - lens-focus: A phandle to the node of the focus lens controller.
 
- Optional endpoint properties
- ----------------------------
+-- rotation: The device, typically an image sensor, is not mounted upright,
+-  but a number of degrees counter clockwise. Typical values are 0 and 180
+-  (upside down).
++- rotation: The mount rotation of the device (typically an image sensor)
++  expressed as counterclockwise rotation degrees along the axis perpendicular to
++  the device mounting surface directed away from it. Typical values are 0
++  degrees for upright mounted devices and 180 degrees for devices mounted upside
++  down.
+
+ - location: The mount location of a device (typically an image sensor or a flash
+   LED) expressed as a position relative to the usage orientation of the system
 --
 2.23.0
 
