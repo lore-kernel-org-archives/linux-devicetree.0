@@ -2,107 +2,89 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A8EC2BD09
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B905C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE54320803
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E208820833
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 12:21:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575462077;
+	bh=SO4UPO0pN1BpTj2Vj+qz2h8O3I4ExQ0WHdRywPmMRHA=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=DyywN5ulxR/BH6jmbTpLYJOfPyiqX1B0LZEBllgCc3iskBxilnGDbnH1PuenNWhJd
+	 aGLNP8PCLSupNAGC0uoOwRDeyC/f/AmVilBjsr704QJfiKip2m+mc2rcHEPt8CmF/o
+	 FdZiT0LeI0JUJu15zG+qlL91hYqeLR/FAYmDJbN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfLDMOW (ORCPT
+        id S1727446AbfLDMVQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 07:14:22 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42398 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbfLDMOW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 07:14:22 -0500
-Received: by mail-oi1-f195.google.com with SMTP id j22so6611565oij.9;
-        Wed, 04 Dec 2019 04:14:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gyltMSwaGXAux8Z3E1Rs/8+GQsTqCMlqwz9wEprYuxI=;
-        b=qLWp7sO2ECMTDQgb+3QyLoEYzIQ2A9L4W+BG7LhccZqbYaUq8B7EHV9iPcm+Tt+cl1
-         HGC7M9qcFwgW67HyP6dLkgaML7LAiA/YlCq3LV9YMpsRIJ9X6FIAslWWm09oQuNek1k0
-         YfB3vfB42XYC39ua8t+OsoNEsrqZbYCMra9pw2ZpQ0br/wUqL4UnfDzw28AXqovQYtuh
-         y40EUjh0V6pWQnXAdlYIiNVeFJvbRbeYVNbJRtrm1qwpLUIIjqTaMnXVKGeN2MxO4gAt
-         3spc5o1NBP+mLZiUipyfWdqawC55gypORoL5iSvxGfuVwVfM/RQts+D8/FMcZCoVoDMy
-         FUlw==
-X-Gm-Message-State: APjAAAXpEQnGDfdi5t64lRwAbmdrfCcruulzaBN/5DrngQWdKUDAetRi
-        XdVb+NUPstQD1sXy32laY45l3G8e5BqdwnFNdNA=
-X-Google-Smtp-Source: APXvYqw8Fs1+GeWP1j9ni3BiJ585N8x8j9pInrEEwGCzSDYGx3Bebh2yBXnZb5CHErF17b0reE6WRUv9j4VhTCJ0ntE=
-X-Received: by 2002:a05:6808:8ec:: with SMTP id d12mr530181oic.131.1575461661003;
- Wed, 04 Dec 2019 04:14:21 -0800 (PST)
+        Wed, 4 Dec 2019 07:21:16 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:43763 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727445AbfLDMVQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 07:21:16 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1icTeU-0002F5-09; Wed, 04 Dec 2019 13:21:06 +0100
+To:     <anarsoul@gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v3 1/2] arm64:  =?UTF-8?Q?arch=5Ftimer=3A=20Workaround=20for=20Allwinner=20A=36=34=20time?=  =?UTF-8?Q?r=20instability?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
- <20191203034519.5640-5-chris.brandt@renesas.com> <20191203141944.GI1998@sirena.org.uk>
- <CAMuHMdXk5DDebriHxmtz0NWF_zDhBK=fBZugdUfmEAyU0O4zMQ@mail.gmail.com> <20191204112528.GQ1998@sirena.org.uk>
-In-Reply-To: <20191204112528.GQ1998@sirena.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 4 Dec 2019 13:14:09 +0100
-Message-ID: <CAMuHMdXY4Po4p0uL_6VU7ia4R7i7F5N+GA4MUaQfhGFvpgLT7g@mail.gmail.com>
-Subject: Re: [PATCH 4/6] spi: Add SPIBSC driver
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Chris Brandt <chris.brandt@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 04 Dec 2019 12:21:05 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <marc.zyngier@arm.com>, Samuel Holland <samuel@sholland.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Content-Type: text/plain; charset="UTF-8"
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+In-Reply-To: <CA+E=qVfaBcUN5iB3kaK5gHyURpWt7ET6_js=sLiDg4PCDXXTYA@mail.gmail.com>
+References: <20190113021719.46457-1-samuel@sholland.org>
+ <20190113021719.46457-2-samuel@sholland.org>
+ <472c5450-1b60-6ac7-b242-805c2a2f3272@arm.com>
+ <CA+E=qVfaBcUN5iB3kaK5gHyURpWt7ET6_js=sLiDg4PCDXXTYA@mail.gmail.com>
+Message-ID: <4b922079aeed04f31ff67b3e7fb78022@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: anarsoul@gmail.com, marc.zyngier@arm.com, samuel@sholland.org, catalin.marinas@arm.com, will.deacon@arm.com, maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark,
+[please note that my email address has changed]
 
-On Wed, Dec 4, 2019 at 12:25 PM Mark Brown <broonie@kernel.org> wrote:
-> On Tue, Dec 03, 2019 at 07:29:45PM +0100, Geert Uytterhoeven wrote:
-> > On Tue, Dec 3, 2019 at 3:19 PM Mark Brown <broonie@kernel.org> wrote:
-> > > > +     pm_runtime_put(&pdev->dev);
-> > > > +     pm_runtime_disable(&pdev->dev);
+On 2019-12-04 04:18, Vasily Khoruzhick wrote:
+
+[...]
+
+> Unfortunately this patch doesn't completely eliminate the jumps. 
+> There
+> have been reports from users who still saw 95y jump even with the
+> patch applied.
 >
-> > > There seems to be no purpose in the runtime PM code in this
-> > > driver, there's no PM operations of any kind and the driver holds
-> > > a runtime PM reference for the entire lifetime of the device.
+> Personally I've seen it once or twice on my Pine64-LTS.
 >
-> > It matters for the clock domain (assumed the module clock is not always
-> > marked as a critical clock).
->
-> That seems like a problem with what the clock domains are doing
-> surely?  The default is supposed to be that if runtime PM isn't
-> enabled we get the behaviour the driver is manually implementing
+> Looks like we need bigger hammer. Does anyone have any idea what it 
+> could be?
 
-Unfortunately not: if the driver doesn't implement Runtime PM, the
-default is to not do anything.  Later, unused clocks will be disabled,
-and the device will stop functioning.
+Which kernel version did you see this happening on?
 
-> here.  Besides, if this is actually impacting power management
-> I'd expect us to be letting the IP idle rather than holding it
-> powered up all the time.
-
-That would be better, definitely.  However, that's just an optimization over
-holding it powered up all the time.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+         M.
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Jazz is not dead. It just smells funny...
