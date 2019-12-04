@@ -2,118 +2,150 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC52C2BD09
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 11:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EA7C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 11:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6489E2084B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 11:25:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575458737;
-	bh=CyU32J+BuI/t1VXzhpM957yE0JDkb1GFDmz2ETLcK14=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=clMATz8aLe1UjJRI/4pKu3Ge16gcpCZsA3OWn0xby4oiSV/6o2O7cr4gmQnS2XPf2
-	 d+e9+R8Fv7Xk7neZqFab/SnDpp0vyCeHg5KlPwIM8hfRpgFEFaOqcxPE3TpnNP+e07
-	 hn70kQR7MLHmr0f4NmMGsvTWYMG66n5Z1dDnL89A=
+	by mail.kernel.org (Postfix) with ESMTP id 02939205ED
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 11:26:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B6v1uXZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbfLDLZg (ORCPT
+        id S1727682AbfLDL0I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 06:25:36 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52960 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbfLDLZg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 06:25:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hdUxh+e5zga2P0izFHRNT+NvrTWWB1D5/zTtECXmmq4=; b=JTagQtuptdU5UemcVWdOQJIEh
-        OFH0vts2gKpQ1iiBkapQsyR1uePy39eUQAY7BJ/+fB9bAUDO2VYQODwUMn71zG6WIgJfX6qRmpZf/
-        1V9HQRS4ftqviYmdfALJmhYlBruoSZe9S2aCE53/83tgZxOxHKBdTUZ0ksbJ5QycveCPo=;
-Received: from fw-tnat-cam3.arm.com ([217.140.106.51] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1icSme-0008Ib-VB; Wed, 04 Dec 2019 11:25:28 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 33793D003B4; Wed,  4 Dec 2019 11:25:28 +0000 (GMT)
-Date:   Wed, 4 Dec 2019 11:25:28 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Chris Brandt <chris.brandt@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 4/6] spi: Add SPIBSC driver
-Message-ID: <20191204112528.GQ1998@sirena.org.uk>
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
- <20191203034519.5640-5-chris.brandt@renesas.com>
- <20191203141944.GI1998@sirena.org.uk>
- <CAMuHMdXk5DDebriHxmtz0NWF_zDhBK=fBZugdUfmEAyU0O4zMQ@mail.gmail.com>
+        Wed, 4 Dec 2019 06:26:08 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56390 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727445AbfLDL0I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 06:26:08 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4BQ1C9015599;
+        Wed, 4 Dec 2019 05:26:02 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575458762;
+        bh=U9KwFUmtbhKcE0R5rk3qW4+wg7hHP+RvMDN9b8akF6E=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=B6v1uXZ2Bb5TkY2O/LztY2GiaAuKpkAVGfEmgcvVXZi6MrWybpCcjQglivQdRovGy
+         ZdZmIPn0DmHW5RfWQRkjnoQqqOSBmVcN1tJ3ELz+NF2/fksYeN5cKDIu5StthrcW/C
+         nKS0Yzgq+gk5VOnh0YW6WTYoMMT2Y+/i4XBivmME=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4BQ1GJ064727;
+        Wed, 4 Dec 2019 05:26:01 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
+ 2019 05:26:00 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Dec 2019 05:26:00 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4BPvwt123659;
+        Wed, 4 Dec 2019 05:25:58 -0600
+Subject: Re: [PATCH] ARM: dts: am335x-evmsk: Use drm simple-panel instead of
+ tilcdc-panel
+To:     Jyri Sarha <jsarha@ti.com>, <dri-devel@lists.freedesktop.org>,
+        <tony@atomide.com>, <bcousson@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
+        <bparrot@ti.com>
+References: <20191204105554.14212-1-jsarha@ti.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <1aa8c476-031a-e156-7648-c9740a98e3ee@ti.com>
+Date:   Wed, 4 Dec 2019 13:26:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tuFXEhzhBeitrIAu"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXk5DDebriHxmtz0NWF_zDhBK=fBZugdUfmEAyU0O4zMQ@mail.gmail.com>
-X-Cookie: Cleanliness is next to impossible.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191204105554.14212-1-jsarha@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---tuFXEhzhBeitrIAu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Tue, Dec 03, 2019 at 07:29:45PM +0100, Geert Uytterhoeven wrote:
-> On Tue, Dec 3, 2019 at 3:19 PM Mark Brown <broonie@kernel.org> wrote:
+On 04/12/2019 12.55, Jyri Sarha wrote:
+> Move to use the new drm panel support in tilcdc together with added
+> "newhaven,nhd-4.3-480272ef-atxl"-panel support in drm panel-simple.
 
-> > > +     pm_runtime_put(&pdev->dev);
-> > > +     pm_runtime_disable(&pdev->dev);
+Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-> > There seems to be no purpose in the runtime PM code in this
-> > driver, there's no PM operations of any kind and the driver holds
-> > a runtime PM reference for the entire lifetime of the device.
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  arch/arm/boot/dts/am335x-evmsk.dts | 38 ++++++++++--------------------
+>  1 file changed, 12 insertions(+), 26 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+> index e28a5b82fdf3..b149e48520b4 100644
+> --- a/arch/arm/boot/dts/am335x-evmsk.dts
+> +++ b/arch/arm/boot/dts/am335x-evmsk.dts
+> @@ -183,36 +183,16 @@
+>  	};
+>  
+>  	panel {
+> -		compatible = "ti,tilcdc,panel";
+> +		compatible = "newhaven,nhd-4.3-480272ef-atxl";
+> +
+>  		pinctrl-names = "default", "sleep";
+>  		pinctrl-0 = <&lcd_pins_default>;
+>  		pinctrl-1 = <&lcd_pins_sleep>;
+>  		backlight = <&lcd_bl>;
+> -		status = "okay";
+> -		panel-info {
+> -			ac-bias		= <255>;
+> -			ac-bias-intrpt	= <0>;
+> -			dma-burst-sz	= <16>;
+> -			bpp		= <32>;
+> -			fdd		= <0x80>;
+> -			sync-edge	= <0>;
+> -			sync-ctrl	= <1>;
+> -			raster-order	= <0>;
+> -			fifo-th		= <0>;
+> -		};
+> -		display-timings {
+> -			480x272 {
+> -				hactive		= <480>;
+> -				vactive		= <272>;
+> -				hback-porch	= <43>;
+> -				hfront-porch	= <8>;
+> -				hsync-len	= <4>;
+> -				vback-porch	= <12>;
+> -				vfront-porch	= <4>;
+> -				vsync-len	= <10>;
+> -				clock-frequency = <9000000>;
+> -				hsync-active	= <0>;
+> -				vsync-active	= <0>;
+> +
+> +		port {
+> +			panel_0: endpoint@0 {
+> +				remote-endpoint = <&lcdc_0>;
+>  			};
+>  		};
+>  	};
+> @@ -750,6 +730,12 @@
+>  	status = "okay";
+>  
+>  	blue-and-red-wiring = "crossed";
+> +
+> +	port {
+> +		lcdc_0: endpoint@0 {
+> +			remote-endpoint = <&panel_0>;
+> +		};
+> +	};
+>  };
+>  
+>  &rtc {
+> 
 
-> It matters for the clock domain (assumed the module clock is not always
-> marked as a critical clock).
+- Péter
 
-That seems like a problem with what the clock domains are doing
-surely?  The default is supposed to be that if runtime PM isn't
-enabled we get the behaviour the driver is manually implementing
-here.  Besides, if this is actually impacting power management
-I'd expect us to be letting the IP idle rather than holding it
-powered up all the time.
-
---tuFXEhzhBeitrIAu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3nl6cACgkQJNaLcl1U
-h9Afawf/eQgbC66Cwx3RMeN7sk9wUXZAUk4TZVle+80Hk2LVcIERFOsvc+2dW0fI
-3ABYuDo501oIhvMzblGlvwwGaiTwLE6RQRgI0GKdfo5YFUB6FxfoCWYvXeqebpSi
-V/jasYVMSHF8/dBRx9zfQFQeBgLxNAjDUH7x0qMFuLJcU8XzpKXylnmt29xG3SzU
-4v4hlYGlI5Wiz0HqS11737iiGbyn485NEZbUoIl8lMgVQeTEBjSYRb2zJdGAv2He
-Wnq1FqodOSaXgUZPDAOAE62whmZT3nc2R3B9mnakoeDrW/CvRhSYuqeZxwxBH0II
-j6EcEn5PVMY3Dj9hqZH/mAHn1eY9tQ==
-=SEvO
------END PGP SIGNATURE-----
-
---tuFXEhzhBeitrIAu--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
