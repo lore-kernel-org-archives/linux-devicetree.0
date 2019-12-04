@@ -2,96 +2,153 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A8EC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E307C0044D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A5F2073B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C6C2073C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbfLDJDI (ORCPT
+        id S1726632AbfLDJDP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:03:08 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47438 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbfLDJDI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 04:03:08 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 928FF291100;
-        Wed,  4 Dec 2019 09:03:04 +0000 (GMT)
+        Wed, 4 Dec 2019 04:03:15 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39745 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfLDJDP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 04:03:15 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a67so6169677oib.6;
+        Wed, 04 Dec 2019 01:03:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GiimM+vAPJm9W6bXX8wORh+f+Ya7ArJHf1Ny0AsE3FE=;
+        b=I+sFzUmkVNyh8AH+f+UMttJ4b8zfqyjU0FPs+sUkrnksWIgaKPeNvjT6UDOWEQPVKv
+         CkPiaXfafyS6aU6mT0AZzTPvpBuU8yq6NcGDKYbHMgU8umKfgx8ch4ai8DuyEebe6C57
+         92gQ/3OKdR+vAU1fcTAVZ4r6DrazR32zyBY7qYDfliUqwBn9yIqT7GoRonJXpfdMPZJf
+         nvSPq/vRnQYJFDZQJLRtoUB+eRe9npa5BzWmb0BroagOPSGijOeSuyQq7E9AYYaaq0Tb
+         KlAGeao/IbYqMeao2QFaUjG4ROuijEqkryEshflpILq/R5RTiuoSIV5KMHf7f4iSGb34
+         F8RQ==
+X-Gm-Message-State: APjAAAVfP6NkFyg/LuWQ7D3mligYY4DaYefxYqBSQhymyqWZGKOyIOGB
+        7b6rZAEBLICB0YvGMnRc0dd89wVDteudHX01qwM=
+X-Google-Smtp-Source: APXvYqzQXYe4gQCdUWg4G1jBsuzwR+3cpC7tyX1rRK1ihEkgVryFHXzaVwEjpn5VWpFRyxiwDsOp9WBGaMP8rktHGag=
+X-Received: by 2002:aca:36c5:: with SMTP id d188mr1768698oia.54.1575450194036;
+ Wed, 04 Dec 2019 01:03:14 -0800 (PST)
+MIME-Version: 1.0
+References: <20191203034519.5640-1-chris.brandt@renesas.com>
+ <20191203034519.5640-3-chris.brandt@renesas.com> <CAMuHMdXUVdG_PMQEpz=QWLCaabfK8Mc41zFiymXJ4Rx_C2gzdg@mail.gmail.com>
+ <TY1PR01MB1562F44E4FB80788922CE9BE8A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <CAMuHMdX_sD+UHnOF+bdbT99zfK1V92+1kVzGnb9JXJyBd-Y5-w@mail.gmail.com> <20191204083821.GA3468@dell>
+In-Reply-To: <20191204083821.GA3468@dell>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
 Date:   Wed, 4 Dec 2019 10:03:02 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
-        Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Clark <robdclark@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
+Message-ID: <CAMuHMdXC+=2nH51ASu0u3WUchjM5bC_bROgcYM-OrsM7OgZpbg@mail.gmail.com>
+Subject: Re: [PATCH 2/6] ARM: dts: r7s72100: Add SPIBSC clocks
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Chris Brandt <Chris.Brandt@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v4 08/11] drm/bridge: Add a drm_bridge_state object
-Message-ID: <20191204100302.38096544@collabora.com>
-In-Reply-To: <20191203181705.GT4730@pendragon.ideasonboard.com>
-References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
-        <20191203141515.3597631-9-boris.brezillon@collabora.com>
-        <20191203181705.GT4730@pendragon.ideasonboard.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 3 Dec 2019 20:17:05 +0200
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+Hi Lee,
 
-> Hi Boris,
-> 
-> Thank you for the patch.
-> 
-> On Tue, Dec 03, 2019 at 03:15:12PM +0100, Boris Brezillon wrote:
-> > One of the last remaining objects to not have its atomic state.
-> > 
-> > This is being motivated by our attempt to support runtime bus-format
-> > negotiation between elements of the bridge chain.
-> > This patch just paves the road for such a feature by adding a new
-> > drm_bridge_state object inheriting from drm_private_obj so we can
-> > re-use some of the existing state initialization/tracking logic.
-> > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> > ---
-> > Changes in v4:
-> > * Fix the doc
-> > * Kill default helpers (inlined)  
-> 
-> I liked the default helpers, inlining their content makes the code more
-> difficult to follow in my opinion.
+On Wed, Dec 4, 2019 at 9:38 AM Lee Jones <lee.jones@linaro.org> wrote:
+> On Tue, 03 Dec 2019, Geert Uytterhoeven wrote:
+> > On Tue, Dec 3, 2019 at 7:58 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> > > On Tue, Dec 3, 2019, Geert Uytterhoeven wrote:
+> > > > > +                       reg = <0x3fefa000 0x100>, <0x18000000
+> > > > > + 0x4000000>;
+> > > >
+> > > > The second region conflicts with the XIP flash@18000000 in
+> > > > arch/arm/boot/dts/r7s72100-gr-peach.dts.
+> > > > Yes, I know it is the same device ;-)
+> > >
+> > > Is that just an FYI?? Or do you have some suggestion??
+> >
+> > Can the flash subnode be compatible with "mtd-rom", even if the parent node
+> > is kept disabled?
+> >
+> > > > > +                       clock-critical = <4>; /* spibsc0 */
+> > > >
+> > > > Iff we go this clock-critical route, I think this should be specified in the
+> > > > board-specific .dts instead of in the SoC-specific .dtsi.
+> > >
+> > > OK, that's fine. It makes more sense to be in the .dts because it's a board
+> > > design decision. I will remove it from the patch.
+> > >
+> > > The one 'tricky' thing is that the <4> is the index into the number of clocks.
+> > >
+> > > So in the Renesas BSP where it includes the VDC5 LCD controllers,
+> > >
+> > > clock-output-names = "i2c0", "i2c1", "i2c2", "i2c3", "vdc50", "vdc51", "spibsc0", "spibsc1";
+> > >
+> > > the <4> needs to become a <6>.
+> >
+> > Unless you pass "clkidx" instead of "i" to of_clk_detect_critical() in [1],
+> > and use "clock-critical = <R7S72100_CLK_SPIBSC0>" in DT?
+> >
+> > Unfortunately the exact semantics of clock-critical were never documented.
+> > Lee?
+>
+> /**
+>  * of_clk_detect_critical() - set CLK_IS_CRITICAL flag from Device Tree
+>  * @np: Device node pointer associated with clock provider
+>  * @index: clock index
+>  * @flags: pointer to top-level framework flags
+>  *
+>  * Detects if the clock-critical property exists and, if so, sets the
+>  * corresponding CLK_IS_CRITICAL flag.
+>  *
+>  * Do not use this function. It exists only for legacy Device Tree
+>  * bindings, such as the one-clock-per-node style that are outdated.
+>  * Those bindings typically put all clock data into .dts and the Linux
+>  * driver has no clock data, thus making it impossible to set this flag
+>  * correctly from the driver. Only those drivers may call
+>  * of_clk_detect_critical from their setup functions.
+>  *
+>  * Return: error code or zero on success
+>  */
+>
+> If this meets the criteria, the API is pretty simple/self
+> explanatory.  What are you having trouble with?
 
-I'll go back to this approach then. Should I keep the original helper
-names even though they're not globally visible (and should probably
-never be)?
+What exactly is the "index" parameter?  This value is matched against
+the values of the "clock-critical" (array) property, but it is described
+nowhere in the DT bindings.
+stih407-clock.dtsi seems to assume this value is an index into the
+clock-output-names array?
+Can we use it as a value of "clock-indices" instead?
 
+> > Thanks!
+> >
+> > [1] "[PATCH 1/6] clk: renesas: mstp: Add critical clock from device
+> > tree support"
+> >     https://lore.kernel.org/linux-renesas-soc/20191203034519.5640-2-chris.brandt@renesas.com/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
