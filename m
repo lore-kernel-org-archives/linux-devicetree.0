@@ -7,73 +7,76 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC02C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 04:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E154C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 04:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C82DA20659
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 04:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18752073C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 04:55:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QM/FiCWi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEfSw070"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfLDEum (ORCPT
+        id S1726845AbfLDEzN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 23:50:42 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46145 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbfLDEul (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 23:50:41 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z7so6770914wrl.13;
-        Tue, 03 Dec 2019 20:50:39 -0800 (PST)
+        Tue, 3 Dec 2019 23:55:13 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46540 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbfLDEzN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 23:55:13 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z7so6778367wrl.13;
+        Tue, 03 Dec 2019 20:55:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:autocrypt:message-id:date:user-agent
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RqSWbVrcq9JaNwN5b63sKB3VzrDwVIrhAqaUDdsYFMg=;
-        b=QM/FiCWievVnhgR6WHzO6N0zT+OBvxs4A6rStxvOkNTg8i5RRG6FpKmovhHudgUs5j
-         ZzfXL0k0vDnpGBN1s/K5RmoALf3vPniuX5OkYxdjPc5vkGHtfvUyu/jddJTDtjAbIG5L
-         5VldlV0P58pvvJPWp+AecAxqU+8XF4slSBSjTso/uGh38Xiamj4uROF8iDExtOoluLFW
-         KWG2jk5RdUBTJsNKTGQPUPUZhccY2S6R8rX7ibqiNx6y5H7v0AyDCujJ/lm2DIvG7MzR
-         nl7w9ybWhm+F7JbkmI+rTNaf9lHqgVZ6c76XMgPiTT5VzchIXVNVS2xKz2DRDYCyDSac
-         kOmg==
+        bh=Odcxr27PsJyXc2GL2yzjyvqk42lklLLv11yX7PMO+VY=;
+        b=fEfSw070ZAOGYPOO7LXCt7S+Sj0YgoP/cszWFat2Sx+JirZt1WeAiCQhbGdp75V5Cw
+         2lhWJ7nuE9SxZ2zzANw+39tHYdIJB9HeRRy8/6lCSQmdDLec4fgTrhI9av2yU3GARA3K
+         X9AKV/Zcq8eRHkMtAtRtU70AlF7S65RPr6s67nBsQFYGeEOSc8cw1arger2hREVdM2vZ
+         kr4TGWossIAiNIU0TiO8lBrGahvDQUBvlWCTo/X8GyqL1EcwZKvrrQxiegW/4wJwRp3Q
+         WPCpQDCYwKap98ztaRL9MJo0ggNV5Pqet9k7f0dOY50tqLJ4/pjP9iCM+K+QlHgci2aM
+         8qJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:autocrypt
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=RqSWbVrcq9JaNwN5b63sKB3VzrDwVIrhAqaUDdsYFMg=;
-        b=aBlTKrnTyK9geGfKoHNAd1/HxfELU/Vx/t0MB2ufY5/kBntFQD+aOcHhOQrKFgRz5d
-         MQIeR7pQlA7uHF5NuNqMe+oa/XcqOQnwmpla8vz+sO/miJC5rt1xPf39fFfGJmvnD4sl
-         PoYeqhgOxssQzXMHNalsFa/t6JMJdhwhHAQid+RZV1BEuH2nQd/lkadnbNmcxsCUh2w9
-         jiPHzOj0Yjf33QvTOwFeUG1NfhiIaETBX/dHWHJlpOXSoqgMkzfj4FozwDXAqfbLYBjI
-         1DB5oXiBOYMQ6V3DG5O8cdg47KIUrRRL92hyEXNMOI9ZmlCTjBu8kk6KFQ6hDlB8Xi1y
-         C0jw==
-X-Gm-Message-State: APjAAAXJvmk+FfjBn9hbXq4tfYnrGMLTlq/4SEID3dOJrCY0ex+gWjr8
-        SMn/IR1/9tzmdG1AMV9ScII=
-X-Google-Smtp-Source: APXvYqyqArtMsoWCtrBvN8OgeF29QawbeaqqAHsW5j/4q1EZcLhwkH0heINdr0KT6kJKK1nUSya1+A==
-X-Received: by 2002:a5d:4f8e:: with SMTP id d14mr1739622wru.112.1575435038746;
-        Tue, 03 Dec 2019 20:50:38 -0800 (PST)
+        bh=Odcxr27PsJyXc2GL2yzjyvqk42lklLLv11yX7PMO+VY=;
+        b=tzZoit7YvA9q9tjVZc3KChgN1frheF1WizgbZAsCHxIcmxx+w552O3Zg3bRjIqEd2T
+         ucGxSL36EaPRrDScfYciAaqOaRlnnP1WA8CCqSLmkFHhJvjsh3o/oyZBDoOatKw5ZqNE
+         MSRmleYuubf/Suc49Q++7MvMG2mMq1yIUADKV8HXhZ8LymMwIT6zWM4/G/zwdPyCeImx
+         oWczYjc1PmDOvLZC8vpPbNZ5jW7UtfQZwWcBT7NTYBpDSlFN95qx4b9iWd6/uf/eHR9m
+         6mYL1zDCYEmynXadw+RQuHPNbZRKtTqHOAhrWPQvYFr995D3zHABm7HbhDtAAH7vr7kp
+         8t9Q==
+X-Gm-Message-State: APjAAAVJE9yDGAaK2mLT1LEcJkt8elOp9gT0K60G/uE6bp11gQN1xzk0
+        jqI6N5f1+8iFNYpPN6DNnJk=
+X-Google-Smtp-Source: APXvYqwK6vAh4AB2JIdP+/j6ILpiQYZm6BdV7q+BIgjg8TJofPrlGRt0RxmcxXceGhR18bnuk85aEA==
+X-Received: by 2002:a5d:4e8c:: with SMTP id e12mr1704894wru.109.1575435310013;
+        Tue, 03 Dec 2019 20:55:10 -0800 (PST)
 Received: from [10.230.28.123] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 60sm7097654wrn.86.2019.12.03.20.50.35
+        by smtp.gmail.com with ESMTPSA id v3sm6355917wru.32.2019.12.03.20.55.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Dec 2019 20:50:37 -0800 (PST)
-Subject: Re: [PATCH 0/6] brcmstb_thermal updates for new processes
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Markus Mayer <mmayer@broadcom.com>,
-        "maintainer:BROADCOM STB AVS TMON DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Tue, 03 Dec 2019 20:55:09 -0800 (PST)
+Subject: Re: [PATCH v3 0/4] Raspberry Pi 4 HWRNG Support
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Stephen Brennan <stephen@brennan.io>,
+        Matt Mackall <mpm@selenic.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:BROADCOM STB AVS TMON DRIVER" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20191030182132.25763-1-f.fainelli@gmail.com>
- <97fc97de-c515-7c70-0c98-44146db91b3e@gmail.com>
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org
+References: <20191120031622.88949-1-stephen@brennan.io>
+ <3e78d01f-f7a4-b3c4-4d23-7be7d6ad764d@gmail.com>
+ <20191121053046.coobocevp4uwwugb@gondor.apana.org.au>
+From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; keydata=
  mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
  xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
@@ -128,12 +131,12 @@ Autocrypt: addr=f.fainelli@gmail.com; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9qfUATKC9NgZjRvBztfqy4
  a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
-Message-ID: <4edae8c7-abb6-fc71-14c3-9b8ddb4e7003@gmail.com>
-Date:   Tue, 3 Dec 2019 20:50:33 -0800
+Message-ID: <5beb190c-fa77-6693-aead-4030930f5b8a@gmail.com>
+Date:   Tue, 3 Dec 2019 20:55:04 -0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <97fc97de-c515-7c70-0c98-44146db91b3e@gmail.com>
+In-Reply-To: <20191121053046.coobocevp4uwwugb@gondor.apana.org.au>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -144,38 +147,28 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 11/20/2019 10:43 AM, Florian Fainelli wrote:
-> 
-> 
-> On 10/30/2019 11:21 AM, Florian Fainelli wrote:
->> Hi,
+On 11/20/2019 9:30 PM, Herbert Xu wrote:
+> On Wed, Nov 20, 2019 at 08:09:57PM -0800, Florian Fainelli wrote:
+>> Hi Herbert,
 >>
->> This patch series contains a bug fix for the existing platforms and then
->> paves the way for adding support for Broadcom STB's latest chips in 16nm
->> processes, and finally updates the driver with pecularities introduced
->> with the 16nm, like the lack of interrupt notification from the HW.
+>> On 11/19/2019 7:16 PM, Stephen Brennan wrote:
+>>> This patch series enables support for the HWRNG included on the Raspberry
+>>> Pi 4.  It is simply a rebase of Stefan's branch [1]. I went ahead and
+>>> tested this out on a Pi 4.  Prior to this patch series, attempting to use
+>>> the hwrng gives:
+>>>
+>>>     $ head -c 2 /dev/hwrng
+>>>     head: /dev/hwrng: Input/output error
+>>>
+>>> After this series, the same command gives two random bytes.
 >>
->> Please queue up the first patch for -stable if you want, thanks!
+>> When we get a review from Rob, you can take patches 1-2 through your
+>> tree and Stefan/Nicholas can queue patches 3-4 through the BCM2835 tree
+>> where the DTS files already exist. Does that work for you?
 > 
-> Ping?
+> Yes sure.
 
-Rui, anyone?
-
-> 
->>
->> Florian Fainelli (6):
->>   thermal: brcmstb_thermal: Do not use DT coefficients
->>   thermal: brcmstb_thermal: Prepare to support a different process
->>   dt-bindings: thermal: Define BCM7216 thermal sensor compatible
->>   thermal: brcmstb_thermal: Add 16nm process thermal parameters
->>   thermal: brcmstb_thermal: Restructure interrupt registration
->>   thermal: brcmstb_thermal: Register different ops per process
->>
->>  .../bindings/thermal/brcm,avs-tmon.txt        |   8 +-
->>  drivers/thermal/broadcom/brcmstb_thermal.c    | 108 ++++++++++--------
->>  2 files changed, 67 insertions(+), 49 deletions(-)
->>
-> 
-
+Rob has provided his Acked-by for the binding patch, are you targeting
+these changes for 5.5 or 5.6 at this point?
 -- 
 Florian
