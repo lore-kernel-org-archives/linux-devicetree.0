@@ -2,216 +2,101 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4214C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 06:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236AFC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 06:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16B4217D9
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 06:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB05020833
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 06:00:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sLiSre6x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbfLDGCD (ORCPT
+        id S1725958AbfLDGAY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 01:02:03 -0500
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.114]:61555 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725932AbfLDGCD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 01:02:03 -0500
-Received: from [85.158.142.201] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-b.eu-central-1.aws.symcld.net id 2C/CD-12313-7DB47ED5; Wed, 04 Dec 2019 06:01:59 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPIsWRWlGSWpSXmKPExsVy8IPnUd3r3s9
-  jDdaek7eYf+Qcq8XhRS8YLW5++sZqcXnXHDaLpdcvMlm07j3C7sDmsWbeGkaPnbPusntsWtXJ
-  5vF5k1wASxRrZl5SfkUCa8akHx+YC9o0K74s02hg7FLqYuTiEBJYxyjxdO9G9i5GTiCnQuJp6
-  3dmEJtXIELi5qQ5bCA2p4CZRF/vAUaIGlOJhnmdLCA2m4COxKOZ65lAbBYBFYmPrSfBaoQFfC
-  Se7HjJCmKLCARJPH50lgVkGbPAbkaJDxcOQC0QlDg58wnYIGYBCYmDL14wQyzQkji3ZhXYIAk
-  Be4np768CxTmAbH2JxmOxEGFDie+zvrFA2OYSu9ZdZ5rAKDgLydRZSKYuYGRaxWiRVJSZnlGS
-  m5iZo2toYKBraGisa6Jrbq6XWKWbpJdaqpucmldSlAiU1EssL9YrrsxNzknRy0st2cQIjIWUQ
-  hbfHYwt397qHWKU5GBSEuXd/PhZrBBfUn5KZUZicUZ8UWlOavEhRhkODiUJXivP57FCgkWp6a
-  kVaZk5wLiESUtw8CiJ8DJ4AaV5iwsSc4sz0yFSpxiNOc7+m7eImeP3hiWLmIVY8vLzUqXEeTl
-  ASgVASjNK8+AGwdLFJUZZKWFeRgYGBiGegtSi3MwSVPlXjOIcjErCvEogU3gy80rg9r0COoUJ
-  6JQDlc9ATilJREhJNTDt6rh6PvDB0x1xW+S+X09dXDd1mufSa8vUNZqSY3y6zN0nPRDZIB548
-  JL2pPT0Zqu4qTYTjBOnqrcoWJXZdFfZ6toEr7iZV+uZbC7afbpVIYl5B6PU4uhpfL48/Tt2Pt
-  b9eCxoYq3fFcYZUYtu/d4uWV9wUtzB9Gfen6eRM3xWraw3e3ou8hgLqzh/FKvZlcZ1xWnLvgS
-  nCHjkSi15Kn9bxEbhxb2gbS9Vkx8zpuk/OPhGkTXk4dPeH3a2Om9bWBgUQu6e9rf/+Ph/PLc2
-  n9vi9d53j116t/87u0S/YvSE7PxNmr3BPSonFKdHerxKnqI2rSY+SN5s9e7bdreXauk/nVbt+
-  jL8fApHIA/beiWW4oxEQy3mouJEAJWBRqeSAwAA
-X-Env-Sender: roy.im.opensource@diasemi.com
-X-Msg-Ref: server-10.tower-246.messagelabs.com!1575439318!946274!2
-X-Originating-IP: [193.240.73.197]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.22; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 30507 invoked from network); 4 Dec 2019 06:01:59 -0000
-Received: from unknown (HELO sw-ex-cashub01.diasemi.com) (193.240.73.197)
-  by server-10.tower-246.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 4 Dec 2019 06:01:59 -0000
-Received: from swsrvapps-01.diasemi.com (10.20.28.141) by
- SW-EX-CASHUB01.diasemi.com (10.20.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Wed, 4 Dec 2019 06:01:56 +0000
-Received: by swsrvapps-01.diasemi.com (Postfix, from userid 22266)      id
- 1AC703FBE7; Tue,  3 Dec 2019 07:11:54 +0000 (GMT)
-Message-ID: <e158579e099adb91c3ed966c1f5b03ff68e85ab8.1575344416.git.Roy.Im@diasemi.com>
-In-Reply-To: <cover.1575344415.git.Roy.Im@diasemi.com>
-References: <cover.1575344415.git.Roy.Im@diasemi.com>
-From:   Roy Im <roy.im.opensource@diasemi.com>
-Date:   Tue, 3 Dec 2019 12:40:15 +0900
-Subject: [PATCH V8 2/3] dt-bindings: input: Add document bindings for DA7280
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
+        Wed, 4 Dec 2019 01:00:24 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:33359 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfLDGAY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 01:00:24 -0500
+Received: by mail-il1-f194.google.com with SMTP id r81so5647034ilk.0
+        for <devicetree@vger.kernel.org>; Tue, 03 Dec 2019 22:00:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VdV6rCozgHYZC1UpVIIfAR60tQ/+k5Yb502oXvuDz3s=;
+        b=sLiSre6x3ZGPGJEwfJi37mQMNCDlG8fNqJ4SC0nPSpVXUMgQOgDyKP60YVuZcVrviO
+         S1ZaCo2bSZY+tdpp3M1Nw9hEK1JNqVa/wTbTgzT8IGFPkTKlIrArH4Zsq/j9BVOKdVtx
+         /q4BployNyl+zOqvBmxb36qHJOuRSPdoxzwujtgx0LatEgeSLSaqwxWcc3pdtgGxAGll
+         4N5jP+2ohs1DDJVP3W0PCG/lLfge1jF0qf3FA8JJM5A8HkpT+fFAvljAiNShcU1+xPrB
+         eOSIinX7d/LZcDWDWuuntUcDxXVm6bu2E7y3rdovcWJrghsESri92nhcLtym1xR9WFOc
+         MWjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VdV6rCozgHYZC1UpVIIfAR60tQ/+k5Yb502oXvuDz3s=;
+        b=lfxE2eO1U83Cd1qCKo9bfqbbMxvOB7xqipr6RzXHL5dS8a5Y5vWgjjIeiFJDrKufBJ
+         sjdzdTPotzhGGmW/gpiXlQusHmOdDv8QIt1UqOaZz5qagKJn5B89XVkZimXBsmLzOl/B
+         6X0ACOceUIVoc10VurcL8EfFoSiv2NSZhECdaL3+novs2vrHALgjZmqUwBWOg34yqTby
+         Uik4Po4l+1wfxzB5gr8ik16dWt+gkmD/5AieF2OzmP0trtYEOCP6U0KsFo2IWuPUkdfd
+         y+RQIE1fNr+OXzZBpcoI7UwYGODVcVpxRU63olbHkvtT7hFu/fuiEOUFMEsziK1LgsmK
+         f0mA==
+X-Gm-Message-State: APjAAAWBNlrjeD9V+LGNB3kbT88pHjd3P19Tiwdvai1rJu4GLeQCFvMD
+        LOMwIMhyIfkf9RMUDmvVXFKZReX8qF2RElP3S2bkoQ==
+X-Google-Smtp-Source: APXvYqwxAn017aiVFDpMhAlXk+WZOqTquu3v1T0UEfmGothdcpPH6MdJ2S0McNjPU5fcYDDUrHZeSaRbP4kyc7RuuFM=
+X-Received: by 2002:a92:a30d:: with SMTP id a13mr1965620ili.186.1575439223157;
+ Tue, 03 Dec 2019 22:00:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-KSE-AttachmentFiltering-Interceptor-Info: protection disabled
-X-KSE-ServerInfo: sw-ex-cashub01.diasemi.com, 9
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 04/12/2019 05:22:00
+References: <20191202144104.5069-1-jun.nie@linaro.org> <20191202144104.5069-5-jun.nie@linaro.org>
+ <20191202175202.GA6488@infradead.org> <CABymUCM09L3TfLsPhLWPkoYXJ6OVGhHvd9_o4FCO07_Z3Y6A8w@mail.gmail.com>
+ <20191203073620.GA360@infradead.org>
+In-Reply-To: <20191203073620.GA360@infradead.org>
+From:   Jun Nie <jun.nie@linaro.org>
+Date:   Wed, 4 Dec 2019 14:00:08 +0800
+Message-ID: <CABymUCNHMKvVCkKdwnOcDZC9rNhLTEHLfLoH_O+CEf9XuZY+_A@mail.gmail.com>
+Subject: Re: [PATCH 4/4] mmc: sdhci: Add DMA memory boundary workaround
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, adrian.hunter@intel.com,
+        linux-mmc <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device tree binding information for DA7280 haptic driver.
-Example bindings for DA7280 are added.
+Christoph Hellwig <hch@infradead.org> =E4=BA=8E2019=E5=B9=B412=E6=9C=883=E6=
+=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=883:36=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Tue, Dec 03, 2019 at 11:29:15AM +0800, Jun Nie wrote:
+> > Thanks for the reminder! So I need to parse the segment_boundary from
+> > device tree and use below code to set it, right?
+> > For the max_segments accounting error, I did not see it so far though I
+> > believe it is true in theory. Maybe it is due to segment boundary value=
+ is
+> > very large.
+> >
+> > +++ b/drivers/mmc/core/queue.c
+> > @@ -374,6 +374,7 @@ static void mmc_setup_queue(struct mmc_queue *mq,
+> > struct mmc_card *card)
+> >                 WARN(!blk_queue_can_use_dma_map_merging(mq->queue,
+> >                                                         mmc_dev(host)),
+> >                      "merging was advertised but not possible");
+> > +       blk_queue_segment_boundary(mq->queue, mmc->segment_boundary);
+> >         blk_queue_max_segments(mq->queue, mmc_get_max_segments(host));
+>
+> Yes, I think should do it.  Maybe modulo a check if the low-level
+> driver actually sets a segment boundary.
 
-Reviewed-by: Rob Herring <robh@kernel.org>.
+For the block device, such as SD card, it is right solution. But I
+have concern on SDIO case. Maybe we should add workaround together
+with block layer segment boundary restriction. How do you think about
+it?
 
-Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
-
----
-v8: Updated descriptions for new properties.
-v7: No changes.
-v6: No changes.
-v5: Updated descriptions and fixed errors.
-v4: Fixed commit message, properties.
-v3: Fixed subject format.
-v2: No changes
-
-
- .../devicetree/bindings/input/dlg,da7280.txt       | 109 +++++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
-
-diff --git a/Documentation/devicetree/bindings/input/dlg,da7280.txt b/Documentation/devicetree/bindings/input/dlg,da7280.txt
-new file mode 100644
-index 0000000..e6b719d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/dlg,da7280.txt
-@@ -0,0 +1,109 @@
-+Dialog Semiconductor DA7280 Haptics bindings
-+
-+Required properties:
-+- compatible: Should be "dlg,da7280".
-+- reg: Specifies the I2C slave address.
-+
-+- interrupt-parent : Specifies the phandle of the interrupt controller to
-+  which the IRQs from DA7280 are delivered to.
-+
-+- dlg,actuator-type: Set Actuator type. it should be one of:
-+  "LRA" - Linear Resonance Actuator type.
-+  "ERM-bar" - Bar type Eccentric Rotating Mass.
-+  "ERM-coin" - Coin type Eccentric Rotating Mass.
-+
-+- dlg,const-op-mode: Haptic operation mode for FF_CONSTANT.
-+  Possible values:
-+	1 - Direct register override(DRO) mode triggered by i2c(default),
-+	2 - PWM data source mode controlled by PWM duty,
-+- dlg,periodic-op-mode: Haptic operation mode for FF_PERIODIC.
-+  Possible values:
-+	1 - Register triggered waveform memory(RTWM) mode, the pattern
-+	    assigned to the PS_SEQ_ID played as much times as PS_SEQ_LOOP,
-+	2 - Edge triggered waveform memory(ETWM) mode, external GPI(N)
-+	    control are required to enable/disable and it needs to keep
-+	    device enabled by sending magnitude (X > 0),
-+	    the pattern is assigned to the GPI(N)_SEQUENCE_ID below.
-+	The default value is 1 for both of the operation modes.
-+	For more details, please see the datasheet.
-+
-+- dlg,nom-microvolt: Nominal actuator voltage rating.
-+  Valid values: 0 - 6000000.
-+- dlg,abs-max-microvolt: Absolute actuator maximum voltage rating.
-+  Valid values: 0 - 6000000.
-+- dlg,imax-microamp: Actuator max current rating.
-+  Valid values: 0 - 252000.
-+  Default: 130000.
-+- dlg,impd-micro-ohms: the impedance of the actuator in micro ohms.
-+  Valid values: 0 - 1500000000.
-+
-+Optional properties:
-+- pwms : phandle to the physical PWM(Pulse Width Modulation) device.
-+  PWM properties should be named "pwms". And number of cell is different
-+  for each pwm device.
-+  (See Documentation/devicetree/bindings/pwm/pwm.txt
-+   for further information relating to pwm properties)
-+
-+- dlg,ps-seq-id: the PS_SEQ_ID(pattern ID in waveform memory inside chip)
-+  to play back when RTWM-MODE is enabled.
-+  Valid range: 0 - 15.
-+- dlg,ps-seq-loop: the PS_SEQ_LOOP, Number of times the pre-stored sequence
-+  pointed to by PS_SEQ_ID or GPI(N)_SEQUENCE_ID is repeated.
-+  Valid range: 0 - 15.
-+- dlg,gpiN-seq-id: the GPI(N)_SEQUENCE_ID, pattern to play
-+  when gpi0 is triggered, 'N' must be 0 - 2.
-+  Valid range: 0 - 15.
-+- dlg,gpiN-mode: the pattern mode which can select either
-+  "Single-pattern" or "Multi-pattern", 'N' must be 0 - 2.
-+- dlg,gpiN-polarity: gpiN polarity which can be chosen among
-+  "Rising-edge", "Falling-edge" and "Both-edge",
-+  'N' must be 0 - 2
-+  Haptic will work by this edge option in case of ETWM mode.
-+
-+- dlg,resonant-freq-hz: use in case of LRA.
-+  the frequency range: 50 - 300.
-+  Default: 205.
-+
-+- dlg,bemf-sens-enable: Enable for internal loop computations.
-+- dlg,freq-track-enable: Enable for resonant frequency tracking.
-+- dlg,acc-enable: Enable for active acceleration.
-+- dlg,rapid-stop-enable: Enable for rapid stop.
-+- dlg,amp-pid-enable: Enable for the amplitude PID.
-+- dlg,mem-array: Customized waveform memory(patterns) data downloaded to
-+  the device during initialization. This is an array of 100 values(u8).
-+
-+For further information, see device datasheet.
-+
-+======
-+
-+Example:
-+
-+	haptics: da7280-haptics@4a {
-+		compatible = "dlg,da7280";
-+		reg = <0x4a>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+		dlg,actuator-type = "LRA";
-+		dlg,dlg,const-op-mode = <1>;
-+		dlg,dlg,periodic-op-mode = <1>;
-+		dlg,nom-microvolt = <2000000>;
-+		dlg,abs-max-microvolt = <2000000>;
-+		dlg,imax-microamp = <170000>;
-+		dlg,resonant-freq-hz = <180>;
-+		dlg,impd-micro-ohms = <10500000>;
-+		dlg,freq-track-enable;
-+		dlg,rapid-stop-enable;
-+		dlg,mem-array = <
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+		>;
-+
-+	};
--- 
-end-of-patch for PATCH V8
-
+Jun
