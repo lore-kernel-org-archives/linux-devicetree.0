@@ -2,105 +2,198 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0410EC2BD09
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D5BC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC8392081B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575472962;
-	bh=+LyWKcoTaC83hFLYOVOLmtxAK1M+52+ZOKXak1ih5Tk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OXrQ5/450kL4nK7zz7EDiiPXSHcCEGVfyc2ke7IavTlrBfWtaPrwfSk2cWDAPlGn/
-	 uWPLeX0HOO/v4/Jmp3lzkkYQ1CUFNbUWQK1Ud56vOgAYxTYsHL/UfREHjyUyIEQes3
-	 zPU5CS7l9m3pNR3UQbSJmgWnG7bqct8hfggsanis=
+	by mail.kernel.org (Postfix) with ESMTP id C1820207DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:23:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vtGNWWKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbfLDPWi (ORCPT
+        id S1728228AbfLDPX1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:22:38 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46805 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbfLDPWi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 10:22:38 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a124so7129800oii.13;
-        Wed, 04 Dec 2019 07:22:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6sPha/wbJhMAM5wPncZACHp8KjMdGhsy8S0M1rRpaf8=;
-        b=gsNNINqimOgoSGUwTJcVOyF7p1n+l9fsQ3+4gcj9pUpuhR6ChUtK4Aq/bDAyc1LvzX
-         RriT5wsksI/51e1+1YgYoIvFpolFxPkaVAelpKHEzKBIzrRBvCo9kg7OSU6TmfC6bfWZ
-         gU6N1zua9Xxae+xEQLBQwv4owbBcBHM3VpK11H94wt5P1cUARTQlrEmOs9esI6J42rtK
-         21ITaiPpYsbPU0ZrCEVf4FG3imFC1kqpQ1SOk/BCIKei5F/j+AWsnbv0TPRFcHcUa2/g
-         ZiUP4z5xWvMTLON+0P6gUCKyYYjTdb+WlgmBeigtm7SrDo9DKlr+75Tm8YFYwGyDpHyX
-         Ie8A==
-X-Gm-Message-State: APjAAAXIrs2UZacmwlkf+oavtZanFIaK+7UEjHbydGKG1bA7N+zCYxIa
-        8hJAbbsCqgwvHE/PxyK9BA==
-X-Google-Smtp-Source: APXvYqw8kKCWJtpWF4IZtXkjbDj7ihw7FUCSOym5glyPaxqeYYa79GKcja0rok7LmHGBYe7QPSY9CA==
-X-Received: by 2002:aca:b986:: with SMTP id j128mr3137425oif.16.1575472957574;
-        Wed, 04 Dec 2019 07:22:37 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c204sm2388795oia.14.2019.12.04.07.22.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:22:37 -0800 (PST)
-Date:   Wed, 4 Dec 2019 09:22:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Khouloud Touil <ktouil@baylibre.com>
-Cc:     bgolaszewski@baylibre.com, mark.rutland@arm.com,
-        srinivas.kandagatla@linaro.org, baylibre-upstreaming@groups.io,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linus.walleij@linaro.org
-Subject: Re: [PATCH 3/4] dt-bindings: at24: remove the optional property
- write-protect-gpios
-Message-ID: <20191204152236.GA22464@bogus>
-References: <20191120142038.30746-1-ktouil@baylibre.com>
- <20191120142038.30746-4-ktouil@baylibre.com>
+        Wed, 4 Dec 2019 10:23:27 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:20620 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727828AbfLDPX1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 10:23:27 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4FM5wl026203;
+        Wed, 4 Dec 2019 16:23:17 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=8BM+BgH6USRwz0DXxL6nJffx2+O6Ux7FvCH6ofepeP4=;
+ b=vtGNWWKDWVVqMkFqQY9rewo2iWybFK9AfvQ/W/Xm69QL0FsoyROikRZES5lgkuvUgKb2
+ CvhGu/DNWjvwjB7C9TmuRnkyVQhh0w7kEaNAl1ay3xQSCMI0TxRNpso8xOSqtmbZ6P2U
+ YbpD+aE7jLDpCEwhx50GMAAh/t3Mje0ShPBmY6gpA09oUCBCd5caUHGu32Faj3LwuL+4
+ jdNTSEiNtNtUIfXuJ8uC7CrzRU2n9TSPz3M+tdswwAaVYk0FKDpouSe3u/Ya9sAsqKCZ
+ naOCPPea+wqmLcVe2o6xQcfTXy47FIOGl1rq8xF9MFmZ2C3QpPxUs3c50+9MZv+ImJo2 Yg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wkeea645g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Dec 2019 16:23:17 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BF840100034;
+        Wed,  4 Dec 2019 16:23:16 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ABE802C1AC8;
+        Wed,  4 Dec 2019 16:23:16 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.45) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 4 Dec
+ 2019 16:23:15 +0100
+Subject: Re: [PATCH] ARM: dts: stm32: remove "@" from stm32f7 pinmux groups
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191125121244.19591-1-benjamin.gaignard@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <f277b73f-716c-0746-73b8-45a8096d0bff@st.com>
+Date:   Wed, 4 Dec 2019 16:23:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120142038.30746-4-ktouil@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191125121244.19591-1-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 03:20:37PM +0100, Khouloud Touil wrote:
-> NVMEM framework is an interface for the at24 EEPROMs as well as for
-> other drivers, instead of passing the wp-gpios over the different
-> drivers each time, it would be better to pass it over the NVMEM
-> subsystem once and for all.
+Hi Benjamin
+
+On 11/25/19 1:12 PM, Benjamin Gaignard wrote:
+> Replace all "@" by "_" in pinmux groups for stm32f7 family.
+> This avoid errors when using yaml to check the bindings.
 > 
-> Removing the optional property form the device tree binding document.
-> 
-> Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  Documentation/devicetree/bindings/eeprom/at24.yaml | 6 ------
->  1 file changed, 6 deletions(-)
+>   arch/arm/boot/dts/stm32f7-pinctrl.dtsi | 22 +++++++++++-----------
+>   1 file changed, 11 insertions(+), 11 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> index e8778560d966..9894237ac432 100644
-> --- a/Documentation/devicetree/bindings/eeprom/at24.yaml
-> +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> @@ -145,11 +145,6 @@ properties:
->        over reads to the next slave address. Please consult the manual of
->        your device.
->  
-> -  wp-gpios:
-> -    description:
-> -      GPIO to which the write-protect pin of the chip is connected.
-> -    maxItems: 1
-> -
+> diff --git a/arch/arm/boot/dts/stm32f7-pinctrl.dtsi b/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
+> index 9314128df185..5271df1017cb 100644
+> --- a/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
+> @@ -127,7 +127,7 @@
+>   				st,bank-name = "GPIOK";
+>   			};
+>   
+> -			cec_pins_a: cec@0 {
+> +			cec_pins_a: cec_0 {
 
-At least 'wp-gpios: true' is still needed or you need to reference the 
-common definition in nvmem.yaml. The reason being is every possible 
-property (and child node) needs to be listed so we can have errors on 
-any that aren't.
+You fix a warning by adding a new one. Please use "cec-0" instead of 
+"cec_0". To be done for all changes in this file.
 
-Rob
+regards
+Alex
+
+
+>   				pins {
+>   					pinmux = <STM32_PINMUX('A', 15, AF4)>; /* HDMI CEC */
+>   					slew-rate = <0>;
+> @@ -136,7 +136,7 @@
+>   				};
+>   			};
+>   
+> -			usart1_pins_a: usart1@0 {
+> +			usart1_pins_a: usart1_0 {
+>   				pins1 {
+>   					pinmux = <STM32_PINMUX('A', 9, AF7)>; /* USART1_TX */
+>   					bias-disable;
+> @@ -149,7 +149,7 @@
+>   				};
+>   			};
+>   
+> -			usart1_pins_b: usart1@1 {
+> +			usart1_pins_b: usart1_1 {
+>   				pins1 {
+>   					pinmux = <STM32_PINMUX('A', 9, AF7)>; /* USART1_TX */
+>   					bias-disable;
+> @@ -162,7 +162,7 @@
+>   				};
+>   			};
+>   
+> -			i2c1_pins_b: i2c1@0 {
+> +			i2c1_pins_b: i2c1_0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('B', 9, AF4)>, /* I2C1 SDA */
+>   						 <STM32_PINMUX('B', 8, AF4)>; /* I2C1 SCL */
+> @@ -172,7 +172,7 @@
+>   				};
+>   			};
+>   
+> -			usbotg_hs_pins_a: usbotg-hs@0 {
+> +			usbotg_hs_pins_a: usbotg-hs_0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('H', 4, AF10)>, /* OTG_HS_ULPI_NXT */
+>   						 <STM32_PINMUX('I', 11, AF10)>, /* OTG_HS_ULPI_DIR */
+> @@ -192,7 +192,7 @@
+>   				};
+>   			};
+>   
+> -			usbotg_hs_pins_b: usbotg-hs@1 {
+> +			usbotg_hs_pins_b: usbotg-hs_1 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('H', 4, AF10)>, /* OTG_HS_ULPI_NXT */
+>   						 <STM32_PINMUX('C', 2, AF10)>, /* OTG_HS_ULPI_DIR */
+> @@ -212,7 +212,7 @@
+>   				};
+>   			};
+>   
+> -			usbotg_fs_pins_a: usbotg-fs@0 {
+> +			usbotg_fs_pins_a: usbotg-fs_0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('A', 10, AF10)>, /* OTG_FS_ID */
+>   						 <STM32_PINMUX('A', 11, AF10)>, /* OTG_FS_DM */
+> @@ -223,7 +223,7 @@
+>   				};
+>   			};
+>   
+> -			sdio_pins_a: sdio_pins_a@0 {
+> +			sdio_pins_a: sdio_pins_a_0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1 D0 */
+>   						 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1 D1 */
+> @@ -236,7 +236,7 @@
+>   				};
+>   			};
+>   
+> -			sdio_pins_od_a: sdio_pins_od_a@0 {
+> +			sdio_pins_od_a: sdio_pins_od_a_0 {
+>   				pins1 {
+>   					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1 D0 */
+>   						 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1 D1 */
+> @@ -254,7 +254,7 @@
+>   				};
+>   			};
+>   
+> -			sdio_pins_b: sdio_pins_b@0 {
+> +			sdio_pins_b: sdio_pins_b_0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('G', 9, AF11)>, /* SDMMC2 D0 */
+>   						 <STM32_PINMUX('G', 10, AF11)>, /* SDMMC2 D1 */
+> @@ -267,7 +267,7 @@
+>   				};
+>   			};
+>   
+> -			sdio_pins_od_b: sdio_pins_od_b@0 {
+> +			sdio_pins_od_b: sdio_pins_od_b_0 {
+>   				pins1 {
+>   					pinmux = <STM32_PINMUX('G', 9, AF11)>, /* SDMMC2 D0 */
+>   						 <STM32_PINMUX('G', 10, AF11)>, /* SDMMC2 D1 */
+> 
