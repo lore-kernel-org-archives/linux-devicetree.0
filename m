@@ -2,133 +2,171 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C150C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 18:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85A4C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 18:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC2920661
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 18:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A47D206DB
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 18:36:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnLIlKDx"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TBoXeX0L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbfLDSB5 (ORCPT
+        id S1728272AbfLDSgm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 13:01:57 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41991 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729275AbfLDSB4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 13:01:56 -0500
-Received: by mail-ed1-f67.google.com with SMTP id e10so143607edv.9;
-        Wed, 04 Dec 2019 10:01:54 -0800 (PST)
+        Wed, 4 Dec 2019 13:36:42 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40478 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727867AbfLDSgm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 13:36:42 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t14so829908wmi.5
+        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 10:36:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mvp9L8yGr+7Q73cf5DiMFkH0tKxVcTrdu8kuP8KT/wA=;
-        b=AnLIlKDxiENCXMUrbqTM8dDUPRPRHtCYpWJQ8og66XUs0vdaxN8hGdg8m117J2krEJ
-         SJ2rAhNZms6onCSAEhb1qbbpGHdAC1mNwB1yBzp4a46YCvh4DYplVBpVi9hnAnUdTk3V
-         7u+AMPmaRBp2zv5wG50ryD9qcrQW5TYYYwRmOFGRps5AMuyfZUiqtmkQZCMW1y1LJeOa
-         DRVwsjJb7aZBa4lcDk/NWOrtV9UDX2xwfA8hVKNB2z+B1q8U/7/BNl9KF3mOCI0qisZE
-         E+Pm16Xc42UW7lkGqqQY1hd/GGQfyoVxJXRWw9ipzYEk34PlwrqXzIRMfYLNeN/9jAsg
-         NaAA==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wK9NstZxWCZ4fUNQKTAEIPBZ++U8z5OdNqnEeiQMgbs=;
+        b=TBoXeX0LWp6vtluo0nZrXJ+HWtp6RtDGftL1htkZ25cbrFAgcczcvS6SGQxLQ/S9DF
+         U6C+bJHCD9Nw5DYneQ5qat7aDKfmutIcMCWejKtLDLpb1WQGzCauCHqoCOTKbO7g7Seu
+         LC6j8E+J3jdAHjZ2AfyyQ7Cb+CO2t6UECM2cw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mvp9L8yGr+7Q73cf5DiMFkH0tKxVcTrdu8kuP8KT/wA=;
-        b=EEYwIaKxo8kTZrJJuv1zBAzl97GY1n6+NM7G8zOqAg6JMNN+ZzGkgAypPSHNQaBzRd
-         0BqKpgayJBvbveJcakn6zAdPkDrw10Ct/MGguGy0TF6gMhLava5/u7ECBnDzPXUOTNXK
-         abnPnK5hkIISiDM0uPpASsGiKQsED5I3ggNCAOjD6PaH/ycjr568bU+s1iR+AFF/GaxF
-         aumXaQg7L5qFUWbGuxxtppEpE9nasNVCf1POGtqnfRE5goPa5gHdWjdPFpK3jQuLx80K
-         5dg7gQXpzp+YVCs7RlVPWyMIgKSdsvjMfuuYvgdvr0nVPwsZFa/BkZI05SgVDZHFQr+a
-         /Atg==
-X-Gm-Message-State: APjAAAWduixBQLK/55H3wzIFnnyN0FLvHMGhsrPcukO3KvOniCyD7NN8
-        PPpD+xD9moCccQox8dXLveshkeScr4ULOhfHzhSdNw==
-X-Google-Smtp-Source: APXvYqyH+H1j/zREsxP/LJQ/Q6PhP0dprWgGzUYK4IWlJ02sNpCzzk2ec/2tRbkR3GG2lr++MiA4m7gV4rTsfvod+5U=
-X-Received: by 2002:aa7:d64f:: with SMTP id v15mr5520399edr.71.1575482513957;
- Wed, 04 Dec 2019 10:01:53 -0800 (PST)
-MIME-Version: 1.0
-References: <1574465484-7115-1-git-send-email-jcrouse@codeaurora.org>
- <0101016e95751c0b-33c9379b-6b8c-43b1-8785-e5e1b6f084f1-000000@us-west-2.amazonses.com>
- <3a283a7c-df75-a30a-1bcb-74e631f06a71@arm.com>
-In-Reply-To: <3a283a7c-df75-a30a-1bcb-74e631f06a71@arm.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Wed, 4 Dec 2019 10:01:42 -0800
-Message-ID: <CAF6AEGuxgUQNuSQVECiUzpj4DM0R7UYme0Q9ggF1a=JCxAJsBA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] dt-bindings: arm-smmu: Add Adreno GPU variant
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wK9NstZxWCZ4fUNQKTAEIPBZ++U8z5OdNqnEeiQMgbs=;
+        b=RVyEz2CClEQDWOO0Re3f+0+KKbLHEYsM231b8uWica7DY8BMbFD5m+3mI345EQaDU7
+         Ebh6uE2mZgG1yUK9WQkGrQhKR/sVlqub+GI7vx13Fy+SjrqzZ8hQk0bHMnjrRsRNQTt/
+         VS7fmZ6LtfQHng37BuDlvpG12OxI51aDDVBuTjK92pGHLC4gOeLWs/+LFi2Ox6cw1SVe
+         2V/7EOIf12TBJOT3EMe8bX7B/xg1GJv/ydX49yYNy7kw9o2cXLYGDJq2vz0OgVlB9SRy
+         QtJax6T5u8TOiPWOUjRfAJbNVVG5rjEeYv6kU8pNUZczc5psphxlFoZvni6zOgPuVKnI
+         mWcQ==
+X-Gm-Message-State: APjAAAUSMyPWf6Kvza+Pq34Ib6qe60Dds4gQ/f2xmNzZrMHyQNES3lFJ
+        84YPcYtnmDlJoi9DQqFzDPT13Q==
+X-Google-Smtp-Source: APXvYqz+06y7g6bDkQSJIocMFzOIfNFtedSXUAM0Vi8Dq5sgC91y+7beIJR+jMAFvOyXeJK38vDwgg==
+X-Received: by 2002:a1c:7f4e:: with SMTP id a75mr1044364wmd.128.1575484598710;
+        Wed, 04 Dec 2019 10:36:38 -0800 (PST)
+Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id n1sm9145299wrw.52.2019.12.04.10.36.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2019 10:36:37 -0800 (PST)
+Subject: Re: [PATCH v3 2/6] PCI: iproc: Add INTx support with better modeling
+To:     Andrew Murray <andrew.murray@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Arnd Bergmann <arnd@arndb.de>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
+ <1575349026-8743-3-git-send-email-srinath.mannam@broadcom.com>
+ <20191203155514.GE18399@e119886-lin.cambridge.arm.com>
+ <CAHp75Vf7d=Gw24MTq2q3BKspkLEDDM24GVK4Zh_4zfZEzVuZjw@mail.gmail.com>
+ <40fffa66-4b06-a851-84c2-4de36d5c6777@broadcom.com>
+ <CAHp75VfyKAg4OhzUa4swGXOGTvJ5fVO8mhGSG=5HAUP__M-URQ@mail.gmail.com>
+ <20191204160729.GJ18399@e119886-lin.cambridge.arm.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <d07d22bc-5ec2-8a0f-22af-6eb89cd68e55@broadcom.com>
+Date:   Wed, 4 Dec 2019 10:36:31 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <20191204160729.GJ18399@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 7:56 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 22/11/2019 11:31 pm, Jordan Crouse wrote:
-> > Add a compatible string to identify SMMUs that are attached
-> > to Adreno GPU devices that wish to support split pagetables.
->
-> A software policy decision is not, in itself, a good justification for a
-> DT property. Is the GPU SMMU fundamentally different in hardware* from
-> the other SMMU(s) in any given SoC?
 
-The GPU CP has some sort of mechanism to switch pagetables.. although
-I guess under the firmware it is all the same.  Jordan should know
-better..
 
-BR,
--R
+On 12/4/19 8:07 AM, Andrew Murray wrote:
+> On Wed, Dec 04, 2019 at 10:29:51AM +0200, Andy Shevchenko wrote:
+>> On Wed, Dec 4, 2019 at 12:09 AM Ray Jui <ray.jui@broadcom.com> wrote:
+>>> On 12/3/19 11:27 AM, Andy Shevchenko wrote:
+>>>> On Tue, Dec 3, 2019 at 5:55 PM Andrew Murray <andrew.murray@arm.com> wrote:
+>>>>> On Tue, Dec 03, 2019 at 10:27:02AM +0530, Srinath Mannam wrote:
+>>>>
+>>>>>> +     /* go through INTx A, B, C, D until all interrupts are handled */
+>>>>>> +     do {
+>>>>>> +             status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
+>>>>>
+>>>>> By performing this read once and outside of the do/while loop you may improve
+>>>>> performance. I wonder how probable it is to get another INTx whilst handling
+>>>>> one?
+>>>>
+>>>> May I ask how it can be improved?
+>>>> One read will be needed any way, and so does this code.
+>>>>
+>>>
+>>> I guess the current code will cause the IPROC_PCIE_INTX_CSR register to
+>>> be read TWICE, if it's ever set to start with.
+>>>
+>>> But then if we do it outside of the while loop, if we ever receive an
+>>> interrupt while servicing one, the interrupt will still need to be
+>>> serviced, and in this case, it will cause additional context switch
+>>> overhead by going out and back in the interrupt context.
+> 
+> Yes it's a trade off - if you dropped the do/while loop and thus had a single
+> read you'd reduce the overhead on interrupt handling in every case except
+> where another INTx is received whilst in this function. But as you point out
+> each time that does happen you'll pay the penalty of a context switch.
+>
 
-> (* where "hardware" may encompass hypervisor shenanigans)
->
-> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > ---
-> >
-> >   Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 6 ++++++
-> >   1 file changed, 6 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> > index 6515dbe..db9f826 100644
-> > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> > @@ -31,6 +31,12 @@ properties:
-> >                 - qcom,sdm845-smmu-v2
-> >             - const: qcom,smmu-v2
-> >
-> > +      - description: Qcom Adreno GPU SMMU iplementing split pagetables
-> > +        items:
-> > +          - enum:
-> > +              - qcom,adreno-smmu-v2
-> > +          - const: qcom,smmu-v2
->
-> Given that we already have per-SoC compatibles for Qcom SMMUs in
-> general, this seems suspiciously vague.
->
-> Robin.
->
-> > +
-> >         - description: Qcom SoCs implementing "arm,mmu-500"
-> >           items:
-> >             - enum:
-> >
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+Exactly, it's a tradeoff between: 1) saving one register read (which is 
+likely in the 10th of nanosecond range) in all INTx handling; and 2) 
+saving context switches (which is likely in 10th of microsecond range) 
+in cases when we have multiple INTx when servicing it.
+
+The current implementation takes 2), which I thought it makes sense.
+
+> I don't have any knowledge of this platform so I have no idea if such a change
+> would be good/bad or material. However I thought I'd point it out. Looking at
+> the other controller drivers, some handle in a loop and some don't.
+> 
+> 
+>>>
+>>> My take is that it's probably more ideal to leave this portion of code
+>>> as it is.
+>>
+>> Can't we simple drop a do-while completely and leave only
+>> for_each_set_bit() loop?
+>>
+
+Like both Andrew and I pointed out. There's a tradeoff here. Could you 
+please help to justify why you favor 1) than 2)?
+
+> 
+> I'm happy either way.
+> 
+> Thanks,
+> 
+> Andrew Murray
+> 
+>>>
+>>>>>> +             for_each_set_bit(bit, &status, PCI_NUM_INTX) {
+>>>>>> +                     virq = irq_find_mapping(pcie->irq_domain, bit);
+>>>>>> +                     if (virq)
+>>>>>> +                             generic_handle_irq(virq);
+>>>>>> +                     else
+>>>>>> +                             dev_err(dev, "unexpected INTx%u\n", bit);
+>>>>>> +             }
+>>>>>> +     } while ((status & SYS_RC_INTX_MASK) != 0);
+>>>>
+>>
+>>
+>>
+>> -- 
+>> With Best Regards,
+>> Andy Shevchenko
