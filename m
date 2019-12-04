@@ -2,91 +2,102 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D9CC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCBAC2BD09
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05DBC20865
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D121206DB
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:59:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rk5spJZk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbfLDP4B (ORCPT
+        id S1728630AbfLDP7e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:56:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:57720 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727828AbfLDP4B (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Dec 2019 10:56:01 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BC9E31B;
-        Wed,  4 Dec 2019 07:56:00 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A0FE53F52E;
-        Wed,  4 Dec 2019 07:55:58 -0800 (PST)
-Subject: Re: [PATCH v2 1/8] dt-bindings: arm-smmu: Add Adreno GPU variant
-To:     Jordan Crouse <jcrouse@codeaurora.org>,
-        iommu@lists.linux-foundation.org
-Cc:     will@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1574465484-7115-1-git-send-email-jcrouse@codeaurora.org>
- <0101016e95751c0b-33c9379b-6b8c-43b1-8785-e5e1b6f084f1-000000@us-west-2.amazonses.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <3a283a7c-df75-a30a-1bcb-74e631f06a71@arm.com>
-Date:   Wed, 4 Dec 2019 15:55:57 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 4 Dec 2019 10:59:34 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40151 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728621AbfLDP7d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 10:59:33 -0500
+Received: by mail-qk1-f193.google.com with SMTP id a137so344971qkc.7;
+        Wed, 04 Dec 2019 07:59:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=yRIWo7lKKgqJCu/aBUPmRsLV0Wkkk5/DYmont9tq1qI=;
+        b=rk5spJZk1saeoY744UNyx+wXqmmNfCrwihWJBMslEhpdRoRXMOEL/weiPQc+ZajJfI
+         nIv2riK0GB72szsbYLQZbOdoE3KqvkEO+c9yvtS1s70+mXQ3A/wQoZyYfG6x2zP3AnCk
+         k5dwdXNyuRDyTqmI0V7qpvZgwhbZexcldeZEyOdHYqF+J45z00RZD7eZI+UL1lMdWbPV
+         Vn4wzxXB84/vPmNHM2qnuUnRcFs/YZLW32es3UCXvBi1zcL3ftsu2c/nmeNEvjrv2o+N
+         9Usucm3+1n5m/eJzYWQIEAfRdpwg2QfFyplmuat1byjjOZ1a5PegX7i3fmaWMH4LHGsJ
+         ShyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=yRIWo7lKKgqJCu/aBUPmRsLV0Wkkk5/DYmont9tq1qI=;
+        b=X4Q5kk9bkehYWGbGpxOdaCP8t3eR3A7xibV1HlhmRhDiOtpkayxs9Q83cA3ZhZAqpW
+         aASUtyzB73EbuKfIGjzbDd9qg3ancbmHbDmXXaubBYB1E7/yVtA57Ls2AM9styCYhrKa
+         6fhcva+Io/9TtS0rRJjaPCLs1E7Og0XZ8QcN3T8uFRym1jUSgN65mSpH0UflICc1UIBI
+         qgP9z7uhT1Z5r1laeTv8qGypK1QHJmd01DL4aCXwXlezhhfrLfauE1cn/+3MQgOD2xQM
+         k+CgsbN1nILxyqSo8Yt3Xs7d+0ARs+h1cAhIcvrIhX203ZFAzYQzTsxst98XPXW6agnd
+         JEBg==
+X-Gm-Message-State: APjAAAWpA0A9R6x0kRzJBh1KQYGxVOjgfUCn/8G5GnsuR9yPAOtNUffz
+        Altyk/99uoVAa/Fu3qJ0KzA=
+X-Google-Smtp-Source: APXvYqw6YVY5BvKuYFjKrTa10B9ON4/0NJEdCx3hp8wekexd4CoYPvPrdFofnV0kKgvQRFItAs68eg==
+X-Received: by 2002:a37:7bc7:: with SMTP id w190mr3680024qkc.132.1575475172496;
+        Wed, 04 Dec 2019 07:59:32 -0800 (PST)
+Received: from smtp.gmail.com (gwcrusp.semfio.usp.br. [143.107.150.86])
+        by smtp.gmail.com with ESMTPSA id c16sm4002902qtm.48.2019.12.04.07.59.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 07:59:31 -0800 (PST)
+Date:   Wed, 4 Dec 2019 12:59:23 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     jic23@kernel.org, robh@kernel.org
+Cc:     dragos.bogdan@analog.com, alexandru.ardelean@analog.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: [PATCH v2 1/2] dt-bindings: iio: adc: ad7292: fix channel constraint
+Message-ID: <20191204155918.5ot4tplceqjeul6a@smtp.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <0101016e95751c0b-33c9379b-6b8c-43b1-8785-e5e1b6f084f1-000000@us-west-2.amazonses.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 22/11/2019 11:31 pm, Jordan Crouse wrote:
-> Add a compatible string to identify SMMUs that are attached
-> to Adreno GPU devices that wish to support split pagetables.
+Change items property of AD7292 channels to correctly constrain their
+quantity.
 
-A software policy decision is not, in itself, a good justification for a 
-DT property. Is the GPU SMMU fundamentally different in hardware* from 
-the other SMMU(s) in any given SoC?
+Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+---
+Changelog V2
+- Shortened the message to make it closer to 50 columns.
 
-(* where "hardware" may encompass hypervisor shenanigans)
+ Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
-> 
->   Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> index 6515dbe..db9f826 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> @@ -31,6 +31,12 @@ properties:
->                 - qcom,sdm845-smmu-v2
->             - const: qcom,smmu-v2
->   
-> +      - description: Qcom Adreno GPU SMMU iplementing split pagetables
-> +        items:
-> +          - enum:
-> +              - qcom,adreno-smmu-v2
-> +          - const: qcom,smmu-v2
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+index b68be3aaf587..18f1032b86f3 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+@@ -53,7 +53,8 @@ patternProperties:
+         description: |
+           The channel number. It can have up to 8 channels numbered from 0 to 7.
+         items:
+-          maximum: 7
++          - minimum: 0
++            maximum: 7
+ 
+       diff-channels:
+         description: see Documentation/devicetree/bindings/iio/adc/adc.txt
+-- 
+2.23.0
 
-Given that we already have per-SoC compatibles for Qcom SMMUs in 
-general, this seems suspiciously vague.
-
-Robin.
-
-> +
->         - description: Qcom SoCs implementing "arm,mmu-500"
->           items:
->             - enum:
-> 
