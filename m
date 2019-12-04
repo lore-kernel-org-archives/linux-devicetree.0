@@ -2,267 +2,222 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C37A5C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 04:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC514C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 04:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2132073B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 04:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8F220803
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 04:34:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UsR4nxLG"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IPfmYZoO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfLDETV (ORCPT
+        id S1726845AbfLDEen (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 3 Dec 2019 23:19:21 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43213 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbfLDETU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Dec 2019 23:19:20 -0500
-Received: by mail-ot1-f66.google.com with SMTP id p8so5112198oth.10;
-        Tue, 03 Dec 2019 20:19:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oO5aKHWqKZXgtDSzybkME6BK6jEsYJ93MQcu7wW6Ois=;
-        b=UsR4nxLGxkGDB8c1PVJMKEM9OO+Ridm9v4kB8Sovl3epF/ujjT7s3EPYaXWek871Ap
-         m3baBWk2e58Ho1eagyO56sSNRY90MUm9QRdNb7WD2BEnkJzlGMbABMjkL+JibbwXTnUq
-         NPgTfgku2xEMZjoRYeOqZNwmMvVkd8uwaj17GZjdo6j4QTNrImxHtCTbAKGVm0d69UC4
-         WUAZGyyZRnKJyCEgTHWXvPfT1GFVhT52kkiakkMmO1TcdyicBbMQOYuHLzaZwVby+JV0
-         Am+QLOtz5qR7KUVokXCwlMZr6z1f6XmDxtCxGDhsbLPZRzgm8kLQGO5p85cKTQX670YM
-         bjsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oO5aKHWqKZXgtDSzybkME6BK6jEsYJ93MQcu7wW6Ois=;
-        b=S35s0moz7Tx0MPFoOaTA+CiE2FjzSZ5B1P6sBFg5U4JG1MlT9IyReI+uJVw4fvnnug
-         LwJKROihtZ8jC5W7kGP7SNBtxFzH2X0IOhYDoS9vMjZ1Xx2zRq5EcETVhbpBpkKUeDTl
-         ATEuOflVu9CZimisZllXje63xsDq61ngsGgVGlHlJRdFQ7NmKO6bl2OC9h/a9Vs9gL+8
-         cQLbKbWjK/WBQVm/9RHEIdyC1N6gFzkN597ZEJHN9lid/Ri9J7n1l7X3vqjYnzSjYd18
-         boU+VWI7PaVmWFUEhiaH6H8Z25l9LQedw7k/KtCD2ztVOxgGANuhg3DjCJ6syDGV4H/q
-         Wz4A==
-X-Gm-Message-State: APjAAAXpQ3JfsfrezT0CbX/RhO2TOQE5lplCsZOdwYp5fxPaFlMz2+5t
-        nkcrRcZvNnW0nR4kyseE4X9dSxUMzef3UcgHFNg=
-X-Google-Smtp-Source: APXvYqytyNA2QkmAJY7xC5kFRg0u6U/Fdz8XWksN3Nv4gba/r2jxdUps87kfcX5VKf3Oss1lFcZ3soNRgEF+xYh58lc=
-X-Received: by 2002:a9d:64ce:: with SMTP id n14mr1025741otl.263.1575433159471;
- Tue, 03 Dec 2019 20:19:19 -0800 (PST)
+        Tue, 3 Dec 2019 23:34:43 -0500
+Received: from mail-eopbgr130053.outbound.protection.outlook.com ([40.107.13.53]:16871
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726856AbfLDEem (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 3 Dec 2019 23:34:42 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IY7Kq/HuUqMwhYDsJcsonuGfvjyrRbbCdHXi09S7JYXBD7SVK7Hrg5Qd7JdrxIZ+ORwCeo19WO/rJqs+RkxZ8b+6hmzuiyxxjI0C34ct2ydsyYQqcE/BMcNdAP9yJa5RDlIdzTTpekyl9yR55ryq0tML1R5AKo9EP7knghv2Q+l3e2tz7V9WZ5u0msJPta2FVnt+lxJzFJjGPlHL9c4riQKdBaQXzI8JVD00Sx+ujbbO4PmmWYKmuaySzQR5QOPqEwe4psfPs3C197LIz1kAOQDVLCiEXWn7BXbKbZgJ3PvqzCf/64R/VEdvIdKb8dm8+DXrJkRMjRnCBr5yJabpNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jDDxceR3uRvOzGYFEYr79tOoXGobJFa7RaZ+4G2YSSg=;
+ b=ag7/J/gYsq9BvCzvDYwvtBDQZqFJUNmITsnCVK7I7RCY+yI08hJ7JXtmWWNe9XrAUyJMA4XrX5+A0HpfiaLBH5pbtYe3JtRovHDt5DsmbmiyJR/KYrUOuIjpIUCkyhrZY9C16+0vufFVig6qFK5I0bdI2l+5+Q7im0cxl5nhSwP1v6mdZy1ySfO5+Pq+RgC/b9GHabdSIz1M2bCqZzIwZW75ndwh3XikWuTEq7rX22+IWXnG7Zbvq9ELx3sX3u/xFzucEsV8loDeekuzQTEsIUt12wpY+SiZWpl5LA/xY/30XtsJwQz2nl00ucjYNaBNAwAqwp2sAk+UyJPkJUyDQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jDDxceR3uRvOzGYFEYr79tOoXGobJFa7RaZ+4G2YSSg=;
+ b=IPfmYZoOtBMvbNnTraDZcqUnHN7ooigy1MMa5alBMuY5FfzUUZSuAt3dp6KlOLTQoBAjhLJu7pfWz518+eeFC8R0SOKfCtHyK1VGv/ovMAOG4Rhq2xqfPjKZjDGImBQH13NUuNP+8PvdMqWhYpFG9yA8+MDMJCKYjEFkAaN9q8U=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB2962.eurprd04.prod.outlook.com (10.167.170.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.22; Wed, 4 Dec 2019 04:34:32 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::a8a6:8d0d:aca4:7bf1]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::a8a6:8d0d:aca4:7bf1%7]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 04:34:32 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Robin Murphy <robin.murphy@arm.com>, Marc Zyngier <maz@kernel.org>
+CC:     Roy Zang <roy.zang@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "frowand.list@gmail.com" <frowand.list@gmail.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>
+Subject: RE: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+Thread-Topic: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+Thread-Index: AQHVqP2nw3AoM5GAtUqPe+h1Ib8VVaemy2EAgADUbVCAAK4bgIAAOn2AgADDy0A=
+Date:   Wed, 4 Dec 2019 04:34:32 +0000
+Message-ID: <AM5PR04MB3299BFC34A4666B7A9C12B13F55D0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
+ <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
+ <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
+ <8f56c2d9-ab01-a91e-902f-a61def0e8ce8@arm.com>
+In-Reply-To: <8f56c2d9-ab01-a91e-902f-a61def0e8ce8@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 06e807cf-2547-4f6b-0f07-08d778734263
+x-ms-traffictypediagnostic: AM5PR04MB2962:|AM5PR04MB2962:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR04MB296233C559F9BCDDFC21E507F55D0@AM5PR04MB2962.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0241D5F98C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(39860400002)(366004)(376002)(136003)(189003)(199004)(13464003)(102836004)(26005)(81156014)(81166006)(7696005)(76176011)(6506007)(52536014)(44832011)(53546011)(71190400001)(71200400001)(3846002)(11346002)(446003)(66476007)(76116006)(5660300002)(256004)(229853002)(25786009)(7416002)(64756008)(66446008)(66946007)(186003)(478600001)(66556008)(6116002)(54906003)(305945005)(110136005)(7736002)(99286004)(74316002)(4326008)(6436002)(33656002)(14454004)(316002)(9686003)(6246003)(55016002)(8676002)(8936002)(2906002)(86362001)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB2962;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wyPbGT6JER8o1dLsljRCwJQlAqd389IoRhyINsHSVGy1Y/nsfI7qB+am2T/lqutkYawT8QKa9XWYpK8Ll8PsZvSWRvzSrVmC2CxCQf5RLhThBtsCcn0Jlp++m87RvUx82t1PLKTAylaYfILwASnZkYMf9lfPri155YHWqpS+IR27MKZq1PGnT2V4abhSSWzZasg63UcJGaVFL6u5KPrjcBeKXgvmxkr1d0Zls3qg45YZNTNrJsc95mmxVFjcUQ9uBT1k9WjI3xj8JGpjLyK6IbfKdMn70Hz136Xk34t1wQRO0Uddt3AFtO1DwNiPqc6hIvSJRcn9vSKkqnf/fTllqEiYx9X5Ed9i8S8MvWkRuJ/x6jjdxeHQ0/NhSpsKyvFYGkCMg2tZrSSsRS+R55lVUEzTJO0DI5TzQPm7szaOK7WpMFXgzt2d4ei4QyR6LJj0JXpk455N00HEnuL8JBAiohP1SGveJu5aGLN5i/unNE9UsUFPYrQhmurmPmGJUCvh
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190113021719.46457-1-samuel@sholland.org> <20190113021719.46457-2-samuel@sholland.org>
- <472c5450-1b60-6ac7-b242-805c2a2f3272@arm.com>
-In-Reply-To: <472c5450-1b60-6ac7-b242-805c2a2f3272@arm.com>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Tue, 3 Dec 2019 20:18:53 -0800
-Message-ID: <CA+E=qVfaBcUN5iB3kaK5gHyURpWt7ET6_js=sLiDg4PCDXXTYA@mail.gmail.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v3 1/2] arm64: arch_timer: Workaround
- for Allwinner A64 timer instability
-To:     marc.zyngier@arm.com
-Cc:     Samuel Holland <samuel@sholland.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 06e807cf-2547-4f6b-0f07-08d778734263
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 04:34:32.4975
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: g5jKYx8HkUNFNWlk4gaw6/JM2hgLm9n/xoDGz6z9Gqq7Sb0ECCw6PB6u1rDMBO9IRaAtdd0kYLFpIoRjpj9z8Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB2962
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 14, 2019 at 1:25 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
->
-> Hi Samuel,
-
-Hi Samuel,
-
-> On 13/01/2019 02:17, Samuel Holland wrote:
-> > The Allwinner A64 SoC is known[1] to have an unstable architectural
-> > timer, which manifests itself most obviously in the time jumping forwar=
-d
-> > a multiple of 95 years[2][3]. This coincides with 2^56 cycles at a
-> > timer frequency of 24 MHz, implying that the time went slightly backwar=
-d
-> > (and this was interpreted by the kernel as it jumping forward and
-> > wrapping around past the epoch).
-> >
-> > Investigation revealed instability in the low bits of CNTVCT at the
-> > point a high bit rolls over. This leads to power-of-two cycle forward
-> > and backward jumps. (Testing shows that forward jumps are about twice a=
-s
-> > likely as backward jumps.) Since the counter value returns to normal
-> > after an indeterminate read, each "jump" really consists of both a
-> > forward and backward jump from the software perspective.
-> >
-> > Unless the kernel is trapping CNTVCT reads, a userspace program is able
-> > to read the register in a loop faster than it changes. A test program
-> > running on all 4 CPU cores that reported jumps larger than 100 ms was
-> > run for 13.6 hours and reported the following:
-> >
-> >  Count | Event
-> > -------+---------------------------
-> >   9940 | jumped backward      699ms
-> >    268 | jumped backward     1398ms
-> >      1 | jumped backward     2097ms
-> >  16020 | jumped forward       175ms
-> >   6443 | jumped forward       699ms
-> >   2976 | jumped forward      1398ms
-> >      9 | jumped forward    356516ms
-> >      9 | jumped forward    357215ms
-> >      4 | jumped forward    714430ms
-> >      1 | jumped forward   3578440ms
-> >
-> > This works out to a jump larger than 100 ms about every 5.5 seconds on
-> > each CPU core.
-> >
-> > The largest jump (almost an hour!) was the following sequence of reads:
-> >     0x0000007fffffffff =E2=86=92 0x00000093feffffff =E2=86=92 0x0000008=
-000000000
-> >
-> > Note that the middle bits don't necessarily all read as all zeroes or
-> > all ones during the anomalous behavior; however the low 10 bits checked
-> > by the function in this patch have never been observed with any other
-> > value.
-> >
-> > Also note that smaller jumps are much more common, with backward jumps
-> > of 2048 (2^11) cycles observed over 400 times per second on each core.
-> > (Of course, this is partially explained by lower bits rolling over more
-> > frequently.) Any one of these could have caused the 95 year time skip.
-> >
-> > Similar anomalies were observed while reading CNTPCT (after patching th=
-e
-> > kernel to allow reads from userspace). However, the CNTPCT jumps are
-> > much less frequent, and only small jumps were observed. The same progra=
-m
-> > as before (except now reading CNTPCT) observed after 72 hours:
-> >
-> >  Count | Event
-> > -------+---------------------------
-> >     17 | jumped backward      699ms
-> >     52 | jumped forward       175ms
-> >   2831 | jumped forward       699ms
-> >      5 | jumped forward      1398ms
-> >
-> > Further investigation showed that the instability in CNTPCT/CNTVCT also
-> > affected the respective timer's TVAL register. The following values wer=
-e
-> > observed immediately after writing CNVT_TVAL to 0x10000000:
-> >
-> >  CNTVCT             | CNTV_TVAL  | CNTV_CVAL          | CNTV_TVAL Error
-> > --------------------+------------+--------------------+----------------=
--
-> >  0x000000d4a2d8bfff | 0x10003fff | 0x000000d4b2d8bfff | +0x00004000
-> >  0x000000d4a2d94000 | 0x0fffffff | 0x000000d4b2d97fff | -0x00004000
-> >  0x000000d4a2d97fff | 0x10003fff | 0x000000d4b2d97fff | +0x00004000
-> >  0x000000d4a2d9c000 | 0x0fffffff | 0x000000d4b2d9ffff | -0x00004000
-> >
-> > The pattern of errors in CNTV_TVAL seemed to depend on exactly which
-> > value was written to it. For example, after writing 0x10101010:
-> >
-> >  CNTVCT             | CNTV_TVAL  | CNTV_CVAL          | CNTV_TVAL Error
-> > --------------------+------------+--------------------+----------------=
--
-> >  0x000001ac3effffff | 0x1110100f | 0x000001ac4f10100f | +0x1000000
-> >  0x000001ac40000000 | 0x1010100f | 0x000001ac5110100f | -0x1000000
-> >  0x000001ac58ffffff | 0x1110100f | 0x000001ac6910100f | +0x1000000
-> >  0x000001ac66000000 | 0x1010100f | 0x000001ac7710100f | -0x1000000
-> >  0x000001ac6affffff | 0x1110100f | 0x000001ac7b10100f | +0x1000000
-> >  0x000001ac6e000000 | 0x1010100f | 0x000001ac7f10100f | -0x1000000
-> >
-> > I was also twice able to reproduce the issue covered by Allwinner's
-> > workaround[4], that writing to TVAL sometimes fails, and both CVAL and
-> > TVAL are left with entirely bogus values. One was the following values:
-> >
-> >  CNTVCT             | CNTV_TVAL  | CNTV_CVAL
-> > --------------------+------------+-------------------------------------=
--
-> >  0x000000d4a2d6014c | 0x8fbd5721 | 0x000000d132935fff (615s in the past=
-)
-> >
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >
-> > Because the CPU can read the CNTPCT/CNTVCT registers faster than they
-> > change, performing two reads of the register and comparing the high bit=
-s
-> > (like other workarounds) is not a workable solution. And because the
-> > timer can jump both forward and backward, no pair of reads can
-> > distinguish a good value from a bad one. The only way to guarantee a
-> > good value from consecutive reads would be to read _three_ times, and
-> > take the middle value only if the three values are 1) each unique and
-> > 2) increasing. This takes at minimum 3 counter cycles (125 ns), or more
-> > if an anomaly is detected.
-> >
-> > However, since there is a distinct pattern to the bad values, we can
-> > optimize the common case (1022/1024 of the time) to a single read by
-> > simply ignoring values that match the error pattern. This still takes n=
-o
-> > more than 3 cycles in the worst case, and requires much less code. As a=
-n
-> > additional safety check, we still limit the loop iteration to the numbe=
-r
-> > of max-frequency (1.2 GHz) CPU cycles in three 24 MHz counter periods.
-> >
-> > For the TVAL registers, the simple solution is to not use them. Instead=
-,
-> > read or write the CVAL and calculate the TVAL value in software.
-> >
-> > Although the manufacturer is aware of at least part of the erratum[4],
-> > there is no official name for it. For now, use the kernel-internal name
-> > "UNKNOWN1".
-> >
-> > [1]: https://github.com/armbian/build/commit/a08cd6fe7ae9
-> > [2]: https://forum.armbian.com/topic/3458-a64-datetime-clock-issue/
-> > [3]: https://irclog.whitequark.org/linux-sunxi/2018-01-26
-> > [4]: https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/dr=
-ivers/clocksource/arm_arch_timer.c#L272
->
-> nit: In general, I'm not overly keen on URLs in commit messages, as they
-> may vanish without notice and the commit message becomes less useful. In
-> the future, please keep those in the cover letter (though in this
-> particular case, the commit message explains the issue pretty well, so
-> no harm done once GitHub dies a horrible death... ;-).
->
-> The fix itself looks pretty solid, and will hopefully make the
-> "AllLoosers" HW more usable.
-
-Unfortunately this patch doesn't completely eliminate the jumps. There
-have been reports from users who still saw 95y jump even with the
-patch applied.
-
-Personally I've seen it once or twice on my Pine64-LTS.
-
-Looks like we need bigger hammer. Does anyone have any idea what it could b=
-e?
-
-Regards,
-Vasily
-
-
-> Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
->
-> Daniel, please consider this for v5.1.
->
-> Thanks,
->
->         M.
-> --
-> Jazz is not dead. It just smells funny...
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe@googlegroups.com.
-> For more options, visit https://groups.google.com/d/optout.
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iaW4gTXVycGh5IDxy
+b2Jpbi5tdXJwaHlAYXJtLmNvbT4NCj4gU2VudDogMjAxOeW5tDEy5pyIM+aXpSAyMzoyMA0KPiBU
+bzogTWFyYyBaeW5naWVyIDxtYXpAa2VybmVsLm9yZz47IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJh
+b0BueHAuY29tPg0KPiBDYzogUm95IFphbmcgPHJveS56YW5nQG54cC5jb20+OyBsb3JlbnpvLnBp
+ZXJhbGlzaUBhcm0uY29tOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtcGNp
+QHZnZXIua2VybmVsLm9yZzsgWi5xLiBIb3UNCj4gPHpoaXFpYW5nLmhvdUBueHAuY29tPjsgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgTS5oLiBMaWFuDQo+IDxtaW5naHVhbi5saWFuQG54
+cC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZzsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsNCj4gYW5kcmV3Lm11cnJheUBhcm0uY29t
+OyBmcm93YW5kLmxpc3RAZ21haWwuY29tOyBNaW5na2FpIEh1DQo+IDxtaW5na2FpLmh1QG54cC5j
+b20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFBDSTogbGF5ZXJzY2FwZTogQWRkIHRoZSBTUklP
+ViBzdXBwb3J0IGluIGhvc3Qgc2lkZQ0KPiANCj4gT24gMDMvMTIvMjAxOSAxMTo1MSBhbSwgTWFy
+YyBaeW5naWVyIHdyb3RlOg0KPiA+IE9uIDIwMTktMTItMDMgMDE6NDIsIFhpYW93ZWkgQmFvIHdy
+b3RlOg0KPiA+Pj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4+IEZyb206IE1hcmMg
+WnluZ2llciA8bWF6QG1pc3RlcmpvbmVzLm9yZz4NCj4gPj4+IFNlbnQ6IDIwMTnlubQxMuaciDLm
+l6UgMjA6NDgNCj4gPj4+IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4g
+Pj4+IENjOiByb2JoK2R0QGtlcm5lbC5vcmc7IGZyb3dhbmQubGlzdEBnbWFpbC5jb207IE0uaC4g
+TGlhbg0KPiA+Pj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IE1pbmdrYWkgSHUgPG1pbmdrYWku
+aHVAbnhwLmNvbT47IFJveQ0KPiBaYW5nDQo+ID4+PiA8cm95LnphbmdAbnhwLmNvbT47IGxvcmVu
+em8ucGllcmFsaXNpQGFybS5jb207DQo+ID4+PiBhbmRyZXcubXVycmF5QGFybS5jb207IGJoZWxn
+YWFzQGdvb2dsZS5jb207DQo+ID4+PiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgt
+a2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPj4+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gPj4+IFoucS4gSG91IDx6
+aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gPj4+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFBDSTogbGF5
+ZXJzY2FwZTogQWRkIHRoZSBTUklPViBzdXBwb3J0IGluIGhvc3QNCj4gPj4+IHNpZGUNCj4gPj4+
+DQo+ID4+PiBPbiAyMDE5LTEyLTAyIDEwOjQ1LCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPj4+ID4g
+R0lDIGdldCB0aGUgbWFwIHJlbGF0aW9ucyBvZiBkZXZpZCBhbmQgc3RyZWFtIGlkIGZyb20gdGhl
+IG1zaS1tYXANCj4gPj4+ID4gcHJvcGVydHkgb2YgRFRTLCBvdXIgcGxhdGZvcm0gYWRkIHRoaXMg
+cHJvcGVydHkgaW4gdS1ib290IGJhc2Ugb24NCj4gPj4+ID4gdGhlIFBDSWUgZGV2aWNlIGluIHRo
+ZSBidXMsIGJ1dCBpZiBlbmFibGUgdGhlIHZmIGRldmljZSBpbiBrZXJuZWwsDQo+ID4+PiA+IHRo
+ZSB2ZiBkZXZpY2UgbXNpLW1hcCB3aWxsIG5vdCBzZXQsIHNvIHRoZSB2ZiBkZXZpY2UgY2FuJ3Qg
+d29yaywNCj4gPj4+ID4gdGhpcyBwYXRjaCBwdXJwb3NlIGlzIHRoYXQgbWFuYWdlIHRoZSBzdHJl
+YW0gaWQgYW5kIGRldmljZSBpZCBtYXANCj4gPj4+ID4gcmVsYXRpb25zIGR5bmFtaWNhbGx5IGlu
+IGtlcm5lbCwgYW5kIG1ha2UgdGhlIG5ldyBQQ0llIGRldmljZSB3b3JrIGluDQo+IGtlcm5lbC4N
+Cj4gPj4+ID4NCj4gPj4+ID4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFv
+QG54cC5jb20+DQo+ID4+PiA+IC0tLQ0KPiA+Pj4gPsKgIGRyaXZlcnMvb2YvaXJxLmPCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDkgKysr
+DQo+ID4+PiA+wqAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUuYyB8
+IDk0DQo+ID4+PiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4+PiA+wqAgZHJp
+dmVycy9wY2kvcHJvYmUuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCB8wqAgNiArKw0KPiA+Pj4gPsKgIGRyaXZlcnMvcGNpL3JlbW92ZS5jwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgNiArKw0KPiA+Pj4gPsKg
+IDQgZmlsZXMgY2hhbmdlZCwgMTE1IGluc2VydGlvbnMoKykNCj4gPj4+ID4NCj4gPj4+ID4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvb2YvaXJxLmMgYi9kcml2ZXJzL29mL2lycS5jIGluZGV4DQo+ID4+
+PiA+IGEyOTZlYWYuLjc5MWU2MDkgMTAwNjQ0DQo+ID4+PiA+IC0tLSBhL2RyaXZlcnMvb2YvaXJx
+LmMNCj4gPj4+ID4gKysrIGIvZHJpdmVycy9vZi9pcnEuYw0KPiA+Pj4gPiBAQCAtNTc2LDYgKzU3
+NiwxMSBAQCB2b2lkIF9faW5pdCBvZl9pcnFfaW5pdChjb25zdCBzdHJ1Y3QNCj4gPj4+ID5vZl9k
+ZXZpY2VfaWQNCj4gPj4+ID4gKm1hdGNoZXMpDQo+ID4+PiA+wqDCoMKgwqDCoCB9DQo+ID4+PiA+
+wqAgfQ0KPiA+Pj4gPg0KPiA+Pj4gPiArdTMyIF9fd2VhayBsc19wY2llX3N0cmVhbWlkX2ZpeChz
+dHJ1Y3QgZGV2aWNlICpkZXYsIHUzMiByaWQpIHsNCj4gPj4+ID4gK8KgwqDCoCByZXR1cm4gcmlk
+Ow0KPiA+Pj4gPiArfQ0KPiA+Pj4gPiArDQo+ID4+PiA+wqAgc3RhdGljIHUzMiBfX29mX21zaV9t
+YXBfcmlkKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0DQo+ID4+PiA+ZGV2aWNlX25vZGUgICoq
+bnAsDQo+ID4+PiA+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1MzIgcmlkX2lu
+KQ0KPiA+Pj4gPsKgIHsNCj4gPj4+ID4gQEAgLTU5MCw2ICs1OTUsMTAgQEAgc3RhdGljIHUzMiBf
+X29mX21zaV9tYXBfcmlkKHN0cnVjdCBkZXZpY2UNCj4gPj4+ID4qZGV2LCAgc3RydWN0IGRldmlj
+ZV9ub2RlICoqbnAsDQo+ID4+PiA+wqDCoMKgwqDCoMKgwqDCoMKgIGlmICghb2ZfbWFwX3JpZChw
+YXJlbnRfZGV2LT5vZl9ub2RlLCByaWRfaW4sICJtc2ktbWFwIiwNCj4gPj4+ID7CoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJtc2ktbWFwLW1hc2siLCBucCwgJnJpZF9vdXQpKQ0K
+PiA+Pj4gPsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJyZWFrOw0KPiA+Pj4gPiArDQo+ID4+
+PiA+ICvCoMKgwqAgaWYgKHJpZF9vdXQgPT0gcmlkX2luKQ0KPiA+Pj4gPiArwqDCoMKgwqDCoMKg
+wqAgcmlkX291dCA9IGxzX3BjaWVfc3RyZWFtaWRfZml4KHBhcmVudF9kZXYsIHJpZF9pbik7DQo+
+ID4+Pg0KPiA+Pj4gT3ZlciBteSBkZWFkIGJvZHkuIEdldCB5b3VyIGZpcm13YXJlIHRvIHByb3Bl
+cmx5IHByb2dyYW0gdGhlIExVVCBzbw0KPiA+Pj4gdGhhdCBpdCBwcmVzZW50cyB0aGUgSVRTIHdp
+dGggYSByZWFzb25hYmxlIHRvcG9sb2d5LiBUaGVyZSBpcw0KPiA+Pj4gYWJzb2x1dGVseSBubyB3
+YXkgdGhpcyBraW5kIG9mIGNoYW5nZSBtYWtlcyBpdCBpbnRvIHRoZSBrZXJuZWwuDQo+ID4+DQo+
+ID4+IFNvcnJ5IGZvciB0aGlzLCBJIGtub3cgaXQgaXMgbm90IHJlYXNvbmFibGUsIGJ1dCBJIGhh
+dmUgbm8gb3RoZXIgd2F5LA0KPiA+PiBhcyBJIGtub3csIEFSTSBnZXQgdGhlIG1hcHBpbmcgb2Yg
+c3RyZWFtIElEIHRvIHJlcXVlc3QgSUQgZnJvbSB0aGUNCj4gPj4gbXNpLW1hcCBwcm9wZXJ0eSBv
+ZiBEVFMsIGlmIGFkZCBhIG5ldyBkZXZpY2Ugd2hpY2ggbmVlZCB0aGUgc3RyZWFtIElEDQo+ID4+
+IGFuZCB0cnkgdG8gZ2V0IGl0IGZyb20gdGhlIG1zaS1tYXAgb2YgRFRTLCBpdCB3aWxsIGZhaWxl
+ZCBhbmQgbm90DQo+ID4+IHdvcmssIHllcz8gU28gY291bGQgeW91IGdpdmUgbWUgYSBiZXR0ZXIg
+YWR2aWNlIHRvIGZpeCB0aGlzIGlzc3VlLCBJDQo+ID4+IHdvdWxkIHJlYWxseSBhcHByZWNpYXRl
+IGFueSBjb21tZW50cyBvciBzdWdnZXN0aW9ucywgdGhhbmtzIGEgbG90Lg0KPiA+DQo+ID4gV2h5
+IGNhbid0IGZpcm13YXJlIGV4cG9zZSBhbiBtc2ktbWFwL21zaS1tYXAtbWFzayB0aGF0IGhhcyBh
+IGxhcmdlDQo+ID4gZW5vdWdoIHJhbmdlIHRvIGVuc3VyZSBtYXBwaW5nIG9mIFZGcz8gV2hhdCBh
+cmUgdGhlIGxpbWl0YXRpb25zIG9mIHRoZQ0KPiA+IExVVCB0aGF0IHdvdWxkIHByZXZlbnQgdGhp
+cyBmcm9tIGJlaW5nIGNvbmZpZ3VyZWQgYmVmb3JlIHRoZSBrZXJuZWwNCj4gPiBib290cz8NCg0K
+VGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLCB5ZXMsIHRoaXMgaXMgdGhlIHJvb3QgY2F1c2UsIHdl
+IG9ubHkgaGF2ZSAxNiBzdHJlYW0NCklEcyBmb3IgUENJZSBkb21haW4sIHRoaXMgaXMgdGhlIGhh
+cmR3YXJlIGxpbWl0YXRpb24sIGlmIHRoZXJlIGhhdmUgZW5vdWdoIHN0cmVhbQ0KSURzLCB3ZSBj
+YW4gZXhwb3NlIGFuIG1zaS1tYXAvbXNpLW1hcC1tYXNrIGZvciBhbGwgUENJZSBkZXZpY2VzIGlu
+IHN5c3RlbSwNCnVuZm9ydHVuYXRlbHksIHRoZSBzdHJlYW0gSURzIGlzIG5vdCBlbm91Z2gsIEkg
+dGhpbmsgb3RoZXIgQVJNIHZlbmRvciBoYXZlIHNhbWUNCmlzc3VlIHRoYXQgdGhleSBkb24ndCBo
+YXZlIGVub3VnaCBzdHJlYW0gSURzLg0KDQpUaGFua3MNClhpYW93ZWkgIA0KDQo+IA0KPiBGdXJ0
+aGVybW9yZSwgbm90ZSB0aGF0IHRoaXMgYXR0ZW1wdCBpc24ndCBkb2luZyBhbnl0aGluZyBmb3Ig
+dGhlIFNNTVUNCj4gU3RyZWFtIElEcywgc28gdGhlIG1vbWVudCBhbnlvbmUgdHJpZXMgdG8gYXNz
+aWduIHRob3NlIFZGcyB0aGV5J3JlIHN0aWxsIGdvaW5nDQo+IHRvIGdvIGJhbmcgYW55d2F5LiBB
+bnkgZmlybXdhcmUtYmFzZWQgZml4dXAgZm9yIElEIG1hcHBpbmdzLCBjb25maWcgc3BhY2UNCj4g
+YWRkcmVzc2VzLCBldGMuIG5lZWRzIHRvIGJlIFNSLUlPVi1hd2FyZSBhbmQgYWNjb3VudCBmb3Ig
+YWxsICpwb3NzaWJsZSoNCj4gQkRGcy4NCj4gDQo+IE9uIExTMjA4NSBhdCBsZWFzdCwgSUlSQyB5
+b3UgY2FuIGNvbmZpZ3VyZSBhIHNpbmdsZSBMVVQgZW50cnkgdG8ganVzdCB0cmFuc2xhdGUNCj4g
+dGhlIEJ1czpEZXZpY2UgaWRlbnRpZmllciBhbmQgcGFzcyBzb21lIG9yIGFsbCBvZiB0aGUgRnVu
+Y3Rpb24gYml0cyBzdHJhaWdodA0KPiB0aHJvdWdoIGFzIHRoZSBMU0JzIG9mIHRoZSBTdHJlYW0g
+SUQsIHNvIEkgZG9uJ3QgYmVsaWV2ZSB0aGUgcmVsYXRpdmVseSBsaW1pdGVkDQo+IG51bWJlciBv
+ZiBMVVQgcmVnaXN0ZXJzIHNob3VsZCBiZSB0b28gbXVjaCBvZiBhbiBpc3N1ZS4gRm9yIGV4YW1w
+bGUsIGxhc3QNCj4gdGltZSBJIGhhY2tlZCBvbiB0aGF0IEkgYXBwYXJlbnRseSBoYWQgaXQgc2V0
+IHVwIHN0YXRpY2FsbHkgbGlrZSB0aGlzOg0KPiANCj4gJnBjaWUzIHsNCj4gCS8qIFNxdWFzaCA4
+OjU6MyBCREYgZG93biB0byAyOjI6MyAqLw0KPiAJbXNpLW1hcC1tYXNrID0gPDB4MDMxZj47DQo+
+IAltc2ktbWFwID0gPDB4MDAwICZpdHMgMHgwMCAweDIwPiwNCj4gCQkgIDwweDEwMCAmaXRzIDB4
+MjAgMHgyMD4sDQo+IAkJICA8MHgyMDAgJml0cyAweDQwIDB4MjA+LA0KPiAJCSAgPDB4MzAwICZp
+dHMgMHg2MCAweDIwPjsNCj4gfTsNCg0KVGhhbmtzIFJvYmluLCB0aGlzIGlzIGEgZWZmZWN0aXZl
+IHdheSwgYnV0IHdlIG9ubHkgaGF2ZSB0b3RhbCAxNiBzdHJlYW0gSURzIGZvciBQQ0llIGRvbWFp
+biwNCmFuZCBvbmx5IGFzc2lnbiA0IHN0cmVhbSBJRHMgZm9yIGVhY2ggUENJZSBjb250cm9sbGVy
+IGlmIHRoZSBib2FyZCBoYXZlIDQgUENJZSBjb250cm9sbGVycywNCnRoaXMgaXMgdGhlIHJvb3Qg
+Y2F1c2UsIEkgc3VibWl0dGVkIHRoaXMgcGF0Y2ggdG8gZHluYW1pY2FsbHkgbWFuYWdlIHRoZXNl
+IHN0cmVhbSBJRHMsIA0Kc28gdGhhdCBpdCBsb29rcyBsaWtlIGVhY2ggUENJZSBjb250cm9sbGVy
+IGhhcyAxNiBzdHJlYW0gSURzLiBJIGNhbiBkeW5hbWljYWxseSBhbGxvY2F0ZSBhbmQgDQpyZWxl
+YXNlIHRoZXNlIHN0cmVhbSBJRHMgYmFzZWQgb24gdGhlIFBDSWUgZGV2aWNlcyBpbiB0aGUgY3Vy
+cmVudCBzeXN0ZW0uIElmIHVzZSB5b3VyIG1ldGhvZCwNCndlIHN1cHBvcnQgdXAgdG8gNCBQQ0ll
+IGRldmljZXMoMiBQRnMgYW5kIDIgVkZzKSwgaXQgd2lsbCBub3QgYWNoaWV2ZSBvdXIgcHVycG9z
+ZS4NCg0KVGhhbmtzIA0KWGlhb3dlaQ0KDQo+IA0KPiBSb2Jpbi4NCg==
