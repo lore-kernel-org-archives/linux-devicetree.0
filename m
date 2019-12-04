@@ -2,145 +2,123 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779B2C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA41EC2BC73
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 11:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 519F12089C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8C820803
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 11:00:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="HKN5qRYW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfLDK6f (ORCPT
+        id S1727469AbfLDLAE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:58:35 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:38848 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727604AbfLDK6d (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Dec 2019 05:58:33 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 67C721A028E;
-        Wed,  4 Dec 2019 11:58:31 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A88FA1A077A;
-        Wed,  4 Dec 2019 11:58:27 +0100 (CET)
-Received: from lsv03124.swis.in-blr01.nxp.com (lsv03124.swis.in-blr01.nxp.com [92.120.146.121])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9F439402BC;
-        Wed,  4 Dec 2019 18:58:22 +0800 (SGT)
-From:   Ashish Kumar <Ashish.Kumar@nxp.com>
-To:     devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ashish Kumar <Ashish.Kumar@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [Patch v2 1/5] arm64: dts: ls1028a: Add FlexSPI support
-Date:   Wed,  4 Dec 2019 16:28:14 +0530
-Message-Id: <1575457098-18368-2-git-send-email-Ashish.Kumar@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1575457098-18368-1-git-send-email-Ashish.Kumar@nxp.com>
-References: <1575457098-18368-1-git-send-email-Ashish.Kumar@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 4 Dec 2019 06:00:04 -0500
+Received: from mail-eopbgr1410111.outbound.protection.outlook.com ([40.107.141.111]:41363
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727268AbfLDLAD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 4 Dec 2019 06:00:03 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Kq2jeSAPgEqUZHwVBeCmfpucXlPL4Ro3AAl9z1eHCD+VLsBWk4e+X5aYAmERciTUNc/qzdL69AAfjOy77jJKnvHnITP6J77ncIOe1nQAGWn7M5yH5WXxKcuUt5SZNLkPX8D/vu6s7pmoITaZocskvJl6oODClu60ViCdZdpvpdg6d9PW2V09bZQu766MEVpdeKR/b2gc7pwggOwc93GKVxB2OnXUNSeudee8hjSluJD6qiZL6IYLg1GxWQofoh6pmV4CKHn8bI3YjSl1r+BmbmJOKos5sKcXPOAkbTWKh8iLoBAS/hfKJcDkWJHT5cevVQRKdSEaAlOcDEqtfvVtBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a8dFKkCmWEC4BLsVuqyf665SDE2UGmW2Km2WUdVItng=;
+ b=gtcmE+arSK8/zeHGxEqQGQ8Wwjy/yOOE1GTkJQ3RCYnfd1/7558mQHyEdFRrne0WYEAxpg8pQzhSORT7rMgfG4EcrdieIj8coUBrB815sCJm+JRIIX5gXfFsVX0UqVb0FZZoysGvGNNbkTFU/S5aPYBHUkv7E1oHu4VCM7V0q8230PP3PhbdGniFkoILP9ig9MCmXJqRUYkiTSy62WckQOogJLa1Tocm2Fxzhh80H5pHbbMxVus6yOhBpNZfprRQuEHxv1YB4XOWBr0oFruBjx2yFRugxO6iHcyEtc8+mxDMr2s/GTz8wFFuNnjPk6LprdPxflA/nnTmTPg6rGGyZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a8dFKkCmWEC4BLsVuqyf665SDE2UGmW2Km2WUdVItng=;
+ b=HKN5qRYWx5jZFqKhCjAyTGAyOz1NPgD23+vyCei35ohfto+djWXrydx1Jt1MJ5nR6ixwXxFEd6hSA191RUi+es+JrWaivqfYmodOgOGtPe9H1JJkkRxztE0I5Wfz9pz2oelXZPy+dkE2Pzt2L2AVBP68J35Fvbna8rOrH9568BQ=
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
+ TY1PR01MB1529.jpnprd01.prod.outlook.com (52.133.160.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.25; Wed, 4 Dec 2019 11:00:00 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2516.003; Wed, 4 Dec 2019
+ 11:00:00 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: RE: [PATCH 2/6] ARM: dts: r7s72100: Add SPIBSC clocks
+Thread-Topic: [PATCH 2/6] ARM: dts: r7s72100: Add SPIBSC clocks
+Thread-Index: AQHVqYw5ixK18pdXUUiJIFkvJ+Qioqeov9OAgAAB0RCAAAaVAIAA4QyAgAAG5gCAAAx5gIAAEVBQ
+Date:   Wed, 4 Dec 2019 11:00:00 +0000
+Message-ID: <TY1PR01MB1562A629EE48FE2C88518AAE8A5D0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20191203034519.5640-1-chris.brandt@renesas.com>
+ <20191203034519.5640-3-chris.brandt@renesas.com>
+ <CAMuHMdXUVdG_PMQEpz=QWLCaabfK8Mc41zFiymXJ4Rx_C2gzdg@mail.gmail.com>
+ <TY1PR01MB1562F44E4FB80788922CE9BE8A420@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <CAMuHMdX_sD+UHnOF+bdbT99zfK1V92+1kVzGnb9JXJyBd-Y5-w@mail.gmail.com>
+ <20191204083821.GA3468@dell>
+ <CAMuHMdXC+=2nH51ASu0u3WUchjM5bC_bROgcYM-OrsM7OgZpbg@mail.gmail.com>
+ <20191204094741.GC3468@dell>
+In-Reply-To: <20191204094741.GC3468@dell>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctMzViY2M1MzUtMTY4NS0xMWVhLWFhNTEtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XDM1YmNjNTM2LTE2ODUtMTFlYS1hYTUxLTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iNTUyIiB0PSIxMzIxOTkzMDc5ODY3NjU0OTIiIGg9IjVGc1hSU01CMEZENUM2QXUxQnRxaEV3Q2dmST0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [75.60.247.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c7355d31-8cac-4707-eafd-08d778a91b8f
+x-ms-traffictypediagnostic: TY1PR01MB1529:
+x-microsoft-antispam-prvs: <TY1PR01MB15297C568EAFB2629A76D8888A5D0@TY1PR01MB1529.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0241D5F98C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(366004)(346002)(376002)(136003)(189003)(199004)(99286004)(74316002)(54906003)(7736002)(110136005)(8676002)(76116006)(14444005)(86362001)(7696005)(76176011)(6506007)(33656002)(4744005)(71200400001)(64756008)(66446008)(305945005)(11346002)(66556008)(66476007)(5660300002)(26005)(102836004)(186003)(66946007)(52536014)(229853002)(2906002)(9686003)(6246003)(14454004)(6116002)(8936002)(478600001)(316002)(81156014)(55016002)(7416002)(71190400001)(4326008)(3846002)(6436002)(81166006)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1529;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: s2djmGL4Rc0RXvAIub/8GreaH6CpOSdM5JpGbn7s+0MyhbjFSH8ijp/0DiGitOTcMzRFedtvCeNlb8t6r456oDaoRdNkJSCdwZEUmsHcYk4EfLjheaUurVEPSxEler4smiIHbR1U3cMU3ZJRjRsVpAozlsbWIN0YkLqc7u0SlPwIMFlSguIfIiC0U7s48w/51JekJfcz48SA/i2iSW5C/3FcU/7QhZ0MtKhaYNUw9U44acUX9P2P1vj9ljQZy1UNT8HI4EsyyHVZPox9mGTdTuikSJGkbL29zqxAw6TzcslMyeti70MAqAaFBN6bzObsgSiaJN757f0O4uw/VqsB4WZKjYsyco+TvUfDulrIb4xRck2VrPxjG/zrZ4dHrFiCsB51XpRCLSUMQWdt/76ZaO2oNPyIVEqHPSSJHt+ACY/1PMGBdiLKCgM9mHZIO4GG
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7355d31-8cac-4707-eafd-08d778a91b8f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 11:00:00.2297
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6zr6ck8FGpsaDGkb8CEDcaFQlnm2qE8ZTPvEBxt4or/+rXfzhJ8MpKRhcy4V0rDtJuMt2OgIit3eCA4bW7Flxoz+5zPx0PjGgd1sN1WDkeg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1529
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add fspi node property for LS1028A SoC for FlexSPI driver.
-Property added for FlexSPI controller and for the connected
-slave device for the LS1028ARDB and LS1028AQDS target.
-RDB and QDS are having one SPI-NOR flash device, mt35xu02g
-connected at CS0.
-This flash device "mt35xu02g" is tested for octal read
-
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
----
-v2:
-Rebased to top
-Use "jedec,spi-nor" in compatibles
-
- arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    | 13 +++++++++++++
- 3 files changed, 43 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-index 5b9d4b35dd35..ca409d907b36 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -123,6 +123,21 @@
- 	status = "okay";
- };
- 
-+&fspi {
-+	status = "okay";
-+
-+	mt35xu02g0: flash@0 {
-+		compatible = "jedec,spi-nor";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <50000000>;
-+		/* The following setting enables 1-1-8 (CMD-ADDR-DATA) mode */
-+		spi-rx-bus-width = <8>; /* 8 SPI Rx lines */
-+		spi-tx-bus-width = <1>; /* 1 SPI Tx line */
-+		reg = <0>;
-+	};
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-index 9720a190049f..af25c09ea427 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-@@ -96,6 +96,21 @@
- 	status = "okay";
- };
- 
-+&fspi {
-+	status = "okay";
-+
-+	mt35xu02g0: flash@0 {
-+		compatible = "jedec,spi-nor";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <50000000>;
-+		/* The following setting enables 1-1-8 (CMD-ADDR-DATA) mode */
-+		spi-rx-bus-width = <8>; /* 8 SPI Rx lines */
-+		spi-tx-bus-width = <1>; /* 1 SPI Tx line */
-+		reg = <0>;
-+	};
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 8e8a77eb596a..f7b79fce3df5 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -271,6 +271,19 @@
- 			status = "disabled";
- 		};
- 
-+		fspi: spi@20c0000 {
-+			compatible = "nxp,lx2160a-fspi";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x20c0000 0x0 0x10000>,
-+			      <0x0 0x20000000 0x0 0x10000000>;
-+			reg-names = "fspi_base", "fspi_mmap";
-+			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
-+			clock-names = "fspi_en", "fspi";
-+			status = "disabled";
-+		};
-+
- 		esdhc: mmc@2140000 {
- 			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
- 			reg = <0x0 0x2140000 0x0 0x10000>;
--- 
-2.17.1
-
+SGkgTGVlLA0KICBUaGFuayB5b3UuDQoNCkhpIEdlZXJ0LA0KDQpPbiBXZWQsIERlYyA0LCAyMDE5
+LCBMZWUgSm9uZXMgd3JvdGU6DQo+IFRoZSB2ZW5kb3IgZHJpdmVyIGNhbiBjYWxsIG9mX2Nsa19k
+ZXRlY3RfY3JpdGljYWwoKSB3aXRoICphbnkqIGluZGV4IGl0IHNlZXMNCj4gZml0LiAgSWYgaXQg
+bWF0Y2hlcyBhIG51bWJlciBsaXN0ZWQgaW4gdGhlICdjbG9jay1jcml0aWNhbCcNCj4gYXJyYXks
+IHRoZSBDTEtfSVNfQ1JJVElDQUwgZmxhZyBpcyBzZXQgaW4gdGhlIGZsYWdzIHBvaW50ZWQgdG8g
+YnkgdGhlIDNyZA0KPiBmdW5jdGlvbiBwYXJhbWV0ZXIuDQoNClNpbmNlIHRoaXMgaXMgdGhlIGNh
+c2UsIEknbGwgY2hhbmdlIHRoZSBkcml2ZXIgY29kZSBzbyB3ZSBjYW4gdXNlIGl0IGhvdyB3ZQ0K
+cHJlZmVyOg0KaWUsDQogICBjbG9jay1jcml0aWNhbCA9IDxSN1M3MjEwMF9DTEtfU1BJQlNDMD47
+DQoNCkNocmlzDQoNCg==
