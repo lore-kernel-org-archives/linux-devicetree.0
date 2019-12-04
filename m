@@ -2,140 +2,137 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633C9C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2E6C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F929207DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3CF2073C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:56:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T1A5sWLR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbfLDKjp (ORCPT
+        id S1727446AbfLDK4G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:39:45 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:42567 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbfLDKjp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 05:39:45 -0500
-X-Originating-IP: 91.224.148.103
-Received: from localhost.localdomain (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id DA0A9E0012;
-        Wed,  4 Dec 2019 10:39:42 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Heiko Stuebner <heiko@sntech.de>,
-        <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH] arm64: dts: rockchip: Describe PX30 caches
-Date:   Wed,  4 Dec 2019 11:39:40 +0100
-Message-Id: <20191204103940.22050-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 4 Dec 2019 05:56:06 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:53204 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727472AbfLDK4F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 05:56:05 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4Atvdu007551;
+        Wed, 4 Dec 2019 04:55:57 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575456957;
+        bh=h5GEQ/bOy6qrn1uLO+MeHYnwvzdjeB/Vg3QaUt0L+kQ=;
+        h=From:To:CC:Subject:Date;
+        b=T1A5sWLRESMOAamKW8mEHG74z4sfakKoL47h8tZknq4RfGq3Q3rDPi3RoAdcbJSo4
+         sMYznc7Rw6Y8SB+WpNTKn0u4etO+HlrUcJojDcD+23qK8CFu6/dYX8Vi+nNtjpbsQk
+         BALnmySyDjOooC5uOOSSMjY4g0L81w5XdsSM46kE=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4AtvJC053258
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 4 Dec 2019 04:55:57 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
+ 2019 04:55:56 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Dec 2019 04:55:56 -0600
+Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4AtsrZ081308;
+        Wed, 4 Dec 2019 04:55:54 -0600
+From:   Jyri Sarha <jsarha@ti.com>
+To:     <dri-devel@lists.freedesktop.org>, <tony@atomide.com>,
+        <bcousson@baylibre.com>, <devicetree@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
+        <peter.ujfalusi@ti.com>, <bparrot@ti.com>
+Subject: [PATCH] ARM: dts: am335x-evmsk: Use drm simple-panel instead of tilcdc-panel
+Date:   Wed, 4 Dec 2019 12:55:54 +0200
+Message-ID: <20191204105554.14212-1-jsarha@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PX30 SoCs feature 4 Cortex-A35 CPUs with each of them a L1 data and
-instruction cache. Both are 32kiB wide (PX30 TRM) and made of 64-bit
-lines (ARM Cortex-A35 manual). I-cache is 2-way set associative (ARM
-Cortex-A35 manual), D-cache is 4-way set associative (ARM
-Cortex-A35manual).
+Move to use the new drm panel support in tilcdc together with added
+"newhaven,nhd-4.3-480272ef-atxl"-panel support in drm panel-simple.
 
-An L2 cache is placed after these 4 L1 caches (PX30 TRM), is 256kiB
-wide (PX30 TRM) and made of 64-bit lines (ARM Cortex-A35 manual) and
-is 8-way set associative (ARM Cortex-A35 manual).
-
-Describe all of them in the PX30 DTSI.
-
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- arch/arm64/boot/dts/rockchip/px30.dtsi | 35 ++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ arch/arm/boot/dts/am335x-evmsk.dts | 38 ++++++++++--------------------
+ 1 file changed, 12 insertions(+), 26 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index 1fd12bd09e83..0e10a224a84b 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -48,6 +48,13 @@
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 			dynamic-power-coefficient = <90>;
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -60,6 +67,13 @@
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 			dynamic-power-coefficient = <90>;
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2>;
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -72,6 +86,13 @@
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 			dynamic-power-coefficient = <90>;
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -84,6 +105,13 @@
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 			dynamic-power-coefficient = <90>;
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2>;
- 		};
- 
- 		idle-states {
-@@ -107,6 +135,13 @@
- 				min-residency-us = <2000>;
- 			};
- 		};
-+
-+		l2: l2-cache {
-+			compatible = "cache";
-+			cache-size = <0x40000>;
-+			cache-line-size = <64>;
-+			cache-sets = <512>;
-+		};
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+index e28a5b82fdf3..b149e48520b4 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -183,36 +183,16 @@
  	};
  
- 	cpu0_opp_table: cpu0-opp-table {
+ 	panel {
+-		compatible = "ti,tilcdc,panel";
++		compatible = "newhaven,nhd-4.3-480272ef-atxl";
++
+ 		pinctrl-names = "default", "sleep";
+ 		pinctrl-0 = <&lcd_pins_default>;
+ 		pinctrl-1 = <&lcd_pins_sleep>;
+ 		backlight = <&lcd_bl>;
+-		status = "okay";
+-		panel-info {
+-			ac-bias		= <255>;
+-			ac-bias-intrpt	= <0>;
+-			dma-burst-sz	= <16>;
+-			bpp		= <32>;
+-			fdd		= <0x80>;
+-			sync-edge	= <0>;
+-			sync-ctrl	= <1>;
+-			raster-order	= <0>;
+-			fifo-th		= <0>;
+-		};
+-		display-timings {
+-			480x272 {
+-				hactive		= <480>;
+-				vactive		= <272>;
+-				hback-porch	= <43>;
+-				hfront-porch	= <8>;
+-				hsync-len	= <4>;
+-				vback-porch	= <12>;
+-				vfront-porch	= <4>;
+-				vsync-len	= <10>;
+-				clock-frequency = <9000000>;
+-				hsync-active	= <0>;
+-				vsync-active	= <0>;
++
++		port {
++			panel_0: endpoint@0 {
++				remote-endpoint = <&lcdc_0>;
+ 			};
+ 		};
+ 	};
+@@ -750,6 +730,12 @@
+ 	status = "okay";
+ 
+ 	blue-and-red-wiring = "crossed";
++
++	port {
++		lcdc_0: endpoint@0 {
++			remote-endpoint = <&panel_0>;
++		};
++	};
+ };
+ 
+ &rtc {
 -- 
-2.20.1
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
