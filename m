@@ -2,125 +2,85 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8607C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 16:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 729B2C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 16:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938A62077B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 16:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6372077B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 16:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575476295;
+	bh=XAYw3r/MyBXD+GXFcfYyithBTDzIi7TzntZhGIyVoWs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uaUWu+ayVVka4QMcdtXSMNvfDc9cqc7FRFFVM8UkGIbMGG994OVXygcsCGQ4DeZjq
+	 7M3QySScNhxXDjQZWHcSDhZAfIkaFNUPQLOtF+P3JBjKqiOtVeu58AY1toDbKNmphZ
+	 QxMXUZ8b90xFWGy5e03tBV7spuwBlY6TAA/1+b9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbfLDQHe (ORCPT
+        id S1728388AbfLDQSO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 11:07:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:58154 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbfLDQHe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Dec 2019 11:07:34 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D0A7831B;
-        Wed,  4 Dec 2019 08:07:32 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FA3A3F52E;
-        Wed,  4 Dec 2019 08:07:32 -0800 (PST)
-Date:   Wed, 4 Dec 2019 16:07:30 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Ray Jui <ray.jui@broadcom.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/6] PCI: iproc: Add INTx support with better modeling
-Message-ID: <20191204160729.GJ18399@e119886-lin.cambridge.arm.com>
-References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
- <1575349026-8743-3-git-send-email-srinath.mannam@broadcom.com>
- <20191203155514.GE18399@e119886-lin.cambridge.arm.com>
- <CAHp75Vf7d=Gw24MTq2q3BKspkLEDDM24GVK4Zh_4zfZEzVuZjw@mail.gmail.com>
- <40fffa66-4b06-a851-84c2-4de36d5c6777@broadcom.com>
- <CAHp75VfyKAg4OhzUa4swGXOGTvJ5fVO8mhGSG=5HAUP__M-URQ@mail.gmail.com>
+        Wed, 4 Dec 2019 11:18:14 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42214 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728301AbfLDQSO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 11:18:14 -0500
+Received: by mail-oi1-f196.google.com with SMTP id j22so7350478oij.9;
+        Wed, 04 Dec 2019 08:18:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aTWv2kRnd2I8BNSkWTbrYY8IgWPRpV337Nl/skN4/18=;
+        b=Pov2/Uu0Wn+RGb0oRFVcvaXGdawCspT7n2TFV5PpPzZjn8HGRribsfMFV2bA4jZgOL
+         tXUrjAClXE7PcjZHHe0Lcj998kRKPiq95B7zHGlAyVC7GnmVvOUmPCIJmRc9IePGCxat
+         Tzfa2u2eCV+Gr1Qyi0CMaMl/l1HaXhmjuWmJyhBBysM9iFRr9zn15+MdKloyjMgFbigh
+         Xi12JmfXaK5hrq55fNC5AvLveVo71RI0+HE7PjteCXC3CPMjDbMSz1ZYYz9iqA0funqA
+         92u5kke1zFY5YUQSKDETKFv7uabWhYFB5w41zeAvNEBm/6kDEhJbUZN+M/lBJji5W4mC
+         BOnw==
+X-Gm-Message-State: APjAAAWEjQFcYqr70XF5fEcOuIa62z2GbQIxFKbGM16w7Ew7QKsfOEeM
+        AaWS1HYeko9nBMJKXxZojg==
+X-Google-Smtp-Source: APXvYqyt+h8GQhsCVeuL82IwwTbvEJ0hmhypUlSo8ZBJTW/VpJLHjXYM59W/NvvtbyQw4yw2F1MCCw==
+X-Received: by 2002:aca:530e:: with SMTP id h14mr2986671oib.105.1575476293512;
+        Wed, 04 Dec 2019 08:18:13 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h22sm1588639otl.73.2019.12.04.08.18.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 08:18:12 -0800 (PST)
+Date:   Wed, 4 Dec 2019 10:18:12 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: crypto: add new compatible for A33 SS
+Message-ID: <20191204161812.GA24881@bogus>
+References: <20191120152833.20443-1-clabbe.montjoie@gmail.com>
+ <20191120152833.20443-2-clabbe.montjoie@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VfyKAg4OhzUa4swGXOGTvJ5fVO8mhGSG=5HAUP__M-URQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20191120152833.20443-2-clabbe.montjoie@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 10:29:51AM +0200, Andy Shevchenko wrote:
-> On Wed, Dec 4, 2019 at 12:09 AM Ray Jui <ray.jui@broadcom.com> wrote:
-> > On 12/3/19 11:27 AM, Andy Shevchenko wrote:
-> > > On Tue, Dec 3, 2019 at 5:55 PM Andrew Murray <andrew.murray@arm.com> wrote:
-> > >> On Tue, Dec 03, 2019 at 10:27:02AM +0530, Srinath Mannam wrote:
-> > >
-> > >>> +     /* go through INTx A, B, C, D until all interrupts are handled */
-> > >>> +     do {
-> > >>> +             status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
-> > >>
-> > >> By performing this read once and outside of the do/while loop you may improve
-> > >> performance. I wonder how probable it is to get another INTx whilst handling
-> > >> one?
-> > >
-> > > May I ask how it can be improved?
-> > > One read will be needed any way, and so does this code.
-> > >
-> >
-> > I guess the current code will cause the IPROC_PCIE_INTX_CSR register to
-> > be read TWICE, if it's ever set to start with.
-> >
-> > But then if we do it outside of the while loop, if we ever receive an
-> > interrupt while servicing one, the interrupt will still need to be
-> > serviced, and in this case, it will cause additional context switch
-> > overhead by going out and back in the interrupt context.
-
-Yes it's a trade off - if you dropped the do/while loop and thus had a single
-read you'd reduce the overhead on interrupt handling in every case except
-where another INTx is received whilst in this function. But as you point out
-each time that does happen you'll pay the penalty of a context switch.
-
-I don't have any knowledge of this platform so I have no idea if such a change
-would be good/bad or material. However I thought I'd point it out. Looking at
-the other controller drivers, some handle in a loop and some don't.
-
-
-> >
-> > My take is that it's probably more ideal to leave this portion of code
-> > as it is.
+On Wed, 20 Nov 2019 16:28:31 +0100, Corentin Labbe wrote:
+> The A33 SS has a difference with all other SS, it give SHA1 digest
+> directly in BE.
+> This difference need to be handlded by the driver and so need a new
+> compatible.
 > 
-> Can't we simple drop a do-while completely and leave only
-> for_each_set_bit() loop?
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> ---
+>  .../devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml  | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-I'm happy either way.
-
-Thanks,
-
-Andrew Murray
-
-> >
-> > >>> +             for_each_set_bit(bit, &status, PCI_NUM_INTX) {
-> > >>> +                     virq = irq_find_mapping(pcie->irq_domain, bit);
-> > >>> +                     if (virq)
-> > >>> +                             generic_handle_irq(virq);
-> > >>> +                     else
-> > >>> +                             dev_err(dev, "unexpected INTx%u\n", bit);
-> > >>> +             }
-> > >>> +     } while ((status & SYS_RC_INTX_MASK) != 0);
-> > >
-> 
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+Acked-by: Rob Herring <robh@kernel.org>
