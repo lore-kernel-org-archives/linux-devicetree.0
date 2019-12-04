@@ -2,269 +2,179 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF20EC2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 789CAC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEFC20833
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A84206DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 15:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="h+3Z8Ejp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jukLGhV+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfLDPcu (ORCPT
+        id S1728436AbfLDPgc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 10:32:50 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25132 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728282AbfLDPcu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 10:32:50 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4FRKQ9030262;
-        Wed, 4 Dec 2019 16:32:39 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=+9lWQkEjqwkPOyurtTV3ZM+qwwYATmvlvAbyD5XGBKo=;
- b=h+3Z8EjpO5BwBlzIcXyd9b3IfjghkL8YihNVQ3PAd57zsp6lABUkHl5ShNcow8Ajh+M/
- 4lBqQm7pP4/ByMNK13fpA1sj3i0FMV8OtCFDuL0eGKbZ1a4/7hL1Q9FcxUtwf/TP5FGa
- OoYjdB/oB6/c+dKg8xbeMZitig+OZJNj5H1AkO3AV57GJEb5udRS4Z70rjjO86DqdrWc
- muZLyv1UfTNAcO0u66SHFRcsHAlc1OXbrpM9iQzBtqQIWSmABiN3/e1ONT2egGDWQchs
- W1Rrv79sptz5V3MAPkbJkctYcMrG3OgmgvRlrc0cGOFJO4VDV4Ntpx5GCNfVrCTQMWpB PQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wkeea65fj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Dec 2019 16:32:39 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E68B010002A;
-        Wed,  4 Dec 2019 16:32:38 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CFEA02C38CF;
-        Wed,  4 Dec 2019 16:32:38 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 4 Dec 2019 16:32:38
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <broonie@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>
-CC:     <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Erwan Leray <erwan.leray@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH] dt-bindings: spi: Convert stm32 spi bindings to json-schema
-Date:   Wed, 4 Dec 2019 16:32:33 +0100
-Message-ID: <20191204153233.791-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Wed, 4 Dec 2019 10:36:32 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43829 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbfLDPgc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 10:36:32 -0500
+Received: by mail-qt1-f193.google.com with SMTP id q8so113152qtr.10
+        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 07:36:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YNh/gbbmWRgHkbHGfxQ5xOBFieH2xGvQqMmiNQHDLT0=;
+        b=jukLGhV+8R8k8f29WiBkYubuL4CzavtAmcHjIr6vtqBVZ3bsQjy4hutLuInhLUjh9u
+         8CJsCgPKD5jJeijeL+JQC6JCpIwI9MbHAeKyjBlVh006dy30WghM58/EPkGH0Be06Fid
+         b/7qWEf27WZkxmQSxXxHpGv9ekHgX1KorhWzTn5obmfKfwrKxbkDjMnNNactM8o7hP4x
+         eAAs8fW9J8DgYlY8tejeV7r7p9H6ZeNoQhIg8dXoBdGk3KG7K+ODsEY57kyH/TG9qrD2
+         8MXPdk9zNa9sgkn5Jw5IfnoZui4bUrlRkcnWsbEncO+au9CHmgQOkTrUIWoL78+j3O/Y
+         OOFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YNh/gbbmWRgHkbHGfxQ5xOBFieH2xGvQqMmiNQHDLT0=;
+        b=KWXMdgnCsruergtsqsZ2KYA+Yfp+SHOu11QArlOOMAbAHb4jWP3R20SCBYI0yqTMla
+         n9CEivLyHEHStV3hCi9jHgsK40i8sEJ0FNzmiGhNY1ZccqUQHmG+9nTMFXHAbkUrqSYy
+         A0iBR6vgPKVC2HMx78In5YBGTp9ro0/msLBf1CQW8LyygU9Z7RPvWOGN0+INEkZoFHik
+         UAYdj6qsy6isa6RU4Qdy77Iqxomr5XiHUXaaTWkT/CZID7gk8HPTh0Q4h9mpCC4j5DOi
+         Nm7ko249G7ls7IO5S1jRkcqL6Xn3NzcOYNZkv66zgK9SBQ4OxWDN5o1nEFwUET/MgHx6
+         BWiA==
+X-Gm-Message-State: APjAAAUnDAJ7UdOLoTbyEdVEH98YGIg6S/pxfCyYXexWujmJBSQJUL3I
+        Jh/s2IzYWnBTpl2H5EhWaloKrG+Ag7f/yjBLybE=
+X-Google-Smtp-Source: APXvYqzUpz7kRayiI1Tw/Pfmt8JgMzT5TG0GjLQ638rS/KA5BxIubo5kP0KfMWuC/foYdyXWCMO42hh+Jpms1/xSkSI=
+X-Received: by 2002:ac8:1494:: with SMTP id l20mr3241584qtj.356.1575473791024;
+ Wed, 04 Dec 2019 07:36:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
+References: <20191204103940.22050-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20191204103940.22050-1-miquel.raynal@bootlin.com>
+From:   Peter Geis <pgwipeout@gmail.com>
+Date:   Wed, 4 Dec 2019 10:36:19 -0500
+Message-ID: <CAMdYzYrEmTqvJ6m54EADxLDf70duCtdz3pesV3EZmt67=cbs5g@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Describe PX30 caches
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the STM32 spi binding to DT schema format using json-schema
+On Wed, Dec 4, 2019 at 5:40 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+>
+> PX30 SoCs feature 4 Cortex-A35 CPUs with each of them a L1 data and
+> instruction cache. Both are 32kiB wide (PX30 TRM) and made of 64-bit
+> lines (ARM Cortex-A35 manual). I-cache is 2-way set associative (ARM
+> Cortex-A35 manual), D-cache is 4-way set associative (ARM
+> Cortex-A35manual).
+>
+> An L2 cache is placed after these 4 L1 caches (PX30 TRM), is 256kiB
+> wide (PX30 TRM) and made of 64-bit lines (ARM Cortex-A35 manual) and
+> is 8-way set associative (ARM Cortex-A35 manual).
+>
+> Describe all of them in the PX30 DTSI.
+>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/px30.dtsi | 35 ++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> index 1fd12bd09e83..0e10a224a84b 100644
+> --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> @@ -48,6 +48,13 @@
+>                         cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+>                         dynamic-power-coefficient = <90>;
+>                         operating-points-v2 = <&cpu0_opp_table>;
+> +                       i-cache-size = <0x8000>;
+> +                       i-cache-line-size = <64>;
+> +                       i-cache-sets = <256>;
+> +                       d-cache-size = <0x8000>;
+> +                       d-cache-line-size = <64>;
+> +                       d-cache-sets = <128>;
+> +                       next-level-cache = <&l2>;
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-CC: Erwan Leray <erwan.leray@st.com>
-CC: Fabrice Gasnier <fabrice.gasnier@st.com>
-CC: Amelie Delaunay <amelie.delaunay@st.com>
----
- .../devicetree/bindings/spi/spi-stm32.txt          |  62 ------------
- .../devicetree/bindings/spi/st,stm32-spi.yaml      | 105 +++++++++++++++++++++
- 2 files changed, 105 insertions(+), 62 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32.txt
- create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
+If the i-cache is 2-way associative and the d-cache is 4-way, wouldn't
+that mean these two values are backwards?
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-stm32.txt b/Documentation/devicetree/bindings/spi/spi-stm32.txt
-deleted file mode 100644
-index d82755c63eaf..000000000000
---- a/Documentation/devicetree/bindings/spi/spi-stm32.txt
-+++ /dev/null
-@@ -1,62 +0,0 @@
--STMicroelectronics STM32 SPI Controller
--
--The STM32 SPI controller is used to communicate with external devices using
--the Serial Peripheral Interface. It supports full-duplex, half-duplex and
--simplex synchronous serial communication with external devices. It supports
--from 4 to 32-bit data size. Although it can be configured as master or slave,
--only master is supported by the driver.
--
--Required properties:
--- compatible: Should be one of:
--  "st,stm32h7-spi"
--  "st,stm32f4-spi"
--- reg: Offset and length of the device's register set.
--- interrupts: Must contain the interrupt id.
--- clocks: Must contain an entry for spiclk (which feeds the internal clock
--	  generator).
--- #address-cells:  Number of cells required to define a chip select address.
--- #size-cells: Should be zero.
--
--Optional properties:
--- resets: Must contain the phandle to the reset controller.
--- A pinctrl state named "default" may be defined to set pins in mode of
--  operation for SPI transfer.
--- dmas: DMA specifiers for tx and rx dma. DMA fifo mode must be used. See the
--  STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt.
--- dma-names: DMA request names should include "tx" and "rx" if present.
--- cs-gpios: list of GPIO chip selects. See the SPI bus bindings,
--  Documentation/devicetree/bindings/spi/spi-bus.txt
--
--
--Child nodes represent devices on the SPI bus
--  See ../spi/spi-bus.txt
--
--Optional properties:
--- st,spi-midi-ns: Only for STM32H7, (Master Inter-Data Idleness) minimum time
--		  delay in nanoseconds inserted between two consecutive data
--		  frames.
--
--
--Example:
--	spi2: spi@40003800 {
--		#address-cells = <1>;
--		#size-cells = <0>;
--		compatible = "st,stm32h7-spi";
--		reg = <0x40003800 0x400>;
--		interrupts = <36>;
--		clocks = <&rcc SPI2_CK>;
--		resets = <&rcc 1166>;
--		dmas = <&dmamux1 0 39 0x400 0x01>,
--		       <&dmamux1 1 40 0x400 0x01>;
--		dma-names = "rx", "tx";
--		pinctrl-0 = <&spi2_pins_b>;
--		pinctrl-names = "default";
--		cs-gpios = <&gpioa 11 0>;
--
--		aardvark@0 {
--			compatible = "totalphase,aardvark";
--			reg = <0>;
--			spi-max-frequency = <4000000>;
--			st,spi-midi-ns = <4000>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-new file mode 100644
-index 000000000000..57ef3a0f57e0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-@@ -0,0 +1,105 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/st,stm32-spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 SPI Controller bindings
-+
-+description: |
-+  The STM32 SPI controller is used to communicate with external devices using
-+  the Serial Peripheral Interface. It supports full-duplex, half-duplex and
-+  simplex synchronous serial communication with external devices. It supports
-+  from 4 to 32-bit data size.
-+
-+maintainers:
-+  - Erwan Leray <erwan.leray@st.com>
-+  - Fabrice Gasnier <fabrice.gasnier@st.com>
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+  - if:
-+      properties:
-+        comptatible:
-+          constains:
-+            st,stm32f4-spi
-+    then:
-+      properties:
-+        st,spi-midi-ns: false
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32f4-spi
-+      - st,stm32h7-spi
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  dmas:
-+    description: |
-+      DMA specifiers for tx and rx dma. DMA fifo mode must be used. See
-+      the STM32 DMA bindings Documentation/devicetree/bindings/dma/stm32-dma.txt.
-+    items:
-+      - description: rx DMA channel
-+      - description: tx DMA channel
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+      - const: tx
-+
-+patternProperties:
-+  "^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-f]+$":
-+    type: object
-+    # SPI slave nodes must be children of the SPI master node and can
-+    # contain the following properties.
-+    properties:
-+      st,spi-midi-ns:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: |
-+          Only for STM32H7, (Master Inter-Data Idleness) minimum time
-+          delay in nanoseconds inserted between two consecutive data frames.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    #include <dt-bindings/reset/stm32mp1-resets.h>
-+    spi@4000b000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      compatible = "st,stm32h7-spi";
-+      reg = <0x4000b000 0x400>;
-+      interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&rcc SPI2_K>;
-+      resets = <&rcc SPI2_R>;
-+      dmas = <&dmamux1 0 39 0x400 0x05>,
-+             <&dmamux1 1 40 0x400 0x05>;
-+      dma-names = "rx", "tx";
-+      cs-gpios = <&gpioa 11 0>;
-+
-+      aardvark@0 {
-+        compatible = "totalphase,aardvark";
-+        reg = <0>;
-+        spi-max-frequency = <4000000>;
-+        st,spi-midi-ns = <4000>;
-+      };
-+    };
-+
-+...
--- 
-2.15.0
-
+>                 };
+>
+>                 cpu1: cpu@1 {
+> @@ -60,6 +67,13 @@
+>                         cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+>                         dynamic-power-coefficient = <90>;
+>                         operating-points-v2 = <&cpu0_opp_table>;
+> +                       i-cache-size = <0x8000>;
+> +                       i-cache-line-size = <64>;
+> +                       i-cache-sets = <256>;
+> +                       d-cache-size = <0x8000>;
+> +                       d-cache-line-size = <64>;
+> +                       d-cache-sets = <128>;
+> +                       next-level-cache = <&l2>;
+>                 };
+>
+>                 cpu2: cpu@2 {
+> @@ -72,6 +86,13 @@
+>                         cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+>                         dynamic-power-coefficient = <90>;
+>                         operating-points-v2 = <&cpu0_opp_table>;
+> +                       i-cache-size = <0x8000>;
+> +                       i-cache-line-size = <64>;
+> +                       i-cache-sets = <256>;
+> +                       d-cache-size = <0x8000>;
+> +                       d-cache-line-size = <64>;
+> +                       d-cache-sets = <128>;
+> +                       next-level-cache = <&l2>;
+>                 };
+>
+>                 cpu3: cpu@3 {
+> @@ -84,6 +105,13 @@
+>                         cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+>                         dynamic-power-coefficient = <90>;
+>                         operating-points-v2 = <&cpu0_opp_table>;
+> +                       i-cache-size = <0x8000>;
+> +                       i-cache-line-size = <64>;
+> +                       i-cache-sets = <256>;
+> +                       d-cache-size = <0x8000>;
+> +                       d-cache-line-size = <64>;
+> +                       d-cache-sets = <128>;
+> +                       next-level-cache = <&l2>;
+>                 };
+>
+>                 idle-states {
+> @@ -107,6 +135,13 @@
+>                                 min-residency-us = <2000>;
+>                         };
+>                 };
+> +
+> +               l2: l2-cache {
+> +                       compatible = "cache";
+> +                       cache-size = <0x40000>;
+> +                       cache-line-size = <64>;
+> +                       cache-sets = <512>;
+> +               };
+>         };
+>
+>         cpu0_opp_table: cpu0-opp-table {
+> --
+> 2.20.1
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
