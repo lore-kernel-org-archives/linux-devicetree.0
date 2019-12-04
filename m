@@ -2,134 +2,100 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A7FC2BC73
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 14:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB89C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 14:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7D8206DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 14:15:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575468900;
-	bh=NqBGe6Sv6wTyUXzOxX9rDh/sNVl/hYS/XAALT4ejUXI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tdh1fYq9Y7CCbo3STeS34LGfMxhUDxApEDN7mfxV8GpxzbGi4EXWPqP50fpuGm2I5
-	 /xHRv9F7eT/hASoXIj3Ur1jTnV8mFd2MIS0c1W4vTCIOD6CB+fWi/JzesBWZM5D13s
-	 B3UBMKhmGEidX8MFuTk33VLbB9qzr18q8qNyQMts=
+	by mail.kernel.org (Postfix) with ESMTP id E6C9A2077B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 14:40:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fvI/aRSK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbfLDOOz (ORCPT
+        id S1727887AbfLDOkf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 09:14:55 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55236 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbfLDOOz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 09:14:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NqBGe6Sv6wTyUXzOxX9rDh/sNVl/hYS/XAALT4ejUXI=; b=Apkm/2we9LPbnYBcBOrJgyc0O
-        NbgXGmUd9oQMVhO4Fpez4qiBbjt3MgJbAbGNYNtO1mIiFm7Uz5joyJkKgug1+3FBKPpXP+obwEvPk
-        kruNQwoeQbblSr9iuI2BoIUxKTKE6FEDdeIIezL1vutBt0K+8qrAOz0TKaEluLLCKTQns=;
-Received: from fw-tnat-cam6.arm.com ([217.140.106.54] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1icVQH-0000he-IS; Wed, 04 Dec 2019 14:14:33 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 4977BD003B4; Wed,  4 Dec 2019 14:14:33 +0000 (GMT)
-Date:   Wed, 4 Dec 2019 14:14:33 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Message-ID: <20191204141433.GU1998@sirena.org.uk>
-References: <20191119181325.GD3634@sirena.org.uk>
- <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
- <20191119193636.GH3634@sirena.org.uk>
- <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
- <20191129120925.GA5747@sirena.org.uk>
- <297fa021fb243072dbbb7bca455e57c13e8c6843.camel@fi.rohmeurope.com>
- <20191202131140.GD1998@sirena.org.uk>
- <72a1f4c5768b8c08c2669ea01e60d1b614095a43.camel@fi.rohmeurope.com>
- <20191204124717.GR1998@sirena.org.uk>
- <6f7b96c71bd1257b0b218a092f8aca7f32ef5468.camel@fi.rohmeurope.com>
+        Wed, 4 Dec 2019 09:40:35 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:32856 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727880AbfLDOkf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 09:40:35 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4EeWcA095124;
+        Wed, 4 Dec 2019 08:40:32 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575470432;
+        bh=wCcmDKSgjXCTPwr0LgBGAxoaAwmIOSctH/Yp+FggVxY=;
+        h=From:To:CC:Subject:Date;
+        b=fvI/aRSKMy55a87C4cZctOqsxcdtHjKtXqgZZ/LZi+Nzvk8vyeWrZVB0yc666gIEa
+         3qLCtsxN3IQ3l/zCAR9ZhaR92sMwaJvN14VtIvO3E9fJSH1BrfuARfu6h7WifM3v56
+         6iPOSp1WQOJfRMZM6/5sxrmojienGW+BSQQwA+CY=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4EeWAq103921
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 4 Dec 2019 08:40:32 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
+ 2019 08:40:27 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Dec 2019 08:40:27 -0600
+Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4EeOA5057127;
+        Wed, 4 Dec 2019 08:40:25 -0600
+From:   Jyri Sarha <jsarha@ti.com>
+To:     <tony@atomide.com>, <bcousson@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <peter.ujfalusi@ti.com>, <bparrot@ti.com>
+Subject: [PATCH] ARM: dts: am335x-icev2: Add support for OSD9616P0899-10 at i2c0
+Date:   Wed, 4 Dec 2019 16:40:24 +0200
+Message-ID: <20191204144024.16021-1-jsarha@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="b9dEYEwnDXkv9lSy"
-Content-Disposition: inline
-In-Reply-To: <6f7b96c71bd1257b0b218a092f8aca7f32ef5468.camel@fi.rohmeurope.com>
-X-Cookie: Cleanliness is next to impossible.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add support for OSD9616P0899-10 96x16 passive matrix display. The
+pre-charge period parameters are taken form a OSD9616P0899-10
+document, but the display works fine with the default values too.
 
---b9dEYEwnDXkv9lSy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ arch/arm/boot/dts/am335x-icev2.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-On Wed, Dec 04, 2019 at 01:13:08PM +0000, Vaittinen, Matti wrote:
+diff --git a/arch/arm/boot/dts/am335x-icev2.dts b/arch/arm/boot/dts/am335x-icev2.dts
+index 204bccfcc110..021eb57261fe 100644
+--- a/arch/arm/boot/dts/am335x-icev2.dts
++++ b/arch/arm/boot/dts/am335x-icev2.dts
+@@ -287,6 +287,19 @@
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 	};
++
++	/* osd9616p0899-10 */
++	display@3c {
++		compatible = "solomon,ssd1306fb-i2c";
++		reg = <0x3c>;
++		solomon,height = <16>;
++		solomon,width = <96>;
++		solomon,com-seq;
++		solomon,com-invdir;
++		solomon,page-offset = <0>;
++		solomon,prechargep1 = <2>;
++		solomon,prechargep2 = <13>;
++	};
+ };
+ 
+ &spi0 {
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-> I think I once again explained myself badly. There can be only one
-> group with 4 RUN states selected by combination of 2 GPIO lines. bucks
-> 1,2,6 and 7 can each either be assigned into this one group or
-> controlled individually via I2C. But I doubt assigning only one of the
-> bucks in this group is the typical use-case. What we would need would
-
-I don't think this is as unusual as you're thinking - the
-regulators people want to control quickly are usually the main
-CPU supply regulators and these often vary independently of
-anything else.
-
---b9dEYEwnDXkv9lSy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3nv0gACgkQJNaLcl1U
-h9Bidgf+JmJlmuyYk4HvvR+RXTF/LJMH+3BvZucpl9loKpF5zI4HySCJdL/apiLp
-N5OogFNqhJpzh/RoOiZOncfXinT/nO8ZE9sv5Xfq+2gXb9fcReutNFi71oYuBQoX
-SeihA1H/gvu9WEp0JGNZ4qn/mfxLSa5ZV5PsBZOTYihLVw6GsSnP1uZeb6EuvKSN
-3zecgHr5LDb8xdqfomgPLSP70jvkkX/0Mlk1LjaS0uCo3ozHi9Gg9NP4yS1hIOjo
-9z6f4jNleLrQ9YGV+OjfpXOsx4QuyDg5Tvk9CNd7Oy522ZCWbBHu78Y4IoKzLrgw
-R61Ph6IhTgRyzufu4R0X2Y62I+X8yQ==
-=+XL6
------END PGP SIGNATURE-----
-
---b9dEYEwnDXkv9lSy--
