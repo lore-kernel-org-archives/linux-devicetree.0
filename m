@@ -2,90 +2,131 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1694AC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 13:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E47C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 13:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3FEE2077B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 13:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575465265;
-	bh=xl+BgZikPZ3S+p4qh8p4csjvgehmP3T3fZ5LJMF7bxI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rjOxKTZtiW3qbGQZRS+6E/pFD2prWn6+muky4SDz53QLpKss7gQUCHVZxva6gHN/h
-	 su5U8Lyz0b1sgHVPpo8rbMRzeY3Xx0pzOEEpm8MMnF/YYSh9QYuX0qxTdOCdtsZHhr
-	 Y8vshfwWBPzLoXDalcr3qRNRDydWDKHSTIw+p35w=
+	by mail.kernel.org (Postfix) with ESMTP id 0E87B20803
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 13:30:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="GcPvVXHC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfLDNOT (ORCPT
+        id S1727889AbfLDNal (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 08:14:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726832AbfLDNOT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Dec 2019 08:14:19 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6F622077B;
-        Wed,  4 Dec 2019 13:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575465258;
-        bh=xl+BgZikPZ3S+p4qh8p4csjvgehmP3T3fZ5LJMF7bxI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tejZatGaBwPto/vJPb2ZmY5UwQ44Wyg8wvdwP3PLS6KqJYMGkA1DbjnZ514Uzpozv
-         Sd2JcwuEOPxk8SxpXWjxFoNtKfV7DG7r7q993pUfxBi7A22EYAfBj9N8NOrp3XJrLN
-         pCN0QaEpmym124GP2ZlFwB9mFgYKeY95PMCAPTh0=
-Date:   Wed, 4 Dec 2019 21:14:07 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        Marc Zyngier <maz@kernel.org>, netdev@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 0/2] ARM: dts: ls1021a: define and use external
- interrupt lines
-Message-ID: <20191204131404.GN3365@dragon>
-References: <20191114110254.32171-1-linux@rasmusvillemoes.dk>
+        Wed, 4 Dec 2019 08:30:41 -0500
+Received: from zimbra2.kalray.eu ([92.103.151.219]:36786 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727635AbfLDNal (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 08:30:41 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id ACF7527E06C1;
+        Wed,  4 Dec 2019 14:30:39 +0100 (CET)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 0qikLOkuYp-c; Wed,  4 Dec 2019 14:30:39 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 3FD8E27E0E3A;
+        Wed,  4 Dec 2019 14:30:39 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 3FD8E27E0E3A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1575466239;
+        bh=tSLqHvB0qnrd8OVcbvn2X2AXUID5Nh56glFAyn927+E=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=GcPvVXHC/K11EuTi9ADAQobQECkkmIurKOFQUFP0uk32OyKxS6tQ5Paeu4J/tJDGG
+         tB6mVKJP6+MbFDrNeaa1DJ3gDNQneBsuX7sIWidbsDNBOxZCScwaKefoApSqzPhZJg
+         7jdjIOFb+ls+vxHuQLgs5rGWSnQmZJstp+M2YAjc=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id ohZvBbAWfMrt; Wed,  4 Dec 2019 14:30:39 +0100 (CET)
+Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 283CE27E06C1;
+        Wed,  4 Dec 2019 14:30:39 +0100 (CET)
+Date:   Wed, 4 Dec 2019 14:30:38 +0100 (CET)
+From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <2116673293.95313020.1575466238935.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <CAHp75VcMm3PPAgfFPLzVwg_RN7_vQfRmufvWiPOkYaErdGiNsw@mail.gmail.com>
+References: <20191204101042.4275-1-cleger@kalray.eu> <CAHp75VcMm3PPAgfFPLzVwg_RN7_vQfRmufvWiPOkYaErdGiNsw@mail.gmail.com>
+Subject: Re: [PATCH 0/5] Add pinctrl support for dwapb gpio driver
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114110254.32171-1-linux@rasmusvillemoes.dk>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - GC75 (Linux)/8.8.12_GA_3794)
+Thread-Topic: Add pinctrl support for dwapb gpio driver
+Thread-Index: r1p3somX97dhEg8W1GZwXsd76Eey8Q==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 12:02:51PM +0100, Rasmus Villemoes wrote:
-> A device tree binding documentation as well as a driver implementing
-> support for the external interrupt lines on the ls1021a has been
-> merged into irqchip-next, so will very likely appear in v5.5. See
-> 
-> 87cd38dfd9e6 dt/bindings: Add bindings for Layerscape external irqs
-> 0dcd9f872769 irqchip: Add support for Layerscape external interrupt lines
-> 
-> present in next-20191114.
-> 
-> These patches simply add the extirq node to the ls1021a.dtsi and make
-> use of it on the LS1021A-TSN board. I hope these can be picked up so
-> they also land in v5.5, so we don't have to wait a full extra release
-> cycle.
 
-Sorry.  I usually send queued patches around -rc6 timeline to my
-arm-soc maintainers.  Patches coming later than that will be scheduled
-for the next release unless critical fixes.
-> 
-> v2: fix interrupt type in 2/2 (s/IRQ_TYPE_EDGE_FALLING/IRQ_TYPE_LEVEL_LOW/).
-> 
-> Rasmus Villemoes (1):
->   ARM: dts: ls1021a: add node describing external interrupt lines
-> 
-> Vladimir Oltean (1):
->   ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
 
-Applied both, thanks.
+----- On 4 Dec, 2019, at 13:24, Andy Shevchenko andy.shevchenko@gmail.com wrote:
+
+> On Wed, Dec 4, 2019 at 12:13 PM Clement Leger <cleger@kalray.eu> wrote:
+>>
+>> Synopsys DWAPB IP includes support for pin control. This control is basic
+>> and allows to switch between a hardware and a software function.
+>> Software function is when driving GPIOs from IP and hardware is controlled
+>> by external signals.
+>> This serie export necessary interface to be able to move the driver to
+>> pinctrl folder and then implement the pinctrl support which is based on the
+>> digicolor driver. The idea is to avoid hardcoding pins in driver since
+>> this IP is a generic one available on multiple SoC.
+>>
+> 
+> This series misses at least GPIO ACPI maintainers to be Cc'ed to for
+> the certain changes.
+> Moreover, I would like to see entire series in the future in my mailbox.
+
+Sorry, I messed up with get_maintainer.pl while sending the serie.
+I can resend it properly if needed.
+
+> 
+> I will look at v1 closer anyway.
+> 
+>> Clement Leger (5):
+>>   gpio: export acpi_gpiochip_request_interrupts in gpio/driver.h
+>>   pinctrl: dw: move gpio-dwapb.c to pinctrl folder
+>>   pinctrl: dw: use devm_gpiochip_add_data
+>>   pinctrl: dw: add pinctrl support for dwapb gpio driver
+>>   dt-bindings: pinctrl: dw: move sps,dwapb-gpio.txt to pinctrl
+>>
+>>  .../bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt |  21 +-
+>>  MAINTAINERS                                        |   6 +-
+>>  drivers/gpio/Kconfig                               |   8 -
+>>  drivers/gpio/Makefile                              |   1 -
+>>  drivers/gpio/gpiolib-acpi.h                        |   4 -
+>>  drivers/pinctrl/Kconfig                            |   1 +
+>>  drivers/pinctrl/Makefile                           |   1 +
+>>  drivers/pinctrl/dw/Kconfig                         |  11 +
+>>  drivers/pinctrl/dw/Makefile                        |   4 +
+>>  .../gpio-dwapb.c => pinctrl/dw/pinctrl-dwapb.c}    | 277 +++++++++++++++++++--
+>>  include/linux/gpio/driver.h                        |  12 +
+>>  include/linux/platform_data/gpio-dwapb.h           |   1 +
+>>  12 files changed, 310 insertions(+), 37 deletions(-)
+>>  rename Documentation/devicetree/bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt
+>>  (76%)
+>>  create mode 100644 drivers/pinctrl/dw/Kconfig
+>>  create mode 100644 drivers/pinctrl/dw/Makefile
+>>  rename drivers/{gpio/gpio-dwapb.c => pinctrl/dw/pinctrl-dwapb.c} (77%)
+>>
+>> --
+>> 2.15.0.276.g89ea799
+>>
+> 
+> 
+> --
+> With Best Regards,
+> Andy Shevchenko
