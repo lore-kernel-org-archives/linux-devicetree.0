@@ -2,90 +2,344 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 359B6C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 22:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06059C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 22:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 058512073C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 22:21:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575498108;
-	bh=fsW26aMycBRY177JsvJe4tBpzShaxZImXYUauAILfBA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ORKumvv6fD8ThNLlzw7EFqDYh3VbCxvWXRUd+a15oV/r5F2P33/T22ISeCZfG7HT6
-	 qE2FR6gjGvopWLA8JblbxW+Ho5ZU5X3HPriXTEM5qvJD1POLOnSYvvl8qr9cJvb7ty
-	 YsgPUgYNusPldZ1LtgVGp00WbdoUf1qVLzAjETYg=
+	by mail.kernel.org (Postfix) with ESMTP id C2BC72073C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 22:25:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hcGC+PTf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbfLDWVr (ORCPT
+        id S1728440AbfLDWZm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 17:21:47 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41598 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfLDWVr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 17:21:47 -0500
-Received: by mail-oi1-f193.google.com with SMTP id i1so793042oie.8;
-        Wed, 04 Dec 2019 14:21:46 -0800 (PST)
+        Wed, 4 Dec 2019 17:25:42 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37503 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728132AbfLDWZm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 17:25:42 -0500
+Received: by mail-pg1-f195.google.com with SMTP id q127so549279pga.4
+        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 14:25:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ZuactyN4A4dYRUXhDIHCeCkwIm9yVEkpFLsO07TsWMo=;
+        b=hcGC+PTfEADAtTpYV00IwDi7gGhJIwdIxxVncPtNp+naLQKD2GcpYgCONjuPUWGrJT
+         68ZVoPyMrQfOz2k71HZP7CWGXwSIi9yPcJgpbY2RRsxIlml5I+q7OjSqyRlL8dBmsImq
+         XxXOFa8gzp1XgaOyd1HtMn5Qm8zU6pqGmri1M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0YMXPK0MWLWyfIyxG2mVwtUXfMBfXzC4dJTyDwiUSCI=;
-        b=EsvFcgw+93ewHXAgf2a+xrCmFjfD1lHaL2vFNhL4VhLs9NlMsNqkU+fx3qANdzhuUN
-         FWkyRIdSZUgsXRD0nj12/zucWRIGCp3/U+atoHtH7NszlS6U5YZx2ydh9vm8VD7Imx3t
-         MolPCt7Xewu/VH1jMlmj2UqZg6wkHNmHK+uemZjKkljFnhIUjdrDnGXD6Pr6ycJSpljF
-         S2el8wZCjtnhI8U0jwhyH47mc18PouiUNtACc/fhWPgX5O6j/m5orKsi11rF+5FS6Zgh
-         LlgW2zqa+DJM2ArDisLSwZiTpL+n1xsrwm+kLJoBwKoo8SYYATU0M/hL2RIbxFrEw4sx
-         tmDA==
-X-Gm-Message-State: APjAAAXou1Z1aekDg0A0GhllmeFD+tqqnBtFWE6UIRgUjyyLSu/KmYub
-        FG4/ILFojb2jU9VpC9CLBqozyys=
-X-Google-Smtp-Source: APXvYqxd6OOdNmobqARjtlfaN0LLudPr5TKfnJ4uyLbrkH6cblTCYO0/yUZjNuu/J1TAHun4I2prDQ==
-X-Received: by 2002:aca:d5d3:: with SMTP id m202mr4421120oig.161.1575498106026;
-        Wed, 04 Dec 2019 14:21:46 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y24sm2784605oix.31.2019.12.04.14.21.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 14:21:45 -0800 (PST)
-Date:   Wed, 4 Dec 2019 16:21:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH] dt-bindings: remoteproc: stm32: add wakeup-source
- property
-Message-ID: <20191204222144.GA25718@bogus>
-References: <20191122125402.14730-1-arnaud.pouliquen@st.com>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ZuactyN4A4dYRUXhDIHCeCkwIm9yVEkpFLsO07TsWMo=;
+        b=ko32bHjYrkiFlawrrhAfK7OX5SFw6gIMUPUKF3nLxJjBJ6k1iQQZCNcnUmDIAx3RYT
+         i2cZ98Og0s3r2eDZp5Ul/Iv5LPz6X+GoKGSuPTVR25MixJ23kxcPnzpkEDamjVqNoxRY
+         HIfBMVOkLsj1Eep19hqJfBcwJzCumc7R8DuM77DoaOHJAGybwNip4pVFHtkr765QGDem
+         cZ38KMGcOglV6AOiCd2NmwWdBo98qR9/vZq7Fo6ax1sJo2wKd0ybnCVq91vrKXo2fZRd
+         01FpqjDoFxOtMTeyN1G0kWVIqxejHtmh3nPrlXdyhRazYtziAwtg1pCALwextv6sbpbC
+         qcqg==
+X-Gm-Message-State: APjAAAVbSt8+rBcZVqzBhOvX/rExoXSokLW8Cb6bHIDfAybo8y3cSpFd
+        OTSXJtjQnF4kyqF15s75gBbCPg==
+X-Google-Smtp-Source: APXvYqxBaAsAuBqWN6ofTztH1Ft6RofDpKfxbvrSawqVadU1ETT+uPUdPcG4iBOR1iaX0suaxHQU4Q==
+X-Received: by 2002:a63:d748:: with SMTP id w8mr5349746pgi.334.1575498340922;
+        Wed, 04 Dec 2019 14:25:40 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id j7sm9359067pgn.0.2019.12.04.14.25.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2019 14:25:40 -0800 (PST)
+Date:   Wed, 4 Dec 2019 14:25:38 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, asutoshd@codeaurora.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        cang@codeaurora.org, rampraka@codeaurora.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH V1 2/2] arm64: dts: qcom: sc7180: Add nodes for eMMC and
+ SD card
+Message-ID: <20191204222538.GI228856@google.com>
+References: <1574855381-15193-1-git-send-email-vbadigan@codeaurora.org>
+ <0101016eacb27366-31803877-9137-4c0e-922b-6a71a0e63ab3-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191122125402.14730-1-arnaud.pouliquen@st.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0101016eacb27366-31803877-9137-4c0e-922b-6a71a0e63ab3-000000@us-west-2.amazonses.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 22 Nov 2019 13:54:02 +0100, Arnaud Pouliquen wrote:
-> If the optional wdg interrupt is defined, then this property
-> may be defined.
-> 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> ---
-> This commit is related to the merge conflict issue reported by
-> Stephen Rothwell: https://lkml.org/lkml/2019/11/21/1168
-> ---
->  .../devicetree/bindings/remoteproc/st,stm32-rproc.yaml          | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+Hi,
 
-Applied, thanks.
+On Wed, Nov 27, 2019 at 11:50:06AM +0000, Veerabhadrarao Badiganti wrote:
 
-Rob
+> Add sdhc instances for supporting eMMC and SD-card on sc7180.
+> The regulators should be in HPM state for proper functionality of
+> eMMC and SD-card. Updating corresponding regulators accordingly.
+> 
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> ---
+> 
+> This depends on the patch series (dt support for sc7180):
+> https://lkml.org/lkml/2019/11/8/149
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  32 +++++++-
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 136 ++++++++++++++++++++++++++++++++
+>  2 files changed, 164 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 189254f..583c42c 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -11,6 +11,7 @@
+>  #include "sc7180.dtsi"
+>  #include "pm6150.dtsi"
+>  #include "pm6150l.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+
+I think this should be above, together with
+'dt-bindings/regulator/qcom,rpmh-regulator.h'
+
+>  
+>  / {
+>  	model = "Qualcomm Technologies, Inc. SC7180 IDP";
+> @@ -103,7 +104,7 @@
+>  		vreg_l12a_1p8: ldo12 {
+>  			regulator-min-microvolt = <1696000>;
+>  			regulator-max-microvolt = <1952000>;
+> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>  		};
+>  
+>  		vreg_l13a_1p8: ldo13 {
+> @@ -145,7 +146,7 @@
+>  		vreg_l19a_2p9: ldo19 {
+>  			regulator-min-microvolt = <2696000>;
+>  			regulator-max-microvolt = <3304000>;
+> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>  		};
+>  	};
+>  
+> @@ -191,7 +192,7 @@
+>  		vreg_l6c_2p9: ldo6 {
+>  			regulator-min-microvolt = <2696000>;
+>  			regulator-max-microvolt = <3304000>;
+> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>  		};
+>  
+>  		vreg_l7c_3p0: ldo7 {
+> @@ -209,7 +210,7 @@
+>  		vreg_l9c_2p9: ldo9 {
+>  			regulator-min-microvolt = <2952000>;
+>  			regulator-max-microvolt = <3304000>;
+> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>  		};
+>  
+>  		vreg_l10c_3p3: ldo10 {
+> @@ -400,3 +401,26 @@
+>  			bias-pull-up;
+>  		};
+>  };
+> +
+> +&sdhc_1 {
+> +	status = "ok";
+> +
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&sdc1_on>;
+> +	pinctrl-1 = <&sdc1_off>;
+> +	vmmc-supply = <&vreg_l19a_2p9>;
+> +	vqmmc-supply = <&vreg_l12a_1p8>;
+> +
+
+remove empty line
+
+> +};
+> +
+> +&sdhc_2 {
+> +	status = "ok";
+> +
+> +	pinctrl-names = "default","sleep";
+> +	pinctrl-0 = <&sdc2_on>;
+> +	pinctrl-1 = <&sdc2_off>;
+> +	vmmc-supply  = <&vreg_l9c_2p9>;
+> +	vqmmc-supply = <&vreg_l6c_2p9>;
+> +
+> +	cd-gpios = <&tlmm 69 GPIO_ACTIVE_LOW>;
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 666e9b9..207d44f 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -897,6 +897,100 @@
+>  					function = "qup15";
+>  				};
+>  			};
+> +
+> +			sdc1_on: sdc1-on {
+> +				clk {
+> +					pins = "sdc1_clk";
+> +					bias-disable;
+> +					drive-strength = <16>;
+> +				};
+> +
+> +				cmd {
+> +					pins = "sdc1_cmd";
+> +					bias-pull-up;
+> +					drive-strength = <10>;
+> +				};
+> +
+> +				data {
+> +					pins = "sdc1_data";
+> +					bias-pull-up;
+> +					drive-strength = <10>;
+> +				};
+> +
+> +				rclk {
+> +					pins = "sdc1_rclk";
+> +					bias-pull-down;
+> +				};
+> +			};
+> +
+> +			sdc1_off: sdc1-off {
+> +				clk {
+> +					pins = "sdc1_clk";
+> +					bias-disable;
+> +					drive-strength = <2>;
+> +				};
+> +
+> +				cmd {
+> +					pins = "sdc1_cmd";
+> +					bias-pull-up;
+> +					drive-strength = <2>;
+> +				};
+> +
+> +				data {
+> +					pins = "sdc1_data";
+> +					bias-pull-up;
+> +					drive-strength = <2>;
+> +				};
+> +
+> +				rclk {
+> +					pins = "sdc1_rclk";
+> +					bias-pull-down;
+> +				};
+> +			};
+> +
+> +			sdc2_on: sdc2_on {
+> +				clk {
+> +					pins = "sdc2_clk";
+> +					bias-disable;
+> +					drive-strength = <16>;
+> +				};
+
+nit: add blank lines, consistent with the other pinconf entries.
+
+> +				cmd {
+> +					pins = "sdc2_cmd";
+> +					bias-pull-up;
+> +					drive-strength = <10>;
+> +				};
+> +				data {
+> +					pins = "sdc2_data";
+> +					bias-pull-up;
+> +					drive-strength = <10>;
+> +				};
+> +				sd-cd {
+> +					pins = "gpio69";
+> +					bias-pull-down;
+> +				};
+> +			};
+> +
+> +			sdc2_off: sdc2_off {
+> +				clk {
+> +					pins = "sdc2_clk";
+> +					bias-disable;
+> +					drive-strength = <2>;
+> +				};
+> +				cmd {
+> +					pins = "sdc2_cmd";
+> +					bias-pull-up;
+> +					drive-strength = <2>;
+> +				};
+> +				data {
+> +					pins = "sdc2_data";
+> +					bias-pull-up;
+> +					drive-strength = <2>;
+> +				};
+> +				sd-cd {
+> +					pins = "gpio69";
+> +					bias-pull-down;
+> +				};
+> +			};
+>  		};
+>  
+>  		qspi: spi@88dc000 {
+> @@ -911,6 +1005,48 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		sdhc_1: sdhci@7c4000 {
+
+IIUC the nodes are ordered by address, hence this one should be between
+'clock-controller@100000' and 'geniqup@8c0000'.
+
+> +			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+> +			reg = <0 0x7c4000 0 0x1000>;
+> +			reg-names = "hc_mem";
+> +
+> +			interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "hc_irq", "pwr_irq";
+> +
+> +			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+> +					<&gcc GCC_SDCC1_AHB_CLK>;
+> +			clock-names = "core", "iface";
+> +
+> +			bus-width = <8>;
+> +			non-removable;
+> +
+> +			mmc-ddr-1_8v;
+> +			mmc-hs200-1_8v;
+> +			mmc-hs400-1_8v;
+> +			mmc-hs400-enhanced-strobe;
+> +
+> +			status = "disabled";
+> +		};
+> +
+> +		sdhc_2: sdhci@8804000 {
+
+nodes are ordered by address: this one should be between 'pinctrl@3500000'
+and 'spi@88dc000´.
+
+> +			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+> +			reg = <0 0x08804000 0 0x1000>;
+> +			reg-names = "hc_mem";
+> +
+> +			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "hc_irq", "pwr_irq";
+> +
+> +			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
+> +					<&gcc GCC_SDCC2_AHB_CLK>;
+> +			clock-names = "core","iface";
+
+nit: add a blank after the comma.
+
+Thanks
+
+Matthias
