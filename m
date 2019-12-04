@@ -2,89 +2,188 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816D3C2BBE2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 08:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7123CC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 08:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F11A206DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 08:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41463206DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 08:41:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="put0ttU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfLDIlJ (ORCPT
+        id S1727158AbfLDIl1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 03:41:09 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46190 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbfLDIlJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 03:41:09 -0500
-Received: by mail-oi1-f196.google.com with SMTP id a124so6074146oii.13;
-        Wed, 04 Dec 2019 00:41:08 -0800 (PST)
+        Wed, 4 Dec 2019 03:41:27 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:44575 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbfLDIl0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 03:41:26 -0500
+Received: by mail-vs1-f65.google.com with SMTP id p6so4284111vsj.11
+        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 00:41:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FQKWqo5Ul5HVHtOUORHbCDERxt4j9fxv7YCvpaF1TZM=;
+        b=put0ttU5VLO+EBQ6LYQzbIk0N4pidLcjzTd6Pj7xQJASCeQmIM/VssqLUy0bq0b93v
+         HtZQvs7oYlSH32sUBG5S5Lr82TM9OJ6/POfRKTbx1ViReB2+WcTmqE1ykDbro4CmDDD3
+         6MccHJGUw0+msMG4qTETOofaRI2hLJ0ZUkynpA7wHyQPFOQgoAnjiBdeO6lSGW6nQfkn
+         Pet+mmzBCMQUQ71EQiVvTQkVRTvEsHueTT3nGCLMa3SfNRYc08vQNs1R5P3LmmqZ7DPb
+         xg7CsXpWQ2Ke28nlBlnBFWaQ7P9rT/R9f8eq9MIOORW6d7bXomitJN7oh+pD65pAUBRa
+         LdhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sdH7qTtZf1EWXzHyucbdWpqxN++s9yx5fEkVuEPj9rY=;
-        b=GqjDYSpk7/8zKD8lYJbu83XrZXclde0jhdYI8ZR5FlXt/zvK66QB0mrMGmv4BiVwRr
-         AZxYVMWLZxfTLtHsxdNSf8nXIdMwZB6ptEE/lx9GLbVX4Z9JccluIk0bCK1GzneTTYzY
-         xB+WVHSz8NhZ3K6tRiCqraBwdUlaA0t751wJlb/+1F4xnMUbdegmWdc+2nKE1Ij2QTnf
-         AGXwZ0HdxdKGeN7ncDwgK7Gc0KD9ddBE5QAUI7NjCf5ZW7b4lRquvg37OFrXavR1Zct6
-         qb75uA5or38pRCHfkK8zcpZT0l6atmgttBId7BVvchIIYGiJd2xg7acQaf8iBrv4Kawm
-         S4Ig==
-X-Gm-Message-State: APjAAAXN7w4mWgDC6Tf5sVrLVs8cIwaSvT9brTTZITLqg9Rxqb+8gtnn
-        bQNHBSt4pbhhcSoeJVvPY7TGOXTEiJ04Vbp59HQ=
-X-Google-Smtp-Source: APXvYqzVU71ZSwcCNz6Z7HOJglmUdD+vS5+BMYSIN0rSyT1OeO2Im8TBsts5Xyi79Z2W7dlY7dDYlBUw1n6tYQbznM8=
-X-Received: by 2002:aca:3a86:: with SMTP id h128mr1549842oia.131.1575448868441;
- Wed, 04 Dec 2019 00:41:08 -0800 (PST)
+        bh=FQKWqo5Ul5HVHtOUORHbCDERxt4j9fxv7YCvpaF1TZM=;
+        b=kg65I14doBdqizhIJaEkKopB+T7Jo00GtX2EgTLzBuJIeybxXGcipWydek0yTbagwT
+         NTKcl5XRZ2FU+/9J5em0NluBQBO6XICSKEliT7Ah4jEqiE8mC1kDL3S3LCuMO9qPMbnm
+         BnnDO4F4AeAPxgDpPunH1sBGFybDc2rds6ECuHsTpMsZSavo+0Q3s5Wx0WCbv9V7+wDN
+         IO0wprBaOJAlIFnejTBh8zwbvkZTEiZ3eIEZyAVVy2nLQh2xjMLbTlm8Fend7u1pd1GI
+         3tfPzx8j+avlWElojJ4Q92DH876C5MiuEPv/71W8SGi1l2pdPMSjkPr6NMEw8c5GpHNW
+         43Ew==
+X-Gm-Message-State: APjAAAWwSpnabJtGFivgKDUBHk2lZRhKaKLc7OSUYTMTZjQWsRq1UgyA
+        UHjLZC5KG71q4ZhIl06xZP7V6mAyR+BMjVszxZg+Ew==
+X-Google-Smtp-Source: APXvYqx3ReMhc5/tnLLDNWde+euvUxoDV0VfeZHcxwaUg5zM7WwrWNoEI3QnjNkobs25W8XAc4phHgFcVksuksneb78=
+X-Received: by 2002:a67:f8cf:: with SMTP id c15mr954910vsp.27.1575448884828;
+ Wed, 04 Dec 2019 00:41:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
- <20191203034519.5640-7-chris.brandt@renesas.com> <CAMuHMdVBYpuoK7hcyNLK-mAdpTQz3ohTGXuYdFPHdpU5RoPr6Q@mail.gmail.com>
- <CAMuHMdV7XY7FB9pBsxuWxGsqYaD9n1Y+XZXEJO5OsuigjjUgpw@mail.gmail.com>
-In-Reply-To: <CAMuHMdV7XY7FB9pBsxuWxGsqYaD9n1Y+XZXEJO5OsuigjjUgpw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 4 Dec 2019 09:40:56 +0100
-Message-ID: <CAMuHMdWtzb5OFEko+6WfrS+72pRT1iyoVZxLGo7A1uFC=FJknQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
-To:     Chris Brandt <chris.brandt@renesas.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+References: <20191030182132.25763-1-f.fainelli@gmail.com> <20191030182132.25763-2-f.fainelli@gmail.com>
+In-Reply-To: <20191030182132.25763-2-f.fainelli@gmail.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Wed, 4 Dec 2019 14:11:13 +0530
+Message-ID: <CAHLCerP6ricempeG=x-a2_aA6__YqADPKAEG5y7qPYNcD2=47Q@mail.gmail.com>
+Subject: Re: [PATCH 1/6] thermal: brcmstb_thermal: Do not use DT coefficients
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Markus Mayer <mmayer@broadcom.com>,
+        "maintainer:BROADCOM STB AVS TMON DRIVER" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:BROADCOM STB AVS TMON DRIVER" <linux-pm@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 9:39 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Tue, Dec 3, 2019 at 7:57 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> Once you have added basic Runtime PM support to
-> drivers/mtd/maps/physmap-core.c:physmap_flash_probe(), the module clock
-> should be kept enabled through the clock domain when using direct mapped
-> mode (hmm, as the driver currently lacks this, it means the FLASH on
-> ape6evm must rely on the bsc module clock being kept enabled through the
-> Ethernet controller connected to the same bsc module?).
+On Wed, Oct 30, 2019 at 11:51 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> At the time the brcmstb_thermal driver and its binding were merged, the
+> DT binding did not make the coefficients properties a mandatory one,
+> therefore all users of the brcmstb_thermal driver out there have a non
+> functional implementation with zero coefficients. Even if these
+> properties were provided, the formula used for computation is incorrect.
+>
+> The coefficients are entirely process specific (right now, only 28nm is
+> supported) and not board or SoC specific, it is therefore appropriate to
+> hard code them in the driver given the compatibility string we are
+> probed with which has to be updated whenever a new process is
+> introduced.
+>
+> We remove the existing coefficients definition since subsequent patches
+> are going to add support for a new process and will introduce new
+> coefficients as well.
+>
+> Fixes: 9e03cf1b2dd5 ("thermal: add brcmstb AVS TMON driver")
 
-JFTR, this is indeed broken: after removing the Ethernet node from
-r8a73a4-ape6evm.dts, accessing the FLASH crashes the system with an
-imprecise external abort.
+I think you should fix the computation formula as the first patch and
+then merge the rest of this patch into your second patch.
 
-Gr{oetje,eeting}s,
+I don't think the intermediate state of converting named constants to
+magic numbers is needed just to convert it over to another set of
+parameters.
 
-                        Geert
+Regards,
+Amit
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/thermal/broadcom/brcmstb_thermal.c | 37 ++++------------------
+>  1 file changed, 6 insertions(+), 31 deletions(-)
+>
+> diff --git a/drivers/thermal/broadcom/brcmstb_thermal.c b/drivers/thermal/broadcom/brcmstb_thermal.c
+> index 5825ac581f56..42482af0422e 100644
+> --- a/drivers/thermal/broadcom/brcmstb_thermal.c
+> +++ b/drivers/thermal/broadcom/brcmstb_thermal.c
+> @@ -48,15 +48,6 @@
+>  #define AVS_TMON_TEMP_INT_CODE         0x1c
+>  #define AVS_TMON_TP_TEST_ENABLE                0x20
+>
+> -/* Default coefficients */
+> -#define AVS_TMON_TEMP_SLOPE            -487
+> -#define AVS_TMON_TEMP_OFFSET           410040
+> -
+> -/* HW related temperature constants */
+> -#define AVS_TMON_TEMP_MAX              0x3ff
+> -#define AVS_TMON_TEMP_MIN              -88161
+> -#define AVS_TMON_TEMP_MASK             AVS_TMON_TEMP_MAX
+> -
+>  enum avs_tmon_trip_type {
+>         TMON_TRIP_TYPE_LOW = 0,
+>         TMON_TRIP_TYPE_HIGH,
+> @@ -108,23 +99,11 @@ struct brcmstb_thermal_priv {
+>         struct thermal_zone_device *thermal;
+>  };
+>
+> -static void avs_tmon_get_coeffs(struct thermal_zone_device *tz, int *slope,
+> -                               int *offset)
+> -{
+> -       *slope = thermal_zone_get_slope(tz);
+> -       *offset = thermal_zone_get_offset(tz);
+> -}
+> -
+>  /* Convert a HW code to a temperature reading (millidegree celsius) */
+>  static inline int avs_tmon_code_to_temp(struct thermal_zone_device *tz,
+>                                         u32 code)
+>  {
+> -       const int val = code & AVS_TMON_TEMP_MASK;
+> -       int slope, offset;
+> -
+> -       avs_tmon_get_coeffs(tz, &slope, &offset);
+> -
+> -       return slope * val + offset;
+> +       return (410040 - (int)((code & 0x3FF) * 487));
+>  }
+>
+>  /*
+> @@ -136,20 +115,16 @@ static inline int avs_tmon_code_to_temp(struct thermal_zone_device *tz,
+>  static inline u32 avs_tmon_temp_to_code(struct thermal_zone_device *tz,
+>                                         int temp, bool low)
+>  {
+> -       int slope, offset;
+> -
+> -       if (temp < AVS_TMON_TEMP_MIN)
+> -               return AVS_TMON_TEMP_MAX; /* Maximum code value */
+> -
+> -       avs_tmon_get_coeffs(tz, &slope, &offset);
+> +       if (temp < -88161)
+> +               return 0x3FF;   /* Maximum code value */
+>
+> -       if (temp >= offset)
+> +       if (temp >= 410040)
+>                 return 0;       /* Minimum code value */
+>
+>         if (low)
+> -               return (u32)(DIV_ROUND_UP(offset - temp, abs(slope)));
+> +               return (u32)(DIV_ROUND_UP(410040 - temp, 487));
+>         else
+> -               return (u32)((offset - temp) / abs(slope));
+> +               return (u32)((410040 - temp) / 487);
+>  }
+>
+>  static int brcmstb_get_temp(void *data, int *temp)
+> --
+> 2.17.1
+>
