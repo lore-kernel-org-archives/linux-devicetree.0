@@ -2,128 +2,141 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B07C2BD09
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C431EC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 496DD20863
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:01:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575478879;
-	bh=SRGv02suHKoy42S2IIKX3hTIgUsaDyj9W45EiTDpSx4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AsBywsNxDYiaiSqS1asHGot2gjqRweFGDGAaGPW+bdv5mUhNwJypjLjsiN+2SRGbg
-	 q5/p3+sm9n4PnVvjZAE54lpVsJEy9X6AYr0WVwgSdk0I/X2h16ZH2aMIiB0de5K23a
-	 l9UZ6URbU6PHPGM68Mj9XCHHj921NGBAzlqpgv7A=
+	by mail.kernel.org (Postfix) with ESMTP id 96E192081B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:14:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvNanVwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbfLDRBS (ORCPT
+        id S1727958AbfLDROx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:01:18 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52300 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbfLDRBS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 12:01:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=asdcy8EJ6DybeaXz0S+Y5PU/41Q6cNiuOXJn7dxF4fs=; b=RMkJ8v/vMPBYXFddlJ8CE2112
-        o4Fd/fPh6+Bw1xmhc1H9D6wwiNrIo4vGlB2SeEGjk4i6KbYGYqJpgHwwX+jFkI3ixAcjn8Tf09h8M
-        r9RbqBnpf/UjAoT445k1I5a5JqzzncUtD3rIGyt4GsgN3r6ohV1Qen6+tMoStISjfOUP8=;
-Received: from 92.40.248.27.threembb.co.uk ([92.40.248.27] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1icY1P-0001Kc-QP; Wed, 04 Dec 2019 17:01:03 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 5DE17D0046D; Wed,  4 Dec 2019 17:00:59 +0000 (GMT)
-Date:   Wed, 4 Dec 2019 17:00:59 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "rodrigorsdc@gmail.com" <rodrigorsdc@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>
-Subject: Re: [PATCH v4] dt-bindings: iio: accel: add binding documentation
- for ADIS16240
-Message-ID: <20191204170059.GX1998@sirena.org.uk>
-References: <20191123051927.5016-1-rodrigorsdc@gmail.com>
- <20191123114119.7b0c3447@archlinux>
- <a55b9c576eded8c91a985aabbba89180561ab156.camel@analog.com>
- <20191201114032.1a972dda@archlinux>
- <20191203163850.GN1998@sirena.org.uk>
- <20191203165154.00005793@Huawei.com>
- <c725b1b1475148ded6168667fa0227bc18de0854.camel@analog.com>
+        Wed, 4 Dec 2019 12:14:53 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46822 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbfLDROx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 12:14:53 -0500
+Received: by mail-qk1-f195.google.com with SMTP id f5so575274qkm.13
+        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 09:14:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=LMCJWJgj3JtLM245DsTOp3ZWCRWTjxWdbv8pYKFWQio=;
+        b=UvNanVwYoPSox2uGkTxpyBf4eC+CDY/BgaltnnBYqqIb6W/WoyWbLMqLV7z2ZvJYBc
+         YLMRjE4InZVvGvFFMbuOx8xhrTvJEMYdrgfQsuX8ZeLix+FaLaEv4nWxP6EZsW0Ustu8
+         NBdr6z/ZyVjwpHcdxsd1NU/uNytcBt92ult7JcU8p+JDx9uxTCnzzR3LeBgizrR3/DYN
+         cOSDSUUkv+fNg95Y0XstjdfQ3Yzi+g8maaCsr2+lRhy7vq3hq0WzPIV35qwx73alnlvI
+         9AK50TB6Vi3+IHrNkDs/GYLvHb+pOTIQ+lG5lEOVVg3vPpZ8BFGQFpPf1eoU28+kNJKf
+         UcCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LMCJWJgj3JtLM245DsTOp3ZWCRWTjxWdbv8pYKFWQio=;
+        b=OANCy9tgXA8ke4+bkbHnyMH+xB8fevIryeb3SMhv7ucAClNO917mFjEmGDfKEQp5TC
+         Kja+gLlJHbNozYQq0lZVRZLtHnWC9iPcuGICcwZAbf6Qucyex8pzePpnQLrTbWNyAPTB
+         sHvpTx1EtmVEz8sUK4xwciZMh0oPaj1w05qvuMToP2yt9nFHAifPT1ikTaqmMBjz6otZ
+         Zaud5Q9gnlCMMm8He8h4Ostq+Bj3aB2KzLgcQoyOqV5/Zhc1q2LruMt4n44gLy0wkr+L
+         lazOTaqcRYLsqSjw2S7331YlCJZlw7zc7hKfWmEK8kHaeTd6jSTWaJrwR/vKc1lDW8UR
+         cgvw==
+X-Gm-Message-State: APjAAAWKXMzL4nn86KP0ksKAsEWw4o+ObdRIP3kAgdxhzH0/7Yw5DJRE
+        C+83FA912dzUWopOHe9zNyVwYSu14jYsKLo4MyQ=
+X-Google-Smtp-Source: APXvYqzZhJKrlhlZi0jdcRzRDG8DgH2KxM9TDusNrmNtsb6knywymir/9J8eGnR/98T2wen2vOMQhRd+knjZ4OW7aJ8=
+X-Received: by 2002:a37:9bd3:: with SMTP id d202mr4111546qke.87.1575479691736;
+ Wed, 04 Dec 2019 09:14:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="z3PcgjD2qOzdkXVS"
-Content-Disposition: inline
-In-Reply-To: <c725b1b1475148ded6168667fa0227bc18de0854.camel@analog.com>
-X-Cookie: Cleanliness is next to impossible.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191204103940.22050-1-miquel.raynal@bootlin.com>
+ <CAMdYzYrEmTqvJ6m54EADxLDf70duCtdz3pesV3EZmt67=cbs5g@mail.gmail.com> <20191204164435.2dd1b4fe@xps13>
+In-Reply-To: <20191204164435.2dd1b4fe@xps13>
+From:   Peter Geis <pgwipeout@gmail.com>
+Date:   Wed, 4 Dec 2019 12:14:40 -0500
+Message-ID: <CAMdYzYoUo_M+qEp3HRsEGrGJDa73JACfH38HG7aY6C8NrQi=5A@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Describe PX30 caches
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Dec 4, 2019 at 10:44 AM Miquel Raynal <miquel.raynal@bootlin.com> w=
+rote:
+>
+> Hi Peter,
+>
+> Peter Geis <pgwipeout@gmail.com> wrote on Wed, 4 Dec 2019 10:36:19
+> -0500:
+>
+> > On Wed, Dec 4, 2019 at 5:40 AM Miquel Raynal <miquel.raynal@bootlin.com=
+> wrote:
+> > >
+> > > PX30 SoCs feature 4 Cortex-A35 CPUs with each of them a L1 data and
+> > > instruction cache. Both are 32kiB wide (PX30 TRM) and made of 64-bit
+> > > lines (ARM Cortex-A35 manual). I-cache is 2-way set associative (ARM
+> > > Cortex-A35 manual), D-cache is 4-way set associative (ARM
+> > > Cortex-A35manual).
+> > >
+> > > An L2 cache is placed after these 4 L1 caches (PX30 TRM), is 256kiB
+> > > wide (PX30 TRM) and made of 64-bit lines (ARM Cortex-A35 manual) and
+> > > is 8-way set associative (ARM Cortex-A35 manual).
+> > >
+> > > Describe all of them in the PX30 DTSI.
+> > >
+> > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > > ---
+> > >  arch/arm64/boot/dts/rockchip/px30.dtsi | 35 ++++++++++++++++++++++++=
+++
+> > >  1 file changed, 35 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot=
+/dts/rockchip/px30.dtsi
+> > > index 1fd12bd09e83..0e10a224a84b 100644
+> > > --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
+> > > +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> > > @@ -48,6 +48,13 @@
+> > >                         cpu-idle-states =3D <&CPU_SLEEP &CLUSTER_SLEE=
+P>;
+> > >                         dynamic-power-coefficient =3D <90>;
+> > >                         operating-points-v2 =3D <&cpu0_opp_table>;
+> > > +                       i-cache-size =3D <0x8000>;
+> > > +                       i-cache-line-size =3D <64>;
+> > > +                       i-cache-sets =3D <256>;
+> > > +                       d-cache-size =3D <0x8000>;
+> > > +                       d-cache-line-size =3D <64>;
+> > > +                       d-cache-sets =3D <128>;
+> > > +                       next-level-cache =3D <&l2>;
+> >
+> > If the i-cache is 2-way associative and the d-cache is 4-way, wouldn't
+> > that mean these two values are backwards?
+>
+> Which value are you referring to? Do you mean cache-sets? The following
+> calculation is my understanding of the situation but it is the first
+> time I am doing it so I might be totally wrong.
+>
+> My understanding is that if there are 32768 cache bytes made of 64-byte
+> lines, so there are 512 lines in both cases.
+>
+> Then, if the instruction cache is 2-way associative, it means there are
+> 512 / 2 =3D 256 sets. For the data cache (4-way), it would be 512 / 4 =3D
+> 128. Am I wrong?
 
---z3PcgjD2qOzdkXVS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Dec 04, 2019 at 07:18:15AM +0000, Ardelean, Alexandru wrote:
-
-> One example (for spi-cpha):
->         if (of_property_read_u32(nc, "spi-cpha", &tmp) == 0) {
->                 spi->mode |= SPI_CPHA_OVERRIDE;
->                 if (tmp)
->                     spi->mode |= SPI_CPHA;
-
-We could also do this with a separate flag saying that the wire
-format is forced from DT rather than having one per setting.
-
-> Or maybe, a more complete solution would be an "spi-mode-conv" driver.
-> Similar to the fixed-factor-clock clk driver, which just does a computation
-> based on values from the DT.
-
-> To tell the truth, this would be a great idea, because we have something
-> like a passive 3-wire-to-4-wire HDL converter. This requires that the
-> driver be configured in 3-wire mode, the SPI controller in normal 4-wire.
-> That's because the SPI framework does a validation of the supported modes
-> (for the SPI controller) and invalidates what the device wants (which is
-> very reasonable).
-
-This is harder to achieve here because we don't have drivers for
-random bits of the wire format...
-
---z3PcgjD2qOzdkXVS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3n5koACgkQJNaLcl1U
-h9DYmAf+LJFYyW1Y0Lbiqs9/Nt03tZeA+6ImdccknWsoJohuCVeKHXZWA7YFquKx
-5WeuRir2eKQQGpCiv5W95qcwpv/QUVpYMTGevZECSnOQHym1pgTknVFIc51RzD/m
-OEG8gVZ1zeSVoGg/2/DvipOFUuj2QToLRFP26tGIIaceY6MGpCDrMg4cLYuGr2ir
-ro5NXmvHrLyD6Yic6GWpwCwSegaX7hFQrQ46Bbvzi1fRFdQOixFqXS8AdtRupmK5
-7Aw1laczA+/C3Ceox6s8UfkOVwJAEt0KAy/afe6tTREtRVtB9rAoT6HmECHk7xgd
-VDDIhbiunTvPZZEsyIlXg1/WZYn4+g==
-=a7mZ
------END PGP SIGNATURE-----
-
---z3PcgjD2qOzdkXVS--
+Apologies, you are correct, it was I who was mistaken.
+>
+> Thanks,
+> Miqu=C3=A8l
