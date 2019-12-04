@@ -6,57 +6,57 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2054C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39787C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1732053B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF342073B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 09:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="CDaJqeQs"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="KmCelkED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfLDJiV (ORCPT
+        id S1727158AbfLDJiy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 04:38:21 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:41773 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbfLDJiV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 04:38:21 -0500
-Received: by mail-vs1-f68.google.com with SMTP id f8so4391696vsq.8
-        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 01:38:20 -0800 (PST)
+        Wed, 4 Dec 2019 04:38:54 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:42356 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfLDJiy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 04:38:54 -0500
+Received: by mail-vk1-f195.google.com with SMTP id u123so1926778vkb.9
+        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 01:38:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=verdurent-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WKSRUXAknnFGuVSfHxGReWQUvxVO29cQQA2zNwSpULM=;
-        b=CDaJqeQsxOZakv4IT6D02OCbik+0JlBE+4lW70GNPFrDEFKnnoc3a8bqcNSiwepcwC
-         cbJnJpVsMMkkV7fnsnKqSi6b2MIMjGBTbQJw9WC/Sf+OKijQ7fegzoqei60yfDYakOCD
-         QHYwwu9vOBc510u62DIDNsNyh68brak/HneiZJLEhbTx3JBFur6r9Zqr0gY+gq7a9Cfn
-         ZbZHvB1xp5BrhFFyEoGJAwDj06xILJWc9gqVAk7NROWUX4cZoUix68cPuk9SNW1m45QQ
-         756cGhUjUX4q6Fgm5/5AZXXZvhghT6WshaTKrVS6kYt7GIyAcuYQsp1PtTACJAE4NqsX
-         RdEw==
+        bh=kBM+7sKdP9ujCe9ALp3o3fbTa5VggqfmCZsELUt7gmY=;
+        b=KmCelkEDW//pN0sIHhURzAdIgLRrtV4W3ZvTphxbkEmsYa1UnJ8NBPQ6XL/j0Bldte
+         kJyRTSZQ+yPMegb0hHGLLP/ToYjBXYveq8S5Swj1BjlkIp3xFREhO+MPg+AiRGAiqibI
+         p1TqIRD0ZqDISySdUxlmYNiOhjm3vULrjvK394FDYqQym+DAcYdt61u2UBwvkjBm2J0V
+         Yo4ZP5rt0xsVN6qBRHM4UkVQX/Qo2ZiEHo0Ipxym4ZMYrruHY2nBXI0odgsaghVkmVtV
+         rsEMmkg4qNTOwmkU5ESS+kg0giexdzQjnQ9Qd2EAPb35bPQRkSChyoHVSMRHqmOKCPuG
+         g3BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WKSRUXAknnFGuVSfHxGReWQUvxVO29cQQA2zNwSpULM=;
-        b=T04ZwDpscYqE1ngCFm2OGrdM7WLMNvlXrMAMkJPCEEFyT34xD2s/Ebc4sQtkh9RkRF
-         tZf1ZDsfYk8EUiCLOqqzSYIgW5Eowuvdn915yKn6cvJENraQlz46M9bdbA40l4l3BNPm
-         NzlfbylwJuvl5/63viWMyXtHGu3DWMMOFcWqODdflNB5tzY+DI0fLQqXKzgeDuiQVKW1
-         80+uOZk1J9u8OPqmIHU4GgIoDznd36b4TX6zVerqquEHbGkog67f8GUI0VE5SgtXdcAt
-         WcvOpgZ/sDxVnqGxBqi/XRjEKcezt4I13LtNEvdw2rPh7GamLOZ8PRQN1Yc/26mcd5TH
-         HNOg==
-X-Gm-Message-State: APjAAAW9WagIPHF53sVbSrinfcHqaoFQxALdclYfZwFLz60sPMct9+u8
-        vOVWpd7CKBJ0CduqogFGyzKiWTR/LU78mEsrGdcbRw==
-X-Google-Smtp-Source: APXvYqxrL3FunHxe+ypKQfT/9GTtMwGi/xMYe45gMeFuXII2RAGl5/rsBU+x3Cj/hRM/BBU+FzxbdlSSvE4RNraI958=
-X-Received: by 2002:a67:f8cf:: with SMTP id c15mr1068522vsp.27.1575452299891;
- Wed, 04 Dec 2019 01:38:19 -0800 (PST)
+        bh=kBM+7sKdP9ujCe9ALp3o3fbTa5VggqfmCZsELUt7gmY=;
+        b=sbi23OrcUKfRTbm3DbmtjSAGAXFIBQsx986YNjVVWXHZwGQTTTjQYLphVo9l8nMk1C
+         ikWdPOCO4ihtt3xHTMvpjZy41RA9sSY8Gk++iU3VTD6kkxkFmVnxa9+/bjGbeRFYvMHD
+         ld51+s9KQYFFi1N4mG3DwIzdngSFlGSSVq+9AunaXdzv/6k9Mznw3tHW3B6Yg3CPdroZ
+         xBB+U+282odawZFRa4tTXlRWTFphJCM/CcBVauPzFqQEjHPWPdJ0lUw7NNkEIjR7n0Ly
+         XUPhc9do9d/Bi1flAznfRwtnuWczlno8tU8ZdTVGpDa397/XfGNyF1imal9IMeqoRmX9
+         A4/Q==
+X-Gm-Message-State: APjAAAXnQzwXbatrecR1ZgyOqG2+ZcPYCjS4ULpLc3RVrMpUtimV/9rv
+        OriHlvfENhtlX1bcZieDSCU5L7Sz+WBhiZu+yYvKjw==
+X-Google-Smtp-Source: APXvYqwiUoUoPZvgpG+ifopwxSLWwG1iOG5+9d9DmpNIKyb1VOCcZCyapnluKjwiXLoMcJdRA6EYd8bNW2NVGYtZ3eU=
+X-Received: by 2002:ac5:c4f8:: with SMTP id b24mr1401815vkl.79.1575452333245;
+ Wed, 04 Dec 2019 01:38:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20191030182132.25763-1-f.fainelli@gmail.com> <20191030182132.25763-6-f.fainelli@gmail.com>
-In-Reply-To: <20191030182132.25763-6-f.fainelli@gmail.com>
+References: <20191030182132.25763-1-f.fainelli@gmail.com> <20191030182132.25763-7-f.fainelli@gmail.com>
+In-Reply-To: <20191030182132.25763-7-f.fainelli@gmail.com>
 From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 4 Dec 2019 15:08:08 +0530
-Message-ID: <CAHLCerP=3uFsj_fxGcWiKppWfOoYQRmLq1PhEZvC8ZURr=sh5A@mail.gmail.com>
-Subject: Re: [PATCH 5/6] thermal: brcmstb_thermal: Restructure interrupt registration
+Date:   Wed, 4 Dec 2019 15:08:41 +0530
+Message-ID: <CAHLCerPyJxsLs5at4dQ7GdDXpC85UijNNhJbKSoDsdLW2do00w@mail.gmail.com>
+Subject: Re: [PATCH 6/6] thermal: brcmstb_thermal: Register different ops per process
 To:     Florian Fainelli <f.fainelli@gmail.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Markus Mayer <mmayer@broadcom.com>,
@@ -80,48 +80,68 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Wed, Oct 30, 2019 at 11:52 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
 >
-> If we are successful grabbing the interrupt resource, then register an
-> interrupt handler, this makes it easier to support the interrupt as
-> being optional, which is it for 7216.
+> Since we do not have interrupts on BCM7216, we cannot have trip point
+> crossing, the thermal subsystem expects us to provide a NULL set_trips
+> operation in that case, so make it possible to provide per-process
+> thermal_zone_of_device_ops
 >
 > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
 Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
 > ---
->  drivers/thermal/broadcom/brcmstb_thermal.c | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
+>  drivers/thermal/broadcom/brcmstb_thermal.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
 >
 > diff --git a/drivers/thermal/broadcom/brcmstb_thermal.c b/drivers/thermal/broadcom/brcmstb_thermal.c
-> index 41d4a142707c..64f715053ce9 100644
+> index 64f715053ce9..a75a335d1bb3 100644
 > --- a/drivers/thermal/broadcom/brcmstb_thermal.c
 > +++ b/drivers/thermal/broadcom/brcmstb_thermal.c
-> @@ -339,16 +339,15 @@ static int brcmstb_thermal_probe(struct platform_device *pdev)
->         priv->thermal = thermal;
+> @@ -96,6 +96,7 @@ static struct avs_tmon_trip avs_tmon_trips[] = {
+>  struct brcmstb_thermal_params {
+>         unsigned int offset;
+>         unsigned int mult;
+> +       const struct thermal_zone_of_device_ops *of_ops;
+>  };
 >
->         irq = platform_get_irq(pdev, 0);
-> -       if (irq < 0) {
-> -               dev_err(&pdev->dev, "could not get IRQ\n");
-> -               return irq;
-> -       }
-> -       ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
-> -                                       brcmstb_tmon_irq_thread, IRQF_ONESHOT,
-> -                                       DRV_NAME, priv);
-> -       if (ret < 0) {
-> -               dev_err(&pdev->dev, "could not request IRQ: %d\n", ret);
-> -               return ret;
-> +       if (irq >= 0) {
-> +               ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
-> +                                               brcmstb_tmon_irq_thread,
-> +                                               IRQF_ONESHOT,
-> +                                               DRV_NAME, priv);
-> +               if (ret < 0) {
-> +                       dev_err(&pdev->dev, "could not request IRQ: %d\n", ret);
-> +                       return ret;
-> +               }
->         }
+>  struct brcmstb_thermal_priv {
+> @@ -278,19 +279,25 @@ static int brcmstb_set_trips(void *data, int low, int high)
+>         return 0;
+>  }
 >
->         dev_info(&pdev->dev, "registered AVS TMON of-sensor driver\n");
+> -static const struct thermal_zone_of_device_ops of_ops = {
+> +static const struct thermal_zone_of_device_ops brcmstb_16nm_of_ops = {
+>         .get_temp       = brcmstb_get_temp,
+> -       .set_trips      = brcmstb_set_trips,
+>  };
+>
+>  static const struct brcmstb_thermal_params brcmstb_16nm_params = {
+>         .offset = 457829,
+>         .mult   = 557,
+> +       .of_ops = &brcmstb_16nm_of_ops,
+> +};
+> +
+> +static const struct thermal_zone_of_device_ops brcmstb_28nm_of_ops = {
+> +       .get_temp       = brcmstb_get_temp,
+> +       .set_trips      = brcmstb_set_trips,
+>  };
+>
+>  static const struct brcmstb_thermal_params brcmstb_28nm_params = {
+>         .offset = 410040,
+>         .mult   = 487,
+> +       .of_ops = &brcmstb_28nm_of_ops,
+>  };
+>
+>  static const struct of_device_id brcmstb_thermal_id_table[] = {
+> @@ -329,7 +336,7 @@ static int brcmstb_thermal_probe(struct platform_device *pdev)
+>         platform_set_drvdata(pdev, priv);
+>
+>         thermal = devm_thermal_zone_of_sensor_register(&pdev->dev, 0, priv,
+> -                                                      &of_ops);
+> +                                                      priv->temp_params.of_ops);
+>         if (IS_ERR(thermal)) {
+>                 ret = PTR_ERR(thermal);
+>                 dev_err(&pdev->dev, "could not register sensor: %d\n", ret);
 > --
 > 2.17.1
 >
