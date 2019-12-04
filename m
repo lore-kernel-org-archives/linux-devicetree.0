@@ -5,59 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C882C2BD09
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429B6C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3295920863
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1799A2081B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 17:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TRXATRf5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C2b+auW9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbfLDRxX (ORCPT
+        id S1727930AbfLDRxV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 12:53:23 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50742 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbfLDRxW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 12:53:22 -0500
+        Wed, 4 Dec 2019 12:53:21 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53190 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbfLDRxV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 12:53:21 -0500
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4HrFpX079687;
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4HrFnI109065;
         Wed, 4 Dec 2019 11:53:15 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
         s=ti-com-17Q1; t=1575481995;
-        bh=AnC853RFFoxs00i8fMk3eDa7i0nyPwZrTi1e2WCpjj8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=TRXATRf5F6o/rVNB7WveJsgTC6EOTmznGk1WH/p4zF4NDAyRamYyJetXDo2rKhno6
-         4/ohZEpEXJPbR8fYIXHx4OGUwf5nZJZem5qYJc6gUY2hMpsGuWp/UHT1RhHp/JWQqb
-         VtNMDs2gU38WZxfEeiZoHTqzA+5/NoG85pOMxIXk=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4HrF2D040848
+        bh=iL2XbLmD+TrHNi/uMsELiJCOuYQfFmOUVnCynnFZPdc=;
+        h=From:To:CC:Subject:Date;
+        b=C2b+auW9hcSaC/m3uLidmaCMnA7SYbKMHz9xjCuYyd+VJauLtN1SQUIfHtEotKs5f
+         P3CPluvvS+cg6l+mop5hs8VIxwoB4H7dsiutq7LWDfuRZ5lBqhcSKOu/ZRRbyqBTDI
+         5cEsEVwxSllLgn9nu7/Ve6zwtjFOlgOUP9/AWcSM=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4HrFI7040834
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
         Wed, 4 Dec 2019 11:53:15 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
  2019 11:53:15 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
  Frontend Transport; Wed, 4 Dec 2019 11:53:15 -0600
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4HrFp4034157;
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4HrF6Y012761;
         Wed, 4 Dec 2019 11:53:15 -0600
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <mkl@pengutronix.de>
 CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Sean Nyekjaer <sean@geanix.com>
-Subject: [PATCH 2/2] net: m_can: Make wake-up gpio an optional
-Date:   Wed, 4 Dec 2019 11:51:12 -0600
-Message-ID: <20191204175112.7308-2-dmurphy@ti.com>
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: tcan4x5x: Make wake-gpio an optional gpio
+Date:   Wed, 4 Dec 2019 11:51:11 -0600
+Message-ID: <20191204175112.7308-1-dmurphy@ti.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191204175112.7308-1-dmurphy@ti.com>
-References: <20191204175112.7308-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -67,81 +65,36 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The device has the ability to disable the wake-up pin option.
-The wake-up pin can be either force to GND or Vsup and does not have to
-be tied to a GPIO.  In order for the device to not use the wake-up feature
-write the register to disable the WAKE_CONFIG option.
+The wake-up of the device can be configured as an optional
+feature of the device.  Move the wake-up gpio from a requried
+property to an optional property.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Sean Nyekjaer <sean@geanix.com>
+CC: Rob Herring <robh@kernel.org>
 ---
- drivers/net/can/m_can/tcan4x5x.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/net/can/tcan4x5x.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
-index 3db619209fe1..6e37c3fd87af 100644
---- a/drivers/net/can/m_can/tcan4x5x.c
-+++ b/drivers/net/can/m_can/tcan4x5x.c
-@@ -101,6 +101,8 @@
- #define TCAN4X5X_MODE_STANDBY BIT(6)
- #define TCAN4X5X_MODE_NORMAL BIT(7)
+diff --git a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+index 27e1b4cebfbd..7cf5ef7acba4 100644
+--- a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
++++ b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+@@ -10,7 +10,6 @@ Required properties:
+ 	- #size-cells: 0
+ 	- spi-max-frequency: Maximum frequency of the SPI bus the chip can
+ 			     operate at should be less than or equal to 18 MHz.
+-	- device-wake-gpios: Wake up GPIO to wake up the TCAN device.
+ 	- interrupt-parent: the phandle to the interrupt controller which provides
+                     the interrupt.
+ 	- interrupts: interrupt specification for data-ready.
+@@ -23,6 +22,7 @@ Optional properties:
+ 		       reset.
+ 	- device-state-gpios: Input GPIO that indicates if the device is in
+ 			      a sleep state or if the device is active.
++	- device-wake-gpios: Wake up GPIO to wake up the TCAN device.
  
-+#define TCAN4X5X_DISABLE_WAKE_MSK	(BIT(31) | BIT(30))
-+
- #define TCAN4X5X_SW_RESET BIT(2)
- 
- #define TCAN4X5X_MCAN_CONFIGURED BIT(5)
-@@ -338,6 +340,15 @@ static int tcan4x5x_init(struct m_can_classdev *cdev)
- 	return ret;
- }
- 
-+static int tcan4x5x_disable_wake(struct m_can_classdev *cdev)
-+{
-+	struct tcan4x5x_priv *tcan4x5x = cdev->device_data;
-+
-+	return regmap_update_bits(tcan4x5x->regmap, TCAN4X5X_CONFIG,
-+				  TCAN4X5X_DISABLE_WAKE_MSK, 0x00);
-+
-+}
-+
- static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
- {
- 	struct tcan4x5x_priv *tcan4x5x = cdev->device_data;
-@@ -345,8 +356,10 @@ static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
- 	tcan4x5x->device_wake_gpio = devm_gpiod_get(cdev->dev, "device-wake",
- 						    GPIOD_OUT_HIGH);
- 	if (IS_ERR(tcan4x5x->device_wake_gpio)) {
--		dev_err(cdev->dev, "device-wake gpio not defined\n");
--		return -EINVAL;
-+		if (PTR_ERR(tcan4x5x->power) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		tcan4x5x_disable_wake(cdev);
- 	}
- 
- 	tcan4x5x->reset_gpio = devm_gpiod_get_optional(cdev->dev, "reset",
-@@ -428,10 +441,6 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
- 
- 	spi_set_drvdata(spi, priv);
- 
--	ret = tcan4x5x_parse_config(mcan_class);
--	if (ret)
--		goto out_clk;
--
- 	/* Configure the SPI bus */
- 	spi->bits_per_word = 32;
- 	ret = spi_setup(spi);
-@@ -441,6 +450,10 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
- 	priv->regmap = devm_regmap_init(&spi->dev, &tcan4x5x_bus,
- 					&spi->dev, &tcan4x5x_regmap);
- 
-+	ret = tcan4x5x_parse_config(mcan_class);
-+	if (ret)
-+		goto out_clk;
-+
- 	tcan4x5x_power_enable(priv->power, 1);
- 
- 	ret = m_can_class_register(mcan_class);
+ Example:
+ tcan4x5x: tcan4x5x@0 {
 -- 
 2.23.0
 
