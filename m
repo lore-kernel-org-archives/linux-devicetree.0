@@ -2,137 +2,82 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2E6C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A52C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3CF2073C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:56:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T1A5sWLR"
+	by mail.kernel.org (Postfix) with ESMTP id 8546B20833
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 10:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfLDK4G (ORCPT
+        id S1727466AbfLDK6b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 05:56:06 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53204 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727472AbfLDK4F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 05:56:05 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4Atvdu007551;
-        Wed, 4 Dec 2019 04:55:57 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575456957;
-        bh=h5GEQ/bOy6qrn1uLO+MeHYnwvzdjeB/Vg3QaUt0L+kQ=;
-        h=From:To:CC:Subject:Date;
-        b=T1A5sWLRESMOAamKW8mEHG74z4sfakKoL47h8tZknq4RfGq3Q3rDPi3RoAdcbJSo4
-         sMYznc7Rw6Y8SB+WpNTKn0u4etO+HlrUcJojDcD+23qK8CFu6/dYX8Vi+nNtjpbsQk
-         BALnmySyDjOooC5uOOSSMjY4g0L81w5XdsSM46kE=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB4AtvJC053258
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Dec 2019 04:55:57 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
- 2019 04:55:56 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Dec 2019 04:55:56 -0600
-Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4AtsrZ081308;
-        Wed, 4 Dec 2019 04:55:54 -0600
-From:   Jyri Sarha <jsarha@ti.com>
-To:     <dri-devel@lists.freedesktop.org>, <tony@atomide.com>,
-        <bcousson@baylibre.com>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
-        <peter.ujfalusi@ti.com>, <bparrot@ti.com>
-Subject: [PATCH] ARM: dts: am335x-evmsk: Use drm simple-panel instead of tilcdc-panel
-Date:   Wed, 4 Dec 2019 12:55:54 +0200
-Message-ID: <20191204105554.14212-1-jsarha@ti.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 4 Dec 2019 05:58:31 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:49094 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727268AbfLDK6b (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 4 Dec 2019 05:58:31 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 165092001BB;
+        Wed,  4 Dec 2019 11:58:30 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B58ED20117B;
+        Wed,  4 Dec 2019 11:58:26 +0100 (CET)
+Received: from lsv03124.swis.in-blr01.nxp.com (lsv03124.swis.in-blr01.nxp.com [92.120.146.121])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 210A4402AD;
+        Wed,  4 Dec 2019 18:58:22 +0800 (SGT)
+From:   Ashish Kumar <Ashish.Kumar@nxp.com>
+To:     devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ashish Kumar <Ashish.Kumar@nxp.com>
+Subject: [Patch v2 0/5] Add dts support for various NXP boards
+Date:   Wed,  4 Dec 2019 16:28:13 +0530
+Message-Id: <1575457098-18368-1-git-send-email-Ashish.Kumar@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Move to use the new drm panel support in tilcdc together with added
-"newhaven,nhd-4.3-480272ef-atxl"-panel support in drm panel-simple.
+This patch series add dts support for various boards like 1028ardb,
+1028aqds, ls1046afrwy, ls1046ardb and ls1088ardb.
+QSPI dts nodes are sorted alphabeticaly and dtsi nodes are sorted
+addresswise.
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
----
- arch/arm/boot/dts/am335x-evmsk.dts | 38 ++++++++++--------------------
- 1 file changed, 12 insertions(+), 26 deletions(-)
+Patch 1 adds support for ls1028ardb and ls1028aqds.
 
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index e28a5b82fdf3..b149e48520b4 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -183,36 +183,16 @@
- 	};
- 
- 	panel {
--		compatible = "ti,tilcdc,panel";
-+		compatible = "newhaven,nhd-4.3-480272ef-atxl";
-+
- 		pinctrl-names = "default", "sleep";
- 		pinctrl-0 = <&lcd_pins_default>;
- 		pinctrl-1 = <&lcd_pins_sleep>;
- 		backlight = <&lcd_bl>;
--		status = "okay";
--		panel-info {
--			ac-bias		= <255>;
--			ac-bias-intrpt	= <0>;
--			dma-burst-sz	= <16>;
--			bpp		= <32>;
--			fdd		= <0x80>;
--			sync-edge	= <0>;
--			sync-ctrl	= <1>;
--			raster-order	= <0>;
--			fifo-th		= <0>;
--		};
--		display-timings {
--			480x272 {
--				hactive		= <480>;
--				vactive		= <272>;
--				hback-porch	= <43>;
--				hfront-porch	= <8>;
--				hsync-len	= <4>;
--				vback-porch	= <12>;
--				vfront-porch	= <4>;
--				vsync-len	= <10>;
--				clock-frequency = <9000000>;
--				hsync-active	= <0>;
--				vsync-active	= <0>;
-+
-+		port {
-+			panel_0: endpoint@0 {
-+				remote-endpoint = <&lcdc_0>;
- 			};
- 		};
- 	};
-@@ -750,6 +730,12 @@
- 	status = "okay";
- 
- 	blue-and-red-wiring = "crossed";
-+
-+	port {
-+		lcdc_0: endpoint@0 {
-+			remote-endpoint = <&panel_0>;
-+		};
-+	};
- };
- 
- &rtc {
+Patch 2 adds support for ls1046afrwy.
+
+Patch 3 adds support for ls1046ardb.
+
+Patch 4 adds support for ls2080a.
+
+Patch 5 adds support for ls1088ardb and ls1088aqds.
+
+Ashish Kumar (4):
+  arm64: dts: ls1028a: Add FlexSPI support
+  arm64: dts: ls1046a: Update QSPI node properties of ls1046ardb
+  arm64: dts: ls208x: Remove non-compatible driver device from qspi node
+  arm64: dts: ls1088a: Add QSPI support for NXP LS1088
+
+Kuldeep Singh (1):
+  arm64: dts: ls1046a: Add QSPI node for ls1046afrwy
+
+ .../boot/dts/freescale/fsl-ls1028a-qds.dts    | 15 ++++++++++++
+ .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 15 ++++++++++++
+ .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 13 ++++++++++
+ .../boot/dts/freescale/fsl-ls1046a-frwy.dts   | 14 +++++++++++
+ .../boot/dts/freescale/fsl-ls1046a-rdb.dts    | 16 ++++++-------
+ .../boot/dts/freescale/fsl-ls1088a-qds.dts    | 24 +++++++++++++++++++
+ .../boot/dts/freescale/fsl-ls1088a-rdb.dts    | 24 +++++++++++++++++++
+ .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 13 ++++++++++
+ .../arm64/boot/dts/freescale/fsl-ls208xa.dtsi |  2 +-
+ 9 files changed, 127 insertions(+), 9 deletions(-)
+
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.17.1
 
