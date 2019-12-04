@@ -2,344 +2,113 @@ Return-Path: <SRS0=zDkl=Z2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06059C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 22:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C92C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 22:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2BC72073C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 22:25:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hcGC+PTf"
+	by mail.kernel.org (Postfix) with ESMTP id F3709206DB
+	for <linux-devicetree@archiver.kernel.org>; Wed,  4 Dec 2019 22:36:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbfLDWZm (ORCPT
+        id S1728060AbfLDWgM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 17:25:42 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37503 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728132AbfLDWZm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 17:25:42 -0500
-Received: by mail-pg1-f195.google.com with SMTP id q127so549279pga.4
-        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 14:25:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ZuactyN4A4dYRUXhDIHCeCkwIm9yVEkpFLsO07TsWMo=;
-        b=hcGC+PTfEADAtTpYV00IwDi7gGhJIwdIxxVncPtNp+naLQKD2GcpYgCONjuPUWGrJT
-         68ZVoPyMrQfOz2k71HZP7CWGXwSIi9yPcJgpbY2RRsxIlml5I+q7OjSqyRlL8dBmsImq
-         XxXOFa8gzp1XgaOyd1HtMn5Qm8zU6pqGmri1M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZuactyN4A4dYRUXhDIHCeCkwIm9yVEkpFLsO07TsWMo=;
-        b=ko32bHjYrkiFlawrrhAfK7OX5SFw6gIMUPUKF3nLxJjBJ6k1iQQZCNcnUmDIAx3RYT
-         i2cZ98Og0s3r2eDZp5Ul/Iv5LPz6X+GoKGSuPTVR25MixJ23kxcPnzpkEDamjVqNoxRY
-         HIfBMVOkLsj1Eep19hqJfBcwJzCumc7R8DuM77DoaOHJAGybwNip4pVFHtkr765QGDem
-         cZ38KMGcOglV6AOiCd2NmwWdBo98qR9/vZq7Fo6ax1sJo2wKd0ybnCVq91vrKXo2fZRd
-         01FpqjDoFxOtMTeyN1G0kWVIqxejHtmh3nPrlXdyhRazYtziAwtg1pCALwextv6sbpbC
-         qcqg==
-X-Gm-Message-State: APjAAAVbSt8+rBcZVqzBhOvX/rExoXSokLW8Cb6bHIDfAybo8y3cSpFd
-        OTSXJtjQnF4kyqF15s75gBbCPg==
-X-Google-Smtp-Source: APXvYqxBaAsAuBqWN6ofTztH1Ft6RofDpKfxbvrSawqVadU1ETT+uPUdPcG4iBOR1iaX0suaxHQU4Q==
-X-Received: by 2002:a63:d748:: with SMTP id w8mr5349746pgi.334.1575498340922;
-        Wed, 04 Dec 2019 14:25:40 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id j7sm9359067pgn.0.2019.12.04.14.25.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2019 14:25:40 -0800 (PST)
-Date:   Wed, 4 Dec 2019 14:25:38 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, asutoshd@codeaurora.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        cang@codeaurora.org, rampraka@codeaurora.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V1 2/2] arm64: dts: qcom: sc7180: Add nodes for eMMC and
- SD card
-Message-ID: <20191204222538.GI228856@google.com>
-References: <1574855381-15193-1-git-send-email-vbadigan@codeaurora.org>
- <0101016eacb27366-31803877-9137-4c0e-922b-6a71a0e63ab3-000000@us-west-2.amazonses.com>
+        Wed, 4 Dec 2019 17:36:12 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40086 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728053AbfLDWgM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 17:36:12 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4MZtcw079935;
+        Wed, 4 Dec 2019 17:35:55 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wnej0veca-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Dec 2019 17:30:58 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB4MOnnk012691;
+        Wed, 4 Dec 2019 22:29:08 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02dal.us.ibm.com with ESMTP id 2wkg273hkx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Dec 2019 22:29:08 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB4MT7Np24838566
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Dec 2019 22:29:07 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D19A3B205F;
+        Wed,  4 Dec 2019 22:29:07 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E102AB2065;
+        Wed,  4 Dec 2019 22:29:06 +0000 (GMT)
+Received: from ltc.linux.ibm.com (unknown [9.16.170.189])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Dec 2019 22:29:06 +0000 (GMT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0101016eacb27366-31803877-9137-4c0e-922b-6a71a0e63ab3-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 04 Dec 2019 16:29:49 -0600
+From:   Adriana Kobylak <anoo@linux.ibm.com>
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     linux-aspeed@lists.ozlabs.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, Adriana Kobylak <anoo@us.ibm.com>,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linux-aspeed 
+        <linux-aspeed-bounces+anoo=linux.ibm.com@lists.ozlabs.org>
+Subject: Re: [PATCH 08/14] ARM: dts: swift: Cleanup gpio-keys-polled
+ properties
+In-Reply-To: <78ea3e17108c7c8fded921f5673777fc415cd66e.1575369656.git-series.andrew@aj.id.au>
+References: <cover.08e3a6c95159f017b753d0f240086d1a7923758b.1575369656.git-series.andrew@aj.id.au>
+ <78ea3e17108c7c8fded921f5673777fc415cd66e.1575369656.git-series.andrew@aj.id.au>
+Message-ID: <450addb633e8572a019ccaec5fd48248@linux.vnet.ibm.com>
+X-Sender: anoo@linux.ibm.com
+User-Agent: Roundcube Webmail/1.0.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 spamscore=0 adultscore=0 malwarescore=0 bulkscore=0
+ suspectscore=0 impostorscore=0 mlxlogscore=999 priorityscore=1501
+ mlxscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912040187
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Nov 27, 2019 at 11:50:06AM +0000, Veerabhadrarao Badiganti wrote:
-
-> Add sdhc instances for supporting eMMC and SD-card on sc7180.
-> The regulators should be in HPM state for proper functionality of
-> eMMC and SD-card. Updating corresponding regulators accordingly.
+On 2019-12-03 06:04, Andrew Jeffery wrote:
+> dtbs_check gave the following warning:
 > 
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>     Warning (avoid_unnecessary_addr_size): /gpio-keys-polled:
+> unnecessary #address-cells/#size-cells without "ranges" or child "reg"
+> property
+> 
+> Cc: Adriana Kobylak <anoo@us.ibm.com>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Reviewed-by: Joel Stanley <joel@jms.id.au>
+
+Reviewed-by: Adriana Kobylak <anoo@us.ibm.com>
+Tested-by: Adriana Kobylak <anoo@us.ibm.com>
+
 > ---
+>  arch/arm/boot/dts/aspeed-bmc-opp-swift.dts | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> This depends on the patch series (dt support for sc7180):
-> https://lkml.org/lkml/2019/11/8/149
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  32 +++++++-
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 136 ++++++++++++++++++++++++++++++++
->  2 files changed, 164 insertions(+), 4 deletions(-)
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
+> b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
+> index 0831bc1f5a4c..555d79405884 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
+> @@ -82,8 +82,6 @@
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 189254f..583c42c 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -11,6 +11,7 @@
->  #include "sc7180.dtsi"
->  #include "pm6150.dtsi"
->  #include "pm6150l.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-
-I think this should be above, together with
-'dt-bindings/regulator/qcom,rpmh-regulator.h'
-
->  
->  / {
->  	model = "Qualcomm Technologies, Inc. SC7180 IDP";
-> @@ -103,7 +104,7 @@
->  		vreg_l12a_1p8: ldo12 {
->  			regulator-min-microvolt = <1696000>;
->  			regulator-max-microvolt = <1952000>;
-> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
->  		vreg_l13a_1p8: ldo13 {
-> @@ -145,7 +146,7 @@
->  		vreg_l19a_2p9: ldo19 {
->  			regulator-min-microvolt = <2696000>;
->  			regulator-max-microvolt = <3304000>;
-> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  	};
->  
-> @@ -191,7 +192,7 @@
->  		vreg_l6c_2p9: ldo6 {
->  			regulator-min-microvolt = <2696000>;
->  			regulator-max-microvolt = <3304000>;
-> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
->  		vreg_l7c_3p0: ldo7 {
-> @@ -209,7 +210,7 @@
->  		vreg_l9c_2p9: ldo9 {
->  			regulator-min-microvolt = <2952000>;
->  			regulator-max-microvolt = <3304000>;
-> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
->  		vreg_l10c_3p3: ldo10 {
-> @@ -400,3 +401,26 @@
->  			bias-pull-up;
->  		};
->  };
-> +
-> +&sdhc_1 {
-> +	status = "ok";
-> +
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&sdc1_on>;
-> +	pinctrl-1 = <&sdc1_off>;
-> +	vmmc-supply = <&vreg_l19a_2p9>;
-> +	vqmmc-supply = <&vreg_l12a_1p8>;
-> +
-
-remove empty line
-
-> +};
-> +
-> +&sdhc_2 {
-> +	status = "ok";
-> +
-> +	pinctrl-names = "default","sleep";
-> +	pinctrl-0 = <&sdc2_on>;
-> +	pinctrl-1 = <&sdc2_off>;
-> +	vmmc-supply  = <&vreg_l9c_2p9>;
-> +	vqmmc-supply = <&vreg_l6c_2p9>;
-> +
-> +	cd-gpios = <&tlmm 69 GPIO_ACTIVE_LOW>;
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 666e9b9..207d44f 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -897,6 +897,100 @@
->  					function = "qup15";
->  				};
->  			};
-> +
-> +			sdc1_on: sdc1-on {
-> +				clk {
-> +					pins = "sdc1_clk";
-> +					bias-disable;
-> +					drive-strength = <16>;
-> +				};
-> +
-> +				cmd {
-> +					pins = "sdc1_cmd";
-> +					bias-pull-up;
-> +					drive-strength = <10>;
-> +				};
-> +
-> +				data {
-> +					pins = "sdc1_data";
-> +					bias-pull-up;
-> +					drive-strength = <10>;
-> +				};
-> +
-> +				rclk {
-> +					pins = "sdc1_rclk";
-> +					bias-pull-down;
-> +				};
-> +			};
-> +
-> +			sdc1_off: sdc1-off {
-> +				clk {
-> +					pins = "sdc1_clk";
-> +					bias-disable;
-> +					drive-strength = <2>;
-> +				};
-> +
-> +				cmd {
-> +					pins = "sdc1_cmd";
-> +					bias-pull-up;
-> +					drive-strength = <2>;
-> +				};
-> +
-> +				data {
-> +					pins = "sdc1_data";
-> +					bias-pull-up;
-> +					drive-strength = <2>;
-> +				};
-> +
-> +				rclk {
-> +					pins = "sdc1_rclk";
-> +					bias-pull-down;
-> +				};
-> +			};
-> +
-> +			sdc2_on: sdc2_on {
-> +				clk {
-> +					pins = "sdc2_clk";
-> +					bias-disable;
-> +					drive-strength = <16>;
-> +				};
-
-nit: add blank lines, consistent with the other pinconf entries.
-
-> +				cmd {
-> +					pins = "sdc2_cmd";
-> +					bias-pull-up;
-> +					drive-strength = <10>;
-> +				};
-> +				data {
-> +					pins = "sdc2_data";
-> +					bias-pull-up;
-> +					drive-strength = <10>;
-> +				};
-> +				sd-cd {
-> +					pins = "gpio69";
-> +					bias-pull-down;
-> +				};
-> +			};
-> +
-> +			sdc2_off: sdc2_off {
-> +				clk {
-> +					pins = "sdc2_clk";
-> +					bias-disable;
-> +					drive-strength = <2>;
-> +				};
-> +				cmd {
-> +					pins = "sdc2_cmd";
-> +					bias-pull-up;
-> +					drive-strength = <2>;
-> +				};
-> +				data {
-> +					pins = "sdc2_data";
-> +					bias-pull-up;
-> +					drive-strength = <2>;
-> +				};
-> +				sd-cd {
-> +					pins = "gpio69";
-> +					bias-pull-down;
-> +				};
-> +			};
->  		};
->  
->  		qspi: spi@88dc000 {
-> @@ -911,6 +1005,48 @@
->  			status = "disabled";
->  		};
->  
-> +		sdhc_1: sdhci@7c4000 {
-
-IIUC the nodes are ordered by address, hence this one should be between
-'clock-controller@100000' and 'geniqup@8c0000'.
-
-> +			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
-> +			reg = <0 0x7c4000 0 0x1000>;
-> +			reg-names = "hc_mem";
-> +
-> +			interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "hc_irq", "pwr_irq";
-> +
-> +			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
-> +					<&gcc GCC_SDCC1_AHB_CLK>;
-> +			clock-names = "core", "iface";
-> +
-> +			bus-width = <8>;
-> +			non-removable;
-> +
-> +			mmc-ddr-1_8v;
-> +			mmc-hs200-1_8v;
-> +			mmc-hs400-1_8v;
-> +			mmc-hs400-enhanced-strobe;
-> +
-> +			status = "disabled";
-> +		};
-> +
-> +		sdhc_2: sdhci@8804000 {
-
-nodes are ordered by address: this one should be between 'pinctrl@3500000'
-and 'spi@88dc000´.
-
-> +			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
-> +			reg = <0 0x08804000 0 0x1000>;
-> +			reg-names = "hc_mem";
-> +
-> +			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "hc_irq", "pwr_irq";
-> +
-> +			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
-> +					<&gcc GCC_SDCC2_AHB_CLK>;
-> +			clock-names = "core","iface";
-
-nit: add a blank after the comma.
-
-Thanks
-
-Matthias
+>  	gpio-keys-polled {
+>  		compatible = "gpio-keys-polled";
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+>  		poll-interval = <1000>;
+> 
+>  		scm0-presence {
