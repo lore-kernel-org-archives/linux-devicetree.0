@@ -2,166 +2,187 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C55FBC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 07:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71DFC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 07:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8982122B48
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 07:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08DC24249
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 07:14:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RPKXGRp0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UqMx0a0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725953AbfLEHNG (ORCPT
+        id S1725926AbfLEHO0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 02:13:06 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:49279 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725867AbfLEHNF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 02:13:05 -0500
-X-UUID: 2db096a82b814c9ab2541d122c04b0d8-20191205
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:Reply-To:From:Subject:Message-ID; bh=MJF+2jLqtT0SflHvg6q5GPIgnEzdpyPSz7LF2tPU4/Y=;
-        b=RPKXGRp0lPIS+PTXHCEJ1myLQp4YgW24OnbstvJXNsUNmgw67SivbzFhDdS91Pi2OtyVP/Ukkt6kF3ssXNJhddu8cY51BgMwHl3CnPQfUn+nZkdhBUV7ptTgNjJ3GE6kvZtsKiQvOEmayc2NcppfCgTc11l/vB4VCeZBfOq3I68=;
-X-UUID: 2db096a82b814c9ab2541d122c04b0d8-20191205
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <yongqiang.niu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 369668520; Thu, 05 Dec 2019 15:13:01 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs05n1.mediatek.inc
- (172.21.101.15) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 5 Dec
- 2019 15:12:43 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 5 Dec 2019 15:12:37 +0800
-Message-ID: <1575529976.9400.4.camel@mhfsdcap03>
-Subject: Re: [v1,1/2] drm/mediatek: Fixup external display black screen issue
-From:   Yongqiang Niu <yongqiang.niu@mediatek.com>
-Reply-To: Yongqiang Niu <yongqiang.niu@mediatek.com>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        lkml <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        CK Hu <ck.hu@mediatek.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 5 Dec 2019 15:12:56 +0800
-In-Reply-To: <CAJMQK-iDnOWCYmxcREGschD=sDfU6yKpUu+koP3YDeO3MPCdhQ@mail.gmail.com>
-References: <1574817475-22378-2-git-send-email-yongqiang.niu@mediatek.com>
-         <CAJMQK-iDnOWCYmxcREGschD=sDfU6yKpUu+koP3YDeO3MPCdhQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 5 Dec 2019 02:14:26 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:57516 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfLEHO0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 02:14:26 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB57E1hv082932;
+        Thu, 5 Dec 2019 01:14:01 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575530041;
+        bh=dkFv6j9fRjqBhXFVZB7BZd45r5LtSIjtFSiHCS/++VY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=UqMx0a0ByuAq/T7JX8L+w97j1tm7X5NVg+1YJalkBUEUbCLT4LygU7Pytj38SjuWF
+         ZO5n93XuCrvnaRyTlK9DMGVykq/G5COai3JAvg9k/DpvVVrHHS/E96vtj+Z6mCDpGt
+         SgXd39XCKBCCu3A4s0037E+7qSb5+Yif+DU1o8sw=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB57E0es097065;
+        Thu, 5 Dec 2019 01:14:00 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
+ 2019 01:14:00 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 5 Dec 2019 01:14:00 -0600
+Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB57Dvrb062767;
+        Thu, 5 Dec 2019 01:13:57 -0600
+Subject: Re: [PATCH 2/2] dt-bindings: display: Add obsolete note to
+ "ti,tilcdc,panel" binding
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+CC:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Tony Lindgren <tony@atomide.com>, <sam@ravnborg.org>,
+        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <tomi.valkeinen@ti.com>,
+        <laurent.pinchart@ideasonboard.com>, <peter.ujfalusi@ti.com>,
+        <bparrot@ti.com>
+References: <cover.1575481630.git.jsarha@ti.com>
+ <eabe78184ea7125dcff50826a0ee12a892443017.1575481630.git.jsarha@ti.com>
+ <55DCFF0C-E03E-44DA-A3BE-C81AA4D6782E@goldelico.com>
+From:   Jyri Sarha <jsarha@ti.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c918d309-4a97-af0b-ef8c-4140b29327ee@ti.com>
+Date:   Thu, 5 Dec 2019 09:13:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <55DCFF0C-E03E-44DA-A3BE-C81AA4D6782E@goldelico.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTEyLTA1IGF0IDE0OjE1ICswODAwLCBIc2luLVlpIFdhbmcgd3JvdGU6DQo+
-IE9uIFdlZCwgTm92IDI3LCAyMDE5IGF0IDE6MTcgQU0gPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsu
-Y29tPiB3cm90ZToNCj4gPg0KPiA+IEZyb206IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVA
-bWVkaWF0ZWsuY29tPg0KPiA+DQo+ID4gUHJvYmxlbToNCj4gPiBvdmVybGF5IGhhbmd1cCB3aGVu
-IGV4dGVybmFsIGRpc3BsYXkgaG90cGx1dCB0ZXN0DQo+ID4NCj4gPiBGaXg6DQo+ID4gZGlzYWJs
-ZSBvdmVybGF5IHdoZW4gY3J0YyBkaXNhYmxlDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBZb25n
-cWlhbmcgTml1IDx5b25ncWlhbmcubml1QG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIHwgMzkgKysrKysrKysrKysrKysr
-KysrKysrLS0tLS0tLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCsp
-LCAxNCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IC0tDQo+ID4gMS44LjEuMS5kaXJ0eQ0KPiA+DQo+
-ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyBi
-L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiA+IGluZGV4IDRmYjM0
-NmMuLjdlY2EwMmYgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fY3J0Yy5jDQo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
-Y3J0Yy5jDQo+ID4gQEAgLTM2OSw2ICszNjksMjAgQEAgc3RhdGljIGludCBtdGtfY3J0Y19kZHBf
-aHdfaW5pdChzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YykNCj4gPiAgICAgICAgIG10a19k
-aXNwX211dGV4X2FkZF9jb21wKG10a19jcnRjLT5tdXRleCwgbXRrX2NydGMtPmRkcF9jb21wW2ld
-LT5pZCk7DQo+ID4gICAgICAgICBtdGtfZGlzcF9tdXRleF9lbmFibGUobXRrX2NydGMtPm11dGV4
-KTsNCj4gPg0KPiA+ICsgICAgICAgLyogSW5pdGlhbGx5IGNvbmZpZ3VyZSBhbGwgcGxhbmVzICov
-DQo+ID4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMtPmxheWVyX25yOyBpKyspIHsN
-Cj4gPiArICAgICAgICAgICAgICAgc3RydWN0IGRybV9wbGFuZSAqcGxhbmUgPSAmbXRrX2NydGMt
-PnBsYW5lc1tpXTsNCj4gPiArICAgICAgICAgICAgICAgc3RydWN0IG10a19wbGFuZV9zdGF0ZSAq
-cGxhbmVfc3RhdGU7DQo+ID4gKyAgICAgICAgICAgICAgIHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNv
-bXA7DQo+ID4gKyAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBsb2NhbF9sYXllcjsNCj4gPiAr
-DQo+ID4gKyAgICAgICAgICAgICAgIHBsYW5lX3N0YXRlID0gdG9fbXRrX3BsYW5lX3N0YXRlKHBs
-YW5lLT5zdGF0ZSk7DQo+ID4gKyAgICAgICAgICAgICAgIGNvbXAgPSBtdGtfZHJtX2RkcF9jb21w
-X2Zvcl9wbGFuZShjcnRjLCBwbGFuZSwgJmxvY2FsX2xheWVyKTsNCj4gPiArICAgICAgICAgICAg
-ICAgaWYgKGNvbXApDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgbXRrX2RkcF9jb21wX2xh
-eWVyX2NvbmZpZyhjb21wLCBsb2NhbF9sYXllciwNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBsYW5lX3N0YXRlLCBOVUxMKTsNCj4gPiArICAg
-ICAgIH0NCj4gPiArDQo+ID4gICAgICAgICBmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMtPmRkcF9j
-b21wX25yOyBpKyspIHsNCj4gPiAgICAgICAgICAgICAgICAgc3RydWN0IG10a19kZHBfY29tcCAq
-Y29tcCA9IG10a19jcnRjLT5kZHBfY29tcFtpXTsNCj4gPiAgICAgICAgICAgICAgICAgZW51bSBt
-dGtfZGRwX2NvbXBfaWQgcHJldjsNCj4gPiBAQCAtMzg1LDIwICszOTksNiBAQCBzdGF0aWMgaW50
-IG10a19jcnRjX2RkcF9od19pbml0KHN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRjKQ0KPiA+
-ICAgICAgICAgICAgICAgICBtdGtfZGRwX2NvbXBfc3RhcnQoY29tcCk7DQo+ID4gICAgICAgICB9
-DQo+ID4NCj4gPiAtICAgICAgIC8qIEluaXRpYWxseSBjb25maWd1cmUgYWxsIHBsYW5lcyAqLw0K
-PiA+IC0gICAgICAgZm9yIChpID0gMDsgaSA8IG10a19jcnRjLT5sYXllcl9ucjsgaSsrKSB7DQo+
-ID4gLSAgICAgICAgICAgICAgIHN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lID0gJm10a19jcnRjLT5w
-bGFuZXNbaV07DQo+ID4gLSAgICAgICAgICAgICAgIHN0cnVjdCBtdGtfcGxhbmVfc3RhdGUgKnBs
-YW5lX3N0YXRlOw0KPiA+IC0gICAgICAgICAgICAgICBzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21w
-Ow0KPiA+IC0gICAgICAgICAgICAgICB1bnNpZ25lZCBpbnQgbG9jYWxfbGF5ZXI7DQo+ID4gLQ0K
-PiA+IC0gICAgICAgICAgICAgICBwbGFuZV9zdGF0ZSA9IHRvX210a19wbGFuZV9zdGF0ZShwbGFu
-ZS0+c3RhdGUpOw0KPiA+IC0gICAgICAgICAgICAgICBjb21wID0gbXRrX2RybV9kZHBfY29tcF9m
-b3JfcGxhbmUoY3J0YywgcGxhbmUsICZsb2NhbF9sYXllcik7DQo+ID4gLSAgICAgICAgICAgICAg
-IGlmIChjb21wKQ0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgIG10a19kZHBfY29tcF9sYXll
-cl9jb25maWcoY29tcCwgbG9jYWxfbGF5ZXIsDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBwbGFuZV9zdGF0ZSwgTlVMTCk7DQo+ID4gLSAgICAg
-ICB9DQo+ID4gLQ0KPiA+ICAgICAgICAgcmV0dXJuIDA7DQo+ID4NCj4gPiAgZXJyX211dGV4X3Vu
-cHJlcGFyZToNCj4gPiBAQCAtNjA3LDEwICs2MDcsMjEgQEAgc3RhdGljIHZvaWQgbXRrX2RybV9j
-cnRjX2F0b21pY19kaXNhYmxlKHN0cnVjdCBkcm1fY3J0YyAqY3J0YywNCj4gPiAgICAgICAgIGZv
-ciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+bGF5ZXJfbnI7IGkrKykgew0KPiA+ICAgICAgICAgICAg
-ICAgICBzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSA9ICZtdGtfY3J0Yy0+cGxhbmVzW2ldOw0KPiA+
-ICAgICAgICAgICAgICAgICBzdHJ1Y3QgbXRrX3BsYW5lX3N0YXRlICpwbGFuZV9zdGF0ZTsNCj4g
-PiArICAgICAgICAgICAgICAgc3RydWN0IG10a19kZHBfY29tcCAqY29tcCA9IG10a19jcnRjLT5k
-ZHBfY29tcFswXTsNCj4gPiArICAgICAgICAgICAgICAgdW5zaWduZWQgaW50IGNvbXBfbGF5ZXJf
-bnIgPSBtdGtfZGRwX2NvbXBfbGF5ZXJfbnIoY29tcCk7DQo+ID4gKyAgICAgICAgICAgICAgIHVu
-c2lnbmVkIGludCBsb2NhbF9sYXllcjsNCj4gPg0KPiA+ICAgICAgICAgICAgICAgICBwbGFuZV9z
-dGF0ZSA9IHRvX210a19wbGFuZV9zdGF0ZShwbGFuZS0+c3RhdGUpOw0KPiA+ICAgICAgICAgICAg
-ICAgICBwbGFuZV9zdGF0ZS0+cGVuZGluZy5lbmFibGUgPSBmYWxzZTsNCj4gPiAgICAgICAgICAg
-ICAgICAgcGxhbmVfc3RhdGUtPnBlbmRpbmcuY29uZmlnID0gdHJ1ZTsNCj4gPiArDQo+ID4gKyAg
-ICAgICAgICAgICAgIGlmIChpID49IGNvbXBfbGF5ZXJfbnIpIHsNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICBjb21wID0gbXRrX2NydGMtPmRkcF9jb21wWzFdOw0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIGxvY2FsX2xheWVyID0gaSAtIGNvbXBfbGF5ZXJfbnI7DQo+ID4gKyAgICAg
-ICAgICAgICAgIH0gZWxzZQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGxvY2FsX2xheWVy
-ID0gaTsNCj4gPiArICAgICAgICAgICAgICAgbXRrX2RkcF9jb21wX2xheWVyX2NvbmZpZyhjb21w
-LCBsb2NhbF9sYXllciwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBwbGFuZV9zdGF0ZSwgTlVMTCk7DQo+IFRoaXMgcGFydCBzaG91bGQgYmUgbW92ZWQgdG8g
-bXRrX2NydGNfZGRwX2h3X2ZpbmkoKSwgb3IgYXQgbGVhc3QNCj4gY2FsbGVkIGFmdGVyIGRybV9j
-cnRjX3ZibGFua19vZmYoKS4gT3RoZXJ3aXNlIHdlIHdvdWxkIHNlZQ0KPiBkcm1fd2FpdF9vbmVf
-dmJsYW5rIHdhcm5pbmdzIG9uIDgxNzMgd2hlbiBkaXNwbGF5IHR1cm5zIG9mZi4NCj4gDQo+IFsg
-ICAyNS42OTYxODJdIENhbGwgdHJhY2U6DQo+IFsgICAyNS42OTg2MjRdICBkcm1fd2FpdF9vbmVf
-dmJsYW5rKzB4MWYwLzB4MWZjDQo+IFsgICAyNS43MDI4ODZdICBkcm1fY3J0Y193YWl0X29uZV92
-YmxhbmsrMHgyMC8weDJjDQo+IFsgICAyNS43MDc0MTVdICBtdGtfZHJtX2NydGNfYXRvbWljX2Rp
-c2FibGUrMHhmMC8weDMwOA0KPiBbICAgMjUuNzEyMjg3XSAgZHJtX2F0b21pY19oZWxwZXJfY29t
-bWl0X21vZGVzZXRfZGlzYWJsZXMrMHgxYjgvMHgzYzANCj4gWyAgIDI1LjcxODQ2MV0gIG10a19h
-dG9taWNfY29tcGxldGUrMHg4OC8weDE2Yw0KPiBbICAgMjUuNzIyNjM4XSAgbXRrX2F0b21pY19j
-b21taXQrMHhhOC8weGIwDQo+IFsgICAyNS43MjY1NTNdICBkcm1fYXRvbWljX2NvbW1pdCsweDUw
-LzB4NWMNCj4gWyAgIDI1LjczMDQ2OV0gIGRybV9hdG9taWNfaGVscGVyX3NldF9jb25maWcrMHg5
-OC8weGEwDQo+IFsgICAyNS43MzUzNDFdICBkcm1fbW9kZV9zZXRjcnRjKzB4MjgwLzB4NjA4DQo+
-IFsgICAyNS43MzkzNDRdICBkcm1faW9jdGxfa2VybmVsKzB4Y2MvMHgxMGMNCj4gWyAgIDI1Ljc0
-MzI2MV0gIGRybV9pb2N0bCsweDI0MC8weDNjMA0KPiBbICAgMjUuNzQ2NjU4XSAgZHJtX2NvbXBh
-dF9pb2N0bCsweGQ4LzB4ZTgNCj4gWyAgIDI1Ljc1MDQ4N10gIF9fc2VfY29tcGF0X3N5c19pb2N0
-bCsweDEwMC8weDI2ZmMNCj4gWyAgIDI1Ljc1NTAwOV0gIF9fYXJtNjRfY29tcGF0X3N5c19pb2N0
-bCsweDIwLzB4MmMNCj4gWyAgIDI1Ljc1OTUzNF0gIGVsMF9zdmNfY29tbW9uKzB4YTQvMHgxNTQN
-Cj4gWyAgIDI1Ljc2MzI3N10gIGVsMF9zdmNfY29tcGF0X2hhbmRsZXIrMHgyYy8weDM4DQo+IFsg
-ICAyNS43Njc2MjhdICBlbDBfc3ZjX2NvbXBhdCsweDgvMHgxOA0KPiBbICAgMjUuNzcxMTk1XSAt
-LS1bIGVuZCB0cmFjZSBmNDYxOWZkYWM4ZjFjMGZmIF0tLS0NCj4gDQo+ID4NCnBsZWFzZSBkb3Vi
-bGUgY29uZmlybSBpcyB0aGlzIGR1bXAgc3RhY2sgbG9nIGlzIHJ1aW5pbmcgb24gTVQ4MTczIHJl
-YWwNCklDIG9yIG5vdC4NCmlmIHllcywgdGhhdCBtYXkgY2F1c2VkIG92bCBoYW5nIHdoZW4gZGlz
-YWJsZSBsYXllciBub3QgaW4gYmxhbmtpbmcsDQp0aGVuIGNhdXNlIHZibGFuayB0aW1lIG91dC4N
-Cmkgd2lsbCBkaXNhYmxlIG92ZXJsYXkgd2l0aCBjbWRxIGluIG5leHQgdmVyc2lvbi4NCg0KDQo+
-IA0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBM
-aW51eC1tZWRpYXRlayBtYWlsaW5nIGxpc3QNCj4gTGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFk
-ZWFkLm9yZw0KPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LW1lZGlhdGVrDQoNCg==
+On 05/12/2019 09:06, H. Nikolaus Schaller wrote:
+> 
+>> Am 04.12.2019 um 18:53 schrieb Jyri Sarha <jsarha@ti.com>:
+>>
+>> The "ti,tilcdc,panel" binding should not be used anymore, since tilcdc
+>> is fully capable of using generic drm panels like panel-simple and
+>> panel-common binding.
+> 
+> Is there an example how to convert?
+> 
+> As far as I can see all arch/arm/boot/dts/am335x-*.dts use "ti,tilcdc,panel"
+> 
+> arch/arm/boot/dts/am335x-evm.dts would IMHO be a good candidate.
+> 
 
+Yes, there is. Here are the patches to convert am335x-evm.dts and
+am335x-evmsk.dts:
+
+https://lists.freedesktop.org/archives/dri-devel/2019-December/247301.html
+https://lists.freedesktop.org/archives/dri-devel/2019-December/247594.html
+
+I would have added a reference to the note, but since the patches are
+not yet queued to mainline, I decided against it.
+
+The first thing to do before conversion is to check if panel-simple (or
+some other generic drm panel driver) already supports the used panel. If
+yes, then the conversion should be quite straight forwards. If not, then
+the first thing to do is to add support for the used panel into
+panel-simple.c.
+
+Best regards,
+Jyri
+
+
+>> However, the obsolete binding is still widely
+>> used in many mainline supported platforms that I do not have access to
+>> and who knows how many custom platforms. So I am afraid we have to
+>> keep the old bundled tilcdc panel driver around.
+>>
+>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+>> ---
+>> Documentation/devicetree/bindings/display/tilcdc/panel.txt | 6 ++++++
+>> 1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/tilcdc/panel.txt b/Documentation/devicetree/bindings/display/tilcdc/panel.txt
+>> index 808216310ea2..54963f9173cc 100644
+>> --- a/Documentation/devicetree/bindings/display/tilcdc/panel.txt
+>> +++ b/Documentation/devicetree/bindings/display/tilcdc/panel.txt
+>> @@ -1,5 +1,11 @@
+>> Device-Tree bindings for tilcdc DRM generic panel output driver
+>>
+>> +NOTE: This binding (and the related driver) is obsolete and should not
+>> +      be used anymore. Please refer to drm panel-common binding (and
+>> +      to a generic drm panel driver like panel-simple).
+>> +      Documentation/devicetree/bindings/display/panel/panel-common.yaml
+>> +      (drivers/gpu/drm/panel/panel-simple.c)
+>> +
+>> Required properties:
+>>  - compatible: value should be "ti,tilcdc,panel".
+>>  - panel-info: configuration info to configure LCDC correctly for the panel
+>> -- 
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>
+> 
+
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
