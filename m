@@ -2,205 +2,133 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C11AC2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 16:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A698DC2BD09
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 16:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7299124654
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 16:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A3FA22525
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 16:01:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dHvUrY3j"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="JmV9fvuW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbfLEQAZ (ORCPT
+        id S1729672AbfLEQB3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 11:00:25 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53435 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729145AbfLEQAZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 11:00:25 -0500
-Received: by mail-wm1-f67.google.com with SMTP id n9so3932601wmd.3
-        for <devicetree@vger.kernel.org>; Thu, 05 Dec 2019 08:00:23 -0800 (PST)
+        Thu, 5 Dec 2019 11:01:29 -0500
+Received: from mail-eopbgr1410121.outbound.protection.outlook.com ([40.107.141.121]:59712
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726028AbfLEQB3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 5 Dec 2019 11:01:29 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bnk3Crce9P6qany17YUHIYp1NvuJPCJHUhTt1m5j8n9NpE9Y3ktwrL1rdLMdeyQMYWcH3Gi4BYkER5hPpERx9w/xhnMfNej31xsegIKv6joBQWJs9xzOz3EynmbKzDAkRE5vv4Ipd774dxBWfw8YcibluwhtCcq3XUKhcm5V5P6dhUUzd7STGd49Y5XHu/fzF20mwYBI82UYYSD6Iwy1Y92TZ3ha6hGnCuFyP2JWPOIuFrm/u8Q0/zcEC5b7dgXp9EjdXggQFO6fGzLK2dlhjmbnwt8po0l8ctoF+aCwd/PbDrOrVU5d2B6rhK4ojZGDVW6AuvqPInnCcHFexWXgEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cIuoTkfGgMguFbVpOxGM0rTuGtgA/ynuG9+ZNQFXVPU=;
+ b=MXX5278nXM+tV4NwGAqORcpGzP1NuMwrU90xG1o6qzSOUnz7MIrAOuBNpJWYDdyDeEzCzQJevPOnw4E1c80Z2m4zMGnnr+wCvD847Ej2NyNbGIbrJT9GHy0mCuOqjAQrfR8sN/edg1Vg/8teTxQZBKIlPmqETlKgAU7zxYIK8XS9V6XfUzH0hWjbnqMIZBUnjGllPegH20bM6RDHoCk2AwZKiZKXWV0YZKHPMtg46vj0z+1WCKOsEdCcAYbu//WpXMfaIgn3o941I9PrlXA2GcNiYfzWCSVUgUF8NepPWS2dqTGCF7nhyK3uyUHgLhSr6y5NnFux/45iqhQlorUcfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YnnvnRu2PoYgPdq942eyS3Ax5hU9+AGDn/94VxefpYc=;
-        b=dHvUrY3jJEMo8JkEfiNhbcY+Lgr/g3UgFCURKa2aMOznUXvBnj2msoM6Der6rMaZMC
-         lYjNqKplHuaH612WbK/eIygcFkQqN5W4Mdseb1+aDEpJOvHitX70V8XwLcoEG+cHztiD
-         qpL5RqB9xyIA0GxdYQqEH2I6HHD+YYMuHb5RwUnvCYE1tYCPVSd2Jzl9eCNg8hBjc3Gd
-         pu5Mh+UhEonfyPSAauB/fdmHAf6fwImDkdBHQUuYt021rtORT6a/wyWM8Pzyq5zg0Gix
-         24u/q2gQUkFSpKPdE4TS6YXIahB6CNZLCn8vCcCjZXXy/oGuViQxqn/EnXvbu+RuNLSW
-         DxHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=YnnvnRu2PoYgPdq942eyS3Ax5hU9+AGDn/94VxefpYc=;
-        b=jUJKdI4qmtGUpLohKtdYhGBYcH2mIcv7s5DBwyzCa0wY4CYTcYUaoBFJ0ZPycg+iXZ
-         wbtx3XKQEZGowtf6oFB4hVPkOQ3Cn0hJkshXiJ/3uMqbFjRDfbA1CkwANBdR3W+UPULA
-         dMFgXsN3tpioM16Efme7eTazUu/OcQatQnFoNT2W+MIOcipRTV7n3IR+RGcHyLPHDKKH
-         vwNWuIRARWdDDbWqDWOpCV7mbxtTwPf/5sPt+kNtAeTXnN5jk8+EMbR4H0POiKbV0GuI
-         76sO/6F7TH8GRRS4SmpJqKgWAl/oO+gn/DOnn/VYPlSza2Ww5as6mfc/C7PudSddolod
-         WGaA==
-X-Gm-Message-State: APjAAAXXDR9FP4BemVF4pJDnJtBnOeIZaA/CUfCKSK4HMkV/Pn4CDpFU
-        SCXNuR7SrcH6aio4rzA7Cb4kbg==
-X-Google-Smtp-Source: APXvYqzQmAMVggpcJ2Il7o1K/oNH2/lKa1KT/fPP47Pa4O6naGVAir4yMUZcakBlKewfYJgm2+dDdw==
-X-Received: by 2002:a1c:8095:: with SMTP id b143mr6307851wmd.7.1575561622159;
-        Thu, 05 Dec 2019 08:00:22 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:24c3:ebb3:9dd5:81c6? ([2a01:e34:ed2f:f020:24c3:ebb3:9dd5:81c6])
-        by smtp.googlemail.com with ESMTPSA id z189sm315498wmc.2.2019.12.05.08.00.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 08:00:21 -0800 (PST)
-Subject: Re: [PATCH] [RESEND] arm64: dts: mt8173: Add dynamic power node.
-To:     michael.kao@mediatek.com, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cIuoTkfGgMguFbVpOxGM0rTuGtgA/ynuG9+ZNQFXVPU=;
+ b=JmV9fvuWJXC0uN1Dv07e8Lx6qqFxhBySnhIPB5cxT6fxKe22iL/s54MEhQE+jZj6B9YldtZJP+etEwHCSeY+AaIzmYg3+pydPIqb1b9tYX745r5pLHM9G1Xl9/L+lXvXTnNsmA715BMJyB1qnH1XBnav88BNx37mMwd3e1JaGhM=
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
+ TY1PR01MB1819.jpnprd01.prod.outlook.com (52.133.160.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.22; Thu, 5 Dec 2019 16:00:45 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2516.003; Thu, 5 Dec 2019
+ 16:00:45 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org,
-        linux-pm@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Dawei Chien <dawei.chien@mediatek.com>
-References: <20191122090610.17015-1-michael.kao@mediatek.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4aaf8cee-eaa2-5de4-37f0-094b9bc8da22@linaro.org>
-Date:   Thu, 5 Dec 2019 17:00:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191122090610.17015-1-michael.kao@mediatek.com>
-Content-Type: text/plain; charset=utf-8
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: RE: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
+Thread-Topic: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
+Thread-Index: AQHVqYxRjjQT6EPsk0uhvsHduSJ+e6eow+OAgAAcgACAACHMAIAArCeAgABEDRCAAcFNgIAAAmFA
+Date:   Thu, 5 Dec 2019 16:00:45 +0000
+Message-ID: <TY1PR01MB1562F5908AC7A9643F51FEBE8A5C0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20191203034519.5640-1-chris.brandt@renesas.com>
+ <20191203034519.5640-7-chris.brandt@renesas.com>
+ <CAMuHMdVBYpuoK7hcyNLK-mAdpTQz3ohTGXuYdFPHdpU5RoPr6Q@mail.gmail.com>
+ <CAMuHMdV7XY7FB9pBsxuWxGsqYaD9n1Y+XZXEJO5OsuigjjUgpw@mail.gmail.com>
+ <TY1PR01MB1562A6AFD8D0807B345B7A208A5D0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <CAMuHMdUn3h1VjYkARTFBqMij5aYg2mJSVErwceHc0NATBo+_hw@mail.gmail.com>
+ <TY1PR01MB1562322613FC52617312F14E8A5D0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <CAMuHMdVy_0e5_94a-G83Tt14XsxmLFOpstvSP6Yw8m9oRW_eZg@mail.gmail.com>
+In-Reply-To: <CAMuHMdVy_0e5_94a-G83Tt14XsxmLFOpstvSP6Yw8m9oRW_eZg@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctNjQxZTk4OTctMTc3OC0xMWVhLWFhNTEtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XDY0MWU5ODk5LTE3NzgtMTFlYS1hYTUxLTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iMTE2MCIgdD0iMTMyMjAwMzUyNDQxNzkxNzkyIiBoPSJicnY3dDh5dXZYWk5nNnpXOW5zNkhRWUZ0ZFE9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [75.60.247.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0d287452-7e54-476f-c3e3-08d7799c49c5
+x-ms-traffictypediagnostic: TY1PR01MB1819:
+x-microsoft-antispam-prvs: <TY1PR01MB1819612C0C87677138A233098A5C0@TY1PR01MB1819.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02426D11FE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(396003)(366004)(39860400002)(136003)(189003)(199004)(66476007)(5660300002)(305945005)(66556008)(33656002)(4326008)(74316002)(76116006)(86362001)(14454004)(9686003)(25786009)(64756008)(8936002)(66946007)(478600001)(316002)(81156014)(7416002)(6506007)(54906003)(55016002)(26005)(186003)(99286004)(66446008)(71190400001)(81166006)(52536014)(102836004)(71200400001)(6916009)(8676002)(2906002)(76176011)(7696005)(11346002)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1819;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6kqotgeO8dJmxJDZTz5O2K1CAekRTEi9nJNqqjdA/xKtyAzukKuxxFHVHaEdJNtXis8tjT21Bt1AY68gZiuowAXxaFcsKMcMBbHcvrQfpAJG18LHMLSMWLYnDWYhZXqPNdm/V9IJiQAG3ASKPM83D8HP+EC6Hj7qwdRWgq26a3OXfiiHO7wvaNoq/J+Wx5t5MfRRvbYRxeDQyjl1Wzgv6AH9H83UvyC+N+Byc9KCk+PFrtrJ7XSsd9qkXeQnVX8zBmV/Qwl/CcQ9Blx9e8htsZbm1YWMlyZhlaJb+dpiqnaobhjX3UJZyzBIw/XjLwYDMGm67EneV75N9B63xZeioSg3S+F4ld1I5eSawXu2AVMyikmZmQ0UY629CvgrFnK1GrOIMlZpDGBqQTGVpp3FRAVanJW2TuXJ1Mui21QEA3qUMF9QTME3mGd28HSv7J7b
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d287452-7e54-476f-c3e3-08d7799c49c5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 16:00:45.4381
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 88YoFkb2+Bps2NGbj81HQ5JKTmUUOAx6tin3fX/lGzbAuzSeKqmidtwc2GVGfiDrPQvaxlD9nlEb3P9AOsACc5lFKLSOQ+xouFP/t1MOZhY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1819
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-Hi Michael,
-
-
-On 22/11/2019 10:06, michael.kao@mediatek.com wrote:
-> From: "michael.kao" <michael.kao@mediatek.com>
-> 
-> This device node is for calculating dynamic power in mW.
-> Since mt8173 has two clusters, there are two dynamic power
-> coefficient as well.
-
-Are you sure about the values? Usually, Big is ~x4 little, here it is ~x2.
-
-
-> Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
-> Signed-off-by: Michael.Kao <michael.kao@mediatek.com>
-> 
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 15f1842f6df3..b03ca5a71338 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -157,6 +157,7 @@
->  			enable-method = "psci";
->  			cpu-idle-states = <&CPU_SLEEP_0>;
->  			#cooling-cells = <2>;
-> +			dynamic-power-coefficient = <263>;
->  			clocks = <&infracfg CLK_INFRA_CA53SEL>,
->  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->  			clock-names = "cpu", "intermediate";
-> @@ -170,6 +171,7 @@
->  			enable-method = "psci";
->  			cpu-idle-states = <&CPU_SLEEP_0>;
->  			#cooling-cells = <2>;
-> +			dynamic-power-coefficient = <263>;
->  			clocks = <&infracfg CLK_INFRA_CA53SEL>,
->  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->  			clock-names = "cpu", "intermediate";
-> @@ -183,6 +185,7 @@
->  			enable-method = "psci";
->  			cpu-idle-states = <&CPU_SLEEP_0>;
->  			#cooling-cells = <2>;
-> +			dynamic-power-coefficient = <530>;
->  			clocks = <&infracfg CLK_INFRA_CA72SEL>,
->  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->  			clock-names = "cpu", "intermediate";
-> @@ -196,6 +199,7 @@
->  			enable-method = "psci";
->  			cpu-idle-states = <&CPU_SLEEP_0>;
->  			#cooling-cells = <2>;
-> +			dynamic-power-coefficient = <530>;
->  			clocks = <&infracfg CLK_INFRA_CA72SEL>,
->  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->  			clock-names = "cpu", "intermediate";
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+SGkgR2VlcnQsDQoNCk9uIFRodSwgRGVjIDUsIDIwMTkgMSwgR2VlcnQgVXl0dGVyaG9ldmVuIHdy
+b3RlOg0KPiBZb3VyIHNwaWJzYyBkcml2ZXIgZG9lczoNCj4gDQo+ICAgICBtYXN0ZXItPm1vZGVf
+Yml0cyA9IFNQSV9DUE9MIHwgU1BJX0NQSEE7DQo+IA0KPiBpLmUuIFNQSV9bVFJdWF97UVVBRCxE
+VUFMfSBhcmUgbm90IHNldCwgc28gaXQgc2hvdWxkIG5vdCB0cnkgdGhvc2UgbW9kZXMuDQoNCk9L
+LCBUaGFuayB5b3UhDQogDQo+IEF0IGxlYXN0IG9uIFJTSytSWkExLCB0aGUgRkxBU0hlcyBhcmUg
+d2lyZWQgaW4gcXVhZCBtb2RlLCBzbyB5b3Ugc2hvdWxkDQo+IGRlc2NyaWJlIHRoZSBoYXJkd2Fy
+ZSBpbiBEVC4NCg0KT0suDQoNCj4gPiA+IEJUVywgd2hlbiB1c2luZyBzcGlic2MgaW4gZGlyZWN0
+LW1hcHBlZCBtb2RlOiBpZiB5b3UgdHVybiBvZiBhbmQgb24NCj4gPiA+IGFnYWluIHRoZSBtb2R1
+bGUgY2xvY2ssIGRvZXMgdGhlIHNwaWJzYyBuZWVkIHJlcHJvZ3JhbW1pbmc/DQo+ID4NCj4gPiBO
+b3BlLiBFdmVyeXRoaW5nIHdpbGwgc3RheSB0aGUgc2FtZSAoanVzdCBsaWtlIGFsbCB0aGUgb3Ro
+ZXIgcGVyaXBoZXJhbHMpLg0KPiBUaGUgb25seSB0aGluZyB5b3UgJ21pZ2h0JyB3YW50IHRvIGRv
+IGlzIGZsdXNoIHRoZSByZWFkIGNhY2hlIChlc3BlY2lhbGx5IGlmDQo+IHlvdSBkaXNjb25uZWN0
+ZWQgaXQgYmVjYXVzZSB5b3Ugd2VyZSBnb2luZyB0byBnbyBvdXQgYW5kIHJlLXdyaXRlIHNvbWUg
+b2YgdGhlDQo+IGZsYXNoIGluIFNQSSBtb2RlKS4NCj4gDQo+IEdvb2QuIFNvIHRoYXQgbWVhbnMg
+dGhlIE1URCBkcml2ZXIgY2FuIGJlIG1vZHVsYXIuICBVbnVzZWQgY2xvY2tzIGFyZSB0dXJuZWQN
+Cj4gb2ZmIGF0IGJvb3QsIGFuZCBjYW4gYmUgdHVybmVkIG9uIHdoZW4gdGhlIG10ZC1yb20gZHJp
+dmVyIGlzIGxvYWRlZCBhbmQNCj4gYWN0aXZhdGVkLg0KDQpJJ20gZ29pbmcgdG8gZG8gc29tZSB0
+ZXN0aW5nIG5vdyBhbmQgdGhlbiBzZW5kIG91dCBhIFYyIHRvIHNlZSBpZiB3ZSBhcmUNCmdldHRp
+bmcgY2xvc2VyIHRvIGEgY29uc2Vuc3VzLg0KDQpDaHJpcw0KDQo=
