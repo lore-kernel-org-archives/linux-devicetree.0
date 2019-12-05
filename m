@@ -2,101 +2,170 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9C4C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7034AC2D0BE
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 919F8206DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47D9721744
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:46:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="gnfFmDPZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hlIfJxJ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728510AbfLEAZK (ORCPT
+        id S1728470AbfLEAqG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 19:25:10 -0500
-Received: from onstation.org ([52.200.56.107]:54056 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728053AbfLEAZK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Dec 2019 19:25:10 -0500
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 9161D3E95C;
-        Thu,  5 Dec 2019 00:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1575505509;
-        bh=jc1PJE+8yGFVsNBkOUuUeXIzbxW2vJhuM2IJtGofqXQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gnfFmDPZTH6NNieh6XomfevdNEupKnTOxkjiSSCg8BFSL654u2I+GwDKst2kjHu+s
-         LoAhkbkIiPcJcial4QUBvsnT8kR7MxfIHLNuyNnB6ggh1j4qLVTmrmjlFjZVvbD92F
-         iygJW38kmuV6Rr3PbCSw7zIrNrtM3vjHtAKDUsI0=
-From:   Brian Masney <masneyb@onstation.org>
-To:     sboyd@kernel.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH 0/7] qcom: add clk-vibrator driver
-Date:   Wed,  4 Dec 2019 19:24:56 -0500
-Message-Id: <20191205002503.13088-1-masneyb@onstation.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 4 Dec 2019 19:46:06 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38631 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728238AbfLEAqF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 19:46:05 -0500
+Received: by mail-pg1-f195.google.com with SMTP id a33so506056pgm.5
+        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 16:46:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=g7Dc3L6ucRDBTOgi1WYw/gKWAHJ0BhR7GlJLT2KOwWU=;
+        b=hlIfJxJ4UQcwyezs5GWGUzTpgBpkXycqViF5s7J9Lbgv7LX5Loh/lFJW26EARxlJS7
+         jQGy+dln8gbBR9ETp7bawc/SUPJ4DGK5qfw9eApXM2bPC8K/wSJANcY+yKbhAg+bDQHx
+         Jb81KyFdr/uon9IeHq8w2COMsphIkRmGm5YYY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g7Dc3L6ucRDBTOgi1WYw/gKWAHJ0BhR7GlJLT2KOwWU=;
+        b=KAEyFQ95e+/EbB0z9McrvL1kMPCLDnWHzzkA+rYYWVqMOij3Gr5e5LxStflZbK/Eg+
+         41hJrSFusBA3TJVDmz/kK0Y7ODPDBuX13rM/eTPUlTijJsufvUHil306Dgg+9aZsq+Rk
+         E3HPc1Cm506xoNzT6UftFXdcG8d1dGXVoDLqwv1ktZ+dMkKb6yjTpVJqlVAuBBoEmhNW
+         tsxE/FJ9ffAelQv4vSeIfsP32u5q/vd+UB9TWAUxXSiPnTpV4/wA63AEQxAFvHyKgsYf
+         DAv0YMq7CuJhhOo9ILSSPA00ufMjoZaipGFxQWFBhNou82Iy76urlwOPVTaWfpzKuiUz
+         WDGQ==
+X-Gm-Message-State: APjAAAWNxyyDYs15zZnOggBFJ30IqblrrBoEc6ExDUKNDVivS6nDqf+p
+        jF9NLWJoSywCsv6+ay5wIujzVg==
+X-Google-Smtp-Source: APXvYqx2X3SI/+sIaJkgoq1wNauTweF2w9MvCcNu9sKGmwlik3upNJqHpW1nTOdh3mFbvDDMr0XIvg==
+X-Received: by 2002:a65:4809:: with SMTP id h9mr6325753pgs.265.1575506765134;
+        Wed, 04 Dec 2019 16:46:05 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id hi2sm7325684pjb.22.2019.12.04.16.46.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2019 16:46:04 -0800 (PST)
+Date:   Wed, 4 Dec 2019 16:46:03 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH v1] arm64: dts: sc7180: Add cpufreq HW node for cpu
+ scaling
+Message-ID: <20191205004603.GK228856@google.com>
+References: <0101016ed02b6356-5165eaaa-6c54-47ff-a008-821c91831e56-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0101016ed02b6356-5165eaaa-6c54-47ff-a008-821c91831e56-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch series adds support for the vibrator that's found on the
-Nexus 5 phone. I previously added a msm-vibrator driver to the input
-subsystem, however that's not the correct approach since the direct
-register writes should occur from within the clk subsystem based on the
-conversation at
-https://lore.kernel.org/lkml/20190516085018.2207-1-masneyb@onstation.org/
+On Wed, Dec 04, 2019 at 09:08:54AM +0000, Taniya Das wrote:
+> cpufreq hw node required to scale CPU frequency on sc7180.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index c0ac0a1..7629995 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -40,6 +40,7 @@
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_0>;
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_0: l2-cache {
+>  				compatible = "cache";
+>  				next-level-cache = <&L3_0>;
+> @@ -55,6 +56,7 @@
+>  			reg = <0x0 0x100>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_100>;
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_100: l2-cache {
+>  				compatible = "cache";
+>  				next-level-cache = <&L3_0>;
+> @@ -67,6 +69,7 @@
+>  			reg = <0x0 0x200>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_200>;
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_200: l2-cache {
+>  				compatible = "cache";
+>  				next-level-cache = <&L3_0>;
+> @@ -79,6 +82,7 @@
+>  			reg = <0x0 0x300>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_300>;
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_300: l2-cache {
+>  				compatible = "cache";
+>  				next-level-cache = <&L3_0>;
+> @@ -91,6 +95,7 @@
+>  			reg = <0x0 0x400>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_400>;
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_400: l2-cache {
+>  				compatible = "cache";
+>  				next-level-cache = <&L3_0>;
+> @@ -103,6 +108,7 @@
+>  			reg = <0x0 0x500>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_500>;
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_500: l2-cache {
+>  				compatible = "cache";
+>  				next-level-cache = <&L3_0>;
+> @@ -115,6 +121,7 @@
+>  			reg = <0x0 0x600>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_600>;
+> +			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			L2_600: l2-cache {
+>  				compatible = "cache";
+>  				next-level-cache = <&L3_0>;
+> @@ -127,6 +134,7 @@
+>  			reg = <0x0 0x700>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_700>;
+> +			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			L2_700: l2-cache {
+>  				compatible = "cache";
+>  				next-level-cache = <&L3_0>;
+> @@ -286,6 +294,17 @@
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		cpufreq_hw: cpufreq@18323000 {
+> +			compatible = "qcom,cpufreq-hw";
+> +			reg = <0 0x18323000 0 0x1400>, <0 0x18325800 0 0x1400>;
+> +			reg-names = "freq-domain0", "freq-domain1";
+> +
+> +			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
+> +			clock-names = "xo", "alternate";
+> +
+> +			#freq-domain-cells = <1>;
+> +		};
+>  	};
+> 
+>  	timer {
 
-So this patch series:
-
-  - Adds support for setting the clock duty cycle to clk-rcg2.c
-  - Removes the msm-vibrator driver and adds a generic clk-vibrator
-    driver in its place. No one is using this driver at the moment so we
-    shouldn't get any complaints.
-
-I also included the defconfig and dts changes. Once this whole series is
-deemed to be ready, it can be merged in pieces through the different
-subsystems. I included everything here as one patch series so everyone
-can see the complete picture of what I'm doing.
-
-Sorry it took me awhile to get back to correcting this; was working on
-other tasks on this phone.
-
-Brian Masney (7):
-  clk: qcom: add support for setting the duty cycle
-  dt-bindings: Input: drop msm-vibrator in favor of clk-vibrator
-  Input: drop msm-vibrator in favor of clk-vibrator driver
-  dt-bindings: Input: introduce new clock vibrator bindings
-  Input: introduce new clock vibrator driver
-  ARM: qcom_defconfig: drop msm-vibrator in favor of clk-vibrator driver
-  ARM: dts: qcom: msm8974-hammerhead: add support for vibrator
-
- .../bindings/input/clk-vibrator.yaml          |  60 ++++++++
- .../bindings/input/msm-vibrator.txt           |  36 -----
- .../qcom-msm8974-lge-nexus5-hammerhead.dts    |  30 ++++
- arch/arm/configs/qcom_defconfig               |   2 +-
- drivers/clk/qcom/clk-rcg.h                    |   4 +
- drivers/clk/qcom/clk-rcg2.c                   |  61 +++++++-
- drivers/input/misc/Kconfig                    |  20 +--
- drivers/input/misc/Makefile                   |   2 +-
- .../misc/{msm-vibrator.c => clk-vibrator.c}   | 138 +++++++-----------
- 9 files changed, 216 insertions(+), 137 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/clk-vibrator.yaml
- delete mode 100644 Documentation/devicetree/bindings/input/msm-vibrator.txt
- rename drivers/input/misc/{msm-vibrator.c => clk-vibrator.c} (51%)
-
--- 
-2.21.0
-
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
