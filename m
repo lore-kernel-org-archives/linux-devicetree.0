@@ -2,402 +2,132 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34954C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 07:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F844C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 07:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F34A824249
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 07:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9432206DB
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 07:32:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K8ZOZvMX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725963AbfLEH1k (ORCPT
+        id S1725963AbfLEHcv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 02:27:40 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:46896 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbfLEH1j (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Dec 2019 02:27:39 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A65361A0008;
-        Thu,  5 Dec 2019 08:27:36 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EE5381A1734;
-        Thu,  5 Dec 2019 08:27:31 +0100 (CET)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 20C3A40296;
-        Thu,  5 Dec 2019 15:27:26 +0800 (SGT)
-From:   Wen He <wen.he_1@nxp.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Walle <michael@walle.cc>, Li Yang <leoyang.li@nxp.com>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Wen He <wen.he_1@nxp.com>
-Subject: [v11 2/2] clk: ls1028a: Add clock driver for Display output interface
-Date:   Thu,  5 Dec 2019 15:26:53 +0800
-Message-Id: <20191205072653.34701-2-wen.he_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191205072653.34701-1-wen.he_1@nxp.com>
-References: <20191205072653.34701-1-wen.he_1@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 5 Dec 2019 02:32:51 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:37236 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfLEHcv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 02:32:51 -0500
+Received: by mail-ua1-f68.google.com with SMTP id f9so535171ual.4
+        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 23:32:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KsELQrnPZOtejoY9i2DcdQh6UW42pUNNIY62CtBGNDc=;
+        b=K8ZOZvMXPg14WS3fQd+RBECESqh0GW7rIgK55uh1NaVW8NgJN3M4lK6gsY58FUpz3r
+         579brr/4qJcNLtpDf/74ELIW4MFLn9VdIRC7C49tRzxW9Sw4D4hxc5fCDlJJ/GRcXRKD
+         rH4zot3jChLf4F049+6kdx643bIVmP2Zlkd7E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KsELQrnPZOtejoY9i2DcdQh6UW42pUNNIY62CtBGNDc=;
+        b=WT50zx3GTOuxLfIA+xBMLsJs9IGy9jnxxs5B9XVRWcBGST3vgFK4JNgwl7tmiYMfMr
+         SF4Z2QKza4CTgNJR9rW5rZzp2CTJiEgF3veiKS0B4SP8nR2uLA4Y+AS0wrr866SZHOee
+         4ahXLpcwRqxk/kjm7b8s6jm3x8JuyGgFHtveGQFjnh5xyfZhtd/F9EkJ3/l+FokAsxMq
+         lMZY0DgzHUhfQcvErVXUnTShkwVr3LppsTE8UUyjo/jzCD9Oe32qujsGaWY2SwOZYQnT
+         ZdOwHudVw6W8hKQt5JQ3YwFoFICpUBI2sv6ioLh9g5+XkTtXOq0Q4UWCuuQpNKeJ+7VC
+         FgoQ==
+X-Gm-Message-State: APjAAAUaq/neLgGUWY1FILue2zooWxL0PqNfUG+4YRKiViKLeZEJE9Io
+        QCuJQkC5PYV6VwwU+ybesOMyqqMHrGxZKvFcdR4Ahg==
+X-Google-Smtp-Source: APXvYqyS8tC5o4S3M/3z7o7qG0IUB3RnkhEI2T8kq01FR6LqqglwErSaRr7uwnavrsj6wAcTuw+4FblqisXXxbVB9r0=
+X-Received: by 2002:ab0:3487:: with SMTP id c7mr4227890uar.25.1575531169645;
+ Wed, 04 Dec 2019 23:32:49 -0800 (PST)
+MIME-Version: 1.0
+References: <20191203101552.199339-1-ikjn@chromium.org> <20191203165301.GH10631@localhost>
+ <CAATdQgCqYrd_aXN5GDsso+F3WadNx3DQKK3Efk3tgkrv2VXjyw@mail.gmail.com> <20191204075533.GI10631@localhost>
+In-Reply-To: <20191204075533.GI10631@localhost>
+From:   Ikjoon Jang <ikjn@chromium.org>
+Date:   Thu, 5 Dec 2019 15:32:38 +0800
+Message-ID: <CAATdQgBcuJenS2VSm+y4Yhn5mWE1P0CGJQ3NRdoe68dd2SRPGg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] usb: overridable hub bInterval by device node
+To:     Johan Hovold <johan@kernel.org>
+Cc:     linux-usb@vger.kernel.org,
+        GregKroah-Hartman <gregkh@linuxfoundation.org>,
+        RobHerring <robh+dt@kernel.org>,
+        MarkRutland <mark.rutland@arm.com>,
+        AlanStern <stern@rowland.harvard.edu>,
+        SuwanKim <suwan.kim027@gmail.com>,
+        "GustavoA . R . Silva" <gustavo@embeddedor.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas Boichat <drinkcat@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add clock driver for QorIQ LS1028A Display output interfaces(LCD, DPHY),
-as implemented in TSMC CLN28HPM PLL, this PLL supports the programmable
-integer division and range of the display output pixel clock's 27-594MHz.
+On Wed, Dec 4, 2019 at 3:55 PM Johan Hovold <johan@kernel.org> wrote:
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/clk/Kconfig      |  10 ++
- drivers/clk/Makefile     |   1 +
- drivers/clk/clk-plldig.c | 297 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 308 insertions(+)
- create mode 100644 drivers/clk/clk-plldig.c
+> > > > @@ -257,6 +258,14 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
+> > > >       memcpy(&endpoint->desc, d, n);
+> > > >       INIT_LIST_HEAD(&endpoint->urb_list);
+> > > >
+> > > > +     /* device node property overrides bInterval */
+> > > > +     if (usb_of_has_combined_node(to_usb_device(ddev))) {
+> > >
+> > > Not only hubs have combined nodes so you probably need to check
+> > > bDeviceClass here instead.
+> >
+> > yes, you're right, I didn't think of that case:
+> > if (to_usb_device(ddev)->descriptor.bDeviceClass == USB_CLASS_HUB &&
+> > ddev->of_node && !of_property_read_u32(...))
+> >
+> > Or is it better to check bInterfaceClass, for composite devices with a
+> > hub interface inside?
+> > if (ifp->desc.bInterfaceClass == USB_CLASS_HUB && ddev->of_node &&
+> > !of_property_read_u32(...))
+> >
+> > I think checking bInterfaceClass is better.
+>
+> Yep, that seems better (but please use two conditionals for
+> readability).
+>
+> But related to my question above, why do you need to do this during
+> enumeration? Why not just set the lower interval value in the hub
+> driver?
+>
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 0530bebfc25a..9f6b0196c604 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -218,6 +218,16 @@ config CLK_QORIQ
- 	  This adds the clock driver support for Freescale QorIQ platforms
- 	  using common clock framework.
- 
-+config CLK_LS1028A_PLLDIG
-+        tristate "Clock driver for LS1028A Display output"
-+        depends on ARCH_LAYERSCAPE || COMPILE_TEST
-+        default ARCH_LAYERSCAPE
-+        help
-+          This driver support the Display output interfaces(LCD, DPHY) pixel clocks
-+          of the QorIQ Layerscape LS1028A, as implemented TSMC CLN28HPM PLL. Not all
-+          features of the PLL are currently supported by the driver. By default,
-+          configured bypass mode with this PLL.
-+
- config COMMON_CLK_XGENE
- 	bool "Clock driver for APM XGene SoC"
- 	default ARCH_XGENE
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 0138fb14e6f8..97d1e5bc6de5 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -43,6 +43,7 @@ obj-$(CONFIG_ARCH_NPCM7XX)	    	+= clk-npcm7xx.o
- obj-$(CONFIG_ARCH_NSPIRE)		+= clk-nspire.o
- obj-$(CONFIG_COMMON_CLK_OXNAS)		+= clk-oxnas.o
- obj-$(CONFIG_COMMON_CLK_PALMAS)		+= clk-palmas.o
-+obj-$(CONFIG_CLK_LS1028A_PLLDIG)	+= clk-plldig.o
- obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
- obj-$(CONFIG_CLK_QORIQ)			+= clk-qoriq.o
- obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
-diff --git a/drivers/clk/clk-plldig.c b/drivers/clk/clk-plldig.c
-new file mode 100644
-index 000000000000..1942686f0254
---- /dev/null
-+++ b/drivers/clk/clk-plldig.c
-@@ -0,0 +1,297 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP
-+ *
-+ * Clock driver for LS1028A Display output interfaces(LCD, DPHY).
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/bitfield.h>
-+
-+/* PLLDIG register offsets and bit masks */
-+#define PLLDIG_REG_PLLSR            0x24
-+#define PLLDIG_LOCK_MASK            BIT(2)
-+#define PLLDIG_REG_PLLDV            0x28
-+#define PLLDIG_MFD_MASK             GENMASK(7, 0)
-+#define PLLDIG_RFDPHI1_MASK         GENMASK(30, 25)
-+#define PLLDIG_REG_PLLFM            0x2c
-+#define PLLDIG_SSCGBYP_ENABLE       BIT(30)
-+#define PLLDIG_REG_PLLFD            0x30
-+#define PLLDIG_FDEN                 BIT(30)
-+#define PLLDIG_FRAC_MASK            GENMASK(15, 0)
-+#define PLLDIG_REG_PLLCAL1          0x38
-+#define PLLDIG_REG_PLLCAL2          0x3c
-+
-+/* Range of the VCO frequencies, in Hz */
-+#define PLLDIG_MIN_VCO_FREQ         650000000
-+#define PLLDIG_MAX_VCO_FREQ         1300000000
-+
-+/* Range of the output frequencies, in Hz */
-+#define PHI1_MIN_FREQ               27000000
-+#define PHI1_MAX_FREQ               600000000
-+
-+/* Maximum value of the reduced frequency divider */
-+#define MAX_RFDPHI1          63UL
-+
-+/* Best value of multiplication factor divider */
-+#define PLLDIG_DEFAULT_MFD   44
-+
-+/*
-+ * Denominator part of the fractional part of the
-+ * loop multiplication factor.
-+ */
-+#define MFDEN          20480
-+
-+static const struct clk_parent_data parent_data[] = {
-+	{.index = 0},
-+};
-+
-+struct clk_plldig {
-+	struct clk_hw hw;
-+	void __iomem *regs;
-+	unsigned int vco_freq;
-+};
-+
-+#define to_clk_plldig(_hw)	container_of(_hw, struct clk_plldig, hw)
-+
-+static int plldig_enable(struct clk_hw *hw)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	u32 val;
-+
-+	val = readl(data->regs + PLLDIG_REG_PLLFM);
-+	/*
-+	 * Use Bypass mode with PLL off by default, the frequency overshoot
-+	 * detector output was disable. SSCG Bypass mode should be enable.
-+	 */
-+	val |= PLLDIG_SSCGBYP_ENABLE;
-+	writel(val, data->regs + PLLDIG_REG_PLLFM);
-+
-+	return 0;
-+}
-+
-+static void plldig_disable(struct clk_hw *hw)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	u32 val;
-+
-+	val = readl(data->regs + PLLDIG_REG_PLLFM);
-+
-+	val &= ~PLLDIG_SSCGBYP_ENABLE;
-+	val |= FIELD_PREP(PLLDIG_SSCGBYP_ENABLE, 0x0);
-+
-+	writel(val, data->regs + PLLDIG_REG_PLLFM);
-+}
-+
-+static int plldig_is_enabled(struct clk_hw *hw)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+
-+	return (readl(data->regs + PLLDIG_REG_PLLFM) &
-+			      PLLDIG_SSCGBYP_ENABLE);
-+}
-+
-+static unsigned long plldig_recalc_rate(struct clk_hw *hw,
-+					unsigned long parent_rate)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	u32 val, rfdphi1;
-+
-+	val = readl(data->regs + PLLDIG_REG_PLLDV);
-+
-+	/* Check if PLL is bypassed */
-+	if (val & PLLDIG_SSCGBYP_ENABLE)
-+		return parent_rate;
-+
-+	rfdphi1 = FIELD_GET(PLLDIG_RFDPHI1_MASK, val);
-+
-+	/*
-+	 * If RFDPHI1 has a value of 1 the VCO frequency is also divided by
-+	 * one.
-+	 */
-+	if (!rfdphi1)
-+		rfdphi1 = 1;
-+
-+	return DIV_ROUND_UP(data->vco_freq, rfdphi1);
-+}
-+
-+static unsigned long plldig_calc_target_div(unsigned long vco_freq,
-+					    unsigned long target_rate)
-+{
-+	unsigned long div;
-+
-+	div = DIV_ROUND_CLOSEST(vco_freq, target_rate);
-+	div = max(1UL, div);
-+	div = min(div, MAX_RFDPHI1);
-+
-+	return div;
-+}
-+
-+static int plldig_determine_rate(struct clk_hw *hw,
-+				 struct clk_rate_request *req)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	unsigned int div;
-+
-+	if (req->rate < PHI1_MIN_FREQ)
-+		req->rate = PHI1_MIN_FREQ;
-+	if (req->rate > PHI1_MAX_FREQ)
-+		req->rate = PHI1_MAX_FREQ;
-+
-+	div = plldig_calc_target_div(data->vco_freq, req->rate);
-+	req->rate = DIV_ROUND_UP(data->vco_freq, div);
-+
-+	return 0;
-+}
-+
-+static int plldig_set_rate(struct clk_hw *hw, unsigned long rate,
-+		unsigned long parent_rate)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	unsigned int val, cond;
-+	unsigned int rfdphi1;
-+
-+	if (rate < PHI1_MIN_FREQ)
-+		rate = PHI1_MIN_FREQ;
-+	if (rate > PHI1_MAX_FREQ)
-+		rate = PHI1_MAX_FREQ;
-+
-+	rfdphi1 = plldig_calc_target_div(data->vco_freq, rate);
-+
-+	/* update the divider value */
-+	val = readl(data->regs + PLLDIG_REG_PLLDV);
-+	val &= ~PLLDIG_RFDPHI1_MASK;
-+	val |= FIELD_PREP(PLLDIG_RFDPHI1_MASK, rfdphi1);
-+	writel(val, data->regs + PLLDIG_REG_PLLDV);
-+
-+	/* delay 200us make sure that old lock state is cleared */
-+	udelay(200);
-+
-+	/* Wait until PLL is locked or timeout (maximum 1000 usecs) */
-+	return readl_poll_timeout_atomic(data->regs + PLLDIG_REG_PLLSR, cond,
-+					 cond & PLLDIG_LOCK_MASK, 0,
-+					 USEC_PER_MSEC);
-+}
-+
-+static const struct clk_ops plldig_clk_ops = {
-+	.enable = plldig_enable,
-+	.disable = plldig_disable,
-+	.is_enabled = plldig_is_enabled,
-+	.recalc_rate = plldig_recalc_rate,
-+	.determine_rate = plldig_determine_rate,
-+	.set_rate = plldig_set_rate,
-+};
-+
-+static int plldig_init(struct clk_hw *hw)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	struct clk_hw *parent = clk_hw_get_parent(hw);
-+	unsigned long parent_rate = clk_hw_get_rate(parent);
-+	unsigned long val;
-+	unsigned long long lltmp;
-+	unsigned int mfd, fracdiv = 0;
-+
-+	if (!parent)
-+		return -EINVAL;
-+
-+	if (data->vco_freq) {
-+		mfd = data->vco_freq / parent_rate;
-+		lltmp = data->vco_freq % parent_rate;
-+		lltmp *= MFDEN;
-+		do_div(lltmp, parent_rate);
-+		fracdiv = lltmp;
-+	} else {
-+		mfd = PLLDIG_DEFAULT_MFD;
-+		data->vco_freq = parent_rate * mfd;
-+	}
-+
-+	val = FIELD_PREP(PLLDIG_MFD_MASK, mfd);
-+	writel(val, data->regs + PLLDIG_REG_PLLDV);
-+
-+	if (fracdiv) {
-+		val = FIELD_PREP(PLLDIG_FRAC_MASK, fracdiv);
-+		/* Enable fractional divider */
-+		val |= PLLDIG_FDEN;
-+		writel(val, data->regs + PLLDIG_REG_PLLFD);
-+	}
-+
-+	return 0;
-+}
-+
-+static int plldig_clk_probe(struct platform_device *pdev)
-+{
-+	struct clk_plldig *data;
-+	struct resource *mem;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	data->regs = devm_ioremap_resource(dev, mem);
-+	if (IS_ERR(data->regs))
-+		return PTR_ERR(data->regs);
-+
-+	data->hw.init = CLK_HW_INIT_PARENTS_DATA("dpclk",
-+						 parent_data,
-+						 &plldig_clk_ops,
-+						 0);
-+
-+	ret = devm_clk_hw_register(dev, &data->hw);
-+	if (ret) {
-+		dev_err(dev, "failed to register %s clock\n",
-+						dev->of_node->name);
-+		return ret;
-+	}
-+
-+	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
-+					  &data->hw);
-+	if (ret) {
-+		dev_err(dev, "unable to add clk provider\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * The frequency of the VCO cannot be changed during runtime.
-+	 * Therefore, let the user specify a desired frequency.
-+	 */
-+	if (!of_property_read_u32(dev->of_node, "fsl,vco-hz",
-+				  &data->vco_freq)) {
-+		if (data->vco_freq < PLLDIG_MIN_VCO_FREQ ||
-+		    data->vco_freq > PLLDIG_MAX_VCO_FREQ)
-+			return -EINVAL;
-+	}
-+
-+	return plldig_init(&data->hw);
-+}
-+
-+static const struct of_device_id plldig_clk_id[] = {
-+	{ .compatible = "fsl,ls1028a-plldig"},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, plldig_clk_id);
-+
-+static struct platform_driver plldig_clk_driver = {
-+	.driver = {
-+		.name = "plldig-clock",
-+		.of_match_table = plldig_clk_id,
-+	},
-+	.probe = plldig_clk_probe,
-+};
-+module_platform_driver(plldig_clk_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Wen He <wen.he_1@nxp.com>");
-+MODULE_DESCRIPTION("LS1028A Display output interface pixel clock driver");
--- 
-2.17.1
+Because I want device tree's bInterval to be checked against the same rules
+defined in usb_parse_endpoint(). e.g. although hardware says its maximum
+is 255, but the practical limit is still 0 to 16, so the code can
+print warnings when
+bInterval from device node is too weird.
 
+> > > > +             u32 interval = 0;
+> > > > +             if (!of_property_read_u32(ddev->of_node, "hub,interval",
+> > > > +                                 &interval))
+> > > > +                     d->bInterval = min_t(u8, interval, 255);
+> > >
+> > > You want min_t(u32, ...) here to avoid surprises when someone specifies
+> > > a value > 255.
+> >
+> > yes, thanks.
+>
+> And I guess you should really be honouring bInterval as a maximum value,
+> right?
+
+Yes, right, not masking.
+
+>
+> > > > +     }
+> > > > +
+> > > >       /*
+> > > >        * Fix up bInterval values outside the legal range.
+> > > >        * Use 10 or 8 ms if no proper value can be guessed.
+>
+> Johan
