@@ -2,104 +2,120 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32641C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 05:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DEFC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 06:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0497020707
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 05:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408CB22464
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 06:06:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="XkSFWnrs";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mFtuhQSU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="XnC1T960"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725855AbfLEFNp (ORCPT
+        id S1725905AbfLEGGi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 00:13:45 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:52337 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725822AbfLEFNp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 00:13:45 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 171566DFB;
-        Thu,  5 Dec 2019 00:13:44 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Thu, 05 Dec 2019 00:13:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=HmY629d09ljX49+gWihMYnlLvvddw8y
-        blf8rUOR5/wE=; b=XkSFWnrsqIZKGLVdudWqOUsdB5YtNlYfu/WzJNmOnyi7Za9
-        38ORxDINALsurrmH9koTMeFOuAMZbEdt3jb4NKuSHz1kx+lTQ8xaqEa4ARhDGT4D
-        KGfLIlPrgABX0jjuH+qOBWgYSBYhf6XN2TcuNhLmzc4lnObgmWWgUqILS/RSwONj
-        0dok7lVopN++sUQMDj6CcDhMfaGf0RO0rzOcHeFJbECCjlfWyZ7zpQLUflU2t4m3
-        O7cOUNTC2iCsFkjBQw5iJqeVUyG/bvlRsBcI+ziZDSYuCJO8AJnT2xLVipUkEmKk
-        5GsqpC7va97/ZkAtZQnZUb+3UJAwaK2HhNrJftA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=HmY629
-        d09ljX49+gWihMYnlLvvddw8yblf8rUOR5/wE=; b=mFtuhQSUTGXR6RwrC/ZSqy
-        DHtQ5sfJ72Gp+Fl14rqpI8A7opsv9ESRgx9plv2EalC4IRNebJZFDPAbVXGAep4o
-        JgsZPzXUfI67INU1Q5h0MO2IeaIdp6pYZXaSdxxkzCukfnYYRgBMl9Kp3NEkQDy3
-        +yrfq21UcepbK7ueIDsO974jcDYOwBURh8RF6li/Ko2371GVJkEpfgnv1Y5Bpt6U
-        CyfG3o8gCDE3M6qGOD9nLeUR4TIAqzun6+KU/Vaonbonc6Z35lZTYQnrWIFEeK0p
-        ukSchr2VVYPg9URotj309OcD4EQh8jjd10uwGTVxU9jR+ABqlVslmU+WCOHbl8aw
-        ==
-X-ME-Sender: <xms:BpLoXT9uaXVa-DTA9FwW7wiy_GJt_465bqEkFIhziNC9gaP8vGHyUQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudektddgkedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:BpLoXZ_D9ZZbPr1lny9cZzaTeUS9m8tXYUZA2MppI0yZIXZnp_X2Xg>
-    <xmx:BpLoXf_QPUo2GeX0u2WvSXm8b7gNwGJfzBKKQ1G_f6wAJAtDi7mWuw>
-    <xmx:BpLoXXE1ahEGOo08cwQHVS1JRmlO5DhCD36h38YcnnRuHi-6wckWRg>
-    <xmx:CJLoXbQbKnADxn_5wl7Byr_5lJFU-G_lsmG9VHhHT4bPdTbtQ1IPNg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id AE0DEE00A2; Thu,  5 Dec 2019 00:13:42 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-612-g13027cc-fmstable-20191203v1
-Mime-Version: 1.0
-Message-Id: <cd76d709-683b-44c0-b29f-d31c9dddc75e@www.fastmail.com>
-In-Reply-To: <20191203134026.GI18165@minyard.net>
-References: <cover.5630f63168ad5cddf02e9796106f8e086c196907.1575376664.git-series.andrew@aj.id.au>
- <84315a29b453068373c096c03433e3a326731988.1575376664.git-series.andrew@aj.id.au>
- <20191203134026.GI18165@minyard.net>
-Date:   Thu, 05 Dec 2019 15:45:17 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Corey Minyard" <minyard@acm.org>
-Cc:     openipmi-developer@lists.sourceforge.net,
-        "Rob Herring" <robh+dt@kernel.org>, mark.rutland@arm.com,
-        "Joel Stanley" <joel@jms.id.au>, "Arnd Bergmann" <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Thu, 5 Dec 2019 01:06:38 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:58358 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725880AbfLEGGi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 5 Dec 2019 01:06:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dSBpaxwIFIt6XTXn2BVKEZT+C7a4WG7hO1oDu4g0lQU=; b=XnC1T96098DXSfUc1kQjc+opX
+        ooXVR+JY2HBPWk/qL7yTfIZreq7mGSB7NGYY6mz0IoX6TxcQw4Cd2dunJtUPRP+B1foaXHBJgZv4N
+        KZbSjEpyHvTdsnm64HgcAhdkMGm7KpM9JrSl8t3yLW0zZEZTfqVjebrCkhfVmXjhUaLGc=;
+Received: from [185.238.219.17] (helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1ickHZ-0002i1-4a; Thu, 05 Dec 2019 07:06:34 +0100
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1ickHN-0000Bm-8W; Thu, 05 Dec 2019 07:06:21 +0100
+Date:   Thu, 5 Dec 2019 07:06:12 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        "Haiyue Wang" <haiyue.wang@linux.intel.com>
-Subject: =?UTF-8?Q?Re:_[PATCH_2/3]_ipmi:_kcs:_Finish_configuring_ASPEED_KCS_devic?=
- =?UTF-8?Q?e_before_enable?=
-Content-Type: text/plain
+        "H . Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH] ARM: dts: e60k02: fix power button
+Message-ID: <20191205070612.27204646@kemnade.info>
+In-Reply-To: <20191204123645.GL3365@dragon>
+References: <20191111202959.24189-1-andreas@kemnade.info>
+        <20191204123645.GL3365@dragon>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/e59ch/q73Ij1=hh=gGw_suC"; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+--Sig_/e59ch/q73Ij1=hh=gGw_suC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, 4 Dec 2019 20:36:47 +0800
+Shawn Guo <shawnguo@kernel.org> wrote:
 
-On Wed, 4 Dec 2019, at 00:10, Corey Minyard wrote:
-> On Tue, Dec 03, 2019 at 11:08:24PM +1030, Andrew Jeffery wrote:
-> > The currently interrupts are configured after the channel was enabled.
-> 
-> How about:
-> 
-> The interrupts were configured after the channel was enabled, configure
-> them before so they will work.
+> On Mon, Nov 11, 2019 at 09:29:59PM +0100, Andreas Kemnade wrote:
+> > The power button was only producing irqs, but no key events,
+> > Forced power down with long key press works, so probably
+> > only a short spike arrives at the SoC.
+> > Further investigation shows that LDORTC2 is off after boot
+> > of the vendor kernel. LDORTC2 is shared with a GPIO at the pmic
+> > which probably transfers the button press to the SoC.
+> > That regulator off at boot, so "regulator-boot-on" is definitively
+> > wrong. So remove that.
+> >=20
+> > Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info> =20
+>=20
+> Do you want this go into 5.5-rc as a fix?  In that case, we may need a
+> Fixes tag here.
+>=20
+well, now there is=20
+regulator: core: Let boot-on regulators be powered off
+so the power button should work after regulator_late_cleanup()
+is called but that is usually some time after userspace has started,
+so it would be better to have that in. And of course dt should
+correctly describe the hardware. That would be
 
-Hah, yes, that commit message did get a bit mangled. I'll update it.
+Fixes: c100ea86e6ab ("ARM: dts: add Netronix E60K02 board common file")
 
-Thanks,
+BTW: I have not seen your 5.5 stuff in Linus' tree yet. Seems that Olof
+has not sent his pull request yet or is there bigger trouble?
 
-Andrew
+Regards,
+Andreas
+
+--Sig_/e59ch/q73Ij1=hh=gGw_suC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl3onlQACgkQl4jFM1s/
+ye9lJhAArhjRzxxMavFXQf2PI+2ZJZ4rFZjFvJ75/UxnBDrNFslJ3WEeEnuIymQD
+MRPwgn4qE57P4pj17WFRS+Xaw7BRRJ5sHjHSfWLsNZMlzhkEDviVx9zOIhQK6GJO
+yxbZq2u0hthGAFM7nJ+Z38Z+j6E9dzQLpufmgFfrCzZaza1GYeJnQbwfUZSHtvjB
+/NwXiA1M6ELlx3evtZ7P6Chi45SmXl4foy1zX4ESh46rR1uaLij1sOXJ7Tu5r54C
+GgaxpdqqR1GtTWfZkF0sQvRmcxGXM+UZDyHFZ2c/Id/6MApQx1vibAyKY9zyHdp0
+wc6tBEPKJHdts9H5rNwQrSwF9k50YlCphuTRtsJUsW3BiNxBmksTNBVfLM2AjiDO
+rpL5OKfJqgUXeP5/sR/H1ZrlJWPMibSvK2C/F8XlkRzM1h54xcil523ymoCoJrc2
+N72JzslVK83SI5gm4CrsRYnEXu+sMS5UbLbgU7zCJdC76PqhsM44hqtVGN1Faf7w
+RB03MjZ2vnuQtk5k/Xn/nUJS5NFp4g0nburvcjSW/jpTPrdT7jhqafUzbazU70NU
+OimIpJWZBghslhZLYaagOJJE/iLrzqe7Tns7UNzzQhKae+YAFtoutLPhV920XVab
+1JSQ1Dtb9AQmLNPhIvXTKaRFpHVYzPlrJO4ICfJbt9ouTY9IrN4=
+=m0VS
+-----END PGP SIGNATURE-----
+
+--Sig_/e59ch/q73Ij1=hh=gGw_suC--
