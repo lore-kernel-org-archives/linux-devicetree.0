@@ -2,72 +2,162 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D4FC2BD09
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEFBC2BD09
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E1624651
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453BF224F8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575554185;
+	bh=SI5/UqDvOLdW/ebXgeRPP0F1wEDuikwE8BLTviwj7zI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=f94OxYmAByCLS6LSkBz2lgOoG2nl/Yk/H2P4Skkwlz/9BEii8Nz2iPlLzM6LbfR0a
+	 Kqfz3dn79yzygV5Z1xh0/dUBjai7fTu3gp5a02xiVxdm7yB5tCikQvFrZdpflsBCQS
+	 yA7tP5oSYev+n830/BB1TUK2i0JLJdZb0r8fN3wk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbfLENrz (ORCPT
+        id S1729260AbfLEN4Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 08:47:55 -0500
-Received: from michel.telenet-ops.be ([195.130.137.88]:51482 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729583AbfLENrz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 08:47:55 -0500
-Received: from ramsan ([84.195.182.253])
-        by michel.telenet-ops.be with bizsmtp
-        id aDns2100D5USYZQ06DnsAz; Thu, 05 Dec 2019 14:47:52 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1icrU0-0002E6-A6; Thu, 05 Dec 2019 14:47:52 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1icrU0-0001oT-9I; Thu, 05 Dec 2019 14:47:52 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: watchdog: renesas-wdt: Document r8a77961 support
-Date:   Thu,  5 Dec 2019 14:47:51 +0100
-Message-Id: <20191205134751.6928-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Thu, 5 Dec 2019 08:56:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729099AbfLEN4Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 5 Dec 2019 08:56:24 -0500
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41D1422525;
+        Thu,  5 Dec 2019 13:56:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575554183;
+        bh=SI5/UqDvOLdW/ebXgeRPP0F1wEDuikwE8BLTviwj7zI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yg7lntnXFYlbDO+rC98Zawl9736UXE/JoMSwLlGu7DSzz7ZIVo1Fn+kvVe5wFj8oX
+         ORE1V1NZRCFe2OD/LgTnjmhjR3dknHNDXRNDSgqnudzCaVzxk3wXXypAPX4W9yBJo/
+         IvY/jADxsCi/U5vhAWde20l3rRE8DKIdnpbdYnKY=
+Received: by mail-qk1-f180.google.com with SMTP id g15so3351553qka.8;
+        Thu, 05 Dec 2019 05:56:23 -0800 (PST)
+X-Gm-Message-State: APjAAAXnxAyCdpUF/kT0rPEg9X/NRMCpzg9nVS5m0TdkobzL+7eVYT7R
+        K4mWvs+KgtYlesl2KJcDMSb2LPvlcoSLOk0E9w==
+X-Google-Smtp-Source: APXvYqxTieNjxwOysjbfDY0Jzt7u28n6wJ0i4JI/0Df2CY+8bRxVrS6cJAN5zimj0f/y7nSsmjIvD9YzQK49P9OeD5Y=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr8502354qkg.152.1575554182339;
+ Thu, 05 Dec 2019 05:56:22 -0800 (PST)
+MIME-Version: 1.0
+References: <20191205002503.13088-1-masneyb@onstation.org> <20191205002503.13088-5-masneyb@onstation.org>
+In-Reply-To: <20191205002503.13088-5-masneyb@onstation.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 5 Dec 2019 07:56:10 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+jpz6_N18sChREC_xGYt9sSFZFtWr3omb_6o7+MFxuHg@mail.gmail.com>
+Message-ID: <CAL_Jsq+jpz6_N18sChREC_xGYt9sSFZFtWr3omb_6o7+MFxuHg@mail.gmail.com>
+Subject: Re: [PATCH 4/7] dt-bindings: Input: introduce new clock vibrator bindings
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linux Input <linux-input@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document support for the Watchdog Timer in the Renesas R-Car M3-W+
-(R8A77961) SoC.
+On Wed, Dec 4, 2019 at 6:25 PM Brian Masney <masneyb@onstation.org> wrote:
+>
+> Add support for clock-based vibrator devices where the speed can be
+> controlled by changing the duty cycle.
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+>  .../bindings/input/clk-vibrator.yaml          | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/clk-vibrator.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/input/clk-vibrator.yaml b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
+> new file mode 100644
+> index 000000000000..2103a5694fad
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/input/clk-vibrator.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Clock vibrator
+> +
+> +maintainers:
+> +  - Brian Masney <masneyb@onstation.org>
+> +
+> +description: |
+> +  Support for clock-based vibrator devices where the speed can be controlled
+> +  by changing the duty cycle.
+> +
+> +properties:
+> +  compatible:
+> +    const: clk-vibrator
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description: output clock that controls the speed
+> +    items:
+> +      - const: core
 
-No driver update is needed.
+No point in making up a name when there's only one clock, so drop.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/watchdog/renesas,wdt.txt | 1 +
- 1 file changed, 1 insertion(+)
+> +
+> +  clock-frequency: true
 
-diff --git a/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
-index a5bf04dba410aced..79b3c62f183d26dc 100644
---- a/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
-@@ -19,6 +19,7 @@ Required properties:
- 	         - "renesas,r8a7794-wdt" (R-Car E2)
- 	         - "renesas,r8a7795-wdt" (R-Car H3)
- 	         - "renesas,r8a7796-wdt" (R-Car M3-W)
-+	         - "renesas,r8a77961-wdt" (R-Car M3-W+)
- 		 - "renesas,r8a77965-wdt" (R-Car M3-N)
- 	         - "renesas,r8a77970-wdt" (R-Car V3M)
- 	         - "renesas,r8a77990-wdt" (R-Car E3)
--- 
-2.17.1
+Given the frequency is variable, what does this mean in this case?
 
+> +  enable-gpios:
+> +    maxItems: 1
+> +
+> +  vcc-supply:
+> +    description: Regulator that provides power
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - clock-names
+> +  - clock-frequency
+
+Add:
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    vibrator {
+> +        compatible = "clk-vibrator";
+> +
+> +        vcc-supply = <&pm8941_l19>;
+> +
+> +        clocks = <&mmcc CAMSS_GP1_CLK>;
+> +        clock-names = "core";
+> +        clock-frequency = <24000>;
+> +
+> +        enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
+> +
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&vibrator_pin>;
+> +    };
+> --
+> 2.21.0
+>
