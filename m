@@ -2,156 +2,148 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6910FC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 07:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8A7C2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 08:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31CA1205F4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 07:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3189324651
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 08:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Trzbnsgf"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HWaeSx3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbfLEHpT (ORCPT
+        id S1726007AbfLEIGV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 02:45:19 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:16919 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfLEHpT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 02:45:19 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: blMtPCkpoLZhBVQvN2vxT8EawB2qs0VXYwEp5OJdKCM2yBppFRuQpBviAhDeCZpNrTcDqam2AR
- 3LeGiQjgHsdfQebCh2rSfcOfhZe7mv5g5235s0TxF7e2N99oVy7oPiRqiMLA8xPnG4Q1jLhAdW
- q4b5XqmSUvFWbY+TJI3F9ZzH+I0nLh/i0QLIpNd45NHtselp3w96At+s3DWsWMGN4OMAd3uwfj
- BOXvOu/daNhHEriyLCuyVBJVU/tQk+Q1maJpAT5tGiHAc+51Ym4M5l2d3yhoIClGH8j3hLJ5Ok
- js0=
-X-IronPort-AV: E=Sophos;i="5.69,280,1571727600"; 
-   d="scan'208";a="59341252"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 05 Dec 2019 00:45:03 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 5 Dec 2019 00:45:04 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
- Transport; Thu, 5 Dec 2019 00:45:05 -0700
+        Thu, 5 Dec 2019 03:06:21 -0500
+Received: from mail-eopbgr140072.outbound.protection.outlook.com ([40.107.14.72]:24302
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728419AbfLEIGV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 5 Dec 2019 03:06:21 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E08b5vZCZ7R+/vkuos+uWyylR+SBXiqDXlYlmGVi1+JywBk/iycvHkQAz874NDi/s10dcPYGY7xnEXZH1/2r0V7ya0us9aFuCEbzhJ0eNk3RQ7haOivAETIGmu9vVZfa9yfOx0NuG1vN6RUPMS1ZJlpvuTkLPws0dcLGK5IIevNsIFL5cF2LpY+ipwhHEz0qVQLYd4yjasUe2Jl3PTTmrEZX34MUkxKI2EREF8SYQQs9nsLty2Kjwv5b8EUL22OqlXKe38czYrFXrQOhdCEm/pvL9UD5XJ6llf6gzV8FuvSPAIwxLqn46uZ/5cx3dWcf5MWKouJ2Wsq4x/vGu84BAQ==
+ b=mzGstZ3/0W1V6Au82cNJvdGaB8mjTx8Q0sfDlMSCRj+3iputeXDQQvChsk1NMaZI/BF6NnC0fnsnmczgoOImWQGwN9jL21sc4lldeUewIHQVyB5m+qh6CfBV/pxY2a65HK1W8OfXnGZtSUpZGUv9loJBdD38MgBHBV+trfFQsTR3/JGjuLCgsWIceRfNeNao+IWY6QgdPyzUdnoLqympf3j2j4GJ1fONKx6DFpAPbo0bTVXcd7k7gWPbVEuSvURbEvCcmGNS3KiiTpUE9+VpiMbhsOrfc475N9MJJdWoOwyDmmSQMVtI99cmLP9JyjjbS8SJNOMpVSDKO6aotYwv9Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2xC3jReT8OL+ItYm7fWigXNH5IVM9Lukn9Rbw3i7d+w=;
- b=OrLDA3VBXsBAX6minNzvUEtlsXq91jG13T1+sNR5PhjziZiSZ62YVZIRHFDj7BI8f9oLoHSBEtdUD2otCIXl13PnP2puwYPhVrxCcuXnMjTAUYQ+LyAU5fxDcAV+Xcr2T7qPvjC02fpa+YgQBALEkrGiweeActJhoJ8Jd5w51+yGUJedTxa5bULtOdQn+Eo1isumzf9uRk93RoeICLOD/r/lEUIj8B2BFLH110FmgZdzUMC3dxgRAH6moMI3NQrnDOnUt+iZQy4CAYSbzEx1XjEvVfkeyYNbIGiQQqaLfe5ZDeUcLmF3rxT/Kt2bpw9j4JPRk3TiMSAx0dh+48kGlw==
+ bh=Sy2yvF7lTaSCWszw23p8+imZjaR1+UzisULwMtz5iw4=;
+ b=kKQA69FzRpN/nlCYtBPhJUA3wz+Aou7xvHZSOvgyL+M7AlWaHLiLH50lDRgKsZYo13XtC3YxkDj46SddX9e3l6qeG/CvKsS3XN/Q7S/egn8KdF1o8g5KqdQWvS0MMMMCLyj90yhMctbeE+bvY6DGjicnJRJbOR8Za5Kvu9gTiAv02A7WHQHYB+IrsV8mwSSHePGAlpCTFY5Io6HJv3msPR9tMQdIAew2quA1XH5n933b8eMrZxPjKEVj82x4HSN1rKkL5tN6T9s/uQK9IlV5z6AWKoOCc4uZC5/J2vDg3o22LlduQHyZIPDWGN82b84I1+3mr7gdTMDTrqwEmVo9jw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2xC3jReT8OL+ItYm7fWigXNH5IVM9Lukn9Rbw3i7d+w=;
- b=TrzbnsgfDj67xybiJmCMAHeV5YIODYUvuU5l0XOyxSMdm63Mn6x0zVjY5mxywzUHbHIqwTp5y+LjAovlLQjb0vK1IBGl7QFC7Mn63rU3gUbABbT1d6mQH5JngAPnBFMXNLUA8/UzEUGdKeTzuIJQP2aJ2Rn3/4HlXX8nFN0jBlU=
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB1979.namprd11.prod.outlook.com (10.175.87.147) with Microsoft SMTP
+ bh=Sy2yvF7lTaSCWszw23p8+imZjaR1+UzisULwMtz5iw4=;
+ b=HWaeSx3byvzYw7l2OZaFQGj/8zrzmUV2Hco+SnonsPDVmDse+8QQrFSI7HPnh/qvTVH/8/oH3pu3Hoo4bAqu98of8ME9iyKGG1QOZqnHT0pQibbyJH5EWNRQ1vSON7BzMBd4AqpXBnOk4noCUMiWdw//ROv5UCyUHGdZ7kBKx4k=
+Received: from VE1PR04MB6528.eurprd04.prod.outlook.com (20.179.235.146) by
+ VE1PR04MB6670.eurprd04.prod.outlook.com (20.179.233.213) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.14; Thu, 5 Dec 2019 07:45:00 +0000
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::9039:e0e8:9032:20c1]) by DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::9039:e0e8:9032:20c1%12]) with mapi id 15.20.2516.014; Thu, 5 Dec 2019
- 07:45:00 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <alexandre.belloni@bootlin.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <Ludovic.Desroches@microchip.com>, <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] ARM: dts: at91: sama5d27_som1_ek: add i2c filters
- properties
-Thread-Topic: [PATCH] ARM: dts: at91: sama5d27_som1_ek: add i2c filters
- properties
-Thread-Index: AQHVo3KV0xMhN6t/20m55125H3GPJKenJySAgAQRrgA=
-Date:   Thu, 5 Dec 2019 07:45:00 +0000
-Message-ID: <35ba1327-ff76-0eed-d481-f07196b20fb1@microchip.com>
-References: <1574674036-5589-1-git-send-email-eugen.hristev@microchip.com>
- <20191202173625.GG909634@piout.net>
-In-Reply-To: <20191202173625.GG909634@piout.net>
-Accept-Language: en-US, ro-RO
+ 15.20.2495.22; Thu, 5 Dec 2019 08:06:17 +0000
+Received: from VE1PR04MB6528.eurprd04.prod.outlook.com
+ ([fe80::bd10:c4cb:c1ed:97df]) by VE1PR04MB6528.eurprd04.prod.outlook.com
+ ([fe80::bd10:c4cb:c1ed:97df%3]) with mapi id 15.20.2516.014; Thu, 5 Dec 2019
+ 08:06:17 +0000
+From:   Jun Li <jun.li@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Jun Li <jun.li@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Subject: [PATCH 1/3] clk: imx8mn: correct the usb1_ctrl parent to be usb_bus
+Thread-Topic: [PATCH 1/3] clk: imx8mn: correct the usb1_ctrl parent to be
+ usb_bus
+Thread-Index: AQHVq0LeKcaKVFbYuE65++4CmZUlQQ==
+Date:   Thu, 5 Dec 2019 08:06:17 +0000
+Message-ID: <1575533029-13049-1-git-send-email-jun.li@nxp.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: ZRAP278CA0009.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:10::19) To DM5PR11MB1242.namprd11.prod.outlook.com
- (2603:10b6:3:14::8)
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR03CA0050.apcprd03.prod.outlook.com
+ (2603:1096:202:17::20) To VE1PR04MB6528.eurprd04.prod.outlook.com
+ (2603:10a6:803:127::18)
+authentication-results: spf=none (sender IP is ) smtp.mailfrom=jun.li@nxp.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
-x-tagtoolbar-keys: D20191205094444311
-x-originating-ip: [94.177.32.156]
+x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3decf607-bf6d-408e-98e7-08d779570827
-x-ms-traffictypediagnostic: DM5PR11MB1979:
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c55002d9-de23-4e1b-cfe2-08d7795a0132
+x-ms-traffictypediagnostic: VE1PR04MB6670:|VE1PR04MB6670:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB1979FB8A3CC3419B6739915BE85C0@DM5PR11MB1979.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-microsoft-antispam-prvs: <VE1PR04MB66701FFC26BF582DC258C33D895C0@VE1PR04MB6670.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:873;
 x-forefront-prvs: 02426D11FE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(39860400002)(136003)(366004)(199004)(189003)(99286004)(478600001)(25786009)(66946007)(52116002)(4326008)(14454004)(102836004)(31686004)(26005)(8676002)(6506007)(966005)(186003)(6436002)(316002)(4744005)(53546011)(66446008)(76176011)(5660300002)(66556008)(64756008)(54906003)(66476007)(71200400001)(2616005)(86362001)(81156014)(81166006)(36756003)(8936002)(305945005)(7736002)(11346002)(6512007)(2906002)(6246003)(3846002)(6486002)(6916009)(71190400001)(31696002)(229853002)(6306002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1979;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39860400002)(396003)(136003)(346002)(199004)(189003)(6506007)(66446008)(7416002)(50226002)(8936002)(81166006)(81156014)(8676002)(7736002)(186003)(4326008)(102836004)(14444005)(26005)(66476007)(66556008)(66946007)(305945005)(64756008)(6512007)(2501003)(316002)(5660300002)(36756003)(71200400001)(71190400001)(110136005)(54906003)(52116002)(99286004)(2201001)(86362001)(3846002)(14454004)(2906002)(25786009)(6116002)(44832011)(6486002)(478600001)(2616005)(6436002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6670;H:VE1PR04MB6528.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aQU66Pd/MEdt7J4BrDnR+D+ia/uLDPzuvzmfBw1r8J0iow04vUi7xlcHqNvklbUD9E/oLuR111Nt9nrrlleIdjqM45Wjh/1uJOO7F4ZOd60ZrUXYECaBjOhjOjBz/42XJo7QM0HVI1t+nesiUxGviywqi7nmNGc0CBP8ipY21LQ51jQeXrEIF48v2KZht0cao0gS43CIHwTFD8ZHsbEJe981+vgceE56lO9Eo1+Ie4BnlII+J4ypoNETQRMZ0zn25u2XTMSu0BpsKfmqof6OP9o1sXV+EoY61/u9ZEVxyAMgluXdS8A1Vg7sOpZOsebdJev6PuSdh71vBZ3407BMX/ycFsDsywZ7VrmaMlGkeWlZB/QVFY37h58Jb1EOZBSWjFmudoVV2cQDACcYnOxQtSrZQB/PbS9OwqXeazDcQ4OOSiSrwVxqKe/E0b7+6vBer3sD5iocHjK82lgj27GVmQDdCyLLC2R5qHAPj9MrdSk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <041C6DC314442247B623CE879BA2A932@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: gj1BiscJ/+ki/HSlp+uvZKkeFSckEP1sZr8+iTBFT5nAVDuJVI9tkLb1c/25+QJxMg2JJycdvp1e2/Q0gSiZEctPi3unAcJzMKXJorfJWq1Bx5TS0tjWoUCupnCr08pnxQyaEu8Ad3Xxahyy74jhKIrYrH4TLl2az3fW4N0sDF+dk1zuk3QP88jndjiU07xlgPmG8kB0IPwHrznMRhzzkoGyHNdPALH8GLBLGUu4qHe5nggYgNCmPKh9AIlYMahntdgpXRla3zgCC2Wl90wrfbq4j79B4aJ7iZabypV7c/XvxG4ECnkAJ+sBbSF/2+uxrTzUMgx05fcH2UqRVVLi6tXCvkHFj11Ff7R7FkrIYJNLP8iOEyR+m4aezGUl2OTlFxBsVVVjPlw2gXnrYSfeML47Rd5q9/wK5JF+9zoCJlemIaC1t0lyr9loMspMDOqrBGUd+LH1ulCZdiqdtxkjL3m8uALC+c5KI0LQDPi5IN1n2jlvViimQj3Jp7EcFLFu
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3decf607-bf6d-408e-98e7-08d779570827
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 07:45:00.5401
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c55002d9-de23-4e1b-cfe2-08d7795a0132
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 08:06:17.6006
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mXpIwh9/+MSR4eFHXwjiJbDjU1xYn63SSfHXQ6oUm4awSy1gb5i7XxCDrgY4YOn3mnIT4MAyjS8crroJIorRo35RevZf6HQPbJAUJHJN9xg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1979
+X-MS-Exchange-CrossTenant-userprincipalname: f8XOIeGKNYDLDSirNJWKD9kTdgmLQ+F2k288x6uubQfQvlabu7lAK205bfugvbMx
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6670
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQoNCk9uIDAyLjEyLjIwMTkgMTk6MzYsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KDQo+IE9u
-IDI1LzExLzIwMTkgMDk6Mjc6NDErMDAwMCwgRXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tIHdy
-b3RlOg0KPj4gRnJvbTogRXVnZW4gSHJpc3RldiA8ZXVnZW4uaHJpc3RldkBtaWNyb2NoaXAuY29t
-Pg0KPj4NCj4+IEFkZCBwcm9wZXJ0aWVzIGZvciBpMmMgZmlsdGVycyBmb3IgaTJjMCBhbmQgaTJj
-MSBvbiBzYW1hNWQyN19zb20xX2VrLg0KPj4gTm9pc2UgaXMgYWZmZWN0aW5nIGNvbW11bmljYXRp
-b24gb24gaTJjIGZvciBleGFtcGxlIHdoZW4gY29ubmVjdGluZyBpMmMNCj4+IGNhbWVyYSBzZW5z
-b3JzLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEV1Z2VuIEhyaXN0ZXYgPGV1Z2VuLmhyaXN0ZXZA
-bWljcm9jaGlwLmNvbT4NCj4+IC0tLQ0KPj4gICBhcmNoL2FybS9ib290L2R0cy9hdDkxLXNhbWE1
-ZDI3X3NvbTFfZWsuZHRzIHwgNiArKysrKysNCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0
-aW9ucygrKQ0KPj4NCj4gQXBwbGllZCwgdGhhbmtzLg0KDQpIaSBBbGV4YW5kcmUsDQoNClRoZSBw
-cm9wZXJ0aWVzIGZvciBpMmMwIGFyZSBhdCB0aGUgd3Jvbmcgbm9kZS4gU2hvdWxkIGJlIGF0IHRo
-ZSBjaGlsZCANCm5vZGUuIEkgc2VudCBhIHYyIHRvIGNvcnJlY3QgaXQuIElmIGl0J3MgdG9vIGxh
-dGUgbGV0IG1lIGtub3cgYW5kIEkgY2FuIA0KbWFrZSBhIGZpeCBwYXRjaCBpbnN0ZWFkLg0KDQpU
-aGFua3MgYW5kIHNvcnJ5LA0KRXVnZW4NCg0KPiANCj4gLS0NCj4gQWxleGFuZHJlIEJlbGxvbmks
-IEJvb3RsaW4NCj4gRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZw0KPiBodHRw
-czovL2Jvb3RsaW4uY29tDQo+IA0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXw0KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdA0KPiBsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsDQo+IA0K
+From: Li Jun <jun.li@nxp.com>
+
+Per latest imx8mn datasheet of CCM, the parent of usb1_ctrl_root_clk
+should be usb_bus.
+
+Signed-off-by: Li Jun <jun.li@nxp.com>
+---
+ drivers/clk/imx/clk-imx8mn.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
+index 9f5a5a5..1c0d5e9 100644
+--- a/drivers/clk/imx/clk-imx8mn.c
++++ b/drivers/clk/imx/clk-imx8mn.c
+@@ -512,7 +512,7 @@ static int imx8mn_clocks_probe(struct platform_device *=
+pdev)
+ 	clks[IMX8MN_CLK_UART2_ROOT] =3D imx_clk_gate4("uart2_root_clk", "uart2", =
+base + 0x44a0, 0);
+ 	clks[IMX8MN_CLK_UART3_ROOT] =3D imx_clk_gate4("uart3_root_clk", "uart3", =
+base + 0x44b0, 0);
+ 	clks[IMX8MN_CLK_UART4_ROOT] =3D imx_clk_gate4("uart4_root_clk", "uart4", =
+base + 0x44c0, 0);
+-	clks[IMX8MN_CLK_USB1_CTRL_ROOT] =3D imx_clk_gate4("usb1_ctrl_root_clk", "=
+usb_core_ref", base + 0x44d0, 0);
++	clks[IMX8MN_CLK_USB1_CTRL_ROOT] =3D imx_clk_gate4("usb1_ctrl_root_clk", "=
+usb_bus", base + 0x44d0, 0);
+ 	clks[IMX8MN_CLK_GPU_CORE_ROOT] =3D imx_clk_gate4("gpu_core_root_clk", "gp=
+u_core_div", base + 0x44f0, 0);
+ 	clks[IMX8MN_CLK_USDHC1_ROOT] =3D imx_clk_gate4("usdhc1_root_clk", "usdhc1=
+", base + 0x4510, 0);
+ 	clks[IMX8MN_CLK_USDHC2_ROOT] =3D imx_clk_gate4("usdhc2_root_clk", "usdhc2=
+", base + 0x4520, 0);
+--=20
+2.7.4
+
