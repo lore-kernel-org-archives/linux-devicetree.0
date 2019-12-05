@@ -2,216 +2,120 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347EFC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 14:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5CBC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0461121835
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 14:58:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575557904;
-	bh=AuxIhNzVenY1YORsvEg+wFXj6r70v48oXJ1iiIrdDFA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=luai5E0OZkpLpggIcEc5s4bynezmO3SX598DNO9sQi4WyCXWjAnGinW7gUkR/Q+/z
-	 1a7ZRNfNBOPWnYTjIqVW9xCA1u00HkJG6PIoijIBOQi2Mbn14dNhvpn0w+lQpE0TPw
-	 Pzp9vyDv9xm8GDRaf4EE04WK/1WIz/elhWMGB3ZQ=
+	by mail.kernel.org (Postfix) with ESMTP id 97B2624249
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:03:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fTGKpaPy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729450AbfLEO6X (ORCPT
+        id S1729540AbfLEPDh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 09:58:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729099AbfLEO6X (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Dec 2019 09:58:23 -0500
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D181B2464F;
-        Thu,  5 Dec 2019 14:58:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575557902;
-        bh=AuxIhNzVenY1YORsvEg+wFXj6r70v48oXJ1iiIrdDFA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pXVarShPWA1HkuNKryg4YeaoV53ibXTtwYDPHUfdv+ET3MXVauHJJenM6X4SNL8vU
-         wB4/Nyaq8Ri/tLoAs0p9NTyaCSHmAazwJ/d0oqvoMTO88+dX1B6NGF4N1OL/Z0kUS8
-         sor0Wy2wU8tM/inVIX3LopV2IyAvHmviAXXFJhws=
-Received: by mail-qk1-f170.google.com with SMTP id a10so3535922qko.9;
-        Thu, 05 Dec 2019 06:58:21 -0800 (PST)
-X-Gm-Message-State: APjAAAWIVPWDpU9pHKBLE+by3d6JJXUXunNrJ4rqMt8Qs+FgpyNd1Ugn
-        i2aZgjupmLBFoD1hSoTYZaj/Rk/wpmBPOLtW2g==
-X-Google-Smtp-Source: APXvYqwYaD7EYo6dbc77Xi0Q+9jY+nRYZTjhkmZUBgpjkyBCK7tDH4AyGL94U374y0Sk+qHHMLrnQoCPStJBctuP+qo=
-X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr9028132qkn.254.1575557900890;
- Thu, 05 Dec 2019 06:58:20 -0800 (PST)
+        Thu, 5 Dec 2019 10:03:37 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:35594 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729187AbfLEPDh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 10:03:37 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB5F3Ulr006976;
+        Thu, 5 Dec 2019 09:03:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575558210;
+        bh=bPHiSbvAxh5EbCsuea3JUYoH4fGkht5SLNEd1ncNzic=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fTGKpaPy/Zb0M6SWfVtLFtx/oJMxgtkSUBFcBDlcFlX4q/WFn5qcV+mi1vf2f8Rks
+         leXqudsaDFzvOmxlpuYIiORXvpxmrHbi9BIjTBjR8jN0qwziaf+OfemkGBWzBnNqk9
+         A7mm2VzeZH3wYiN7IIVdKKHhT9vl5qp3SakRI8Mg=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB5F3Ukg053299
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 5 Dec 2019 09:03:30 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
+ 2019 09:03:29 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 5 Dec 2019 09:03:29 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5F3TdL093838;
+        Thu, 5 Dec 2019 09:03:29 -0600
+Subject: Re: [PATCH 2/2] net: m_can: Make wake-up gpio an optional
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Sean Nyekjaer <sean@geanix.com>
+CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20191204175112.7308-1-dmurphy@ti.com>
+ <20191204175112.7308-2-dmurphy@ti.com>
+ <b9eaa5c4-13bc-295f-dcbf-d2a846243682@geanix.com>
+ <827b022e-9188-7bcf-25e3-3777df3b08a5@ti.com>
+ <809b9ff1-88e3-4e46-33e0-856db37898b2@pengutronix.de>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <76e96337-bbcf-89f1-2f1c-45144c15cb5b@ti.com>
+Date:   Thu, 5 Dec 2019 09:01:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191205140809.19413-1-p.paillet@st.com>
-In-Reply-To: <20191205140809.19413-1-p.paillet@st.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 5 Dec 2019 08:58:09 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKzRj_SDUJH60gUpOqUE_cBbT7bwdo5OgK=iUwh_7xo+g@mail.gmail.com>
-Message-ID: <CAL_JsqKzRj_SDUJH60gUpOqUE_cBbT7bwdo5OgK=iUwh_7xo+g@mail.gmail.com>
-Subject: Re: [PATCH v2] regulator: Convert stm32-pwr regulator to json-schema
-To:     Pascal Paillet <p.paillet@st.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <809b9ff1-88e3-4e46-33e0-856db37898b2@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 8:08 AM Pascal Paillet <p.paillet@st.com> wrote:
->
-> Convert the stm32-pwr regulator binding to DT schema format using
-> json-schema.
->
-> Signed-off-by: Pascal Paillet <p.paillet@st.com>
-> ---
-> Changes since v1:
-> - remove a regulator.yaml reference
-> - add /schemas/types.yaml#/definitions/phandle-array for supply
+Marc
 
-Why? That's wrong as *-supply already has a type definition.
+On 12/5/19 8:39 AM, Marc Kleine-Budde wrote:
+> On 12/5/19 2:26 PM, Dan Murphy wrote:
+>> On 12/5/19 1:39 AM, Sean Nyekjaer wrote:
+>>>
+>>> On 04/12/2019 18.51, Dan Murphy wrote:
+>>>> The device has the ability to disable the wake-up pin option.
+>>>> The wake-up pin can be either force to GND or Vsup and does not have to
+>>>> be tied to a GPIO.  In order for the device to not use the wake-up
+>>>> feature
+>>>> write the register to disable the WAKE_CONFIG option.
+>>>>
+>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>> CC: Sean Nyekjaer <sean@geanix.com>
+>>> Reviewed-by: Sean Nyekjaer <sean@geanix.com>
+>>>> ---
+>>>
+>>> Hi Dan,
+>>>
+>>> I would add tcan4x5x to the subject of this patch ->
+>>> "net: m_can: tcan4x5x Make wake-up gpio an optional"
+>>>
+>> Do you want me to submit v2 with the $subject change?
+>>
+>> Or would you fix it up when committing it?
+> I'll change the subject while applying.
+>
+> Dan, what about maintainerchip of the tcan4x5?
 
-> - fix indent below required
->
->  .../regulator/st,stm32mp1-pwr-reg.txt         | 43 ------------
->  .../regulator/st,stm32mp1-pwr-reg.yaml        | 66 +++++++++++++++++++
->  2 files changed, 66 insertions(+), 43 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
->  create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
->
-> diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
-> deleted file mode 100644
-> index e372dd3f0c8a..000000000000
-> --- a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
-> +++ /dev/null
-> @@ -1,43 +0,0 @@
-> -STM32MP1 PWR Regulators
-> ------------------------
-> -
-> -Available Regulators in STM32MP1 PWR block are:
-> -  - reg11 for regulator 1V1
-> -  - reg18 for regulator 1V8
-> -  - usb33 for the swtich USB3V3
-> -
-> -Required properties:
-> -- compatible: Must be "st,stm32mp1,pwr-reg"
-> -- list of child nodes that specify the regulator reg11, reg18 or usb33
-> -  initialization data for defined regulators. The definition for each of
-> -  these nodes is defined using the standard binding for regulators found at
-> -  Documentation/devicetree/bindings/regulator/regulator.txt.
-> -- vdd-supply: phandle to the parent supply/regulator node for vdd input
-> -- vdd_3v3_usbfs-supply: phandle to the parent supply/regulator node for usb33
-> -
-> -Example:
-> -
-> -pwr_regulators: pwr@50001000 {
-> -       compatible = "st,stm32mp1,pwr-reg";
-> -       reg = <0x50001000 0x10>;
-> -       vdd-supply = <&vdd>;
-> -       vdd_3v3_usbfs-supply = <&vdd_usb>;
-> -
-> -       reg11: reg11 {
-> -               regulator-name = "reg11";
-> -               regulator-min-microvolt = <1100000>;
-> -               regulator-max-microvolt = <1100000>;
-> -       };
-> -
-> -       reg18: reg18 {
-> -               regulator-name = "reg18";
-> -               regulator-min-microvolt = <1800000>;
-> -               regulator-max-microvolt = <1800000>;
-> -       };
-> -
-> -       usb33: usb33 {
-> -               regulator-name = "usb33";
-> -               regulator-min-microvolt = <3300000>;
-> -               regulator-max-microvolt = <3300000>;
-> -       };
-> -};
-> diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
-> new file mode 100644
-> index 000000000000..cc66a7c91260
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
-> @@ -0,0 +1,66 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/regulator/st,stm32mp1-pwr-reg.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STM32MP1 PWR voltage regulators
-> +
-> +maintainers:
-> +  - Pascal Paillet <p.paillet@st.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: st,stm32mp1,pwr-reg
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: Input supply phandle(s) for vdd input
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +
-> +  vdd_3v3_usbfs-supply:
-> +    description: Input supply phandle(s) for vdd_3v3_usbfs input
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +
-> +patternProperties:
-> +  "^(reg11|reg18|usb33)$":
-> +    type: object
-> +
-> +    allOf:
-> +      - $ref: "regulator.yaml#"
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pwr@50001000 {
-> +      compatible = "st,stm32mp1,pwr-reg";
-> +      reg = <0x50001000 0x10>;
-> +      vdd-supply = <&vdd>;
-> +      vdd_3v3_usbfs-supply = <&vdd_usb>;
-> +
-> +      reg11 {
-> +        regulator-name = "reg11";
-> +        regulator-min-microvolt = <1100000>;
-> +        regulator-max-microvolt = <1100000>;
-> +      };
-> +
-> +      reg18 {
-> +        regulator-name = "reg18";
-> +        regulator-min-microvolt = <1800000>;
-> +        regulator-max-microvolt = <1800000>;
-> +      };
-> +
-> +      usb33 {
-> +        regulator-name = "usb33";
-> +        regulator-min-microvolt = <3300000>;
-> +        regulator-max-microvolt = <3300000>;
-> +      };
-> +    };
-> +...
-> --
-> 2.17.1
+Ooops that was buried in my inbox.
+
+It only makes sense for someone from TI to take maintainership of the 
+TCAN device.
+
+Do I need to submit a patch to the maintainers file or is the authorship 
+enough?
+
+As far as a device what country do you reside in?
+
+Dan
+
+
+> regards,
+> Marc
 >
