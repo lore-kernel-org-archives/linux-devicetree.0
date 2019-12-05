@@ -2,398 +2,242 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BITCOIN_SPAM_02,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D19C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 10:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6AEC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 11:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B96BC24648
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 10:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B5C92245C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 11:11:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="s7/AAMCw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbfLEK6b (ORCPT
+        id S1729044AbfLELLS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 05:58:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50434 "EHLO mx1.suse.de"
+        Thu, 5 Dec 2019 06:11:18 -0500
+Received: from mail-eopbgr00071.outbound.protection.outlook.com ([40.107.0.71]:62631
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728735AbfLEK6a (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Dec 2019 05:58:30 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AC6C0ADDF;
-        Thu,  5 Dec 2019 10:58:27 +0000 (UTC)
-Subject: Re: [PATCH 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek
- PymParticle EVB
-To:     James Tai <james.tai@realtek.com>
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-realtek-soc@lists.infradead.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+        id S1728735AbfLELLS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 5 Dec 2019 06:11:18 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mp75BZ5mfUdXxpagSchxmnkcvHrIHv6euM10/NL4rWmLjNtIpwNWI+RWC3GQpisKmHNzc1IbfR7wGKmo1+eMqaSeHrOdcSIX9PgzhrDP9VqgUc1yXgvHsFRGhrcTbsxEUzeWZNcMS0gxaHy7pSKDnzhNECS7oCEl/Vg5JYvUVOQifY10Yie/FUXHdTCPPJyIY7vW1M2faVZsZn9x+3xu59QhjlqUYbdR2GCbuQLLsoJQiC/crSnxH3Dl1B2BRVAYtUGk1V+/VT4kHf7phBH/QQd1Zj26e/Keq17lRvg8UFoeqFO0khEcFcSBENB43OZif51ZagBrcW/prOGioOGZWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZtAW2COMnfQW8Z9XCHCLRXFK1LDUjQCVknFr/ywWDR8=;
+ b=iOC44E2BNZU7QKrHD5Y/u7g4ejS+++fXwSpxCP/s6E1XZDoTYtMfeyctn03MyrdiNk0Kikhssomg+NVSq0AnzVJnzBkxgNrXxJ3X7qTZM1wIWOX9/7kIrz9LUyPZ4fguuSUzbl7Lb+urM30jNmJgRR6seADHRAvU3V8ggOYUFn5o2SjC3IWaKOjtM3TDbE4eAK2nfhkNjd3cJXzxFDYPUPf7xhVo8I3bDtMiaREvI4EjPTuhhfo9GvmzHJvhjF5EPawMBNpp8MG4jfRwT84lXvaSg9YvFXC47w+2kakOzhbsMkM1qTRqWcw9Imam8a3LpSzUjVxX6BXNE+gZFSz1RQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZtAW2COMnfQW8Z9XCHCLRXFK1LDUjQCVknFr/ywWDR8=;
+ b=s7/AAMCwb4l5BVnEKJVKliemNzsaP3TdM6XhUk7xl5f6l4up2nRMVprysRgrbh1U6HoFABR4cFmiB/5Z+sof47biDetXo3s3efJfT+UZADg7FxIvrG2aSGqCTnE+bwSrGKMnW+WK9GBBHguD4/7XDvg1ZhytMoSXTqu6m1ZFl6c=
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.51.208) by
+ VI1PR04MB5806.eurprd04.prod.outlook.com (20.178.204.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.12; Thu, 5 Dec 2019 11:11:09 +0000
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::71d2:55b3:810d:c75b]) by VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::71d2:55b3:810d:c75b%7]) with mapi id 15.20.2495.026; Thu, 5 Dec 2019
+ 11:11:09 +0000
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>,
         Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-References: <20191205082555.22633-1-james.tai@realtek.com>
- <20191205082555.22633-3-james.tai@realtek.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <4040ffcf-5c54-fb44-b0a8-ce0c8c21b93f@suse.de>
-Date:   Thu, 5 Dec 2019 11:58:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191205082555.22633-3-james.tai@realtek.com>
-Content-Type: text/plain; charset=utf-8
+        Marc Zyngier <maz@kernel.org>
+CC:     Roy Zang <roy.zang@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "frowand.list@gmail.com" <frowand.list@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>
+Subject: RE: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+Thread-Topic: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+Thread-Index: AQHVqP2u5HKRks3QXEmyFTQz0j+ob6emy2EAgADYg4CAAKoFgIAAOn2AgADd3QCAAfrtgA==
+Date:   Thu, 5 Dec 2019 11:11:09 +0000
+Message-ID: <VI1PR04MB5134A689AEA8C49BFC7F8356EC5C0@VI1PR04MB5134.eurprd04.prod.outlook.com>
+References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
+ <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
+ <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
+ <8f56c2d9-ab01-a91e-902f-a61def0e8ce8@arm.com>
+ <AM5PR04MB3299BFC34A4666B7A9C12B13F55D0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+In-Reply-To: <AM5PR04MB3299BFC34A4666B7A9C12B13F55D0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 289ff90c-26b6-4907-47e4-08d77973d4db
+x-ms-traffictypediagnostic: VI1PR04MB5806:|VI1PR04MB5806:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB58069B4F74567FF8E16FFA75EC5C0@VI1PR04MB5806.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02426D11FE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(396003)(366004)(376002)(13464003)(189003)(199004)(66556008)(66446008)(66476007)(52536014)(64756008)(14454004)(229853002)(11346002)(966005)(110136005)(478600001)(7416002)(76116006)(81166006)(81156014)(71200400001)(8936002)(8676002)(54906003)(26005)(44832011)(66946007)(2906002)(5660300002)(53546011)(74316002)(4326008)(7696005)(6506007)(99286004)(33656002)(25786009)(14444005)(186003)(55016002)(316002)(102836004)(86362001)(9686003)(71190400001)(305945005)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5806;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2w1z2JaElDyLFCI6Jgv35lnaZIkBzWGMoDciwSL7KlwGp0r5aaerTb848GfJAJDK4CN1pUksffbjmr2ZT16xLxtFqADayDsQDJIjywxENwcAQTCYn+/0FUtfwVOF7PvGITpQE91qqWZmvzzb+bTG0+6MTOOcwaCcHKG88zvOEWp9VtfXN5NGIl6hL9ZYIsyQPva78PrJ2C2gGBDzJPIkUCcXSNEM1/rKwKEWUWvz9aRADXd5Hg+rwykfH1/unYbvVBgf4QbR3WBdAmx/197PfI4z9DMQ6S7W+TTeDgQZqDUxPwynS0gu7zNgXb7fxJdpvCdLhYtX9DX4osew7+R6OY2MkH7Rbg80nwIHTfRHRg5oROj2mn+odPHOigMULLxg76iPhkxIo8R0WYrBKK4VXW6aBAvPKbn6brDoXs5PEt5N1D/urY8E/IoomZlqg5cs4fLNVm3e5ZPaFJGEqm8Cd/YLnV10iGbDqcKo1yQICL8PEzoJcNz188a+xhgPsEm+k3JWFnePAOcTqFglzKXIAo2V/6sSIXsbpdmCCyPHjn8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 289ff90c-26b6-4907-47e4-08d77973d4db
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 11:11:09.3906
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wtzKoychbfMkV6hhvDryh8xqY8mrdiIcqfmY6SSsZe8F+HutRfZgnfY6KYsQN6sYTTHWjovdm5iKbzFJ+IsSkw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5806
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi James,
-
-+ Robin for PMU
-+ Lorenzo for PSCI
-
-Am 05.12.19 um 09:25 schrieb James Tai:
-> Add Device Trees for Realtek RTD1319 SoC family, RTD1319 SoC and
-> Realtek PymParticle EVB.
-> 
-> Signed-off-by: James Tai <james.tai@realtek.com>
-> ---
->  arch/arm64/boot/dts/realtek/Makefile          |   2 +
->  .../boot/dts/realtek/rtd1319-pymparticle.dts  |  43 ++++++
->  arch/arm64/boot/dts/realtek/rtd1319.dtsi      |  12 ++
->  arch/arm64/boot/dts/realtek/rtd13xx.dtsi      | 137 ++++++++++++++++++
->  4 files changed, 194 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
->  create mode 100644 arch/arm64/boot/dts/realtek/rtd1319.dtsi
->  create mode 100644 arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/realtek/Makefile b/arch/arm64/boot/dts/realtek/Makefile
-> index fb5f05978ecc..ab00c272ea9e 100644
-> --- a/arch/arm64/boot/dts/realtek/Makefile
-> +++ b/arch/arm64/boot/dts/realtek/Makefile
-> @@ -9,3 +9,5 @@ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
->  dtb-$(CONFIG_ARCH_REALTEK) += rtd1296-ds418.dtb
->  
->  dtb-$(CONFIG_ARCH_REALTEK) += rtd1619-mjolnir.dtb
-> +
-> +dtb-$(CONFIG_ARCH_REALTEK) += rtd1319-pymparticle.dtb
-
-This hunk is lacking rtd1395, so is not based on the latest patches I
-posted. I expect you to be developing against linux-next.git tree, and
-when there's relevant in-flight patches, you'll need to either apply my
-patches via git-am to your tree, or for convenience you can use the
-beginning of my (but better not the full experimental) rtd1295-next
-branch (git-rebase -i, or (careful!) git-reset --hard). Yes, neither is
-super-easy.
-
-Same as with the binding, it would seem better to not add this at the
-end, even if it's your newest family. Consider this: Someone finds an
-RTD1036 in their household and wants to contribute a patch - where would
-they add it? I don't want all newly added stuff to go into the bottom of
-the file (then it'll be hard to find and potentially causes conflicts),
-so we need a stable sort order where I don't need to do historical
-research of whether 1036 is newer or older than 1195/1296 to determine
-where to insert it in a file. Alphanumerical sort order seems simplest
-to understand and is proven elsewhere to reduce merge conflicts.
-
-> diff --git a/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts b/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
-> new file mode 100644
-> index 000000000000..d8bfe2304b71
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
-> @@ -0,0 +1,43 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> +/*
-> + * Copyright (c) 2019 Realtek Semiconductor Corp.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "rtd1319.dtsi"
-> +
-> +/ {
-> +	compatible = "realtek,pymparticle", "realtek,rtd1319";
-
-Thanks, correct order now.
-
-> +	model = "Realtek PymParticle EVB";
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x80000000>;
-> +	};
-
-No! I understood RTD1319 has the same boot ROM size 184 KiB as RTD1619,
-so please look at the patches I posted, including fix for RTD1619 [1],
-and fix this yourself here. A comment for humans would also be nice.
-
-In the public BPI-M4-bsp code I see one -pymparticle-1GB.CMAx2.dts file.
-If this board is available with less than 2 GiB RAM then please use the
-lower value to be safe - you can run a 2 GiB board with 1 GiB RAM used,
-but using more RAM than available will break.
-
-[1] https://patchwork.kernel.org/patch/11268969/
-
-> +
-> +	chosen {
-> +		stdout-path = "serial0:460800n8";
-> +	};
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +		serial2 = &uart2;
-> +	};
-> +};
-> +
-> +/* debug console (J1) */
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +/* M.2 slot (CON8) */
-> +&uart1 {
-> +	status = "disabled";
-> +};
-> +
-> +/* GPIO connector (T1) */
-> +&uart2 {
-> +	status = "disabled";
-> +};
-> diff --git a/arch/arm64/boot/dts/realtek/rtd1319.dtsi b/arch/arm64/boot/dts/realtek/rtd1319.dtsi
-> new file mode 100644
-> index 000000000000..1dcee00009cd
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/realtek/rtd1319.dtsi
-> @@ -0,0 +1,12 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> +/*
-> + * Realtek RTD1319 SoC
-> + *
-> + * Copyright (c) 2019 Realtek Semiconductor Corp.
-> + */
-> +
-> +#include "rtd13xx.dtsi"
-> +
-> +/ {
-> +	compatible = "realtek,rtd1319";
-> +};
-
-What other contents are you expecting to add in this file?
-
-> diff --git a/arch/arm64/boot/dts/realtek/rtd13xx.dtsi b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-> new file mode 100644
-> index 000000000000..92bf962377f6
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-> @@ -0,0 +1,137 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> +/*
-> + * Realtek RTD13xx SoC family
-> + *
-> + * Copyright (c) 2019 Realtek Semiconductor Corp.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/ {
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x0>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu1: cpu@100 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x100>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu2: cpu@200 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x200>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu3: cpu@300 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x300>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		l2: l2-cache {
-> +			compatible = "cache";
-> +		};
-
-I note this seems a different cache topology than RTD1619?
-
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +
-> +	arm_pmu: pmu {
-> +		compatible = "arm,armv8-pmuv3";
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>,
-> +			<&cpu3>;
-> +	};
-
-@Robin, is this single PPI interrupt better than previous single SPI?
-
-Is "arm,armv8-pmuv3" the correct one to use for Cortex-A55? There's no
-"arm,cortex-a55-pmu" binding - is that still in the works?
-
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0";
-
-@Lorenzo: Same question as left unanswered for RTD1619:
-Should this be "arm,psci-1.0", "arm-psci-0.2"?
-
-The YAML schema allows both, without clearly documenting which one shall
-be used in new DTs, and there's no psci-1.0 example either.
-
-> +		method = "smc";
-> +	};
-> +
-> +	osc27M: osc {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <27000000>;
-> +		clock-output-names = "osc27M";
-
-BTW I recall seeing "osc27m" in your clk patchset. We should decide on
-one name and stick with it consistently, and I think it's best to have
-this as a node here in .dtsi (or in .dts), in case OEMs ever choose to
-have it generated by some other non-trivial IC.
-
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x98000000 0x98000000 0x68000000>;
-
-No! Lacking a range for boot ROM. And your range is probably too large
-due to high RAM. Please see [1] and fix for both. r-bus ranges below
-would indicate that above soc range should be 0x00200000 long only, plus
-extra ranges for whatever besides r-bus is shadowing RAM (e.g., GIC).
-
-> +
-> +		rbus: bus@98000000 {
-> +			compatible = "simple-bus";
-> +			reg = <0x98000000 0x200000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges = <0x0 0x98000000 0x200000>;
-
-Thanks for incorporating r-bus right away.
-
-> +
-> +			uart0: serial0@7800 {
-> +				compatible = "snps,dw-apb-uart";
-> +				reg = <0x7800 0x400>;
-> +				reg-shift = <2>;
-> +				reg-io-width = <4>;
-> +				interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
-> +				clock-frequency = <432000000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			uart1: serial1@1b200 {
-> +				compatible = "snps,dw-apb-uart";
-> +				reg = <0x1b200 0x400>;
-> +				reg-shift = <2>;
-> +				reg-io-width = <4>;
-> +				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> +				clock-frequency = <432000000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			uart2: serial2@1b400 {
-> +				compatible = "snps,dw-apb-uart";
-> +				reg = <0x1b400 0x400>;
-> +				reg-shift = <2>;
-> +				reg-io-width = <4>;
-> +				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-> +				clock-frequency = <432000000>;
-> +				status = "disabled";
-> +			};
-
-Here you appear to ignore my patches introducing syscon for ISO & MISC!
-
-See https://patchwork.kernel.org/cover/11269453/
-
-> +		};
-> +
-> +		gic: interrupt-controller@ff100000 {
-> +			compatible = "arm,gic-v3";
-> +			reg = <0xff100000 0x10000>,
-> +			      <0xff140000 0xc0000>;
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +		};
-> +	};
-> +};
-
-Please review patches that have been posted to the list, and incorporate
-such fixes and refactorings into any new patches. If you disagree with
-my patchsets, then you need to reply to them! If my numbers and naming
-are correct on the other hand, you and your colleagues are encouraged to
-respond to patches with an Acked-by, or Reviewed-by if you've reviewed
-the full patch, and/or Tested-by if you've tested it on some board
-(usually with comment on where/what you did). As long as no compatible
-strings get introduced, it is within my discretion to apply DT patches
-to linux-realtek.git if no review comments arrive asking for changes, so
-you can safely assume that I'll apply my own non-RFC patches otherwise.
-Not responding to patches and silently subverting them is not the way to
-go. linux-realtek-soc is still fairly small in volume compared to LAKML,
-so that I do expect contributors to at least skim patch subjects and
-cover letters for any conflicting/relevant work before posting patches.
-Don't expect maintainers to apply a v1 patch and to fix it up for you.
-
-For Acked-by vs. Reviewed-by, compare this and the next section:
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
-
-If you want to post patches that you know are not yet ready for merging,
-you can use --subject-prefix="RFC", like I did for the SoC info series.
-The cover letter should explain the main discussion points then.
-
-Thanks in advance,
-
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+SGkgWGlhb3dlaSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51
+eC1hcm0ta2VybmVsIDxsaW51eC1hcm0ta2VybmVsLWJvdW5jZXNAbGlzdHMuaW5mcmFkZWFkLm9y
+Zz4gT24NCj4gQmVoYWxmIE9mIFhpYW93ZWkgQmFvDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tDQo+ID4gRnJvbTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4N
+Cj4gPiBTZW50OiAyMDE55bm0MTLmnIgz5pelIDIzOjIwDQo+ID4gVG86IE1hcmMgWnluZ2llciA8
+bWF6QGtlcm5lbC5vcmc+OyBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiBD
+YzogUm95IFphbmcgPHJveS56YW5nQG54cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29t
+Ow0KPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwu
+b3JnOyBaLnEuIEhvdQ0KPiA+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmc7IE0uaC4gTGlhbg0KPiA+IDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBy
+b2JoK2R0QGtlcm5lbC5vcmc7DQo+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOw0KPiA+IGFuZHJldy5tdXJyYXlAYXJtLmNvbTsgZnJv
+d2FuZC5saXN0QGdtYWlsLmNvbTsgTWluZ2thaSBIdQ0KPiA+IDxtaW5na2FpLmh1QG54cC5jb20+
+DQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gUENJOiBsYXllcnNjYXBlOiBBZGQgdGhlIFNSSU9W
+IHN1cHBvcnQgaW4gaG9zdCBzaWRlDQo+ID4NCj4gPiBPbiAwMy8xMi8yMDE5IDExOjUxIGFtLCBN
+YXJjIFp5bmdpZXIgd3JvdGU6DQo+ID4gPiBPbiAyMDE5LTEyLTAzIDAxOjQyLCBYaWFvd2VpIEJh
+byB3cm90ZToNCj4gPiA+Pj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+Pj4gRnJv
+bTogTWFyYyBaeW5naWVyIDxtYXpAbWlzdGVyam9uZXMub3JnPg0KPiA+ID4+PiBTZW50OiAyMDE5
+5bm0MTLmnIgy5pelIDIwOjQ4DQo+ID4gPj4+IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9A
+bnhwLmNvbT4NCj4gPiA+Pj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgZnJvd2FuZC5saXN0QGdt
+YWlsLmNvbTsgTS5oLiBMaWFuDQo+ID4gPj4+IDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5n
+a2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kNCj4gPiBaYW5nDQo+ID4gPj4+IDxyb3ku
+emFuZ0BueHAuY29tPjsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsNCj4gPiA+Pj4gYW5kcmV3
+Lm11cnJheUBhcm0uY29tOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOw0KPiA+ID4+PiBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+Pj4g
+bGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnOw0KPiA+ID4+PiBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+ID4gPj4+
+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFBDSTogbGF5ZXJzY2FwZTogQWRkIHRoZSBTUklPViBzdXBw
+b3J0IGluIGhvc3QNCj4gPiA+Pj4gc2lkZQ0KPiA+ID4+Pg0KPiA+ID4+PiBPbiAyMDE5LTEyLTAy
+IDEwOjQ1LCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiA+Pj4gPiBHSUMgZ2V0IHRoZSBtYXAgcmVs
+YXRpb25zIG9mIGRldmlkIGFuZCBzdHJlYW0gaWQgZnJvbSB0aGUgbXNpLW1hcA0KPiA+ID4+PiA+
+IHByb3BlcnR5IG9mIERUUywgb3VyIHBsYXRmb3JtIGFkZCB0aGlzIHByb3BlcnR5IGluIHUtYm9v
+dCBiYXNlIG9uDQo+ID4gPj4+ID4gdGhlIFBDSWUgZGV2aWNlIGluIHRoZSBidXMsIGJ1dCBpZiBl
+bmFibGUgdGhlIHZmIGRldmljZSBpbiBrZXJuZWwsDQo+ID4gPj4+ID4gdGhlIHZmIGRldmljZSBt
+c2ktbWFwIHdpbGwgbm90IHNldCwgc28gdGhlIHZmIGRldmljZSBjYW4ndCB3b3JrLA0KPiA+ID4+
+PiA+IHRoaXMgcGF0Y2ggcHVycG9zZSBpcyB0aGF0IG1hbmFnZSB0aGUgc3RyZWFtIGlkIGFuZCBk
+ZXZpY2UgaWQgbWFwDQo+ID4gPj4+ID4gcmVsYXRpb25zIGR5bmFtaWNhbGx5IGluIGtlcm5lbCwg
+YW5kIG1ha2UgdGhlIG5ldyBQQ0llIGRldmljZSB3b3JrDQo+IGluDQo+ID4ga2VybmVsLg0KPiA+
+ID4+PiA+DQo+ID4gPj4+ID4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFv
+QG54cC5jb20+DQo+ID4gPj4+ID4gLS0tDQo+ID4gPj4+ID7CoCBkcml2ZXJzL29mL2lycS5jwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCA5
+ICsrKw0KPiA+ID4+PiA+wqAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2Nh
+cGUuYyB8IDk0DQo+ID4gPj4+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiA+
+Pj4gPsKgIGRyaXZlcnMvcGNpL3Byb2JlLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgfMKgIDYgKysNCj4gPiA+Pj4gPsKgIGRyaXZlcnMvcGNpL3JlbW92
+ZS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgNiAr
+Kw0KPiA+ID4+PiA+wqAgNCBmaWxlcyBjaGFuZ2VkLCAxMTUgaW5zZXJ0aW9ucygrKQ0KPiA+ID4+
+PiA+DQo+ID4gPj4+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvaXJxLmMgYi9kcml2ZXJzL29m
+L2lycS5jIGluZGV4DQo+ID4gPj4+ID4gYTI5NmVhZi4uNzkxZTYwOSAxMDA2NDQNCj4gPiA+Pj4g
+PiAtLS0gYS9kcml2ZXJzL29mL2lycS5jDQo+ID4gPj4+ID4gKysrIGIvZHJpdmVycy9vZi9pcnEu
+Yw0KPiA+ID4+PiA+IEBAIC01NzYsNiArNTc2LDExIEBAIHZvaWQgX19pbml0IG9mX2lycV9pbml0
+KGNvbnN0IHN0cnVjdA0KPiA+ID4+PiA+b2ZfZGV2aWNlX2lkDQo+ID4gPj4+ID4gKm1hdGNoZXMp
+DQo+ID4gPj4+ID7CoMKgwqDCoMKgIH0NCj4gPiA+Pj4gPsKgIH0NCj4gPiA+Pj4gPg0KPiA+ID4+
+PiA+ICt1MzIgX193ZWFrIGxzX3BjaWVfc3RyZWFtaWRfZml4KHN0cnVjdCBkZXZpY2UgKmRldiwg
+dTMyIHJpZCkgew0KPiA+ID4+PiA+ICvCoMKgwqAgcmV0dXJuIHJpZDsNCj4gPiA+Pj4gPiArfQ0K
+PiA+ID4+PiA+ICsNCj4gPiA+Pj4gPsKgIHN0YXRpYyB1MzIgX19vZl9tc2lfbWFwX3JpZChzdHJ1
+Y3QgZGV2aWNlICpkZXYsIHN0cnVjdA0KPiA+ID4+PiA+ZGV2aWNlX25vZGUgICoqbnAsDQo+ID4g
+Pj4+ID7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHUzMiByaWRfaW4pDQo+ID4g
+Pj4+ID7CoCB7DQo+ID4gPj4+ID4gQEAgLTU5MCw2ICs1OTUsMTAgQEAgc3RhdGljIHUzMiBfX29m
+X21zaV9tYXBfcmlkKHN0cnVjdCBkZXZpY2UNCj4gPiA+Pj4gPipkZXYsICBzdHJ1Y3QgZGV2aWNl
+X25vZGUgKipucCwNCj4gPiA+Pj4gPsKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoIW9mX21hcF9yaWQo
+cGFyZW50X2Rldi0+b2Zfbm9kZSwgcmlkX2luLCAibXNpLW1hcCIsDQo+ID4gPj4+ID7CoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJtc2ktbWFwLW1hc2siLCBucCwgJnJpZF9vdXQp
+KQ0KPiA+ID4+PiA+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYnJlYWs7DQo+ID4gPj4+ID4g
+Kw0KPiA+ID4+PiA+ICvCoMKgwqAgaWYgKHJpZF9vdXQgPT0gcmlkX2luKQ0KPiA+ID4+PiA+ICvC
+oMKgwqDCoMKgwqDCoCByaWRfb3V0ID0gbHNfcGNpZV9zdHJlYW1pZF9maXgocGFyZW50X2Rldiwg
+cmlkX2luKTsNCj4gPiA+Pj4NCj4gPiA+Pj4gT3ZlciBteSBkZWFkIGJvZHkuIEdldCB5b3VyIGZp
+cm13YXJlIHRvIHByb3Blcmx5IHByb2dyYW0gdGhlIExVVCBzbw0KPiA+ID4+PiB0aGF0IGl0IHBy
+ZXNlbnRzIHRoZSBJVFMgd2l0aCBhIHJlYXNvbmFibGUgdG9wb2xvZ3kuIFRoZXJlIGlzDQo+ID4g
+Pj4+IGFic29sdXRlbHkgbm8gd2F5IHRoaXMga2luZCBvZiBjaGFuZ2UgbWFrZXMgaXQgaW50byB0
+aGUga2VybmVsLg0KPiA+ID4+DQo+ID4gPj4gU29ycnkgZm9yIHRoaXMsIEkga25vdyBpdCBpcyBu
+b3QgcmVhc29uYWJsZSwgYnV0IEkgaGF2ZSBubyBvdGhlciB3YXksDQo+ID4gPj4gYXMgSSBrbm93
+LCBBUk0gZ2V0IHRoZSBtYXBwaW5nIG9mIHN0cmVhbSBJRCB0byByZXF1ZXN0IElEIGZyb20gdGhl
+DQo+ID4gPj4gbXNpLW1hcCBwcm9wZXJ0eSBvZiBEVFMsIGlmIGFkZCBhIG5ldyBkZXZpY2Ugd2hp
+Y2ggbmVlZCB0aGUgc3RyZWFtIElEDQo+ID4gPj4gYW5kIHRyeSB0byBnZXQgaXQgZnJvbSB0aGUg
+bXNpLW1hcCBvZiBEVFMsIGl0IHdpbGwgZmFpbGVkIGFuZCBub3QNCj4gPiA+PiB3b3JrLCB5ZXM/
+IFNvIGNvdWxkIHlvdSBnaXZlIG1lIGEgYmV0dGVyIGFkdmljZSB0byBmaXggdGhpcyBpc3N1ZSwg
+SQ0KPiA+ID4+IHdvdWxkIHJlYWxseSBhcHByZWNpYXRlIGFueSBjb21tZW50cyBvciBzdWdnZXN0
+aW9ucywgdGhhbmtzIGEgbG90Lg0KPiA+ID4NCj4gPiA+IFdoeSBjYW4ndCBmaXJtd2FyZSBleHBv
+c2UgYW4gbXNpLW1hcC9tc2ktbWFwLW1hc2sgdGhhdCBoYXMgYSBsYXJnZQ0KPiA+ID4gZW5vdWdo
+IHJhbmdlIHRvIGVuc3VyZSBtYXBwaW5nIG9mIFZGcz8gV2hhdCBhcmUgdGhlIGxpbWl0YXRpb25z
+IG9mIHRoZQ0KPiA+ID4gTFVUIHRoYXQgd291bGQgcHJldmVudCB0aGlzIGZyb20gYmVpbmcgY29u
+ZmlndXJlZCBiZWZvcmUgdGhlIGtlcm5lbA0KPiA+ID4gYm9vdHM/DQo+IA0KPiBUaGFua3MgZm9y
+IHlvdXIgY29tbWVudHMsIHllcywgdGhpcyBpcyB0aGUgcm9vdCBjYXVzZSwgd2Ugb25seSBoYXZl
+IDE2DQo+IHN0cmVhbQ0KPiBJRHMgZm9yIFBDSWUgZG9tYWluLCB0aGlzIGlzIHRoZSBoYXJkd2Fy
+ZSBsaW1pdGF0aW9uLCBpZiB0aGVyZSBoYXZlIGVub3VnaA0KPiBzdHJlYW0NCj4gSURzLCB3ZSBj
+YW4gZXhwb3NlIGFuIG1zaS1tYXAvbXNpLW1hcC1tYXNrIGZvciBhbGwgUENJZSBkZXZpY2VzIGlu
+IHN5c3RlbSwNCj4gdW5mb3J0dW5hdGVseSwgdGhlIHN0cmVhbSBJRHMgaXMgbm90IGVub3VnaCwg
+SSB0aGluayBvdGhlciBBUk0gdmVuZG9yIGhhdmUNCj4gc2FtZQ0KPiBpc3N1ZSB0aGF0IHRoZXkg
+ZG9uJ3QgaGF2ZSBlbm91Z2ggc3RyZWFtIElEcy4NCj4gDQo+IFRoYW5rcw0KPiBYaWFvd2VpDQo+
+IA0KPiA+DQo+ID4gRnVydGhlcm1vcmUsIG5vdGUgdGhhdCB0aGlzIGF0dGVtcHQgaXNuJ3QgZG9p
+bmcgYW55dGhpbmcgZm9yIHRoZSBTTU1VDQo+ID4gU3RyZWFtIElEcywgc28gdGhlIG1vbWVudCBh
+bnlvbmUgdHJpZXMgdG8gYXNzaWduIHRob3NlIFZGcyB0aGV5J3JlIHN0aWxsDQo+IGdvaW5nDQo+
+ID4gdG8gZ28gYmFuZyBhbnl3YXkuIEFueSBmaXJtd2FyZS1iYXNlZCBmaXh1cCBmb3IgSUQgbWFw
+cGluZ3MsIGNvbmZpZw0KPiBzcGFjZQ0KPiA+IGFkZHJlc3NlcywgZXRjLiBuZWVkcyB0byBiZSBT
+Ui1JT1YtYXdhcmUgYW5kIGFjY291bnQgZm9yIGFsbCAqcG9zc2libGUqDQo+ID4gQkRGcy4NCj4g
+Pg0KPiA+IE9uIExTMjA4NSBhdCBsZWFzdCwgSUlSQyB5b3UgY2FuIGNvbmZpZ3VyZSBhIHNpbmds
+ZSBMVVQgZW50cnkgdG8ganVzdA0KPiB0cmFuc2xhdGUNCj4gPiB0aGUgQnVzOkRldmljZSBpZGVu
+dGlmaWVyIGFuZCBwYXNzIHNvbWUgb3IgYWxsIG9mIHRoZSBGdW5jdGlvbiBiaXRzDQo+IHN0cmFp
+Z2h0DQo+ID4gdGhyb3VnaCBhcyB0aGUgTFNCcyBvZiB0aGUgU3RyZWFtIElELCBzbyBJIGRvbid0
+IGJlbGlldmUgdGhlIHJlbGF0aXZlbHkNCj4gbGltaXRlZA0KPiA+IG51bWJlciBvZiBMVVQgcmVn
+aXN0ZXJzIHNob3VsZCBiZSB0b28gbXVjaCBvZiBhbiBpc3N1ZS4gRm9yIGV4YW1wbGUsDQo+IGxh
+c3QNCj4gPiB0aW1lIEkgaGFja2VkIG9uIHRoYXQgSSBhcHBhcmVudGx5IGhhZCBpdCBzZXQgdXAg
+c3RhdGljYWxseSBsaWtlIHRoaXM6DQo+ID4NCj4gPiAmcGNpZTMgew0KPiA+IAkvKiBTcXVhc2gg
+ODo1OjMgQkRGIGRvd24gdG8gMjoyOjMgKi8NCj4gPiAJbXNpLW1hcC1tYXNrID0gPDB4MDMxZj47
+DQo+ID4gCW1zaS1tYXAgPSA8MHgwMDAgJml0cyAweDAwIDB4MjA+LA0KPiA+IAkJICA8MHgxMDAg
+Jml0cyAweDIwIDB4MjA+LA0KPiA+IAkJICA8MHgyMDAgJml0cyAweDQwIDB4MjA+LA0KPiA+IAkJ
+ICA8MHgzMDAgJml0cyAweDYwIDB4MjA+Ow0KPiA+IH07DQo+IA0KPiBUaGFua3MgUm9iaW4sIHRo
+aXMgaXMgYSBlZmZlY3RpdmUgd2F5LCBidXQgd2Ugb25seSBoYXZlIHRvdGFsIDE2IHN0cmVhbQ0K
+PiBJRHMgZm9yIFBDSWUgZG9tYWluLA0KPiBhbmQgb25seSBhc3NpZ24gNCBzdHJlYW0gSURzIGZv
+ciBlYWNoIFBDSWUgY29udHJvbGxlciBpZiB0aGUgYm9hcmQgaGF2ZSA0DQo+IFBDSWUgY29udHJv
+bGxlcnMsDQo+IHRoaXMgaXMgdGhlIHJvb3QgY2F1c2UsIEkgc3VibWl0dGVkIHRoaXMgcGF0Y2gg
+dG8gZHluYW1pY2FsbHkgbWFuYWdlIHRoZXNlDQo+IHN0cmVhbSBJRHMsDQo+IHNvIHRoYXQgaXQg
+bG9va3MgbGlrZSBlYWNoIFBDSWUgY29udHJvbGxlciBoYXMgMTYgc3RyZWFtIElEcy4gSSBjYW4N
+Cj4gZHluYW1pY2FsbHkgYWxsb2NhdGUgYW5kDQo+IHJlbGVhc2UgdGhlc2Ugc3RyZWFtIElEcyBi
+YXNlZCBvbiB0aGUgUENJZSBkZXZpY2VzIGluIHRoZSBjdXJyZW50IHN5c3RlbS4NCj4gSWYgdXNl
+IHlvdXIgbWV0aG9kLA0KPiB3ZSBzdXBwb3J0IHVwIHRvIDQgUENJZSBkZXZpY2VzKDIgUEZzIGFu
+ZCAyIFZGcyksIGl0IHdpbGwgbm90IGFjaGlldmUgb3VyDQo+IHB1cnBvc2UuDQo+IA0KDQpXZSBh
+bGxvY2F0ZSB0aGUgU3RyZWFtX0lEcyBpbiBhIHN0YXRpYyBmYXNoaW9uIGluIHUtYm9vdCwgc2Vl
+IFsxXSwgc28gaWYgYSB1c2VyIHdvdWxkIG5lZWQgYSBsYXJnZXIgcmFuZ2UgZm9yIFBDSSB7c31o
+ZSBjb3VsZCBhZGp1c3QgdGhhdCBpbiB0aGVyZS4gT24gbW9zdCBvZiBvdXIgTGF5ZXJzY2FwZSBj
+aGlwcyB0aGUgU01NVSBpcyBjb25maWd1cmVkIHRvIDUgYml0cyBmb3IgVEJVX0lEIHBsdXMgMTAg
+Yml0cyBmb3IgU3RyZWFtSUQuIE91dCBvZiB0aGVzZSAxMCBjb250cm9sbGFibGUgYml0cyB3ZSBj
+YW4gZWZmZWN0aXZlbHkgdXNlIDcgYml0cyBnaXZpbmcgdXMgYSBtYXggcmFuZ2Ugb2YgMTI3IFN0
+cmVhbV9JRHMuDQoNClsxXSBodHRwczovL2dpdGxhYi5kZW54LmRlL3UtYm9vdC91LWJvb3QvYmxv
+Yi9tYXN0ZXIvYXJjaC9hcm0vaW5jbHVkZS9hc20vYXJjaC1mc2wtbGF5ZXJzY2FwZS9zdHJlYW1f
+aWRfbHNjaDMuaA0KDQotLS0NCkJlc3QgUmVnYXJkcywgTGF1cmVudGl1DQo=
