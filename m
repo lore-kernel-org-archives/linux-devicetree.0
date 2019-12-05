@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AFCC2BD09
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F243EC3F68F
 	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A870E224F8
+	by mail.kernel.org (Postfix) with ESMTP id D18C7224F8
 	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729551AbfLEN7f (ORCPT
+        id S1729099AbfLEN7f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Thu, 5 Dec 2019 08:59:35 -0500
-Received: from andre.telenet-ops.be ([195.130.132.53]:40698 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729099AbfLEN7f (ORCPT
+Received: from michel.telenet-ops.be ([195.130.137.88]:42162 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729503AbfLEN7f (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 08:59:35 -0500
 Received: from ramsan ([84.195.182.253])
-        by andre.telenet-ops.be with bizsmtp
-        id aDzY210095USYZQ01DzYRT; Thu, 05 Dec 2019 14:59:33 +0100
+        by michel.telenet-ops.be with bizsmtp
+        id aDzY210075USYZQ06DzYDp; Thu, 05 Dec 2019 14:59:33 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1icrfI-0002LA-6h; Thu, 05 Dec 2019 14:59:32 +0100
+        id 1icrfI-0002L5-5f; Thu, 05 Dec 2019 14:59:32 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1icrfI-0001xL-5K; Thu, 05 Dec 2019 14:59:32 +0100
+        id 1icrfI-0001xI-4H; Thu, 05 Dec 2019 14:59:32 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Magnus Damm <magnus.damm@gmail.com>
 Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
@@ -37,9 +37,9 @@ Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
         linux-renesas-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 6/6] arm64: dts: renesas: r8a77961: Add SDHI nodes
-Date:   Thu,  5 Dec 2019 14:59:30 +0100
-Message-Id: <20191205135930.7454-7-geert+renesas@glider.be>
+Subject: [PATCH 5/6] arm64: dts: renesas: r8a77961: Add I2C nodes
+Date:   Thu,  5 Dec 2019 14:59:29 +0100
+Message-Id: <20191205135930.7454-6-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191205135930.7454-1-geert+renesas@glider.be>
 References: <20191205135930.7454-1-geert+renesas@glider.be>
@@ -48,76 +48,165 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device nodes for the SDHI Interfaces on the Renesas R-Car M3-W+
-(r8a77961) SoC.
+Add device nodes for the I2C and IIC Controllers on the Renesas R-Car
+M3-W+ (r8a77961) SoC, including DMA properties linking them to the DMA
+controllers.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-Test procedure (eMMC):
-  1. "hd /dev/mmcblk0boot1".
+Test procedure (MAX9611 ADC, BR24T01 EEPROM):
+  1. "grep . /sys/bus/iio/devices/iio:device[01]/in*",
+  2. "hd /sys/devices/platform/soc/e60b0000.i2c/i2c-?/?-0050/eeprom".
 ---
- arch/arm64/boot/dts/renesas/r8a77961.dtsi | 39 +++++++++++++++++++++--
- 1 file changed, 36 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a77961.dtsi | 117 +++++++++++++++++++++-
+ 1 file changed, 114 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a77961.dtsi b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
-index 26bffffe7c544bb4..81e089458ce5b770 100644
+index 7b2820e9c5dcbb97..26bffffe7c544bb4 100644
 --- a/arch/arm64/boot/dts/renesas/r8a77961.dtsi
 +++ b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
-@@ -905,18 +905,51 @@
+@@ -481,27 +481,138 @@
+ 			/* placeholder */
  		};
  
- 		sdhi0: sd@ee100000 {
-+			compatible = "renesas,sdhi-r8a77961",
-+				     "renesas,rcar-gen3-sdhi";
- 			reg = <0 0xee100000 0 0x2000>;
--			/* placeholder */
-+			interrupts = <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 314>;
-+			max-frequency = <200000000>;
++		i2c0: i2c@e6500000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a77961",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe6500000 0 0x40>;
++			interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 931>;
 +			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 314>;
++			resets = <&cpg 931>;
++			dmas = <&dmac1 0x91>, <&dmac1 0x90>,
++			       <&dmac2 0x91>, <&dmac2 0x90>;
++			dma-names = "tx", "rx", "tx", "rx";
++			i2c-scl-internal-delay-ns = <110>;
 +			status = "disabled";
 +		};
 +
-+		sdhi1: sd@ee120000 {
-+			compatible = "renesas,sdhi-r8a77961",
-+				     "renesas,rcar-gen3-sdhi";
-+			reg = <0 0xee120000 0 0x2000>;
-+			interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 313>;
-+			max-frequency = <200000000>;
++		i2c1: i2c@e6508000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a77961",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe6508000 0 0x40>;
++			interrupts = <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 930>;
 +			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 313>;
++			resets = <&cpg 930>;
++			dmas = <&dmac1 0x93>, <&dmac1 0x92>,
++			       <&dmac2 0x93>, <&dmac2 0x92>;
++			dma-names = "tx", "rx", "tx", "rx";
++			i2c-scl-internal-delay-ns = <6>;
 +			status = "disabled";
- 		};
- 
- 		sdhi2: sd@ee140000 {
-+			compatible = "renesas,sdhi-r8a77961",
-+				     "renesas,rcar-gen3-sdhi";
- 			reg = <0 0xee140000 0 0x2000>;
++		};
++
+ 		i2c2: i2c@e6510000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a77961",
++				     "renesas,rcar-gen3-i2c";
+ 			reg = <0 0xe6510000 0 0x40>;
 -			/* placeholder */
-+			interrupts = <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 312>;
-+			max-frequency = <200000000>;
++			interrupts = <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 929>;
 +			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 312>;
++			resets = <&cpg 929>;
++			dmas = <&dmac1 0x95>, <&dmac1 0x94>,
++			       <&dmac2 0x95>, <&dmac2 0x94>;
++			dma-names = "tx", "rx", "tx", "rx";
++			i2c-scl-internal-delay-ns = <6>;
++			status = "disabled";
++		};
++
++		i2c3: i2c@e66d0000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a77961",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe66d0000 0 0x40>;
++			interrupts = <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 928>;
++			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
++			resets = <&cpg 928>;
++			dmas = <&dmac0 0x97>, <&dmac0 0x96>;
++			dma-names = "tx", "rx";
++			i2c-scl-internal-delay-ns = <110>;
 +			status = "disabled";
  		};
  
- 		sdhi3: sd@ee160000 {
-+			compatible = "renesas,sdhi-r8a77961",
-+				     "renesas,rcar-gen3-sdhi";
- 			reg = <0 0xee160000 0 0x2000>;
+ 		i2c4: i2c@e66d8000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a77961",
++				     "renesas,rcar-gen3-i2c";
+ 			reg = <0 0xe66d8000 0 0x40>;
 -			/* placeholder */
-+			interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 311>;
-+			max-frequency = <200000000>;
++			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 927>;
 +			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 311>;
++			resets = <&cpg 927>;
++			dmas = <&dmac0 0x99>, <&dmac0 0x98>;
++			dma-names = "tx", "rx";
++			i2c-scl-internal-delay-ns = <110>;
++			status = "disabled";
++		};
++
++		i2c5: i2c@e66e0000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a77961",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe66e0000 0 0x40>;
++			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 919>;
++			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
++			resets = <&cpg 919>;
++			dmas = <&dmac0 0x9b>, <&dmac0 0x9a>;
++			dma-names = "tx", "rx";
++			i2c-scl-internal-delay-ns = <110>;
++			status = "disabled";
++		};
++
++		i2c6: i2c@e66e8000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a77961",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe66e8000 0 0x40>;
++			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 918>;
++			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
++			resets = <&cpg 918>;
++			dmas = <&dmac0 0x9d>, <&dmac0 0x9c>;
++			dma-names = "tx", "rx";
++			i2c-scl-internal-delay-ns = <6>;
 +			status = "disabled";
  		};
  
- 		gic: interrupt-controller@f1010000 {
+ 		i2c_dvfs: i2c@e60b0000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			compatible = "renesas,iic-r8a77961",
++				     "renesas,rcar-gen3-iic",
++				     "renesas,rmobile-iic";
+ 			reg = <0 0xe60b0000 0 0x425>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 926>;
++			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
++			resets = <&cpg 926>;
++			dmas = <&dmac0 0x11>, <&dmac0 0x10>;
++			dma-names = "tx", "rx";
++			status = "disabled";
+ 		};
+ 
++
+ 		hscif1: serial@e6550000 {
+ 			reg = <0 0xe6550000 0 0x60>;
+ 			/* placeholder */
 -- 
 2.17.1
 
