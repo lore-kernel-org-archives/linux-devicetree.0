@@ -2,91 +2,177 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAF4C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 22:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE29C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 23:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5921E20706
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 22:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFD8C24659
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 23:17:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="cC1QZ33w";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="glsgjMMV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbfLEW6C (ORCPT
+        id S1726065AbfLEXRo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 17:58:02 -0500
-Received: from hall.aurel32.net ([195.154.113.88]:42106 "EHLO hall.aurel32.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbfLEW6C (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Dec 2019 17:58:02 -0500
-X-Greylist: delayed 1666 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Dec 2019 17:58:01 EST
-Received: from [2a01:e35:2fdd:a4e1:fe91:fc89:bc43:b814] (helo=ohm.rr44.fr)
-        by hall.aurel32.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <aurelien@aurel32.net>)
-        id 1iczdF-0004M3-RF; Thu, 05 Dec 2019 23:29:57 +0100
-Received: from aurel32 by ohm.rr44.fr with local (Exim 4.92.3)
-        (envelope-from <aurelien@aurel32.net>)
-        id 1iczdE-00114c-0g; Thu, 05 Dec 2019 23:29:56 +0100
-Date:   Thu, 5 Dec 2019 23:29:56 +0100
-From:   Aurelien Jarno <aurelien@aurel32.net>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        Thu, 5 Dec 2019 18:17:44 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:33479 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726034AbfLEXRo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 18:17:44 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id F25596056;
+        Thu,  5 Dec 2019 18:17:42 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Thu, 05 Dec 2019 18:17:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=D8lbGIlMZ18hLjs6+rXC0nkBXoWutq8
+        kGyoDAM61WFQ=; b=cC1QZ33wwhO3ON234cJV7WeWKsjQsu3AM+62O/5yn+hQu0c
+        uKzptXAbSTjvzvMMqmjq0t0jqmIr1TN2hvQyLNrPZgypFJNHaFGVhLk4Fj6o5RvX
+        RDxZw8Wd64PPWtH73pOyMVMQg9WkV86kuswV6kdTtr8PMKbRNU22FBkE59wUublR
+        0z2k1NnO9LVLgGPWmPScrsOBVLr2ppxLbaOBpFBhQmmqvJb5L7BwXQRCM3NUT3qE
+        BkuzaLgGJwXm5sqrnK13iXJLq8awORQ+ANfaljvZeg3TG6FNYREOH7nqetHoVoyK
+        k5FtRzsCDtvVwaTD0HXBVOLvX/Hkz9dv/wQKaiQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=D8lbGI
+        lMZ18hLjs6+rXC0nkBXoWutq8kGyoDAM61WFQ=; b=glsgjMMVtVu1GYFVEeFa/P
+        nQew7jllOtDaWL3IBMHyiJul+mnzAP01MCA5EqEhymmJi0GymZ56t46bj+Afo3RT
+        KOYK3pTGNNUJRYrIUmvrwPhPR/BQ+epM1gEmgvyzynD+H47qOnLgDuUXtRqCoRKD
+        onnoXUj9PdzZykhUFwWRgUy8cQFHI8FVuB/sbswBBtyv2KXiUx4A+2XzGdIf+LdT
+        DCPIzS8EnpDrfPf3PwTnLN6evbTg+pD9o7e5Wp17nFYIrZfBhiBdYt4fDRKgO2S8
+        xktZkDj4L5vWiwMtOrVeiALV+6fQJgbORSHUSbsn+CPLfvfV20iO9Utjg/apuP8w
+        ==
+X-ME-Sender: <xms:FZDpXeTTwGGI38eYvtWGeRC1DnWm68J7-5E_TGZspAqE43qaDjoKbw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudekuddgudejvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehn
+    ughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrg
+    hrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushht
+    vghrufhiiigvpedt
+X-ME-Proxy: <xmx:FZDpXcKo7VUtlTy3lsqmSInY81M65uFtpqj3pOmg1M1YNtunHnJ_lQ>
+    <xmx:FZDpXeB-axUfZd-YOJgvtLWJpRXBAH_s6o46kDwuQ0MJ1DPIaiiPWQ>
+    <xmx:FZDpXR13oNqwdquMe_tq9eTCKeSe9y0pIxS6bJ9tMyETplcSNKKA1Q>
+    <xmx:FpDpXUIEUd8oU9lm1s8jZB1f5dtmqt3SiiDiPYO-C6VETZGkQq8gdw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 04541E00A2; Thu,  5 Dec 2019 18:17:41 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-612-g13027cc-fmstable-20191203v1
+Mime-Version: 1.0
+Message-Id: <fffcd415-0c9e-43ca-8957-b951c2f047b5@www.fastmail.com>
+In-Reply-To: <CAL_JsqLgmU8m-zT8-K=peENshJx7Gx2Hn9RoZ-zbnqLUmqBQpw@mail.gmail.com>
+References: <cover.5630f63168ad5cddf02e9796106f8e086c196907.1575376664.git-series.andrew@aj.id.au>
+ <3da2492c244962c27b21aad87bfa6bf74f568f1d.1575376664.git-series.andrew@aj.id.au>
+ <CAL_Jsq+3qXJbTu9G42g11PLJH-A0XeSQmJKj0obO32QFna3dEA@mail.gmail.com>
+ <40d554c0-de62-4d45-bbcc-dd3a3aa12a65@www.fastmail.com>
+ <CAL_JsqLgmU8m-zT8-K=peENshJx7Gx2Hn9RoZ-zbnqLUmqBQpw@mail.gmail.com>
+Date:   Fri, 06 Dec 2019 09:49:04 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Rob Herring" <robh+dt@kernel.org>
+Cc:     openipmi-developer@lists.sourceforge.net,
+        "Corey Minyard" <minyard@acm.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Joel Stanley" <joel@jms.id.au>, "Arnd Bergmann" <arnd@arndb.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] USB support on stm32mp157 boards
-Message-ID: <20191205222956.GA240447@aurel32.net>
-Mail-Followup-To: Amelie Delaunay <amelie.delaunay@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191121161152.25541-1-amelie.delaunay@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121161152.25541-1-amelie.delaunay@st.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?Re:_[PATCH_1/3]_dt-bindings:_ipmi:_aspeed:_Introduce_a_v2_bind?=
+ =?UTF-8?Q?ing_for_KCS?=
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-11-21 17:11, Amelie Delaunay wrote:
-> This patchset adds support for USB (Host and OTG) on stm32mp157a-dk1.
-> USB OTG HS is forced in Peripheral mode.
-> This patchset also fixes USB on stm32mp157c-ev1: USB PHYS supplies were missing
-> (CONFIG_REGULATOR_STM32_PWR) and usbotg_hs node requires phy-names property to
-> get the phy.
+
+
+On Fri, 6 Dec 2019, at 04:20, Rob Herring wrote:
+> On Wed, Dec 4, 2019 at 11:12 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+> >
+> >
+> >
+> > On Wed, 4 Dec 2019, at 01:01, Rob Herring wrote:
+> > > On Tue, Dec 3, 2019 at 6:36 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> > > >
+> > > > The v2 binding utilises reg and renames some of the v1 properties.
+> > > >
+> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt | 20 +++++---
+> > > >  1 file changed, 14 insertions(+), 6 deletions(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt b/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
+> > > > index d98a9bf45d6c..76b180ebbde4 100644
+> > > > --- a/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
+> > > > +++ b/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
+> > > > @@ -1,9 +1,10 @@
+> > > > -* Aspeed KCS (Keyboard Controller Style) IPMI interface
+> > > > +# Aspeed KCS (Keyboard Controller Style) IPMI interface
+> > > >
+> > > >  The Aspeed SOCs (AST2400 and AST2500) are commonly used as BMCs
+> > > >  (Baseboard Management Controllers) and the KCS interface can be
+> > > >  used to perform in-band IPMI communication with their host.
+> > > >
+> > > > +## v1
+> > > >  Required properties:
+> > > >  - compatible : should be one of
+> > > >      "aspeed,ast2400-kcs-bmc"
+> > > > @@ -12,14 +13,21 @@ Required properties:
+> > > >  - kcs_chan : The LPC channel number in the controller
+> > > >  - kcs_addr : The host CPU IO map address
+> > > >
+> > > > +## v2
+> > > > +Required properties:
+> > > > +- compatible : should be one of
+> > > > +    "aspeed,ast2400-kcs-bmc-v2"
+> > > > +    "aspeed,ast2500-kcs-bmc-v2"
+> > > > +- reg : The address and size of the IDR, ODR and STR registers
+> > > > +- interrupts : interrupt generated by the controller
+> > > > +- slave-reg : The host CPU IO map address
+> > >
+> > > aspeed,slave-reg
+> >
+> > I don't agree, as it's not an aspeed-specific behaviour. This property
+> > controls where the device appears in the host's LPC IO address space,
+> > which is a common problem for any LPC IO device exposed by the BMC
+> > to the host.
 > 
-> Amelie Delaunay (5):
->   ARM: multi_v7_defconfig: enable STM32 PWR regulator
->   ARM: dts: stm32: enable USBPHYC on stm32mp157a-dk1
->   ARM: dts: stm32: enable USB Host (USBH) EHCI controller on
->     stm32mp157a-dk1
->   ARM: dts: stm32: enable USB OTG HS on stm32mp157a-dk1
->   ARM: dts: stm32: add phy-names to usbotg_hs on stm32mp157c-ev1
+> Then document it as such. Common properties go into common binding documents.
+
+Fair call.
+
 > 
->  arch/arm/boot/dts/stm32mp157a-dk1.dts | 28 +++++++++++++++++++++++++++
->  arch/arm/boot/dts/stm32mp157c-ev1.dts |  1 +
->  arch/arm/configs/multi_v7_defconfig   |  1 +
->  3 files changed, 30 insertions(+)
+> > > >  Example:
+> > > >
+> > > > -    kcs3: kcs3@0 {
+> > > > -        compatible = "aspeed,ast2500-kcs-bmc";
+> > > > -        reg = <0x0 0x80>;
+> > > > +    kcs3: kcs@24 {
+> > > > +        compatible = "aspeed,ast2500-kcs-bmc-v2";
+> > > > +        reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
+> > >
+> > > What are the other registers in this address space? I'm not so sure
+> > > this is an improvement if you end up with a bunch of nodes with single
+> > > registers.
+> >
+> > Put into practice the bindings give the following patch: on the AST2500:
+> 
+> Okay, that's an unfortunate interleaving, but seems fine.
 
-I tested the series on a stm32mp157c-dk2.
+"Unfortunate" is a good description for the entire register layout of the LPC
+slave controller.
 
-Tested-by: Aurelien Jarno <aurelien@aurel32.net>
+I'll send a v2.
 
--- 
-Aurelien Jarno                          GPG: 4096R/1DDD8C9B
-aurelien@aurel32.net                 http://www.aurel32.net
+Thanks,
+
+Andrew
