@@ -2,97 +2,164 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCE3C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 08:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB75C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 09:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACD24205ED
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 08:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94681205ED
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 09:02:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="J2J6kqtt"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hOXjLcPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbfLEIqg (ORCPT
+        id S1726239AbfLEJCP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 03:46:36 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58450 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfLEIqf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 03:46:35 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D9DC02E5;
-        Thu,  5 Dec 2019 09:46:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575535594;
-        bh=8TJsjX9IMvcIxIR6rtYMP5rvFtEm/ezfomI72rg3LWM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J2J6kqttuSr10yCnUUiJ3/FHYvpSYKemAAigqbL9IXHSbbzwjC4j7BYgmgNXYvgYO
-         hYBQOyku/R/oy/apxEZ0MgarfBtNn0TbupW6wVrNljclC4t0P7cMUpi5el+BiltIPw
-         sh6s5PEoxgUTdR8Jpe7QUdDdEu+QzOMiFuyWA/0o=
-Date:   Thu, 5 Dec 2019 10:46:26 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jyri Sarha <jsarha@ti.com>
-Cc:     dri-devel@lists.freedesktop.org, tony@atomide.com,
-        sam@ravnborg.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, tomi.valkeinen@ti.com,
-        peter.ujfalusi@ti.com, bparrot@ti.com
-Subject: Re: [PATCH 2/2] dt-bindings: display: Add obsolete note to
- "ti,tilcdc,panel" binding
-Message-ID: <20191205084626.GB4734@pendragon.ideasonboard.com>
-References: <cover.1575481630.git.jsarha@ti.com>
- <eabe78184ea7125dcff50826a0ee12a892443017.1575481630.git.jsarha@ti.com>
+        Thu, 5 Dec 2019 04:02:15 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:34614 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726108AbfLEJCP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 04:02:15 -0500
+X-UUID: 04dfd7b2c9644ad99bcfe5f93d326375-20191205
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=BQlboLM9i0jWhGchARZHPdGw1XSxdRk80iBFjWnL64w=;
+        b=hOXjLcPnT9QvNC4mga1XSMli1pfLYJeIBWDpc9mts+zKK3Sz2LozPlOGeRe7XU6zcodtgELNraiRF/tIJjrL7Oc0khVbRL5JKKBUycFq8FdrfkXYo5TgHIsu0Z2wB13Mg0hmiWuHsLrILsxYOn9VRONPLN0pdyjm3t8Ihs7xFi0=;
+X-UUID: 04dfd7b2c9644ad99bcfe5f93d326375-20191205
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <yongqiang.niu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1702364425; Thu, 05 Dec 2019 17:02:07 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 5 Dec 2019 17:01:50 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 5 Dec 2019 17:01:44 +0800
+From:   Yongqiang Niu <yongqiang.niu@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Yongqiang Niu <yongqiang.niu@mediatek.com>
+Subject: [PATCH v3] drm/mediatek: Add ctm property support
+Date:   Thu, 5 Dec 2019 17:02:03 +0800
+Message-ID: <1575536523-10605-1-git-send-email-yongqiang.niu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <eabe78184ea7125dcff50826a0ee12a892443017.1575481630.git.jsarha@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jyri,
+QWRkIGN0bSBwcm9wZXJ0eSBzdXBwb3J0DQoNClNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUg
+PHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fY3J0Yy5jICAgICB8IDEwICsrKystDQogZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZGRwX2NvbXAuYyB8IDYxICsrKysrKysrKysrKysrKysrKysrKysrKysrKyst
+DQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCB8IDExICsrKysr
+Kw0KIDMgZmlsZXMgY2hhbmdlZCwgODAgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCg0K
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyBiL2Ry
+aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KaW5kZXggOTM0MDM0Ni4uMzNl
+OTYwNCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMu
+Yw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQpAQCAtNzQ4
+LDYgKzc0OCw4IEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNlICpk
+cm1fZGV2LA0KIAlpbnQgcGlwZSA9IHByaXYtPm51bV9waXBlczsNCiAJaW50IHJldDsNCiAJaW50
+IGk7DQorCWJvb2wgaGFzX2N0bSA9IGZhbHNlOw0KKwl1aW50IGdhbW1hX2x1dF9zaXplID0gMDsN
+CiANCiAJaWYgKCFwYXRoKQ0KIAkJcmV0dXJuIDA7DQpAQCAtNzk5LDYgKzgwMSwxMiBAQCBpbnQg
+bXRrX2RybV9jcnRjX2NyZWF0ZShzdHJ1Y3QgZHJtX2RldmljZSAqZHJtX2RldiwNCiAJCX0NCiAN
+CiAJCW10a19jcnRjLT5kZHBfY29tcFtpXSA9IGNvbXA7DQorDQorCQlpZiAoY29tcC0+ZnVuY3Mt
+PmN0bV9zZXQpDQorCQkJaGFzX2N0bSA9IHRydWU7DQorDQorCQlpZiAoY29tcC0+ZnVuY3MtPmdh
+bW1hX3NldCkNCisJCQlnYW1tYV9sdXRfc2l6ZSA9IE1US19MVVRfU0laRTsNCiAJfQ0KIA0KIAlm
+b3IgKGkgPSAwOyBpIDwgbXRrX2NydGMtPmRkcF9jb21wX25yOyBpKyspDQpAQCAtODIwLDcgKzgy
+OCw3IEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2
+LA0KIAlpZiAocmV0IDwgMCkNCiAJCXJldHVybiByZXQ7DQogCWRybV9tb2RlX2NydGNfc2V0X2dh
+bW1hX3NpemUoJm10a19jcnRjLT5iYXNlLCBNVEtfTFVUX1NJWkUpOw0KLQlkcm1fY3J0Y19lbmFi
+bGVfY29sb3JfbWdtdCgmbXRrX2NydGMtPmJhc2UsIDAsIGZhbHNlLCBNVEtfTFVUX1NJWkUpOw0K
+Kwlkcm1fY3J0Y19lbmFibGVfY29sb3JfbWdtdCgmbXRrX2NydGMtPmJhc2UsIDAsIGhhc19jdG0s
+IGdhbW1hX2x1dF9zaXplKTsNCiAJcHJpdi0+bnVtX3BpcGVzKys7DQogCW11dGV4X2luaXQoJm10
+a19jcnRjLT5od19sb2NrKTsNCiANCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RybV9kZHBfY29tcC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
+ZGRwX2NvbXAuYw0KaW5kZXggZTkzZTQ2Ny4uMWRhN2QyOCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMNCkBAIC0zOCw3ICszOCwxNSBAQA0KICNkZWZp
+bmUgQ0NPUlJfRU4JCQkJQklUKDApDQogI2RlZmluZSBESVNQX0NDT1JSX0NGRwkJCQkweDAwMjAN
+CiAjZGVmaW5lIENDT1JSX1JFTEFZX01PREUJCQlCSVQoMCkNCisjZGVmaW5lIENDT1JSX0VOR0lO
+RV9FTgkJCQlCSVQoMSkNCisjZGVmaW5lIENDT1JSX0dBTU1BX09GRgkJCQlCSVQoMikNCisjZGVm
+aW5lIENDT1JSX1dHQU1VVF9TUkNfQ0xJUAkJCUJJVCgzKQ0KICNkZWZpbmUgRElTUF9DQ09SUl9T
+SVpFCQkJCTB4MDAzMA0KKyNkZWZpbmUgRElTUF9DQ09SUl9DT0VGXzAJCQkweDAwODANCisjZGVm
+aW5lIERJU1BfQ0NPUlJfQ09FRl8xCQkJMHgwMDg0DQorI2RlZmluZSBESVNQX0NDT1JSX0NPRUZf
+MgkJCTB4MDA4OA0KKyNkZWZpbmUgRElTUF9DQ09SUl9DT0VGXzMJCQkweDAwOEMNCisjZGVmaW5l
+IERJU1BfQ0NPUlJfQ09FRl80CQkJMHgwMDkwDQogDQogI2RlZmluZSBESVNQX0RJVEhFUl9FTgkJ
+CQkweDAwMDANCiAjZGVmaW5lIERJVEhFUl9FTgkJCQlCSVQoMCkNCkBAIC0xODcsNyArMTk1LDcg
+QEAgc3RhdGljIHZvaWQgbXRrX2Njb3JyX2NvbmZpZyhzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21w
+LCB1bnNpZ25lZCBpbnQgdywNCiAJCQkgICAgIHVuc2lnbmVkIGludCBicGMsIHN0cnVjdCBjbWRx
+X3BrdCAqY21kcV9wa3QpDQogew0KIAltdGtfZGRwX3dyaXRlKGNtZHFfcGt0LCBoIDw8IDE2IHwg
+dywgY29tcCwgRElTUF9DQ09SUl9TSVpFKTsNCi0JbXRrX2RkcF93cml0ZShjbWRxX3BrdCwgQ0NP
+UlJfUkVMQVlfTU9ERSwgY29tcCwgRElTUF9DQ09SUl9DRkcpOw0KKwltdGtfZGRwX3dyaXRlKGNt
+ZHFfcGt0LCBDQ09SUl9FTkdJTkVfRU4sIGNvbXAsIERJU1BfQ0NPUlJfQ0ZHKTsNCiB9DQogDQog
+c3RhdGljIHZvaWQgbXRrX2Njb3JyX3N0YXJ0KHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXApDQpA
+QCAtMjAwLDYgKzIwOCw1NiBAQCBzdGF0aWMgdm9pZCBtdGtfY2NvcnJfc3RvcChzdHJ1Y3QgbXRr
+X2RkcF9jb21wICpjb21wKQ0KIAl3cml0ZWxfcmVsYXhlZCgweDAsIGNvbXAtPnJlZ3MgKyBESVNQ
+X0NDT1JSX0VOKTsNCiB9DQogDQorLyogQ29udmVydHMgYSBEUk0gUzMxLjMyIHZhbHVlIHRvIHRo
+ZSBIVyBTMC4xMSBmb3JtYXQuICovDQorc3RhdGljIHUxNiBtdGtfY3RtX3MzMV8zMl90b19zMF8x
+MSh1NjQgaW4pDQorew0KKwl1MTYgcjsNCisNCisJLyogU2lnbiBiaXQuICovDQorCXIgPSBpbiAm
+IEJJVF9VTEwoNjMpID8gQklUKDExKSA6IDA7DQorDQorCWlmICgoaW4gJiBHRU5NQVNLX1VMTCg2
+MiwgMzMpKSA+IDApIHsNCisJCS8qIFdlIGhhdmUgemVybyBpbnRlZ2VyIGJpdHMgc28gd2UgY2Fu
+IG9ubHkgc2F0dXJhdGUgaGVyZS4gKi8NCisJCXIgfD0gR0VOTUFTSygxMCwgMCk7DQorCX0gZWxz
+ZSB7DQorCQkvKiBPdGhlcndpc2UgdGFrZSB0aGUgOSBtb3N0IGltcG9ydGFudCBmcmFjdGlvbmFs
+IGJpdHMuICovDQorCQlyIHw9IChpbiA+PiAyMikgJiBHRU5NQVNLKDEwLCAwKTsNCisJfQ0KKw0K
+KwlyZXR1cm4gcjsNCit9DQorDQorc3RhdGljIHZvaWQgbXRrX2Njb3JyX2N0bV9zZXQoc3RydWN0
+IG10a19kZHBfY29tcCAqY29tcCwNCisJCQkgICAgICBzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKnN0
+YXRlLA0KKwkJCSAgICAgIHN0cnVjdCBjbWRxX3BrdCAqY21kcV9wa3QpDQorew0KKwlzdHJ1Y3Qg
+ZHJtX3Byb3BlcnR5X2Jsb2IgKmJsb2IgPSBzdGF0ZS0+Y3RtOw0KKwlzdHJ1Y3QgZHJtX2NvbG9y
+X2N0bSAqY3RtOw0KKwljb25zdCB1NjQgKmlucHV0Ow0KKwl1aW50MTZfdCBjb2VmZnNbOV0gPSB7
+IDAgfTsNCisJaW50IGk7DQorDQorCWlmICghYmxvYikNCisJCXJldHVybjsNCisNCisJY3RtID0g
+KHN0cnVjdCBkcm1fY29sb3JfY3RtICopYmxvYi0+ZGF0YTsNCisJaW5wdXQgPSBjdG0tPm1hdHJp
+eDsNCisNCisJZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUoY29lZmZzKTsgaSsrKQ0KKwkJY29l
+ZmZzW2ldID0gbXRrX2N0bV9zMzFfMzJfdG9fczBfMTEoaW5wdXRbaV0pOw0KKw0KKwltdGtfZGRw
+X3dyaXRlKGNtZHFfcGt0LCBjb2VmZnNbMF0gPDwgMTYgfCBjb2VmZnNbMV0sDQorCQkgICAgICBj
+b21wLCBESVNQX0NDT1JSX0NPRUZfMCk7DQorCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIGNvZWZm
+c1syXSA8PCAxNiB8IGNvZWZmc1szXSwNCisJCSAgICAgIGNvbXAsIERJU1BfQ0NPUlJfQ09FRl8x
+KTsNCisJbXRrX2RkcF93cml0ZShjbWRxX3BrdCwgY29lZmZzWzRdIDw8IDE2IHwgY29lZmZzWzVd
+LA0KKwkJICAgICAgY29tcCwgRElTUF9DQ09SUl9DT0VGXzIpOw0KKwltdGtfZGRwX3dyaXRlKGNt
+ZHFfcGt0LCBjb2VmZnNbNl0gPDwgMTYgfCBjb2VmZnNbN10sDQorCQkgICAgICBjb21wLCBESVNQ
+X0NDT1JSX0NPRUZfMyk7DQorCW10a19kZHBfd3JpdGUoY21kcV9wa3QsIGNvZWZmc1s4XSA8PCAx
+NiwNCisJCSAgICAgIGNvbXAsIERJU1BfQ0NPUlJfQ09FRl80KTsNCit9DQorDQogc3RhdGljIHZv
+aWQgbXRrX2RpdGhlcl9jb25maWcoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwgdW5zaWduZWQg
+aW50IHcsDQogCQkJICAgICAgdW5zaWduZWQgaW50IGgsIHVuc2lnbmVkIGludCB2cmVmcmVzaCwN
+CiAJCQkgICAgICB1bnNpZ25lZCBpbnQgYnBjLCBzdHJ1Y3QgY21kcV9wa3QgKmNtZHFfcGt0KQ0K
+QEAgLTI3MCw2ICszMjgsNyBAQCBzdGF0aWMgdm9pZCBtdGtfZ2FtbWFfc2V0KHN0cnVjdCBtdGtf
+ZGRwX2NvbXAgKmNvbXAsDQogCS5jb25maWcgPSBtdGtfY2NvcnJfY29uZmlnLA0KIAkuc3RhcnQg
+PSBtdGtfY2NvcnJfc3RhcnQsDQogCS5zdG9wID0gbXRrX2Njb3JyX3N0b3AsDQorCS5jdG1fc2V0
+ID0gbXRrX2Njb3JyX2N0bV9zZXQsDQogfTsNCiANCiBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19k
+ZHBfY29tcF9mdW5jcyBkZHBfZGl0aGVyID0gew0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2RybV9kZHBfY29tcC5oDQppbmRleCAzODRhYmFlLi44ZmE4MDgyIDEwMDY0NA0KLS0tIGEv
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KKysrIGIvZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KQEAgLTkyLDYgKzkyLDkgQEAg
+c3RydWN0IG10a19kZHBfY29tcF9mdW5jcyB7DQogCQkJICBzdHJ1Y3QgZHJtX2NydGNfc3RhdGUg
+KnN0YXRlKTsNCiAJdm9pZCAoKmJnY2xyX2luX29uKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21w
+KTsNCiAJdm9pZCAoKmJnY2xyX2luX29mZikoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCk7DQor
+CXZvaWQgKCpjdG1fc2V0KShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLA0KKwkJCXN0cnVjdCBk
+cm1fY3J0Y19zdGF0ZSAqc3RhdGUsDQorCQkJc3RydWN0IGNtZHFfcGt0ICpjbWRxX3BrdCk7DQog
+fTsNCiANCiBzdHJ1Y3QgbXRrX2RkcF9jb21wIHsNCkBAIC0yMDUsNiArMjA4LDE0IEBAIHN0YXRp
+YyBpbmxpbmUgdm9pZCBtdGtfZGRwX2NvbXBfYmdjbHJfaW5fb2ZmKHN0cnVjdCBtdGtfZGRwX2Nv
+bXAgKmNvbXApDQogCQljb21wLT5mdW5jcy0+YmdjbHJfaW5fb2ZmKGNvbXApOw0KIH0NCiANCitz
+dGF0aWMgaW5saW5lIHZvaWQgbXRrX2RkcF9jdG1fc2V0KHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNv
+bXAsDQorCQkJCSAgIHN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAqc3RhdGUsDQorCQkJCSAgIHN0cnVj
+dCBjbWRxX3BrdCAqY21kcV9wa3QpDQorew0KKwlpZiAoY29tcC0+ZnVuY3MgJiYgY29tcC0+ZnVu
+Y3MtPmN0bV9zZXQpDQorCQljb21wLT5mdW5jcy0+Y3RtX3NldChjb21wLCBzdGF0ZSwgY21kcV9w
+a3QpOw0KK30NCisNCiBpbnQgbXRrX2RkcF9jb21wX2dldF9pZChzdHJ1Y3QgZGV2aWNlX25vZGUg
+Km5vZGUsDQogCQkJZW51bSBtdGtfZGRwX2NvbXBfdHlwZSBjb21wX3R5cGUpOw0KIGludCBtdGtf
+ZGRwX2NvbXBfaW5pdChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2Vfbm9kZSAqY29t
+cF9ub2RlLA0KLS0gDQoxLjguMS4xLmRpcnR5DQo=
 
-Thank you for the patch.
-
-On Wed, Dec 04, 2019 at 07:53:11PM +0200, Jyri Sarha wrote:
-> The "ti,tilcdc,panel" binding should not be used anymore, since tilcdc
-> is fully capable of using generic drm panels like panel-simple and
-> panel-common binding. However, the obsolete binding is still widely
-> used in many mainline supported platforms that I do not have access to
-> and who knows how many custom platforms. So I am afraid we have to
-> keep the old bundled tilcdc panel driver around.
-> 
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> ---
->  Documentation/devicetree/bindings/display/tilcdc/panel.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/tilcdc/panel.txt b/Documentation/devicetree/bindings/display/tilcdc/panel.txt
-> index 808216310ea2..54963f9173cc 100644
-> --- a/Documentation/devicetree/bindings/display/tilcdc/panel.txt
-> +++ b/Documentation/devicetree/bindings/display/tilcdc/panel.txt
-> @@ -1,5 +1,11 @@
->  Device-Tree bindings for tilcdc DRM generic panel output driver
->  
-> +NOTE: This binding (and the related driver) is obsolete and should not
-> +      be used anymore. Please refer to drm panel-common binding (and
-> +      to a generic drm panel driver like panel-simple).
-> +      Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> +      (drivers/gpu/drm/panel/panel-simple.c)
-> +
-
-How about adding a WARN_ON() in the code when this binding is used ?
-This could help getting those platforms converted.
-
->  Required properties:
->   - compatible: value should be "ti,tilcdc,panel".
->   - panel-info: configuration info to configure LCDC correctly for the panel
-
--- 
-Regards,
-
-Laurent Pinchart
