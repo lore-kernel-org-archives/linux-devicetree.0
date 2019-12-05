@@ -2,133 +2,224 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A698DC2BD09
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 16:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3164FC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 16:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3FA22525
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 16:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE1C1206DB
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 16:07:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="JmV9fvuW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="mGwuk/t/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbfLEQB3 (ORCPT
+        id S1730019AbfLEQHl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 11:01:29 -0500
-Received: from mail-eopbgr1410121.outbound.protection.outlook.com ([40.107.141.121]:59712
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbfLEQB3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Dec 2019 11:01:29 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bnk3Crce9P6qany17YUHIYp1NvuJPCJHUhTt1m5j8n9NpE9Y3ktwrL1rdLMdeyQMYWcH3Gi4BYkER5hPpERx9w/xhnMfNej31xsegIKv6joBQWJs9xzOz3EynmbKzDAkRE5vv4Ipd774dxBWfw8YcibluwhtCcq3XUKhcm5V5P6dhUUzd7STGd49Y5XHu/fzF20mwYBI82UYYSD6Iwy1Y92TZ3ha6hGnCuFyP2JWPOIuFrm/u8Q0/zcEC5b7dgXp9EjdXggQFO6fGzLK2dlhjmbnwt8po0l8ctoF+aCwd/PbDrOrVU5d2B6rhK4ojZGDVW6AuvqPInnCcHFexWXgEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cIuoTkfGgMguFbVpOxGM0rTuGtgA/ynuG9+ZNQFXVPU=;
- b=MXX5278nXM+tV4NwGAqORcpGzP1NuMwrU90xG1o6qzSOUnz7MIrAOuBNpJWYDdyDeEzCzQJevPOnw4E1c80Z2m4zMGnnr+wCvD847Ej2NyNbGIbrJT9GHy0mCuOqjAQrfR8sN/edg1Vg/8teTxQZBKIlPmqETlKgAU7zxYIK8XS9V6XfUzH0hWjbnqMIZBUnjGllPegH20bM6RDHoCk2AwZKiZKXWV0YZKHPMtg46vj0z+1WCKOsEdCcAYbu//WpXMfaIgn3o941I9PrlXA2GcNiYfzWCSVUgUF8NepPWS2dqTGCF7nhyK3uyUHgLhSr6y5NnFux/45iqhQlorUcfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cIuoTkfGgMguFbVpOxGM0rTuGtgA/ynuG9+ZNQFXVPU=;
- b=JmV9fvuWJXC0uN1Dv07e8Lx6qqFxhBySnhIPB5cxT6fxKe22iL/s54MEhQE+jZj6B9YldtZJP+etEwHCSeY+AaIzmYg3+pydPIqb1b9tYX745r5pLHM9G1Xl9/L+lXvXTnNsmA715BMJyB1qnH1XBnav88BNx37mMwd3e1JaGhM=
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
- TY1PR01MB1819.jpnprd01.prod.outlook.com (52.133.160.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.22; Thu, 5 Dec 2019 16:00:45 +0000
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2516.003; Thu, 5 Dec 2019
- 16:00:45 +0000
-From:   Chris Brandt <Chris.Brandt@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: RE: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
-Thread-Topic: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
-Thread-Index: AQHVqYxRjjQT6EPsk0uhvsHduSJ+e6eow+OAgAAcgACAACHMAIAArCeAgABEDRCAAcFNgIAAAmFA
-Date:   Thu, 5 Dec 2019 16:00:45 +0000
-Message-ID: <TY1PR01MB1562F5908AC7A9643F51FEBE8A5C0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20191203034519.5640-1-chris.brandt@renesas.com>
- <20191203034519.5640-7-chris.brandt@renesas.com>
- <CAMuHMdVBYpuoK7hcyNLK-mAdpTQz3ohTGXuYdFPHdpU5RoPr6Q@mail.gmail.com>
- <CAMuHMdV7XY7FB9pBsxuWxGsqYaD9n1Y+XZXEJO5OsuigjjUgpw@mail.gmail.com>
- <TY1PR01MB1562A6AFD8D0807B345B7A208A5D0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <CAMuHMdUn3h1VjYkARTFBqMij5aYg2mJSVErwceHc0NATBo+_hw@mail.gmail.com>
- <TY1PR01MB1562322613FC52617312F14E8A5D0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <CAMuHMdVy_0e5_94a-G83Tt14XsxmLFOpstvSP6Yw8m9oRW_eZg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVy_0e5_94a-G83Tt14XsxmLFOpstvSP6Yw8m9oRW_eZg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctNjQxZTk4OTctMTc3OC0xMWVhLWFhNTEtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XDY0MWU5ODk5LTE3NzgtMTFlYS1hYTUxLTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iMTE2MCIgdD0iMTMyMjAwMzUyNDQxNzkxNzkyIiBoPSJicnY3dDh5dXZYWk5nNnpXOW5zNkhRWUZ0ZFE9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Brandt@renesas.com; 
-x-originating-ip: [75.60.247.61]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0d287452-7e54-476f-c3e3-08d7799c49c5
-x-ms-traffictypediagnostic: TY1PR01MB1819:
-x-microsoft-antispam-prvs: <TY1PR01MB1819612C0C87677138A233098A5C0@TY1PR01MB1819.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02426D11FE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(396003)(366004)(39860400002)(136003)(189003)(199004)(66476007)(5660300002)(305945005)(66556008)(33656002)(4326008)(74316002)(76116006)(86362001)(14454004)(9686003)(25786009)(64756008)(8936002)(66946007)(478600001)(316002)(81156014)(7416002)(6506007)(54906003)(55016002)(26005)(186003)(99286004)(66446008)(71190400001)(81166006)(52536014)(102836004)(71200400001)(6916009)(8676002)(2906002)(76176011)(7696005)(11346002)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1819;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6kqotgeO8dJmxJDZTz5O2K1CAekRTEi9nJNqqjdA/xKtyAzukKuxxFHVHaEdJNtXis8tjT21Bt1AY68gZiuowAXxaFcsKMcMBbHcvrQfpAJG18LHMLSMWLYnDWYhZXqPNdm/V9IJiQAG3ASKPM83D8HP+EC6Hj7qwdRWgq26a3OXfiiHO7wvaNoq/J+Wx5t5MfRRvbYRxeDQyjl1Wzgv6AH9H83UvyC+N+Byc9KCk+PFrtrJ7XSsd9qkXeQnVX8zBmV/Qwl/CcQ9Blx9e8htsZbm1YWMlyZhlaJb+dpiqnaobhjX3UJZyzBIw/XjLwYDMGm67EneV75N9B63xZeioSg3S+F4ld1I5eSawXu2AVMyikmZmQ0UY629CvgrFnK1GrOIMlZpDGBqQTGVpp3FRAVanJW2TuXJ1Mui21QEA3qUMF9QTME3mGd28HSv7J7b
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 5 Dec 2019 11:07:41 -0500
+Received: from gateway22.websitewelcome.com ([192.185.46.233]:12711 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729901AbfLEQHl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 11:07:41 -0500
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id B27F97CAE
+        for <devicetree@vger.kernel.org>; Thu,  5 Dec 2019 09:44:51 -0600 (CST)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id ctJDixOeiW4frctJDiK78A; Thu, 05 Dec 2019 09:44:51 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=dVXSh/+sYChT+0vyzLWC+KW0jU+OnuSqpd8XzGuTwBw=; b=mGwuk/t/OdPj/6WF5Z02TSmTrX
+        NMpms2+gydX3E5aNI8tWU85mCtGK9T/dTzeLZjw3OUv4cacYWyJT2bCKP96Rmm2ezyuS0BoSWS14x
+        678OvM8uuzB/Urcwzq1IlPmCPotckdQHwbeAKx0Hq47hT+XTNLAELhu0GGnKI3/a+6yBPVhyKIoOl
+        411sRIxmceygQoJbhGdyn/aMJ0X0YyZ40Slz8GdVNNjGk495xRN1/AeR+qQL7Z0QXmrZGuirJVT+U
+        mp8iQHn39TqZUCvpuXH46QtrcTw05sANj9rVC2JIYAtWFcFl2UAiLaNwjzh8UcaOMw6uEX0GFeFQo
+        CH4DBFxw==;
+Received: from [191.31.196.215] (port=35544 helo=castello.bz.toradex.local)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1ictJC-001jEH-QB; Thu, 05 Dec 2019 12:44:51 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v8 1/5] power: supply: max17040: Add IRQ handler for low SOC alert
+Date:   Thu,  5 Dec 2019 12:44:06 -0300
+Message-Id: <20191205154410.29462-2-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.24.0.rc2
+In-Reply-To: <20191205154410.29462-1-matheus@castello.eng.br>
+References: <20191205154410.29462-1-matheus@castello.eng.br>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d287452-7e54-476f-c3e3-08d7799c49c5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 16:00:45.4381
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 88YoFkb2+Bps2NGbj81HQ5JKTmUUOAx6tin3fX/lGzbAuzSeKqmidtwc2GVGfiDrPQvaxlD9nlEb3P9AOsACc5lFKLSOQ+xouFP/t1MOZhY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1819
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.196.215
+X-Source-L: No
+X-Exim-ID: 1ictJC-001jEH-QB
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.bz.toradex.local) [191.31.196.215]:35544
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 13
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIFRodSwgRGVjIDUsIDIwMTkgMSwgR2VlcnQgVXl0dGVyaG9ldmVuIHdy
-b3RlOg0KPiBZb3VyIHNwaWJzYyBkcml2ZXIgZG9lczoNCj4gDQo+ICAgICBtYXN0ZXItPm1vZGVf
-Yml0cyA9IFNQSV9DUE9MIHwgU1BJX0NQSEE7DQo+IA0KPiBpLmUuIFNQSV9bVFJdWF97UVVBRCxE
-VUFMfSBhcmUgbm90IHNldCwgc28gaXQgc2hvdWxkIG5vdCB0cnkgdGhvc2UgbW9kZXMuDQoNCk9L
-LCBUaGFuayB5b3UhDQogDQo+IEF0IGxlYXN0IG9uIFJTSytSWkExLCB0aGUgRkxBU0hlcyBhcmUg
-d2lyZWQgaW4gcXVhZCBtb2RlLCBzbyB5b3Ugc2hvdWxkDQo+IGRlc2NyaWJlIHRoZSBoYXJkd2Fy
-ZSBpbiBEVC4NCg0KT0suDQoNCj4gPiA+IEJUVywgd2hlbiB1c2luZyBzcGlic2MgaW4gZGlyZWN0
-LW1hcHBlZCBtb2RlOiBpZiB5b3UgdHVybiBvZiBhbmQgb24NCj4gPiA+IGFnYWluIHRoZSBtb2R1
-bGUgY2xvY2ssIGRvZXMgdGhlIHNwaWJzYyBuZWVkIHJlcHJvZ3JhbW1pbmc/DQo+ID4NCj4gPiBO
-b3BlLiBFdmVyeXRoaW5nIHdpbGwgc3RheSB0aGUgc2FtZSAoanVzdCBsaWtlIGFsbCB0aGUgb3Ro
-ZXIgcGVyaXBoZXJhbHMpLg0KPiBUaGUgb25seSB0aGluZyB5b3UgJ21pZ2h0JyB3YW50IHRvIGRv
-IGlzIGZsdXNoIHRoZSByZWFkIGNhY2hlIChlc3BlY2lhbGx5IGlmDQo+IHlvdSBkaXNjb25uZWN0
-ZWQgaXQgYmVjYXVzZSB5b3Ugd2VyZSBnb2luZyB0byBnbyBvdXQgYW5kIHJlLXdyaXRlIHNvbWUg
-b2YgdGhlDQo+IGZsYXNoIGluIFNQSSBtb2RlKS4NCj4gDQo+IEdvb2QuIFNvIHRoYXQgbWVhbnMg
-dGhlIE1URCBkcml2ZXIgY2FuIGJlIG1vZHVsYXIuICBVbnVzZWQgY2xvY2tzIGFyZSB0dXJuZWQN
-Cj4gb2ZmIGF0IGJvb3QsIGFuZCBjYW4gYmUgdHVybmVkIG9uIHdoZW4gdGhlIG10ZC1yb20gZHJp
-dmVyIGlzIGxvYWRlZCBhbmQNCj4gYWN0aXZhdGVkLg0KDQpJJ20gZ29pbmcgdG8gZG8gc29tZSB0
-ZXN0aW5nIG5vdyBhbmQgdGhlbiBzZW5kIG91dCBhIFYyIHRvIHNlZSBpZiB3ZSBhcmUNCmdldHRp
-bmcgY2xvc2VyIHRvIGEgY29uc2Vuc3VzLg0KDQpDaHJpcw0KDQo=
+According datasheet max17040 has a pin for alert host for low SOC.
+This pin can be used as external interrupt, so we need to check for
+interrupts assigned for device and handle it.
+
+In handler we are checking and storing fuel gauge registers values
+and send an uevent to notificate user space, so user space can decide
+save work or turn off since the alert demonstrate that the battery may
+no have the power to keep the system turned on for much longer.
+
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/power/supply/max17040_battery.c | 73 +++++++++++++++++++++++--
+ 1 file changed, 68 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+index 62499018e68b..5a8cd365a61e 100644
+--- a/drivers/power/supply/max17040_battery.c
++++ b/drivers/power/supply/max17040_battery.c
+@@ -13,6 +13,7 @@
+ #include <linux/err.h>
+ #include <linux/i2c.h>
+ #include <linux/delay.h>
++#include <linux/interrupt.h>
+ #include <linux/power_supply.h>
+ #include <linux/max17040_battery.h>
+ #include <linux/slab.h>
+@@ -160,21 +161,54 @@ static void max17040_get_status(struct i2c_client *client)
+ 		chip->status = POWER_SUPPLY_STATUS_FULL;
+ }
+
++static void max17040_check_changes(struct i2c_client *client)
++{
++	max17040_get_vcell(client);
++	max17040_get_soc(client);
++	max17040_get_online(client);
++	max17040_get_status(client);
++}
++
+ static void max17040_work(struct work_struct *work)
+ {
+ 	struct max17040_chip *chip;
+
+ 	chip = container_of(work, struct max17040_chip, work.work);
+-
+-	max17040_get_vcell(chip->client);
+-	max17040_get_soc(chip->client);
+-	max17040_get_online(chip->client);
+-	max17040_get_status(chip->client);
++	max17040_check_changes(chip->client);
+
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
+ }
+
++static irqreturn_t max17040_thread_handler(int id, void *dev)
++{
++	struct max17040_chip *chip = dev;
++	struct i2c_client *client = chip->client;
++
++	dev_warn(&client->dev, "IRQ: Alert battery low level");
++	/* read registers */
++	max17040_check_changes(chip->client);
++
++	/* send uevent */
++	power_supply_changed(chip->battery);
++
++	return IRQ_HANDLED;
++}
++
++static int max17040_enable_alert_irq(struct max17040_chip *chip)
++{
++	struct i2c_client *client = chip->client;
++	unsigned int flags;
++	int ret;
++
++	flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
++	ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
++					max17040_thread_handler, flags,
++					chip->battery->desc->name, chip);
++
++	return ret;
++}
++
+ static enum power_supply_property max17040_battery_props[] = {
+ 	POWER_SUPPLY_PROP_STATUS,
+ 	POWER_SUPPLY_PROP_ONLINE,
+@@ -220,6 +254,19 @@ static int max17040_probe(struct i2c_client *client,
+ 	max17040_reset(client);
+ 	max17040_get_version(client);
+
++	/* check interrupt */
++	if (client->irq && of_device_is_compatible(client->dev.of_node,
++						   "maxim,max77836-battery")) {
++		int ret;
++
++		ret = max17040_enable_alert_irq(chip);
++		if (ret) {
++			client->irq = 0;
++			dev_warn(&client->dev,
++				 "Failed to get IRQ err %d\n", ret);
++		}
++	}
++
+ 	INIT_DEFERRABLE_WORK(&chip->work, max17040_work);
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
+@@ -244,6 +291,14 @@ static int max17040_suspend(struct device *dev)
+ 	struct max17040_chip *chip = i2c_get_clientdata(client);
+
+ 	cancel_delayed_work(&chip->work);
++
++	if (client->irq) {
++		if (device_may_wakeup(dev))
++			enable_irq_wake(client->irq);
++		else
++			disable_irq_wake(client->irq);
++	}
++
+ 	return 0;
+ }
+
+@@ -254,6 +309,14 @@ static int max17040_resume(struct device *dev)
+
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
++
++	if (client->irq) {
++		if (device_may_wakeup(dev))
++			disable_irq_wake(client->irq);
++		else
++			enable_irq_wake(client->irq);
++	}
++
+ 	return 0;
+ }
+
+--
+2.24.0.rc2
+
