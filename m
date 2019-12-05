@@ -7,82 +7,75 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C05C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 21:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EA4C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 21:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0E024670
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 21:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0162464E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 21:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575582026;
-	bh=ffkozNXHOO1VTTh1n72LFZtDnMt5j0QyL9IBSj4a2qM=;
+	s=default; t=1575582516;
+	bh=R8g3sK3m4ptM+/VbIRsbsyTsIoEeuTx0/Av/5QgD08Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Mfnchp7MfZhUqMbbEffD5895+y4V//yzsQBX+9gtpQn8ZmNTYgAzkpSfix+R2nL8F
-	 JV927zoyN74HvMjRHm9KJVgxZFp1RwvFMplYTA2CPYjU7eriP/WsNxuNqV7wuIHOuw
-	 7v7klWcQkozTZfcEaBi6WKbZyc/rneHTZA0Q/6LE=
+	b=GYNcQEB2vbcglPXHX2jQgRDN1GMc8hfHaoQ3YvxknLiGGpX1Wnd6DWBnmJsx99QNh
+	 iNOaYjQlDzhr1lPmkvJ/2fgp7v+YG2pZE4W6vEfoaMf+9CmqejuCms3LcDQSQ400nn
+	 6BdSOlAzNjhr+4Rx159sUjdHeViZyacJ+olevBJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbfLEVkZ (ORCPT
+        id S1729430AbfLEVsg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 16:40:25 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38602 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729914AbfLEVkZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 16:40:25 -0500
-Received: by mail-oi1-f196.google.com with SMTP id b8so4212529oiy.5;
-        Thu, 05 Dec 2019 13:40:24 -0800 (PST)
+        Thu, 5 Dec 2019 16:48:36 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44334 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729417AbfLEVsf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 16:48:35 -0500
+Received: by mail-ot1-f66.google.com with SMTP id x3so3963423oto.11;
+        Thu, 05 Dec 2019 13:48:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5B07evfQjYRmezpr618YMj75/8A+9fi/BoaS8w0bgCw=;
-        b=M6XVYNYjZtPHc+Guj34IwmgNCmc8y72L5Hle7hmqODjye9KXsoBMTGKnris3SmOBuM
-         v1NFQFKAMC7wvdIgvKVe6/Jdd3rQ9W/9yBbJHzPb9iwr9zTY/JnXAEa/y/cUs4qYvShL
-         qd6AXftKdn8yzE7IaTw2WujQGHTV+iA+3r7oo1vBCdNkchU1suMJQNms/+PTrN6ScwQG
-         qqSaqdZs3O0lRtf5jac943MgsH2BCZOBFiI6Qk3V/7/JUEfnXSf7J8w/ewhP+xzezyCs
-         yAoejrbNz5+4Qv7lmXoriHymph80ZzMAxml3cir+ZoHlktxzj2ftglAD+89mNIY7Oaeu
-         aNTg==
-X-Gm-Message-State: APjAAAX2QtmeuWLolWl7oYDdS1IZ6foVuHRGU45s9Q79meyWaCXeDLWN
-        pzQzg2ClbATjtjvIlv9Jog==
-X-Google-Smtp-Source: APXvYqxEtg3YSKnAqJeM+USaEc+2azfpgWhVrK3I05OmYCtSEJzGliakgatYJcxuupfvARlqBjslqw==
-X-Received: by 2002:aca:aad8:: with SMTP id t207mr8998770oie.138.1575582024374;
-        Thu, 05 Dec 2019 13:40:24 -0800 (PST)
+        bh=coyOvgWTYrQ7WR6ABQooVjUnJpSFQK1P2URKO0xpD0w=;
+        b=BxqINOSFkEYKYaSb2KhlngJ9PuQ8zgIvdurDnutgvRTuJo/4SYleCF762nisrB8G98
+         liFQcFEIkcCcS1Mj3IfzppGYKPmLLyM7cFCEo4sYsJGusuKWpLP4hhdz+8VExp3Cvlyj
+         h2wX5vH0x+JGOgYGItdsFEADYmfShAFde93mknA1w7akVicUDkbMcVncvruxVABFURZZ
+         9RXfz4AHZfxfgGI975mARh1FyydrsvK1EhFFmi5Ttx1k1gGF3klUIbp/TtLkWpq0q+U9
+         M5vA+Tc0FaKFtxSQgC8hS6LRa1dqOpnhPKytNK1n4YptYM2i8q6BKnbnhjAR9pDnQ2MA
+         ZyYg==
+X-Gm-Message-State: APjAAAXmYop37md8hO5liCmd029WyM/cYIiP0yxBBcjOr7vRpdGWDvWV
+        96QKqUtFCi+hX2jRsFhE0b97X/o=
+X-Google-Smtp-Source: APXvYqz+/xHBWYyf66UeM80J+fWiUwnoj20g7bmhfI+HsBKUoddRJfDYxDbJ+yFkm+BibevNuV5lBA==
+X-Received: by 2002:a9d:6196:: with SMTP id g22mr8749600otk.204.1575582515123;
+        Thu, 05 Dec 2019 13:48:35 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g5sm3798447otp.10.2019.12.05.13.40.23
+        by smtp.gmail.com with ESMTPSA id s133sm4000150oia.58.2019.12.05.13.48.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 13:40:23 -0800 (PST)
-Date:   Thu, 5 Dec 2019 15:40:22 -0600
+        Thu, 05 Dec 2019 13:48:34 -0800 (PST)
+Date:   Thu, 5 Dec 2019 15:48:34 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     support.opensource@diasemi.com, stwiss.opensource@diasemi.com,
-        dmitry.torokhov@gmail.com, Adam.Thomson.Opensource@diasemi.com,
-        devicetree@vger.kernel.org, kernel@pengutronix.de,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: Input: da9062 - add key-opmode
- documentation
-Message-ID: <20191205214022.GA5072@bogus>
-References: <20191127132304.22924-1-m.felsch@pengutronix.de>
- <20191127132304.22924-2-m.felsch@pengutronix.de>
+To:     Lorenzo Bianconi <lorenzo@kernel.org>
+Cc:     nbd@nbd.name, linux-wireless@vger.kernel.org,
+        devicetree@vger.kernel.org, lorenzo.bianconi@redhat.com
+Subject: Re: [PATCH v2 2/2] dt-bindings: net: wireless: mt76: introduce
+ big-endian property
+Message-ID: <20191205214834.GA19679@bogus>
+References: <cover.1574865558.git.lorenzo@kernel.org>
+ <1b46b03f6c60c08d29d4c3cc4e2ae0a50af5eb30.1574865558.git.lorenzo@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191127132304.22924-2-m.felsch@pengutronix.de>
+In-Reply-To: <1b46b03f6c60c08d29d4c3cc4e2ae0a50af5eb30.1574865558.git.lorenzo@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 02:23:02PM +0100, Marco Felsch wrote:
-> The onkey behaviour can be changed by programming the NONKEY_PIN
-> bitfield. Since the driver supports the reconfiguration we need to add
-> the documentation here.
+On Wed, 27 Nov 2019 16:46:34 +0200, Lorenzo Bianconi wrote:
+> Introduce big-endian property to specify mtd radio partition endianness
 > 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 > ---
-> v2:
-> - add da9061/3 references
-> - adapt binding description to be more general
+>  .../devicetree/bindings/net/wireless/mediatek,mt76.txt         | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
->  .../devicetree/bindings/input/da9062-onkey.txt         | 10 ++++++++++
->  1 file changed, 10 insertions(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
