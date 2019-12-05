@@ -2,217 +2,155 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B986BC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 17:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7972C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 17:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDFE24651
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 17:01:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575565277;
-	bh=ISVAyeAY4EDACwFrRCzRPkoX7/jhSr76I2EQ6tvGkuM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Djil3y2bmmYF41wJ+XXNo3ZvQX7TLyRrIg+B+fYI0tazwjUKQbjOnEc0jlwFdG6wG
-	 Z2gRhynIYObXjl9tlK2/LsQHntMOMVtfAPdybRZ9bOW9QH3sJouLDBBBnAA7EnM6PA
-	 e3CgeQvZjrF8wkk8Ra6BHbN2OM+Vh4vgPQX75EY8=
+	by mail.kernel.org (Postfix) with ESMTP id 9140E20801
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 17:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729996AbfLERBR (ORCPT
+        id S1729941AbfLERPf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 12:01:17 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43127 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLERBQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 12:01:16 -0500
-Received: by mail-ot1-f67.google.com with SMTP id p8so3184905oth.10;
-        Thu, 05 Dec 2019 09:01:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=we3V0A3CP3GJ5VroH1Xes4X0bIkD7d1eDUPN+iJq6YY=;
-        b=IFvyfg8fm89VUman1VSe46n7sfGA09pBUZk5y0cS3QdfcdlEp55afpX5aYdux27syD
-         NvtK3eLBN0IL1AdERnnXW+pjZFYU8nvAkg2yr5Np+YolxqtBN1vF9Qd9galeI9YKde7x
-         aR12v6CBig8gOjTtbbXPyqI5nx7TA/GulA7xqpB4JMjBbBOKFKVbUZ/ZpU6761VlCIiU
-         MmzWkVNclGwa1uyOe9m83LcGglUWg89U7v0tC+kw2epT16JWHtkjpA1LnmXinuL8NSJl
-         b0N2jn8BMJxoyv+IVNW4RuM9W8/5JQs7xhjxOp2viHLpNZl9Pav2Axn8HVkF8R7PN+Wn
-         EWgA==
-X-Gm-Message-State: APjAAAUcx+gEw4+6k4cqcRWXiaUHGsKULIwrSN8838j4NLqSn6M1qQ0f
-        VoG+t4Ri9I5sbdkNgMYS72vLjIc=
-X-Google-Smtp-Source: APXvYqwPOFtxlz43TE9JFByZyUgENLw5Wl2Y32OtFxgdowrLWCSWQVIiu5n6P7R/wUuChxkREDSq/w==
-X-Received: by 2002:a9d:7e8a:: with SMTP id m10mr7015046otp.27.1575565275155;
-        Thu, 05 Dec 2019 09:01:15 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w201sm1479331oif.29.2019.12.05.09.01.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 09:01:14 -0800 (PST)
-Date:   Thu, 5 Dec 2019 11:01:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org
-Subject: Re: [PATCH v3 1/8] dt-bindings: add img,pvrsgx.yaml for Imagination
- GPUs
-Message-ID: <20191205170113.GA853@bogus>
-References: <cover.1574595627.git.hns@goldelico.com>
- <c93eff41b4a85ec01fa01819af8a380b7465e01c.1574595627.git.hns@goldelico.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c93eff41b4a85ec01fa01819af8a380b7465e01c.1574595627.git.hns@goldelico.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 5 Dec 2019 12:15:35 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52292 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726028AbfLERPe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 12:15:34 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB5H8CvB015468;
+        Thu, 5 Dec 2019 12:15:20 -0500
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wq2xc1qtm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Dec 2019 12:15:20 -0500
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB5HFHLC014850;
+        Thu, 5 Dec 2019 17:15:19 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma03wdc.us.ibm.com with ESMTP id 2wkg278cn6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Dec 2019 17:15:18 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB5HFIvL48628090
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Dec 2019 17:15:18 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 04C386E052;
+        Thu,  5 Dec 2019 17:15:18 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 65A6A6E05D;
+        Thu,  5 Dec 2019 17:15:17 +0000 (GMT)
+Received: from talon7.ibm.com (unknown [9.41.103.158])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Dec 2019 17:15:17 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, jason@lakedaemon.net,
+        linux-aspeed@lists.ozlabs.org, maz@kernel.org, robh+dt@kernel.org,
+        tglx@linutronix.de, mark.rutland@arm.com, joel@jms.id.au,
+        andrew@aj.id.au
+Subject: [PATCH v2 05/12] dt-bindings: soc: Add Aspeed XDMA Engine
+Date:   Thu,  5 Dec 2019 11:15:05 -0600
+Message-Id: <1575566112-11658-6-git-send-email-eajames@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1575566112-11658-1-git-send-email-eajames@linux.ibm.com>
+References: <1575566112-11658-1-git-send-email-eajames@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-05_05:2019-12-04,2019-12-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 mlxlogscore=999 bulkscore=0 mlxscore=0 adultscore=0
+ clxscore=1015 spamscore=0 suspectscore=1 malwarescore=0 impostorscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912050144
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Nov 24, 2019 at 12:40:21PM +0100, H. Nikolaus Schaller wrote:
-> The Imagination PVR/SGX GPU is part of several SoC from
-> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo
-> and others.
-> 
-> With this binding, we describe how the SGX processor is
-> interfaced to the SoC (registers, interrupt etc.).
-> 
-> In most cases, Clock, Reset and power management is handled
-> by a parent node or elsewhere.
-> 
-> Tested by make dt_binding_check dtbs_check
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 83 +++++++++++++++++++
->  1 file changed, 83 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> new file mode 100644
-> index 000000000000..fe206a53cbe1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> @@ -0,0 +1,83 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
 
-Dual license new bindings: (GPL-2.0-only OR BSD-2-Clause)
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes since v1:
+ - Add 'clocks', 'scu', 'sdmc', 'vga-mem', and 'pcie-device' property
+   documentation
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Imagination PVR/SGX GPU
-> +
-> +maintainers:
-> +  - H. Nikolaus Schaller <hns@goldelico.com>
-> +
-> +description: |+
-> +  This binding describes the Imagination SGX5 series of 3D accelerators which
-> +  are found in several different SoC like TI OMAP, Sitara, Ingenic JZ4780,
-> +  Allwinner A83, and Intel Poulsbo and CedarView and more.
-> +
-> +  For an almost complete list see: https://en.wikipedia.org/wiki/PowerVR#Implementations
-> +  
-> +  Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently covered by
-> +  this binding but the extension of the pattern is straightforward.
-> +  
-> +  The SGX node is usually a child node of some DT node belonging to the SoC
-> +  which handles clocks, reset and general address space mapping of the SGX
-> +  register area.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +    # BeagleBoard ABC, OpenPandora 600MHz
+ .../devicetree/bindings/soc/aspeed/xdma.txt        | 43 ++++++++++++++++++++++
+ MAINTAINERS                                        |  6 +++
+ 2 files changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
 
-I'd expect compatibles to be per SoC, not per board.
+diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.txt b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+new file mode 100644
+index 0000000..942dc07
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+@@ -0,0 +1,43 @@
++Aspeed AST25XX and AST26XX XDMA Engine
++
++The XDMA Engine embedded in the AST2500 and AST2600 SOCs can perform automatic
++DMA operations over PCI between the SOC (acting as a BMC) and a host processor.
++
++Required properties:
++ - compatible		: must be "aspeed,ast2500-xdma" or
++			  "aspeed,ast2600-xdma"
++ - reg			: contains the address and size of the memory region
++			  associated with the XDMA engine registers
++ - clocks		: clock specifier for the clock associated with the
++			  XDMA engine
++ - resets		: reset specifier for the syscon reset associated with
++			  the XDMA engine
++ - interrupts-extended	: two interrupt nodes; the first specifies the global
++			  interrupt for the XDMA engine and the second
++			  specifies the PCI-E reset or PERST interrupt.
++ - scu			: a phandle to the syscon node for the system control
++			  unit of the SOC
++ - sdmc			: a phandle to the syscon node for the SDRAM memory
++			  controller of the SOC
++ - vga-mem		: contains the address and size of the VGA memory space
++			  to be used by the XDMA engine
++
++Optional properties:
++ - pcie-device		: should be either "bmc" or "vga", corresponding to
++			  which device should be used by the XDMA engine for
++			  DMA operations. If this property is not set, the XDMA
++			  engine will use the BMC PCI-E device.
++
++Example:
++
++    xdma@1e6e7000 {
++        compatible = "aspeed,ast2500-xdma";
++        reg = <0x1e6e7000 0x100>;
++        clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
++        resets = <&syscon ASPEED_RESET_XDMA>;
++        interrupts-extended = <&vic 6>, <&scu_ic ASPEED_AST2500_SCU_IC_PCIE_RESET_LO_TO_HI>;
++        scu = <&syscon>;
++        sdmc = <&edac>;
++        pcie-device = "bmc";
++        vga-mem = <0x9f000000 0x01000000>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 398861a..528a142 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2707,6 +2707,12 @@ S:	Maintained
+ F:	drivers/media/platform/aspeed-video.c
+ F:	Documentation/devicetree/bindings/media/aspeed-video.txt
+ 
++ASPEED XDMA ENGINE DRIVER
++M:	Eddie James <eajames@linux.ibm.com>
++L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/devicetree/bindings/soc/aspeed/xdma.txt
++
+ ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
+ M:	Corentin Chary <corentin.chary@gmail.com>
+ L:	acpi4asus-user@lists.sourceforge.net
+-- 
+1.8.3.1
 
-> +      - ti,omap3-sgx530-121, img,sgx530-121, img,sgx530, img,sgx5
-
-4 compatibles is probably a bit much. Are there not any version or 
-feature registers that some of this could be detected? If there are, I'd 
-assume the middle 2 strings could be dropped. If not, drop the last one 
-and just match on the 3rd string. It's not a long list.
-
-> +    # BeagleBoard XM, GTA04, OpenPandora 1GHz
-> +      - ti,omap3-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
-> +    # BeagleBone Black
-> +      - ti,am3352-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
-> +    # Pandaboard, Pandaboard ES
-> +      - ti,omap4-sgx540-120, img,sgx540-120, img,sgx540, img,sgx5
-> +      - ti,omap4-sgx544-112, img,sgx544-112, img,sgx544, img,sgx5
-> +    # OMAP5 UEVM, Pyra Handheld
-> +      - ti,omap5-sgx544-116, img,sgx544-116, img,sgx544, img,sgx5
-> +      - ti,dra7-sgx544-116, img,sgx544-116, img,sgx544, img,sgx5
-> +    # CI20
-> +      - ingenic,jz4780-sgx540-120, img,sgx540-120, img,sgx540, img,sgx5
-> +    # the following entries are not validated with real hardware
-> +    # more TI
-> +      - ti,am3517-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
-> +      - ti,am4-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
-> +      - ti,ti81xx-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
-> +    # Banana-Pi-M3 (Allwinner A83T)
-> +      - allwinner,sun8i-a83t-sgx544-116, img,sgx544-116, img,sgx544, img,sgx5
-> +    # Atom Z5xx
-> +      - intel,poulsbo-gma500-sgx535, img,sgx535-116, img,sgx535, img,sgx5
-> +    # Atom Z24xx
-> +      - intel,medfield-gma-sgx540, img,sgx540-116, img,sgx540, img,sgx5
-> +    # Atom N2600, D2500
-> +      - intel,cedarview-gma3600-sgx545, img,sgx545-116, img,sgx545, img,sgx5
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: physical base address and length of the register area
-
-No need to give a generic description of a standard property.
-
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: interrupt line from SGX subsystem to core processor
-
-Same here.
-
-> +
-> +  clocks:
-> +    description: optional clocks
-
-Need to define how many and what they are. Or drop until you know.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-
-Add:
-
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |+
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    gpu@fe00 {
-> +      compatible = "ti,omap-omap5-sgx544-116", "img,sgx544-116", "img,sgx544", "img,sgx5";
-> +      reg = <0xfe00 0x200>;
-> +      interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> +
-> +...
-> -- 
-> 2.23.0
-> 
