@@ -2,162 +2,122 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEFBC2BD09
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AFCC2BD09
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453BF224F8
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:56:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575554185;
-	bh=SI5/UqDvOLdW/ebXgeRPP0F1wEDuikwE8BLTviwj7zI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=f94OxYmAByCLS6LSkBz2lgOoG2nl/Yk/H2P4Skkwlz/9BEii8Nz2iPlLzM6LbfR0a
-	 Kqfz3dn79yzygV5Z1xh0/dUBjai7fTu3gp5a02xiVxdm7yB5tCikQvFrZdpflsBCQS
-	 yA7tP5oSYev+n830/BB1TUK2i0JLJdZb0r8fN3wk=
+	by mail.kernel.org (Postfix) with ESMTP id A870E224F8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfLEN4Y (ORCPT
+        id S1729551AbfLEN7f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 08:56:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729099AbfLEN4Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Dec 2019 08:56:24 -0500
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41D1422525;
-        Thu,  5 Dec 2019 13:56:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575554183;
-        bh=SI5/UqDvOLdW/ebXgeRPP0F1wEDuikwE8BLTviwj7zI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yg7lntnXFYlbDO+rC98Zawl9736UXE/JoMSwLlGu7DSzz7ZIVo1Fn+kvVe5wFj8oX
-         ORE1V1NZRCFe2OD/LgTnjmhjR3dknHNDXRNDSgqnudzCaVzxk3wXXypAPX4W9yBJo/
-         IvY/jADxsCi/U5vhAWde20l3rRE8DKIdnpbdYnKY=
-Received: by mail-qk1-f180.google.com with SMTP id g15so3351553qka.8;
-        Thu, 05 Dec 2019 05:56:23 -0800 (PST)
-X-Gm-Message-State: APjAAAXnxAyCdpUF/kT0rPEg9X/NRMCpzg9nVS5m0TdkobzL+7eVYT7R
-        K4mWvs+KgtYlesl2KJcDMSb2LPvlcoSLOk0E9w==
-X-Google-Smtp-Source: APXvYqxTieNjxwOysjbfDY0Jzt7u28n6wJ0i4JI/0Df2CY+8bRxVrS6cJAN5zimj0f/y7nSsmjIvD9YzQK49P9OeD5Y=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr8502354qkg.152.1575554182339;
- Thu, 05 Dec 2019 05:56:22 -0800 (PST)
-MIME-Version: 1.0
-References: <20191205002503.13088-1-masneyb@onstation.org> <20191205002503.13088-5-masneyb@onstation.org>
-In-Reply-To: <20191205002503.13088-5-masneyb@onstation.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 5 Dec 2019 07:56:10 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+jpz6_N18sChREC_xGYt9sSFZFtWr3omb_6o7+MFxuHg@mail.gmail.com>
-Message-ID: <CAL_Jsq+jpz6_N18sChREC_xGYt9sSFZFtWr3omb_6o7+MFxuHg@mail.gmail.com>
-Subject: Re: [PATCH 4/7] dt-bindings: Input: introduce new clock vibrator bindings
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thu, 5 Dec 2019 08:59:35 -0500
+Received: from andre.telenet-ops.be ([195.130.132.53]:40698 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729099AbfLEN7f (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 08:59:35 -0500
+Received: from ramsan ([84.195.182.253])
+        by andre.telenet-ops.be with bizsmtp
+        id aDzY210095USYZQ01DzYRT; Thu, 05 Dec 2019 14:59:33 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1icrfI-0002LA-6h; Thu, 05 Dec 2019 14:59:32 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1icrfI-0001xL-5K; Thu, 05 Dec 2019 14:59:32 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Magnus Damm <magnus.damm@gmail.com>
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linux Input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 6/6] arm64: dts: renesas: r8a77961: Add SDHI nodes
+Date:   Thu,  5 Dec 2019 14:59:30 +0100
+Message-Id: <20191205135930.7454-7-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191205135930.7454-1-geert+renesas@glider.be>
+References: <20191205135930.7454-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 6:25 PM Brian Masney <masneyb@onstation.org> wrote:
->
-> Add support for clock-based vibrator devices where the speed can be
-> controlled by changing the duty cycle.
->
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  .../bindings/input/clk-vibrator.yaml          | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/clk-vibrator.yaml
->
-> diff --git a/Documentation/devicetree/bindings/input/clk-vibrator.yaml b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> new file mode 100644
-> index 000000000000..2103a5694fad
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/input/clk-vibrator.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Clock vibrator
-> +
-> +maintainers:
-> +  - Brian Masney <masneyb@onstation.org>
-> +
-> +description: |
-> +  Support for clock-based vibrator devices where the speed can be controlled
-> +  by changing the duty cycle.
-> +
-> +properties:
-> +  compatible:
-> +    const: clk-vibrator
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    description: output clock that controls the speed
-> +    items:
-> +      - const: core
+Add device nodes for the SDHI Interfaces on the Renesas R-Car M3-W+
+(r8a77961) SoC.
 
-No point in making up a name when there's only one clock, so drop.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Test procedure (eMMC):
+  1. "hd /dev/mmcblk0boot1".
+---
+ arch/arm64/boot/dts/renesas/r8a77961.dtsi | 39 +++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 3 deletions(-)
 
-> +
-> +  clock-frequency: true
+diff --git a/arch/arm64/boot/dts/renesas/r8a77961.dtsi b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
+index 26bffffe7c544bb4..81e089458ce5b770 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77961.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
+@@ -905,18 +905,51 @@
+ 		};
+ 
+ 		sdhi0: sd@ee100000 {
++			compatible = "renesas,sdhi-r8a77961",
++				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee100000 0 0x2000>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 314>;
++			max-frequency = <200000000>;
++			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
++			resets = <&cpg 314>;
++			status = "disabled";
++		};
++
++		sdhi1: sd@ee120000 {
++			compatible = "renesas,sdhi-r8a77961",
++				     "renesas,rcar-gen3-sdhi";
++			reg = <0 0xee120000 0 0x2000>;
++			interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 313>;
++			max-frequency = <200000000>;
++			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
++			resets = <&cpg 313>;
++			status = "disabled";
+ 		};
+ 
+ 		sdhi2: sd@ee140000 {
++			compatible = "renesas,sdhi-r8a77961",
++				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee140000 0 0x2000>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 312>;
++			max-frequency = <200000000>;
++			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
++			resets = <&cpg 312>;
++			status = "disabled";
+ 		};
+ 
+ 		sdhi3: sd@ee160000 {
++			compatible = "renesas,sdhi-r8a77961",
++				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee160000 0 0x2000>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 311>;
++			max-frequency = <200000000>;
++			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
++			resets = <&cpg 311>;
++			status = "disabled";
+ 		};
+ 
+ 		gic: interrupt-controller@f1010000 {
+-- 
+2.17.1
 
-Given the frequency is variable, what does this mean in this case?
-
-> +  enable-gpios:
-> +    maxItems: 1
-> +
-> +  vcc-supply:
-> +    description: Regulator that provides power
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - clock-names
-> +  - clock-frequency
-
-Add:
-
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    vibrator {
-> +        compatible = "clk-vibrator";
-> +
-> +        vcc-supply = <&pm8941_l19>;
-> +
-> +        clocks = <&mmcc CAMSS_GP1_CLK>;
-> +        clock-names = "core";
-> +        clock-frequency = <24000>;
-> +
-> +        enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
-> +
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&vibrator_pin>;
-> +    };
-> --
-> 2.21.0
->
