@@ -2,120 +2,182 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DEFC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 06:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9347DC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 06:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 408CB22464
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 06:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58FB622464
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 06:16:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="XnC1T960"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OpbZtYc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbfLEGGi (ORCPT
+        id S1726027AbfLEGQY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 01:06:38 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:58358 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725880AbfLEGGi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Dec 2019 01:06:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dSBpaxwIFIt6XTXn2BVKEZT+C7a4WG7hO1oDu4g0lQU=; b=XnC1T96098DXSfUc1kQjc+opX
-        ooXVR+JY2HBPWk/qL7yTfIZreq7mGSB7NGYY6mz0IoX6TxcQw4Cd2dunJtUPRP+B1foaXHBJgZv4N
-        KZbSjEpyHvTdsnm64HgcAhdkMGm7KpM9JrSl8t3yLW0zZEZTfqVjebrCkhfVmXjhUaLGc=;
-Received: from [185.238.219.17] (helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1ickHZ-0002i1-4a; Thu, 05 Dec 2019 07:06:34 +0100
-Received: from [::1] (helo=localhost)
-        by eeepc with esmtp (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1ickHN-0000Bm-8W; Thu, 05 Dec 2019 07:06:21 +0100
-Date:   Thu, 5 Dec 2019 07:06:12 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "H . Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH] ARM: dts: e60k02: fix power button
-Message-ID: <20191205070612.27204646@kemnade.info>
-In-Reply-To: <20191204123645.GL3365@dragon>
-References: <20191111202959.24189-1-andreas@kemnade.info>
-        <20191204123645.GL3365@dragon>
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
+        Thu, 5 Dec 2019 01:16:24 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45840 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfLEGQY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 01:16:24 -0500
+Received: by mail-io1-f67.google.com with SMTP id i11so2339248ioi.12
+        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 22:16:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sagxzG2UOJgqtCWMTEvuG8BujWW/Ac96ALrG1/iNc1g=;
+        b=OpbZtYc602v9GzttMW4clzIL5MO4H74stJoLKvSgJ9YuuzxyAVwKg2x2E5bGNMS8Ix
+         VDGM0ySfeLoY9+ChJHUdC74eBzZEuLW95Lorx6yqi4GfEEPEMk7F9nkm/1HdMBuXIe8W
+         5dmUXfLm7RO8hDMjSRzUREtQ0GULXDZwxm5Vk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sagxzG2UOJgqtCWMTEvuG8BujWW/Ac96ALrG1/iNc1g=;
+        b=TrB3m8Pf0b5lhP1HPG9tAYpqjHbYca6PSG59q5EpRFYO2b/iOiKamfhgxl9LO4/quj
+         PGny+QV1mEmS4qLmxJDGwv9YHOXd+g5BXK4PmxKQPEadG0IRm0yYBfeBUvLkICOOP60d
+         a19kvBrdltseP9p1i4OKSG0e2WuKmq1N0G3x4TuRhgjoj9lGtbF1Tf+TUO+AAVFd6ls2
+         3PIBk4RP1F6KVg5uy4hYzzBjcZFm9DyT4fBZJhz2kIlvn/pCt87eoD3HVyzTJMvXBiu1
+         m/zehwZhPO1oOUoltdH7mxxwboObzCbbR488Mt8IeNp9+i5gqDwEGifq9LDEx0m26Pwm
+         8JSA==
+X-Gm-Message-State: APjAAAUDp7MbB64z2vZuZOLqs3haDhR4iTb0M3ZP0Y4Df3o0o1bBufGH
+        cmMtRUb7icjwl+vahJZ0KO+zcU95Z91NH9Df4ExpNw==
+X-Google-Smtp-Source: APXvYqwd0SY25U4cq3pwuC4ufVW/oZZK/mthsjkNg5Pt9lukryHB6LaDPd57XgXny29wudUpug6IojBLFRTn9swdYmo=
+X-Received: by 2002:a02:b18d:: with SMTP id t13mr158882jah.4.1575526583427;
+ Wed, 04 Dec 2019 22:16:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/e59ch/q73Ij1=hh=gGw_suC"; protocol="application/pgp-signature"
+References: <1574817475-22378-2-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1574817475-22378-2-git-send-email-yongqiang.niu@mediatek.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Thu, 5 Dec 2019 14:15:57 +0800
+Message-ID: <CAJMQK-iDnOWCYmxcREGschD=sDfU6yKpUu+koP3YDeO3MPCdhQ@mail.gmail.com>
+Subject: Re: [v1,1/2] drm/mediatek: Fixup external display black screen issue
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---Sig_/e59ch/q73Ij1=hh=gGw_suC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Nov 27, 2019 at 1:17 AM <yongqiang.niu@mediatek.com> wrote:
+>
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+>
+> Problem:
+> overlay hangup when external display hotplut test
+>
+> Fix:
+> disable overlay when crtc disable
+>
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 39 +++++++++++++++++++++------------
+>  1 file changed, 25 insertions(+), 14 deletions(-)
+>
+> --
+> 1.8.1.1.dirty
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> index 4fb346c..7eca02f 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> @@ -369,6 +369,20 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+>         mtk_disp_mutex_add_comp(mtk_crtc->mutex, mtk_crtc->ddp_comp[i]->id);
+>         mtk_disp_mutex_enable(mtk_crtc->mutex);
+>
+> +       /* Initially configure all planes */
+> +       for (i = 0; i < mtk_crtc->layer_nr; i++) {
+> +               struct drm_plane *plane = &mtk_crtc->planes[i];
+> +               struct mtk_plane_state *plane_state;
+> +               struct mtk_ddp_comp *comp;
+> +               unsigned int local_layer;
+> +
+> +               plane_state = to_mtk_plane_state(plane->state);
+> +               comp = mtk_drm_ddp_comp_for_plane(crtc, plane, &local_layer);
+> +               if (comp)
+> +                       mtk_ddp_comp_layer_config(comp, local_layer,
+> +                                                 plane_state, NULL);
+> +       }
+> +
+>         for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
+>                 struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
+>                 enum mtk_ddp_comp_id prev;
+> @@ -385,20 +399,6 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+>                 mtk_ddp_comp_start(comp);
+>         }
+>
+> -       /* Initially configure all planes */
+> -       for (i = 0; i < mtk_crtc->layer_nr; i++) {
+> -               struct drm_plane *plane = &mtk_crtc->planes[i];
+> -               struct mtk_plane_state *plane_state;
+> -               struct mtk_ddp_comp *comp;
+> -               unsigned int local_layer;
+> -
+> -               plane_state = to_mtk_plane_state(plane->state);
+> -               comp = mtk_drm_ddp_comp_for_plane(crtc, plane, &local_layer);
+> -               if (comp)
+> -                       mtk_ddp_comp_layer_config(comp, local_layer,
+> -                                                 plane_state, NULL);
+> -       }
+> -
+>         return 0;
+>
+>  err_mutex_unprepare:
+> @@ -607,10 +607,21 @@ static void mtk_drm_crtc_atomic_disable(struct drm_crtc *crtc,
+>         for (i = 0; i < mtk_crtc->layer_nr; i++) {
+>                 struct drm_plane *plane = &mtk_crtc->planes[i];
+>                 struct mtk_plane_state *plane_state;
+> +               struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+> +               unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
+> +               unsigned int local_layer;
+>
+>                 plane_state = to_mtk_plane_state(plane->state);
+>                 plane_state->pending.enable = false;
+>                 plane_state->pending.config = true;
+> +
+> +               if (i >= comp_layer_nr) {
+> +                       comp = mtk_crtc->ddp_comp[1];
+> +                       local_layer = i - comp_layer_nr;
+> +               } else
+> +                       local_layer = i;
+> +               mtk_ddp_comp_layer_config(comp, local_layer,
+> +                                         plane_state, NULL);
+This part should be moved to mtk_crtc_ddp_hw_fini(), or at least
+called after drm_crtc_vblank_off(). Otherwise we would see
+drm_wait_one_vblank warnings on 8173 when display turns off.
 
-On Wed, 4 Dec 2019 20:36:47 +0800
-Shawn Guo <shawnguo@kernel.org> wrote:
+[   25.696182] Call trace:
+[   25.698624]  drm_wait_one_vblank+0x1f0/0x1fc
+[   25.702886]  drm_crtc_wait_one_vblank+0x20/0x2c
+[   25.707415]  mtk_drm_crtc_atomic_disable+0xf0/0x308
+[   25.712287]  drm_atomic_helper_commit_modeset_disables+0x1b8/0x3c0
+[   25.718461]  mtk_atomic_complete+0x88/0x16c
+[   25.722638]  mtk_atomic_commit+0xa8/0xb0
+[   25.726553]  drm_atomic_commit+0x50/0x5c
+[   25.730469]  drm_atomic_helper_set_config+0x98/0xa0
+[   25.735341]  drm_mode_setcrtc+0x280/0x608
+[   25.739344]  drm_ioctl_kernel+0xcc/0x10c
+[   25.743261]  drm_ioctl+0x240/0x3c0
+[   25.746658]  drm_compat_ioctl+0xd8/0xe8
+[   25.750487]  __se_compat_sys_ioctl+0x100/0x26fc
+[   25.755009]  __arm64_compat_sys_ioctl+0x20/0x2c
+[   25.759534]  el0_svc_common+0xa4/0x154
+[   25.763277]  el0_svc_compat_handler+0x2c/0x38
+[   25.767628]  el0_svc_compat+0x8/0x18
+[   25.771195] ---[ end trace f4619fdac8f1c0ff ]---
 
-> On Mon, Nov 11, 2019 at 09:29:59PM +0100, Andreas Kemnade wrote:
-> > The power button was only producing irqs, but no key events,
-> > Forced power down with long key press works, so probably
-> > only a short spike arrives at the SoC.
-> > Further investigation shows that LDORTC2 is off after boot
-> > of the vendor kernel. LDORTC2 is shared with a GPIO at the pmic
-> > which probably transfers the button press to the SoC.
-> > That regulator off at boot, so "regulator-boot-on" is definitively
-> > wrong. So remove that.
-> >=20
-> > Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info> =20
->=20
-> Do you want this go into 5.5-rc as a fix?  In that case, we may need a
-> Fixes tag here.
->=20
-well, now there is=20
-regulator: core: Let boot-on regulators be powered off
-so the power button should work after regulator_late_cleanup()
-is called but that is usually some time after userspace has started,
-so it would be better to have that in. And of course dt should
-correctly describe the hardware. That would be
-
-Fixes: c100ea86e6ab ("ARM: dts: add Netronix E60K02 board common file")
-
-BTW: I have not seen your 5.5 stuff in Linus' tree yet. Seems that Olof
-has not sent his pull request yet or is there bigger trouble?
-
-Regards,
-Andreas
-
---Sig_/e59ch/q73Ij1=hh=gGw_suC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl3onlQACgkQl4jFM1s/
-ye9lJhAArhjRzxxMavFXQf2PI+2ZJZ4rFZjFvJ75/UxnBDrNFslJ3WEeEnuIymQD
-MRPwgn4qE57P4pj17WFRS+Xaw7BRRJ5sHjHSfWLsNZMlzhkEDviVx9zOIhQK6GJO
-yxbZq2u0hthGAFM7nJ+Z38Z+j6E9dzQLpufmgFfrCzZaza1GYeJnQbwfUZSHtvjB
-/NwXiA1M6ELlx3evtZ7P6Chi45SmXl4foy1zX4ESh46rR1uaLij1sOXJ7Tu5r54C
-GgaxpdqqR1GtTWfZkF0sQvRmcxGXM+UZDyHFZ2c/Id/6MApQx1vibAyKY9zyHdp0
-wc6tBEPKJHdts9H5rNwQrSwF9k50YlCphuTRtsJUsW3BiNxBmksTNBVfLM2AjiDO
-rpL5OKfJqgUXeP5/sR/H1ZrlJWPMibSvK2C/F8XlkRzM1h54xcil523ymoCoJrc2
-N72JzslVK83SI5gm4CrsRYnEXu+sMS5UbLbgU7zCJdC76PqhsM44hqtVGN1Faf7w
-RB03MjZ2vnuQtk5k/Xn/nUJS5NFp4g0nburvcjSW/jpTPrdT7jhqafUzbazU70NU
-OimIpJWZBghslhZLYaagOJJE/iLrzqe7Tns7UNzzQhKae+YAFtoutLPhV920XVab
-1JSQ1Dtb9AQmLNPhIvXTKaRFpHVYzPlrJO4ICfJbt9ouTY9IrN4=
-=m0VS
------END PGP SIGNATURE-----
-
---Sig_/e59ch/q73Ij1=hh=gGw_suC--
+>
