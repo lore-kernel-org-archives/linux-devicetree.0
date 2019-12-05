@@ -2,204 +2,174 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50460C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 14:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BA0C2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 14:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21D4D21835
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 14:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E762245C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 14:48:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="fgnbnepY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbfLEOjT (ORCPT
+        id S1729622AbfLEOso (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 09:39:19 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51037 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729099AbfLEOjT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 09:39:19 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1icsHk-0000lm-Pq; Thu, 05 Dec 2019 15:39:16 +0100
-Received: from [IPv6:2001:67c:670:202:c1c2:3766:121d:8496] (unknown [IPv6:2001:67c:670:202:c1c2:3766:121d:8496])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 4743D489E36;
-        Thu,  5 Dec 2019 14:39:15 +0000 (UTC)
-To:     Dan Murphy <dmurphy@ti.com>, Sean Nyekjaer <sean@geanix.com>
-Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20191204175112.7308-1-dmurphy@ti.com>
- <20191204175112.7308-2-dmurphy@ti.com>
- <b9eaa5c4-13bc-295f-dcbf-d2a846243682@geanix.com>
- <827b022e-9188-7bcf-25e3-3777df3b08a5@ti.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Subject: Re: [PATCH 2/2] net: m_can: Make wake-up gpio an optional
-Message-ID: <809b9ff1-88e3-4e46-33e0-856db37898b2@pengutronix.de>
-Date:   Thu, 5 Dec 2019 15:39:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 5 Dec 2019 09:48:44 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43032 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729574AbfLEOso (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 09:48:44 -0500
+Received: by mail-wr1-f68.google.com with SMTP id d16so3912321wre.10
+        for <devicetree@vger.kernel.org>; Thu, 05 Dec 2019 06:48:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oHdIrCO6kQ2Rshm7QZhBaPgPSsJahjIjSW1nStTA8NM=;
+        b=fgnbnepY9/THLXfaK+hiYjanJJ0I1nyLSyQYlGcsIGmWDFwPmtKQ0Ye+RP3ViSJsip
+         HNzrDUCzrzJIDOCSXuBj3TOFM3WjxI2R0pG5U8idEvHYCLwvH09/0ymUNzFrS7LFyoei
+         Dd852ZXd3sEw1MJOiVpe7e7uovotdYntQBJ+MNyexvp82k7LmM9yf/LS0hA5MX5H88m/
+         1TpFsUBDe7arywTtwD2yzaiJCXeUf8J+w1N+hoyh88D0TUcAurDq7+VibAPtMNjVLNw8
+         OVIWowpFo95XeUcJY2BCPtzIKIAd0IGhp66JvW5QGdHYA9I3cux8VR/IHwNRq3Bxnny3
+         rvLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oHdIrCO6kQ2Rshm7QZhBaPgPSsJahjIjSW1nStTA8NM=;
+        b=SCqp60gI/3M645DADEbyKO/lO54/Mx2VgxULLhFrWxRZftRtK+6dEYSXN/xs9RbGEw
+         XKdQpAwUqnfJePDQkS8MfBIYz1MatzlPP93lBBrvunRFucc0RRdzPVmqhk9ZP3Uo9RGi
+         p+EXHDPH5yN2KrWGJh6KR32HC5YUde46Bq13XkCM1R289kcHi45vITSO+KBYrSVuIVJ4
+         qBzNHEjcvaPJzDdTV3O/QlBuFFyXuAncgXdnG1DEVAJBTVnDJeZimUVWmCI/Hm5HUZQA
+         zbI72pUOZUtoToDIWYPgufJWnUPjidpS+r6syR28rUJgSZcTw9OjvVTzYwZBPuBH7NQB
+         fuyw==
+X-Gm-Message-State: APjAAAU7jK/FLFStAhBbBn72DXxOfU1pczpbzTJL43LdZ57NBY4dbG3I
+        wUGBV0gIXOIpIu65RNzATDZ59w==
+X-Google-Smtp-Source: APXvYqxW+7gCTDwfdwZ9xn5nP1blFVvd2gKJZp5hqR+snnPERZdt+Sfx5QTBUvGLfYS8jhPOC9+PdQ==
+X-Received: by 2002:a5d:6a0f:: with SMTP id m15mr8241306wru.40.1575557320401;
+        Thu, 05 Dec 2019 06:48:40 -0800 (PST)
+Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
+        by smtp.gmail.com with ESMTPSA id c4sm75334wml.7.2019.12.05.06.48.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 06:48:39 -0800 (PST)
+Date:   Thu, 5 Dec 2019 15:48:38 +0100
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: net: mdio: use non vendor specific
+ compatible string in example
+Message-ID: <20191205144837.GA28725@netronome.com>
+References: <20191127153928.22408-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <827b022e-9188-7bcf-25e3-3777df3b08a5@ti.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="iZU9bZITvtgiwIRdmRwqqWeLtKpNHVsed"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127153928.22408-1-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---iZU9bZITvtgiwIRdmRwqqWeLtKpNHVsed
-Content-Type: multipart/mixed; boundary="Mnnmu6BcRlpk8J2MfsWkjfPCqrE9aKPjY";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Dan Murphy <dmurphy@ti.com>, Sean Nyekjaer <sean@geanix.com>
-Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-Message-ID: <809b9ff1-88e3-4e46-33e0-856db37898b2@pengutronix.de>
-Subject: Re: [PATCH 2/2] net: m_can: Make wake-up gpio an optional
-References: <20191204175112.7308-1-dmurphy@ti.com>
- <20191204175112.7308-2-dmurphy@ti.com>
- <b9eaa5c4-13bc-295f-dcbf-d2a846243682@geanix.com>
- <827b022e-9188-7bcf-25e3-3777df3b08a5@ti.com>
-In-Reply-To: <827b022e-9188-7bcf-25e3-3777df3b08a5@ti.com>
+On Wed, Nov 27, 2019 at 05:39:28PM +0200, Grygorii Strashko wrote:
+> Use non vendor specific compatible string in example, otherwise DT YAML
+> schemas validation may trigger warnings specific to TI ti,davinci_mdio
+> and not to the generic MDIO example.
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
---Mnnmu6BcRlpk8J2MfsWkjfPCqrE9aKPjY
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
+This seems sensible to me.
 
-On 12/5/19 2:26 PM, Dan Murphy wrote:
-> On 12/5/19 1:39 AM, Sean Nyekjaer wrote:
->>
->>
->> On 04/12/2019 18.51, Dan Murphy wrote:
->>> The device has the ability to disable the wake-up pin option.
->>> The wake-up pin can be either force to GND or Vsup and does not have =
-to
->>> be tied to a GPIO.=C2=A0 In order for the device to not use the wake-=
-up=20
->>> feature
->>> write the register to disable the WAKE_CONFIG option.
->>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> CC: Sean Nyekjaer <sean@geanix.com>
->> Reviewed-by: Sean Nyekjaer <sean@geanix.com>
->>> ---
->>
->>
->> Hi Dan,
->>
->> I would add tcan4x5x to the subject of this patch ->
->> "net: m_can: tcan4x5x Make wake-up gpio an optional"
->>
-> Do you want me to submit v2 with the $subject change?
->=20
-> Or would you fix it up when committing it?
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
 
-I'll change the subject while applying.
+Are there any plans to address the errors DT YAML schema validation reports?
 
-Dan, what about maintainerchip of the tcan4x5?
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
-
-
---Mnnmu6BcRlpk8J2MfsWkjfPCqrE9aKPjY--
-
---iZU9bZITvtgiwIRdmRwqqWeLtKpNHVsed
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl3pFogACgkQWsYho5Hk
-nSD7Cwf/fbv3hoVGUGGFAH8BxqgHR6oOtr1zZBZJpo6RGumAWrabIJmmrm2sZoHZ
-eurm7p3YAefNpOUaJaBudQyLfZ/Bj4NyWE/aGU4rMdAVLbFQU30aMrKFn9DRdI/L
-D1pJE2S/kcfXSYIKih58c22CcLSqCFUwhn1xSEb29LAmIIpvoQTXsUBOymQFNKEO
-Z5xHCudVHR9axcONsiqs0oUPW+apz8buQ/CYCvMVbyBUtF/5HbHnjGa5176bC4fH
-Bh4NR4hN42beMksSjXMCN6onuNgf9AuX8kK6kiqsjBInYj6p8GttrlTCieXnL/8x
-JYrlKCHuDf9bosQY6rPmR/o1+4Oikw==
-=7SuL
------END PGP SIGNATURE-----
-
---iZU9bZITvtgiwIRdmRwqqWeLtKpNHVsed--
+$ ARCH=arm make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/net/mdio.yaml
+.../linux/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4708-netgear-r6250.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4708-netgear-r6250.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4708-linksys-ea6300-v1.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4708-linksys-ea6300-v1.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47081-luxul-xwr-1200.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47081-luxul-xwr-1200.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47081-asus-rt-n18u.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47081-asus-rt-n18u.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4709-asus-rt-ac87u.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4709-asus-rt-ac87u.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47081-tplink-archer-c5-v2.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47081-tplink-archer-c5-v2.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47081-buffalo-wzr-900dhp.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47081-buffalo-wzr-900dhp.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4709-netgear-r7000.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4709-netgear-r7000.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4709-linksys-ea9200.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4709-linksys-ea9200.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47081-luxul-xap-1410.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47081-luxul-xap-1410.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47094-luxul-xwr-3150-v1.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47094-luxul-xwr-3150-v1.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47094-luxul-xap-1610.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47094-luxul-xap-1610.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47094-dlink-dir-885l.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47094-dlink-dir-885l.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4709-netgear-r8000.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4709-netgear-r8000.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4709-buffalo-wxr-1900dhp.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4709-buffalo-wxr-1900dhp.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47094-luxul-abr-4500.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47094-luxul-abr-4500.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47094-linksys-panamera.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47094-linksys-panamera.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm94709.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm94709.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47094-luxul-xbr-4500.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47094-luxul-xbr-4500.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47094-phicomm-k3.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47094-phicomm-k3.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm911360k.dt.yaml: mdio@18002000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm911360k.dt.yaml: mdio@18002000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm47094-netgear-r8500.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm47094-netgear-r8500.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm94708.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm94708.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm953012k.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm953012k.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm953012er.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm953012er.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm911360_entphn.dt.yaml: mdio@18002000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm911360_entphn.dt.yaml: mdio@18002000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm953012hr.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm953012hr.dt.yaml: mdio@18003000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm958305k.dt.yaml: mdio@18002000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm958305k.dt.yaml: mdio@18002000: #size-cells:0:0: 0 was expected
+.../linux/arch/arm/boot/dts/bcm958300k.dt.yaml: mdio@18002000: #address-cells:0:0: 1 was expected
+.../linux/arch/arm/boot/dts/bcm958300k.dt.yaml: mdio@18002000: #size-cells:0:0: 0 was expected
