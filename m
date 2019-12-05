@@ -7,80 +7,92 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C50C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 21:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60561C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 21:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83E3B24670
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 21:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2488424671
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 21:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575580522;
-	bh=65qof+2pKIiDkdnbH27diEYSYggjj2e6fRn+s00UYrQ=;
+	s=default; t=1575580561;
+	bh=Lb1o7EVP6Zavy8CFuV7+uxkBdTgm97p2EwRVOXWDqUY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n0iBn0lRga0WXL/DRWfHk62slJcfwf0YqwerG265JbIQ3sRea8ift3meo/g7RCyuK
-	 WxzAR4LrmkA01x23mmdPqGLCq6202w3ghBPKWlJ5djRkm9OqdvL7pvuHOrVPHZhzuU
-	 pSOYS0L1btIaMp7b7deWKp73W37d6HPe648vcG5I=
+	b=adVh7pQ3QTm2VCAYkHMHiL03ILEKoBYrpQrUaUTXI8SvTmQXH3mizAnVnkN9wuVSW
+	 CbYpSoRuIpJL3+haVXTDzf9EvJLnYEkBCnJIcZDFpriV2oz9IU7xFrhmLddjug+WcM
+	 DNbaQJvQoVC4s/idQ/Fskm/HZmXqiU7u50XFGA5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbfLEVPW (ORCPT
+        id S1729489AbfLEVQA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 16:15:22 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42314 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729450AbfLEVPW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 16:15:22 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so3911410otd.9;
-        Thu, 05 Dec 2019 13:15:21 -0800 (PST)
+        Thu, 5 Dec 2019 16:16:00 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45486 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729430AbfLEVQA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 16:16:00 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 59so3891877otp.12;
+        Thu, 05 Dec 2019 13:15:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YJ9zindtieuDhe+7MeY3HR+ZIrhEnTYORFnF43Fjuuo=;
-        b=H8FjBmCGpKJ12wybDVkmrbxMQtMFXJnBNXpQu+uP8Bz+UET1zkLgd0Q4DSYX+K4lqs
-         R+xgMm3YJptsTUZMSWQsR5M4heft+hOXqhNLpUIQJaP0VXUjTxkju2wgpjUXR5U/lcwP
-         xatmqD6UYO+CDHy7qPT44ntLXzsu9FHi/fT625rP2MWeBUxaTTuJuEzIIcOw/YMHVbeh
-         Nap/78Zfq7KqNjbk/IuBi54arNETu7ZdQVTTLJWPLrx+Ay+Hv9Yka5irqYUiQ3tY78nX
-         gR/+3iGYyIveGWAdpKKnvZYka/N4nqg76aDUMcLua+q4cUK1uErDLG6mWXob2rrUwBgu
-         XH8Q==
-X-Gm-Message-State: APjAAAUm4GCX9FzepGahoB43GDh77p2X0lTPes0nv1xj7bnzVm8fdF7z
-        xA4jPz7euZzcG6PhEmgzsA==
-X-Google-Smtp-Source: APXvYqxZcyLjEEXrywjejvo3Fovq/Vj1ZK2rPKMOypHYm8vTPRNz4P37AyKMhs/HcKqGxOLJBudH/Q==
-X-Received: by 2002:a9d:58c9:: with SMTP id s9mr8001069oth.121.1575580520010;
-        Thu, 05 Dec 2019 13:15:20 -0800 (PST)
+        bh=bMEPgFnBcKMSD8dtJPMDYYn6pR51fgydSuOlX9FkuK0=;
+        b=KT8ZTplnSrVXl0zzSk4TNqik4Xjmg3dvrHcuCQMdwUA0icZrUGC9x4VNDymNo2AR1D
+         u9BFl9g3K8Q2vAYHy9zWjYKVMW8/NzBzNm2BOc/oS6y+cQq5Q29ntoNQDmS+urfwWxm+
+         +uRf7+soJww0gsEotX6r7ja1NHHPgaui53fFrZGLIBiIn1D5P6CkFzjN8ATA3H7hM+lo
+         dFFkEE7255POFL2zDkZQ2c9wCV72SzvjTXwBb+2qLkW87nWLfej8RCBYr6B4/ZsnhAq/
+         WmAjVyD49HvdLvPmh+e6+XvnWKERoAYPo22icWWQCwurJvpYthTtgSrlaTZZXTDsd2lp
+         dHsw==
+X-Gm-Message-State: APjAAAXY2alCeE5bdZXAeka5KQ/Cmod9JZ2tDCU+lHaQnOQqhsxCfLcs
+        Bq6cXRyPeYSdu/6tt75NjA==
+X-Google-Smtp-Source: APXvYqxJ34BuvnBNl8qqmmfGsvnglkGM+dvCwO8QTEHOQg+QsUOlrJsGBfcCWGh/FxUQd5JT5epaAw==
+X-Received: by 2002:a9d:53c2:: with SMTP id i2mr7842890oth.43.1575580559384;
+        Thu, 05 Dec 2019 13:15:59 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f62sm3800001otf.23.2019.12.05.13.15.19
+        by smtp.gmail.com with ESMTPSA id m2sm3934618oim.13.2019.12.05.13.15.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 13:15:19 -0800 (PST)
-Date:   Thu, 5 Dec 2019 15:15:18 -0600
+        Thu, 05 Dec 2019 13:15:58 -0800 (PST)
+Date:   Thu, 5 Dec 2019 15:15:58 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, asutoshd@codeaurora.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        cang@codeaurora.org, rampraka@codeaurora.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V1 1/2] dt-bindings: mmc: sdhci-msm: Add compatible
- string for sc7180
-Message-ID: <20191205211518.GA30447@bogus>
-References: <0101016eacb255af-3985262d-9b7e-4813-88c2-61838406e12c-000000@us-west-2.amazonses.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     robh+dt@kernel.org, andriy.shevchenko@linux.intel.com,
+        dmitry.torokhov@gmail.com, bparrot@ti.com,
+        andy.shevchenko@gmail.com, simon.budig@kernelconcepts.de,
+        hdegoede@redhat.com, fcooper@ti.com, mripard@kernel.org,
+        alexandre.belloni@bootlin.com, shawnguo@kernel.org,
+        devicetree@vger.kernel.org, kernel@pengutronix.de,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] dt-bindings: Input: edt-ft5x06 - document
+ wakeup-source capability
+Message-ID: <20191205211558.GA31631@bogus>
+References: <20191127120948.22251-1-m.felsch@pengutronix.de>
+ <20191127120948.22251-4-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0101016eacb255af-3985262d-9b7e-4813-88c2-61838406e12c-000000@us-west-2.amazonses.com>
+In-Reply-To: <20191127120948.22251-4-m.felsch@pengutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 27 Nov 2019 11:49:59 +0000, Veerabhadrarao Badiganti wrote:
-> Add sc7180 SoC specific compatible strings for qcom-sdhci controller.
+On Wed, 27 Nov 2019 13:09:46 +0100, Marco Felsch wrote:
+> The current driver behaviour was to enable the wakeup-source everytime.
+> After discussion [1] we decided to change that behaviour so the device
+> will act as wakeup-source only if the "wakeup-source" dt-property is
+> present.
 > 
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> The patch adds the binding documentation to enable the wakeup-source
+> capability.
+> 
+> [1] https://patchwork.kernel.org/patch/11149037/
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 > ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 1 +
->  1 file changed, 1 insertion(+)
+> v2:
+> - make use of common dt-property wakeup-source
+> - adapt commit message
+> 
+>  .../devicetree/bindings/input/touchscreen/edt-ft5x06.txt        | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
