@@ -2,108 +2,109 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE99C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC26C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 02:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7E124667
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808C5214B2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 02:19:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dbEieWkw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kUT4K4VJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfLEA4t (ORCPT
+        id S1728393AbfLECTn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 19:56:49 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:38081 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728098AbfLEA4t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 19:56:49 -0500
-Received: by mail-pj1-f67.google.com with SMTP id l4so542738pjt.5
-        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 16:56:49 -0800 (PST)
+        Wed, 4 Dec 2019 21:19:43 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:33753 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728321AbfLECTm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 21:19:42 -0500
+Received: by mail-yw1-f66.google.com with SMTP id 192so639655ywy.0;
+        Wed, 04 Dec 2019 18:19:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mkK1VbYU8pd8d1R2HwKoX7wARdH4Fdf+a3nqX6mf/A8=;
-        b=dbEieWkwvw6WZSpP1x7bC4rsOw5teKRhgEYI1EgQL8Mw6TV1DHWZ3AHvhig8Gj59sY
-         LYWUeilhVAielBO2XpkLLJrj/SG4ZABZgXwVppbT3ok1163wByjsemU6rq5Wqu02BFj8
-         mQWIyIKJUuY1CwGc+0KWD6po2054VL91TfDls=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W0wipGAlhtFBkJDMjyVi53Belp9dZbF8qy8E6IHBmAc=;
+        b=kUT4K4VJ3i15DzpOkpq7fK7DgnWrHPwjdAGZyO4qBy5SBblwpIll3K/BimeM7GBf6S
+         h5JNbWRPQXOoa69Dgpc/c28ZfdA2zZcMDn0ptcRrinbBAdxWFeqjSD39G8OEV6MxyfPo
+         PhBieSaCbbvXKPLJ6qAQIXFDisK10uuc/bcHHVArpwGNERDLN3/DEsxnEDPPk6bkLhK5
+         4elI7/lcLdf3xETQ+vSuio0Mj+v6HasE/Gc7/cO6p7ELWxy3WnuQltkRDKEdOnv9sY+q
+         0wznrP/qzbKz5EgEONJ1NCajYAtvI2dS0XRUVEfYWxtywhIHwozZSWqL/NjgHP6dkISy
+         hyPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mkK1VbYU8pd8d1R2HwKoX7wARdH4Fdf+a3nqX6mf/A8=;
-        b=nPfx9Hn2T4JFUR7l1DFrs+ph94X1XiBDsxue8nxYE8qhil2xPJ8EWxDIeuG9krRjFT
-         HyP0dJCxiCLEfDdZA0mnl9Ygqc4EUTn4jOrhOPfyIFBU+vh/JQ6fnoSa73etc70plcpO
-         Q608SWSImnwF7fnolKXtG/wFfv+ttPBn6iZ0vgGoR7ymTHZpkHNBl24/r7g27n4IiWTf
-         qWc1ZHIrF8W3557xc8HURbxY3FHDddHv7u6ksY92BfEdPw45GeGbe3lYS5YpX8OwzOTg
-         CUWbdRvoJPkKXtnHQ51bUDbjO5+RX+D9YYVh3pTRtwJyIsFYrv8+AaDwrEhKAdRxm+6t
-         ygjA==
-X-Gm-Message-State: APjAAAVLHFeTKkLfBA0Ft/y2vQ/kPUprulDk6xXMoqlpSQ0yrtZvmG+C
-        5YnDfvIQXQFHh0bu+byeTVbOyRwk9sPUSw==
-X-Google-Smtp-Source: APXvYqxJ0zxJwZ22BShddeCBPYuInYIfGJ/UwK80td0CdFHYrbpSKP7c3zsMboM8VVVoF2a9Ix3HZw==
-X-Received: by 2002:a17:90a:b009:: with SMTP id x9mr6338021pjq.124.1575507408713;
-        Wed, 04 Dec 2019 16:56:48 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id u1sm9151663pfn.133.2019.12.04.16.56.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2019 16:56:48 -0800 (PST)
-Date:   Wed, 4 Dec 2019 16:56:46 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Make MSA memory fixed for wifi
-Message-ID: <20191205005646.GL228856@google.com>
-References: <0101016ed035d185-20f04863-0f38-41b7-b88d-76bc36e4dcf9-000000@us-west-2.amazonses.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W0wipGAlhtFBkJDMjyVi53Belp9dZbF8qy8E6IHBmAc=;
+        b=X+eSXH8jWdof+vZ4ygDkRGJyoAy1lvG7DhDjAH7z+6wxU4+7jea+Ou9SuYdbMKp5fD
+         Ebtgi48ElFVdRqLhuBrz9QUgLIdLL2IfmOIo21MyG39Uwg0pbA4zU8GP2AUrI7vYKZwS
+         w5lN0F4ncQtaN/0/79i11oYOIhcyCEHiik562jlxUw5/JVouYJWmA3KPqhxv8CkQUAcX
+         5n0tbc1Cbqoy1km3o81rUssjNRoYSO7MokcldnIT0HB7dp+KHjeuOe+fuoPqetHLXhG0
+         jfFlPlybECBgakp5Gn+nQ5oe+9RsnNn16ZAbudlpfridtQsdDKGE++lD8c6NImv0Tf9Z
+         No8g==
+X-Gm-Message-State: APjAAAUci4Hc+qVuenoJ/jg14R+pNPuBoUL/D7I/BKd3wAwduDHoIJRm
+        8dUqH66n08GoDhAigDd7IjA=
+X-Google-Smtp-Source: APXvYqwmA0tNypyxHFhWWBSeQmaZKBrbjW0ry33aUyY5ro4GqrUJGZqXbgcg/CTdfAPjgNHekXLwLQ==
+X-Received: by 2002:a0d:d5d5:: with SMTP id x204mr3846561ywd.283.1575512380930;
+        Wed, 04 Dec 2019 18:19:40 -0800 (PST)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id l6sm4188449ywa.39.2019.12.04.18.19.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2019 18:19:40 -0800 (PST)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] soc: imx: Enable additional functionality of i.MX8M
+Date:   Wed,  4 Dec 2019 20:19:16 -0600
+Message-Id: <20191205021924.25188-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0101016ed035d185-20f04863-0f38-41b7-b88d-76bc36e4dcf9-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 09:20:18AM +0000, Rakesh Pillai wrote:
+The GPCv2 controller on the i.MX8M Mini is compatible with the driver
+used for the i.MX8MQ except for the register locations and names.
+The GPCv2 controller is used to enable additional periperals currently
+unavailable on the i.MX8M Mini.  In order to make them function,
+the GPCv2 needs to be adapted so the drivers can associate their
+power domain to the GPCv2 to enable them.
 
-> arm64: dts: qcom: sc7180: Make MSA memory fixed for wifi
+This series makes one include file slightly more generic,
+adds the iMX8M Mini entries, updates the bindings, adds them
+to the device tree, then associates the new power domain to
+both the OTG and PCIe controllers.
 
-This is not really done for sc7180, but only for the sc7180-idp,
-which should be reflected in the subject (i.e. s/sc7180/sc7180-idp/)
+Adam Ford (7):
+  soc: imx: gpcv2: Rename imx8mq-power.h to imx8m-power.h
+  soc: imx: gpcv2: Update imx8m-power.h to include iMX8M Mini
+  soc: imx: gpcv2: add support for i.MX8M Mini SoC
+  dt-bindings: imx-gpcv2: Update bindings to support i.MX8M Mini
+  arm64: dts: imx8mm: add GPC power domains
+  ARM64: dts: imx8mm: Fix clocks and power domain for USB OTG
+  arm64: dts: imx8mm: Add PCIe support
 
-> The MSA memory is at a fixed offset, which will be
-> a part of reserved memory. Add this flag to indicate
-> that wifi in sc7180 will use a fixed memory for MSA.
+ .../bindings/power/fsl,imx-gpcv2.txt          |   6 +-
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi     | 129 ++++++++-
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     |   2 +-
+ drivers/soc/imx/gpcv2.c                       | 246 +++++++++++++++++-
+ .../power/{imx8mq-power.h => imx8m-power.h}   |  14 +
+ 5 files changed, 389 insertions(+), 8 deletions(-)
+ rename include/dt-bindings/power/{imx8mq-power.h => imx8m-power.h} (57%)
 
-ditto, say it's the IDP
+-- 
+2.20.1
 
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> ---
-> This patchet is dependent on the below changes
-> arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node (https://lore.kernel.org/patchwork/patch/1162434/)
-> dt: bindings: add dt entry flag to skip SCM call for msa region (https://patchwork.ozlabs.org/patch/1192725/)
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 8a6a760..b2ca143f 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -250,6 +250,7 @@
->  
->  &wifi {
->  	status = "okay";
-> +	qcom,msa_fixed_perm;
->  };
->  
->  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
-> -- 
-> 2.7.4
-> 
