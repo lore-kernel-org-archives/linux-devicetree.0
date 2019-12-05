@@ -5,494 +5,681 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEFFC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 09:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1752CC2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 10:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 468C62464D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 09:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA5A62464F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 10:22:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SuOnMkXQ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j3Ee9jxf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbfLEJ6H (ORCPT
+        id S1729074AbfLEKWg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 04:58:07 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6176 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728955AbfLEJ6H (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 04:58:07 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de8d49d0000>; Thu, 05 Dec 2019 01:57:49 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 05 Dec 2019 01:58:05 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 05 Dec 2019 01:58:05 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec
- 2019 09:58:04 +0000
-Received: from [10.25.73.84] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec 2019
- 09:57:59 +0000
-Subject: Re: [PATCH 2/6] dt-bindings: PCI: tegra: Add DT support for PCIe EP
- nodes in Tegra194
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Thu, 5 Dec 2019 05:22:36 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53522 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729295AbfLEKWf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 05:22:35 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB5ALv9T011289;
+        Thu, 5 Dec 2019 04:21:57 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575541317;
+        bh=iZ0pCV3atWz3xk2mdxV/dTvz0gJJheCIIPOBFtFumIw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=j3Ee9jxfTMno2zWvjbGmYoEG+BuNEgxWwjGy9tCgdboTbfrQb7QaGCntlKqMTsCLB
+         viDJxHOmyDCEaC0ETjp/an4sVZprs6qG7Si6+gA7Hb8t4mpj5HzwNmd2SMnvsGnEYI
+         Hk5Zv7rVkNK49COkrF84UQDsO/n9AWFl/WOb1EPo=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB5ALvlC087938
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 5 Dec 2019 04:21:57 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
+ 2019 04:21:57 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 5 Dec 2019 04:21:57 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5ALnDH059515;
+        Thu, 5 Dec 2019 04:21:49 -0600
+Subject: Re: [PATCH 2/5] pci: endpoint: add support to handle multiple base
+ for mapping outbound memory
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        <linux-rockchip@lists.infradead.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Tom Joseph <tjoseph@cadence.com>,
         Jingoo Han <jingoohan1@gmail.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-References: <20191122104505.8986-1-vidyas@nvidia.com>
- <20191122104505.8986-3-vidyas@nvidia.com> <20191122131931.GB1315704@ulmo>
- <8fbdda8e-84af-576c-e240-61c381c85a8f@nvidia.com>
- <20191125073359.GD1409040@ulmo>
- <DM6PR12MB401074B85B9E9E592648FF65DA4A0@DM6PR12MB4010.namprd12.prod.outlook.com>
- <b9e8e8cc-2d05-cab7-4fd8-34c3c835bf92@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <39619170-117d-2504-4816-ff40c398ec36@nvidia.com>
-Date:   Thu, 5 Dec 2019 15:27:55 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191106193609.19645-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <8564ee76-1da6-9b7c-01f2-7cda0cd3b3dc@ti.com>
+ <CA+V-a8tAk0iLNxN+ZgKyf-chLY2s4C-ajpJKeEr-B8Ajn1MkJQ@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <9b8a8943-b2a1-1afd-eec1-ed664a5882ca@ti.com>
+Date:   Thu, 5 Dec 2019 15:52:59 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <b9e8e8cc-2d05-cab7-4fd8-34c3c835bf92@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
+In-Reply-To: <CA+V-a8tAk0iLNxN+ZgKyf-chLY2s4C-ajpJKeEr-B8Ajn1MkJQ@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575539869; bh=AW82+JLzOUNe9WDEexBN1WZ5qLWqQXJ11zyeLMODOYI=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=SuOnMkXQXv67GD6C7t0Wg9+G6ZfjiB4l/UQPj+SPAb+jNayBW3EqA9uK79yFI8ZpC
-         b2lAxdUZeLdkwI/6DNrOMCJZUQD6smqoxM9IVTVWiayc7lEAxrnSnj865B5iWNTM5A
-         WTK/l9oTTy6FVMWGeGNEr/9dym19N515tbd60Xc7aw5D8mx12WcfXQefqhGR9CX+VC
-         UY3LwD+6uAxKhRg5Cxi3bq61lTMNIB3uLZMymjZtYq/tUb+6wgu3G1mbxcDK5ReZqe
-         /uSWHGnQS76b3l/u5S9dZxQG4X7rGGo620OYwBO3ObUkmuRmQYm5DIMV2ZoP+rGVeH
-         3meBiagqLemqw==
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/29/2019 6:56 PM, Vidya Sagar wrote:
+Hi,
 
-Rob, Can you please update your comments on this?
+On 28/11/19 2:51 am, Lad, Prabhakar wrote:
+> Hi Kishon,
+> 
+> Thank you for the review.
+> 
+> On Wed, Nov 27, 2019 at 5:15 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Hi Prabhakar,
+>>
+>> On 07/11/19 1:06 AM, Lad Prabhakar wrote:
+>>> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>>>
+>>> rcar pcie controller has support to map multiple memory regions
+>>> for mapping the outbound memory in local system, this feature
+>>> inspires to add support for handling multiple memory bases in
+>>> endpoint framework. In case of multiple memory regions only chunk
+>>> or complete region can be mapped and this window needs to be
+>>> passed to the controller driver.
+>>>
+>>> Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>>> Cc: <linux-rockchip@lists.infradead.org>
+>>> Cc: Shawn Lin <shawn.lin@rock-chips.com>
+>>> Cc: Heiko Stuebner <heiko@sntech.de>
+>>> Cc: Tom Joseph <tjoseph@cadence.com>
+>>> Cc: Jingoo Han <jingoohan1@gmail.com>
+>>> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>> ---
+>>>   .../pci/controller/dwc/pcie-designware-ep.c   |  30 ++-
+>>>   drivers/pci/controller/pcie-cadence-ep.c      |  11 +-
+>>>   drivers/pci/controller/pcie-rockchip-ep.c     |  13 +-
+>>>   drivers/pci/endpoint/functions/pci-epf-test.c |  29 +--
+>>>   drivers/pci/endpoint/pci-epc-core.c           |   7 +-
+>>>   drivers/pci/endpoint/pci-epc-mem.c            | 189 ++++++++++++++----
+>>>   include/linux/pci-epc.h                       |  43 ++--
+>>>   7 files changed, 234 insertions(+), 88 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>>> index 3dd2e2697294..8d23c20b9afd 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>>> @@ -195,7 +195,7 @@ static void dw_pcie_ep_unmap_addr(struct pci_epc *epc, u8 func_no,
+>>>   }
+>>>
+>>>   static int dw_pcie_ep_map_addr(struct pci_epc *epc, u8 func_no,
+>>> -                            phys_addr_t addr,
+>>> +                            phys_addr_t addr, int window,
+>>>                               u64 pci_addr, size_t size)
+>>>   {
+>>>        int ret;
+>>> @@ -367,6 +367,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>>>        unsigned int aligned_offset;
+>>>        u16 msg_ctrl, msg_data;
+>>>        u32 msg_addr_lower, msg_addr_upper, reg;
+>>> +     int window = PCI_EPC_DEFAULT_WINDOW;
+>>>        u64 msg_addr;
+>>>        bool has_upper;
+>>>        int ret;
+>>> @@ -390,11 +391,11 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>>>                reg = ep->msi_cap + PCI_MSI_DATA_32;
+>>>                msg_data = dw_pcie_readw_dbi(pci, reg);
+>>>        }
+>>> -     aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
+>>> +     aligned_offset = msg_addr_lower & (epc->mem[window]->page_size - 1);
+>>>        msg_addr = ((u64)msg_addr_upper) << 32 |
+>>>                        (msg_addr_lower & ~aligned_offset);
+>>> -     ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
+>>> -                               epc->mem->page_size);
+>>> +     ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, window,
+>>> +                               msg_addr, epc->mem[window]->page_size);
+>>>        if (ret)
+>>>                return ret;
+>>>
+>>> @@ -416,6 +417,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>>>        u32 reg, msg_data, vec_ctrl;
+>>>        u64 tbl_addr, msg_addr, reg_u64;
+>>>        void __iomem *msix_tbl;
+>>> +     int window = PCI_EPC_DEFAULT_WINDOW;
+>>>        int ret;
+>>>
+>>>        reg = ep->msix_cap + PCI_MSIX_TABLE;
+>>> @@ -452,8 +454,8 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>>>                return -EPERM;
+>>>        }
+>>>
+>>> -     ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
+>>> -                               epc->mem->page_size);
+>>> +     ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, window,
+>>> +                               msg_addr, epc->mem[window]->page_size);
+>>>        if (ret)
+>>>                return ret;
+>>>
+>>> @@ -466,10 +468,11 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>>>
+>>>   void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+>>>   {
+>>> +     int window = PCI_EPC_DEFAULT_WINDOW;
+>>>        struct pci_epc *epc = ep->epc;
+>>>
+>>>        pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
+>>> -                           epc->mem->page_size);
+>>> +                           epc->mem[window]->page_size);
+>>>
+>>>        pci_epc_mem_exit(epc);
+>>>   }
+>>> @@ -499,9 +502,12 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>>        u32 reg;
+>>>        void *addr;
+>>>        u8 hdr_type;
+>>> +     int window;
+>>>        unsigned int nbars;
+>>>        unsigned int offset;
+>>>        struct pci_epc *epc;
+>>> +     size_t msi_page_size;
+>>> +     struct pci_epc_mem_window mem_window;
+>>>        struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>>>        struct device *dev = pci->dev;
+>>>        struct device_node *np = dev->of_node;
+>>> @@ -574,15 +580,17 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>>        if (ret < 0)
+>>>                epc->max_functions = 1;
+>>>
+>>> -     ret = __pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
+>>> -                              ep->page_size);
+>>> +     mem_window.phys_base = ep->phys_base;
+>>> +     mem_window.size = ep->addr_size;
+>>> +     ret = __pci_epc_mem_init(epc, &mem_window, 1, ep->page_size);
+>>>        if (ret < 0) {
+>>>                dev_err(dev, "Failed to initialize address space\n");
+>>>                return ret;
+>>>        }
+>>>
+>>> -     ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
+>>> -                                          epc->mem->page_size);
+>>> +     msi_page_size = epc->mem[PCI_EPC_DEFAULT_WINDOW]->page_size;
+>>> +     ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys, &window,
+>>> +                                          msi_page_size);
+>>>        if (!ep->msi_mem) {
+>>>                dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+>>>                return -ENOMEM;
+>>> diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
+>>> index def7820cb824..7991b38a5350 100644
+>>> --- a/drivers/pci/controller/pcie-cadence-ep.c
+>>> +++ b/drivers/pci/controller/pcie-cadence-ep.c
+>>> @@ -172,7 +172,7 @@ static void cdns_pcie_ep_clear_bar(struct pci_epc *epc, u8 fn,
+>>>   }
+>>>
+>>>   static int cdns_pcie_ep_map_addr(struct pci_epc *epc, u8 fn, phys_addr_t addr,
+>>> -                              u64 pci_addr, size_t size)
+>>> +                              int window, u64 pci_addr, size_t size)
+>>>   {
+>>>        struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>>>        struct cdns_pcie *pcie = &ep->pcie;
+>>> @@ -434,12 +434,14 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
+>>>   {
+>>>        struct device *dev = &pdev->dev;
+>>>        struct device_node *np = dev->of_node;
+>>> +     struct pci_epc_mem_window mem_window;
+>>>        struct cdns_pcie_ep *ep;
+>>>        struct cdns_pcie *pcie;
+>>>        struct pci_epc *epc;
+>>>        struct resource *res;
+>>>        int ret;
+>>>        int phy_count;
+>>> +     int window;
+>>>
+>>>        ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+>>>        if (!ep)
+>>> @@ -502,15 +504,16 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
+>>>        if (of_property_read_u8(np, "max-functions", &epc->max_functions) < 0)
+>>>                epc->max_functions = 1;
+>>>
+>>> -     ret = pci_epc_mem_init(epc, pcie->mem_res->start,
+>>> -                            resource_size(pcie->mem_res));
+>>> +     mem_window.phys_base = pcie->mem_res->start;
+>>> +     mem_window.size = resource_size(pcie->mem_res);
+>>> +     ret = pci_epc_mem_init(epc, &mem_window, 1);
+>>>        if (ret < 0) {
+>>>                dev_err(dev, "failed to initialize the memory space\n");
+>>>                goto err_init;
+>>>        }
+>>>
+>>>        ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
+>>> -                                               SZ_128K);
+>>> +                                               &window, SZ_128K);
+>>>        if (!ep->irq_cpu_addr) {
+>>>                dev_err(dev, "failed to reserve memory space for MSI\n");
+>>>                ret = -ENOMEM;
+>>> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+>>> index d743b0a48988..d59e85c8d319 100644
+>>> --- a/drivers/pci/controller/pcie-rockchip-ep.c
+>>> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+>>> @@ -256,8 +256,8 @@ static void rockchip_pcie_ep_clear_bar(struct pci_epc *epc, u8 fn,
+>>>   }
+>>>
+>>>   static int rockchip_pcie_ep_map_addr(struct pci_epc *epc, u8 fn,
+>>> -                                  phys_addr_t addr, u64 pci_addr,
+>>> -                                  size_t size)
+>>> +                                  phys_addr_t addr, int window,
+>>> +                                  u64 pci_addr, size_t size)
+>>>   {
+>>>        struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
+>>>        struct rockchip_pcie *pcie = &ep->rockchip;
+>>> @@ -562,11 +562,13 @@ static const struct of_device_id rockchip_pcie_ep_of_match[] = {
+>>>
+>>>   static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+>>>   {
+>>> +     struct pci_epc_mem_window mem_window;
+>>>        struct device *dev = &pdev->dev;
+>>>        struct rockchip_pcie_ep *ep;
+>>>        struct rockchip_pcie *rockchip;
+>>>        struct pci_epc *epc;
+>>>        size_t max_regions;
+>>> +     int window;
+>>>        int err;
+>>>
+>>>        ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+>>> @@ -614,15 +616,16 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+>>>        /* Only enable function 0 by default */
+>>>        rockchip_pcie_write(rockchip, BIT(0), PCIE_CORE_PHY_FUNC_CFG);
+>>>
+>>> -     err = pci_epc_mem_init(epc, rockchip->mem_res->start,
+>>> -                            resource_size(rockchip->mem_res));
+>>> +     mem_window.phys_base = rockchip->mem_res->start;
+>>> +     mem_window.size = resource_size(rockchip->mem_res);
+>>> +     err = pci_epc_mem_init(epc, &mem_window, 1);
+>>>        if (err < 0) {
+>>>                dev_err(dev, "failed to initialize the memory space\n");
+>>>                goto err_uninit_port;
+>>>        }
+>>>
+>>>        ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
+>>> -                                               SZ_128K);
+>>> +                                               &window, SZ_128K);
+>>>        if (!ep->irq_cpu_addr) {
+>>>                dev_err(dev, "failed to reserve memory space for MSI\n");
+>>>                err = -ENOMEM;
+>>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+>>> index 5d74f81ddfe4..475228011703 100644
+>>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>>> @@ -84,8 +84,10 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+>>>        struct pci_epc *epc = epf->epc;
+>>>        enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>>>        struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+>>> +     int window;
+>>>
+>>> -     src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr, reg->size);
+>>> +     src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr,
+>>> +                                       &window, reg->size);
+>>>        if (!src_addr) {
+>>>                dev_err(dev, "Failed to allocate source address\n");
+>>>                reg->status = STATUS_SRC_ADDR_INVALID;
+>>> @@ -93,15 +95,16 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+>>>                goto err;
+>>>        }
+>>>
+>>> -     ret = pci_epc_map_addr(epc, epf->func_no, src_phys_addr, reg->src_addr,
+>>> -                            reg->size);
+>>> +     ret = pci_epc_map_addr(epc, epf->func_no, src_phys_addr, window,
+>>> +                            reg->src_addr, reg->size);
+>>>        if (ret) {
+>>>                dev_err(dev, "Failed to map source address\n");
+>>>                reg->status = STATUS_SRC_ADDR_INVALID;
+>>>                goto err_src_addr;
+>>>        }
+>>>
+>>> -     dst_addr = pci_epc_mem_alloc_addr(epc, &dst_phys_addr, reg->size);
+>>> +     dst_addr = pci_epc_mem_alloc_addr(epc, &dst_phys_addr,
+>>> +                                       &window, reg->size);
+>>>        if (!dst_addr) {
+>>>                dev_err(dev, "Failed to allocate destination address\n");
+>>>                reg->status = STATUS_DST_ADDR_INVALID;
+>>> @@ -109,8 +112,8 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+>>>                goto err_src_map_addr;
+>>>        }
+>>>
+>>> -     ret = pci_epc_map_addr(epc, epf->func_no, dst_phys_addr, reg->dst_addr,
+>>> -                            reg->size);
+>>> +     ret = pci_epc_map_addr(epc, epf->func_no, dst_phys_addr, window,
+>>> +                            reg->dst_addr, reg->size);
+>>>        if (ret) {
+>>>                dev_err(dev, "Failed to map destination address\n");
+>>>                reg->status = STATUS_DST_ADDR_INVALID;
+>>> @@ -146,8 +149,9 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+>>>        struct pci_epc *epc = epf->epc;
+>>>        enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>>>        struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+>>> +     int window;
+>>>
+>>> -     src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+>>> +     src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, &window, reg->size);
+>>>        if (!src_addr) {
+>>>                dev_err(dev, "Failed to allocate address\n");
+>>>                reg->status = STATUS_SRC_ADDR_INVALID;
+>>> @@ -155,8 +159,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+>>>                goto err;
+>>>        }
+>>>
+>>> -     ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->src_addr,
+>>> -                            reg->size);
+>>> +     ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, window,
+>>> +                            reg->src_addr, reg->size);
+>>>        if (ret) {
+>>>                dev_err(dev, "Failed to map address\n");
+>>>                reg->status = STATUS_SRC_ADDR_INVALID;
+>>> @@ -193,13 +197,14 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+>>>        void __iomem *dst_addr;
+>>>        void *buf;
+>>>        phys_addr_t phys_addr;
+>>> +     int window;
+>>>        struct pci_epf *epf = epf_test->epf;
+>>>        struct device *dev = &epf->dev;
+>>>        struct pci_epc *epc = epf->epc;
+>>>        enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>>>        struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+>>>
+>>> -     dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+>>> +     dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, &window, reg->size);
+>>>        if (!dst_addr) {
+>>>                dev_err(dev, "Failed to allocate address\n");
+>>>                reg->status = STATUS_DST_ADDR_INVALID;
+>>> @@ -207,8 +212,8 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+>>>                goto err;
+>>>        }
+>>>
+>>> -     ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->dst_addr,
+>>> -                            reg->size);
+>>> +     ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, window,
+>>> +                            reg->dst_addr, reg->size);
+>>>        if (ret) {
+>>>                dev_err(dev, "Failed to map address\n");
+>>>                reg->status = STATUS_DST_ADDR_INVALID;
+>>> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+>>> index 2091508c1620..289c266c2d90 100644
+>>> --- a/drivers/pci/endpoint/pci-epc-core.c
+>>> +++ b/drivers/pci/endpoint/pci-epc-core.c
+>>> @@ -358,13 +358,15 @@ EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
+>>>    * @epc: the EPC device on which address is allocated
+>>>    * @func_no: the endpoint function number in the EPC device
+>>>    * @phys_addr: physical address of the local system
+>>> + * @window: index to the window region where PCI address will be mapped
+>>>    * @pci_addr: PCI address to which the physical address should be mapped
+>>>    * @size: the size of the allocation
+>>>    *
+>>>    * Invoke to map CPU address with PCI address.
+>>>    */
+>>>   int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
+>>> -                  phys_addr_t phys_addr, u64 pci_addr, size_t size)
+>>> +                  phys_addr_t phys_addr, int window,
+>>> +                  u64 pci_addr, size_t size)
+>>>   {
+>>>        int ret;
+>>>        unsigned long flags;
+>>> @@ -376,7 +378,8 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
+>>>                return 0;
+>>>
+>>>        spin_lock_irqsave(&epc->lock, flags);
+>>> -     ret = epc->ops->map_addr(epc, func_no, phys_addr, pci_addr, size);
+>>> +     ret = epc->ops->map_addr(epc, func_no, phys_addr,
+>>> +                              window, pci_addr, size);
+>>>        spin_unlock_irqrestore(&epc->lock, flags);
+>>>
+>>>        return ret;
+>>> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+>>> index d2b174ce15de..c955f2c97944 100644
+>>> --- a/drivers/pci/endpoint/pci-epc-mem.c
+>>> +++ b/drivers/pci/endpoint/pci-epc-mem.c
+>>> @@ -39,56 +39,77 @@ static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
+>>>    * __pci_epc_mem_init() - initialize the pci_epc_mem structure
+>>>    * @epc: the EPC device that invoked pci_epc_mem_init
+>>>    * @phys_base: the physical address of the base
+>>> - * @size: the size of the address space
+>>> + * @num_windows: number of windows device supports
+>>
+>> struct pci_epc_mem_window is missing here.
+> oops my bad will fix that.
+> 
+>>>    * @page_size: size of each page
+>>>    *
+>>>    * Invoke to initialize the pci_epc_mem structure used by the
+>>>    * endpoint functions to allocate mapped PCI address.
+>>>    */
+>>> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
+>>> -                    size_t page_size)
+>>> +int __pci_epc_mem_init(struct pci_epc *epc, struct pci_epc_mem_window *windows,
+>>> +                    int num_windows, size_t page_size)
+>>>   {
+>>> -     int ret;
+>>> -     struct pci_epc_mem *mem;
+>>> -     unsigned long *bitmap;
+>>> +     struct pci_epc_mem *mem = NULL;
+>>> +     unsigned long *bitmap = NULL;
+>>>        unsigned int page_shift;
+>>> -     int pages;
+>>>        int bitmap_size;
+>>> +     int pages;
+>>> +     int ret;
+>>> +     int i;
+>>> +
+>>> +     epc->mem_windows = 0;
+>>> +
+>>> +     if (!windows)
+>>> +             return -EINVAL;
+>>> +
+>>> +     if (num_windows <= 0)
+>>> +             return -EINVAL;
+>>>
+>>>        if (page_size < PAGE_SIZE)
+>>>                page_size = PAGE_SIZE;
+>>>
+>>>        page_shift = ilog2(page_size);
+>>> -     pages = size >> page_shift;
+>>> -     bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+>>>
+>>> -     mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+>>> -     if (!mem) {
+>>> -             ret = -ENOMEM;
+>>> -             goto err;
+>>> -     }
+>>> +     epc->mem = kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
+>>> +     if (!epc->mem)
+>>> +             return -EINVAL;
+>>>
+>>> -     bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+>>> -     if (!bitmap) {
+>>> -             ret = -ENOMEM;
+>>> -             goto err_mem;
+>>> -     }
+>>> +     for (i = 0; i < num_windows; i++) {
+>>> +             pages = windows[i].phys_base >> page_shift;
+>>> +             bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+>>>
+>>> -     mem->bitmap = bitmap;
+>>> -     mem->phys_base = phys_base;
+>>> -     mem->page_size = page_size;
+>>> -     mem->pages = pages;
+>>> -     mem->size = size;
+>>> +             mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+>>> +             if (!mem) {
+>>> +                     ret = -ENOMEM;
+>>> +                     goto err_mem;
+>>> +             }
+>>>
+>>> -     epc->mem = mem;
+>>> +             bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+>>> +             if (!bitmap) {
+>>> +                     ret = -ENOMEM;
+>>> +                     goto err_mem;
+>>> +             }
+>>> +
+>>> +             mem->bitmap = bitmap;
+>>> +             mem->window.phys_base = windows[i].phys_base;
+>>> +             mem->page_size = page_size;
+>>> +             mem->pages = pages;
+>>> +             mem->window.size = windows[i].size;
+>>> +             mem->window.map_size = 0;
+>>> +
+>>> +             epc->mem[i] = mem;
+>>> +     }
+>>> +     epc->mem_windows = num_windows;
+>>>
+>>>        return 0;
+>>>
+>>>   err_mem:
+>>> -     kfree(mem);
+>>> +     for (; i >= 0; i--) {
+>>> +             kfree(mem->bitmap);
+>>> +             kfree(epc->mem[i]);
+>>> +     }
+>>> +     kfree(epc->mem);
+>>>
+>>> -err:
+>>> -return ret;
+>>> +     return ret;
+>>>   }
+>>>   EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+>>>
+>>> @@ -101,48 +122,126 @@ EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+>>>    */
+>>>   void pci_epc_mem_exit(struct pci_epc *epc)
+>>>   {
+>>> -     struct pci_epc_mem *mem = epc->mem;
+>>> +     struct pci_epc_mem *mem;
+>>> +     int i;
+>>> +
+>>> +     if (!epc->mem_windows)
+>>> +             return;
+>>> +
+>>> +     for (i = 0; i <= epc->mem_windows; i--) {
+>>> +             mem = epc->mem[i];
+>>> +             kfree(mem->bitmap);
+>>> +             kfree(epc->mem[i]);
+>>> +     }
+>>> +     kfree(epc->mem);
+>>>
+>>>        epc->mem = NULL;
+>>> -     kfree(mem->bitmap);
+>>> -     kfree(mem);
+>>> +     epc->mem_windows = 0;
+>>>   }
+>>>   EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+>>>
+>>> +static int pci_epc_find_best_fit_window(struct pci_epc *epc, size_t size)
+>>> +{
+>>> +     size_t window_least_size = 0;
+>>> +     int best_fit_window = -1;
+>>> +     struct pci_epc_mem *mem;
+>>> +     size_t actual_size;
+>>> +     int i;
+>>> +
+>>> +     for (i = 0; i < epc->mem_windows; i++) {
+>>> +             mem = epc->mem[i];
+>>> +
+>>> +             /* if chunk from this region is already used skip it */
+>>> +             if (mem->window.map_size)
+>>> +                     continue;
+>>> +
+>>> +             actual_size = ALIGN(size, mem->page_size);
+>>> +
+>>> +             if (best_fit_window == -1) {
+>>> +                     best_fit_window = i;
+>>> +                     window_least_size = mem->window.size;
+>>> +             } else {
+>>> +                     if (actual_size <= mem->window.size &&
+>>> +                         mem->window.size < window_least_size) {
+>>> +                             best_fit_window = i;
+>>> +                             window_least_size = mem->window.size;
+>>> +                     }
+>>> +             }
+>>> +     }
+>>> +
+>>> +     return best_fit_window;
+>>> +}
+>>> +
+>>>   /**
+>>>    * pci_epc_mem_alloc_addr() - allocate memory address from EPC addr space
+>>>    * @epc: the EPC device on which memory has to be allocated
+>>>    * @phys_addr: populate the allocated physical address here
+>>> + * @window: populate the window here which will be used to map PCI address
+>>>    * @size: the size of the address space that has to be allocated
+>>>    *
+>>>    * Invoke to allocate memory address from the EPC address space. This
+>>>    * is usually done to map the remote RC address into the local system.
+>>>    */
+>>>   void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+>>> -                                  phys_addr_t *phys_addr, size_t size)
+>>> +                                  phys_addr_t *phys_addr,
+>>> +                                  int *window, size_t size)
+>>>   {
+>>> +     int best_fit = PCI_EPC_DEFAULT_WINDOW;
+>>> +     void __iomem *virt_addr = NULL;
+>>> +     struct pci_epc_mem *mem;
+>>> +     unsigned int page_shift;
+>>>        int pageno;
+>>> -     void __iomem *virt_addr;
+>>> -     struct pci_epc_mem *mem = epc->mem;
+>>> -     unsigned int page_shift = ilog2(mem->page_size);
+>>>        int order;
+>>>
+>>> +     if (epc->mem_windows <= 0)
+>>> +             return NULL;
+>>> +
+>>> +     if (epc->mem_windows > 1) {
+>>> +             best_fit = pci_epc_find_best_fit_window(epc, size);
+>>> +             if (best_fit < 0)
+>>> +                     return NULL;
+>>> +     }
+>>> +
+>>> +     mem = epc->mem[best_fit];
+>>>        size = ALIGN(size, mem->page_size);
+>>> +     if (size > (mem->window.size - mem->window.map_size))
+>>> +             return NULL;
+>>
+>> Assume I have two mem regions, first region is of size 128MB and the second
+>> region is of size 4GB. If there is a allocation request for 4GB, will the
+>> allocation succeed?
+>>
+> yes it would succeed, the pci_epc_find_best_fit_window() would get the
+> corresponding window.
 
-Thanks,
-Vidya Sagar
+Can you step through the algo again? pci_epc_find_best_fit_window() will 
+return the first region which is of size 128MB.
 
-> On 11/25/2019 5:22 PM, Gustavo Pimentel wrote:
->> On Mon, Nov 25, 2019 at 7:33:59, Thierry Reding
->> <thierry.reding@gmail.com> wrote:
->>
->>> On Mon, Nov 25, 2019 at 12:53:42PM +0530, Vidya Sagar wrote:
->>>> On 11/22/2019 6:49 PM, Thierry Reding wrote:
->>>>> On Fri, Nov 22, 2019 at 04:15:01PM +0530, Vidya Sagar wrote:
->>>>>> Add support for PCIe controllers that can operate in endpoint mode
->>>>>> in Tegra194.
->>>>>>
->>>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>>>> ---
->>>>>> =C2=A0=C2=A0 .../bindings/pci/nvidia,tegra194-pcie-ep.txt=C2=A0 | 13=
-8 ++++++++++++++++++
->>>>>> =C2=A0=C2=A0 1 file changed, 138 insertions(+)
->>>>>> =C2=A0=C2=A0 create mode 100644 Documentation/devicetree/bindings/pc=
-i/nvidia,tegra194-pcie-ep.txt
->>>>>
->>>>> The vast majority of this is a duplication of the host mode device tr=
-ee
->>>>> bindings. I think it'd be best to combine both and only highlight whe=
-re
->>>>> both modes differ.
->>>>>
->>>>> The designware-pcie.txt binding does something similar.
->>>> Ok. I'll merge this into the host mode bindings file and in that diffe=
-rentiate between
->>>> root mode and endpoint mode.
->>>>
->>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-p=
-cie-ep.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.=
-txt
->>>>>> new file mode 100644
->>>>>> index 000000000000..4676ccf7dfa5
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.=
-txt
->>>>>> @@ -0,0 +1,138 @@
->>>>>> +NVIDIA Tegra PCIe Endpoint mode controller (Synopsys DesignWare Cor=
-e based)
->>>>>> +
->>>>>> +Some of the PCIe controllers which are based on Synopsys DesignWare=
- PCIe IP
->>>>>> +are dual mode i.e. they can work in root port mode or endpoint mode=
- but one
->>>>>> + at a time. Since they are based on DesignWare IP, they inherit all=
- the common
->>>>>> +properties defined in designware-pcie.txt.
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
->>>>>
->>>>> The device tree snippets that you added have "nvidia,tegra194-pcie-ep=
-"
->>>>> for EP mode controllers. So either this is wrong or the DTS files are
->>>>> wrong.
->>>> DTS file are correct. This is a mistake in this file. I'll correct thi=
-s.
->>>>
->>>>>
->>>>> This device tree binding describes the exact same hardware, so I don'=
-t
->>>>> think we necessarily need two different compatible strings. It's fair=
-ly
->>>>> easy to distinguish between which mode to run in by looking at which
->>>>> properties exist. EP mode for example is the only one that uses the
->>>>> "addr_space" reg entry.
->>>>>
->>>>> Rob, do you know why a different compatible string was chosen for the=
- EP
->>>>> mode? Looking at the driver, there are only a handful of differences =
-in
->>>>> the programming, but most of the driver remains identical. An extra D=
-T
->>>>> compatible string seems a bit exaggerated since it suggests that this=
- is
->>>>> actually different hardware, where it clearly isn't.
->>>> Since all other implementations have done it this way, I just followed=
- to be in sync
->>>> with them. Even I would also like to hear from Rob on the rationale be=
-hind this.
-> Rob, Could you please update on this?
->=20
->>>>
->>>>>
->>>>>> +=C2=A0 Tegra194: Only C0, C4 & C5 controllers are dual mode control=
-lers.
->>>>>> +- power-domains: A phandle to the node that controls power to the r=
-espective
->>>>>> +=C2=A0 PCIe controller and a specifier name for the PCIe controller=
-. Following are
->>>>>> +=C2=A0 the specifiers for the different PCIe controllers
->>>>>> +=C2=A0=C2=A0=C2=A0 TEGRA194_POWER_DOMAIN_PCIEX8B: C0
->>>>>> +=C2=A0=C2=A0=C2=A0 TEGRA194_POWER_DOMAIN_PCIEX4A: C4
->>>>>> +=C2=A0=C2=A0=C2=A0 TEGRA194_POWER_DOMAIN_PCIEX8A: C5
->>>>>> +=C2=A0 these specifiers are defined in
->>>>>> +=C2=A0 "include/dt-bindings/power/tegra194-powergate.h" file.
->>>>>> +- reg: A list of physical base address and length pairs for each se=
-t of
->>>>>> +=C2=A0 controller registers. Must contain an entry for each entry i=
-n the reg-names
->>>>>> +=C2=A0 property.
->>>>>> +- reg-names: Must include the following entries:
->>>>>> +=C2=A0 "appl": Controller's application logic registers
->>>>>> +=C2=A0 "atu_dma": iATU and DMA registers. This is where the iATU (i=
-nternal Address
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 Translation Unit) registers of the PCIe core are made available
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 for SW access.
->>>>>> +=C2=A0 "dbi": The aperture where root port's own configuration regi=
-sters are
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 available
->>>>>> +=C2=A0 "addr_space": Used to map remote RC address space
->>>>>> +- interrupts: A list of interrupt outputs of the controller. Must c=
-ontain an
->>>>>> +=C2=A0 entry for each entry in the interrupt-names property.
->>>>>> +- interrupt-names: Must include the following entry:
->>>>>> +=C2=A0 "intr": The Tegra interrupt that is asserted for controller =
-interrupts
->>>>>> +- clocks: Must contain an entry for each entry in clock-names.
->>>>>> +=C2=A0 See ../clocks/clock-bindings.txt for details.
->>>>>> +- clock-names: Must include the following entries:
->>>>>> +=C2=A0 - core
->>>>>> +- resets: Must contain an entry for each entry in reset-names.
->>>>>> +=C2=A0 See ../reset/reset.txt for details.
->>>>>> +- reset-names: Must include the following entries:
->>>>>> +=C2=A0 - apb
->>>>>> +=C2=A0 - core
->>>>>> +- phys: Must contain a phandle to P2U PHY for each entry in phy-nam=
-es.
->>>>>> +- phy-names: Must include an entry for each active lane.
->>>>>> +=C2=A0 "p2u-N": where N ranges from 0 to one less than the total nu=
-mber of lanes
->>>>>> +- nvidia,bpmp: Must contain a pair of phandle to BPMP controller no=
-de followed
->>>>>> +=C2=A0 by controller-id. Following are the controller ids for each =
-controller.
->>>>>> +=C2=A0=C2=A0=C2=A0 0: C0
->>>>>> +=C2=A0=C2=A0=C2=A0 4: C4
->>>>>> +=C2=A0=C2=A0=C2=A0 5: C5
->>>>>> +- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
->>>>>> +- nvidia,pex-rst-gpio: Must contain a phandle to a GPIO controller =
-followed by
->>>>>> +=C2=A0 GPIO that is being used as PERST signal
->>>>>
->>>>> Why is this NVIDIA specific? Do other instantiations of the DW IP not
->>>>> also need a means to define which GPIO is the reset?
->>>> I'm not sure. At least I didn't find anything like this in other imple=
-mentations.
->>>> My understanding is that, controller handles assert/de-assert on the P=
-ERST line
->>>> automatically without SW intervention. I think it is for the same reas=
-on that other
->>>> implementations don't wait for the REFCLK to flow in from host to conf=
-igure the IP.
->>>> I think they just use some internal clock for the configuration and sw=
-itch to
->>>> running the core based on REFCLK as and when it is available
->>>> (i.e. whenever a de-assert is perceived on PERST line by the controlle=
-r)
->>>
->>> That would be somewhat surprising, though. The IP used in Tegra must be
->>> pretty close to the IP used in other SoCs, and the code that we need in
->>> pex_ep_event_pex_rst_{assert,deassert}() is pretty significant. Why the
->>> other instantiations wouldn't need something similar seems unlikely to
->>> me.
->>>
->>> Perhaps Jingoo or Gustavo can shed some light on this.
->>
->> On my current FPGA prototyping solution, I don't need to control the
->> PERST line and it's very likely that I don't even have access to control
->> it. I guess due to some particularity of my solution, the HW team
->> probably has decided to wire it up directly for some unknown reason to
->> me.
->>
->> However, It seems to me that exynos, imx6, keystone, meson, al, histb,
->> kirin, and qcom drivers controls the PERST line in spite of others drive=
-r
->> that doesn't do it like in my prototype solution.
->> In the end I'd says that depends of how the IP solution of design by the
->> HW team.
->>
->> Gustavo
->>
->>>
->>> Thierry
->>>
->>>>
->>>>>
->>>>>> +
->>>>>> +Optional properties:
->>>>>> +- pinctrl-names: A list of pinctrl state names.
->>>>>> +=C2=A0 It is mandatory for C5 controller and optional for other con=
-trollers.
->>>>>> +=C2=A0 - "default": Configures PCIe I/O for proper operation.
->>>>>> +- pinctrl-0: phandle for the 'default' state of pin configuration.
->>>>>> +=C2=A0 It is mandatory for C5 controller and optional for other con=
-trollers.
->>>>>> +- supports-clkreq: Refer to Documentation/devicetree/bindings/pci/p=
-ci.txt
->>>>>> +- nvidia,update-fc-fixup: This is a boolean property and needs to b=
-e present to
->>>>>> +=C2=A0=C2=A0=C2=A0 improve performance when a platform is designed =
-in such a way that it
->>>>>> +=C2=A0=C2=A0=C2=A0 satisfies at least one of the following conditio=
-ns thereby enabling root
->>>>>> +=C2=A0=C2=A0=C2=A0 port to exchange optimum number of FC (Flow Cont=
-rol) credits with
->>>>>> +=C2=A0=C2=A0=C2=A0 downstream devices
->>>>>> +=C2=A0=C2=A0=C2=A0 1. If C0/C4/C5 run at x1/x2 link widths (irrespe=
-ctive of speed and MPS)
->>>>>> +=C2=A0=C2=A0=C2=A0 2. If C0/C4/C5 operate at their respective max l=
-ink widths and
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 a) speed is Gen-2 and MPS is 2=
-56B
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 b) speed is >=3D Gen-3 with an=
-y MPS
->>>>>> +- nvidia,aspm-cmrt-us: Common Mode Restore Time for proper operatio=
-n of ASPM
->>>>>> +=C2=A0=C2=A0 to be specified in microseconds
->>>>>> +- nvidia,aspm-pwr-on-t-us: Power On time for proper operation of AS=
-PM to be
->>>>>> +=C2=A0=C2=A0 specified in microseconds
->>>>>> +- nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to=
- be
->>>>>> +=C2=A0=C2=A0 specified in microseconds
->>>>>> +
->>>>>> +NOTE:- On Tegra194's P2972-0000 platform, only C5 controller can be=
- enabled to
->>>>>> +operate in the endpoint mode because of the way the platform is des=
-igned.
->>>>>> +There is a mux that needs to be programmed to let the REFCLK from t=
-he host to
->>>>>> +flow into C5 controller when it operates in the endpoint mode. This=
- mux is
->>>>>> +controlled by the GPIO (AA, 5) and it needs to be driven 'high'. Fo=
-r this to
->>>>>> +happen, set status of "pex-refclk-sel-high" node under "gpio@c2f000=
-0" node to
->>>>>> +'okay'.
->>>>>> +=C2=A0=C2=A0=C2=A0 When any dual mode controller is made to operate=
- in the endpoint mode,
->>>>>> +please make sure that its respective root port node's status is set=
- to
->>>>>> +'disabled'.
->>>>>
->>>>> This seems very brittle to me. There's no good way how we can detect
->>>>> such misconfigurations. If instead we only have one node describing t=
-he
->>>>> hardware fully, the chances of configuring things wrong (by for examp=
-le
->>>>> enabling both the host and EP mode device tree nodes) can be reduced.
->>>>>
->>>>> So I think instead of duplicating all of the device tree content to h=
-ave
->>>>> both a host and an EP node for each controller, it'd be better to jus=
-t
->>>>> have a single node and let the device tree bindings specify which
->>>>> changes to apply to switch into EP mode.
->>>>>
->>>>> For example, there should be nothing wrong with specifying some of th=
-e
->>>>> EP-only properties (like num-ib-windows and num-ob-windows) all the t=
-ime
->>>>> and only use them when we actually run in EP mode.
->>>>>
->>>>> As I mentioned earlier, there are a couple of easy ways to distinguis=
-h
->>>>> the modes. The presence of the "addr_space" reg entry is one example,
->>>>> but we could also key off the nvidia,pex-rst-gpio property, since tha=
-t
->>>>> (presumably) wouldn't be needed for host mode.
->>>>>
->>>>> That way we can just add default, host mode entries to tegra194.dtsi =
-and
->>>>> whenever somebody wants to enable EP mode, they can just override the
->>>>> node in the board-level DTS file, like so:
->>>>>
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0pcie@141a0000 {
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0x00 0x141a0000 0=
-x0 0x00020000=C2=A0=C2=A0 /* appl registers (128K)=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0x00 0x3a040000 0x0 0x00040000=C2=A0=C2=A0 /* iATU_DMA reg =
-space (256K)=C2=A0 */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0x00 0x3a080000 0x0 0x00040000=C2=A0=C2=A0 /* DBI reg space=
- (256K)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg-names =3D "appl", "atu=
-_dma", "dbi", "addr_space";
->>>>>
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nvidia,pex-rst-gpio =3D <&=
-gpio TEGRA194_MAIN_GPIO(GG, 1) GPIO_ACTIVE_LOW>;
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0};
->>>>>
->>>>> Thierry
->>>> I like it and fine with making these modifications also but would like=
- to hear from Rob
->>>> also on this.
->>>>
->>>> - Vidya Sagar
->>>>>
->>>>>> +
->>>>>> +Examples:
->>>>>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>>>> +
->>>>>> +Tegra194:
->>>>>> +--------
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 pcie_ep@141a0000 {
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "nvidia,t=
-egra194-pcie-ep", "snps,dw-pcie-ep";
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 power-domains =3D <&bpmp=
- TEGRA194_POWER_DOMAIN_PCIEX8A>;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0x00 0x141a0000=
- 0x0 0x00020000=C2=A0=C2=A0 /* appl registers (128K)=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 */
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 0x00 0x3a040000 0x0 0x00040000=C2=A0=C2=A0 /* iATU_DMA r=
-eg space (256K)=C2=A0 */
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 0x00 0x3a080000 0x0 0x00040000=C2=A0=C2=A0 /* DBI reg sp=
-ace (256K)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg-names =3D "appl", "a=
-tu_dma", "dbi", "addr_space";
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 num-lanes =3D <8>;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 num-ib-windows =3D <2>;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 num-ob-windows =3D <8>;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "defau=
-lt";
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&clkreq_c=
-5_bi_dir_state>;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clocks =3D <&bpmp TEGRA1=
-94_CLK_PEX1_CORE_5>;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock-names =3D "core";
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 resets =3D <&bpmp TEGRA1=
-94_RESET_PEX1_CORE_5_APB>,
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 <&bpmp TEGRA194_RESET_PEX1_CORE_5>;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reset-names =3D "apb", "=
-core";
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupts =3D <GIC_SPI =
-53 IRQ_TYPE_LEVEL_HIGH>;=C2=A0=C2=A0=C2=A0 /* controller interrupt */
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupt-names =3D "int=
-r";
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nvidia,bpmp =3D <&bpmp 5=
->;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nvidia,aspm-cmrt-us =3D =
-<60>;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nvidia,aspm-pwr-on-t-us =
-=3D <20>;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nvidia,aspm-l0s-entrance=
--latency-us =3D <3>;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vddio-pex-ctl-supply =3D=
- <&vdd_1v8ao>;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nvidia,pex-rst-gpio =3D =
-<&gpio TEGRA194_MAIN_GPIO(GG, 1)
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 GPIO_ACTIVE_LOW>;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 phys =3D <&p2u_nvhs_0>, =
-<&p2u_nvhs_1>, <&p2u_nvhs_2>,
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 <&p2u_nvhs_6>, <&p2u_nvhs_7>;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 phy-names =3D "p2u-0", "=
-p2u-1", "p2u-2", "p2u-3", "p2u-4",
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "p2u-5", "p2u-6", "p2u-7";
->>>>>> +=C2=A0=C2=A0=C2=A0 };
->>>>>> --=20
->>>>>> 2.17.1
->>>>>>
->>>>
->>
->>
->=20
-
+Thanks
+Kishon
