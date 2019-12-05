@@ -2,121 +2,117 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D42AC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82737C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 703C7206DB
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:45:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="f5pmWoLw"
+	by mail.kernel.org (Postfix) with ESMTP id 5FFD42464D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:48:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbfLEPpd (ORCPT
+        id S1726257AbfLEPsV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 10:45:33 -0500
-Received: from gateway23.websitewelcome.com ([192.185.50.108]:13521 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729967AbfLEPpa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 10:45:30 -0500
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 9CFB214697
-        for <devicetree@vger.kernel.org>; Thu,  5 Dec 2019 09:45:29 -0600 (CST)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id ctJpixPfSW4frctJpiK88A; Thu, 05 Dec 2019 09:45:29 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=v/IFCcTbO/DrE6m1PJu/yWJCqP1uo1Mldd05pOJ8dG8=; b=f5pmWoLwdHuJU762BAsu7SszOm
-        OUK4UpyOjkHdbi/3dsGZYny5Kpat+YPDHfwX/sb/H/8yvMZqwRaV/CppM53CRI8ifdNCTRz6pDbxn
-        25n/5GWCpakBz4KLMFPLFxxi9j+joiSMXP/Xxk8JpGPHB80mfgxrLD6gd9jdjy44vH6KcNzSF95mP
-        He09l7LUgoEmkeINVmis2ZDpy6i81pDNVXR35qy3FSxKqX3x6aojZ+9eT/u29c+fiQVXLJAIgrRRo
-        KTFjKKliw/HFVCZBqP5WQ4yFuFU3w+zn5AIE3NhKOfb863sqQkIVCUrqIdLFRyj0uZ+LHp4J1JRx9
-        3muYoWSQ==;
-Received: from [191.31.196.215] (port=35544 helo=castello.bz.toradex.local)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1ictJo-001jEH-G0; Thu, 05 Dec 2019 12:45:28 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v8 5/5] power: supply: max17040: Send uevent in SOC and status change
-Date:   Thu,  5 Dec 2019 12:44:10 -0300
-Message-Id: <20191205154410.29462-6-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.24.0.rc2
-In-Reply-To: <20191205154410.29462-1-matheus@castello.eng.br>
-References: <20191205154410.29462-1-matheus@castello.eng.br>
+        Thu, 5 Dec 2019 10:48:21 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44114 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfLEPsV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 10:48:21 -0500
+Received: by mail-oi1-f193.google.com with SMTP id d62so3116108oia.11;
+        Thu, 05 Dec 2019 07:48:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XZiF8L55aoKSCKIPsroK6TKVziAXxA4eopxQuCxnWPg=;
+        b=j7xCbNPAfUIVLs3H6M0n+STqooL2KHW3AZu0fnhSi6JXSUVXpOWAfEJfOq77tZmXsC
+         PvbQTcCprSRxnlQBefSzfksWVMkz3Xi/krtKb6OuuKqrhef+3BySnxiD8JELF9VdnIoT
+         Kk68rwSbeTWJ4yF5b6gdwGHYEmS+Tcb5IgOspEXuu2nkyElGTzugOv3CTsGcs9bfsGGC
+         PkzD2JgJtRqBQcyMJPgcPbDxnMJtwlnupUtEKYzaiNb73MHUNR+6SzEvfPj7i4NlYPBM
+         lK7ryuw5nhy0Fh/sBjAOm5NPp3MDRwhzO8SeRKCz0iBHa0Q1zyqE67cfngChMjsXbNMq
+         3sLQ==
+X-Gm-Message-State: APjAAAV4Zh13ePUuWklTaK6sOlnhWeYbXNfzjkEmGjXjEmKkc44+nGNB
+        ltSeZjY91Lz5u/+Lhdv68F0xNDmTtkurAwyOGpU=
+X-Google-Smtp-Source: APXvYqw/+zkbokRYmfSgQpeCPIqliBYTc3RYgcji0fDJoOYlF/6LAGPuT8XtB0B9Q+xDPgtWc3MSZasdOt39nB2UEYI=
+X-Received: by 2002:aca:4a41:: with SMTP id x62mr7347186oia.148.1575560900523;
+ Thu, 05 Dec 2019 07:48:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.196.215
-X-Source-L: No
-X-Exim-ID: 1ictJo-001jEH-G0
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.bz.toradex.local) [191.31.196.215]:35544
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 59
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+References: <20191203034519.5640-1-chris.brandt@renesas.com>
+ <20191203034519.5640-7-chris.brandt@renesas.com> <CAMuHMdVBYpuoK7hcyNLK-mAdpTQz3ohTGXuYdFPHdpU5RoPr6Q@mail.gmail.com>
+ <CAMuHMdV7XY7FB9pBsxuWxGsqYaD9n1Y+XZXEJO5OsuigjjUgpw@mail.gmail.com>
+ <TY1PR01MB1562A6AFD8D0807B345B7A208A5D0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <CAMuHMdUn3h1VjYkARTFBqMij5aYg2mJSVErwceHc0NATBo+_hw@mail.gmail.com> <TY1PR01MB1562322613FC52617312F14E8A5D0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB1562322613FC52617312F14E8A5D0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 5 Dec 2019 16:48:09 +0100
+Message-ID: <CAMuHMdVy_0e5_94a-G83Tt14XsxmLFOpstvSP6Yw8m9oRW_eZg@mail.gmail.com>
+Subject: Re: [PATCH 6/6] dt-bindings: spi: Document Renesas SPIBSC bindings
+To:     Chris Brandt <Chris.Brandt@renesas.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Notify core through power_supply_changed() in case of changes in state
-of charge and power supply status. This is useful for user-space to
-efficiently update current battery level.
+Hi Chris,
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/power/supply/max17040_battery.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On Wed, Dec 4, 2019 at 2:31 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> > To avoid future problems, you probably do want to specify spi-tx-bus-width =
+> > <4> and spi-rx-bus-width = <4> in DTS now.
+>
+> I didn't do that because if the MTD layer then thinks I 'want' to do 4-bit access, then that introduces a new problem the solve.
+> The MTD layer might start sending down QUAD READ commands to the external SPI and then the SPI Flash will start sending back data on all 4 lines, but the controller is only configured for 1-bit transfers.
+>
+> I honestly don't know when/why the MTD layer decides on switch from 1-bit to 4-bit mode, so while the board hardware is wired for 4-bit (as the DT would document), we are not ready to be doing 4-bit just yet.
+> I just want to try and get the driver in at first....then we can make it do fancy stuff later.
+>
+> If someone can tell me that even if "spi-rx-bus-width = <4>" is put I the board DTS, the spi will still only do 1-bit transfers until the application specially enables 4-bit mode, then I'm fine with add bus-width=<4> in the DTS.
 
-diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 2a2a1fd8d4eb..c1188e94cf54 100644
---- a/drivers/power/supply/max17040_battery.c
-+++ b/drivers/power/supply/max17040_battery.c
-@@ -207,10 +207,19 @@ static void max17040_check_changes(struct i2c_client *client)
- static void max17040_work(struct work_struct *work)
- {
- 	struct max17040_chip *chip;
-+	int last_soc, last_status;
+Your spibsc driver does:
 
- 	chip = container_of(work, struct max17040_chip, work.work);
-+
-+	/* store SOC and status to check changes */
-+	last_soc = chip->soc;
-+	last_status = chip->status;
- 	max17040_check_changes(chip->client);
+    master->mode_bits = SPI_CPOL | SPI_CPHA;
 
-+	/* check changes and send uevent */
-+	if (last_soc != chip->soc || last_status != chip->status)
-+		power_supply_changed(chip->battery);
-+
- 	queue_delayed_work(system_power_efficient_wq, &chip->work,
- 			   MAX17040_DELAY);
- }
+i.e. SPI_[TR]X_{QUAD,DUAL} are not set, so it should not try those modes.
+
+At least on RSK+RZA1, the FLASHes are wired in quad mode, so you
+should describe the hardware in DT.
+
+>
+> Unless....I did not understand you meaning....
+>
+> Did you mean put 'spi-rx-bus-width = <4>' in the .dtsi????  (then I can override it back to <1>  that in the board .dts)???
+
+No, in the board .dtb.
+
+> > BTW, when using spibsc in direct-mapped mode: if you turn of and on again the
+> > module clock, does the spibsc need reprogramming?
+>
+> Nope. Everything will stay the same (just like all the other peripherals). The only thing you 'might' want to do is flush the read cache (especially if you disconnected it because you were going to go out and re-write some of the flash in SPI mode).
+
+Good. So that means the MTD driver can be modular.  Unused clocks are
+turned off at boot, and can be turned on when the mtd-rom driver is loaded
+and activated.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-2.24.0.rc2
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
