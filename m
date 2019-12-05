@@ -2,156 +2,276 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E03C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 22:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5EFC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 22:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C07F20707
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 22:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575584848;
-	bh=o+pMfB+dZRjNUEC+C1oSHkDVNuqkjUKAu5lRrNYxlVI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yRA+Zqnmc7HbgNJK/IM27ZdwRsSLUHXHcq9NcEpswZ1l0cXowObRxoJTuCYR3CuvI
-	 iMGPIJPhkO+3HvfcImcVytWr/eTtSKYP1M8+lmgPxhkRTA6L9lslpcVpEgBgNcHZSi
-	 LoHlce/hvXy5NltVbJ9G4FWRthOPWKZnqL+7YHm4=
+	by mail.kernel.org (Postfix) with ESMTP id 71DB52245C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 22:30:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbfLEW12 (ORCPT
+        id S1727305AbfLEWaZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 17:27:28 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41126 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729187AbfLEW11 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 17:27:27 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r27so4073284otc.8;
-        Thu, 05 Dec 2019 14:27:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=651QbfFxHbn+gIg6TglJPaA7sVi2egQeAs/aiyii6jY=;
-        b=syRlrXzudyJkSG4wXS1Nmz0qb679dLeZHPbzCfWHBIj76SIBorwJLjxTS08pXRuBws
-         nXoAUWHjKy4C2qxW16fWPRnr/3I3ftg1QE0xnuAPOn9Y5GaAmXl0lN37d6eKpLdM9lLp
-         JUvwZuO3VItaZNAZ2r5TlgEg66VAr4gDZKpM5OaadqxqzU5njN8NJ4fjl9eHwxLD7uMY
-         LIuHHffxK0bfem7bgJKxPUo9FjvMRtm/f6cTDuwIvqenFT/ZNEvM/BVwBVWqBke/y13i
-         xXrHn11DP2KZROWwMb33OWr67oYOca72IZNix+UoEcPyj+KlG4I+KnlKMOCea0xZLYe5
-         a2XA==
-X-Gm-Message-State: APjAAAVw/m3eGhUlcdjKJKSV0c1VZMZ2ZPKWDndQMIeXQgCjDxy3vWh4
-        D/r8GjAH7j16iRReao0z0g==
-X-Google-Smtp-Source: APXvYqw/PZNA3vwmc6UK37QzPywxm/gn6jJclg5Apod62JI2XI7Q9MTrj8/GmqtdSYdOOs7l2iZ8IQ==
-X-Received: by 2002:a05:6830:16c6:: with SMTP id l6mr8879987otr.186.1575584846734;
-        Thu, 05 Dec 2019 14:27:26 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w203sm2009701oia.12.2019.12.05.14.27.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 14:27:25 -0800 (PST)
-Date:   Thu, 5 Dec 2019 16:27:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     jic23@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
-        lars@metafoo.de, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pmeerw@pmeerw.net, knaack.h@gmx.de, fabrice.gasnier@st.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: iio: adc: convert sd modulator to
- json-schema
-Message-ID: <20191205222725.GA7547@bogus>
-References: <20191127171642.6014-1-olivier.moysan@st.com>
+        Thu, 5 Dec 2019 17:30:25 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:50955 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727194AbfLEWaZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 17:30:25 -0500
+Received: from localhost (unknown [78.193.40.249])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id CF65F200005;
+        Thu,  5 Dec 2019 22:30:23 +0000 (UTC)
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Kamel Bouhara <kamel.bouhara@bootlin.com>
+Subject: [PATCH v3] ARM: dts: at91: rearrange kizbox dts using aliases nodes
+Date:   Thu,  5 Dec 2019 23:30:21 +0100
+Message-Id: <20191205223021.1370083-1-kamel.bouhara@bootlin.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127171642.6014-1-olivier.moysan@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 06:16:42PM +0100, Olivier Moysan wrote:
-> Convert the sigma delta modulator bindings
-> to DT schema format using json-schema.
-> 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-> ---
->  .../iio/adc/sigma-delta-modulator.txt         | 13 -------
->  .../iio/adc/sigma-delta-modulator.yaml        | 35 +++++++++++++++++++
->  2 files changed, 35 insertions(+), 13 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
-> deleted file mode 100644
-> index 59b92cd32552..000000000000
-> --- a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
-> +++ /dev/null
-> @@ -1,13 +0,0 @@
-> -Device-Tree bindings for sigma delta modulator
-> -
-> -Required properties:
-> -- compatible: should be "ads1201", "sd-modulator". "sd-modulator" can be use
-> -	as a generic SD modulator if modulator not specified in compatible list.
-> -- #io-channel-cells = <0>: See the IIO bindings section "IIO consumers".
-> -
-> -Example node:
-> -
-> -	ads1202: adc {
-> -		compatible = "sd-modulator";
-> -		#io-channel-cells = <0>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
-> new file mode 100644
-> index 000000000000..8967c6f06d9d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
-> @@ -0,0 +1,35 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/sigma-delta-modulator.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Device-Tree bindings for sigma delta modulator
-> +
-> +maintainers:
-> +  - Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> +
-> +properties:
-> +  compatible:
-> +    description: |
-> +      "sd-modulator" can be used as a generic SD modulator,
-> +      if the modulator is not specified in the compatible list.
-> +    enum:
-> +      - sd-modulator
-> +      - ads1201
-> +
-> +  '#io-channel-cells':
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - '#io-channel-cells'
+Use aliases nodes to easy kizbox dts readability.
 
-Add:
+Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+---
+Changes in v3:
+	- Fixed missing i2c-gpio0 label in dtsi
+Changes in v2:
+	- Fixed some missing aliases label from dtsi
 
-additionalProperties: false
+ arch/arm/boot/dts/at91-kizbox.dts  | 172 ++++++++++++++---------------
+ arch/arm/boot/dts/at91sam9260.dtsi |   4 +-
+ 2 files changed, 86 insertions(+), 90 deletions(-)
 
-> +
-> +examples:
-> +  - |
-> +    ads1202: adc@0 {
+diff --git a/arch/arm/boot/dts/at91-kizbox.dts b/arch/arm/boot/dts/at91-kizbox.dts
+index 90996eaf73b2..7d938ccf71b0 100644
+--- a/arch/arm/boot/dts/at91-kizbox.dts
++++ b/arch/arm/boot/dts/at91-kizbox.dts
+@@ -28,85 +28,6 @@
+ 		};
+ 	};
 
-No reg, so drop the unit-address.
+-	ahb {
+-		apb {
+-			tcb0: timer@fffa0000 {
+-				timer@0 {
+-					compatible = "atmel,tcb-timer";
+-					reg = <0>, <1>;
+-				};
+-
+-				timer@2 {
+-					compatible = "atmel,tcb-timer";
+-					reg = <2>;
+-				};
+-			};
+-
+-			macb0: ethernet@fffc4000 {
+-				phy-mode = "mii";
+-				pinctrl-0 = <&pinctrl_macb_rmii
+-				             &pinctrl_macb_rmii_mii_alt>;
+-				status = "okay";
+-			};
+-
+-			usart3: serial@fffd0000 {
+-				status = "okay";
+-			};
+-
+-			dbgu: serial@fffff200 {
+-				status = "okay";
+-			};
+-
+-			watchdog@fffffd40 {
+-				timeout-sec = <15>;
+-				atmel,max-heartbeat-sec = <16>;
+-				atmel,min-heartbeat-sec = <0>;
+-				status = "okay";
+-			};
+-		};
+-
+-		usb0: ohci@500000 {
+-			num-ports = <1>;
+-			status = "okay";
+-		};
+-
+-		ebi: ebi@10000000 {
+-			status = "okay";
+-
+-			nand_controller: nand-controller {
+-				status = "okay";
+-				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
+-				pinctrl-names = "default";
+-
+-				nand@3 {
+-					reg = <0x3 0x0 0x800000>;
+-					rb-gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
+-					cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
+-					nand-bus-width = <8>;
+-					nand-ecc-mode = "soft";
+-					nand-on-flash-bbt;
+-					label = "atmel_nand";
+-
+-					partitions {
+-						compatible = "fixed-partitions";
+-						#address-cells = <1>;
+-						#size-cells = <1>;
+-
+-						bootstrap@0 {
+-							label = "bootstrap";
+-							reg = <0x0 0x20000>;
+-						};
+-
+-						ubi@20000 {
+-							label = "ubi";
+-							reg = <0x20000 0x7fe0000>;
+-						};
+-					};
+-				};
+-			};
+-		};
+-	};
+-
+ 	gpio_keys {
+ 		compatible = "gpio-keys";
+ 		#address-cells = <1>;
+@@ -127,15 +48,6 @@
+ 		};
+ 	};
 
-> +      compatible = "sd-modulator";
-> +      #io-channel-cells = <0>;
-> +    };
-> +
-> +...
-> -- 
-> 2.17.1
-> 
+-	i2c-gpio-0 {
+-		status = "okay";
+-
+-		rtc: pcf8563@51 {
+-			compatible = "nxp,pcf8563";
+-			reg = <0x51>;
+-		};
+-	};
+-
+ 	pwm_leds {
+ 		compatible = "pwm-leds";
+
+@@ -179,3 +91,87 @@
+ 			     &pinctrl_tcb1_tiob0>;
+ 	};
+ };
++
++&tcb0 {
++	timer@0 {
++		compatible = "atmel,tcb-timer";
++		reg = <0>, <1>;
++	};
++
++	timer@2 {
++		compatible = "atmel,tcb-timer";
++		reg = <2>;
++	};
++};
++
++&ebi {
++	status = "okay";
++};
++
++&nand_controller {
++	status = "okay";
++	pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
++	pinctrl-names = "default";
++
++	nand@3 {
++		reg = <0x3 0x0 0x800000>;
++		rb-gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
++		cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
++		nand-bus-width = <8>;
++		nand-ecc-mode = "soft";
++		nand-on-flash-bbt;
++		label = "atmel_nand";
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			bootstrap@0 {
++				label = "bootstrap";
++				reg = <0x0 0x20000>;
++			};
++
++			ubi@20000 {
++				label = "ubi";
++				reg = <0x20000 0x7fe0000>;
++			};
++		};
++	};
++};
++
++&macb0 {
++	phy-mode = "mii";
++	pinctrl-0 = <&pinctrl_macb_rmii
++		     &pinctrl_macb_rmii_mii_alt>;
++	status = "okay";
++};
++
++&usart3 {
++	status = "okay";
++};
++
++&dbgu {
++	status = "okay";
++};
++
++&watchdog {
++	timeout-sec = <15>;
++	atmel,max-heartbeat-sec = <16>;
++	atmel,min-heartbeat-sec = <0>;
++	status = "okay";
++};
++
++&usb0 {
++	num-ports = <1>;
++	status = "okay";
++};
++
++&i2c_gpio0 {
++	status = "okay";
++
++	rtc: pcf8563@51 {
++		compatible = "nxp,pcf8563";
++		reg = <0x51>;
++	};
++};
+diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+index dee9c0c8a096..c5c05b723976 100644
+--- a/arch/arm/boot/dts/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/at91sam9260.dtsi
+@@ -738,7 +738,7 @@
+ 				status = "disabled";
+ 			};
+
+-			watchdog@fffffd40 {
++			watchdog: watchdog@fffffd40 {
+ 				compatible = "atmel,at91sam9260-wdt";
+ 				reg = <0xfffffd40 0x10>;
+ 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+@@ -793,7 +793,7 @@
+ 		};
+ 	};
+
+-	i2c-gpio-0 {
++	i2c_gpio0: i2c-gpio-0 {
+ 		compatible = "i2c-gpio";
+ 		gpios = <&pioA 23 GPIO_ACTIVE_HIGH /* sda */
+ 			 &pioA 24 GPIO_ACTIVE_HIGH /* scl */
+--
+2.24.0
+
