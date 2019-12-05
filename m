@@ -2,74 +2,88 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E96C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 08:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F8CC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 08:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A09024648
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 08:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05BD321823
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 08:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbfLEI0Z (ORCPT
+        id S1726589AbfLEId4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 03:26:25 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:56098 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfLEI0Y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 03:26:24 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xB58Q1t2024515, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xB58Q1t2024515
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 5 Dec 2019 16:26:01 +0800
-Received: from james-BS01.localdomain (172.21.190.33) by
- RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server id
- 14.3.468.0; Thu, 5 Dec 2019 16:26:00 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-CC:     <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        <linux-realtek-soc@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 0/2] Initial RTD1319 SoC and Realtek PymParticle EVB support
-Date:   Thu, 5 Dec 2019 16:25:53 +0800
-Message-ID: <20191205082555.22633-1-james.tai@realtek.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 5 Dec 2019 03:33:56 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38160 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725974AbfLEId4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 5 Dec 2019 03:33:56 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C314AACA5;
+        Thu,  5 Dec 2019 08:33:54 +0000 (UTC)
+Subject: Re: [PATCH 1/2] dt-bindings: arm: realtek: Document RTD1319 and
+ Realtek PymParticle EVB
+To:     James Tai <james.tai@realtek.com>
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-realtek-soc@lists.infradead.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20191205082555.22633-1-james.tai@realtek.com>
+ <20191205082555.22633-2-james.tai@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <ca3edb07-b2d4-7305-9a34-c4d55f30d778@suse.de>
+Date:   Thu, 5 Dec 2019 09:33:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191205082555.22633-2-james.tai@realtek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andreas,
+Hi James,
 
-This series adds Device Trees for the Realtek RTD1319 SoC and Realtek's
-PymParticle EVB.
+Am 05.12.19 um 09:25 schrieb James Tai:
+> Define compatible strings for Realtek RTD1319 SoC and Realtek PymParticle
+> EVB.
+> 
+> Signed-off-by: James Tai <james.tai@realtek.com>
+> ---
+>  Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
+> index 2444eff2c3d5..f018d683a544 100644
+> --- a/Documentation/devicetree/bindings/arm/realtek.yaml
+> +++ b/Documentation/devicetree/bindings/arm/realtek.yaml
+> @@ -39,4 +39,10 @@ properties:
+>            - enum:
+>                - realtek,mjolnir # Realtek Mjolnir EVB
+>            - const: realtek,rtd1619
+> +
+> +     # RTD1319 SoC based boards
+> +     - items:
+> +          - enum:
+> +              - realtek,pymparticle # Realtek PymParticle EVB
+> +          - const: realtek,rtd1319
+>  ...
 
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Andreas Färber <afaerber@suse.de>
+I think it would be better to order this alphabetically before RTD1395.
 
-James Tai (2):
-  dt-bindings: arm: realtek: Document RTD1319 and Realtek PymParticle
-    EVB
-  arm64: dts: realtek: Add RTD1319 SoC and Realtek PymParticle EVB
+Otherwise looking good.
 
- .../devicetree/bindings/arm/realtek.yaml      |   6 +
- arch/arm64/boot/dts/realtek/Makefile          |   2 +
- .../boot/dts/realtek/rtd1319-pymparticle.dts  |  43 ++++++
- arch/arm64/boot/dts/realtek/rtd1319.dtsi      |  12 ++
- arch/arm64/boot/dts/realtek/rtd13xx.dtsi      | 137 ++++++++++++++++++
- 5 files changed, 200 insertions(+)
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1319.dtsi
- create mode 100644 arch/arm64/boot/dts/realtek/rtd13xx.dtsi
+Thanks,
+Andreas
 
 -- 
-2.24.0
-
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
