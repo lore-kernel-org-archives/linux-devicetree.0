@@ -2,158 +2,163 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D8BC2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1F7C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCBA124651
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575559292;
-	bh=W+fB0lkYlMsEuvJGi7dBDak3D1u3wyO/Zqd/ae0XBbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oHeQPYRsYGwA0NohWqFzxUZ3LKdLdEIXGLeqQYWubYfMHpkAJt3WKRNRLvZYGlpiI
-	 GdkVZxSRL8SqZ+tAdkMKld6chH4WoIyYLcYWF2vhIngTpJMWlQf5ePgRvCnMMsYAT3
-	 ungWZ7I9kawt5XRCaQ9+AidNLp8KHhtX/+BF9lZA=
+	by mail.kernel.org (Postfix) with ESMTP id C11572464D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:34:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1RAkL/Yq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbfLEPVc (ORCPT
+        id S1729790AbfLEPeR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 10:21:32 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33058 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729790AbfLEPVc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 10:21:32 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v140so3097326oie.0;
-        Thu, 05 Dec 2019 07:21:31 -0800 (PST)
+        Thu, 5 Dec 2019 10:34:17 -0500
+Received: from mail-wr1-f46.google.com ([209.85.221.46]:39194 "EHLO
+        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729695AbfLEPeR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 10:34:17 -0500
+Received: by mail-wr1-f46.google.com with SMTP id y11so4139206wrt.6
+        for <devicetree@vger.kernel.org>; Thu, 05 Dec 2019 07:34:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=KzKSFA37zQ+fSsnCSfsJqcJWA1YqoEpujyYe82jiosA=;
+        b=1RAkL/YqqEmrVPedzEg2Pc0Ov3GvHhQDDskUsdP88FKftcpyQigTss9I7/RJeNaUWJ
+         8SxDYfPOP10oekWk/HW52CxH3vycbaZGijkt/iEktSBaQIOyZ+ZFiih4FwRMEvQrBtKt
+         q40mxhTIaXZm6rmsGymyE03yDP1zjMp5GsS4ojcVZP+c8ME5ZADLF9qLjLlhNtZPpVna
+         v40EMCUiDKqq0m4nYJfbIXt1EDhDHbUXfxR+luG/18Z936G2of2baLTrugjU1n9HO3i+
+         M1BlbA/SLFnu4eSJEi3Ts5ZyZKM7eCVemr2cYZJV0SNcv33nR7gSciCyUWMV6MMUmrRs
+         bYDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+WIMxLv19tjffTAX77E2M2L63dzYaMaTLYuDHcPpCEE=;
-        b=dv0aeVhzikvm9N1HMR+UCwYiP2sfuHcZ2vr7MutvOVpuAygjQ6Zc0w/aIIIUMhmjPw
-         ZhTVJeL4kB0W0J+JkJ2UAuuZjkjBfXiY0tmBaMYmuzES9pVNJFVttX5yroxmB+RpB65d
-         RfnpUYJWb7ijrRN1q/WCNHlVPJz20FBqSXGTldNUim8Ad4eWMCfMZTVaOb9LYZUjYyTj
-         XWNHsWMnmfmIBvpitnp3+mCwH1qBwTWa8Uw90qzaw6FKt8y4hjDNdgnHQTcXHKKFnsc8
-         pED/dWaaQ6waoreFoiZ7AEOsUZOP9JlfZPN4EdC65FwYWojP9iAyPGSsVHn4NsVcOMTb
-         89ww==
-X-Gm-Message-State: APjAAAW6f9Re+JGaUPXegCRuaRDoEePSYrAokVlmi+NumrfPU+4XQq6C
-        taAnqK2U6UuV9NVOQMtiGQ==
-X-Google-Smtp-Source: APXvYqxWM2sWW0OmOjxxnjypKw2CsTWhwLb6dpBPypkmM6lnxiLp7y3FhuXuAy+HjZDphQ3sYtuYIw==
-X-Received: by 2002:a05:6808:50:: with SMTP id v16mr7227208oic.11.1575559291069;
-        Thu, 05 Dec 2019 07:21:31 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j23sm3560484oij.56.2019.12.05.07.21.30
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KzKSFA37zQ+fSsnCSfsJqcJWA1YqoEpujyYe82jiosA=;
+        b=f2co8ENbLS/6e4ZB9/0RVuBnlILo4GaFTWpRPG102d/BeFRspP3kwZa5sxQZ6bGgMb
+         fJNiH/lqKCDPZu7WH0o7XDcVa3xiV8JrPhDu5cVHWfDqXmVRcIMq67qaeZP4VhB5TJEI
+         Wp/4leI1A5ZbBCCrUZHEgPsReMDvVUyCMr8iy/k5lHSAy9DxXTmMOfc5WYpenQRyme3R
+         lqSeuYi4VMsq/pfraLcr0hnA4zD+UlZ5RHOcq25s17n07Kymnzayk1VcvsLOBGbKc7XB
+         Csgs3mWU8ckEUKnTh5c7R3E/QcJL8FZg6lJP8pCBxSGVC8L5duWbSp+lYeYaIvT/rZom
+         DYHQ==
+X-Gm-Message-State: APjAAAVFKhm6M4S8eHayZMfbAjhJqqyowo3nDkILM+jmxV8GK/Na52p9
+        qAvqwI3nsl+4UeObaHsEpLyskQ==
+X-Google-Smtp-Source: APXvYqzZBXKnAbQRB+UN+TlYuRc21RIUf2MlSS34PJhj5LkssDhww4cmP6eaWU2qSaFmGTFxlmAbFw==
+X-Received: by 2002:adf:83c7:: with SMTP id 65mr10264958wre.368.1575560054836;
+        Thu, 05 Dec 2019 07:34:14 -0800 (PST)
+Received: from bender.baylibre.local (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id u26sm191894wmj.9.2019.12.05.07.34.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 07:21:30 -0800 (PST)
-Date:   Thu, 5 Dec 2019 09:21:29 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rodrigo Carvalho <rodrigorsdc@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        alexandru.ardelean@analog.com, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: Re: [PATCH v5 2/2] dt-bindings: iio: accel: add binding
- documentation for ADIS16240
-Message-ID: <20191205152129.GA13911@bogus>
-References: <20191123233510.4890-1-rodrigorsdc@gmail.com>
- <20191123233510.4890-2-rodrigorsdc@gmail.com>
+        Thu, 05 Dec 2019 07:34:13 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     mjourdan@baylibre.com, devicetree@vger.kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/4] dt-bindings: media: amlogic,gx-vdec: add bindings for G12A family
+Date:   Thu,  5 Dec 2019 16:34:06 +0100
+Message-Id: <20191205153408.26500-3-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191205153408.26500-1-narmstrong@baylibre.com>
+References: <20191205153408.26500-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191123233510.4890-2-rodrigorsdc@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 08:35:10PM -0300, Rodrigo Carvalho wrote:
-> This patch add device tree binding documentation for ADIS16240.
-> 
-> Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
+Add bindings to support the Amlogic Video Decoder on the Amlogic G12A
+family.
 
-checkpatch.pl complains about a mismatch between the author and S-o-b.
+For the G12A family, a supplementary clock is needed to operate the
+HEVC/VP9 decoder.
 
-> ---
-> V5:
->   - None 
-> 
->  .../bindings/iio/accel/adi,adis16240.yaml     | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> new file mode 100644
-> index 000000000000..8e902f7c49e6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> @@ -0,0 +1,49 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../bindings/media/amlogic,gx-vdec.yaml       | 42 ++++++++++++++++---
+ 1 file changed, 37 insertions(+), 5 deletions(-)
 
-Dual license new bindings please: (GPL-2.0-only OR BSD-2-Clause)
+diff --git a/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml b/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
+index 878944867d6e..cc8dc264fc72 100644
+--- a/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
++++ b/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
+@@ -27,12 +27,15 @@ description: |
+ 
+ properties:
+   compatible:
+-    items:
++    oneOf:
++      - items:
++        - enum:
++          - amlogic,gxbb-vdec # GXBB (S905)
++          - amlogic,gxl-vdec # GXL (S905X, S905D)
++          - amlogic,gxm-vdec # GXM (S912)
++        - const: amlogic,gx-vdec
+       - enum:
+-        - amlogic,gxbb-vdec # GXBB (S905)
+-        - amlogic,gxl-vdec # GXL (S905X, S905D)
+-        - amlogic,gxm-vdec # GXM (S912)
+-      - const: amlogic,gx-vdec
++        - amlogic,g12a-vdec # G12A (S905X2, S905D2)
+ 
+   interrupts:
+     minItems: 2
+@@ -59,13 +62,17 @@ properties:
+ 
+   clocks:
+     minItems: 4
++    maxItems: 5
+ 
+   clock-names:
++    minItems: 4
++    maxItems: 5
+     items:
+       - const: dos_parser
+       - const: dos
+       - const: vdec_1
+       - const: vdec_hevc
++      - const: vdec_hevcf
+ 
+   amlogic,ao-sysctrl:
+     description: should point to the AOBUS sysctrl node
+@@ -77,6 +84,31 @@ properties:
+     allOf:
+       - $ref: /schemas/types.yaml#/definitions/phandle
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - amlogic,gx-vdec
++
++    then:
++      properties:
++        clock-names:
++          maxItems: 4
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - amlogic,g12a-vdec
++
++    then:
++      properties:
++        clock-names:
++          minItems: 5
++
+ required:
+   - compatible
+   - reg
+-- 
+2.22.0
 
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ADIS16240 Programmable Impact Sensor and Recorder driver
-> +
-> +maintainers:
-> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> +
-> +description: |
-> +  ADIS16240 Programmable Impact Sensor and Recorder driver that supports
-> +  SPI interface.
-> +    https://www.analog.com/en/products/adis16240.html
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,adis16240
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    spi0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        /* Example for a SPI device node */
-> +        accelerometer@0 {
-> +            compatible = "adi,adis16240";
-> +            reg = <0>;
-> +            spi-max-frequency = <2500000>;
-> +            interrupt-parent = <&gpio0>;
-> +            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> +        };
-> +    };
-> -- 
-> 2.24.0
-> 
