@@ -2,99 +2,70 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92EDC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D5DC2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8159620659
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:28:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LO4WnFjF"
+	by mail.kernel.org (Postfix) with ESMTP id 083BE2464D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbfLEN2R (ORCPT
+        id S1729406AbfLENhl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 08:28:17 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52320 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbfLEN2Q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 08:28:16 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB5DS8rd109614;
-        Thu, 5 Dec 2019 07:28:08 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575552488;
-        bh=7JZvZPT9dAnniPhNx/k+WuJDCz1xGhlz+enp4fhaaso=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LO4WnFjFJZYlztPxOqGoBcNW2PzIim+nRdQu8VoL+BtGNe7lQoVreWr3LB0BhKZy5
-         cbCYg61lZ96gzOU5/YnV142mFAzF61b7e6sgS/00kjiwUgGljbZGQ67WXMxZiDkJ7B
-         F7julAaklTk8wGJ3ZxEAWwFhTQgG+VLPxCyfZKE8=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5DS8mX002799;
-        Thu, 5 Dec 2019 07:28:08 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
- 2019 07:28:08 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 5 Dec 2019 07:28:08 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5DS8kr052362;
-        Thu, 5 Dec 2019 07:28:08 -0600
-Subject: Re: [PATCH 2/2] net: m_can: Make wake-up gpio an optional
-To:     Sean Nyekjaer <sean@geanix.com>, <mkl@pengutronix.de>
-CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20191204175112.7308-1-dmurphy@ti.com>
- <20191204175112.7308-2-dmurphy@ti.com>
- <b9eaa5c4-13bc-295f-dcbf-d2a846243682@geanix.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <827b022e-9188-7bcf-25e3-3777df3b08a5@ti.com>
-Date:   Thu, 5 Dec 2019 07:26:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <b9eaa5c4-13bc-295f-dcbf-d2a846243682@geanix.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 5 Dec 2019 08:37:41 -0500
+Received: from xavier.telenet-ops.be ([195.130.132.52]:48196 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729187AbfLENhl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 08:37:41 -0500
+Received: from ramsan ([84.195.182.253])
+        by xavier.telenet-ops.be with bizsmtp
+        id aDde2100M5USYZQ01DdeZU; Thu, 05 Dec 2019 14:37:39 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1icrK6-00026q-Fr; Thu, 05 Dec 2019 14:37:38 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1icrK6-0001YT-Cp; Thu, 05 Dec 2019 14:37:38 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: dmaengine: rcar-dmac: Document r8a77961 support
+Date:   Thu,  5 Dec 2019 14:37:36 +0100
+Message-Id: <20191205133736.5934-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Marc
+Document support for the system DMA controller in the Renesas R-Car
+M3-W+ (R8A77961) SoC.
 
-On 12/5/19 1:39 AM, Sean Nyekjaer wrote:
->
->
-> On 04/12/2019 18.51, Dan Murphy wrote:
->> The device has the ability to disable the wake-up pin option.
->> The wake-up pin can be either force to GND or Vsup and does not have to
->> be tied to a GPIO.  In order for the device to not use the wake-up 
->> feature
->> write the register to disable the WAKE_CONFIG option.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> CC: Sean Nyekjaer <sean@geanix.com>
-> Reviewed-by: Sean Nyekjaer <sean@geanix.com>
->> ---
->
->
-> Hi Dan,
->
-> I would add tcan4x5x to the subject of this patch ->
-> "net: m_can: tcan4x5x Make wake-up gpio an optional"
->
-Do you want me to submit v2 with the $subject change?
+No driver update is needed.
 
-Or would you fix it up when committing it?
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Dan
+diff --git a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+index 5551e929fd99f630..b7f81c63be8bdc33 100644
+--- a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
++++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+@@ -30,6 +30,7 @@ Required Properties:
+ 		- "renesas,dmac-r8a7794" (R-Car E2)
+ 		- "renesas,dmac-r8a7795" (R-Car H3)
+ 		- "renesas,dmac-r8a7796" (R-Car M3-W)
++		- "renesas,dmac-r8a77961" (R-Car M3-W+)
+ 		- "renesas,dmac-r8a77965" (R-Car M3-N)
+ 		- "renesas,dmac-r8a77970" (R-Car V3M)
+ 		- "renesas,dmac-r8a77980" (R-Car V3H)
+-- 
+2.17.1
 
