@@ -2,212 +2,113 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9319EC2D0C1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 20:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1F9C2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 20:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D83924679
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 20:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575578335;
-	bh=K7c3qaYFnXWMMqmwVGrwX7rG4+uwWtUsCcODfBtRF1k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=iWH9a5K2E8zAT0WmRFHH+wOcQBfU+uoxst70Eyq8w9B9CRT66Zg4EHL2ew8RTeTD2
-	 5psUAFeNYg1TQAajyS3os3Pj7phfHphDN9l4fXK66WkwlNp/rxcKp16EvnL2ds3g/T
-	 c7n8O9TAkt+07Sp9hgjjDtpwgSnFR2N3lnIO7mu4=
+	by mail.kernel.org (Postfix) with ESMTP id 909E224671
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 20:46:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="XdU6/ypk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729430AbfLEUit (ORCPT
+        id S1730384AbfLEUqS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 15:38:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729145AbfLEUit (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Dec 2019 15:38:49 -0500
-Received: from localhost (mobile-166-170-221-197.mycingular.net [166.170.221.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B455D205F4;
-        Thu,  5 Dec 2019 20:38:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575578328;
-        bh=K7c3qaYFnXWMMqmwVGrwX7rG4+uwWtUsCcODfBtRF1k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NWmiSx+ex1TjiKC4MaIx3xgvijveWrSbxbs+XjqnQh8NtXiBsDxOC54dxgdSCwY2Q
-         JFbBLgr1/UwBKIqUKv7MLbUuUhoa33JyMTyHQS/JVBgESXzRhy4V3aJStQ6g6aSYgd
-         BMEn5r9MAm2BdXlEKpf1Z9W0pYFSQT6+AX76sG20=
-Date:   Thu, 5 Dec 2019 14:38:45 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, jeremy.linton@arm.com,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v4 8/8] linux/log2.h: Use roundup/dow_pow_two() on 64bit
- calculations
-Message-ID: <20191205203845.GA243596@google.com>
+        Thu, 5 Dec 2019 15:46:18 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33963 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730381AbfLEUqS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 15:46:18 -0500
+Received: by mail-io1-f66.google.com with SMTP id z193so5096393iof.1
+        for <devicetree@vger.kernel.org>; Thu, 05 Dec 2019 12:46:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=humTQycd0vFrkIxQZiWiqgySySbeGFmTzkUhXf3KboE=;
+        b=XdU6/ypkhmReLxd03n6s8HpHulakpvc3pASxdTKIXH5An0XRvRpiR5gmD8jxcctCtu
+         AZ1hpqEmX4HDZOW36C/slJrG6ubHNk+86q7aGjG8lowWjq77rYGQtIffDTiLvwr5fz2X
+         hwEAbOrYCHKci7lvtvy4hU6VjIYmeZLACNF2KEJSM2ULPOd9XZsWwwgCsuktqFOhSXqV
+         6l26BDcvq/AIf4qgZsSjRnYm3f5T2Mpy3MY215s7XVGWsn0E8PW8g4FHLQRhawKHmCdQ
+         cMISuBMCKa6YMp2kZnqgIJ9nmsLIcf4uACpYaNEVYws2f5xAhk0ed6bLJ78sgl+dT+xi
+         dBpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=humTQycd0vFrkIxQZiWiqgySySbeGFmTzkUhXf3KboE=;
+        b=HAWoDoaI9TQ+12peqsv+B1EQd5AD8pxdCT3BP1YP+0zpmuknVSoJtDOHKjsvF8dtwL
+         19tZmTp4iZWMndZNoNWrZDnXO2l4BTF3DBIhZyaceHrP/ZBI2AJAU0MDa6IL3W06kZzC
+         2E6pstkV/3342FI7fzPoK/ZqvTedHxn1UYS+YA0c5HaVDI0c5ofQmsR132A/sU/xNjPE
+         DQjTFeO4C4N63zyml+Zw3gFKTaQX8xv0RVkLqBQsjeTi6vy8Ozp/FEF8uVPtc2VUjo5k
+         8T4n3gUCW0QSEF20DQrlFk0pVxWcttUMDu26+9Ac7sePlM94ZdH7jRY8CKXuhZn6jSpx
+         usuQ==
+X-Gm-Message-State: APjAAAXfIa5U5dtIRWFXJ2J4QLjLYByedMZFbLiyNfr6iIimvNsE0kq7
+        lz1kaCdGp7t8bsiLA/jrCRAsa+6MY1WQ2Qh5qUJQRw==
+X-Google-Smtp-Source: APXvYqz7Sg7e83fq0vHcuOBJBouB7Eicn+xN/Pzkb8SFrEF/cGfUJr2/1zhC8EK8+W4Iqy3mBKDJlZEWDlP9p4WjktI=
+X-Received: by 2002:a02:6a2f:: with SMTP id l47mr10252363jac.132.1575578777145;
+ Thu, 05 Dec 2019 12:46:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203114743.1294-9-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191021205426.28825-1-rjones@gateworks.com> <CALAE=UAEFobA2SXOTJWAqexg+VNN_VTXGLGH+VwqqjKkuFwddg@mail.gmail.com>
+ <20191204113307.GH3365@dragon>
+In-Reply-To: <20191204113307.GH3365@dragon>
+From:   Bobby Jones <rjones@gateworks.com>
+Date:   Thu, 5 Dec 2019 12:46:06 -0800
+Message-ID: <CALAE=UBFWvBpxODRgzM0YiM2uaBefCTvGjYj4Se=ZUU8g5fihg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx: ventana: add fxos8700 on gateworks boards
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The subject contains a couple typos: it's missing "of" and it's
-missing the "n" on "down".
+On Wed, Dec 4, 2019 at 3:33 AM Shawn Guo <shawnguo@kernel.org> wrote:
+>
+> On Thu, Nov 07, 2019 at 11:10:19AM -0800, Bobby Jones wrote:
+> > Hello Shawn,
+> >
+> > I just wanted to follow up with this and see if you had a chance to
+> > look at this. I submitted this after responding to Marco on my initial
+> > submission but haven't heard anything since and didn't want it to fall
+> > through the cracks. It may be worth mentioning that both the bindings
+> > for the fxos8700 and lsm9ds1 have been accepted by iio.
+> >
+> > In addition to this submission I have the following that I'd like to
+> > check in on as well:
+> >
+> > [PATCH] ARM: dts: imx: imx6qdl-gw553x.dtsi: add lsm9ds1 iio imu/magn support
+> > [PATCH] ARM: dts: imx: Add GW5907
+> > [PATCH] ARM: dts: imx: Add GW5912
+> > [PATCH] ARM: dts: imx: Add GW5913
+> > [PATCH] ARM: dts: imx: Add GW5910
+> >
+> > Please let me know if there's anything I can do. Thanks!
+>
+> Hmm, did you copy me on those patches?  I cannot find them in my
+> mailbox.
 
-On Tue, Dec 03, 2019 at 12:47:41PM +0100, Nicolas Saenz Julienne wrote:
-> The function now is safe to use while expecting a 64bit value. Use it
-> where relevant.
+I just double checked and they all have you in the recipient list.
+However I just had my coworker check who's also subscribed to
+linux-arm-kernel and he's only seeing this thread and the "add lsm9ds1
+iio imu/magn support" thread. Maybe something funny with our mail
+server.
 
-Please include the function names ("roundup_pow_of_two()",
-"rounddown_pow_of_two()") in the changelog so it is self-contained and
-doesn't depend on the subject.
+Interestingly enough they appear on the marc.info archive for Oct 3rd:
+https://marc.info/?a=147430901100002&r=1&w=2
 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+I'm not sure what happened but I'll send them out again now.
 
-With the nits above and below addressed,
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci
-
-> ---
->  drivers/acpi/arm64/iort.c                        | 2 +-
->  drivers/net/ethernet/mellanox/mlx4/en_clock.c    | 3 ++-
->  drivers/of/device.c                              | 3 ++-
->  drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 ++-
->  drivers/pci/controller/cadence/pcie-cadence.c    | 3 ++-
->  drivers/pci/controller/pcie-brcmstb.c            | 3 ++-
->  drivers/pci/controller/pcie-rockchip-ep.c        | 5 +++--
->  kernel/dma/direct.c                              | 2 +-
->  8 files changed, 15 insertions(+), 9 deletions(-)
-
-> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> @@ -10,6 +10,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/sizes.h>
-> +#include <linux/log2.h>
->  
->  #include "pcie-cadence.h"
->  
-> @@ -65,7 +66,7 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc, u8 fn,
->  	 * roundup_pow_of_two() returns an unsigned long, which is not suited
->  	 * for 64bit values.
->  	 */
-
-Please remove the comment above since it no longer applies.
-
-> -	sz = 1ULL << fls64(sz - 1);
-> +	sz = roundup_pow_of_two(sz);
->  	aperture = ilog2(sz) - 7; /* 128B -> 0, 256B -> 1, 512B -> 2, ... */
->  
->  	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO) {
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
-> index cd795f6fc1e2..b1689f725b41 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
-> @@ -4,6 +4,7 @@
->  // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
->  
->  #include <linux/kernel.h>
-> +#include <linux/log2.h>
->  
->  #include "pcie-cadence.h"
->  
-> @@ -15,7 +16,7 @@ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
->  	 * roundup_pow_of_two() returns an unsigned long, which is not suited
->  	 * for 64bit values.
->  	 */
-
-Same here.
-
-> -	u64 sz = 1ULL << fls64(size - 1);
-> +	u64 sz = roundup_pow_of_two(size);
->  	int nbits = ilog2(sz);
->  	u32 addr0, addr1, desc0, desc1;
->  
-> --- a/drivers/pci/controller/pcie-rockchip-ep.c
-> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-> @@ -16,6 +16,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pci-epf.h>
->  #include <linux/sizes.h>
-> +#include <linux/log2.h>
->  
->  #include "pcie-rockchip.h"
->  
-> @@ -70,7 +71,7 @@ static void rockchip_pcie_prog_ep_ob_atu(struct rockchip_pcie *rockchip, u8 fn,
->  					 u32 r, u32 type, u64 cpu_addr,
->  					 u64 pci_addr, size_t size)
->  {
-> -	u64 sz = 1ULL << fls64(size - 1);
-> +	u64 sz = roundup_pow_of_two(size);
->  	int num_pass_bits = ilog2(sz);
->  	u32 addr0, addr1, desc0, desc1;
->  	bool is_nor_msg = (type == AXI_WRAPPER_NOR_MSG);
-> @@ -176,7 +177,7 @@ static int rockchip_pcie_ep_set_bar(struct pci_epc *epc, u8 fn,
->  	 * roundup_pow_of_two() returns an unsigned long, which is not suited
->  	 * for 64bit values.
->  	 */
-
-And here.
-
-> -	sz = 1ULL << fls64(sz - 1);
-> +	sz = roundup_pow_of_two(sz);
->  	aperture = ilog2(sz) - 7; /* 128B -> 0, 256B -> 1, 512B -> 2, ... */
->  
->  	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO) {
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index 6af7ae83c4ad..056886c4efec 100644
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -53,7 +53,7 @@ u64 dma_direct_get_required_mask(struct device *dev)
->  {
->  	u64 max_dma = phys_to_dma_direct(dev, (max_pfn - 1) << PAGE_SHIFT);
->  
-> -	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
-> +	return rounddown_pow_of_two(max_dma) * 2 - 1;
-
-Personally I would probably make this one a separate patch since it's
-qualitatively different than the others and it would avoid the slight
-awkwardness of the non-greppable "roundup/down_pow_of_two()"
-construction in the commit subject.
-
-But it's fine either way.
-
->  }
->  
->  static gfp_t __dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
-> -- 
-> 2.24.0
-> 
+Thanks,
+Bobby
