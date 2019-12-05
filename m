@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A87C2D0BE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 02:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB85C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 02:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49DF021744
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 02:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8772A21744
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 02:20:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZqvPktc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZ7oQT4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbfLECUE (ORCPT
+        id S1728730AbfLECTr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 21:20:04 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:36148 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728862AbfLECTy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 21:19:54 -0500
-Received: by mail-yb1-f196.google.com with SMTP id v2so882435ybo.3;
-        Wed, 04 Dec 2019 18:19:53 -0800 (PST)
+        Wed, 4 Dec 2019 21:19:47 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:46892 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728684AbfLECTq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 21:19:46 -0500
+Received: by mail-yb1-f194.google.com with SMTP id v15so850563ybp.13;
+        Wed, 04 Dec 2019 18:19:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NBUCQ3HXWtjqS7u+DV8bVMI4GRsmhHpuG+2/DBZke2U=;
-        b=gZqvPktcf6I8/hfOocl3lqK6ZkGdntiy5ippuyOtLR1PsAvNFTzHaCL0peOfCUrZFN
-         hZBA2YM5Zqiqf+TjBICsmwrRVJTbjb6UCIRkl3PM2kOboSJ+NqrO4svjirQ8QORXJdeg
-         qv5mNTpM+DPfWLq7RjcJ8+JWYXqPvqqGzwh1uGn9P+tiLP8f96Dm4PNROjUBA83XIxcm
-         VzmmovvA+bxcThlIUHj5FBlFqpB5HkSrnVphnsgF32EtIVTh+GecSxdiVbLBF+LP+fDs
-         D1NwShFZ5ueZxyFaeac2pntK9BO4aLlmJDZ4d4CkUanv6sO2BcaDF5DwmuaVZY7SjIyG
-         LTjg==
+        bh=Yd2Q7YPR11r5oinbUH01VXPynULLPCtlISudYlOMZyU=;
+        b=dZ7oQT4U2H+qzIRBhZmeTPi8Mt3dIMzOm7Hp5/V3r8x/h/EIO00FBZMSX3PlqoQSrv
+         Ua9Xjpp1MH/3vnT9HJSleKk0nsEdNYw2lowXV421mkLCgS39iX5Jzm22PS7aaHUprt/i
+         X6H+kHwAhaTA8H7ejrzXE2wLJsx8aP5vQtGEUbPBjBYwgdogL9oPNCFncN9gm80hAq3X
+         iHn8wiooFWAwTk8zF2gWozDTciPwZFgRBM5KS1I7eZo015WAKeazOlT8dqNq+qSFplj7
+         R13YpWnX6+BkhEdMFf/dgNMiwI5hD+QRrL2o2GqR2Hw5QuNk1eUIKtDuLC5ZmAAGTrDC
+         qIYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NBUCQ3HXWtjqS7u+DV8bVMI4GRsmhHpuG+2/DBZke2U=;
-        b=pWCh53rmv9NCM+4i99YaKZpjYXoTdWkUWrgybmKnTFlTEwpYLHryDBQ08KHdWXh7s1
-         6ia7aecBpuQUpANmT1BTre4QAEGLATE+kOn1RXQ77i1ddAaobhpWOq3Dtek4whLqow4j
-         6DIr32z+xmI4duwj7kC2xg8ZuIoz/b15gGKQt0xx6VNsfFTs7eUXs7uBajxH9YttajLS
-         TIPCGhEJCNVMlMTM1O6nh/jitXWg1zu0GKWm6V+xgC6V8LTjYcWUg+CEHEmKTHfpoOuY
-         MavexBkDrN7TxKFJ7AYBr0ULayDA3w4uVUvcqgrPVeVxKd8vVTHuVG+8EQsdjV0Kd8kA
-         h3oA==
-X-Gm-Message-State: APjAAAUXWxpeFxp7Hq4/yOkhwEzRgsZrxbrJP3h32v1LnYeEYKXdAwRe
-        JqaNkoObFBDjBe5lwGUpEO0=
-X-Google-Smtp-Source: APXvYqwpnSW0TEm1sDRCzLBvTQE4cuFAOFTuoVVDJT3nfkg/Z0yJYgcHWfa00gQ6AC1z7piMSl0Ffg==
-X-Received: by 2002:a25:860b:: with SMTP id y11mr4655565ybk.485.1575512392989;
-        Wed, 04 Dec 2019 18:19:52 -0800 (PST)
+        bh=Yd2Q7YPR11r5oinbUH01VXPynULLPCtlISudYlOMZyU=;
+        b=COpLX36f/7h/ButBDPN/PgrcNQrq7n0VdVA21BEv9DW0e/6Zp9uCl4IxbR1Kiks2qK
+         ODjbYE4GCKwruLc5W5iZQD5edIVxyZQ2xX7cD3NMLPYEojX3IcmtMWaBZgz5UOkHMikj
+         DKnA4OYnsZjKEi1hoURLTZBnR6PuqRJUX3t7VaU17711F2IoOF4ncp2erKVGijPkbKGm
+         /aAkTq25ipEKKP8/bLouHZt3p1QlRY4REIN5gLx+Jb6i5c8yEI27BTb3OY5TiqcDgXA/
+         Ei2e40+Slp1HroWPgbdXBNPngJHMD7oLQ+txuBJmPwSquFIgC5a+SLolA1BV4bIMSnze
+         GbVw==
+X-Gm-Message-State: APjAAAXlyNEci4eP2wvupFDOh8YK6y8d3Zpc+mwnKlUwEmic+JI1a61L
+        Ya15YlaPHF7W2/EVCDzCgiA=
+X-Google-Smtp-Source: APXvYqyVdj3RzhMGiTatSwC3Khz8b2JenHZUs6hXCp8QeiH6aGTz3/PIkHDqKJsFHIjOWWrugZ0pgw==
+X-Received: by 2002:a25:d143:: with SMTP id i64mr4691585ybg.415.1575512384839;
+        Wed, 04 Dec 2019 18:19:44 -0800 (PST)
 Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id l6sm4188449ywa.39.2019.12.04.18.19.51
+        by smtp.gmail.com with ESMTPSA id l6sm4188449ywa.39.2019.12.04.18.19.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 18:19:52 -0800 (PST)
+        Wed, 04 Dec 2019 18:19:44 -0800 (PST)
 From:   Adam Ford <aford173@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
@@ -66,9 +66,9 @@ Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/7] ARM64: dts: imx8mm: Fix clocks and power domain for USB OTG
-Date:   Wed,  4 Dec 2019 20:19:22 -0600
-Message-Id: <20191205021924.25188-7-aford173@gmail.com>
+Subject: [PATCH 2/7] soc: imx: gpcv2: Update imx8m-power.h to include iMX8M Mini
+Date:   Wed,  4 Dec 2019 20:19:18 -0600
+Message-Id: <20191205021924.25188-3-aford173@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191205021924.25188-1-aford173@gmail.com>
 References: <20191205021924.25188-1-aford173@gmail.com>
@@ -79,63 +79,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are two USB OTG controllers on the i.MX8M Mini, but currently
-neither are functional.
-
-According to the device tree entries published on the NXP kernel
-for the imx8m mini, these both need to be assigned to the proper
-clocks and power domain in order to function.
-
-This patch configures both USB OTG controllers to enable a missing
-clock and define the power domain so boards wishing to enable
-the USB OTG can do so.
+In preparation for i.MX8M Mini support in the GPC driver, the
+include file used by both the device tree and the source needs to
+have the appropriate references for it.
 
 Signed-off-by: Adam Ford <aford173@gmail.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ include/dt-bindings/power/imx8m-power.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index d05c5b617a4d..5036d713558f 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -14,7 +14,7 @@
+diff --git a/include/dt-bindings/power/imx8m-power.h b/include/dt-bindings/power/imx8m-power.h
+index 8a513bd9166e..0054bba744b8 100644
+--- a/include/dt-bindings/power/imx8m-power.h
++++ b/include/dt-bindings/power/imx8m-power.h
+@@ -18,4 +18,18 @@
+ #define IMX8M_POWER_DOMAIN_MIPI_CSI2	9
+ #define IMX8M_POWER_DOMAIN_PCIE2	10
  
- / {
- 	compatible = "fsl,imx8mm";
--	interrupt-parent = <&gpc>;
-+	interrupt-parent = <&gic>;
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
-@@ -867,8 +867,11 @@
- 				interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MM_CLK_USB1_CTRL_ROOT>;
- 				clock-names = "usb1_ctrl_root_clk";
--				assigned-clocks = <&clk IMX8MM_CLK_USB_BUS>;
--				assigned-clock-parents = <&clk IMX8MM_SYS_PLL2_500M>;
-+				assigned-clocks = <&clk IMX8MM_CLK_USB_BUS>,
-+						  <&clk IMX8MM_CLK_USB_CORE_REF>;
-+				assigned-clock-parents = <&clk IMX8MM_SYS_PLL2_500M>,
-+							 <&clk IMX8MM_SYS_PLL1_100M>;
-+				power-domains = <&pgc_otg1>;
- 				fsl,usbphy = <&usbphynop1>;
- 				fsl,usbmisc = <&usbmisc1 0>;
- 				status = "disabled";
-@@ -886,8 +889,11 @@
- 				interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MM_CLK_USB1_CTRL_ROOT>;
- 				clock-names = "usb1_ctrl_root_clk";
--				assigned-clocks = <&clk IMX8MM_CLK_USB_BUS>;
--				assigned-clock-parents = <&clk IMX8MM_SYS_PLL2_500M>;
-+				assigned-clocks = <&clk IMX8MM_CLK_USB_BUS>,
-+						  <&clk IMX8MM_CLK_USB_CORE_REF>;
-+				assigned-clock-parents = <&clk IMX8MM_SYS_PLL2_500M>,
-+							 <&clk IMX8MM_SYS_PLL1_100M>;
-+				power-domains = <&pgc_otg2>;
- 				fsl,usbphy = <&usbphynop2>;
- 				fsl,usbmisc = <&usbmisc2 0>;
- 				status = "disabled";
++#define IMX8MM_POWER_DOMAIN_MIPI	0
++#define IMX8MM_POWER_DOMAIN_PCIE	1
++#define IMX8MM_POWER_DOMAIN_USB_OTG1	2
++#define IMX8MM_POWER_DOMAIN_USB_OTG2	3
++#define IMX8MM_POWER_DOMAIN_DDR1	4
++#define IMX8MM_POWER_DOMAIN_GPU2D	5
++#define IMX8MM_POWER_DOMAIN_GPU	6
++#define IMX8MM_POWER_DOMAIN_VPU	7
++#define IMX8MM_POWER_DOMAIN_GPU3D	8
++#define IMX8MM_POWER_DOMAIN_DISP	9
++#define IMX8MM_POWER_VPU_G1		10
++#define IMX8MM_POWER_VPU_G2		11
++#define IMX8MM_POWER_VPU_H1		12
++
+ #endif
 -- 
 2.20.1
 
