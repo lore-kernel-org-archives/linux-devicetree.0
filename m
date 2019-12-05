@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7188BC2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF49C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47BF52464D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1548222525
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 13:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729524AbfLENjP (ORCPT
+        id S1729622AbfLENkA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 08:39:15 -0500
-Received: from andre.telenet-ops.be ([195.130.132.53]:59526 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729430AbfLENjP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 08:39:15 -0500
+        Thu, 5 Dec 2019 08:40:00 -0500
+Received: from laurent.telenet-ops.be ([195.130.137.89]:50732 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729618AbfLENj7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 08:39:59 -0500
 Received: from ramsan ([84.195.182.253])
-        by andre.telenet-ops.be with bizsmtp
-        id aDfD2100V5USYZQ01DfDka; Thu, 05 Dec 2019 14:39:13 +0100
+        by laurent.telenet-ops.be with bizsmtp
+        id aDfx2100N5USYZQ01Dfx3U; Thu, 05 Dec 2019 14:39:58 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1icrLd-000283-Hy; Thu, 05 Dec 2019 14:39:13 +0100
+        id 1icrML-00028C-Mk; Thu, 05 Dec 2019 14:39:57 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1icrLd-0001aH-GT; Thu, 05 Dec 2019 14:39:13 +0100
+        id 1icrML-0001ca-Kl; Thu, 05 Dec 2019 14:39:57 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: gpio: rcar: Document r8a77961 support
-Date:   Thu,  5 Dec 2019 14:39:12 +0100
-Message-Id: <20191205133912.6048-1-geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: i2c: rcar: Document r8a77961 support
+Date:   Thu,  5 Dec 2019 14:39:56 +0100
+Message-Id: <20191205133956.6191-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document support for the GPIO controller in the Renesas R-Car M3-W+
+Document support for the I2C controller in the Renesas R-Car M3-W+
 (R8A77961) SoC.
 
 Update all references to R-Car M3-W from "r8a7796" to "r8a77960", to
@@ -56,23 +55,23 @@ No driver update is needed.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt | 3 ++-
+ Documentation/devicetree/bindings/i2c/renesas,i2c.txt | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-index 41e5fed0f8420d64..10dce84b1545e074 100644
---- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-+++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-@@ -18,7 +18,8 @@ Required Properties:
-     - "renesas,gpio-r8a7793": for R8A7793 (R-Car M2-N) compatible GPIO controller.
-     - "renesas,gpio-r8a7794": for R8A7794 (R-Car E2) compatible GPIO controller.
-     - "renesas,gpio-r8a7795": for R8A7795 (R-Car H3) compatible GPIO controller.
--    - "renesas,gpio-r8a7796": for R8A7796 (R-Car M3-W) compatible GPIO controller.
-+    - "renesas,gpio-r8a7796": for R8A77960 (R-Car M3-W) compatible GPIO controller.
-+    - "renesas,gpio-r8a77961": for R8A77961 (R-Car M3-W+) compatible GPIO controller.
-     - "renesas,gpio-r8a77965": for R8A77965 (R-Car M3-N) compatible GPIO controller.
-     - "renesas,gpio-r8a77970": for R8A77970 (R-Car V3M) compatible GPIO controller.
-     - "renesas,gpio-r8a77980": for R8A77980 (R-Car V3H) compatible GPIO controller.
+diff --git a/Documentation/devicetree/bindings/i2c/renesas,i2c.txt b/Documentation/devicetree/bindings/i2c/renesas,i2c.txt
+index 0660a3eb25474e74..c359965d0724e23f 100644
+--- a/Documentation/devicetree/bindings/i2c/renesas,i2c.txt
++++ b/Documentation/devicetree/bindings/i2c/renesas,i2c.txt
+@@ -17,7 +17,8 @@ Required properties:
+ 	"renesas,i2c-r8a7793" if the device is a part of a R8A7793 SoC.
+ 	"renesas,i2c-r8a7794" if the device is a part of a R8A7794 SoC.
+ 	"renesas,i2c-r8a7795" if the device is a part of a R8A7795 SoC.
+-	"renesas,i2c-r8a7796" if the device is a part of a R8A7796 SoC.
++	"renesas,i2c-r8a7796" if the device is a part of a R8A77960 SoC.
++	"renesas,i2c-r8a77961" if the device is a part of a R8A77961 SoC.
+ 	"renesas,i2c-r8a77965" if the device is a part of a R8A77965 SoC.
+ 	"renesas,i2c-r8a77970" if the device is a part of a R8A77970 SoC.
+ 	"renesas,i2c-r8a77980" if the device is a part of a R8A77980 SoC.
 -- 
 2.17.1
 
