@@ -2,170 +2,106 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7034AC2D0BE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBC9C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D9721744
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBBCE24671
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:55:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hlIfJxJ4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dFoaD7QD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbfLEAqG (ORCPT
+        id S1728121AbfLEAzH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 19:46:06 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38631 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728238AbfLEAqF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 19:46:05 -0500
-Received: by mail-pg1-f195.google.com with SMTP id a33so506056pgm.5
-        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 16:46:05 -0800 (PST)
+        Wed, 4 Dec 2019 19:55:07 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40217 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728098AbfLEAzG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 19:55:06 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q8so714412pfh.7;
+        Wed, 04 Dec 2019 16:55:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=g7Dc3L6ucRDBTOgi1WYw/gKWAHJ0BhR7GlJLT2KOwWU=;
-        b=hlIfJxJ4UQcwyezs5GWGUzTpgBpkXycqViF5s7J9Lbgv7LX5Loh/lFJW26EARxlJS7
-         jQGy+dln8gbBR9ETp7bawc/SUPJ4DGK5qfw9eApXM2bPC8K/wSJANcY+yKbhAg+bDQHx
-         Jb81KyFdr/uon9IeHq8w2COMsphIkRmGm5YYY=
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:cc:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=d6Csj6U0+grfMQyPcI2MRtp14xJZsLe4pPPVYQKDBHg=;
+        b=dFoaD7QDyB4Y4mpD9b/Pe5Yqd6ljHqp6PN3tYKbt/uoug38dguaomQVZPY4XIaYM6Z
+         3xgsWGPgaT1AwfK44TtYAs2Axi+kUl+ggeTwOhHoDZKREcO3r4IuLKdPX0UOHJxKTafZ
+         ryCF73mOMJAnm/Z9fZs7jai9GOriS6O5mYkoBWQGty9mTN0dibhc5YTXG1mh9RaUDXh3
+         WBpGLNlsq9Rb5QO81WRccE6/f0wQ9V3ABR6yqRJzHMkqATj+HonXrrtxtggG4eSOLtke
+         eCXXh3WKIDQ/B2dMtBHtgd1lNlhG/AxhMM7UElNjaIAKlblA5KOyF7qfw8WgDGLwZmLv
+         +08g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g7Dc3L6ucRDBTOgi1WYw/gKWAHJ0BhR7GlJLT2KOwWU=;
-        b=KAEyFQ95e+/EbB0z9McrvL1kMPCLDnWHzzkA+rYYWVqMOij3Gr5e5LxStflZbK/Eg+
-         41hJrSFusBA3TJVDmz/kK0Y7ODPDBuX13rM/eTPUlTijJsufvUHil306Dgg+9aZsq+Rk
-         E3HPc1Cm506xoNzT6UftFXdcG8d1dGXVoDLqwv1ktZ+dMkKb6yjTpVJqlVAuBBoEmhNW
-         tsxE/FJ9ffAelQv4vSeIfsP32u5q/vd+UB9TWAUxXSiPnTpV4/wA63AEQxAFvHyKgsYf
-         DAv0YMq7CuJhhOo9ILSSPA00ufMjoZaipGFxQWFBhNou82Iy76urlwOPVTaWfpzKuiUz
-         WDGQ==
-X-Gm-Message-State: APjAAAWNxyyDYs15zZnOggBFJ30IqblrrBoEc6ExDUKNDVivS6nDqf+p
-        jF9NLWJoSywCsv6+ay5wIujzVg==
-X-Google-Smtp-Source: APXvYqx2X3SI/+sIaJkgoq1wNauTweF2w9MvCcNu9sKGmwlik3upNJqHpW1nTOdh3mFbvDDMr0XIvg==
-X-Received: by 2002:a65:4809:: with SMTP id h9mr6325753pgs.265.1575506765134;
-        Wed, 04 Dec 2019 16:46:05 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id hi2sm7325684pjb.22.2019.12.04.16.46.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2019 16:46:04 -0800 (PST)
-Date:   Wed, 4 Dec 2019 16:46:03 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v1] arm64: dts: sc7180: Add cpufreq HW node for cpu
- scaling
-Message-ID: <20191205004603.GK228856@google.com>
-References: <0101016ed02b6356-5165eaaa-6c54-47ff-a008-821c91831e56-000000@us-west-2.amazonses.com>
+        h=x-gm-message-state:subject:to:references:from:cc:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=d6Csj6U0+grfMQyPcI2MRtp14xJZsLe4pPPVYQKDBHg=;
+        b=YZBzJ9LSQ3J+LgyxMP2rBbdIevCxB2VjB/dQBcXV5PvuV+d0CNk169Zh6JoBKbtj/P
+         HhyqbzP4ziNBsrcYyB0VpsEMpZP/f5rJaTDc3WtEp76WBdRfuYFedzLtSC49W5EEexbf
+         ms/S27X7BS+khTxzhw05ZKDI8ZaWE6gXwXRRhFOBxALrCk0VB0/HYWIvT3XOPsBQ5mqg
+         93ev803iiJAIbuQ+yHLKvIiDQ1drXw8p491hZXwzKf89hI5Kmlj/TFPeHbPqfJZZ+QL6
+         g9Q3W/bC3Pqvg0pDLdiazZCh8xDnP198RJ98ZvwgsTnZAgg2ZovM/Raoj1iXUfUU8toB
+         KxpA==
+X-Gm-Message-State: APjAAAU0j205ZKa7qrvazqOtPCVnEEoix7LJC9KRGSDvrYT3MicAjvEL
+        9byHX1UxKNBG8s7lbMNyV1U=
+X-Google-Smtp-Source: APXvYqw/c86Dl1C8JR0jDUOr+yGX05pbNgzBjrJPb44O3JzjdT+ifVAsuXX3hvfMm3MH64Cy2wuf0w==
+X-Received: by 2002:a63:cb:: with SMTP id 194mr6614885pga.163.1575507306088;
+        Wed, 04 Dec 2019 16:55:06 -0800 (PST)
+Received: from ?IPv6:240d:1a:90a:7900:c9ba:60a6:b93d:a99a? ([240d:1a:90a:7900:c9ba:60a6:b93d:a99a])
+        by smtp.gmail.com with ESMTPSA id o19sm235031pjr.2.2019.12.04.16.55.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Dec 2019 16:55:05 -0800 (PST)
+Subject: Re: Fedora on Raspberry Pi
+To:     Erastus Toe <chukpozohnt@gmail.com>
+References: <940E1B0B-422A-40F0-A779-893133C6405F@gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree-spec@vger.kernel.org,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Message-ID: <a823a227-5c94-47a8-16c7-e363bc40e6ed@gmail.com>
+Date:   Wed, 4 Dec 2019 18:55:00 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <940E1B0B-422A-40F0-A779-893133C6405F@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0101016ed02b6356-5165eaaa-6c54-47ff-a008-821c91831e56-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 09:08:54AM +0000, Taniya Das wrote:
-> cpufreq hw node required to scale CPU frequency on sc7180.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index c0ac0a1..7629995 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -40,6 +40,7 @@
->  			reg = <0x0 0x0>;
->  			enable-method = "psci";
->  			next-level-cache = <&L2_0>;
-> +			qcom,freq-domain = <&cpufreq_hw 0>;
->  			L2_0: l2-cache {
->  				compatible = "cache";
->  				next-level-cache = <&L3_0>;
-> @@ -55,6 +56,7 @@
->  			reg = <0x0 0x100>;
->  			enable-method = "psci";
->  			next-level-cache = <&L2_100>;
-> +			qcom,freq-domain = <&cpufreq_hw 0>;
->  			L2_100: l2-cache {
->  				compatible = "cache";
->  				next-level-cache = <&L3_0>;
-> @@ -67,6 +69,7 @@
->  			reg = <0x0 0x200>;
->  			enable-method = "psci";
->  			next-level-cache = <&L2_200>;
-> +			qcom,freq-domain = <&cpufreq_hw 0>;
->  			L2_200: l2-cache {
->  				compatible = "cache";
->  				next-level-cache = <&L3_0>;
-> @@ -79,6 +82,7 @@
->  			reg = <0x0 0x300>;
->  			enable-method = "psci";
->  			next-level-cache = <&L2_300>;
-> +			qcom,freq-domain = <&cpufreq_hw 0>;
->  			L2_300: l2-cache {
->  				compatible = "cache";
->  				next-level-cache = <&L3_0>;
-> @@ -91,6 +95,7 @@
->  			reg = <0x0 0x400>;
->  			enable-method = "psci";
->  			next-level-cache = <&L2_400>;
-> +			qcom,freq-domain = <&cpufreq_hw 0>;
->  			L2_400: l2-cache {
->  				compatible = "cache";
->  				next-level-cache = <&L3_0>;
-> @@ -103,6 +108,7 @@
->  			reg = <0x0 0x500>;
->  			enable-method = "psci";
->  			next-level-cache = <&L2_500>;
-> +			qcom,freq-domain = <&cpufreq_hw 0>;
->  			L2_500: l2-cache {
->  				compatible = "cache";
->  				next-level-cache = <&L3_0>;
-> @@ -115,6 +121,7 @@
->  			reg = <0x0 0x600>;
->  			enable-method = "psci";
->  			next-level-cache = <&L2_600>;
-> +			qcom,freq-domain = <&cpufreq_hw 1>;
->  			L2_600: l2-cache {
->  				compatible = "cache";
->  				next-level-cache = <&L3_0>;
-> @@ -127,6 +134,7 @@
->  			reg = <0x0 0x700>;
->  			enable-method = "psci";
->  			next-level-cache = <&L2_700>;
-> +			qcom,freq-domain = <&cpufreq_hw 1>;
->  			L2_700: l2-cache {
->  				compatible = "cache";
->  				next-level-cache = <&L3_0>;
-> @@ -286,6 +294,17 @@
->  				status = "disabled";
->  			};
->  		};
-> +
-> +		cpufreq_hw: cpufreq@18323000 {
-> +			compatible = "qcom,cpufreq-hw";
-> +			reg = <0 0x18323000 0 0x1400>, <0 0x18325800 0 0x1400>;
-> +			reg-names = "freq-domain0", "freq-domain1";
-> +
-> +			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
-> +			clock-names = "xo", "alternate";
-> +
-> +			#freq-domain-cells = <1>;
-> +		};
->  	};
-> 
->  	timer {
++ linux device tree mail list
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+If you reply to this email, please remove devicetree-spec from the To: list.
+
+On 11/3/19 6:59 AM, Erastus Toe wrote:
+> Hello all, 
+> 
+> I’m in the process of setting up Fedora on RPi. More especially, I’m
+> trying to get Sense Hat to work. But on the Fedora wiki, it is said
+> that there’s a problem with device tree overlay. I’m very new to
+> device tree and I’m still doing my research. It is also said that
+> this group is working on this problem.
+> 
+> Is it possible for any to shin some light on this for me please? I’m
+> a little lost here.
+> Thank you,
+> C. Erastus Toe 
+> 
+
+The devicetree-spec mail list is for discussion of the specification.
+I added the linux kernel devicetree mail list to the distribution list.
+That is the list you should use for Linux related devicetree questions.
+
+The short answer to your RPi question is that you should use uboot
+to apply any devicetree overlay that you want to use.  The Linux
+kernel implementation of loading overlays after the kernel has
+booted is an incomplete work in progress.
+
+-Frank
