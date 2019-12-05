@@ -2,131 +2,101 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AFAC2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 19:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00404C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 20:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC2024653
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 19:08:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575572905;
-	bh=40P9n3emZPz0ZfLgusgo/yMSIxlr6E2qcaFz2UtC+Gk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jaQazHhzJgaTQrJw4st6PNGlx+eQK0U8WMZKgFRuDdugoJl/FrU1LIUTlwUxMhfOJ
-	 WXP711iKWyG/nSO124QKSZwsebeUibVl9MLUReKbN1SuY/Bv4LUub9CKIfzwzM2/xj
-	 gF8xkJxYCmbwaWE4TXPSOCrbIhQdVEp5X18S1qwM=
+	by mail.kernel.org (Postfix) with ESMTP id C0C2120707
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 20:23:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ipIsPEHW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbfLETIZ (ORCPT
+        id S1729417AbfLEUXG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 14:08:25 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44281 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfLETIZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 14:08:25 -0500
-Received: by mail-ot1-f68.google.com with SMTP id x3so3548152oto.11;
-        Thu, 05 Dec 2019 11:08:24 -0800 (PST)
+        Thu, 5 Dec 2019 15:23:06 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44718 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfLEUXG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 15:23:06 -0500
+Received: by mail-pl1-f193.google.com with SMTP id bh2so578346plb.11
+        for <devicetree@vger.kernel.org>; Thu, 05 Dec 2019 12:23:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jRayL2fPl6QXTU1X2IWavTR7Yo2eBg/CqXK33XYBy24=;
+        b=ipIsPEHW5UTXPYiz3f6QtrmZgRxejUQdh7nqa7uCLrBiB1pCIUwQLjKY+Hx3W8tpoG
+         4JZH2HQj0kzSPqYsqUvaQY7ExySSj+PnYoqpRE0lr5b+1x5913Xotg9pssTMfbRZZGGH
+         5pgKb163uie0tO5bmMpj/imErYbNd+oMzjpV0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GhI01COZ1PM4IuNCQYroNt43ak9q+ZJEl+5PK/vzrwc=;
-        b=Cpxk46pnI8ZCtT+1E/uZ9TbR/h1P8SsJPaKYiye7X/GQYWLPdjqvaz+oMhdikno/iS
-         FYrOI5mmb91YVoXZdVKnL55dVZVohuamF3PwGekZEuLfwbpQ2C4Up8C2Ggj+N4pat8rx
-         5uRz/YjEjnxrJw5lLbFuy636O9pvWMbuVXeBACKUjzort/4Uaml0fbFwaj8tjlcNJa+/
-         WhcfIFRGLgIO/tXMDp6f8FkRV+D5rJq1U4FFLyZOoLDFsvE3OJ5+xpzW9e+pxP/nMXms
-         vKwKedlnpTE+7BU60076cBgCR2IVy7lmRaMZqQXLeo3dHNChCy3pHypV0c0U4jTSxxGF
-         JTHQ==
-X-Gm-Message-State: APjAAAUr830AiXyS3XHnFbyM+/j5hENZ/YJJyoJqr8sYPLZYyt52REHA
-        lbNaU8VTe2dn7NTuiwHzKQ==
-X-Google-Smtp-Source: APXvYqyrDf3SjBOgDwQzOa4/THONdCOmBohqUk4Y5DGydGiSs0Q8JEOerKtxomNcothMl7/fKTTrlA==
-X-Received: by 2002:a9d:7357:: with SMTP id l23mr7568607otk.10.1575572903777;
-        Thu, 05 Dec 2019 11:08:23 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w8sm2157401ote.80.2019.12.05.11.08.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 11:08:22 -0800 (PST)
-Date:   Thu, 5 Dec 2019 13:08:21 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     freddy.hsin@mediatek.com
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wim@linux-watchdog.org,
-        linux@roeck-us.net, matthias.bgg@gmail.com,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, Chang-An.Chen@mediatek.com,
-        wsd_upstream@mediatek.com
-Subject: Re: [PATCH v1 4/4] dt-binding: power: reset: Add documentation for
- MTK RGU (Reset Gernation Unit) reboot driver
-Message-ID: <20191205190821.GA25233@bogus>
-References: <1574746490-625-1-git-send-email-freddy.hsin@mediatek.com>
- <1574746490-625-5-git-send-email-freddy.hsin@mediatek.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jRayL2fPl6QXTU1X2IWavTR7Yo2eBg/CqXK33XYBy24=;
+        b=LOfj2lwfdsq0TXwGHP59vuSeY6HudmmNmsGy5E4wUV+zg4YR2d1gTr8TTCV6vZq8RZ
+         MQDR3EbyhTRneyMcXalOKFI2NolplgHwWIECNNlhfsUUaweUlKyNV+GZKPQ2qlg+o/qB
+         8TF3NmH44AFmgfn8puFF914pQYhxsp9ryVy1PM/u5lhX4LioiwZ1Xw0uUYo3IR0Klzgt
+         LTXdxkdknUpNwTvA4GJj1s5Xowt/YvnTnMA3ER7qMTO/6ewsxyyuzhK4i6c9ufX3oJS6
+         IZcr4iBjHjwcj489yQu/pevkaNKRzXcbRYpJBB495s81xJlom5KqLbfkyskUG2T1Dlsj
+         lsAQ==
+X-Gm-Message-State: APjAAAWTc6kTcLbGwMTxSgigJF1lGCFMJdu+e/BQW4qJYURjY4qODSwN
+        knhcnZWN8G4k3Ckb0vBgeeGclg==
+X-Google-Smtp-Source: APXvYqyhuW24FCLFzDv7K5KLFR+I/VPosr2uRJN/oZqO0hNSV+b/CSnMTJFLXtEYNnOjNboxSKC8AQ==
+X-Received: by 2002:a17:90a:d344:: with SMTP id i4mr11653491pjx.42.1575577385316;
+        Thu, 05 Dec 2019 12:23:05 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id o12sm560691pjf.19.2019.12.05.12.23.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2019 12:23:04 -0800 (PST)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org,
+        Rocky Liao <rjliao@codeaurora.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Harish Bandi <c-hbandi@codeaurora.org>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: [PATCH] dt-bindings: net: bluetooth: Add compatible string for WCN3991
+Date:   Thu,  5 Dec 2019 12:22:59 -0800
+Message-Id: <20191205122241.1.I6c86a40ce133428b6fab21f24f6ff6fec7e74e62@changeid>
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574746490-625-5-git-send-email-freddy.hsin@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 01:34:50PM +0800, freddy.hsin@mediatek.com wrote:
-> From: Freddy Hsin <freddy.hsin@mediatek.com>
-> 
-> Add documentation for MTK RGU (Reset Generation Unit) reboot driver.
-> 
-> Signed-off-by: Freddy Hsin <freddy.hsin@mediatek.com>
-> ---
->  .../devicetree/bindings/power/reset/mtk-reboot.txt |   30 ++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/mtk-reboot.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/reset/mtk-reboot.txt b/Documentation/devicetree/bindings/power/reset/mtk-reboot.txt
-> new file mode 100644
-> index 0000000..708d351
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/mtk-reboot.txt
-> @@ -0,0 +1,30 @@
-> +Generic MTK RGU mapped register reset driver
-> +
-> +This is a reset driver using toprgu to map its non-volatile register.
-> +The reset is generally performed with a write to the non-volatile register
-> +defined by the register map pointed by toprgu reference plus the offset
-> +with the mask defined in the reboot-mode node.
-> +
-> +Required properties:
-> +- compatible: should contain "toprgu-reboot-mode"
+Commit 7d250a062f75 ("Bluetooth: hci_qca: Add support for Qualcomm
+Bluetooth SoC WCN3991") added the compatible string 'qcom,wcn3991-bt'
+to the Qualcomm Bluetooth driver, however the string is not listed
+in the binding. Add the 'qcom,wcn3991-bt' to the supported compatible
+strings.
 
-What's wrong with syscon-reboot-mode?
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
 
-> +- regmap: this is phandle to the register map node
+ Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Make this node a child node of the phandle and get rid of this.
+diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+index 68b67d9db63a3..999aceadb9853 100644
+--- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
++++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+@@ -11,6 +11,7 @@ Required properties:
+  - compatible: should contain one of the following:
+    * "qcom,qca6174-bt"
+    * "qcom,wcn3990-bt"
++   * "qcom,wcn3991-bt"
+    * "qcom,wcn3998-bt"
+ 
+ Optional properties for compatible string qcom,qca6174-bt:
+-- 
+2.24.0.393.g34dc348eaf-goog
 
-> +- offset: offset in the register map for the reboot-mode register (in bytes)
-> +- mask: the reset value written to the reboot register (32 bit access)
-> +
-> +Examples:
-> +	reboot-mode {
-> +	   compatible = "toprgu-reboot-mode";
-> +	   regmap = <&toprgu>;
-> +	   offset = <0x24>;
-> +	   mask = <0xF>;
-> +	};
-> +
-> +Optional properties - reboot mode value that will keep in toprgu nonrst RG:
-> +- mode-charger = <BOOT_CHARGER>;
-> +- mode-recovery = <BOOT_RECOVERY>;
-> +- mode-bootloader = <BOOT_BOOTLOADER>;
-> +- mode-dm-verity-dev-corrupt = <BOOT_DM_VERITY>;
-> +- mode-kpoc = <BOOT_KPOC>;
-> +- mode-ddr-reserve = <BOOT_DDR_RSVD>;
-> +- mode-meta = <BOOT_META>;
-> +- mode-rpmbpk = <BOOT_RPMBPK>;
-> -- 
-> 1.7.9.5
