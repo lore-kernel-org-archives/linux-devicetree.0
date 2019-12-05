@@ -2,213 +2,147 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2841C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092FDC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60ECE24652
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2CAB22525
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575558761;
-	bh=JzjNkX/2Nbo6GlblPPluACsjcHZsfz/p6Nojkr11NQA=;
+	s=default; t=1575559014;
+	bh=WIK65c6WJMswuB1/yzsaX0B0TqDvDhjVpIdXeK0c/Ro=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YOikV0wDipKvAIjnv/5I+wM1WedHm9ZH2g5s51+0Dk4ThTwynmQsFrtNR0iUTf42w
-	 7uCqLohSTwEy148f7L2OELKI5H2GkFTjCzho7AE6/wJKDWJwhIDTgywbQ+8Dlsmy0m
-	 fcZI8v7a1cny+DMwnXRHNK5vXADu9xSDD+E0VqD8=
+	b=tMr0Tq/hw7gll1Zutubxt8YDo3BKPgt3ZG1FyPAcR2wNRLyge55Yk6T0ekcEyd+Wr
+	 Hft0x5Cr1x3PC/YeTUdbZooldJC+DcLx7i0k4c8oJYPrvar3eHArsDKvSHe+FLz8jZ
+	 Fyod7uE+hLHy/oOc+RvPb8Xe6tf6G4AQxJCWuPZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbfLEPMk (ORCPT
+        id S1729815AbfLEPQu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 10:12:40 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44098 "EHLO
+        Thu, 5 Dec 2019 10:16:50 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45889 "EHLO
         mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLEPMk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 10:12:40 -0500
-Received: by mail-oi1-f194.google.com with SMTP id d62so2999560oia.11;
-        Thu, 05 Dec 2019 07:12:39 -0800 (PST)
+        with ESMTP id S1725909AbfLEPQu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 10:16:50 -0500
+Received: by mail-oi1-f194.google.com with SMTP id v10so3002513oiv.12;
+        Thu, 05 Dec 2019 07:16:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ct3cztTVPY5fqFtFxY79enKS5M3PxUPj5Gr6za0FKzc=;
-        b=RNRAYxSWpyztyJp4emajf5yG2rj4ydxeUA5TIUulBhEsLpXEsEJRVUih/mbvfMTp2t
-         bj6cmhsvRpRprjIZwZax9srD2XVB+8doGDHpZN8zve52FAGK+LP4OGFczpFoBq2QDdw3
-         x9eikJ7a7cV+PmdWeB0I669B9pZu+M6Wx1i9lKHU3aImRkCn2lCqvaO1eLjd1VxydMoe
-         PvbIYKkA1WQ3Y/iWKcsG1duFr8QVN/TiV21npghlgUio9ukH3Zu+gYTAejHwXXntoCFR
-         mTbBXajcawgIZGc0GK/K3JLptI1w7BZh/+9gdZS+eOXWnRtRrPteUKYz1k4gdeQMm7o/
-         1yNg==
-X-Gm-Message-State: APjAAAVH3NO+asi2m16qUt5uSC2W5NSSrArhIG1qnPbsrzbrptQo1FFY
-        y4Irab6nCVvQTX9w2ldqww==
-X-Google-Smtp-Source: APXvYqyEn64lxv2I6QD1cuSgRAQUS0/AMs3S4yVo81pvB0lnM7FD5eedCJJ/HwIkntkujI43KeChfQ==
-X-Received: by 2002:a05:6808:996:: with SMTP id a22mr7208327oic.146.1575558759243;
-        Thu, 05 Dec 2019 07:12:39 -0800 (PST)
+        bh=X30L2/SCmmy4K42AOTapqg9tKMhPdm3eZC6cSR8du98=;
+        b=XQz2YfLztJW5y4gcuRfrtmsitouZOdzhCplZMmeaCleNdJjmWb3bddIdCAl+8u1Xl7
+         77ZWFoPvtz2oJfChCfB086yeH9SZxxoSroI5S5rYUlLxLjhra6rx5Q1cGykOkRyMZ1LK
+         PsuV9Jv8LVvw+5ODQRAZ3/z/TZYUDghMFn5jv3sUnZ5Af/2RqNaRu0FjIEsZk+OZnq/F
+         K5IbRqz4oyfPPp2cqkiChVfc2WCFnfc96q8dxq1UGEGlB0s2hHXf8iiackjQywyXkZd/
+         VLs3rupKb8+ZtbA5ddGa2IkYhvm+hZEP7311+lqaileHg2MmmaC1ScpoTOOKZnb+atOv
+         hzCA==
+X-Gm-Message-State: APjAAAWTLRXZsZ8LVWae+3EAMqyhg088stj1UH/VdD1QmYA2vCojIXzS
+        jtUhbK9Vg0DqhMGKwulLvQ==
+X-Google-Smtp-Source: APXvYqzHqt/rY6XQcuU7ueo8b9ybugfDYukAes39oBqOVVyEu3v063qYQtF2pekF0yMjPZb9r5Dd2A==
+X-Received: by 2002:aca:f083:: with SMTP id o125mr7281931oih.122.1575559009391;
+        Thu, 05 Dec 2019 07:16:49 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m7sm2064241otl.20.2019.12.05.07.12.37
+        by smtp.gmail.com with ESMTPSA id e17sm3469100otq.58.2019.12.05.07.16.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 07:12:38 -0800 (PST)
-Date:   Thu, 5 Dec 2019 09:12:37 -0600
+        Thu, 05 Dec 2019 07:16:48 -0800 (PST)
+Date:   Thu, 5 Dec 2019 09:16:48 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Orson Zhai <orson.zhai@spreadtrum.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Orson Zhai <orson.zhai@unisoc.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kevin.tang@unisoc.com, baolin.wang@unisoc.com,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: Re: [PATCH V2 1/2] dt-bindings: syscon: Add syscon-names to refer to
- syscon easily
-Message-ID: <20191205151237.GA30195@bogus>
-References: <20191120154148.22067-1-orson.zhai@unisoc.com>
- <20191120154148.22067-2-orson.zhai@unisoc.com>
- <20191204163830.GA25135@bogus>
- <CAK8P3a3_r6z6Qk133=4gUzJ0rYmMH7sDDqpEF8ZVXS_bc3OtkQ@mail.gmail.com>
- <20191204192639.GA15786@bogus>
- <CAK8P3a165hqB=5LmMiTPGJxvsSJqrbFf5EC9WnqtFRYFok+xKw@mail.gmail.com>
- <20191205125539.GH21613@lenovo>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: document the fsl-sai driver
+Message-ID: <20191205151648.GA5680@bogus>
+References: <20191122235622.8818-1-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191205125539.GH21613@lenovo>
+In-Reply-To: <20191122235622.8818-1-michael@walle.cc>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 08:55:39PM +0800, Orson Zhai wrote:
-> Hi Arnd & Rob,
+On Sat, Nov 23, 2019 at 12:56:21AM +0100, Michael Walle wrote:
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  .../bindings/clock/fsl,sai-clock.yaml         | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml
 > 
-> On Thu, Dec 05, 2019 at 10:20:03AM +0100, Arnd Bergmann wrote:
-> > On Wed, Dec 4, 2019 at 8:26 PM Rob Herring <robh@kernel.org> wrote:
-> > > On Wed, Dec 04, 2019 at 06:00:17PM +0100, Arnd Bergmann wrote:
-> > > > On Wed, Dec 4, 2019 at 5:38 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > > > I think generally speaking this would be useful for random registers that
-> > > > logically belong to one device but are grouped with other unrelated
-> > > > registers in a syscon, and that are in a different register offset for
-> > > > each chip that has them. Using named properties instead of a list
-> > > > of phandle/arg tuples with names is clearly a simpler alternative
-> > > > and more like we do it today, but I can also see some API simplification
-> > > > with Orson's patch without the binding getting out of hand.
-> > >
-> > > I understand when a phandle to a syscon is used. That's nothing new.
-> > > What's special about Unisoc SoC that needs something new/different?
-> > > I saw there's a large number of syscons, but I don't understand what's
-> > > in them.
-> > >
-> > > If the API is this:
-> > >
-> > > struct regmap *syscon_regmap_lookup_by_name(struct device_node *np,
-> > >                                        const char *name,
-> > >                                        int arg_count, __u32 *out_args)
-> > >
-> > > How is 'name' being an entry in syscon-names simpler than just being the
-> > > property name? The implementation for the latter would certainly be
-> > > simpler.
-> > >
-> > > It also makes the property unparseable without knowledge outside of the
-> > > DT (i.e. in the driver). I suppose if the number of cells for each entry
-> > > is fixed, we could count the number of syscon-names entries to figure
-> > > out the stride. But then if one entry needs a lot of cells, then they
-> > > all have to have padding cells.
-> >
-> > Good point. The syscon_regmap_lookup_by_name() interface would
-> > work just as well when passing a property name compared to
-> > a name listed in another property, and this would still be more in
-> > line with what we do on other SoCs.
-> >
-> 
-> udx710-modem.dtsi:69:   syscons = <&pmu_apb_regs 0x18 0x2000000>,
-> udx710-modem.dtsi-70-           <&pmu_apb_regs 0x544 0x1>,
-> udx710-modem.dtsi-71-           <&aon_apb_regs 0x218 0x7e00>,
-> udx710-modem.dtsi-72-           <&pmu_apb_regs 0xb0 0x20000>,
-> udx710-modem.dtsi-73-           <&pmu_apb_regs 0xff 0x100>;
-> udx710-modem.dtsi:74:   syscon-names = "shutdown", "deepsleep", "corereset",
-> udx710-modem.dtsi-75-                  "sysreset", "getstatus";
+> diff --git a/Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml b/Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml
+> new file mode 100644
+> index 000000000000..7116c8bc24d3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml
+> @@ -0,0 +1,48 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Reset at least has a standard binding.
+Dual license new bindings please: (GPL-2.0-only OR BSD-2-Clause)
 
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/clock/fsl,sai-clock.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale SAI bitclock-as-a-clock binding
+> +
+> +maintainers:
+> +  - Michael Walle <michael@walle.cc>
+> +
+> +description: |
+> +  It is possible to use the BCLK pin of a SAI module as a generic clock
+> +  output. Some SoC are very constrained in their pin multiplexer
+> +  configuration. Eg. pins can only be changed groups. For example, on the
+> +  LS1028A SoC you can only enable SAIs in pairs. If you use only one SAI,
+> +  the second pins are wasted. Using this binding it is possible to use the
+> +  clock of the second SAI as a MCLK clock for an audio codec, for example.
+> +
+> +  This is a composite of a gated clock and a divider clock.
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,vf610-sai-clock
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  '#clock-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - '#clock-cells'
+> +
 
-> ud710.dtsi:1268:        syscons = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PRESENT_32K>,
-> ud710.dtsi-1269-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PROTECT_32K>,
-> ud710.dtsi-1270-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_EN_32K>,
-> ud710.dtsi-1271-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_THD_32K>;
-> ud710.dtsi:1272:        syscon-names =  "sd_detect_pol",
-> ud710.dtsi-1273-                        "sd_hotplug_protect_en",
-> ud710.dtsi-1274-                        "sd_hotplug_debounce_en",
-> ud710.dtsi-1275-                        "sd_hotplug_debounce_cn";
+Add:
 
-This looks to me like it should be a single phandle. How many different 
-register layouts across how many SoCs do you need to support?
+additionalProperties: false
 
-> > The only advantage I can see in having a list of phandle/arg tuples
-> > rather than a set of properties is that it is a slightly more compact
-> > representation in source form, but otherwise they should be equivalent
-> 
-> Yes, I agree.
-> They are equivalent.
-> 
-> But sprd SoCs have too many registers and the representation might matter.
-> Here's some real code from local,
-> 
-> orca.dtsi:1276:         syscons = <&pmu_apb_regs REG_PMU_APB_RF_PD_AUDCP_SYS_CFG MASK_PMU_APB_RF_PD_AUDCP_SYS_FORCE_SHUTDOWN >,
-> orca.dtsi-1277-                 <&pmu_apb_regs REG_PMU_APB_RF_PD_AUDCP_AUDDSP_CFG MASK_PMU_APB_RF_PD_AUDCP_AUDDSP_AUTO_SHUTDOWN_EN>,
-> orca.dtsi-1278-                 <&pmu_apb_regs REG_PMU_APB_RF_SLEEP_CTRL MASK_PMU_APB_RF_AUDCP_FORCE_DEEP_SLEEP>,
-> orca.dtsi-1279-                 <&pmu_apb_regs REG_PMU_APB_RF_CP_SOFT_RST MASK_PMU_APB_RF_AUDCP_AUDDSP_SOFT_RST>,
-> orca.dtsi-1280-                 <&pmu_apb_regs REG_PMU_APB_RF_CP_SOFT_RST MASK_PMU_APB_RF_AUDCP_SYS_SOFT_RST>,
-> orca.dtsi-1281-                 <&pmu_apb_regs REG_PMU_APB_RF_SOFT_RST_SEL MASK_PMU_APB_RF_SOFT_RST_SEL>,
-> orca.dtsi-1282-                 <&pmu_apb_regs REG_PMU_APB_RF_PWR_STATUS3_DBG MASK_PMU_APB_RF_PD_AUDCP_SYS_STATE>,
-> orca.dtsi-1283-                 <&pmu_apb_regs REG_PMU_APB_RF_PWR_STATUS3_DBG MASK_PMU_APB_RF_PD_AUDCP_AUDDSP_STATE>,
-> orca.dtsi-1284-                 <&pmu_apb_regs REG_PMU_APB_RF_SLEEP_STATUS MASK_PMU_APB_RF_AUDCP_SLP_STATUS>,
-> --
-> orca.dtsi:1288:         syscon-names = "sysshutdown", "coreshutdown", "deepsleep", "corereset",
-> orca.dtsi-1289-                 "sysreset", "reset_sel", "sysstatus", "corestatus", "sleepstatus",
-> orca.dtsi-1290-                 "bootprotect", "bootvector", "bootaddress_sel";
+> +examples:
+> +  - |
+> +    mclk: clock-mclk@f130080 {
+> +        compatible = "fsl,vf610-sai-clock";
+> +        reg = <0x0 0xf130080 0x0 0x80>;
 
-Again, reset has standard binding. 
+Examples are built now and this will fail because the default 
+#address-cells and #size-cells are 1.
 
-Also consider if you really need to access all of these vs. assuming a 
-fixed mode that the firmware/bootloader sets up.
-
-> ud710.dtsi:1268:        syscons = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PRESENT_32K>,
-> ud710.dtsi-1269-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PROTECT_32K>,
-> ud710.dtsi-1270-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_EN_32K>,
-> ud710.dtsi-1271-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_THD_32K>;
-> ud710.dtsi:1272:        syscon-names =  "sd_detect_pol",
-> ud710.dtsi-1273-                        "sd_hotplug_protect_en",
-> ud710.dtsi-1274-                        "sd_hotplug_debounce_en",
-> ud710.dtsi-1275-                        "sd_hotplug_debounce_cn";
+> +        #clock-cells = <0>;
+> +        clocks = <&parentclk>;
+> +    };
+> -- 
+> 2.20.1
 > 
-> Compare to following,
-> 
-> sd_hotplug_protect_en-syscon = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PRESENT_32K>;
-> sd_hotplug_debounce_en-syscon = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PROTECT_32K>;
-> sd_hotplug_debounce_cn-syscon = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_THD_32K>;
-> .....
-> 
-> For me, my choice would be the former.
-> It looks more clear.
-> 
-> > and agree about this being harder to parse in an automated way.
-> >
-> > Orson, do you see any other reason for the combined property?
-> No other reason.
-> 
-> > If not, could you respin the series once more with
-> > syscon_regmap_lookup_by_name() replaced by something like:?
-> >
-> > struct regmap *
-> > syscon_regmap_lookup_args_by_phandle(struct device_node *np,
-> >                                         const char *property,
-> >                                         int arg_count, __u32 *out_args)
-> 
-> I like this idea. syscon_regmap_lookup_by_phandle_args() would be better?
-> 
-> May I impelement them both?
-
-No.
-
-Rob
