@@ -2,87 +2,266 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2847BC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 21:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB98C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 22:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E114821835
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 21:56:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575582992;
-	bh=DnPD3CnDhreal0N+3axZFhS0u8r08OCQwqV4+jzEAzU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eM0nzZwI257fMeDD+4r4Y6ZiSPiBGxdNnb2Z9n1zGmANeBv6exIAtlIdzaOf0em+P
-	 iS87IeSxyU2y2scEZWMG67ORy2LDlRQ7zPlGDSpqukfVcQLe85vFOD6/JTPgeO9d49
-	 xaMEotKbbIT6/NzMCNqgWdvj3erh+WUQEwn88Mgg=
+	by mail.kernel.org (Postfix) with ESMTP id D6DFC2464E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 22:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfLEV4b (ORCPT
+        id S1729739AbfLEWX4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 16:56:31 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35390 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfLEV4b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 16:56:31 -0500
-Received: by mail-oi1-f193.google.com with SMTP id k196so4270106oib.2;
-        Thu, 05 Dec 2019 13:56:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+4jN+XaXHwrYJI+muu2FvEZSPfGj9LIVkbxEwDHYMas=;
-        b=BD6GPwcMe0BLBUvudzCr/chkM/YfW+yRM2U+Jxya9K7lPf4ThUT7+8Umyz5e/ucNFA
-         MtC+iCzrzM1tsp/0DuoPaKbrxkmtSyWkRtxvpEqtozMVRDqiIf7uLYKgY9aIJSEeBjA2
-         XsB16DcxxiqhMDCYWJ6GB5cTyqT9KGFNkLNyBZcaxNEejmO8nv1k7DyO28rKxLJYLuzg
-         GQUJlAWkgbbrjy3+aEcJKFdWJiK2rGJTr/tewnTojwUwTrdrLobARKTGLVfOox6Aj2sM
-         vbIdjkj1xAodWF4/m9PpFmrjUHGSKtn3p8YuPJhXCQR4p/ZSHQFbrh2Yz2SMD+Waqenj
-         VK2w==
-X-Gm-Message-State: APjAAAWHxbrPG3yju3F/04X+EfBGmo5F0PNaVUVvgAqfKuDrFET35565
-        AfCottFn+PNyWHMigePqPg==
-X-Google-Smtp-Source: APXvYqwnyU36jjBCPs3lGB+ujZ9geaCsahZP028XU/TWYqFvFZtwklN3E7FkUeJyL4g2H8dTgny28g==
-X-Received: by 2002:aca:889:: with SMTP id 131mr9140897oii.3.1575582990359;
-        Thu, 05 Dec 2019 13:56:30 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o2sm4026571oih.19.2019.12.05.13.56.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2019 13:56:29 -0800 (PST)
-Date:   Thu, 5 Dec 2019 15:56:29 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
-        linux-kernel@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH] dt-bindings: net: ti: cpsw-switch: update to fix comments
-Message-ID: <20191205215629.GA32427@bogus>
-References: <20191127155526.22746-1-grygorii.strashko@ti.com>
+        Thu, 5 Dec 2019 17:23:56 -0500
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:57119 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfLEWX4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 17:23:56 -0500
+X-Originating-IP: 78.193.40.249
+Received: from localhost (unknown [78.193.40.249])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 8E995E0007;
+        Thu,  5 Dec 2019 22:23:53 +0000 (UTC)
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Kamel Bouhara <kamel.bouhara@bootlin.com>
+Subject: [PATCH v2] ARM: dts: at91: rearrange kizbox dts using aliases nodes
+Date:   Thu,  5 Dec 2019 23:23:44 +0100
+Message-Id: <20191205222344.1367147-1-kamel.bouhara@bootlin.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127155526.22746-1-grygorii.strashko@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 27 Nov 2019 17:55:26 +0200, Grygorii Strashko wrote:
-> After original patch was merged there were additional comments/requests
-> provided by Rob Herring [1]. Mostly they are related to json-schema usage,
-> and this patch fixes them. Also SPDX-License-Identifier has been changed to
-> (GPL-2.0-only OR BSD-2-Clause) as requested.
-> 
-> [1] https://lkml.org/lkml/2019/11/21/875
-> Fixes: ef63fe72f698 ("dt-bindings: net: ti: add new cpsw switch driver bindings")
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->  .../bindings/net/ti,cpsw-switch.yaml          | 20 +++++++------------
->  1 file changed, 7 insertions(+), 13 deletions(-)
-> 
+Use aliases nodes to easy kizbox dts readability.
 
-Applied, thanks.
+Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+---
+Changes in v2:
+	- Fixed some missing aliases label from dtsi
 
-Rob
+ arch/arm/boot/dts/at91-kizbox.dts  | 172 ++++++++++++++---------------
+ arch/arm/boot/dts/at91sam9260.dtsi |   2 +-
+ 2 files changed, 85 insertions(+), 89 deletions(-)
+
+diff --git a/arch/arm/boot/dts/at91-kizbox.dts b/arch/arm/boot/dts/at91-kizbox.dts
+index 90996eaf73b2..644009a157d6 100644
+--- a/arch/arm/boot/dts/at91-kizbox.dts
++++ b/arch/arm/boot/dts/at91-kizbox.dts
+@@ -28,85 +28,6 @@
+ 		};
+ 	};
+
+-	ahb {
+-		apb {
+-			tcb0: timer@fffa0000 {
+-				timer@0 {
+-					compatible = "atmel,tcb-timer";
+-					reg = <0>, <1>;
+-				};
+-
+-				timer@2 {
+-					compatible = "atmel,tcb-timer";
+-					reg = <2>;
+-				};
+-			};
+-
+-			macb0: ethernet@fffc4000 {
+-				phy-mode = "mii";
+-				pinctrl-0 = <&pinctrl_macb_rmii
+-				             &pinctrl_macb_rmii_mii_alt>;
+-				status = "okay";
+-			};
+-
+-			usart3: serial@fffd0000 {
+-				status = "okay";
+-			};
+-
+-			dbgu: serial@fffff200 {
+-				status = "okay";
+-			};
+-
+-			watchdog@fffffd40 {
+-				timeout-sec = <15>;
+-				atmel,max-heartbeat-sec = <16>;
+-				atmel,min-heartbeat-sec = <0>;
+-				status = "okay";
+-			};
+-		};
+-
+-		usb0: ohci@500000 {
+-			num-ports = <1>;
+-			status = "okay";
+-		};
+-
+-		ebi: ebi@10000000 {
+-			status = "okay";
+-
+-			nand_controller: nand-controller {
+-				status = "okay";
+-				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
+-				pinctrl-names = "default";
+-
+-				nand@3 {
+-					reg = <0x3 0x0 0x800000>;
+-					rb-gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
+-					cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
+-					nand-bus-width = <8>;
+-					nand-ecc-mode = "soft";
+-					nand-on-flash-bbt;
+-					label = "atmel_nand";
+-
+-					partitions {
+-						compatible = "fixed-partitions";
+-						#address-cells = <1>;
+-						#size-cells = <1>;
+-
+-						bootstrap@0 {
+-							label = "bootstrap";
+-							reg = <0x0 0x20000>;
+-						};
+-
+-						ubi@20000 {
+-							label = "ubi";
+-							reg = <0x20000 0x7fe0000>;
+-						};
+-					};
+-				};
+-			};
+-		};
+-	};
+-
+ 	gpio_keys {
+ 		compatible = "gpio-keys";
+ 		#address-cells = <1>;
+@@ -127,15 +48,6 @@
+ 		};
+ 	};
+
+-	i2c-gpio-0 {
+-		status = "okay";
+-
+-		rtc: pcf8563@51 {
+-			compatible = "nxp,pcf8563";
+-			reg = <0x51>;
+-		};
+-	};
+-
+ 	pwm_leds {
+ 		compatible = "pwm-leds";
+
+@@ -179,3 +91,87 @@
+ 			     &pinctrl_tcb1_tiob0>;
+ 	};
+ };
++
++&tcb0 {
++	timer@0 {
++		compatible = "atmel,tcb-timer";
++		reg = <0>, <1>;
++	};
++
++	timer@2 {
++		compatible = "atmel,tcb-timer";
++		reg = <2>;
++	};
++};
++
++&ebi {
++	status = "okay";
++};
++
++&nand_controller {
++	status = "okay";
++	pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
++	pinctrl-names = "default";
++
++	nand@3 {
++		reg = <0x3 0x0 0x800000>;
++		rb-gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
++		cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
++		nand-bus-width = <8>;
++		nand-ecc-mode = "soft";
++		nand-on-flash-bbt;
++		label = "atmel_nand";
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			bootstrap@0 {
++				label = "bootstrap";
++				reg = <0x0 0x20000>;
++			};
++
++			ubi@20000 {
++				label = "ubi";
++				reg = <0x20000 0x7fe0000>;
++			};
++		};
++	};
++};
++
++&macb0 {
++	phy-mode = "mii";
++	pinctrl-0 = <&pinctrl_macb_rmii
++		     &pinctrl_macb_rmii_mii_alt>;
++	status = "okay";
++};
++
++&usart3 {
++	status = "okay";
++};
++
++&dbgu {
++	status = "okay";
++};
++
++&watchdog {
++	timeout-sec = <15>;
++	atmel,max-heartbeat-sec = <16>;
++	atmel,min-heartbeat-sec = <0>;
++	status = "okay";
++};
++
++&usb0 {
++	num-ports = <1>;
++	status = "okay";
++};
++
++&i2c-gpio-0 {
++	status = "okay";
++
++	rtc: pcf8563@51 {
++		compatible = "nxp,pcf8563";
++		reg = <0x51>;
++	};
++};
+diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+index dee9c0c8a096..9f9ee3cd7375 100644
+--- a/arch/arm/boot/dts/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/at91sam9260.dtsi
+@@ -738,7 +738,7 @@
+ 				status = "disabled";
+ 			};
+
+-			watchdog@fffffd40 {
++			watchdog: watchdog@fffffd40 {
+ 				compatible = "atmel,at91sam9260-wdt";
+ 				reg = <0xfffffd40 0x10>;
+ 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+--
+2.24.0
+
