@@ -2,106 +2,108 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBC9C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE99C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBBCE24671
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7E124667
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:56:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dFoaD7QD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dbEieWkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbfLEAzH (ORCPT
+        id S1728419AbfLEA4t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 19:55:07 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40217 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728098AbfLEAzG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 19:55:06 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q8so714412pfh.7;
-        Wed, 04 Dec 2019 16:55:06 -0800 (PST)
+        Wed, 4 Dec 2019 19:56:49 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38081 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728098AbfLEA4t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Dec 2019 19:56:49 -0500
+Received: by mail-pj1-f67.google.com with SMTP id l4so542738pjt.5
+        for <devicetree@vger.kernel.org>; Wed, 04 Dec 2019 16:56:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:cc:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=d6Csj6U0+grfMQyPcI2MRtp14xJZsLe4pPPVYQKDBHg=;
-        b=dFoaD7QDyB4Y4mpD9b/Pe5Yqd6ljHqp6PN3tYKbt/uoug38dguaomQVZPY4XIaYM6Z
-         3xgsWGPgaT1AwfK44TtYAs2Axi+kUl+ggeTwOhHoDZKREcO3r4IuLKdPX0UOHJxKTafZ
-         ryCF73mOMJAnm/Z9fZs7jai9GOriS6O5mYkoBWQGty9mTN0dibhc5YTXG1mh9RaUDXh3
-         WBpGLNlsq9Rb5QO81WRccE6/f0wQ9V3ABR6yqRJzHMkqATj+HonXrrtxtggG4eSOLtke
-         eCXXh3WKIDQ/B2dMtBHtgd1lNlhG/AxhMM7UElNjaIAKlblA5KOyF7qfw8WgDGLwZmLv
-         +08g==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mkK1VbYU8pd8d1R2HwKoX7wARdH4Fdf+a3nqX6mf/A8=;
+        b=dbEieWkwvw6WZSpP1x7bC4rsOw5teKRhgEYI1EgQL8Mw6TV1DHWZ3AHvhig8Gj59sY
+         LYWUeilhVAielBO2XpkLLJrj/SG4ZABZgXwVppbT3ok1163wByjsemU6rq5Wqu02BFj8
+         mQWIyIKJUuY1CwGc+0KWD6po2054VL91TfDls=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:cc:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=d6Csj6U0+grfMQyPcI2MRtp14xJZsLe4pPPVYQKDBHg=;
-        b=YZBzJ9LSQ3J+LgyxMP2rBbdIevCxB2VjB/dQBcXV5PvuV+d0CNk169Zh6JoBKbtj/P
-         HhyqbzP4ziNBsrcYyB0VpsEMpZP/f5rJaTDc3WtEp76WBdRfuYFedzLtSC49W5EEexbf
-         ms/S27X7BS+khTxzhw05ZKDI8ZaWE6gXwXRRhFOBxALrCk0VB0/HYWIvT3XOPsBQ5mqg
-         93ev803iiJAIbuQ+yHLKvIiDQ1drXw8p491hZXwzKf89hI5Kmlj/TFPeHbPqfJZZ+QL6
-         g9Q3W/bC3Pqvg0pDLdiazZCh8xDnP198RJ98ZvwgsTnZAgg2ZovM/Raoj1iXUfUU8toB
-         KxpA==
-X-Gm-Message-State: APjAAAU0j205ZKa7qrvazqOtPCVnEEoix7LJC9KRGSDvrYT3MicAjvEL
-        9byHX1UxKNBG8s7lbMNyV1U=
-X-Google-Smtp-Source: APXvYqw/c86Dl1C8JR0jDUOr+yGX05pbNgzBjrJPb44O3JzjdT+ifVAsuXX3hvfMm3MH64Cy2wuf0w==
-X-Received: by 2002:a63:cb:: with SMTP id 194mr6614885pga.163.1575507306088;
-        Wed, 04 Dec 2019 16:55:06 -0800 (PST)
-Received: from ?IPv6:240d:1a:90a:7900:c9ba:60a6:b93d:a99a? ([240d:1a:90a:7900:c9ba:60a6:b93d:a99a])
-        by smtp.gmail.com with ESMTPSA id o19sm235031pjr.2.2019.12.04.16.55.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Dec 2019 16:55:05 -0800 (PST)
-Subject: Re: Fedora on Raspberry Pi
-To:     Erastus Toe <chukpozohnt@gmail.com>
-References: <940E1B0B-422A-40F0-A779-893133C6405F@gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree-spec@vger.kernel.org,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Message-ID: <a823a227-5c94-47a8-16c7-e363bc40e6ed@gmail.com>
-Date:   Wed, 4 Dec 2019 18:55:00 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mkK1VbYU8pd8d1R2HwKoX7wARdH4Fdf+a3nqX6mf/A8=;
+        b=nPfx9Hn2T4JFUR7l1DFrs+ph94X1XiBDsxue8nxYE8qhil2xPJ8EWxDIeuG9krRjFT
+         HyP0dJCxiCLEfDdZA0mnl9Ygqc4EUTn4jOrhOPfyIFBU+vh/JQ6fnoSa73etc70plcpO
+         Q608SWSImnwF7fnolKXtG/wFfv+ttPBn6iZ0vgGoR7ymTHZpkHNBl24/r7g27n4IiWTf
+         qWc1ZHIrF8W3557xc8HURbxY3FHDddHv7u6ksY92BfEdPw45GeGbe3lYS5YpX8OwzOTg
+         CUWbdRvoJPkKXtnHQ51bUDbjO5+RX+D9YYVh3pTRtwJyIsFYrv8+AaDwrEhKAdRxm+6t
+         ygjA==
+X-Gm-Message-State: APjAAAVLHFeTKkLfBA0Ft/y2vQ/kPUprulDk6xXMoqlpSQ0yrtZvmG+C
+        5YnDfvIQXQFHh0bu+byeTVbOyRwk9sPUSw==
+X-Google-Smtp-Source: APXvYqxJ0zxJwZ22BShddeCBPYuInYIfGJ/UwK80td0CdFHYrbpSKP7c3zsMboM8VVVoF2a9Ix3HZw==
+X-Received: by 2002:a17:90a:b009:: with SMTP id x9mr6338021pjq.124.1575507408713;
+        Wed, 04 Dec 2019 16:56:48 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id u1sm9151663pfn.133.2019.12.04.16.56.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2019 16:56:48 -0800 (PST)
+Date:   Wed, 4 Dec 2019 16:56:46 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rakesh Pillai <pillair@codeaurora.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Make MSA memory fixed for wifi
+Message-ID: <20191205005646.GL228856@google.com>
+References: <0101016ed035d185-20f04863-0f38-41b7-b88d-76bc36e4dcf9-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-In-Reply-To: <940E1B0B-422A-40F0-A779-893133C6405F@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <0101016ed035d185-20f04863-0f38-41b7-b88d-76bc36e4dcf9-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-+ linux device tree mail list
+On Wed, Dec 04, 2019 at 09:20:18AM +0000, Rakesh Pillai wrote:
 
-If you reply to this email, please remove devicetree-spec from the To: list.
+> arm64: dts: qcom: sc7180: Make MSA memory fixed for wifi
 
-On 11/3/19 6:59 AM, Erastus Toe wrote:
-> Hello all, 
+This is not really done for sc7180, but only for the sc7180-idp,
+which should be reflected in the subject (i.e. s/sc7180/sc7180-idp/)
+
+> The MSA memory is at a fixed offset, which will be
+> a part of reserved memory. Add this flag to indicate
+> that wifi in sc7180 will use a fixed memory for MSA.
+
+ditto, say it's the IDP
+
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> ---
+> This patchet is dependent on the below changes
+> arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node (https://lore.kernel.org/patchwork/patch/1162434/)
+> dt: bindings: add dt entry flag to skip SCM call for msa region (https://patchwork.ozlabs.org/patch/1192725/)
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> I’m in the process of setting up Fedora on RPi. More especially, I’m
-> trying to get Sense Hat to work. But on the Fedora wiki, it is said
-> that there’s a problem with device tree overlay. I’m very new to
-> device tree and I’m still doing my research. It is also said that
-> this group is working on this problem.
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 8a6a760..b2ca143f 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -250,6 +250,7 @@
+>  
+>  &wifi {
+>  	status = "okay";
+> +	qcom,msa_fixed_perm;
+>  };
+>  
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+> -- 
+> 2.7.4
 > 
-> Is it possible for any to shin some light on this for me please? I’m
-> a little lost here.
-> Thank you,
-> C. Erastus Toe 
-> 
-
-The devicetree-spec mail list is for discussion of the specification.
-I added the linux kernel devicetree mail list to the distribution list.
-That is the list you should use for Linux related devicetree questions.
-
-The short answer to your RPi question is that you should use uboot
-to apply any devicetree overlay that you want to use.  The Linux
-kernel implementation of loading overlays after the kernel has
-booted is an incomplete work in progress.
-
--Frank
