@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00510C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B92DC2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC83324652
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63CB21823
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 00:25:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="Y2uLkgrp"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="rGMse0ea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbfLEAZN (ORCPT
+        id S1728612AbfLEAZM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 4 Dec 2019 19:25:13 -0500
+        Wed, 4 Dec 2019 19:25:12 -0500
 Received: from onstation.org ([52.200.56.107]:54108 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728590AbfLEAZM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 4 Dec 2019 19:25:12 -0500
+        id S1728557AbfLEAZL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 4 Dec 2019 19:25:11 -0500
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 9659B3EA09;
-        Thu,  5 Dec 2019 00:25:11 +0000 (UTC)
+        by onstation.org (Postfix) with ESMTPSA id 65DCD538A5;
+        Thu,  5 Dec 2019 00:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1575505511;
-        bh=wrpNF5GI4EFOJIQeD1HHKoAOQrklQZzjGwI2qeKAV3U=;
+        s=default; t=1575505510;
+        bh=2OX8S2TwxbSrcYZ5mPRrewqOvJrOWqLNCom5xuy7YCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y2uLkgrp1ZnUemn32szS0PavSYADzVizEjtCtuPZH3VmtTsL8wvdvTNnoAamlGe+K
-         0ovU8u1AsAbq5xJ9v8UtXdJYJKWNEHwmhofrd4OsOYSFyaMYUYDPL5nQkEG4v3slGa
-         kUBLKsp9gx9ZXtPybU2vZ6K8genIuPSs8DJovDaI=
+        b=rGMse0ea89HvvjHNUxTuQd6nyWDAByRfnP7z+y1yHCcxXq3kYDKvyl4gE3uU24jiN
+         YfIRb/Dw/hbiuRjSr0dtJPj6G+IzUWqleAqtnFMcORWQXyMVB/fL4lstuPrfh0HZTV
+         h11Bl2jx5CvcrcZmtABsqMix7F7hAsfrsG3lUvFE=
 From:   Brian Masney <masneyb@onstation.org>
 To:     sboyd@kernel.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org
 Cc:     mark.rutland@arm.com, agross@kernel.org,
@@ -42,9 +42,9 @@ Cc:     mark.rutland@arm.com, agross@kernel.org,
         linux-input@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: [PATCH 7/7] ARM: dts: qcom: msm8974-hammerhead: add support for vibrator
-Date:   Wed,  4 Dec 2019 19:25:03 -0500
-Message-Id: <20191205002503.13088-8-masneyb@onstation.org>
+Subject: [PATCH 4/7] dt-bindings: Input: introduce new clock vibrator bindings
+Date:   Wed,  4 Dec 2019 19:25:00 -0500
+Message-Id: <20191205002503.13088-5-masneyb@onstation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191205002503.13088-1-masneyb@onstation.org>
 References: <20191205002503.13088-1-masneyb@onstation.org>
@@ -55,61 +55,81 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for the vibrator found on the Nexus 5 phone.
+Add support for clock-based vibrator devices where the speed can be
+controlled by changing the duty cycle.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ .../bindings/input/clk-vibrator.yaml          | 60 +++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/clk-vibrator.yaml
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-index 797a43be844e..e17ea4f602c1 100644
---- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-@@ -234,6 +234,21 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&wlan_regulator_pin>;
- 	};
+diff --git a/Documentation/devicetree/bindings/input/clk-vibrator.yaml b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
+new file mode 100644
+index 000000000000..2103a5694fad
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
+@@ -0,0 +1,60 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/input/clk-vibrator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	vibrator {
-+		compatible = "clk-vibrator";
++title: Clock vibrator
 +
-+		vcc-supply = <&pm8941_l19>;
++maintainers:
++  - Brian Masney <masneyb@onstation.org>
 +
-+		clocks = <&mmcc CAMSS_GP1_CLK>;
-+		clock-names = "core";
-+		clock-frequency = <24000>;
++description: |
++  Support for clock-based vibrator devices where the speed can be controlled
++  by changing the duty cycle.
 +
-+		enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
++properties:
++  compatible:
++    const: clk-vibrator
 +
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vibrator_pin>;
-+	};
- };
- 
- &soc {
-@@ -355,6 +370,21 @@
- 				bias-disable;
- 			};
- 		};
++  clocks:
++    maxItems: 1
 +
-+		vibrator_pin: vibrator {
-+			core {
-+				pins = "gpio27";
-+				function = "gp1_clk";
++  clock-names:
++    description: output clock that controls the speed
++    items:
++      - const: core
 +
-+				drive-strength = <6>;
-+				bias-disable;
-+			};
++  clock-frequency: true
 +
-+			enable {
-+				pins = "gpio60";
-+				function = "gpio";
-+			};
-+		};
- 	};
- 
- 	sdhci@f9824900 {
++  enable-gpios:
++    maxItems: 1
++
++  vcc-supply:
++    description: Regulator that provides power
++
++required:
++  - compatible
++  - clocks
++  - clock-names
++  - clock-frequency
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
++    #include <dt-bindings/gpio/gpio.h>
++
++    vibrator {
++        compatible = "clk-vibrator";
++
++        vcc-supply = <&pm8941_l19>;
++
++        clocks = <&mmcc CAMSS_GP1_CLK>;
++        clock-names = "core";
++        clock-frequency = <24000>;
++
++        enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
++
++        pinctrl-names = "default";
++        pinctrl-0 = <&vibrator_pin>;
++    };
 -- 
 2.21.0
 
