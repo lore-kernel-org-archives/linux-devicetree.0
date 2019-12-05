@@ -2,205 +2,128 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0B5C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 17:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E35C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 17:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18747224F8
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 17:50:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575568251;
-	bh=IEqN5jALA/tA1YwYPL5ex66SSXu8AQtHWEUKdGhqRN4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jeycmB0pivRCz9IK15B5VEMZ5bA1jofkFHYm+rV0t8B5RmXdwEBUg2xDg6g7Rq8Ht
-	 WSPZ+Q8JUNhHWY52mhhKPr/p8UBj0xT5JDUolMigoHOy2vbVFsDZ0nNkNHmVIvstlR
-	 nUc1Tk/1hsD4IF1uwX/QX+oTwJ6z+34NdKsGcB9c=
+	by mail.kernel.org (Postfix) with ESMTP id B522E24654
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 17:54:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="x7B43v54"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730220AbfLERuu (ORCPT
+        id S1730241AbfLERyG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 12:50:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730003AbfLERuu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 5 Dec 2019 12:50:50 -0500
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 338D7224F8;
-        Thu,  5 Dec 2019 17:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575568249;
-        bh=IEqN5jALA/tA1YwYPL5ex66SSXu8AQtHWEUKdGhqRN4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jv3ZvTVd98uAIGB6m+6El9AuZjrji4nvWOsrKMNDD8TiCO5nT87xnA3Yf1QeziTxN
-         lk5rB0wL3h59uQ5dhlTyHfKZ30ogmZebK3SrY2JPBgIediOyDtZPGo0FWQSZ4cDplx
-         RsASs/RLUC1ViKTYH7YovnPzW8ckzMXRL5RuTDgg=
-Received: by mail-qv1-f45.google.com with SMTP id y8so1605386qvk.6;
-        Thu, 05 Dec 2019 09:50:49 -0800 (PST)
-X-Gm-Message-State: APjAAAXlNAYAE925RqL7cD/HeD+VNLzuIa1l++epG0vzSmkFKNgiQSia
-        bLB/omhMpO0MW6LJl4Hk5G94dZu0sXGwZH+Cfg==
-X-Google-Smtp-Source: APXvYqxvPvfcZUTfd2X07Gu3YCHbfqmczpAcwIz+b4jGQZwl3ynTJkYLAYgYk4otbiDmIz2Cwk7T274xtOb2NDzSwfs=
-X-Received: by 2002:ad4:450a:: with SMTP id k10mr8183566qvu.136.1575568248163;
- Thu, 05 Dec 2019 09:50:48 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.5630f63168ad5cddf02e9796106f8e086c196907.1575376664.git-series.andrew@aj.id.au>
- <3da2492c244962c27b21aad87bfa6bf74f568f1d.1575376664.git-series.andrew@aj.id.au>
- <CAL_Jsq+3qXJbTu9G42g11PLJH-A0XeSQmJKj0obO32QFna3dEA@mail.gmail.com> <40d554c0-de62-4d45-bbcc-dd3a3aa12a65@www.fastmail.com>
-In-Reply-To: <40d554c0-de62-4d45-bbcc-dd3a3aa12a65@www.fastmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 5 Dec 2019 11:50:36 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLgmU8m-zT8-K=peENshJx7Gx2Hn9RoZ-zbnqLUmqBQpw@mail.gmail.com>
-Message-ID: <CAL_JsqLgmU8m-zT8-K=peENshJx7Gx2Hn9RoZ-zbnqLUmqBQpw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: ipmi: aspeed: Introduce a v2 binding for KCS
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     openipmi-developer@lists.sourceforge.net,
-        Corey Minyard <minyard@acm.org>,
+        Thu, 5 Dec 2019 12:54:06 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37536 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730189AbfLERyG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 12:54:06 -0500
+Received: by mail-lf1-f65.google.com with SMTP id b15so3172079lfc.4
+        for <devicetree@vger.kernel.org>; Thu, 05 Dec 2019 09:54:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=GnbFNkIxR70lINeEkzf0C3CsMt6KmAk3DjiL3dWVia0=;
+        b=x7B43v547TpkGTqUj3h8zeo/B9Bjnb+92D+QLeC+pC6P4dk4g8ebQhtLZ01CcxeBgj
+         CUlGwXhLCWx67s6JL4JdBYqG7SWs5LBLlr/XRfxPaIwEu00aFLJ8MX9ZlOfZRgbI5bLi
+         LnhQcVheY3UM4QE9d9tzRnMPP92gLFvvglCFQQjvTpji4e2HcE1qPICM8AIFKmfJ4lRM
+         OYleq3CZPjm4s9hZNc4GiffE89hAdBqbnDi0437X4Pcx9Wk0tO00c1OA5/R4m1l9xhxx
+         ULJss/MOv9k6m945eL6103HVRD3ivr8NoL9+E6HHmlP4ingNq4j7Zi6sFIcR93cBqoVa
+         EnlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=GnbFNkIxR70lINeEkzf0C3CsMt6KmAk3DjiL3dWVia0=;
+        b=sjFpttg4zK0D4YGIExVRyel0D3D/iyzXetifYzGUwNCUsbBzqR+21MXj4HwIWS/1gI
+         6G2+Z4g3yZ6EnKH59bG4gwZG9PE4K6VxALS4DoS89yTgnQoXJTN7X6w5BTAJvA3e1K29
+         K4tHrLQio0VKHS8vrjyttLVmaIz4eZcSg+W7kjPLt+pnUvF9X6tAwaX9bTMZ/itNwlSP
+         IoyCajonS080N1QH2LmkEUFGR8i6qpGHXXP4e8e2HfHqY7nC5VuJlbcHmmXhmqRIhBye
+         66WJqiI223hmTOzWkZbci5v+FWChLZHwhMBvotphKUNKM/IcCC5Rw0FxV9uoDmH9RG9C
+         tBMg==
+X-Gm-Message-State: APjAAAVj7UZOSDKYqNjwpyjwdDskAjzjGMScXYd/Kqw38l0aPPBOimD6
+        iLx/8d2suZXeI/MKsTYgeWaE+Q==
+X-Google-Smtp-Source: APXvYqyTE1dL3L8Ty1iYjitUq6l5M5ez66of3MWw+FEAf4W+55UiFfu7DXDVJtdeyEM8EMSiAs+ZqA==
+X-Received: by 2002:ac2:43af:: with SMTP id t15mr6008348lfl.154.1575568443854;
+        Thu, 05 Dec 2019 09:54:03 -0800 (PST)
+Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
+        by smtp.gmail.com with ESMTPSA id y14sm5395473ljk.46.2019.12.05.09.54.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 09:54:03 -0800 (PST)
+Date:   Thu, 5 Dec 2019 18:54:02 +0100
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 0/2] mmc: renesas_sdhi: Add r8a77961 support
+Message-ID: <20191205175402.GF28879@bigcity.dyn.berto.se>
+References: <20191205134349.6410-1-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191205134349.6410-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 11:12 PM Andrew Jeffery <andrew@aj.id.au> wrote:
->
->
->
-> On Wed, 4 Dec 2019, at 01:01, Rob Herring wrote:
-> > On Tue, Dec 3, 2019 at 6:36 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> > >
-> > > The v2 binding utilises reg and renames some of the v1 properties.
-> > >
-> > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > > ---
-> > >  Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt | 20 +++++---
-> > >  1 file changed, 14 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt b/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
-> > > index d98a9bf45d6c..76b180ebbde4 100644
-> > > --- a/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
-> > > +++ b/Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
-> > > @@ -1,9 +1,10 @@
-> > > -* Aspeed KCS (Keyboard Controller Style) IPMI interface
-> > > +# Aspeed KCS (Keyboard Controller Style) IPMI interface
-> > >
-> > >  The Aspeed SOCs (AST2400 and AST2500) are commonly used as BMCs
-> > >  (Baseboard Management Controllers) and the KCS interface can be
-> > >  used to perform in-band IPMI communication with their host.
-> > >
-> > > +## v1
-> > >  Required properties:
-> > >  - compatible : should be one of
-> > >      "aspeed,ast2400-kcs-bmc"
-> > > @@ -12,14 +13,21 @@ Required properties:
-> > >  - kcs_chan : The LPC channel number in the controller
-> > >  - kcs_addr : The host CPU IO map address
-> > >
-> > > +## v2
-> > > +Required properties:
-> > > +- compatible : should be one of
-> > > +    "aspeed,ast2400-kcs-bmc-v2"
-> > > +    "aspeed,ast2500-kcs-bmc-v2"
-> > > +- reg : The address and size of the IDR, ODR and STR registers
-> > > +- interrupts : interrupt generated by the controller
-> > > +- slave-reg : The host CPU IO map address
-> >
-> > aspeed,slave-reg
->
-> I don't agree, as it's not an aspeed-specific behaviour. This property
-> controls where the device appears in the host's LPC IO address space,
-> which is a common problem for any LPC IO device exposed by the BMC
-> to the host.
+Hi Geert,
 
-Then document it as such. Common properties go into common binding documents.
+Thanks for your series.
 
-> > >  Example:
-> > >
-> > > -    kcs3: kcs3@0 {
-> > > -        compatible = "aspeed,ast2500-kcs-bmc";
-> > > -        reg = <0x0 0x80>;
-> > > +    kcs3: kcs@24 {
-> > > +        compatible = "aspeed,ast2500-kcs-bmc-v2";
-> > > +        reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
-> >
-> > What are the other registers in this address space? I'm not so sure
-> > this is an improvement if you end up with a bunch of nodes with single
-> > registers.
->
-> Put into practice the bindings give the following patch: on the AST2500:
+On 2019-12-05 14:43:47 +0100, Geert Uytterhoeven wrote:
+> 	Hi all,
+> 
+> This patch series documents DT bindings for the SDHI controller in the
+> Renesas R-Car M3-W+ (R8A77961) SoC, and adds support for it to the
+> driver.
+> 
+> The second patch may be dropped, once "[PATCH] mmc: renesas_sdhi: remove
+> whitelist for internal DMAC"[1] has been accepted.
+> 
+> Thanks!
+> 
+> [1] https://lore.kernel.org/linux-mmc/20191203194859.917-1-wsa@the-dreams.de/
 
-Okay, that's an unfortunate interleaving, but seems fine.
+For the whole series,
 
->
-> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-> index e8feb8b66a2f..5d51f469cbf0 100644
-> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-> @@ -399,22 +399,22 @@
->                                         #size-cells = <1>;
->                                         ranges = <0x0 0x0 0x80>;
->
-> -                                       kcs1: kcs1@0 {
-> -                                               compatible = "aspeed,ast2500-kcs-bmc";
-> +                                       kcs1: kcs@24 {
-> +                                               compatible = "aspeed,ast2500-kcs-bmc-v2";
-> +                                               reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
->                                                 interrupts = <8>;
-> -                                               kcs_chan = <1>;
->                                                 status = "disabled";
->                                         };
-> -                                       kcs2: kcs2@0 {
-> -                                               compatible = "aspeed,ast2500-kcs-bmc";
-> +                                       kcs2: kcs@28 {
-> +                                               compatible = "aspeed,ast2500-kcs-bmc-v2";
-> +                                               reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
->                                                 interrupts = <8>;
-> -                                               kcs_chan = <2>;
->                                                 status = "disabled";
->                                         };
-> -                                       kcs3: kcs3@0 {
-> -                                               compatible = "aspeed,ast2500-kcs-bmc";
-> +                                       kcs3: kcs@2c {
-> +                                               compatible = "aspeed,ast2500-kcs-bmc-v2";
-> +                                               reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
->                                                 interrupts = <8>;
-> -                                               kcs_chan = <3>;
->                                                 status = "disabled";
->                                         };
->                                 };
-> @@ -428,10 +428,10 @@
->                                         #size-cells = <1>;
->                                         ranges = <0x0 0x80 0x1e0>;
->
-> -                                       kcs4: kcs4@0 {
-> -                                               compatible = "aspeed,ast2500-kcs-bmc";
-> +                                       kcs4: kcs@94 {
-> +                                               compatible = "aspeed,ast2500-kcs-bmc-v2";
-> +                                               reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
->                                                 interrupts = <8>;
-> -                                               kcs_chan = <4>;
->                                                 status = "disabled";
->                                         };
->
-> The aim is to fix these warnings which appear for every aspeed-based devicetree:
->
->         arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: node has a unit name, but no reg property
->         arch/arm/boot/dts/aspeed-g5.dtsi:382.19-387.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0: node has a unit name, but no reg property
->         arch/arm/boot/dts/aspeed-g5.dtsi:388.19-393.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0: node has a unit name, but no reg property
->         arch/arm/boot/dts/aspeed-g5.dtsi:405.19-410.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-host@80/kcs4@0: node has a unit name, but no reg property
->         arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0)
->         arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0)
->         arch/arm/boot/dts/aspeed-g5.dtsi:382.19-387.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0)
->         arch/arm/boot/dts/aspeed-g5.dtsi:405.19-410.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-host@80/kcs4@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-host@80/lpc-ctrl@0)
->
-> Andrew
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+ 
+> Geert Uytterhoeven (2):
+>   dt-bindings: mmc: renesas_sdhi: Document r8a77961 support
+>   mmc: renesas_sdhi_internal_dmac: Add r8a77961 support
+> 
+>  Documentation/devicetree/bindings/mmc/renesas,sdhi.txt | 3 ++-
+>  drivers/mmc/host/renesas_sdhi_internal_dmac.c          | 1 +
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> -- 
+> 2.17.1
+> 
+> Gr{oetje,eeting}s,
+> 
+> 						Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+> 							    -- Linus Torvalds
+
+-- 
+Regards,
+Niklas Söderlund
