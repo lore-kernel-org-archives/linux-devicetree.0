@@ -2,120 +2,213 @@ Return-Path: <SRS0=PToE=Z3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5CBC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2841C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97B2624249
-	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:03:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fTGKpaPy"
+	by mail.kernel.org (Postfix) with ESMTP id 60ECE24652
+	for <linux-devicetree@archiver.kernel.org>; Thu,  5 Dec 2019 15:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575558761;
+	bh=JzjNkX/2Nbo6GlblPPluACsjcHZsfz/p6Nojkr11NQA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YOikV0wDipKvAIjnv/5I+wM1WedHm9ZH2g5s51+0Dk4ThTwynmQsFrtNR0iUTf42w
+	 7uCqLohSTwEy148f7L2OELKI5H2GkFTjCzho7AE6/wJKDWJwhIDTgywbQ+8Dlsmy0m
+	 fcZI8v7a1cny+DMwnXRHNK5vXADu9xSDD+E0VqD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbfLEPDh (ORCPT
+        id S1726257AbfLEPMk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 10:03:37 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35594 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729187AbfLEPDh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 10:03:37 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB5F3Ulr006976;
-        Thu, 5 Dec 2019 09:03:30 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575558210;
-        bh=bPHiSbvAxh5EbCsuea3JUYoH4fGkht5SLNEd1ncNzic=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fTGKpaPy/Zb0M6SWfVtLFtx/oJMxgtkSUBFcBDlcFlX4q/WFn5qcV+mi1vf2f8Rks
-         leXqudsaDFzvOmxlpuYIiORXvpxmrHbi9BIjTBjR8jN0qwziaf+OfemkGBWzBnNqk9
-         A7mm2VzeZH3wYiN7IIVdKKHhT9vl5qp3SakRI8Mg=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB5F3Ukg053299
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 5 Dec 2019 09:03:30 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
- 2019 09:03:29 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 5 Dec 2019 09:03:29 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5F3TdL093838;
-        Thu, 5 Dec 2019 09:03:29 -0600
-Subject: Re: [PATCH 2/2] net: m_can: Make wake-up gpio an optional
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sean Nyekjaer <sean@geanix.com>
-CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20191204175112.7308-1-dmurphy@ti.com>
- <20191204175112.7308-2-dmurphy@ti.com>
- <b9eaa5c4-13bc-295f-dcbf-d2a846243682@geanix.com>
- <827b022e-9188-7bcf-25e3-3777df3b08a5@ti.com>
- <809b9ff1-88e3-4e46-33e0-856db37898b2@pengutronix.de>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <76e96337-bbcf-89f1-2f1c-45144c15cb5b@ti.com>
-Date:   Thu, 5 Dec 2019 09:01:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 5 Dec 2019 10:12:40 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44098 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfLEPMk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 10:12:40 -0500
+Received: by mail-oi1-f194.google.com with SMTP id d62so2999560oia.11;
+        Thu, 05 Dec 2019 07:12:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ct3cztTVPY5fqFtFxY79enKS5M3PxUPj5Gr6za0FKzc=;
+        b=RNRAYxSWpyztyJp4emajf5yG2rj4ydxeUA5TIUulBhEsLpXEsEJRVUih/mbvfMTp2t
+         bj6cmhsvRpRprjIZwZax9srD2XVB+8doGDHpZN8zve52FAGK+LP4OGFczpFoBq2QDdw3
+         x9eikJ7a7cV+PmdWeB0I669B9pZu+M6Wx1i9lKHU3aImRkCn2lCqvaO1eLjd1VxydMoe
+         PvbIYKkA1WQ3Y/iWKcsG1duFr8QVN/TiV21npghlgUio9ukH3Zu+gYTAejHwXXntoCFR
+         mTbBXajcawgIZGc0GK/K3JLptI1w7BZh/+9gdZS+eOXWnRtRrPteUKYz1k4gdeQMm7o/
+         1yNg==
+X-Gm-Message-State: APjAAAVH3NO+asi2m16qUt5uSC2W5NSSrArhIG1qnPbsrzbrptQo1FFY
+        y4Irab6nCVvQTX9w2ldqww==
+X-Google-Smtp-Source: APXvYqyEn64lxv2I6QD1cuSgRAQUS0/AMs3S4yVo81pvB0lnM7FD5eedCJJ/HwIkntkujI43KeChfQ==
+X-Received: by 2002:a05:6808:996:: with SMTP id a22mr7208327oic.146.1575558759243;
+        Thu, 05 Dec 2019 07:12:39 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m7sm2064241otl.20.2019.12.05.07.12.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 07:12:38 -0800 (PST)
+Date:   Thu, 5 Dec 2019 09:12:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Orson Zhai <orson.zhai@spreadtrum.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Orson Zhai <orson.zhai@unisoc.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kevin.tang@unisoc.com, baolin.wang@unisoc.com,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: Re: [PATCH V2 1/2] dt-bindings: syscon: Add syscon-names to refer to
+ syscon easily
+Message-ID: <20191205151237.GA30195@bogus>
+References: <20191120154148.22067-1-orson.zhai@unisoc.com>
+ <20191120154148.22067-2-orson.zhai@unisoc.com>
+ <20191204163830.GA25135@bogus>
+ <CAK8P3a3_r6z6Qk133=4gUzJ0rYmMH7sDDqpEF8ZVXS_bc3OtkQ@mail.gmail.com>
+ <20191204192639.GA15786@bogus>
+ <CAK8P3a165hqB=5LmMiTPGJxvsSJqrbFf5EC9WnqtFRYFok+xKw@mail.gmail.com>
+ <20191205125539.GH21613@lenovo>
 MIME-Version: 1.0
-In-Reply-To: <809b9ff1-88e3-4e46-33e0-856db37898b2@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191205125539.GH21613@lenovo>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Marc
+On Thu, Dec 05, 2019 at 08:55:39PM +0800, Orson Zhai wrote:
+> Hi Arnd & Rob,
+> 
+> On Thu, Dec 05, 2019 at 10:20:03AM +0100, Arnd Bergmann wrote:
+> > On Wed, Dec 4, 2019 at 8:26 PM Rob Herring <robh@kernel.org> wrote:
+> > > On Wed, Dec 04, 2019 at 06:00:17PM +0100, Arnd Bergmann wrote:
+> > > > On Wed, Dec 4, 2019 at 5:38 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > > > I think generally speaking this would be useful for random registers that
+> > > > logically belong to one device but are grouped with other unrelated
+> > > > registers in a syscon, and that are in a different register offset for
+> > > > each chip that has them. Using named properties instead of a list
+> > > > of phandle/arg tuples with names is clearly a simpler alternative
+> > > > and more like we do it today, but I can also see some API simplification
+> > > > with Orson's patch without the binding getting out of hand.
+> > >
+> > > I understand when a phandle to a syscon is used. That's nothing new.
+> > > What's special about Unisoc SoC that needs something new/different?
+> > > I saw there's a large number of syscons, but I don't understand what's
+> > > in them.
+> > >
+> > > If the API is this:
+> > >
+> > > struct regmap *syscon_regmap_lookup_by_name(struct device_node *np,
+> > >                                        const char *name,
+> > >                                        int arg_count, __u32 *out_args)
+> > >
+> > > How is 'name' being an entry in syscon-names simpler than just being the
+> > > property name? The implementation for the latter would certainly be
+> > > simpler.
+> > >
+> > > It also makes the property unparseable without knowledge outside of the
+> > > DT (i.e. in the driver). I suppose if the number of cells for each entry
+> > > is fixed, we could count the number of syscon-names entries to figure
+> > > out the stride. But then if one entry needs a lot of cells, then they
+> > > all have to have padding cells.
+> >
+> > Good point. The syscon_regmap_lookup_by_name() interface would
+> > work just as well when passing a property name compared to
+> > a name listed in another property, and this would still be more in
+> > line with what we do on other SoCs.
+> >
+> 
+> udx710-modem.dtsi:69:   syscons = <&pmu_apb_regs 0x18 0x2000000>,
+> udx710-modem.dtsi-70-           <&pmu_apb_regs 0x544 0x1>,
+> udx710-modem.dtsi-71-           <&aon_apb_regs 0x218 0x7e00>,
+> udx710-modem.dtsi-72-           <&pmu_apb_regs 0xb0 0x20000>,
+> udx710-modem.dtsi-73-           <&pmu_apb_regs 0xff 0x100>;
+> udx710-modem.dtsi:74:   syscon-names = "shutdown", "deepsleep", "corereset",
+> udx710-modem.dtsi-75-                  "sysreset", "getstatus";
 
-On 12/5/19 8:39 AM, Marc Kleine-Budde wrote:
-> On 12/5/19 2:26 PM, Dan Murphy wrote:
->> On 12/5/19 1:39 AM, Sean Nyekjaer wrote:
->>>
->>> On 04/12/2019 18.51, Dan Murphy wrote:
->>>> The device has the ability to disable the wake-up pin option.
->>>> The wake-up pin can be either force to GND or Vsup and does not have to
->>>> be tied to a GPIO.  In order for the device to not use the wake-up
->>>> feature
->>>> write the register to disable the WAKE_CONFIG option.
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>> CC: Sean Nyekjaer <sean@geanix.com>
->>> Reviewed-by: Sean Nyekjaer <sean@geanix.com>
->>>> ---
->>>
->>> Hi Dan,
->>>
->>> I would add tcan4x5x to the subject of this patch ->
->>> "net: m_can: tcan4x5x Make wake-up gpio an optional"
->>>
->> Do you want me to submit v2 with the $subject change?
->>
->> Or would you fix it up when committing it?
-> I'll change the subject while applying.
->
-> Dan, what about maintainerchip of the tcan4x5?
-
-Ooops that was buried in my inbox.
-
-It only makes sense for someone from TI to take maintainership of the 
-TCAN device.
-
-Do I need to submit a patch to the maintainers file or is the authorship 
-enough?
-
-As far as a device what country do you reside in?
-
-Dan
+Reset at least has a standard binding.
 
 
-> regards,
-> Marc
->
+> ud710.dtsi:1268:        syscons = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PRESENT_32K>,
+> ud710.dtsi-1269-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PROTECT_32K>,
+> ud710.dtsi-1270-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_EN_32K>,
+> ud710.dtsi-1271-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_THD_32K>;
+> ud710.dtsi:1272:        syscon-names =  "sd_detect_pol",
+> ud710.dtsi-1273-                        "sd_hotplug_protect_en",
+> ud710.dtsi-1274-                        "sd_hotplug_debounce_en",
+> ud710.dtsi-1275-                        "sd_hotplug_debounce_cn";
+
+This looks to me like it should be a single phandle. How many different 
+register layouts across how many SoCs do you need to support?
+
+> > The only advantage I can see in having a list of phandle/arg tuples
+> > rather than a set of properties is that it is a slightly more compact
+> > representation in source form, but otherwise they should be equivalent
+> 
+> Yes, I agree.
+> They are equivalent.
+> 
+> But sprd SoCs have too many registers and the representation might matter.
+> Here's some real code from local,
+> 
+> orca.dtsi:1276:         syscons = <&pmu_apb_regs REG_PMU_APB_RF_PD_AUDCP_SYS_CFG MASK_PMU_APB_RF_PD_AUDCP_SYS_FORCE_SHUTDOWN >,
+> orca.dtsi-1277-                 <&pmu_apb_regs REG_PMU_APB_RF_PD_AUDCP_AUDDSP_CFG MASK_PMU_APB_RF_PD_AUDCP_AUDDSP_AUTO_SHUTDOWN_EN>,
+> orca.dtsi-1278-                 <&pmu_apb_regs REG_PMU_APB_RF_SLEEP_CTRL MASK_PMU_APB_RF_AUDCP_FORCE_DEEP_SLEEP>,
+> orca.dtsi-1279-                 <&pmu_apb_regs REG_PMU_APB_RF_CP_SOFT_RST MASK_PMU_APB_RF_AUDCP_AUDDSP_SOFT_RST>,
+> orca.dtsi-1280-                 <&pmu_apb_regs REG_PMU_APB_RF_CP_SOFT_RST MASK_PMU_APB_RF_AUDCP_SYS_SOFT_RST>,
+> orca.dtsi-1281-                 <&pmu_apb_regs REG_PMU_APB_RF_SOFT_RST_SEL MASK_PMU_APB_RF_SOFT_RST_SEL>,
+> orca.dtsi-1282-                 <&pmu_apb_regs REG_PMU_APB_RF_PWR_STATUS3_DBG MASK_PMU_APB_RF_PD_AUDCP_SYS_STATE>,
+> orca.dtsi-1283-                 <&pmu_apb_regs REG_PMU_APB_RF_PWR_STATUS3_DBG MASK_PMU_APB_RF_PD_AUDCP_AUDDSP_STATE>,
+> orca.dtsi-1284-                 <&pmu_apb_regs REG_PMU_APB_RF_SLEEP_STATUS MASK_PMU_APB_RF_AUDCP_SLP_STATUS>,
+> --
+> orca.dtsi:1288:         syscon-names = "sysshutdown", "coreshutdown", "deepsleep", "corereset",
+> orca.dtsi-1289-                 "sysreset", "reset_sel", "sysstatus", "corestatus", "sleepstatus",
+> orca.dtsi-1290-                 "bootprotect", "bootvector", "bootaddress_sel";
+
+Again, reset has standard binding. 
+
+Also consider if you really need to access all of these vs. assuming a 
+fixed mode that the firmware/bootloader sets up.
+
+> ud710.dtsi:1268:        syscons = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PRESENT_32K>,
+> ud710.dtsi-1269-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PROTECT_32K>,
+> ud710.dtsi-1270-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_EN_32K>,
+> ud710.dtsi-1271-                  <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_THD_32K>;
+> ud710.dtsi:1272:        syscon-names =  "sd_detect_pol",
+> ud710.dtsi-1273-                        "sd_hotplug_protect_en",
+> ud710.dtsi-1274-                        "sd_hotplug_debounce_en",
+> ud710.dtsi-1275-                        "sd_hotplug_debounce_cn";
+> 
+> Compare to following,
+> 
+> sd_hotplug_protect_en-syscon = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PRESENT_32K>;
+> sd_hotplug_debounce_en-syscon = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARD_PROTECT_32K>;
+> sd_hotplug_debounce_cn-syscon = <&aon_apb_regs REG_AON_APB_SDIO0_CTRL_REG MASK_AON_APB_SDIO0_EMMC_CARDDET_DBNC_THD_32K>;
+> .....
+> 
+> For me, my choice would be the former.
+> It looks more clear.
+> 
+> > and agree about this being harder to parse in an automated way.
+> >
+> > Orson, do you see any other reason for the combined property?
+> No other reason.
+> 
+> > If not, could you respin the series once more with
+> > syscon_regmap_lookup_by_name() replaced by something like:?
+> >
+> > struct regmap *
+> > syscon_regmap_lookup_args_by_phandle(struct device_node *np,
+> >                                         const char *property,
+> >                                         int arg_count, __u32 *out_args)
+> 
+> I like this idea. syscon_regmap_lookup_by_phandle_args() would be better?
+> 
+> May I impelement them both?
+
+No.
+
+Rob
