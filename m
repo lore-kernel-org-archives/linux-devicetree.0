@@ -2,103 +2,153 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 472A0C2BBE2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 18:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C88DC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 18:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2186324670
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 18:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1479724673
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 18:45:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="ja4FwW0l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kUh88S/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbfLFSki (ORCPT
+        id S1726321AbfLFSpq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 13:40:38 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38905 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfLFSki (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 13:40:38 -0500
-Received: by mail-lf1-f66.google.com with SMTP id r14so6013975lfm.5
-        for <devicetree@vger.kernel.org>; Fri, 06 Dec 2019 10:40:36 -0800 (PST)
+        Fri, 6 Dec 2019 13:45:46 -0500
+Received: from mail-pl1-f172.google.com ([209.85.214.172]:46209 "EHLO
+        mail-pl1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfLFSpq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 13:45:46 -0500
+Received: by mail-pl1-f172.google.com with SMTP id k20so3057117pll.13;
+        Fri, 06 Dec 2019 10:45:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=UwMCmr796apltCBLUqhe/A5aREgROqeA/aKGMVOBK5A=;
-        b=ja4FwW0ldHzkgz7cFjZiTR4WwZTx291RUps/Y5tPmXtLWqqXGR/Mt2Sz/eofDjGBYh
-         7RrVqrQ2AQ1PxwrDbhSRFwipbclA3C0ftzK80mIPhUETBx64M6HUSGiW3Y0mIYPAvTki
-         Aq3q6ZLigqXlHZ8lbMwKhmNDmzuGYUpDNCPHfputU6+rkN4gs6iih+lvf09Y1Fcdrg47
-         eZLY1u/DUKVzH58EtI+eRdkMrdLNC0Un7QM69yRcXwDCtYMahx1tLehjRwcCS9iGEJiN
-         Jr6MzYRQ5Q8ytqVsVHVR0p0G/O1HXerBiL7uMqN6V8HWQ7GS7qSg90EwJHg/I/QLOnzU
-         5QgA==
+        bh=Fi0v276DytflAY2h044Dlr4Bh1mkN9HRCT9MVIFntkY=;
+        b=kUh88S/sioS4h6odf8ciymAoRA+iF6r6am/1niCdnSLdPozYU9dH9/TqVtEM0FdTqJ
+         DvARn1aA34ayQ9UgeiGdEylxIUc+/5D7F2McVzdOShdS6npIMJf73uC1lZABX0pr9ve1
+         em8TXNYcm/OxQkkFoL9030k/+5snXhw1KXnB2Ys5jiDv2BGTLwNtZ1DKQ7EBGPPuWvz6
+         a2IVyzKZnPoryhDfFVikzF01PPJiDI4yV2DXl0/pe2zEqnPK29qUY+kQkLjPfXeRtMQt
+         re7GZ7QNKP3dHIooQsBlP0V8NxxJEchC4kj2a6TnD+5uPLpOMnQ0a+Bm2M6HtEhFwXDx
+         3tEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=UwMCmr796apltCBLUqhe/A5aREgROqeA/aKGMVOBK5A=;
-        b=HhQy7XSnbAhQCzao5y7etxpSFRHBRgBeN8x1fm5wBdWmbseWII5BrKWEFrfXEdCG+i
-         /asxrQG6I6j6kq3Qr/G8Qm5+ldfPTo9U1y1wyCwShEqEzwCjyHOpRI3E10mi3boA0lvc
-         xKgU9utt+qHleLtj09ZYq0D3xAhlCXnx7stqtoSrM7uFZDm3RnzJ8nHdwiNNbK6Gds8X
-         vKBTw3jKSS9/7BElRZ39LinKGHEKbxOu1iC/utnXITHhGdQCimZT5u0+1ZAUCDshTzp0
-         pUF4Z2U7wF1aYikJhSXz5coQY9DYIB+flJ6xskxOzMOExJ+oadqFS8ndDzpj+dnOGdxv
-         Magg==
-X-Gm-Message-State: APjAAAVOTGDC2LI8icA39zZvfVDvbDfwiVr0NrU9lOsII6z1Y6ZnNQqz
-        K4UMTKfkTKrXfr/iReBCcab8wQ==
-X-Google-Smtp-Source: APXvYqwoiF1L7BhBtSP9Wb2lbIR6oGXDekXGfEbkT9v9ygQo6K88wZj1r41+5B0NKf9UvMHc0EJ3VA==
-X-Received: by 2002:ac2:430e:: with SMTP id l14mr5508779lfh.79.1575657636192;
-        Fri, 06 Dec 2019 10:40:36 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:4291:257c:a228:1c89:88a1:5b3b])
-        by smtp.gmail.com with ESMTPSA id l28sm6929760lfk.21.2019.12.06.10.40.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Dec 2019 10:40:35 -0800 (PST)
-Subject: Re: [PATCH v2 3/6] clk: renesas: r7s9210: Add SPIBSC clock
-To:     Chris Brandt <chris.brandt@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fi0v276DytflAY2h044Dlr4Bh1mkN9HRCT9MVIFntkY=;
+        b=lFLdqRlyrKXV4MYO3A1jpFWUTxWdaFIyvbKj+SRizOR2LhT+bJJtFx78drqBzOOUhl
+         7vcHT0WIWhd4smyTl/FaMPpLNWTae2+hqe/iAWhbDmM3vaRf9VKyjzWhAG9NaYPT6UTC
+         frbt7HMXQWRDLAd7do00CViNaUXWyyFw5Rzi6ciafhKZC5jWHUjZFaAEXWSroT8xfr5o
+         aj/FYNXAa1E3DI6Av6K0dxPhuwSrSz37tj0Q7wG5RhBwxr7mhAiZBCRuEb8nh8Yf7UI3
+         wxZ3CSyagr1iL8uDC4LDl67/cidjb8k21dcoOD+RRQq5oEVs7VtkohY5datVeTmMA+Fk
+         3r7Q==
+X-Gm-Message-State: APjAAAUzNThomtqt7GLqdZvBssP0uoNDXEb+xRiW9XGTEXRYiremT/lZ
+        mjJEY5CuwoyNnXJqwpaHWYU=
+X-Google-Smtp-Source: APXvYqzFULyrWU1raYozRu6SwmVgDm85vacQym1/ejWbOJHlKBERhL2ywaXfNAK4/2L+wy8DtxUqpA==
+X-Received: by 2002:a17:90a:868b:: with SMTP id p11mr17241511pjn.60.1575657945401;
+        Fri, 06 Dec 2019 10:45:45 -0800 (PST)
+Received: from localhost.localdomain ([103.51.73.190])
+        by smtp.gmail.com with ESMTPSA id p4sm16777039pfb.157.2019.12.06.10.45.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 10:45:44 -0800 (PST)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        Mason Yang <masonccyang@mxic.com.tw>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <20191206134202.18784-4-chris.brandt@renesas.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <5644c687-7692-53f2-f01e-0e7bf62464ea@cogentembedded.com>
-Date:   Fri, 6 Dec 2019 21:40:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Daniel Schultz <d.schultz@phytec.de>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFCv1 0/8] RK3399 clean shutdown issue
+Date:   Fri,  6 Dec 2019 18:45:28 +0000
+Message-Id: <20191206184536.2507-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20191206134202.18784-4-chris.brandt@renesas.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/06/2019 04:41 PM, Chris Brandt wrote:
+Most of the RK3399 SBC boards do not perform clean
+shutdown and clean reboot.
 
-> The SPIBSC clocks are marked as critical because for XIP systems, the
-> kernel will be running from QSPI flash and cannot be turned off.
-> 
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> ---
-> v2:
->  * Removed spibsc from critical clock section
+These patches try to help resolve the issue with proper
+shutdown by turning off the PMIC.
 
-   So you've removed it from the critical table but left the patch description
-intact?
+For reference 
+RK805 PMCI data sheet:
+[0] http://rockchip.fr/RK805%20datasheet%20V1.3.pdf
+RK808 PMIC data sheet:
+[1] http://rockchip.fr/RK808%20datasheet%20V1.4.pdf
+RK817 PMIC data sheet:
+[2] http://rockchip.fr/RK817%20datasheet%20V1.01.pdf 
+RK818 PMIC data sheet:
+[3] http://rockchip.fr/RK818%20datasheet%20V1.0.pdf
 
-[...]
+Reboot issue:
+My guess is that we need to some proper sequence of
+setting to PMCI to perform clean.
 
-MBR, Sergei
+If you have any input please share them.
+
+Tested on SBC
+Rock960 Model A
+Odroid N1
+Rock64
+
+-Anand Moon
+
+Anand Moon (8):
+  mfd: rk808: Refactor shutdown functions
+  mfd: rk808: use syscore for RK805 PMIC shutdown
+  mfd: rk808: use syscore for RK808 PMIC shutdown
+  mfd: rk808: use syscore for RK818 PMIC shutdown
+  mfd: rk808: cleanup unused function pointer
+  mfd: rk808: use common syscore for all PMCI for clean shutdown
+  arm64: rockchip: drop unused field from rk8xx i2c node
+  arm: rockchip: drop unused field from rk8xx i2c node
+
+ arch/arm/boot/dts/rk3036-kylin.dts            |   1 -
+ arch/arm/boot/dts/rk3188-px3-evb.dts          |   1 -
+ arch/arm/boot/dts/rk3288-evb-rk808.dts        |   1 -
+ arch/arm/boot/dts/rk3288-phycore-som.dtsi     |   1 -
+ arch/arm/boot/dts/rk3288-popmetal.dts         |   1 -
+ arch/arm/boot/dts/rk3288-tinker.dtsi          |   1 -
+ arch/arm/boot/dts/rk3288-veyron.dtsi          |   1 -
+ arch/arm/boot/dts/rk3288-vyasa.dts            |   1 -
+ arch/arm/boot/dts/rv1108-elgin-r1.dts         |   1 -
+ arch/arm/boot/dts/rv1108-evb.dts              |   1 -
+ arch/arm64/boot/dts/rockchip/px30-evb.dts     |   1 -
+ arch/arm64/boot/dts/rockchip/rk3328-a1.dts    |   1 -
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts   |   1 -
+ .../arm64/boot/dts/rockchip/rk3328-roc-cc.dts |   1 -
+ .../arm64/boot/dts/rockchip/rk3328-rock64.dts |   1 -
+ .../boot/dts/rockchip/rk3368-geekbox.dts      |   1 -
+ arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi |   1 -
+ .../boot/dts/rockchip/rk3368-px5-evb.dts      |   1 -
+ .../boot/dts/rockchip/rk3399-firefly.dts      |   1 -
+ .../boot/dts/rockchip/rk3399-hugsun-x99.dts   |   1 -
+ .../boot/dts/rockchip/rk3399-khadas-edge.dtsi |   1 -
+ .../boot/dts/rockchip/rk3399-leez-p710.dts    |   1 -
+ .../boot/dts/rockchip/rk3399-nanopi4.dtsi     |   1 -
+ .../boot/dts/rockchip/rk3399-orangepi.dts     |   1 -
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi |   1 -
+ .../boot/dts/rockchip/rk3399-roc-pc.dtsi      |   1 -
+ .../boot/dts/rockchip/rk3399-rock-pi-4.dts    |   1 -
+ .../boot/dts/rockchip/rk3399-rock960.dtsi     |   1 -
+ .../boot/dts/rockchip/rk3399-rockpro64.dts    |   1 -
+ .../boot/dts/rockchip/rk3399-sapphire.dtsi    |   1 -
+ drivers/mfd/rk808.c                           | 144 +++++-------------
+ include/linux/mfd/rk808.h                     |   2 -
+ 32 files changed, 42 insertions(+), 134 deletions(-)
+
+-- 
+2.24.0
+
