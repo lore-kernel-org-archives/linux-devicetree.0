@@ -2,114 +2,111 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF27AC2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 09:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB72C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 09:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E4F21823
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 09:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8009521835
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 09:35:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="iAfWz5Yz"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FEJKPtO6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfLFJby (ORCPT
+        id S1726201AbfLFJfe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 04:31:54 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35979 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfLFJby (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 04:31:54 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z3so7010891wru.3
-        for <devicetree@vger.kernel.org>; Fri, 06 Dec 2019 01:31:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bjrso+OQmafKmtEWvkVUYyImbpjYTr/XVyq1DXIdCUo=;
-        b=iAfWz5YzYiRiCZNhuRr09t/FmQAw6p9+6vvfi93jLSt0oiMp2cW85uVDW+iRBk8+GY
-         cv8P2u7lQRhHDc9U0Zjh8Sq9erBdatuluurIKWMAlrGTkXleJqRL41aq8Hnh3fLnIZbb
-         5aAYbxF0vgc35DJEeCjtl4JVUg10Vi1CHnSTukkdO6yTlU53yTL1tOhEnj+EqtgCjGyB
-         dySLIE/vMuo5LM26UU8Xg2FMuvoN3lYNGwG5eh7cDRKxmuWB9hioLHWe/F8Z9b0dVMWa
-         GSAslfT6xv2jseDndnHvZiyT0mOtfFKFAnrkrUq1Gk2qtYJiz+mVpQJ/xoPuhivCHamj
-         xP2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bjrso+OQmafKmtEWvkVUYyImbpjYTr/XVyq1DXIdCUo=;
-        b=asUtyBSDqBdU4CwHWBsUkgpey9oO//HPAzLLvzKuSUq257j/5exyPXW3M6M7YnWhPu
-         LtOKab2vunyurqhr9T2WwzTlvGcBX2j8a4cEzyTR1I9Gpjr1AphAdF4v0AsOyuZD0UCW
-         B5DBO1ncFIMPuWeVGT21NKmjxm86Uh/1cZBCSCqCCi9uj5HSj8mHEBd/GZgmzxvTjAqL
-         cpFQ+SK8Lhs5IGT9w8ZXSo98uUkwsjaWQDguVdlkfGnp3wGJx7CMxjXJLL9EfD/RLFkm
-         KTghNADISq60iVeBNmzQoSVoBHc3DUY8tKuZ3gCGCSk5XYHTRzEN3q+DDMXIueWHLhrS
-         qD9g==
-X-Gm-Message-State: APjAAAUP0zz4udrFE6hs4cSLVDoFYdGD0NBlBshl1lesshIpHav/Z2By
-        61VRZSNhW9BT1gJLqSryzLERLQ==
-X-Google-Smtp-Source: APXvYqwSvgXZPZYvhH5/TP4F6vU9XeDDqHNqzU+AeFmI0rkq740MlfQL7vuwL6pHE+wm5JOCIGoNMg==
-X-Received: by 2002:a5d:5487:: with SMTP id h7mr14371488wrv.18.1575624712378;
-        Fri, 06 Dec 2019 01:31:52 -0800 (PST)
-Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
-        by smtp.gmail.com with ESMTPSA id v188sm2950016wma.10.2019.12.06.01.31.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2019 01:31:51 -0800 (PST)
-Date:   Fri, 6 Dec 2019 10:31:51 +0100
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@vger.kernel.org, grygorii.strashko@ti.com,
-        robh+dt@kernel.org, rafal@milecki.pl, davem@davemloft.net,
-        andrew@lunn.ch, mark.rutland@arm.com, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Fix MDIO node address/size cells
-Message-ID: <20191206093150.GA27144@netronome.com>
-References: <20191206000421.12541-1-f.fainelli@gmail.com>
+        Fri, 6 Dec 2019 04:35:34 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:5461 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726070AbfLFJfe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 04:35:34 -0500
+X-UUID: 2dfcf66ed612406c98283f1ad3fb97d1-20191206
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=vR5+TmnGL8k18O3RfwhBu/Xl8JNbLQTJoi3SA28TkwA=;
+        b=FEJKPtO6DGFE/HBnaQa1tq7mNOXQMTKic6YvCv9ETOPxmUS4driR3Uwkhc3saEfbP6jV+LUGqLK98mmgBsfHG8G5J/qQ+AnGR5EX05ECxxOk1xoLnFLLj4RbxynbYAr7y3GPA7JKhp/LMS1ZWZ+/A7o4jTD3G16AHGDC4ZXspBM=;
+X-UUID: 2dfcf66ed612406c98283f1ad3fb97d1-20191206
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <michael.kao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 583983391; Fri, 06 Dec 2019 17:35:29 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 6 Dec 2019 17:35:27 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 6 Dec 2019 17:34:50 +0800
+Message-ID: <1575624927.1631.7.camel@mtksdccf07>
+Subject: Re: [PATCH v2 7/8] thermal: mediatek: add another get_temp ops for
+ thermal sensors
+From:   Michael Kao <michael.kao@mediatek.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+CC:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        <linux-pm@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Fri, 6 Dec 2019 17:35:27 +0800
+In-Reply-To: <CAJMQK-ivho3T1hnD9axV2EMKT3Srs_5zAXLqwts8nojY15fBGg@mail.gmail.com>
+References: <1557494826-6044-1-git-send-email-michael.kao@mediatek.com>
+         <1557494826-6044-8-git-send-email-michael.kao@mediatek.com>
+         <CAJMQK-ivho3T1hnD9axV2EMKT3Srs_5zAXLqwts8nojY15fBGg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206000421.12541-1-f.fainelli@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-SNTS-SMTP: B074D70E04D46F7F6E1F3B63CE826B399628CA35CC3E3E458B7FA485D552647E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 04:04:21PM -0800, Florian Fainelli wrote:
-> The MDIO node on BCM5301X had an reversed #address-cells and
->  #size-cells properties, correct those, silencing checker warnings:
-> 
-> .../linux/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
-> 
-> Reported-by: Simon Horman <simon.horman@netronome.com>
-> Fixes: 23f1eca6d59b ("ARM: dts: BCM5301X: Specify MDIO bus in the DT")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+T24gVGh1LCAyMDE5LTExLTIxIGF0IDE1OjAwICswODAwLCBIc2luLVlpIFdhbmcgd3JvdGU6DQo+
+IE9uIEZyaSwgTWF5IDEwLCAyMDE5IGF0IDk6MjcgUE0gbWljaGFlbC5rYW8gPG1pY2hhZWwua2Fv
+QG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+IA0KPiA+IC0gICAgICAgdHpkZXYgPSBkZXZtX3RoZXJt
+YWxfem9uZV9vZl9zZW5zb3JfcmVnaXN0ZXIoJnBkZXYtPmRldiwgMCwgbXQsDQo+ID4gLSAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmbXRrX3RoZXJt
+YWxfb3BzKTsNCj4gPiAtICAgICAgIGlmIChJU19FUlIodHpkZXYpKSB7DQo+ID4gLSAgICAgICAg
+ICAgICAgIHJldCA9IFBUUl9FUlIodHpkZXYpOw0KPiA+IC0gICAgICAgICAgICAgICBnb3RvIGVy
+cl9kaXNhYmxlX2Nsa19wZXJpX3RoZXJtOw0KPiA+ICsgICAgICAgZm9yIChpID0gMDsgaSA8IG10
+LT5jb25mLT5udW1fc2Vuc29ycyArIDE7IGkrKykgew0KPiA+ICsgICAgICAgICAgICAgICB0eiA9
+IGttYWxsb2Moc2l6ZW9mKCp0eiksIEdGUF9LRVJORUwpOw0KPiA+ICsgICAgICAgICAgICAgICBp
+ZiAoIXR6KQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAtRU5PTUVNOw0KPiA+
+ICsNCj4gPiArICAgICAgICAgICAgICAgdHotPm10ID0gbXQ7DQo+ID4gKyAgICAgICAgICAgICAg
+IHR6LT5pZCA9IGk7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICB0emRldiA9IGRldm1fdGhl
+cm1hbF96b25lX29mX3NlbnNvcl9yZWdpc3RlcigmcGRldi0+ZGV2LCBpLA0KPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgdHosIChpID09IDApID8NCj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICZtdGtfdGhlcm1hbF9vcHMgOiAmbXRrX3RoZXJtYWxfc2Vuc29y
+X29wcyk7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBpZiAoSVNfRVJSKHR6ZGV2KSkgew0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmIChJU19FUlIodHpkZXYpICE9IC1FQUNDRVMp
+IHsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBQVFJfRVJSKHR6ZGV2KQ0KPiAN
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldCA9IFBUUl9FUlIodHpkZXYp
+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ290byBlcnJfZGlzYWJsZV9j
+bGtfcGVyaV90aGVybTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB9DQo+ID4gKyAgICAg
+ICAgICAgICAgIH0NCj4gDQo+IFRoaXMgZm9yIGxvb3AgYWRkaW5nIHRoZXJtYWwgem9uZSBzZW5z
+b3JzIHdpbGwgbm90IHdvcmsgZm9yIG10ODE3My4gSXQNCj4gYXNzdW1lcyB0aGF0IHRoZXJtYWwt
+em9uZXMgaW4gZHRzIGhhdmUgc3Vibm9kZXMgKGVnLiBjcHVfdGhlcm1hbCwNCj4gdHp0cy4uKSBh
+bW91bnQgZXF1YWwgdG8gbnVtX3NlbnNvcnMrMS4gT3RoZXJ3aXNlIHR6ZGV2IHdvdWxkIGJlDQo+
+IC1FTk9ERVYgYW5kIHRoZXJtYWwgZmFpbGVkIHRvIGJlIHByb2JlZC4NCj4gSW4gbXQ4MTgzIHRo
+aXMgaXMgZmluZSwgc2luY2UgZWFjaCB0aGVybWFsIHpvbmUgb25seSBoYXMgb25lIHNlbnNvciwN
+Cj4gYnV0IGluIG10ODE3Mywgc29tZSBzZW5zb3IgYXBwZWFycyBpbiBtdWx0aXBsZSB0aGVybWFs
+IHpvbmVzLg0KPiANCj4gSW4gb3JkZXIgdG8gbGV0IHRoZSBjaGFuZ2UgYWxzbyB3b3JrcyBmb3Ig
+ODE3MywgSSB0aGluayBpZiB0aGUgZXJyb3INCj4gaXMgLUVOT0RFViwgYW5kIHRoZSBpZCBpcyBu
+b3QgMCAoMCBpcyBjcHVfdGhlcm1hbCksIHByb21wdCBhIHdhcm5pbmcNCj4gaW5zdGVhZCBvZiBm
+YWlsaW5nLiBFZy4NCj4gDQo+ICAgICAgICAgICAgICAgICBpZiAoSVNfRVJSKHR6ZGV2KSkgew0K
+PiArICAgICAgICAgICAgICAgICAgICAgICBpZiAoaSA+IDAgJiYgUFRSX0VSUih0emRldikgPT0g
+LUVOT0RFVikgew0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRldl93YXJuKCZw
+ZGV2LT5kZXYsICJjYW4ndCBmaW5kDQo+IHRoZXJtYWwgc2Vuc29yICVkXG4iLCBpKTsNCj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb250aW51ZTsNCj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgfQ0KPiAgICAgICAgICAgICAgICAgICAgICAgICBpZiAoUFRSX0VSUih0emRldikg
+IT0gLUVBQ0NFUykgew0KDQpPSywgSSB3aWxsIHVwZGF0ZSB0aGlzIHBhdGNoLg0K
 
-Thanks, make dtbs_check seems a lot happier now.
-
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-
-FWIIW, I think a similar change might also be in order for bcm-cygnus.dtsi.
-
-> ---
->  arch/arm/boot/dts/bcm5301x.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-> index 372dc1eb88a0..2d9b4dd05830 100644
-> --- a/arch/arm/boot/dts/bcm5301x.dtsi
-> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
-> @@ -353,8 +353,8 @@
->  	mdio: mdio@18003000 {
->  		compatible = "brcm,iproc-mdio";
->  		reg = <0x18003000 0x8>;
-> -		#size-cells = <1>;
-> -		#address-cells = <0>;
-> +		#size-cells = <0>;
-> +		#address-cells = <1>;
->  	};
->  
->  	mdio-bus-mux@18003000 {
-> -- 
-> 2.17.1
-> 
