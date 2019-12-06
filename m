@@ -6,87 +6,127 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9536EC2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 07:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D165C2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 07:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75DEC24679
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 07:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260C32467A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 07:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfLFH2M (ORCPT
+        id S1726628AbfLFHlN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 02:28:12 -0500
-Received: from mga17.intel.com ([192.55.52.151]:48024 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726472AbfLFH2K (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Dec 2019 02:28:10 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 23:28:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,283,1571727600"; 
-   d="scan'208";a="263519920"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by FMSMGA003.fm.intel.com with ESMTP; 05 Dec 2019 23:28:06 -0800
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com
-Cc:     gustavo.pimentel@synopsys.com, andrew.murray@arm.com,
-        robh@kernel.org, linux-kernel@vger.kernel.org,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v10 3/3] PCI: artpec6: Configure FTS with dwc helper function
-Date:   Fri,  6 Dec 2019 15:27:50 +0800
-Message-Id: <0cee553f18a8ec1ae84ee64cdffb6627e4c5bc02.1575612493.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1575612493.git.eswara.kota@linux.intel.com>
-References: <cover.1575612493.git.eswara.kota@linux.intel.com>
-In-Reply-To: <cover.1575612493.git.eswara.kota@linux.intel.com>
-References: <cover.1575612493.git.eswara.kota@linux.intel.com>
+        Fri, 6 Dec 2019 02:41:13 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:26913 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfLFHlM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 02:41:12 -0500
+Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 6 Dec 2019
+ 15:41:36 +0800
+From:   Jian Hu <jian.hu@amlogic.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v4 2/6] clk: meson: add support for A1 PLL clock ops
+Date:   Fri, 6 Dec 2019 15:40:48 +0800
+Message-ID: <20191206074052.15557-3-jian.hu@amlogic.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191206074052.15557-1-jian.hu@amlogic.com>
+References: <20191206074052.15557-1-jian.hu@amlogic.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.28.8.25]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use DesignWare helper functions to configure Fast Training
-Sequence. Drop the respective code in the driver.
+The A1 PLL design is different with previous SoCs. The PLL
+internal analog modules Power-on sequence is different
+with previous, and thus requires a strict register sequence to
+enable the PLL.
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Jian Hu <jian.hu@amlogic.com>
 ---
-Changes on v10:
-	No change.
+ drivers/clk/meson/clk-pll.c | 21 +++++++++++++++++++++
+ drivers/clk/meson/clk-pll.h |  1 +
+ drivers/clk/meson/parm.h    |  1 +
+ 3 files changed, 23 insertions(+)
 
- drivers/pci/controller/dwc/pcie-artpec6.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index d00252bd8fae..02d93b8c7942 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -51,9 +51,6 @@ static const struct of_device_id artpec6_pcie_of_match[];
- #define ACK_N_FTS_MASK			GENMASK(15, 8)
- #define ACK_N_FTS(x)			(((x) << 8) & ACK_N_FTS_MASK)
+diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+index ddb1e5634739..4aff31a51589 100644
+--- a/drivers/clk/meson/clk-pll.c
++++ b/drivers/clk/meson/clk-pll.c
+@@ -318,6 +318,23 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+ 	struct clk_regmap *clk = to_clk_regmap(hw);
+ 	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
  
--#define FAST_TRAINING_SEQ_MASK		GENMASK(7, 0)
--#define FAST_TRAINING_SEQ(x)		(((x) << 0) & FAST_TRAINING_SEQ_MASK)
--
- /* ARTPEC-6 specific registers */
- #define PCIECFG				0x18
- #define  PCIECFG_DBG_OEN		BIT(24)
-@@ -313,10 +310,7 @@ static void artpec6_pcie_set_nfts(struct artpec6_pcie *artpec6_pcie)
- 	 * Set the Number of Fast Training Sequences that the core
- 	 * advertises as its N_FTS during Gen2 or Gen3 link training.
- 	 */
--	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
--	val &= ~FAST_TRAINING_SEQ_MASK;
--	val |= FAST_TRAINING_SEQ(180);
--	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-+	dw_pcie_link_set_n_fts(pci, 180);
++	/*
++	 * The A1 design is different with previous SoCs.The PLL
++	 * internal analog modules Power-on sequence is different with
++	 * previous, and thus requires a strict register sequence to
++	 * enable the PLL.
++	 */
++	if (MESON_PARM_APPLICABLE(&pll->current_en)) {
++		/* Enable the pll */
++		meson_parm_write(clk->map, &pll->en, 1);
++		udelay(10);
++		/* Enable the pll self-adaption module current */
++		meson_parm_write(clk->map, &pll->current_en, 1);
++		udelay(40);
++		meson_parm_write(clk->map, &pll->rst, 1);
++		meson_parm_write(clk->map, &pll->rst, 0);
++	}
++
+ 	/* do nothing if the PLL is already enabled */
+ 	if (clk_hw_is_enabled(hw))
+ 		return 0;
+@@ -347,6 +364,10 @@ static void meson_clk_pll_disable(struct clk_hw *hw)
+ 
+ 	/* Disable the pll */
+ 	meson_parm_write(clk->map, &pll->en, 0);
++
++	/* Disable PLL internal self-adaption module current */
++	if (MESON_PARM_APPLICABLE(&pll->current_en))
++		meson_parm_write(clk->map, &pll->current_en, 0);
  }
  
- static void artpec6_pcie_assert_core_reset(struct artpec6_pcie *artpec6_pcie)
+ static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
+index 367efd0f6410..30f039242a65 100644
+--- a/drivers/clk/meson/clk-pll.h
++++ b/drivers/clk/meson/clk-pll.h
+@@ -36,6 +36,7 @@ struct meson_clk_pll_data {
+ 	struct parm frac;
+ 	struct parm l;
+ 	struct parm rst;
++	struct parm current_en;
+ 	const struct reg_sequence *init_regs;
+ 	unsigned int init_count;
+ 	const struct pll_params_table *table;
+diff --git a/drivers/clk/meson/parm.h b/drivers/clk/meson/parm.h
+index 3c9ef1b505ce..c53fb26577e3 100644
+--- a/drivers/clk/meson/parm.h
++++ b/drivers/clk/meson/parm.h
+@@ -20,6 +20,7 @@
+ 	(((reg) & CLRPMASK(width, shift)) | ((val) << (shift)))
+ 
+ #define MESON_PARM_APPLICABLE(p)		(!!((p)->width))
++#define MESON_PARM_CURRENT(p)			(!!((p)->width))
+ 
+ struct parm {
+ 	u16	reg_off;
 -- 
-2.11.0
+2.24.0
 
