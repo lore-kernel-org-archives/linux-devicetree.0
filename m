@@ -2,106 +2,128 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55191C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 17:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4DCC2BD09
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 17:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C1A2245C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 17:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5852424673
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 17:49:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cBmImDjj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfLFRm3 (ORCPT
+        id S1726336AbfLFRt5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 12:42:29 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2164 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726287AbfLFRm3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Dec 2019 12:42:29 -0500
-Received: from lhreml707-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id D1B54F1A6E5362091C9C;
-        Fri,  6 Dec 2019 17:42:27 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml707-cah.china.huawei.com (10.201.108.48) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 6 Dec 2019 17:42:27 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Fri, 6 Dec 2019
- 17:42:27 +0000
-From:   John Garry <john.garry@huawei.com>
-Subject: warning from device_links_supplier_sync_state_resume()
-To:     <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-        "Saravana Kannan" <saravanak@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Message-ID: <7cb0ca10-8fb2-0cc8-224b-f5f908984998@huawei.com>
-Date:   Fri, 6 Dec 2019 17:42:26 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 6 Dec 2019 12:49:57 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7881 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfLFRt4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 12:49:56 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dea94be0000>; Fri, 06 Dec 2019 09:49:51 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 06 Dec 2019 09:49:55 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 06 Dec 2019 09:49:55 -0800
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec
+ 2019 17:49:55 +0000
+Received: from [10.2.168.155] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec 2019
+ 17:49:53 +0000
+Subject: Re: [PATCH v3 09/15] ASoC: tegra: Add fallback for audio mclk
+To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
+        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
+        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
+        <josephl@nvidia.com>, <vidyas@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
+References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
+ <1575600535-26877-10-git-send-email-skomatineni@nvidia.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <e94e56bc-2b4c-5d95-002a-073c9272537d@nvidia.com>
+Date:   Fri, 6 Dec 2019 09:49:49 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <1575600535-26877-10-git-send-email-skomatineni@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
 Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575654591; bh=YAKMdzUBMPWAB8WxEd9kdEtmiQZK+fcXFtpn3WK3zFI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=cBmImDjj+dyCqtopez7WVPM/iJlu/l28OHqHjZChjD+Mp3OVTNm+RP4BLaBZxlohg
+         jFLvRr6hs8CbAP4rCu9sBsol/cIJ+dbyjva75W8ULSHpS/Rvjq5GzesL+Mkyv4naYx
+         kyfjyPy/qUh3C0V+QFgUfjGznstU32zWVzd63IucFk7Ur1IT6eBYp9mDP9u4hw8KP8
+         VZ3xpAjo5jE+VbRZYIm7dbXZ0Dd74f3QkSWOl74lw+OfiDrxBRHjVctdtn1Ci5s/pk
+         nJbKMH+1enbKMJpfYA9EsGB4KExgGuhOBCDBDNSX/4wJsj7F46XH41pBmMyIuTOlUm
+         fcDubePTSjzBA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Thanks Greg.
 
-I'm testing my arm64 system on Linus' master branch at recent commit 
-b0d4beaa5a4b.
+Sorry, Will send this patch separately (out of this series) with stable 
+tag to get this applied to stable kernels once review is done for this 
+series.
 
-This system is ACPI based, but I notice that when CONFIG_OF_UNITTEST=y 
-(don't ask why...), I get this:
-
-[   18.344208] ------------[ cut here ]------------
-[   18.348813] Unmatched sync_state pause/resume!
-[   18.348833] WARNING: CPU: 1 PID: 1 at drivers/base/core.c:786 
-device_links_supplier_sync_state_resume+0xf8/0x108
-[   18.363419] Modules linked in:
-[   18.366461] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 
-5.4.0-12941-gb0d4beaa5a4b-dirty #683
-[   18.374710] Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon 
-D05 IT21 Nemo 2.0 RC0 04/18/2018
-[   18.383828] pstate: 60000005 (nZCv daif -PAN -UAO)
-[   18.388606] pc : device_links_supplier_sync_state_resume+0xf8/0x108
-[   18.394858] lr : device_links_supplier_sync_state_resume+0xf8/0x108
-[   18.401110] sp : ffff800011c7bd40
-[   18.404411] x29: ffff800011c7bd40 x28: 0000000000000008
-[   18.409709] x27: ffff80001140e070 x26: ffff80001133b7e8
-[   18.415007] x25: ffff800011a56000 x24: ffff800011a56000
-[   18.420305] x23: ffff041fa7798000 x22: ffff8000119f0000
-[   18.425603] x21: ffff800011879000 x20: ffff800011c7bd88
-[   18.430900] x19: ffff8000119f06b0 x18: ffffffffffffffff
-[   18.436198] x17: fffffdfffe608a5b x16: 0000000000001400
-[   18.441496] x15: ffff8000118798c8 x14: ffff800091c7b9e7
-[   18.446793] x13: ffff800011c7b9f5 x12: ffff800011891000
-[   18.452091] x11: 0000000005f5e0ff x10: ffff80001187a120
-[   18.457389] x9 : ffff800011c7bd40 x8 : 7561702065746174
-[   18.462687] x7 : 735f636e79732064 x6 : ffff800011a616b2
-[   18.467985] x5 : 0000000000000000 x4 : 0000000000000000
-[   18.473283] x3 : 00000000ffffffff x2 : ffff801feaa06000
-[   18.478581] x1 : 51ddef120d2f0500 x0 : 0000000000000000
-[   18.483880] Call trace:
-[   18.486313]  device_links_supplier_sync_state_resume+0xf8/0x108
-[   18.492221]  of_platform_sync_state_init+0x18/0x2c
-[   18.497000]  do_one_initcall+0x5c/0x1b0
-[   18.500824]  kernel_init_freeable+0x1a0/0x248
-[   18.505168]  kernel_init+0x10/0x108
-[   18.508644]  ret_from_fork+0x10/0x18
-[   18.512205] ---[ end trace b280eee6dfb144c3 ]---
-
-It seems the check of_have_populated_dt() is not always the best test 
-for this device links state resume call.
-
-Thanks,
-John
-
-
+On 12/5/19 6:48 PM, Sowjanya Komatineni wrote:
+> mclk is from clk_out_1 which is part of Tegra PMC block and pmc clocks
+> are moved to Tegra PMC driver with pmc as clock provider and using pmc
+> clock ids.
+>
+> New device tree uses clk_out_1 from pmc clock provider.
+>
+> So, this patch adds fallback to extern1 in case of retrieving mclk fails
+> to be backward compatible of new device tree with older kernels.
+>
+> Cc: stable@vger.kernel.org
+>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>   sound/soc/tegra/tegra_asoc_utils.c | 10 ++++++++--
+>   1 file changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/sound/soc/tegra/tegra_asoc_utils.c b/sound/soc/tegra/tegra_asoc_utils.c
+> index 8e3a3740df7c..f7408d5240c0 100644
+> --- a/sound/soc/tegra/tegra_asoc_utils.c
+> +++ b/sound/soc/tegra/tegra_asoc_utils.c
+> @@ -211,8 +211,14 @@ int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
+>   	data->clk_cdev1 = clk_get(dev, "mclk");
+>   	if (IS_ERR(data->clk_cdev1)) {
+>   		dev_err(data->dev, "Can't retrieve clk cdev1\n");
+> -		ret = PTR_ERR(data->clk_cdev1);
+> -		goto err_put_pll_a_out0;
+> +		data->clk_cdev1 = clk_get_sys("clk_out_1", "extern1");
+> +		if (IS_ERR(data->clk_cdev1)) {
+> +			dev_err(data->dev, "Can't retrieve clk extern1\n");
+> +			ret = PTR_ERR(data->clk_cdev1);
+> +			goto err_put_pll_a_out0;
+> +		}
+> +
+> +		dev_err(data->dev, "Falling back to extern1\n");
+>   	}
+>   
+>   	/*
