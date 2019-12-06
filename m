@@ -2,63 +2,61 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B345DC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 00:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B298C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 00:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7376E24659
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 00:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50BEB22525
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 00:22:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUfAUSF3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cYYF3XwM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbfLFAJz (ORCPT
+        id S1725988AbfLFAWl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 19:09:55 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41194 "EHLO
+        Thu, 5 Dec 2019 19:22:41 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44727 "EHLO
         mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfLFAJz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 19:09:55 -0500
-Received: by mail-ed1-f67.google.com with SMTP id c26so4283414eds.8;
-        Thu, 05 Dec 2019 16:09:53 -0800 (PST)
+        with ESMTP id S1725959AbfLFAWl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 19:22:41 -0500
+Received: by mail-ed1-f67.google.com with SMTP id cm12so4295199edb.11;
+        Thu, 05 Dec 2019 16:22:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Pu7aZrCRpmbK9eIe5VfBppycurruZf1/Fg8oPrOmz5w=;
-        b=dUfAUSF3rN9GOZKG6L738lHqvfLhWP7D3l3q8HabmB/Q19pH1Zm2WmRf2gsukMZ0b4
-         kmdQoNOac/RjKeM+NUqzxBxixVEbzr9z1WUQheWM/NVseOfrvwfBgfxhm19KX6JSnWTn
-         8BKH1Jb8fTcUyUmNCut4nStLy/+Jnv1UIbtWfPqPtkkXyWqB70z0FPFjPlvpT3rdxkp/
-         VBP/iw7ks6/QwXJiyZ1BEBsbpDVYA/LBMAcQLToSxB0+hrJA05/P4J64gfQY2ub3QR/e
-         tfl/83XdOZEZFwOmP8efU+yBB3YJi1LwpUAMy/N5oY4JXmA7/XVzb8U78y1GCiybGhka
-         jWEg==
+        bh=HVEngqNE+n/9b4VUg5UGRzlN7Ot2kbLWrq3boRtIV5I=;
+        b=cYYF3XwM9qP5vPXClZMz2i3tp3pvYkhLKHLMk5N5NuKHrKy5PWIFn72/czidLwdTuz
+         njwte+qyIOscbDPRii6RnWKdnOe8RNwLLx7l8jUVRQUiRQ/sfsZUkff3sNMeTzfQ0d38
+         n6elSn1mCIaSlSx0PswgXyMPfIIV98Kon/VAt0dWUXgjpfc1vxZ+OuYg1Z8gjUrEOT71
+         hKfJd0IwvU+VqFivrFFLH92zZXG29t8do8OuFlfHf30LnvBs55KI/F2M8ddZd5Ewbqk5
+         82NsU5YmR7XZtasvHvduAfjnJ0EH2+EcJ74YX9bsQzoiXstscogtV5ZmZfdHlCflOnSy
+         RRIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=Pu7aZrCRpmbK9eIe5VfBppycurruZf1/Fg8oPrOmz5w=;
-        b=QkWV7MSYqXwxIL2+j4DGmmLtjO0OoAIdntT3DfTkowAM+jKltmjFPddeuydIC/Pcyv
-         8kEYKdL+Opx4I8FqBCT1seAcKMxtUTWsgCZA0nGJk695rd/2NAk9LBxHy2KidBctc60x
-         YJRCgvOkTcwhRUBslMhPO1SzUVjARb4hK7MWUpd0SS8uWqXXZ9mM1rzIncdpHA2ZHV5L
-         tI1O9Bfs7p4qZmi9JxySbBBcktdYRlhe5oMG3SzHnD2DCNhRmiczynY5TmoojwS5+OzL
-         uNUHF3TyfTGgqYsF1RA7lBL4hB58aTpiQq4TpTq/MG/8HcRkrMPXo+CIQOcca9rQeD+R
-         XoFQ==
-X-Gm-Message-State: APjAAAWmjbL+CntpxVo3sJY9xfBpKV6UweOECe0cr6c6Sql9Gfy5oiPu
-        L3D/g9Rcuod2aV66C5on5VHuBMxk
-X-Google-Smtp-Source: APXvYqyrKCmObwIrxCughrq6gD80iLhJ2CFPGdEFQyBC+9iOmemQL2sVfeAqxlw3KYi/fFhqNlDzDQ==
-X-Received: by 2002:aa7:c701:: with SMTP id i1mr13463950edq.247.1575590992681;
-        Thu, 05 Dec 2019 16:09:52 -0800 (PST)
+        bh=HVEngqNE+n/9b4VUg5UGRzlN7Ot2kbLWrq3boRtIV5I=;
+        b=DAsfX+ru742e9puk1Itnmn7s1y5Epv6F3is81gXYyt4XFmBUNMBsVbpM9xxOIFoATq
+         gfSjMWxEp+mP2J5+vT+NCVBMjJzUPGrfZjjZzhedawqhDFpFg230PQkJ7Wa2T04LYUc6
+         P76wjXB22tkDEJcZ2tCbw0bREefuHP88DocCA4o7eL9Zc6s/3FTnQkKghVBnhscaxnfK
+         Ny+38AYFTSZeoTxG5GUd/kS7075c+xmTaJ13i/GGqoHEK33zViE4ucGBbXRdiq4Sf1Nz
+         HIGlMyD9WASqFbVCRbopWwkarbBoiL0fmDdRvqN/MeIo9Ze50YnK8IOEOrmkxpRXCG4H
+         46ww==
+X-Gm-Message-State: APjAAAWL8OtSNl6hozNoz1VU22rDaqU39l/O6tYxja6KavkDiTJExTzU
+        DVA3g8brRYsBXO8Hk5XBBFOma8Ge
+X-Google-Smtp-Source: APXvYqwj/YV3hU8I5FQqoLnfFROxjn81FACe+B9HETblKOYse6Ggfb6LzNs4d3o8WfLF58CGLnHNoQ==
+X-Received: by 2002:a17:906:339a:: with SMTP id v26mr12571251eja.2.1575591758851;
+        Thu, 05 Dec 2019 16:22:38 -0800 (PST)
 Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id w5sm140974eje.14.2019.12.05.16.09.50
+        by smtp.googlemail.com with ESMTPSA id f7sm452380edu.38.2019.12.05.16.22.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2019 16:09:51 -0800 (PST)
-Subject: Re: [PATCH 1/2] dt-bindings: soc: Add binding doc for iProc IDM
- device
+        Thu, 05 Dec 2019 16:22:38 -0800 (PST)
+Subject: Re: [PATCH 2/2] soc: bcm: iproc: Add Broadcom iProc IDM driver
 To:     Ray Jui <ray.jui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -66,7 +64,7 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         bcm-kernel-feedback-list@broadcom.com,
         Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 References: <20191202233127.31160-1-ray.jui@broadcom.com>
- <20191202233127.31160-2-ray.jui@broadcom.com>
+ <20191202233127.31160-3-ray.jui@broadcom.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -122,85 +120,146 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <62254bbb-168e-c0ad-a72d-bd659a2c23fa@gmail.com>
-Date:   Thu, 5 Dec 2019 16:09:48 -0800
+Message-ID: <955f1d22-a1df-377a-1ed9-7fdaa4309b33@gmail.com>
+Date:   Thu, 5 Dec 2019 16:22:35 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191202233127.31160-2-ray.jui@broadcom.com>
+In-Reply-To: <20191202233127.31160-3-ray.jui@broadcom.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 On 12/2/19 3:31 PM, Ray Jui wrote:
-> Add binding document for iProc based IDM devices.
+> Add Broadcom iProc IDM driver that controls that IDM devices available
+> on various iProc based SoCs for bus transaction timeout monitoring and
+> error logging.
 > 
 > Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-
-Looks good to me, it's 2019, nearly 2020, maybe make this a YAML
-compatible binding since it is a new one?
-
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 > ---
->  .../bindings/soc/bcm/brcm,iproc-idm.txt       | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
-> new file mode 100644
-> index 000000000000..388c6b036d7e
+
+Looks good to me, just a few suggestions below
+
+[snip]
+
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/bcm/brcm,iproc-idm.txt
-> @@ -0,0 +1,44 @@
-> +Broadcom iProc Interconnect Device Management (IDM) device
-> +
-> +The Broadcom iProc IDM device allows control and monitoring of ASIC internal
-> +bus transactions. Most importantly, it can be configured to detect bus
-> +transaction timeout. In such case, critical information such as transaction
-> +address that caused the error, bus master ID of the transaction that caused
-> +the error, and etc., are made available from the IDM device.
-> +
-> +-------------------------------------------------------------------------------
-> +
-> +Required properties for IDM device node:
-> +- compatible: must be "brcm,iproc-idm"
-> +- reg: base address and length of the IDM register space
-> +- interrupt: IDM interrupt number
-> +- brcm,iproc-idm-bus: IDM bus string
-> +
-> +Optional properties for IDM device node:
-> +- brcm,iproc-idm-elog: phandle to the device node of the IDM logging device
-> +
-> +-------------------------------------------------------------------------------
-> +
-> +Required properties for IDM error logging device node:
-> +- compatible: must be "brcm,iproc-idm-elog";
-> +- reg: base address and length of reserved memory location where IDM error
-> +  events can be saved
-> +
-> +-------------------------------------------------------------------------------
-> +
-> +Example:
-> +
-> +idm {
-> +	idm-elog {
-> +		compatible = "brcm,iproc-idm-elog";
-> +		reg = <0x8f221000 0x1000>;
-> +	};
-> +
-> +	idm-mhb-paxc-axi {
-> +		compatible = "brcm,iproc-idm";
-> +		reg = <0x60406900 0x200>;
-> +		interrupt = <GIC_SPI 516 IRQ_TYPE_LEVEL_HIGH>;
-> +		brcm,iproc-idm-bus = "idm-mhb-paxc-axi";
-> +		brcm,iproc-idm-elog = <&idm-elog>;
-> +	};
-> +};
-> 
+> +++ b/drivers/soc/bcm/iproc/Kconfig
+> @@ -0,0 +1,6 @@
 
+You would want an
 
+if SOC_BRCM_IPROC
+
+> +config IPROC_IDM
+> +	bool "Broadcom iProc IDM driver"
+> +	depends on (ARCH_BCM_IPROC || COMPILE_TEST) && OF
+> +	default ARCH_BCM_IPROC
+> +	help
+> +	  Enables support for iProc Interconnect and Device Management (IDM) control and monitoring
+
+and endif here to make this a nice menu.
+
+[snip]
+
+> +
+> +static int iproc_idm_dev_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct platform_device *elog_pdev;
+> +	struct device_node *elog_np;
+> +	struct iproc_idm *idm;
+> +	const char *name;
+> +	int ret;
+> +	u32 val;
+> +
+> +	idm = devm_kzalloc(dev, sizeof(*idm), GFP_KERNEL);
+> +	if (!idm)
+> +		return -ENOMEM;
+> +
+> +	ret = of_property_read_string(np, "brcm,iproc-idm-bus", &name);
+> +	if (ret) {
+> +		dev_err(dev, "Unable to parse IDM bus name\n");
+> +		return ret;
+> +	}
+> +	idm->name = name;
+> +
+> +	platform_set_drvdata(pdev, idm);
+> +	idm->dev = dev;
+> +
+> +	idm->base = of_iomap(np, 0);
+> +	if (!idm->base) {
+> +		dev_err(dev, "Unable to map I/O\n");
+> +		ret = -ENOMEM;
+> +		goto err_exit;
+> +	}
+> +
+> +	ret = of_irq_get(np, 0);
+> +	if (ret <= 0) {
+> +		dev_err(dev, "Unable to find IRQ number. ret=%d\n", ret);
+> +		goto err_iounmap;
+> +	}
+
+Since this is a standard platform device, you can use the standard
+platform_get_resource() and platform_get_irq(). If you ever needed to
+support ACPI in the future, that would make it transparent and almost
+already ready.
+
+> +
+> +	ret = devm_request_irq(dev, ret, iproc_idm_irq_handler, IRQF_SHARED,
+> +			       idm->name, idm);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Unable to request irq. ret=%d\n", ret);
+> +		goto err_iounmap;
+> +	}
+> +
+> +	/*
+> +	 * ELOG phandle is optional. If ELOG phandle is specified, it indicates
+> +	 * ELOG logging needs to be enabled
+> +	 */
+> +	elog_np = of_parse_phandle(dev->of_node, ELOG_IDM_COMPAT_STR, 0);
+> +	if (elog_np) {
+> +		elog_pdev = of_find_device_by_node(elog_np);
+> +		if (!elog_pdev) {
+> +			dev_err(dev, "Unable to find IDM ELOG device\n");
+> +			ret = -ENODEV;
+> +			goto err_iounmap;
+> +		}
+> +
+> +		idm->elog = platform_get_drvdata(elog_pdev);
+> +		if (!idm->elog) {
+> +			dev_err(dev, "Unable to get IDM ELOG driver data\n");
+> +			ret = -EINVAL;
+> +			goto err_iounmap;
+> +		}
+> +	}
+> +
+> +	/* enable IDM timeout and its interrupt */
+> +	val = readl(idm->base + IDM_CTRL_OFFSET);
+> +	val |= IDM_CTRL_TIMEOUT_EXP_MASK | IDM_CTRL_TIMEOUT_ENABLE |
+> +	       IDM_CTRL_TIMEOUT_IRQ;
+> +	writel(val, idm->base + IDM_CTRL_OFFSET);
+> +
+> +	ret = device_create_file(dev, &dev_attr_no_panic);
+> +	if (ret < 0)
+> +		goto err_iounmap;
+> +
+> +	of_node_put(np);
+
+Did not you intend to drop the reference count on elog_np here?
+
+[snip]
+
+> +static struct platform_driver iproc_idm_driver = {
+> +	.probe = iproc_idm_probe,
+
+Do not you need a remove function in order to unregister the sysfs file
+that you created in iproc_idm_dev_probe() to avoid bind/unbind (or
+rmmod/modprobe) to spit out an existing sysfs entry warning?
 -- 
 Florian
