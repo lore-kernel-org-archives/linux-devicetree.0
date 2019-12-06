@@ -2,137 +2,98 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066C7C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 22:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF77C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 23:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D199924670
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 22:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B7224670
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 23:41:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfLFWcX (ORCPT
+        id S1726377AbfLFXlK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 17:32:23 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:44886 "EHLO gloria.sntech.de"
+        Fri, 6 Dec 2019 18:41:10 -0500
+Received: from gate.crashing.org ([63.228.1.57]:53978 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726353AbfLFWcX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Dec 2019 17:32:23 -0500
-Received: from p57b772b2.dip0.t-ipconnect.de ([87.183.114.178] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1idM90-0004jn-SN; Fri, 06 Dec 2019 23:32:14 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Daniel Schultz <d.schultz@phytec.de>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFCv1 0/8] RK3399 clean shutdown issue
-Date:   Fri, 06 Dec 2019 23:32:14 +0100
-Message-ID: <1765889.rfqrfT1PbY@phil>
-In-Reply-To: <20191206184536.2507-1-linux.amoon@gmail.com>
-References: <20191206184536.2507-1-linux.amoon@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        id S1726371AbfLFXlK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Dec 2019 18:41:10 -0500
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id xB6NeZ43027638;
+        Fri, 6 Dec 2019 17:40:35 -0600
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id xB6NeYbA027637;
+        Fri, 6 Dec 2019 17:40:34 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Fri, 6 Dec 2019 17:40:34 -0600
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC] Efficiency of the phandle_cache on ppc64/SLOF
+Message-ID: <20191206234034.GW3152@gate.crashing.org>
+References: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de> <87wobedpit.fsf@mpe.ellerman.id.au> <20191203183531.GT24609@gate.crashing.org> <493a7da7-774c-1515-b43a-80d72c9d3c19@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <493a7da7-774c-1515-b43a-80d72c9d3c19@gmail.com>
+User-Agent: Mutt/1.4.2.3i
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Anand,
+Hi,
 
-Am Freitag, 6. Dezember 2019, 19:45:28 CET schrieb Anand Moon:
-> Most of the RK3399 SBC boards do not perform clean
-> shutdown and clean reboot.
+On Thu, Dec 05, 2019 at 07:37:24PM -0600, Frank Rowand wrote:
+> On 12/3/19 12:35 PM, Segher Boessenkool wrote:
+> > Btw.  Some OFs mangle the phandles some way, to make it easier to catch
+> > people using it as an address (and similarly, mangle ihandles differently,
+> > so you catch confusion between ihandles and phandles as well).  Like a
+> > simple xor, with some odd number preferably.  You should assume *nothing*
+> > about phandles, they are opaque identifiers.
 > 
-> These patches try to help resolve the issue with proper
-> shutdown by turning off the PMIC.
-> 
-> For reference 
-> RK805 PMCI data sheet:
-> [0] http://rockchip.fr/RK805%20datasheet%20V1.3.pdf
-> RK808 PMIC data sheet:
-> [1] http://rockchip.fr/RK808%20datasheet%20V1.4.pdf
-> RK817 PMIC data sheet:
-> [2] http://rockchip.fr/RK817%20datasheet%20V1.01.pdf 
-> RK818 PMIC data sheet:
-> [3] http://rockchip.fr/RK818%20datasheet%20V1.0.pdf
-> 
-> Reboot issue:
-> My guess is that we need to some proper sequence of
-> setting to PMCI to perform clean.
-> 
-> If you have any input please share them.
+> For arm32 machines that use dtc to generate the devicetree, which is a
+> very large user base, we certainly can make assumptions about phandles.
 
-The rk8xx pmics may not on all devices be responsible for powering down
-the device. That is what the system-power-controller dt-property is for.
+I was talking about OF.  Phandles are explicitly defined to be opaque
+tokens.  If there is an extra meaning to them in flattened device trees,
+well, the kernel should then only depend on that there, not for more
+general phandles.  Where is this documented btw?
 
-So that property is there for a reason - to indicate that the pmic is
-responsible for power-off-handling.
+> Especially because the complaints about the overhead of phandle based
+> lookups have been voiced by users of this specific set of machines.
+> 
+> For systems with a devicetree that does not follow the assumptions, the
+> phandle cache should not measurably increase the overhead of phandle
+> based lookups.
 
-Heiko
+It's an extra memory access and extra code to execute, for not much gain
+(if anything).  While with a reasonable hash function it will be good
+for everyone.
 
-> Tested on SBC
-> Rock960 Model A
-> Odroid N1
-> Rock64
-> 
-> -Anand Moon
-> 
-> Anand Moon (8):
->   mfd: rk808: Refactor shutdown functions
->   mfd: rk808: use syscore for RK805 PMIC shutdown
->   mfd: rk808: use syscore for RK808 PMIC shutdown
->   mfd: rk808: use syscore for RK818 PMIC shutdown
->   mfd: rk808: cleanup unused function pointer
->   mfd: rk808: use common syscore for all PMCI for clean shutdown
->   arm64: rockchip: drop unused field from rk8xx i2c node
->   arm: rockchip: drop unused field from rk8xx i2c node
-> 
->  arch/arm/boot/dts/rk3036-kylin.dts            |   1 -
->  arch/arm/boot/dts/rk3188-px3-evb.dts          |   1 -
->  arch/arm/boot/dts/rk3288-evb-rk808.dts        |   1 -
->  arch/arm/boot/dts/rk3288-phycore-som.dtsi     |   1 -
->  arch/arm/boot/dts/rk3288-popmetal.dts         |   1 -
->  arch/arm/boot/dts/rk3288-tinker.dtsi          |   1 -
->  arch/arm/boot/dts/rk3288-veyron.dtsi          |   1 -
->  arch/arm/boot/dts/rk3288-vyasa.dts            |   1 -
->  arch/arm/boot/dts/rv1108-elgin-r1.dts         |   1 -
->  arch/arm/boot/dts/rv1108-evb.dts              |   1 -
->  arch/arm64/boot/dts/rockchip/px30-evb.dts     |   1 -
->  arch/arm64/boot/dts/rockchip/rk3328-a1.dts    |   1 -
->  arch/arm64/boot/dts/rockchip/rk3328-evb.dts   |   1 -
->  .../arm64/boot/dts/rockchip/rk3328-roc-cc.dts |   1 -
->  .../arm64/boot/dts/rockchip/rk3328-rock64.dts |   1 -
->  .../boot/dts/rockchip/rk3368-geekbox.dts      |   1 -
->  arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi |   1 -
->  .../boot/dts/rockchip/rk3368-px5-evb.dts      |   1 -
->  .../boot/dts/rockchip/rk3399-firefly.dts      |   1 -
->  .../boot/dts/rockchip/rk3399-hugsun-x99.dts   |   1 -
->  .../boot/dts/rockchip/rk3399-khadas-edge.dtsi |   1 -
->  .../boot/dts/rockchip/rk3399-leez-p710.dts    |   1 -
->  .../boot/dts/rockchip/rk3399-nanopi4.dtsi     |   1 -
->  .../boot/dts/rockchip/rk3399-orangepi.dts     |   1 -
->  arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi |   1 -
->  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      |   1 -
->  .../boot/dts/rockchip/rk3399-rock-pi-4.dts    |   1 -
->  .../boot/dts/rockchip/rk3399-rock960.dtsi     |   1 -
->  .../boot/dts/rockchip/rk3399-rockpro64.dts    |   1 -
->  .../boot/dts/rockchip/rk3399-sapphire.dtsi    |   1 -
->  drivers/mfd/rk808.c                           | 144 +++++-------------
->  include/linux/mfd/rk808.h                     |   2 -
->  32 files changed, 42 insertions(+), 134 deletions(-)
-> 
-> 
+> If you have measurements of a system where implementing the phandle
+> cache increased the overhead,
+
+Are you seriously saying you think this code can run in zero time and
+space on most systems?
+
+> and the additional overhead is a concern
+> (such as significantly increasing boot time) then please share that
+> information with us.  Otherwise this is just a theoretical exercise.
+
+The point is that this code could be easily beneficial for most (or all)
+users, not just those that use dtc-constructed device trees.  It is
+completely obvious that having a worse cache hash function results in
+many more lookups.  Whether that results in something expressed as
+milliseconds on tiny systems or microseconds on bigger systems is
+completely beside the point.
 
 
-
-
+Segher
