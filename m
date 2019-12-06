@@ -2,100 +2,172 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9606BC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 14:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AF3C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 14:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BFA124673
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 14:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CA924675
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 14:49:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8swaD0/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rLyIHoRd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbfLFOjp (ORCPT
+        id S1726259AbfLFOtK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 09:39:45 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44742 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbfLFOjp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 09:39:45 -0500
-Received: by mail-pf1-f193.google.com with SMTP id d199so3432962pfd.11;
-        Fri, 06 Dec 2019 06:39:44 -0800 (PST)
+        Fri, 6 Dec 2019 09:49:10 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35928 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfLFOtK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 09:49:10 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z3so8088968wru.3;
+        Fri, 06 Dec 2019 06:49:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=irYNqKPLHshq/aQvOEy9WqNzGmfWQrAlrNW/wTAkb1U=;
-        b=I8swaD0/efsTUzN0rwN5fqcT2d0qBUB+9t5phKehvb58plhMdhclYqff6QDdCqAknw
-         Co/U+RxCxpNkCZ+3u9MkhvYFF+xdatN2uIRygf8GFvra9yrIm+k//cKsYRdL4TFYPgLb
-         CmBXbvT9AzX2TPTlo8aVpCWJlC6iMPQL6KCKnbXWFCT6rbhtUVlkOTfeDM7ap/0Y0t10
-         ZmdChr0BqNX1XD78SQy2wBkwH7e9ZRs9sf2oLZD/ROPwOrv9ms5VwiMWIkYLsC/Mrh3P
-         eWRfEMtFmLV1QTxSlp9RT5QKqBDOvquXAFZGAvW/tFEWOsPUxx2qsMbsHmOP2PrlN+FW
-         YTQg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2aalaEaVKfHAlKY2p1rpxj3inrK0861vRpI8dmURXSc=;
+        b=rLyIHoRdLAQgJnQCNdtN19CAAB7uTqFw0HldC/x0BVmwK7qtcDk80++dmEgLc7Fthv
+         Tt+XwIDLmwWby6E5+g+CwdkC4XdFHNnTRsW7eqhvDRuJxviTIVSxb+3i1Cev5AaU4Ddq
+         0JRD7cvyIDqM0t6CxHHfPLUsJ7jfM7n2qvNj5BylEmCVRidLUXhsg/daO/Q/ab5HHx5A
+         leH+yBJKx8Vmstr8p4b1XfUM5zb1/f5dZkGaRcBuFARyPoTqV3YPctQug6m9TKc1pNLc
+         1nILLMG62vp1U4YUsBWlVADAGfFPL9SGtYm1CexXqGxWalpotLbwa8V/FV1GPyPnMkUZ
+         deCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=irYNqKPLHshq/aQvOEy9WqNzGmfWQrAlrNW/wTAkb1U=;
-        b=QKHHzg66JDzx5A1mivFi25+05XcRzMRzc5AYrdnO7S37G2Vjp9tS7Vw9JCmj5UIB/q
-         CN4RnBiWEpEbKcVwAKX4eVH7GFPd3Feg0rPXTD88D4SE+sSyfEMfyDve+uF5PPor09oE
-         F/WV+6I5yPM0V0UwIUghT+OjcUvHPPeL+vFfHO4ykhZXU0gf3BWXMkwtVTsBNXA5pd1A
-         0qusB10S/tbL4RLAZwT73zeS8ZFBvQe+WS/p5hi1T8agR9D/9c2Hkd8vzD1t/Qv3hhcL
-         bt50RDnI7oRDliTUHXIFwyVpUeHVbE2ArozZERrFv2JJJVOOllyHPcEbGlqpsCWS5GsR
-         9baQ==
-X-Gm-Message-State: APjAAAU5uQ3PaIv5hx3gfdLH65p0LurDoTdIQcVOQVfC5woXmSkWaUog
-        hSfqe7a+nZrgyO9dl71l58JC+xry
-X-Google-Smtp-Source: APXvYqzCiYipDLDiHc06A/YWriJlXA+sFvNuqJij2Yu0x2xReX9LY6An4j/v1bgWMkItMfwztVwhdw==
-X-Received: by 2002:a63:c207:: with SMTP id b7mr3853777pgd.422.1575643183855;
-        Fri, 06 Dec 2019 06:39:43 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e11sm15791532pgh.54.2019.12.06.06.39.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Dec 2019 06:39:43 -0800 (PST)
-Subject: Re: [PATCH v2 0/2] hwmon: Add UCD90320 power sequencer chip
-To:     Jim Wright <wrightj@linux.vnet.ibm.com>, jdelvare@suse.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191205232411.21492-1-wrightj@linux.vnet.ibm.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <955b4485-aaa4-a255-752e-5ae336e9130f@roeck-us.net>
-Date:   Fri, 6 Dec 2019 06:39:42 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2aalaEaVKfHAlKY2p1rpxj3inrK0861vRpI8dmURXSc=;
+        b=pzPjV3iWCEPwc61COOO2cfnxmNuLsxb+GOVRyfEJjsc2cVbMwpLVUM5WilcEYuIA5g
+         p5a3BzFIYVX96p830cYMG41Tu+6rf59dPoMMo3zg9cujsqQ69GPCwPe4Qw5UiEchueW8
+         xX1vJv7e9PqPWAXW8fue6BAbMWgz9CTqXD/ZGf2uyzCnzULQa4wabm8Rv1Z6hMbfnFcL
+         hYEq5cwVvd/RCOj1CRFnLA/WCBBmEiyXm1jAWAHzGqLh+ou00QBo3huNXEO5gUClelRb
+         iLt6x6a2c6d8IScehDA+V++JYbRrE7J2eA/DQKFZ7iwWHuG25VukGzEMgNlE/btzT7+N
+         gNJw==
+X-Gm-Message-State: APjAAAWSkX8LRlOzFsFGXmiJz4gGCBYQr+RSLM27+6lPtzSVGWfzq3wj
+        UpBDXNJZI7QvH3JT/6tlPNA=
+X-Google-Smtp-Source: APXvYqySmeMk3VIYBGLIgJSqtRCYSHhZfeUzyl/1OUtAsXT8QOiFDgrU+AcvwlGN+zgjD8qSDflJeQ==
+X-Received: by 2002:a05:6000:160d:: with SMTP id u13mr16759890wrb.22.1575643747476;
+        Fri, 06 Dec 2019 06:49:07 -0800 (PST)
+Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
+        by smtp.gmail.com with ESMTPSA id 5sm16841135wrh.5.2019.12.06.06.49.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 06:49:06 -0800 (PST)
+Date:   Fri, 6 Dec 2019 15:49:05 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/18] dt-bindings: phy: tegra-xusb: Add usb-role-switch
+Message-ID: <20191206144905.GC2085684@ulmo>
+References: <1575629421-7039-1-git-send-email-nkristam@nvidia.com>
+ <1575629421-7039-2-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20191205232411.21492-1-wrightj@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5QAgd0e35j3NYeGe"
+Content-Disposition: inline
+In-Reply-To: <1575629421-7039-2-git-send-email-nkristam@nvidia.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/5/19 3:24 PM, Jim Wright wrote:
-> Add support for TI UCD90320 power sequencer chip.
-> 
-> Changes since v1:
-> - Device tree bindings text file replaced with YAML schema.
-> - Device driver files are unchanged.
-> 
-> Jim Wright (2):
->    dt-bindings: hwmon/pmbus: Add ti,ucd90320 power sequencer
->    hwmon: Add support for UCD90320 Power Sequencer
-> 
->   .../bindings/hwmon/pmbus/ti,ucd90320.yaml     | 45 +++++++++++++++++++
->   Documentation/hwmon/ucd9000.rst               | 12 ++++-
->   drivers/hwmon/pmbus/Kconfig                   |  6 +--
->   drivers/hwmon/pmbus/ucd9000.c                 | 39 +++++++++++-----
->   4 files changed, 85 insertions(+), 17 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/ti,ucd90320.yaml
-> 
-Series applied to hwmon-next.
 
-Thanks,
-Guenter
+--5QAgd0e35j3NYeGe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Dec 06, 2019 at 04:20:04PM +0530, Nagarjuna Kristam wrote:
+> Add usb-role-switch property for Tegra210 and Tegra186 platforms. This
+> entry is used by XUSB pad controller driver to register for role changes
+> for OTG/Peripheral capable USB 2 ports.
+>=20
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> ---
+>  Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt | =
+4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-p=
+adctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padc=
+tl.txt
+> index 9fb682e..0f19ed6 100644
+> --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.t=
+xt
+> +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.t=
+xt
+> @@ -179,6 +179,10 @@ Optional properties:
+>    is internal. In the absence of this property the port is considered to=
+ be
+>    external.
+>  - vbus-supply: phandle to a regulator supplying the VBUS voltage.
+> +- usb-role-switch: boolean property to indicate use of USB Role Switch.
+
+That first sentence here seems a bit useless and vague. It doesn't
+really convey anything other than the name already does. Perhaps
+something like:
+
+	Boolean property to indicate that the port support OTG. If
+	present, the port supports switching between USB host and
+	peripheral roles.
+
+> +  This property is MUST for OTG,Peripheral capable USB 2 ports. Connector
+
+If this is mandatory, why not add it to the list of required properties?
+I guess since it's only mandatory for ports that support OTG, perhaps we
+could add a section "Required properties for OTG capable ports:" or
+something like that? Then you can also omit the second sentence in the
+description.
+
+> +  should be added as subnode, see connector.txt. vbus-gpio in connector =
+is
+
+There's no file called "connector.txt". Are you referring to
+
+	Documentation/devicetree/bindings/connector/usb-connector.txt
+
+? Also, that file calls the property "vbus-gpios" and lists it as
+optional. What would happen if we don't specify it? Doesn't that just
+mean that we can't support role detection?
+
+> +  Mandatory.
+
+"mandatory"
+
+Thierry
+
+> =20
+>  ULPI ports:
+>  -----------
+> --=20
+> 2.7.4
+>=20
+
+--5QAgd0e35j3NYeGe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3qal8ACgkQ3SOs138+
+s6FCvw//W+tif2kSJJtiPRCRw6jpSoXUwVAjU7ZwbXXADIhJu5fnxdzio29NFIsp
+BAe7QcXP8emgeUdOvZuRedDX5RX1KZkSz8i3JV2o6kMHa1u2Jnu+pQFv1nQz2HnE
+ATTUej+WAX8pPy/EVkW3UX0dqUWw8/agZzJckfuoQpXhjgZB5to7ZAAb0eN8Oxwb
+uNqYVxunX+A4mRcyHNCZlAsdH5K8qv4ueZezgChS5zmK9nou7pV3vjS5SK2KPrZp
+aHwXhtM98CcLto2nOs4S84GDMUMgECxIM9LCLETt6oLNjs+J6UVmJrh2yJ+xqQTG
+BKp6mwp53p3KMMT+7nUG7WsRElFP/w9QPcLbxBXCfqUzlA57/yj/DVWqitJbaSkS
+U+bEAhxg/n7NJVDFF0JR06YABn/fYE2uRX8otXE18DtrVFaQgRV9jx2sFWrOh1gv
+6a5Je+nXSQvx4j3/0otBIuoPqDli85rDHwpWamqW3PmBCyqJF3eg1kepOcwFnB1V
+lZ4Y9bsGy/yKsQjrfLpe0AEC3Jo+OxIBrwrSz3VATz0LLnXUH+tbt7bTrJetE29a
+qiXlTtdWLsnYMGvnmYts+bKw7FaEuKqz9b/Yd/iw4LO47xo4r/Pfx5tXMng+KiG0
+Ve+Bp9KBju8Llg/5nojd9FVQtlV4n+uY+XnibgICSsjJdhMyQfQ=
+=Ud+/
+-----END PGP SIGNATURE-----
+
+--5QAgd0e35j3NYeGe--
