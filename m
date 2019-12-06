@@ -2,97 +2,123 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44558C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 13:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BBDC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 14:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B6D24659
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 13:49:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="M4wOasyM"
+	by mail.kernel.org (Postfix) with ESMTP id 7DD0320706
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 14:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbfLFNtz (ORCPT
+        id S1726244AbfLFOC3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 08:49:55 -0500
-Received: from first.geanix.com ([116.203.34.67]:36354 "EHLO first.geanix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbfLFNtz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Dec 2019 08:49:55 -0500
-Received: from [192.168.100.95] (unknown [95.138.208.137])
-        by first.geanix.com (Postfix) with ESMTPSA id D20B23BF;
-        Fri,  6 Dec 2019 13:49:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1575640187; bh=SL0f1EfmZIUpsEaw4T2Bwmfal12c5jyQZVybKsFjToI=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=M4wOasyMtuLNdFg1ySNQcC5m6HqrJyzKre0K7gJ+DEJRV69beeEQ1OFPPPGcAwooR
-         XbMGPJWAYMzU1ST12VFfVDjX0XP3rjcQGxkQuA+sQLZpPdHAvvm1/PM5VVTbaIWsT4
-         4R3TiMiyryayUo6nO5WDwjiAXxJeeGBRSka/fzX89SmX0iOYFKij1vjNaelsdypjKm
-         +cknG5FLQB8JAGwhF/lZHVJQ06ApKur5ZvUX9auFL8FUj7BqX/ycpWggRCjxbP18Gf
-         zPqdWZA/3cHAssw20njZ3bZEdoT0Z1GDtD1LhuCnkjEy55FmVni++yMCn2FQVBrckJ
-         6GvL/Z5/BNkkA==
-Subject: Re: [PATCH 1/2] dt-bindings: tcan4x5x: Make wake-gpio an optional
- gpio
-From:   Sean Nyekjaer <sean@geanix.com>
-To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de
-Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-References: <20191204175112.7308-1-dmurphy@ti.com>
- <d34673db-cc43-6e1d-6f4a-07b25c2c8f7b@geanix.com>
-Message-ID: <bd4586d0-4ea7-e247-d72d-a759c99860b0@geanix.com>
-Date:   Fri, 6 Dec 2019 14:49:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 6 Dec 2019 09:02:29 -0500
+Received: from pbmsgap02.intersil.com ([192.157.179.202]:49374 "EHLO
+        pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfLFOC3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 09:02:29 -0500
+X-Greylist: delayed 1176 seconds by postgrey-1.27 at vger.kernel.org; Fri, 06 Dec 2019 09:02:29 EST
+Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
+        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id xB6DgMJh000675;
+        Fri, 6 Dec 2019 08:42:34 -0500
+Received: from pbmxdp01.intersil.corp (pbmxdp01.pb.intersil.com [132.158.200.222])
+        by pbmsgap02.intersil.com with ESMTP id 2wkkffmn5a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 06 Dec 2019 08:42:34 -0500
+Received: from pbmxdp02.intersil.corp (132.158.200.223) by
+ pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.1531.3; Fri, 6 Dec 2019 08:42:32 -0500
+Received: from localhost.localdomain (132.158.202.109) by
+ pbmxdp02.intersil.corp (132.158.200.223) with Microsoft SMTP Server id
+ 15.1.1531.3 via Frontend Transport; Fri, 6 Dec 2019 08:42:31 -0500
+From:   Chris Brandt <chris.brandt@renesas.com>
+To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
+Date:   Fri, 6 Dec 2019 08:41:56 -0500
+Message-ID: <20191206134202.18784-1-chris.brandt@renesas.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <d34673db-cc43-6e1d-6f4a-07b25c2c8f7b@geanix.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US-large
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-12-06_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911200000 definitions=main-1912060118
+X-Proofpoint-Spam-Reason: mlx
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The Renesas SPI Bus Space Controller (SPIBSC) HW was specifically designed for
+accessing Serial flash devices (QSPI, HyperFlash, Octa Flash). In the hardware
+manuals, it is almost always labeled as the "Renesas SPI Multi I/O Bus Controller".
+However, the HW IP is usually referred to within Renesas as the "SPI BSC".
+Yes, the R-Car team nicknamed it RPC (for "Reduced Pin Count" flash) after HyperFash
+support was added...but I personally think that RPC is not a good name for this
+HW block.
 
 
-On 05/12/2019 08.36, Sean Nyekjaer wrote:
-> 
-> 
-> On 04/12/2019 18.51, Dan Murphy wrote:
->> The wake-up of the device can be configured as an optional
->> feature of the device.  Move the wake-up gpio from a requried
->> property to an optional property.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> CC: Rob Herring <robh@kernel.org>
-> Reviewed-by: Sean Nyekjaer <sean@geanix.com>
-Tested-by: Sean Nyekjaer <sean@geanix.com>
->> ---
->>   Documentation/devicetree/bindings/net/can/tcan4x5x.txt | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt 
->> b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
->> index 27e1b4cebfbd..7cf5ef7acba4 100644
->> --- a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
->> +++ b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
->> @@ -10,7 +10,6 @@ Required properties:
->>       - #size-cells: 0
->>       - spi-max-frequency: Maximum frequency of the SPI bus the chip can
->>                    operate at should be less than or equal to 18 MHz.
->> -    - device-wake-gpios: Wake up GPIO to wake up the TCAN device.
->>       - interrupt-parent: the phandle to the interrupt controller 
->> which provides
->>                       the interrupt.
->>       - interrupts: interrupt specification for data-ready.
->> @@ -23,6 +22,7 @@ Optional properties:
->>                  reset.
->>       - device-state-gpios: Input GPIO that indicates if the device is in
->>                     a sleep state or if the device is active.
->> +    - device-wake-gpios: Wake up GPIO to wake up the TCAN device.
->>   Example:
->>   tcan4x5x: tcan4x5x@0 {
->>
+This driver has been tested on an RZ/A1H RSK and RZ/A2M EVB.
+
+The testing mostly consisted of formatting an area as JFFS2 and doing copying
+of files and such.
+
+While the HW changed a little between the RZ/A1 and RZ/A2 generations, the IP
+block in the RZ/A2M was taken from the R-Car H3 design, so in theory this
+driver should work for R-Car Gen3 as well.
+
+=========================
+Version 2 changes
+=========================
+* I got rid of all the critical clock stuff. The idea is is that if you are
+  planning on using the SPI BSC, even in XIP mode, it should be described in DT.
+
+* There is no actual 'runtime pm' implmented in the driver at the moment, and
+  so just the standard enable/disable clock API is used.
+
+* The compatible string "jedec,spi-nor" will be used to determine if a spi controller
+  needs to be regitered or not. At the moment there is no setup needed for
+  running in XIP mode, so we just need to signal that the peripheral clock should
+  be left on and then we're done.
+
+
+
+
+Chris Brandt (6):
+  spi: Add SPIBSC driver
+  dt-bindings: spi: Document Renesas SPIBSC bindings
+  clk: renesas: r7s9210: Add SPIBSC clock
+  ARM: dts: r7s72100: Add SPIBSC devices
+  ARM: dts: r7s9210: Add SPIBSC device
+  ARM: dts: gr-peach: Enable SPIBSC
+
+ .../bindings/spi/renesas,spibsc.yaml          | 115 ++++
+ arch/arm/boot/dts/r7s72100-gr-peach.dts       |   5 +
+ arch/arm/boot/dts/r7s72100.dtsi               |  25 +-
+ arch/arm/boot/dts/r7s9210.dtsi                |  11 +
+ drivers/clk/renesas/r7s9210-cpg-mssr.c        |   1 +
+ drivers/spi/Kconfig                           |   8 +
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-spibsc.c                      | 612 ++++++++++++++++++
+ 8 files changed, 776 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/renesas,spibsc.yaml
+ create mode 100644 drivers/spi/spi-spibsc.c
+
+-- 
+2.23.0
+
