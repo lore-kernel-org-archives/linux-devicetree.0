@@ -2,120 +2,195 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CBEC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 16:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497BEC2BD09
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 16:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2161724659
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 16:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5E924673
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 16:47:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CnFFcQlC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfLFQfB convert rfc822-to-8bit (ORCPT
+        id S1726442AbfLFQr1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:35:01 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:44661 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfLFQfB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 11:35:01 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 814C6C0009;
-        Fri,  6 Dec 2019 16:34:54 +0000 (UTC)
-Date:   Fri, 6 Dec 2019 17:34:53 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: Change RK809 PMIC interrupt
- polarity
-Message-ID: <20191206173453.1b2f7844@xps13>
-In-Reply-To: <1601413.9zADmrJRdp@phil>
-References: <20191206154247.28057-1-miquel.raynal@bootlin.com>
-        <3285991.EbEXlA3CnX@phil>
-        <20191206165250.5877dec8@xps13>
-        <1601413.9zADmrJRdp@phil>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 6 Dec 2019 11:47:27 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:57204 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfLFQr0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 11:47:26 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB6GlMio016593;
+        Fri, 6 Dec 2019 10:47:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575650842;
+        bh=YM3VwWjblZ+96a50E5Kk0PHMfn6mkHDwsOR8RbqQotE=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=CnFFcQlCv2DuqyT7CPjsraExT648eCgs8MnYMK9qN3UGo6GTIdfkwK9NiPFLnqfCa
+         Cd7mVwjBSQVIxZCvUXXI4YmRFVfDBXOEMH+L0djc7HRlvJjcJkVsSuXSz5O92dfL4P
+         K/cwRPiNuuRTRWVt480X1N/F5anyjNboA0USxqQI=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB6GlMf6046460
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 6 Dec 2019 10:47:22 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 6 Dec
+ 2019 10:47:21 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 6 Dec 2019 10:47:21 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB6GlLF6062776;
+        Fri, 6 Dec 2019 10:47:21 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <bunk@kernel.org>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 2/2] net: phy: dp83867: Add rx-fifo-depth and tx-fifo-depth
+Date:   Fri, 6 Dec 2019 10:45:16 -0600
+Message-ID: <20191206164516.2702-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191206164516.2702-1-dmurphy@ti.com>
+References: <20191206164516.2702-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Heiko,
+This code changes the TI specific ti,fifo-depth to the common
+tx-fifo-depth property.  The tx depth is applicable for both RGMII and
+SGMII modes of operation.
 
-Heiko Stuebner <heiko@sntech.de> wrote on Fri, 06 Dec 2019 17:01:58
-+0100:
+rx-fifo-depth was added as well but this is only applicable for SGMII
+mode.
 
-> Am Freitag, 6. Dezember 2019, 16:52:50 CET schrieb Miquel Raynal:
-> > Hi Heiko,
-> > 
-> > Heiko Stuebner <heiko@sntech.de> wrote on Fri, 06 Dec 2019 16:48:00
-> > +0100:
-> >   
-> > > Hi Miquel,
-> > > 
-> > > Am Freitag, 6. Dezember 2019, 16:42:47 CET schrieb Miquel Raynal:  
-> > > > PMIC interrupt can be active high or active low depending on BIT(1) of
-> > > > the GPIO_INT_CFG pin. The default is 0x1, which means active
-> > > > high. Change the polarity in the device tree to reflect the default
-> > > > state.
-> > > > 
-> > > > Without this and with the current code base, the interrupt never stops
-> > > > triggering while the MFD driver does not see anything to
-> > > > check/clear/mask so after 100000 spurious IRQs, the kernel simply
-> > > > desactivates the interrupt:
-> > > > 
-> > > >         irq 36: nobody cared (try booting with the "irqpoll" option)
-> > > >         [...]
-> > > >         handlers:
-> > > >         [<(____ptrval____)>] irq_default_primary_handler threaded
-> > > > 	[<(____ptrval____)>] regmap_irq_thread
-> > > >         Disabling IRQ #36
-> > > > 
-> > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>    
-> > > 
-> > > *coughs slightly*
-> > > 
-> > > mfd: rk808: Set RK817 interrupt polarity to low
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/commit/drivers/mfd/rk808.c?h=for-mfd-next&id=dbd16ef53487084816a20f662423ab543a75fc83
-> > > 
-> > > Should be in the current merge window already I guess ;-)  
-> > 
-> > This time I swear I checked your tree. But this time we did not ended
-> > with the same fix so I missed this one *again* :)  
-> 
-> No worries ... I guess I should check where I hid additional patches ;-)
-> 
-> So right now px30 stuff is in the trees:
-> - mine
-> - mfd
-> - phy (first round of dsi phy, refinement pending on the list)
-> - nvmem (for the otp controller)
-> - drm (drm/rockchip: vop: add the definition of dclk_pol)
-> - clk
-> 
-> and pending on lists:
-> - drm (dsi support + timings)
-> - phy (refinement as mentioned above)
-> 
-> not submitted yet but planning to get this done this weekend:
-> - panel driver for px30-evb
-> - dsi devicetree stuff
+So in summary
+if RGMII mode write tx fifo depth only
+if SGMII mode write both rx and tx fifo depths
 
-Thank you very much for the detailed list! I will soon work on the
-PMIC audio support and on secure boot, do not hesitate to ping me if
-you see this kind of work coming on the mailing list!
+If the property is not populated in the device tree then set the value
+to the default values.
 
-Thanks,
-Miquèl
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Reported-by: Adrian Bunk <bunk@kernel.org>
+---
+ drivers/net/phy/dp83867.c | 62 +++++++++++++++++++++++++++++++--------
+ 1 file changed, 49 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+index 1f1ecee0ee2f..93649ebc87b5 100644
+--- a/drivers/net/phy/dp83867.c
++++ b/drivers/net/phy/dp83867.c
+@@ -72,9 +72,11 @@
+ #define DP83867_STRAP_STS2_CLK_SKEW_NONE	BIT(2)
+ 
+ /* PHY CTRL bits */
+-#define DP83867_PHYCR_FIFO_DEPTH_SHIFT		14
++#define DP83867_PHYCR_TX_FIFO_DEPTH_SHIFT	14
++#define DP83867_PHYCR_RX_FIFO_DEPTH_SHIFT	12
+ #define DP83867_PHYCR_FIFO_DEPTH_MAX		0x03
+-#define DP83867_PHYCR_FIFO_DEPTH_MASK		GENMASK(15, 14)
++#define DP83867_PHYCR_TX_FIFO_DEPTH_MASK	GENMASK(15, 14)
++#define DP83867_PHYCR_RX_FIFO_DEPTH_MASK	GENMASK(13, 12)
+ #define DP83867_PHYCR_RESERVED_MASK		BIT(11)
+ 
+ /* RGMIIDCTL bits */
+@@ -103,7 +105,8 @@ enum {
+ struct dp83867_private {
+ 	u32 rx_id_delay;
+ 	u32 tx_id_delay;
+-	u32 fifo_depth;
++	u32 tx_fifo_depth;
++	u32 rx_fifo_depth;
+ 	int io_impedance;
+ 	int port_mirroring;
+ 	bool rxctrl_strap_quirk;
+@@ -255,18 +258,32 @@ static int dp83867_of_init(struct phy_device *phydev)
+ 		dp83867->port_mirroring = DP83867_PORT_MIRROING_DIS;
+ 
+ 	ret = of_property_read_u32(of_node, "ti,fifo-depth",
+-				   &dp83867->fifo_depth);
++				   &dp83867->tx_fifo_depth);
+ 	if (ret) {
+-		phydev_err(phydev,
+-			   "ti,fifo-depth property is required\n");
+-		return ret;
++		ret = of_property_read_u32(of_node, "tx-fifo-depth",
++					   &dp83867->tx_fifo_depth);
++		if (ret)
++			dp83867->tx_fifo_depth =
++					DP83867_PHYCR_FIFO_DEPTH_4_B_NIB;
+ 	}
+-	if (dp83867->fifo_depth > DP83867_PHYCR_FIFO_DEPTH_MAX) {
+-		phydev_err(phydev,
+-			   "ti,fifo-depth value %u out of range\n",
+-			   dp83867->fifo_depth);
++
++	if (dp83867->tx_fifo_depth > DP83867_PHYCR_FIFO_DEPTH_MAX) {
++		phydev_err(phydev, "tx-fifo-depth value %u out of range\n",
++			   dp83867->tx_fifo_depth);
+ 		return -EINVAL;
+ 	}
++
++	ret = of_property_read_u32(of_node, "rx-fifo-depth",
++				   &dp83867->rx_fifo_depth);
++	if (ret)
++		dp83867->rx_fifo_depth = DP83867_PHYCR_FIFO_DEPTH_4_B_NIB;
++
++	if (dp83867->rx_fifo_depth > DP83867_PHYCR_FIFO_DEPTH_MAX) {
++		phydev_err(phydev, "rx-fifo-depth value %u out of range\n",
++			   dp83867->rx_fifo_depth);
++		return -EINVAL;
++	}
++
+ 	return 0;
+ }
+ #else
+@@ -305,12 +322,31 @@ static int dp83867_config_init(struct phy_device *phydev)
+ 		phy_clear_bits_mmd(phydev, DP83867_DEVADDR, DP83867_CFG4,
+ 				   BIT(7));
+ 
++	if (phy_interface_is_rgmii(phydev) ||
++	    phydev->interface == PHY_INTERFACE_MODE_SGMII) {
++		val = phy_read(phydev, MII_DP83867_PHYCTRL);
++		if (val < 0)
++			return val;
++
++		val &= ~DP83867_PHYCR_TX_FIFO_DEPTH_MASK;
++		val |= (dp83867->tx_fifo_depth <<
++			DP83867_PHYCR_TX_FIFO_DEPTH_SHIFT);
++
++		if (phydev->interface == PHY_INTERFACE_MODE_SGMII) {
++			val &= ~DP83867_PHYCR_RX_FIFO_DEPTH_MASK;
++			val |= (dp83867->rx_fifo_depth <<
++				DP83867_PHYCR_RX_FIFO_DEPTH_SHIFT);
++		}
++
++		ret = phy_write(phydev, MII_DP83867_PHYCTRL, val);
++		if (ret)
++			return ret;
++	}
++
+ 	if (phy_interface_is_rgmii(phydev)) {
+ 		val = phy_read(phydev, MII_DP83867_PHYCTRL);
+ 		if (val < 0)
+ 			return val;
+-		val &= ~DP83867_PHYCR_FIFO_DEPTH_MASK;
+-		val |= (dp83867->fifo_depth << DP83867_PHYCR_FIFO_DEPTH_SHIFT);
+ 
+ 		/* The code below checks if "port mirroring" N/A MODE4 has been
+ 		 * enabled during power on bootstrap.
+-- 
+2.23.0
+
