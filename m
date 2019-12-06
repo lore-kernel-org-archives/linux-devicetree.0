@@ -2,108 +2,104 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DE4C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 15:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF35C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 15:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11760206DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 15:47:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575647263;
-	bh=XU4KzAffhiVHpNEe4/1pdiuPJO9W/DiMeS6NkVUi/r0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1GP6pzc+rNd27kHg7CrFu6JJtXCyYqpRG7KBD0e1qmQXY1vEy6YyaF4xTjhiizlCS
-	 FrApRvx/WNVvx6C47k+VTkSq7CrRJ/6BQwMiyfILQ7AEPrKqeojQzee11swaprI/LD
-	 8ue3as5f+KKCCxnz6RkPLFZwQGC0VIq6vLVhdXdc=
+	by mail.kernel.org (Postfix) with ESMTP id 2E64120659
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 15:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfLFPrm (ORCPT
+        id S1726258AbfLFPsE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 10:47:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52902 "EHLO mail.kernel.org"
+        Fri, 6 Dec 2019 10:48:04 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:41854 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfLFPrm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Dec 2019 10:47:42 -0500
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BBEE206DF
-        for <devicetree@vger.kernel.org>; Fri,  6 Dec 2019 15:47:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575647261;
-        bh=XU4KzAffhiVHpNEe4/1pdiuPJO9W/DiMeS6NkVUi/r0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=c7iu67z+LrSf350mbV7RDu4fl92aou0+HBXLZHPoFUUbexNBVScqI5NFIyEQzIHrh
-         KVL1Z6FEJ2oo54bH5WVwLIlOMvVAlED5gO+UO/YHoq9gMIYcozGeL4trRzOwteFX3I
-         FyqjLTJZCk4MnmQ9dwnQMlAKqplsQWEVU3i3Tsq0=
-Received: by mail-qt1-f176.google.com with SMTP id 38so7484972qtb.13
-        for <devicetree@vger.kernel.org>; Fri, 06 Dec 2019 07:47:41 -0800 (PST)
-X-Gm-Message-State: APjAAAWAGc0W6RG8qsmhHcKNSPoYsMcMxWxoSWcfWPBsj0HXbX7RVUFC
-        UcDQusGYUsfiDTCLpZ/s99HKlkCSbN3PvOm50w==
-X-Google-Smtp-Source: APXvYqyeSom6mLENE9BcvQUDnH0vB4y24fx8zVOglyIjwjuSLgFIcolTe8ZmUrklSMAw/rsuJYze6eLV3P6APmMsULk=
-X-Received: by 2002:ac8:2cd0:: with SMTP id 16mr13466853qtx.136.1575647260809;
- Fri, 06 Dec 2019 07:47:40 -0800 (PST)
+        id S1726251AbfLFPsE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Dec 2019 10:48:04 -0500
+Received: from p57b772b2.dip0.t-ipconnect.de ([87.183.114.178] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1idFpp-0003G4-8O; Fri, 06 Dec 2019 16:48:01 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Change RK809 PMIC interrupt polarity
+Date:   Fri, 06 Dec 2019 16:48:00 +0100
+Message-ID: <3285991.EbEXlA3CnX@phil>
+In-Reply-To: <20191206154247.28057-1-miquel.raynal@bootlin.com>
+References: <20191206154247.28057-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-References: <02bf81614fd5806fbdb8e58760f424adeee3fdc6.1575611847.git.lijiazi@xiaomi.com>
-In-Reply-To: <02bf81614fd5806fbdb8e58760f424adeee3fdc6.1575611847.git.lijiazi@xiaomi.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 6 Dec 2019 09:47:29 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+rgS5oJGYP4WvE_uRc9RR+19MZMVe-gpu1nJUmqgdYNA@mail.gmail.com>
-Message-ID: <CAL_Jsq+rgS5oJGYP4WvE_uRc9RR+19MZMVe-gpu1nJUmqgdYNA@mail.gmail.com>
-Subject: Re: [PATCH] of: increase readability when reading prop through sysfs
-To:     lijiazi <jqqlijiazi@gmail.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        lijiazi <lijiazi@xiaomi.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 6, 2019 at 6:15 AM lijiazi <jqqlijiazi@gmail.com> wrote:
->
-> Replace '\0' with '\n', output will display on a single line.
+Hi Miquel,
 
-That would be nice, but that breaks the ABI. For example, dtc can read
-this filesystem tree and convert to dts or dtb.
+Am Freitag, 6. Dezember 2019, 16:42:47 CET schrieb Miquel Raynal:
+> PMIC interrupt can be active high or active low depending on BIT(1) of
+> the GPIO_INT_CFG pin. The default is 0x1, which means active
+> high. Change the polarity in the device tree to reflect the default
+> state.
+> 
+> Without this and with the current code base, the interrupt never stops
+> triggering while the MFD driver does not see anything to
+> check/clear/mask so after 100000 spurious IRQs, the kernel simply
+> desactivates the interrupt:
+> 
+>         irq 36: nobody cared (try booting with the "irqpoll" option)
+>         [...]
+>         handlers:
+>         [<(____ptrval____)>] irq_default_primary_handler threaded
+> 	[<(____ptrval____)>] regmap_irq_thread
+>         Disabling IRQ #36
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-Even if we ignored that or could fix all the users (we can't), your
-implementation is just broken in all cases. If the value is a string
-(you could guess, but you really don't know), then you are removing
-the null termination. If the value is a number, then you are changing
-the value when the last byte is 0.
+*coughs slightly*
 
-> Signed-off-by: lijiazi <lijiazi@xiaomi.com>
+mfd: rk808: Set RK817 interrupt polarity to low
+https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/commit/drivers/mfd/rk808.c?h=for-mfd-next&id=dbd16ef53487084816a20f662423ab543a75fc83
+
+Should be in the current merge window already I guess ;-)
+
+Having this consistent over all rk8xx seemed nicer.
+
+
+Heiko
+
+
 > ---
->  drivers/of/kobj.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c
-> index c72eef9..c776610 100644
-> --- a/drivers/of/kobj.c
-> +++ b/drivers/of/kobj.c
-> @@ -32,8 +32,18 @@ static ssize_t of_node_property_read(struct file *filp, struct kobject *kobj,
->                                 struct bin_attribute *bin_attr, char *buf,
->                                 loff_t offset, size_t count)
->  {
-> +       ssize_t pos = 0;
->         struct property *pp = container_of(bin_attr, struct property, attr);
-> -       return memory_read_from_buffer(buf, count, &offset, pp->value, pp->length);
-> +       pos = memory_read_from_buffer(buf, count, &offset,
-> +                       pp->value, pp->length);
-> +       /*
-> +        * value is ends with '\0', so if read prop value through sysfs, the
-> +        * output will be displayed on the same line as the shell prompt.
-> +        * Replace '\0' with '\n', increase readability of output.
-> +        */
-> +       if (pos >= 1)
-> +               buf[pos-1] = '\n';
-> +       return pos;
->  }
->
->  /* always return newly allocated name, caller must free after use */
-> --
-> 2.7.4
->
+>  arch/arm64/boot/dts/rockchip/px30-evb.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/px30-evb.dts b/arch/arm64/boot/dts/rockchip/px30-evb.dts
+> index 869f90cbf0da..a922ea75639d 100644
+> --- a/arch/arm64/boot/dts/rockchip/px30-evb.dts
+> +++ b/arch/arm64/boot/dts/rockchip/px30-evb.dts
+> @@ -138,7 +138,7 @@
+>  		compatible = "rockchip,rk809";
+>  		reg = <0x20>;
+>  		interrupt-parent = <&gpio0>;
+> -		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupts = <7 IRQ_TYPE_LEVEL_HIGH>;
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&pmic_int>;
+>  		rockchip,system-power-controller;
+> 
+
+
+
+
