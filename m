@@ -2,217 +2,151 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5A3C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 10:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED66C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 10:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC6821823
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 10:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA5122245C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 10:29:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsLGG1uT"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="MCJ6e8Wk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbfLFKJu (ORCPT
+        id S1726193AbfLFK3V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 05:09:50 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:32867 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfLFKJu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 05:09:50 -0500
-Received: by mail-wm1-f66.google.com with SMTP id y23so9413686wma.0;
-        Fri, 06 Dec 2019 02:09:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UsGwuJpmmXggI12c0BJbL3myfNW+vrDNmKExLXNygA8=;
-        b=WsLGG1uT0EHP0LWLa7rcecRpTgGQAwTESH1i7zL9UoTK5xHg3MI6tuNXVX2GIZhiCI
-         GxLb+b198fRzaRZIDlPf3i9qYnKKZW1x/5wqajSgIRj9RSX1oyEuSvYoCAe/XEdHsNzx
-         jQqK9cs+U6vfYCxdXtO5g/vmT8DFjUjF4nj5Z/kOOF/zMHz1v/ZEW4NoExL7T2G3wGfs
-         cb7o6efTprnimGhqhAx5ReOt+GN1JXQJKF0cNL3hvofKkZUWBDuuiqyPZ66Jntm+C7/h
-         GZfi8xyv8R9LUe29mQX1AFY5ykit2tr7jkYIHVQ1xYbksbQ0NeHdE0Dwk51Eo1AohCbZ
-         2b7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UsGwuJpmmXggI12c0BJbL3myfNW+vrDNmKExLXNygA8=;
-        b=kIA/OGo4jWPzxrhKpuvvhgou2kyw2CsWT9ToqDjbNx84/Zi0nQdHm6nJKm10UeR+c/
-         xtsDiEclylFIKbjJZ3c+mFUg9XdADE+0akdcPMVuRnNdlmOToEs2euCnzafvubtPuxI5
-         rR5/dx86vgRXLLHKFFVepGNn0eQEk5ID7vwRd+CiCAhUYK7WGbU/kRIVU2NGF3WQrerc
-         /MBdoHE6mxpbmuiAHgLYcWynhwAgJGdhLHke4u+gflPfL/OKNucsWD7L/XfxzsHcD0rP
-         b8XvNWKBmjZZiYl6WTCQSXWUB12KrhYmnlwpQyXMUzr5DamPMO8tz3Bj6y/93o7en+Fx
-         PJXw==
-X-Gm-Message-State: APjAAAVaRuSsx5664v+DrKGc3/K+dscLXChXQHZwbgDILyok6JYCOuAh
-        Spwv1pLLR2A1JcwhDCTGEMFDv16FcrKkFzT5Zjw=
-X-Google-Smtp-Source: APXvYqwDFvN6nRFU4i6tJIgVnMTN3dF1rix2W514PLzTBSRjPJ+dltNekFEdEtwWBnuLrcvSRDXwzoKiHOG6cO7SDpA=
-X-Received: by 2002:a7b:c74c:: with SMTP id w12mr9713944wmk.1.1575626986848;
- Fri, 06 Dec 2019 02:09:46 -0800 (PST)
+        Fri, 6 Dec 2019 05:29:21 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57324 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726102AbfLFK3V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 05:29:21 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB6AM7u0010137;
+        Fri, 6 Dec 2019 11:29:05 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=ho/sbuk46SVZEILtxoh1iWZ9PESL2p1iRVEuMafk6NI=;
+ b=MCJ6e8Wk7J6ysXSdJgo6QfQY0bCfzfPUq8JNcGrn9a1fyOgjFOwGp3/X7PaunmJIlwdL
+ TDM0ecGlMLDP/G8v8V6E9NFqiWSPYZdF5gq62dsUex4EI0wEhtiy0WhkQI3R0DW8tpUz
+ KQvfMgjsvzIeiVh/IuzFw757ZrSNjWmQIlsjVxH2UMaDb2+C8xkxu1EynJL4AlMDGYH2
+ R8kJyazXc4H4EoXIzT+0AviFcXLyA8NP9yMPVWwSaJlHuDmI3ZJ7nO/k0ZhiWVIV4e5F
+ IA2cqhIEhglAQHcYbT1CPgw2TsBRUspmbAv0iScqNkimmgrYxA37gJwHYRIqZIDI8mJ/ gQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wkes3817u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Dec 2019 11:29:05 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 885C110002A;
+        Fri,  6 Dec 2019 11:29:03 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 562252AE75F;
+        Fri,  6 Dec 2019 11:29:03 +0100 (CET)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE3.st.com
+ (10.75.127.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Dec
+ 2019 11:29:03 +0100
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Fri, 6 Dec 2019 11:29:02 +0100
+From:   Philippe CORNU <philippe.cornu@st.com>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>
+CC:     "kernel@collabora.com" <kernel@collabora.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>
+Subject: Re: [Linux-stm32] [PATCH v4 0/4] Genericize DW MIPI DSI bridge and
+ add i.MX 6 driver
+Thread-Topic: [Linux-stm32] [PATCH v4 0/4] Genericize DW MIPI DSI bridge and
+ add i.MX 6 driver
+Thread-Index: AQHVrB/6dEkIz1e2jUeb7WXRJ/4vMA==
+Date:   Fri, 6 Dec 2019 10:29:02 +0000
+Message-ID: <a356df00-e321-ab8c-61e9-f179cb1f8e12@st.com>
+References: <20191202193359.703709-1-adrian.ratiu@collabora.com>
+In-Reply-To: <20191202193359.703709-1-adrian.ratiu@collabora.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.51]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2AFA399042EFAD419166C5E33226D3E5@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
- <20191111090230.3402-6-chunyan.zhang@unisoc.com> <20191114210516.GB16668@bogus>
- <CAAfSe-tg2Jp-kuKW5QC4cAityDiuEhMuDfDDyUgt1YZ4eXte7A@mail.gmail.com>
- <CAL_JsqKqFmXZCJRKdHoYx14j=pzs80KqGpVd19ri4T_f6jrQCA@mail.gmail.com>
- <CAAfSe-uU0O_hkNfCX7aptHyMSMagPH-=9KRKbXfUp2J26Bk4AA@mail.gmail.com> <CAL_Jsq+ciND5sCpR3L63yH2XvbMLE2b7DMdOzWSZJc8utE7gZg@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+ciND5sCpR3L63yH2XvbMLE2b7DMdOzWSZJc8utE7gZg@mail.gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Fri, 6 Dec 2019 18:09:10 +0800
-Message-ID: <CAAfSe-tm-E-q-L4J=NP_Oa3+jLP5nM4yf69XuAm4=Uij_YB4AQ@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] arm64: dts: Add Unisoc's SC9863A SoC support
-To:     Rob Herring <robh@kernel.org>
-Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-06_02:2019-12-05,2019-12-06 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 3 Dec 2019 at 00:33, Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Nov 25, 2019 at 2:34 AM Chunyan Zhang <zhang.lyra@gmail.com> wrot=
-e:
-> >
-> > On Fri, 15 Nov 2019 at 22:43, Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Fri, Nov 15, 2019 at 2:59 AM Chunyan Zhang <zhang.lyra@gmail.com> =
-wrote:
-> > > >
-> > > > On Fri, 15 Nov 2019 at 05:05, Rob Herring <robh@kernel.org> wrote:
-> > > > >
-> > > > > On Mon, Nov 11, 2019 at 05:02:30PM +0800, Chunyan Zhang wrote:
-> > > > > >
-> > > > > > Add basic DT to support Unisoc's SC9863A, with this patch,
-> > > > > > the board sp9863a-1h10 can run into console.
-> > > > > >
-> > > > > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > > > > > ---
-> > > > > >  arch/arm64/boot/dts/sprd/Makefile         |   3 +-
-> > > > > >  arch/arm64/boot/dts/sprd/sc9863a.dtsi     | 536 ++++++++++++++=
-++++++++
-> > > > > >  arch/arm64/boot/dts/sprd/sharkl3.dtsi     | 188 ++++++++
-> > > > > >  arch/arm64/boot/dts/sprd/sp9863a-1h10.dts |  40 ++
-> > > > > >  4 files changed, 766 insertions(+), 1 deletion(-)
-> > > > > >  create mode 100644 arch/arm64/boot/dts/sprd/sc9863a.dtsi
-> > > > > >  create mode 100644 arch/arm64/boot/dts/sprd/sharkl3.dtsi
-> > > > > >  create mode 100644 arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-> > > > > >
-> > > > > > diff --git a/arch/arm64/boot/dts/sprd/Makefile b/arch/arm64/boo=
-t/dts/sprd/Makefile
-> > > > > > index 2bdc23804f40..f4f1f5148cc2 100644
-> > > > > > --- a/arch/arm64/boot/dts/sprd/Makefile
-> > > > > > +++ b/arch/arm64/boot/dts/sprd/Makefile
-> > > > > > @@ -1,3 +1,4 @@
-> > > > > >  # SPDX-License-Identifier: GPL-2.0
-> > > > > >  dtb-$(CONFIG_ARCH_SPRD) +=3D sc9836-openphone.dtb \
-> > > > > > -                     sp9860g-1h10.dtb
-> > > > > > +                     sp9860g-1h10.dtb        \
-> > > > > > +                     sp9863a-1h10.dtb
-> > > > > > diff --git a/arch/arm64/boot/dts/sprd/sc9863a.dtsi b/arch/arm64=
-/boot/dts/sprd/sc9863a.dtsi
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..578d71a932d9
-> > > > > > --- /dev/null
-> > > > > > +++ b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-> > > > > > @@ -0,0 +1,536 @@
-> > > > > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > > > > +/*
-> > > > > > + * Unisoc SC9863A SoC DTS file
-> > > > > > + *
-> > > > > > + * Copyright (C) 2019, Unisoc Inc.
-> > > > > > + */
-> > > > > > +
-> > > > > > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> > > > > > +#include "sharkl3.dtsi"
-> > > > > > +
-> > > > > > +/ {
-> > > > > > +     cpus {
-> > > > > > +             #address-cells =3D <2>;
-> > > > > > +             #size-cells =3D <0>;
-> > > > > > +
-> > > > > > +             cpu-map {
-> > > > > > +                     cluster0 {
-> > > > > > +                             core0 {
-> > > > > > +                                     cpu =3D <&CPU0>;
-> > > > > > +                             };
-> > > > > > +                             core1 {
-> > > > > > +                                     cpu =3D <&CPU1>;
-> > > > > > +                             };
-> > > > > > +                             core2 {
-> > > > > > +                                     cpu =3D <&CPU2>;
-> > > > > > +                             };
-> > > > > > +                             core3 {
-> > > > > > +                                     cpu =3D <&CPU3>;
-> > > > > > +                             };
-> > > > > > +                     };
-> > > > > > +
-> > > > > > +                     cluster1 {
-> > > > > > +                             core0 {
-> > > > > > +                                     cpu =3D <&CPU4>;
-> > > > > > +                             };
-> > > > > > +                             core1 {
-> > > > > > +                                     cpu =3D <&CPU5>;
-> > > > > > +                             };
-> > > > > > +                             core2 {
-> > > > > > +                                     cpu =3D <&CPU6>;
-> > > > > > +                             };
-> > > > > > +                             core3 {
-> > > > > > +                                     cpu =3D <&CPU7>;
-> > > > > > +                             };
-> > > > > > +                     };
-> > > > > > +             };
-> > > > > > +
-> > > > > > +             CPU0: cpu@0 {
-> > > > > > +                     device_type =3D "cpu";
-> > > > > > +                     compatible =3D "arm,cortex-a55";
-> > > > > > +                     reg =3D <0x0 0x0>;
-> > > > > > +                     enable-method =3D "psci";
-> > > > > > +                     cpu-idle-states =3D <&CORE_PD>;
-> > > > > > +             };
-> > > > > > +
-> > > > > > +             CPU1: cpu@100 {
-> > > > >
-> > > > > Your numbering seems odd. This follows the MPIDR reg? Normally a =
-cluster
-> > > > > would share the same number in one of the bytes.
-> > > >
-> > > > We're using A55, and the spec says that bit[15:8] identifies
-> > > > individual cores within the local DynamIQ=E2=84=A2 cluster
-> > >
-> > > Okay.
-> > >
-> > > > Also, we only support one cluster.
-> > >
-> > > cpu-map shows 2 clusters.
-> >
-> > From the scheduler view, we have two clusters, but there's actually
-> > one physical cluster only.
->
-> What's the scheduler? ;)
-
-It refers to EAS actually, which has a out-of-tree concept of Phantom
-Domains which are not congruent to the real cluster physical domains
-for DynamIQ.
-But now I understand the problem (saw the previous similar discussions
-on other DynamIQ SoC), dividing the cores into two phantom clusters is
-a workaround and cannot be merged into mainline.  :)
-
->
-> DT describes the physical system.
-
-Got it, I will fix that to move all cores into a single cluster.
-
-Thanks for the review.
-Chunyan
-
->
-> Rob
+SGkgQWRyaWFuLA0KDQpBbmQgc29ycnkgZm9yIHRoaXMgbGF0ZSByZXBseS4NCllvdXIgcGF0Y2hl
+cyBsb29rIGdvb2QgYW5kIHdlICgic3RtIGd1eXMiKSB1bmRlcnN0YW5kIHRoYXQgdjEuMDEgaXMg
+dmVyeSANCmRpZmZlcmVudCB0byB2MS4zMC8zMS4NCg0KV2UgYXJlIGRvaW5nIG91ciBiZXN0IHRv
+IHJldmlldyAmIHRlc3QgeW91ciBwYXRjaGVzIGFuZCB3ZSB3aWxsIGdvIGJhY2sgDQp0byB5b3Ug
+YXNhcC4NCk1hbnkgdGhhbmtzLA0KUGhpbGlwcGUgOi0pDQoNCg0KT24gMTIvMi8xOSA4OjMzIFBN
+LCBBZHJpYW4gUmF0aXUgd3JvdGU6DQo+IEhhdmluZyBhIGdlbmVyaWMgU3lub3BzaXMgRGVzaWdu
+V2FyZSBNSVBJLURTSSBob3N0IGNvbnRyb2xsZXIgYnJpZGdlDQo+IGRyaXZlciBpcyBhIHZlcnkg
+Z29vZCBpZGVhLCBob3dldmVyIHRoZSBjdXJyZW50IGltcGxlbWVudGF0aW9uIGhhcw0KPiBoYXJk
+Y29kZWQgcXVpdGUgYSBsb3Qgb2YgdGhlIHJlZ2lzdGVyIGxheW91dHMgdXNlZCBieSB0aGUgdHdv
+IHN1cHBvcnRlZA0KPiBTb0MgdmVuZG9ycywgU1RNIGFuZCBSb2NrY2hpcCwgd2hpY2ggdXNlIElQ
+IGNvcmVzIHYxLjMwIGFuZCB2MS4zMS4NCj4gDQo+IFRoaXMgbWFrZXMgaXQgaGFyZCB0byBzdXBw
+b3J0IG90aGVyIFNvQyB2ZW5kb3JzIGxpa2UgdGhlIEZTTC9OWFAgaS5NWCA2DQo+IHdoaWNoIHVz
+ZSBvbGRlciB2MS4wMSBjb3JlcyBvciBmdXR1cmUgdmVyc2lvbnMgYmVjYXVzZSwgYmFzZWQgb24g
+aGlzdG9yeSwNCj4gbGF5b3V0IGNoYW5nZXMgc2hvdWxkIGFsc28gYmUgZXhwZWN0ZWQgaW4gbmV3
+IERTSSB2ZXJzaW9ucyAvIFNvQ3MuDQo+IA0KPiBUaGlzIHBhdGNoIHNlcmllcyBjb252ZXJ0cyB0
+aGUgYnJpZGdlIGFuZCBwbGF0Zm9ybSBkcml2ZXJzIHRvIGFjY2Vzcw0KPiByZWdpc3RlcnMgdmlh
+IGdlbmVyaWMgcmVnbWFwIEFQSXMgYW5kIGFsbG93cyBlYWNoIHBsYXRmb3JtIGRyaXZlciB0bw0K
+PiBjb25maWd1cmUgaXRzIHJlZ2lzdGVyIGxheW91dCB2aWEgc3RydWN0IHJlZ19maWVsZHMsIHRo
+ZW4gYWRkcyBzdXBwb3J0DQo+IGZvciB0aGUgaG9zdCBjb250cm9sbGVyIGZvdW5kIG9uIGkuTVgg
+Ni4NCj4gDQo+IEkgb25seSBoYXZlIGkuTVggaGFyZHdhcmUgd2l0aCBNSVBJLURTSSBwYW5lbCBh
+bmQgcmVsZXZhbnQgZG9jdW1lbnRhdGlvbg0KPiBhdmFpbGFibGUgZm9yIHRlc3Rpbmcgc28gSSds
+bCByZWFsbHkgYXBwcmVjaWF0ZSBpdCBpZiBzb21lb25lIGNvdWxkIHRlc3QNCj4gdGhlIHNlcmll
+cyBvbiBSb2NrY2hpcCBhbmQgU1RNLi4uIGV5ZWJhbGxpbmcgcmVnaXN0ZXIgZmllbGRzIGNvdWxk
+IG9ubHkNCj4gZ2V0IG1lIHNvIGZhciwgc28gc29ycnkgaW4gYWR2YW5jZSBmb3IgYW55IGJyZWFr
+YWdlIQ0KPiANCj4gTWFueSB0aGFua3MgdG8gQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxs
+b25AY29sbGFib3JhLmNvbT4gZm9yDQo+IHN1Z2dlc3RpbmcgdGhlIHJlZ21hcCBzb2x1dGlvbiBh
+bmQgdG8gTGl1IFlpbmcgPFlpbmcuTGl1QGZyZWVzY2FsZS5jb20+DQo+IGZvciBkb2luZyB0aGUg
+aW5pdGlhbCBpLk1YIHBsYXRmb3JtIGRyaXZlciBpbXBsZW1lbnRhdGlvbi4NCj4gDQo+IFRoaXMg
+c2VyaWVzIGFwcGxpZXMgb24gdG9wIG9mIGxhdGVzdCBsaW51eC1uZXh0IHRyZWUsIG5leHQtMjAx
+OTEyMDIuDQo+IA0KPiB2MyAtPiB2NDoNCj4gICAgKiBBZGRlZCBjb21tbWl0IG1lc3NhZ2UgdG8g
+ZHQtYmluZGluZyBwYXRjaCAoTmVpbCkNCj4gICAgKiBDb252ZXJ0ZWQgdGhlIGR0LWJpbmRpbmcg
+dG8geWFtbCBkdC1zY2hlbWEgZm9ybWF0IChOZWlsKQ0KPiAgICAqIFNtYWxsIERUIG5vZGUgKyBk
+cml2ZXIgZml4ZXMgKFJvYikNCj4gICAgKiBSZW5hbWVkIHBsYXRmb3JtIGRyaXZlciB0byByZWZs
+ZWN0IGl0J3Mgb25seSBmb3IgaS5NWCB2NiAoRmFiaW8pDQo+ICAgICogQWRkZWQgc21hbGwgcGFu
+ZWwgZXhhbXBsZSB0byB0aGUgaG9zdCBjb250cm9sbGVyIERUIGJpbmRpbmcNCj4gDQo+IHYyIC0+
+IHYzOg0KPiAgICAqIEFkZGVkIGNvbnN0IGRlY2xhcmF0aW9ucyB0byBkdy1taXBpLWRzaS5jIHN0
+cnVjdHMgKEVtaWwpDQo+ICAgICogRml4ZWQgUmV2aWV3ZWQtYnkgdGFncyBhbmQgY2MnZCBzb21l
+IG1vcmUgcmVsZXZhbnQgTUwgKEVtaWwpDQo+IA0KPiB2MSAtPiB2MjoNCj4gICAgKiBNb3ZlZCBy
+ZWdpc3RlciBkZWZpbml0aW9ucyAmIHJlZ21hcCBpbml0aWFsaXphdGlvbiBpbnRvIGJyaWRnZQ0K
+PiAgICBtb2R1bGUuIFBsYXRmb3JtIGRyaXZlcnMgZ2V0IHRoZSByZWdtYXAgdmlhIHBsYXRfZGF0
+YSBhZnRlciBjYWxsaW5nDQo+ICAgIHRoZSBicmlkZ2UgcHJvYmUgKEVtaWwpLg0KPiANCj4gQWRy
+aWFuIFJhdGl1ICg0KToNCj4gICAgZHJtOiBicmlkZ2U6IGR3X21pcGlfZHNpOiBhY2Nlc3MgcmVn
+aXN0ZXJzIHZpYSBhIHJlZ21hcA0KPiAgICBkcm06IGJyaWRnZTogZHdfbWlwaV9kc2k6IGFic3Ry
+YWN0IHJlZ2lzdGVyIGFjY2VzcyB1c2luZyByZWdfZmllbGRzDQo+ICAgIGRybTogaW14OiBBZGQg
+aS5NWCA2IE1JUEkgRFNJIGhvc3QgZHJpdmVyDQo+ICAgIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBh
+ZGQgaS5NWDYgTUlQSSBEU0kgaG9zdCBjb250cm9sbGVyIGRvYw0KPiANCj4gICAuLi4vZGlzcGxh
+eS9pbXgvZnNsLG1pcGktZHNpLWlteDYueWFtbCAgICAgICAgfCAxMzYgKysrKw0KPiAgIGRyaXZl
+cnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYyB8IDY5OSArKysrKysrKysr
+KysrLS0tLS0NCj4gICBkcml2ZXJzL2dwdS9kcm0vaW14L0tjb25maWcgICAgICAgICAgICAgICAg
+ICAgfCAgIDcgKw0KPiAgIGRyaXZlcnMvZ3B1L2RybS9pbXgvTWFrZWZpbGUgICAgICAgICAgICAg
+ICAgICB8ICAgMSArDQo+ICAgZHJpdmVycy9ncHUvZHJtL2lteC9kd19taXBpX2RzaS1pbXg2LmMg
+ICAgICAgIHwgMzc4ICsrKysrKysrKysNCj4gICAuLi4vZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBp
+LWRzaS1yb2NrY2hpcC5jICAgfCAgMTcgKy0NCj4gICBkcml2ZXJzL2dwdS9kcm0vc3RtL2R3X21p
+cGlfZHNpLXN0bS5jICAgICAgICAgfCAgMzQgKy0NCj4gICBpbmNsdWRlL2RybS9icmlkZ2UvZHdf
+bWlwaV9kc2kuaCAgICAgICAgICAgICAgfCAgIDIgKy0NCj4gICA4IGZpbGVzIGNoYW5nZWQsIDEw
+NjcgaW5zZXJ0aW9ucygrKSwgMjA3IGRlbGV0aW9ucygtKQ0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbXgvZnNsLG1pcGkt
+ZHNpLWlteDYueWFtbA0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaW14
+L2R3X21pcGlfZHNpLWlteDYuYw0KPiA=
