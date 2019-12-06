@@ -2,88 +2,167 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A4BC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 04:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C49C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 05:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788502464E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 04:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08C2B24677
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 05:44:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Y52jFYLB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hwk8aQjr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbfLFEFf (ORCPT
+        id S1726091AbfLFFoh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 5 Dec 2019 23:05:35 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:25490 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726076AbfLFEFf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Dec 2019 23:05:35 -0500
-X-UUID: c433c899c35b4210b759f1b5b6c57ec3-20191206
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=CV7DAlbfexttU47r175IIVk9wg60txROOSVKG7NLYFA=;
-        b=Y52jFYLB+9X280FVFRBpAuANp9f36YN5zyXlYCynNuptFZ/OLgJ0CBIPuaSgIw4z+zOjd4mZdyc0Q82fbWyAxSjE0+byY/oGMHC71qShnz8zmbqKpS4CvR/HORqdk+fIYJDPJiIoWVLfyFnldB0JaU+HQeqitXNKmAOtho/mQXc=;
-X-UUID: c433c899c35b4210b759f1b5b6c57ec3-20191206
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1395859010; Fri, 06 Dec 2019 12:05:30 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 6 Dec 2019 12:05:19 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 6 Dec 2019 12:05:09 +0800
-Message-ID: <1575605122.6151.2.camel@mtksdaap41>
-Subject: Re: [PATCH v2 05/14] arm64: dts: add gce node for mt6779
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Fri, 6 Dec 2019 12:05:22 +0800
-In-Reply-To: <1574819937-6246-7-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574819937-6246-7-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 6 Dec 2019 00:44:37 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41339 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfLFFoh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 00:44:37 -0500
+Received: by mail-ed1-f66.google.com with SMTP id c26so4794710eds.8;
+        Thu, 05 Dec 2019 21:44:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jG4VeHKyYrwbwzbvzBFt4Gx2edRiCsdmF+I1yIWaGOQ=;
+        b=hwk8aQjrxoq7/cMpTn3R/vI7AwL8vcmF8odckxSgFkQ7S5l8xjksnJ8GXpTauf6VxW
+         FbIV50+Finemz9inqv8p8j41pxeEKHNNiTaBbub+pgk7JxY5lpgS3hYLG8ATCX7ZFVUJ
+         uwcoARmbktnQSOrOAabeGjejFiovi03QBCyaK5qjJgTgfHABaIwl6sLey6iCxrHLGHc2
+         s6D4pmKTdaB48kvXcyRq90VKOHsjA4vR4zDhHYOKpEn9UfjSjHsv60cvhXqF5r0DK0p1
+         0hkd08vUqnTd6gqZMDG6fgBSNT1VzMrWRhfLztWMZtiOdx5zqQ+SaGXPRwBQMCWdQdDB
+         Gpwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jG4VeHKyYrwbwzbvzBFt4Gx2edRiCsdmF+I1yIWaGOQ=;
+        b=sR7N41nbiQGsPPkUeaImK66VFXttJq4w3Be24/ZQlBh574GnDSa7NTECidJ4O8ZM5q
+         m8G7TVC1WB+gUhmlT/KGS4D0HIoOztc++V8pMoNzyH0cUZbdGxLQG1OlSeVJ4hZcX9+L
+         Phing4XrS0HvfJNfEOs/1mFIeMpsx6jOj7bEzDOcB+v25JU3cz4RSSlS4A5ts+OUKXWU
+         Lnw6LI9hqrgYu8027eA3FQ4aJmraVKAQjak8MujzRJ6iO/AlGNHGIM5sFMzo/hsL04yc
+         EVY7rhshxPcRFQXoWaTcufTTYFv35/qSzxQVpHjZ4v+mZmVARteJagmJosxHBFGQqshL
+         tMsw==
+X-Gm-Message-State: APjAAAUUhaxIBVXqpa2xCS8/k+Tq2X6U1cSYD06djeL80nuwciIzi9Dw
+        QODySDSlTN2IQRsecaZO+bqgbQu1+BlPVrNeCBU=
+X-Google-Smtp-Source: APXvYqyDDeni3gnBiyE0+HxIAg+g/Cy0WoARGXH+7cPG3f7z554qdeBuocYEs/PL7lODC/WIgmE8dBBlC+DWW7zBBjU=
+X-Received: by 2002:a05:6402:12d1:: with SMTP id k17mr14585333edx.291.1575611074979;
+ Thu, 05 Dec 2019 21:44:34 -0800 (PST)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <1574679352-2989-1-git-send-email-shubhrajyoti.datta@gmail.com> <20191205181740.GA26684@bogus>
+In-Reply-To: <20191205181740.GA26684@bogus>
+From:   Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Date:   Fri, 6 Dec 2019 11:14:23 +0530
+Message-ID: <CAKfKVtHnnFbgmtpRJYS7V97SvZdipnhf7Pe1kOxPpJh+30bEFA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: Add dt bindings for flex noc Performance Monitor
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org,
+        corbet@lwn.net, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjU4ICswODAwLCBEZW5uaXMgWUMgSHNpZWggd3JvdGU6
-DQo+IGFkZCBnY2UgZGV2aWNlIG5vZGUgZm9yIG10Njc3OQ0KPiANCj4gU2lnbmVkLW9mZi1ieTog
-RGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsuY29tPg0KDQpSZXZpZXdl
-ZC1ieTogQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBh
-cmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS5kdHNpIHwgMTAgKysrKysrKysrKw0K
-PiAgMSBmaWxlIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9h
-cmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS5kdHNpIGIvYXJjaC9hcm02NC9ib290
-L2R0cy9tZWRpYXRlay9tdDY3NzkuZHRzaQ0KPiBpbmRleCBkYWEyNWI3NTc4OGYuLjEwZDU5Mzg1
-ZjRhMSAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3Nzku
-ZHRzaQ0KPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS5kdHNpDQo+
-IEBAIC04LDYgKzgsNyBAQA0KPiAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL210Njc3OS1j
-bGsuaD4NCj4gICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9pcnEu
-aD4NCj4gICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2lj
-Lmg+DQo+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ2NlL210Njc3OS1nY2UuaD4NCj4gIA0KPiAg
-LyB7DQo+ICAJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NzkiOw0KPiBAQCAtMTU5LDYgKzE2
-MCwxNSBAQA0KPiAgCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KPiAgCQl9Ow0KPiAgDQo+ICsJCWdj
-ZTogbWFpbGJveEAxMDIyODAwMCB7DQo+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3
-OS1nY2UiOw0KPiArCQkJcmVnID0gPDAgMHgxMDIyODAwMCAwIDB4NDAwMD47DQo+ICsJCQlpbnRl
-cnJ1cHRzID0gPEdJQ19TUEkgMTg1IElSUV9UWVBFX0xFVkVMX0xPVz47DQo+ICsJCQkjbWJveC1j
-ZWxscyA9IDwzPjsNCj4gKwkJCWNsb2NrcyA9IDwmaW5mcmFjZmdfYW8gQ0xLX0lORlJBX0dDRT47
-DQo+ICsJCQljbG9jay1uYW1lcyA9ICJnY2UiOw0KPiArCQl9Ow0KPiArDQo+ICAJCXVhcnQwOiBz
-ZXJpYWxAMTEwMDIwMDAgew0KPiAgCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NzktdWFy
-dCIsDQo+ICAJCQkJICAgICAibWVkaWF0ZWssbXQ2NTc3LXVhcnQiOw0KDQo=
+On Thu, Dec 5, 2019 at 11:47 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Nov 25, 2019 at 04:25:50PM +0530, shubhrajyoti.datta@gmail.com wrote:
+> > From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> >
+> > Add dt bindings for flexnoc Performance Monitor.
+> > The flexnoc counters for read and write response and requests are
+> > supported.
+> >
+> > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> > ---
+> > changes from RFC:
+> > moved to schema / yaml
+> >
+> >  .../devicetree/bindings/perf/xlnx-flexnoc-pm.yaml  | 45 ++++++++++++++++++++++
+> >  1 file changed, 45 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/perf/xlnx-flexnoc-pm.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/perf/xlnx-flexnoc-pm.yaml b/Documentation/devicetree/bindings/perf/xlnx-flexnoc-pm.yaml
+> > new file mode 100644
+> > index 0000000..bd0f345
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/perf/xlnx-flexnoc-pm.yaml
+> > @@ -0,0 +1,45 @@
+> > +# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
+>
+> () around the licenses.
+>
+> Are you good with GPL v10? Make it 'GPL-2.0-only' instead.
+fixed in v2
 
+>
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/perf/xlnx-flexnoc-pm.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Xilinx flexnoc Performance Monitor device tree bindings
+> > +
+> > +maintainers:
+> > +  - Arnd Bergmann <arnd@arndb.de>
+> > +  - Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
+> This should be someone familar with this h/w (you).
+>
+fixed in v2
+> > +
+> > +properties:
+> > +  compatible:
+> > +    # Versal SoC based boards
+> > +    items:
+> > +      - enum:
+> > +          - xlnx,flexnoc-pm-2.7
+> > +
+> > +  reg:
+> > +    items:
+> > +      - description: funnel registers
+> > +      - description: baselpd registers
+> > +      - description: basefpd registers
+> > +
+> > +  reg-names:
+> > +    # The core schema enforces this is a string array
+> > +    items:
+> > +      - const: funnel
+> > +      - const: baselpd
+> > +      - const: basefpd
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+>
+> No point having 'reg-names' if not required.
+this I am using to get the addresses.
+
+>
+>
+> Add:
+>
+> additionalProperties: false
+
+updated in v2.
+>
+> > +
+> > +examples:
+> > +  - |
+> > +    performance-monitor@f0920000 {
+> > +        compatible = "xlnx,flexnoc-pm-2.7";
+> > +        reg-names = "funnel", "baselpd", "basefpd";
+> > +        reg = <0x0 0xf0920000 0x0 0x1000>,
+> > +              <0x0 0xf0980000 0x0 0x9000>,
+> > +              <0x0 0xf0b80000 0x0 0x9000>;
+> > +    };
+> > --
+> > 2.1.1
+> >
