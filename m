@@ -2,83 +2,163 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6931AC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 15:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C114FC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 15:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4559624670
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 15:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FAFB24670
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 15:44:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Vhu1tPM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbfLFPmw (ORCPT
+        id S1726287AbfLFPok (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 10:42:52 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:43107 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfLFPmw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 10:42:52 -0500
-X-Originating-IP: 91.224.148.103
-Received: from localhost.localdomain (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 20E62240003;
-        Fri,  6 Dec 2019 15:42:50 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+        Fri, 6 Dec 2019 10:44:40 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57254 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfLFPoj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 10:44:39 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB6FiU6T034988;
+        Fri, 6 Dec 2019 09:44:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575647070;
+        bh=J2NTJJnc7EuyiPXPghfk+i5MBxVPL04W9oNwR740Zks=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Vhu1tPM3r6TjmLwpujAFpxCBg+9eo0bPailOUpUj1p9oc7vpl9dsfnPVw0DOgl2hg
+         IbTE16fkI/Y7Jl0H6mEaBZOwzkcVqUQ0lzoblJU7n7yWXDJvGjo5mThRRnggGXLwfv
+         E8g2KakZf3WQTCVXGT1UGPPTBL3bleborDJUoNA8=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB6FiUH9084143
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 6 Dec 2019 09:44:30 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 6 Dec
+ 2019 09:44:30 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 6 Dec 2019 09:44:30 -0600
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB6FiRnk075212;
+        Fri, 6 Dec 2019 09:44:28 -0600
+Subject: Re: [PATCH] dt-bindings: net: mdio: use non vendor specific
+ compatible string in example
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        <linux-rockchip@lists.infradead.org>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH] arm64: dts: rockchip: Change RK809 PMIC interrupt polarity
-Date:   Fri,  6 Dec 2019 16:42:47 +0100
-Message-Id: <20191206154247.28057-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
+        <devicetree@vger.kernel.org>,
+        Simon Horman <simon.horman@netronome.com>,
+        netdev <netdev@vger.kernel.org>
+References: <20191127153928.22408-1-grygorii.strashko@ti.com>
+ <CAL_Jsq+viKkF4FFgpMhTjKCMLeGOX1o9Uq-StU6xwFuTcpCL2Q@mail.gmail.com>
+ <eb3cb685-5ddc-8e06-1e26-0f6bc43b294c@ti.com>
+ <CAL_JsqKZ5qexJMSm5MZYQp5LutyHHHObbfA3r2_XQa7E6kjqpg@mail.gmail.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <72fc7152-abb8-e0b4-0e0f-c8afe649a2c7@ti.com>
+Date:   Fri, 6 Dec 2019 17:44:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqKZ5qexJMSm5MZYQp5LutyHHHObbfA3r2_XQa7E6kjqpg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PMIC interrupt can be active high or active low depending on BIT(1) of
-the GPIO_INT_CFG pin. The default is 0x1, which means active
-high. Change the polarity in the device tree to reflect the default
-state.
 
-Without this and with the current code base, the interrupt never stops
-triggering while the MFD driver does not see anything to
-check/clear/mask so after 100000 spurious IRQs, the kernel simply
-desactivates the interrupt:
 
-        irq 36: nobody cared (try booting with the "irqpoll" option)
-        [...]
-        handlers:
-        [<(____ptrval____)>] irq_default_primary_handler threaded
-	[<(____ptrval____)>] regmap_irq_thread
-        Disabling IRQ #36
+On 06/12/2019 17:09, Rob Herring wrote:
+> On Fri, Dec 6, 2019 at 5:14 AM Grygorii Strashko
+> <grygorii.strashko@ti.com> wrote:
+>>
+>>
+>>
+>> On 05/12/2019 19:59, Rob Herring wrote:
+>>> On Wed, Nov 27, 2019 at 9:39 AM Grygorii Strashko
+>>> <grygorii.strashko@ti.com> wrote:
+>>>>
+>>>> Use non vendor specific compatible string in example, otherwise DT YAML
+>>>> schemas validation may trigger warnings specific to TI ti,davinci_mdio
+>>>> and not to the generic MDIO example.
+>>>>
+>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/net/mdio.yaml | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
+>>>> index 5d08d2ffd4eb..524f062c6973 100644
+>>>> --- a/Documentation/devicetree/bindings/net/mdio.yaml
+>>>> +++ b/Documentation/devicetree/bindings/net/mdio.yaml
+>>>> @@ -56,7 +56,7 @@ patternProperties:
+>>>>    examples:
+>>>>      - |
+>>>>        davinci_mdio: mdio@5c030000 {
+>>>> -        compatible = "ti,davinci_mdio";
+>>>> +        compatible = "vendor,mdio";
+>>>
+>>> The problem with this is eventually 'vendor,mdio' will get flagged as
+>>> an undocumented compatible. We're a ways off from being able to enable
+>>> that until we have a majority of bindings converted. Though maybe
+>>> examples can be enabled sooner rather than later.
+>>>
+>>
+>> May be some generic compatible string be used for all examples,
+>> like: "vendor,example-ip". What do you think?
+> 
+> I'm still not clear what problem you are trying to solve. 'may trigger
+> warnings' doesn't sound like an actual problem.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- arch/arm64/boot/dts/rockchip/px30-evb.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+oh. sry.
+it's like this
+  - mdio.yaml describes generic MDIO properties, but uses compatible = "ti,davinci_mdio";
+  - davinci_mdio (or other IPs) has some custom properties.
+    Some of them can be marked as required - for example bus_freq.
+    And in the feature i need to add clocks.
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30-evb.dts b/arch/arm64/boot/dts/rockchip/px30-evb.dts
-index 869f90cbf0da..a922ea75639d 100644
---- a/arch/arm64/boot/dts/rockchip/px30-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/px30-evb.dts
-@@ -138,7 +138,7 @@
- 		compatible = "rockchip,rk809";
- 		reg = <0x20>;
- 		interrupt-parent = <&gpio0>;
--		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pmic_int>;
- 		rockchip,system-power-controller;
+   Now "bus_freq" is required for davinci_mdio, but not required for generic mdio example.
+   As result, by default, following warning will be produced:
+/home/grygorii/kernel.org/linux-master/linux/Documentation/devicetree/bindings/net/mdio.example.dt.yaml: mdio@5c030000: 'bus_freq' is a required property
+
+  to w/a above I've added for davinci_mdio:
+if:
+   properties:
+     compatible:
+       contains:
+         const: ti,davinci_mdio
+   required:
+     - bus_freq
+  (by the way above is incorrect and if i add "then:" it will still produce warning :), but
+   it is different story)
+
+  Next if I add "clocks" as required for davinci_mdio I'll get warning again and
+  will need to hack ti,davinci-mdio.yaml or update example in mdio.yaml.
+
+  So, I'm the position of lucky persons who is working on some HW module which bindings
+  where occasionally selected as generic example. :)
+
+FYI, below is example from power-domain.yaml:
+
+     parent3: power-controller@12340000 {
+         compatible = "foo,power-controller";
+         reg = <0x12340000 0x1000>;
+         #power-domain-cells = <0>;
+         domain-idle-states = <&DOMAIN_RET>, <&DOMAIN_PWR_DN>;
+     };
+  
 -- 
-2.20.1
-
+Best regards,
+grygorii
