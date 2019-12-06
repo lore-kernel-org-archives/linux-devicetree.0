@@ -2,120 +2,145 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D992C2BD09
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 19:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A70EC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 19:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42AFB24679
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 19:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 010572464E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 19:56:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="I8MOIuol"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FoabJm/V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfLFTtk (ORCPT
+        id S1726374AbfLFTz4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 14:49:40 -0500
-Received: from mail-eopbgr1400104.outbound.protection.outlook.com ([40.107.140.104]:36171
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726325AbfLFTtk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Dec 2019 14:49:40 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ch9UQrbrUPPG0nB8ZNlSSzkqsKKpXirydgCOcmA3qDgWoTskqP9B6+NhJ0BCZ5dVIh81wiqMnPDT79lv+91HcIxewGE+loEvSJHnmuUJIcv9l5ByaeZxTl4Uo6s+ZjkJyZWO6E1GgAh+otI+INgGhpdtnDqbliuGzCCiSdIDFguWUrd5SalAne7UD3owwgNrum6t2A243emyu4goOuR7igVWuu9ch/cO6SkL7G581fzmqT7CpcY8Pe+FMUBu5NYKX5uvE4uWdfIWNF42eI5ndM7xfXwyyb86Y/sGIaN3NvkGEvaBIwnRKJAKOOtzRe6waqN9N1w8m9h3AhiW8ekt1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gyGjU7T6WutyAvOkNHgc4SGQpxnvbKyXVi72RF4mXN0=;
- b=hWVgc0bOr1sTfPcWMcZKu/rYEW+6bNzuT7JGtu+DnZNS3QyiJIPd9uGr/yc1M1lA4pkxyN32piWlASbV4K7uzSDdFOtHVaunyd6Hhv0zsLlL0ZccZxDs3TDIBs1nFTiN8HiQCdtsVZBk/LK94nIfQOP5FmZBlgGxM45VOF86b3Qys5f7tTaRunF7WAq94riO8PF8uLDsaa7hOKt2LWDsjTH0uleeXRucbFCSuK54z16EXfRY/vRVUuEL71a/VtnJSinsGLjUsukLM3SsAgIY8zt/dN5zQ7zkMzM3uYb3z/u7FP39JKPKZ39NCfV6tUr7HcGDi/GRrrYNGNUnRYXIBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Fri, 6 Dec 2019 14:55:56 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:40657 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfLFTzz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 14:55:55 -0500
+Received: by mail-il1-f196.google.com with SMTP id b15so7256592ila.7;
+        Fri, 06 Dec 2019 11:55:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gyGjU7T6WutyAvOkNHgc4SGQpxnvbKyXVi72RF4mXN0=;
- b=I8MOIuol4RDN8Gk7j2z9N1kFQBXIgzBakIchV6NB+y+fWgWQqvNK1pB2r5/Cck5It8uB6BxudPPqrYoblnvBTo/PN09bA+9Ybnw2FCJk6B9WTuS3M95+wZOPexe2rvft5yBqTrIzQRgN2CxUvonrCDwXBqFVENcVROAserMGJlM=
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
- TY1PR01MB1643.jpnprd01.prod.outlook.com (52.133.163.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.17; Fri, 6 Dec 2019 19:49:34 +0000
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2516.003; Fri, 6 Dec 2019
- 19:49:34 +0000
-From:   Chris Brandt <Chris.Brandt@renesas.com>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: RE: [PATCH v2 3/6] clk: renesas: r7s9210: Add SPIBSC clock
-Thread-Topic: [PATCH v2 3/6] clk: renesas: r7s9210: Add SPIBSC clock
-Thread-Index: AQHVrDsZnI+SMLkmZkyW5+1FSLVd3qetcNKAgAAShiA=
-Date:   Fri, 6 Dec 2019 19:49:34 +0000
-Message-ID: <TY1PR01MB1562645184402F7C01CE36958A5F0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <20191206134202.18784-4-chris.brandt@renesas.com>
- <5644c687-7692-53f2-f01e-0e7bf62464ea@cogentembedded.com>
-In-Reply-To: <5644c687-7692-53f2-f01e-0e7bf62464ea@cogentembedded.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctODQ5ZDdkZDEtMTg2MS0xMWVhLWFhNTItOTRlNmY3Njc5M2FlXGFtZS10ZXN0XDg0OWQ3ZGQzLTE4NjEtMTFlYS1hYTUyLTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iNjg5IiB0PSIxMzIyMDEzNTM3MTQ0MTg1ODkiIGg9IjlzS0dEQ0xiVktiaWd4VjIwQnM0NTg2ZnRjaz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Brandt@renesas.com; 
-x-originating-ip: [75.60.247.61]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e6c8f820-1813-40e3-8c57-08d77a856b70
-x-ms-traffictypediagnostic: TY1PR01MB1643:
-x-microsoft-antispam-prvs: <TY1PR01MB1643437E672D90FEACCBC5148A5F0@TY1PR01MB1643.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0243E5FD68
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(9686003)(76176011)(99286004)(478600001)(81166006)(81156014)(55016002)(7696005)(8936002)(186003)(5660300002)(305945005)(74316002)(8676002)(229853002)(2906002)(102836004)(53546011)(6506007)(66946007)(33656002)(52536014)(7416002)(66446008)(64756008)(66556008)(66476007)(76116006)(86362001)(71200400001)(71190400001)(4744005)(54906003)(316002)(110136005)(26005)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1643;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fiaYp+NTbST/jqAv5SDWDFSh10U6W1RT2pRmDViYtD7uBfroouJrNtIU4gQJqBWPg1uJ+kDEspwSbl+SJE5ZwYsyiFyrFrBo6NRbJbvEWdmW86ol7Vxtr9i7moT4aOmJ8vY0K89U3xViSDc34PJziFPbI71PB5nX5pAB20LzgQNFZuXClXUPc7eSxeV/NL971eUx3nD+Of2aWHxbVwHoPAd2smQjNAmpXq/r+7/PZfK1tBrFytL8d1vWoiQvQny6lUfGg4KLDkH0iU5UKnSSBWbs6VC26CvlBd+wx6RD9mrhyEJ+h/ll1JJYyXrxZQYyb0UWHy5CG1S1XbNiV/1mVRgKXJBmB9YB/WELmNAZKAtN1oX//bQC3dYjQXduQ5r+4MHFu25xudE5ph6E+dnnYo2iMR9WDFTXBpZcTxp0Me1U/h1Q0NceiYNXCFz/6jEW
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DTgSv4IR0PpwmqQTfS7L4oC63RYA+jjFi0H391aqaRo=;
+        b=FoabJm/VAHEA72IkwsIyNnv2Lb0OAfzfxwsi0xcKcZSGC/zIOq4hoVvRBGyq823LgA
+         5QvG4cpHa9qGCS74ERmwipoNQna4LCng8AHcMhbc9m4BhXQOHxQ6mvZZKk2bfFIAgEz5
+         yCdmoq909w9OxHbSYp6/VZGJWug7Qzv815CNhPRhlrmZQyJsut/ofMwtRpnhdfr7L7wq
+         e3kd9xPjIxAq2hPa/iqD9PA8SldEqPRF8KjCeHFmqZPRC67+2/7pHKP/RieCINQwe0Sq
+         slOAoDOnpoUgeBlKBoO7eu77aInhlnhWoBvQWjxkNfgsBIjtEme8zib6OybCBex/+M/j
+         8jrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DTgSv4IR0PpwmqQTfS7L4oC63RYA+jjFi0H391aqaRo=;
+        b=IqvrTrTMHwXnenBcq54jPxyCDc+Hr1tArxiBtAiBkJpY7zkW9EngArG82STfRPtEVh
+         DZuqVHzKSPZZnr+JB1oLfVHKTdCSH1J2zZmPuP1fVe66efuVmGyekiAX61w4GWkNWZhl
+         sF4uE2BYdM8tXoqtmxNWJAELxUJMYJKsKJYCaDePyxXbedCBPzQ0M338cU4kHiwqNWEb
+         AzMR9GKZTkCR2F07m+VUqvsBKNvZ2BVM2n+dm/XVgvLVotRvj3tvTnpPkcyvAPs50AH+
+         XnLn120sml3RE7lDr6vNfZDfSofMocl3J5WWN2RPYEypsg6xI7xP0h9GxqqBfWqQNGAk
+         m1NQ==
+X-Gm-Message-State: APjAAAVue1tbEoRUZeNbZmc54dsnfaSTV3zuWdn2VliibsW4jPjbKe5y
+        WgqHJv/rbsdI+3n7WwYk2+3MM0pJDVf/Zp0e/Dc=
+X-Google-Smtp-Source: APXvYqxfst5CvLGkDYX1hM+1pCwvA12wTlx4CfhcmvnK7rSdpwqjzuJODINqQZ2f1SUQGfzkdM7TqkiZnSP6UkBHKvE=
+X-Received: by 2002:a92:1588:: with SMTP id 8mr15690935ilv.276.1575662154375;
+ Fri, 06 Dec 2019 11:55:54 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6c8f820-1813-40e3-8c57-08d77a856b70
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Dec 2019 19:49:34.5742
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1bKrH3wZIooZwFvEX2a7biiARZrNaHJke7cWlJfaprGqzxgC07McP1gpZ1YmH/x1dQzpHzG1i2m/HIIEWUvB8/qeefNps+ombkkiqIw+s2M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1643
+References: <20191130225153.30111-1-aford173@gmail.com> <e8e429dd-4508-9835-fd01-825d2de8871e@kontron.de>
+In-Reply-To: <e8e429dd-4508-9835-fd01-825d2de8871e@kontron.de>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 6 Dec 2019 13:55:43 -0600
+Message-ID: <CAHCN7xLkV1WC=9ACj1Mi8+uE8kRCEjCEe+Y36pXwkNeNrgrNVg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] crypto: caam: Change the i.MX8MQ check support all
+ i.MX8M variants
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gRnJpLCBEZWMgNiwgMjAxOSwgU2VyZ2VpIFNodHlseW92IHdyb3RlOg0KPiBPbiAxMi8wNi8y
-MDE5IDA0OjQxIFBNLCBDaHJpcyBCcmFuZHQgd3JvdGU6DQo+IA0KPiA+IFRoZSBTUElCU0MgY2xv
-Y2tzIGFyZSBtYXJrZWQgYXMgY3JpdGljYWwgYmVjYXVzZSBmb3IgWElQIHN5c3RlbXMsIHRoZQ0K
-PiA+IGtlcm5lbCB3aWxsIGJlIHJ1bm5pbmcgZnJvbSBRU1BJIGZsYXNoIGFuZCBjYW5ub3QgYmUg
-dHVybmVkIG9mZi4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IENocmlzIEJyYW5kdCA8Y2hyaXMu
-YnJhbmR0QHJlbmVzYXMuY29tPg0KPiA+IC0tLQ0KPiA+IHYyOg0KPiA+ICAqIFJlbW92ZWQgc3Bp
-YnNjIGZyb20gY3JpdGljYWwgY2xvY2sgc2VjdGlvbg0KPiANCj4gICAgU28geW91J3ZlIHJlbW92
-ZWQgaXQgZnJvbSB0aGUgY3JpdGljYWwgdGFibGUgYnV0IGxlZnQgdGhlIHBhdGNoDQo+IGRlc2Ny
-aXB0aW9uIGludGFjdD8NCg0KRGFtbiENClRoYW5rIHlvdSBmb3IgcG9pbnRpbmcgdGhhdCBvdXQu
-DQpJIHJlbWVtYmVyZWQgdG8gdGFrZSB0aGUgY29tbWVudCBvdXQgb2Ygb25lIHBhdGNoLCBidXQg
-SSBtaXNzZWQgdGhpcyBvbmUuDQoNCkNocmlzDQoNCg==
+On Wed, Dec 4, 2019 at 5:38 AM Schrempf Frieder
+<frieder.schrempf@kontron.de> wrote:
+>
+> Hi Adam,
+>
+> On 30.11.19 23:51, Adam Ford wrote:
+> > The i.MX8M Mini uses the same crypto engine as the i.MX8MQ, but
+> > the driver is restricting the check to just the i.MX8MQ.
+> >
+> > This patch lets the driver support all i.MX8M Variants if enabled.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+>
+> What about the following lines in run_descriptor_deco0()? Does this
+> condition also apply to i.MX8MM?
+
+I think that's a question for NXP.  I am not seeing that in the NXP
+Linux Release, and I don't have an 8MQ to compare.
+
+I was able to get the driver working on the i.MXMM with the patch.
+
+NXP  Team,
+
+Do you have any opinions on this?
+
+adam
+>
+> drivers/crypto/caam/ctrl.c:
+>
+>         if (ctrlpriv->virt_en == 1 ||
+>             /*
+>              * Apparently on i.MX8MQ it doesn't matter if virt_en == 1
+>              * and the following steps should be performed regardless
+>              */
+>             of_machine_is_compatible("fsl,imx8mq")) {
+>                 clrsetbits_32(&ctrl->deco_rsr, 0, DECORSR_JR0);
+>
+>                 while (!(rd_reg32(&ctrl->deco_rsr) & DECORSR_VALID) &&
+>                        --timeout)
+>                         cpu_relax();
+>
+>                 timeout = 100000;
+>         }
+>
+> Regards,
+> Frieder
+>
+> >
+> > diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+> > index db22777d59b4..1ce03f8961b6 100644
+> > --- a/drivers/crypto/caam/ctrl.c
+> > +++ b/drivers/crypto/caam/ctrl.c
+> > @@ -527,7 +527,7 @@ static const struct soc_device_attribute caam_imx_soc_table[] = {
+> >       { .soc_id = "i.MX6UL", .data = &caam_imx6ul_data },
+> >       { .soc_id = "i.MX6*",  .data = &caam_imx6_data },
+> >       { .soc_id = "i.MX7*",  .data = &caam_imx7_data },
+> > -     { .soc_id = "i.MX8MQ", .data = &caam_imx7_data },
+> > +     { .soc_id = "i.MX8M*", .data = &caam_imx7_data },
+> >       { .family = "Freescale i.MX" },
+> >       { /* sentinel */ }
+> >   };
+> >
