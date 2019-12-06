@@ -2,154 +2,140 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC805C2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 07:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD00C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 08:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81DC2467A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 07:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802E624685
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 08:05:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="fCADfeHV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfLFHlL (ORCPT
+        id S1726225AbfLFIFA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 02:41:11 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:26913 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfLFHlK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 02:41:10 -0500
-Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 6 Dec 2019
- 15:41:36 +0800
-From:   Jian Hu <jian.hu@amlogic.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v4 1/6] dt-bindings: clock: meson: add A1 PLL clock controller bindings
-Date:   Fri, 6 Dec 2019 15:40:47 +0800
-Message-ID: <20191206074052.15557-2-jian.hu@amlogic.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191206074052.15557-1-jian.hu@amlogic.com>
-References: <20191206074052.15557-1-jian.hu@amlogic.com>
+        Fri, 6 Dec 2019 03:05:00 -0500
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:31900 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbfLFIE7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 03:04:59 -0500
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id xB684ujw021333;
+        Fri, 6 Dec 2019 17:04:56 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com xB684ujw021333
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1575619496;
+        bh=5HkglI0EKjnLXCnlt94Q9XbXoUC156pTW0gJif8WsLM=;
+        h=From:Date:Subject:To:Cc:From;
+        b=fCADfeHV0pHWJfJJZReqYgrFWALqlNHJo4mhghcMnzY+qcFsW7i/T3WSK24ScT7Iy
+         dLN32NZkjERwIWiqpD6nV2aZduYg5CKr6dFWewRNvdMoKtHqrCqTwfUED1D4AQZa8r
+         +7zCdPbukVAygKyeaw31rJ+shCyWECyp1dsqKEqrtxgbb1WNCElPVs779xujmQ9G1Y
+         Q1fmoVO+I2KiZB3CGAtSgqGHUy0+T7zSCSqT20VzTKJ46qnaIn7575Cmltlu9kfuSX
+         Ltq8puz7u/G4nFsErrsyaLCPMonLBx9naBmnwBYdaOS3E0NjNUN7Bxfv+J6LxXZD9y
+         9uRI4N4PwMCdg==
+X-Nifty-SrcIP: [209.85.222.54]
+Received: by mail-ua1-f54.google.com with SMTP id f7so2464123uaa.8;
+        Fri, 06 Dec 2019 00:04:56 -0800 (PST)
+X-Gm-Message-State: APjAAAWo2ND7LJG/OUHYzSHyEO5OPsPx5RUSI6ibhFjGOVhmRJpjKg1z
+        1kqQqT83wNvxagVB96pJPKic0L6I7gFGW592pmM=
+X-Google-Smtp-Source: APXvYqy3+OU+tXwm9mApi3095nPuMim4hayi3qQUxbwWEblDDMPQ+2LojXhJOLXlE5A6bcurl/xkESk2ulBMZ17+6e4=
+X-Received: by 2002:ab0:3487:: with SMTP id c7mr9347188uar.25.1575619495354;
+ Fri, 06 Dec 2019 00:04:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.28.8.25]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 6 Dec 2019 17:04:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ29tXAFZaYODFyd4iAx9UhyjhyEtXxk+ZC+yUtXsqMMQ@mail.gmail.com>
+Message-ID: <CAK7LNAQ29tXAFZaYODFyd4iAx9UhyjhyEtXxk+ZC+yUtXsqMMQ@mail.gmail.com>
+Subject: About DT binding of reset control
+To:     Rob Herring <robh+dt@kernel.org>, DTML <devicetree@vger.kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the documentation to support Amlogic A1 PLL clock driver,
-and add A1 PLL clock controller bindings.
+Hello, Rob, DT folks,
 
-Signed-off-by: Jian Hu <jian.hu@amlogic.com>
----
- .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 59 +++++++++++++++++++
- include/dt-bindings/clock/a1-pll-clkc.h       | 16 +++++
- 2 files changed, 75 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
- create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+I am trying to add the reset control into
+the Denali NAND controller driver:
+Documentation/devicetree/bindings/mtd/denali-nand.txt
+drivers/mtd/nand/raw/denali_dt.c
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-new file mode 100644
-index 000000000000..7feeef5abf1b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-@@ -0,0 +1,59 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-+ */
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/clock/amlogic,a1-pll-clkc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
-+
-+maintainers:
-+  - Neil Armstrong <narmstrong@baylibre.com>
-+  - Jerome Brunet <jbrunet@baylibre.com>
-+  - Jian Hu <jian.hu@jian.hu.com>
-+
-+properties:
-+  compatible:
-+    - enum:
-+        - amlogic,a1-pll-clkc
-+  "#clock-cells":
-+    const: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+clocks:
-+  minItems: 2
-+  maxItems: 2
-+  items:
-+   - description: Input xtal_fixpll
-+   - description: Input xtal_hifipll
-+
-+clock-names:
-+  minItems: 2
-+  maxItems: 2
-+  items:
-+     - const: xtal_fixpll
-+     - const: xtal_hifipll
-+
-+required:
-+  - compatible
-+  - "#clock-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clkc_pll: pll-clock-controller@7c80 {
-+                compatible = "amlogic,a1-pll-clkc";
-+                reg = <0 0x7c80 0 0x18c>;
-+                #clock-cells = <1>;
-+                clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
-+                         <&clkc_periphs CLKID_XTAL_HIFIPLL>;
-+                clock-names = "xtal_fixpll", "xtal_hifipll";
-+    };
-diff --git a/include/dt-bindings/clock/a1-pll-clkc.h b/include/dt-bindings/clock/a1-pll-clkc.h
-new file mode 100644
-index 000000000000..58eae237e503
---- /dev/null
-+++ b/include/dt-bindings/clock/a1-pll-clkc.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-+ */
-+
-+#ifndef __A1_PLL_CLKC_H
-+#define __A1_PLL_CLKC_H
-+
-+#define CLKID_FIXED_PLL				1
-+#define CLKID_FCLK_DIV2				6
-+#define CLKID_FCLK_DIV3				7
-+#define CLKID_FCLK_DIV5				8
-+#define CLKID_FCLK_DIV7				9
-+#define CLKID_HIFI_PLL				10
-+
-+#endif /* __A1_PLL_CLKC_H */
--- 
-2.24.0
+I'd like to get some advice about the DT binding
+before the detailed implementation.
 
+
+
+The IP datasheet clearly says
+two separate reset lines, like this:
+
+rst_n :           controller core reset
+reg_rst_n:     register flip-flop reset
+
+
+But, in actual SoC integration,
+the two reset signals are often tied up together, and
+the reset controller only provides 1-bit control.
+
+(The upstream platforms, SoCFPGA, UniPhier,
+ both are this case.)
+
+
+In this case, which is more preferred for the
+DT binding?
+
+
+[1] Define two resets explicitly according to the IP spec
+
+Optional properties:
+  reset-names :  contain "nand", "reg"
+  resets: phandles to the controller core reset, the register reset
+
+Example:
+
+   nand {
+         ....
+         reset-names = "nand", "reg";
+         resets = <&nand_rst>, <&nand_rst>;
+         ...
+   };
+
+
+
+[2] Allow arbitrary number of reset lines
+
+
+Optional properties:
+     resets: phandle(s) to reset(s)
+
+   The number of reset lines is SoC-dependent.
+
+
+Examples:
+
+      nand {
+
+               resets = <&nand>;
+                ...
+       };
+
+
+
+
+
+I guess [1] is more precise as the hardware specification.
+But, DT files will end up with giving the same phandle
+to both of the two resets.
+I think it is OK, but anyway better to ask
+before proceeding.
+
+Thanks.
+
+--
+Best Regards
+Masahiro Yamada
