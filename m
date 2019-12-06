@@ -2,115 +2,160 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11425C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 17:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2477C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 17:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E557220706
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 17:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9645421835
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 17:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575652209;
+	bh=cnUp3MMTWmr0jeElpcAs3FfhFQExmXjdVn6BToXvU58=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=phC98sN0nJ63aRkrkxur3AuK7WpzR/svjlItgrMZSUG1GeOrEU62DUDmesdKe1Ajv
+	 FcMdqQ7V8l6D2b8zLeuuiLJtRoqvlEcZhKV+ef35wOInlCSE+CcEV+aBaiSoygocDt
+	 dVrIo0BKrfR9eaCtPTZEkvDF9HVdA1gz36DVQ3og=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbfLFRJH (ORCPT
+        id S1726353AbfLFRKJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 12:09:07 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:42646 "EHLO gloria.sntech.de"
+        Fri, 6 Dec 2019 12:10:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbfLFRJH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Dec 2019 12:09:07 -0500
-Received: from p57b772b2.dip0.t-ipconnect.de ([87.183.114.178] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1idH6F-0003bn-RF; Fri, 06 Dec 2019 18:09:03 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: Change RK809 PMIC interrupt polarity
-Date:   Fri, 06 Dec 2019 18:09:03 +0100
-Message-ID: <22838931.IDdASOIBor@phil>
-In-Reply-To: <20191206173453.1b2f7844@xps13>
-References: <20191206154247.28057-1-miquel.raynal@bootlin.com> <1601413.9zADmrJRdp@phil> <20191206173453.1b2f7844@xps13>
+        id S1726352AbfLFRKJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Dec 2019 12:10:09 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C16AF20706;
+        Fri,  6 Dec 2019 17:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575652208;
+        bh=cnUp3MMTWmr0jeElpcAs3FfhFQExmXjdVn6BToXvU58=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=T/fsoK61BtPcpSWGYW3vyJzZZGzL49IVAqUvYZLKfI8aMAwerC5jJZuhonYA36swL
+         PVV5K8eo+JdsAZ60yZfhYV9oJQ05X0FpA27eT8vRrwgEJvlhnTNFjbBb5ku392S77T
+         L6ODDYlDzGICXNs+hHGZF2qBAC0N9qlwL4X93JUY=
+Date:   Fri, 6 Dec 2019 17:10:02 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Rodrigo Carvalho <rodrigorsdc@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        alexandru.ardelean@analog.com, linux-iio@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: Re: [PATCH v5 2/2] dt-bindings: iio: accel: add binding
+ documentation for ADIS16240
+Message-ID: <20191206171002.2ad020e4@archlinux>
+In-Reply-To: <20191205152129.GA13911@bogus>
+References: <20191123233510.4890-1-rodrigorsdc@gmail.com>
+        <20191123233510.4890-2-rodrigorsdc@gmail.com>
+        <20191205152129.GA13911@bogus>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Miquel,
+On Thu, 5 Dec 2019 09:21:29 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-Am Freitag, 6. Dezember 2019, 17:34:53 CET schrieb Miquel Raynal:
-> Heiko Stuebner <heiko@sntech.de> wrote on Fri, 06 Dec 2019 17:01:58
-> +0100:
-> > Am Freitag, 6. Dezember 2019, 16:52:50 CET schrieb Miquel Raynal:
-> > > Heiko Stuebner <heiko@sntech.de> wrote on Fri, 06 Dec 2019 16:48:00
-> > > +0100:
-> > > > Am Freitag, 6. Dezember 2019, 16:42:47 CET schrieb Miquel Raynal:  
-> > > > > PMIC interrupt can be active high or active low depending on BIT(1) of
-> > > > > the GPIO_INT_CFG pin. The default is 0x1, which means active
-> > > > > high. Change the polarity in the device tree to reflect the default
-> > > > > state.
-> > > > > 
-> > > > > Without this and with the current code base, the interrupt never stops
-> > > > > triggering while the MFD driver does not see anything to
-> > > > > check/clear/mask so after 100000 spurious IRQs, the kernel simply
-> > > > > desactivates the interrupt:
-> > > > > 
-> > > > >         irq 36: nobody cared (try booting with the "irqpoll" option)
-> > > > >         [...]
-> > > > >         handlers:
-> > > > >         [<(____ptrval____)>] irq_default_primary_handler threaded
-> > > > > 	[<(____ptrval____)>] regmap_irq_thread
-> > > > >         Disabling IRQ #36
-> > > > > 
-> > > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>    
-> > > > 
-> > > > *coughs slightly*
-> > > > 
-> > > > mfd: rk808: Set RK817 interrupt polarity to low
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/commit/drivers/mfd/rk808.c?h=for-mfd-next&id=dbd16ef53487084816a20f662423ab543a75fc83
-> > > > 
-> > > > Should be in the current merge window already I guess ;-)  
-> > > 
-> > > This time I swear I checked your tree. But this time we did not ended
-> > > with the same fix so I missed this one *again* :)  
+> On Sat, Nov 23, 2019 at 08:35:10PM -0300, Rodrigo Carvalho wrote:
+> > This patch add device tree binding documentation for ADIS16240.
 > > 
-> > No worries ... I guess I should check where I hid additional patches ;-)
-> > 
-> > So right now px30 stuff is in the trees:
-> > - mine
-> > - mfd
-> > - phy (first round of dsi phy, refinement pending on the list)
-> > - nvmem (for the otp controller)
-> > - drm (drm/rockchip: vop: add the definition of dclk_pol)
-> > - clk
-> > 
-> > and pending on lists:
-> > - drm (dsi support + timings)
-> > - phy (refinement as mentioned above)
-> > 
-> > not submitted yet but planning to get this done this weekend:
-> > - panel driver for px30-evb
-> > - dsi devicetree stuff
+> > Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>  
 > 
-> Thank you very much for the detailed list! I will soon work on the
-> PMIC audio support and on secure boot, do not hesitate to ping me if
-> you see this kind of work coming on the mailing list!
+> checkpatch.pl complains about a mismatch between the author and S-o-b.
+The open question on patch 1 is resolved, so respin with the points Rob pointed
+out her resolved and I'll pick up v6.
 
-I think it's only us (you, Paul and me) working on px30 mainline stuff,
-right now so it's only us that should probably coordinate :-)
+Thanks,
 
-Secureboot also is of interest to my project, so a Cc would be appreciated ;-)
+Jonathan
 
-
-Heiko
-
+> 
+> > ---
+> > V5:
+> >   - None 
+> > 
+> >  .../bindings/iio/accel/adi,adis16240.yaml     | 49 +++++++++++++++++++
+> >  1 file changed, 49 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> > new file mode 100644
+> > index 000000000000..8e902f7c49e6
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> > @@ -0,0 +1,49 @@
+> > +# SPDX-License-Identifier: GPL-2.0  
+> 
+> Dual license new bindings please: (GPL-2.0-only OR BSD-2-Clause)
+> 
+> With that,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: ADIS16240 Programmable Impact Sensor and Recorder driver
+> > +
+> > +maintainers:
+> > +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > +
+> > +description: |
+> > +  ADIS16240 Programmable Impact Sensor and Recorder driver that supports
+> > +  SPI interface.
+> > +    https://www.analog.com/en/products/adis16240.html
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - adi,adis16240
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    spi0 {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        /* Example for a SPI device node */
+> > +        accelerometer@0 {
+> > +            compatible = "adi,adis16240";
+> > +            reg = <0>;
+> > +            spi-max-frequency = <2500000>;
+> > +            interrupt-parent = <&gpio0>;
+> > +            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> > +        };
+> > +    };
+> > -- 
+> > 2.24.0
+> >   
 
