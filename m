@@ -2,228 +2,120 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE27DC2BD09
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 16:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CBEC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 16:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCCE320659
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 16:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2161724659
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 16:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfLFQdp (ORCPT
+        id S1726352AbfLFQfB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 11:33:45 -0500
-Received: from relmlor1.renesas.com ([210.160.252.171]:21444 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726258AbfLFQdp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 11:33:45 -0500
-X-IronPort-AV: E=Sophos;i="5.69,285,1571670000"; 
-   d="scan'208";a="33693129"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 07 Dec 2019 01:33:43 +0900
-Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 42A6F400D4D7;
-        Sat,  7 Dec 2019 01:33:38 +0900 (JST)
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 6 Dec 2019 11:35:01 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:44661 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfLFQfB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 11:35:01 -0500
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 814C6C0009;
+        Fri,  6 Dec 2019 16:34:54 +0000 (UTC)
+Date:   Fri, 6 Dec 2019 17:34:53 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        ebiharaml@si-linux.co.jp
-Subject: [PATCH v4 7/7] arm64: dts: renesas: Add EK874 board with idk-2121wr display support
-Date:   Fri,  6 Dec 2019 16:32:54 +0000
-Message-Id: <1575649974-31472-8-git-send-email-fabrizio.castro@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1575649974-31472-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1575649974-31472-1-git-send-email-fabrizio.castro@bp.renesas.com>
+        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Change RK809 PMIC interrupt
+ polarity
+Message-ID: <20191206173453.1b2f7844@xps13>
+In-Reply-To: <1601413.9zADmrJRdp@phil>
+References: <20191206154247.28057-1-miquel.raynal@bootlin.com>
+        <3285991.EbEXlA3CnX@phil>
+        <20191206165250.5877dec8@xps13>
+        <1601413.9zADmrJRdp@phil>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The EK874 is advertised as compatible with panel IDK-2121WR from
-Advantech, however the panel isn't sold alongside the board.
-A new dts, adding everything that's required to get the panel to
-to work with the EK874, is the most convenient way to support the
-EK874 when it's connected to the IDK-2121WR.
+Hi Heiko,
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Heiko Stuebner <heiko@sntech.de> wrote on Fri, 06 Dec 2019 17:01:58
++0100:
 
----
-v3->v4:
-* no change
+> Am Freitag, 6. Dezember 2019, 16:52:50 CET schrieb Miquel Raynal:
+> > Hi Heiko,
+> > 
+> > Heiko Stuebner <heiko@sntech.de> wrote on Fri, 06 Dec 2019 16:48:00
+> > +0100:
+> >   
+> > > Hi Miquel,
+> > > 
+> > > Am Freitag, 6. Dezember 2019, 16:42:47 CET schrieb Miquel Raynal:  
+> > > > PMIC interrupt can be active high or active low depending on BIT(1) of
+> > > > the GPIO_INT_CFG pin. The default is 0x1, which means active
+> > > > high. Change the polarity in the device tree to reflect the default
+> > > > state.
+> > > > 
+> > > > Without this and with the current code base, the interrupt never stops
+> > > > triggering while the MFD driver does not see anything to
+> > > > check/clear/mask so after 100000 spurious IRQs, the kernel simply
+> > > > desactivates the interrupt:
+> > > > 
+> > > >         irq 36: nobody cared (try booting with the "irqpoll" option)
+> > > >         [...]
+> > > >         handlers:
+> > > >         [<(____ptrval____)>] irq_default_primary_handler threaded
+> > > > 	[<(____ptrval____)>] regmap_irq_thread
+> > > >         Disabling IRQ #36
+> > > > 
+> > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>    
+> > > 
+> > > *coughs slightly*
+> > > 
+> > > mfd: rk808: Set RK817 interrupt polarity to low
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/commit/drivers/mfd/rk808.c?h=for-mfd-next&id=dbd16ef53487084816a20f662423ab543a75fc83
+> > > 
+> > > Should be in the current merge window already I guess ;-)  
+> > 
+> > This time I swear I checked your tree. But this time we did not ended
+> > with the same fix so I missed this one *again* :)  
+> 
+> No worries ... I guess I should check where I hid additional patches ;-)
+> 
+> So right now px30 stuff is in the trees:
+> - mine
+> - mfd
+> - phy (first round of dsi phy, refinement pending on the list)
+> - nvmem (for the otp controller)
+> - drm (drm/rockchip: vop: add the definition of dclk_pol)
+> - clk
+> 
+> and pending on lists:
+> - drm (dsi support + timings)
+> - phy (refinement as mentioned above)
+> 
+> not submitted yet but planning to get this done this weekend:
+> - panel driver for px30-evb
+> - dsi devicetree stuff
 
-v2->v3:
-* removed renesas,swap-data property
-* added dual-lvds-odd-pixels and dual-lvds-even-pixels properties
+Thank you very much for the detailed list! I will soon work on the
+PMIC audio support and on secure boot, do not hesitate to ping me if
+you see this kind of work coming on the mailing list!
 
-v1->v2:
-* Added comment for lvds-connector-en-gpio
-* Renamed &lvds0_panel_in to panel_in0
-* Renamed &lvds1_panel_in to panel_in1
----
- arch/arm64/boot/dts/renesas/Makefile               |   3 +-
- .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 116 +++++++++++++++++++++
- 2 files changed, 118 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
-
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index 8fdbd22..2635799 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -3,7 +3,8 @@ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m.dtb
- dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
- dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
- dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
--dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb
-+dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
-+			       r8a774c0-ek874-idk-2121wr.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-h3ulcb-kf.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-xs.dtb
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
-new file mode 100644
-index 0000000..a7b27d0
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
-@@ -0,0 +1,116 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the Silicon Linux RZ/G2E evaluation kit (EK874),
-+ * connected to an Advantech IDK-2121WR 21.5" LVDS panel
-+ *
-+ * Copyright (C) 2019 Renesas Electronics Corp.
-+ */
-+
-+#include "r8a774c0-ek874.dts"
-+
-+/ {
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm5 0 50000>;
-+
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+
-+		power-supply = <&reg_12p0v>;
-+		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	panel-lvds {
-+		compatible = "advantech,idk-2121wr", "panel-lvds";
-+
-+		width-mm = <476>;
-+		height-mm = <268>;
-+
-+		data-mapping = "vesa-24";
-+
-+		panel-timing {
-+			clock-frequency = <148500000>;
-+			hactive = <1920>;
-+			vactive = <1080>;
-+			hsync-len = <44>;
-+			hfront-porch = <88>;
-+			hback-porch = <148>;
-+			vfront-porch = <4>;
-+			vback-porch = <36>;
-+			vsync-len = <5>;
-+		};
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				dual-lvds-odd-pixels;
-+				panel_in0: endpoint {
-+					remote-endpoint = <&lvds0_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				dual-lvds-even-pixels;
-+				panel_in1: endpoint {
-+					remote-endpoint = <&lvds1_out>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&gpio0 {
-+	/*
-+	 * When GP0_17 is low LVDS[01] are connected to the LVDS connector
-+	 * When GP0_17 is high LVDS[01] are connected to the LT8918L
-+	 */
-+	lvds-connector-en-gpio{
-+		gpio-hog;
-+		gpios = <17 GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "lvds-connector-en-gpio";
-+	};
-+};
-+
-+&lvds0 {
-+	ports {
-+		port@1 {
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&panel_in0>;
-+			};
-+		};
-+	};
-+};
-+
-+&lvds1 {
-+	status = "okay";
-+
-+	clocks = <&cpg CPG_MOD 727>, <&x13_clk>, <&extal_clk>;
-+	clock-names = "fck", "dclkin.0", "extal";
-+
-+	ports {
-+		port@1 {
-+			lvds1_out: endpoint {
-+				remote-endpoint = <&panel_in1>;
-+			};
-+		};
-+	};
-+};
-+
-+&pfc {
-+	pwm5_pins: pwm5 {
-+		groups = "pwm5_a";
-+		function = "pwm5";
-+	};
-+};
-+
-+&pwm5 {
-+	pinctrl-0 = <&pwm5_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
--- 
-2.7.4
-
+Thanks,
+Miquèl
