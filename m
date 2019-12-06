@@ -2,93 +2,100 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7B7C2D0C1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 14:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9606BC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 14:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA889206DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 14:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BFA124673
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 14:39:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8swaD0/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfLFOIY (ORCPT
+        id S1726312AbfLFOjp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 09:08:24 -0500
-Received: from pbmsgap02.intersil.com ([192.157.179.202]:49756 "EHLO
-        pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfLFOIY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 09:08:24 -0500
-Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
-        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id xB6DhCkB000787;
-        Fri, 6 Dec 2019 08:43:42 -0500
-Received: from pbmxdp01.intersil.corp (pbmxdp01.pb.intersil.com [132.158.200.222])
-        by pbmsgap02.intersil.com with ESMTP id 2wkkffmn5y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 06 Dec 2019 08:43:41 -0500
-Received: from pbmxdp02.intersil.corp (132.158.200.223) by
- pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1531.3; Fri, 6 Dec 2019 08:43:40 -0500
-Received: from localhost.localdomain (132.158.202.109) by
- pbmxdp02.intersil.corp (132.158.200.223) with Microsoft SMTP Server id
- 15.1.1531.3 via Frontend Transport; Fri, 6 Dec 2019 08:43:39 -0500
-From:   Chris Brandt <chris.brandt@renesas.com>
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC:     <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 6/6] ARM: dts: gr-peach: Enable SPIBSC
-Date:   Fri, 6 Dec 2019 08:42:02 -0500
-Message-ID: <20191206134202.18784-7-chris.brandt@renesas.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191206134202.18784-1-chris.brandt@renesas.com>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
+        Fri, 6 Dec 2019 09:39:45 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44742 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfLFOjp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 09:39:45 -0500
+Received: by mail-pf1-f193.google.com with SMTP id d199so3432962pfd.11;
+        Fri, 06 Dec 2019 06:39:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=irYNqKPLHshq/aQvOEy9WqNzGmfWQrAlrNW/wTAkb1U=;
+        b=I8swaD0/efsTUzN0rwN5fqcT2d0qBUB+9t5phKehvb58plhMdhclYqff6QDdCqAknw
+         Co/U+RxCxpNkCZ+3u9MkhvYFF+xdatN2uIRygf8GFvra9yrIm+k//cKsYRdL4TFYPgLb
+         CmBXbvT9AzX2TPTlo8aVpCWJlC6iMPQL6KCKnbXWFCT6rbhtUVlkOTfeDM7ap/0Y0t10
+         ZmdChr0BqNX1XD78SQy2wBkwH7e9ZRs9sf2oLZD/ROPwOrv9ms5VwiMWIkYLsC/Mrh3P
+         eWRfEMtFmLV1QTxSlp9RT5QKqBDOvquXAFZGAvW/tFEWOsPUxx2qsMbsHmOP2PrlN+FW
+         YTQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=irYNqKPLHshq/aQvOEy9WqNzGmfWQrAlrNW/wTAkb1U=;
+        b=QKHHzg66JDzx5A1mivFi25+05XcRzMRzc5AYrdnO7S37G2Vjp9tS7Vw9JCmj5UIB/q
+         CN4RnBiWEpEbKcVwAKX4eVH7GFPd3Feg0rPXTD88D4SE+sSyfEMfyDve+uF5PPor09oE
+         F/WV+6I5yPM0V0UwIUghT+OjcUvHPPeL+vFfHO4ykhZXU0gf3BWXMkwtVTsBNXA5pd1A
+         0qusB10S/tbL4RLAZwT73zeS8ZFBvQe+WS/p5hi1T8agR9D/9c2Hkd8vzD1t/Qv3hhcL
+         bt50RDnI7oRDliTUHXIFwyVpUeHVbE2ArozZERrFv2JJJVOOllyHPcEbGlqpsCWS5GsR
+         9baQ==
+X-Gm-Message-State: APjAAAU5uQ3PaIv5hx3gfdLH65p0LurDoTdIQcVOQVfC5woXmSkWaUog
+        hSfqe7a+nZrgyO9dl71l58JC+xry
+X-Google-Smtp-Source: APXvYqzCiYipDLDiHc06A/YWriJlXA+sFvNuqJij2Yu0x2xReX9LY6An4j/v1bgWMkItMfwztVwhdw==
+X-Received: by 2002:a63:c207:: with SMTP id b7mr3853777pgd.422.1575643183855;
+        Fri, 06 Dec 2019 06:39:43 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e11sm15791532pgh.54.2019.12.06.06.39.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 06:39:43 -0800 (PST)
+Subject: Re: [PATCH v2 0/2] hwmon: Add UCD90320 power sequencer chip
+To:     Jim Wright <wrightj@linux.vnet.ibm.com>, jdelvare@suse.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191205232411.21492-1-wrightj@linux.vnet.ibm.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <955b4485-aaa4-a255-752e-5ae336e9130f@roeck-us.net>
+Date:   Fri, 6 Dec 2019 06:39:42 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-12-06_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=879
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911200000 definitions=main-1912060118
-X-Proofpoint-Spam-Reason: mlx
+In-Reply-To: <20191205232411.21492-1-wrightj@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The SPIBSC is used to memory map the QSPI device for XIP of the kernel and
-root file system.
+On 12/5/19 3:24 PM, Jim Wright wrote:
+> Add support for TI UCD90320 power sequencer chip.
+> 
+> Changes since v1:
+> - Device tree bindings text file replaced with YAML schema.
+> - Device driver files are unchanged.
+> 
+> Jim Wright (2):
+>    dt-bindings: hwmon/pmbus: Add ti,ucd90320 power sequencer
+>    hwmon: Add support for UCD90320 Power Sequencer
+> 
+>   .../bindings/hwmon/pmbus/ti,ucd90320.yaml     | 45 +++++++++++++++++++
+>   Documentation/hwmon/ucd9000.rst               | 12 ++++-
+>   drivers/hwmon/pmbus/Kconfig                   |  6 +--
+>   drivers/hwmon/pmbus/ucd9000.c                 | 39 +++++++++++-----
+>   4 files changed, 85 insertions(+), 17 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/ti,ucd90320.yaml
+> 
+Series applied to hwmon-next.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- arch/arm/boot/dts/r7s72100-gr-peach.dts | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r7s72100-gr-peach.dts b/arch/arm/boot/dts/r7s72100-gr-peach.dts
-index fe1a4aa4d7cb..df3c37b4fa31 100644
---- a/arch/arm/boot/dts/r7s72100-gr-peach.dts
-+++ b/arch/arm/boot/dts/r7s72100-gr-peach.dts
-@@ -116,6 +116,11 @@
- 	status = "okay";
- };
- 
-+/* Used for XIP of kernel and root file system. */
-+&spibsc0 {
-+	status = "okay";
-+};
-+
- &ether {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ether_pins>;
--- 
-2.23.0
+Thanks,
+Guenter
 
