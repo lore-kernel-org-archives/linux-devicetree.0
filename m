@@ -2,101 +2,114 @@ Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3650C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 18:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89CFC2BD09
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 19:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E80824673
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 18:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1CDB24673
+	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 19:16:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="qVvSJYj9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iP/LrjVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfLFS6K (ORCPT
+        id S1726501AbfLFTQw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 13:58:10 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:51602 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbfLFS6J (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Dec 2019 13:58:09 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47V1xd4KSvz3c;
-        Fri,  6 Dec 2019 19:55:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1575658536; bh=ezWxskmwxI8C/8lBttgiFOBWumB5XqgQX2Lyv35wtXs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qVvSJYj9YFwdhcAJDhCbE27sYYMUvgdTONxp+WWKd+z5M7iiAI5MehkQT3K2RazLO
-         Fd9fJReH4fmO4JIbPH7vvAG5OF2f+k2n+Ld1c3N3PX5ld+hkdoJQ2IFzQMJIwLVZc3
-         677oFRZnpUv7WC+skB2A72eXwr/NiceO2d59iHAuZSWyiZ9j4ZIfNR224I4LEuylT/
-         OgQXR2R6mep2NizcYogzTvDzpSM7LavHwjNn8x1geUwhPTgKNZ4p0HkFQKk3rbFUkn
-         D2t6f0Opeh7KPGs9oDBi617XDzVFR99l7Pg+gcwf5VVg4jPbwVWPMzXiXjjzcViHtW
-         OGnWhmW29zmJQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Fri, 6 Dec 2019 19:58:00 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, digetx@gmail.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, robh-dt@kernel.org,
-        mark.rutland@arm.com, allison@lohutok.net, pdeschrijver@nvidia.com,
-        pgaikwad@nvidia.com, mturquette@baylibre.com,
-        horms-renesas@verge.net.au, Jisheng.Zhang@synaptics.com,
-        krzk@kernel.org, arnd@arndb.de, spujar@nvidia.com,
-        josephl@nvidia.com, vidyas@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alexios.zavras@intel.com,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH v3 01/15] dt-bindings: soc: tegra-pmc: Add Tegra PMC
- clock bindings
-Message-ID: <20191206185800.GB20259@qmqm.qmqm.pl>
-References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-2-git-send-email-skomatineni@nvidia.com>
+        Fri, 6 Dec 2019 14:16:52 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43446 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbfLFTQw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 14:16:52 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 9so6061660lfq.10
+        for <devicetree@vger.kernel.org>; Fri, 06 Dec 2019 11:16:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dp6TtsDVMwDLXVNf7z26o9XIaBeojD6ZI0FYrgN+jxw=;
+        b=iP/LrjVMleDaUJuXaUiNHfkocDJ+QBeAdqfEUhPU+zL8YR3HhO5xKQTteOaptagCby
+         4JT64mVbmW9G6XScfGCKDnVfbX1uYpgrUiMjou2dA9VpJ+z/yCj7jafk2C3g2wUjptE5
+         9tG9mdoGs2Tt9k7WwtEd68QJq7G3aLTs5ahc8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dp6TtsDVMwDLXVNf7z26o9XIaBeojD6ZI0FYrgN+jxw=;
+        b=kjEAXl5P/b+G/7Q8gQ05hnShR+MYQJzzIYjjQG5hLPVZFj6toaOcjc0phZo430lcDv
+         i++OBIZu26+iN9f7ZLtv+l+hnCvJiJ9aHfzVcRHooaWdPq5YQ6i+RS7kB/Nh4R21UK4M
+         t5VJ51CdlmjeH1C1T8fAEI+RLa3/DbcvncFZLFK0MFdl24pDmENoO7dhLn2rIHcIpBMd
+         HPUhlgzRURFwGQKRg6RVuwxDxyX3nTCCGrvOR31iZknP4EfzJ8pt1YgKL/6WAUJijRiT
+         LENPwVH1Tp1eDZeR4tc9uOluwT8uR30J19vRg+/lIAc9QdClNlfsAry08emmH5b2H21p
+         c7Tg==
+X-Gm-Message-State: APjAAAUGPg0h0Q1NyOWXzLvWQNc2QMpezAhRXCBbctk7YRsR8Nrf0q6Z
+        /RO1TCLaUPFki4fdfpphpIQtm7BLxL0=
+X-Google-Smtp-Source: APXvYqwtM527B2WfBgwjlqnhIbzvj2lDCFxUbg8n4JUqIu7UuJoTRuMVHXAiVFc+LMpvs6q9M6yHuQ==
+X-Received: by 2002:ac2:485c:: with SMTP id 28mr8982606lfy.118.1575659809148;
+        Fri, 06 Dec 2019 11:16:49 -0800 (PST)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id r4sm4662978ljk.25.2019.12.06.11.16.47
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2019 11:16:47 -0800 (PST)
+Received: by mail-lf1-f53.google.com with SMTP id 203so6036703lfa.12
+        for <devicetree@vger.kernel.org>; Fri, 06 Dec 2019 11:16:47 -0800 (PST)
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr8789546lfi.93.1575659806793;
+ Fri, 06 Dec 2019 11:16:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1575600535-26877-2-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191118154435.20357-1-sibis@codeaurora.org> <0101016e7f30ad15-18908ef0-a2b9-4a2a-bf32-6cb3aa447b01-000000@us-west-2.amazonses.com>
+ <CAE=gft5jGagsFS2yBeJCLt9R26RQjx9bfMxhQu8Jj4uc4ca40w@mail.gmail.com>
+ <0101016e83897442-ecc4c00f-c0d1-4c2c-92ed-ce78e65c0935-000000@us-west-2.amazonses.com>
+ <0101016eac068d05-761f0d60-b1ef-400f-bf84-3164c2a26d2e-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016eac068d05-761f0d60-b1ef-400f-bf84-3164c2a26d2e-000000@us-west-2.amazonses.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Fri, 6 Dec 2019 11:16:10 -0800
+X-Gmail-Original-Message-ID: <CAE=gft5cS54qn0JjxO58xL6sFyQk4t=8ofLFWPUSVQ9sdU4XpQ@mail.gmail.com>
+Message-ID: <CAE=gft5cS54qn0JjxO58xL6sFyQk4t=8ofLFWPUSVQ9sdU4XpQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] interconnect: qcom: Add OSM L3 interconnect
+ provider support
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Dai <daidavid1@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 06:48:41PM -0800, Sowjanya Komatineni wrote:
-> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 clocks and each of
-> these clocks has mux and a gate as a part of PMC controller.
-[...]
-> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-[...]
-> +Clock consumer example:
-> +	host1x@50000000 {
-> +		...
-> +		vi@54080000 {
-> +			...
-> +			assigned-clocks = <&pmc TEGRA_PMC_CLK_OUT_3_MUX>;
-> +			assigned-clock-parents = <&tegra_car TEGRA210_CLK_EXTERN3>;
-> +		};
-> +		...
-> +	};
-> +	...
-> +	i2c@7000c500 {
-> +		cam_sensor {
-> +			...
-> +			clocks = <&pmc TEGRA_PMC_CLK_OUT_3>;
-> +			clock-names = "mclk";
-> +			...
-> +		};
-> +	};
+On Wed, Nov 27, 2019 at 12:42 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+>
+> Hey Evan/Georgi,
+>
+> https://git.linaro.org/people/georgi.djakov/linux.git/commit/?h=icc-dev&id=9197da7d06e88666d1588e3c21a743e60381264d
+>
+> With the "Redefine interconnect provider
+> DT nodes for SDM845" series, wouldn't it
+> make more sense to define the OSM_L3 icc
+> nodes in the sdm845.c icc driver and have
+> the common helpers in osm_l3 driver? Though
+> we don't plan on linking the OSM L3 nodes
+> to the other nodes on SDM845/SC7180, we
+> might have GPU needing to be linked to the
+> OSM L3 nodes on future SoCs. Let me know
+> how you want this done.
+>
+> Anyway I'll re-spin the series once the
+> SDM845 icc re-work gets re-posted.
 
-The assigned-clocks should be in the cam_sensor node, unless vi device
-also uses the clock.
-
-Best Regards,
-Micha³ Miros³aw
+I don't have a clear picture of the proposal. You'd put the couple of
+extra defines in sdm845.c for the new nodes. But then you'd need to do
+something in icc_set() of sdm845. Is that when you'd call out to the
+osm_l3 driver?
