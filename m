@@ -2,47 +2,46 @@ Return-Path: <SRS0=J+Gt=Z5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AF0C2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 22:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DA2C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 22:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FEA324680
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 22:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF8624679
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 22:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575757537;
-	bh=9P0bIPyAh6kpDv/rBjVNltnM5pHymCOLQUIUPUshyR0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=REHASiynmK4egfRoqFl1B9xHtxXQXCpICOE9UawJ6ZFogtGHl7VqMArpfnIp39QjO
-	 EFFcyX9+EsCWKUfkqIWELW50VK3acrqqTwZkNYSViED9ZqHdkFjgbzrVWbM8vD4/DZ
-	 ZvItwM1Plm6RhYG4/JsHck7MBsX68scZIUd+0ERY=
+	s=default; t=1575758887;
+	bh=93NzKwhH96xN9ph6jHZTyuNaVTL3dPzKjPH/rfZohME=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=nLSNuxxAK5m5mDYnkswXNzz0mXC2cZpbkva3eHzR3FPyR/97HGTac08KVWZzUzs07
+	 Z6/M1/W9d5PRQw6tb+BJ6j45B+Iwivh/Byvuoqwds1sAbcIOzeTxb60TjordO6vLIj
+	 RnTuzXQhlO62XV1lPIuh53C9l49LzrZkGoJdFFPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfLGWYu (ORCPT
+        id S1726535AbfLGWsE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Dec 2019 17:24:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36562 "EHLO mail.kernel.org"
+        Sat, 7 Dec 2019 17:48:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbfLGWYt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 7 Dec 2019 17:24:49 -0500
+        id S1726416AbfLGWsE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 7 Dec 2019 17:48:04 -0500
 Received: from ziggy.de (unknown [95.169.229.25])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B52924680;
-        Sat,  7 Dec 2019 22:24:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D691D206DF;
+        Sat,  7 Dec 2019 22:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575757487;
-        bh=9P0bIPyAh6kpDv/rBjVNltnM5pHymCOLQUIUPUshyR0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vRgIJC8jTScRe7VIxurEqqOdLu2K7ZlgENnuS59daRU/Z65QP45QNBEfq7o5pww1u
-         copHMQ7c+PMx3bgPz7cBr3EOyqC/p+ne1cGil8jdRSF1wKQO5Dy8xLYj4Jr+sCFjxt
-         624mzEgf0OFVuHEMTnKQ5ORfAOANbyXR2Jdar7Ik=
+        s=default; t=1575758882;
+        bh=93NzKwhH96xN9ph6jHZTyuNaVTL3dPzKjPH/rfZohME=;
+        h=From:To:Cc:Subject:Date:From;
+        b=e5NmXO42FZJxfWU96LzDKeiQX5mbz0BLaxnTby1/9Pn0Q+JizVFSuHjnqRW0s9ZnY
+         hnN5q3R2ur6DOk9b02yjQvdFxlp7N/IsI5sxaEXsJM68Q0thsq6Sc5+H0jUsrVLdY3
+         ORalyU0pxGNSd6MkPptb313Q+9TlthVRPr6mio+w=
 From:   matthias.bgg@kernel.org
 To:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
         p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@codeaurora.org, ulrich.hecht+renesas@gmail.com,
+        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
         laurent.pinchart@ideasonboard.com, enric.balletbo@collabora.com
 Cc:     sean.wang@mediatek.com, sean.wang@kernel.org,
         rdunlap@infradead.org, wens@csie.org, hsinyi@chromium.org,
@@ -50,13 +49,12 @@ Cc:     sean.wang@mediatek.com, sean.wang@kernel.org,
         linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, mbrugger@suse.com
-Subject: [PATCH v6 04/12] drm: mediatek: Omit warning on probe defers
-Date:   Sat,  7 Dec 2019 23:23:41 +0100
-Message-Id: <20191207222349.23161-5-matthias.bgg@kernel.org>
+        devicetree@vger.kernel.org, mbrugger@suse.com,
+        matthias.bgg@kernel.org
+Subject: [resend PATCH v6 00/12] arm/arm64: mediatek: Fix mmsys device probing
+Date:   Sat,  7 Dec 2019 23:47:28 +0100
+Message-Id: <20191207224740.24536-1-matthias.bgg@kernel.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191207222349.23161-1-matthias.bgg@kernel.org>
-References: <20191207222349.23161-1-matthias.bgg@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -66,160 +64,101 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Matthias Brugger <mbrugger@suse.com>
 
-It can happen that the mmsys clock drivers aren't probed before the
-platform driver gets invoked. The platform driver used to print a warning
-that the driver failed to get the clocks. Omit this error on
-the defered probe path.
+[reseding due to wrong mail of Stephen]
 
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
----
- drivers/gpu/drm/mediatek/mtk_disp_color.c |  5 ++++-
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c   |  5 ++++-
- drivers/gpu/drm/mediatek/mtk_disp_rdma.c  |  5 ++++-
- drivers/gpu/drm/mediatek/mtk_dpi.c        | 12 +++++++++---
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c    |  4 +++-
- drivers/gpu/drm/mediatek/mtk_dsi.c        |  8 ++++++--
- drivers/gpu/drm/mediatek/mtk_hdmi.c       |  4 +++-
- 7 files changed, 33 insertions(+), 10 deletions(-)
+This is version five of the series. It's a long time this wasn't worked on, so
+as a reminder, version four can be found here:
+https://patchwork.kernel.org/cover/10686247/
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_color.c b/drivers/gpu/drm/mediatek/mtk_disp_color.c
-index 59de2a46aa49..8f0fc96ef7bc 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_color.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_color.c
-@@ -118,7 +118,10 @@ static int mtk_disp_color_probe(struct platform_device *pdev)
- 	ret = mtk_ddp_comp_init(dev, dev->of_node, &priv->ddp_comp, comp_id,
- 				&mtk_disp_color_funcs);
- 	if (ret) {
--		dev_err(dev, "Failed to initialize component: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to initialize component: %d\n",
-+				ret);
-+
- 		return ret;
- 	}
+The biggest changes this new version does, is to implement the clock probing
+through a platform driver. The corresponding platform device get's created in
+the DRM driver. I converted all the clock drivers to platform drivers and tested
+the approach on the Acer Chromebook R13 (mt8173 based).
+Apart from that I reordered the patches so that the DT bindings update are the first
+patches.
+
+Changes since v5:
+- re-arrange the patch order
+- generate platform_device for mmsys clock driver inside the DRM driver
+- fix DTS binding accordingly
+- switch all mmsys clock driver to platform probing
+- fix mt8173 platform driver remove function
+- fix probe defer path in HDMI driver
+- fix probe defer path in mtk_mdp_comp
+- fix identation of error messages
+
+Changes since v4:
+- fix missing regmap accessors in drm diver (patch 1)
+- omit probe deffered warning on all drivers (patch 5)
+- update drm and clk bindings (patch 6 and 7)
+- put mmsys clock part in dts child node of mmsys. Only done
+for HW where no dts backport compatible breakage is expected 
+(either DRM driver not yet implemented or no HW available to
+the public) (patch 9 to 12)
+
+Changes since v3:
+- use platform device to probe clock driver
+- add Acked-by CK Hu for the probe deferred patch
+
+Changes since v2:
+- fix kconfig typo (shame on me)
+- delete __initconst from mm_clocks as converted to a platform driver
+  
+Changes since v1:
+- add binding documentation
+- ddp: use regmap_update_bits
+- ddp: ignore EPROBE_DEFER on clock probing
+- mfd: delete mmsys_private
+- add Reviewed-by and Acked-by tags
  
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index 21851756c579..7487b0182c05 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -285,7 +285,10 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
- 	ret = mtk_ddp_comp_init(dev, dev->of_node, &priv->ddp_comp, comp_id,
- 				&mtk_disp_ovl_funcs);
- 	if (ret) {
--		dev_err(dev, "Failed to initialize component: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to initialize component: %d\n",
-+				ret);
-+
- 		return ret;
- 	}
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-index 405afef31407..835ea8f8dab9 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-@@ -287,7 +287,10 @@ static int mtk_disp_rdma_probe(struct platform_device *pdev)
- 	ret = mtk_ddp_comp_init(dev, dev->of_node, &priv->ddp_comp, comp_id,
- 				&mtk_disp_rdma_funcs);
- 	if (ret) {
--		dev_err(dev, "Failed to initialize component: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to initialize component: %d\n",
-+				ret);
-+
- 		return ret;
- 	}
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index be6d95c5ff25..9ed32470ad02 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -700,21 +700,27 @@ static int mtk_dpi_probe(struct platform_device *pdev)
- 	dpi->engine_clk = devm_clk_get(dev, "engine");
- 	if (IS_ERR(dpi->engine_clk)) {
- 		ret = PTR_ERR(dpi->engine_clk);
--		dev_err(dev, "Failed to get engine clock: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get engine clock: %d\n", ret);
-+
- 		return ret;
- 	}
- 
- 	dpi->pixel_clk = devm_clk_get(dev, "pixel");
- 	if (IS_ERR(dpi->pixel_clk)) {
- 		ret = PTR_ERR(dpi->pixel_clk);
--		dev_err(dev, "Failed to get pixel clock: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get pixel clock: %d\n", ret);
-+
- 		return ret;
- 	}
- 
- 	dpi->tvd_clk = devm_clk_get(dev, "pll");
- 	if (IS_ERR(dpi->tvd_clk)) {
- 		ret = PTR_ERR(dpi->tvd_clk);
--		dev_err(dev, "Failed to get tvdpll clock: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get tvdpll clock: %d\n", ret);
-+
- 		return ret;
- 	}
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index b765181223e6..6054e2b675f9 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -558,7 +558,9 @@ static int mtk_ddp_probe(struct platform_device *pdev)
- 
- 	ddp->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(ddp->clk)) {
--		dev_err(dev, "Failed to get clock\n");
-+		if (PTR_ERR(ddp->clk) != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get clock\n");
-+
- 		return PTR_ERR(ddp->clk);
- 	}
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 4332563df952..66d5b0fdd678 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -1110,14 +1110,18 @@ static int mtk_dsi_probe(struct platform_device *pdev)
- 	dsi->engine_clk = devm_clk_get(dev, "engine");
- 	if (IS_ERR(dsi->engine_clk)) {
- 		ret = PTR_ERR(dsi->engine_clk);
--		dev_err(dev, "Failed to get engine clock: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get engine clock: %d\n", ret);
-+
- 		return ret;
- 	}
- 
- 	dsi->digital_clk = devm_clk_get(dev, "digital");
- 	if (IS_ERR(dsi->digital_clk)) {
- 		ret = PTR_ERR(dsi->digital_clk);
--		dev_err(dev, "Failed to get digital clock: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get digital clock: %d\n", ret);
-+
- 		return ret;
- 	}
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index ce91b61364eb..62f9ca2308ee 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1447,7 +1447,9 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
- 
- 	ret = mtk_hdmi_get_all_clk(hdmi, np);
- 	if (ret) {
--		dev_err(dev, "Failed to get clocks: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get clocks: %d\n", ret);
-+
- 		return ret;
- 	}
- 
+MMSYS in Mediatek SoCs has some registers to control clock gates (which is 
+used in the clk driver) and some registers to set the routing and enable
+the differnet blocks of the display subsystem.
+
+Up to now both drivers, clock and drm are probed with the same device tree
+compatible. But only the first driver get probed, which in effect breaks
+graphics on mt8173 and mt2701.
+
+This patch uses a platform device registration in the DRM driver, which
+will trigger the probe of the corresponding clock driver. It was tested on the
+bananapi-r2 and the Acer R13 Chromebook.
+
+
+Matthias Brugger (12):
+  dt-bindings: display: mediatek: Add mmsys binding description
+  dt-bindings: mediatek: Add compatible for mt7623
+  drm/mediatek: Use regmap for register access
+  drm: mediatek: Omit warning on probe defers
+  media: mtk-mdp: Check return value of of_clk_get
+  clk: mediatek: mt2701: switch mmsys to platform device probing
+  clk: mediatek: mt2712e: switch to platform device probing
+  clk: mediatek: mt6779: switch mmsys to platform device probing
+  clk: mediatek: mt6797: switch to platform device probing
+  clk: mediatek: mt8183: switch mmsys to platform device probing
+  clk: mediatek: mt8173: switch mmsys to platform device probing
+  drm/mediatek: Add support for mmsys through a pdev
+
+ .../display/mediatek/mediatek,disp.txt        | 30 ++++++-----
+ drivers/clk/mediatek/clk-mt2701-mm.c          | 41 +++++++++-----
+ drivers/clk/mediatek/clk-mt2712-mm.c          | 39 +++++++++-----
+ drivers/clk/mediatek/clk-mt6779-mm.c          | 41 +++++++++-----
+ drivers/clk/mediatek/clk-mt6797-mm.c          | 43 ++++++++++-----
+ drivers/clk/mediatek/clk-mt8173.c             | 51 +++++++++++++++---
+ drivers/clk/mediatek/clk-mt8183-mm.c          | 39 +++++++++-----
+ drivers/gpu/drm/mediatek/mtk_disp_color.c     |  5 +-
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c       |  5 +-
+ drivers/gpu/drm/mediatek/mtk_disp_rdma.c      |  5 +-
+ drivers/gpu/drm/mediatek/mtk_dpi.c            | 12 +++--
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c       |  4 +-
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c        | 54 +++++++++----------
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.h        |  4 +-
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c        | 35 +++++++++---
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h        |  4 +-
+ drivers/gpu/drm/mediatek/mtk_dsi.c            |  8 ++-
+ drivers/gpu/drm/mediatek/mtk_hdmi.c           |  4 +-
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.c |  6 +++
+ 19 files changed, 295 insertions(+), 135 deletions(-)
+
 -- 
 2.24.0
 
