@@ -2,144 +2,116 @@ Return-Path: <SRS0=J+Gt=Z5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1BFC43603
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 16:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFF6C43603
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 17:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBB324670
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 16:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B07B121835
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 17:13:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="banbk1xN"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="AFL2+H+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfLGQAJ (ORCPT
+        id S1726464AbfLGRNj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Dec 2019 11:00:09 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34390 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbfLGQAJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 11:00:09 -0500
-Received: by mail-lf1-f66.google.com with SMTP id l18so7558614lfc.1;
-        Sat, 07 Dec 2019 08:00:07 -0800 (PST)
+        Sat, 7 Dec 2019 12:13:39 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41832 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbfLGRNi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 12:13:38 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c9so11263018wrw.8
+        for <devicetree@vger.kernel.org>; Sat, 07 Dec 2019 09:13:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pSsGyhYusNn14wX08kX5/yw/DF7mNGeSPkIRQpam7uQ=;
-        b=banbk1xNMgoJqtduf9/tQnrZW6RfkzY2RZjMWOjvZxKRjhSdLd938FvZPUdLHO5sSq
-         DBqr2QBpVNMi4vwNo9UP9wGoUlC1vIyPMqEMPcpC9xdGWy3pWjlemyD4C7eNU8gp0MS1
-         iPoY4tLaRQ2W9217Ellr/M0KOFY5nB2iSBGBN2Q5h+tQ6ZVJCqK9xx3f+EiGRG06MIca
-         l3FjObPGkiAKva8uQJhYZA7orHbXQo11oMxZQAe9efP3zSXvJ7ik54tx1pt3Dc/NFN6F
-         lfmMGC29oLWVVygPc9141xT0EwilkyiJc+xYKKpnhtRr7pGUamgsmCgwG+zbsHBHDDsq
-         iYrw==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jR3SyHBUEWSPjBlDW1LeGn/KYMF0y8nruNnoz/13mkQ=;
+        b=AFL2+H+B1H0cUjM21DoS+EbPmSeWc+tVjHWCByl0XnHympdA1FNb5GilbogW6Vp6k8
+         /0v51aHKBg9h7alJHCY9O0Pyv8JakfMZMXWW+ay7kMm8HztvZcuwFHeYDwih1eOF0MXe
+         LUmrdjAIh3/bCLzXYh+/IISmwzaajZ0NH9T1nrmHIkS94ijrr/ua1fh0HO0tepKh4kWz
+         Ox0GKA4bkAHKiUulETJQrkXORtnNCIqUj+Y3CgDM11nemud34mfxSKzApX6atyLiVkm4
+         Zn3qp9eqjSvlcSFc8xZe8GDFW9fFR/8h5iMxkOawmFJfO92rH1hoIFbXuyB8seCGv41z
+         MgnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pSsGyhYusNn14wX08kX5/yw/DF7mNGeSPkIRQpam7uQ=;
-        b=qHV5yJxpxSPqCSMChAyQkMUeMWac4TPNpMdqPaLAhFzDDN0Ywr6HKU7oWl8SKhqblO
-         /wu0bB6XjU8HyOMXNkuv/x4LUFRn7LrVIm3ulsKFEY4yx2vk5c6KeQbJLJ18mU6j8tG0
-         a0Er1oLhcETgSSgMCAmxGwlwZgPX7xViGyLNM1rGLoYs8MZRCVt6VCzq+7KU6xiZao1u
-         Tu5JC//07Q3HNQGTR3/S+v48zck3PJRFMnGvcJj7sO2qMCooyV64hLmCuYH8PkMDuD0b
-         L2X9KdFRW3kG/yawoT8xdLldyzlIlvLrxuY2bBzyqt7jVQMpQNWCx/qRS/erIHCNQH+5
-         kvww==
-X-Gm-Message-State: APjAAAVjdwqBAxCDLZHPkK1MvGwtqyH00OCk3SpcfEqSvE+HRg4vz494
-        Dm1oRHobViquuIs2VCGms4k=
-X-Google-Smtp-Source: APXvYqwgRepgXYD+Wsz26E3mZp/qWEn6slPq81tn70PkFLJrEpU7//YodsoJauhAhVXPZX5wfQRVog==
-X-Received: by 2002:a19:5007:: with SMTP id e7mr11211683lfb.153.1575734406686;
-        Sat, 07 Dec 2019 08:00:06 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id z5sm8268779lji.32.2019.12.07.08.00.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Dec 2019 08:00:06 -0800 (PST)
-Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        mturquette@baylibre.com, horms+renesas@verge.net.au,
-        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
-        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        alexios.zavras@intel.com, alsa-devel@alsa-project.org
-References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-4-git-send-email-skomatineni@nvidia.com>
- <7cf4ff77-2f33-4ee5-0e09-5aa6aef3e8be@gmail.com>
- <ad3a6743-4b36-fa25-9cc7-72803038ecc5@gmail.com>
- <dc7a057a-0bed-0e6f-0987-edcfec47f867@gmail.com>
-Message-ID: <288a1701-def6-d628-26bc-a305f817bdb1@gmail.com>
-Date:   Sat, 7 Dec 2019 19:00:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jR3SyHBUEWSPjBlDW1LeGn/KYMF0y8nruNnoz/13mkQ=;
+        b=CNDwVS04X+i/BeOsA9UmQJ8skQGntnNnyrDHq7E+i4WQfrvmoaO7dWuMMS7MXCcREp
+         35T9z4B1T8iHA7alYYXQ8MnS96G/4MCT2uEZgDNlIVHoqJbCbIgH1OVzMXUF6e2uf9ih
+         O2WM3nVZFPSqPaNtdV5ZtBSjR9Qy5MCwCazUYzkoDFk7OaNvIi/wL2yu2Xr9QQ1Mupaj
+         N7Y8c3pRgyNGwwBAmuGz+abragabQC9zO5ZDcyUHpAx72wlXV3KRWUHS84CqeEPr4AgP
+         8W8OrFwQSxRYnuZeEf4Sj+ka2953QQh3cERMoei6TlQFxALQbZnEQJqqve5tPnirnfZb
+         +Dmw==
+X-Gm-Message-State: APjAAAUTdTs5afuwsP6Qa5WFBukVLROCQHJWaL7LOWNUKobLTWg4lit3
+        /Z8WqQCR5SSanLY1TX+2CaMkLw==
+X-Google-Smtp-Source: APXvYqzzT6cpEXbdQzFCSXPWWrCMrulA7XTI6/VFmEaL73RKZUx/P2+UHqPR7ey6iRNw14U/hJqzAA==
+X-Received: by 2002:a5d:6350:: with SMTP id b16mr22200705wrw.132.1575738816490;
+        Sat, 07 Dec 2019 09:13:36 -0800 (PST)
+Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
+        by smtp.gmail.com with ESMTPSA id 2sm21102237wrq.31.2019.12.07.09.13.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Dec 2019 09:13:35 -0800 (PST)
+Date:   Sat, 7 Dec 2019 18:13:34 +0100
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, grygorii.strashko@ti.com,
+        robh+dt@kernel.org, rafal@milecki.pl, davem@davemloft.net,
+        andrew@lunn.ch, mark.rutland@arm.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: Cygnus: Fix MDIO node address/size cells
+Message-ID: <20191207171333.GD26173@netronome.com>
+References: <20191206181909.10962-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <dc7a057a-0bed-0e6f-0987-edcfec47f867@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191206181909.10962-1-f.fainelli@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-07.12.2019 18:53, Dmitry Osipenko пишет:
-> 07.12.2019 18:47, Dmitry Osipenko пишет:
->> 07.12.2019 17:28, Dmitry Osipenko пишет:
->>> 06.12.2019 05:48, Sowjanya Komatineni пишет:
->>>> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2, clk_out_3 with
->>>> mux and gate for each of these clocks.
->>>>
->>>> Currently these PMC clocks are registered by Tegra clock driver using
->>>> clk_register_mux and clk_register_gate by passing PMC base address
->>>> and register offsets and PMC programming for these clocks happens
->>>> through direct PMC access by the clock driver.
->>>>
->>>> With this, when PMC is in secure mode any direct PMC access from the
->>>> non-secure world does not go through and these clocks will not be
->>>> functional.
->>>>
->>>> This patch adds these clocks registration with PMC as a clock provider
->>>> for these clocks. clk_ops callback implementations for these clocks
->>>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC programming
->>>> in secure mode and non-secure mode.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>
->> [snip]
->>
->>>> +
->>>> +static const struct clk_ops pmc_clk_gate_ops = {
->>>> +	.is_enabled = pmc_clk_is_enabled,
->>>> +	.enable = pmc_clk_enable,
->>>> +	.disable = pmc_clk_disable,
->>>> +};
->>>
->>> What's the benefit of separating GATE from the MUX?
->>>
->>> I think it could be a single clock.
->>
->> According to TRM:
->>
->> 1. GATE and MUX are separate entities.
->>
->> 2. GATE is the parent of MUX (see PMC's CLK_OUT paths diagram in TRM).
->>
->> 3. PMC doesn't gate EXTPERIPH clock but could "force-enable" it, correct?
+On Fri, Dec 06, 2019 at 10:19:09AM -0800, Florian Fainelli wrote:
+> The MDIO node on Cygnus had an reversed #address-cells and
+>  #size-cells properties, correct those.
 > 
-> 4. clk_m_div2/4 are internal PMC OSC dividers and thus these clocks
-> should belong to PMC.
+> Fixes: 40c26d3af60a ("ARM: dts: Cygnus: Add the ethernet switch and ethernet PHY")
+> Reported-by: Simon Horman <simon.horman@netronome.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Also, it should be "osc" and not "clk_m".
+Thanks Florian,
+
+this looks good to me.
+
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+
+> ---
+>  arch/arm/boot/dts/bcm-cygnus.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> index 2dac3efc7640..1bc45cfd5453 100644
+> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
+> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> @@ -174,8 +174,8 @@
+>  		mdio: mdio@18002000 {
+>  			compatible = "brcm,iproc-mdio";
+>  			reg = <0x18002000 0x8>;
+> -			#size-cells = <1>;
+> -			#address-cells = <0>;
+> +			#size-cells = <0>;
+> +			#address-cells = <1>;
+>  			status = "disabled";
+>  
+>  			gphy0: ethernet-phy@0 {
+> -- 
+> 2.17.1
+> 
