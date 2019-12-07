@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E389C2BBE2
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 19:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08135C43603
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 19:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2145B2176D
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 19:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF87C24670
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 19:59:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qNnAtmCZ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WRQUx8pX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfLGTfW (ORCPT
+        id S1726669AbfLGT7Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Dec 2019 14:35:22 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3590 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbfLGTfW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 14:35:22 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5debfef30000>; Sat, 07 Dec 2019 11:35:15 -0800
+        Sat, 7 Dec 2019 14:59:24 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15326 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbfLGT7X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 14:59:23 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dec04950000>; Sat, 07 Dec 2019 11:59:17 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 07 Dec 2019 11:35:20 -0800
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sat, 07 Dec 2019 11:59:22 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 07 Dec 2019 11:35:20 -0800
+        by hqpgpgate102.nvidia.com on Sat, 07 Dec 2019 11:59:22 -0800
 Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 7 Dec
- 2019 19:35:20 +0000
+ 2019 19:59:22 +0000
 Received: from [10.2.171.190] (172.20.13.39) by DRHQMAIL107.nvidia.com
  (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 7 Dec 2019
- 19:35:18 +0000
-Subject: Re: [PATCH v3 06/15] clk: tegra: Remove tegra_pmc_clk_init along with
- clk ids
+ 19:59:20 +0000
+Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
+ into PMC driver
 To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
         <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
@@ -53,17 +53,18 @@ CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
         <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
         <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
 References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-7-git-send-email-skomatineni@nvidia.com>
- <3880aa15-c47a-5ab2-dd39-e8a47f6a3d6a@gmail.com>
- <e342a6e7-f213-53b4-1388-23cf61cf6fbb@gmail.com>
- <5938df22-2474-3950-fc33-3e19cbf3da9c@gmail.com>
+ <1575600535-26877-4-git-send-email-skomatineni@nvidia.com>
+ <7cf4ff77-2f33-4ee5-0e09-5aa6aef3e8be@gmail.com>
+ <ad3a6743-4b36-fa25-9cc7-72803038ecc5@gmail.com>
+ <dc7a057a-0bed-0e6f-0987-edcfec47f867@gmail.com>
+ <288a1701-def6-d628-26bc-a305f817bdb1@gmail.com>
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <c81ccd45-781e-0fce-4f20-65281b8c6119@nvidia.com>
-Date:   Sat, 7 Dec 2019 11:35:18 -0800
+Message-ID: <78644d45-2ae3-121f-99fc-0a46f205907d@nvidia.com>
+Date:   Sat, 7 Dec 2019 11:59:19 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <5938df22-2474-3950-fc33-3e19cbf3da9c@gmail.com>
+In-Reply-To: <288a1701-def6-d628-26bc-a305f817bdb1@gmail.com>
 X-Originating-IP: [172.20.13.39]
 X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
  DRHQMAIL107.nvidia.com (10.27.9.16)
@@ -71,68 +72,75 @@ Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575747315; bh=1Ya/CJUQcm/EZA7RBmptW1I45EPwRTjSK1PLRr84L9w=;
+        t=1575748757; bh=N8cFqw4WsOhmPbQ9i3Ws/JDKp0jPOKAwYAQ2PfxA688=;
         h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
          Content-Language;
-        b=qNnAtmCZaD7/TaWT3tGDvs+UpjNleA405v5ssZiJme+pxj11GYfLJXunBz7CpwDog
-         wvk54G4R4u9JO9bBOB2KnED27BZP5JIYUjfXwhzBiINO9QDmBYwFBPsVh5gF4xXpKq
-         MamKyUfyZ6tYUntHh4bi/kddEkP2emMXeXWnbNwBiaozhv+2601DokFnLrngEXg9rW
-         zBGZg0u9XjXOhf5LHUyw9M0LLDE9lm49NG4fb2mtAhyYnOijISDDYUJaIVXkFpEn9A
-         FrFZS5bVkI2q28X5bojvwqbGXNFCNtFkZcsI8dztG97Zj/+VHcDO5IWEgOHWuqECR9
-         xVCHIxTKVSJzA==
+        b=WRQUx8pXfXk6QqvjvcVFbQTj3OB0qpTaS+5QXYT2w2+45Ho1Pp+wppaMSmoEHQ/aO
+         7OAoE85aTkp2S0iOfIJv5wopk9GS1+ScprLEZSeROxCtd48WIfMM1C5TRgkQuDpwMq
+         hyp1apCpin6hTl4fWh+CYSs6sSWohYQStPaeSC59YIw6YvYSs47iNX5q9quNpxo8em
+         0Upd5wM178fAm3WchbDVNMdzMd6KPWLg1ocJ3zL5QTTHC5vmX3ZGlKB/jpaHZ9+3Bb
+         wucmYE1lM95AMYyJ7kW8EurJuGWqgHQerQfoZF1zhiswi2pOypN5NY44Gdz6VFtCl5
+         9BmUpI3nrY4IA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-On 12/7/19 7:04 AM, Dmitry Osipenko wrote:
-> 07.12.2019 17:43, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> 07.12.2019 17:33, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> 06.12.2019 05:48, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> Current Tegra clock driver registers PMC clocks clk_out_1, clk_out_2,
->>>> clk_out_3 and blink output in tegra_pmc_init() which does direct Tegra
->>>> PMC access during clk_ops and these PMC register read and write access
->>>> will not happen when PMC is in secure mode.
->>>>
->>>> Any direct PMC register access from non-secure world will not go
->>>> through and all the PMC clocks and blink control are done in Tegra PMC
->>>> driver with PMC as clock provider.
->>>>
->>>> This patch removes tegra_pmc_clk_init along with corresponding clk ids
->>>> from Tegra clock driver.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
+On 12/7/19 8:00 AM, Dmitry Osipenko wrote:
+> 07.12.2019 18:53, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> 07.12.2019 18:47, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> 07.12.2019 17:28, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> 06.12.2019 05:48, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2, clk_out_3 with
+>>>>> mux and gate for each of these clocks.
+>>>>>
+>>>>> Currently these PMC clocks are registered by Tegra clock driver using
+>>>>> clk_register_mux and clk_register_gate by passing PMC base address
+>>>>> and register offsets and PMC programming for these clocks happens
+>>>>> through direct PMC access by the clock driver.
+>>>>>
+>>>>> With this, when PMC is in secure mode any direct PMC access from the
+>>>>> non-secure world does not go through and these clocks will not be
+>>>>> functional.
+>>>>>
+>>>>> This patch adds these clocks registration with PMC as a clock provide=
+r
+>>>>> for these clocks. clk_ops callback implementations for these clocks
+>>>>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC programm=
+ing
+>>>>> in secure mode and non-secure mode.
+>>>>>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
 >>> [snip]
 >>>
->>>> @@ -1230,9 +1222,6 @@ static struct tegra_clk_init_table init_table[] =
-__initdata =3D {
->>>>   	{ TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 1 },
->>>>   	{ TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 1 },
->>>>   	{ TEGRA30_CLK_EXTERN1, TEGRA30_CLK_PLL_A_OUT0, 0, 1 },
->>> Perhaps these clocks do not need to be always-enabled?
+>>>>> +
+>>>>> +static const struct clk_ops pmc_clk_gate_ops =3D {
+>>>>> +	.is_enabled =3D pmc_clk_is_enabled,
+>>>>> +	.enable =3D pmc_clk_enable,
+>>>>> +	.disable =3D pmc_clk_disable,
+>>>>> +};
+>>>> What's the benefit of separating GATE from the MUX?
+>>>>
+>>>> I think it could be a single clock.
+>>> According to TRM:
 >>>
->>> [snip]
+>>> 1. GATE and MUX are separate entities.
 >>>
->> Also, EXTERN1 parent configuration should be moved to the audio
->> driver/device-tree as well.
-> Ah, I missed that it's done in the patch #10.
-Yes its done in Patch#10
->
->> Maybe it even makes sense to move the whole configuration, including
->> PLLA. I don't see why clk driver need to do something for the audio driv=
-er.
+>>> 2. GATE is the parent of MUX (see PMC's CLK_OUT paths diagram in TRM).
+>>>
+>>> 3. PMC doesn't gate EXTPERIPH clock but could "force-enable" it, correc=
+t?
+>> 4. clk_m_div2/4 are internal PMC OSC dividers and thus these clocks
+>> should belong to PMC.
+> Also, it should be "osc" and not "clk_m".
 
-Current ASoC driver already takes care of PLLA rate and enables.
+I followed the same parents as it were in existing clk-tegra-pmc driver.
 
-So PLLA init can be removed from clock driver too. I didn't went through=20
-complete audio driver to be confident to remove this.
+Yeah they are wrong and they should be from osc and not clk_m.
 
-But PLLA is needed for i2s clock also and currently I2S driver takes=20
-care of only I2S clock rate using PLLA as parent set by clock driver and=20
-clock driver enables PLLA earlier to have it ready by the time both I2S=20
-driver and ASoC driver .
+Will fix in next version.
 
