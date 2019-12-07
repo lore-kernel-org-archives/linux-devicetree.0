@@ -2,175 +2,197 @@ Return-Path: <SRS0=J+Gt=Z5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76132C43603
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 13:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83BBC43603
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 14:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B5C2253D
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 13:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B206824677
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 14:26:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qIF9CxEQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbfLGNEG (ORCPT
+        id S1726409AbfLGO0V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Dec 2019 08:04:06 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38391 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfLGNEG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 08:04:06 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1idZkd-0004dI-W4; Sat, 07 Dec 2019 14:04:00 +0100
-Received: from [IPv6:2a01:4f8:1c1c:29e9:22:41ff:fe00:1400] (unknown [IPv6:2a01:4f8:1c1c:29e9:22:41ff:fe00:1400])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits))
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id E540F48AF4F;
-        Sat,  7 Dec 2019 13:03:57 +0000 (UTC)
-Subject: Re: [PATCH 1/2] net: m_can: tcan4x5x: add required delay after reset
-To:     Sean Nyekjaer <sean@geanix.com>, dmurphy@ti.com,
-        linux-can@vger.kernel.org, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, martin@geanix.com
-References: <20191206152923.470980-1-sean@geanix.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <6f0a5077-360c-39a2-0103-fb91355bcc88@pengutronix.de>
-Date:   Sat, 7 Dec 2019 14:03:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sat, 7 Dec 2019 09:26:21 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41820 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbfLGO0U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 09:26:20 -0500
+Received: by mail-lj1-f194.google.com with SMTP id h23so10731697ljc.8;
+        Sat, 07 Dec 2019 06:26:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=y2jLemfM6NAa2htdvtNYO/Blymq/6is+o20B/osA9Ro=;
+        b=qIF9CxEQ6k1EF/wqZtxvEai9mTLlsDwyNz++ooTbsAS9QwTtkSqRAk+YvNmtXp9QPe
+         k/4V29MeSX3PW7cKFz65qoEa3W9fgRweWAYOFYYc3WpCESIC9euKFqMe1lVW2EOievFt
+         3/h1JzjIiU5M1miTi/jx+eUuQ/seDVanFdxnI0cxiEDdSutLkFFP/cCVb8Er3+3eEmaX
+         dztGrSqarJD18XnypryEKxayizmfQISw/uRsHZk89Hoj9j8aOXNNOogX3tpCbVqBLtXt
+         Eya6SEryR9plGqUKupDB8B3lHDzo2dO4p6ZAphHrhZWb58dO2mbfMR5jJRPBX60n/2Gc
+         KtaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=y2jLemfM6NAa2htdvtNYO/Blymq/6is+o20B/osA9Ro=;
+        b=orotlePkznKHY5ULOhSPPWVj7hWRE0jjrudPrFwRT4t+6RmCLnVUMh2onVrUeYhmf0
+         9eMuv9QHkI49EvIlH7NZhyWCiz56b8JXAWdcC7wbXUJt80RL4bwyuPREGS6F0FDaqlVP
+         Yi0bRVGbvfTH3045UUBTThC/JrMx4GcJsdRu2WzWGvFDipgb5RT/AyFl+fmlOuaHMepn
+         iIF1IrmbgBREXUK3gup+knaX2wecOV1JtHL59Q8C7sLk/K8lSCqGlXx88C1gZpxOSmln
+         6LGrco/QksBXG1WynzpI2qcopbm6bN6VD43v604TU5bAACaYfxkdvpWV4XiiGOAfnBFB
+         lcCA==
+X-Gm-Message-State: APjAAAUl3Qi1HXgrAOYiua/O8KxiYeFIIme2CzvQHi86+huMssPQWBVj
+        UMtdZKlZ8T+c6iy4Gmk/NW8=
+X-Google-Smtp-Source: APXvYqz1YRFRFNxLt0h0j6p1bp3b8kcTYDbdTpKf1RHHQ0N+EIL0IYrF/JF8vAisr83u1gPfUooNgg==
+X-Received: by 2002:a05:651c:1139:: with SMTP id e25mr11792174ljo.200.1575728777693;
+        Sat, 07 Dec 2019 06:26:17 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id d16sm8147955lfa.16.2019.12.07.06.26.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 07 Dec 2019 06:26:16 -0800 (PST)
+Subject: Re: [PATCH v3 00/15] Move PMC clocks into Tegra PMC driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
+        mark.rutland@arm.com, allison@lohutok.net, pdeschrijver@nvidia.com,
+        pgaikwad@nvidia.com, mturquette@baylibre.com,
+        horms+renesas@verge.net.au, Jisheng.Zhang@synaptics.com,
+        krzk@kernel.org, arnd@arndb.de, spujar@nvidia.com,
+        josephl@nvidia.com, vidyas@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alexios.zavras@intel.com,
+        alsa-devel@alsa-project.org
+References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <dfda896d-27f3-7185-146e-4f697d823471@gmail.com>
+Date:   Sat, 7 Dec 2019 17:26:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191206152923.470980-1-sean@geanix.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="037xotzaQ81uAHyUJC18ttpJLKLr9UUAB"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---037xotzaQ81uAHyUJC18ttpJLKLr9UUAB
-Content-Type: multipart/mixed; boundary="8pIXE54iNIOiLSPJQGeEfo4PYenFIws6e";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Sean Nyekjaer <sean@geanix.com>, dmurphy@ti.com,
- linux-can@vger.kernel.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, martin@geanix.com
-Message-ID: <6f0a5077-360c-39a2-0103-fb91355bcc88@pengutronix.de>
-Subject: Re: [PATCH 1/2] net: m_can: tcan4x5x: add required delay after reset
-References: <20191206152923.470980-1-sean@geanix.com>
-In-Reply-To: <20191206152923.470980-1-sean@geanix.com>
+06.12.2019 05:48, Sowjanya Komatineni пишет:
+> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls which
+> are currently registered by Tegra clock driver using clk_regiser_mux and
+> clk_register_gate which performs direct Tegra PMC register access.
+> 
+> When Tegra PMC is in secure mode, any access from non-secure world will
+> not go through.
+> 
+> This patch series adds these Tegra PMC clocks and blink controls to Tegra
+> PMC driver with PMC as clock provider and removed them from Tegra clock
+> driver. This also adds PMC specific clock id's to use in device tree and
+> removed clock ids of PMC clock from Tegra clock driver.
+> 
+> clk_out_1 is dedicated for audio mclk and current ASoC driver does not
+> setting extern1 as parent for clk_out_1 and enabling clk_out_1 and
+> currently this is taken care by Tegra clock driver during clock inits
+> and there is no need to enable this during clock init.
+> 
+> So, this series also includes patch that updates ASoC driver to take
+> care of configuring parent of mclk and enabling mclk using both extern1
+> and clk_out_1 and updates all device trees to use clk_out_1 from pmc as
+> mclk incase if device tree don't specify assigned-clock-parents.
+> 
+> This series also includes a patch for mclk fallback to use extern1
+> when retrieving mclk fails with new device tree which uses pmc provider
+> to have this backward compatible of new DT with old kernels.
+> 
+> This series also includes a patch to remove clock ids for these clocks
+> from clock dt-binding as these clocks are not used in any of the existing
+> device tree except in tegra210-smaug.dts and this series includes a patch
+> to update clock provider from tegra_car to pmc in tegra210-smaug.dts for
+> clk_out_2.
+> 
+> [v3]:	Changes between v2 and v3 are
+> 	- Removes set parent of clk_out_1_mux to extern1 and enabling
+> 	  extern1 from the clock driver.
+> 	- Doesn't enable clk_out_1 and blink by default in pmc driver
+> 	- Updates ASoC driver to take care of audio mclk parent
+> 	  configuration incase if device tree don't specify assigned
+> 	  clock parent properties and enables mclk using both clk_out_1
+> 	  and extern1.
+> 	- updates all device trees using extern1 as mclk in sound node
+> 	  to use clk_out_1 from pmc.
+> 	- patch for YAML format pmc dt-binding
+> 	- Includes v2 feedback
+> 
+> [v2]:	Changes between v1 and v2 are
+> 	- v2 includes patches for adding clk_out_1, clk_out_2, clk_out_3,
+> 	  blink controls to Tegra PMC driver and removing clk-tegra-pmc.
+> 	- feedback related to pmc clocks in Tegra PMC driver from v1
+> 	- Removed patches for WB0 PLLM overrides and PLLE IDDQ PMC programming
+> 	  by the clock driver using helper functions from Tegra PMC.
+> 
+>  	  Note:
+> 	  To use helper functions from PMC driver, PMC early init need to
+> 	  happen prior to using helper functions and these helper functions are
+> 	  for PLLM Override and PLLE IDDQ programming in PMC during PLLM/PLLE
+> 	  clock registration which happen in clock_init prior to Tegra PMC
+> 	  probe.
+> 	  Moving PLLM/PLLE clocks registration to happen after Tegra PMC
+> 	  impacts other clocks EMC, MC and corresponding tegra_emc_init and
+> 	  tegra_mc_init.
+> 	  This implementation of configuring PMC registers thru helper
+> 	  functions in clock driver needs proper changes across PMC, Clock,
+> 	  EMC and MC inits to have it work across all Tegra platforms.
+> 
+> 	  Currently PLLM Override is not enabled in the bootloader so proper
+> 	  patches for this fix will be taken care separately.
+> 
+> [v1]:	v1 includes patches for below fixes.
+> 	- adding clk_out_1, clk_out_2, clk_out_3, blink controls to Tegra PMC
+> 	  driver and removing clk-tegra-pmc.
+> 	- updated clock provider from tegra_car to pmc in the device tree
+> 	  tegra210-smaug.dts that uses clk_out_2.
+> 	- Added helper functions in PMC driver for WB0 PLLM overrides and PLLE
+> 	  IDDQ programming to use by clock driver and updated clock driver to
+> 	  use these helper functions and removed direct PMC access from clock
+> 	  driver and all pmc base address references in clock driver.
+> 
+> 
+> Sowjanya Komatineni (15):
+>   dt-bindings: soc: tegra-pmc: Add Tegra PMC clock bindings
+>   dt-bindings: tegra: Convert Tegra PMC bindings to YAML
+>   soc: tegra: Add Tegra PMC clock registrations into PMC driver
+>   dt-bindings: soc: tegra-pmc: Add id for Tegra PMC blink control
+>   soc: pmc: Add blink output clock registration to Tegra PMC
+>   clk: tegra: Remove tegra_pmc_clk_init along with clk ids
+>   dt-bindings: clock: tegra: Remove pmc clock ids from clock dt-bindings
+>   ASoC: tegra: Add audio mclk control through clk_out_1 and extern1
+>   ASoC: tegra: Add fallback for audio mclk
+>   clk: tegra: Remove extern1 and cdev1 from clocks inittable
+>   ARM: dts: tegra: Add clock-cells property to pmc
 
---8pIXE54iNIOiLSPJQGeEfo4PYenFIws6e
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
 
-On 12/6/19 4:29 PM, Sean Nyekjaer wrote:
-> According to section "8.3.8 RST Pin" in the datasheet we are required t=
-o
-> wait >700us after the device is reset.
->=20
-> Signed-off-by: Sean Nyekjaer <sean@geanix.com>
+>   arm64: tegra: Add clock-cells property to Tegra PMC node
+>   ARM: tegra: Update sound node clocks in device tree
+>   arm64: tegra: smaug: Change clk_out_2 provider to pmc
+>   ASoC: nau8825: change Tegra clk_out_2 provider from tegra_car to pmc
 
-applied both to linux-can.
+Hello Sowjanya,
 
-tnx,
-Marc
+Something gone wrong with these patches because I didn't receive them
+and don't see them on the ML either.
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
-
-
---8pIXE54iNIOiLSPJQGeEfo4PYenFIws6e--
-
---037xotzaQ81uAHyUJC18ttpJLKLr9UUAB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl3rozoACgkQWsYho5Hk
-nSCZ0wf8D6qn40jVeWEz+iBDDJOcy5pb1ySVRyNrshhg0LWDhcCrGDO44ynhgbsC
-zXHKxGoAVuUNWSHKIck6e3+Y3zaQYa9pKr1Nn7WGPtjgUbF7/TQmS86amwvMIFbu
-iyDsNi+pIPJWq8QRKy7yM5U3BxrDL7/yLf65YA2oon2QLx99pPAiPvFMXscQZA6Q
-vO0kS6/LFHnNUhvh58gUdj4w11aN8L3s5OZ933TUA/LU9knffng0kuS0MNDqPfUC
-3HnXohNC7tSjx4X2nIxfPZfMPPlVKdAaLFyDcvB5BgqY7g9JH/DBJCaJslbZD11i
-8cUkgYsBHjCA6RU8buonjjZCIWfWaA==
-=+Aib
------END PGP SIGNATURE-----
-
---037xotzaQ81uAHyUJC18ttpJLKLr9UUAB--
+Also, the list of email correspondents looks a bit too larger. I'm
+pretty sure some of the people do not care much about this series. I
+tend to use script/get_maintainer.pl and then manually pick the relevant
+people for patches.
