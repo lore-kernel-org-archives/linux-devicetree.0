@@ -2,116 +2,79 @@ Return-Path: <SRS0=J+Gt=Z5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFF6C43603
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 17:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC35FC43603
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 17:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B07B121835
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 17:13:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="AFL2+H+B"
+	by mail.kernel.org (Postfix) with ESMTP id 8CD66217BA
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 17:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575740360;
+	bh=T++ydQOV27cJbVsEb9mju7e2HDkTJb9/H8TvZE8Cq9s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dSru8aOvu3TJnvcMc1JMbCc+LckSQBWjvdhMeIisAyVqpnM75jCSZPoORdLin/ZL6
+	 oL7iRi3C5R3TxxQxGC7NrYGbQlPC4n+EQOgLGRPFWpmZnZWxrb9gK2Krsi0lBk0FT4
+	 gy1IUJtCQ1sThwIfIZRbbXZOCYWXQVz0rn72XnUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfLGRNj (ORCPT
+        id S1726464AbfLGRjU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Dec 2019 12:13:39 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41832 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbfLGRNi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 12:13:38 -0500
-Received: by mail-wr1-f66.google.com with SMTP id c9so11263018wrw.8
-        for <devicetree@vger.kernel.org>; Sat, 07 Dec 2019 09:13:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jR3SyHBUEWSPjBlDW1LeGn/KYMF0y8nruNnoz/13mkQ=;
-        b=AFL2+H+B1H0cUjM21DoS+EbPmSeWc+tVjHWCByl0XnHympdA1FNb5GilbogW6Vp6k8
-         /0v51aHKBg9h7alJHCY9O0Pyv8JakfMZMXWW+ay7kMm8HztvZcuwFHeYDwih1eOF0MXe
-         LUmrdjAIh3/bCLzXYh+/IISmwzaajZ0NH9T1nrmHIkS94ijrr/ua1fh0HO0tepKh4kWz
-         Ox0GKA4bkAHKiUulETJQrkXORtnNCIqUj+Y3CgDM11nemud34mfxSKzApX6atyLiVkm4
-         Zn3qp9eqjSvlcSFc8xZe8GDFW9fFR/8h5iMxkOawmFJfO92rH1hoIFbXuyB8seCGv41z
-         MgnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jR3SyHBUEWSPjBlDW1LeGn/KYMF0y8nruNnoz/13mkQ=;
-        b=CNDwVS04X+i/BeOsA9UmQJ8skQGntnNnyrDHq7E+i4WQfrvmoaO7dWuMMS7MXCcREp
-         35T9z4B1T8iHA7alYYXQ8MnS96G/4MCT2uEZgDNlIVHoqJbCbIgH1OVzMXUF6e2uf9ih
-         O2WM3nVZFPSqPaNtdV5ZtBSjR9Qy5MCwCazUYzkoDFk7OaNvIi/wL2yu2Xr9QQ1Mupaj
-         N7Y8c3pRgyNGwwBAmuGz+abragabQC9zO5ZDcyUHpAx72wlXV3KRWUHS84CqeEPr4AgP
-         8W8OrFwQSxRYnuZeEf4Sj+ka2953QQh3cERMoei6TlQFxALQbZnEQJqqve5tPnirnfZb
-         +Dmw==
-X-Gm-Message-State: APjAAAUTdTs5afuwsP6Qa5WFBukVLROCQHJWaL7LOWNUKobLTWg4lit3
-        /Z8WqQCR5SSanLY1TX+2CaMkLw==
-X-Google-Smtp-Source: APXvYqzzT6cpEXbdQzFCSXPWWrCMrulA7XTI6/VFmEaL73RKZUx/P2+UHqPR7ey6iRNw14U/hJqzAA==
-X-Received: by 2002:a5d:6350:: with SMTP id b16mr22200705wrw.132.1575738816490;
-        Sat, 07 Dec 2019 09:13:36 -0800 (PST)
-Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
-        by smtp.gmail.com with ESMTPSA id 2sm21102237wrq.31.2019.12.07.09.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Dec 2019 09:13:35 -0800 (PST)
-Date:   Sat, 7 Dec 2019 18:13:34 +0100
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, grygorii.strashko@ti.com,
-        robh+dt@kernel.org, rafal@milecki.pl, davem@davemloft.net,
-        andrew@lunn.ch, mark.rutland@arm.com, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Eric Anholt <eric@anholt.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: Cygnus: Fix MDIO node address/size cells
-Message-ID: <20191207171333.GD26173@netronome.com>
-References: <20191206181909.10962-1-f.fainelli@gmail.com>
+        Sat, 7 Dec 2019 12:39:20 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:55248 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726455AbfLGRjT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 12:39:19 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ide32-0008Ha-2c; Sat, 07 Dec 2019 18:39:16 +0100
+Date:   Sat, 7 Dec 2019 17:39:14 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/2] Add iProc IDM device support
+Message-ID: <20191207173914.353f768d@why>
+In-Reply-To: <20191202233127.31160-1-ray.jui@broadcom.com>
+References: <20191202233127.31160-1-ray.jui@broadcom.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206181909.10962-1-f.fainelli@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: ray.jui@broadcom.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, rayagonda.kokatanur@broadcom.com, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 10:19:09AM -0800, Florian Fainelli wrote:
-> The MDIO node on Cygnus had an reversed #address-cells and
->  #size-cells properties, correct those.
-> 
-> Fixes: 40c26d3af60a ("ARM: dts: Cygnus: Add the ethernet switch and ethernet PHY")
-> Reported-by: Simon Horman <simon.horman@netronome.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On Mon,  2 Dec 2019 15:31:25 -0800
+Ray Jui <ray.jui@broadcom.com> wrote:
 
-Thanks Florian,
+> The Broadcom iProc IDM device allows control and monitoring of ASIC internal
+> bus transactions. Most importantly, it can be configured to detect bus
+> transaction timeout. In such case, critical information such as transaction
+> address that caused the error, bus master ID of the transaction that caused
+> the error, and etc., are made available from the IDM device.
 
-this looks good to me.
+This seems to have many of the features of an EDAC device reporting
+uncorrectable errors.
 
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Is there any reason why it is not implemented as such?
 
-> ---
->  arch/arm/boot/dts/bcm-cygnus.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-> index 2dac3efc7640..1bc45cfd5453 100644
-> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-> @@ -174,8 +174,8 @@
->  		mdio: mdio@18002000 {
->  			compatible = "brcm,iproc-mdio";
->  			reg = <0x18002000 0x8>;
-> -			#size-cells = <1>;
-> -			#address-cells = <0>;
-> +			#size-cells = <0>;
-> +			#address-cells = <1>;
->  			status = "disabled";
->  
->  			gphy0: ethernet-phy@0 {
-> -- 
-> 2.17.1
-> 
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
