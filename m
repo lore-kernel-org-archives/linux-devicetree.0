@@ -2,209 +2,200 @@ Return-Path: <SRS0=J+Gt=Z5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DEFC2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 20:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5930C43603
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 21:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59C202467B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 20:36:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s5bZeDr0"
+	by mail.kernel.org (Postfix) with ESMTP id B9F0424670
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 21:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfLGUgd (ORCPT
+        id S1726661AbfLGVN4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Dec 2019 15:36:33 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37776 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfLGUgc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 15:36:32 -0500
-Received: by mail-pg1-f195.google.com with SMTP id q127so5076014pga.4
-        for <devicetree@vger.kernel.org>; Sat, 07 Dec 2019 12:36:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=y5s38wz/6dk76o2wu93apOYv5A1m/3RpeMLEd54gKHA=;
-        b=s5bZeDr0Sln+9g/a0EciNEuzuvps+Nd8eSHR6z8G3Ycx0YyHpqr46Js6YGYw7nPhr9
-         N2/9cpqmyhIf1JnmNWUN+m+HPBXc6M7Qszc44JENP5u7QgwkD95SjIJE7pr4InM6WYfQ
-         X0OlPgXFDJWR3GyD0VXGKwow5ut5scco33KtrJdQVrPCHNv4pAylg6wh7vM/3zS9Skcr
-         eSoqV8ar331KUVaLm5vpS2iQOyTlDQymKNY9NCuQnRKN0gYLe6qLoDfrGb6eHamR9FMK
-         CUZ0/oWQqk1zHLx4M9guPBwTOlUgdKznrz+z9m90DmzAT7uXI6mOihy4zS+012FGj3u/
-         2Vkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=y5s38wz/6dk76o2wu93apOYv5A1m/3RpeMLEd54gKHA=;
-        b=XPbsF9oMgeZ30DKkiPcU2gUQfC4rRtYwxXUzeqhu6/BqvVEeqUqtGEi1y+oq5dvXqI
-         TCpEMYS15zAKlS903d8yt7qwoJp/lr8fWwO1h6GEBDrmKTg+LKFQu+5WgD5E1z4XN+dp
-         CQ/2B10KqeGX2vjahfKihw7dd3bX3NHjTT85qq1bjHkYRfPz37KZ+DfofPXOgx4ym+ya
-         6zPJnaeuVcSmUU2v3RBX/6xzY4A62QpVMsSE7V5vpHO6qAXeqxcWYqdpy4b29QY8hghc
-         bzVkkplbIayKzD6fnXFaJU9mrrT+foXYXnLKofepqeZtHeYir3kN786OT9E6SljL+Jk4
-         SRJQ==
-X-Gm-Message-State: APjAAAVqy5mljk16wmbZKDeq7jqA9tlYnoImYPDJVh55rwXtyTtvAflM
-        vIvRSt78q41MZqqldvRxBw9t2Q==
-X-Google-Smtp-Source: APXvYqxPvzGVJHajbJKyNuh/L/VZJpPacmlCJRWlTu4zUkXrUoGgX4pOBwfDBPRMamkQ922x9BnOCg==
-X-Received: by 2002:aa7:9118:: with SMTP id 24mr22439749pfh.182.1575750991839;
-        Sat, 07 Dec 2019 12:36:31 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d14sm22982186pfq.117.2019.12.07.12.36.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Dec 2019 12:36:31 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        Sat, 7 Dec 2019 16:13:56 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:59594 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfLGVN4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 16:13:56 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 208A520041;
+        Sat,  7 Dec 2019 22:13:47 +0100 (CET)
+Date:   Sat, 7 Dec 2019 22:13:45 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Pisati <p.pisati@gmail.com>
-Subject: [PATCH 1/2] clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks
-Date:   Sat,  7 Dec 2019 12:36:02 -0800
-Message-Id: <20191207203603.2314424-2-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191207203603.2314424-1-bjorn.andersson@linaro.org>
-References: <20191207203603.2314424-1-bjorn.andersson@linaro.org>
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/4] dt-bindings: display: panel: document panel-id
+Message-ID: <20191207211345.GA32369@ravnborg.org>
+References: <20191207203553.286017-1-robdclark@gmail.com>
+ <20191207203553.286017-2-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191207203553.286017-2-robdclark@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cm27Pg_UAAAA:8
+        a=e5mUnYsNAAAA:8 a=2slYeMzxh5QCkdzES2IA:9 a=CjuIK1q_8ugA:10
+        a=xmb-EsYY8bH0VWELuYED:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The CLKREF clocks are all fed by the clock signal on the CXO2 pad on the
-SoC. Update the definition of these clocks to allow this to be wired up
-to the appropriate clock source.
+On Sat, Dec 07, 2019 at 12:35:50PM -0800, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> For devices that have one of several possible panels installed, the
+> panel-id property gives firmware a generic way to locate and enable the
+> panel node corresponding to the installed panel.
 
-Retain "xo" as the global named parent to make the change a nop in the
-event that DT doesn't carry the necessary clocks definition.
+For display timings there is something similar.
+Here the property is named native-mode and is a phandle to the
+preferred timing.
+And it is documented that if no native-mode is specified the first
+timing in the tree is chosen.  
+So a different concept than this.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- .../devicetree/bindings/clock/qcom,gcc.yaml   |  6 ++--
- drivers/clk/qcom/gcc-msm8996.c                | 35 +++++++++++++++----
- 2 files changed, 32 insertions(+), 9 deletions(-)
+I could not from your otherwise well-documented changelog see why you
+wanted to go for an opauge integer and status rather than a phandle to
+the active display.
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-index e73a56fb60ca..f8bd902d4e6d 100644
---- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-@@ -41,19 +41,21 @@ properties:
- 
-   clocks:
-     minItems: 1
--    maxItems: 3
-+    maxItems: 4
-     items:
-       - description: Board XO source
-       - description: Board active XO source
-       - description: Sleep clock source
-+      - description: Second XO source
- 
-   clock-names:
-     minItems: 1
--    maxItems: 3
-+    maxItems: 4
-     items:
-       - const: bi_tcxo
-       - const: bi_tcxo_ao
-       - const: sleep_clk
-+      - const: cxo2
- 
-   '#clock-cells':
-     const: 1
-diff --git a/drivers/clk/qcom/gcc-msm8996.c b/drivers/clk/qcom/gcc-msm8996.c
-index d004cdaa0e39..3c3a7ff04562 100644
---- a/drivers/clk/qcom/gcc-msm8996.c
-+++ b/drivers/clk/qcom/gcc-msm8996.c
-@@ -3046,7 +3046,10 @@ static struct clk_branch gcc_usb3_clkref_clk = {
- 		.enable_mask = BIT(0),
- 		.hw.init = &(struct clk_init_data){
- 			.name = "gcc_usb3_clkref_clk",
--			.parent_names = (const char *[]){ "xo" },
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "cxo2",
-+				.name = "xo",
-+			},
- 			.num_parents = 1,
- 			.ops = &clk_branch2_ops,
- 		},
-@@ -3060,7 +3063,10 @@ static struct clk_branch gcc_hdmi_clkref_clk = {
- 		.enable_mask = BIT(0),
- 		.hw.init = &(struct clk_init_data){
- 			.name = "gcc_hdmi_clkref_clk",
--			.parent_names = (const char *[]){ "xo" },
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "cxo2",
-+				.name = "xo",
-+			},
- 			.num_parents = 1,
- 			.ops = &clk_branch2_ops,
- 		},
-@@ -3074,7 +3080,10 @@ static struct clk_branch gcc_edp_clkref_clk = {
- 		.enable_mask = BIT(0),
- 		.hw.init = &(struct clk_init_data){
- 			.name = "gcc_edp_clkref_clk",
--			.parent_names = (const char *[]){ "xo" },
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "cxo2",
-+				.name = "xo",
-+			},
- 			.num_parents = 1,
- 			.ops = &clk_branch2_ops,
- 		},
-@@ -3088,7 +3097,10 @@ static struct clk_branch gcc_ufs_clkref_clk = {
- 		.enable_mask = BIT(0),
- 		.hw.init = &(struct clk_init_data){
- 			.name = "gcc_ufs_clkref_clk",
--			.parent_names = (const char *[]){ "xo" },
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "cxo2",
-+				.name = "xo",
-+			},
- 			.num_parents = 1,
- 			.ops = &clk_branch2_ops,
- 		},
-@@ -3102,7 +3114,10 @@ static struct clk_branch gcc_pcie_clkref_clk = {
- 		.enable_mask = BIT(0),
- 		.hw.init = &(struct clk_init_data){
- 			.name = "gcc_pcie_clkref_clk",
--			.parent_names = (const char *[]){ "xo" },
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "cxo2",
-+				.name = "xo",
-+			},
- 			.num_parents = 1,
- 			.ops = &clk_branch2_ops,
- 		},
-@@ -3116,7 +3131,10 @@ static struct clk_branch gcc_rx2_usb2_clkref_clk = {
- 		.enable_mask = BIT(0),
- 		.hw.init = &(struct clk_init_data){
- 			.name = "gcc_rx2_usb2_clkref_clk",
--			.parent_names = (const char *[]){ "xo" },
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "cxo2",
-+				.name = "xo",
-+			},
- 			.num_parents = 1,
- 			.ops = &clk_branch2_ops,
- 		},
-@@ -3130,7 +3148,10 @@ static struct clk_branch gcc_rx1_usb2_clkref_clk = {
- 		.enable_mask = BIT(0),
- 		.hw.init = &(struct clk_init_data){
- 			.name = "gcc_rx1_usb2_clkref_clk",
--			.parent_names = (const char *[]){ "xo" },
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "cxo2",
-+				.name = "xo",
-+			},
- 			.num_parents = 1,
- 			.ops = &clk_branch2_ops,
- 		},
--- 
-2.24.0
+The panel-id, if I get it right, is optional and the important part is
+that the first panel with staus = "okay" is selected.
+This would cover my usecase fine.
+I have a target with four different displays and the bootloader
+knows what display is used (based on gpio etc).
+The bootloader (barebox in my case) uses a simple variant of the DT,
+but reads in the DT used by the kernel and can modify the DT before
+it is passed to the kernel.
 
+	Sam
+
+
+
+
+> Example of how to use this property:
+> 
+>     ivo_panel {
+>         compatible = "ivo,m133nwf4-r0";
+>         panel-id = <0xc5>;
+>         status = "disabled";
+> 
+>         ports {
+>             port {
+>                 ivo_panel_in_edp: endpoint {
+>                     remote-endpoint = <&sn65dsi86_out_ivo>;
+>                 };
+>             };
+>         };
+>     };
+> 
+>     boe_panel {
+>         compatible = "boe,nv133fhm-n61";
+>         panel-id = <0xc4>;
+>         status = "disabled";
+> 
+>         ports {
+>             port {
+>                 boe_panel_in_edp: endpoint {
+>                     remote-endpoint = <&sn65dsi86_out_boe>;
+>                 };
+>             };
+>         };
+>     };
+> 
+>     sn65dsi86: bridge@2c {
+>         compatible = "ti,sn65dsi86";
+> 
+>         ports {
+>             #address-cells = <1>;
+>             #size-cells = <0>;
+> 
+>             port@0 {
+>                 reg = <0>;
+>                 sn65dsi86_in_a: endpoint {
+>                     remote-endpoint = <&dsi0_out>;
+>                 };
+>             };
+> 
+>             port@1 {
+>                 reg = <1>;
+> 
+>                 sn65dsi86_out_boe: endpoint@c4 {
+>                     remote-endpoint = <&boe_panel_in_edp>;
+>                 };
+> 
+>                 sn65dsi86_out_ivo: endpoint@c5 {
+>                     remote-endpoint = <&ivo_panel_in_edp>;
+>                 };
+>             };
+>         };
+>     };
+> 
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  .../bindings/display/panel/panel-common.yaml  | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> index ef8d8cdfcede..6113319b91dd 100644
+> --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> @@ -75,6 +75,32 @@ properties:
+>        in the device graph bindings defined in
+>        Documentation/devicetree/bindings/graph.txt.
+>  
+> +  panel-id:
+> +    description:
+> +      To support the case where one of several different panels can be installed
+> +      on a device, the panel-id property can be used by the firmware to identify
+> +      which panel should have it's status changed to "ok".  This property is not
+> +      used by the HLOS itself.
+> +
+> +      For a device with multiple potential panels, a node for each potential
+> +      should be defined with status = "disabled", and an appropriate panel-id
+> +      property.  The video data producer should be setup with endpoints going to
+> +      each possible panel.  The firmware will find the dt node with a panel-id
+> +      matching the actual panel installed, and change it's status to "ok".
+> +
+> +      The exact method the firmware uses to determine the panel-id of the installed
+> +      panel is outside the scope of this binding, but a few examples are
+> +
+> +      1) u-boot module reading a value from a u-boot env var
+> +      2) EFI driver module reading a value from an EFI variable
+> +      3) device specific firmware reading some device specific GPIOs or
+> +         e-fuse
+> +
+> +      The panel-id values are an opaque integer.  They can be sparse.  The only
+> +      important thing is that each possible panel in the system has a unique
+> +      panel-id, and that the values configured in the device's DTB match the
+> +      values that the firmware is looking for.
+> +
+>    ddc-i2c-bus:
+>      $ref: /schemas/types.yaml#/definitions/phandle
+>      description:
+> -- 
+> 2.23.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
