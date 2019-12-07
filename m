@@ -8,57 +8,58 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F7FC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 14:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EDBC2D0BE
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 14:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC8712467C
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 14:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EDFE2467A
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 14:43:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K3aQ1qbn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEXsRsUj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfLGOdY (ORCPT
+        id S1726414AbfLGOnx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Dec 2019 09:33:24 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45863 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbfLGOdY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 09:33:24 -0500
-Received: by mail-lj1-f193.google.com with SMTP id d20so10709766ljc.12;
-        Sat, 07 Dec 2019 06:33:22 -0800 (PST)
+        Sat, 7 Dec 2019 09:43:53 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42052 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfLGOnx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 09:43:53 -0500
+Received: by mail-lj1-f194.google.com with SMTP id e28so10743452ljo.9;
+        Sat, 07 Dec 2019 06:43:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/FFDjLwGzWA9HSQGVIzBQAFJnVseiTav15XJa3GBc3M=;
-        b=K3aQ1qbnb55GNOBjWlsAMHcHx4YpXkTmspJZNtQXfZdFyWE+cwSXhC+prKM7Cj+7LU
-         jduHbB8Y3SawAfvF6BiO8joJc70Bkgx827I05VZk19e5S08pWQHu0Xcj6ubmkd9v01yz
-         8vUqyzhjuQuo0tipFfpM4TEbT+am9WsUMgmv74hmFUD5Zr2yprED8P8W42B5XsatRe9S
-         38WrXZFsAGdVu3KbEql7dhqguT+YQlZWhEvwJyyK9ghBvbfEPEAFUPiFXdK9weISgcb/
-         /GbNBmS+Dg67t1paCZbFk9QohnHq8yqD2EqOYGBFRHLDRRrZm8Dj+vv5w6l+R7nUiWbP
-         PXFQ==
+        bh=M4178m5wqKcjur6WZ9VbgwAy1j68KdshPPjyIN/6tPs=;
+        b=JEXsRsUjV2g10sr0Ks0k3FUw9U5Tv97+5vrfYHJZOIcNSgd6M+N5vTtgaCHX3c8/8a
+         +oNhdRKUkWMzF/WSTpiuN4ecPb7ElQcmbs2mNsXjcnxARF1D/yvdqxmsTYRUbn6iq9EX
+         QWPn4LtwsAJt2utSabQVTf8KbxeHmW61Q93SPmk9gzIFH8IyCqeH3royTvXmlDHUqMiX
+         JXzhDznChEN8g9jgpuJyTjWuW3g57aSUeC/E3MrGn7Z+ZoDte3AzDVtEH8M0HlO9Mp4i
+         AtmyKD5OcVxL7iXM/75BCdU8CI9/SZEArBOGMMhwzOagt8LV3x/rei58gUrWU05odAD8
+         y0/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=/FFDjLwGzWA9HSQGVIzBQAFJnVseiTav15XJa3GBc3M=;
-        b=T7fb5wCFhWuvVJfSa4GmugX89IJzMVSQYSSLAo3z9q6cLHGbX6wdI7weAMNCOOyFct
-         v9yd3epjvugCovTamoN7zKzBBphs9V/D8FWHHJZ5foHBj1gamdmUiFZhUCJ3fqvj9y+7
-         YqMAskPjFNOXbISmT6pjZw8ix3J6BNlab+Hmmz6y256W0kEuXZcRanPtxbky1KlHf37X
-         8uVL3XU/wX4PCssGBwvjDfWgrrSSfbe3cpRiXd2Th5gbKKtbEE56/eKXVpKCrUG4Ac/B
-         MopbppdatA2KZmoOt++MRoBZTuTeAQQOEw2QcFzUw1zT2gD6JjGDSSgLzALA7nwqqWDG
-         eO1g==
-X-Gm-Message-State: APjAAAXUWqmpLXDGkRnSKrO5TKazXNollmxTY5SYgzJNmItG00XaSEb3
-        b9tcpwy8hxmC4Iu4eQOVttQ=
-X-Google-Smtp-Source: APXvYqwlXFJb8W4yPOfhW3/16zy5CO9BLcreipXry+ldYRegUMcmqCBo+2yeOXVRJRYvTKIUZaTVpA==
-X-Received: by 2002:a2e:9705:: with SMTP id r5mr10932018lji.114.1575729201868;
-        Sat, 07 Dec 2019 06:33:21 -0800 (PST)
+        bh=M4178m5wqKcjur6WZ9VbgwAy1j68KdshPPjyIN/6tPs=;
+        b=hcJh6kbCTLgxHjrLlas+Cl3dLyXDEbha6PDQ8KSl4Na6/sJBgHqNz9PnJEN/vOqEL3
+         E5lYVf/RJl8ILwv1c8q4IrsCaeQWQ5idE31TikA+S+XZjjGU58yt5ylxEkW/7M8mONUt
+         OGVvOurwB4bhlyD+2qXlVCZDkgCFUoe5CdpqeLfKU6ws7IyqWLpCAtQl+SzLRcJsP6/Y
+         Ia7d+ZtBn+fAjJnjc270P7DFcssSNmm5GQgi8aTY5C8E7YLDM//ydsH00xcQ58mYJQo4
+         0Z1MCNzG8+ehKcTrEJknVF9A0YX2Ed0Kg2d/j+RSzYKuhTKp0W5WiXi85MNXOkelFSDd
+         NRhA==
+X-Gm-Message-State: APjAAAWdKv9Wk6U0h2yxF/dyeALCB7+TJHqBNRzsSMwoMKrmVfyVXTb4
+        flej5HQo5r6e46N88buQGW4=
+X-Google-Smtp-Source: APXvYqyqrq36nLJ9lM39hAYXIi5EgLPNDsEijYW1ZwyxcXInMqQSgLCoGiMV6ulTtSVLZFqJpT8q6Q==
+X-Received: by 2002:a2e:8e72:: with SMTP id t18mr2688107ljk.132.1575729830747;
+        Sat, 07 Dec 2019 06:43:50 -0800 (PST)
 Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id l28sm8132397lfk.21.2019.12.07.06.33.20
+        by smtp.googlemail.com with ESMTPSA id w2sm8155909ljo.61.2019.12.07.06.43.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Dec 2019 06:33:21 -0800 (PST)
+        Sat, 07 Dec 2019 06:43:50 -0800 (PST)
 Subject: Re: [PATCH v3 06/15] clk: tegra: Remove tegra_pmc_clk_init along with
  clk ids
+From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
         thierry.reding@gmail.com, jonathanh@nvidia.com,
         mperttunen@nvidia.com, gregkh@linuxfoundation.org,
@@ -76,13 +77,13 @@ Cc:     allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
         alexios.zavras@intel.com, alsa-devel@alsa-project.org
 References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
  <1575600535-26877-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3880aa15-c47a-5ab2-dd39-e8a47f6a3d6a@gmail.com>
-Date:   Sat, 7 Dec 2019 17:33:19 +0300
+ <3880aa15-c47a-5ab2-dd39-e8a47f6a3d6a@gmail.com>
+Message-ID: <e342a6e7-f213-53b4-1388-23cf61cf6fbb@gmail.com>
+Date:   Sat, 7 Dec 2019 17:43:48 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1575600535-26877-7-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <3880aa15-c47a-5ab2-dd39-e8a47f6a3d6a@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -91,30 +92,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-06.12.2019 05:48, Sowjanya Komatineni пишет:
-> Current Tegra clock driver registers PMC clocks clk_out_1, clk_out_2,
-> clk_out_3 and blink output in tegra_pmc_init() which does direct Tegra
-> PMC access during clk_ops and these PMC register read and write access
-> will not happen when PMC is in secure mode.
+07.12.2019 17:33, Dmitry Osipenko пишет:
+> 06.12.2019 05:48, Sowjanya Komatineni пишет:
+>> Current Tegra clock driver registers PMC clocks clk_out_1, clk_out_2,
+>> clk_out_3 and blink output in tegra_pmc_init() which does direct Tegra
+>> PMC access during clk_ops and these PMC register read and write access
+>> will not happen when PMC is in secure mode.
+>>
+>> Any direct PMC register access from non-secure world will not go
+>> through and all the PMC clocks and blink control are done in Tegra PMC
+>> driver with PMC as clock provider.
+>>
+>> This patch removes tegra_pmc_clk_init along with corresponding clk ids
+>> from Tegra clock driver.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
 > 
-> Any direct PMC register access from non-secure world will not go
-> through and all the PMC clocks and blink control are done in Tegra PMC
-> driver with PMC as clock provider.
+> [snip]
 > 
-> This patch removes tegra_pmc_clk_init along with corresponding clk ids
-> from Tegra clock driver.
+>> @@ -1230,9 +1222,6 @@ static struct tegra_clk_init_table init_table[] __initdata = {
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
+>>  	{ TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 1 },
+>>  	{ TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 1 },
+>>  	{ TEGRA30_CLK_EXTERN1, TEGRA30_CLK_PLL_A_OUT0, 0, 1 },
+> 
+> Perhaps these clocks do not need to be always-enabled?
+> 
+> [snip]
+> 
 
-[snip]
+Also, EXTERN1 parent configuration should be moved to the audio
+driver/device-tree as well.
 
-> @@ -1230,9 +1222,6 @@ static struct tegra_clk_init_table init_table[] __initdata = {
-
->  	{ TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 1 },
->  	{ TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 1 },
->  	{ TEGRA30_CLK_EXTERN1, TEGRA30_CLK_PLL_A_OUT0, 0, 1 },
-
-Perhaps these clocks do not need to be always-enabled?
-
-[snip]
+Maybe it even makes sense to move the whole configuration, including
+PLLA. I don't see why clk driver need to do something for the audio driver.
