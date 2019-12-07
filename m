@@ -2,157 +2,189 @@ Return-Path: <SRS0=J+Gt=Z5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94984C43603
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 20:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5EAC2BBE2
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 20:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62FC9206DB
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 20:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3D8F24679
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 20:36:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="YPH9mj0K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1ah2Jgj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfLGU3A (ORCPT
+        id S1726654AbfLGUgL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Dec 2019 15:29:00 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41100 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbfLGU27 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 15:28:59 -0500
-Received: by mail-lj1-f196.google.com with SMTP id h23so11304193ljc.8
-        for <devicetree@vger.kernel.org>; Sat, 07 Dec 2019 12:28:58 -0800 (PST)
+        Sat, 7 Dec 2019 15:36:11 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46486 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfLGUgK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 15:36:10 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y14so5131305pfm.13;
+        Sat, 07 Dec 2019 12:36:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=l2Bez8LdoluwsORjwCrpP+ORceYmTvmMN1fTDoAmM20=;
-        b=YPH9mj0Kpv04KhAttwgYfeRxoLsTRerNnVEWXNEmSiGXVVtmex1Xt6OXiOS3bhbOkL
-         px0mSPW7+X1FG4sDoeEfD1M24YYU2d2Gfmc0v55TdiToVI9CaQb8KI+Ycwa9iwo7nSP4
-         Oi6aVD4YHbgGxMoyTHM85piOKkbTTUSxrnK/v3WJCNm1+shNe+i0ug68uW8ijb7WFNok
-         qmEJGpLp6NI5IQML85sqnEYisDfdHKUWT3JRuvThUVwlD/gRf93GkPmif5fQGyNztp0Y
-         zWXgfmYBtSLRQceaVuceJknnC8vVyoAfW+M3DL1ihw/4H6jdL9j4U7ZegWzRi5wYqOqv
-         Lraw==
+        bh=2kMIJY/eOkF08UFC83+z2Yvw2OEsP0PRB4nAXO2fCAU=;
+        b=L1ah2JgjYkVbYTJrHXreZ/M03kKDjwenY8BAjQ9xJEx0gbKashe1+23y3HRp0Xx+WC
+         Ou2IQzV+8QXgBlKXvhkEtaCLdSQlIFo+qkXefce0BZdNG5kYKpv3JpAoWpMuy2Lnzwu1
+         C5J6apBOhbPYAqsgiW5bhXn3gix9FaHZ83rezWyEV1Za4Jt7ulew6i1DNB5bkjQK02oY
+         AzRWp4LLJR/ml+NOxujgBGeSnJuNQbye7c2/YNqS7a8ZU6zfZYHpcI7skbX6dyLODERj
+         T4J7zxloGX09YN0DMYOZYbEmtWXI+va/wJdXFZd3GaR71EWPoJJv2wwzxMOu77Q2F70I
+         7G8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=l2Bez8LdoluwsORjwCrpP+ORceYmTvmMN1fTDoAmM20=;
-        b=IvuWhaXEO+4VZIUPwDpos6KWXb6L/8ySPnQ1i6NZfbiiCRYvgg/8wSfIIB/IMex3fB
-         WYVwDYqewIe/PjQSSWksQQYvf/FaARlJRUO6VzVG6oTEsLFpJYi/AgcmnMBZHx7WooD/
-         cC8AjpBIEWdm3pS+7KIOOkpcOyGWAn9Ya8tg4Da2UhP6YjYa1rbrOh0vhEiF2uylov25
-         fczfS8N1ksjoqlpzFmmBZT6uESmpX2Selmj5pVE49OpeGx/RCpCjvYGhKKFEhR90bqMw
-         KF8S+0pr4MU2I/4FXjW2uP9J95JE89vYJO5sp4s9b7cCNM7IuquNnSUm7qu2a2soGuR1
-         4JNA==
-X-Gm-Message-State: APjAAAVxRhD7tEUHu2zpkpGstuoPH5EEkixrvn/EMO4UdWzfN2M42iYp
-        jEVJnYO1teEivmU+Z4dgDyBUCA==
-X-Google-Smtp-Source: APXvYqyAYjqX+4BcVE2Sz01P1Gs79GkHwoh28QlbVnZ/sLKD9B7bxtxDLOonL3K55m0asDMMvJU3kQ==
-X-Received: by 2002:a2e:9687:: with SMTP id q7mr12472790lji.80.1575750537704;
-        Sat, 07 Dec 2019 12:28:57 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:4830:260e:ff6:21f7:4d8b:4a84])
-        by smtp.gmail.com with ESMTPSA id a9sm8561722lfk.23.2019.12.07.12.28.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 07 Dec 2019 12:28:57 -0800 (PST)
-Subject: Re: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
-To:     Chris Brandt <chris.brandt@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        Mason Yang <masonccyang@mxic.com.tw>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com>
-Date:   Sat, 7 Dec 2019 23:28:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2kMIJY/eOkF08UFC83+z2Yvw2OEsP0PRB4nAXO2fCAU=;
+        b=K6h4yRGw5uWox67kFymH0ajVt4RiTLH+5xeGxxyxSDmNJIOpBxivyzq515piFlL6t/
+         RUe2ksGW5Hec1JC1memiWXLu0JMRCRvv59QFAP4d+BoUzPZGF/lb84fztjnPOwpBCPEP
+         R9IXO30VkHNxbgmlNDb1jOhJ2+56EDkEPSRn5oGpcMyoEo60ZN/FamiAaYtZ/yQKa+1p
+         UfdAKaVtWqp2kvYSZqFm7G1N1sS9yBusctiQl9UpVpyjYAg1LqWwtFW6/IYJbTyc1Rqg
+         9vFw4siazumvbKdC2h9f9htrHJ02fuueOpIcTqh/DvWd4Zu0OHEQO37889ljNwSWY+6H
+         JbsA==
+X-Gm-Message-State: APjAAAVBJEF81vcQXBeyqeUh821lllHhZlRjUQMFyklLfbPtP0MzXP9f
+        T2MN+HLKYLSWweESFng4oY8=
+X-Google-Smtp-Source: APXvYqyHsn0JRBAztc8gkWedID4H+F1dMmOijtBZeWWN976EbUglK6Cd/j6zKuX60a2hGwZ5Nhn3NA==
+X-Received: by 2002:a63:d958:: with SMTP id e24mr10614053pgj.31.1575750969811;
+        Sat, 07 Dec 2019 12:36:09 -0800 (PST)
+Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
+        by smtp.gmail.com with ESMTPSA id d24sm22327447pfq.75.2019.12.07.12.36.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Dec 2019 12:36:09 -0800 (PST)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        aarch64-laptops@lists.linaro.org
+Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-kernel@vger.kernel.org (open list),
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH 0/4] drm+dt: multi panel selection and yoga c630 display
+Date:   Sat,  7 Dec 2019 12:35:49 -0800
+Message-Id: <20191207203553.286017-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191206134202.18784-1-chris.brandt@renesas.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
+From: Rob Clark <robdclark@chromium.org>
 
-  Thank you for having mty on CC:, I might have missed oit otherwise... :-)
+It is not uncommon for devices to use one of several possible panels.
+The Lenovo Yoga C630 laptop is one such device.  This patchset
+introduces an optional "panel-id" property which can be used by the
+firmware to find the correct panel node to enable.  The second patch
+adds support in drm/of to automatically pick the enabled endpoint, to
+avoid adding the same logic in multiple bridges/drivers.  The last
+patch uses this mechanism to enable display support for the Yoga C630.
 
-On 12/06/2019 04:41 PM, Chris Brandt wrote:
+An example usage:
 
-> The Renesas SPI Bus Space Controller (SPIBSC) HW was specifically designed for
-> accessing Serial flash devices (QSPI,
+  boe_panel {
+      compatible = "boe,nv133fhm-n61";
+      panel-id = <0xc4>;
+      /* fw will change status to "Ok" if this panel is installed */
+      status = "disabled";
 
-   The initial design did only support SPI, hence the SPI in the name.
+      ports {
+          port {
+              boe_panel_in_edp: endpoint {
+                  remote-endpoint = <&sn65dsi86_out_boe>;
+              };
+          };
+      };
+  };
 
-> HyperFlash, Octa Flash). In the hardware
+  ivo_panel {
+      compatible = "ivo,m133nwf4-r0";
+      panel-id = <0xc5>;
+      /* fw will change status to "Ok" if this panel is installed */
+      status = "disabled";
 
-   Only added in "2nd generation" controllers, like on R-Car gen3, RZ/A2. 
+      ports {
+          port {
+              ivo_panel_in_edp: endpoint {
+                  remote-endpoint = <&sn65dsi86_out_ivo>;
+              };
+          };
+      };
+  };
 
-> manuals, it is almost always labeled as the "Renesas SPI Multi I/O Bus Controller".
+  sn65dsi86: bridge@2c {
+      compatible = "ti,sn65dsi86";
 
-   Not seeing "Renesas" but the rest looks consistent across the manuals.
+      ports {
+          #address-cells = <1>;
+          #size-cells = <0>;
 
-> However, the HW IP is usually referred to within Renesas as the "SPI BSC".
+          port@0 {
+              reg = <0>;
+              sn65dsi86_in_a: endpoint {
+                  remote-endpoint = <&dsi0_out>;
+              };
+          };
 
-   Poor name for the 2nd generation controllers which also support at least HyperFlash.
+          port@1 {
+              reg = <1>;
 
-> Yes, the R-Car team nicknamed it RPC (for "Reduced Pin Count" flash) after HyperFash
-> support was added...but I personally think that RPC is not a good name for this
-> HW block.
+              sn65dsi86_out_boe: endpoint@c4 {
+                  remote-endpoint = <&boe_panel_in_edp>;
+              };
 
-   SPIBSC is also misleading... RPC-IF seems misleading too as it's only spelled out
-in the R-Car gen3 and RZ/A2H manuals. 
+              sn65dsi86_out_ivo: endpoint@c5 {
+                  remote-endpoint = <&ivo_panel_in_edp>;
+              };
+          };
+      };
+  };
 
-> This driver has been tested on an RZ/A1H RSK and RZ/A2M EVB.
+This replaces an earlier proposal[1] to use chosen/panel-id to select the
+installed panel, in favor of adding support[2] to an EFI driver module
+(DtbLoader.efi) to find the installed panel, locate it in dtb via the
+'panel-id' property, and update it's status to "Ok".
 
-   In the SPI mode only, I assume?
+[1] https://patchwork.kernel.org/cover/11024613/
+[2] https://github.com/robclark/edk2/commits/dtbloader
 
-   What I have now is the core driver (or rather a library) placed under drivers/memory/
-and the SPI and HyperFlash front ends in drivers/spi/ and drivers/mtd/hyperbus/ respectfully.
-I'm almost ready to post the core driver/bindings, the SPI driver still needs some Mark Brown's
-comments addressed, and the HyperFlash driver is also ready but needs the existing HyperBus
-infrastructure properly fixed up (having a draft patch now)...
+In this case, DtbLoader, which is somewhat generic (ie. this mechanism
+applies to all snapdragon based devices which orignally ship with
+windows), determines the panel-id of the installed panel from the
+UEFIDisplayInfo variable.
 
-> The testing mostly consisted of formatting an area as JFFS2 and doing copying
-> of files and such.
+As I understand, a similar situation exists with the pine64 laptops.  A
+similar scheme could be used to support this, by loading the panel-id
+from a u-boot variable.
 
-   Did the same (or at least tried to :-) and I must admit that writing doesn't work with
-any of the front ends... I still need to get this fixed.
+In other cases (phones), a more device specific shim would be needed to
+determine the panel-id by reading some GPIOs, or some other more device-
+specific mechanism.
 
-> While the HW changed a little between the RZ/A1 and RZ/A2 generations, the IP
-> block in the RZ/A2M was taken from the R-Car H3 design, so in theory this
-> driver should work for R-Car Gen3 as well.
+Bjorn Andersson (1):
+  arm64: dts: qcom: c630: Enable display
 
-   I don't think it's a good idea to use the SPI dedicated driver on R-Car gen3, I would rather
-see the RZ/A1 using the RPC-IF driver/library to reduce the code duplication...
+Rob Clark (3):
+  dt-bindings: display: panel: document panel-id
+  drm/of: add support to find any enabled endpoint
+  drm/bridge: ti-sn65dsi86: find any enabled endpoint
 
-> =========================
-> Version 2 changes
-> =========================
-> * I got rid of all the critical clock stuff. The idea is is that if you are
->   planning on using the SPI BSC, even in XIP mode, it should be described in DT.
-> 
-> * There is no actual 'runtime pm' implmented in the driver at the moment, and
->   so just the standard enable/disable clock API is used.
+ .../bindings/display/panel/panel-common.yaml  |  26 +++
+ .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 165 ++++++++++++++++++
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c         |   2 +-
+ drivers/gpu/drm/drm_of.c                      |  41 ++++-
+ 4 files changed, 232 insertions(+), 2 deletions(-)
 
-   My code does have RPM enabled and used.
+-- 
+2.23.0
 
-> * The compatible string "jedec,spi-nor" will be used to determine if a spi controller
->   needs to be regitered or not. At the moment there is no setup needed for
->   running in XIP mode, so we just need to signal that the peripheral clock should
->   be left on and then we're done.
-
-[...]
-
-MBR, Sergei
