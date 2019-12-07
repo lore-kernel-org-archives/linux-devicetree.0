@@ -2,231 +2,112 @@ Return-Path: <SRS0=J+Gt=Z5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DC1C43603
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 01:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D22DC43603
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 04:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4BA2173E
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 01:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327942467A
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 04:54:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AVgm9cJg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B1z22Lhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfLGBPu (ORCPT
+        id S1726619AbfLGEyL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 20:15:50 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37263 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbfLGBPt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 20:15:49 -0500
-Received: by mail-pl1-f196.google.com with SMTP id bb5so3439707plb.4
-        for <devicetree@vger.kernel.org>; Fri, 06 Dec 2019 17:15:49 -0800 (PST)
+        Fri, 6 Dec 2019 23:54:11 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:33817 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfLGEyL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 23:54:11 -0500
+Received: by mail-ua1-f66.google.com with SMTP id w20so3736622uap.1;
+        Fri, 06 Dec 2019 20:54:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TcZXle/krhNKj/2nCJEOVs7pK4S6zGjMn5udHE26v1Q=;
-        b=AVgm9cJg4CCfoMONrJFzWfj47YnxNdM9F5PgW1gRRX14Ghm9zM0ebEM7SUfRIJ7xZQ
-         beAYp5bts+KNIc9ymPPn/2gkHHhQxExNAQuTvYAgE+GyWvwFHzp4AUkvEleKdekssNPp
-         xoAmhxRSSTP8EtK3pcuGeacPe+ZC2YHAtnZWQ=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IiFK9BAduFHna34DQon87G4FreS7gq1kGZB1A1KnXt8=;
+        b=B1z22Lhh9VfS9y96LDb+/zD+DLGmgwCbnKJoVsVQNPEdnKtyDwwaoweZBDk1JO106U
+         lqYp0tK7lfgsLI4kTrC15itURVO5/25IyjlDJ+LRiaWinA67W2nZh8dCXRJfT2f9yQnI
+         evcCeX0jmzi0DWPkaTSaxPUDlCDpwS+O+CIf/pga0RoGEMtP3ruJ2D1J8y+Oo3EKhV+q
+         1KzeXbdiFSnYzVuqQ5mMUY4ot2Vwvx+DW1Jou+Mulzib8IkoJajb91j2OvR7QVy+z055
+         KfojXyMGJoPai0FgwkoluJAkr94gYhYK1Tzsc5SqWo17FqrnbaPkWh0PpsqRkWzo+qQ/
+         vPxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=TcZXle/krhNKj/2nCJEOVs7pK4S6zGjMn5udHE26v1Q=;
-        b=Ea1aodzy1V9XLmGiojW690YjYGC+0G3hZCzQvycNG4A65FXr5KPCDAuWXnF44PKSHh
-         OgnQA0P840Fn7A6xm7NNFtSOWSc0eo6m/tgMnoJJtMnkoCUlC+9h5Au7GNQNCcszbkfP
-         MVHwwdwyGSZVvBKFqf07LRVCYLbKAxV70Y572e+c3diA3oj11/bZMn8V8HBEIfdAi7LF
-         ROk+8ZWC/+qc3QWZKZWNt6nGEcGGBsiiZamKp3qem1XN7IgXBSserD9WlGMzv52V7Mig
-         1X62Q9oaGdjZvHIvyAn2GeqrCObwGSGyJNm+14miTjNjNPCf4DzUoOzXqy81tjR2/qZ2
-         LbGg==
-X-Gm-Message-State: APjAAAXfHbY0IpnvaAASbejFbSYgYwJbfwFsXfra/pox78fKvM3MSGkH
-        c5A3OaQbPKFWEJY/1/nf03jyAQ==
-X-Google-Smtp-Source: APXvYqzGBIwdDxGqw2dMGU7hGmbzVbaXRN+CoQEemqNI1oALAfa+1Gp/CBftGs0e4dkz0zN6NOIrYQ==
-X-Received: by 2002:a17:90a:a386:: with SMTP id x6mr5661494pjp.116.1575681348558;
-        Fri, 06 Dec 2019 17:15:48 -0800 (PST)
-Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id z26sm16072334pgu.80.2019.12.06.17.15.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Dec 2019 17:15:47 -0800 (PST)
-Subject: Re: [PATCH 2/2] soc: bcm: iproc: Add Broadcom iProc IDM driver
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-References: <20191202233127.31160-1-ray.jui@broadcom.com>
- <20191202233127.31160-3-ray.jui@broadcom.com>
- <955f1d22-a1df-377a-1ed9-7fdaa4309b33@gmail.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <d4740de9-52b2-a4f8-7a4b-4f523c61cb9c@broadcom.com>
-Date:   Fri, 6 Dec 2019 17:15:41 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        bh=IiFK9BAduFHna34DQon87G4FreS7gq1kGZB1A1KnXt8=;
+        b=IOc22fzj3dXAOcL5E20njJIOKNSWJJocAG8k3COvKfOFD4wMghdWZV66/MESeySdCQ
+         GmLYHMy9fDc4LUBrGvVO/Oyw1yBt9/dmWtYubEKo4QRAmjdQb6KNDEHSsh7RjAMBjGER
+         fyr9TkjDJckdzzIKDZEWnPa82lPG9ysxg+shFAB0duLZJ14azAbQ2G5osLAXm2w5OuzY
+         JPoR9KIxqLPJadE7RkGJ54/5QCfy7gdNI2cLwd5pyD/FthldtYX/3t8be2U8qMmCMTAj
+         DfXjm0nba9sGi37bwpvncjHNJHFT5vON2H58LoTLMwZ+0nHCcQGgKqj3ShCrhxew817P
+         YCjw==
+X-Gm-Message-State: APjAAAXHe8cXsG/JGTPqTXNUEsGMEKxFcWN8p8YmHTs4Q9xXefOghnb/
+        RyZoUhyApBP0Oq0/KrJk00E=
+X-Google-Smtp-Source: APXvYqzcU+qHwBoWF6V8jXH/kcw3HOHOmuN+vu+g7aB6s7KogEati7PJZ06qZOY8EV/W68ROszZyBQ==
+X-Received: by 2002:ab0:46c:: with SMTP id 99mr16117574uav.134.1575694449985;
+        Fri, 06 Dec 2019 20:54:09 -0800 (PST)
+Received: from localhost.localdomain ([177.45.184.74])
+        by smtp.gmail.com with ESMTPSA id w132sm8156205vkw.46.2019.12.06.20.54.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2019 20:54:09 -0800 (PST)
+From:   Rodrigo Carvalho <rodrigorsdc@gmail.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel-usp@googlegroups.com,
+        Rodrigo Carvalho <rodrigorsdc@gmail.com>
+Subject: [PATCH v6 1/2] staging: iio: accel: adis16240: enforce SPI mode on probe function
+Date:   Sat,  7 Dec 2019 01:53:38 -0300
+Message-Id: <20191207045339.9186-1-rodrigorsdc@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <955f1d22-a1df-377a-1ed9-7fdaa4309b33@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+According to the datasheet, this driver supports only SPI mode 3,
+so we should enforce it on probe function.
 
+Signed-off-by: Rodrigo Carvalho <rodrigorsdc@gmail.com>
+---
+V6:
+  -none
 
-On 12/5/19 4:22 PM, Florian Fainelli wrote:
-> On 12/2/19 3:31 PM, Ray Jui wrote:
->> Add Broadcom iProc IDM driver that controls that IDM devices available
->> on various iProc based SoCs for bus transaction timeout monitoring and
->> error logging.
->>
->> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
->> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
->> ---
-> 
-> Looks good to me, just a few suggestions below
-> 
-> [snip]
-> 
->> --- /dev/null
->> +++ b/drivers/soc/bcm/iproc/Kconfig
->> @@ -0,0 +1,6 @@
-> 
-> You would want an
-> 
-> if SOC_BRCM_IPROC
-> 
->> +config IPROC_IDM
->> +	bool "Broadcom iProc IDM driver"
->> +	depends on (ARCH_BCM_IPROC || COMPILE_TEST) && OF
->> +	default ARCH_BCM_IPROC
->> +	help
->> +	  Enables support for iProc Interconnect and Device Management (IDM) control and monitoring
-> 
-> and endif here to make this a nice menu.
-> 
+ drivers/staging/iio/accel/adis16240.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Sure I'll add SOC_BRCM_IPROC at one layer higher and use the if here.
+diff --git a/drivers/staging/iio/accel/adis16240.c b/drivers/staging/iio/accel/adis16240.c
+index 82099db4bf0c..77b6b81767b9 100644
+--- a/drivers/staging/iio/accel/adis16240.c
++++ b/drivers/staging/iio/accel/adis16240.c
+@@ -400,6 +400,13 @@ static int adis16240_probe(struct spi_device *spi)
+ 	indio_dev->num_channels = ARRAY_SIZE(adis16240_channels);
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 
++	spi->mode = SPI_MODE_3;
++	ret = spi_setup(spi);
++	if (ret) {
++		dev_err(&spi->dev, "spi_setup failed!\n");
++		return ret;
++	}
++
+ 	ret = adis_init(st, indio_dev, spi, &adis16240_data);
+ 	if (ret)
+ 		return ret;
+-- 
+2.24.0
 
-> [snip]
-> 
->> +
->> +static int iproc_idm_dev_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct device_node *np = dev->of_node;
->> +	struct platform_device *elog_pdev;
->> +	struct device_node *elog_np;
->> +	struct iproc_idm *idm;
->> +	const char *name;
->> +	int ret;
->> +	u32 val;
->> +
->> +	idm = devm_kzalloc(dev, sizeof(*idm), GFP_KERNEL);
->> +	if (!idm)
->> +		return -ENOMEM;
->> +
->> +	ret = of_property_read_string(np, "brcm,iproc-idm-bus", &name);
->> +	if (ret) {
->> +		dev_err(dev, "Unable to parse IDM bus name\n");
->> +		return ret;
->> +	}
->> +	idm->name = name;
->> +
->> +	platform_set_drvdata(pdev, idm);
->> +	idm->dev = dev;
->> +
->> +	idm->base = of_iomap(np, 0);
->> +	if (!idm->base) {
->> +		dev_err(dev, "Unable to map I/O\n");
->> +		ret = -ENOMEM;
->> +		goto err_exit;
->> +	}
->> +
->> +	ret = of_irq_get(np, 0);
->> +	if (ret <= 0) {
->> +		dev_err(dev, "Unable to find IRQ number. ret=%d\n", ret);
->> +		goto err_iounmap;
->> +	}
-> 
-> Since this is a standard platform device, you can use the standard
-> platform_get_resource() and platform_get_irq(). If you ever needed to
-> support ACPI in the future, that would make it transparent and almost
-> already ready.
-> 
-
-Will do, thanks!
-
->> +
->> +	ret = devm_request_irq(dev, ret, iproc_idm_irq_handler, IRQF_SHARED,
->> +			       idm->name, idm);
->> +	if (ret < 0) {
->> +		dev_err(dev, "Unable to request irq. ret=%d\n", ret);
->> +		goto err_iounmap;
->> +	}
->> +
->> +	/*
->> +	 * ELOG phandle is optional. If ELOG phandle is specified, it indicates
->> +	 * ELOG logging needs to be enabled
->> +	 */
->> +	elog_np = of_parse_phandle(dev->of_node, ELOG_IDM_COMPAT_STR, 0);
->> +	if (elog_np) {
->> +		elog_pdev = of_find_device_by_node(elog_np);
->> +		if (!elog_pdev) {
->> +			dev_err(dev, "Unable to find IDM ELOG device\n");
->> +			ret = -ENODEV;
->> +			goto err_iounmap;
->> +		}
->> +
->> +		idm->elog = platform_get_drvdata(elog_pdev);
->> +		if (!idm->elog) {
->> +			dev_err(dev, "Unable to get IDM ELOG driver data\n");
->> +			ret = -EINVAL;
->> +			goto err_iounmap;
->> +		}
->> +	}
->> +
->> +	/* enable IDM timeout and its interrupt */
->> +	val = readl(idm->base + IDM_CTRL_OFFSET);
->> +	val |= IDM_CTRL_TIMEOUT_EXP_MASK | IDM_CTRL_TIMEOUT_ENABLE |
->> +	       IDM_CTRL_TIMEOUT_IRQ;
->> +	writel(val, idm->base + IDM_CTRL_OFFSET);
->> +
->> +	ret = device_create_file(dev, &dev_attr_no_panic);
->> +	if (ret < 0)
->> +		goto err_iounmap;
->> +
->> +	of_node_put(np);
-> 
-> Did not you intend to drop the reference count on elog_np here?
-> 
-
-Sorry, I'm not following this comment. Could you please help to clarify 
-for me a bit more? Thanks!
-
-> [snip]
-> 
->> +static struct platform_driver iproc_idm_driver = {
->> +	.probe = iproc_idm_probe,
-> 
-> Do not you need a remove function in order to unregister the sysfs file
-> that you created in iproc_idm_dev_probe() to avoid bind/unbind (or
-> rmmod/modprobe) to spit out an existing sysfs entry warning?
-> 
-
-This driver should never be compiled as a module. It's meant to be 
-always there to capture IDM bus timeouts.
-
-But you are right that I cannot prevent user from trying to unbind it 
-for whatever reason. I'll add a remove routine to take care of this.
-
-Thanks!
-
-Ray
