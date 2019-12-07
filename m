@@ -2,92 +2,150 @@ Return-Path: <SRS0=J+Gt=Z5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4705CC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 22:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D260C43603
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 23:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E0324679
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 22:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575758950;
-	bh=fQiHeTSkXa+q0MUHJbEeA+eMFm4vY8RORCB2PwtjnWI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y/Zsg5aSDwuL9cvwTKTSOt0QcTqRCscCSaECAiAqpgNV/LeRlrqF1fdOm8tu5kQRQ
-	 jO3w9WNZrL4V1SMu99L6p2YPotNJU/vqIB7Uuq3fsBq+59I02C0Ohg7ZxpjcTfIYiP
-	 Q7zqwBQvVMbuf2fzGP5/86fF2Sirf0J/HId9GNFM=
+	by mail.kernel.org (Postfix) with ESMTP id D8B9C20706
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 23:24:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m2e3DVoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfLGWsP (ORCPT
+        id S1726484AbfLGXY6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Dec 2019 17:48:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726810AbfLGWsN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 7 Dec 2019 17:48:13 -0500
-Received: from ziggy.de (unknown [95.169.229.25])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1335524681;
-        Sat,  7 Dec 2019 22:48:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575758892;
-        bh=fQiHeTSkXa+q0MUHJbEeA+eMFm4vY8RORCB2PwtjnWI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ATvc5XgEKBnyQmykQVFhL2x6QB9sfUZk+OXJI6aKl618V6PDw+zl7yuV1BOxRuwCQ
-         0gkAd6WF+8i5Mh/qxHLsA0m++R3o4tTUw+SQb5IKfBzhrZtB/b6bnhS1UXSr/yJmNF
-         3lPiABM6zPffZVMJWlz3Nx9BzHhaXo/5GSVYi/qg=
-From:   matthias.bgg@kernel.org
-To:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com, enric.balletbo@collabora.com
-Cc:     sean.wang@mediatek.com, sean.wang@kernel.org,
-        rdunlap@infradead.org, wens@csie.org, hsinyi@chromium.org,
-        frank-w@public-files.de, drinkcat@chromium.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, mbrugger@suse.com,
-        matthias.bgg@kernel.org
-Subject: [resend PATCH v6 02/12] dt-bindings: mediatek: Add compatible for mt7623
-Date:   Sat,  7 Dec 2019 23:47:30 +0100
-Message-Id: <20191207224740.24536-3-matthias.bgg@kernel.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191207224740.24536-1-matthias.bgg@kernel.org>
-References: <20191207224740.24536-1-matthias.bgg@kernel.org>
+        Sat, 7 Dec 2019 18:24:58 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41031 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfLGXY6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 18:24:58 -0500
+Received: by mail-lj1-f194.google.com with SMTP id h23so11525956ljc.8;
+        Sat, 07 Dec 2019 15:24:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UYYclqI+qbEWxgjHzSQw1mRE8Z+HNZO1kpO5Dr5T5Zo=;
+        b=m2e3DVoJEoIDL+VUAjilEa45HADkdtPQ5yqtDXIeKD7IyMxe7/l2p2UTMdO/G5ZSMh
+         JV36MAs5NUacLjejDjRHiL0axTSr/l8rtQHgIJuPKBq+XXvn/lUFY5RhMhWjemyBinTW
+         Fj0+9DwxlchlD2NRJ9WShFXNHXwrm1QW+DbAIx0sBwT7H4QM/slfpRGTbL79Oa7+bnFC
+         T/DkK5f9SCOVtQa4cm87GQ1blSqIogDXcGdoZtTh6c2eQzNKdG0Q/fiKwH4qsx1BaPpH
+         3bbQlJ3G8WFeqPWU8uCcaksknWRyWBhapQjk/AfaQbxsfrbtluK4FDXqq8BOK9nYQKrZ
+         aI3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UYYclqI+qbEWxgjHzSQw1mRE8Z+HNZO1kpO5Dr5T5Zo=;
+        b=ec4Em6JOUMXFYV8EyVZPQHFgZDMVhTaQcSrY60MHFHDp0+4+QoL+L6TqftdEoTM6o6
+         Fc4IbjLlWcdVGz3I3P9jqgPHYXq5L11MJw+5x6Zv5p2gXmWL/Jw+YAdLNLQ1KadXmgG3
+         OcoaByTUKJpoLX913bL8AwP0R9THQJcGqXU3gAUeIA3XlK038kh8xB+VV/NOckEp0M69
+         d85zKHBQBZAjhEjPGGuFmaUsYXbTVjFD7Lopnkj4zi8LswZyik/s4ZXKdQD/23pua7Yc
+         JhXxXvCceC3y5oqvfPkp9UYFo8WV3zOUIZShMxWz5wTOdBPXEoUJNIWs1XMV37GRM/WY
+         6jzw==
+X-Gm-Message-State: APjAAAUHLnzjcVTzVzkSabT5zsCpf4AXfsOx/vrXw5LXCF+hpH6EHV8v
+        elt7qHJ++xu3vQSpyuRmRAI=
+X-Google-Smtp-Source: APXvYqyhVxrvLXBCuvNVTxG/3XJJJA+cgc3K90h56oHZ1wvKmB/jS+aOEEXAQQRzF0rA1zwaXQqVmA==
+X-Received: by 2002:a2e:9bd9:: with SMTP id w25mr10729689ljj.212.1575761095167;
+        Sat, 07 Dec 2019 15:24:55 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id p26sm8604243lfh.64.2019.12.07.15.24.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 07 Dec 2019 15:24:54 -0800 (PST)
+Subject: Re: [PATCH v3 06/15] clk: tegra: Remove tegra_pmc_clk_init along with
+ clk ids
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        mturquette@baylibre.com, horms+renesas@verge.net.au,
+        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
+        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
+        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
+        markz@nvidia.com, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        alexios.zavras@intel.com, alsa-devel@alsa-project.org
+References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
+ <1575600535-26877-7-git-send-email-skomatineni@nvidia.com>
+ <3880aa15-c47a-5ab2-dd39-e8a47f6a3d6a@gmail.com>
+ <e342a6e7-f213-53b4-1388-23cf61cf6fbb@gmail.com>
+ <5938df22-2474-3950-fc33-3e19cbf3da9c@gmail.com>
+ <c81ccd45-781e-0fce-4f20-65281b8c6119@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f8188f0d-ec7e-7d4a-f977-16273b594838@gmail.com>
+Date:   Sun, 8 Dec 2019 02:24:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <c81ccd45-781e-0fce-4f20-65281b8c6119@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Matthias Brugger <mbrugger@suse.com>
+07.12.2019 22:35, Sowjanya Komatineni пишет:
+> 
+> On 12/7/19 7:04 AM, Dmitry Osipenko wrote:
+>> 07.12.2019 17:43, Dmitry Osipenko пишет:
+>>> 07.12.2019 17:33, Dmitry Osipenko пишет:
+>>>> 06.12.2019 05:48, Sowjanya Komatineni пишет:
+>>>>> Current Tegra clock driver registers PMC clocks clk_out_1, clk_out_2,
+>>>>> clk_out_3 and blink output in tegra_pmc_init() which does direct Tegra
+>>>>> PMC access during clk_ops and these PMC register read and write access
+>>>>> will not happen when PMC is in secure mode.
+>>>>>
+>>>>> Any direct PMC register access from non-secure world will not go
+>>>>> through and all the PMC clocks and blink control are done in Tegra PMC
+>>>>> driver with PMC as clock provider.
+>>>>>
+>>>>> This patch removes tegra_pmc_clk_init along with corresponding clk ids
+>>>>> from Tegra clock driver.
+>>>>>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
+>>>> [snip]
+>>>>
+>>>>> @@ -1230,9 +1222,6 @@ static struct tegra_clk_init_table
+>>>>> init_table[] __initdata = {
+>>>>>       { TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 1 },
+>>>>>       { TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 1 },
+>>>>>       { TEGRA30_CLK_EXTERN1, TEGRA30_CLK_PLL_A_OUT0, 0, 1 },
+>>>> Perhaps these clocks do not need to be always-enabled?
+>>>>
+>>>> [snip]
+>>>>
+>>> Also, EXTERN1 parent configuration should be moved to the audio
+>>> driver/device-tree as well.
+>> Ah, I missed that it's done in the patch #10.
+> Yes its done in Patch#10
+>>
+>>> Maybe it even makes sense to move the whole configuration, including
+>>> PLLA. I don't see why clk driver need to do something for the audio
+>>> driver.
+> 
+> Current ASoC driver already takes care of PLLA rate and enables.
+> 
+> So PLLA init can be removed from clock driver too. I didn't went through
+> complete audio driver to be confident to remove this.
+> 
+> But PLLA is needed for i2s clock also and currently I2S driver takes
+> care of only I2S clock rate using PLLA as parent set by clock driver and
+> clock driver enables PLLA earlier to have it ready by the time both I2S
+> driver and ASoC driver .
+I2S could use assigned-clocks, but probably it's not really necessary
+and predefined configuration in the clk driver is good enough.
 
-MediaTek mt7623 uses the mt2701 binings as fallback.
-Document this in the binding description.
-
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
----
- .../devicetree/bindings/display/mediatek/mediatek,disp.txt      | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-index c71c8a4b73ff..a747895574f1 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-@@ -42,6 +42,8 @@ Required properties (all function blocks):
- 	"mediatek,<chip>-disp-od"		- overdrive
- 	"mediatek,<chip>-mmsys", "syscon"	- provide clocks and components management
-   the supported chips are mt2701, mt2712 and mt8173.
-+  For mt7623, compatible must be:
-+        "mediatek,mt7623-<component>" , "mediatek,mt2701-<component>"
- 
- - reg: Physical base address and length of the function block register space
- - interrupts: The interrupt signal from the function block (required, except for
--- 
-2.24.0
-
+At least PLLA doesn't need to be always-enabled since audio drivers
+enable it when necessary.
