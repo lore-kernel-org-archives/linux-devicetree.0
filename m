@@ -2,116 +2,137 @@ Return-Path: <SRS0=J+Gt=Z5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A522C43603
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 19:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E389C2BBE2
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 19:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560162176D
-	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 19:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2145B2176D
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 19:35:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="HSWfbL1R";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nMRjGBn3"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qNnAtmCZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbfLGTW5 (ORCPT
+        id S1726489AbfLGTfW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 7 Dec 2019 14:22:57 -0500
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:47997 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726473AbfLGTW4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 14:22:56 -0500
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id 25A3960B;
-        Sat,  7 Dec 2019 14:22:55 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Sat, 07 Dec 2019 14:22:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
-         h=from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=Z2PjyZf3136gCvtJS7r8XhFYol
-        pFs7Qq0QrFZubMpCM=; b=HSWfbL1RCQWIFnBsdrVRkQaLS2TYI0LaPj/VDRTvnT
-        ldIZsB2gupLuHbodKyMnKt1kQd/Pr7X1L3U1RDZPmgbGTlfkwiJgcRPuRNuTRN5D
-        H5A9m31TJnU0wqh+80QlYCu8jxVIkTw0UAR55hN2G/iScfKDGv5Izbv59K4s68Wt
-        WPQmtkyt2tWwuo8R+X5XB1bAqFWEkCbNGIMJ5xvv2QAkS659Zi9nDYY31cm2T/Ff
-        va1BkoKdRz2gKk5Rz3Wx4cNWt6xUkZpyu+6riqGG931gKTIBhpitmleqNyuepa+b
-        jzRF6CjMtxwtyu6HUZnOJTKAG468Vt0XIx5m3SMAU2lA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=Z2PjyZf3136gCvtJS
-        7r8XhFYolpFs7Qq0QrFZubMpCM=; b=nMRjGBn3tzAClgnICYBySrm/ENoibw3u6
-        tx2fC1IAGxGKmqKajoP+0SsT7vg6qAHP8RcxEC3OFr9xhzf7M+dgTwCcZ/K10c6D
-        xsPSOI5Uw1wTihZWdVN3RADyBz8SV6nYiLji0Wj+5ccohR00Ai+2+XRtVNhK+tsy
-        1n2OKWgDq4J8VLHra/KqFT0VRYpxRqbGROlGun3eZyjOOkbWiJT3EKWdE9x2WSEy
-        eAem2dUQLQR/8M0jsREiciqyNJj3Q1qqKmimA1WC7CtjYAJ1unel1OiCYK4copT6
-        Z7pkP6tPXhmybRAXCq0Y6qohi+k8GlHvCQUhAdtx/KCX6VZZP2h4A==
-X-ME-Sender: <xms:DfzrXRmpJRN1AyywKk3kYG79Eg5bpc5ViuUbW1HA7sToh0gWZvKKRw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudekhedguddvkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpeetlhhishhtrghirhcuhfhrrghntghishcuoegrlhhishhtrghi
-    rhesrghlihhsthgrihhrvdefrdhmvgeqnecukfhppeejfedrleefrdekgedrvddtkeenuc
-    frrghrrghmpehmrghilhhfrhhomheprghlihhsthgrihhrsegrlhhishhtrghirhdvfedr
-    mhgvnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:DvzrXaqDIWey4LD3tIiJ70YiTXjivHNS_kuFndwt3rMoxX9S3aIfTg>
-    <xmx:DvzrXSEBiX_6Di5fnn1lT8q4LAVeDMWjQpohdvoONgp0cq3LZXYbjQ>
-    <xmx:DvzrXexuW1uHyS8qlDMhp7T0BVv63nIGTCmgPUCfjEHvMvoF_o80_A>
-    <xmx:DvzrXfpMp_j_rK60mgG68zfbChFE1hv5ztTxxqh5X7XH0qxREg-yig>
-Received: from alistair-xps-14z.alistair23.me (c-73-93-84-208.hsd1.ca.comcast.net [73.93.84.208])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0CDEE80062;
-        Sat,  7 Dec 2019 14:22:52 -0500 (EST)
-From:   Alistair Francis <alistair@alistair23.me>
-To:     linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        wens@csie.org, mripard@kernel.org, alistair23@gmail.com,
-        Alistair Francis <alistair@alistair23.me>
-Subject: [PATCH] arm64: allwinner: Enable Bluetooth and WiFi on sopine baseboard
-Date:   Sat,  7 Dec 2019 11:22:49 -0800
-Message-Id: <20191207192249.8346-1-alistair@alistair23.me>
-X-Mailer: git-send-email 2.24.0
+        Sat, 7 Dec 2019 14:35:22 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3590 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbfLGTfW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Dec 2019 14:35:22 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5debfef30000>; Sat, 07 Dec 2019 11:35:15 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 07 Dec 2019 11:35:20 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 07 Dec 2019 11:35:20 -0800
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 7 Dec
+ 2019 19:35:20 +0000
+Received: from [10.2.171.190] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 7 Dec 2019
+ 19:35:18 +0000
+Subject: Re: [PATCH v3 06/15] clk: tegra: Remove tegra_pmc_clk_init along with
+ clk ids
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
+        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
+        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
+        <josephl@nvidia.com>, <vidyas@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
+References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
+ <1575600535-26877-7-git-send-email-skomatineni@nvidia.com>
+ <3880aa15-c47a-5ab2-dd39-e8a47f6a3d6a@gmail.com>
+ <e342a6e7-f213-53b4-1388-23cf61cf6fbb@gmail.com>
+ <5938df22-2474-3950-fc33-3e19cbf3da9c@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <c81ccd45-781e-0fce-4f20-65281b8c6119@nvidia.com>
+Date:   Sat, 7 Dec 2019 11:35:18 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <5938df22-2474-3950-fc33-3e19cbf3da9c@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575747315; bh=1Ya/CJUQcm/EZA7RBmptW1I45EPwRTjSK1PLRr84L9w=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=qNnAtmCZaD7/TaWT3tGDvs+UpjNleA405v5ssZiJme+pxj11GYfLJXunBz7CpwDog
+         wvk54G4R4u9JO9bBOB2KnED27BZP5JIYUjfXwhzBiINO9QDmBYwFBPsVh5gF4xXpKq
+         MamKyUfyZ6tYUntHh4bi/kddEkP2emMXeXWnbNwBiaozhv+2601DokFnLrngEXg9rW
+         zBGZg0u9XjXOhf5LHUyw9M0LLDE9lm49NG4fb2mtAhyYnOijISDDYUJaIVXkFpEn9A
+         FrFZS5bVkI2q28X5bojvwqbGXNFCNtFkZcsI8dztG97Zj/+VHcDO5IWEgOHWuqECR9
+         xVCHIxTKVSJzA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The sopine board has an optional RTL8723BS WiFi + BT module that can be
-connected to UART1. Add this to the device tree so that it will work for
-users if connected.
 
-Signed-off-by: Alistair Francis <alistair@alistair23.me>
----
- .../dts/allwinner/sun50i-a64-sopine-baseboard.dts  | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On 12/7/19 7:04 AM, Dmitry Osipenko wrote:
+> 07.12.2019 17:43, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> 07.12.2019 17:33, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> 06.12.2019 05:48, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> Current Tegra clock driver registers PMC clocks clk_out_1, clk_out_2,
+>>>> clk_out_3 and blink output in tegra_pmc_init() which does direct Tegra
+>>>> PMC access during clk_ops and these PMC register read and write access
+>>>> will not happen when PMC is in secure mode.
+>>>>
+>>>> Any direct PMC register access from non-secure world will not go
+>>>> through and all the PMC clocks and blink control are done in Tegra PMC
+>>>> driver with PMC as clock provider.
+>>>>
+>>>> This patch removes tegra_pmc_clk_init along with corresponding clk ids
+>>>> from Tegra clock driver.
+>>>>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>> [snip]
+>>>
+>>>> @@ -1230,9 +1222,6 @@ static struct tegra_clk_init_table init_table[] =
+__initdata =3D {
+>>>>   	{ TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 1 },
+>>>>   	{ TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 1 },
+>>>>   	{ TEGRA30_CLK_EXTERN1, TEGRA30_CLK_PLL_A_OUT0, 0, 1 },
+>>> Perhaps these clocks do not need to be always-enabled?
+>>>
+>>> [snip]
+>>>
+>> Also, EXTERN1 parent configuration should be moved to the audio
+>> driver/device-tree as well.
+> Ah, I missed that it's done in the patch #10.
+Yes its done in Patch#10
+>
+>> Maybe it even makes sense to move the whole configuration, including
+>> PLLA. I don't see why clk driver need to do something for the audio driv=
+er.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index 920103ec0046..0a91f9d8ed47 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -214,6 +214,20 @@ &uart0 {
- 	status = "okay";
- };
- 
-+&uart1 {
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+        status = "okay";
-+
-+        bluetooth {
-+                compatible = "realtek,rtl8723bs-bt";
-+                reset-gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>; /* PL4 */
-+                device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
-+                host-wake-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-+                firmware-postfix = "pine64";
-+        };
-+};
-+
- /* On Pi-2 connector */
- &uart2 {
- 	pinctrl-names = "default";
--- 
-2.24.0
+Current ASoC driver already takes care of PLLA rate and enables.
+
+So PLLA init can be removed from clock driver too. I didn't went through=20
+complete audio driver to be confident to remove this.
+
+But PLLA is needed for i2s clock also and currently I2S driver takes=20
+care of only I2S clock rate using PLLA as parent set by clock driver and=20
+clock driver enables PLLA earlier to have it ready by the time both I2S=20
+driver and ASoC driver .
 
