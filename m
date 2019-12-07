@@ -1,99 +1,192 @@
-Return-Path: <SRS0=B/fR=Z4=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=J+Gt=Z5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF77C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 23:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81DAC43603
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 00:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B7224670
-	for <linux-devicetree@archiver.kernel.org>; Fri,  6 Dec 2019 23:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4CA9205ED
+	for <linux-devicetree@archiver.kernel.org>; Sat,  7 Dec 2019 00:24:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GgYr0rmg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfLFXlK (ORCPT
+        id S1726413AbfLGAYa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 6 Dec 2019 18:41:10 -0500
-Received: from gate.crashing.org ([63.228.1.57]:53978 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726371AbfLFXlK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Dec 2019 18:41:10 -0500
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id xB6NeZ43027638;
-        Fri, 6 Dec 2019 17:40:35 -0600
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id xB6NeYbA027637;
-        Fri, 6 Dec 2019 17:40:34 -0600
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Fri, 6 Dec 2019 17:40:34 -0600
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC] Efficiency of the phandle_cache on ppc64/SLOF
-Message-ID: <20191206234034.GW3152@gate.crashing.org>
-References: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de> <87wobedpit.fsf@mpe.ellerman.id.au> <20191203183531.GT24609@gate.crashing.org> <493a7da7-774c-1515-b43a-80d72c9d3c19@gmail.com>
+        Fri, 6 Dec 2019 19:24:30 -0500
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:36067 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbfLGAY3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Dec 2019 19:24:29 -0500
+Received: by mail-pl1-f201.google.com with SMTP id s6so4336500plq.3
+        for <devicetree@vger.kernel.org>; Fri, 06 Dec 2019 16:24:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=5QskUqrSs8tfhni9O8M9nfwm0gn25mamJ/N+0daOZSo=;
+        b=GgYr0rmgQ4SIfZj52ZzHe23Vh0wuhLbhsjx5x0yvFHjxMONRS4whndS8mkm0Mhgg3d
+         Jz3P7AZTOF2bdV4BLiJP3zKP8ruj3NdC6kBl7SCzdwU5s5yG9XCLJYOFj9jUuvD1zsir
+         jfWv2cHws+AFbw1RIYCY9hHp6xSYDvQ66WombrhSUT92tJUylngUKaaScJp39VHIieUT
+         V3TznRF8MhDUny61c8jU4pGlLiWd8XGIRKKocNEChkh36F93f6zu/PY1FiqDBZPXAJnv
+         0fsR7MDwR9ikXI9xTGElm0wsbM4F6hH8qxpmMYEJ+B6S54qMMaLzk3FTT3/C1oCCv7gw
+         iuJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=5QskUqrSs8tfhni9O8M9nfwm0gn25mamJ/N+0daOZSo=;
+        b=mAB2m7LED3Rj5iH3aZXKmq+FaVFDEORpYgP6ShIC3KQjAxYc5c0SOL5atmzCGDcN3/
+         toElVd2+zPGS6nNoLdqFoGeo1CGJsh11wacmrnjCDB1AYnDoQhIG9BfeOV1YSJubMslG
+         BJCqy7OsstX5bq7yvK7ZqsrRmV53PcqVQgyJlKfI4p90UqH82SJRvSNo+lqQxEjSZrfV
+         x+ImJJK10H70DnmaQiL/O8sOyTBhOIqJdRBZGjDMeCsYQNVu4+wDUR1VSD5vxhZvU52O
+         RQDOOo13yZEcj4v38kpmGBf1/arkl+bu19FqKC6A2HDB14cMr1TC2jwbyK7mG0nNbQ8v
+         tp7Q==
+X-Gm-Message-State: APjAAAVkIAkdy/O37U7Yx+zBSy0CszW4EuvlA0ZftOz2u9L6vFa/M2Qp
+        OWDZvy5GFzenzmJHlXmdLn5xF177uLuCf5c=
+X-Google-Smtp-Source: APXvYqwv2cS8roXs3o61C/0Z4Ss478NxQoub4UVFi4s0qZCzqLSz5ySy4LZM+5VlBHusfRzpt91TN0FrLJLWvtA=
+X-Received: by 2002:a63:4723:: with SMTP id u35mr6378799pga.194.1575678268770;
+ Fri, 06 Dec 2019 16:24:28 -0800 (PST)
+Date:   Fri,  6 Dec 2019 16:24:21 -0800
+Message-Id: <20191207002424.201796-1-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <493a7da7-774c-1515-b43a-80d72c9d3c19@gmail.com>
-User-Agent: Mutt/1.4.2.3i
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+Subject: [PATCH v6 0/3] Introduce Bandwidth OPPs for interconnects
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
+        daidavid1@codeaurora.org, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Viresh/Stephen,
 
-On Thu, Dec 05, 2019 at 07:37:24PM -0600, Frank Rowand wrote:
-> On 12/3/19 12:35 PM, Segher Boessenkool wrote:
-> > Btw.  Some OFs mangle the phandles some way, to make it easier to catch
-> > people using it as an address (and similarly, mangle ihandles differently,
-> > so you catch confusion between ihandles and phandles as well).  Like a
-> > simple xor, with some odd number preferably.  You should assume *nothing*
-> > about phandles, they are opaque identifiers.
-> 
-> For arm32 machines that use dtc to generate the devicetree, which is a
-> very large user base, we certainly can make assumptions about phandles.
+I don't think all the additional code/diff in this v6 series is worth it
+to avoid using the rate field to store peak bandwidth. However, since folks
+weren't too happy about it, here it is. I prefer the v5 series, but not
+too strongly tied to it. Let me know what you think Viresh/Stephen.
 
-I was talking about OF.  Phandles are explicitly defined to be opaque
-tokens.  If there is an extra meaning to them in flattened device trees,
-well, the kernel should then only depend on that there, not for more
-general phandles.  Where is this documented btw?
+Btw, I wasn't sure of opp-hz = 0 or opp-level = 0 were allowed. Also,
+it's not clear why the duplicate check isn't done for opp-level when
+_opp_add() is called. Based on that, we could add opp-level comparison
+to opp_compare_key(). That's why you'll see a few spurious
+opp_key.level = 0 lines. Let me know how you want to go with that.
 
-> Especially because the complaints about the overhead of phandle based
-> lookups have been voiced by users of this specific set of machines.
-> 
-> For systems with a devicetree that does not follow the assumptions, the
-> phandle cache should not measurably increase the overhead of phandle
-> based lookups.
+I could also add a opp.key_type enum field to store what key type the
+opp entry is. But looks like I can get away without adding an
+unnecessary variable. So, I've skipped that for now.
 
-It's an extra memory access and extra code to execute, for not much gain
-(if anything).  While with a reasonable hash function it will be good
-for everyone.
+------
 
-> If you have measurements of a system where implementing the phandle
-> cache increased the overhead,
+Interconnects and interconnect paths quantify their performance levels in
+terms of bandwidth and not in terms of frequency. So similar to how we have
+frequency based OPP tables in DT and in the OPP framework, we need
+bandwidth OPP table support in DT and in the OPP framework.
 
-Are you seriously saying you think this code can run in zero time and
-space on most systems?
+So with the DT bindings added in this patch series, the DT for a GPU
+that does bandwidth voting from GPU to Cache and GPU to DDR would look
+something like this:
 
-> and the additional overhead is a concern
-> (such as significantly increasing boot time) then please share that
-> information with us.  Otherwise this is just a theoretical exercise.
+gpu_cache_opp_table: gpu_cache_opp_table {
+	compatible = "operating-points-v2";
 
-The point is that this code could be easily beneficial for most (or all)
-users, not just those that use dtc-constructed device trees.  It is
-completely obvious that having a worse cache hash function results in
-many more lookups.  Whether that results in something expressed as
-milliseconds on tiny systems or microseconds on bigger systems is
-completely beside the point.
+	gpu_cache_3000: opp-3000 {
+		opp-peak-KBps = <3000000>;
+		opp-avg-KBps = <1000000>;
+	};
+	gpu_cache_6000: opp-6000 {
+		opp-peak-KBps = <6000000>;
+		opp-avg-KBps = <2000000>;
+	};
+	gpu_cache_9000: opp-9000 {
+		opp-peak-KBps = <9000000>;
+		opp-avg-KBps = <9000000>;
+	};
+};
 
+gpu_ddr_opp_table: gpu_ddr_opp_table {
+	compatible = "operating-points-v2";
 
-Segher
+	gpu_ddr_1525: opp-1525 {
+		opp-peak-KBps = <1525000>;
+		opp-avg-KBps = <452000>;
+	};
+	gpu_ddr_3051: opp-3051 {
+		opp-peak-KBps = <3051000>;
+		opp-avg-KBps = <915000>;
+	};
+	gpu_ddr_7500: opp-7500 {
+		opp-peak-KBps = <7500000>;
+		opp-avg-KBps = <3000000>;
+	};
+};
+
+gpu_opp_table: gpu_opp_table {
+	compatible = "operating-points-v2";
+	opp-shared;
+
+	opp-200000000 {
+		opp-hz = /bits/ 64 <200000000>;
+	};
+	opp-400000000 {
+		opp-hz = /bits/ 64 <400000000>;
+	};
+};
+
+gpu@7864000 {
+	...
+	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
+	...
+};
+
+v1 -> v3:
+- Lots of patch additions that were later dropped
+v3 -> v4:
+- Fixed typo bugs pointed out by Sibi.
+- Fixed bug that incorrectly reset rate to 0 all the time
+- Added units documentation
+- Dropped interconnect-opp-table property and related changes
+v4->v5:
+- Replaced KBps with kBps
+- Minor documentation fix
+v5->v6:
+- Added Rob's reviewed-by for the DT patch
+- Rewrote OPP patches to use separate field for peak_bw instead of
+  reusing rate field.
+- Pulled in opp-level parsing into _read_opp_key
+- Addressed minor code style and typo comments
+
+Cheers,
+Saravana
+
+Saravana Kannan (3):
+  dt-bindings: opp: Introduce opp-peak-kBps and opp-avg-kBps bindings
+  OPP: Add support for bandwidth OPP tables
+  OPP: Add helper function for bandwidth OPP tables
+
+ Documentation/devicetree/bindings/opp/opp.txt |  15 +-
+ .../devicetree/bindings/property-units.txt    |   4 +
+ drivers/opp/core.c                            | 316 +++++++++++++++---
+ drivers/opp/of.c                              |  63 ++--
+ drivers/opp/opp.h                             |   5 +
+ include/linux/pm_opp.h                        |  43 +++
+ 6 files changed, 383 insertions(+), 63 deletions(-)
+
+-- 
+2.24.0.393.g34dc348eaf-goog
+
