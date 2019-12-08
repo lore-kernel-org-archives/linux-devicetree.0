@@ -2,201 +2,74 @@ Return-Path: <SRS0=dKgV=Z6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267E9C43603
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Dec 2019 14:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1494CC43603
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Dec 2019 14:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D882D206E0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Dec 2019 14:45:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="S88xWFm+"
+	by mail.kernel.org (Postfix) with ESMTP id E1F7D20637
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Dec 2019 14:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726017AbfLHOpq (ORCPT
+        id S1726460AbfLHOz2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Dec 2019 09:45:46 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:43138 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfLHOpq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Dec 2019 09:45:46 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7763052B;
-        Sun,  8 Dec 2019 15:45:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575816341;
-        bh=QD0nTIwYIQ9eKjfuPVhANN19JX+df8dsKi9/tNgpjS4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S88xWFm+BS6wZu2nytTO2r9us6YdrHtGx7/CiK3Ya4cqhiFMf9vmBGbqxnRUZ1lFd
-         1Qq68Dndwj0RKUTAbIJuUHHSClZ552S3xJ0du/0Plr6+N28nELT+TnBp51/XNkCVGH
-         YvqgPVqvmMAL4VN8UG8QQXgADkPA+DPoiA3pHLCI=
-Date:   Sun, 8 Dec 2019 16:45:33 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        aarch64-laptops@lists.linaro.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: display: panel: document panel-id
-Message-ID: <20191208144533.GA14311@pendragon.ideasonboard.com>
-References: <20191207203553.286017-1-robdclark@gmail.com>
- <20191207203553.286017-2-robdclark@gmail.com>
+        Sun, 8 Dec 2019 09:55:28 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:33340 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726308AbfLHOz2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 8 Dec 2019 09:55:28 -0500
+Received: from muedsl-82-207-238-043.citykom.de ([82.207.238.43] helo=phil.fritz.box)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1idxy1-00043q-L8; Sun, 08 Dec 2019 15:55:25 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     linux-rockchip@lists.infradead.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH 3/3] arm64: dts: rockchip: enable the gpu on px30-evb
+Date:   Sun,  8 Dec 2019 15:55:08 +0100
+Message-Id: <20191208145508.3124-3-heiko@sntech.de>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191208145508.3124-1-heiko@sntech.de>
+References: <20191208145508.3124-1-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191207203553.286017-2-robdclark@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-Thank you for the patch.
+The px30 has a Mali Bifrost gpu, so enable it on the evb board
+and connect it with its supplying regulator.
 
-On Sat, Dec 07, 2019 at 12:35:50PM -0800, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> For devices that have one of several possible panels installed, the
-> panel-id property gives firmware a generic way to locate and enable the
-> panel node corresponding to the installed panel.  Example of how to use
-> this property:
-> 
->     ivo_panel {
->         compatible = "ivo,m133nwf4-r0";
->         panel-id = <0xc5>;
->         status = "disabled";
-> 
->         ports {
->             port {
->                 ivo_panel_in_edp: endpoint {
->                     remote-endpoint = <&sn65dsi86_out_ivo>;
->                 };
->             };
->         };
->     };
-> 
->     boe_panel {
->         compatible = "boe,nv133fhm-n61";
->         panel-id = <0xc4>;
->         status = "disabled";
-> 
->         ports {
->             port {
->                 boe_panel_in_edp: endpoint {
->                     remote-endpoint = <&sn65dsi86_out_boe>;
->                 };
->             };
->         };
->     };
-> 
->     sn65dsi86: bridge@2c {
->         compatible = "ti,sn65dsi86";
-> 
->         ports {
->             #address-cells = <1>;
->             #size-cells = <0>;
-> 
->             port@0 {
->                 reg = <0>;
->                 sn65dsi86_in_a: endpoint {
->                     remote-endpoint = <&dsi0_out>;
->                 };
->             };
-> 
->             port@1 {
->                 reg = <1>;
-> 
->                 sn65dsi86_out_boe: endpoint@c4 {
->                     remote-endpoint = <&boe_panel_in_edp>;
->                 };
-> 
->                 sn65dsi86_out_ivo: endpoint@c5 {
->                     remote-endpoint = <&ivo_panel_in_edp>;
->                 };
->             };
->         };
->     };
-> 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  .../bindings/display/panel/panel-common.yaml  | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> index ef8d8cdfcede..6113319b91dd 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> @@ -75,6 +75,32 @@ properties:
->        in the device graph bindings defined in
->        Documentation/devicetree/bindings/graph.txt.
->  
-> +  panel-id:
-> +    description:
-> +      To support the case where one of several different panels can be installed
-> +      on a device, the panel-id property can be used by the firmware to identify
-> +      which panel should have it's status changed to "ok".  This property is not
-> +      used by the HLOS itself.
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+---
+ arch/arm64/boot/dts/rockchip/px30-evb.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-If your firmware can modify the status property of a panel, it can also
-add DT nodes. As discussed before, I don't think this belongs to DT.
-Even if panel-id isn't used by the operating system, you have Linux
-kernel patches in this series that show that this isn't transparent.
-
-This needs to be handled in the firmware (or, if not possible, in a
-kernel board driver). The above DT fragment, visible to the kernel,
-doesn't describe the actual hardware. Furthermore, you would require all
-bridge drivers to be patched to support this method, which shows again
-that the issue isn't handled in the right place.
-
-Finally, unless I'm mistaken, this series is meant to support display
-for an ACPI-based ARM machine. Using DT as a stop-gap measure because
-ACPI support isn't there yet is fine out-of-tree, and fine by me in-tree
-provided that the DT bindings are clean, but not when DT is abused like
-this.
-
-I'm sorry, but this is a NACK from me. Please handle this transparently
-in the firmware if you want DT-based boot, or with ACPI.
-
-> +
-> +      For a device with multiple potential panels, a node for each potential
-> +      should be defined with status = "disabled", and an appropriate panel-id
-> +      property.  The video data producer should be setup with endpoints going to
-> +      each possible panel.  The firmware will find the dt node with a panel-id
-> +      matching the actual panel installed, and change it's status to "ok".
-> +
-> +      The exact method the firmware uses to determine the panel-id of the installed
-> +      panel is outside the scope of this binding, but a few examples are
-> +
-> +      1) u-boot module reading a value from a u-boot env var
-> +      2) EFI driver module reading a value from an EFI variable
-> +      3) device specific firmware reading some device specific GPIOs or
-> +         e-fuse
-> +
-> +      The panel-id values are an opaque integer.  They can be sparse.  The only
-> +      important thing is that each possible panel in the system has a unique
-> +      panel-id, and that the values configured in the device's DTB match the
-> +      values that the firmware is looking for.
-> +
->    ddc-i2c-bus:
->      $ref: /schemas/types.yaml#/definitions/phandle
->      description:
-
+diff --git a/arch/arm64/boot/dts/rockchip/px30-evb.dts b/arch/arm64/boot/dts/rockchip/px30-evb.dts
+index f2fcca21c04d..180995a590c1 100644
+--- a/arch/arm64/boot/dts/rockchip/px30-evb.dts
++++ b/arch/arm64/boot/dts/rockchip/px30-evb.dts
+@@ -132,6 +132,11 @@ &gmac {
+ 	status = "okay";
+ };
+ 
++&gpu {
++	mali-supply = <&vdd_log>;
++	status = "okay";
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
 -- 
-Regards,
+2.24.0
 
-Laurent Pinchart
