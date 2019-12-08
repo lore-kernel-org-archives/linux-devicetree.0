@@ -2,270 +2,189 @@ Return-Path: <SRS0=dKgV=Z6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE1BC43603
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Dec 2019 07:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B38C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Dec 2019 09:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB32D206D5
-	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Dec 2019 07:00:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pJ7FvOA3"
+	by mail.kernel.org (Postfix) with ESMTP id A3922206D6
+	for <linux-devicetree@archiver.kernel.org>; Sun,  8 Dec 2019 09:39:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725787AbfLHHAD (ORCPT
+        id S1726044AbfLHJjx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Dec 2019 02:00:03 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34221 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfLHHAD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Dec 2019 02:00:03 -0500
-Received: by mail-pl1-f196.google.com with SMTP id h13so4476084plr.1
-        for <devicetree@vger.kernel.org>; Sat, 07 Dec 2019 23:00:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=joWCl9BKSpGB/115/n2GPxqk/jY1nElh0rbHXE4/v3I=;
-        b=pJ7FvOA3R0+IKIzaq6caXcXIHAD0r2F052IFgCbmfXwBfa54IJlk1CdeBcbSCQ0fs6
-         /j/xVmtEJ1xOFNhF91ymtm15xexC3tsT/N8GPls3asdEDsEpbJtssj86wUDE0H386766
-         9uTbQuFU/hNLtNSqBF9l/xh/nPNzUZQDiSo/uL6Vnffq8HHw1xEZXoifQIQYKIJP9adS
-         ck/FsifD7tEA4WzZ/53qpLAtpNJVcTw2WBSWt884tsR6jY5FraE9DpytK0N1EDjlNcL2
-         fI7dfW4py5qUbXr32nrYa1zxNWKHStB3pFSAoOG3dFAwEqXYZ8Ohx6v9BPxUYvVpo6ig
-         aWcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=joWCl9BKSpGB/115/n2GPxqk/jY1nElh0rbHXE4/v3I=;
-        b=A+rG1pUFXIyGPZ+JBJnaaO0l+JSIj7leFytXgw9EKhRC9F3qva+GhQbSdKXiv96Wug
-         cRgEfcQIDoAL2QVNNxBLnhsGePpnfTo+8TKqGLhuVfTCf9M4dTETmazuhIIVWEk1PP3R
-         zzuUAgrSO5SlwS+EvrGxwvCgORKN3MPyaC8pIMrhTvkhV0rr1eNb6rGKCokOcKIKYGSj
-         E2WurdY3TYzeYcq9qz1xyu9lfnDBp47nD7CZD4CYJ+EoQIOIFpguc5KUoPONqM5GSy44
-         c75K3z0wMb3bljmkDMaL5ikoMJz0azlu8FgDnWIEp5w3HTevxNQ1nUyjed1996up2Mol
-         OiOw==
-X-Gm-Message-State: APjAAAW/v0RlD5uSJgPLa5+I6YqnpQbBfemTecBz2kxD0HpFaB0U+V2i
-        qajvGi8zpiOCSkNVpDCmiiKfBjjE
-X-Google-Smtp-Source: APXvYqxJcBhY5VKo6AuiTCL+UdgE9sULPH8pGVy1WSo4wcUvoEm3ndR3+zasQ+Dy7QM+WJF9CUOzwA==
-X-Received: by 2002:a17:902:7c88:: with SMTP id y8mr10944451pll.104.1575788402636;
-        Sat, 07 Dec 2019 23:00:02 -0800 (PST)
-Received: from [10.231.110.95] ([125.29.25.186])
-        by smtp.gmail.com with ESMTPSA id in6sm5550923pjb.8.2019.12.07.22.59.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 07 Dec 2019 23:00:01 -0800 (PST)
-Subject: Re: [RFC] Efficiency of the phandle_cache on ppc64/SLOF
-From:   Frank Rowand <frowand.list@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        devicetree@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de>
- <e1f232f5-3847-a519-5cce-95a26512e82b@gmail.com>
- <87tv6idp37.fsf@mpe.ellerman.id.au>
- <67e1da87-7f5a-3972-bc16-28bae2350c12@gmail.com>
- <CAL_JsqKieG5=teL7gABPKbJOQfvoS9s-ZPF-=R0yEE_LUoy-Kw@mail.gmail.com>
- <d5adf331-bf5a-0582-8bb3-fa35e96b3fd1@gmail.com>
-Message-ID: <656d2efe-454c-c1bd-adce-0528d953d7ee@gmail.com>
-Date:   Sun, 8 Dec 2019 00:59:57 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 8 Dec 2019 04:39:53 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:41484 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfLHJjx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Dec 2019 04:39:53 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 932DF20026;
+        Sun,  8 Dec 2019 10:39:49 +0100 (CET)
+Date:   Sun, 8 Dec 2019 10:39:48 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/4] dt-bindings: display: panel: document panel-id
+Message-ID: <20191208093948.GB21141@ravnborg.org>
+References: <20191207203553.286017-1-robdclark@gmail.com>
+ <20191207203553.286017-2-robdclark@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <d5adf331-bf5a-0582-8bb3-fa35e96b3fd1@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191207203553.286017-2-robdclark@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=cm27Pg_UAAAA:8 a=e5mUnYsNAAAA:8 a=ILDvgjsUearIMHsXgicA:9
+        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=xmb-EsYY8bH0VWELuYED:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/5/19 7:52 PM, Frank Rowand wrote:
-> On 12/3/19 10:56 AM, Rob Herring wrote:
->> On Mon, Dec 2, 2019 at 10:28 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>>
->>> On 12/2/19 10:12 PM, Michael Ellerman wrote:
->>>> Frank Rowand <frowand.list@gmail.com> writes:
->>>>> On 11/29/19 9:10 AM, Sebastian Andrzej Siewior wrote:
->>>>>> I've been looking at phandle_cache and noticed the following: The raw
->>>>>> phandle value as generated by dtc starts at zero and is incremented by
->>>>>> one for each phandle entry. The qemu pSeries model is using Slof (which
->>>>>> is probably the same thing as used on real hardware) and this looks like
->>>>>> a poiner value for the phandle.
->>>>>> With
->>>>>>     qemu-system-ppc64le -m 16G -machine pseries -smp 8
->>>>>>
->>>>>> I got the following output:
->>>>>> | entries: 64
->>>>>> | phandle 7e732468 slot 28 hash c
->>>>>> | phandle 7e732ad0 slot 10 hash 27
->>>>>> | phandle 7e732ee8 slot 28 hash 3a
->>>>>> | phandle 7e734160 slot 20 hash 36
->>>>>> | phandle 7e734318 slot 18 hash 3a
->>>>>> | phandle 7e734428 slot 28 hash 33
->>>>>> | phandle 7e734538 slot 38 hash 2c
->>>>>> | phandle 7e734850 slot 10 hash e
->>>>>> | phandle 7e735220 slot 20 hash 2d
->>>>>> | phandle 7e735bf0 slot 30 hash d
->>>>>> | phandle 7e7365c0 slot 0 hash 2d
->>>>>> | phandle 7e736f90 slot 10 hash d
->>>>>> | phandle 7e737960 slot 20 hash 2d
->>>>>> | phandle 7e738330 slot 30 hash d
->>>>>> | phandle 7e738d00 slot 0 hash 2d
->>>>>> | phandle 7e739730 slot 30 hash 38
->>>>>> | phandle 7e73bd08 slot 8 hash 17
->>>>>> | phandle 7e73c2e0 slot 20 hash 32
->>>>>> | phandle 7e73c7f8 slot 38 hash 37
->>>>>> | phandle 7e782420 slot 20 hash 13
->>>>>> | phandle 7e782ed8 slot 18 hash 1b
->>>>>> | phandle 7e73ce28 slot 28 hash 39
->>>>>> | phandle 7e73d390 slot 10 hash 22
->>>>>> | phandle 7e73d9a8 slot 28 hash 1a
->>>>>> | phandle 7e73dc28 slot 28 hash 37
->>>>>> | phandle 7e73de00 slot 0 hash a
->>>>>> | phandle 7e73e028 slot 28 hash 0
->>>>>> | phandle 7e7621a8 slot 28 hash 36
->>>>>> | phandle 7e73e458 slot 18 hash 1e
->>>>>> | phandle 7e73e608 slot 8 hash 1e
->>>>>> | phandle 7e740078 slot 38 hash 28
->>>>>> | phandle 7e740180 slot 0 hash 1d
->>>>>> | phandle 7e740240 slot 0 hash 33
->>>>>> | phandle 7e740348 slot 8 hash 29
->>>>>> | phandle 7e740410 slot 10 hash 2
->>>>>> | phandle 7e740eb0 slot 30 hash 3e
->>>>>> | phandle 7e745390 slot 10 hash 33
->>>>>> | phandle 7e747b08 slot 8 hash c
->>>>>> | phandle 7e748528 slot 28 hash f
->>>>>> | phandle 7e74a6e0 slot 20 hash 18
->>>>>> | phandle 7e74aab0 slot 30 hash b
->>>>>> | phandle 7e74f788 slot 8 hash d
->>>>>> | Used entries: 8, hashed: 29
->>>>>>
->>>>>> So the hash array has 64 entries out which only 8 are populated. Using
->>>>>> hash_32() populates 29 entries.
->>>>>> Could someone with real hardware verify this?
->>>>>> I'm not sure how important this performance wise, it looks just like a
->>>>>> waste using only 1/8 of the array.
->>>>>
->>>>> The hash used is based on the assumptions you noted, and as stated in the
->>>>> code, that phandle property values are in a contiguous range of 1..n
->>>>> (not starting from zero), which is what dtc generates.
->>>>
->>>>> We knew that for systems that do not match the assumptions that the hash
->>>>> will not be optimal.
->>>>
->>>> If we're going to have the phandle cache it should at least make some
->>>> attempt to work across the systems that Linux supports.
->>>>
->>>>> Unless there is a serious performance problem for
->>>>> such systems, I do not want to make the phandle hash code more complicated
->>>>> to optimize for these cases.  And the pseries have been performing ok
->>>>> without phandle related performance issues that I remember hearing since
->>>>> before the cache was added, which could have only helped the performance.
->>>>> Yes, if your observations are correct, some memory is being wasted, but
->>>>> a 64 entry cache is not very large on a pseries.
->>>>
->>>> A single line change to use an actual hash function is hardly
->>>> complicating it, compared to the amount of code already there.
->>>
->>> With a dtc generated devicetree, the hash is perfect, with no
->>> misses.  That single line change then makes the hash bad for
->>> dtc generated devicetrees.
->>
->> To quantify that, I did some tests with the hash algo and it's about a
->> 10% collision rate using phandle values of 1-$cache_size. There's
->> never more than 2 phandles colliding in a slot. The actual impact
->> would be less given 100% thrashing seems unlikely.
+Hi Rob.
 
-I also tested a few cache sizes.
+The panel-id can be used to help in several usecase.
+With a few nits pointed out below fixed:
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
-For cache size 64 entries, I get a 14% collision rate (and also 14% of
-entries unused).  For 1024 entries, I get a 12% collision rate.  And
-I can confirm no more than two phandles hashing to the same slot.
+	Sam
 
-So essentially confirming your data.
+On Sat, Dec 07, 2019 at 12:35:50PM -0800, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> For devices that have one of several possible panels installed, the
+> panel-id property gives firmware a generic way to locate and enable the
+> panel node corresponding to the installed panel.  Example of how to use
+> this property:
+> 
+>     ivo_panel {
+>         compatible = "ivo,m133nwf4-r0";
+>         panel-id = <0xc5>;
+>         status = "disabled";
+> 
+>         ports {
+>             port {
+>                 ivo_panel_in_edp: endpoint {
+>                     remote-endpoint = <&sn65dsi86_out_ivo>;
+>                 };
+>             };
+>         };
+>     };
+> 
+>     boe_panel {
+>         compatible = "boe,nv133fhm-n61";
+>         panel-id = <0xc4>;
+>         status = "disabled";
+> 
+>         ports {
+>             port {
+>                 boe_panel_in_edp: endpoint {
+>                     remote-endpoint = <&sn65dsi86_out_boe>;
+>                 };
+>             };
+>         };
+>     };
+> 
+>     sn65dsi86: bridge@2c {
+>         compatible = "ti,sn65dsi86";
+> 
+>         ports {
+>             #address-cells = <1>;
+>             #size-cells = <0>;
+> 
+>             port@0 {
+>                 reg = <0>;
+>                 sn65dsi86_in_a: endpoint {
+>                     remote-endpoint = <&dsi0_out>;
+>                 };
+>             };
+> 
+>             port@1 {
+>                 reg = <1>;
+> 
+>                 sn65dsi86_out_boe: endpoint@c4 {
+>                     remote-endpoint = <&boe_panel_in_edp>;
+>                 };
+> 
+>                 sn65dsi86_out_ivo: endpoint@c5 {
+>                     remote-endpoint = <&ivo_panel_in_edp>;
+>                 };
+>             };
+>         };
+>     };
+> 
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  .../bindings/display/panel/panel-common.yaml  | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> index ef8d8cdfcede..6113319b91dd 100644
+> --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> @@ -75,6 +75,32 @@ properties:
+>        in the device graph bindings defined in
+>        Documentation/devicetree/bindings/graph.txt.
+>  
+> +  panel-id:
+> +    description:
+> +      To support the case where one of several different panels can be installed
+> +      on a device, the panel-id property can be used by the firmware to identify
+> +      which panel should have it's status changed to "ok".  This property is not
+Use "okay" as this is waht is specified in the CT files.
 
--Frank
+> +      used by the HLOS itself.
+Spell out HLOS - it is not obvious for all what it is.
 
-> 
-> Thank you for doing the tests.  Actual data helps a lot.
-> 
-> If there is only a 10% collision rate for this case, that does not
-> sound bad to me.  There is the possibility of current or future
-> code resulting in ping ponging between two phandle values which
-> collide in the cache, but that should not be the common case.
-> 
-> However, given a choice between two algorithms, one of which
-> guarantees no thrashing (the current cache algorithm) and one
-> which allows a pathologic use case which results in thrashing,
-> I prefer the first algorithm.  This may seem theoretical, but
-> I have seen enough pathological code paths in my years of
-> performance analysis and tuning to be sensitive to this issue.
-> 
->>
->>> The cache was added to address a problem with a system with a
->>> dtc generated devicetree.
->>
->> The cache was added to address a problem with a system with a large
->> number of nodes and phandles (814 phandles in the reported case). dtc
->> happens to be used in that case.
-> 
-> Yes, you stated that in a more general way than I did.  Agreed.
-> 
-> 
->>
->>> I had not heard of any phandle
->>> lookup performance issues on ppc systems.  An imperfect hash
->>> for ppc should not make the ppc performance worse (unless
->>> every single phandle value hashes to a single bucket).  So
->>> the ppc performance is likely better than it was before
->>> the hash was added, even without an optimal hash algorithm.
->>>
->>> So the change would not be a single line change.  It would
->>> be a change to use different hash algorithms for dtc
->>> generated device trees versus other device trees.
->>>
->>> Another possibility would be to make the cache be dependent
->>> upon not CONFIG_PPC.  It might be possible to disable the
->>> cache with a minimal code change.
->>
->> I'd rather not do that.
-> 
-> I also agree with that.  I threw that out as kind of a nuclear option.
-> If ppc did not benefit from the cache having been implemented and
-> perceived a negative impact from the cache, this is simply a way
-> to remove that negative impact.  Then ppc would be in the same
-> state as before we implemented the cache.  Again, I also do not
-> like such a special casing.
-> 
->>
->> And yes, as mentioned earlier I don't like the complexity. I didn't
->> from the start and I'm  I'm still of the opinion we should have a
->> fixed or 1 time sized true cache (i.e. smaller than total # of
->> phandles). That would solve the RT memory allocation and locking issue
->> too.
-> 
-> I could be convinced to go to a one time sized cache, especially now
-> that the RT issue exists.  If we change to that, it would be documented
-> as a possible overhead impact that devicetree overlays would have to
-> accept.
-> 
-> -Frank
-> 
->>
->> For reference, the performance difference between the current
->> implementation (assuming fixes haven't regressed it) was ~400ms vs. a
->> ~340ms improvement with a 64 entry cache (using a mask, not a hash).
->> IMO, 340ms improvement was good enough.
->>
->> Rob
->>
-> 
-> 
+> +
+> +      For a device with multiple potential panels, a node for each potential
+> +      should be defined with status = "disabled", and an appropriate panel-id
+"potential panel should"
 
+> +      property.  The video data producer should be setup with endpoints going to
+> +      each possible panel.  The firmware will find the dt node with a panel-id
+> +      matching the actual panel installed, and change it's status to "ok".
+> +
+> +      The exact method the firmware uses to determine the panel-id of the installed
+> +      panel is outside the scope of this binding, but a few examples are
+> +
+> +      1) u-boot module reading a value from a u-boot env var
+> +      2) EFI driver module reading a value from an EFI variable
+> +      3) device specific firmware reading some device specific GPIOs or
+> +         e-fuse
+> +
+> +      The panel-id values are an opaque integer.  They can be sparse.  The only
+> +      important thing is that each possible panel in the system has a unique
+> +      panel-id, and that the values configured in the device's DTB match the
+> +      values that the firmware is looking for.
+> +
+>    ddc-i2c-bus:
+>      $ref: /schemas/types.yaml#/definitions/phandle
+>      description:
+> -- 
+> 2.23.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
