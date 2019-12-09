@@ -7,107 +7,94 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234BAC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54C7C2D0BE
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7ED220828
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D72A208C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:50:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="c6ntOlc1"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kehsnBfj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbfLIOoM (ORCPT
+        id S1726783AbfLIOue (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:44:12 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:34796 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727891AbfLIOoK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:44:10 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9Egjpg017551;
-        Mon, 9 Dec 2019 15:43:52 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=vKx6OPdSeYJTuRGa0bHCD2tYSeg+UtY9A3haTmI2eKA=;
- b=c6ntOlc126VLKeqyu4GAC4nsRoo7L/y/wpleFu9k1K+1s90MlQADGV2W+omSCJCO3CvN
- EyJtnea6Ee3WS9nY/7HUgXOMnAg1Q+E2DGu5F7gHrOtsvZ9pbKRa3nD5kYUmbOR5pt2x
- ah1hkDXaCytdccqyyaH++WgfekYbeVLs76peteDiSzhFC/LaCP31IocckHdvEOA/Xx+X
- Aa4o3Nhws5Np5oqMvE85guQd3c5PJmv/Jwvm91G2SGNdt+7tbr0awKQOFHZkDxxT2G+A
- T6soWnVEfm7PhN1YgDLqZuruHnHt+7AcTziV0LU+HJ8+ZRhQE465zo4K4C/C5hBq7fKu vQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wradh7xe1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Dec 2019 15:43:52 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6C39910002A;
-        Mon,  9 Dec 2019 15:43:51 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3CA812D3765;
-        Mon,  9 Dec 2019 15:43:51 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 9 Dec
- 2019 15:43:50 +0100
-Subject: Re: [PATCH 5/5] ARM: dts: stm32: add phy-names to usbotg_hs on
- stm32mp157c-ev1
-To:     Amelie Delaunay <amelie.delaunay@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191121161259.25799-1-amelie.delaunay@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <181a4a40-f54c-3559-aaa9-9443fb2153ac@st.com>
-Date:   Mon, 9 Dec 2019 15:43:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 9 Dec 2019 09:50:34 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36592 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbfLIOud (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:50:33 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0CD25DAD;
+        Mon,  9 Dec 2019 15:50:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1575903031;
+        bh=iMA0EMCIcVhf1bAexv25ojEbqExgp+n80z/z9CDFqJo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kehsnBfjJjSGCd9e2JiRW6Qz+YP1pdWYqrl+G1It+mEU+1vRCgdUGeTpw4sshrfQ+
+         OgzeXaTiUXztWDwsvfVswez3dVhC9XKW78WeKIeL9vProh7XgzHh/yNNHaOkKbLp0R
+         5GvWh1nvD5M6wHg43pc6pK0Nk5JVTeniBdGgcrPo=
+Date:   Mon, 9 Dec 2019 16:50:24 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jyri Sarha <jsarha@ti.com>
+Cc:     dri-devel@lists.freedesktop.org, tony@atomide.com,
+        sam@ravnborg.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, tomi.valkeinen@ti.com,
+        peter.ujfalusi@ti.com, bparrot@ti.com
+Subject: Re: [PATCH v2 2/3] dt-bindings: display: Add obsolete note to
+ "ti,tilcdc,panel" binding
+Message-ID: <20191209145024.GB12841@pendragon.ideasonboard.com>
+References: <cover.1575901747.git.jsarha@ti.com>
+ <459ed943fe0725200062171755bcfe5f73713d50.1575901747.git.jsarha@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20191121161259.25799-1-amelie.delaunay@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-09_04:2019-12-09,2019-12-09 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <459ed943fe0725200062171755bcfe5f73713d50.1575901747.git.jsarha@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Amélie,
+Hi Jyri,
 
-On 11/21/19 5:12 PM, Amelie Delaunay wrote:
-> phy-names is required by usbotg_hs driver to get the phy, otherwise, it
-> considers that there is no phys property.
-> 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Thank you for the patch.
+
+On Mon, Dec 09, 2019 at 04:42:15PM +0200, Jyri Sarha wrote:
+> The "ti,tilcdc,panel" binding should not be used anymore, since tilcdc
+> is fully capable of using generic drm panels like panel-simple and
+> panel-common binding. However, the obsolete binding is still widely
+> used in many mainline supported platforms that I do not have access to
+> and who knows how many custom platforms. So I am afraid we have to
+> keep the old bundled tilcdc panel driver around.
+
+But can't we drop the bindings instead of marking them as obsolete, even
+if we keep the driver around for some time ?
+
+Also, would it make sense to set a date for the removal of the driver,
+and add it to the WARN() message in patch 3/3 ?
+
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
 > ---
->   arch/arm/boot/dts/stm32mp157c-ev1.dts | 1 +
->   1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/display/tilcdc/panel.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> index 2010f6292a77..228e35e16884 100644
-> --- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> +++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> @@ -355,6 +355,7 @@
->   &usbotg_hs {
->   	dr_mode = "peripheral";
->   	phys = <&usbphyc_port1 0>;
-> +	phy-names = "usb2-phy";
->   	status = "okay";
->   };
->   
-> 
+> diff --git a/Documentation/devicetree/bindings/display/tilcdc/panel.txt b/Documentation/devicetree/bindings/display/tilcdc/panel.txt
+> index 808216310ea2..54963f9173cc 100644
+> --- a/Documentation/devicetree/bindings/display/tilcdc/panel.txt
+> +++ b/Documentation/devicetree/bindings/display/tilcdc/panel.txt
+> @@ -1,5 +1,11 @@
+>  Device-Tree bindings for tilcdc DRM generic panel output driver
+>  
+> +NOTE: This binding (and the related driver) is obsolete and should not
+> +      be used anymore. Please refer to drm panel-common binding (and
+> +      to a generic drm panel driver like panel-simple).
+> +      Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> +      (drivers/gpu/drm/panel/panel-simple.c)
+> +
+>  Required properties:
+>   - compatible: value should be "ti,tilcdc,panel".
+>   - panel-info: configuration info to configure LCDC correctly for the panel
 
+-- 
+Regards,
 
-Series applied on stm32-next.
-
-Note: due to new STM32 diversity I renamed some patches.
-
-Regards
-Alex
+Laurent Pinchart
