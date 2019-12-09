@@ -2,175 +2,151 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F20C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 03:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8BDC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 04:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477FD20721
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 03:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1892071A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 04:06:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdP+ABq+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bYE7UvRj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfLID5Z (ORCPT
+        id S1726860AbfLIEGF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Dec 2019 22:57:25 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:33781 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbfLID5Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Dec 2019 22:57:25 -0500
-Received: by mail-pj1-f66.google.com with SMTP id r67so5276640pjb.0;
-        Sun, 08 Dec 2019 19:57:24 -0800 (PST)
+        Sun, 8 Dec 2019 23:06:05 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:33935 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbfLIEGF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Dec 2019 23:06:05 -0500
+Received: by mail-vk1-f193.google.com with SMTP id w67so279085vkf.1
+        for <devicetree@vger.kernel.org>; Sun, 08 Dec 2019 20:06:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=k5+zjDRRhhqO491xHEoAU6VTv+EQua9/0+Lq9coQ6dc=;
-        b=KdP+ABq+8Z0LzLBnD+4dkYtV2EJBlYa8pgmDg/uSP/ZirM8CJ42r80GcUUEZoNdI0J
-         AOtZE7OZRrXNuwK8D9lIRYRdXzRd6EhQqIWo5+nVBn3Ng8JTskFKXgMoNvSTot7zo3WS
-         OBpcerZohcb/bIoo6Qd0qGFBsFc9c91y4Sq+5UJKF6xpA4VfdeGsf51c2wcXwPcxxxzZ
-         czBV0GOUn4pXO7qEaP7IVohJ+Si/K6kKvo9shgKKuXpAa534WJrXPHSZt0Wugsp8eOJ6
-         3P5fn9Rd80VJpQTUFHcZcO5H6XQzDjnHk/9OkkVlfTFLYDWTHJxOIWVa4kPhaRk6G+9A
-         batw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SSKZQVNYBrUoRU4TPgH9Xi7HOKeo/fTJhl3EcFgABvc=;
+        b=bYE7UvRj8WqhH/yPnmNYzBwI9HgYLmCbDkmqzmiM6urz1iwQWs3gJP4jUyz3Nk3Cl4
+         mZJ0unsgC7SUGo4APlmBV0tzbpoinfMIDbAGlv5Kmp1K1xUSURUJfKfItDQyq/w535tp
+         U5hyBNlIHd4inJvg287aAk+wQyGQ+ybxr8HgY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=k5+zjDRRhhqO491xHEoAU6VTv+EQua9/0+Lq9coQ6dc=;
-        b=bdSwwvfdSDSl3GLIIkJbs8VwFg3y8UGI9iLgvSmxd53YEvvTNYoJr+S1AlE/Nisp1V
-         CGIHHihZlDYlHiFbWrO2NHPS0FBlXMQ/7cnW0AyLboOOo9YLT9X70mUalTojxPQvHDWb
-         QS4uu/4Herb/tBcVSI5a5eh0vcvGcrSe937ztTTXptyvatgnu5rfT3cUB1NlvEt+FEUW
-         zOUa+TbAOlEBuk6wGOOAtPJpe5DbFP8lqjOgFFEIC3K55iMpcG6/JU2WndkkVFq3A6F5
-         dO6QOy9Mr/HAF2oLNxgH0vx0Md72j9/4BkTtw6e9Oeexw329kkFIH+iPcwOd1UNrdipT
-         h+iQ==
-X-Gm-Message-State: APjAAAUTc9n+adPcZSfnyqU2X5OoPtlkwbgqy/XYZy8hxI8latv5g1gh
-        UkpviqHCD46YSnWiKI4OUcE=
-X-Google-Smtp-Source: APXvYqy45e7awVfFtJobgsw1VBWiM2A5JEwtoJXxqxUqW+5OOGTknwQFtVNxOCQd47FfCaEUjo1Kzg==
-X-Received: by 2002:a17:902:12c:: with SMTP id 41mr27181156plb.224.1575863844491;
-        Sun, 08 Dec 2019 19:57:24 -0800 (PST)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id b129sm24606111pfb.147.2019.12.08.19.57.21
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 08 Dec 2019 19:57:24 -0800 (PST)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com,
-        baolin.wang@linaro.org, baolin.wang7@gmail.com,
-        zhang.lyra@gmail.com, orsonzhai@gmail.com
-Subject: [PATCH v3 3/5] power: supply: sc27xx: Optimize the battery resistance with measuring temperature
-Date:   Mon,  9 Dec 2019 11:56:23 +0800
-Message-Id: <2c3b89e093dad0cfe8e8dadcc09a0a466f5c5409.1575863274.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1575863274.git.baolin.wang7@gmail.com>
-References: <cover.1575863274.git.baolin.wang7@gmail.com>
-In-Reply-To: <cover.1575863274.git.baolin.wang7@gmail.com>
-References: <cover.1575863274.git.baolin.wang7@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SSKZQVNYBrUoRU4TPgH9Xi7HOKeo/fTJhl3EcFgABvc=;
+        b=ZLBec4CwnjViXIn0ONybYFZiVoCz+bl7Y/ImR7FvonWRBd6hXs6+pMyDZNhzwd4eJc
+         RpuCZQt+6PTfaYK0d3p5SzSBzLQrxsmeqtjZdfMvhqzkl3u6g2XB6wMkgyl+xkRs8Qqm
+         KHapD75k51x8EOYHcQWikDeapKlwX3lA19XdmmuyvEx9LPP103TH7AmqzJ9X5aBh82dj
+         4H5DBkBQtcpEsIb/HjCK+TqebGYy4YsWd8S8e7oC7HSXq5gr8smHGrHsA8Da/7Krrtt/
+         ut40qS2uR48HuSDemBFuFCK+g3kc6ZIBV2It1V447mK9Nfs96phScYUbk0ZtvSZ78l4Y
+         3qbw==
+X-Gm-Message-State: APjAAAXi5mow94rcw9XQwGpm9h6MUR1UW3jPxH3oPe7wbU1nmR8b8X7r
+        EjidbPZsFwa9t1+V+5BN+wE3LwgX77RDHY5dw7ZQ9g==
+X-Google-Smtp-Source: APXvYqxiLiVTMXxIQfcCgISplvC33Dty2tzSU0elJdJeDv4SwXtUrMMWJ6sQkhk52auJFaw3mV3pedUilqtbw7keBOA=
+X-Received: by 2002:a1f:8fd3:: with SMTP id r202mr22038987vkd.77.1575864364344;
+ Sun, 08 Dec 2019 20:06:04 -0800 (PST)
+MIME-Version: 1.0
+References: <20191203101552.199339-1-ikjn@chromium.org> <20191203165301.GH10631@localhost>
+ <CAATdQgCqYrd_aXN5GDsso+F3WadNx3DQKK3Efk3tgkrv2VXjyw@mail.gmail.com>
+ <20191204075533.GI10631@localhost> <CAATdQgBcuJenS2VSm+y4Yhn5mWE1P0CGJQ3NRdoe68dd2SRPGg@mail.gmail.com>
+ <20191205142641.GL10631@localhost> <CAATdQgBK4gWvR06YJ3Z_y5NeqLKYY7Ajc0KG78rG2deR3Ga11A@mail.gmail.com>
+ <20191206152604.GO10631@localhost>
+In-Reply-To: <20191206152604.GO10631@localhost>
+From:   Ikjoon Jang <ikjn@chromium.org>
+Date:   Mon, 9 Dec 2019 12:05:53 +0800
+Message-ID: <CAATdQgDAZ21bEXh+YFh+fCdBxnuRi-1_x0o_hpxW0Vj0zY-j8A@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] usb: overridable hub bInterval by device node
+To:     Johan Hovold <johan@kernel.org>
+Cc:     linux-usb@vger.kernel.org,
+        GregKroah-Hartman <gregkh@linuxfoundation.org>,
+        RobHerring <robh+dt@kernel.org>,
+        MarkRutland <mark.rutland@arm.com>,
+        AlanStern <stern@rowland.harvard.edu>,
+        SuwanKim <suwan.kim027@gmail.com>,
+        "GustavoA . R . Silva" <gustavo@embeddedor.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
+On Fri, Dec 6, 2019 at 11:25 PM Johan Hovold <johan@kernel.org> wrote:
+>
+> On Fri, Dec 06, 2019 at 11:57:30AM +0800, Ikjoon Jang wrote:
+> > On Thu, Dec 5, 2019 at 10:26 PM Johan Hovold <johan@kernel.org> wrote:
+> > >
+> > > On Thu, Dec 05, 2019 at 03:32:38PM +0800, Ikjoon Jang wrote:
+> > > > On Wed, Dec 4, 2019 at 3:55 PM Johan Hovold <johan@kernel.org> wrote:
+> > >
+> > > > > But related to my question above, why do you need to do this during
+> > > > > enumeration? Why not just set the lower interval value in the hub
+> > > > > driver?
+> > > >
+> > > > Because I want device tree's bInterval to be checked against the same rules
+> > > > defined in usb_parse_endpoint(). e.g. although hardware says its maximum
+> > > > is 255, but the practical limit is still 0 to 16, so the code can
+> > > > print warnings when bInterval from device node is too weird.
+> > >
+> > > But that could be handled refactoring the code in question or similar.
+> >
+> > Yes, that should be worked. I can't exactly figure out how to refactor
+> > the code for now, but maybe parsed endpoint descriptors are being
+> > checked with default hard wired bInterval value and after that
+> > an overridden value should be checked again.
+> >
+> > Actually I don't care about the details of software policies. I just want
+> > all devices to be handled in the same manner without any further
+> > special treatments.
+>
+> I'd say you're indeed trying to give a specific device special
+> treatment. ;)
 
-Optimize the battery internal resistance in a certain temerature to
-get a accurate battery internal resistance.
+yeah right, I'm giving one treatment but I mean not any further.
 
-Signed-off-by: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
- drivers/power/supply/sc27xx_fuel_gauge.c |   32 ++++++++++++++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
+>
+> > > The fundamental problem here is that you're using devicetree, which is
+> > > supposed to only describe the hardware, to encode policy which should be
+> > > deferred to user space.
+> >
+> > The hub hardware has a default bInterval inside which is actually
+> > adjustable. So I can think setting bInterval is to describe the hardware
+> > rather than policy.
+>
+> No, the USB spec says bInterval is a maximum requested value and that
+> the host is free to poll more often. And that's policy.
 
-diff --git a/drivers/power/supply/sc27xx_fuel_gauge.c b/drivers/power/supply/sc27xx_fuel_gauge.c
-index bc8f5bd..221b6fb 100644
---- a/drivers/power/supply/sc27xx_fuel_gauge.c
-+++ b/drivers/power/supply/sc27xx_fuel_gauge.c
-@@ -81,9 +81,11 @@
-  * @max_volt: the maximum constant input voltage in millivolt
-  * @min_volt: the minimum drained battery voltage in microvolt
-  * @table_len: the capacity table length
-+ * @resist_table_len: the resistance table length
-  * @cur_1000ma_adc: ADC value corresponding to 1000 mA
-  * @vol_1000mv_adc: ADC value corresponding to 1000 mV
-  * @cap_table: capacity table with corresponding ocv
-+ * @resist_table: resistance percent table with corresponding temperature
-  */
- struct sc27xx_fgu_data {
- 	struct regmap *regmap;
-@@ -103,15 +105,18 @@ struct sc27xx_fgu_data {
- 	int max_volt;
- 	int min_volt;
- 	int table_len;
-+	int resist_table_len;
- 	int cur_1000ma_adc;
- 	int vol_1000mv_adc;
- 	struct power_supply_battery_ocv_table *cap_table;
-+	struct power_supply_resistance_temp_table *resist_table;
- };
- 
- static int sc27xx_fgu_cap_to_clbcnt(struct sc27xx_fgu_data *data, int capacity);
- static void sc27xx_fgu_capacity_calibration(struct sc27xx_fgu_data *data,
- 					    int cap, bool int_mode);
- static void sc27xx_fgu_adjust_cap(struct sc27xx_fgu_data *data, int cap);
-+static int sc27xx_fgu_get_temp(struct sc27xx_fgu_data *data, int *temp);
- 
- static const char * const sc27xx_charger_supply_name[] = {
- 	"sc2731_charger",
-@@ -434,7 +439,7 @@ static int sc27xx_fgu_get_current(struct sc27xx_fgu_data *data, int *val)
- 
- static int sc27xx_fgu_get_vbat_ocv(struct sc27xx_fgu_data *data, int *val)
- {
--	int vol, cur, ret;
-+	int vol, cur, ret, temp, resistance;
- 
- 	ret = sc27xx_fgu_get_vbat_vol(data, &vol);
- 	if (ret)
-@@ -444,8 +449,19 @@ static int sc27xx_fgu_get_vbat_ocv(struct sc27xx_fgu_data *data, int *val)
- 	if (ret)
- 		return ret;
- 
-+	resistance = data->internal_resist;
-+	if (data->resist_table_len > 0) {
-+		ret = sc27xx_fgu_get_temp(data, &temp);
-+		if (ret)
-+			return ret;
-+
-+		resistance = power_supply_temp2resist_simple(data->resist_table,
-+						data->resist_table_len, temp);
-+		resistance = data->internal_resist * resistance / 100;
-+	}
-+
- 	/* Return the battery OCV in micro volts. */
--	*val = vol * 1000 - cur * data->internal_resist;
-+	*val = vol * 1000 - cur * resistance;
- 
- 	return 0;
- }
-@@ -929,6 +945,18 @@ static int sc27xx_fgu_hw_init(struct sc27xx_fgu_data *data)
- 	if (!data->alarm_cap)
- 		data->alarm_cap += 1;
- 
-+	data->resist_table_len = info.resist_table_size;
-+	if (data->resist_table_len > 0) {
-+		data->resist_table = devm_kmemdup(data->dev, info.resist_table,
-+						  data->resist_table_len *
-+						  sizeof(struct power_supply_resistance_temp_table),
-+						  GFP_KERNEL);
-+		if (!data->resist_table) {
-+			power_supply_put_battery_info(data->battery, &info);
-+			return -ENOMEM;
-+		}
-+	}
-+
- 	power_supply_put_battery_info(data->battery, &info);
- 
- 	ret = sc27xx_fgu_calibration(data);
--- 
-1.7.9.5
+Honestly I'm a bit confused on the border line between hardware
+and software definition. That's quite reasonable it's policy that software
+can poll more often than hardware specified, but can we think it's just
+overriding hardware property specifying maximum value from beginning?
+Is it still policy? or 'overriding hardware property' part is already not
+a hardware description? :-S
 
+>
+> > > So I think you need to figure out an interface that allows user space to
+> > > set the polling interval for any hub at runtime instead.
+> >
+> > Changing the interval at runtime is an another way to solve the
+> > power consumption problem, but it's not so easy. At least xhci needs
+> > to restart an endpoint and no devices are changing the interval after
+> > enumeration stage.
+>
+> The usb-hid driver actually supports configuring the polling rate
+> for devices like mice and keyboards after enumeration (through a module
+> parameter, but still).
+>
+> Unfortunately, the xhci driver does not yet support this and always uses
+> the device maximum bInterval. A bug report for this was filed many years
+> ago, perhaps it's time to address that (adding Mathias on CC):
+>
+>         https://bugzilla.kernel.org/show_bug.cgi?id=82571
+
+Thanks!
+
+>
+> Johan
