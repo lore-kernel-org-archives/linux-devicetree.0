@@ -2,89 +2,158 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB96C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 03:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55679C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 03:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4C3206E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 03:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2898C206E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 03:20:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfLIDU1 (ORCPT
+        id S1727054AbfLIDU6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Dec 2019 22:20:27 -0500
-Received: from mga14.intel.com ([192.55.52.115]:37235 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727084AbfLIDU1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 8 Dec 2019 22:20:27 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Dec 2019 19:20:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,294,1571727600"; 
-   d="scan'208";a="387102974"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga005.jf.intel.com with ESMTP; 08 Dec 2019 19:20:23 -0800
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        andrew.murray@arm.com, robh@kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v11 3/3] PCI: artpec6: Configure FTS with dwc helper function
-Date:   Mon,  9 Dec 2019 11:20:06 +0800
-Message-Id: <d862101a58286c30636a5f4671861ac4f076bfb8.1575860791.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1575860791.git.eswara.kota@linux.intel.com>
-References: <cover.1575860791.git.eswara.kota@linux.intel.com>
-In-Reply-To: <cover.1575860791.git.eswara.kota@linux.intel.com>
-References: <cover.1575860791.git.eswara.kota@linux.intel.com>
+        Sun, 8 Dec 2019 22:20:58 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53816 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726834AbfLIDU6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Dec 2019 22:20:58 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB93COJ3026553;
+        Sun, 8 Dec 2019 22:20:25 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wrte588jg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 08 Dec 2019 22:20:25 -0500
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xB93CwxW027647;
+        Sun, 8 Dec 2019 22:20:24 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wrte588ja-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 08 Dec 2019 22:20:24 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB93GLVZ009672;
+        Mon, 9 Dec 2019 03:20:23 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma04dal.us.ibm.com with ESMTP id 2wr3q631jw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Dec 2019 03:20:23 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB93KMKF66584954
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 Dec 2019 03:20:22 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 29BE46A051;
+        Mon,  9 Dec 2019 03:20:22 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 900B36A04D;
+        Mon,  9 Dec 2019 03:20:21 +0000 (GMT)
+Received: from [9.70.82.143] (unknown [9.70.82.143])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  9 Dec 2019 03:20:21 +0000 (GMT)
+Subject: [PATCH V2 00/13] powerpc/vas: Page fault handling for user space
+ NX requests
+From:   Haren Myneni <haren@linux.ibm.com>
+To:     mpe@ellerman.id.au, hch@infradead.org, mikey@neuling.org,
+        npiggin@gmail.com, herbert@gondor.apana.org.au,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org
+Cc:     sukadev@linux.vnet.ibm.com, hbabu@us.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Date:   Sun, 08 Dec 2019 19:18:42 -0800
+Message-ID: <1575861522.16318.9.camel@hbabu-laptop>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.28.3 
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-08_07:2019-12-05,2019-12-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 mlxscore=0
+ malwarescore=0 clxscore=1011 bulkscore=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912090028
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use DesignWare helper functions to configure Fast Training
-Sequence. Drop the respective code in the driver.
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
----
- drivers/pci/controller/dwc/pcie-artpec6.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+Applications will send compression / decompression requests to NX with
+COPY/PASTE instructions. When NX is processing these requests, can hit
+fault on the request buffer (not in memory). It issues an interrupt and
+pastes fault CRB in fault FIFO. Expects kernel to handle this fault and
+return credits for both send and fault windows after processing.
 
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index 9e2482bd7b6d..28d5a1095200 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -51,9 +51,6 @@ static const struct of_device_id artpec6_pcie_of_match[];
- #define ACK_N_FTS_MASK			GENMASK(15, 8)
- #define ACK_N_FTS(x)			(((x) << 8) & ACK_N_FTS_MASK)
- 
--#define FAST_TRAINING_SEQ_MASK		GENMASK(7, 0)
--#define FAST_TRAINING_SEQ(x)		(((x) << 0) & FAST_TRAINING_SEQ_MASK)
--
- /* ARTPEC-6 specific registers */
- #define PCIECFG				0x18
- #define  PCIECFG_DBG_OEN		BIT(24)
-@@ -313,10 +310,7 @@ static void artpec6_pcie_set_nfts(struct artpec6_pcie *artpec6_pcie)
- 	 * Set the Number of Fast Training Sequences that the core
- 	 * advertises as its N_FTS during Gen2 or Gen3 link training.
- 	 */
--	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
--	val &= ~FAST_TRAINING_SEQ_MASK;
--	val |= FAST_TRAINING_SEQ(180);
--	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-+	dw_pcie_link_set_n_fts(pci, 180);
- }
- 
- static void artpec6_pcie_assert_core_reset(struct artpec6_pcie *artpec6_pcie)
+This patch series adds IRQ and fault window setup, and NX fault handling:
+- Read IRQ# from "interrupts" property and configure IRQ per VAS instance.
+- Set port# for each window to generate an interrupt when noticed fault.
+- Set fault window and FIFO on which NX paste fault CRB.
+- Setup IRQ thread fault handler per VAS instance.
+- When receiving an interrupt, Read CRBs from fault FIFO and update
+  coprocessor_status_block (CSB) in the corresponding CRB with translation
+  failure (CSB_CC_TRANSLATION). After issuing NX requests, process polls
+  on CSB address. When it sees translation error, can touch the request
+  buffer to bring the page in to memory and reissue NX request.
+- If copy_to_user fails on user space CSB address, OS sends SEGV signal.
+
+Tested these patches with NX-GZIP support and will be posting this series
+soon.
+
+Patch 2: Define nx_fault_stamp on which NX writes fault status for the fault
+         CRB
+Patch 3: Read interrupts and port properties per VAS instance
+Patch 4: Setup fault window per each VAS instance. This window is used for
+         NX to paste fault CRB in FIFO.
+Patches 5 & 6: Setup threaded IRQ per VAS and register NX with fault window
+	 ID and port number for each send window so that NX paste fault CRB
+	 in this window.
+Patch 7: Reference to pid and mm so that pid is not used until window closed.
+	 Needed for multi thread application where child can open a window
+	 and can be used by parent later.
+Patches 8 and 9: Process CRBs from fault FIFO and notify tasks by
+         updating CSB or through signals.
+Patches 10 and 11: Return credits for send and fault windows after handling
+        faults.
+Patch 13:Fix closing send window after all credits are returned. This issue
+         happens only for user space requests. No page faults on kernel
+         request buffer.
+
+Changelog:
+V2:
+  - Use threaded IRQ instead of own kernel thread handler
+  - Use pswid insted of user space CSB address to find valid CRB
+  - Removed unused macros and other changes as suggested by Christoph Hellwig
+
+Haren Myneni (13):
+  powerpc/vas: Describe vas-port and interrupts properties
+  powerpc/vas: Define nx_fault_stamp in coprocessor_request_block
+  powerpc/vas: Read interrupts and vas-port device tree properties
+  powerpc/vas: Setup fault window per VAS instance
+  powerpc/vas: Setup thread IRQ handler per VAS instance
+  powerpc/vas: Register NX with fault window ID and IRQ port value
+  powerpc/vas: Take reference to PID and mm for user space windows
+  powerpc/vas: Update CSB and notify process for fault CRBs
+  powerpc/vas: Print CRB and FIFO values
+  powerpc/vas: Do not use default credits for receive window
+  powerpc/VAS: Return credits after handling fault
+  powerpc/vas: Display process stuck message
+  powerpc/vas: Free send window in VAS instance after credits returned
+
+ .../devicetree/bindings/powerpc/ibm,vas.txt        |   5 +
+ arch/powerpc/include/asm/icswx.h                   |  18 +-
+ arch/powerpc/platforms/powernv/Makefile            |   2 +-
+ arch/powerpc/platforms/powernv/vas-debug.c         |   2 +-
+ arch/powerpc/platforms/powernv/vas-fault.c         | 337 +++++++++++++++++++++
+ arch/powerpc/platforms/powernv/vas-window.c        | 173 ++++++++++-
+ arch/powerpc/platforms/powernv/vas.c               |  77 ++++-
+ arch/powerpc/platforms/powernv/vas.h               |  38 ++-
+ 8 files changed, 627 insertions(+), 25 deletions(-)
+ create mode 100644 arch/powerpc/platforms/powernv/vas-fault.c
+
 -- 
-2.11.0
+1.8.3.1
+
+
 
