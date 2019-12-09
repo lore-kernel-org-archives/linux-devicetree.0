@@ -2,490 +2,516 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510E5C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 08:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3C4C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 08:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F4292075B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 08:54:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="FB9aNPDa"
+	by mail.kernel.org (Postfix) with ESMTP id 99BEE2077B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 08:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575881868;
+	bh=UdVrxFkQyZG28u0Hdc95DyuTak04p9szo9hdkx4JIik=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n3VzM4PZ051yuXa+mjqtm5OJcLbplV1HZMGIByyhw6Pu9S+Bu0I5VdbZVKBrFPVYz
+	 lTVgSFVCMspSbpJZu3l138uCJ4tKBSZKeH1ZMSbHWqbtQsLGkiWiM4VL8V+u2JEXOv
+	 SsgSwdOBYC/sIIIYER930des3ZYF1ra3LPcr48k0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbfLIIyI (ORCPT
+        id S1727244AbfLII5s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 03:54:08 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:35821 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbfLIIyI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 03:54:08 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 9 Dec 2019 03:57:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726377AbfLII5r (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 03:57:47 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id BB64323061;
-        Mon,  9 Dec 2019 09:54:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1575881643;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4riFmKf9tBgbsf4/e3IuOdl1wAdjwDAfAlAXK9IfW+Q=;
-        b=FB9aNPDa2D+WzDu0C91tIjIQjZlceuZ4d/EKTo8n0Zl6z84jY2MAIdFBhrBS3v4sLLCXIH
-        VQb7h7kiw2rPvVbQfnnBfnM1HGrwZXmKA5jhFkrpM0bNj/Cb/DCXj9PeMkBveMAfaPSuWE
-        SDDDZuTyV1uOLQ21cOo4Yc9DmwzgKFk=
+        by mail.kernel.org (Postfix) with ESMTPSA id 870CE20692;
+        Mon,  9 Dec 2019 08:57:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575881866;
+        bh=UdVrxFkQyZG28u0Hdc95DyuTak04p9szo9hdkx4JIik=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jFM2fN4oniF0/NqyKFulpDsi2didOP/x9LEi5OxJ7IiFa0nWPcv4SbyBpaGu9IxgN
+         uMatQwFuNmImKUD9u5HIbEG4o92v/7Uyblew9Ljx6Pc5QudrK70I17tfyuy57Hr4m9
+         Fzfe+zeSX9SVuNUmevkIOrfuUnxK1A+aDtxl/iiY=
+Date:   Mon, 9 Dec 2019 16:57:31 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Marco Antonio Franchi <marco.franchi@nxp.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "marcofrk@gmail.com" <marcofrk@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "atv@google.com" <atv@google.com>
+Subject: Re: [PATCH v4 2/2] arm64: dts: freescale: add initial support for
+ Google i.MX 8MQ Phanbell
+Message-ID: <20191209085729.GK3365@dragon>
+References: <20191128194815.26642-1-marco.franchi@nxp.com>
+ <20191128194815.26642-2-marco.franchi@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 09 Dec 2019 09:54:03 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 4/4] arm64: dts: freescale: add Kontron sl28 support
-In-Reply-To: <20191209064356.GD3365@dragon>
-References: <20191123201317.25861-1-michael@walle.cc>
- <20191123201317.25861-5-michael@walle.cc> <20191209064356.GD3365@dragon>
-Message-ID: <ef2438b502d84127c4bca201e2dcc0f8@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.8
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: BB64323061
-X-Spamd-Result: default: False [1.40 / 15.00];
-         TO_DN_SOME(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[7];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         DBL_PROHIBIT(0.00)[0.4.147.224:email,0.0.0.4:email,0.0.0.50:email,0.0.0.5:email,0.0.39.16:email,0.0.0.32:email,0.3.13.64:email,0.1.134.160:email,0.3.52.80:email,0.5.48.32:email,0.0.0.0:email];
-         NEURAL_HAM(-0.00)[-0.655];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191128194815.26642-2-marco.franchi@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2019-12-09 07:43, schrieb Shawn Guo:
-> On Sat, Nov 23, 2019 at 09:13:17PM +0100, Michael Walle wrote:
->> Add device tree files for the Kontron SMARC-sAL28 board and its
->> carriers.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->>  arch/arm64/boot/dts/freescale/Makefile        |   4 +
->>  .../fsl-ls1028a-kontron-kbox-a-230-ls.dts     |  27 +++
->>  .../fsl-ls1028a-kontron-sl28-var3-ads2.dts    |  73 ++++++++
->>  .../fsl-ls1028a-kontron-sl28-var4.dts         |  34 ++++
->>  .../freescale/fsl-ls1028a-kontron-sl28.dts    | 158 
->> ++++++++++++++++++
->>  5 files changed, 296 insertions(+)
->>  create mode 100644 
->> arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
->>  create mode 100644 
->> arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
->>  create mode 100644 
->> arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
->>  create mode 100644 
->> arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
->> 
->> diff --git a/arch/arm64/boot/dts/freescale/Makefile 
->> b/arch/arm64/boot/dts/freescale/Makefile
->> index 93fce8f0c66d..080c5a59d6bd 100644
->> --- a/arch/arm64/boot/dts/freescale/Makefile
->> +++ b/arch/arm64/boot/dts/freescale/Makefile
->> @@ -4,6 +4,10 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-frwy.dtb
->>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-oxalis.dtb
->>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-qds.dtb
->>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-rdb.dtb
->> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += 
->> fsl-ls1028a-kontron-kbox-a-230-ls.dtb
->> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-kontron-sl28.dtb
->> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += 
->> fsl-ls1028a-kontron-sl28-var3-ads2.dtb
->> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-kontron-sl28-var4.dtb
->>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-qds.dtb
->>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-rdb.dtb
->>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
->> diff --git 
->> a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts 
->> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
->> new file mode 100644
->> index 000000000000..97e72c94b7fc
->> --- /dev/null
->> +++ 
->> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
->> @@ -0,0 +1,27 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * Device Tree File for the Kontron KBox A-230-LS.
->> + *
->> + * This consists of a Kontron SMARC-sAL28 (Dual PHY) and a special
->> + * carrier (s1914).
->> + *
->> + * Copyright (C) 2019 Michael Walle <michael@walle.cc>
->> + *
->> + */
->> +
->> +/dts-v1/;
->> +#include "fsl-ls1028a-kontron-sl28-var4.dts"
->> +
->> +/ {
->> +	model = "Kontron KBox A-230-LS";
->> +	compatible = "kontron,kbox-a-230-ls", "kontron,sl28-var3",
->> +		     "kontron,sl28", "fsl,ls1028a";
+On Thu, Nov 28, 2019 at 07:48:34PM +0000, Marco Antonio Franchi wrote:
+> This patch adds the device tree to support Google Coral Edge TPU,
+> historicaly named as fsl-imx8mq-phanbell, a computer on module
+> which can be used for AI/ML propose.
 > 
-> Any new compatible needs to be documented.
+> It introduces a minimal enablement support for this module and
+> was totally based on the NXP i.MX 8MQ EVK board and i.MX 8MQ Phanbell
+> Google Source Code for Coral Edge TPU Mendel release:
+> https://coral.googlesource.com/linux-imx/
+> 
+> Tested components:
+> - PMIC;
+> - USB-C OTG;
+> - USB-C PWR;
+> - micro-USB;
+> - USB.
+> 
+> Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> ---
+> Changes since v3:
+> - remove reg_gpio_dvfs regulator
+> - change cpu-supply to buck2
+> - fix regulators values and properties
+> - remove sai2 node
+>  arch/arm64/boot/dts/freescale/Makefile        |   1 +
+>  .../boot/dts/freescale/imx8mq-phanbell.dts    | 377 ++++++++++++++++++
+>  2 files changed, 378 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index 38e344a2f0ff..e50a934e2417 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-hummingboard-pulse.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-nitrogen.dtb
+> +dtb-$(CONFIG_ARCH_MXC) += imx8mq-phanbell.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-pico-pi.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
+> new file mode 100644
+> index 000000000000..a7565a0146ee
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
+> @@ -0,0 +1,377 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/*
+> + * Copyright 2017-2019 NXP
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "imx8mq.dtsi"
+> +
+> +/ {
+> +	model = "Google i.MX8MQ Phanbell";
+> +	compatible = "google,imx8mq-phanbell", "fsl,imx8mq";
+> +
+> +	chosen {
+> +		stdout-path = &uart1;
+> +	};
+> +
+> +	memory@40000000 {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x40000000 0 0x40000000>;
+> +	};
+> +
+> +	pmic_osc: clock-pmic {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <32768>;
+> +		clock-output-names = "pmic_osc";
+> +	};
+> +
+> +	reg_usdhc2_vmmc: usdhc2_vmmc {
 
-There is actually no ls1028a board documented ;) I'd add the rdb as well 
-as the qds to Documentation/devicetree/bindings/arm/fsl.yaml in the next 
-series. Or is that just for arm and not arm64?
+Please name the fixed regulator node like regulator-xxx.
 
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VSD_3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +};
+> +
+> +&A53_0 {
+> +	cpu-supply = <&buck2>;
+> +};
+> +
+> +&A53_1 {
+> +	cpu-supply = <&buck2>;
+> +};
+> +
+> +&A53_2 {
+> +	cpu-supply = <&buck2>;
+> +};
+> +
+> +&A53_3 {
+> +	cpu-supply = <&buck2>;
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <400000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +
+> +	pmic: pmic@4b {
+> +		reg = <0x4b>;
 
-> 
->> +};
->> +
->> +&i2c4 {
->> +	eeprom@50 {
->> +		compatible = "atmel,24c32";
->> +		reg = <0x50>;
->> +		pagesize = <32>;
->> +	};
->> +};
->> diff --git 
->> a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts 
->> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
->> new file mode 100644
->> index 000000000000..a4640e6b3928
->> --- /dev/null
->> +++ 
->> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
->> @@ -0,0 +1,73 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * Device Tree file for the Kontron SMARC-sAL28 board on a SMARC Eval 
->> 2.0
->> + * carrier (ADS2).
->> + *
->> + * Copyright (C) 2019 Michael Walle <michael@walle.cc>
->> + *
->> + */
->> +
->> +/dts-v1/;
->> +#include "fsl-ls1028a-kontron-sl28.dts"
->> +
->> +/ {
->> +	model = "Kontron SMARC-sAL28 (Single PHY) on SMARC Eval 2.0 
->> carrier";
->> +	compatible = "kontron,sl28-var3-ads2", "kontron,sl28", 
->> "fsl,ls1028a";
->> +
->> +	sound {
->> +		compatible = "simple-audio-card";
->> +		simple-audio-card,format = "i2s";
->> +		simple-audio-card,widgets =
->> +			"Headphone", "Headphone Jack",
->> +			"Line", "Line Out Jack";
->> +		simple-audio-card,routing =
->> +			"Line Out Jack", "LINEOUTR",
->> +			"Line Out Jack", "LINEOUTL",
->> +			"Headphone Jack", "HPOUTR",
->> +			"Headphone Jack", "HPOUTL";
->> +		simple-audio-card,mclk-fs = <256>;
->> +
->> +		simple-audio-card,cpu {
->> +			sound-dai = <&sai6>;
->> +		};
->> +
->> +		simple-audio-card,codec {
->> +			sound-dai = <&wm8904>;
->> +			frame-master;
->> +			bitclock-master;
->> +		};
->> +	};
->> +};
->> +
->> +&i2c4 {
->> +	status = "okay";
->> +
->> +	wm8904: wm8904@1a {
-> 
-> audio-codec for node name.
-ok
+Nit: we usually start properties with 'compatible'.
 
-> 
->> +		#sound-dai-cells = <0>;
->> +		compatible = "wlf,wm8904";
->> +		reg = <0x1a>;
->> +		clocks = <&wm8904_mclk>;
->> +		clock-names = "mclk";
->> +		assigned-clocks = <&wm8904_mclk>;
->> +		assigned-clock-rates = <1250000>;
->> +	};
->> +
->> +	eeprom@50 {
->> +		compatible = "atmel,24c32";
->> +		reg = <0x50>;
->> +		pagesize = <32>;
->> +	};
->> +};
->> +
->> +&sai6 {
->> +	status = "okay";
->> +};
->> +
->> +&soc {
->> +	wm8904_mclk: wm8904-mclk@f130080 {
->> +		compatible = "fsl,vf610-sai-clock";
-> 
-> Unsupported/undocumented binding?
+> +		compatible = "rohm,bd71837";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_pmic>;
+> +		clocks = <&pmic_osc>;
+> +		clock-names = "osc";
 
-under review here:
-https://lore.kernel.org/linux-devicetree/20191122235622.8818-1-michael@walle.cc/
+Is this clock-names needed?
 
-> 
->> +		reg = <0x0 0xf130080 0x0 0x80>;
->> +		clocks = <&clockgen 4 1>;
->> +		#clock-cells = <0>;
->> +	};
->> +};
->> diff --git 
->> a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts 
->> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
->> new file mode 100644
->> index 000000000000..5c8b13108e4d
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
->> @@ -0,0 +1,34 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * Device Tree file for the Kontron SMARC-sAL28 board.
->> + *
->> + * This is for the network variant 4 which has two ethernet ports. It
->> + * extends the base and provides one more port connected via RGMII.
->> + *
->> + * Copyright (C) 2019 Michael Walle <michael@walle.cc>
->> + *
->> + */
->> +
->> +/dts-v1/;
->> +#include "fsl-ls1028a-kontron-sl28.dts"
->> +
->> +/ {
->> +	model = "Kontron SMARC-sAL28 (Dual PHY)";
->> +	compatible = "kontron,sl28-var4", "kontron,sl28", "fsl,ls1028a";
->> +};
->> +
->> +&enetc_port1 {
->> +	phy-handle = <&phy1>;
->> +	phy-connection-type = "rgmii-id";
->> +
->> +	mdio {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		phy1: ethernet-phy@4 {
->> +			reg = <0x4>;
->> +			eee-broken-1000t;
->> +			eee-broken-100tx;
->> +		};
->> +	};
->> +};
->> diff --git 
->> a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts 
->> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
->> new file mode 100644
->> index 000000000000..a18cb4395ad0
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
->> @@ -0,0 +1,158 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * Device Tree file for the Kontron SMARC-sAL28 board.
->> + *
->> + * Copyright (C) 2019 Michael Walle <michael@walle.cc>
->> + *
->> + */
->> +
->> +/dts-v1/;
->> +#include "fsl-ls1028a.dtsi"
->> +
->> +/ {
->> +	model = "Kontron SMARC-sAL28";
->> +	compatible = "kontron,sl28", "fsl,ls1028a";
->> +
->> +	aliases {
->> +		crypto = &crypto;
->> +		serial0 = &duart0;
->> +		serial1 = &duart1;
->> +	};
->> +
->> +	chosen {
->> +		stdout-path = "serial0:115200n8";
->> +	};
->> +};
->> +
->> +&duart0 {
->> +	status = "okay";
->> +};
->> +
->> +&duart1 {
->> +	status = "okay";
->> +};
->> +
->> +&enetc_port0 {
->> +	phy-handle = <&phy0>;
->> +	phy-connection-type = "sgmii";
->> +
->> +	mdio {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		phy0: ethernet-phy@5 {
->> +			reg = <0x5>;
->> +			eee-broken-1000t;
->> +			eee-broken-100tx;
->> +		};
->> +	};
->> +};
->> +
->> +&esdhc {
->> +	sd-uhs-sdr104;
->> +	sd-uhs-sdr50;
->> +	sd-uhs-sdr25;
->> +	sd-uhs-sdr12;
->> +	status = "okay";
->> +};
->> +
->> +&esdhc1 {
->> +	mmc-hs200-1_8v;
->> +	mmc-hs400-1_8v;
->> +	bus-width = <8>;
->> +	status = "okay";
->> +};
->> +
->> +&fspi {
->> +	status = "okay";
->> +
->> +	w25q32jw@0 {
-> 
-> Use a generic node name.
-> 
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		compatible = "w25q32jw", "jedec,spi-nor";
-> 
-> Is "w25q32jw" documented somewhere?
+> +		clock-output-names = "pmic_clk";
 
-seems like it should only be "jedec,spi-nor" anyway:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=10a6a6975691775bbcc677a04c6fd3120b5c1160
+Binding doc says #clock-cells is a required property, but I cannot find
+it anywhere.
 
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <3 GPIO_ACTIVE_LOW>;
+> +		interrupt-names = "irq";
 
-I'll send a v2 series. There were updates to the sound node in the 
-meantime.
+Is this interrupt-names really needed?
 
+> +
+> +		regulators {
+> +			buck1: BUCK1 {
+> +				regulator-name = "buck1";
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <1250>;
+> +				rohm,dvs-run-voltage = <900000>;
+> +				rohm,dvs-idle-voltage = <900000>;
+> +				rohm,dvs-suspend-voltage = <800000>;
+> +			};
+> +
+> +			buck2: BUCK2 {
+> +				regulator-name = "buck2";
+> +				regulator-min-microvolt = <850000>;
+> +				regulator-max-microvolt = <1000000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				rohm,dvs-run-voltage = <1000000>;
+> +				rohm,dvs-idle-voltage = <900000>;
+> +			};
+> +
+> +			buck3: BUCK3 {
+> +				regulator-name = "buck3";
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1300000>;
+> +				regulator-boot-on;
+> +				rohm,dvs-run-voltage = <900000>;
+> +			};
+> +
+> +			buck4: BUCK4 {
+> +				regulator-name = "buck4";
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				rohm,dvs-run-voltage = <900000>;
+> +			};
+> +
+> +			buck5: BUCK5 {
+> +				regulator-name = "buck5";
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			buck6: BUCK6 {
+> +				regulator-name = "buck6";
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			buck7: BUCK7 {
+> +				regulator-name = "buck7";
+> +				regulator-min-microvolt = <1605000>;
+> +				regulator-max-microvolt = <1995000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			buck8: BUCK8 {
+> +				regulator-name = "buck8";
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1400000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo1: LDO1 {
+> +				regulator-name = "ldo1";
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo2: LDO2 {
+> +				regulator-name = "ldo2";
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <900000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo3: LDO3 {
+> +				regulator-name = "ldo3";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo4: LDO4 {
+> +				regulator-name = "ldo4";
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo5: LDO5 {
+> +				regulator-name = "ldo5";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo6: LDO6 {
+> +				regulator-name = "ldo6";
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo7: LDO7 {
+> +				regulator-name = "ldo7";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc1 {
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
+> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
+> +	bus-width = <8>;
+> +	non-removable;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc2 {
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
+> +	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
+> +	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
+> +	bus-width = <4>;
+> +	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
+> +	vmmc-supply = <&reg_usdhc2_vmmc>;
+> +	status = "okay";
+> +};
+> +
+> +&usb3_phy0 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_dwc3_0 {
+> +	status = "okay";
+> +	dr_mode = "otg";
+
+As a idiomatic practice, we end property list with 'status'.
+
+> +};
+> +
+> +&usb3_phy1 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_dwc3_1 {
+> +	status = "okay";
+> +	dr_mode = "host";
+
+Ditto
+
+Shawn
+
+> +};
+> +
+> +&wdog1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_wdog>;
+> +	fsl,ext-reset-output;
+> +	status = "okay";
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
+> +			MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA			0x4000007f
+> +		>;
+> +	};
+> +
+> +	pinctrl_pmic: pmicirq {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x41
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart1: uart1grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX		0x49
+> +			MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX		0x49
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1: usdhc1grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
+> +			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
+> +			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x83
+> +			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x85
+> +			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc5
+> +			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x85
+> +			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x87
+> +			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc7
+> +			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x87
+> +			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2_gpio: usdhc2grpgpio {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12	0x41
+> +			MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2: usdhc2grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x83
+> +			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc3
+> +			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc3
+> +			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc3
+> +			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc3
+> +			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc3
+> +			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x85
+> +			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc5
+> +			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc5
+> +			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc5
+> +			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc5
+> +			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc5
+> +			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x87
+> +			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc7
+> +			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc7
+> +			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc7
+> +			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc7
+> +			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc7
+> +			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
+> +		>;
+> +	};
+> +
+> +	pinctrl_wdog: wdoggrp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B 0xc6
+> +		>;
+> +	};
+> +};
+> -- 
+> 2.17.1
 > 
-> Shawn
-> 
->> +		m25p,fast-read;
->> +		spi-max-frequency = <133000000>;
->> +		reg = <0>;
->> +		/* The following setting enables 1-1-2 (CMD-ADDR-DATA) mode */
->> +		spi-rx-bus-width = <2>; /* 2 SPI Rx lines */
->> +		spi-tx-bus-width = <1>; /* 1 SPI Tx line */
->> +
->> +		partition@0 {
->> +			reg = <0x000000 0x010000>;
->> +			label = "rcw";
->> +			read-only;
->> +		};
->> +
->> +		partition@10000 {
->> +			reg = <0x010000 0x0f0000>;
->> +			label = "failsafe bootloader";
->> +			read-only;
->> +		};
->> +
->> +		partition@100000 {
->> +			reg = <0x100000 0x040000>;
->> +			label = "failsafe DP firmware";
->> +			read-only;
->> +		};
->> +
->> +		partition@140000 {
->> +			reg = <0x140000 0x0a0000>;
->> +			label = "failsafe trusted firmware";
->> +			read-only;
->> +		};
->> +
->> +		partition@1e0000 {
->> +			reg = <0x1e0000 0x020000>;
->> +			label = "reserved";
->> +			read-only;
->> +		};
->> +
->> +		partition@200000 {
->> +			reg = <0x200000 0x010000>;
->> +			label = "configuration store";
->> +		};
->> +
->> +		partition@210000 {
->> +			reg = <0x210000 0x0f0000>;
->> +			label = "bootloader";
->> +		};
->> +
->> +		partition@300000 {
->> +			reg = <0x300000 0x040000>;
->> +			label = "DP firmware";
->> +		};
->> +
->> +		partition@340000 {
->> +			reg = <0x340000 0x0a0000>;
->> +			label = "trusted firmware";
->> +		};
->> +
->> +		partition@3e0000 {
->> +			reg = <0x3e0000 0x020000>;
->> +			label = "bootloader environment";
->> +		};
->> +	};
->> +};
->> +
->> +&i2c0 {
->> +	status = "okay";
->> +
->> +	rtc@32 {
->> +		compatible = "microcrystal,rv8803";
->> +		reg = <0x32>;
->> +	};
->> +
->> +	eeprom@50 {
->> +		compatible = "atmel,24c32";
->> +		reg = <0x50>;
->> +		pagesize = <32>;
->> +	};
->> +};
->> +
->> +&i2c3 {
->> +	status = "okay";
->> +};
->> +
->> +&i2c4 {
->> +	status = "okay";
->> +};
->> --
->> 2.20.1
->> 
