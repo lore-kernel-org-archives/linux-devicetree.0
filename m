@@ -2,185 +2,115 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A51EC04E30
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 13:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3FDC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 13:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47E602077B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 13:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27F220663
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 13:16:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fluep6Cy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfLINBJ (ORCPT
+        id S1727690AbfLINQ1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:01:09 -0500
-Received: from out28-220.mail.aliyun.com ([115.124.28.220]:59178 "EHLO
-        out28-220.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727567AbfLINBJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 08:01:09 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07732261|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.424408-0.0111602-0.564432;DS=CONTINUE|ham_system_inform|0.144077-0.000892893-0.85503;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03300;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=22;RT=22;SR=0;TI=SMTPD_---.GDcmOki_1575896441;
-Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GDcmOki_1575896441)
-          by smtp.aliyun-inc.com(10.147.41.138);
-          Mon, 09 Dec 2019 21:01:02 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
-        mark.rutland@arm.com, ebiederm@xmission.com, ralf@linux-mips.org,
-        heiko@sntech.de, icenowy@aosc.io,
-        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
-        geert+renesas@glider.be, paul@crapouillou.net,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 772753199@qq.com
-Subject: [PATCH v7 5/6] MIPS: X1000: Add missing X1000 nodes.
-Date:   Mon,  9 Dec 2019 21:00:37 +0800
-Message-Id: <1575896438-9562-6-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1575896438-9562-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1575896438-9562-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Mon, 9 Dec 2019 08:16:27 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33999 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727655AbfLINQ1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 08:16:27 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t2so16195258wrr.1
+        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 05:16:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=6JKjS8ULGOzUFR7zV+Ndftoq/ev83XREiug0BBdNIeE=;
+        b=Fluep6Cy08Kzg9mPraMCdGJvXYVj7EnADOl1PYagnYKgrHsKt1Xsp9NRKUB+ooeph/
+         vP1+nnfyracffXp6R4IWPuaA7oCZWLkd6UpAvbwPT8oMhZKdDaZDYxR8YyhaW5CtdN0/
+         jQMOwkxHx0EfxlhkGxlS4Wm+dDO/tKc/uQdzSCJyN6rnJNfK3QiH4T3LcvbHymztIO/X
+         exCokdFITCA6+DJkwR6Z7p+pwf7cFCKcyxsQ3LPAyLO9rtDkjaFip8op45XbbJ62+Bnv
+         YtOSlyoy1OXRn487KoaySckqJh++QDJvxdhmXQLOe1XR0g1/u96bV0K5wTZYTF2bPDLS
+         2i4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=6JKjS8ULGOzUFR7zV+Ndftoq/ev83XREiug0BBdNIeE=;
+        b=Wz1Z2rNDLW0ITatzKOn0thbvdcLEqjru9DCjT6ZGJpYn++fskOUOv4cUjE7UM+DMKB
+         XVWaVpyedr16NJf510O3k/WQ4yNkVpKDIElefcmwHbAzLYeT2N9fcJY5lWbkYIiEKTX7
+         3rfaa3YEZCqfnI9GCq7y5fSW0lprvyHga54yg17Dr6kgZS2Y5u1gKLxoWovo9aAHMmbq
+         fw+Ff/WTuL7fAbecVzEWmH6GBZsnf9PpcYiFx3MpiKwLhtCPFQ6t2dMwEh4E0AW398jA
+         RHI5at4BquiuejWWH9zHgnRUmjVRd2tKLDGCdOr88cQPm5ejZWjntop/h3UzVJiULhJX
+         v80w==
+X-Gm-Message-State: APjAAAU1yzHUFXxRGIlLhL+TNNPr8j75wchp0coENlDoFYxusrH+QgyS
+        lCoOIdz7pPXMv02MZut0kW95+g==
+X-Google-Smtp-Source: APXvYqyfJb9ulY7eYGRni5x1EoiZ65N/w4IbXiFtTbTgqXufBVfAXngFIBRVWJ/guKS6mVh9b6EFmQ==
+X-Received: by 2002:adf:8041:: with SMTP id 59mr2019145wrk.257.1575897385263;
+        Mon, 09 Dec 2019 05:16:25 -0800 (PST)
+Received: from dell ([2.27.35.145])
+        by smtp.gmail.com with ESMTPSA id d8sm26935218wre.13.2019.12.09.05.16.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 05:16:24 -0800 (PST)
+Date:   Mon, 9 Dec 2019 13:16:18 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
+        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 03/12] mfd: wcd934x: add support to wcd9340/wcd9341
+ codec
+Message-ID: <20191209131618.GL3468@dell>
+References: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
+ <20191121170509.10579-4-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191121170509.10579-4-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the appropriate DT node to probe pdma/msc/rtc/watchdog/ethernet
-driver using the devicetree.
+On Thu, 21 Nov 2019, Srinivas Kandagatla wrote:
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
+> Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
+> 
+> This codec has integrated SoundWire controller, pin controller and
+> interrupt controller.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+> Change since v3:
+>  Fixed lowcase usage of wcd934x as suggested by Lee.
+>  Updated few if checks as recommended.
+>  add defines for SLIM devic and Instance ID of WCD934x
+>  Updated device name and compatible for gpio controller driver.
+> 
+>  drivers/mfd/Kconfig                   |  12 +
+>  drivers/mfd/Makefile                  |   1 +
+>  drivers/mfd/wcd934x.c                 | 306 +++++++++++++++
+>  include/linux/mfd/wcd934x/registers.h | 531 ++++++++++++++++++++++++++
+>  include/linux/mfd/wcd934x/wcd934x.h   |  31 ++
+>  5 files changed, 881 insertions(+)
+>  create mode 100644 drivers/mfd/wcd934x.c
+>  create mode 100644 include/linux/mfd/wcd934x/registers.h
+>  create mode 100644 include/linux/mfd/wcd934x/wcd934x.h
 
-Notes:
-    v7:
-    New patch, merge[05/12],[07/12],[09/12],[11/12] in v6.
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
- arch/mips/boot/dts/ingenic/x1000.dtsi | 96 +++++++++++++++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
-
-diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
-index 13a6c9ff..398a756 100644
---- a/arch/mips/boot/dts/ingenic/x1000.dtsi
-+++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <dt-bindings/clock/x1000-cgu.h>
-+#include <dt-bindings/dma/x1000-dma.h>
- 
- / {
- 	#address-cells = <1>;
-@@ -68,6 +69,25 @@
- 		interrupts = <27 26 25>;
- 	};
- 
-+	wdt: watchdog@10002000 {
-+		compatible = "ingenic,x1000-watchdog", "ingenic,jz4780-watchdog";
-+		reg = <0x10002000 0x10>;
-+
-+		clocks = <&cgu X1000_CLK_RTCLK>;
-+		clock-names = "rtc";
-+	};
-+
-+	rtc: rtc@10003000 {
-+		compatible = "ingenic,x1000-rtc", "ingenic,jz4780-rtc";
-+		reg = <0x10003000 0x4c>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <32>;
-+
-+		clocks = <&cgu X1000_CLK_RTCLK>;
-+		clock-names = "rtc";
-+	};
-+
- 	pinctrl: pin-controller@10010000 {
- 		compatible = "ingenic,x1000-pinctrl";
- 		reg = <0x10010000 0x800>;
-@@ -173,4 +193,80 @@
- 
- 		status = "disabled";
- 	};
-+
-+	pdma: dma-controller@13420000 {
-+		compatible = "ingenic,x1000-dma";
-+		reg = <0x13420000 0x400
-+			   0x13421000 0x40>;
-+		#dma-cells = <2>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <10>;
-+
-+		clocks = <&cgu X1000_CLK_PDMA>;
-+	};
-+
-+	mac: mac@134b0000 {
-+		compatible = "ingenic,x1000-mac", "snps,dwmac";
-+		reg = <0x134b0000 0x2000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <55>;
-+		interrupt-names = "macirq";
-+
-+		clocks = <&cgu X1000_CLK_MAC>;
-+		clock-names = "stmmaceth";
-+
-+		status = "disabled";
-+
-+		mdio: mdio {
-+			compatible = "snps,dwmac-mdio";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			status = "disabled";
-+		};
-+	};
-+
-+	msc0: msc@13450000 {
-+		compatible = "ingenic,x1000-mmc";
-+		reg = <0x13450000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <37>;
-+
-+		clocks = <&cgu X1000_CLK_MSC0>;
-+		clock-names = "mmc";
-+
-+		cap-sd-highspeed;
-+		cap-mmc-highspeed;
-+		cap-sdio-irq;
-+
-+		dmas = <&pdma X1000_DMA_MSC0_RX 0xffffffff>,
-+			   <&pdma X1000_DMA_MSC0_TX 0xffffffff>;
-+		dma-names = "rx", "tx";
-+
-+		status = "disabled";
-+	};
-+
-+	msc1: msc@13460000 {
-+		compatible = "ingenic,x1000-mmc";
-+		reg = <0x13460000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <36>;
-+
-+		clocks = <&cgu X1000_CLK_MSC1>;
-+		clock-names = "mmc";
-+
-+		cap-sd-highspeed;
-+		cap-mmc-highspeed;
-+		cap-sdio-irq;
-+
-+		dmas = <&pdma X1000_DMA_MSC1_RX 0xffffffff>,
-+			   <&pdma X1000_DMA_MSC1_TX 0xffffffff>;
-+		dma-names = "rx", "tx";
-+
-+		status = "disabled";
-+	};
- };
 -- 
-2.7.4
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
