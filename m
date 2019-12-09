@@ -2,68 +2,108 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0083EC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05025C00454
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD6C9207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC1C0207FD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:42:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ibA8c8hr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbfLIOma (ORCPT
+        id S1727846AbfLIOmh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:42:30 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:46356 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727608AbfLIOma (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Dec 2019 09:42:30 -0500
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.lan)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1ieKEx-00016m-7Z; Mon, 09 Dec 2019 15:42:23 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     thierry.reding@gmail.com, sam@ravnborg.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH 1/3] dt-bindings: Add vendor prefix for Xinpeng Technology
-Date:   Mon,  9 Dec 2019 15:42:06 +0100
-Message-Id: <20191209144208.4863-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.24.0
+        Mon, 9 Dec 2019 09:42:37 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57326 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727843AbfLIOmg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:42:36 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9EgK4k048715;
+        Mon, 9 Dec 2019 08:42:20 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575902540;
+        bh=iIPdTi3vkObZXA5TwQ23lL3Sn4gIOMSE9/ixyE3RfWc=;
+        h=From:To:CC:Subject:Date;
+        b=ibA8c8hrTE5yVO7Bk4hpX8ew1i7BowlvdOLgBfo+pbE7G6qscbIKfGyNptot88Vc5
+         645l4Q77fe01tcKUDwpkCB+T+QgM/CdK1oMy+Iotw4oVCiBCCvnWyfbwaSbKMboHqN
+         cTe7fUa0auWNt/7a2XDz06FI7DQQCUxC2StSxrc0=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9EgKKl074901
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Dec 2019 08:42:20 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 08:42:19 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 08:42:19 -0600
+Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9EgGve122297;
+        Mon, 9 Dec 2019 08:42:17 -0600
+From:   Jyri Sarha <jsarha@ti.com>
+To:     <dri-devel@lists.freedesktop.org>, <tony@atomide.com>,
+        <sam@ravnborg.org>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
+        <peter.ujfalusi@ti.com>, <bparrot@ti.com>
+Subject: [PATCH v2 0/3] drm/tilcdc: Remove "ti,tilcdc,tfp410" and mark "ti,tilcdc,panel" obsolete
+Date:   Mon, 9 Dec 2019 16:42:13 +0200
+Message-ID: <cover.1575901747.git.jsarha@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Since v1:
+- Add Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+  to "drm/tilcdc: Remove obsolete bundled tilcdc tfp410 driver"
+- Add "drm/tilcdc: panel: Add WARN() with a comment to tilcdc-panel probe"
 
-Shenzhen Xinpeng Technology Co., Ltd produces for example display panels.
+Nobody should any more use the old tilcdc bundled drivers anymore. The
+driver is fully capable of using the generic drm bridge and panel
+drivers.  However, the obsolete "ti,tilcdc,panel" binding is still
+widely used in many mainline supported platforms that I do not have
+access to and who knows how many custom platforms. So I am afraid we
+have to keep the old bundled tilcdc panel driver around.
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+I'll wait with merging the "ti,tilcdc,panel" patches until these
+patches have been merged:
+https://lists.freedesktop.org/archives/dri-devel/2019-December/247301.html
+https://lists.freedesktop.org/archives/dri-devel/2019-December/247594.html
+So I can refer to them as an example in the comments. 
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 6046f4555852..85e7c26a05c7 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1056,6 +1056,8 @@ patternProperties:
-     description: Extreme Engineering Solutions (X-ES)
-   "^xillybus,.*":
-     description: Xillybus Ltd.
-+  "^xinpeng,.*":
-+    description: Shenzhen Xinpeng Technology Co., Ltd
-   "^xlnx,.*":
-     description: Xilinx
-   "^xunlong,.*":
+But I'll merge "drm/tilcdc: Remove obsolete bundled tilcdc tfp410
+driver" trough drm-misc in couple days if I do not hear any
+objections.
+
+Jyri Sarha (3):
+  drm/tilcdc: Remove obsolete bundled tilcdc tfp410 driver
+  dt-bindings: display: Add obsolete note to "ti,tilcdc,panel" binding
+  drm/tilcdc: panel: Add WARN() with a comment to tilcdc-panel probe
+
+ .../bindings/display/tilcdc/panel.txt         |   6 +
+ .../bindings/display/tilcdc/tfp410.txt        |  21 -
+ drivers/gpu/drm/tilcdc/Makefile               |   1 -
+ drivers/gpu/drm/tilcdc/tilcdc_drv.c           |   3 -
+ drivers/gpu/drm/tilcdc/tilcdc_panel.c         |  10 +
+ drivers/gpu/drm/tilcdc/tilcdc_tfp410.c        | 379 ------------------
+ drivers/gpu/drm/tilcdc/tilcdc_tfp410.h        |  15 -
+ 7 files changed, 16 insertions(+), 419 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/tilcdc/tfp410.txt
+ delete mode 100644 drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
+ delete mode 100644 drivers/gpu/drm/tilcdc/tilcdc_tfp410.h
+
 -- 
-2.24.0
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
