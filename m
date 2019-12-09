@@ -2,160 +2,137 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9624C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 10:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49867C04E30
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 10:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C82A9206D5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 10:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F6620726
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 10:17:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfLIKPk (ORCPT
+        id S1727208AbfLIKRj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 05:15:40 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41026 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfLIKPk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 05:15:40 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id C67AD28EDB5
-Subject: Re: [resend PATCH v6 12/12] drm/mediatek: Add support for mmsys
- through a pdev
-To:     matthias.bgg@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com
-Cc:     sean.wang@mediatek.com, sean.wang@kernel.org,
-        rdunlap@infradead.org, wens@csie.org, hsinyi@chromium.org,
-        frank-w@public-files.de, drinkcat@chromium.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, mbrugger@suse.com
-References: <20191207224740.24536-1-matthias.bgg@kernel.org>
- <20191207224740.24536-13-matthias.bgg@kernel.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <96c850e0-9b12-a943-4e99-9aca7ce8ca8b@collabora.com>
-Date:   Mon, 9 Dec 2019 11:15:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 9 Dec 2019 05:17:39 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38138 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfLIKRj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 05:17:39 -0500
+Received: by mail-ot1-f68.google.com with SMTP id h20so11700851otn.5;
+        Mon, 09 Dec 2019 02:17:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y7flbq6+7YTjmESDNTJ4OzwE7ryXBG98KKcLk04ran8=;
+        b=O9h9oCKXI8QyPSIsTruKomXA+HFse0/yYn/VJnTz/Xp9IGlD471kENT7wmSNYLmK7d
+         aF51qnKPcrWY4N1rFflG+gNdk8Q74dU96RlJBNUso2m5yJfTyKq0J2w3FDERp7c59kNZ
+         kRrx/MPvc41mcNFGHIG+aMLaA41fu3D3TwMyN+F0NdHTjiDaVi+XE4cXE58qysx0gvBx
+         hSmBmxlBtEKw/cpJeKr17JNnUch3GC6uj6Qgg1jtkw46syQNcHjO18v2sAr4F5xgV5/I
+         Jpr5puyhljzgBywZWDRtjJOxfmQ3qSyUN/NLtAahjwiXUFoSUTCgb+eKXIZYJJ2uDvwB
+         HmBg==
+X-Gm-Message-State: APjAAAXyeLZU5CL9+czLVHqpMEORY0ymHZFyLyX3Tt8SKHa0es4nf3WB
+        oAyTxGtiBbjc278H/SeAaRAMvaFxzFGEf5LOaow=
+X-Google-Smtp-Source: APXvYqxddFupz55wwOQITZ3Eom64vQFZfo4vNjcw+JJLnpiE1RU3C/1uMCrZ0t0QSH5gpJnQBZZHhg/WnzmsJ3f+x6M=
+X-Received: by 2002:a9d:2073:: with SMTP id n106mr20867827ota.145.1575886658196;
+ Mon, 09 Dec 2019 02:17:38 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191207224740.24536-13-matthias.bgg@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1569249052-1037-1-git-send-email-biju.das@bp.renesas.com>
+ <dd752192-8caf-39bf-5a91-27adb6a5f84b@linaro.org> <CAMuHMdVvgS17NW7srZ37x5QD3qtZkGQY9xE_97bvF8bwAcmLvg@mail.gmail.com>
+ <OSBPR01MB21035DCC73952DBC72C139B2B84E0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <CAMuHMdU530kruHOf1POKQ_jyvMMU=KY5TEVRgtQg54SHDaGX9A@mail.gmail.com>
+In-Reply-To: <CAMuHMdU530kruHOf1POKQ_jyvMMU=KY5TEVRgtQg54SHDaGX9A@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 9 Dec 2019 11:17:27 +0100
+Message-ID: <CAMuHMdW7NkDk2keWx9vJtRSJ4SVuSk6NVLTcCCS6zpDF-Y5AFQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: timer: renesas: tmu: Document r8a774b1 bindings
+To:     Biju Das <biju.das@bp.renesas.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matthias,
+On Thu, Nov 21, 2019 at 9:55 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Thu, Nov 21, 2019 at 9:52 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> > Any update on the below binding patch?
+>
+> If it won't appear in v5.5-rc1, my plan is to queue it in renesas-devel
+> for v5.6.
 
-Just one nit below and LGTM
+Queued.
 
-On 7/12/19 23:47, matthias.bgg@kernel.org wrote:
-> From: Matthias Brugger <mbrugger@suse.com>
-> 
-> The MMSYS subsystem includes clocks and drm components.
-> This patch adds an initailization path through a platform device
-> for the clock part, so that both drivers get probed from the same
-> device tree compatible.
-> 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
 
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > > -----Original Message-----
+> > > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > Sent: Thursday, October 3, 2019 7:51 AM
+> > > To: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > > Cc: Biju Das <biju.das@bp.renesas.com>; Rob Herring
+> > > <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Thomas
+> > > Gleixner <tglx@linutronix.de>; open list:OPEN FIRMWARE AND FLATTENED
+> > > DEVICE TREE BINDINGS <devicetree@vger.kernel.org>; Geert Uytterhoeven
+> > > <geert+renesas@glider.be>; Simon Horman <horms@verge.net.au>; Chris
+> > > Paterson <Chris.Paterson2@renesas.com>; Fabrizio Castro
+> > > <fabrizio.castro@bp.renesas.com>; Linux-Renesas <linux-renesas-
+> > > soc@vger.kernel.org>
+> > > Subject: Re: [PATCH] dt-bindings: timer: renesas: tmu: Document r8a774b1
+> > > bindings
+> > >
+> > > Hi Daniel,
+> > >
+> > > On Thu, Oct 3, 2019 at 6:09 AM Daniel Lezcano <daniel.lezcano@linaro.org>
+> > > wrote:
+> > > > On 23/09/2019 16:30, Biju Das wrote:
+> > > > > Document RZ/G2N (R8A774B1) SoC in the Renesas TMU bindings.
+> > > > >
+> > > > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/timer/renesas,tmu.txt | 1 +
+> > > > >  1 file changed, 1 insertion(+)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+> > > > > b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+> > > > > index 9dff7e5..29159f4 100644
+> > > > > --- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+> > > > > +++ b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+> > > > > @@ -11,6 +11,7 @@ Required Properties:
+> > > > >    - compatible: must contain one or more of the following:
+> > > > >      - "renesas,tmu-r8a7740" for the r8a7740 TMU
+> > > > >      - "renesas,tmu-r8a774a1" for the r8a774A1 TMU
+> > > > > +    - "renesas,tmu-r8a774b1" for the r8a774B1 TMU
+> > > > >      - "renesas,tmu-r8a774c0" for the r8a774C0 TMU
+> > > > >      - "renesas,tmu-r8a7778" for the r8a7778 TMU
+> > > > >      - "renesas,tmu-r8a7779" for the r8a7779 TMU
+> > > > >
+> > > >
+> > > > The patch does not apply on tip/timers
+> > >
+> > > That's expected, as I queued the previous change in renesas-dt-bindings-for-
+> > > v5.5, cfr.
+> > > https://lore.kernel.org/linux-renesas-soc/244ca7ac-54d1-d07d-762f-
+> > > e832b0e2a267@linaro.org/
+> > >
+> > > Do you want me to know this in renesas-dt-bindings-for-v5.5?
 
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 24 ++++++++++++++++++++++++
->  drivers/gpu/drm/mediatek/mtk_drm_drv.h |  2 ++
->  2 files changed, 26 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> index 210455e9f46c..5ada74d8d0c9 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> @@ -186,6 +186,7 @@ static const struct mtk_mmsys_driver_data mt2701_mmsys_driver_data = {
->  	.ext_path = mt2701_mtk_ddp_ext,
->  	.ext_len = ARRAY_SIZE(mt2701_mtk_ddp_ext),
->  	.shadow_register = true,
-> +	.clk_drv_name = "clk-mt2701-mm",
->  };
->  
->  static const struct mtk_mmsys_driver_data mt2712_mmsys_driver_data = {
-> @@ -195,6 +196,7 @@ static const struct mtk_mmsys_driver_data mt2712_mmsys_driver_data = {
->  	.ext_len = ARRAY_SIZE(mt2712_mtk_ddp_ext),
->  	.third_path = mt2712_mtk_ddp_third,
->  	.third_len = ARRAY_SIZE(mt2712_mtk_ddp_third),
-> +	.clk_drv_name = "clk-mt2712-mm",
->  };
->  
->  static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
-> @@ -202,6 +204,7 @@ static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
->  	.main_len = ARRAY_SIZE(mt8173_mtk_ddp_main),
->  	.ext_path = mt8173_mtk_ddp_ext,
->  	.ext_len = ARRAY_SIZE(mt8173_mtk_ddp_ext),
-> +	.clk_drv_name = "clk-mt8173-mm",
->  };
->  
->  static int mtk_drm_kms_init(struct drm_device *drm)
-> @@ -499,6 +502,24 @@ static int mtk_drm_probe(struct platform_device *pdev)
->  	INIT_WORK(&private->commit.work, mtk_atomic_work);
->  	private->data = of_device_get_match_data(dev);
->  
-> +	/*
-> +	 * MMSYS includes apart from components management a block providing
-> +	 * clocks for the subsystem. We probe this clock driver via a platform
-> +	 * device.
-> +	 */
-> +	if (private->data->clk_drv_name) {
-> +		private->clk_dev = platform_device_register_data(dev,
-> +						private->data->clk_drv_name, -1,
-> +						NULL, 0);
+Gr{oetje,eeting}s,
 
-Replace -1 for PLATFORM_DEVID_NONE
+                        Geert
 
-> +
-> +		if (IS_ERR(private->clk_dev)) {
-> +			dev_err(dev, "failed to register %s platform device\n",
-> +				private->data->clk_drv_name);
-> +
-> +			return PTR_ERR(private->clk_dev);
-> +		}
-> +	}
-> +
->  	private->config_regs = syscon_node_to_regmap(dev->of_node);
->  	if (IS_ERR(private->config_regs))
->  		return PTR_ERR(private->config_regs);
-> @@ -605,6 +626,9 @@ static int mtk_drm_remove(struct platform_device *pdev)
->  	for (i = 0; i < DDP_COMPONENT_ID_MAX; i++)
->  		of_node_put(private->comp_node[i]);
->  
-> +	if (private->clk_dev)
-> +		platform_device_unregister(private->clk_dev);
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-> index 63a121577dcb..8fe9136adc38 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-> @@ -29,11 +29,13 @@ struct mtk_mmsys_driver_data {
->  	unsigned int third_len;
->  
->  	bool shadow_register;
-> +	const char *clk_drv_name;
->  };
->  
->  struct mtk_drm_private {
->  	struct drm_device *drm;
->  	struct device *dma_dev;
-> +	struct platform_device *clk_dev;
->  
->  	unsigned int num_pipes;
->  
-> 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
