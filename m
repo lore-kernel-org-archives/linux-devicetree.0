@@ -2,98 +2,170 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D90C04E30
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE850C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A21D2080D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD2E20828
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:41:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HG2T15sh"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="F3cBvfzc";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="T+0Or8QK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfLIOio (ORCPT
+        id S1727359AbfLIOlB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:38:44 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45231 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727684AbfLIOin (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:38:43 -0500
-Received: by mail-wr1-f68.google.com with SMTP id j42so16412814wrj.12
-        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 06:38:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XVxY3z3jO25K+7clgiD3fKNA3bHm5aN4+J3uKucqrZ8=;
-        b=HG2T15shJSJ54y7RsQuRt9mrYK5WEedIS6rRlx18E8uC8rXb1Y3k2h3iOVkCCumQiP
-         /q/YUh2aJdEeJ7+iA9NMBNpe2riWD1AE9yPIAT6IzvopGKZ47zh3lmHmqaG4/FIeYNYS
-         VUPGF+Ts1Mb5nkM21YxRdIRUX5Ws4I2q1f+GNz+SGpNhJLTVuaSY8M6CEk8s6+bJtzLU
-         I9XIvMVEtyjahCd2WCrRz3mrF399h2tnImT/5d1OYU7FkkQawfI/VSHwOnnEbmVLza7B
-         D1vORy1r1KY866KxIb2HccXS/5TfQfFcLDJ4iWGwFW9IOHmBXz2Hb+pbVhlmdZmJcMWY
-         b0WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XVxY3z3jO25K+7clgiD3fKNA3bHm5aN4+J3uKucqrZ8=;
-        b=YnKNyjrOY+XDD1i6/Bmmm4088MzDQWyeUMn6mlEOYLkQIEmIwlJXTB1DIMnzQLfwLw
-         efLdwFnXNKUb7p7qIFCIQc1iBw0VM+alyVgXXRvYUNieaMf35lvpEto3l11hrCJ1fMUD
-         d1WJ1EYrqE3Pp6LYxlMK7ZIySMQP6cJ1DAEZrX1AZipYs6cfLo7Hu1HBgc7JjdyntyO4
-         zgRjaKDJeoWTKTrFXlIy6//Z7Um/5sPz9WozMA95GJlRFoOL4JiH3uGgV04nJjOQU85p
-         4g8EiaxRCWvgRen0T/LafbjHL3MLnXV3MuOb8zQmDZVdLSOhmMP0xvHiiOQ78mGGI70J
-         9HVg==
-X-Gm-Message-State: APjAAAX1NypGdCZ8hkXUQQOL/mJJo/3HWGIMlGMGkR7+4qFSmUhf97xE
-        apZ3NAtskVlZPr/dc5Jh8+KP+w==
-X-Google-Smtp-Source: APXvYqyIzQHuKh60zkXMrtB1gWGpysiz3Lj3Ozcq7LikDUwc6+3D9PG3cIvaVB6sRShCYkNXyhoVpA==
-X-Received: by 2002:adf:ffc5:: with SMTP id x5mr2597194wrs.92.1575902322035;
-        Mon, 09 Dec 2019 06:38:42 -0800 (PST)
-Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id a1sm1904165wrr.80.2019.12.09.06.38.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 06:38:41 -0800 (PST)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/4] arm64: defconfig: enable FUSB302 as module
-Date:   Mon,  9 Dec 2019 15:38:34 +0100
-Message-Id: <20191209143836.825990-3-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191209143836.825990-1-jbrunet@baylibre.com>
-References: <20191209143836.825990-1-jbrunet@baylibre.com>
+        Mon, 9 Dec 2019 09:41:01 -0500
+Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:53264
+        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726687AbfLIOlB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:41:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575902460;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=FwsTN1S8xTUtsKIR4+YjOOPQ4UCSIVoYV0o+74vu/E8=;
+        b=F3cBvfzc2ApvC/q5bwfcQyj43+Tj+eIRKEaChXmnVPxJwVJ2c7749NjFbnUH/PDV
+        LwoNJjbCLyld1jKm9aqezrn+Omzi+5kJrwsVCJZi//xcrsAR3YQbQp9le2/8qY1xCgd
+        HCT0I1LWaOFfa32QkYq4oGUj69Y1qidZ9kjuuRAI=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575902460;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=FwsTN1S8xTUtsKIR4+YjOOPQ4UCSIVoYV0o+74vu/E8=;
+        b=T+0Or8QKRoFZbmCUBxgGRmn4/i55zayvWHGVRERk6T4dcMJUg+Isihj6UsyKYtwu
+        XLMMZePW++nPjIjkkuhMxfIg2jO5913lLuHYVs6iOINfG5AHCaYAEZrNC5Hr3Ifi1Wv
+        ADDbOWgMZq2Sc76xzwFGIc1mNVEe+1cICCyKEAlI=
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Date:   Mon, 9 Dec 2019 14:41:00 +0000
+From:   ppvk@codeaurora.org
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     adrian.hunter@intel.com, robh+dt@kernel.org,
+        ulf.hansson@linaro.org, asutoshd@codeaurora.org,
+        vbadigan@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, rampraka@codeaurora.org, sboyd@kernel.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, linux-mmc-owner@vger.kernel.org
+Subject: Re: [RFC-v2 1/2] dt-bindings: mmc: sdhci-msm: Add Bus BW vote
+ supported strings
+In-Reply-To: <8d7f2a2f-1312-8983-4e58-80dc6939154c@linaro.org>
+References: <1573220319-4287-1-git-send-email-ppvk@codeaurora.org>
+ <1573220319-4287-2-git-send-email-ppvk@codeaurora.org>
+ <8d7f2a2f-1312-8983-4e58-80dc6939154c@linaro.org>
+Message-ID: <0101016eeb1b3894-fc246837-27f4-447b-b37a-6bc4dd1893dc-000000@us-west-2.amazonses.com>
+X-Sender: ppvk@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2019.12.09-54.240.27.55
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable the type C fusb302 driver as module
+On 2019-11-13 18:46, Georgi Djakov wrote:
+> Hi Pradeep,
+> 
+> Thanks for the patch!
+> 
+> On 8.11.19 г. 15:38 ч., Pradeep P V K wrote:
+>> Add Bus bandwidth voting supported strings for qcom-sdhci controller.
+>> 
+>> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/mmc/sdhci-msm.txt          | 32 
+>> ++++++++++++++++++++++
+>>  1 file changed, 32 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt 
+>> b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> index da4edb1..22fb140 100644
+>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> @@ -39,6 +39,25 @@ Required properties:
+>>  	"cal"	- reference clock for RCLK delay calibration (optional)
+>>  	"sleep"	- sleep clock for RCLK delay calibration (optional)
+>> 
+>> +Optional Properties:
+>> +* Following bus parameters are required for bus bw voting:
+> 
+> "bus bw voting" sounds a bit vague to me. I would say instead:
+> 
+> The following DT properties are required for interconnect bandwidth 
+> scaling.
+> 
+  Thanks for the review. I will address this in my next patch set.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+>> +- interconnects: Pairs of phandles and interconnect provider 
+>> specifier
+>> +		 to denote the edge source and destination ports of
+>> +		 the interconnect path. Please refer to
+>> +		 Documentation/devicetree/bindings/interconnect/
+>> +		 for more details.
+>> +- interconnect-names: List of interconnect path name strings sorted 
+>> in the same
+>> +		order as the interconnects property. Consumers drivers will use
+>> +		interconnect-names to match interconnect paths with interconnect
+>> +		specifiers. Please refer to Documentation/devicetree/bindings/
+>> +		interconnect/ for more details.
+> 
+> Please describe here what there are two paths are for sdhc and how they 
+> are
+> expected to be named. You already responded to this question, so please 
+> include
+> this information here.
+> Hint: Refer to the Documentation for how we described it for other 
+> subsystems.
+> 
+ok. I will address in my next patch set.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 6a83ba2aea3e..33147f54efe6 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -603,6 +603,8 @@ CONFIG_USB_GADGET=y
- CONFIG_USB_RENESAS_USBHS_UDC=m
- CONFIG_USB_RENESAS_USB3=m
- CONFIG_TYPEC=m
-+CONFIG_TYPEC_TCPM=m
-+CONFIG_TYPEC_FUSB302=m
- CONFIG_TYPEC_HD3SS3220=m
- CONFIG_MMC=y
- CONFIG_MMC_BLOCK_MINORS=32
--- 
-2.23.0
+>> +- msm-bus,name: string describing the bus path
+>> +- msm-bus,num-cases: number of configurations in which sdhc can 
+>> operate in
+>> +- msm-bus,num-paths: number of paths to vote for
+>> +- msm-bus,vectors-KBps: Takes a tuple <ib ab>, <ib ab> (2 tuples for 
+>> 2
+>> +				num-paths) The number of these entries *must*
+>> +				be same as num-cases.
+> 
+> If it has to be in DT, could we use this [1] instead of the above? The 
+> patches
+> are not merged yet, but this might be the direction we want to go.
+> 
+> Thanks,
+> Georgi
+> 
+> [1] 
+> http://lore.kernel.org/r/20190807223111.230846-1-saravanak@google.com
+> 
 
+Sure, i will make the change based on [1] in my next patch set.
+
+>> +
+>>  Example:
+>> 
+>>  	sdhc_1: sdhci@f9824900 {
+>> @@ -56,6 +75,19 @@ Example:
+>> 
+>>  		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+>>  		clock-names = "core", "iface";
+>> +		interconnects = <&qnoc 50 &qnoc 512>,
+>> +				<&qnoc 1 &qnoc 544>;
+>> +		interconnect-names = "sdhc-ddr","cpu-sdhc";
+>> +		msm-bus,name = "sdhc1";
+>> +		msm-bus,num-cases = <3>;
+>> +		msm-bus,num-paths = <2>;
+>> +		msm-bus,vectors-KBps =
+>> +		/* No Vote */
+>> +		<0 0>, <0 0>,
+>> +		/* 50 MB/s */
+>> +		<130718 200000>, <133320 133320>,
+>> +		/* 200 MB/s */
+>> +		<1338562 4096000>, <1338562 4096000>;
+>>  	};
+>> 
+>>  	sdhc_2: sdhci@f98a4900 {
+>> 
