@@ -2,112 +2,135 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8604EC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 20:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FC3C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 21:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5322020637
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 20:47:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575924462;
-	bh=xjQtbBTSqhoMGJwn3RUeOi50GwFWIhX8xMZTaQKQu9c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qFNLPGlo3QDgwozS0ad3/Bj8Dth+rMEBwxAK2wuyBnMyrmGgwU9rGSS9SmPK/js61
-	 njkuSIkHY63MLJzF8FdpNtxOXcoQZfMAgUapxZQ6c6Fbg+tt6zC5SX0iM+Ixdg3nzc
-	 3AEhU/6Yrs4pUKphDoET/c74pujP4tGxJQ+o3eRE=
+	by mail.kernel.org (Postfix) with ESMTP id BB897205C9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 21:01:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=seznam.cz header.i=@seznam.cz header.b="Y9baib6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfLIUri (ORCPT
+        id S1726607AbfLIVBr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:47:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:45592 "EHLO foss.arm.com"
+        Mon, 9 Dec 2019 16:01:47 -0500
+Received: from mxa1.seznam.cz ([77.75.78.90]:27568 "EHLO mxa1.seznam.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbfLIUri (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:47:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E147A328;
-        Mon,  9 Dec 2019 12:47:37 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E6833F718;
-        Mon,  9 Dec 2019 12:47:37 -0800 (PST)
-Date:   Mon, 9 Dec 2019 20:47:35 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com, allison@lohutok.net, pdeschrijver@nvidia.com,
-        pgaikwad@nvidia.com, mturquette@baylibre.com,
-        horms+renesas@verge.net.au, Jisheng.Zhang@synaptics.com,
-        krzk@kernel.org, arnd@arndb.de, spujar@nvidia.com,
-        josephl@nvidia.com, vidyas@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        alexios.zavras@intel.com, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v3 09/15] ASoC: tegra: Add fallback for audio mclk
-Message-ID: <20191209204735.GK5483@sirena.org.uk>
-References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-10-git-send-email-skomatineni@nvidia.com>
- <20191209164027.GG5483@sirena.org.uk>
- <7fe879fd-dae3-1e64-1031-cd9f00e31552@gmail.com>
+        id S1726532AbfLIVBq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 16:01:46 -0500
+X-Greylist: delayed 732 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Dec 2019 16:01:45 EST
+Received: from email.seznam.cz
+        by email-smtpc8b.ko.seznam.cz (email-smtpc8b.ko.seznam.cz [10.53.13.225])
+        id 72f6188a29f84ce3735fd4d4;
+        Mon, 09 Dec 2019 22:01:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seznam.cz; s=beta;
+        t=1575925300; bh=PrVyWKz+cStZKFUbfG88xeiAHpw+y5USeILJtHAAfcU=;
+        h=Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:
+         References:MIME-Version:Content-Transfer-Encoding;
+        b=Y9baib6r+H7Lsi/Zm0rTxuMeV2IkRPtv/1g/4pt17rEs7ZouzKwYgFRFxtN9QzV2d
+         vDiOXLRyCCVKxcJEIukCA2Rpl1DwZmG1o0UKcp7yWXYa/TvLthcx4YNXJIPD5Ov4BO
+         n/c4GpXi5joNzTGcvsiIcrhXOm0y7tcXG3TQ/taM=
+Received: from localhost.localdomain (212.69.128.228 [212.69.128.228])
+        by email-relay21.ko.seznam.cz (Seznam SMTPD 1.3.108) with ESMTP;
+        Mon, 09 Dec 2019 21:49:25 +0100 (CET)  
+From:   michael.srba@seznam.cz
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Michael Srba <Michael.Srba@seznam.cz>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 2/2] dt-bindings: input/touchscreen: add bindings for zinitix
+Date:   Mon,  9 Dec 2019 21:46:29 +0100
+Message-Id: <20191209204629.27243-2-michael.srba@seznam.cz>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191209204629.27243-1-michael.srba@seznam.cz>
+References: <20191209204629.27243-1-michael.srba@seznam.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LQ77YLfPrO/qF/pM"
-Content-Disposition: inline
-In-Reply-To: <7fe879fd-dae3-1e64-1031-cd9f00e31552@gmail.com>
-X-Cookie: We read to say that we have read.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Michael Srba <Michael.Srba@seznam.cz>
 
---LQ77YLfPrO/qF/pM
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch adds dts bindings for the zinitix bt541 touchscreen.
 
-On Mon, Dec 09, 2019 at 11:31:59PM +0300, Dmitry Osipenko wrote:
-> 09.12.2019 19:40, Mark Brown =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+Signed-off-by: Michael Srba <Michael.Srba@seznam.cz>
+---
+ changes in v2: none
+ changes in v3: document zinitix,mode property
 
-> > Why would this need to be a stable fix?  Presumably people with stable
-> > kernels are using the old device tree anyway?
 
-> At least Rob Herring is asking to maintain backwards compatibility
-> because some ditros are using newer device-trees with stable kernels.
+ .../bindings/input/touchscreen/zinitix.txt    | 40 +++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+ 2 files changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/zinitix.txt
 
-You're talking about forwards compatibility not backwards here.  Are
-those distros actually using LTS kernels?
-
-> I'm personally also tending to use the newer DTB with older kernel
-> version whenever there is a need to check something using stable kernel.
-> Perhaps losing sound is not very important, but will be nicer if that
-> doesn't happen.
-
-That really does sound like a "you broke it, you get all the pieces"
-situation TBH...  I'd be a lot more comfortable if the stable kernels
-were sticking to bugfix only though I do appreciate that they're not
-really that any more.
-
---LQ77YLfPrO/qF/pM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3usucACgkQJNaLcl1U
-h9DLZgf/bl+y6tN1f9+6Q5i4PkGjVAppOzDxi0mDZ6TrvcSLsNfAhK9+1IH7w0+x
-F90tauu6Flsm9/TnoDK5Csuotm+nKlkXidXNL5qfSzW4azrXes5gdOrwpicKOnEG
-7T92jLjHOCPaANNqKrtX+29qAamyxmKOCW/8AKH8SNjerkCDZfZks3yjqilm4i4A
-6jwUUAi9ij8TvZlSGteUlqfmib7FdxodH0Gud2q3lYFUKWrKpGnPh823iHtTpiKK
-EGDYhbcuS1BeEP6dB/7baejQjkrEjpz7YslmD2KjGlUWIRVEpKPqU/SY63e7mChB
-UDCefmC858Tzlkyi7AFFmjnFrTfrMQ==
-=IA00
------END PGP SIGNATURE-----
-
---LQ77YLfPrO/qF/pM--
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/zinitix.txt b/Documentation/devicetree/bindings/input/touchscreen/zinitix.txt
+new file mode 100644
+index 000000000000..446efb9f5f55
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/zinitix.txt
+@@ -0,0 +1,40 @@
++Device tree bindings for Zinitx BT541 touchscreen controller
++
++Required properties:
++
++ - compatible		: Should be "zinitix,bt541"
++ - reg			: I2C address of the chip. Should be 0x20
++ - interrupts		: Interrupt to which the chip is connected
++
++Optional properties:
++
++ - vdd-supply		: Analog power supply regulator on VCCA pin
++ - vddo-supply		: Digital power supply regulator on VDD pin
++ - zinitix,mode		: Mode of reporting touch points. Some modes may not work
++			  with a particular ts firmware for unknown reasons. Available
++			  modes are 1 and 2. Mode 2 is the default and preferred.
++
++The touchscreen-* properties are documented in touchscreen.txt in this
++directory.
++
++Example:
++
++	i2c@00000000 {
++		/* ... */
++
++		bt541@20 {
++			compatible = "zinitix,bt541";
++			reg = <0x20>;
++			interrupt-parent = <&msmgpio>;
++			interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&tsp_default>;
++			vdd-supply = <&reg_vdd_tsp>;
++			vddo-supply = <&pm8916_l6>;
++			touchscreen-size-x = <540>;
++			touchscreen-size-y = <960>;
++			zinitix,mode = <2>;
++		};
++
++		/* ... */
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 967e78c5ec0a..1b0b5e23267d 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1066,6 +1066,8 @@ patternProperties:
+     description: Shenzhen Zidoo Technology Co., Ltd.
+   "^zii,.*":
+     description: Zodiac Inflight Innovations
++  "^zinitix,.*":
++    description: Zinitix Co., Ltd
+   "^zte,.*":
+     description: ZTE Corp.
+   "^zyxel,.*":
+-- 
+2.24.0
