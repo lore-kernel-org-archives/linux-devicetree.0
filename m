@@ -2,75 +2,71 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED528C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 21:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E29C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 22:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997BB206D5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 21:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33785206D5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 22:12:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tY1B/g/W"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PLTuiULk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfLIVwR (ORCPT
+        id S1726522AbfLIWMi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:52:17 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34127 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfLIVwR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 16:52:17 -0500
-Received: by mail-pg1-f196.google.com with SMTP id r11so7793084pgf.1
-        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 13:52:16 -0800 (PST)
+        Mon, 9 Dec 2019 17:12:38 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35935 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfLIWMi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 17:12:38 -0500
+Received: by mail-pl1-f193.google.com with SMTP id k20so6376530pls.3
+        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 14:12:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:in-reply-to:references:date:message-id
          :mime-version;
-        bh=i5+TnwHki7CwB9DGX3Mta0rJCHBm+w/ZGchbVbmsZYk=;
-        b=tY1B/g/W6Gp0eDto/4M5qAgnEJFLIsacGgPoR131eRiJk7fUtWl4e5TQIlC1CAiwdY
-         b2TBMj1z/kkjZxyKSMYaCnnAel2maeSAGyyUqpShy5+reGnTxRvNPJnUa54b2HshK+sw
-         t+J0fkA28IJXOSml4Jbt+zWayFEF8JZiQi3qqIpF4RsKMh+2RK1GijtLBE9c5vl5ZJ2o
-         oK2ucjV+VnSS61VxdpB2OPot2SGhvHBBB+vFt9nNelUOZSqQIPhVC1ofDKm0wlM+tnbe
-         yYfDf7wS04Ibq9CrYi9EXfDHETyRs5qRNWbuNJ7rOu+M7/dQiZLDtmcjMWT9YUPboBG/
-         vJ3g==
+        bh=ItZ6nMPESHqLIASUC8LoX6fE4/wm+TwTGtRQ1RnKUZ0=;
+        b=PLTuiULkvl88lhZJ7eXEZyEeyBFYh9ogHEt4KRJu32M2cSkg+0HS26NQbqT2+JfAs8
+         dFf9qlMcSwGgR4627eFALudbNGexXTuCa6SEd7v3Hx7SK9dSKEmEDuk0v3Y9NsZMgpq/
+         mxKlvx6opX6J7hpzmDQ29YK/mcz6eYhMYpvY7riVO3pCebZFVxPLkDvLO1gjPrP4dbl0
+         qw0SWvQc7uOLp3QQ6G2B5Umx3KsUyg6T/YMGTRGxF0aoJzaXX7Q/e5NoJnusYIyu4tta
+         Y4nffcrao80vVYOpikWwtkLJbMFNjwwLDRDUfSTT/wF3gKdXO1iPaFge9FbUtvSWhNtK
+         rqrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=i5+TnwHki7CwB9DGX3Mta0rJCHBm+w/ZGchbVbmsZYk=;
-        b=lFnCB/hHiZmEkLJUaIuXv98UsyrxrAIciNdJeCJ0OVMIXyd/DI2yeid3Kf1hrjMHBv
-         N7sgH7HlCWpyffPyl7Czqt/1YkrdvKkiRBkC5Vu/6wuU0+pYuFZ7NceUPJYEHTXy30fC
-         H0udAJjE/R/+KBPcXQuPY+1LHWBkd4X5FG7o92BXegA/4amNfQdTq+Tbpx5WY+i+XajB
-         Gawhgg/xhmREZ8Va+TscQjjzanlN0OiR4mW0QY5rIgn0uhC6x9PLr2RKjpRQksBJG145
-         Q5EAixMuSFybZSPUTFgRXFI8CfpDSYfiOHZeMwjLde2bJZHP4hn1QaNnMuX3nLNRL0Jb
-         h3xQ==
-X-Gm-Message-State: APjAAAX4aKRYcK7MwHuFEaCVQLkSpTsY1y9aGq5Ft9wPIa53Tg11A4Jv
-        nCac9glvUqTJSjd6Mq6pOIGKYzBVQfNdaA==
-X-Google-Smtp-Source: APXvYqwJ+lQOvhufrrs8iA3BVrUFuPSN7n3NPPeGKXKlHT1K24DHqB1iVmQmDkzXvU5fBntaC/ym1Q==
-X-Received: by 2002:a63:1624:: with SMTP id w36mr19463046pgl.404.1575928336235;
-        Mon, 09 Dec 2019 13:52:16 -0800 (PST)
+        bh=ItZ6nMPESHqLIASUC8LoX6fE4/wm+TwTGtRQ1RnKUZ0=;
+        b=pihAz9vLjkzzyBes06a3+eaOuEpQgB4KAB3TbbiA+fiFEsy2PzH+sksDJri8+bpL9Z
+         pjUarL5E0KMVRTHEbj0dMpizO9X4QFRDbfl2L+OOY5VcBiafE4X9/UW5oiERjKtHYQXV
+         kuA9gpaPxHh/uPjFBrhA6Pzf4vLPpDNwier1o5HgLsrCKxLJFll5VwVGO2djIV5MAtR4
+         GuHgy+2FQhvHUwHQEkovAzkoBd1ZbzMSS1QoOC1nvpitw79CxERw7E3yC6Z3Cl2v9K6N
+         4xoPBc/dLMYlnuOn3Fx1gNOBouDZhuIe2s4Npdhokv2Wl73hrGMdKxNp7r7x5+LoV+uz
+         BotQ==
+X-Gm-Message-State: APjAAAV7gfaEVhl2UPwHNkCoACMW4Pw/4JVYUan4MVhOlP1uxklFI57Z
+        CQCshmwXv0tpX4vz71nMJ6D+wuo7O8mQ1w==
+X-Google-Smtp-Source: APXvYqx22xb5jLxK6hTsSuOBQ53SZCEaDbusHD9ujqDQUXDe6tywX359eNJglK+iOHzOxi2uui8Ynw==
+X-Received: by 2002:a17:902:a614:: with SMTP id u20mr31864485plq.107.1575929557672;
+        Mon, 09 Dec 2019 14:12:37 -0800 (PST)
 Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id i127sm465841pfe.54.2019.12.09.13.52.15
+        by smtp.gmail.com with ESMTPSA id q13sm345574pjc.4.2019.12.09.14.12.36
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Dec 2019 13:52:15 -0800 (PST)
+        Mon, 09 Dec 2019 14:12:37 -0800 (PST)
 From:   Kevin Hilman <khilman@baylibre.com>
-To:     Xingyu Chen <xingyu.chen@amlogic.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Xingyu Chen <xingyu.chen@amlogic.com>,
+To:     Anand Moon <linux.amoon@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Jerome Brunet <jbrunet@baylibre.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] arm64: dts: meson: add reset controller for Meson-A1 SoC
-In-Reply-To: <1569738255-3941-2-git-send-email-xingyu.chen@amlogic.com>
-References: <1569738255-3941-1-git-send-email-xingyu.chen@amlogic.com> <1569738255-3941-2-git-send-email-xingyu.chen@amlogic.com>
-Date:   Mon, 09 Dec 2019 13:52:14 -0800
-Message-ID: <7hsgltrwtt.fsf@baylibre.com>
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC-next 0/1] Odroid C2: Enable DVFS for cpu
+In-Reply-To: <20191101143126.2549-1-linux.amoon@gmail.com>
+References: <20191101143126.2549-1-linux.amoon@gmail.com>
+Date:   Mon, 09 Dec 2019 14:12:36 -0800
+Message-ID: <7hfthtrvvv.fsf@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
@@ -78,19 +74,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Xiangyu,
+Anand Moon <linux.amoon@gmail.com> writes:
 
-Xingyu Chen <xingyu.chen@amlogic.com> writes:
-
-> Add the reset controller device of Meson-A1 SoC family
+> Some how this patch got lost, so resend this again.
 >
-> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+> [0] https://patchwork.kernel.org/patch/11136545/
+>
+> This patch enable DVFS on GXBB Odroid C2.
+>
+> DVFS has been tested by running the arm64 cpuburn
+> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
+> PM-QA testing
+> [2] https://git.linaro.org/power/pm-qa.git [cpufreq testcase]
+>
+> Tested on latest U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
 
-I just realized I missed the DT patch for this series.  Sorry about
-that.  Generally it helps if you (re)send the DT patches separate from
-the driver, and if if it's been a couple weeks and you haven't heard
-from me, don't hesitate to ping me.
+Have you tested with the Harkernel u-boot?
 
-Queuing this up now, with Neils tag.  Sorry for the delay.
+Last I remember, enabling CPUfreq will cause system hangs with the
+Hardkernel u-boot because of improperly enabled frequencies, so I'm not
+terribly inclined to merge this patch.
+
+> Patch based on my next-20191031 for 5.5.x kernel.
+> Hope this is not late entry.
+
+Re: "too late".  FYI... when you post things as RFC, it means you're
+looking for comments (Request For Comment) but that it's not intended
+for merging.
+
+I didn't see any comments on this, but I also didn't see a non-RFC
+follow-up, so I didn't queue it for v5.5.
 
 Kevin
