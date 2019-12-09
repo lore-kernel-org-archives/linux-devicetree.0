@@ -2,101 +2,98 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AA4C00454
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 20:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB83C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 20:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB672073D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 20:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575922207;
-	bh=Diy0RAMb2nmCr+FApInTdUlXJLEjOPXITAFoPxtK6Lw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h/tX8fdhJE+pRq19AGVSDVxnijl6O2P6dXQwf46YeM0zG8t18VCC0Ts+80NKFjJBD
-	 t2n5hOnlt5K3QIOEuLI1CXDr0v0i0MDbXgTTpuzgD9aGghZHa58akODizD1GmX0BpW
-	 bGfXRq7DEUa3TYsZofMoc6t3ywTI1ZoRnlgDhP/o=
+	by mail.kernel.org (Postfix) with ESMTP id CB12321556
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 20:12:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sPJ9LnkI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbfLIUKG (ORCPT
+        id S1726614AbfLIUMj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:10:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfLIUKG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:10:06 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B75E214D8;
-        Mon,  9 Dec 2019 20:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575922205;
-        bh=Diy0RAMb2nmCr+FApInTdUlXJLEjOPXITAFoPxtK6Lw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sZFLl1YErRFnSKRSMXOxm4n5/u2qhnNLjtgxyrohyoLZ+o8nhFndXIBnXQsAU+MM2
-         /0gsZJcFQhNPp305wZejd1Lh83xdrq+035ePlZU9W2siegqsB+I00VwRzR+OyCEFWq
-         FERNlByejYl2Jd5EifpsZNDR2TjecUkM4vsyRe9g=
-Date:   Mon, 9 Dec 2019 20:37:29 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Alistair Francis <alistair@alistair23.me>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, wens@csie.org,
-        alistair23@gmail.com
-Subject: Re: [PATCH] arm64: allwinner: Enable Bluetooth and WiFi on sopine
- baseboard
-Message-ID: <20191209193729.jfw2z4iqlhrzohse@hendrix.lan>
-References: <20191207192249.8346-1-alistair@alistair23.me>
+        Mon, 9 Dec 2019 15:12:39 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58066 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfLIUMi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 15:12:38 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9KCYgE127564;
+        Mon, 9 Dec 2019 14:12:34 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575922354;
+        bh=b1dx9RfgDJ5UAlXPjVOL/TLMzf8DwKXRH4HKbwoZ1xk=;
+        h=From:To:CC:Subject:Date;
+        b=sPJ9LnkI4+PRHXs90VTX1TGCSOAmuoJF30NNu6y+dlsU+Awu0asI7S+OpXhAxlUIK
+         V0Mlu9D/4/XWg+iKV+mGGD+FRsq2j6DiKTSq+KHegmuEN/zUsRhK+RuEQLrmcbALBc
+         ckaPRZ+cLxnybGux/LC8b+PqjCRoZmBMowMPFbLE=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9KCYP5036567
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Dec 2019 14:12:34 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 14:12:33 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 14:12:34 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9KCX3Y022354;
+        Mon, 9 Dec 2019 14:12:33 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <bunk@kernel.org>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next v3 0/2] Fix Tx/Rx FIFO depth for DP83867
+Date:   Mon, 9 Dec 2019 14:10:23 -0600
+Message-ID: <20191209201025.5757-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191207192249.8346-1-alistair@alistair23.me>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Dec 07, 2019 at 11:22:49AM -0800, Alistair Francis wrote:
-> The sopine board has an optional RTL8723BS WiFi + BT module that can be
-> connected to UART1. Add this to the device tree so that it will work for
-> users if connected.
->
-> Signed-off-by: Alistair Francis <alistair@alistair23.me>
-> ---
->  .../dts/allwinner/sun50i-a64-sopine-baseboard.dts  | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> index 920103ec0046..0a91f9d8ed47 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> @@ -214,6 +214,20 @@ &uart0 {
->  	status = "okay";
->  };
->
-> +&uart1 {
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-> +        status = "okay";
-> +
-> +        bluetooth {
-> +                compatible = "realtek,rtl8723bs-bt";
-> +                reset-gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>; /* PL4 */
-> +                device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
-> +                host-wake-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-> +                firmware-postfix = "pine64";
-> +        };
-> +};
-> +
+Hello
 
-Output from checkpatch:
-total: 10 errors, 11 warnings, 0 checks, 20 lines checked
+The DP83867 supports both the RGMII and SGMII modes.  The Tx and Rx FIFO depths
+are configurable in these modes but may not applicable for both modes.
 
-More importantly, that binding isn't documented, and doesn't have a
-driver either.
+When the device is configured for RGMII mode the Tx FIFO depth is applicable
+and for SGMII mode both Tx and Rx FIFO depth settings are applicable.  When
+the driver was originally written only the RGMII device was available and there
+were no standard fifo-depth DT properties.
 
-I guess you want to have a look at:
-https://www.spinics.net/lists/arm-kernel/msg771488.html
+The patchset converts the special ti,fifo-depth property to the standard
+tx-fifo-depth property while still allowing the ti,fifo-depth property to be
+set as to maintain backward compatibility.
 
-Maxime
+In addition to this change the rx-fifo-depth property support was added and only
+written when the device is configured for SGMII mode.
+
+Dan
+
+Dan Murphy (2):
+  dt-bindings: dp83867: Convert fifo-depth to common fifo-depth and make
+    optional
+  net: phy: dp83867: Add rx-fifo-depth and tx-fifo-depth
+
+ .../devicetree/bindings/net/ti,dp83867.txt    | 12 +++-
+ drivers/net/phy/dp83867.c                     | 62 +++++++++++++++----
+ 2 files changed, 58 insertions(+), 16 deletions(-)
+
+-- 
+2.23.0
+
