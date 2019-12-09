@@ -2,77 +2,85 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DACDC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90D5C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2726E2465B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF501207FF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:01:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NBwxxhZD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbfLISAl (ORCPT
+        id S1726677AbfLISB6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:00:41 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:51370 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfLISAl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 13:00:41 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 975532006E;
-        Mon,  9 Dec 2019 19:00:37 +0100 (CET)
-Date:   Mon, 9 Dec 2019 19:00:35 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] dt-bindings: display: Convert a bunch of panels to DT
- schema
-Message-ID: <20191209180035.GA14817@ravnborg.org>
-References: <20191119231309.18295-1-robh@kernel.org>
- <20191130194337.GE24722@ravnborg.org>
- <CAL_Jsq+AsCOQh89t1foJjDFFoQzfx5NythgdcbQGYNxRHRjB2A@mail.gmail.com>
- <20191204201452.GA30193@ravnborg.org>
- <CAL_JsqLNSF3j9q49SVTpg=742dgt-60BRhXUxEVUXyYtroAqOQ@mail.gmail.com>
+        Mon, 9 Dec 2019 13:01:58 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43480 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbfLISB6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 13:01:58 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9I1qIK087440;
+        Mon, 9 Dec 2019 12:01:52 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575914512;
+        bh=NVEdmtqnF1FgORctGvl5SiwspTg/hxgrR/2+ib3BYgA=;
+        h=From:To:CC:Subject:Date;
+        b=NBwxxhZD5gqGRacKerGB5I1+h++zxhq2FYqv+93TAAVS5lgydpNhF9bFvaohMAfOj
+         RD9qAOngiUybFfVwX7XmICvbb7YTpY0U8JMRp/5fhBf0ofPOpYsOqYANa4f5K+PC94
+         70MXdoTRoPCx2gMyrka7x9Jn7OxrfPbyHhYw8UqI=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9I1qpr046727
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Dec 2019 12:01:52 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 12:01:52 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 12:01:52 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9I1qbi099391;
+        Mon, 9 Dec 2019 12:01:52 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <bunk@kernel.org>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next v2 0/2] Rebase of patches
+Date:   Mon, 9 Dec 2019 11:59:41 -0600
+Message-ID: <20191209175943.23110-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLNSF3j9q49SVTpg=742dgt-60BRhXUxEVUXyYtroAqOQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=_nXCi8Np0ha-vpYLopoA:9 a=CjuIK1q_8ugA:10
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob.
+Hello
 
-> 
-> Yes. The issue would be enforcing the big disclaimer of "Do not add
-> your panel here unless it has a single power rail." (And anything else
-> we think of). Between a single line add vs. a whole new doc, you know
-> what people will pick. I guess panels could still be moved out of the
-> common doc later on. We'd also have to be fighting off the "let me add
-> just one new property for my panel".
+This is a rebase of the dp83867 patches on top of the net-next tree
 
-If the panel cannot be supported by the panel-simple driver then
-this is a good sign that it does not belong in the bindings file.
-Or something like this.
+Dan
 
-I do not see it as a 1:1 for all panels but I guess most panels
-supported by panel-simple would go in a single bindings file.
+Dan Murphy (2):
+  dt-bindings: dp83867: Convert fifo-depth to common fifo-depth and make
+    optional
+  net: phy: dp83867: Add rx-fifo-depth and tx-fifo-depth
 
-> You did. I'd like to hear Thierry's thoughts on this before going down
-> this path.
-Seconded, Thierry?
+ .../devicetree/bindings/net/ti,dp83867.txt    | 12 +++-
+ drivers/net/phy/dp83867.c                     | 62 +++++++++++++++----
+ 2 files changed, 58 insertions(+), 16 deletions(-)
 
-	Sam
+-- 
+2.23.0
+
