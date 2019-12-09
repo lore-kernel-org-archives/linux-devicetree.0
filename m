@@ -2,124 +2,137 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76159C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 19:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5089C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476F4205ED
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 19:31:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KIjyedjy"
+	by mail.kernel.org (Postfix) with ESMTP id 811B32080D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbfLITbp (ORCPT
+        id S1726623AbfLITeO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:31:45 -0500
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:42632 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfLITbp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 14:31:45 -0500
-Received: by mail-qk1-f201.google.com with SMTP id m13so10660591qka.9
-        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 11:31:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=prB1mk9zvmGsCm6yR+oUx6Ow5sTMlrAQcgGbY8ED3/U=;
-        b=KIjyedjy8nKNq/kpAMbwxkGMECaIvC3qdOkXTSD8uZOSbIA1zqIMm+d3v2GbyU9CsC
-         cewFDS9udMTcBDkUKZUS6p0AzmHYec6yPjkNtBiJZWVnBSF29uq9nXNAZDuzByhgHKGI
-         ud9yyn+iZ2S5WHgMw26FIeid04csehS+Fyof2aQAmzeurrobWJFSe1wjhKgN98C+hUsq
-         +em5TRFqHNGUupbBoZEuGtb1MxxLbu7ZE5qh/qvhG83X9bXVs4NUhouWhSvPe9WStWxm
-         JzpxqaZiGGvDXbAfO+PtALH4PaAOqAlVhkJqJJNAqh2Fx2P4mXyhyZfE24NwwRNXHjBc
-         4Eng==
+        Mon, 9 Dec 2019 14:34:14 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35003 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfLITeO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 14:34:14 -0500
+Received: by mail-oi1-f193.google.com with SMTP id k196so7477121oib.2;
+        Mon, 09 Dec 2019 11:34:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=prB1mk9zvmGsCm6yR+oUx6Ow5sTMlrAQcgGbY8ED3/U=;
-        b=pMmDNpMmmdAS3OTb8kEtx0qRJD3j+aR7Vz1+UybWh8YKCAgamKy+t50+rjtx7kcs+A
-         gIA5D/S9S/RJ2tUoVG7uvyhoYTOvxrb6SzJKp83jBi0P2H7sybMvgqAlmHebK6kFAuQX
-         5tNUXhI+ZY2KFhBnZqyuwyPyeewKJZB55QO09QLzyLYuE4pVJatT/MqlXEs+RaqfJCyt
-         DsoXZKN3Mf5WejX7jtbpFVkIrl9xD3+Lt6tOeoMVrOSPNO1rK9BRCiLBdCIGDh8sOCUa
-         pfKcZJnZRR4qP88T7w+5VtiSwJoIiy5ihUk12lbwX1mlbLw9AA64vnKRgxaWMB+vd1wN
-         z9lA==
-X-Gm-Message-State: APjAAAWcG1cga04yimVYrpDic7O8lXfPa+kkPmtJeOAEAGk4S2MlZgZ5
-        l8d099pyhAnaWYYiDNkF/GW8l4WoNzvXO74=
-X-Google-Smtp-Source: APXvYqw9GHdPYoc93yCyiJKvU4kxnAKjk+GlfxyVvVSYOkfPpKh49jd7LxoXpmTmYo3eAgsuBRRMGKQCgC8Tku8=
-X-Received: by 2002:ac8:5155:: with SMTP id h21mr26336525qtn.174.1575919904561;
- Mon, 09 Dec 2019 11:31:44 -0800 (PST)
-Date:   Mon,  9 Dec 2019 11:31:19 -0800
-Message-Id: <20191209193119.147056-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: [PATCH v3] of/platform: Unconditionally pause/resume sync state
- during kernel init
-From:   Saravana Kannan <saravanak@google.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>
-Cc:     kernel test robot <lkp@intel.com>, kernel-team@android.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gPj5BnCRFlVLAcTocdSdKOif0Ppf6lvvauzu7g3ZWKw=;
+        b=TGBAOSU73tA20LO5J0gKwaJsLh7g8tzWmTqEPLKkjtv5IWhrf4Wcmv0TXnjxqgL1jF
+         yBC1O9bdvqMQq33RimLfL/ksA1Cmyr9qX8HizrOeGMJgCGR+VypKI90KWVIoUC19NG/A
+         LxhIOMr49DTnR+kFuE1K+xhQo/h3YX60NAmSqfVkq+5yGWjSLz8cPG2muk7XT+RGrvE6
+         aGpiRRBDspUMs+FPalSct5iyOLq7ynW6eGQViB/TzVqd5+aYS9ddd2PDvQ4NUzUTgQCg
+         EElt3hH8q9QNFd9+31jFkmAGqM/x10Mo7GsOHgGzf8cyenhvU58jyvRwLv8GNEU0lGxg
+         y52A==
+X-Gm-Message-State: APjAAAW1d5eON/a4zDieha6S1Uq4P/Zz08jbswp223vrkwFt8ShnqxtS
+        59S1XLycvi56/e6LdB5kPojw8B+KYykPdKELydY=
+X-Google-Smtp-Source: APXvYqwJ0Yps000beZiYNpb0g4ISSQQDOIbeEGH4u9DT8U2zSZ93q58ESvoZEPACv8jSmyP8+1aFBlobGs4verKHE88=
+X-Received: by 2002:aca:4e87:: with SMTP id c129mr624324oib.153.1575920053160;
+ Mon, 09 Dec 2019 11:34:13 -0800 (PST)
+MIME-Version: 1.0
+References: <20191206134202.18784-1-chris.brandt@renesas.com>
+ <20191206134202.18784-3-chris.brandt@renesas.com> <CAMuHMdXW6_tCcx_DE66qBSTK8XmWyWm82ZD6h-N5YX_+xcvBtw@mail.gmail.com>
+ <TY1PR01MB1562BC84E2ECF81487A780D38A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB1562BC84E2ECF81487A780D38A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 9 Dec 2019 20:34:02 +0100
+Message-ID: <CAMuHMdWM79gxugmxiQVdGoivN5mAXT+5sMNOmJ-YyPyOZ39W=Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/6] dt-bindings: spi: Document Renesas SPIBSC bindings
+To:     Chris Brandt <Chris.Brandt@renesas.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit 5e6669387e22 ("of/platform: Pause/resume sync state during init
-and of_platform_populate()") paused/resumed sync state during init only
-if Linux had parsed and populated a devicetree.
+Hi Chris,
 
-However, the check for that (of_have_populated_dt()) can change after
-of_platform_default_populate_init() executes.  One example of this is
-when devicetree unittests are enabled.  This causes an unmatched
-pause/resume of sync state. To avoid this, just unconditionally
-pause/resume sync state during init.
+On Mon, Dec 9, 2019 at 4:45 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Mon, Dec 9, 2019, Geert Uytterhoeven wrote:
+> > > +    # This example is for "External Address Space Read Mode"
+> > > +    spibsc: spi@1f800000 {
+> > > +        compatible = "renesas,r7s9210-spibsc";
+> > > +        reg = <0x1f800000 0x100>, <0x20000000 0x10000000>;
+> > > +        clocks = <&cpg CPG_MOD 83>;
+> > > +        power-domains = <&cpg>;
+> > > +        interrupts = <GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH>;
+> > > +        #address-cells = <1>;
+> > > +        #size-cells = <0>;
+> > > +    };
+> > > +    flash@20000000 {
+> >
+> > This does not describe the hardware topology: the flash node should be a
+> > subnode of the spibsc node, as it relies on the spibsc being clocked.
+>
+> So for the "XIP" case, I originally tried adding an "mtd-rom" flash node
+> under the spibsc node, but then the mtd-rom part never got probed. I
+> guess that was because it didn't register a SPI controller.
 
-Fixes: 5e6669387e22 ("of/platform: Pause/resume sync state during init and of_platform_populate()")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Reviewed-by: Frank Rowand <frowand.list@gmail.com>
----
+To probe subnodes, your node needs to either be compatible with e.g.
+"simple-bus", or have its own driver that calls of_platform_populate().
 
-v1->v2:
-- Updated the commit text to address Frank's comments
-- Added Frank's R-b
-v2->v3:
-- Added this change log to address Greg's comments
+> But, I guess if we go your method...
+> >     spibsc: spi@1f800000 {
+> >                 compatible = "renesas,r7s9210-spibsc", "simple-pm-bus";
+>
+> Then after the spibsc driver fails and the "simple-pm-bus" driver tries,
+> it will succeed and the simple-pm-bus driver will start probing the
+> subnodes (in my case, the mtd-rom).
 
- drivers/of/platform.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Yes, and unlike "simple-bus", "simple-pm-bus" does handle Runtime PM,
+so the clock will be enabled when needed.
+BTW, I still think "simple-bus" should handle Runtime PM, and
+"simple-pm-bus" should not exist.
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index d93891a05f60..3371e4a06248 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -518,10 +518,11 @@ static int __init of_platform_default_populate_init(void)
- {
- 	struct device_node *node;
- 
-+	device_links_supplier_sync_state_pause();
-+
- 	if (!of_have_populated_dt())
- 		return -ENODEV;
- 
--	device_links_supplier_sync_state_pause();
- 	/*
- 	 * Handle certain compatibles explicitly, since we don't want to create
- 	 * platform_devices for every node in /reserved-memory with a
-@@ -545,8 +546,7 @@ arch_initcall_sync(of_platform_default_populate_init);
- 
- static int __init of_platform_sync_state_init(void)
- {
--	if (of_have_populated_dt())
--		device_links_supplier_sync_state_resume();
-+	device_links_supplier_sync_state_resume();
- 	return 0;
- }
- late_initcall_sync(of_platform_sync_state_init);
+> > and applying "[PATCH] mtd: maps: physmap: Add minimal Runtime PM support"[1],
+> > the memory-mapped case should work, without your spibsc driver.
+>
+> Good.
+> So we can add the SPI-BSC clocks for RZ/A1 and RZ/A2 (even without the
+> SPI-BSC driver) and still have a working solution for XIP_KERNEL.
+>
+> So in the end, this all seems like a very simple solution to get
+> everything I wanted with minimal complexity.
+
+Exactly.
+
+> But, if Sergei is going a completely different route for R-Car, I guess
+> I need to understand that first what he is trying to do before I really
+> push for this driver getting in.
+> Again, this driver was only when using the SPI-BSC HW, not the full
+> (different) R/W HyperFlash controller HW. That would be a separate driver.
+
+Yeah, the "real" serial FLASH functionality needs its own driver.
+How to fit all the SPI/QSPI/HF pieces together in a working driver is
+still TBD.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.24.0.393.g34dc348eaf-goog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
