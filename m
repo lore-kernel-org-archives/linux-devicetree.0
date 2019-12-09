@@ -2,516 +2,131 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3C4C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 08:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38DFC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99BEE2077B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 08:57:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575881868;
-	bh=UdVrxFkQyZG28u0Hdc95DyuTak04p9szo9hdkx4JIik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n3VzM4PZ051yuXa+mjqtm5OJcLbplV1HZMGIByyhw6Pu9S+Bu0I5VdbZVKBrFPVYz
-	 lTVgSFVCMspSbpJZu3l138uCJ4tKBSZKeH1ZMSbHWqbtQsLGkiWiM4VL8V+u2JEXOv
-	 SsgSwdOBYC/sIIIYER930des3ZYF1ra3LPcr48k0=
+	by mail.kernel.org (Postfix) with ESMTP id 84AD620692
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:02:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="BmOe7vHM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfLII5s (ORCPT
+        id S1727243AbfLIJCH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 03:57:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbfLII5r (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Dec 2019 03:57:47 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        Mon, 9 Dec 2019 04:02:07 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:33663 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfLIJCG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:02:06 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 870CE20692;
-        Mon,  9 Dec 2019 08:57:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575881866;
-        bh=UdVrxFkQyZG28u0Hdc95DyuTak04p9szo9hdkx4JIik=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jFM2fN4oniF0/NqyKFulpDsi2didOP/x9LEi5OxJ7IiFa0nWPcv4SbyBpaGu9IxgN
-         uMatQwFuNmImKUD9u5HIbEG4o92v/7Uyblew9Ljx6Pc5QudrK70I17tfyuy57Hr4m9
-         Fzfe+zeSX9SVuNUmevkIOrfuUnxK1A+aDtxl/iiY=
-Date:   Mon, 9 Dec 2019 16:57:31 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Marco Antonio Franchi <marco.franchi@nxp.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "marcofrk@gmail.com" <marcofrk@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "atv@google.com" <atv@google.com>
-Subject: Re: [PATCH v4 2/2] arm64: dts: freescale: add initial support for
- Google i.MX 8MQ Phanbell
-Message-ID: <20191209085729.GK3365@dragon>
-References: <20191128194815.26642-1-marco.franchi@nxp.com>
- <20191128194815.26642-2-marco.franchi@nxp.com>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 96AA423061;
+        Mon,  9 Dec 2019 10:02:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1575882122;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=A+S+3RFjVcWK0eGQU/wCN8y+0aJTyPpQt2Yx6PrB4a0=;
+        b=BmOe7vHMwSZ3b0Nh7ICW9Ztz0DnvAGQAwNpiPP7/0aSs0/MvLB0Qc7s5OA6prXbQn7MaPZ
+        RO0oTQ9WohcxvPwAF/1Hc/MDA8q1Kn2dGy4mCMGB/3oz4bxbMfwhoRsTni+57+BqUwvwd1
+        EcZgmdH89vEgBYG4X/gTZWwbMh2ig8Q=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128194815.26642-2-marco.franchi@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Dec 2019 10:02:02 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] arm64: dts: ls1028a: fix reboot node
+In-Reply-To: <20191209034722.GZ3365@dragon>
+References: <20191123000709.13162-1-michael@walle.cc>
+ <20191209034722.GZ3365@dragon>
+Message-ID: <67346b48fa7e236ea31e3ecb1a108f28@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.8
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 96AA423061
+X-Spamd-Result: default: False [1.40 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[7];
+         NEURAL_HAM(-0.00)[-0.679];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 07:48:34PM +0000, Marco Antonio Franchi wrote:
-> This patch adds the device tree to support Google Coral Edge TPU,
-> historicaly named as fsl-imx8mq-phanbell, a computer on module
-> which can be used for AI/ML propose.
+Am 2019-12-09 04:47, schrieb Shawn Guo:
+> On Sat, Nov 23, 2019 at 01:07:09AM +0100, Michael Walle wrote:
+>> The reboot register isn't located inside the DCFG controller, but in 
+>> its
+>> own RST controller. Fix it.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> ---
+>>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi 
+>> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>> index 72b9a75976a1..dc75534a4754 100644
+>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>> @@ -102,7 +102,7 @@
+>> 
+>>  	reboot {
+>>  		compatible ="syscon-reboot";
+>> -		regmap = <&dcfg>;
+>> +		regmap = <&rst>;
+>>  		offset = <0xb0>;
+>>  		mask = <0x02>;
+>>  	};
+>> @@ -161,6 +161,12 @@
+>>  			big-endian;
+>>  		};
+>> 
+>> +		rst: syscon@1e60000 {
+>> +			compatible = "fsl,ls1028a-rst", "syscon";
 > 
-> It introduces a minimal enablement support for this module and
-> was totally based on the NXP i.MX 8MQ EVK board and i.MX 8MQ Phanbell
-> Google Source Code for Coral Edge TPU Mendel release:
-> https://coral.googlesource.com/linux-imx/
+> Compatible "fsl,ls1028a-rst" seems undocumented?
+
+it is the same with fsl,ls1028a-scfg and fsl,ls1028a-dcfg. So maybe I 
+should just drop the "fsl,ls1028a-rst". What do you think?
+
+-michael
+
 > 
-> Tested components:
-> - PMIC;
-> - USB-C OTG;
-> - USB-C PWR;
-> - micro-USB;
-> - USB.
+> Shawn
 > 
-> Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> ---
-> Changes since v3:
-> - remove reg_gpio_dvfs regulator
-> - change cpu-supply to buck2
-> - fix regulators values and properties
-> - remove sai2 node
->  arch/arm64/boot/dts/freescale/Makefile        |   1 +
->  .../boot/dts/freescale/imx8mq-phanbell.dts    | 377 ++++++++++++++++++
->  2 files changed, 378 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 38e344a2f0ff..e50a934e2417 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-hummingboard-pulse.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-nitrogen.dtb
-> +dtb-$(CONFIG_ARCH_MXC) += imx8mq-phanbell.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-pico-pi.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-> new file mode 100644
-> index 000000000000..a7565a0146ee
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-> @@ -0,0 +1,377 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/*
-> + * Copyright 2017-2019 NXP
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "imx8mq.dtsi"
-> +
-> +/ {
-> +	model = "Google i.MX8MQ Phanbell";
-> +	compatible = "google,imx8mq-phanbell", "fsl,imx8mq";
-> +
-> +	chosen {
-> +		stdout-path = &uart1;
-> +	};
-> +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x40000000 0 0x40000000>;
-> +	};
-> +
-> +	pmic_osc: clock-pmic {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <32768>;
-> +		clock-output-names = "pmic_osc";
-> +	};
-> +
-> +	reg_usdhc2_vmmc: usdhc2_vmmc {
-
-Please name the fixed regulator node like regulator-xxx.
-
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VSD_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +};
-> +
-> +&A53_0 {
-> +	cpu-supply = <&buck2>;
-> +};
-> +
-> +&A53_1 {
-> +	cpu-supply = <&buck2>;
-> +};
-> +
-> +&A53_2 {
-> +	cpu-supply = <&buck2>;
-> +};
-> +
-> +&A53_3 {
-> +	cpu-supply = <&buck2>;
-> +};
-> +
-> +&i2c1 {
-> +	clock-frequency = <400000>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c1>;
-> +	status = "okay";
-> +
-> +	pmic: pmic@4b {
-> +		reg = <0x4b>;
-
-Nit: we usually start properties with 'compatible'.
-
-> +		compatible = "rohm,bd71837";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_pmic>;
-> +		clocks = <&pmic_osc>;
-> +		clock-names = "osc";
-
-Is this clock-names needed?
-
-> +		clock-output-names = "pmic_clk";
-
-Binding doc says #clock-cells is a required property, but I cannot find
-it anywhere.
-
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <3 GPIO_ACTIVE_LOW>;
-> +		interrupt-names = "irq";
-
-Is this interrupt-names really needed?
-
-> +
-> +		regulators {
-> +			buck1: BUCK1 {
-> +				regulator-name = "buck1";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +				regulator-ramp-delay = <1250>;
-> +				rohm,dvs-run-voltage = <900000>;
-> +				rohm,dvs-idle-voltage = <900000>;
-> +				rohm,dvs-suspend-voltage = <800000>;
-> +			};
-> +
-> +			buck2: BUCK2 {
-> +				regulator-name = "buck2";
-> +				regulator-min-microvolt = <850000>;
-> +				regulator-max-microvolt = <1000000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +				rohm,dvs-run-voltage = <1000000>;
-> +				rohm,dvs-idle-voltage = <900000>;
-> +			};
-> +
-> +			buck3: BUCK3 {
-> +				regulator-name = "buck3";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				regulator-boot-on;
-> +				rohm,dvs-run-voltage = <900000>;
-> +			};
-> +
-> +			buck4: BUCK4 {
-> +				regulator-name = "buck4";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +				rohm,dvs-run-voltage = <900000>;
-> +			};
-> +
-> +			buck5: BUCK5 {
-> +				regulator-name = "buck5";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck6: BUCK6 {
-> +				regulator-name = "buck6";
-> +				regulator-min-microvolt = <3000000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck7: BUCK7 {
-> +				regulator-name = "buck7";
-> +				regulator-min-microvolt = <1605000>;
-> +				regulator-max-microvolt = <1995000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck8: BUCK8 {
-> +				regulator-name = "buck8";
-> +				regulator-min-microvolt = <800000>;
-> +				regulator-max-microvolt = <1400000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo1: LDO1 {
-> +				regulator-name = "ldo1";
-> +				regulator-min-microvolt = <3000000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo2: LDO2 {
-> +				regulator-name = "ldo2";
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <900000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo3: LDO3 {
-> +				regulator-name = "ldo3";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo4: LDO4 {
-> +				regulator-name = "ldo4";
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo5: LDO5 {
-> +				regulator-name = "ldo5";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo6: LDO6 {
-> +				regulator-name = "ldo6";
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo7: LDO7 {
-> +				regulator-name = "ldo7";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc1 {
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +	pinctrl-0 = <&pinctrl_usdhc1>;
-> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-> +	bus-width = <8>;
-> +	non-removable;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc2 {
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-> +	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-> +	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-> +	bus-width = <4>;
-> +	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
-> +	vmmc-supply = <&reg_usdhc2_vmmc>;
-> +	status = "okay";
-> +};
-> +
-> +&usb3_phy0 {
-> +	status = "okay";
-> +};
-> +
-> +&usb_dwc3_0 {
-> +	status = "okay";
-> +	dr_mode = "otg";
-
-As a idiomatic practice, we end property list with 'status'.
-
-> +};
-> +
-> +&usb3_phy1 {
-> +	status = "okay";
-> +};
-> +
-> +&usb_dwc3_1 {
-> +	status = "okay";
-> +	dr_mode = "host";
-
-Ditto
-
-Shawn
-
-> +};
-> +
-> +&wdog1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_wdog>;
-> +	fsl,ext-reset-output;
-> +	status = "okay";
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl_i2c1: i2c1grp {
-> +		fsl,pins = <
-> +			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
-> +			MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA			0x4000007f
-> +		>;
-> +	};
-> +
-> +	pinctrl_pmic: pmicirq {
-> +		fsl,pins = <
-> +			MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x41
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart1: uart1grp {
-> +		fsl,pins = <
-> +			MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX		0x49
-> +			MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX		0x49
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1: usdhc1grp {
-> +		fsl,pins = <
-> +			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
-> +			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
-> +			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
-> +			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
-> +			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
-> +			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
-> +			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
-> +			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
-> +			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
-> +			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
-> +			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x83
-> +			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-> +		fsl,pins = <
-> +			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x85
-> +			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc5
-> +			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc5
-> +			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc5
-> +			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc5
-> +			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc5
-> +			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc5
-> +			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc5
-> +			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc5
-> +			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc5
-> +			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x85
-> +			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-> +		fsl,pins = <
-> +			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x87
-> +			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc7
-> +			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc7
-> +			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc7
-> +			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc7
-> +			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc7
-> +			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc7
-> +			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc7
-> +			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc7
-> +			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc7
-> +			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x87
-> +			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_gpio: usdhc2grpgpio {
-> +		fsl,pins = <
-> +			MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12	0x41
-> +			MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2: usdhc2grp {
-> +		fsl,pins = <
-> +			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x83
-> +			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc3
-> +			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc3
-> +			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc3
-> +			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc3
-> +			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc3
-> +			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-> +		fsl,pins = <
-> +			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x85
-> +			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc5
-> +			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc5
-> +			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc5
-> +			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc5
-> +			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc5
-> +			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-> +		fsl,pins = <
-> +			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x87
-> +			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc7
-> +			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc7
-> +			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc7
-> +			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc7
-> +			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc7
-> +			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-> +		>;
-> +	};
-> +
-> +	pinctrl_wdog: wdoggrp {
-> +		fsl,pins = <
-> +			MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B 0xc6
-> +		>;
-> +	};
-> +};
-> -- 
-> 2.17.1
-> 
+>> +			reg = <0x0 0x1e60000 0x0 0x10000>;
+>> +			little-endian;
+>> +		};
+>> +
+>>  		scfg: syscon@1fc0000 {
+>>  			compatible = "fsl,ls1028a-scfg", "syscon";
+>>  			reg = <0x0 0x1fc0000 0x0 0x10000>;
+>> --
+>> 2.20.1
+>> 
