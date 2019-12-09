@@ -2,158 +2,151 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04AC3C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65BBC2BD09
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA46E207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D0C21556
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:45:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sYWBiNew"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="APUJMIOk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbfLIPio (ORCPT
+        id S1726678AbfLIPpP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:38:44 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35586 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfLIPio (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 10:38:44 -0500
-Received: by mail-io1-f65.google.com with SMTP id v18so15248226iol.2;
-        Mon, 09 Dec 2019 07:38:43 -0800 (PST)
+        Mon, 9 Dec 2019 10:45:15 -0500
+Received: from mail-eopbgr1400137.outbound.protection.outlook.com ([40.107.140.137]:14624
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726197AbfLIPpO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 10:45:14 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BFNnSNN6r8yXuQuj6eSCjOLwUOed3TLo84nvXLk5JWZFF1lxaFIqfPi9jEhxsCocqN96I3294djZ97EZrCEWuLq5GgeZLCjAZ852g7PL54eIGc0PQmJN+vqbpd/kFB49zSqvDEt9Oq9CBzZRU7RPx4K74guK+Ht9qapI7JGTz83JFIFAjXAgGSVwJskTVgTzx88HDF6PYnuhQ2f09vQ6gG8QPkUICthdbu5p7UOGjhQP975pPa+XYegcrGRmWXdjHt4u6X8NsLeTfamcqzPOC8kZPgyNdFdBLCHKsJNd2It+0rS2qLq91EN8nvKJIlqwBWqfpMyA0loR+kdvD19jtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=453Izz16sVVzR3SB1Q3rp17mLUDpKDLyJK4NQbUedX0=;
+ b=AhedxbqpGxs4N5wY62GWdcPD7u3nCx6S90OfjqmFND78vwP557BJ/5BLO4zx8D+dqjmiL3Ub1uW6fVyR9SRkdelxWRmfa9xwBgSWgBCjvC1mvmSWpkyMk7RVkcg+BAQAQcXxpqJxoBaYaRK11EL86CJ9cbBZXbJuMSE4pbQPhCrk08UBkEglqQr9tnqi66Q0HJZtpqbuYl3HEWxO0qGGumya4LC2OrYQrYePjAyHAQNjtpLB0++tDdJ8EAXwvJPuOO62BRKt5yo9SKVPos8BM5tBeLBYqN/wphcOrF4QQmAPYpDUhXCk/UMEobK132oVK36exkTaoRXbbtQF2bvWrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZJHtdl64eSg7tX1bls5wY/hgwg2SeBy1mqhpZlCukvg=;
-        b=sYWBiNewuyqeitxp4PMfrWb8D5LArfvGYVlnna4mBtaRMWcybALmK4TSqg7M/HKA1i
-         85aVtTxdrFrUZO5be9qMmHnxoj2f16hCkwRN6gtWVx+L9JUsxL5DLcePNscgNynYhloC
-         VEm6MCqqrVLY1aRK63NYHp9pg3+pwb5JS4nOdvLU+JWQh1qcMOXZjhrE9qxaP0Q4BehK
-         Gsn2K/LiOp2/s0TUyEEvu1PvhZpNTUN8pemOAMe5iT4VX7Ac1b2opKqp8pl7TSLhmffY
-         HobeBr/5FkeX5fDbHWmaxUGCJKWKMFHairadzP8yQM6TqaCNEtvIec58Uw99BqricfOM
-         k+iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZJHtdl64eSg7tX1bls5wY/hgwg2SeBy1mqhpZlCukvg=;
-        b=r6HIcT/wrZJe5hli8ReOBHqc4OxKhzGQ74KXShZLl4f8SsMA1eG6OqULVmdZT7nw18
-         SpjYsPKSuIMmGJyJ6xgfGBcGMDt/lxEw/cRzLyJoVpDZI82m3G3JYAoVRLYmdNpFffBK
-         MsSYrGlYUeUgywN6lCfQ6BArlvX2o+t2Hl0mJhwnhPnVsJmpcyPOo0ypqVglZHU192Jf
-         cce9+5fLe6i/KVvyM5ouRqnQ80IvIxJPblqcFPnHfYe+NgHZmgTdv3Oi/fFFTIi8xLoe
-         WZC4GkhH1jIvKGY2AydgN4jEpkPRZwGtiI5v1BGHoXB7Jw9aoE09vGip1z5xNSt+vG1r
-         VC/Q==
-X-Gm-Message-State: APjAAAXUI3IaXwvGrumCBGnDZRNAmgQBOt5okZJhAsyK1HU2cIQNRG8G
-        DYuzdn7dpTduRAvOVVFy7ataENu4fhII2qNeCbM=
-X-Google-Smtp-Source: APXvYqyKe81SV620SWPT3vlC+s2nmZV57gLiyzYp6LoXO4TmESagI9KWQZJxUmkLqawCteKkmS0vffcB403S2IYmD8Y=
-X-Received: by 2002:a02:8817:: with SMTP id r23mr28310766jai.120.1575905923417;
- Mon, 09 Dec 2019 07:38:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20191206184536.2507-1-linux.amoon@gmail.com> <20191206184536.2507-3-linux.amoon@gmail.com>
- <f1327196-66c9-d152-c0ca-914d43d6f55e@arm.com>
-In-Reply-To: <f1327196-66c9-d152-c0ca-914d43d6f55e@arm.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 9 Dec 2019 21:08:31 +0530
-Message-ID: <CANAwSgTSDX=36eF3UxVyVykguRjd90=x4iT27s=nJg5ezG_V7w@mail.gmail.com>
-Subject: Re: [RFCv1 2/8] mfd: rk808: use syscore for RK805 PMIC shutdown
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=453Izz16sVVzR3SB1Q3rp17mLUDpKDLyJK4NQbUedX0=;
+ b=APUJMIOkiYfuJSO4jBHaAyj2BXhkVbg9X0dIXDRP0qIwPsPCql0Y6Vgd6A8YNlsCJiG+k9qiXf4HDNCt2pmpz39iUmCExIpm44jPEe0Lvpqm39JlC+nF2aCc2Agn/06utTrBu7UZfw/P1X8l7U62QeTgRCF/nHO8ZSbuX/OW+Ik=
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
+ TY1PR01MB1852.jpnprd01.prod.outlook.com (52.133.164.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.17; Mon, 9 Dec 2019 15:45:09 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
+ 15:45:09 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Daniel Schultz <d.schultz@phytec.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-rockchip@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: RE: [PATCH v2 2/6] dt-bindings: spi: Document Renesas SPIBSC bindings
+Thread-Topic: [PATCH v2 2/6] dt-bindings: spi: Document Renesas SPIBSC
+ bindings
+Thread-Index: AQHVrDsTjXSeF7WhuEKgUGoi0guPiaex3BKAgAAR69A=
+Date:   Mon, 9 Dec 2019 15:45:08 +0000
+Message-ID: <TY1PR01MB1562BC84E2ECF81487A780D38A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20191206134202.18784-1-chris.brandt@renesas.com>
+ <20191206134202.18784-3-chris.brandt@renesas.com>
+ <CAMuHMdXW6_tCcx_DE66qBSTK8XmWyWm82ZD6h-N5YX_+xcvBtw@mail.gmail.com>
+In-Reply-To: <CAMuHMdXW6_tCcx_DE66qBSTK8XmWyWm82ZD6h-N5YX_+xcvBtw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctZGZhNzVkODYtMWE5YS0xMWVhLWFhNTQtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XGRmYTc1ZDg3LTFhOWEtMTFlYS1hYTU0LTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iMjQwNSIgdD0iMTMyMjAzNzk5MDc4NDYwNDEzIiBoPSJoODdXcE5SdDBMMC9CSDE2czFOYW1BWFZrWTQ9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [75.60.247.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d1780d1a-be85-4da8-6088-08d77cbec544
+x-ms-traffictypediagnostic: TY1PR01MB1852:
+x-microsoft-antispam-prvs: <TY1PR01MB18527A6FA7BEDDDD9A0223938A580@TY1PR01MB1852.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02462830BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(366004)(396003)(39840400004)(136003)(199004)(189003)(7696005)(52536014)(229853002)(7416002)(33656002)(26005)(186003)(305945005)(9686003)(64756008)(5660300002)(55016002)(71190400001)(71200400001)(478600001)(66446008)(6506007)(66556008)(54906003)(76116006)(66946007)(81166006)(81156014)(4326008)(316002)(8676002)(8936002)(86362001)(66476007)(2906002)(6916009);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1852;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1TvaLUqQEbg0P+wkw7fzToEjyHU5YoOxZXP33eyxSaR4bIXBgIzCwp013urHcDLV5ktuDImozKtYG1nzeqEgagOWTVsh+vsTa9k/zDz0lfgWpZyhhunbUolMTYeZYlGgDMiq0b+hhmwskPo3iAEf/XmDIapqnedbKoLGhRgUOCXhd6PkVNmaGtAr0ACviPw2dazWIO48TglWwP8BsaXFTKQlJMY92xPhYtKj3VXK50Nd6LIfVCvZvoNwCawtY1R7WtT2NBFZnau3YuewP7cnK0EFv/bxSe55vW+odofnwD3N2ml/ItRKdW7hF3m8iDAMgijXPvR6VeW4PAAoJh1Fnv+1HC52JFKt88hHzmIzw50Wo8MIcT5oUhUtNw9/SsXt2q9u2jE0VvECbFGcJYWra9Wwqnfdt07JNAXC+kKPIrPfPAjWcDcsEa2xFNvayC+z
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1780d1a-be85-4da8-6088-08d77cbec544
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 15:45:08.9179
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +Pn/a8YNK8t1FYbI7bVlcFb+Ok3dqY7h4Zu9fa7uLviJif/OVo1B4MiN+cU9rtYxLXkLm86Yuioc7mxPH5N1qVx9n9pQPxdtnsYXgujGB7Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1852
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robin,
-
-On Mon, 9 Dec 2019 at 19:04, Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 06/12/2019 6:45 pm, Anand Moon wrote:
-> > Use common syscore_shutdown for RK805 PMIC to do
-> > clean I2C shutdown, drop the unused pm_pwroff_prep_fn
-> > and pm_pwroff_fn function pointers.
->
-> Coincidentally, I've also been looking at RK805 for the sake of trying
-> to get suspend to behave on my RK3328 box, and I've ended up with some
-> slightly different cleanup patches - I'll tidy them up and post them for
-> comparison as soon as I can.
-
-No issue if their is better clean approach, I will definitely test that ser=
-ies.
->
-> > Cc: Heiko Stuebner <heiko@sntech.de>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> >   drivers/mfd/rk808.c | 33 +++++++++++++++++----------------
-> >   1 file changed, 17 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
-> > index e637f5bcc8bb..713d989064ba 100644
-> > --- a/drivers/mfd/rk808.c
-> > +++ b/drivers/mfd/rk808.c
-> > @@ -467,16 +467,6 @@ static void rk808_update_bits(unsigned int reg, un=
-signed int mask,
-> >                       "can't write to register 0x%x: %x!\n", reg, ret);
-> >   }
-> >
-> > -static void rk805_device_shutdown(void)
-> > -{
-> > -     rk808_update_bits(RK805_DEV_CTRL_REG, DEV_OFF, DEV_OFF);
-> > -}
-> > -
-> > -static void rk805_device_shutdown_prepare(void)
-> > -{
-> > -     rk808_update_bits(RK805_GPIO_IO_POL_REG, SLP_SD_MSK, SHUTDOWN_FUN=
-);
-> > -}
-> > -
-> >   static void rk808_device_shutdown(void)
-> >   {
-> >       rk808_update_bits(RK808_DEVCTRL_REG, DEV_OFF_RST, DEV_OFF_RST);
-> > @@ -491,10 +481,23 @@ static void rk8xx_syscore_shutdown(void)
-> >   {
-> >       struct rk808 *rk808 =3D i2c_get_clientdata(rk808_i2c_client);
-> >
-> > -     if (system_state =3D=3D SYSTEM_POWER_OFF &&
-> > -         (rk808->variant =3D=3D RK809_ID || rk808->variant =3D=3D RK81=
-7_ID)) {
-> > -             rk808_update_bits(RK817_SYS_CFG(3), RK817_SLPPIN_FUNC_MSK=
-,
-> > -                             SLPPIN_DN_FUN);
-> > +     if (system_state =3D=3D SYSTEM_POWER_OFF) {
-> > +             dev_info(&rk808_i2c_client->dev, "System Shutdown Event\n=
-");
-> > +
-> > +             switch (rk808->variant) {
-> > +             case RK805_ID:
-> > +                     rk808_update_bits(RK805_GPIO_IO_POL_REG,
-> > +                                     SLP_SD_MSK, SHUTDOWN_FUN);
-> > +                     rk808_update_bits(RK805_DEV_CTRL_REG, DEV_OFF, DE=
-V_OFF);
->
-> Why this change? Shutdown via the SLEEP pin is working just fine on my
-> box :/
->
-> Robin.
-
-As per RK-805 datasheet [0] below.
-For clean poweroff we need to set in DEV_CTRL_REG reg
-Bit 0 DEV_OFF: write =E2=80=9C1=E2=80=9D to turn down the PMU.
-
-[0] http://files.pine64.org/doc/rock64/Rockchip_RK805_Datasheet_V1.1%C2%A02=
-0160921.pdf
-
--Anand
+SGkgR2VlcnQsDQoNCk9uIE1vbiwgRGVjIDksIDIwMTksIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90
+ZToNCj4gPiArICByZWc6DQo+ID4gKyAgICBtaW5JdGVtczogMg0KPiA+ICsgICAgbWF4SXRlbXM6
+IDINCj4gPiArICAgIGl0ZW1zOg0KPiA+ICsgICAgICAtIGRlc2NyaXB0aW9uOiBSZWdpc3RlcnMN
+Cj4gPiArICAgICAgLSBkZXNjcmlwdGlvbjogTWVtb3J5IE1hcHBlZCBBZGRyZXNzIFNwYWNlDQo+
+IA0KPiBUaGUgc2Vjb25kIG9uZSBpcyBub3QgbmVlZGVkLCBpZiB5b3Ugd291bGQgYWRkICJyYW5n
+ZXMiIGZvciB0aGUgbWVtb3J5LW1hcHBlZA0KPiBtb2RlLg0KDQoNClNvIGZvciBSWi9BMk06DQog
+IHJhbmdlcyA9IDwweDAgMHgyMDAwMDAwMCAweDEwMDAwMDAwPjsNCg0KDQo+ID4gKyAgICAjIFRo
+aXMgZXhhbXBsZSBpcyBmb3IgIkV4dGVybmFsIEFkZHJlc3MgU3BhY2UgUmVhZCBNb2RlIg0KPiA+
+ICsgICAgc3BpYnNjOiBzcGlAMWY4MDAwMDAgew0KPiA+ICsgICAgICAgIGNvbXBhdGlibGUgPSAi
+cmVuZXNhcyxyN3M5MjEwLXNwaWJzYyI7DQo+ID4gKyAgICAgICAgcmVnID0gPDB4MWY4MDAwMDAg
+MHgxMDA+LCA8MHgyMDAwMDAwMCAweDEwMDAwMDAwPjsNCj4gPiArICAgICAgICBjbG9ja3MgPSA8
+JmNwZyBDUEdfTU9EIDgzPjsNCj4gPiArICAgICAgICBwb3dlci1kb21haW5zID0gPCZjcGc+Ow0K
+PiA+ICsgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSA0NDUgSVJRX1RZUEVfTEVWRUxfSElH
+SD47DQo+ID4gKyAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKyAgICAgICAgI3Np
+emUtY2VsbHMgPSA8MD47DQo+ID4gKyAgICB9Ow0KPiA+ICsgICAgZmxhc2hAMjAwMDAwMDAgew0K
+PiANCj4gVGhpcyBkb2VzIG5vdCBkZXNjcmliZSB0aGUgaGFyZHdhcmUgdG9wb2xvZ3k6IHRoZSBm
+bGFzaCBub2RlIHNob3VsZCBiZSBhDQo+IHN1Ym5vZGUgb2YgdGhlIHNwaWJzYyBub2RlLCBhcyBp
+dCByZWxpZXMgb24gdGhlIHNwaWJzYyBiZWluZyBjbG9ja2VkLg0KDQpTbyBmb3IgdGhlICJYSVAi
+IGNhc2UsIEkgb3JpZ2luYWxseSB0cmllZCBhZGRpbmcgYW4gIm10ZC1yb20iIGZsYXNoIG5vZGUN
+CnVuZGVyIHRoZSBzcGlic2Mgbm9kZSwgYnV0IHRoZW4gdGhlIG10ZC1yb20gcGFydCBuZXZlciBn
+b3QgcHJvYmVkLiBJIA0KZ3Vlc3MgdGhhdCB3YXMgYmVjYXVzZSBpdCBkaWRuJ3QgcmVnaXN0ZXIg
+YSBTUEkgY29udHJvbGxlci4NCg0KDQpCdXQsIEkgZ3Vlc3MgaWYgd2UgZ28geW91ciBtZXRob2Qu
+Li4NCj4gICAgIHNwaWJzYzogc3BpQDFmODAwMDAwIHsNCj4gICAgICAgICAgICAgICAgIGNvbXBh
+dGlibGUgPSAicmVuZXNhcyxyN3M5MjEwLXNwaWJzYyIsICJzaW1wbGUtcG0tYnVzIjsNCg0KVGhl
+biBhZnRlciB0aGUgc3BpYnNjIGRyaXZlciBmYWlscyBhbmQgdGhlICJzaW1wbGUtcG0tYnVzIiBk
+cml2ZXIgdHJpZXMsDQppdCB3aWxsIHN1Y2NlZWQgYW5kIHRoZSBzaW1wbGUtcG0tYnVzIGRyaXZl
+ciB3aWxsIHN0YXJ0IHByb2JpbmcgdGhlIA0Kc3Vibm9kZXMgKGluIG15IGNhc2UsIHRoZSBtdGQt
+cm9tKS4NCg0KDQo+IGFuZCBhcHBseWluZyAiW1BBVENIXSBtdGQ6IG1hcHM6IHBoeXNtYXA6IEFk
+ZCBtaW5pbWFsIFJ1bnRpbWUgUE0gc3VwcG9ydCJbMV0sDQo+IHRoZSBtZW1vcnktbWFwcGVkIGNh
+c2Ugc2hvdWxkIHdvcmssIHdpdGhvdXQgeW91ciBzcGlic2MgZHJpdmVyLg0KDQpHb29kLg0KU28g
+d2UgY2FuIGFkZCB0aGUgU1BJLUJTQyBjbG9ja3MgZm9yIFJaL0ExIGFuZCBSWi9BMiAoZXZlbiB3
+aXRob3V0IHRoZSANClNQSS1CU0MgZHJpdmVyKSBhbmQgc3RpbGwgaGF2ZSBhIHdvcmtpbmcgc29s
+dXRpb24gZm9yIFhJUF9LRVJORUwuDQoNCg0KDQpTbyBpbiB0aGUgZW5kLCB0aGlzIGFsbCBzZWVt
+cyBsaWtlIGEgdmVyeSBzaW1wbGUgc29sdXRpb24gdG8gZ2V0IA0KZXZlcnl0aGluZyBJIHdhbnRl
+ZCB3aXRoIG1pbmltYWwgY29tcGxleGl0eS4NCg0KQnV0LCBpZiBTZXJnZWkgaXMgZ29pbmcgYSBj
+b21wbGV0ZWx5IGRpZmZlcmVudCByb3V0ZSBmb3IgUi1DYXIsIEkgZ3Vlc3MgDQpJIG5lZWQgdG8g
+dW5kZXJzdGFuZCB0aGF0IGZpcnN0IHdoYXQgaGUgaXMgdHJ5aW5nIHRvIGRvIGJlZm9yZSBJIHJl
+YWxseQ0KcHVzaCBmb3IgdGhpcyBkcml2ZXIgZ2V0dGluZyBpbi4NCkFnYWluLCB0aGlzIGRyaXZl
+ciB3YXMgb25seSB3aGVuIHVzaW5nIHRoZSBTUEktQlNDIEhXLCBub3QgdGhlIGZ1bGwgDQooZGlm
+ZmVyZW50KSBSL1cgSHlwZXJGbGFzaCBjb250cm9sbGVyIEhXLiBUaGF0IHdvdWxkIGJlIGEgc2Vw
+YXJhdGUgZHJpdmVyLg0KDQpDaHJpcw0KDQo=
