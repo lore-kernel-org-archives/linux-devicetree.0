@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62368C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19D2C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3566B2075B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51112075B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:34:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="n9qLyvJ0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HDGVEXps"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Gm1hRYX+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WoRSJ/D/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfLIJeu (ORCPT
+        id S1727482AbfLIJex (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:34:50 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:39123 "EHLO
+        Mon, 9 Dec 2019 04:34:53 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:49685 "EHLO
         out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727454AbfLIJeu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:34:50 -0500
+        by vger.kernel.org with ESMTP id S1727454AbfLIJex (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:34:53 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7BAE3228A2;
-        Mon,  9 Dec 2019 04:34:49 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 09 Dec 2019 04:34:49 -0500
+        by mailout.nyi.internal (Postfix) with ESMTP id F329522855;
+        Mon,  9 Dec 2019 04:34:51 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 09 Dec 2019 04:34:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=mKPUX87mu/fBK
-        Hm6UpGd87kix2+aso87ZbphQBUSJ0g=; b=n9qLyvJ027c8MM0s2e9x8V6nYdEVE
-        1i5wvw0LrX5h9ETBcVIidFEQ/IrTF0w5TOyrIf1eFLmOUjKDLqCuLZ/H08tlwSjy
-        JMeZFFrLPm+US1n2H8mWNMjkRJaHhI35mQuA7/Hn+O/exp19cFs/HewJkhGyiObo
-        n8/zTNWCX2vcJH9S1PFgHhxeQtxKtlRgA5OnVsEPrdvWpiG+vnxmIVKX6x9Gt/zc
-        q/aSyMYhKFRdK3MTR1eToXDa8/twamWNsx+hL56ADK+2dI7os2AkTAP8exqvxvaa
-        VpaUkkCISpHmob96deM3PPLoYZjErUZD51yOrmVe9DZRDcMFNI1AZFanQ==
+        :mime-version:content-transfer-encoding; s=fm1; bh=S5c/sy1rEfhoC
+        tKq1f3YwzXpZZiw9bf4fsl2pQLauCM=; b=Gm1hRYX+P4eIv90Wp1zpSYlo2it95
+        mclPXvfYsFPAZqMhBpvU0j9xNQ/dxptE6/B1zkLGlC1jEnZbSBNFlrnfkZ0QNuFT
+        Ej8ilray5YvxdnE8ZXCWzJ/2X9r2O0SAoM7yxv/5VSteNBt1+Fq7EEQogiw0VfTl
+        vjh08Tb+scfOtsu11xx8ArLmThAlOPmd1GvsV46aTNoej1JI4MnqOth0iM7VqOO7
+        CQNlhH6vfA1H3gyGE8P9CZ592GC+wmJsXoGtu9HiJ51h+S+KUe9Ae07mbS2miP1z
+        3njY/a1+E1gbp+yp905apS+q5Tteb1sYS/rNjTZU+yVExIhtARCxdX5Ew==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=mKPUX87mu/fBKHm6UpGd87kix2+aso87ZbphQBUSJ0g=; b=HDGVEXps
-        Doo3ncZigmq4LeE3IgrmPwfE6wkNtispHA6IgQXCBSYGjPI2rXlpwP+WCNGRvKjL
-        saIIG2gxDcLgeWDIIkih+/BSVfs0nNgqXdx4MSoCZ+1OKcpY4GKIBZjZBK5/gFFq
-        tHt2RkWoYb8wIj9ghvck9MJ7WePqUA/r7wlvvet5OHKcnCQxMV3HD7AELSAuNen0
-        jhW/p3t9Uql9sZ397toVcGpPlrrt6zSHOel0JjY7KAppy1bY5ONXz9TLSdNzsTuG
-        S1dqjAfYKmlDJioum5bjQzcXdvrBP4fZWKNjArd3gJapsAghZIWvPBnTnL4KE123
-        OdQkxrcuLKHBKQ==
-X-ME-Sender: <xms:ORXuXXSNuxz6kO7E6TX9kjrXy0DPlXpojWamlRGt-PklqZrlVhqqlA>
+        fm1; bh=S5c/sy1rEfhoCtKq1f3YwzXpZZiw9bf4fsl2pQLauCM=; b=WoRSJ/D/
+        kjMqWPPUgk6iPmiK9jejSrzmdPCCpl5pj27wJ9cngEKs4Zb7nC3W05xqDbDuD/6A
+        R3ofNcOYfW1SyRFHT1TeemgSQjMXCa8yz92RVOHlzknX75jmAcqNydvsIH8GVJn2
+        lcEFuVLt4/u4guoM1Witn6Tx7zpeLuxEYk6y0nz4Mc+C7Fk8TB4bH38sGN3Wu9kE
+        8hFMcsQpDkOHIL/w29nM8KPhvUocbeB2DMSAKPbj6+2uWVHqucxoN/Vfw6l5IdCU
+        YdTWCk7sB4z3m3daQypFoRbczE89KOskOxjsdKyMii3BEQJsr5/a6QR1whhdVza6
+        dLkFyspJP5NuLw==
+X-ME-Sender: <xms:OxXuXchVn6Nu7cjuoDxoNnl_EmJKaNtIsBGnWhDnvLJdnyn8JO7XcA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeltddgtdehucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
     drkeelrdeikedrjeeinecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggv
-    rhhnohdrthgvtghhnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:ORXuXbTIjnTIWrsPo068HUEaywVux-AdVsBas1Lvv7C3bDgy795KYQ>
-    <xmx:ORXuXc-JF_-RU38L4hhoGLx1t1UHNeqVFeH5yWLpBAQLbw2_pgxuKg>
-    <xmx:ORXuXZ8fBif_nZUoZDHnoE8syONvj3I0ID0LqaeRGj3vZNvR8vQHbQ>
-    <xmx:ORXuXa2xDW5TYNsCpE9YGukNO3faPZS5-qD4xTNQyaieDKbJQOaATA>
+    rhhnohdrthgvtghhnecuvehluhhsthgvrhfuihiivgepud
+X-ME-Proxy: <xmx:OxXuXaCgXiNqTuAAVHUCmg7-u1btZ2ge5EypcQv-m14dGEWsVR5_KA>
+    <xmx:OxXuXb9x8CMxStJdislNuKmDqek_U7vby-CsL_4NAgrLXjhGIBg29w>
+    <xmx:OxXuXbFcqV6iPY1olGMYCy-xQf2-NfCbxmNLWwwU6SzdXxjsJSXwzA>
+    <xmx:OxXuXVliBq3lhhFtiK0RCguwhDEamrnm17FYW1d7GxwPfBdnr5CrOA>
 Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 19D1630600A8;
-        Mon,  9 Dec 2019 04:34:49 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 74A2A8005B;
+        Mon,  9 Dec 2019 04:34:51 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -70,9 +70,9 @@ To:     Mark Rutland <mark.rutland@arm.com>,
 Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         krzk@kernel.org, Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH 2/4] dt-bindings: sram: Allow for more specific compatibles
-Date:   Mon,  9 Dec 2019 10:34:39 +0100
-Message-Id: <20191209093441.50694-2-maxime@cerno.tech>
+Subject: [PATCH 3/4] dt-bindings: sram: Add Allwinner SRAM compatibles
+Date:   Mon,  9 Dec 2019 10:34:40 +0100
+Message-Id: <20191209093441.50694-3-maxime@cerno.tech>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191209093441.50694-1-maxime@cerno.tech>
 References: <20191209093441.50694-1-maxime@cerno.tech>
@@ -83,52 +83,30 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Even though the generic mmio-sram binding has a list of the sections
-compatible allowed, most device trees have more specific compatibles
-attached to those generic ones.
-
-This creates warnings at the moment, and we don't really want to cripple
-the generic binding with all the vendor specific combinations that would
-prove to be hard to maintain.
-
-Let's allow additional compatibles for the sections, and then we can have
-the vendor-specific bindings to reduce the scope of what's allowed exactly.
+The mmio-sram binding was added missing a few SRAM sections compatible for
+allwinner SoCs. Let's add them.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- .../devicetree/bindings/sram/sram.yaml        | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ Documentation/devicetree/bindings/sram/sram.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
-index 83e3bc64d6fc..9ffef983510b 100644
+index 9ffef983510b..7b83cc6c9bfa 100644
 --- a/Documentation/devicetree/bindings/sram/sram.yaml
 +++ b/Documentation/devicetree/bindings/sram/sram.yaml
-@@ -64,15 +64,16 @@ patternProperties:
-         description:
-           Should contain a vendor specific string in the form
+@@ -66,7 +66,11 @@ patternProperties:
            <vendor>,[<device>-]<usage>
--        enum:
--          - allwinner,sun9i-a80-smp-sram
--          - amlogic,meson8-smp-sram
--          - amlogic,meson8b-smp-sram
--          - renesas,smp-sram
--          - rockchip,rk3066-smp-sram
--          - samsung,exynos4210-sysram
--          - samsung,exynos4210-sysram-ns
--          - socionext,milbeaut-smp-sram
-+        contains:
-+          enum:
-+            - allwinner,sun9i-a80-smp-sram
-+            - amlogic,meson8-smp-sram
-+            - amlogic,meson8b-smp-sram
-+            - renesas,smp-sram
-+            - rockchip,rk3066-smp-sram
-+            - samsung,exynos4210-sysram
-+            - samsung,exynos4210-sysram-ns
-+            - socionext,milbeaut-smp-sram
- 
-       reg:
-         description:
+         contains:
+           enum:
++            - allwinner,sun4i-a10-sram-a3-a4
++            - allwinner,sun4i-a10-sram-c1
++            - allwinner,sun4i-a10-sram-d
+             - allwinner,sun9i-a80-smp-sram
++            - allwinner,sun50i-a64-sram-c
+             - amlogic,meson8-smp-sram
+             - amlogic,meson8b-smp-sram
+             - renesas,smp-sram
 -- 
 2.23.0
 
