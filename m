@@ -2,140 +2,137 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C90AAC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 05:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D354DC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 05:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88F6020721
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 05:42:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="boUCfZId"
+	by mail.kernel.org (Postfix) with ESMTP id A82542071E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 05:53:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726038AbfLIFmH (ORCPT
+        id S1726343AbfLIFxg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 00:42:07 -0500
-Received: from mailgw02.mediatek.com ([216.200.240.185]:39297 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfLIFmH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 00:42:07 -0500
-X-UUID: f68b681b6ee64dd8b21073ba3f887546-20191208
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=IfbqGrd5rrP8sh9a0nWcVEhjpDGUtdEIy6n7ea6KzZ4=;
-        b=boUCfZIdSJ/9DWCp6nuTkpNiIU2FGTRS0vx8r72kqWPe7iiBnqymypHrcOMHg82YHw1/HV6ciTFCqgAchs58jgtAiafI2PBXYbXimJeKnYNVC7JHfO6VTVAb7PDMcl/NzsDRzIrJ+394T7jagw/xYif3D5xaZBssKuKc32niLoc=;
-X-UUID: f68b681b6ee64dd8b21073ba3f887546-20191208
-Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1996030212; Sun, 08 Dec 2019 21:42:02 -0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS62N1.mediatek.inc (172.29.193.41) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 8 Dec 2019 21:35:44 -0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 9 Dec 2019 13:34:52 +0800
-Message-ID: <1575869682.7013.14.camel@mtksdaap41>
-Subject: Re: [resend PATCH v6 12/12] drm/mediatek: Add support for mmsys
- through a pdev
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <matthias.bgg@kernel.org>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <ulrich.hecht+renesas@gmail.com>,
-        <laurent.pinchart@ideasonboard.com>,
-        <enric.balletbo@collabora.com>, <sean.wang@mediatek.com>,
-        <sean.wang@kernel.org>, <rdunlap@infradead.org>, <wens@csie.org>,
-        <hsinyi@chromium.org>, <frank-w@public-files.de>,
-        <drinkcat@chromium.org>, <linux-media@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <mbrugger@suse.com>
-Date:   Mon, 9 Dec 2019 13:34:42 +0800
-In-Reply-To: <20191207224740.24536-13-matthias.bgg@kernel.org>
-References: <20191207224740.24536-1-matthias.bgg@kernel.org>
-         <20191207224740.24536-13-matthias.bgg@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 9 Dec 2019 00:53:36 -0500
+Received: from mail-dm6nam12on2048.outbound.protection.outlook.com ([40.107.243.48]:6099
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726038AbfLIFxg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 00:53:36 -0500
+Received: from DM6PR02CA0055.namprd02.prod.outlook.com (2603:10b6:5:177::32)
+ by MN2PR02MB6255.namprd02.prod.outlook.com (2603:10b6:208:1b9::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12; Mon, 9 Dec
+ 2019 05:53:33 +0000
+Received: from SN1NAM02FT032.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::206) by DM6PR02CA0055.outlook.office365.com
+ (2603:10b6:5:177::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.14 via Frontend
+ Transport; Mon, 9 Dec 2019 05:53:33 +0000
+Authentication-Results: spf=softfail (sender IP is 149.199.60.83)
+ smtp.mailfrom=gmail.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=fail action=none header.from=gmail.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ gmail.com discourages use of 149.199.60.83 as permitted sender)
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT032.mail.protection.outlook.com (10.152.72.126) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2495.26
+ via Frontend Transport; Mon, 9 Dec 2019 05:53:33 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1ieBzB-0004Ml-2w; Sun, 08 Dec 2019 21:53:33 -0800
+Received: from localhost ([127.0.0.1] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1ieBz5-00010W-VC; Sun, 08 Dec 2019 21:53:28 -0800
+Received: from [10.140.6.59] (helo=xhdshubhraj40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1ieBz5-0000yR-79; Sun, 08 Dec 2019 21:53:27 -0800
+From:   shubhrajyoti.datta@gmail.com
+To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, arnd@arndb.de, michal.simek@xilinx.com,
+        robh+dt@kernel.org, shubhrajyoti.datta@gmail.com,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [PATCH 1/3] dt-bindings: misc: Add dt bindings for traffic generator
+Date:   Mon,  9 Dec 2019 11:23:18 +0530
+Message-Id: <1575870800-7369-1-git-send-email-shubhrajyoti.datta@gmail.com>
+X-Mailer: git-send-email 2.1.1
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-Result: No--5.340-7.0-31-1
+X-imss-scan-details: No--5.340-7.0-31-1;No--5.340-5.0-31-1
+X-TM-AS-User-Approved-Sender: No;No
+X-TM-AS-Result-Xfilter: Match text exemption rules:No
+X-EOPAttributedMessage: 0
+X-Matching-Connectors: 132203444136109666;(f9e945fa-a09a-4caa-7158-08d2eb1d8c44);()
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(376002)(346002)(396003)(39860400002)(189003)(199004)(70206006)(82202003)(73392003)(70586007)(81166006)(76482006)(2616005)(2906002)(26005)(5660300002)(336012)(48376002)(426003)(50466002)(86362001)(81156014)(8936002)(8676002)(316002)(498600001)(6666004)(51416003)(55446002)(4326008)(50226002)(450100002)(107886003)(305945005)(356004)(36756003)(9786002)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6255;H:xsj-pvapsmtpgw01;FPR:;SPF:SoftFail;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bc5ebbfc-1249-40d9-b086-08d77c6c2040
+X-MS-TrafficTypeDiagnostic: MN2PR02MB6255:
+X-Microsoft-Antispam-PRVS: <MN2PR02MB6255864F593CF8FBFB78315A87580@MN2PR02MB6255.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 02462830BE
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: D2HoYpjhVmfDo+nXsOPBHGdBA7Xm4E/x3za5ZLkf3h/FZM797GSMFNCkaWTgATz37WqRZAasBu536ZugSQqu3ReRYyMyqDi4Hfugcy/8BHGjvr+/qNmclEHXBSaJtpckAWYYDLbI5uDUdGH33bW949eLlEbiFVZjh9Avzbnhq3Xh2l2k0Gyp1ES8EVXiAl3P06UDEgzeNWaE+aBXfpCRC1WiWgCYIHrdmvMi5Ag4LCK5A9zuZ8Pr4mtn6gKzmMvGGGiFQFJrl0szNVOmZOKpvGz+A+fELq9nczrN1Tcef7S6Zf5rmsgBqHsqBDq1YQcHOuae3Rlsld5GSrWGxxMwyC0g8s4BjSlSiVUFBsEJcimwefAE4IUz4LbPEtT46Ppy9QXZHl66J+yhzSx+bu0Pp/bt3PDovl8S7PEJz0yM2V5qDfZHNMFPjJhIBzjhDLWO
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2019 05:53:33.4506
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc5ebbfc-1249-40d9-b086-08d77c6c2040
+X-MS-Exchange-CrossTenant-Id: 5afe0b00-7697-4969-b663-5eab37d5f47e
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5afe0b00-7697-4969-b663-5eab37d5f47e;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6255
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIE1hdHRoaWFzOg0KDQpPbiBTYXQsIDIwMTktMTItMDcgYXQgMjM6NDcgKzAxMDAsIG1hdHRo
-aWFzLmJnZ0BrZXJuZWwub3JnIHdyb3RlOg0KPiBGcm9tOiBNYXR0aGlhcyBCcnVnZ2VyIDxtYnJ1
-Z2dlckBzdXNlLmNvbT4NCj4gDQo+IFRoZSBNTVNZUyBzdWJzeXN0ZW0gaW5jbHVkZXMgY2xvY2tz
-IGFuZCBkcm0gY29tcG9uZW50cy4NCj4gVGhpcyBwYXRjaCBhZGRzIGFuIGluaXRhaWxpemF0aW9u
-IHBhdGggdGhyb3VnaCBhIHBsYXRmb3JtIGRldmljZQ0KPiBmb3IgdGhlIGNsb2NrIHBhcnQsIHNv
-IHRoYXQgYm90aCBkcml2ZXJzIGdldCBwcm9iZWQgZnJvbSB0aGUgc2FtZQ0KPiBkZXZpY2UgdHJl
-ZSBjb21wYXRpYmxlLg0KDQpZb3UndmUgc3dpdGNoZWQgbXQ2Nzc5IGFuZCBtdDY3OTcgY2xvY2sg
-ZHJpdmVyIHRvIHBsYXRmb3JtIGRldmljZQ0KcHJvYmluZywgYnV0IHlvdSBkb2VzIG5vdCBwcm9i
-ZSB0aGVuIGluIGRybSBkcml2ZXIsIHNvIHlvdXIgZGVzaWduIGlzIHRvDQpsZXQgbW1zeXMgY2xv
-Y2sgbm90IHdvcmsgaWYgZHJtIGRyaXZlciBpcyBub3QgZW5hYmxlZD8gSXQncyBmaW5lIGZvciBt
-ZQ0KYmVjYXVzZSBpdCBzZWVtcyB0aGF0IGRybSBkcml2ZXIgaXMgdGhlIG9ubHkgdXNlciBvZiBt
-bXN5cyBjbG9jayBub3cuDQoNClJlZ2FyZHMsDQpDSw0KDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBN
-YXR0aGlhcyBCcnVnZ2VyIDxtYnJ1Z2dlckBzdXNlLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyB8IDI0ICsrKysrKysrKysrKysrKysrKysrKysr
-Kw0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmggfCAgMiArKw0KPiAg
-MiBmaWxlcyBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9kcnYuYw0KPiBpbmRleCAyMTA0NTVlOWY0NmMuLjVhZGE3NGQ4ZDBjOSAx
-MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMNCj4g
-KysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMNCj4gQEAgLTE4Niw2
-ICsxODYsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19tbXN5c19kcml2ZXJfZGF0YSBtdDI3
-MDFfbW1zeXNfZHJpdmVyX2RhdGEgPSB7DQo+ICAJLmV4dF9wYXRoID0gbXQyNzAxX210a19kZHBf
-ZXh0LA0KPiAgCS5leHRfbGVuID0gQVJSQVlfU0laRShtdDI3MDFfbXRrX2RkcF9leHQpLA0KPiAg
-CS5zaGFkb3dfcmVnaXN0ZXIgPSB0cnVlLA0KPiArCS5jbGtfZHJ2X25hbWUgPSAiY2xrLW10Mjcw
-MS1tbSIsDQo+ICB9Ow0KPiAgDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19tbXN5c19kcml2
-ZXJfZGF0YSBtdDI3MTJfbW1zeXNfZHJpdmVyX2RhdGEgPSB7DQo+IEBAIC0xOTUsNiArMTk2LDcg
-QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfbW1zeXNfZHJpdmVyX2RhdGEgbXQyNzEyX21tc3lz
-X2RyaXZlcl9kYXRhID0gew0KPiAgCS5leHRfbGVuID0gQVJSQVlfU0laRShtdDI3MTJfbXRrX2Rk
-cF9leHQpLA0KPiAgCS50aGlyZF9wYXRoID0gbXQyNzEyX210a19kZHBfdGhpcmQsDQo+ICAJLnRo
-aXJkX2xlbiA9IEFSUkFZX1NJWkUobXQyNzEyX210a19kZHBfdGhpcmQpLA0KPiArCS5jbGtfZHJ2
-X25hbWUgPSAiY2xrLW10MjcxMi1tbSIsDQo+ICB9Ow0KPiAgDQo+ICBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IG10a19tbXN5c19kcml2ZXJfZGF0YSBtdDgxNzNfbW1zeXNfZHJpdmVyX2RhdGEgPSB7DQo+
-IEBAIC0yMDIsNiArMjA0LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfbW1zeXNfZHJpdmVy
-X2RhdGEgbXQ4MTczX21tc3lzX2RyaXZlcl9kYXRhID0gew0KPiAgCS5tYWluX2xlbiA9IEFSUkFZ
-X1NJWkUobXQ4MTczX210a19kZHBfbWFpbiksDQo+ICAJLmV4dF9wYXRoID0gbXQ4MTczX210a19k
-ZHBfZXh0LA0KPiAgCS5leHRfbGVuID0gQVJSQVlfU0laRShtdDgxNzNfbXRrX2RkcF9leHQpLA0K
-PiArCS5jbGtfZHJ2X25hbWUgPSAiY2xrLW10ODE3My1tbSIsDQo+ICB9Ow0KPiAgDQo+ICBzdGF0
-aWMgaW50IG10a19kcm1fa21zX2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRybSkNCj4gQEAgLTQ5
-OSw2ICs1MDIsMjQgQEAgc3RhdGljIGludCBtdGtfZHJtX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYpDQo+ICAJSU5JVF9XT1JLKCZwcml2YXRlLT5jb21taXQud29yaywgbXRrX2F0
-b21pY193b3JrKTsNCj4gIAlwcml2YXRlLT5kYXRhID0gb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRh
-KGRldik7DQo+ICANCj4gKwkvKg0KPiArCSAqIE1NU1lTIGluY2x1ZGVzIGFwYXJ0IGZyb20gY29t
-cG9uZW50cyBtYW5hZ2VtZW50IGEgYmxvY2sgcHJvdmlkaW5nDQo+ICsJICogY2xvY2tzIGZvciB0
-aGUgc3Vic3lzdGVtLiBXZSBwcm9iZSB0aGlzIGNsb2NrIGRyaXZlciB2aWEgYSBwbGF0Zm9ybQ0K
-PiArCSAqIGRldmljZS4NCj4gKwkgKi8NCj4gKwlpZiAocHJpdmF0ZS0+ZGF0YS0+Y2xrX2Rydl9u
-YW1lKSB7DQo+ICsJCXByaXZhdGUtPmNsa19kZXYgPSBwbGF0Zm9ybV9kZXZpY2VfcmVnaXN0ZXJf
-ZGF0YShkZXYsDQo+ICsJCQkJCQlwcml2YXRlLT5kYXRhLT5jbGtfZHJ2X25hbWUsIC0xLA0KPiAr
-CQkJCQkJTlVMTCwgMCk7DQo+ICsNCj4gKwkJaWYgKElTX0VSUihwcml2YXRlLT5jbGtfZGV2KSkg
-ew0KPiArCQkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gcmVnaXN0ZXIgJXMgcGxhdGZvcm0gZGV2
-aWNlXG4iLA0KPiArCQkJCXByaXZhdGUtPmRhdGEtPmNsa19kcnZfbmFtZSk7DQo+ICsNCj4gKwkJ
-CXJldHVybiBQVFJfRVJSKHByaXZhdGUtPmNsa19kZXYpOw0KPiArCQl9DQo+ICsJfQ0KPiArDQo+
-ICAJcHJpdmF0ZS0+Y29uZmlnX3JlZ3MgPSBzeXNjb25fbm9kZV90b19yZWdtYXAoZGV2LT5vZl9u
-b2RlKTsNCj4gIAlpZiAoSVNfRVJSKHByaXZhdGUtPmNvbmZpZ19yZWdzKSkNCj4gIAkJcmV0dXJu
-IFBUUl9FUlIocHJpdmF0ZS0+Y29uZmlnX3JlZ3MpOw0KPiBAQCAtNjA1LDYgKzYyNiw5IEBAIHN0
-YXRpYyBpbnQgbXRrX2RybV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4g
-IAlmb3IgKGkgPSAwOyBpIDwgRERQX0NPTVBPTkVOVF9JRF9NQVg7IGkrKykNCj4gIAkJb2Zfbm9k
-ZV9wdXQocHJpdmF0ZS0+Y29tcF9ub2RlW2ldKTsNCj4gIA0KPiArCWlmIChwcml2YXRlLT5jbGtf
-ZGV2KQ0KPiArCQlwbGF0Zm9ybV9kZXZpY2VfdW5yZWdpc3Rlcihwcml2YXRlLT5jbGtfZGV2KTsN
-Cj4gKw0KPiAgCXJldHVybiAwOw0KPiAgfQ0KPiAgDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaCBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
-dGtfZHJtX2Rydi5oDQo+IGluZGV4IDYzYTEyMTU3N2RjYi4uOGZlOTEzNmFkYzM4IDEwMDY0NA0K
-PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaA0KPiArKysgYi9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaA0KPiBAQCAtMjksMTEgKzI5LDEz
-IEBAIHN0cnVjdCBtdGtfbW1zeXNfZHJpdmVyX2RhdGEgew0KPiAgCXVuc2lnbmVkIGludCB0aGly
-ZF9sZW47DQo+ICANCj4gIAlib29sIHNoYWRvd19yZWdpc3RlcjsNCj4gKwljb25zdCBjaGFyICpj
-bGtfZHJ2X25hbWU7DQo+ICB9Ow0KPiAgDQo+ICBzdHJ1Y3QgbXRrX2RybV9wcml2YXRlIHsNCj4g
-IAlzdHJ1Y3QgZHJtX2RldmljZSAqZHJtOw0KPiAgCXN0cnVjdCBkZXZpY2UgKmRtYV9kZXY7DQo+
-ICsJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqY2xrX2RldjsNCj4gIA0KPiAgCXVuc2lnbmVkIGlu
-dCBudW1fcGlwZXM7DQo+ICANCg0K
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+
+Add dt bindings for xilinx traffic generator IP.
+
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+---
+ .../bindings/misc/xlnx,axi-traffic-gen.txt         | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt
+
+diff --git a/Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt b/Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt
+new file mode 100644
+index 0000000..6edb8f6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt
+@@ -0,0 +1,25 @@
++* Xilinx AXI Traffic generator IP
++
++Required properties:
++- compatible: "xlnx,axi-traffic-gen"
++- interrupts: Should contain AXI Traffic Generator interrupts.
++- interrupt-parent: Must be core interrupt controller.
++- reg: Should contain AXI Traffic Generator registers location and length.
++- interrupt-names: Should contain both the intr names of device - error
++		   and completion.
++- xlnx,device-id: Device instance Id.
++
++Optional properties:
++- clocks: Input clock specifier. Refer to common clock bindings.
++
++Example:
++++++++++
++axi_traffic_gen_1: axi-traffic-gen@76000000 {
++	compatible = "xlnx,axi-traffic-gen-1.0", "xlnx,axi-traffic-gen";
++	clocks = <&clkc 15>;
++	interrupts = <0 2 2 2>;
++	interrupt-parent = <&axi_intc_1>;
++	interrupt-names = "err-out", "irq-out";
++	reg = <0x76000000 0x800000>;
++	xlnx,device-id = <0x0>;
++} ;
+-- 
+2.1.1
 
