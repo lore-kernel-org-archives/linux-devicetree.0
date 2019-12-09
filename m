@@ -2,117 +2,104 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E340C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 03:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5645FC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 03:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5FC2071A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 03:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1710C2071A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 03:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575863200;
+	bh=4oeu8cyoVaTnaC9rYcfi4Uf0bow8pY1/IorMe2It3U8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AtsbHVOjliomE0teH2u0zNJvSRTBv5UzTzU3ef8GruwK/TKXSXNRN15CNMdAdSyI7
+	 GJ4WUi/K3kW9Tllvd6WqZtxuk65O43jV9AZifUN1xGkw5bJRGNByjk4uLJqNTFvM1C
+	 q3lAYrQbVvCsfAohhpagYif3WWRqGgMFxUSihEl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfLIDjU (ORCPT
+        id S1726988AbfLIDqj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Dec 2019 22:39:20 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26526 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726748AbfLIDjU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Dec 2019 22:39:20 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB93bFWU035849;
-        Sun, 8 Dec 2019 22:39:05 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wrtgy8mba-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 08 Dec 2019 22:39:05 -0500
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xB93d5ET058571;
-        Sun, 8 Dec 2019 22:39:05 -0500
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wrtgy8mav-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 08 Dec 2019 22:39:05 -0500
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB93a3Os009546;
-        Mon, 9 Dec 2019 03:39:04 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma02wdc.us.ibm.com with ESMTP id 2wr3q5y975-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Dec 2019 03:39:04 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB93d2vS44892494
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Dec 2019 03:39:03 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D23DB13604F;
-        Mon,  9 Dec 2019 03:39:02 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4E7FD136060;
-        Mon,  9 Dec 2019 03:39:02 +0000 (GMT)
-Received: from [9.70.82.143] (unknown [9.70.82.143])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  9 Dec 2019 03:39:02 +0000 (GMT)
-Subject: [PATCH V2 13/13] powerpc/vas: Free send window in VAS instance
- after credits returned
-From:   Haren Myneni <haren@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     hch@infradead.org, mikey@neuling.org, npiggin@gmail.com,
-        herbert@gondor.apana.org.au, linuxppc-dev@lists.ozlabs.org,
-        devicetree@vger.kernel.org, sukadev@linux.vnet.ibm.com
-In-Reply-To: <1575861522.16318.9.camel@hbabu-laptop>
-References: <1575861522.16318.9.camel@hbabu-laptop>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Sun, 08 Dec 2019 19:37:23 -0800
-Message-ID: <1575862643.16318.31.camel@hbabu-laptop>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.28.3 
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-08_07:2019-12-05,2019-12-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 suspectscore=3 bulkscore=0
- phishscore=0 impostorscore=0 adultscore=0 spamscore=0 mlxlogscore=878
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912090030
+        Sun, 8 Dec 2019 22:46:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726834AbfLIDqj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 8 Dec 2019 22:46:39 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C21F720663;
+        Mon,  9 Dec 2019 03:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575863199;
+        bh=4oeu8cyoVaTnaC9rYcfi4Uf0bow8pY1/IorMe2It3U8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mIHZZlNt+roCRKMRD6h+PUC5L6mZEPFDrPhIOzwMzI7PLb8PlIvESDxCHn9RTAr+E
+         T77O33PHVBOOmyRMwdYxR3ArojpF0+ouVvT0ScSb4/vfUWSanTpS/osziVivoiVwv2
+         m0pQBU+Oj04vTHVbSsMAaZ7p83BVqm/D+mlHXF2o=
+Date:   Mon, 9 Dec 2019 11:46:25 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Michael Walle <michael@walle.cc>, Li Yang <leoyang.li@nxp.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] arm64: dts: ls1028a: fix reboot node
+Message-ID: <20191209034624.GY3365@dragon>
+References: <20191123000709.13162-1-michael@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191123000709.13162-1-michael@walle.cc>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sat, Nov 23, 2019 at 01:07:09AM +0100, Michael Walle wrote:
+> The reboot register isn't located inside the DCFG controller, but in its
+> own RST controller. Fix it.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-NX may be processing requests while trying to close window. Wait until
-all credits are returned and then free send window from VAS instance.
+Do we need a Fixes tag?
 
-Signed-off-by: Haren Myneni <haren@us.ibm.com>
----
- arch/powerpc/platforms/powernv/vas-window.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+@Leo, looks good to you?
 
-diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/platforms/powernv/vas-window.c
-index 578f144..5322d1c 100644
---- a/arch/powerpc/platforms/powernv/vas-window.c
-+++ b/arch/powerpc/platforms/powernv/vas-window.c
-@@ -1309,14 +1309,14 @@ int vas_win_close(struct vas_window *window)
- 
- 	unmap_paste_region(window);
- 
--	clear_vinst_win(window);
--
- 	poll_window_busy_state(window);
- 
- 	unpin_close_window(window);
- 
- 	poll_window_credits(window);
- 
-+	clear_vinst_win(window);
-+
- 	poll_window_castout(window);
- 
- 	/* if send window, drop reference to matching receive window */
--- 
-1.8.3.1
+Shawn
 
-
-
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 72b9a75976a1..dc75534a4754 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -102,7 +102,7 @@
+>  
+>  	reboot {
+>  		compatible ="syscon-reboot";
+> -		regmap = <&dcfg>;
+> +		regmap = <&rst>;
+>  		offset = <0xb0>;
+>  		mask = <0x02>;
+>  	};
+> @@ -161,6 +161,12 @@
+>  			big-endian;
+>  		};
+>  
+> +		rst: syscon@1e60000 {
+> +			compatible = "fsl,ls1028a-rst", "syscon";
+> +			reg = <0x0 0x1e60000 0x0 0x10000>;
+> +			little-endian;
+> +		};
+> +
+>  		scfg: syscon@1fc0000 {
+>  			compatible = "fsl,ls1028a-scfg", "syscon";
+>  			reg = <0x0 0x1fc0000 0x0 0x10000>;
+> -- 
+> 2.20.1
+> 
