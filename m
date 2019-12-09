@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5695C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F018C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 897B42075B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22CD52073D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:33:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="LNYFzsgg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YxJK44y8"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="mCHRonte";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mKfT+gAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfLIJc4 (ORCPT
+        id S1727323AbfLIJdp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:32:56 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:44417 "EHLO
+        Mon, 9 Dec 2019 04:33:45 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:42357 "EHLO
         out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727299AbfLIJc4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:32:56 -0500
+        by vger.kernel.org with ESMTP id S1727113AbfLIJdp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:33:45 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9AC8222788;
-        Mon,  9 Dec 2019 04:32:53 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 09 Dec 2019 04:32:53 -0500
+        by mailout.nyi.internal (Postfix) with ESMTP id 11AD722844;
+        Mon,  9 Dec 2019 04:33:44 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 09 Dec 2019 04:33:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=QuUJ41Gws/3C9/zblvje8nu6dO
-        iRmYHvnK83utZ89ck=; b=LNYFzsggjBRIkj1GRKZwq0SUbPgxSs1Hep7qVx/FlY
-        bTA+0uLr2shibzciIc2qhVdVVXDCzoS6DCtONt4wEH0t4VSQSKPhskHY9HkjlYZH
-        tTSZ6AG24JJIRPH6McG6hFsLrqoOYgy7YwU5GQBJK+mxiFSZal5yWlKNLYFwB9WI
-        L5ZGNKuV+HAzmnC7ZpXM58GukvzbzFVYju+MVu3Neq0oJifnnVeC49BwYMgpwZ0W
-        c+L+9k/Ym6+Snbl0PFTMfilXbgBmdPp9zurlgrG11BWp8iAl1vi99pRPGmFXqRgI
-        UTd06BNUieDrRu3ghPtdzEKibMpiJ5/3rsZUUMo9mmMA==
+        :content-transfer-encoding; s=fm1; bh=CzRTS+zLwSmz8j9boPn7XwoLe7
+        GpXZpeUy5iQWVdTl8=; b=mCHRontePT0dkN2Uc+PgE7Ry1r9Id9oZZjLiIWFSoA
+        tQ486B9P46ngnYrD7n8CLeiwDOBK3cVqfLNfB/ctS2Ez8KDPiqerb4KzDrLsKgjV
+        Gw4kEj3QJtY9c1/e1RpZqagOs524vDuekrPNtopWmqZg32gfZ/BRFFFc5JijE9s1
+        KhcuSd/j//hbKzsyvyS6tmOaC8dKuRkMh8HFfdEK65pnGID/CCZaHtAdRfJOFjRW
+        KLouCUja8MBOcRz1lwtdCW6Vqpwn85cUvB9j4s3SVRCf9Qev+SCZBjwmwZVNDv6f
+        IqnzIfh2tkxj1Gk4OBtR7XmBwKOmXXpNLUofYDCD5EYw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=QuUJ41Gws/3C9/zbl
-        vje8nu6dOiRmYHvnK83utZ89ck=; b=YxJK44y8wezRBkjJGIAqOFVyuLRDrI6Fu
-        3e87MxJaZ8DAD1J5IZxpcArnMcuhFlcjv3Dstg7c071e7Z2Y+6L0se47/JxNfo6J
-        Z3GBpAoQRg+OMmNi0ogGck6pCAGt9KExm7R3it9Bn45YDy+Xh04jWTZd9AAd14oH
-        3R/f1epPp1dNEyr9T/M02nWB9DFh0i7I6xG416nqKNOik9MuN8yxEHHfUKn8CaDL
-        bZQaTzAC2uBLfxGd4X/eNZppmqtHrA5O298g845n1xgCzFaJUdhuyIG8C3Rnx1QB
-        Lu0kLnoXtFppjFSGLYoT5RhdMD3VA5konfrB4drofKlMWzb5HaKDA==
-X-ME-Sender: <xms:xRTuXa0aKO3eotYMCA7TDsvQZGPD-w0d_WTq_ijlL0m7hfik1bsCHA>
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=CzRTS+zLwSmz8j9bo
+        Pn7XwoLe7GpXZpeUy5iQWVdTl8=; b=mKfT+gADxrdn337JEUgNb1f3HtGQeWcji
+        JTQeeRcb2X2jGRSZ41ff9Fu400js2MISCOEAfRWYcFuyxb0FpNPH17c0rEepXZXS
+        DdT8CagzsXfk+atobRI9NMhrBLc0EErWpjTFrEDipaw+om8lEF2By8k119ExU1mb
+        eCzgKYRlTr3qrybODE5dP6BsuuWoNXeKsvNrv0kASfoNiqNxFuYCru06KWkA8jNX
+        yJurCwuVbowBSL4J2Vi2Ms7z2u7gNeaFgnN0yuFQeDIyVjVLjQNk3ULh5pVgdJqc
+        AqOWXOYdwjFSwcPXviac6sB2wjShqFBRoeWmjqd8REhofxyTu/xug==
+X-ME-Sender: <xms:9xTuXZSqig6A2_yJNxf_FdkVy7Cz0Qv1O_YHrb7SAikxslkFaSWjIw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeltddgtdehucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -55,23 +55,26 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeltddgtdehucetufdoteggod
     tfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrihhnpe
     guvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrieekrdejieenucfrrghr
     rghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthhenucevlhhush
-    htvghrufhiiigvpedt
-X-ME-Proxy: <xmx:xRTuXSE0nGxgRyhB1wJ0sXFvxpMO3B6BfB2YWwK86H5a--wniXsJUw>
-    <xmx:xRTuXawlmn4dD1CgjKWSehQCH65YMn0_e-2h4FaV8CkHX8ggIHQyGw>
-    <xmx:xRTuXZrmDdX16tkLsqviu7sTmxXyomJrftsvLtZML962yFgy1spBMA>
-    <xmx:xRTuXXJOWYyHwshm0n2WxHg-IOWGoluQ-kB-qBsk7QMMSe9ta_EhCw>
+    htvghrufhiiigvpedu
+X-ME-Proxy: <xmx:9xTuXZIv3hwdsgKinZMavgfDE-RRdmUqCbfpV6XL9Pb8VIienU-51w>
+    <xmx:9xTuXThtlahYfs4ZyZkaDh1azq0nuJ5LisPj_vlcAemgSV0XmFcEGQ>
+    <xmx:9xTuXUL3ARr6e92QJdQ0Ik7OdafC-ZsAfxLR0SghWjO_atoQGVjAeA>
+    <xmx:-BTuXVh5u3eMsiqxNl0CuTYqc1kt47QHgSwL1wjazCcXEOiQJYf1QQ>
 Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8AD7280061;
-        Mon,  9 Dec 2019 04:32:52 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8EDE230600AB;
+        Mon,  9 Dec 2019 04:33:42 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     Mark Rutland <mark.rutland@arm.com>,
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
-        devicetree@vger.kernel.org, Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH] dt-bindings: Change maintainer address
-Date:   Mon,  9 Dec 2019 10:32:48 +0100
-Message-Id: <20191209093248.50454-1-maxime@cerno.tech>
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH v2] dt-bindings: usb: Convert Allwinner USB PHY controller to a schema
+Date:   Mon,  9 Dec 2019 10:33:40 +0100
+Message-Id: <20191209093340.50552-1-maxime@cerno.tech>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -80,629 +83,1271 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-While my email address has changed for a while, all the schemas I
-contributed still have the old one unfortunately. Update it.
+The Allwinner SoCs have a USB PHY controller that is supported in Linux,
+with a matching Device Tree binding.
+
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- Documentation/devicetree/bindings/arm/sunxi.yaml                | 2 +-
- .../devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml       | 2 +-
- .../devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml        | 2 +-
- .../devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml      | 2 +-
- .../devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml  | 2 +-
- .../bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml          | 2 +-
- .../devicetree/bindings/display/panel/ronbo,rb070d30.yaml       | 2 +-
- .../devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml        | 2 +-
- .../devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml       | 2 +-
- .../devicetree/bindings/dma/allwinner,sun6i-a31-dma.yaml        | 2 +-
- .../devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml       | 2 +-
- .../devicetree/bindings/iio/adc/allwinner,sun8i-a33-ths.yaml    | 2 +-
- .../bindings/input/allwinner,sun4i-a10-lradc-keys.yaml          | 2 +-
- .../bindings/interrupt-controller/allwinner,sun4i-a10-ic.yaml   | 2 +-
- .../interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml        | 2 +-
- .../devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml      | 2 +-
- .../devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml       | 2 +-
- .../devicetree/bindings/mfd/allwinner,sun4i-a10-ts.yaml         | 2 +-
- .../devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml        | 2 +-
- .../devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml       | 2 +-
- .../devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml       | 2 +-
- .../devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml       | 2 +-
- .../devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml       | 2 +-
- .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml      | 2 +-
- .../devicetree/bindings/net/can/allwinner,sun4i-a10-can.yaml    | 2 +-
- .../devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml      | 2 +-
- .../devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml  | 2 +-
- .../bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml           | 2 +-
- .../devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml        | 2 +-
- .../devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml        | 2 +-
- .../devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml        | 2 +-
- .../devicetree/bindings/serio/allwinner,sun4i-a10-ps2.yaml      | 2 +-
- .../devicetree/bindings/sound/allwinner,sun4i-a10-codec.yaml    | 2 +-
- .../devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml      | 2 +-
- .../devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml    | 2 +-
- .../bindings/sound/allwinner,sun50i-a64-codec-analog.yaml       | 2 +-
- .../bindings/sound/allwinner,sun8i-a23-codec-analog.yaml        | 2 +-
- .../devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml    | 2 +-
- .../devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml        | 2 +-
- .../devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml        | 2 +-
- .../devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml    | 2 +-
- .../devicetree/bindings/timer/allwinner,sun5i-a13-hstimer.yaml  | 2 +-
- .../devicetree/bindings/usb/allwinner,sun4i-a10-musb.yaml       | 2 +-
- .../devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml   | 2 +-
- 44 files changed, 44 insertions(+), 44 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-index 8a1e38a1d7ab..cffe8bb0bad1 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-+++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-@@ -8,7 +8,7 @@ title: Allwinner platforms device tree bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
+---
+
+Changes from v1:
+  - Split the schemas into files of their own to make it more readable
+---
+ .../phy/allwinner,sun4i-a10-usb-phy.yaml      | 105 ++++++++++++++
+ .../phy/allwinner,sun50i-a64-usb-phy.yaml     | 106 ++++++++++++++
+ .../phy/allwinner,sun50i-h6-usb-phy.yaml      | 105 ++++++++++++++
+ .../phy/allwinner,sun5i-a13-usb-phy.yaml      |  93 ++++++++++++
+ .../phy/allwinner,sun6i-a31-usb-phy.yaml      | 119 +++++++++++++++
+ .../phy/allwinner,sun8i-a23-usb-phy.yaml      | 102 +++++++++++++
+ .../phy/allwinner,sun8i-a83t-usb-phy.yaml     | 122 ++++++++++++++++
+ .../phy/allwinner,sun8i-h3-usb-phy.yaml       | 137 ++++++++++++++++++
+ .../phy/allwinner,sun8i-r40-usb-phy.yaml      | 119 +++++++++++++++
+ .../phy/allwinner,sun8i-v3s-usb-phy.yaml      |  86 +++++++++++
+ .../devicetree/bindings/phy/sun4i-usb-phy.txt |  68 ---------
+ 11 files changed, 1094 insertions(+), 68 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun4i-a10-usb-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-a64-usb-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun5i-a13-usb-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-usb-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun8i-a23-usb-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun8i-a83t-usb-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun8i-h3-usb-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun8i-r40-usb-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun8i-v3s-usb-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun4i-a10-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun4i-a10-usb-phy.yaml
+new file mode 100644
+index 000000000000..020ef9e4c411
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/allwinner,sun4i-a10-usb-phy.yaml
+@@ -0,0 +1,105 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/allwinner,sun4i-a10-usb-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A10 USB PHY Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
 +  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   $nodename:
-diff --git a/Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml b/Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml
-index d2a872286437..f0b3d30fbb76 100644
---- a/Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml
-+++ b/Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A64 Display Engine Bus Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  "#phy-cells":
++    const: 1
++
++  compatible:
++    enum:
++      - allwinner,sun4i-a10-usb-phy
++      - allwinner,sun7i-a20-usb-phy
++
++  reg:
++    items:
++      - description: PHY Control registers
++      - description: PHY PMU1 registers
++      - description: PHY PMU2 registers
++
++  reg-names:
++    items:
++      - const: phy_ctrl
++      - const: pmu1
++      - const: pmu2
++
++  clocks:
++    maxItems: 1
++    description: USB PHY bus clock
++
++  clock-names:
++    const: usb_phy
++
++  resets:
++    items:
++      - description: USB OTG reset
++      - description: USB Host 1 Controller reset
++      - description: USB Host 2 Controller reset
++
++  reset-names:
++    items:
++      - const: usb0_reset
++      - const: usb1_reset
++      - const: usb2_reset
++
++  usb0_id_det-gpios:
++    description: GPIO to the USB OTG ID pin
++
++  usb0_vbus_det-gpios:
++    description: GPIO to the USB OTG VBUS detect pin
++
++  usb0_vbus_power-supply:
++    description: Power supply to detect the USB OTG VBUS
++
++  usb0_vbus-supply:
++    description: Regulator controlling USB OTG VBUS
++
++  usb1_vbus-supply:
++    description: Regulator controlling USB1 Host controller
++
++  usb2_vbus-supply:
++    description: Regulator controlling USB2 Host controller
++
++required:
++  - "#phy-cells"
++  - compatible
++  - clocks
++  - clock-names
++  - reg
++  - reg-names
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/clock/sun4i-a10-ccu.h>
++    #include <dt-bindings/reset/sun4i-a10-ccu.h>
++
++    usbphy: phy@01c13400 {
++        #phy-cells = <1>;
++        compatible = "allwinner,sun4i-a10-usb-phy";
++        reg = <0x01c13400 0x10>, <0x01c14800 0x4>, <0x01c1c800 0x4>;
++        reg-names = "phy_ctrl", "pmu1", "pmu2";
++        clocks = <&ccu CLK_USB_PHY>;
++        clock-names = "usb_phy";
++        resets = <&ccu RST_USB_PHY0>,
++                 <&ccu RST_USB_PHY1>,
++                 <&ccu RST_USB_PHY2>;
++        reset-names = "usb0_reset", "usb1_reset", "usb2_reset";
++        usb0_id_det-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>;
++        usb0_vbus_det-gpios = <&pio 7 22 GPIO_ACTIVE_HIGH>;
++        usb0_vbus-supply = <&reg_usb0_vbus>;
++        usb1_vbus-supply = <&reg_usb1_vbus>;
++        usb2_vbus-supply = <&reg_usb2_vbus>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun50i-a64-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun50i-a64-usb-phy.yaml
+new file mode 100644
+index 000000000000..fd6e126fcf18
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/allwinner,sun50i-a64-usb-phy.yaml
+@@ -0,0 +1,106 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/allwinner,sun50i-a64-usb-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A64 USB PHY Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
 +  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   $nodename:
-diff --git a/Documentation/devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml b/Documentation/devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml
-index be32f087c529..9fe11ceecdba 100644
---- a/Documentation/devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml
-+++ b/Documentation/devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A23 RSB Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  "#phy-cells":
++    const: 1
++
++  compatible:
++    const: allwinner,sun50i-a64-usb-phy
++
++  reg:
++    items:
++      - description: PHY Control registers
++      - description: PHY PMU0 registers
++      - description: PHY PMU1 registers
++
++  reg-names:
++    items:
++      - const: phy_ctrl
++      - const: pmu0
++      - const: pmu1
++
++  clocks:
++    items:
++      - description: USB OTG PHY bus clock
++      - description: USB Host 0 PHY bus clock
++
++  clock-names:
++    items:
++      - const: usb0_phy
++      - const: usb1_phy
++
++  resets:
++    items:
++      - description: USB OTG reset
++      - description: USB Host 1 Controller reset
++
++  reset-names:
++    items:
++      - const: usb0_reset
++      - const: usb1_reset
++
++  usb0_id_det-gpios:
++    description: GPIO to the USB OTG ID pin
++
++  usb0_vbus_det-gpios:
++    description: GPIO to the USB OTG VBUS detect pin
++
++  usb0_vbus_power-supply:
++    description: Power supply to detect the USB OTG VBUS
++
++  usb0_vbus-supply:
++    description: Regulator controlling USB OTG VBUS
++
++  usb1_vbus-supply:
++    description: Regulator controlling USB1 Host controller
++
++required:
++  - "#phy-cells"
++  - compatible
++  - clocks
++  - clock-names
++  - reg
++  - reg-names
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/clock/sun50i-a64-ccu.h>
++    #include <dt-bindings/reset/sun50i-a64-ccu.h>
++
++    phy@1c19400 {
++        #phy-cells = <1>;
++        compatible = "allwinner,sun50i-a64-usb-phy";
++        reg = <0x01c19400 0x14>,
++              <0x01c1a800 0x4>,
++              <0x01c1b800 0x4>;
++        reg-names = "phy_ctrl",
++                    "pmu0",
++                    "pmu1";
++        clocks = <&ccu CLK_USB_PHY0>,
++                 <&ccu CLK_USB_PHY1>;
++        clock-names = "usb0_phy",
++                      "usb1_phy";
++        resets = <&ccu RST_USB_PHY0>,
++                 <&ccu RST_USB_PHY1>;
++        reset-names = "usb0_reset",
++                      "usb1_reset";
++        usb0_id_det-gpios = <&pio 7 9 GPIO_ACTIVE_HIGH>; /* PH9 */
++        usb0_vbus_power-supply = <&usb_power_supply>;
++        usb0_vbus-supply = <&reg_drivevbus>;
++        usb1_vbus-supply = <&reg_usb1_vbus>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb-phy.yaml
+new file mode 100644
+index 000000000000..7670411002c9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb-phy.yaml
+@@ -0,0 +1,105 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/allwinner,sun50i-h6-usb-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner H6 USB PHY Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
 +  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#address-cells":
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml
-index 64938fdaea55..4d382128b711 100644
---- a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml
-@@ -8,7 +8,7 @@ title: Allwinner Clock Control Unit Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  "#phy-cells":
++    const: 1
++
++  compatible:
++    const: allwinner,sun50i-h6-usb-phy
++
++  reg:
++    items:
++      - description: PHY Control registers
++      - description: PHY PMU0 registers
++      - description: PHY PMU3 registers
++
++  reg-names:
++    items:
++      - const: phy_ctrl
++      - const: pmu0
++      - const: pmu3
++
++  clocks:
++    items:
++      - description: USB OTG PHY bus clock
++      - description: USB Host PHY bus clock
++
++  clock-names:
++    items:
++      - const: usb0_phy
++      - const: usb3_phy
++
++  resets:
++    items:
++      - description: USB OTG reset
++      - description: USB Host Controller reset
++
++  reset-names:
++    items:
++      - const: usb0_reset
++      - const: usb3_reset
++
++  usb0_id_det-gpios:
++    description: GPIO to the USB OTG ID pin
++
++  usb0_vbus_det-gpios:
++    description: GPIO to the USB OTG VBUS detect pin
++
++  usb0_vbus_power-supply:
++    description: Power supply to detect the USB OTG VBUS
++
++  usb0_vbus-supply:
++    description: Regulator controlling USB OTG VBUS
++
++  usb3_vbus-supply:
++    description: Regulator controlling USB3 Host controller
++
++required:
++  - "#phy-cells"
++  - compatible
++  - clocks
++  - clock-names
++  - reg
++  - reg-names
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/clock/sun50i-h6-ccu.h>
++    #include <dt-bindings/reset/sun50i-h6-ccu.h>
++
++    phy@5100400 {
++        #phy-cells = <1>;
++        compatible = "allwinner,sun50i-h6-usb-phy";
++        reg = <0x05100400 0x24>,
++              <0x05101800 0x4>,
++              <0x05311800 0x4>;
++        reg-names = "phy_ctrl",
++                    "pmu0",
++                    "pmu3";
++        clocks = <&ccu CLK_USB_PHY0>,
++                 <&ccu CLK_USB_PHY3>;
++        clock-names = "usb0_phy",
++                      "usb3_phy";
++        resets = <&ccu RST_USB_PHY0>,
++                 <&ccu RST_USB_PHY3>;
++        reset-names = "usb0_reset",
++                      "usb3_reset";
++        usb0_id_det-gpios = <&pio 2 6 GPIO_ACTIVE_HIGH>; /* PC6 */
++        usb0_vbus-supply = <&reg_vcc5v>;
++        usb3_vbus-supply = <&reg_vcc5v>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun5i-a13-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun5i-a13-usb-phy.yaml
+new file mode 100644
+index 000000000000..9b319381d1ad
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/allwinner,sun5i-a13-usb-phy.yaml
+@@ -0,0 +1,93 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/allwinner,sun5i-a13-usb-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A13 USB PHY Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
 +  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#clock-cells":
-diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
-index 80b3e7350a73..33c7842917f6 100644
---- a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
-+++ b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 Security System Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  "#phy-cells":
++    const: 1
++
++  compatible:
++    const: allwinner,sun5i-a13-usb-phy
++
++  reg:
++    items:
++      - description: PHY Control registers
++      - description: PHY PMU1 registers
++
++  reg-names:
++    items:
++      - const: phy_ctrl
++      - const: pmu1
++
++  clocks:
++    maxItems: 1
++    description: USB OTG PHY bus clock
++
++  clock-names:
++    const: usb_phy
++
++  resets:
++    items:
++      - description: USB OTG reset
++      - description: USB Host 1 Controller reset
++
++  reset-names:
++    items:
++      - const: usb0_reset
++      - const: usb1_reset
++
++  usb0_id_det-gpios:
++    description: GPIO to the USB OTG ID pin
++
++  usb0_vbus_det-gpios:
++    description: GPIO to the USB OTG VBUS detect pin
++
++  usb0_vbus_power-supply:
++    description: Power supply to detect the USB OTG VBUS
++
++  usb0_vbus-supply:
++    description: Regulator controlling USB OTG VBUS
++
++  usb1_vbus-supply:
++    description: Regulator controlling USB1 Host controller
++
++required:
++  - "#phy-cells"
++  - compatible
++  - clocks
++  - clock-names
++  - reg
++  - reg-names
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/clock/sun5i-ccu.h>
++    #include <dt-bindings/reset/sun5i-ccu.h>
++
++    phy@1c13400 {
++        #phy-cells = <1>;
++        compatible = "allwinner,sun5i-a13-usb-phy";
++        reg = <0x01c13400 0x10>, <0x01c14800 0x4>;
++        reg-names = "phy_ctrl", "pmu1";
++        clocks = <&ccu CLK_USB_PHY0>;
++        clock-names = "usb_phy";
++        resets = <&ccu RST_USB_PHY0>, <&ccu RST_USB_PHY1>;
++        reset-names = "usb0_reset", "usb1_reset";
++        usb0_id_det-gpios = <&pio 6 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>; /* PG2 */
++        usb0_vbus_det-gpios = <&pio 6 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>; /* PG1 */
++        usb0_vbus-supply = <&reg_usb0_vbus>;
++        usb1_vbus-supply = <&reg_usb1_vbus>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-usb-phy.yaml
+new file mode 100644
+index 000000000000..b0ed01bbf3db
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-usb-phy.yaml
+@@ -0,0 +1,119 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/allwinner,sun6i-a31-usb-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A31 USB PHY Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
 +  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-index dafc0980c4fa..0f7074977c04 100644
---- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-+++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A31 MIPI-DSI Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  "#phy-cells":
++    const: 1
++
++  compatible:
++    const: allwinner,sun6i-a31-usb-phy
++
++  reg:
++    items:
++      - description: PHY Control registers
++      - description: PHY PMU1 registers
++      - description: PHY PMU2 registers
++
++  reg-names:
++    items:
++      - const: phy_ctrl
++      - const: pmu1
++      - const: pmu2
++
++  clocks:
++    items:
++      - description: USB OTG PHY bus clock
++      - description: USB Host 0 PHY bus clock
++      - description: USB Host 1 PHY bus clock
++
++  clock-names:
++    items:
++      - const: usb0_phy
++      - const: usb1_phy
++      - const: usb2_phy
++
++  resets:
++    items:
++      - description: USB OTG reset
++      - description: USB Host 1 Controller reset
++      - description: USB Host 2 Controller reset
++
++  reset-names:
++    items:
++      - const: usb0_reset
++      - const: usb1_reset
++      - const: usb2_reset
++
++  usb0_id_det-gpios:
++    description: GPIO to the USB OTG ID pin
++
++  usb0_vbus_det-gpios:
++    description: GPIO to the USB OTG VBUS detect pin
++
++  usb0_vbus_power-supply:
++    description: Power supply to detect the USB OTG VBUS
++
++  usb0_vbus-supply:
++    description: Regulator controlling USB OTG VBUS
++
++  usb1_vbus-supply:
++    description: Regulator controlling USB1 Host controller
++
++  usb2_vbus-supply:
++    description: Regulator controlling USB2 Host controller
++
++required:
++  - "#phy-cells"
++  - compatible
++  - clocks
++  - clock-names
++  - reg
++  - reg-names
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/clock/sun6i-a31-ccu.h>
++    #include <dt-bindings/reset/sun6i-a31-ccu.h>
++
++    phy@1c19400 {
++        #phy-cells = <1>;
++        compatible = "allwinner,sun6i-a31-usb-phy";
++        reg = <0x01c19400 0x10>,
++              <0x01c1a800 0x4>,
++              <0x01c1b800 0x4>;
++        reg-names = "phy_ctrl",
++                    "pmu1",
++                    "pmu2";
++        clocks = <&ccu CLK_USB_PHY0>,
++                 <&ccu CLK_USB_PHY1>,
++                 <&ccu CLK_USB_PHY2>;
++        clock-names = "usb0_phy",
++                      "usb1_phy",
++                      "usb2_phy";
++        resets = <&ccu RST_USB_PHY0>,
++                 <&ccu RST_USB_PHY1>,
++                 <&ccu RST_USB_PHY2>;
++        reset-names = "usb0_reset",
++                      "usb1_reset",
++                      "usb2_reset";
++        usb0_id_det-gpios = <&pio 0 15 GPIO_ACTIVE_HIGH>; /* PA15 */
++        usb0_vbus_det-gpios = <&pio 0 16 GPIO_ACTIVE_HIGH>; /* PA16 */
++        usb0_vbus_power-supply = <&usb_power_supply>;
++        usb0_vbus-supply = <&reg_drivevbus>;
++        usb1_vbus-supply = <&reg_usb1_vbus>;
++        usb2_vbus-supply = <&reg_usb2_vbus>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun8i-a23-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun8i-a23-usb-phy.yaml
+new file mode 100644
+index 000000000000..b0674406f8aa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/allwinner,sun8i-a23-usb-phy.yaml
+@@ -0,0 +1,102 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/allwinner,sun8i-a23-usb-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A23 USB PHY Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
 +  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#address-cells": true
-diff --git a/Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.yaml b/Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.yaml
-index 0e7987f1cdb7..d67617f6f74a 100644
---- a/Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.yaml
-@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Ronbo RB070D30 DSI Display Panel
- 
- maintainers:
--  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  "#phy-cells":
++    const: 1
++
++  compatible:
++    enum:
++      - allwinner,sun8i-a23-usb-phy
++      - allwinner,sun8i-a33-usb-phy
++
++  reg:
++    items:
++      - description: PHY Control registers
++      - description: PHY PMU1 registers
++
++  reg-names:
++    items:
++      - const: phy_ctrl
++      - const: pmu1
++
++  clocks:
++    items:
++      - description: USB OTG PHY bus clock
++      - description: USB Host 0 PHY bus clock
++
++  clock-names:
++    items:
++      - const: usb0_phy
++      - const: usb1_phy
++
++  resets:
++    items:
++      - description: USB OTG reset
++      - description: USB Host 1 Controller reset
++
++  reset-names:
++    items:
++      - const: usb0_reset
++      - const: usb1_reset
++
++  usb0_id_det-gpios:
++    description: GPIO to the USB OTG ID pin
++
++  usb0_vbus_det-gpios:
++    description: GPIO to the USB OTG VBUS detect pin
++
++  usb0_vbus_power-supply:
++    description: Power supply to detect the USB OTG VBUS
++
++  usb0_vbus-supply:
++    description: Regulator controlling USB OTG VBUS
++
++  usb1_vbus-supply:
++    description: Regulator controlling USB1 Host controller
++
++required:
++  - "#phy-cells"
++  - compatible
++  - clocks
++  - clock-names
++  - reg
++  - reg-names
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/clock/sun8i-a23-a33-ccu.h>
++    #include <dt-bindings/reset/sun8i-a23-a33-ccu.h>
++
++    phy@1c19400 {
++        #phy-cells = <1>;
++        compatible = "allwinner,sun8i-a23-usb-phy";
++        reg = <0x01c19400 0x10>, <0x01c1a800 0x4>;
++        reg-names = "phy_ctrl", "pmu1";
++        clocks = <&ccu CLK_USB_PHY0>,
++                 <&ccu CLK_USB_PHY1>;
++        clock-names = "usb0_phy",
++                      "usb1_phy";
++        resets = <&ccu RST_USB_PHY0>,
++                 <&ccu RST_USB_PHY1>;
++        reset-names = "usb0_reset",
++                      "usb1_reset";
++        usb0_id_det-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
++        usb0_vbus_power-supply = <&usb_power_supply>;
++        usb0_vbus-supply = <&reg_drivevbus>;
++        usb1_vbus-supply = <&reg_usb1_vbus>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun8i-a83t-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun8i-a83t-usb-phy.yaml
+new file mode 100644
+index 000000000000..48dc9c834a9b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/allwinner,sun8i-a83t-usb-phy.yaml
+@@ -0,0 +1,122 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/allwinner,sun8i-a83t-usb-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A83t USB PHY Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
 +  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml b/Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml
-index 15abc0f9429f..83808199657b 100644
---- a/Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml
-+++ b/Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 DMA Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  "#phy-cells":
++    const: 1
++
++  compatible:
++    const: allwinner,sun8i-a83t-usb-phy
++
++  reg:
++    items:
++      - description: PHY Control registers
++      - description: PHY PMU1 registers
++      - description: PHY PMU2 registers
++
++  reg-names:
++    items:
++      - const: phy_ctrl
++      - const: pmu1
++      - const: pmu2
++
++  clocks:
++    items:
++      - description: USB OTG PHY bus clock
++      - description: USB Host 0 PHY bus clock
++      - description: USB Host 1 PHY bus clock
++      - description: USB HSIC 12MHz clock
++
++  clock-names:
++    items:
++      - const: usb0_phy
++      - const: usb1_phy
++      - const: usb2_phy
++      - const: usb2_hsic_12M
++
++  resets:
++    items:
++      - description: USB OTG reset
++      - description: USB Host 1 Controller reset
++      - description: USB Host 2 Controller reset
++
++  reset-names:
++    items:
++      - const: usb0_reset
++      - const: usb1_reset
++      - const: usb2_reset
++
++  usb0_id_det-gpios:
++    description: GPIO to the USB OTG ID pin
++
++  usb0_vbus_det-gpios:
++    description: GPIO to the USB OTG VBUS detect pin
++
++  usb0_vbus_power-supply:
++    description: Power supply to detect the USB OTG VBUS
++
++  usb0_vbus-supply:
++    description: Regulator controlling USB OTG VBUS
++
++  usb1_vbus-supply:
++    description: Regulator controlling USB1 Host controller
++
++  usb2_vbus-supply:
++    description: Regulator controlling USB2 Host controller
++
++required:
++  - "#phy-cells"
++  - compatible
++  - clocks
++  - clock-names
++  - reg
++  - reg-names
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/clock/sun8i-a83t-ccu.h>
++    #include <dt-bindings/reset/sun8i-a83t-ccu.h>
++
++    phy@1c19400 {
++        #phy-cells = <1>;
++        compatible = "allwinner,sun8i-a83t-usb-phy";
++        reg = <0x01c19400 0x10>,
++              <0x01c1a800 0x14>,
++              <0x01c1b800 0x14>;
++        reg-names = "phy_ctrl",
++                    "pmu1",
++                    "pmu2";
++        clocks = <&ccu CLK_USB_PHY0>,
++                 <&ccu CLK_USB_PHY1>,
++                 <&ccu CLK_USB_HSIC>,
++                 <&ccu CLK_USB_HSIC_12M>;
++        clock-names = "usb0_phy",
++                      "usb1_phy",
++                      "usb2_phy",
++                      "usb2_hsic_12M";
++        resets = <&ccu RST_USB_PHY0>,
++                 <&ccu RST_USB_PHY1>,
++                 <&ccu RST_USB_HSIC>;
++        reset-names = "usb0_reset",
++                      "usb1_reset",
++                      "usb2_reset";
++        usb0_id_det-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>; /* PH11 */
++        usb0_vbus_power-supply = <&usb_power_supply>;
++        usb0_vbus-supply = <&reg_drivevbus>;
++        usb1_vbus-supply = <&reg_usb1_vbus>;
++        usb2_vbus-supply = <&reg_usb2_vbus>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun8i-h3-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun8i-h3-usb-phy.yaml
+new file mode 100644
+index 000000000000..60c344585276
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/allwinner,sun8i-h3-usb-phy.yaml
+@@ -0,0 +1,137 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/allwinner,sun8i-h3-usb-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner H3 USB PHY Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
 +  - Maxime Ripard <mripard@kernel.org>
- 
- allOf:
-   - $ref: "dma-controller.yaml#"
-diff --git a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
-index 387d599522c7..9e53472be194 100644
---- a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
-+++ b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A64 DMA Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  "#phy-cells":
++    const: 1
++
++  compatible:
++    const: allwinner,sun8i-h3-usb-phy
++
++  reg:
++    items:
++      - description: PHY Control registers
++      - description: PHY PMU0 registers
++      - description: PHY PMU1 registers
++      - description: PHY PMU2 registers
++      - description: PHY PMU3 registers
++
++  reg-names:
++    items:
++      - const: phy_ctrl
++      - const: pmu0
++      - const: pmu1
++      - const: pmu2
++      - const: pmu3
++
++  clocks:
++    items:
++      - description: USB OTG PHY bus clock
++      - description: USB Host 0 PHY bus clock
++      - description: USB Host 1 PHY bus clock
++      - description: USB Host 2 PHY bus clock
++
++  clock-names:
++    items:
++      - const: usb0_phy
++      - const: usb1_phy
++      - const: usb2_phy
++      - const: usb3_phy
++
++  resets:
++    items:
++      - description: USB OTG reset
++      - description: USB Host 1 Controller reset
++      - description: USB Host 2 Controller reset
++      - description: USB Host 3 Controller reset
++
++  reset-names:
++    items:
++      - const: usb0_reset
++      - const: usb1_reset
++      - const: usb2_reset
++      - const: usb3_reset
++
++  usb0_id_det-gpios:
++    description: GPIO to the USB OTG ID pin
++
++  usb0_vbus_det-gpios:
++    description: GPIO to the USB OTG VBUS detect pin
++
++  usb0_vbus_power-supply:
++    description: Power supply to detect the USB OTG VBUS
++
++  usb0_vbus-supply:
++    description: Regulator controlling USB OTG VBUS
++
++  usb1_vbus-supply:
++    description: Regulator controlling USB1 Host controller
++
++  usb2_vbus-supply:
++    description: Regulator controlling USB2 Host controller
++
++  usb3_vbus-supply:
++    description: Regulator controlling USB3 Host controller
++
++required:
++  - "#phy-cells"
++  - compatible
++  - clocks
++  - clock-names
++  - reg
++  - reg-names
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/clock/sun8i-h3-ccu.h>
++    #include <dt-bindings/reset/sun8i-h3-ccu.h>
++
++    phy@1c19400 {
++        #phy-cells = <1>;
++        compatible = "allwinner,sun8i-h3-usb-phy";
++        reg = <0x01c19400 0x2c>,
++              <0x01c1a800 0x4>,
++              <0x01c1b800 0x4>,
++              <0x01c1c800 0x4>,
++              <0x01c1d800 0x4>;
++        reg-names = "phy_ctrl",
++                    "pmu0",
++                    "pmu1",
++                    "pmu2",
++                    "pmu3";
++        clocks = <&ccu CLK_USB_PHY0>,
++                 <&ccu CLK_USB_PHY1>,
++                 <&ccu CLK_USB_PHY2>,
++                 <&ccu CLK_USB_PHY3>;
++        clock-names = "usb0_phy",
++                      "usb1_phy",
++                      "usb2_phy",
++                      "usb3_phy";
++        resets = <&ccu RST_USB_PHY0>,
++                 <&ccu RST_USB_PHY1>,
++                 <&ccu RST_USB_PHY2>,
++                 <&ccu RST_USB_PHY3>;
++        reset-names = "usb0_reset",
++                      "usb1_reset",
++                      "usb2_reset",
++                      "usb3_reset";
++        usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
++        usb0_vbus-supply = <&reg_usb0_vbus>;
++        usb1_vbus-supply = <&reg_usb1_vbus>;
++        usb2_vbus-supply = <&reg_usb2_vbus>;
++        usb3_vbus-supply = <&reg_usb3_vbus>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun8i-r40-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun8i-r40-usb-phy.yaml
+new file mode 100644
+index 000000000000..a2bb36790fbd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/allwinner,sun8i-r40-usb-phy.yaml
+@@ -0,0 +1,119 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/allwinner,sun8i-r40-usb-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner R40 USB PHY Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
 +  - Maxime Ripard <mripard@kernel.org>
- 
- allOf:
-   - $ref: "dma-controller.yaml#"
-diff --git a/Documentation/devicetree/bindings/dma/allwinner,sun6i-a31-dma.yaml b/Documentation/devicetree/bindings/dma/allwinner,sun6i-a31-dma.yaml
-index 740b7f9b535b..c1676b96daac 100644
---- a/Documentation/devicetree/bindings/dma/allwinner,sun6i-a31-dma.yaml
-+++ b/Documentation/devicetree/bindings/dma/allwinner,sun6i-a31-dma.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A31 DMA Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  "#phy-cells":
++    const: 1
++
++  compatible:
++    const: allwinner,sun8i-r40-usb-phy
++
++  reg:
++    items:
++      - description: PHY Control registers
++      - description: PHY PMU0 registers
++      - description: PHY PMU1 registers
++      - description: PHY PMU2 registers
++
++  reg-names:
++    items:
++      - const: phy_ctrl
++      - const: pmu0
++      - const: pmu1
++      - const: pmu2
++
++  clocks:
++    items:
++      - description: USB OTG PHY bus clock
++      - description: USB Host 0 PHY bus clock
++      - description: USB Host 1 PHY bus clock
++
++  clock-names:
++    items:
++      - const: usb0_phy
++      - const: usb1_phy
++      - const: usb2_phy
++
++  resets:
++    items:
++      - description: USB OTG reset
++      - description: USB Host 1 Controller reset
++      - description: USB Host 2 Controller reset
++
++  reset-names:
++    items:
++      - const: usb0_reset
++      - const: usb1_reset
++      - const: usb2_reset
++
++  usb0_id_det-gpios:
++    description: GPIO to the USB OTG ID pin
++
++  usb0_vbus_det-gpios:
++    description: GPIO to the USB OTG VBUS detect pin
++
++  usb0_vbus_power-supply:
++    description: Power supply to detect the USB OTG VBUS
++
++  usb0_vbus-supply:
++    description: Regulator controlling USB OTG VBUS
++
++  usb1_vbus-supply:
++    description: Regulator controlling USB1 Host controller
++
++  usb2_vbus-supply:
++    description: Regulator controlling USB2 Host controller
++
++required:
++  - "#phy-cells"
++  - compatible
++  - clocks
++  - clock-names
++  - reg
++  - reg-names
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/clock/sun8i-r40-ccu.h>
++    #include <dt-bindings/reset/sun8i-r40-ccu.h>
++
++    phy@1c13400 {
++        #phy-cells = <1>;
++        compatible = "allwinner,sun8i-r40-usb-phy";
++        reg = <0x01c13400 0x14>,
++              <0x01c14800 0x4>,
++              <0x01c19800 0x4>,
++              <0x01c1c800 0x4>;
++        reg-names = "phy_ctrl",
++                    "pmu0",
++                    "pmu1",
++                    "pmu2";
++        clocks = <&ccu CLK_USB_PHY0>,
++                 <&ccu CLK_USB_PHY1>,
++                 <&ccu CLK_USB_PHY2>;
++        clock-names = "usb0_phy",
++                      "usb1_phy",
++                      "usb2_phy";
++        resets = <&ccu RST_USB_PHY0>,
++                 <&ccu RST_USB_PHY1>,
++                 <&ccu RST_USB_PHY2>;
++        reset-names = "usb0_reset",
++                      "usb1_reset",
++                      "usb2_reset";
++        usb1_vbus-supply = <&reg_vcc5v0>;
++        usb2_vbus-supply = <&reg_vcc5v0>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun8i-v3s-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun8i-v3s-usb-phy.yaml
+new file mode 100644
+index 000000000000..eadfd0c9493c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/allwinner,sun8i-v3s-usb-phy.yaml
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/allwinner,sun8i-v3s-usb-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner V3s USB PHY Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
 +  - Maxime Ripard <mripard@kernel.org>
- 
- allOf:
-   - $ref: "dma-controller.yaml#"
-diff --git a/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml b/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
-index 9346ef6ba61b..6097e8ac46c1 100644
---- a/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
-+++ b/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A31 P2WI (Push/Pull 2 Wires Interface) Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- allOf:
-   - $ref: /schemas/i2c/i2c-controller.yaml#
-diff --git a/Documentation/devicetree/bindings/iio/adc/allwinner,sun8i-a33-ths.yaml b/Documentation/devicetree/bindings/iio/adc/allwinner,sun8i-a33-ths.yaml
-index d74962c0f5ae..15c514b83583 100644
---- a/Documentation/devicetree/bindings/iio/adc/allwinner,sun8i-a33-ths.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/allwinner,sun8i-a33-ths.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A33 Thermal Sensor Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#io-channel-cells":
-diff --git a/Documentation/devicetree/bindings/input/allwinner,sun4i-a10-lradc-keys.yaml b/Documentation/devicetree/bindings/input/allwinner,sun4i-a10-lradc-keys.yaml
-index b3bd8ef7fbd6..5b3b71c9c018 100644
---- a/Documentation/devicetree/bindings/input/allwinner,sun4i-a10-lradc-keys.yaml
-+++ b/Documentation/devicetree/bindings/input/allwinner,sun4i-a10-lradc-keys.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 LRADC Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-a10-ic.yaml b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-a10-ic.yaml
-index 23a202d24e43..953d875b5e74 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-a10-ic.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-a10-ic.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 Interrupt Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- allOf:
-   - $ref: /schemas/interrupt-controller.yaml#
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
-index 8cd08cfb25be..cf09055da78b 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A20 Non-Maskable Interrupt Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- allOf:
-   - $ref: /schemas/interrupt-controller.yaml#
-diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-index d3e423fcb6c2..0f6374ceaa69 100644
---- a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-+++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- description: |-
-   The Allwinner A10 and later has a CMOS Sensor Interface to retrieve
-diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
-index dea36d68cdbe..7838804700d6 100644
---- a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
-+++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 Infrared Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- allOf:
-   - $ref: "rc.yaml#"
-diff --git a/Documentation/devicetree/bindings/mfd/allwinner,sun4i-a10-ts.yaml b/Documentation/devicetree/bindings/mfd/allwinner,sun4i-a10-ts.yaml
-index 4b1a09acb98b..39afacc447b2 100644
---- a/Documentation/devicetree/bindings/mfd/allwinner,sun4i-a10-ts.yaml
-+++ b/Documentation/devicetree/bindings/mfd/allwinner,sun4i-a10-ts.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 Resistive Touchscreen Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#thermal-sensor-cells":
-diff --git a/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml b/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
-index 64bca41031d5..e82c9a07b6fb 100644
---- a/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
-+++ b/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
-@@ -11,7 +11,7 @@ allOf:
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#address-cells": true
-diff --git a/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml b/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
-index b5b3cf5b1ac2..5d3fa412aabd 100644
---- a/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
-+++ b/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
-@@ -11,7 +11,7 @@ allOf:
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#address-cells": true
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
-index ae4796ec50a0..8d8560a67abf 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
-@@ -11,7 +11,7 @@ allOf:
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml
-index e5562c525ed9..767193ec1d32 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 MDIO Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- allOf:
-   - $ref: "mdio.yaml#"
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
-index f683b7104e3e..703d0d886884 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
-@@ -11,7 +11,7 @@ allOf:
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-index 11654d4b80fb..db36b4d86484 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A83t EMAC Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/net/can/allwinner,sun4i-a10-can.yaml b/Documentation/devicetree/bindings/net/can/allwinner,sun4i-a10-can.yaml
-index 770af7c46114..a95960ee3feb 100644
---- a/Documentation/devicetree/bindings/net/can/allwinner,sun4i-a10-can.yaml
-+++ b/Documentation/devicetree/bindings/net/can/allwinner,sun4i-a10-can.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 CAN Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-index 659b02002a35..daf1321d76ad 100644
---- a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 Security ID Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- allOf:
-   - $ref: "nvmem.yaml#"
-diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-index fa46670de299..230d74f22136 100644
---- a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-+++ b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A31 MIPI D-PHY Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#phy-cells":
-diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-index cd0503b6fe36..bfefd09d8c1e 100644
---- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 Pin Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#gpio-cells":
-diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-index 0ac52f83a58c..4a21fe77ee1d 100644
---- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 PWM Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#pwm-cells":
-diff --git a/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml b/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
-index 46d69c32b89b..478b0234e8fa 100644
---- a/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
-+++ b/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
-@@ -11,7 +11,7 @@ allOf:
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml b/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
-index d7a57ec4a640..37c2a601c3fa 100644
---- a/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
-+++ b/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A31 RTC Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#clock-cells":
-diff --git a/Documentation/devicetree/bindings/serio/allwinner,sun4i-a10-ps2.yaml b/Documentation/devicetree/bindings/serio/allwinner,sun4i-a10-ps2.yaml
-index ee9712f1c97d..2ecab8ed702a 100644
---- a/Documentation/devicetree/bindings/serio/allwinner,sun4i-a10-ps2.yaml
-+++ b/Documentation/devicetree/bindings/serio/allwinner,sun4i-a10-ps2.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 PS2 Host Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- description:
-   A20 PS2 is dual role controller (PS2 host and PS2 device). These
-diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-codec.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-codec.yaml
-index b8f89c7258eb..ea1d2efb2aaa 100644
---- a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-codec.yaml
-+++ b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-codec.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 Codec Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#sound-dai-cells":
-diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
-index eb3992138eec..112ae00d63c1 100644
---- a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
-+++ b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 I2S Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#sound-dai-cells":
-diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
-index 38d4cede0860..444a432912bb 100644
---- a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
-+++ b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
-@@ -10,7 +10,7 @@ maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
-   - Liam Girdwood <lgirdwood@gmail.com>
-   - Mark Brown <broonie@kernel.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#sound-dai-cells":
-diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun50i-a64-codec-analog.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun50i-a64-codec-analog.yaml
-index f290eb72a878..3b764415c9ab 100644
---- a/Documentation/devicetree/bindings/sound/allwinner,sun50i-a64-codec-analog.yaml
-+++ b/Documentation/devicetree/bindings/sound/allwinner,sun50i-a64-codec-analog.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A64 Analog Codec Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun8i-a23-codec-analog.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun8i-a23-codec-analog.yaml
-index 85305b4c2729..9718358826ab 100644
---- a/Documentation/devicetree/bindings/sound/allwinner,sun8i-a23-codec-analog.yaml
-+++ b/Documentation/devicetree/bindings/sound/allwinner,sun8i-a23-codec-analog.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A23 Analog Codec Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
-index 5e7cc05bbff1..55d28268d2f4 100644
---- a/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
-+++ b/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A33 Codec Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#sound-dai-cells":
-diff --git a/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml b/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml
-index 6d1329c28170..8036499112f5 100644
---- a/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml
-+++ b/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml
-@@ -11,7 +11,7 @@ allOf:
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#address-cells": true
-diff --git a/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml b/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
-index f36c46d236d7..0565dc49e449 100644
---- a/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
-+++ b/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
-@@ -11,7 +11,7 @@ allOf:
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   "#address-cells": true
-diff --git a/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml b/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
-index 20adc1c8e9cc..23e989e09766 100644
---- a/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
-+++ b/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 Timer Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/timer/allwinner,sun5i-a13-hstimer.yaml b/Documentation/devicetree/bindings/timer/allwinner,sun5i-a13-hstimer.yaml
-index dfa0c41fd261..40fc4bcb3145 100644
---- a/Documentation/devicetree/bindings/timer/allwinner,sun5i-a13-hstimer.yaml
-+++ b/Documentation/devicetree/bindings/timer/allwinner,sun5i-a13-hstimer.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A13 High-Speed Timer Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.yaml b/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.yaml
-index 0af70fc8de5a..d9207bf9d894 100644
---- a/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.yaml
-+++ b/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.yaml
-@@ -8,7 +8,7 @@ title: Allwinner A10 mUSB OTG Controller Device Tree Bindings
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-index 3a54f58683a0..e8f226376108 100644
---- a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-@@ -11,7 +11,7 @@ allOf:
- 
- maintainers:
-   - Chen-Yu Tsai <wens@csie.org>
--  - Maxime Ripard <maxime.ripard@bootlin.com>
-+  - Maxime Ripard <mripard@kernel.org>
- 
- properties:
-   compatible:
++
++properties:
++  "#phy-cells":
++    const: 1
++
++  compatible:
++    const: allwinner,sun8i-v3s-usb-phy
++
++  reg:
++    items:
++      - description: PHY Control registers
++      - description: PHY PMU0 registers
++
++  reg-names:
++    items:
++      - const: phy_ctrl
++      - const: pmu0
++
++  clocks:
++    maxItems: 1
++    description: USB OTG PHY bus clock
++
++  clock-names:
++    const: usb0_phy
++
++  resets:
++    maxItems: 1
++    description: USB OTG reset
++
++  reset-names:
++    const: usb0_reset
++
++  usb0_id_det-gpios:
++    description: GPIO to the USB OTG ID pin
++
++  usb0_vbus_det-gpios:
++    description: GPIO to the USB OTG VBUS detect pin
++
++  usb0_vbus_power-supply:
++    description: Power supply to detect the USB OTG VBUS
++
++  usb0_vbus-supply:
++    description: Regulator controlling USB OTG VBUS
++
++required:
++  - "#phy-cells"
++  - compatible
++  - clocks
++  - clock-names
++  - reg
++  - reg-names
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/clock/sun8i-v3s-ccu.h>
++    #include <dt-bindings/reset/sun8i-v3s-ccu.h>
++
++    phy@1c19400 {
++        #phy-cells = <1>;
++        compatible = "allwinner,sun8i-v3s-usb-phy";
++        reg = <0x01c19400 0x2c>,
++              <0x01c1a800 0x4>;
++        reg-names = "phy_ctrl",
++                    "pmu0";
++        clocks = <&ccu CLK_USB_PHY0>;
++        clock-names = "usb0_phy";
++        resets = <&ccu RST_USB_PHY0>;
++        reset-names = "usb0_reset";
++        usb0_id_det-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+deleted file mode 100644
+index f2e120af17f0..000000000000
+--- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
++++ /dev/null
+@@ -1,68 +0,0 @@
+-Allwinner sun4i USB PHY
+------------------------
+-
+-Required properties:
+-- compatible : should be one of
+-  * allwinner,sun4i-a10-usb-phy
+-  * allwinner,sun5i-a13-usb-phy
+-  * allwinner,sun6i-a31-usb-phy
+-  * allwinner,sun7i-a20-usb-phy
+-  * allwinner,sun8i-a23-usb-phy
+-  * allwinner,sun8i-a33-usb-phy
+-  * allwinner,sun8i-a83t-usb-phy
+-  * allwinner,sun8i-h3-usb-phy
+-  * allwinner,sun8i-r40-usb-phy
+-  * allwinner,sun8i-v3s-usb-phy
+-  * allwinner,sun50i-a64-usb-phy
+-  * allwinner,sun50i-h6-usb-phy
+-- reg : a list of offset + length pairs
+-- reg-names :
+-  * "phy_ctrl"
+-  * "pmu0" for H3, V3s, A64 or H6
+-  * "pmu1"
+-  * "pmu2" for sun4i, sun6i, sun7i, sun8i-a83t or sun8i-h3
+-  * "pmu3" for sun8i-h3 or sun50i-h6
+-- #phy-cells : from the generic phy bindings, must be 1
+-- clocks : phandle + clock specifier for the phy clocks
+-- clock-names :
+-  * "usb_phy" for sun4i, sun5i or sun7i
+-  * "usb0_phy", "usb1_phy" and "usb2_phy" for sun6i
+-  * "usb0_phy", "usb1_phy" for sun8i
+-  * "usb0_phy", "usb1_phy", "usb2_phy" and "usb2_hsic_12M" for sun8i-a83t
+-  * "usb0_phy", "usb1_phy", "usb2_phy" and "usb3_phy" for sun8i-h3
+-  * "usb0_phy" and "usb3_phy" for sun50i-h6
+-- resets : a list of phandle + reset specifier pairs
+-- reset-names :
+-  * "usb0_reset"
+-  * "usb1_reset"
+-  * "usb2_reset" for sun4i, sun6i, sun7i, sun8i-a83t or sun8i-h3
+-  * "usb3_reset" for sun8i-h3 and sun50i-h6
+-
+-Optional properties:
+-- usb0_id_det-gpios : gpio phandle for reading the otg id pin value
+-- usb0_vbus_det-gpios : gpio phandle for detecting the presence of usb0 vbus
+-- usb0_vbus_power-supply: power-supply phandle for usb0 vbus presence detect
+-- usb0_vbus-supply : regulator phandle for controller usb0 vbus
+-- usb1_vbus-supply : regulator phandle for controller usb1 vbus
+-- usb2_vbus-supply : regulator phandle for controller usb2 vbus
+-- usb3_vbus-supply : regulator phandle for controller usb3 vbus
+-
+-Example:
+-	usbphy: phy@01c13400 {
+-		#phy-cells = <1>;
+-		compatible = "allwinner,sun4i-a10-usb-phy";
+-		/* phy base regs, phy1 pmu reg, phy2 pmu reg */
+-		reg = <0x01c13400 0x10 0x01c14800 0x4 0x01c1c800 0x4>;
+-		reg-names = "phy_ctrl", "pmu1", "pmu2";
+-		clocks = <&usb_clk 8>;
+-		clock-names = "usb_phy";
+-		resets = <&usb_clk 0>, <&usb_clk 1>, <&usb_clk 2>;
+-		reset-names = "usb0_reset", "usb1_reset", "usb2_reset";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
+-		usb0_id_det-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>; /* PH19 */
+-		usb0_vbus_det-gpios = <&pio 7 22 GPIO_ACTIVE_HIGH>; /* PH22 */
+-		usb0_vbus-supply = <&reg_usb0_vbus>;
+-		usb1_vbus-supply = <&reg_usb1_vbus>;
+-		usb2_vbus-supply = <&reg_usb2_vbus>;
+-	};
 -- 
 2.23.0
 
