@@ -2,173 +2,414 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF462C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 08:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A1EC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 08:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D1820721
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 08:04:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ILwltwmy"
+	by mail.kernel.org (Postfix) with ESMTP id 42A1A205ED
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 08:06:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575878812;
+	bh=+p82qJRV+HdxV2eDzgujR97+XhTtLV6uMXNeoRqg/1E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B8jTq6lRYceCKLxaQMFnva1ztebVfTLXu0ZDkpVM0y6JkKF2zI1NToNTQY7p4AzK9
+	 UACQ5KkO0jl2AMQ2aaF9waq4o5+tiATq5I3RvXvD742ajrbJ8IjdHtvCWfkx0C+MJa
+	 nDmOBE8rOWNeQTbYT6Qk2+f1IsILwoNNZc2s6ZLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfLIIEw (ORCPT
+        id S1727110AbfLIIGs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 03:04:52 -0500
-Received: from mail-mw2nam10on2067.outbound.protection.outlook.com ([40.107.94.67]:54163
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727160AbfLIIEw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Dec 2019 03:04:52 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I3dyaluwSxepCAHcZgMiI6fYb2PPuQI89wwDte5NVaAOoqSzt8BSm5wxKS9J/rYcr6iDxGquUwZ0A8AlItbJ+yJKv0/CLEXfKymnmpwvRGdlnkmR1qArDOK6cDtsvYL/HF9kYUHSkG8MNWkGRzDtkSEJ7Sn/+lvfiMkbREJslaMJ3FchGTz0/ZjBAQZ1vaE/6hfjWGh4s4P/7ebmKRXQ47j/Z4cl8kzNEz0gO1pkPW4L2a9qSE6GrTapsa9WFHyyA4aysrsAsE/lpzdXQe1OFF1wQC8igQr0i8EYED+5r3C/LWHUY9ULVnIgflu8Goeb5K3ALz4GcSdEwLpAMsbtMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lHpirNoQllot/qAGqgDmO3BbQ2FDjvALdZ+gDs90Qgk=;
- b=Un0R8tAcTytfQANChGaZ7UQohRW2Tj3OSK6BfNO2KWHv9tuX/pTScQF0HNdVbW8QkQFDwt3QMZRhAs1pVaQxOGCE34g8pVHbc2JZ9BuPiqBYl8P9mNvWMvmbJWwcRUE4wOLrpFgnYEN7toLAcQ1LCOGKXx0dYLFFVGr7orUvPLSBFe7tCE6T7jjz0s84MR5RYXLKwhW5CgcAF98FFU/gOQ8/oAquhVsD9tNU4D78TLtCOCdGLsAhnfygUxc4vSrsNVCsATMagEYR8k1R+lBMLDCHu6mZiPLKkROORfe2rGI7xXGrskKFx/3TachdOBmlHResBs32+0YxBOqwtJjjlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=roeck-us.net smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lHpirNoQllot/qAGqgDmO3BbQ2FDjvALdZ+gDs90Qgk=;
- b=ILwltwmyDklb/IThVZdaSu9dB07xEE0kG3AY9//59DYnUCC7mPldRDBqOKLyHVb79JclqLrOrZFOWeSBhJWaOhvn104/L9XBTu7kKi8gvfwEFyjBuw4ixxaJnX2Wu/LLIppqBnVJy0+nimqVOkrd0pGrtNtByFAa4Vv7kMw2W+w=
-Received: from MWHPR02CA0002.namprd02.prod.outlook.com (2603:10b6:300:4b::12)
- by BY5PR02MB6517.namprd02.prod.outlook.com (2603:10b6:a03:1dc::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.14; Mon, 9 Dec
- 2019 08:04:09 +0000
-Received: from BL2NAM02FT006.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::203) by MWHPR02CA0002.outlook.office365.com
- (2603:10b6:300:4b::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12 via Frontend
- Transport; Mon, 9 Dec 2019 08:04:08 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; roeck-us.net; dkim=none (message not signed)
- header.d=none;roeck-us.net; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT006.mail.protection.outlook.com (10.152.76.239) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2495.26
- via Frontend Transport; Mon, 9 Dec 2019 08:04:08 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <edgar@xilinx.com>)
-        id 1ieE1O-00051f-Pq; Mon, 09 Dec 2019 00:03:58 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <edgar@xilinx.com>)
-        id 1ieE1J-0001PT-Me; Mon, 09 Dec 2019 00:03:53 -0800
-Received: from [10.71.117.222] (helo=localhost)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <edgar@xilinx.com>)
-        id 1ieE1E-0001Mf-5n; Mon, 09 Dec 2019 00:03:48 -0800
-Date:   Mon, 9 Dec 2019 08:48:40 +0100
-From:   "Edgar E. Iglesias" <edgar.iglesias@xilinx.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Michael Tretter <m.tretter@pengutronix.de>,
-        Edgar Iglesias <edgari@xilinx.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        Rajan Vaja <rajanv@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, qemu-devel@nongnu.org
-Subject: Re: [PATCH 1/5] arm64: zynqmp: Add firmware DT node
-Message-ID: <20191209074840.GP32392@toto>
-References: <20191018160735.15658-1-m.tretter@pengutronix.de>
- <20191018160735.15658-2-m.tretter@pengutronix.de>
- <20191208223814.GA21260@roeck-us.net>
- <dbba2a25-cbf7-60f4-99f7-056512e28d00@xilinx.com>
- <4821742f-2d60-b722-b954-263de975bf2e@roeck-us.net>
+        Mon, 9 Dec 2019 03:06:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727044AbfLIIGs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 03:06:48 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBE19205ED;
+        Mon,  9 Dec 2019 08:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575878807;
+        bh=+p82qJRV+HdxV2eDzgujR97+XhTtLV6uMXNeoRqg/1E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=v70dICLIt2wSBD4f5PAvXKM1AYydl/wRec66JOgjWOeOcRTy8WdF2/6+9O18/LUDx
+         WfF15Vi1Xyt+t2Mp7EYm5LDVSYdLEi7nMADrtVet2G7SnRP47LHdVgtO32e5D0q2J3
+         UCpNb3gfRe129WO9VYBAYxh8ub7MqHcsaXSvkHKk=
+Date:   Mon, 9 Dec 2019 09:06:45 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     shubhrajyoti.datta@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        devicetree@vger.kernel.org, arnd@arndb.de, michal.simek@xilinx.com,
+        robh+dt@kernel.org,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Kedareswara rao Appana <appanad@xilinx.com>,
+        Srikanth Thokala <sthokal@xilinx.com>
+Subject: Re: [PATCH v2 2/3] trafgen: xilinx: add axi traffic generator driver
+Message-ID: <20191209080645.GA706232@kroah.com>
+References: <8b3a446fc60cdd7d085203ce00c3f6bfba642437.1575871828.git.shubhrajyoti.datta@xilinx.com>
+ <d66da6c524d01414562d3c15853174eeafa0c9fa.1575871828.git.shubhrajyoti.datta@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4821742f-2d60-b722-b954-263de975bf2e@roeck-us.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(7916004)(39860400002)(136003)(396003)(376002)(346002)(199004)(189003)(336012)(70206006)(50466002)(70586007)(26005)(36386004)(6916009)(186003)(5660300002)(53546011)(6666004)(426003)(356004)(316002)(76176011)(58126008)(54906003)(966005)(2906002)(478600001)(1076003)(33656002)(76506006)(9686003)(8936002)(8676002)(81156014)(57986006)(4326008)(305945005)(229853002)(33716001)(81166006)(9786002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR02MB6517;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 99d3363b-7ba9-49f0-8e36-08d77c7e5e43
-X-MS-TrafficTypeDiagnostic: BY5PR02MB6517:
-X-Microsoft-Antispam-PRVS: <BY5PR02MB6517DB46EEB3E02DFCF4F9EEC2580@BY5PR02MB6517.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 02462830BE
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NBr13pZoCi8wycUbsH7Yx6ioBJK8vJD+gB3KKvU2z5iweCsGuUIwuvwaucSzYXEwlHwdyyCxI398lXUygfKxTXFV22SaYrt2yPhZ6F3cDxxIxVrd588jx+1IpjMaC6cZVaY8OJh/E0H9RgDhEnUaNA2DA0lCUqk3IRR431XPI5wGHUMQC8ld7DN0UoILwtU14tgq8nkByTjUyes7fBHn4TEJaWtlhiXrVnpPmTWH9plma9JzG1C1uSyVd7Oxmbsfq908hPAJ6okeoDd98p6IQ5LHPKIw9lwozl43Bd2inbfPkGxhgDPkIICrB3iGP1m1YxXU57MbEObLbtOe0jrCLooHm/Y6XZrH78hD/Emm5SZzOcJa4waxY6koI5sVER52lXTsn8YYkZbLWtAbNW0pAkLr17XDlNRo/qCJhnnL0Iv0AjfHvOh3JyZr/iNOK3DT0gKgGjvj4TI4kXWEc1wUk5YkI9Threy1Oe6nSV73HBU=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2019 08:04:08.3692
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99d3363b-7ba9-49f0-8e36-08d77c7e5e43
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6517
+In-Reply-To: <d66da6c524d01414562d3c15853174eeafa0c9fa.1575871828.git.shubhrajyoti.datta@xilinx.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Dec 08, 2019 at 11:19:33PM -0800, Guenter Roeck wrote:
-> On 12/8/19 10:42 PM, Michal Simek wrote:
-> > Hi, +Edgar
-> > 
-> > 
-> > On 08. 12. 19 23:38, Guenter Roeck wrote:
-> > > On Fri, Oct 18, 2019 at 06:07:31PM +0200, Michael Tretter wrote:
-> > > > From: Rajan Vaja <rajan.vaja@xilinx.com>
-> > > > 
-> > > > Add firmware DT node in ZynqMP device tree. This node
-> > > > uses bindings as per new firmware interface driver.
-> > > > 
-> > > > Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
-> > > > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> > > > Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-> > > 
-> > > With this patch applied in the mainline kernel, the qemu xlnx-zcu102
-> > > emulation crashes (see below). Any idea what it might take to get
-> > > qemu back to working ?
-> > 
-> > Driver talks through ATF to PMU unit(microblaze). I don't think A53+MB
-> > concept is working with mainline qemu. But crash is too hard. It should
+On Mon, Dec 09, 2019 at 11:41:27AM +0530, shubhrajyoti.datta@gmail.com wrote:
+> +/* Macro */
 
-Yes, QEMU doesn't support the Cortex-A53s along with the PMU MicroBlaze.
+We know it's a macro, no need to say it :)
 
-My workaround when using upstream QEMU is a modified DT without the PMU firmware
-and with fixed-clock nodes.
+> +#define to_xtg_dev_info(n)	((struct xtg_dev_info *)dev_get_drvdata(n))
+
+No need for the cast, and really, no need for this macro at all.  Please
+drop it.
+
+> + * FIXME: This structure is shared with the user application and
+> + * hence need to be synchronized. We know these kind of structures
+> + * should not be defined in the driver and this need to be fixed
+> + * if found a proper placeholder (in uapi/).
+
+Woah!  This isn't ok to leave as a fixme.  Please fix properly.
+
+As it is, this is NOT a portable data structure by any means.
+
+> + * FIXME: This structure is shared with the user application and
+> + * hence need to be synchronized. We know these kind of structures
+> + * should not be defined in the driver and this need to be fixed
+> + * if found a proper placeholder (in uapi/).
+
+Same here, this is just flat out not going to work.
+
+> +static void xtg_access_rams(struct xtg_dev_info *tg, int where,
+> +			    int count, int flags, u32 *data)
+> +{
+> +	u32 index;
+> +
+> +	switch (flags) {
+> +	case XTG_WRITE_RAM_ZERO:
+> +		memset_io(tg->regs + where, 0, count);
+> +#ifdef CONFIG_PHYS_ADDR_T_64BIT
+
+No #ifdef in .c code please, fix this correctly.
+
+> +		writel(0x0, tg->regs + where +
+> +			(XTG_COMMAND_RAM_MSB_OFFSET - XTG_COMMAND_RAM_OFFSET) +
+> +			XTG_EXTCMD_RAM_BLOCK_SIZE - XTG_CMD_RAM_BLOCK_SIZE);
+> +#endif
+> +		break;
+> +	case XTG_WRITE_RAM:
+> +		for (index = 0; count > 0; index++, count -= 4)
+> +			writel(data[index], tg->regs + where + index * 4);
+> +#ifdef CONFIG_PHYS_ADDR_T_64BIT
+
+Same here, and everywhere else.
+
+> +/**
+> + * xtg_sysfs_ioctl - Implements sysfs operations
+
+sysfs is not an ioctl.  Please fix your naming.
+
+> + * @dev: Device structure
+> + * @buf: Value to write
+> + * @opcode: Ioctl opcode
+> + *
+> + * Return: value read from the sysfs opcode.
+> + */
+
+Why are you creating kernel doc documentation for static functions?
+That's not needed at all, right?
+
+> +static ssize_t xtg_sysfs_ioctl(struct device *dev, const char *buf,
+> +			       enum xtg_sysfs_ioctl_opcode opcode)
+> +{
+> +	struct xtg_dev_info *tg = to_xtg_dev_info(dev);
+> +	unsigned long wrval;
+> +	ssize_t status, rdval = 0;
+> +
+> +	if (opcode > XTG_GET_STREAM_TRANSFERCNT) {
+> +		status = kstrtoul(buf, 0, &wrval);
+> +		if (status < 0)
+> +			return status;
+> +	}
+> +
+> +	switch (opcode) {
+> +	case XTG_GET_MASTER_CMP_STS:
+> +		rdval = (readl(tg->regs + XTG_MCNTL_OFFSET) &
+> +				XTG_MCNTL_MSTEN_MASK) ? 1 : 0;
+> +		break;
+> +
+> +	case XTG_GET_MASTER_LOOP_EN:
+> +		rdval = (readl(tg->regs + XTG_MCNTL_OFFSET) &
+> +				XTG_MCNTL_LOOPEN_MASK) ? 1 : 0;
+> +		break;
+> +
+> +	case XTG_GET_SLV_CTRL_REG:
+> +		rdval = readl(tg->regs + XTG_SCNTL_OFFSET);
+> +		break;
+> +
+> +	case XTG_GET_ERR_STS:
+> +		rdval = readl(tg->regs + XTG_ERR_STS_OFFSET) &
+> +				XTG_ERR_ALL_ERRS_MASK;
+> +		break;
+> +
+> +	case XTG_GET_CFG_STS:
+> +		rdval = readl(tg->regs + XTG_CFG_STS_OFFSET);
+> +		break;
+> +
+> +	case XTG_GET_LAST_VALID_INDEX:
+> +		rdval = (((tg->last_wr_valid_idx << 16) & 0xffff0000) |
+> +				(tg->last_rd_valid_idx & 0xffff));
+> +		break;
+> +
+> +	case XTG_GET_DEVICE_ID:
+> +		rdval = tg->id;
+> +		break;
+> +
+> +	case XTG_GET_RESOURCE:
+> +		rdval = (unsigned long)tg->regs;
+> +		break;
+> +
+> +	case XTG_GET_STATIC_ENABLE:
+> +		rdval = readl(tg->regs + XTG_STATIC_CNTL_OFFSET);
+> +		break;
+> +
+> +	case XTG_GET_STATIC_BURSTLEN:
+> +		rdval = readl(tg->regs + XTG_STATIC_LEN_OFFSET);
+> +		break;
+> +
+> +	case XTG_GET_STATIC_TRANSFERDONE:
+> +		rdval = (readl(tg->regs + XTG_STATIC_CNTL_OFFSET) &
+> +				XTG_STATIC_CNTL_TD_MASK);
+> +		break;
+> +
+> +	case XTG_GET_STREAM_ENABLE:
+> +		rdval = readl(tg->regs + XTG_STREAM_CNTL_OFFSET);
+> +		break;
+> +
+> +	case XTG_GET_STREAM_TRANSFERLEN:
+> +		rdval = (readl(tg->regs + XTG_STREAM_TL_OFFSET) &
+> +				XTG_STREAM_TL_TLEN_MASK);
+> +		break;
+> +
+> +	case XTG_GET_STREAM_TRANSFERCNT:
+> +		rdval = ((readl(tg->regs + XTG_STREAM_TL_OFFSET) &
+> +				XTG_STREAM_TL_TCNT_MASK) >>
+> +				XTG_STREAM_TL_TCNT_SHIFT);
+> +		break;
+> +
+> +	case XTG_GET_STREAM_TKTS1:
+> +		rdval = readl(tg->regs + XTG_STREAM_TKTS1_OFFSET);
+> +		break;
+> +	case XTG_GET_STREAM_TKTS2:
+> +		rdval = readl(tg->regs + XTG_STREAM_TKTS2_OFFSET);
+> +		break;
+> +	case XTG_GET_STREAM_TKTS3:
+> +		rdval = readl(tg->regs + XTG_STREAM_TKTS3_OFFSET);
+> +		break;
+> +	case XTG_GET_STREAM_TKTS4:
+> +		rdval = readl(tg->regs + XTG_STREAM_TKTS4_OFFSET);
+> +		break;
+> +
+> +	case XTG_GET_STREAM_CFG:
+> +		rdval = (readl(tg->regs + XTG_STREAM_CFG_OFFSET));
+> +		break;
+> +
+> +	case XTG_START_MASTER_LOGIC:
+> +		if (wrval)
+> +			writel(readl(tg->regs + XTG_MCNTL_OFFSET) |
+> +					XTG_MCNTL_MSTEN_MASK,
+> +				tg->regs + XTG_MCNTL_OFFSET);
+> +		break;
+> +
+> +	case XTG_MASTER_LOOP_EN:
+> +		if (wrval)
+> +			writel(readl(tg->regs + XTG_MCNTL_OFFSET) |
+> +					XTG_MCNTL_LOOPEN_MASK,
+> +				tg->regs + XTG_MCNTL_OFFSET);
+> +		else
+> +			writel(readl(tg->regs + XTG_MCNTL_OFFSET) &
+> +					~XTG_MCNTL_LOOPEN_MASK,
+> +				tg->regs + XTG_MCNTL_OFFSET);
+> +		break;
+> +
+> +	case XTG_SET_SLV_CTRL_REG:
+> +		writel(wrval, tg->regs + XTG_SCNTL_OFFSET);
+> +		break;
+> +
+> +	case XTG_ENABLE_ERRORS:
+> +		wrval &= XTG_ERR_ALL_ERRS_MASK;
+> +		writel(wrval, tg->regs + XTG_ERR_EN_OFFSET);
+> +		break;
+> +
+> +	case XTG_CLEAR_ERRORS:
+> +		wrval &= XTG_ERR_ALL_ERRS_MASK;
+> +		writel(readl(tg->regs + XTG_ERR_STS_OFFSET) | wrval,
+> +		       tg->regs + XTG_ERR_STS_OFFSET);
+> +		break;
+> +
+> +	case XTG_ENABLE_INTRS:
+> +		if (wrval & XTG_MASTER_CMP_INTR) {
+> +			pr_info("Enabling Master Complete Interrupt\n");
+> +			writel(readl(tg->regs + XTG_ERR_EN_OFFSET) |
+> +					XTG_ERR_EN_MSTIRQEN_MASK,
+> +				tg->regs + XTG_ERR_EN_OFFSET);
+> +		}
+> +		if (wrval & XTG_MASTER_ERR_INTR) {
+> +			pr_info("Enabling Interrupt on Master Errors\n");
+> +			writel(readl(tg->regs + XTG_MSTERR_INTR_OFFSET) |
+> +					XTG_MSTERR_INTR_MINTREN_MASK,
+> +				tg->regs + XTG_MSTERR_INTR_OFFSET);
+> +		}
+> +		if (wrval & XTG_SLAVE_ERR_INTR) {
+> +			pr_info("Enabling Interrupt on Slave Errors\n");
+> +			writel(readl(tg->regs + XTG_SCNTL_OFFSET) |
+> +					XTG_SCNTL_ERREN_MASK,
+> +				tg->regs + XTG_SCNTL_OFFSET);
+> +		}
+> +		break;
+> +
+> +	case XTG_CLEAR_MRAM:
+> +		xtg_access_rams(tg, tg->xtg_mram_offset,
+> +				XTG_MASTER_RAM_SIZE,
+> +				XTG_WRITE_RAM_ZERO, NULL);
+> +		break;
+> +
+> +	case XTG_CLEAR_CRAM:
+> +		xtg_access_rams(tg, XTG_COMMAND_RAM_OFFSET,
+> +				XTG_COMMAND_RAM_SIZE,
+> +				XTG_WRITE_RAM_ZERO, NULL);
+> +		break;
+> +
+> +	case XTG_CLEAR_PRAM:
+> +		xtg_access_rams(tg, XTG_PARAM_RAM_OFFSET,
+> +				XTG_PARAM_RAM_SIZE,
+> +				XTG_WRITE_RAM_ZERO, NULL);
+> +		break;
+> +
+> +	case XTG_SET_STATIC_ENABLE:
+> +		if (wrval) {
+> +			wrval &= XTG_STATIC_CNTL_STEN_MASK;
+> +			writel(readl(tg->regs + XTG_STATIC_CNTL_OFFSET) | wrval,
+> +			       tg->regs + XTG_STATIC_CNTL_OFFSET);
+> +		} else {
+> +			writel(readl(tg->regs + XTG_STATIC_CNTL_OFFSET) &
+> +				~XTG_STATIC_CNTL_STEN_MASK,
+> +				tg->regs + XTG_STATIC_CNTL_OFFSET);
+> +		}
+> +		break;
+> +
+> +	case XTG_SET_STATIC_BURSTLEN:
+> +		writel(wrval, tg->regs + XTG_STATIC_LEN_OFFSET);
+> +		break;
+> +
+> +	case XTG_SET_STATIC_TRANSFERDONE:
+> +		wrval |= XTG_STATIC_CNTL_TD_MASK;
+> +		writel(readl(tg->regs + XTG_STATIC_CNTL_OFFSET) | wrval,
+> +		       tg->regs + XTG_STATIC_CNTL_OFFSET);
+> +		break;
+> +
+> +	case XTG_SET_STREAM_ENABLE:
+> +		if (wrval) {
+> +			rdval = readl(tg->regs + XTG_STREAM_CNTL_OFFSET);
+> +			rdval |= XTG_STREAM_CNTL_STEN_MASK,
+> +			writel(rdval,
+> +			       tg->regs + XTG_STREAM_CNTL_OFFSET);
+> +		} else {
+> +			writel(readl(tg->regs + XTG_STREAM_CNTL_OFFSET) &
+> +			       ~XTG_STREAM_CNTL_STEN_MASK,
+> +			       tg->regs + XTG_STREAM_CNTL_OFFSET);
+> +		}
+> +		break;
+> +
+> +	case XTG_SET_STREAM_TRANSFERLEN:
+> +		wrval &= XTG_STREAM_TL_TLEN_MASK;
+> +		rdval = readl(tg->regs + XTG_STREAM_TL_OFFSET);
+> +		rdval &= ~XTG_STREAM_TL_TLEN_MASK;
+> +		writel(rdval | wrval,
+> +		       tg->regs + XTG_STREAM_TL_OFFSET);
+> +		break;
+> +
+> +	case XTG_SET_STREAM_TRANSFERCNT:
+> +		wrval = ((wrval << XTG_STREAM_TL_TCNT_SHIFT) &
+> +				XTG_STREAM_TL_TCNT_MASK);
+> +		rdval = readl(tg->regs + XTG_STREAM_TL_OFFSET);
+> +		rdval = rdval & ~XTG_STREAM_TL_TCNT_MASK;
+> +		writel(rdval | wrval,
+> +		       tg->regs + XTG_STREAM_TL_OFFSET);
+> +		break;
+> +
+> +	case XTG_SET_STREAM_TKTS1:
+> +		writel(wrval, tg->regs + XTG_STREAM_TKTS1_OFFSET);
+> +		break;
+> +	case XTG_SET_STREAM_TKTS2:
+> +		writel(wrval, tg->regs + XTG_STREAM_TKTS2_OFFSET);
+> +		break;
+> +	case XTG_SET_STREAM_TKTS3:
+> +		writel(wrval, tg->regs + XTG_STREAM_TKTS3_OFFSET);
+> +		break;
+> +	case XTG_SET_STREAM_TKTS4:
+> +		writel(wrval, tg->regs + XTG_STREAM_TKTS4_OFFSET);
+> +		break;
+> +
+> +	case XTG_SET_STREAM_CFG:
+> +		writel(wrval, tg->regs + XTG_STREAM_CFG_OFFSET);
+> +		break;
+> +
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return rdval;
+> +}
+> +
+> +/* Sysfs functions */
+> +
+> +static ssize_t id_show(struct device *dev,
+> +		       struct device_attribute *attr, char *buf)
+> +{
+> +	ssize_t rdval = xtg_sysfs_ioctl(dev, buf, XTG_GET_DEVICE_ID);
+> +
+> +	return snprintf(buf, PAGE_SIZE, "%zd\n", rdval);
+
+You "know" the size of the data for sysfs, no need for snprintf() or
+friends at all, just use sprintf() please.
+
+> +static ssize_t xtg_pram_read(struct file *filp, struct kobject *kobj,
+> +			     struct bin_attribute *bin_attr,
+> +			     char *buf, loff_t off, size_t count)
+> +{
+> +	pr_info("No read access to Parameter RAM\n");
+> +
+> +	return 0;
+> +}
 
 
-> > be no response from PMU and then this panic.
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/firmware/xilinx/zynqmp.c?h=v5.5-rc1#n728
-> > 
-> 
-> Isn't that a bit harsh too ? Normally one would print an error message
-> and abort driver instantiation.
+This is pointless, why do you have/need this?
 
-I agree, it would be nice if ATF & kernel drivers would somehow handle
-this more gracefully.
+Looks like a good way to spam the kernel log :(
 
-Cheers,
-Edgar
+And never use pr_* calls in a driver, always use dev_* instead.
 
+> +	/*
+> +	 * Create sysfs file entries for the device
+> +	 */
+> +	err = sysfs_create_group(&dev->kobj, &xtg_attributes);
 
-> 
-> It sounds like you are saying that qemu's xlnx-zcu102 emulation is
-> no longer supported and expected to crash the kernel. Is this a
-> correct assumption ? If so, I'll drop it from my list of tests.
-> 
-> Thanks,
-> Guenter
+You just raced with userspace and lost.  Set the attribute groups
+pointer up correctly and the driver core will create/remove your
+attributes for you.  This code does it wrong.
+
+> +	dev_info(&pdev->dev, "Probing xilinx traffic generator success\n");
+
+Do NOT be noisy when everything goes correctly.  Drivers should not
+print out anything if all is well, please drop this.
+
+thanks,
+
+greg k-h
