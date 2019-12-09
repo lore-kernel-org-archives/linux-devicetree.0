@@ -2,237 +2,231 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB294C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5737BC2BD09
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE44207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3D42073D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:43:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KPzgZ+xo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfLIJjU (ORCPT
+        id S1727666AbfLIJnt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:39:20 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40228 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727578AbfLIJjU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:39:20 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 52C6028DB10
-Subject: Re: [resend PATCH v6 04/12] drm: mediatek: Omit warning on probe
- defers
-To:     matthias.bgg@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com
-Cc:     sean.wang@mediatek.com, sean.wang@kernel.org,
-        rdunlap@infradead.org, wens@csie.org, hsinyi@chromium.org,
-        frank-w@public-files.de, drinkcat@chromium.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, mbrugger@suse.com
-References: <20191207224740.24536-1-matthias.bgg@kernel.org>
- <20191207224740.24536-5-matthias.bgg@kernel.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <48f9ec0c-1f1e-5a6c-283b-7efc4ce1bd5e@collabora.com>
-Date:   Mon, 9 Dec 2019 10:39:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 9 Dec 2019 04:43:49 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52216 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727649AbfLIJns (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:43:48 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB99hf2L033102;
+        Mon, 9 Dec 2019 03:43:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575884621;
+        bh=uSViP+QvJDzIv6c8dhx5jMKNUxJQ+VwAKiFTRE1e4co=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=KPzgZ+xorC/+hnSfVemPOyUjF4D9dyQ90O7xw1/As7IAZz3iXpYE4Eb2Ng+rpIhrR
+         wN9eitL05T5RA61t3mDju6a3/7JwnQXzqyqZ8fLnjyiMM/vyzj7U7sjGwHmgIkmpqG
+         YNnzoYbR3QRYrJgzLZ107PjjNvc8bqMeP0vlBxQI=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB99hfEp041537
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Dec 2019 03:43:41 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 03:43:41 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 03:43:41 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB99hOWk080263;
+        Mon, 9 Dec 2019 03:43:37 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
+        <vigneshr@ti.com>
+Subject: [PATCH v7 03/12] dmaengine: doc: Add sections for per descriptor metadata support
+Date:   Mon, 9 Dec 2019 11:43:23 +0200
+Message-ID: <20191209094332.4047-4-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20191207224740.24536-5-matthias.bgg@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matthias,
+Update the provider and client documentation with details about the
+metadata support.
 
-On 7/12/19 23:47, matthias.bgg@kernel.org wrote:
-> From: Matthias Brugger <mbrugger@suse.com>
-> 
-> It can happen that the mmsys clock drivers aren't probed before the
-> platform driver gets invoked. The platform driver used to print a warning
-> that the driver failed to get the clocks. Omit this error on
-> the defered probe path.
-> 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_disp_color.c |  5 ++++-
->  drivers/gpu/drm/mediatek/mtk_disp_ovl.c   |  5 ++++-
->  drivers/gpu/drm/mediatek/mtk_disp_rdma.c  |  5 ++++-
->  drivers/gpu/drm/mediatek/mtk_dpi.c        | 12 +++++++++---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c    |  4 +++-
->  drivers/gpu/drm/mediatek/mtk_dsi.c        |  8 ++++++--
->  drivers/gpu/drm/mediatek/mtk_hdmi.c       |  4 +++-
->  7 files changed, 33 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_color.c b/drivers/gpu/drm/mediatek/mtk_disp_color.c
-> index 59de2a46aa49..8f0fc96ef7bc 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_color.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_color.c
-> @@ -118,7 +118,10 @@ static int mtk_disp_color_probe(struct platform_device *pdev)
->  	ret = mtk_ddp_comp_init(dev, dev->of_node, &priv->ddp_comp, comp_id,
->  				&mtk_disp_color_funcs);
->  	if (ret) {
-> -		dev_err(dev, "Failed to initialize component: %d\n", ret);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to initialize component: %d\n",
-> +				ret);
-> +
->  		return ret;
->  	}
->  
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> index 21851756c579..7487b0182c05 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> @@ -285,7 +285,10 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
->  	ret = mtk_ddp_comp_init(dev, dev->of_node, &priv->ddp_comp, comp_id,
->  				&mtk_disp_ovl_funcs);
->  	if (ret) {
-> -		dev_err(dev, "Failed to initialize component: %d\n", ret);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to initialize component: %d\n",
-> +				ret);
-> +
->  		return ret;
->  	}
->  
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-> index 405afef31407..835ea8f8dab9 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-> @@ -287,7 +287,10 @@ static int mtk_disp_rdma_probe(struct platform_device *pdev)
->  	ret = mtk_ddp_comp_init(dev, dev->of_node, &priv->ddp_comp, comp_id,
->  				&mtk_disp_rdma_funcs);
->  	if (ret) {
-> -		dev_err(dev, "Failed to initialize component: %d\n", ret);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to initialize component: %d\n",
-> +				ret);
-> +
->  		return ret;
->  	}
->  
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> index be6d95c5ff25..9ed32470ad02 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> @@ -700,21 +700,27 @@ static int mtk_dpi_probe(struct platform_device *pdev)
->  	dpi->engine_clk = devm_clk_get(dev, "engine");
->  	if (IS_ERR(dpi->engine_clk)) {
->  		ret = PTR_ERR(dpi->engine_clk);
-> -		dev_err(dev, "Failed to get engine clock: %d\n", ret);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get engine clock: %d\n", ret);
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Tero Kristo <t-kristo@ti.com>
+---
+ Documentation/driver-api/dmaengine/client.rst | 75 +++++++++++++++++++
+ .../driver-api/dmaengine/provider.rst         | 46 ++++++++++++
+ 2 files changed, 121 insertions(+)
 
-This is only to print an error and I think that devm_clk_get will print a
-warning if the clk is not found. I guess that you can just remove the dev_err
-print logic, here and below.
+diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+index 45953f171500..41309c176df4 100644
+--- a/Documentation/driver-api/dmaengine/client.rst
++++ b/Documentation/driver-api/dmaengine/client.rst
+@@ -151,6 +151,81 @@ The details of these operations are:
+      Note that callbacks will always be invoked from the DMA
+      engines tasklet, never from interrupt context.
+ 
++  Optional: per descriptor metadata
++  ---------------------------------
++  DMAengine provides two ways for metadata support.
++
++  DESC_METADATA_CLIENT
++
++    The metadata buffer is allocated/provided by the client driver and it is
++    attached to the descriptor.
++
++  .. code-block:: c
++
++     int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
++				   void *data, size_t len);
++
++  DESC_METADATA_ENGINE
++
++    The metadata buffer is allocated/managed by the DMA driver. The client
++    driver can ask for the pointer, maximum size and the currently used size of
++    the metadata and can directly update or read it.
++
++  .. code-block:: c
++
++     void *dmaengine_desc_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
++		size_t *payload_len, size_t *max_len);
++
++     int dmaengine_desc_set_metadata_len(struct dma_async_tx_descriptor *desc,
++		size_t payload_len);
++
++  Client drivers can query if a given mode is supported with:
++
++  .. code-block:: c
++
++     bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
++		enum dma_desc_metadata_mode mode);
++
++  Depending on the used mode client drivers must follow different flow.
++
++  DESC_METADATA_CLIENT
++
++    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++         construct the metadata in the client's buffer
++      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
++         descriptor
++      3. submit the transfer
++    - DMA_DEV_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
++         descriptor
++      3. submit the transfer
++      4. when the transfer is completed, the metadata should be available in the
++         attached buffer
++
++  DESC_METADATA_ENGINE
++
++    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the
++         engine's metadata area
++      3. update the metadata at the pointer
++      4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the
++         amount of data the client has placed into the metadata buffer
++      5. submit the transfer
++    - DMA_DEV_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. submit the transfer
++      3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get the
++         pointer to the engine's metadata area
++      4. Read out the metadata from the pointer
++
++  .. note::
++
++     Mixed use of DESC_METADATA_CLIENT / DESC_METADATA_ENGINE is not allowed,
++     client drivers must use either of the modes per descriptor.
++
+ 4. Submit the transaction
+ 
+    Once the descriptor has been prepared and the callback information
+diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+index dfc4486b5743..da557c21c619 100644
+--- a/Documentation/driver-api/dmaengine/provider.rst
++++ b/Documentation/driver-api/dmaengine/provider.rst
+@@ -247,6 +247,52 @@ after each transfer. In case of a ring buffer, they may loop
+ (DMA_CYCLIC). Addresses pointing to a device's register (e.g. a FIFO)
+ are typically fixed.
+ 
++Per descriptor metadata support
++-------------------------------
++Some data movement architecture (DMA controller and peripherals) uses metadata
++associated with a transaction. The DMA controller role is to transfer the
++payload and the metadata alongside.
++The metadata itself is not used by the DMA engine itself, but it contains
++parameters, keys, vectors, etc for peripheral or from the peripheral.
++
++The DMAengine framework provides a generic ways to facilitate the metadata for
++descriptors. Depending on the architecture the DMA driver can implement either
++or both of the methods and it is up to the client driver to choose which one
++to use.
++
++- DESC_METADATA_CLIENT
++
++  The metadata buffer is allocated/provided by the client driver and it is
++  attached (via the dmaengine_desc_attach_metadata() helper to the descriptor.
++
++  From the DMA driver the following is expected for this mode:
++  - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM
++    The data from the provided metadata buffer should be prepared for the DMA
++    controller to be sent alongside of the payload data. Either by copying to a
++    hardware descriptor, or highly coupled packet.
++  - DMA_DEV_TO_MEM
++    On transfer completion the DMA driver must copy the metadata to the client
++    provided metadata buffer.
++
++- DESC_METADATA_ENGINE
++
++  The metadata buffer is allocated/managed by the DMA driver. The client driver
++  can ask for the pointer, maximum size and the currently used size of the
++  metadata and can directly update or read it. dmaengine_desc_get_metadata_ptr()
++  and dmaengine_desc_set_metadata_len() is provided as helper functions.
++
++  From the DMA driver the following is expected for this mode:
++  - get_metadata_ptr
++    Should return a pointer for the metadata buffer, the maximum size of the
++    metadata buffer and the currently used / valid (if any) bytes in the buffer.
++  - set_metadata_len
++    It is called by the clients after it have placed the metadata to the buffer
++    to let the DMA driver know the number of valid bytes provided.
++
++  Note: since the client will ask for the metadata pointer in the completion
++  callback (in DMA_DEV_TO_MEM case) the DMA driver must ensure that the
++  descriptor is not freed up prior the callback is called.
++
+ Device operations
+ -----------------
+ 
+-- 
+Peter
 
-In case there is an optional clock you could use devm_clk_get_optional, not sure
-if there is any, though.
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-> +
->  		return ret;
->  	}
->  
->  	dpi->pixel_clk = devm_clk_get(dev, "pixel");
->  	if (IS_ERR(dpi->pixel_clk)) {
->  		ret = PTR_ERR(dpi->pixel_clk);
-> -		dev_err(dev, "Failed to get pixel clock: %d\n", ret);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get pixel clock: %d\n", ret);
-> +
-
-ditto
-
->  		return ret;
->  	}
->  
->  	dpi->tvd_clk = devm_clk_get(dev, "pll");
->  	if (IS_ERR(dpi->tvd_clk)) {
->  		ret = PTR_ERR(dpi->tvd_clk);
-> -		dev_err(dev, "Failed to get tvdpll clock: %d\n", ret);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get tvdpll clock: %d\n", ret);
-> +
-
-ditto
-
->  		return ret;
->  	}
->  
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index b765181223e6..6054e2b675f9 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -558,7 +558,9 @@ static int mtk_ddp_probe(struct platform_device *pdev)
->  
->  	ddp->clk = devm_clk_get(dev, NULL);
->  	if (IS_ERR(ddp->clk)) {
-> -		dev_err(dev, "Failed to get clock\n");
-> +		if (PTR_ERR(ddp->clk) != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get clock\n");
-> +
-
-ditto
-
->  		return PTR_ERR(ddp->clk);
->  	}
->  
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index 4332563df952..66d5b0fdd678 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -1110,14 +1110,18 @@ static int mtk_dsi_probe(struct platform_device *pdev)
->  	dsi->engine_clk = devm_clk_get(dev, "engine");
->  	if (IS_ERR(dsi->engine_clk)) {
->  		ret = PTR_ERR(dsi->engine_clk);
-> -		dev_err(dev, "Failed to get engine clock: %d\n", ret);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get engine clock: %d\n", ret);
-> +
-
-ditto
-
->  		return ret;
->  	}
->  
->  	dsi->digital_clk = devm_clk_get(dev, "digital");
->  	if (IS_ERR(dsi->digital_clk)) {
->  		ret = PTR_ERR(dsi->digital_clk);
-> -		dev_err(dev, "Failed to get digital clock: %d\n", ret);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get digital clock: %d\n", ret);
-> +
-
-ditto
-
->  		return ret;
->  	}
->  
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> index ce91b61364eb..62f9ca2308ee 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> @@ -1447,7 +1447,9 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
->  
->  	ret = mtk_hdmi_get_all_clk(hdmi, np);
->  	if (ret) {
-> -		dev_err(dev, "Failed to get clocks: %d\n", ret);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get clocks: %d\n", ret);
-> +
->  		return ret;
->  	}
->  
-> 
