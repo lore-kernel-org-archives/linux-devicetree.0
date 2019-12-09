@@ -2,348 +2,135 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CB3C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 12:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B127C04E30
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 12:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24E52077B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 12:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BEFA20726
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 12:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="dn6TXh/+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DCh5KZu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfLIMA5 (ORCPT
+        id S1727492AbfLIMcQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 07:00:57 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:60948 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727163AbfLIMA5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 07:00:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
-        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:References:
-        In-Reply-To:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=DvJrpfUEAls5914FKdSrFntz566Xp3fyW0kN2JE9zuo=; b=dn6TXh/+U1Iu2i8gFwOeVYoXKs
-        osibfriIA8Y+B5waFunKswX559aVewwwYhdHQpJR225tEdba7qO34OSYR6wdCIOsHdX8BoJ3x7KQY
-        0ipQX9w/HDRZOPEtGZaopUU3nu5iF0HcryxJwkBhD+8Cw4kZSEd7XBkIQ6wOxR9qKzRamD6HgKaVu
-        RKY0gMmkZx4kskGHuHU8KIydHfYtUdzCnD89vYQ0Q9z7HuJBpo1CbqrJbBKgOy6SBupOLvM5MSevr
-        2zZSYCogmyYcttfzOXxQCL1cUSM6q/5Ruo3qLc2cvP+P/ZNY/L5I51/dApodAQZB9xC6Ble/U5H4w
-        uuofgaNQ==;
-Received: from e0022681537dd.dyn.armlinux.org.uk ([2002:4e20:1eda:1:222:68ff:fe15:37dd]:49968 helo=rmk-PC.armlinux.org.uk)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1ieHiV-0002o0-LY; Mon, 09 Dec 2019 12:00:43 +0000
-Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1ieHiU-0004wa-83; Mon, 09 Dec 2019 12:00:42 +0000
-In-Reply-To: <20191209120010.GG25745@shell.armlinux.org.uk>
-References: <20191209120010.GG25745@shell.armlinux.org.uk>
-From:   Russell King <rmk+kernel@armlinux.org.uk>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Jon Nettleton <jon@solid-run.com>,
-        Rabeeh Khoury <rabeeh@solid-run.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 9 Dec 2019 07:32:16 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34241 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbfLIMcP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 07:32:15 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f4so15334998wmj.1
+        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 04:32:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=TcMAms7p1AUqadQqTsVabpfv+HfKMd7JiIn6+0u5b3A=;
+        b=DCh5KZu71inkeOQZtpOb6fNnGUXSsbnL7cEiiLU5KddsEMz9ECtfYa3HgYGJe4I7JW
+         gUIApCg9rdZQoaigvMt4IKU8b4M6cC39IRPWTfxYUHUl5McOXpozx3+paF8+LbCD1vzy
+         WNrLYoSlA0om7Ehyh6EuQ4oy3Ug6AV1pgDMhRDWtd3tiGTDMU39Sz8wpqlDC94oyX7pY
+         CafooqdJolIMHiPfgYM0LAFQxplJRM9b59HWhB9uGWzi3e8YdyZMyGd+vFu6mEl0MO6/
+         Ke+/MEwe6t0qTGm/UOffRErHeDzu0V4nl2ZeeNsgDGKFhDtLAS3lZefqnuBRUpmQZwv2
+         YBwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=TcMAms7p1AUqadQqTsVabpfv+HfKMd7JiIn6+0u5b3A=;
+        b=LQgLQtpbc1939KCtJON7+mjfEOQ9tGQWEG4LRiiQ43RwkbmFH8FWOdGDAjva75gQ7S
+         ojLfB1rHFJAKdOEqNTXd7rIrh1mwbFudZYeHdP5DR3cndxARhPu5bcpRjqSIdejVg2Yk
+         oYmw4PZZFZL48B7xzi/8yx1g18a3bYMzAnJMUzIy1byTQHDpSiKZZHV7GG87s7QKf5Xu
+         XME28Vy8BXXHp8VzHT2PD9zuhekjjLwUVnBKfLfQafeVrqXoXVG+J4dAa72RzU/Cq9wq
+         JMspUA5QJWKvSnL9MqKexqdxD5cQ6bf7ugOY/ii7tZv5i5+WQJEec9ojV08oZeKBquI+
+         Y17Q==
+X-Gm-Message-State: APjAAAXhG3KFoY00p0WX5ORHNEXj6zbp4kp+1/7Hyr1iYLqPr0HVs49P
+        JCQhPgLcD5wA7ZY5eqlQhuL6pg==
+X-Google-Smtp-Source: APXvYqwrv2cRs37H9u3Gm+6DMpoyR28B91jn/bI1oNa8G1d5YGlOX8ZuK/J1QqXIrJ7mW3zHuCE32Q==
+X-Received: by 2002:a1c:2245:: with SMTP id i66mr24316351wmi.86.1575894733535;
+        Mon, 09 Dec 2019 04:32:13 -0800 (PST)
+Received: from dell ([2.27.35.145])
+        by smtp.gmail.com with ESMTPSA id m10sm27506266wrx.19.2019.12.09.04.32.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 04:32:12 -0800 (PST)
+Date:   Mon, 9 Dec 2019 12:32:06 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/2] arm64: dts: lx2160a: add dts for CEX7 platforms
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] dt-bindings: mfd: update TI tps6105x chip bindings
+Message-ID: <20191209123206.GI3468@dell>
+References: <20191121142726.22856-1-TheSven73@gmail.com>
+ <20191121142726.22856-3-TheSven73@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <E1ieHiU-0004wa-83@rmk-PC.armlinux.org.uk>
-Date:   Mon, 09 Dec 2019 12:00:42 +0000
+In-Reply-To: <20191121142726.22856-3-TheSven73@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Rabeeh Khoury <rabeeh@solid-run.com>
+On Thu, 21 Nov 2019, Sven Van Asbroeck wrote:
 
-The device tree enables the following features -
-1. dpmac17 RGMII MAC connected to Atheros AR8035 phy
-2. 2x MDIO busses
-3. 2x USB 3.0 controllers
-4. 4x SATA ports
-5. MT35X 512Mb SPI flash
-6. Temperature sensor on i2c0 channel 3
-7. AMC6821 temperature and PWM fan controller (not fitted)
+> The driver has been extended to optionally get its operational
+> mode, regulator init data and led naming from the devicetree.
 
-The module supports AMC6821 PWM controller which is not currently
-assembled on currently available Com Express 7 hardware.
+s/led/LED/
 
-This commit adds support for the Clearfog CX and Honeycomb variants,
-which are indentical in this patch, but once QSFP support is finished,
-only the Clearfog CX will have a QSFP description.
+> Tree: next-20191118
 
-Signed-off-by: Rabeeh Khoury <rabeeh@solid-run.com>
-[Add Makefile patch, split into clearfog-cx and honeycomb variants,
-reworded commit -- rmk]
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
- arch/arm64/boot/dts/freescale/Makefile        |   2 +
- .../boot/dts/freescale/fsl-lx2160a-cex7.dtsi  | 123 ++++++++++++++++++
- .../dts/freescale/fsl-lx2160a-clearfog-cx.dts |  15 +++
- .../freescale/fsl-lx2160a-clearfog-itx.dtsi   |  57 ++++++++
- .../dts/freescale/fsl-lx2160a-honeycomb.dts   |  15 +++
- 5 files changed, 212 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-lx2160a-cex7.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-lx2160a-clearfog-cx.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-lx2160a-clearfog-itx.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-lx2160a-honeycomb.dts
+Why is this in your commit message?
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 93fce8f0c66d..b4d696e64625 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -18,6 +18,8 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
-+dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-clearfog-cx.dtb
-+dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-honeycomb.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-cex7.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a-cex7.dtsi
-new file mode 100644
-index 000000000000..4761737e62e2
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-cex7.dtsi
-@@ -0,0 +1,123 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+//
-+// Device Tree file for LX2160A-CEx7
-+//
-+// Copyright 2019 SolidRun Ltd.
-+
-+/dts-v1/;
-+
-+#include "fsl-lx2160a.dtsi"
-+
-+/ {
-+	model = "SolidRun LX2160A COM Express Type 7 module";
-+	compatible = "solidrun,lx2160a-cex7", "fsl,lx2160a";
-+
-+	aliases {
-+		crypto = &crypto;
-+	};
-+
-+	sb_3v3: regulator-sb3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "RT7290";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+};
-+
-+&crypto {
-+	status = "okay";
-+};
-+
-+&esdhc1 {
-+	mmc-hs200-1_8v;
-+	mmc-hs400-1_8v;
-+	bus-width = <8>;
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	i2c-switch@77 {
-+		compatible = "nxp,pca9547";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x77>;
-+
-+		i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+			fan-temperature-ctrlr@18 {
-+				compatible = "ti,amc6821";
-+				reg = <0x18>;
-+				cooling-min-state = <0>;
-+				cooling-max-state = <9>;
-+				#cooling-cells = <2>;
-+			};
-+		};
-+		i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+
-+			temperature-sensor@48 {
-+				compatible = "nxp,sa56004";
-+				reg = <0x48>;
-+				vcc-supply = <&sb_3v3>;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+
-+	rtc@51 {
-+		compatible = "nxp,pcf2129";
-+		reg = <0x51>;
-+		// IRQ10_B
-+		interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+};
-+
-+&fspi {
-+	status = "okay";
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "micron,m25p80";
-+		m25p,fast-read;
-+		spi-max-frequency = <50000000>;
-+		reg = <0>;
-+		/* The following setting enables 1-1-8 (CMD-ADDR-DATA) mode */
-+		spi-rx-bus-width = <8>;
-+		spi-tx-bus-width = <1>;
-+	};
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
-+
-+&emdio1 {
-+	status = "okay";
-+	rgmii_phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
-+&dpmac17 {
-+	phy-handle = <&rgmii_phy1>;
-+	phy-connection-type = "rgmii-id";
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-clearfog-cx.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-clearfog-cx.dts
-new file mode 100644
-index 000000000000..86a9b771428d
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-clearfog-cx.dts
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+//
-+// Device Tree file for LX2160A Clearfog CX board
-+//
-+// Copyright 2019 SolidRun Ltd.
-+
-+/dts-v1/;
-+
-+#include "fsl-lx2160a-clearfog-itx.dtsi"
-+
-+/ {
-+	model = "SolidRun LX2160A Clearfog CX";
-+	compatible = "solidrun,clearfog-cx",
-+		"solidrun,lx2160a-cex7", "fsl,lx2160a";
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-clearfog-itx.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a-clearfog-itx.dtsi
-new file mode 100644
-index 000000000000..10541f1345bf
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-clearfog-itx.dtsi
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+//
-+// Device Tree file for LX2160A Clearfog ITX board; this contains the
-+// common parts shared between the Clearfog CX and Honeycomb builds.
-+//
-+// Copyright 2019 SolidRun Ltd.
-+
-+/dts-v1/;
-+
-+#include "fsl-lx2160a-cex7.dtsi"
-+
-+/ {
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&esdhc0 {
-+	sd-uhs-sdr104;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr12;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&emdio2 {
-+	status = "okay";
-+};
-+
-+&sata0 {
-+	status = "okay";
-+};
-+
-+&sata1 {
-+	status = "okay";
-+};
-+
-+&sata2 {
-+	status = "okay";
-+};
-+
-+&sata3 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-honeycomb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-honeycomb.dts
-new file mode 100644
-index 000000000000..fe19f3009ea5
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-honeycomb.dts
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+//
-+// Device Tree file for LX2160A Honeycomb board
-+//
-+// Copyright 2019 SolidRun Ltd.
-+
-+/dts-v1/;
-+
-+#include "fsl-lx2160a-clearfog-itx.dtsi"
-+
-+/ {
-+	model = "SolidRun LX2160A Honeycomb";
-+	compatible = "solidrun,honeycomb",
-+		"solidrun,lx2160a-cex7", "fsl,lx2160a";
-+};
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
+>  .../devicetree/bindings/mfd/tps6105x.txt      | 47 ++++++++++++++++++-
+>  1 file changed, 46 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/tps6105x.txt b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+> index 93602c7a19c8..1fc9aa3ed882 100644
+> --- a/Documentation/devicetree/bindings/mfd/tps6105x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+> @@ -7,11 +7,56 @@ Required properties:
+>  - compatible:		"ti,tps61050" or "ti,tps61052"
+>  - reg:			Specifies the I2C slave address
+>  
+> -Example:
+> +Optional sub-node:
+> +
+> +This subnode selects the chip's operational mode.
+> +There can be at most one single available subnode.
+> +
+> +- regulator: presence of this sub-node puts the chip in regulator mode.
+> +	see Documentation/devicetree/bindings/regulator/regulator.txt
+> +
+> +- led: presence of this sub-node puts the chip in led mode.
+> +	Optional properties:
+> +	- function : see Documentation/devicetree/bindings/leds/common.txt
+> +	- color : see Documentation/devicetree/bindings/leds/common.txt
+> +	- label : see Documentation/devicetree/bindings/leds/common.txt
+> +			(deprecated)
+
+Nit:
+
+Could you please use relative paths here.
+
+If you line up the ':', it would look slightly cleaner.
+
 -- 
-2.20.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
