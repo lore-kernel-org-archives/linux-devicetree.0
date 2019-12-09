@@ -2,56 +2,56 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68805C00454
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F8DC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A71C20726
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8465F20726
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:51:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MTVk39t+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FoiOPgQc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfLIOva (ORCPT
+        id S1726310AbfLIOvi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:51:30 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34393 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfLIOva (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:51:30 -0500
-Received: by mail-pf1-f195.google.com with SMTP id n13so7373248pff.1
-        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 06:51:29 -0800 (PST)
+        Mon, 9 Dec 2019 09:51:38 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42462 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbfLIOvi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:51:38 -0500
+Received: by mail-pg1-f195.google.com with SMTP id s64so527769pgb.9
+        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 06:51:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=y+0hUIOuHNjYLITTiiOz7YncnUCd05TXc7UArDjIWPQ=;
-        b=MTVk39t+p3sutUs/EaeRJsE9LBl7uiMHkFMRLZd/nX+Pe2fsFUDRRmXx9l/V5Dj6aV
-         59Z9O3SSk0vvqJhbLLM3jWLWTQgC0a5FRwezfJhM/mgIXd7HIQAOSTSiq0SsZSItO1RV
-         LBTAWLNycc1s071U3sy9+SqAlBOMKjNrnU7mE=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cGLkt56MhFh8o5EiPOGN5Gs/bQLSYtcgRKiESMUAAEg=;
+        b=FoiOPgQcYmkXm/tZqxmuOTlheNX0AgdOI/2MZIVoyVaDZ2omAlNpvjC5J7UkXZjHkN
+         w/FEIk9KLjFC9aKhMHaRz6mznpSflD0o8I0Gq9L9AKEzN5+Ft6j7taGzy5nEO8JDQzdE
+         SXjPxv1lzNd1yp0r/THRyWzyCzs5KLo3RQEv8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=y+0hUIOuHNjYLITTiiOz7YncnUCd05TXc7UArDjIWPQ=;
-        b=GiqUC2FtzmX4PTkj55fL5RwEns8JWUBcCBAmtu9RugnTBCK+wRmkl7YAC4CCfqzc4W
-         8LAOSLzA+XihPIQRh6rpLST03q9xpEbyYMtbMAd7yJwieBm+TYZCNND4EWQ8bJWrfTOj
-         IxwQNc7uiN3RErPn9Hn6NFeqlmOAQzpg0yyTuzW7DNp/IFcxpYt9tzy7JXwP+79HF4xd
-         yOKgIsyaMuo6wjXcijg9YanUzEuRK+6LVcvwDGFfwx8A10zDmlZSgZ7JCGEsahA8r9OB
-         Jil6bOseytFHPfQOdNq4lZhytF57g1ObXS4ZjcweRDFTrP46rpexesHR1s7plcS7p1Qv
-         Am6A==
-X-Gm-Message-State: APjAAAUE562cmrPSzNbQJaC6ubhRDCEoxz0/Rlk3CpGunudQFInhz6lu
-        6NK7prco3LqZ6NeWUm1mwQCuMw==
-X-Google-Smtp-Source: APXvYqywaG4WX0pSxF4HCeSSMFbKbY3wDRtmsG50dx44TU1Ypx6sq4Pk+CTzkgbiq0kZiYkp7z8Gbw==
-X-Received: by 2002:a63:1101:: with SMTP id g1mr18531573pgl.435.1575903089059;
-        Mon, 09 Dec 2019 06:51:29 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cGLkt56MhFh8o5EiPOGN5Gs/bQLSYtcgRKiESMUAAEg=;
+        b=bCkwcCaJ04w8dfaPawzglhVoNeMQFDVHSopXbSgn2Ct5AuFsBhWz97inDyD8fr0wt9
+         1QksHcubpVvjZSZAate3Mw7m66c1XTMkWsirmeA7yqk086goxkqnn2GZWHP+GlgUB4IP
+         1enSqHRSKMF1nlCEYcm9Jb+C/wti4s09itfKzqnjuMOabZ0CSaIPJpdFC++fNyT8iX32
+         uY4ZkEGDCjB8e4yz15s1O1NhUTooCwK4W/ZmWNmLV1tFJMIHKCHEYfb+l8I74cKd4MqN
+         FuUlEChFsM4wkVusxBQE+R99n1eV6V9i9/aO36Js2ekqOXf626CNpf0zSxcdQCqwbgYR
+         OUZg==
+X-Gm-Message-State: APjAAAVpiBD6jpKmOt6vqDwbecBgv2HqW+HeHsRdgN1dqeRUgLAFr/M7
+        xaX79kdutj0p/1cRfMeN99rqAg==
+X-Google-Smtp-Source: APXvYqwdFN4BDi6/3J9nybGN70nDZ2haqNMPr+4STLfU6yafWcXmeyYw7k9dIphwuYdoFrfoWNCktQ==
+X-Received: by 2002:a63:93:: with SMTP id 141mr18975594pga.411.1575903097523;
+        Mon, 09 Dec 2019 06:51:37 -0800 (PST)
 Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id k16sm29143119pfh.97.2019.12.09.06.51.25
+        by smtp.gmail.com with ESMTPSA id k16sm29143119pfh.97.2019.12.09.06.51.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 06:51:28 -0800 (PST)
+        Mon, 09 Dec 2019 06:51:37 -0800 (PST)
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
 To:     dri-devel@lists.freedesktop.org
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -68,10 +68,12 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Matthias Brugger <mbrugger@suse.com>,
         Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH RESEND 0/4] drm: bridge: anx7688 and an optional feature
-Date:   Mon,  9 Dec 2019 22:50:12 +0800
-Message-Id: <20191209145016.227784-1-hsinyi@chromium.org>
+Subject: [PATCH RESEND 1/4] dt-bindings: drm/bridge: analogix-anx7688: Add ANX7688 transmitter binding
+Date:   Mon,  9 Dec 2019 22:50:13 +0800
+Message-Id: <20191209145016.227784-2-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+In-Reply-To: <20191209145016.227784-1-hsinyi@chromium.org>
+References: <20191209145016.227784-1-hsinyi@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -79,37 +81,55 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-[Resend to cc more reviewers]
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-This series is to add anx7688 bridge driver. It is extended from
-previous work[1].
+Add support for analogix,anx7688
 
-The first 2 patches are same as previous version, with some modification
-due to drm core function changes and use regmap abstraction.
-
-We add an optional feature bypass-gpios so that driver can decide if it serves
-as simple pass-thru by reading GPIO values, which is controlled by
-hardware.
-
-[1] https://lore.kernel.org/lkml/1467013727-11482-1-git-send-email-drinkcat@chromium.org/
-
-Hsin-Yi Wang (2):
-  dt-bindings: drm/bridge: analogix-anx78xx: support bypass GPIO
-  drm: bridge: anx7688: Support bypass GPIO feature
-
-Nicolas Boichat (2):
-  dt-bindings: drm/bridge: analogix-anx7688: Add ANX7688 transmitter
-    binding
-  drm: bridge: anx7688: Add anx7688 bridge driver support.
-
- .../bindings/display/bridge/anx7688.txt       |  70 +++++
- drivers/gpu/drm/bridge/Kconfig                |   9 +
- drivers/gpu/drm/bridge/Makefile               |   1 +
- drivers/gpu/drm/bridge/analogix-anx7688.c     | 260 ++++++++++++++++++
- 4 files changed, 340 insertions(+)
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+---
+ .../bindings/display/bridge/anx7688.txt       | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx7688.txt
- create mode 100644 drivers/gpu/drm/bridge/analogix-anx7688.c
 
+diff --git a/Documentation/devicetree/bindings/display/bridge/anx7688.txt b/Documentation/devicetree/bindings/display/bridge/anx7688.txt
+new file mode 100644
+index 000000000000..78b55bdb18f7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/anx7688.txt
+@@ -0,0 +1,32 @@
++Analogix ANX7688 SlimPort (Single-Chip Transmitter for DP over USB-C)
++---------------------------------------------------------------------
++
++The ANX7688 is a single-chip mobile transmitter to support 4K 60 frames per
++second (4096x2160p60) or FHD 120 frames per second (1920x1080p120) video
++resolution from a smartphone or tablet with full function USB-C.
++
++This binding only describes the HDMI to DP display bridge.
++
++Required properties:
++
++ - compatible          : "analogix,anx7688"
++ - reg                 : I2C address of the device (fixed at 0x2c)
++
++Optional properties:
++
++ - Video port for HDMI input, using the DT bindings defined in [1].
++
++[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++
++	anx7688: anx7688@2c {
++		compatible = "analogix,anx7688";
++		reg = <0x2c>;
++
++		port {
++			anx7688_in: endpoint {
++				remote-endpoint = <&hdmi0_out>;
++			};
++		};
++	};
 -- 
 2.24.0.393.g34dc348eaf-goog
 
