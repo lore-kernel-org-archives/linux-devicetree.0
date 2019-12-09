@@ -7,124 +7,102 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CAAC00454
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11756C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC7B207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFA69207FF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:55:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fv4lpIeR"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="MwGX9WKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbfLIOxf (ORCPT
+        id S1726527AbfLIOzy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:53:35 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36664 "EHLO
+        Mon, 9 Dec 2019 09:55:54 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36698 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfLIOxf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:53:35 -0500
+        with ESMTP id S1725904AbfLIOzy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:55:54 -0500
 Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D07A5DAD;
-        Mon,  9 Dec 2019 15:53:32 +0100 (CET)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2FE3AB2C;
+        Mon,  9 Dec 2019 15:49:04 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575903213;
-        bh=Q0OVJhjw7SZuhsekU9fG/W4V8dGuID7ElTtvVg2tjfI=;
+        s=mail; t=1575902944;
+        bh=moup88+1AXSzEBbkY0ogHDXr3kUQoRsbnyHWmDnec8A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fv4lpIeREWadJYjO759G72RPdXeU5ytjXx/ob10hZoTe/IswAGeDQLCHxUI4DX4Tt
-         tPlgWX51TCYGLR+dbgXIc4ZEPe+ngZdGMNcP0i/g8iawWiI0m71Fv7ci5WtugvivTl
-         8Tu1OQw3xhB28KH+8FSBX9B1XQUjhWiBXUruY6rc=
-Date:   Mon, 9 Dec 2019 16:53:26 +0200
+        b=MwGX9WKtAX0NlVKPSv8B6uqYCPjfM4orkrQE9h1nZ+HmGVnku0I1OHEgtpnAqnHCA
+         15aXPVvHmcZmo+/hxpMpaplTXiqilc0wAcOOG/jSJ1+cSiGK23lle39cEZ2rsn8B2J
+         5Zxa43KbOSTCzccEk9I8R7kKo1hq/qRAZaGE6n1A=
+Date:   Mon, 9 Dec 2019 16:48:57 +0200
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Archit Taneja <architt@codeaurora.org>, p.zabel@pengutronix.de,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: Re: [PATCH RESEND 1/4] dt-bindings: drm/bridge: analogix-anx7688:
- Add ANX7688 transmitter binding
-Message-ID: <20191209145326.GC12841@pendragon.ideasonboard.com>
-References: <20191209145016.227784-1-hsinyi@chromium.org>
- <20191209145016.227784-2-hsinyi@chromium.org>
+To:     Jyri Sarha <jsarha@ti.com>
+Cc:     dri-devel@lists.freedesktop.org, tony@atomide.com,
+        sam@ravnborg.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, tomi.valkeinen@ti.com,
+        peter.ujfalusi@ti.com, bparrot@ti.com
+Subject: Re: [PATCH v2 3/3] drm/tilcdc: panel: Add WARN() with a comment to
+ tilcdc-panel probe
+Message-ID: <20191209144857.GA12841@pendragon.ideasonboard.com>
+References: <cover.1575901747.git.jsarha@ti.com>
+ <54966ffd61ca46528bc55961c532001aa7463c30.1575901747.git.jsarha@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191209145016.227784-2-hsinyi@chromium.org>
+In-Reply-To: <54966ffd61ca46528bc55961c532001aa7463c30.1575901747.git.jsarha@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hsin-Yi,
+Hi Jyri,
 
 Thank you for the patch.
 
-On Mon, Dec 09, 2019 at 10:50:13PM +0800, Hsin-Yi Wang wrote:
-> From: Nicolas Boichat <drinkcat@chromium.org>
+On Mon, Dec 09, 2019 at 04:42:16PM +0200, Jyri Sarha wrote:
+> Add WARN() to the beginnig of tilcdc-panel probe. The obsolete
+
+s/beginnig/beginning/
+
+> tilcdc-panel driver should not be used anymore, since tilcdc is fully
+> capable of using generic drm panels like panel-simple and panel-common
+> binding.
 > 
-> Add support for analogix,anx7688
-> 
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
 > ---
->  .../bindings/display/bridge/anx7688.txt       | 32 +++++++++++++++++++
-
-How about converting this to yaml bindings already ? It's fairly simple
-and gives you DT validation.
-
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx7688.txt
+>  drivers/gpu/drm/tilcdc/tilcdc_panel.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/anx7688.txt b/Documentation/devicetree/bindings/display/bridge/anx7688.txt
-> new file mode 100644
-> index 000000000000..78b55bdb18f7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/anx7688.txt
-> @@ -0,0 +1,32 @@
-> +Analogix ANX7688 SlimPort (Single-Chip Transmitter for DP over USB-C)
-> +---------------------------------------------------------------------
+> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+> index 5584e656b857..cf8e2462a524 100644
+> --- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+> +++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+> @@ -309,6 +309,16 @@ static int panel_probe(struct platform_device *pdev)
+>  	struct pinctrl *pinctrl;
+>  	int ret;
+>  
+> +	/*
+> +	 * The obsolete tilcdc-panel driver should not be used
+> +         * anymore, since tilcdc is fully capable of using generic drm
+> +         * panels like panel-simple and panel-common binding.
+
+Indentation should use tabs.
+
+> +	 */
 > +
-> +The ANX7688 is a single-chip mobile transmitter to support 4K 60 frames per
-> +second (4096x2160p60) or FHD 120 frames per second (1920x1080p120) video
-> +resolution from a smartphone or tablet with full function USB-C.
+> +	WARN(true,
+> +	     "tilcdc-panel is obsolte and should not be used. Please update your configuration!\n",
+
+s/obsolte/obsolete/ or deprecated ?
+
+You may want to explicitly state what it should be updated to :-)
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +	     dev_name(&pdev->dev));
 > +
-> +This binding only describes the HDMI to DP display bridge.
-> +
-> +Required properties:
-> +
-> + - compatible          : "analogix,anx7688"
-> + - reg                 : I2C address of the device (fixed at 0x2c)
-> +
-> +Optional properties:
-> +
-> + - Video port for HDMI input, using the DT bindings defined in [1].
-> +
-> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +
-> +	anx7688: anx7688@2c {
-> +		compatible = "analogix,anx7688";
-> +		reg = <0x2c>;
-> +
-> +		port {
-> +			anx7688_in: endpoint {
-> +				remote-endpoint = <&hdmi0_out>;
-> +			};
-> +		};
-> +	};
-> -- 
-> 2.24.0.393.g34dc348eaf-goog
-> 
+>  	/* bail out early if no DT data: */
+>  	if (!node) {
+>  		dev_err(&pdev->dev, "device-tree data is missing\n");
 
 -- 
 Regards,
