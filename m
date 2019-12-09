@@ -2,128 +2,169 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEE6C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20253C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD1E20726
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA53420726
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:03:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jo1DFtbf"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="XR4UYR3W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbfLIO4z (ORCPT
+        id S1726080AbfLIPDw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:56:55 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:37693 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfLIO4z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:56:55 -0500
-Received: by mail-il1-f193.google.com with SMTP id t9so12975433iln.4;
-        Mon, 09 Dec 2019 06:56:54 -0800 (PST)
+        Mon, 9 Dec 2019 10:03:52 -0500
+Received: from mail-bn8nam12on2058.outbound.protection.outlook.com ([40.107.237.58]:34913
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725956AbfLIPDw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 10:03:52 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gFB3hcVaAGIUbxUMObw/Loe7Or7jx+zzHXu2MnzS4JwEVDWxVKyWhteEd81A1X7Xq0gY7P5KHiG8dBDr5RAdxsMtZH6oypAWF7giJffiz3oVk+8owUR/sOqgJw8qDQqJuJOd3dUlJtNH4969oJwjmgXY3foivP2YEBhq+wYINCaJJz4AgwNsvlYkGZpEWRmCOyo30vWo4B61rwKatxGfyvn5SOgfvlvDhsfh+gL7/6U/41c3kwcMoz71HzHcSufQrD0BIWmddsbfq7cfR3NPLbWaxXQ15luRFyAHf0/TxpOlTaFYS4sNVHy4kJMWGxet8nh/bwaNdRiCt4tpeHeonw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DktADPHNdKbivPRd1Ij5JPxIOd5MKDhmodedl4y8O+g=;
+ b=YQvIVoSSfBKgO5t8AVrdl0f5RIWbVlimTBeOX1OYjRCUBXjCiS4FhGlZU9CmRUrB5rGkPh/ckwEVPt6o5buy3G79lBEs73OhAz0JaPp/u4MH9RZCKZuBVSzEEm3HhcfUqEk/mLGTTHehsPARpZ/3Q0Ugm2aQmT/IXpQU+h9jGTSng+aBpE8o1LO6kPkefZLPG6J9J84nq4A/UWHzbhlvk8riN/x8I467h6qhxkXdaFk/rWQ7Q1kTG8HFjzJSSD/zARFB/2t2Di/AAsuLgh8WCOXnCy4dGStrgaQwLYIAsdPecaWOxtWeYgSMBFmm/fMUy0Lfe34gLdK8z08SEN4sFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=nongnu.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GZjkca3Zp9sYYYIS/QPCEF0H2DGmE3kQodC7U7RI6jg=;
-        b=Jo1DFtbfEqbVJQq5XZ5LYzCv5LfIMXre5rs2IBqXAEswSM4ZyGHTOACUpAWl/JxobF
-         HLX/pPfXm0RL9M3l645yavzaROmAbjPrumBgCxOs+qt0jECTLvAP2saRGhxDiE4oVabe
-         x5ksCotFtF8bz+kAXYWj99jBeJUme6AdylQlFhZHK5Pd5Gk1t3eZiddRZuYK0LK40RxD
-         YSVYDjyxUtLqzzIQK4xOZoi+glaFkyr5SiLcxWGHnk44UhVVdqwlxJe//NV2RaRGPTNP
-         gl8tmVv118OmwBXVwaHHpaVbbEq1vi6cVvltYUcazpnix7+plbZ6LF5IODbwmjQ4/C3R
-         9miQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GZjkca3Zp9sYYYIS/QPCEF0H2DGmE3kQodC7U7RI6jg=;
-        b=HGkTwBtNpfa0PsAvonHxJuAzOIxbuXF03Cfft+CY/0La5g/uYt4+7CnOehphaIlYAf
-         oeVVf4hvIWtiwAV8s5Z29TaVHg0+9ptlOm1akBduHliIGI0nOWkFyawwi23sQAhGcrp5
-         M784IiwdijVdyyiJP05KvYzUrW5cB6ayAHEmvRFzhV+JcQ+8c4g3uuC+H2kJBACGGorh
-         k6gAXLtw4YyHf2rxQnJg0tEkgbyF9itKdCruZWlqLsvb+Xzf98EsM+JYWl9TZEEdfyJA
-         R9t1oB/NrFSVKWP/AE2RfY0ssvSrHX5YY9j/WFuGC+Bs3ef2OP5gex6vM3907pQ6ROM7
-         Al/A==
-X-Gm-Message-State: APjAAAXsKve5UM7kJ0xhJpWIDjOoQcCXi2/iZJ48/TC16wV2jlNNzNnh
-        6UrflmFgg8uYpJi46BVnYk0yzGhLQYid/1iMFwcOUGi6
-X-Google-Smtp-Source: APXvYqxlvrvi0P/1yFULp5Ov9uTz23XUXUnTAB4CPJ8ux5bZ/ALMike0pN8bBYyFrKhz/ds6VBHl/XO9ocuzIVo34UE=
-X-Received: by 2002:a92:3919:: with SMTP id g25mr10786954ila.221.1575903414183;
- Mon, 09 Dec 2019 06:56:54 -0800 (PST)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DktADPHNdKbivPRd1Ij5JPxIOd5MKDhmodedl4y8O+g=;
+ b=XR4UYR3WY9/IoxDC4Cb1fMfRkLz4uoj1/psue1891JwA8GwKxQEp+Cm1MjqP+RoCi5SIizj8JeIdqmois89GkvwDEFfRxhajpTNrG+taC/shbpFe4OgVIy9NUZmwzbhKG55MFpX/HJRnLxseqPqL9lsMacUc7BDRnaXwiScRqjA=
+Received: from CY4PR02CA0009.namprd02.prod.outlook.com (2603:10b6:903:18::19)
+ by BN7PR02MB5233.namprd02.prod.outlook.com (2603:10b6:408:25::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.13; Mon, 9 Dec
+ 2019 15:03:09 +0000
+Received: from BL2NAM02FT013.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::204) by CY4PR02CA0009.outlook.office365.com
+ (2603:10b6:903:18::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12 via Frontend
+ Transport; Mon, 9 Dec 2019 15:03:08 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; nongnu.org; dkim=none (message not signed)
+ header.d=none;nongnu.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT013.mail.protection.outlook.com (10.152.77.19) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2495.26
+ via Frontend Transport; Mon, 9 Dec 2019 15:03:08 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1ieKZ1-0007xe-Q8; Mon, 09 Dec 2019 07:03:07 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1ieKYw-0006Ik-MU; Mon, 09 Dec 2019 07:03:02 -0800
+Received: from [172.30.17.107]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1ieKYv-0006Hp-8i; Mon, 09 Dec 2019 07:03:01 -0800
+Subject: Re: [PATCH 1/5] arm64: zynqmp: Add firmware DT node
+To:     Guenter Roeck <linux@roeck-us.net>,
+        "Edgar E. Iglesias" <edgar.iglesias@xilinx.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Michael Tretter <m.tretter@pengutronix.de>,
+        Edgar Iglesias <edgari@xilinx.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        Rajan Vaja <rajanv@xilinx.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, qemu-devel@nongnu.org
+References: <20191018160735.15658-1-m.tretter@pengutronix.de>
+ <20191018160735.15658-2-m.tretter@pengutronix.de>
+ <20191208223814.GA21260@roeck-us.net>
+ <dbba2a25-cbf7-60f4-99f7-056512e28d00@xilinx.com>
+ <4821742f-2d60-b722-b954-263de975bf2e@roeck-us.net>
+ <20191209074840.GP32392@toto>
+ <d2e63acb-c076-7bfb-c492-0355ec106cbf@roeck-us.net>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <fa36a9e9-9e44-d1ff-cfdc-22d0484318ff@xilinx.com>
+Date:   Mon, 9 Dec 2019 16:02:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191206184536.2507-1-linux.amoon@gmail.com> <724aa7db-3838-16f9-d344-1789ae2a5746@arm.com>
-In-Reply-To: <724aa7db-3838-16f9-d344-1789ae2a5746@arm.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 9 Dec 2019 20:26:42 +0530
-Message-ID: <CANAwSgTPrP5FS3xb7SadZ+BwASWQxfO8rBmno8ZW0JzAxcqWKA@mail.gmail.com>
-Subject: Re: [RFCv1 0/8] RK3399 clean shutdown issue
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Daniel Schultz <d.schultz@phytec.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-rockchip@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d2e63acb-c076-7bfb-c492-0355ec106cbf@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(39860400002)(136003)(376002)(189003)(199004)(70206006)(2616005)(9786002)(81156014)(31696002)(4326008)(36756003)(70586007)(44832011)(5660300002)(229853002)(6636002)(31686004)(230700001)(53546011)(478600001)(8936002)(305945005)(336012)(26005)(356004)(8676002)(6666004)(54906003)(110136005)(316002)(186003)(81166006)(426003)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB5233;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 76127af6-71f5-4b80-a4a5-08d77cb8e6df
+X-MS-TrafficTypeDiagnostic: BN7PR02MB5233:
+X-Microsoft-Antispam-PRVS: <BN7PR02MB523349D866F89A8EEF87D36BC6580@BN7PR02MB5233.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 02462830BE
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8jC1l0FuAK6gV7mZiVHHeEiP4D50WWmiRH7MViIAOVB8fiqDBtrkNJIL3CZQh8XGS8ve8l7yiKNf4/Xf580pVgowz+Nsx7udYnz161a3FJIUROwThm9jo1+HNwf9Wyt0ROV4dDLNmEiLxIt3R5g5t55Dqb3wbP+v/BtO7qTAKG3rr2A7hCi0qTjhAYgPd2zR5Gc/pk7xj+56UAlS8wvrrVoM/fbB+yUlKImrQxC8aMOk9HveSToE1VO1JXV825rsr19owB8ZWdrIGV3921DQ3dlLYmpMv1GVyTA96uBvhiCwncs+WgUhB7RCM36nyPJXIVPZ+430iQFTVwk7OZd8ZCq7OAT1DMZTVDM8Yipm/oSWfnclNmiH5p/JcrqSJF0JSXolUnbL4lSYBzmWIVMEB+hGkfhXgBN5TCx7/LuNCwf60qbKPsTjCmsgb2SVM0Mu
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2019 15:03:08.3716
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76127af6-71f5-4b80-a4a5-08d77cb8e6df
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB5233
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robin,
+On 09. 12. 19 15:32, Guenter Roeck wrote:
+> On 12/8/19 11:48 PM, Edgar E. Iglesias wrote:
+>> On Sun, Dec 08, 2019 at 11:19:33PM -0800, Guenter Roeck wrote:
+>>> On 12/8/19 10:42 PM, Michal Simek wrote:
+>>>> Hi, +Edgar
+>>>>
+>>>>
+>>>> On 08. 12. 19 23:38, Guenter Roeck wrote:
+>>>>> On Fri, Oct 18, 2019 at 06:07:31PM +0200, Michael Tretter wrote:
+>>>>>> From: Rajan Vaja <rajan.vaja@xilinx.com>
+>>>>>>
+>>>>>> Add firmware DT node in ZynqMP device tree. This node
+>>>>>> uses bindings as per new firmware interface driver.
+>>>>>>
+>>>>>> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+>>>>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>>>>>> Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+>>>>>
+>>>>> With this patch applied in the mainline kernel, the qemu xlnx-zcu102
+>>>>> emulation crashes (see below). Any idea what it might take to get
+>>>>> qemu back to working ?
+>>>>
+>>>> Driver talks through ATF to PMU unit(microblaze). I don't think A53+MB
+>>>> concept is working with mainline qemu. But crash is too hard. It should
+>>
+>> Yes, QEMU doesn't support the Cortex-A53s along with the PMU MicroBlaze.
+>>
+>> My workaround when using upstream QEMU is a modified DT without the
+>> PMU firmware
+>> and with fixed-clock nodes.
+>>
+> 
+> I can't do that for my boot tests. Normally I would just disable
+> ZYNQMP_FIRMWARE,
+> but that is hard enabled with ARCH_ZYNQMP. I'll have to drop those tests,
+> unfortunately, if the firmware driver is considered mandatory.
 
-On Mon, 9 Dec 2019 at 18:59, Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 06/12/2019 6:45 pm, Anand Moon wrote:
-> > Most of the RK3399 SBC boards do not perform clean
-> > shutdown and clean reboot.
->
-> FWIW reboot problems on RK3399 have been tracked down to issues in
-> upstream ATF, and are unrelated to the PMIC.
+We can make it optional.
+Rajan: please send a patch for it.
 
-Yes I am aware of this changes.
-But, I have tired to study *RK808 datasheet V1.4* [0] below section
-*5.2.3 Power Channel Control/Monitor Registers*
-for clean reboot I was going to try disable some bit in below
-into reboot handle in the future patch.
+M
 
-DCDC_EN_REG
-SLEEP_SET_OFF_REG1
-SLEEP_SET_OFF_REG2
-DCDC_UV_STS_REG
-
-I was going see if this helps to do clean reboot.
-further more use this in suspend/resume operation.
-
-[0] http://rockchip.fr/RK808%20datasheet%20V1.4.pdf
-
-But I feed that their is some more issue with related to mmc or PCIe
-not able to cleanly release the resources while reboot which caused
-then to disable after reboot.
-
->
-> > These patches try to help resolve the issue with proper
-> > shutdown by turning off the PMIC.
->
-> As mentioned elsewhere[1], although this is what the BSP kernel seems to
-> do, and in practice it's unlikely to matter for the majority of devboard
-> users like you and me, I still feel a bit uncomfortable with this
-> solution for systems using ATF as in principle the secure world might
-> want to know about orderly shutdowns, and this effectively makes every
-> shutdown an unexpected power loss from secure software's point of view.
->
-> Robin.
->
-> [1]
-> http://lists.infradead.org/pipermail/linux-rockchip/2019-December/028183.html
->
-
-Yes I have follow the mailing list and I read this thread.
-I am not aware of ATF complete architecture.
-
--Anand
