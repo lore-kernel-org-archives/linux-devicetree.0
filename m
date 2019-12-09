@@ -2,114 +2,112 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D33C04E30
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234BAC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBCCC2080D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7ED220828
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:44:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bwiWLgyw"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="c6ntOlc1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfLIOnF (ORCPT
+        id S1727893AbfLIOoM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:43:05 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39168 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727654AbfLIOnD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:43:03 -0500
-Received: by mail-wm1-f68.google.com with SMTP id s14so15204212wmh.4;
-        Mon, 09 Dec 2019 06:43:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NV+OtFNHEPzK4aALA3wGiz+UFBKhhJOcbOzMP5xc22k=;
-        b=bwiWLgywo4bf2Dm4Ihu3a9OQzCW+Bcm0MRmMhP3dm7qO/brttTj8L67XJibxd6vTix
-         3G+uINewRv4VhP7E8F03AWBILGLSbVisz/lwn+KlM22BnGqwogFN9uMxSZsGliB0Xonm
-         DfLcXpIDyUJNd3iAs4fo17prGdJ2Pw1ZxtYFsBSDsaa9k2oF2tM2ZdQ0POIj3QThtByc
-         2IYQ6VQpbE/rxx4ktCnSocpdE56KR6KLf0cB1pwS1W33hBSan/WK1DezW0reo4WaxshO
-         B6vjyjQ6+MIxm+lttNugyuDpOpTxTlqpqeGDjzhLKcVQA2PIoS+nW+3So8WR8p051Lou
-         Wa9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NV+OtFNHEPzK4aALA3wGiz+UFBKhhJOcbOzMP5xc22k=;
-        b=tmJ2L1kJQM3zQScA/hk0rKY56EQ5Mfd7FGGBM2XzxXrqhepFLxELDgc9WIovP58yVg
-         No3dH/iMwIXjaLwx6JYNHeeKsb8Ef0CsOb1D9NZHdjZRDxTMOUULvGiPDY8k5yCNc949
-         OObHnaLt9TtamizyiQPOft4ALhQ7M0U2G4RtuI3zlIpHFJWrBmH2ee+3Oxou3yqqN5Y5
-         EFnb1WdHjMMe3d1RfduLsqsYBTpQzIllXgHY+2qwh2Ya9UY2mNfk+cIK4Ig1TzlPdItq
-         uJIHa3C5ZalJpABdvkjpC8LgDSKoV4Z/SosSQM7wfGb4A+R3dkncctdQFF8AOBqFSBZX
-         8L1g==
-X-Gm-Message-State: APjAAAUSr62M0Jc7a5MOhktOlQ+JGzna71ncV5JtAZD92Ok4PwZ0uP8s
-        kxAI23/ChtBYYJ2EW3Qvx2Y=
-X-Google-Smtp-Source: APXvYqyJwFHV7cm833OQ2PvjlHHPlHPTguHfZPFEEjeLQsJeto1AdNMXKAMXnzYvun173UkWc3IHKA==
-X-Received: by 2002:a05:600c:2383:: with SMTP id m3mr12937576wma.32.1575902581139;
-        Mon, 09 Dec 2019 06:43:01 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id b10sm8756152wmb.48.2019.12.09.06.42.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 06:43:00 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: [PATCH v2 2/2] iommu: dma: Use of_iommu_get_resv_regions()
-Date:   Mon,  9 Dec 2019 15:42:56 +0100
-Message-Id: <20191209144256.2396808-2-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191209144256.2396808-1-thierry.reding@gmail.com>
-References: <20191209144256.2396808-1-thierry.reding@gmail.com>
+        Mon, 9 Dec 2019 09:44:12 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:34796 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727891AbfLIOoK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:44:10 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9Egjpg017551;
+        Mon, 9 Dec 2019 15:43:52 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=vKx6OPdSeYJTuRGa0bHCD2tYSeg+UtY9A3haTmI2eKA=;
+ b=c6ntOlc126VLKeqyu4GAC4nsRoo7L/y/wpleFu9k1K+1s90MlQADGV2W+omSCJCO3CvN
+ EyJtnea6Ee3WS9nY/7HUgXOMnAg1Q+E2DGu5F7gHrOtsvZ9pbKRa3nD5kYUmbOR5pt2x
+ ah1hkDXaCytdccqyyaH++WgfekYbeVLs76peteDiSzhFC/LaCP31IocckHdvEOA/Xx+X
+ Aa4o3Nhws5Np5oqMvE85guQd3c5PJmv/Jwvm91G2SGNdt+7tbr0awKQOFHZkDxxT2G+A
+ T6soWnVEfm7PhN1YgDLqZuruHnHt+7AcTziV0LU+HJ8+ZRhQE465zo4K4C/C5hBq7fKu vQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wradh7xe1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Dec 2019 15:43:52 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6C39910002A;
+        Mon,  9 Dec 2019 15:43:51 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3CA812D3765;
+        Mon,  9 Dec 2019 15:43:51 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 9 Dec
+ 2019 15:43:50 +0100
+Subject: Re: [PATCH 5/5] ARM: dts: stm32: add phy-names to usbotg_hs on
+ stm32mp157c-ev1
+To:     Amelie Delaunay <amelie.delaunay@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191121161259.25799-1-amelie.delaunay@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <181a4a40-f54c-3559-aaa9-9443fb2153ac@st.com>
+Date:   Mon, 9 Dec 2019 15:43:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191121161259.25799-1-amelie.delaunay@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-09_04:2019-12-09,2019-12-09 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+Hi Amélie,
 
-For device tree nodes, use the standard of_iommu_get_resv_regions()
-implementation to obtain the reserved memory regions associated with a
-device.
+On 11/21/19 5:12 PM, Amelie Delaunay wrote:
+> phy-names is required by usbotg_hs driver to get the phy, otherwise, it
+> considers that there is no phys property.
+> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> ---
+>   arch/arm/boot/dts/stm32mp157c-ev1.dts | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+> index 2010f6292a77..228e35e16884 100644
+> --- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
+> +++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+> @@ -355,6 +355,7 @@
+>   &usbotg_hs {
+>   	dr_mode = "peripheral";
+>   	phys = <&usbphyc_port1 0>;
+> +	phy-names = "usb2-phy";
+>   	status = "okay";
+>   };
+>   
+> 
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- drivers/iommu/dma-iommu.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 76ef31123cd9..2b2ec643b7e8 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -19,6 +19,7 @@
- #include <linux/iova.h>
- #include <linux/irq.h>
- #include <linux/mm.h>
-+#include <linux/of_iommu.h>
- #include <linux/pci.h>
- #include <linux/scatterlist.h>
- #include <linux/vmalloc.h>
-@@ -165,6 +166,8 @@ void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
- 	if (!is_of_node(dev_iommu_fwspec_get(dev)->iommu_fwnode))
- 		iort_iommu_msi_get_resv_regions(dev, list);
- 
-+	if (dev->of_node)
-+		of_iommu_get_resv_regions(dev, list);
- }
- EXPORT_SYMBOL(iommu_dma_get_resv_regions);
- 
--- 
-2.23.0
+Series applied on stm32-next.
 
+Note: due to new STM32 diversity I renamed some patches.
+
+Regards
+Alex
