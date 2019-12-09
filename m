@@ -2,216 +2,118 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83BDC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16293C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB3420828
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE9A2077B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:10:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="YCqcLXE2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jCwHdkzj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfLIPHm (ORCPT
+        id S1726675AbfLIPKB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:07:42 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:47868 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfLIPHm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 10:07:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1575904058; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xwHOmmEeu2eYACHyX+W/1JmkDRO9vyXjLPc/BjErkck=;
-        b=YCqcLXE2zvQ3KaiUaxSq7tlr7q3DETPMjvUQ72aQfBuZhq56kpwgGbViI4A0q6x33sZUun
-        kjc6+vQCJEGccXOSBqOgzLggfl3CEAQGyy27kxDP5P5YY3l3xbbl5/bjgtkEP+mK1sSkaV
-        /fpHPvT7mJDAkIDWGiwLayoa9j1Lqb4=
-Date:   Mon, 09 Dec 2019 16:07:28 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v7 6/6] MIPS: CU1000: Add devicetree & config with
- PDMA/MSC/RTC/WDT/NET enabled.
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
-        ebiederm@xmission.com, ralf@linux-mips.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        krzk@kernel.org, geert+renesas@glider.be,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 772753199@qq.com
-Message-Id: <1575904048.3.2@crapouillou.net>
-In-Reply-To: <1575896438-9562-7-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1575896438-9562-1-git-send-email-zhouyanjie@wanyeetech.com>
-        <1575896438-9562-7-git-send-email-zhouyanjie@wanyeetech.com>
+        Mon, 9 Dec 2019 10:10:01 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38506 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbfLIPKB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 10:10:01 -0500
+Received: by mail-io1-f65.google.com with SMTP id u7so15100288iop.5
+        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 07:10:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xcWrJCCDV9FLXdr0ZUztddjQSSx3x7+pXvp+/EC4d4s=;
+        b=jCwHdkzjuZXdAkFGt53WBUw98CEGScyc/VWwjQ7pxH+VWdtrquDNMCbo59WLI4gWmZ
+         FLY7q481NWsVYTxuLmnRDrwcP9ZTE64og3Ks1EYf96dttxJ8/fV+ab2gimu4+16zUtRn
+         FjTGKEqm7de1F01zLV4vmAsXOJm+fXN+FNgyg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xcWrJCCDV9FLXdr0ZUztddjQSSx3x7+pXvp+/EC4d4s=;
+        b=WWOUqeCeM2fQmm1H9LRosQQjn8s0aCMPlH5HqfVjd7WLFfP2pvT8b9HG/wPE19UIJ6
+         QocDENF4DTTRbdnbAt/Fp2y19P6xknL5coiH19fdaXKgKyIJcz8f/gpepjZr+ucthq0Y
+         zje+W+LfhHAJQbJcCaidx03p5Z1e9b+Zzw9u1LogvDHC3VvM8tTU8x1lshw27Ylus9K/
+         ugMnGEdCfyOFjDxinpLvjNoCvR1i2iOClixJZ28TDeRxCawiYpWNwx+LfYPjT4uink+d
+         X+xQI3lEpeAMA6qhd0IMyFe2HQw3KmgBy0IAMfon4oGDTAQGorm8rpt5bREj6n4MzRTO
+         0RRA==
+X-Gm-Message-State: APjAAAVmkmyBVmZpRWLwQ4eNvARtqt2oNREVOMkWdAI5Dh/U3hEXLW3J
+        iYSZtL0xYJblJDSLTNEG/oJwb6ofcTrHDHEmJK2zzw==
+X-Google-Smtp-Source: APXvYqzg3szTNJsFOs7seXieuvnWRJ9uISz+Z/GGKMgmwYIKFt9RhcKAORgRuxrGJQAz5EnB4PhlNDhQ7834VEmeZRc=
+X-Received: by 2002:a5e:c204:: with SMTP id v4mr21682825iop.106.1575904200419;
+ Mon, 09 Dec 2019 07:10:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20191209145016.227784-1-hsinyi@chromium.org> <20191209145016.227784-4-hsinyi@chromium.org>
+ <20191209145552.GD12841@pendragon.ideasonboard.com>
+In-Reply-To: <20191209145552.GD12841@pendragon.ideasonboard.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Mon, 9 Dec 2019 23:09:34 +0800
+Message-ID: <CAJMQK-hNSF-Vu4CfTKiCUdBRmaONf=Lp3NN0-nFor6mxY1seJg@mail.gmail.com>
+Subject: Re: [PATCH RESEND 3/4] dt-bindings: drm/bridge: analogix-anx78xx:
+ support bypass GPIO
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Archit Taneja <architt@codeaurora.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Zhou,
+On Mon, Dec 9, 2019 at 10:55 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Hsin-Yi,
+>
+> Thank you for the patch.
+>
+> On Mon, Dec 09, 2019 at 10:50:15PM +0800, Hsin-Yi Wang wrote:
+> > Support optional feature: bypass GPIO.
+> >
+> > Some SoC (eg. mt8173) have a hardware mux that connects to 2 ports:
+> > anx7688 and hdmi. When the GPIO is active, the bridge is bypassed.
+>
+> This doesn't look like the right place to fix this, as the mux is
+> unrelated to the bridge. You would have to duplicate this logic in every
+> bridge driver otherwise.
+>
+> Could you describe the hardware topology in a bit more details ? I can
+> then try to advise on how to best support it.
+>
+Hi Laurent,
 
-You modify here in patch [06/06] two files that were introduced in=20
-[04/06]. Just merge the two patches into one then, and make it last in=20
-the patchset.
+The mt8173 layout is:
 
--Paul
+MT8173 HDMI bridge-- hardware mux --- HDMI
+                                                   |
+                                                    ------------ anx7688
+There's a hardware mux that takes mt8173 hdmi as input and has 2
+output port: native hdmi and anx7688 bridge.
+If gpio is active, we would like it to go to HDMI.
 
+Previous approach is to make hardware mux a generic gpio mux bridge,
+but this is probably a very rare use case that is only for
+mt8173.(https://lore.kernel.org/lkml/57723AD2.8020806@codeaurora.org/)
+We merge the mux and anx7688 to a single bridge and leave this as an
+optional feature in this time.
 
-Le lun., d=C3=A9c. 9, 2019 at 21:00, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanj=
-ie)=20
-<zhouyanjie@wanyeetech.com> a =C3=A9crit :
-> Add the CU1000 Neo devicetree and defconfig with PDMA, MMC, RTC, WDT
-> and NET enabled.
->=20
-> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech.com>
-> ---
->=20
-> Notes:
->     v7:
->     New patch, merge[06/12],[08/12],[10/12],[12/12] in v6.
->=20
->  arch/mips/boot/dts/ingenic/cu1000-neo.dts | 47=20
-> +++++++++++++++++++++++++++++++
->  arch/mips/configs/cu1000-neo_defconfig    | 17 +++++++++--
->  2 files changed, 62 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/mips/boot/dts/ingenic/cu1000-neo.dts=20
-> b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
-> index 6f1a7e9..b0733da 100644
-> --- a/arch/mips/boot/dts/ingenic/cu1000-neo.dts
-> +++ b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
-> @@ -43,10 +43,57 @@
->  	status =3D "okay";
->  };
->=20
-> +&mac {
-> +	phy-mode =3D "rmii";
-> +	phy-handle =3D <&lan8720a>;
-> +
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pins_mac>;
-> +
-> +	snps,reset-gpio =3D <&gpc 23 GPIO_ACTIVE_LOW>; /* PC23 */
-> +	snps,reset-active-low;
-> +	snps,reset-delays-us =3D <0 10000 30000>;
-> +
-> +	status =3D "okay";
-> +};
-> +
-> +&mdio {
-> +	status =3D "okay";
-> +
-> +	lan8720a: ethernet-phy@0 {
-> +		compatible =3D "ethernet-phy-id0007.c0f0",=20
-> "ethernet-phy-ieee802.3-c22";
-> +		reg =3D <0>;
-> +	};
-> +};
-> +
-> +&msc0 {
-> +	bus-width =3D <8>;
-> +	max-frequency =3D <50000000>;
-> +
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pins_msc0>;
-> +
-> +	non-removable;
-> +
-> +	status =3D "okay";
-> +};
-> +
->  &pinctrl {
->  	pins_uart2: uart2 {
->  		function =3D "uart2";
->  		groups =3D "uart2-data-d";
->  		bias-disable;
->  	};
-> +
-> +	pins_mac: mac {
-> +		function =3D "mac";
-> +		groups =3D "mac";
-> +		bias-disable;
-> +	};
-> +
-> +	pins_msc0: msc0 {
-> +		function =3D "mmc0";
-> +		groups =3D "mmc0-1bit", "mmc0-4bit", "mmc0-8bit";
-> +		bias-disable;
-> +	};
->  };
-> diff --git a/arch/mips/configs/cu1000-neo_defconfig=20
-> b/arch/mips/configs/cu1000-neo_defconfig
-> index 4fafe92..9f988ed 100644
-> --- a/arch/mips/configs/cu1000-neo_defconfig
-> +++ b/arch/mips/configs/cu1000-neo_defconfig
-> @@ -16,8 +16,6 @@ CONFIG_CGROUP_DEVICE=3Dy
->  CONFIG_CGROUP_CPUACCT=3Dy
->  CONFIG_NAMESPACES=3Dy
->  CONFIG_USER_NS=3Dy
-> -CONFIG_BLK_DEV_INITRD=3Dy
-> -CONFIG_INITRAMFS_SOURCE=3D"arch/mips/boot/ramdisk.cpio.gz"
->  CONFIG_CC_OPTIMIZE_FOR_SIZE=3Dy
->  CONFIG_SYSCTL_SYSCALL=3Dy
->  CONFIG_KALLSYMS_ALL=3Dy
-> @@ -35,11 +33,17 @@ CONFIG_HZ_100=3Dy
->  # CONFIG_COMPACTION is not set
->  CONFIG_CMA=3Dy
->  CONFIG_CMA_AREAS=3D7
-> +CONFIG_NET=3Dy
-> +CONFIG_UNIX=3Dy
-> +CONFIG_INET=3Dy
->  CONFIG_UEVENT_HELPER=3Dy
->  CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
->  CONFIG_DEVTMPFS=3Dy
->  # CONFIG_FW_LOADER is not set
->  # CONFIG_ALLOW_DEV_COREDUMP is not set
-> +CONFIG_NETDEVICES=3Dy
-> +CONFIG_STMMAC_ETH=3Dy
-> +CONFIG_SMSC_PHY=3Dy
->  # CONFIG_INPUT_MOUSEDEV is not set
->  # CONFIG_INPUT_KEYBOARD is not set
->  # CONFIG_INPUT_MOUSE is not set
-> @@ -55,17 +59,26 @@ CONFIG_SERIAL_8250_INGENIC=3Dy
->  CONFIG_SERIAL_OF_PLATFORM=3Dy
->  # CONFIG_HW_RANDOM is not set
->  CONFIG_GPIO_SYSFS=3Dy
-> +CONFIG_WATCHDOG=3Dy
-> +CONFIG_JZ4740_WDT=3Dy
->  # CONFIG_HWMON is not set
->  # CONFIG_LCD_CLASS_DEVICE is not set
->  # CONFIG_BACKLIGHT_CLASS_DEVICE is not set
->  # CONFIG_VGA_CONSOLE is not set
->  # CONFIG_HID is not set
->  # CONFIG_USB_SUPPORT is not set
-> +CONFIG_MMC=3Dy
-> +CONFIG_MMC_JZ4740=3Dy
-> +CONFIG_RTC_CLASS=3Dy
-> +CONFIG_RTC_DRV_JZ4740=3Dy
-> +CONFIG_DMADEVICES=3Dy
-> +CONFIG_DMA_JZ4780=3Dy
->  # CONFIG_IOMMU_SUPPORT is not set
->  CONFIG_NVMEM=3Dy
->  CONFIG_NVMEM_SYSFS=3Dy
->  CONFIG_EXT4_FS=3Dy
->  # CONFIG_DNOTIFY is not set
-> +CONFIG_AUTOFS_FS=3Dy
->  CONFIG_PROC_KCORE=3Dy
->  # CONFIG_PROC_PAGE_MONITOR is not set
->  CONFIG_TMPFS=3Dy
-> --
-> 2.7.4
->=20
-
-=
-
+Thanks.
