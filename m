@@ -2,170 +2,68 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE850C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0083EC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD2E20828
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:41:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="F3cBvfzc";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="T+0Or8QK"
+	by mail.kernel.org (Postfix) with ESMTP id CD6C9207FD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:42:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfLIOlB (ORCPT
+        id S1727654AbfLIOma (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:41:01 -0500
-Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:53264
-        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726687AbfLIOlB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:41:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575902460;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=FwsTN1S8xTUtsKIR4+YjOOPQ4UCSIVoYV0o+74vu/E8=;
-        b=F3cBvfzc2ApvC/q5bwfcQyj43+Tj+eIRKEaChXmnVPxJwVJ2c7749NjFbnUH/PDV
-        LwoNJjbCLyld1jKm9aqezrn+Omzi+5kJrwsVCJZi//xcrsAR3YQbQp9le2/8qY1xCgd
-        HCT0I1LWaOFfa32QkYq4oGUj69Y1qidZ9kjuuRAI=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575902460;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=FwsTN1S8xTUtsKIR4+YjOOPQ4UCSIVoYV0o+74vu/E8=;
-        b=T+0Or8QKRoFZbmCUBxgGRmn4/i55zayvWHGVRERk6T4dcMJUg+Isihj6UsyKYtwu
-        XLMMZePW++nPjIjkkuhMxfIg2jO5913lLuHYVs6iOINfG5AHCaYAEZrNC5Hr3Ifi1Wv
-        ADDbOWgMZq2Sc76xzwFGIc1mNVEe+1cICCyKEAlI=
+        Mon, 9 Dec 2019 09:42:30 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:46356 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727608AbfLIOma (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 09:42:30 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.lan)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ieKEx-00016m-7Z; Mon, 09 Dec 2019 15:42:23 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     thierry.reding@gmail.com, sam@ravnborg.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH 1/3] dt-bindings: Add vendor prefix for Xinpeng Technology
+Date:   Mon,  9 Dec 2019 15:42:06 +0100
+Message-Id: <20191209144208.4863-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
 Content-Transfer-Encoding: 8bit
-Date:   Mon, 9 Dec 2019 14:41:00 +0000
-From:   ppvk@codeaurora.org
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     adrian.hunter@intel.com, robh+dt@kernel.org,
-        ulf.hansson@linaro.org, asutoshd@codeaurora.org,
-        vbadigan@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org, sboyd@kernel.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org
-Subject: Re: [RFC-v2 1/2] dt-bindings: mmc: sdhci-msm: Add Bus BW vote
- supported strings
-In-Reply-To: <8d7f2a2f-1312-8983-4e58-80dc6939154c@linaro.org>
-References: <1573220319-4287-1-git-send-email-ppvk@codeaurora.org>
- <1573220319-4287-2-git-send-email-ppvk@codeaurora.org>
- <8d7f2a2f-1312-8983-4e58-80dc6939154c@linaro.org>
-Message-ID: <0101016eeb1b3894-fc246837-27f4-447b-b37a-6bc4dd1893dc-000000@us-west-2.amazonses.com>
-X-Sender: ppvk@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.12.09-54.240.27.55
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-11-13 18:46, Georgi Djakov wrote:
-> Hi Pradeep,
-> 
-> Thanks for the patch!
-> 
-> On 8.11.19 г. 15:38 ч., Pradeep P V K wrote:
->> Add Bus bandwidth voting supported strings for qcom-sdhci controller.
->> 
->> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
->> ---
->>  .../devicetree/bindings/mmc/sdhci-msm.txt          | 32 
->> ++++++++++++++++++++++
->>  1 file changed, 32 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt 
->> b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> index da4edb1..22fb140 100644
->> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> @@ -39,6 +39,25 @@ Required properties:
->>  	"cal"	- reference clock for RCLK delay calibration (optional)
->>  	"sleep"	- sleep clock for RCLK delay calibration (optional)
->> 
->> +Optional Properties:
->> +* Following bus parameters are required for bus bw voting:
-> 
-> "bus bw voting" sounds a bit vague to me. I would say instead:
-> 
-> The following DT properties are required for interconnect bandwidth 
-> scaling.
-> 
-  Thanks for the review. I will address this in my next patch set.
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
->> +- interconnects: Pairs of phandles and interconnect provider 
->> specifier
->> +		 to denote the edge source and destination ports of
->> +		 the interconnect path. Please refer to
->> +		 Documentation/devicetree/bindings/interconnect/
->> +		 for more details.
->> +- interconnect-names: List of interconnect path name strings sorted 
->> in the same
->> +		order as the interconnects property. Consumers drivers will use
->> +		interconnect-names to match interconnect paths with interconnect
->> +		specifiers. Please refer to Documentation/devicetree/bindings/
->> +		interconnect/ for more details.
-> 
-> Please describe here what there are two paths are for sdhc and how they 
-> are
-> expected to be named. You already responded to this question, so please 
-> include
-> this information here.
-> Hint: Refer to the Documentation for how we described it for other 
-> subsystems.
-> 
-ok. I will address in my next patch set.
+Shenzhen Xinpeng Technology Co., Ltd produces for example display panels.
 
->> +- msm-bus,name: string describing the bus path
->> +- msm-bus,num-cases: number of configurations in which sdhc can 
->> operate in
->> +- msm-bus,num-paths: number of paths to vote for
->> +- msm-bus,vectors-KBps: Takes a tuple <ib ab>, <ib ab> (2 tuples for 
->> 2
->> +				num-paths) The number of these entries *must*
->> +				be same as num-cases.
-> 
-> If it has to be in DT, could we use this [1] instead of the above? The 
-> patches
-> are not merged yet, but this might be the direction we want to go.
-> 
-> Thanks,
-> Georgi
-> 
-> [1] 
-> http://lore.kernel.org/r/20190807223111.230846-1-saravanak@google.com
-> 
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Sure, i will make the change based on [1] in my next patch set.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 6046f4555852..85e7c26a05c7 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1056,6 +1056,8 @@ patternProperties:
+     description: Extreme Engineering Solutions (X-ES)
+   "^xillybus,.*":
+     description: Xillybus Ltd.
++  "^xinpeng,.*":
++    description: Shenzhen Xinpeng Technology Co., Ltd
+   "^xlnx,.*":
+     description: Xilinx
+   "^xunlong,.*":
+-- 
+2.24.0
 
->> +
->>  Example:
->> 
->>  	sdhc_1: sdhci@f9824900 {
->> @@ -56,6 +75,19 @@ Example:
->> 
->>  		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
->>  		clock-names = "core", "iface";
->> +		interconnects = <&qnoc 50 &qnoc 512>,
->> +				<&qnoc 1 &qnoc 544>;
->> +		interconnect-names = "sdhc-ddr","cpu-sdhc";
->> +		msm-bus,name = "sdhc1";
->> +		msm-bus,num-cases = <3>;
->> +		msm-bus,num-paths = <2>;
->> +		msm-bus,vectors-KBps =
->> +		/* No Vote */
->> +		<0 0>, <0 0>,
->> +		/* 50 MB/s */
->> +		<130718 200000>, <133320 133320>,
->> +		/* 200 MB/s */
->> +		<1338562 4096000>, <1338562 4096000>;
->>  	};
->> 
->>  	sdhc_2: sdhci@f98a4900 {
->> 
