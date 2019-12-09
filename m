@@ -2,61 +2,62 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05025C00454
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4ABC2D0C5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1C0207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B4C2068E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:42:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ibA8c8hr"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zTG6Zyk8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfLIOmh (ORCPT
+        id S1727843AbfLIOmk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:42:37 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57326 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727843AbfLIOmg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:42:36 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9EgK4k048715;
-        Mon, 9 Dec 2019 08:42:20 -0600
+        Mon, 9 Dec 2019 09:42:40 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40374 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727845AbfLIOmj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:42:39 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9EgRD8015017;
+        Mon, 9 Dec 2019 08:42:27 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575902540;
-        bh=iIPdTi3vkObZXA5TwQ23lL3Sn4gIOMSE9/ixyE3RfWc=;
-        h=From:To:CC:Subject:Date;
-        b=ibA8c8hrTE5yVO7Bk4hpX8ew1i7BowlvdOLgBfo+pbE7G6qscbIKfGyNptot88Vc5
-         645l4Q77fe01tcKUDwpkCB+T+QgM/CdK1oMy+Iotw4oVCiBCCvnWyfbwaSbKMboHqN
-         cTe7fUa0auWNt/7a2XDz06FI7DQQCUxC2StSxrc0=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9EgKKl074901
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Dec 2019 08:42:20 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1575902547;
+        bh=B9OLsy3glNyhloOu8PeWPNPqAtRcQ04jS9dbdJ3Yb+g=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=zTG6Zyk8kar0i15rq+dZVU0JJrO8rjoBMcVX/0sto2Cf+guoH3DSMcHJqOydV5kfF
+         93YaKS+KK+iBUOEOoYfFjRHh5PddshJFZZkaJAODTFR3fEB1iWC0ppEYj2ogFvfvmr
+         ZJLNKnRVysveD9PBFDjfL1CVx7fxHqtGxSr2ytF4=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9EgRRG099057;
+        Mon, 9 Dec 2019 08:42:27 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 08:42:19 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 08:42:27 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 08:42:19 -0600
+ Frontend Transport; Mon, 9 Dec 2019 08:42:27 -0600
 Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9EgGve122297;
-        Mon, 9 Dec 2019 08:42:17 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9EgGvh122297;
+        Mon, 9 Dec 2019 08:42:24 -0600
 From:   Jyri Sarha <jsarha@ti.com>
 To:     <dri-devel@lists.freedesktop.org>, <tony@atomide.com>,
         <sam@ravnborg.org>, <robh+dt@kernel.org>,
         <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>
 CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
         <peter.ujfalusi@ti.com>, <bparrot@ti.com>
-Subject: [PATCH v2 0/3] drm/tilcdc: Remove "ti,tilcdc,tfp410" and mark "ti,tilcdc,panel" obsolete
-Date:   Mon, 9 Dec 2019 16:42:13 +0200
-Message-ID: <cover.1575901747.git.jsarha@ti.com>
+Subject: [PATCH v2 3/3] drm/tilcdc: panel: Add WARN() with a comment to tilcdc-panel probe
+Date:   Mon, 9 Dec 2019 16:42:16 +0200
+Message-ID: <54966ffd61ca46528bc55961c532001aa7463c30.1575901747.git.jsarha@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1575901747.git.jsarha@ti.com>
+References: <cover.1575901747.git.jsarha@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -65,45 +66,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since v1:
-- Add Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-  to "drm/tilcdc: Remove obsolete bundled tilcdc tfp410 driver"
-- Add "drm/tilcdc: panel: Add WARN() with a comment to tilcdc-panel probe"
+Add WARN() to the beginnig of tilcdc-panel probe. The obsolete
+tilcdc-panel driver should not be used anymore, since tilcdc is fully
+capable of using generic drm panels like panel-simple and panel-common
+binding.
 
-Nobody should any more use the old tilcdc bundled drivers anymore. The
-driver is fully capable of using the generic drm bridge and panel
-drivers.  However, the obsolete "ti,tilcdc,panel" binding is still
-widely used in many mainline supported platforms that I do not have
-access to and who knows how many custom platforms. So I am afraid we
-have to keep the old bundled tilcdc panel driver around.
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ drivers/gpu/drm/tilcdc/tilcdc_panel.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-I'll wait with merging the "ti,tilcdc,panel" patches until these
-patches have been merged:
-https://lists.freedesktop.org/archives/dri-devel/2019-December/247301.html
-https://lists.freedesktop.org/archives/dri-devel/2019-December/247594.html
-So I can refer to them as an example in the comments. 
-
-But I'll merge "drm/tilcdc: Remove obsolete bundled tilcdc tfp410
-driver" trough drm-misc in couple days if I do not hear any
-objections.
-
-Jyri Sarha (3):
-  drm/tilcdc: Remove obsolete bundled tilcdc tfp410 driver
-  dt-bindings: display: Add obsolete note to "ti,tilcdc,panel" binding
-  drm/tilcdc: panel: Add WARN() with a comment to tilcdc-panel probe
-
- .../bindings/display/tilcdc/panel.txt         |   6 +
- .../bindings/display/tilcdc/tfp410.txt        |  21 -
- drivers/gpu/drm/tilcdc/Makefile               |   1 -
- drivers/gpu/drm/tilcdc/tilcdc_drv.c           |   3 -
- drivers/gpu/drm/tilcdc/tilcdc_panel.c         |  10 +
- drivers/gpu/drm/tilcdc/tilcdc_tfp410.c        | 379 ------------------
- drivers/gpu/drm/tilcdc/tilcdc_tfp410.h        |  15 -
- 7 files changed, 16 insertions(+), 419 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/tilcdc/tfp410.txt
- delete mode 100644 drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
- delete mode 100644 drivers/gpu/drm/tilcdc/tilcdc_tfp410.h
-
+diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+index 5584e656b857..cf8e2462a524 100644
+--- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
++++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+@@ -309,6 +309,16 @@ static int panel_probe(struct platform_device *pdev)
+ 	struct pinctrl *pinctrl;
+ 	int ret;
+ 
++	/*
++	 * The obsolete tilcdc-panel driver should not be used
++         * anymore, since tilcdc is fully capable of using generic drm
++         * panels like panel-simple and panel-common binding.
++	 */
++
++	WARN(true,
++	     "tilcdc-panel is obsolte and should not be used. Please update your configuration!\n",
++	     dev_name(&pdev->dev));
++
+ 	/* bail out early if no DT data: */
+ 	if (!node) {
+ 		dev_err(&pdev->dev, "device-tree data is missing\n");
 -- 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
