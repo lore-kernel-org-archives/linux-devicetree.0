@@ -7,102 +7,143 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11756C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FA1C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFA69207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D39DA2080D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:56:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="MwGX9WKt"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KLmhXjwx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfLIOzy (ORCPT
+        id S1726677AbfLIO4C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:55:54 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36698 "EHLO
+        Mon, 9 Dec 2019 09:56:02 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36732 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfLIOzy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:55:54 -0500
+        with ESMTP id S1726310AbfLIO4C (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:56:02 -0500
 Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2FE3AB2C;
-        Mon,  9 Dec 2019 15:49:04 +0100 (CET)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id F1DB1B2C;
+        Mon,  9 Dec 2019 15:55:58 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575902944;
-        bh=moup88+1AXSzEBbkY0ogHDXr3kUQoRsbnyHWmDnec8A=;
+        s=mail; t=1575903359;
+        bh=vhHx1PjaeLJMGX9Xm/0FmdneX5UOPsaDKk1edME3V0E=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MwGX9WKtAX0NlVKPSv8B6uqYCPjfM4orkrQE9h1nZ+HmGVnku0I1OHEgtpnAqnHCA
-         15aXPVvHmcZmo+/hxpMpaplTXiqilc0wAcOOG/jSJ1+cSiGK23lle39cEZ2rsn8B2J
-         5Zxa43KbOSTCzccEk9I8R7kKo1hq/qRAZaGE6n1A=
-Date:   Mon, 9 Dec 2019 16:48:57 +0200
+        b=KLmhXjwxkqST47lNHsRUzGQqrDVHkl3c+KEPg1zP3Ttm5HKzRD51bsx7fPcEoof5N
+         JkRhxfzbfdZyjwrPFyime4fUdMN//fdWye6bRsV+F6FR9CxaH6Yjbms1M9L5ujuLuG
+         xFBjXkFEh0fGG39k1yujz9Qv7wmaOuWNTRh9wa3Q=
+Date:   Mon, 9 Dec 2019 16:55:52 +0200
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jyri Sarha <jsarha@ti.com>
-Cc:     dri-devel@lists.freedesktop.org, tony@atomide.com,
-        sam@ravnborg.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, tomi.valkeinen@ti.com,
-        peter.ujfalusi@ti.com, bparrot@ti.com
-Subject: Re: [PATCH v2 3/3] drm/tilcdc: panel: Add WARN() with a comment to
- tilcdc-panel probe
-Message-ID: <20191209144857.GA12841@pendragon.ideasonboard.com>
-References: <cover.1575901747.git.jsarha@ti.com>
- <54966ffd61ca46528bc55961c532001aa7463c30.1575901747.git.jsarha@ti.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Archit Taneja <architt@codeaurora.org>, p.zabel@pengutronix.de,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: Re: [PATCH RESEND 3/4] dt-bindings: drm/bridge: analogix-anx78xx:
+ support bypass GPIO
+Message-ID: <20191209145552.GD12841@pendragon.ideasonboard.com>
+References: <20191209145016.227784-1-hsinyi@chromium.org>
+ <20191209145016.227784-4-hsinyi@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <54966ffd61ca46528bc55961c532001aa7463c30.1575901747.git.jsarha@ti.com>
+In-Reply-To: <20191209145016.227784-4-hsinyi@chromium.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jyri,
+Hi Hsin-Yi,
 
 Thank you for the patch.
 
-On Mon, Dec 09, 2019 at 04:42:16PM +0200, Jyri Sarha wrote:
-> Add WARN() to the beginnig of tilcdc-panel probe. The obsolete
-
-s/beginnig/beginning/
-
-> tilcdc-panel driver should not be used anymore, since tilcdc is fully
-> capable of using generic drm panels like panel-simple and panel-common
-> binding.
+On Mon, Dec 09, 2019 at 10:50:15PM +0800, Hsin-Yi Wang wrote:
+> Support optional feature: bypass GPIO.
 > 
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> Some SoC (eg. mt8173) have a hardware mux that connects to 2 ports:
+> anx7688 and hdmi. When the GPIO is active, the bridge is bypassed.
+
+This doesn't look like the right place to fix this, as the mux is
+unrelated to the bridge. You would have to duplicate this logic in every
+bridge driver otherwise.
+
+Could you describe the hardware topology in a bit more details ? I can
+then try to advise on how to best support it.
+
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 > ---
->  drivers/gpu/drm/tilcdc/tilcdc_panel.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  .../bindings/display/bridge/anx7688.txt       | 40 ++++++++++++++++++-
+>  1 file changed, 39 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-> index 5584e656b857..cf8e2462a524 100644
-> --- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-> +++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-> @@ -309,6 +309,16 @@ static int panel_probe(struct platform_device *pdev)
->  	struct pinctrl *pinctrl;
->  	int ret;
+> diff --git a/Documentation/devicetree/bindings/display/bridge/anx7688.txt b/Documentation/devicetree/bindings/display/bridge/anx7688.txt
+> index 78b55bdb18f7..44185dcac839 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/anx7688.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/anx7688.txt
+> @@ -15,10 +15,13 @@ Required properties:
+>  Optional properties:
 >  
-> +	/*
-> +	 * The obsolete tilcdc-panel driver should not be used
-> +         * anymore, since tilcdc is fully capable of using generic drm
-> +         * panels like panel-simple and panel-common binding.
-
-Indentation should use tabs.
-
-> +	 */
+>   - Video port for HDMI input, using the DT bindings defined in [1].
+> + - bypass-gpios        : External GPIO. If this GPIO is active, we assume
+> + the bridge is bypassed (e.g. by a mux).
+> + - pinctrl-0, pinctrl-names: the pincontrol settings to configure bypass GPIO.
+>  
+>  [1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+>  
+> -Example:
+> +Example 1:
+>  
+>  	anx7688: anx7688@2c {
+>  		compatible = "analogix,anx7688";
+> @@ -30,3 +33,38 @@ Example:
+>  			};
+>  		};
+>  	};
 > +
-> +	WARN(true,
-> +	     "tilcdc-panel is obsolte and should not be used. Please update your configuration!\n",
-
-s/obsolte/obsolete/ or deprecated ?
-
-You may want to explicitly state what it should be updated to :-)
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +	     dev_name(&pdev->dev));
+> +Example 2:
 > +
->  	/* bail out early if no DT data: */
->  	if (!node) {
->  		dev_err(&pdev->dev, "device-tree data is missing\n");
+> +       anx7688: anx7688@2c {
+> +               compatible = "analogix,anx7688";
+> +               status = "okay";
+> +               reg = <0x2c>;
+> +               ddc-i2c-bus = <&hdmiddc0>;
+> +
+> +               bypass-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&hdmi_mux_pins>;
+> +
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       port@0 { /* input */
+> +                               reg = <0>;
+> +
+> +                               anx7688_in: endpoint {
+> +                                       remote-endpoint = <&hdmi_out_anx>;
+> +                               };
+> +                       };
+> +
+> +                       port@1 { /* output */
+> +                               reg = <1>;
+> +
+> +                               anx7688_out: endpoint {
+> +                                       remote-endpoint = <&hdmi_connector_in>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
 
 -- 
 Regards,
