@@ -2,138 +2,97 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC5FC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5DBC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DBE62075B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:08:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575882537;
-	bh=QAsy6KYtyWoOffL4NFS3+5/Zh44sQt9mMpY2XhbERdM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=msD7fP3uC78fMY4EQpUGozlQN5FJtTaTnnrozQoSz4/WLsA22xI94ibG0q54p7twu
-	 omqdUVbBpXrVf6Pq1QVAi/lssIuPJh4xJP88f4V6ZxVNNDk4eCgPbIO0SFyugsKCsi
-	 549lTA3jsqRWT0qN+XEGHzTrU+lMmWv5b/nqq5TQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5FE382077B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfLIJI4 (ORCPT
+        id S1727326AbfLIJNt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:08:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43100 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbfLIJI4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:08:56 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EEB82072D;
-        Mon,  9 Dec 2019 09:08:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575882536;
-        bh=QAsy6KYtyWoOffL4NFS3+5/Zh44sQt9mMpY2XhbERdM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fJr+YRMo1Rnw0+vTxF6gPpMdzFTFrIfbdML67vLN6jbyh5McznFgrIX0BjK9CA7iK
-         dYFz9iFC0H8+/ml50izL4yc8S1EpANPnuREKYX0eAc4PdGphLzymmVskHnzECr1+Mu
-         /+hwKeGGPVnWAKfkdb21nDvtwNEbJop3/VDxkcus=
-Date:   Mon, 9 Dec 2019 17:08:42 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Michael Walle <michael@walle.cc>, Alison Wang <alison.wang@nxp.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] arm64: dts: ls1028a: put SAIs into async mode
-Message-ID: <20191209090840.GL3365@dragon>
-References: <20191129210937.26808-1-michael@walle.cc>
+        Mon, 9 Dec 2019 04:13:49 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:34523 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfLIJNs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:13:48 -0500
+Received: from localhost (lfbn-1-1480-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id E434920000E;
+        Mon,  9 Dec 2019 09:13:44 +0000 (UTC)
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org,
+        Kamel Bouhara <kamel.bouhara@bootlin.com>
+Subject: [PATCH v5 1/2] dt-bindings: arm: at91: Document Kizboxmini and Smartkiz boards binding
+Date:   Mon,  9 Dec 2019 10:13:38 +0100
+Message-Id: <20191209091339.32593-1-kamel.bouhara@bootlin.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191129210937.26808-1-michael@walle.cc>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-+ Alison Wang
+Document devicetree's bindings for the Overkiz's Kizbox Mini and
+Smartkiz boards, based on a SAM9G25 Atmel SoC.
 
-On Fri, Nov 29, 2019 at 10:09:37PM +0100, Michael Walle wrote:
-> The LS1028A SoC has only unidirectional SAIs. Therefore, it doesn't make
-> sense to have the RX and TX part synchronous. Even worse, the RX part
-> wont work out of the box because by default it is configured as
-> synchronous to the TX part. And as said before, the pinmux of the SoC
-> can only be configured to route either the RX or the TX signals to the
-> SAI but never both at the same time. Thus configure the asynchronous
-> mode by default.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+---
+Changes in v2
+=============
+	- Added Kizboxmini Base board documentation
+	- Merged Smartkiz documentation as it is also a sam9g25 based
+	board
 
-Alison, Leo,
+Changes in v3
+=============
+	- Made a single items list with all the sam9g25 based boards and
+	put description into a comment.
+	- Fixed duplicated item in enum list and checked with 'make
+	dt_binding_check'
 
-Looks good to you?
+Changes in v4
+=============
+	- Fix missing "-" before items list
 
-Shawn
+Changes in v5
+=============
+	- s/at91-kizboxmini_common.dtsi/at91-kizboxmini-common.dtsi/
+---
+ Documentation/devicetree/bindings/arm/atmel-at91.yaml | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 379913756e90..9be33426e5ce 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -637,6 +637,7 @@
->  			dma-names = "tx", "rx";
->  			dmas = <&edma0 1 4>,
->  			       <&edma0 1 3>;
-> +			fsl,sai-asynchronous;
->  			status = "disabled";
->  		};
->  
-> @@ -651,6 +652,7 @@
->  			dma-names = "tx", "rx";
->  			dmas = <&edma0 1 6>,
->  			       <&edma0 1 5>;
-> +			fsl,sai-asynchronous;
->  			status = "disabled";
->  		};
->  
-> @@ -665,6 +667,7 @@
->  			dma-names = "tx", "rx";
->  			dmas = <&edma0 1 8>,
->  			       <&edma0 1 7>;
-> +			fsl,sai-asynchronous;
->  			status = "disabled";
->  		};
->  
-> @@ -679,6 +682,7 @@
->  			dma-names = "tx", "rx";
->  			dmas = <&edma0 1 10>,
->  			       <&edma0 1 9>;
-> +			fsl,sai-asynchronous;
->  			status = "disabled";
->  		};
->  
-> @@ -693,6 +697,7 @@
->  			dma-names = "tx", "rx";
->  			dmas = <&edma0 1 12>,
->  			       <&edma0 1 11>;
-> +			fsl,sai-asynchronous;
->  			status = "disabled";
->  		};
->  
-> @@ -707,6 +712,7 @@
->  			dma-names = "tx", "rx";
->  			dmas = <&edma0 1 14>,
->  			       <&edma0 1 13>;
-> +			fsl,sai-asynchronous;
->  			status = "disabled";
->  		};
->  
-> -- 
-> 2.20.1
-> 
+diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+index 6dd8be401673..8d50915330e8 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-at91.yaml
++++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+@@ -35,6 +35,16 @@ properties:
+               - atmel,at91sam9x60
+           - const: atmel,at91sam9
+
++      - items:
++          - enum:
++                - overkiz,kizboxmini-base # Overkiz kizbox Mini Base Board
++                - overkiz,kizboxmini-mb   # Overkiz kizbox Mini Mother Board
++                - overkiz,kizboxmini-rd   # Overkiz kizbox Mini RailDIN
++                - overkiz,smartkiz        # Overkiz SmartKiz Board
++          - const: atmel,at91sam9g25
++          - const: atmel,at91sam9x5
++          - const: atmel,at91sam9
++
+       - items:
+           - enum:
+               - atmel,at91sam9g15
+--
+2.24.0
+
