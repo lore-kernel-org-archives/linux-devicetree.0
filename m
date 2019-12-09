@@ -2,134 +2,94 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3550C04E30
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 13:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3E0C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 13:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C53A20828
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 13:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A84AE20726
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 13:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbfLINeP (ORCPT
+        id S1727438AbfLINfj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:34:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:60694 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727438AbfLINeP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:34:15 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E694328;
-        Mon,  9 Dec 2019 05:34:14 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D5B0F3F718;
-        Mon,  9 Dec 2019 05:34:12 -0800 (PST)
-Subject: Re: [RFCv1 2/8] mfd: rk808: use syscore for RK805 PMIC shutdown
-To:     Anand Moon <linux.amoon@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Daniel Schultz <d.schultz@phytec.de>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191206184536.2507-1-linux.amoon@gmail.com>
- <20191206184536.2507-3-linux.amoon@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f1327196-66c9-d152-c0ca-914d43d6f55e@arm.com>
-Date:   Mon, 9 Dec 2019 13:34:09 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 9 Dec 2019 08:35:39 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38496 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbfLINfj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 08:35:39 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1ieJCF-0008Qz-Iv; Mon, 09 Dec 2019 14:35:31 +0100
+Date:   Mon, 9 Dec 2019 14:35:31 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        devicetree@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC] Efficiency of the phandle_cache on ppc64/SLOF
+Message-ID: <20191209133531.ykkknqmeeb36rv7l@linutronix.de>
+References: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de>
+ <e1f232f5-3847-a519-5cce-95a26512e82b@gmail.com>
+ <87tv6idp37.fsf@mpe.ellerman.id.au>
+ <67e1da87-7f5a-3972-bc16-28bae2350c12@gmail.com>
+ <CAL_JsqKieG5=teL7gABPKbJOQfvoS9s-ZPF-=R0yEE_LUoy-Kw@mail.gmail.com>
+ <20191205163538.mzunfrpox7jbrssl@linutronix.de>
+ <084ed924-eaed-5232-a9f6-fe60128fe11a@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191206184536.2507-3-linux.amoon@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <084ed924-eaed-5232-a9f6-fe60128fe11a@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06/12/2019 6:45 pm, Anand Moon wrote:
-> Use common syscore_shutdown for RK805 PMIC to do
-> clean I2C shutdown, drop the unused pm_pwroff_prep_fn
-> and pm_pwroff_fn function pointers.
+On 2019-12-05 20:01:41 [-0600], Frank Rowand wrote:
+> Is there a memory usage issue for the systems that led to this thread?
 
-Coincidentally, I've also been looking at RK805 for the sake of trying 
-to get suspend to behave on my RK3328 box, and I've ended up with some 
-slightly different cleanup patches - I'll tidy them up and post them for 
-comparison as soon as I can.
+No, no memory issue led to this thread. I was just testing my patch and
+I assumed that I did something wrong in the counting/lock drop/lock
+acquire/allocate path because the array was hardly used. So I started to
+look deeper…
+Once I figured out everything was fine, I was curious if everyone is
+aware of the different phandle creation by dtc vs POWER. And I posted
+the mail in the thread.
+Once you confirmed that everything is "known / not an issue" I was ready
+to take off [0].
 
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
->   drivers/mfd/rk808.c | 33 +++++++++++++++++----------------
->   1 file changed, 17 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
-> index e637f5bcc8bb..713d989064ba 100644
-> --- a/drivers/mfd/rk808.c
-> +++ b/drivers/mfd/rk808.c
-> @@ -467,16 +467,6 @@ static void rk808_update_bits(unsigned int reg, unsigned int mask,
->   			"can't write to register 0x%x: %x!\n", reg, ret);
->   }
->   
-> -static void rk805_device_shutdown(void)
-> -{
-> -	rk808_update_bits(RK805_DEV_CTRL_REG, DEV_OFF, DEV_OFF);
-> -}
-> -
-> -static void rk805_device_shutdown_prepare(void)
-> -{
-> -	rk808_update_bits(RK805_GPIO_IO_POL_REG, SLP_SD_MSK, SHUTDOWN_FUN);
-> -}
-> -
->   static void rk808_device_shutdown(void)
->   {
->   	rk808_update_bits(RK808_DEVCTRL_REG, DEV_OFF_RST, DEV_OFF_RST);
-> @@ -491,10 +481,23 @@ static void rk8xx_syscore_shutdown(void)
->   {
->   	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
->   
-> -	if (system_state == SYSTEM_POWER_OFF &&
-> -	    (rk808->variant == RK809_ID || rk808->variant == RK817_ID)) {
-> -		rk808_update_bits(RK817_SYS_CFG(3), RK817_SLPPIN_FUNC_MSK,
-> -				SLPPIN_DN_FUN);
-> +	if (system_state == SYSTEM_POWER_OFF) {
-> +		dev_info(&rk808_i2c_client->dev, "System Shutdown Event\n");
-> +
-> +		switch (rk808->variant) {
-> +		case RK805_ID:
-> +			rk808_update_bits(RK805_GPIO_IO_POL_REG,
-> +					SLP_SD_MSK, SHUTDOWN_FUN);
-> +			rk808_update_bits(RK805_DEV_CTRL_REG, DEV_OFF, DEV_OFF);
+Later more replies came in such as one mail [1] from Rob describing the
+original reason with 814 phandles. _Here_ I was just surprised that 1024
+were used over 64 entries for a benefit of 60ms. I understand that this
+is low concern for you because that memory is released if modules are
+not enabled. I usually see that module support is left enabled.
 
-Why this change? Shutdown via the SLEEP pin is working just fine on my 
-box :/
+However, Rob suggested / asked about the fixed size array (this is how I
+understood it):
+|And yes, as mentioned earlier I don't like the complexity. I didn't
+|from the start and I'm  I'm still of the opinion we should have a
+|fixed or 1 time sized true cache (i.e. smaller than total # of
+|phandles). That would solve the RT memory allocation and locking issue
+|too.
 
-Robin.
+so I attempted to ask if we should have the fixed size array maybe
+with the hash_32() instead the mask. This would make my other patch
+obsolete because the fixed size array should not have a RT issue. The
+hash_32() part here would address the POWER issue where the cache is
+currently not used efficiently.
 
-> +			break;
-> +		case RK809_ID:
-> +		case RK817_ID:
-> +			rk808_update_bits(RK817_SYS_CFG(3),
-> +					RK817_SLPPIN_FUNC_MSK, SLPPIN_DN_FUN);
-> +			break;
-> +		default:
-> +			break;
-> +		}
->   	}
->   }
->   
-> @@ -565,8 +568,6 @@ static int rk808_probe(struct i2c_client *client,
->   		nr_pre_init_regs = ARRAY_SIZE(rk805_pre_init_reg);
->   		cells = rk805s;
->   		nr_cells = ARRAY_SIZE(rk805s);
-> -		rk808->pm_pwroff_fn = rk805_device_shutdown;
-> -		rk808->pm_pwroff_prep_fn = rk805_device_shutdown_prepare;
->   		break;
->   	case RK808_ID:
->   		rk808->regmap_cfg = &rk808_regmap_config;
-> 
+If you want instead to keep things as-is then this is okay from my side.
+If you want to keep this cache off on POWER then I could contribute a
+patch doing so.
+
+[0] https://lore.kernel.org/linux-devicetree/20191202110732.4dvzrro5o6zrlpax@linutronix.de/
+[1] https://lore.kernel.org/linux-devicetree/CAL_JsqKieG5=teL7gABPKbJOQfvoS9s-ZPF-=R0yEE_LUoy-Kw@mail.gmail.com/
+> -Frank
+
+Sebastian
