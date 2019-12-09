@@ -2,501 +2,240 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E182C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 10:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6B0C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 10:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC26207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 10:33:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="q3FIiwm4"
+	by mail.kernel.org (Postfix) with ESMTP id 88C6A2077B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 10:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfLIKdH (ORCPT
+        id S1727435AbfLIKfM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 05:33:07 -0500
-Received: from mail-eopbgr10119.outbound.protection.outlook.com ([40.107.1.119]:50726
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727188AbfLIKdH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Dec 2019 05:33:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MiejcSgHMpiN+BCSXCOpxu6DqC6BsaCSNnQ1thl2ZFbzaxqbnTWibhGKIoTntAm3yU5SmhQpkJRAub3nGD9iD8W/ZApjWPm4hN9vLCDO7EZ9vU2ZJt6PY6nRZLS2B5E2fqeu0UrLGb6PPIr7S9s/fhqNlx5W3dBTSSw4lMcld+WM94FoLyT78ZqTD9UNHBr18ug7HDV8Vsn9I0SAAV8n32xNf6ko3um3I3pEGDWfmylABjhR4Cus4hNFBZNM+8XI+L9WPqMCEdmLDK/yRZFnDaIxeamKoEZ4Nd8EhTpg2VFp4NdoM6Wd5HacggMLfRjuWi1xNyFCdWANb/LlUFBzLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DXX6JGsGUoIUFZ4mBFJLlDVjUN+2q7izbQQRcpTFXnw=;
- b=aTecrLTWphml/oYjsNUWgIiSUShEEbWwlPi2wwa3eRJjFGLzNZBNWdYNk25XTnbnp/Ke0zaoRQ97rRdtcYrLCfJepDqxW3JJNwbRHxsb+dXaAnPI7UoiWdmH0qAlEDqUuZB6sR1yHvZ4Mvp6jGVLHIpF2peaY/6ICSbUEvqPv3UqITNmd+x1o96PczILZfkbuJOeMjYDVg3m+p4xsgkXVnteymLEf2nEFYZNxxuTP1NDk0p/cIQDjaxONwv84U0BO28iZyaFfPxEAN2VXAKKqp2PDQf23a8QDiOIC6UKO163Sv6SPos2jknouP/yHUvbMfpoc+A3ty2xkij5Ly1Z+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DXX6JGsGUoIUFZ4mBFJLlDVjUN+2q7izbQQRcpTFXnw=;
- b=q3FIiwm4Zd6M/Bb1Q6eKusxBCvCCrz+5s6KcBZa+n5iaZTybMkgffV3NLiyQ3z+zSEUpOoupwiDbI21SclxurJemYgWvkTXa6qD5YhP5CKLzcvnK7cNDcSd3dawXlCmIPMNZ/51Kb8gjakjbgQJb1pIjHpPtyHvaALmK/yxK/zA=
-Received: from DB6PR0502MB3015.eurprd05.prod.outlook.com (10.172.247.138) by
- DB6PR0502MB2952.eurprd05.prod.outlook.com (10.172.245.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.17; Mon, 9 Dec 2019 10:32:54 +0000
-Received: from DB6PR0502MB3015.eurprd05.prod.outlook.com
- ([fe80::c459:8ad5:c5c4:d603]) by DB6PR0502MB3015.eurprd05.prod.outlook.com
- ([fe80::c459:8ad5:c5c4:d603%6]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
- 10:32:53 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Mon, 9 Dec 2019 05:35:12 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41410 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727421AbfLIKfM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 05:35:12 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6DB5728EDB5;
+        Mon,  9 Dec 2019 10:35:09 +0000 (GMT)
+Date:   Mon, 9 Dec 2019 11:35:06 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>
-CC:     Fabio Estevam <festevam@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH v2] ARM: dts: colibri-imx6ull: correct wrong pinmuxing and add
- comments
-Thread-Topic: [PATCH v2] ARM: dts: colibri-imx6ull: correct wrong pinmuxing
- and add comments
-Thread-Index: AQHVrnwDKm411Dk+NEKbeV8b2rBehA==
-Date:   Mon, 9 Dec 2019 10:32:53 +0000
-Message-ID: <20191209103234.35972-1-philippe.schenker@toradex.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR2P264CA0032.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:101:1::20) To DB6PR0502MB3015.eurprd05.prod.outlook.com
- (2603:10a6:4:99::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.24.0
-x-originating-ip: [31.10.206.124]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 74d688e8-d112-4d86-f6dd-08d77c9325ea
-x-ms-traffictypediagnostic: DB6PR0502MB2952:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0502MB29529B6E38826D81F741DDE1F4580@DB6PR0502MB2952.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 02462830BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(136003)(396003)(376002)(39840400004)(199004)(189003)(81166006)(81156014)(8676002)(86362001)(2616005)(44832011)(6512007)(30864003)(66556008)(36756003)(305945005)(4326008)(66446008)(66946007)(6506007)(71190400001)(71200400001)(6486002)(64756008)(66476007)(52116002)(186003)(478600001)(8936002)(26005)(5660300002)(110136005)(316002)(2906002)(7416002)(54906003)(1076003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB6PR0502MB2952;H:DB6PR0502MB3015.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xdzy/rgg+WmaE1vePmlxdOnx+BdlJhfRLfkddZ7oVLS0Ad9Ka6FDIZqvmbpD6WmNRPKaxUbYxYYa3qzKycxeJapNweKY1kZ+0V2Q3Uj4xRTVwoh0xPi0bajZ39hPenxDnWwW69t3arYO2ruyaq15Un6qHdhxucwyEO+W08z3Sa38JjMNrEtIee7Nwe1X/UAeln0CLr3UhZ/H2u/ucGv0+mugJ0rJLpJtiJvuMwkiKxXFymimNMIqlrl21NVCtVCYBzqNT0btfbZ1ukMLHie/8Lgdi9YoPk4dkuuXzFBxtghvJVhgkHh8sH469Yupf3uuATPzbYS3FT+tXdc1BcjChq8oqWw2WKYJKBFt897TvrFGoYSMqpEoCvxCpkDOLdlQxIfMAJNpGAUMJgo4iYDpbcDk2oeXNBBnAYO6qw1PTDr165HWBvz1qhJRGblnNxT3
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        <linux-mtd@lists.infradead.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Bernhard Frauendienst <kernel@nospam.obeliks.de>
+Subject: Re: [PATCH v5 4/4] mtd: Add driver for concatenating devices
+Message-ID: <20191209113506.41341ed4@collabora.com>
+In-Reply-To: <20191127105522.31445-5-miquel.raynal@bootlin.com>
+References: <20191127105522.31445-1-miquel.raynal@bootlin.com>
+        <20191127105522.31445-5-miquel.raynal@bootlin.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74d688e8-d112-4d86-f6dd-08d77c9325ea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 10:32:53.7295
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BUPGARvpu5Daxh3lsCgXtdOleA+06hDK9iYK+3Qn8wMbkylMABmFPMlfW+Q77WyDlnR05nEk7aZQ/wEwC+T28VVpOLksL1Xw5Qvqhm12ejU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0502MB2952
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some pinmuxings are obviously wrong, originating from a copy/paste
-error. This patch corrects that with the following strategy:
+On Wed, 27 Nov 2019 11:55:22 +0100
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-- Set all reserved bits to zero
-- Leave drive strength and slew rate as is
-- Add sensible pull and hysteresis depending on the function of the pin
-- Not used pins are muxed to their reset-value defined by the SoC
+> Introduce a generic way to define concatenated MTD devices. This may
+> be very useful in the case of ie. stacked SPI-NOR. Partitions to
+> concatenate are described in an additional property of the partitions
+> subnode:
+> 
+>         flash0 {
+>                 partitions {
+>                         compatible = "fixed-partitions";
+>                         part-concat = <&flash0_part1>, <&flash1_part0>;
+> 
+> 			part0@0 {
+> 				label = "part0_0";
+> 				reg = <0x0 0x800000>;
+> 			};
+> 
+> 			flash0_part1: part1@800000 {
+> 				label = "part0_1";
+> 				reg = <0x800000 0x800000>;
 
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+So, flash0_part1 and flash0_part2 will be created even though the user
+probably doesn't need them?
 
----
+> 			};
+>                 };
+>         };
+> 
+>         flash1 {
+>                 partitions {
+>                         compatible = "fixed-partitions";
+> 
+> 			flash0_part1: part1@0 {
+> 				label = "part1_0";
+> 				reg = <0x0 0x800000>;
+> 			};
+> 
+> 			part0@800000 {
+> 				label = "part1_1";
+> 				reg = <0x800000 0x800000>;
+> 			};
+>                 };
+>         };
 
-Changes in v2:
-- Rebased against Shawn Guos imx/dt branch, sorry it didn't work the
-  first time!
+IMHO this representation is far from intuitive. At first glance it's not
+obvious which partitions are linked together and what's the name of the
+resulting concatenated part. I definitely prefer the solution where we
+have a virtual device describing the concatenation. I also understand
+that this goes against the #1 DT rule: "DT only decribes HW blocks, not
+how they should be used/configured", but maybe we can find a compromise
+here, like moving this description to the /chosen node?
 
- arch/arm/boot/dts/imx6ull-colibri.dtsi | 188 ++++++++++++-------------
- 1 file changed, 94 insertions(+), 94 deletions(-)
+chosen {
+	flash-arrays {
+		/*
+		 * my-flash-array is the MTD name if label is
+		 * not present.
+		 */
+		my-flash-array {
+			/*
+			 * We could have
+			 * compatible = "flash-array";
+			 * but we can also do without it.
+			 */
+			label = "foo";
+			flashes = <&flash1 &flash2 ...>;
+			partitions {
+				/* usual partition description. */
+				...
+			};
+		};
+	};
+};
 
-diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx=
-6ull-colibri.dtsi
-index 6d850d997e1e..53a8f354a18d 100644
---- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-@@ -220,7 +220,7 @@ &wdog1 {
- &iomuxc {
- 	pinctrl_can_int: canint-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_ENET1_TX_DATA1__GPIO2_IO04	0X14 /* SODIMM 73 */
-+			MX6UL_PAD_ENET1_TX_DATA1__GPIO2_IO04	0x13010	/* SODIMM 73 */
- 		>;
- 	};
-=20
-@@ -256,15 +256,15 @@ MX6UL_PAD_ENET2_TX_EN__GPIO2_IO13	0x0
-=20
- 	pinctrl_ecspi1_cs: ecspi1-cs-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_LCD_DATA21__GPIO3_IO26	0x000a0
-+			MX6UL_PAD_LCD_DATA21__GPIO3_IO26	0x70a0	/* SODIMM 86 */
- 		>;
- 	};
-=20
- 	pinctrl_ecspi1: ecspi1-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_LCD_DATA20__ECSPI1_SCLK	0x000a0
--			MX6UL_PAD_LCD_DATA22__ECSPI1_MOSI	0x000a0
--			MX6UL_PAD_LCD_DATA23__ECSPI1_MISO	0x100a0
-+			MX6UL_PAD_LCD_DATA20__ECSPI1_SCLK	0x000a0	/* SODIMM 88 */
-+			MX6UL_PAD_LCD_DATA22__ECSPI1_MOSI	0x000a0 /* SODIMM 92 */
-+			MX6UL_PAD_LCD_DATA23__ECSPI1_MISO	0x100a0 /* SODIMM 90 */
- 		>;
- 	};
-=20
-@@ -284,68 +284,68 @@ MX6UL_PAD_ENET1_RX_EN__FLEXCAN2_TX	0x1b020
-=20
- 	pinctrl_gpio_bl_on: gpio-bl-on-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_JTAG_TMS__GPIO1_IO11		0x000a0
-+			MX6UL_PAD_JTAG_TMS__GPIO1_IO11		0x30a0	/* SODIMM 71 */
- 		>;
- 	};
-=20
- 	pinctrl_gpio1: gpio1-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_UART3_RX_DATA__GPIO1_IO25	0X14 /* SODIMM 77 */
--			MX6UL_PAD_JTAG_TCK__GPIO1_IO14		0x14 /* SODIMM 99 */
--			MX6UL_PAD_NAND_CE1_B__GPIO4_IO14	0x14 /* SODIMM 133 */
--			MX6UL_PAD_UART3_TX_DATA__GPIO1_IO24	0x14 /* SODIMM 135 */
--			MX6UL_PAD_UART3_CTS_B__GPIO1_IO26	0x14 /* SODIMM 100 */
--			MX6UL_PAD_JTAG_TRST_B__GPIO1_IO15	0x14 /* SODIMM 102 */
--			MX6UL_PAD_ENET1_RX_ER__GPIO2_IO07	0x14 /* SODIMM 104 */
--			MX6UL_PAD_UART3_RTS_B__GPIO1_IO27	0x14 /* SODIMM 186 */
-+			MX6UL_PAD_UART3_RX_DATA__GPIO1_IO25	0x10b0 /* SODIMM 77 */
-+			MX6UL_PAD_JTAG_TCK__GPIO1_IO14		0x70a0 /* SODIMM 99 */
-+			MX6UL_PAD_NAND_CE1_B__GPIO4_IO14	0x10b0 /* SODIMM 133 */
-+			MX6UL_PAD_UART3_TX_DATA__GPIO1_IO24	0x10b0 /* SODIMM 135 */
-+			MX6UL_PAD_UART3_CTS_B__GPIO1_IO26	0x10b0 /* SODIMM 100 */
-+			MX6UL_PAD_JTAG_TRST_B__GPIO1_IO15	0x70a0 /* SODIMM 102 */
-+			MX6UL_PAD_ENET1_RX_ER__GPIO2_IO07	0x10b0 /* SODIMM 104 */
-+			MX6UL_PAD_UART3_RTS_B__GPIO1_IO27	0x10b0 /* SODIMM 186 */
- 		>;
- 	};
-=20
- 	pinctrl_gpio2: gpio2-grp { /* Camera */
- 		fsl,pins =3D <
--			MX6UL_PAD_CSI_DATA04__GPIO4_IO25	0x74 /* SODIMM 69 */
--			MX6UL_PAD_CSI_MCLK__GPIO4_IO17		0x14 /* SODIMM 75 */
--			MX6UL_PAD_CSI_DATA06__GPIO4_IO27	0x14 /* SODIMM 85 */
--			MX6UL_PAD_CSI_PIXCLK__GPIO4_IO18	0x14 /* SODIMM 96 */
--			MX6UL_PAD_CSI_DATA05__GPIO4_IO26	0x14 /* SODIMM 98 */
-+			MX6UL_PAD_CSI_DATA04__GPIO4_IO25	0x10b0 /* SODIMM 69 */
-+			MX6UL_PAD_CSI_MCLK__GPIO4_IO17		0x10b0 /* SODIMM 75 */
-+			MX6UL_PAD_CSI_DATA06__GPIO4_IO27	0x10b0 /* SODIMM 85 */
-+			MX6UL_PAD_CSI_PIXCLK__GPIO4_IO18	0x10b0 /* SODIMM 96 */
-+			MX6UL_PAD_CSI_DATA05__GPIO4_IO26	0x10b0 /* SODIMM 98 */
- 		>;
- 	};
-=20
- 	pinctrl_gpio3: gpio3-grp { /* CAN2 */
- 		fsl,pins =3D <
--			MX6UL_PAD_ENET1_RX_EN__GPIO2_IO02	0x14 /* SODIMM 178 */
--			MX6UL_PAD_ENET1_TX_DATA0__GPIO2_IO03	0x14 /* SODIMM 188 */
-+			MX6UL_PAD_ENET1_RX_EN__GPIO2_IO02	0x10b0 /* SODIMM 178 */
-+			MX6UL_PAD_ENET1_TX_DATA0__GPIO2_IO03	0x10b0 /* SODIMM 188 */
- 		>;
- 	};
-=20
- 	pinctrl_gpio4: gpio4-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_CSI_DATA07__GPIO4_IO28	0x74 /* SODIMM 65 */
-+			MX6UL_PAD_CSI_DATA07__GPIO4_IO28	0x10b0 /* SODIMM 65 */
- 		>;
- 	};
-=20
- 	pinctrl_gpio5: gpio5-grp { /* ATMEL MXT TOUCH */
- 		fsl,pins =3D <
--			MX6UL_PAD_JTAG_MOD__GPIO1_IO10		0x74 /* SODIMM 106 */
-+			MX6UL_PAD_JTAG_MOD__GPIO1_IO10		0xb0a0 /* SODIMM 106 */
- 		>;
- 	};
-=20
- 	pinctrl_gpio6: gpio6-grp { /* Wifi pins */
- 		fsl,pins =3D <
--			MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0x14 /* SODIMM 89 */
--			MX6UL_PAD_CSI_DATA02__GPIO4_IO23	0x14 /* SODIMM 79 */
--			MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x14 /* SODIMM 81 */
--			MX6UL_PAD_CSI_DATA03__GPIO4_IO24	0x14 /* SODIMM 97 */
--			MX6UL_PAD_CSI_DATA00__GPIO4_IO21	0x14 /* SODIMM 101 */
--			MX6UL_PAD_CSI_DATA01__GPIO4_IO22	0x14 /* SODIMM 103 */
--			MX6UL_PAD_CSI_HSYNC__GPIO4_IO20		0x14 /* SODIMM 94 */
-+			MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0x10b0 /* SODIMM 89 */
-+			MX6UL_PAD_CSI_DATA02__GPIO4_IO23	0x10b0 /* SODIMM 79 */
-+			MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x10b0 /* SODIMM 81 */
-+			MX6UL_PAD_CSI_DATA03__GPIO4_IO24	0x10b0 /* SODIMM 97 */
-+			MX6UL_PAD_CSI_DATA00__GPIO4_IO21	0x10b0 /* SODIMM 101 */
-+			MX6UL_PAD_CSI_DATA01__GPIO4_IO22	0x10b0 /* SODIMM 103 */
-+			MX6UL_PAD_CSI_HSYNC__GPIO4_IO20		0x10b0 /* SODIMM 94 */
- 		>;
- 	};
-=20
- 	pinctrl_gpio7: gpio7-grp { /* CAN1 */
- 		fsl,pins =3D <
--			MX6UL_PAD_ENET1_RX_DATA0__GPIO2_IO00	0x74 /* SODIMM 55 */
--			MX6UL_PAD_ENET1_RX_DATA1__GPIO2_IO01	0x74 /* SODIMM 63 */
-+			MX6UL_PAD_ENET1_RX_DATA0__GPIO2_IO00	0xb0b0/* SODIMM 55 */
-+			MX6UL_PAD_ENET1_RX_DATA1__GPIO2_IO01	0xb0b0 /* SODIMM 63 */
- 		>;
- 	};
-=20
-@@ -370,15 +370,15 @@ MX6UL_PAD_NAND_READY_B__RAWNAND_READY_B	0x100a9
-=20
- 	pinctrl_i2c1: i2c1-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_UART4_TX_DATA__I2C1_SCL 0x4001b8b0
--			MX6UL_PAD_UART4_RX_DATA__I2C1_SDA 0x4001b8b0
-+			MX6UL_PAD_UART4_TX_DATA__I2C1_SCL 0x4001b8b0	/* SODIMM 196 */
-+			MX6UL_PAD_UART4_RX_DATA__I2C1_SDA 0x4001b8b0	/* SODIMM 194 */
- 		>;
- 	};
-=20
- 	pinctrl_i2c1_gpio: i2c1-gpio-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_UART4_TX_DATA__GPIO1_IO28 0x4001b8b0
--			MX6UL_PAD_UART4_RX_DATA__GPIO1_IO29 0x4001b8b0
-+			MX6UL_PAD_UART4_TX_DATA__GPIO1_IO28 0x4001b8b0	/* SODIMM 196 */
-+			MX6UL_PAD_UART4_RX_DATA__GPIO1_IO29 0x4001b8b0	/* SODIMM 194 */
- 		>;
- 	};
-=20
-@@ -398,107 +398,107 @@ MX6UL_PAD_UART5_RX_DATA__GPIO1_IO31 0x4001b8b0
-=20
- 	pinctrl_lcdif_dat: lcdif-dat-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_LCD_DATA00__LCDIF_DATA00  0x00079
--			MX6UL_PAD_LCD_DATA01__LCDIF_DATA01  0x00079
--			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02  0x00079
--			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03  0x00079
--			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04  0x00079
--			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05  0x00079
--			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06  0x00079
--			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07  0x00079
--			MX6UL_PAD_LCD_DATA08__LCDIF_DATA08  0x00079
--			MX6UL_PAD_LCD_DATA09__LCDIF_DATA09  0x00079
--			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10  0x00079
--			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11  0x00079
--			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12  0x00079
--			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13  0x00079
--			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14  0x00079
--			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15  0x00079
--			MX6UL_PAD_LCD_DATA16__LCDIF_DATA16  0x00079
--			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17  0x00079
-+			MX6UL_PAD_LCD_DATA00__LCDIF_DATA00 0x00079	/* SODIMM 76 */
-+			MX6UL_PAD_LCD_DATA01__LCDIF_DATA01 0x00079	/* SODIMM 70 */
-+			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02 0x00079	/* SODIMM 60 */
-+			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03 0x00079	/* SODIMM 58 */
-+			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04 0x00079	/* SODIMM 78 */
-+			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05 0x00079	/* SODIMM 72 */
-+			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06 0x00079	/* SODIMM 80 */
-+			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07 0x00079	/* SODIMM 46 */
-+			MX6UL_PAD_LCD_DATA08__LCDIF_DATA08 0x00079	/* SODIMM 62 */
-+			MX6UL_PAD_LCD_DATA09__LCDIF_DATA09 0x00079	/* SODIMM 48 */
-+			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10 0x00079	/* SODIMM 74 */
-+			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11 0x00079	/* SODIMM 50 */
-+			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12 0x00079	/* SODIMM 52 */
-+			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13 0x00079	/* SODIMM 54 */
-+			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14 0x00079	/* SODIMM 66 */
-+			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15 0x00079	/* SODIMM 64 */
-+			MX6UL_PAD_LCD_DATA16__LCDIF_DATA16 0x00079	/* SODIMM 57 */
-+			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17 0x00079	/* SODIMM 61 */
- 		>;
- 	};
-=20
- 	pinctrl_lcdif_ctrl: lcdif-ctrl-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_LCD_CLK__LCDIF_CLK	    0x00079
--			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE  0x00079
--			MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC    0x00079
--			MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC    0x00079
-+			MX6UL_PAD_LCD_CLK__LCDIF_CLK	    0x00079	/* SODIMM 56 */
-+			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE  0x00079	/* SODIMM 44 */
-+			MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC    0x00079	/* SODIMM 68 */
-+			MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC    0x00079	/* SODIMM 82 */
- 		>;
- 	};
-=20
- 	pinctrl_pwm4: pwm4-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_NAND_WP_B__PWM4_OUT	0x00079
-+			MX6UL_PAD_NAND_WP_B__PWM4_OUT	0x00079		/* SODIMM 59 */
- 		>;
- 	};
-=20
- 	pinctrl_pwm5: pwm5-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_NAND_DQS__PWM5_OUT	0x00079
-+			MX6UL_PAD_NAND_DQS__PWM5_OUT	0x00079		/* SODIMM 28 */
- 		>;
- 	};
-=20
- 	pinctrl_pwm6: pwm6-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_ENET1_TX_EN__PWM6_OUT	0x00079
-+			MX6UL_PAD_ENET1_TX_EN__PWM6_OUT	0x00079		/* SODIMM 30 */
- 		>;
- 	};
-=20
- 	pinctrl_pwm7: pwm7-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_ENET1_TX_CLK__PWM7_OUT	0x00079
-+			MX6UL_PAD_ENET1_TX_CLK__PWM7_OUT	0x00079	/* SODIMM 67 */
- 		>;
- 	};
-=20
- 	pinctrl_uart1: uart1-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_UART1_TX_DATA__UART1_DTE_RX	0x1b0b1
--			MX6UL_PAD_UART1_RX_DATA__UART1_DTE_TX	0x1b0b1
--			MX6UL_PAD_UART1_RTS_B__UART1_DTE_CTS	0x1b0b1
--			MX6UL_PAD_UART1_CTS_B__UART1_DTE_RTS	0x1b0b1
-+			MX6UL_PAD_UART1_TX_DATA__UART1_DTE_RX	0x1b0b1	/* SODIMM 33 */
-+			MX6UL_PAD_UART1_RX_DATA__UART1_DTE_TX	0x1b0b1	/* SODIMM 35 */
-+			MX6UL_PAD_UART1_RTS_B__UART1_DTE_CTS	0x1b0b1	/* SODIMM 27 */
-+			MX6UL_PAD_UART1_CTS_B__UART1_DTE_RTS	0x1b0b1	/* SODIMM 25 */
- 		>;
- 	};
-=20
- 	pinctrl_uart1_ctrl1: uart1-ctrl1-grp { /* Additional DTR, DCD */
- 		fsl,pins =3D <
--			MX6UL_PAD_JTAG_TDI__GPIO1_IO13		0x1b0b1 /* DCD */
--			MX6UL_PAD_LCD_DATA18__GPIO3_IO23	0x1b0b1 /* DSR */
--			MX6UL_PAD_JTAG_TDO__GPIO1_IO12		0x1b0b1 /* DTR */
--			MX6UL_PAD_LCD_DATA19__GPIO3_IO24        0x1b0b1 /* RI */
-+			MX6UL_PAD_JTAG_TDI__GPIO1_IO13		0x70a0 /* SODIMM 31 */
-+			MX6UL_PAD_LCD_DATA18__GPIO3_IO23	0x10b0 /* SODIMM 29 */
-+			MX6UL_PAD_JTAG_TDO__GPIO1_IO12		0x90b1 /* SODIMM 23 */
-+			MX6UL_PAD_LCD_DATA19__GPIO3_IO24        0x10b0 /* SODIMM 37 */
- 		>;
- 	};
-=20
- 	pinctrl_uart2: uart2-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_UART2_TX_DATA__UART2_DTE_RX	0x1b0b1
--			MX6UL_PAD_UART2_RX_DATA__UART2_DTE_TX	0x1b0b1
--			MX6UL_PAD_UART2_CTS_B__UART2_DTE_RTS	0x1b0b1
--			MX6UL_PAD_UART2_RTS_B__UART2_DTE_CTS	0x1b0b1
-+			MX6UL_PAD_UART2_TX_DATA__UART2_DTE_RX	0x1b0b1 /* SODIMM 36 */
-+			MX6UL_PAD_UART2_RX_DATA__UART2_DTE_TX	0x1b0b1 /* SODIMM 38 */
-+			MX6UL_PAD_UART2_CTS_B__UART2_DTE_RTS	0x1b0b1 /* SODIMM 32 */
-+			MX6UL_PAD_UART2_RTS_B__UART2_DTE_CTS	0x1b0b1 /* SODIMM 34 */
- 		>;
- 	};
- 	pinctrl_uart5: uart5-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_GPIO1_IO04__UART5_DTE_RX	0x1b0b1
--			MX6UL_PAD_GPIO1_IO05__UART5_DTE_TX	0x1b0b1
-+			MX6UL_PAD_GPIO1_IO04__UART5_DTE_RX	0x1b0b1 /* SODIMM 19 */
-+			MX6UL_PAD_GPIO1_IO05__UART5_DTE_TX	0x1b0b1 /* SODIMM 21 */
- 		>;
- 	};
-=20
- 	pinctrl_usbh_reg: gpio-usbh-reg {
- 		fsl,pins =3D <
--			MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0x1b0b1 /* SODIMM 129 USBH PEN */
-+			MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0x10b0 /* SODIMM 129 */
- 		>;
- 	};
-=20
- 	pinctrl_usdhc1: usdhc1-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x17059
--			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x10059
--			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
--			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
--			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
--			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x17059 /* SODIMM 47 */
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x10059 /* SODIMM 190 */
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059 /* SODIMM 192 */
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059 /* SODIMM 49 */
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059 /* SODIMM 51 */
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059 /* SODIMM 53 */
- 		>;
- 	};
-=20
-@@ -533,7 +533,7 @@ MX6UL_PAD_CSI_DATA03__USDHC2_DATA3	0x17059
- 			MX6UL_PAD_CSI_HSYNC__USDHC2_CMD		0x17059
- 			MX6UL_PAD_CSI_VSYNC__USDHC2_CLK		0x17059
-=20
--			MX6UL_PAD_GPIO1_IO03__OSC32K_32K_OUT	0x14
-+			MX6UL_PAD_GPIO1_IO03__REF_CLK_32K	0x10
- 		>;
- 	};
-=20
-@@ -547,23 +547,23 @@ MX6UL_PAD_LCD_RESET__WDOG1_WDOG_ANY    0x30b0
- &iomuxc_snvs {
- 	pinctrl_snvs_gpio1: snvs-gpio1-grp {
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x14 /* SODIMM 93 */
--			MX6ULL_PAD_SNVS_TAMPER3__GPIO5_IO03	0x14 /* SODIMM 95 */
--			MX6ULL_PAD_BOOT_MODE0__GPIO5_IO10	0x74 /* SODIMM 105 */
--			MX6ULL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x14 /* SODIMM 131 USBH OC */
--			MX6ULL_PAD_SNVS_TAMPER8__GPIO5_IO08	0x74 /* SODIMM 138 */
-+			MX6ULL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x110a0	/* SODIMM 93 */
-+			MX6ULL_PAD_SNVS_TAMPER3__GPIO5_IO03	0x110a0	/* SODIMM 95 */
-+			MX6ULL_PAD_BOOT_MODE0__GPIO5_IO10	0x1b0a0	/* SODIMM 105 */
-+			MX6ULL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x0b0a0	/* SODIMM 131 */
-+			MX6ULL_PAD_SNVS_TAMPER8__GPIO5_IO08	0x110a0	/* SODIMM 138 */
- 		>;
- 	};
-=20
- 	pinctrl_snvs_gpio2: snvs-gpio2-grp { /* ATMEL MXT TOUCH */
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x74 /* SODIMM 107 */
-+			MX6ULL_PAD_SNVS_TAMPER4__GPIO5_IO04	0xb0a0	/* SODIMM 107 */
- 		>;
- 	};
-=20
- 	pinctrl_snvs_gpio3: snvs-gpio3-grp { /* Wifi pins */
- 		fsl,pins =3D <
--			MX6ULL_PAD_BOOT_MODE1__GPIO5_IO11	0x14 /* SODIMM 127 */
-+			MX6ULL_PAD_BOOT_MODE1__GPIO5_IO11	0x130a0	/* SODIMM 127 */
- 		>;
- 	};
-=20
-@@ -587,13 +587,13 @@ MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x130b0
-=20
- 	pinctrl_snvs_gpiokeys: snvs-gpiokeys-grp {
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER1__GPIO5_IO01	0x130b0
-+			MX6ULL_PAD_SNVS_TAMPER1__GPIO5_IO01	0x130a0	/* SODIMM 45 */
- 		>;
- 	};
-=20
- 	pinctrl_snvs_usdhc1_cd: snvs-usdhc1-cd-grp {
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x1b0b0 /* CD */
-+			MX6ULL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x1b0a0 /* SODIMM 43 */
- 		>;
- 	};
-=20
-@@ -605,7 +605,7 @@ MX6ULL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x0
-=20
- 	pinctrl_snvs_wifi_pdn: snvs-wifi-pdn-grp {
- 		fsl,pins =3D <
--			MX6ULL_PAD_BOOT_MODE1__GPIO5_IO11	0x14
-+			MX6ULL_PAD_BOOT_MODE1__GPIO5_IO11	0x130a0
- 		>;
- 	};
- };
---=20
-2.24.0
+Rob, what do you think?
+
+> 
+> This is useful for boards where memory range has been extended with
+> the use of multiple flash chips as memory banks of a single MTD
+> device, with partitions spanning chip borders.
+> 
+> Suggested-by: Bernhard Frauendienst <kernel@nospam.obeliks.de>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/mtd/Kconfig           |   8 ++
+>  drivers/mtd/Makefile          |   1 +
+>  drivers/mtd/mtd_virt_concat.c | 240 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 249 insertions(+)
+>  create mode 100644 drivers/mtd/mtd_virt_concat.c
+> 
+> diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
+> index 79a8ff542883..3e1e55e7158f 100644
+> --- a/drivers/mtd/Kconfig
+> +++ b/drivers/mtd/Kconfig
+> @@ -276,6 +276,14 @@ config MTD_PARTITIONED_MASTER
+>  	  the parent of the partition device be the master device, rather than
+>  	  what lies behind the master.
+>  
+> +config MTD_VIRT_CONCAT
+> +	tristate "Virtual concatenated MTD devices"
+> +	help
+> +	  This driver allows creation of a virtual MTD device, which
+> +	  concatenates multiple physical MTD devices into a single one.
+> +	  This is useful to create partitions bigger than the underlying
+> +	  physical chips by allowing cross-chip boundaries.
+> +
+>  source "drivers/mtd/chips/Kconfig"
+>  
+>  source "drivers/mtd/maps/Kconfig"
+> diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
+> index 58fc327a5276..c7ee13368a66 100644
+> --- a/drivers/mtd/Makefile
+> +++ b/drivers/mtd/Makefile
+> @@ -27,6 +27,7 @@ obj-$(CONFIG_SSFDC)		+= ssfdc.o
+>  obj-$(CONFIG_SM_FTL)		+= sm_ftl.o
+>  obj-$(CONFIG_MTD_OOPS)		+= mtdoops.o
+>  obj-$(CONFIG_MTD_SWAP)		+= mtdswap.o
+> +obj-$(CONFIG_MTD_VIRT_CONCAT)	+= mtd_virt_concat.o
+
+Can we move that code to mtdconcat? After, it's just an extension to
+the mtdconcat logic that extract the description from a DT instead of
+expecting drivers to create the concatenation on their own.
+
+
+> +
+> +static int __init mtd_virt_concat_init(void)
+> +{
+> +	struct mtd_virt_concat_node *item;
+> +	struct device_node *parts = NULL;
+> +	int ret = 0, count;
+> +
+> +	/* List all the concatenations found in DT */
+> +	do {
+> +		parts = of_find_node_with_property(parts, CONCAT_PROP);
+> +		if (!of_device_is_available(parts))
+> +			continue;
+> +
+> +		count = of_count_phandle_with_args(parts, CONCAT_PROP, NULL);
+> +		if (count < MIN_DEV_PER_CONCAT)
+> +			continue;
+> +
+> +		ret = mtd_virt_concat_create_item(parts, count);
+> +		if (ret) {
+> +			of_node_put(parts);
+> +			goto destroy_items;
+> +		}
+> +	} while (parts);
+> +
+> +	/* TODO: also parse the cmdline */
+> +
+> +	/* Create the concatenations */
+> +	list_for_each_entry(item, &concat_list, head) {
+> +		ret = mtd_virt_concat_create_join(item);
+> +		if (ret)
+> +			goto destroy_joins;
+> +	}
+> +
+> +	return 0;
+> +
+> +destroy_joins:
+> +	mtd_virt_concat_destroy_joins();
+> +destroy_items:
+> +	mtd_virt_concat_destroy_items();
+> +
+> +	return ret;
+> +}
+> +late_initcall(mtd_virt_concat_init);
+
+Right now the solution assumes all drivers are statically linked. I'm
+pretty sure we can support other cases if we use MTD notifiers to be
+informed of MTD device is addition/removal.
+
+> +
+> +static void __exit mtd_virt_concat_exit(void)
+> +{
+> +	mtd_virt_concat_destroy_joins();
+> +	mtd_virt_concat_destroy_items();
+> +}
+> +module_exit(mtd_virt_concat_exit);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Bernhard Frauendienst <kernel@nospam.obeliks.de>");
+> +MODULE_DESCRIPTION("Virtual concat MTD device driver");
 
