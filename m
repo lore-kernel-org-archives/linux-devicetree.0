@@ -2,130 +2,160 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F166AC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 05:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16897C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 05:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C80A320637
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 05:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D526F206D3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 05:37:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="K+xbjE4z"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="GzhS+DwH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfLIFWn (ORCPT
+        id S1726014AbfLIFhM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 00:22:43 -0500
-Received: from mailgw02.mediatek.com ([216.200.240.185]:58116 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbfLIFWn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 00:22:43 -0500
-X-UUID: 7818660cc7c544d8a7f98f1cfeb7855b-20191208
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ButzdGv9wS4vEWD4n7bWNCvee+jF/m3iYcDfT63Gb/M=;
-        b=K+xbjE4zxHlsimO89ardVwvWMdR/92+p/ZkgGAM1A89rtS6hWOhjVHROk99RMBrzso3vDBkSEuo/nzrhxIREb4A0GnazQcCZDgLOpAYwQJ2Gw2ItgxVyFCF6GjYt1C5l6JnKtHdw9fVAAMCfO313R5bzAFn39cjN6fxNjO9tBjk=;
-X-UUID: 7818660cc7c544d8a7f98f1cfeb7855b-20191208
-Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1206621328; Sun, 08 Dec 2019 21:17:36 -0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS62N2.mediatek.inc (172.29.193.42) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 8 Dec 2019 21:13:55 -0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 9 Dec 2019 13:12:23 +0800
-Message-ID: <1575868373.7013.4.camel@mtksdaap41>
-Subject: Re: [resend PATCH v6 01/12] dt-bindings: display: mediatek: Add
- mmsys binding description
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <matthias.bgg@kernel.org>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <ulrich.hecht+renesas@gmail.com>,
-        <laurent.pinchart@ideasonboard.com>,
-        <enric.balletbo@collabora.com>, <sean.wang@mediatek.com>,
-        <sean.wang@kernel.org>, <rdunlap@infradead.org>, <wens@csie.org>,
-        <hsinyi@chromium.org>, <frank-w@public-files.de>,
-        <drinkcat@chromium.org>, <linux-media@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <mbrugger@suse.com>
-Date:   Mon, 9 Dec 2019 13:12:53 +0800
-In-Reply-To: <20191207224740.24536-2-matthias.bgg@kernel.org>
-References: <20191207224740.24536-1-matthias.bgg@kernel.org>
-         <20191207224740.24536-2-matthias.bgg@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 9 Dec 2019 00:37:12 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:14064 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbfLIFhM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 00:37:12 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47WX4x3wfVz9v6RT;
+        Mon,  9 Dec 2019 06:37:05 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=GzhS+DwH; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id iB1Z137g_8ck; Mon,  9 Dec 2019 06:37:05 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47WX4x2Ccpz9v6RS;
+        Mon,  9 Dec 2019 06:37:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1575869825; bh=FEaKJXbXjOZ1lXq1C/Q2UlBfDCkQh9ayeBwDENy5BRg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GzhS+DwHmvcH7W0kx9/VDg8rH//PkeuA5gm9WiyQKP6X5IuU8WLySJ0Y45zfEKN53
+         MxN/37bQh9VhThRUzXfCuA5ZbNpmiEL8Bq9aPGzYggZBvIaeMlHiE88lB63mQINyA4
+         HacB28XxQpEZuPIshNaU3cWXTW9h2ZYOK3uGtVr4=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B1EF48B789;
+        Mon,  9 Dec 2019 06:37:09 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id z_yjYl-8tdf1; Mon,  9 Dec 2019 06:37:09 +0100 (CET)
+Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5B3758B755;
+        Mon,  9 Dec 2019 06:37:09 +0100 (CET)
+Subject: Re: [PATCH V2 00/13] powerpc/vas: Page fault handling for user space
+ NX requests
+To:     Haren Myneni <haren@linux.ibm.com>, mpe@ellerman.id.au,
+        hch@infradead.org, mikey@neuling.org, npiggin@gmail.com,
+        herbert@gondor.apana.org.au, linuxppc-dev@lists.ozlabs.org,
+        devicetree@vger.kernel.org
+Cc:     sukadev@linux.vnet.ibm.com
+References: <1575861522.16318.9.camel@hbabu-laptop>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <8ba807dd-9d5a-e42a-60e8-f9ad648026bf@c-s.fr>
+Date:   Mon, 9 Dec 2019 06:37:09 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1575861522.16318.9.camel@hbabu-laptop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIE1hdHRoaWFzOg0KDQpPbiBTYXQsIDIwMTktMTItMDcgYXQgMjM6NDcgKzAxMDAsIG1hdHRo
-aWFzLmJnZ0BrZXJuZWwub3JnIHdyb3RlOg0KPiBGcm9tOiBNYXR0aGlhcyBCcnVnZ2VyIDxtYnJ1
-Z2dlckBzdXNlLmNvbT4NCj4gDQo+IFRoZSBNZWRpYVRlayBEUk0gaGFzIGEgYmxvY2sgY2FsbGVk
-IG1tc3lzLCB3aGljaCBzZXRzDQo+IHRoZSByb3V0aW5nIGFuZCBlbmFsYmVzIHRoZSBkaWZmZXJl
-bnQgYmxvY2tzLg0KPiBUaGlzIHBhdGNoIGFkZHMgb25lIGxpbmUgZm9yIHRoZSBtbXN5cyBiaW5k
-aW5ncyBkZXNjcmlwdGlvbi4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE1hdHRoaWFzIEJydWdnZXIg
-PG1icnVnZ2VyQHN1c2UuY29tPg0KPiAtLS0NCj4gIC4uLi9kaXNwbGF5L21lZGlhdGVrL21lZGlh
-dGVrLGRpc3AudHh0ICAgICAgICB8IDI4ICsrKysrKysrKystLS0tLS0tLS0NCj4gIDEgZmlsZSBj
-aGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspLCAxMyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9t
-ZWRpYXRlayxkaXNwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L21lZGlhdGVrL21lZGlhdGVrLGRpc3AudHh0DQo+IGluZGV4IDg0NjlkZTUxMDAwMS4uYzcx
-YzhhNGI3M2ZmIDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkaXNwLnR4dA0KPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkaXNwLnR4
-dA0KPiBAQCAtMjcsMjAgKzI3LDIyIEBAIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQuDQo+ICANCj4gIFJlcXVpcmVkIHBy
-b3BlcnRpZXMgKGFsbCBmdW5jdGlvbiBibG9ja3MpOg0KPiAgLSBjb21wYXRpYmxlOiAibWVkaWF0
-ZWssPGNoaXA+LWRpc3AtPGZ1bmN0aW9uPiIsIG9uZSBvZg0KPiAtCSJtZWRpYXRlayw8Y2hpcD4t
-ZGlzcC1vdmwiICAgLSBvdmVybGF5ICg0IGxheWVycywgYmxlbmRpbmcsIGNzYykNCj4gLQkibWVk
-aWF0ZWssPGNoaXA+LWRpc3AtcmRtYSIgIC0gcmVhZCBETUEgLyBsaW5lIGJ1ZmZlcg0KPiAtCSJt
-ZWRpYXRlayw8Y2hpcD4tZGlzcC13ZG1hIiAgLSB3cml0ZSBETUENCj4gLQkibWVkaWF0ZWssPGNo
-aXA+LWRpc3AtY29sb3IiIC0gY29sb3IgcHJvY2Vzc29yDQo+IC0JIm1lZGlhdGVrLDxjaGlwPi1k
-aXNwLWFhbCIgICAtIGFkYXB0aXZlIGFtYmllbnQgbGlnaHQgY29udHJvbGxlcg0KPiAtCSJtZWRp
-YXRlayw8Y2hpcD4tZGlzcC1nYW1tYSIgLSBnYW1tYSBjb3JyZWN0aW9uDQo+IC0JIm1lZGlhdGVr
-LDxjaGlwPi1kaXNwLW1lcmdlIiAtIG1lcmdlIHN0cmVhbXMgZnJvbSB0d28gUkRNQSBzb3VyY2Vz
-DQo+IC0JIm1lZGlhdGVrLDxjaGlwPi1kaXNwLXNwbGl0IiAtIHNwbGl0IHN0cmVhbSB0byB0d28g
-ZW5jb2RlcnMNCj4gLQkibWVkaWF0ZWssPGNoaXA+LWRpc3AtdWZvZSIgIC0gZGF0YSBjb21wcmVz
-c2lvbiBlbmdpbmUNCj4gLQkibWVkaWF0ZWssPGNoaXA+LWRzaSIgICAgICAgIC0gRFNJIGNvbnRy
-b2xsZXIsIHNlZSBtZWRpYXRlayxkc2kudHh0DQo+IC0JIm1lZGlhdGVrLDxjaGlwPi1kcGkiICAg
-ICAgICAtIERQSSBjb250cm9sbGVyLCBzZWUgbWVkaWF0ZWssZHBpLnR4dA0KPiAtCSJtZWRpYXRl
-ayw8Y2hpcD4tZGlzcC1tdXRleCIgLSBkaXNwbGF5IG11dGV4DQo+IC0JIm1lZGlhdGVrLDxjaGlw
-Pi1kaXNwLW9kIiAgICAtIG92ZXJkcml2ZQ0KPiArCSJtZWRpYXRlayw8Y2hpcD4tZGlzcC1vdmwi
-CQktIG92ZXJsYXkgKDQgbGF5ZXJzLCBibGVuZGluZywgY3NjKQ0KDQpUaGlzIHBhdGNoIGNvbmZs
-aWN0cyB3aXRoIDUuNS1yYywgcGxlYXNlIHJlc2VuZCB0aGlzIHBhdGNoIGJhc2Ugb24NCjUuNS1y
-YzEuDQoNCj4gKwkibWVkaWF0ZWssPGNoaXA+LWRpc3AtcmRtYSIJCS0gcmVhZCBETUEgLyBsaW5l
-IGJ1ZmZlcg0KPiArCSJtZWRpYXRlayw8Y2hpcD4tZGlzcC13ZG1hIgkJLSB3cml0ZSBETUENCj4g
-KwkibWVkaWF0ZWssPGNoaXA+LWRpc3AtY29sb3IiCQktIGNvbG9yIHByb2Nlc3Nvcg0KPiArCSJt
-ZWRpYXRlayw8Y2hpcD4tZGlzcC1hYWwiCQktIGFkYXB0aXZlIGFtYmllbnQgbGlnaHQgY29udHJv
-bGxlcg0KPiArCSJtZWRpYXRlayw8Y2hpcD4tZGlzcC1nYW1tYSIJCS0gZ2FtbWEgY29ycmVjdGlv
-bg0KPiArCSJtZWRpYXRlayw8Y2hpcD4tZGlzcC1tZXJnZSIJCS0gbWVyZ2Ugc3RyZWFtcyBmcm9t
-IHR3byBSRE1BIHNvdXJjZXMNCj4gKwkibWVkaWF0ZWssPGNoaXA+LWRpc3Atc3BsaXQiCQktIHNw
-bGl0IHN0cmVhbSB0byB0d28gZW5jb2RlcnMNCj4gKwkibWVkaWF0ZWssPGNoaXA+LWRpc3AtdWZv
-ZSIJCS0gZGF0YSBjb21wcmVzc2lvbiBlbmdpbmUNCj4gKwkibWVkaWF0ZWssPGNoaXA+LWRzaSIJ
-CQktIERTSSBjb250cm9sbGVyLCBzZWUgbWVkaWF0ZWssZHNpLnR4dA0KPiArCSJtZWRpYXRlayw8
-Y2hpcD4tZHBpIgkJCS0gRFBJIGNvbnRyb2xsZXIsIHNlZSBtZWRpYXRlayxkcGkudHh0DQo+ICsJ
-Im1lZGlhdGVrLDxjaGlwPi1kaXNwLW11dGV4IgkJLSBkaXNwbGF5IG11dGV4DQo+ICsJIm1lZGlh
-dGVrLDxjaGlwPi1kaXNwLW9kIgkJLSBvdmVyZHJpdmUNCj4gKwkibWVkaWF0ZWssPGNoaXA+LW1t
-c3lzIiwgInN5c2NvbiIJLSBwcm92aWRlIGNsb2NrcyBhbmQgY29tcG9uZW50cyBtYW5hZ2VtZW50
-DQo+ICAgIHRoZSBzdXBwb3J0ZWQgY2hpcHMgYXJlIG10MjcwMSwgbXQyNzEyIGFuZCBtdDgxNzMu
-DQoNClRoZSBvcmlnaW5hbCBiaW5kaW5nIGRvY3VtZW50IGZvciBtbXN5cyBpcyBpbiBbMV0sIEkg
-dGhpbmsgd2Ugc2hvdWxkIG5vdA0KZGVmaW5lIGl0IGluIGR1cGxpY2F0ZS4gTWF5YmUgeW91IGNv
-dWxkIHJlbW92ZSB0aGUgb3JpZ2luYWwgZG9jdW1lbnQuDQoNClsxXQ0KaHR0cHM6Ly93d3cua2Vy
-bmVsLm9yZy9kb2MvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tZWRpYXRl
-ay9tZWRpYXRlayUyQ21tc3lzLnR4dA0KDQpSZWdhcmRzLA0KQ0sNCg0KPiArDQo+ICAtIHJlZzog
-UGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGZ1bmN0aW9uIGJsb2NrIHJl
-Z2lzdGVyIHNwYWNlDQo+ICAtIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFsIGZyb20g
-dGhlIGZ1bmN0aW9uIGJsb2NrIChyZXF1aXJlZCwgZXhjZXB0IGZvcg0KPiAgICBtZXJnZSBhbmQg
-c3BsaXQgZnVuY3Rpb24gYmxvY2tzKS4NCg0K
+Hi,
 
+What do you mean by NX ?
+Up to now, NX has been standing for No-eXecute. That's a bit in segment 
+registers on book3s/32 to forbid executing code.
+
+Therefore, some of your text is really misleading. If NX means something 
+else for you, your text must be unambiguous.
+
+Christophe
+
+Le 09/12/2019 à 04:18, Haren Myneni a écrit :
+> 
+> Applications will send compression / decompression requests to NX with
+> COPY/PASTE instructions. When NX is processing these requests, can hit
+> fault on the request buffer (not in memory). It issues an interrupt and
+> pastes fault CRB in fault FIFO. Expects kernel to handle this fault and
+> return credits for both send and fault windows after processing.
+> 
+> This patch series adds IRQ and fault window setup, and NX fault handling:
+> - Read IRQ# from "interrupts" property and configure IRQ per VAS instance.
+> - Set port# for each window to generate an interrupt when noticed fault.
+> - Set fault window and FIFO on which NX paste fault CRB.
+> - Setup IRQ thread fault handler per VAS instance.
+> - When receiving an interrupt, Read CRBs from fault FIFO and update
+>    coprocessor_status_block (CSB) in the corresponding CRB with translation
+>    failure (CSB_CC_TRANSLATION). After issuing NX requests, process polls
+>    on CSB address. When it sees translation error, can touch the request
+>    buffer to bring the page in to memory and reissue NX request.
+> - If copy_to_user fails on user space CSB address, OS sends SEGV signal.
+> 
+> Tested these patches with NX-GZIP support and will be posting this series
+> soon.
+> 
+> Patch 2: Define nx_fault_stamp on which NX writes fault status for the fault
+>           CRB
+> Patch 3: Read interrupts and port properties per VAS instance
+> Patch 4: Setup fault window per each VAS instance. This window is used for
+>           NX to paste fault CRB in FIFO.
+> Patches 5 & 6: Setup threaded IRQ per VAS and register NX with fault window
+> 	 ID and port number for each send window so that NX paste fault CRB
+> 	 in this window.
+> Patch 7: Reference to pid and mm so that pid is not used until window closed.
+> 	 Needed for multi thread application where child can open a window
+> 	 and can be used by parent later.
+> Patches 8 and 9: Process CRBs from fault FIFO and notify tasks by
+>           updating CSB or through signals.
+> Patches 10 and 11: Return credits for send and fault windows after handling
+>          faults.
+> Patch 13:Fix closing send window after all credits are returned. This issue
+>           happens only for user space requests. No page faults on kernel
+>           request buffer.
+> 
+> Changelog:
+> V2:
+>    - Use threaded IRQ instead of own kernel thread handler
+>    - Use pswid insted of user space CSB address to find valid CRB
+>    - Removed unused macros and other changes as suggested by Christoph Hellwig
+> 
+> Haren Myneni (13):
+>    powerpc/vas: Describe vas-port and interrupts properties
+>    powerpc/vas: Define nx_fault_stamp in coprocessor_request_block
+>    powerpc/vas: Read interrupts and vas-port device tree properties
+>    powerpc/vas: Setup fault window per VAS instance
+>    powerpc/vas: Setup thread IRQ handler per VAS instance
+>    powerpc/vas: Register NX with fault window ID and IRQ port value
+>    powerpc/vas: Take reference to PID and mm for user space windows
+>    powerpc/vas: Update CSB and notify process for fault CRBs
+>    powerpc/vas: Print CRB and FIFO values
+>    powerpc/vas: Do not use default credits for receive window
+>    powerpc/VAS: Return credits after handling fault
+>    powerpc/vas: Display process stuck message
+>    powerpc/vas: Free send window in VAS instance after credits returned
+> 
+>   .../devicetree/bindings/powerpc/ibm,vas.txt        |   5 +
+>   arch/powerpc/include/asm/icswx.h                   |  18 +-
+>   arch/powerpc/platforms/powernv/Makefile            |   2 +-
+>   arch/powerpc/platforms/powernv/vas-debug.c         |   2 +-
+>   arch/powerpc/platforms/powernv/vas-fault.c         | 337 +++++++++++++++++++++
+>   arch/powerpc/platforms/powernv/vas-window.c        | 173 ++++++++++-
+>   arch/powerpc/platforms/powernv/vas.c               |  77 ++++-
+>   arch/powerpc/platforms/powernv/vas.h               |  38 ++-
+>   8 files changed, 627 insertions(+), 25 deletions(-)
+>   create mode 100644 arch/powerpc/platforms/powernv/vas-fault.c
+> 
