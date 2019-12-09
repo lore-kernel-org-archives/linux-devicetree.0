@@ -7,104 +7,102 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF06AC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 20:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E34C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 20:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88B9F20663
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 20:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C822068E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 20:23:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YyWaTa3g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iEEtxuDJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfLIUTF (ORCPT
+        id S1726589AbfLIUX1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:19:05 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39003 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfLIUTE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 15:19:04 -0500
-Received: by mail-lj1-f193.google.com with SMTP id e10so17154048ljj.6;
-        Mon, 09 Dec 2019 12:19:03 -0800 (PST)
+        Mon, 9 Dec 2019 15:23:27 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40423 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfLIUX1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 15:23:27 -0500
+Received: by mail-oi1-f195.google.com with SMTP id 6so7592215oix.7
+        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 12:23:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=n1EdrnRTVcraROl5/h8aaMtwkvgNtthE6B0nadUQmNM=;
-        b=YyWaTa3gnmdIYwVKVbmo7iBU4bN5OGGRfD/62puTS0gNvrMO2Gn52AUyhSnCwq8CMd
-         wR03rB0TUPJbC5zMlN44+k7hjCwO+baR8t4mgLtW40gBXm/sehCBVm5s5M+xKBVhoGhr
-         W/ev/YydmL+HcKZLZvpcF7/hBtf/4WOgcYSrxRDzXmzCDtgZVbXlj5Dnl38zVEgiPBMC
-         S5Ar3nDEgmaur+OOaj3gG60Pb+KKkNB1wit28dY2jcQhMKrG3TL3IQkdm520wfV07mtg
-         J4SGJavVx2XoiPZWucDtJiYVUC0192OwXrhD/noBjLMJGN5Fw2PeTQfe6oUeJoGpxhzF
-         SS9Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Zb2z1zh/PIMzhw5YuaHgoz9OhiNEP+lZ66Mh07HK17M=;
+        b=iEEtxuDJYa+g2J9VBtV1qwh8N5zKCj9QsMm9jTr2sOBLMb3hCbbxt7jYIbCz0YvFjk
+         dTS6vE4Wn0E/mazaqxrbnwAHcGpEEqkMY3tX7vuNBvvps0U7k05iOuqBMUK9Ak1IIgba
+         lzoceXwvdxIVz1m3hwg+mGQpGdwNVdipSkbGpWpiIAnZx6eDuigtTIKQnLa6B8W5Vab3
+         2dmpKaxWL6+UEq6DxQYAG1iNuBqMbkt5Ivyf2rYGTliP8+zC4S0zVx2V1ORNTqa1YfZv
+         m72I9kF/Y5ik/kzpfJAd8nCu9KRnAHlEDCiYrN9wqHjSqoS4ZIpqJkligqAAH60+7ujk
+         3QMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=n1EdrnRTVcraROl5/h8aaMtwkvgNtthE6B0nadUQmNM=;
-        b=CYVX9Rtlna9fLL7/k/no4qcrIwTK9BKv+iWZABLKD36PltZLT6HWT8Rjv7enQWiTYT
-         fD12LODkf8agla1cuHCFLrYnsxZeVgD44TQyS4d+7KkmXJctbSTJYj4YGfSIZJ65fp7J
-         iQkg4eP/9ylkUWlUefGGy94+3w4qoAt3CLiv1HBbuQ/hzB6OWW1sszVLmAYhnbl8uDgL
-         iRy0HJiMIn5WOsMRtauahfQObtsulHshrf+5O3CtgK3k5GK7a/yMhAJvJjWBZDDPSz0p
-         TSe0UhLG1ycbiNqLFl8/Qg3utX6ZDRyUBBQw7WiBJJhB6F3XsLueke4+eTCjeKHftOJo
-         6saA==
-X-Gm-Message-State: APjAAAUZ+Kz55wy0rtuK8HsmFqPNGewPabYB2puAhD0BMT1tmYOqqUhd
-        jX1NsYzz4RUESHo67rag5a0=
-X-Google-Smtp-Source: APXvYqyfu7gL7wbNI0OOFWaQIsqDNwc4LTHSY9AuWl7rOPaR/iVf8RbBzzn3iTnZxmGFFwaacn/o1A==
-X-Received: by 2002:a2e:5751:: with SMTP id r17mr18245968ljd.254.1575922742313;
-        Mon, 09 Dec 2019 12:19:02 -0800 (PST)
-Received: from rikard (h-158-174-187-196.NA.cust.bahnhof.se. [158.174.187.196])
-        by smtp.gmail.com with ESMTPSA id i19sm237269lfj.17.2019.12.09.12.19.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 12:19:01 -0800 (PST)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-X-Google-Original-From: Rikard Falkeborn <rikard.falkeborn>
-Date:   Mon, 9 Dec 2019 21:18:58 +0100
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>, kishon@ti.com
-Cc:     megous@megous.com, arnd@arndb.de, devicetree@vger.kernel.org,
-        gregkh@linuxfoundation.org, icenowy@aosc.io, kishon@ti.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, mark.rutland@arm.com,
-        mripard@kernel.org, paul.kocialkowski@bootlin.com,
-        robh+dt@kernel.org, tglx@linutronix.de, wens@csie.org
-Subject: Re: [PATCH v2] phy: allwinner: Fix GENMASK misuse
-Message-ID: <20191209201858.GA1223@rikard>
-References: <20191020134229.1216351-3-megous@megous.com>
- <20191110124355.1569-1-rikard.falkeborn@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zb2z1zh/PIMzhw5YuaHgoz9OhiNEP+lZ66Mh07HK17M=;
+        b=V9Al1NbR878M/xfOW6dM8mZalwBECxh9yYUEFQHBAZOgt63uRnBGIVG1LAcDbVYQxZ
+         rdakp1Y6elL6YJm3OAaWQCoA4IMGW6yZMWDVLUNIaBgQtNAPHlPPGovfj9fvwmpLAeh6
+         KJmEVs0nV+QnwKAZmGtJ8yYA/BlokqjWvs3UgHXnE8uxpmAcivXJc9NT6R2mrXEKFoqY
+         /Mh4uNrQEukrS9IJyiZa3vj1ghXeulk6JLanjGTp1r/8BP9/6A+5NVxzL1C/LNthCPDe
+         EAhOjk6KcJBYbHkQ7jMsG9eZGhhlGU03Ott4xbk169wGk+iaYq3zFXAln0VOS/TLS/yL
+         Bxsg==
+X-Gm-Message-State: APjAAAVg0eKWpO9CDb2R/5VVk5ZFbYzLDfv9UXdzm3R1gCtx3WYU7qF+
+        MwreL0YCf3FSGr4qnSPvbSiKxQYnh9/25OCvBEg=
+X-Google-Smtp-Source: APXvYqyDDNE9/rLQegvz6/oBL9hwxhdlCfxJI17/tIDMmTvRsbRghB5eJVsPTc1bZqHpyayNj7SMNqn9hYbaHIoC7Ws=
+X-Received: by 2002:aca:c3c6:: with SMTP id t189mr895697oif.98.1575923006414;
+ Mon, 09 Dec 2019 12:23:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191110124355.1569-1-rikard.falkeborn@gmail.com>
+References: <20191203021420.164129-1-anarsoul@gmail.com> <20191209193112.qr6un5ryhyxwu6a5@hendrix.lan>
+In-Reply-To: <20191209193112.qr6un5ryhyxwu6a5@hendrix.lan>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Mon, 9 Dec 2019 12:23:18 -0800
+Message-ID: <CA+E=qVcxXu4CggnhZFti-J4MB5m3pvoxKCHnH6ap-4OSZMzCFQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: set GPU clock to 432 MHz
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 01:43:55PM +0100, Rikard Falkeborn wrote:
-> Arguments are supposed to be ordered high then low.
-> 
-> Fixes: a228890f9458 ("phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC")
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-> Tested-by: Ondrej Jirman <megous@megous.com>
-> ---
-> v1->v2: Add fixes tax. Add Ondrejs Tested-by. No functional change.
-> 
->  drivers/phy/allwinner/phy-sun50i-usb3.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c b/drivers/phy/allwinner/phy-sun50i-usb3.c
-> index 1169f3e83a6f..b1c04f71a31d 100644
-> --- a/drivers/phy/allwinner/phy-sun50i-usb3.c
-> +++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
-> @@ -49,7 +49,7 @@
->  #define SUNXI_LOS_BIAS(n)		((n) << 3)
->  #define SUNXI_LOS_BIAS_MASK		GENMASK(5, 3)
->  #define SUNXI_TXVBOOSTLVL(n)		((n) << 0)
-> -#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(0, 2)
-> +#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(2, 0)
->  
->  struct sun50i_usb3_phy {
->  	struct phy *phy;
-> -- 
-> 2.24.0
-> 
+On Mon, Dec 9, 2019 at 12:03 PM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> Hi,
+>
+> On Mon, Dec 02, 2019 at 06:14:20PM -0800, Vasily Khoruzhick wrote:
+> > That's what BSP kernel sets it to and it seems to work fine.
+> >
+> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > index 27e48234f1c2..0051f39b3d98 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > @@ -976,6 +976,9 @@ mali: gpu@1c40000 {
+> >                       clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
+> >                       clock-names = "bus", "core";
+> >                       resets = <&ccu RST_BUS_GPU>;
+> > +
+> > +                     assigned-clocks = <&ccu CLK_GPU>;
+> > +                     assigned-clock-rates = <432000000>;
+> >               };
+>
+> This doesn't really guarantee anything. If the GPU needs to remain at
+> that rate, it should be set in the driver. I just saw that you did
+> send a PR in github, I just merged it.
 
-Ping.
+Lima doesn't set GPU frequency at all since it's different for
+different SoCs and we don't support operation points nor frequency
+scaling yet.
+
+So this change effectively sets GPU frequency to 432MHz on A64 when using lima.
+
+>
+> Maxime
