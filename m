@@ -2,442 +2,317 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD7AC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEC5C2BD09
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2A6207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D7142068E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:31:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575905438;
-	bh=LYjRBh90O5HYAIu5dtpovBGv6ud9Pv4H6SyZaJxCCG4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oPk4UKzN7x4lzWlBX9rZatp1nI1UftSAL/A+RjI1i7SDLNaZlM3azvyLzOKCIQv+M
-	 0M9MxjFNjFQILfE70b7OQNjWQKvczWzFIPcifuZubwMTMrYLeep02dfbt3xmu0SLRI
-	 qlWp7QrwCqe5uXrz0VSIarAhI95CSt9MoiRdzcg0=
+	s=default; t=1575905519;
+	bh=ofqIYIemd1D0b3yzkB6LCuueWfFwja6Mfc7dfyMtTLw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Y9pPVriQEXssin8DFNovnnW3106mLN1IwRrU2QnRyEe+gapMW/R9nnBTNKtRoYy4F
+	 W6pBQSJb3RJOla5ioXROW4SgpaenqOGFwNUhsSL4oS0u4UeANSW1dXS4ChHWB4W2+o
+	 owC1RJCT+gNfrl89FD3tW2QBkTrEEsd2KI1qIPzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbfLIPah (ORCPT
+        id S1726831AbfLIPby (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:30:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38430 "EHLO mail.kernel.org"
+        Mon, 9 Dec 2019 10:31:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbfLIPah (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Dec 2019 10:30:37 -0500
-Received: from localhost (unknown [89.205.132.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726408AbfLIPby (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 10:31:54 -0500
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E073E2068E;
-        Mon,  9 Dec 2019 15:30:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2145324653;
+        Mon,  9 Dec 2019 15:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575905435;
-        bh=LYjRBh90O5HYAIu5dtpovBGv6ud9Pv4H6SyZaJxCCG4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V8dyaFJc26XWEkqrZE7OPAFunXLGJAe4VMYn7kTD+y+HxwNy7kd6zOPRXPxKWP/rh
-         Gg1ejCitUO270AjzGN9I2QwBfkVkvSdsgZhLUDlh21TsKN3bhxbPXJcnV6s+WHKHdM
-         CUcxfPbFLLZbQUwnt8ZZ3X2+S/umolRLJw69IZr4=
-Date:   Mon, 9 Dec 2019 16:30:31 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     shubhrajyoti.datta@gmail.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        michal.simek@xilinx.com, robh+dt@kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
-Subject: Re: [PATCH v2 1/2] uio: uio_xilinx_apm: Add Xilinx AXI performance
- monitor driver
-Message-ID: <20191209153031.GC1280846@kroah.com>
-References: <1575901405-3084-1-git-send-email-shubhrajyoti.datta@gmail.com>
+        s=default; t=1575905513;
+        bh=ofqIYIemd1D0b3yzkB6LCuueWfFwja6Mfc7dfyMtTLw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HeHu/WczDuuQ+b3lqLaESpVihmzfEFNIaCPnKUJzWPJy4JSBtt6+xlLUv3pT2PnR3
+         Lcl0iKZ/xjEKW+lSPCuwP4tlRUQLyowK8UNJZ/+0n54qy+zwA5T3j5HNhZ8923XWFs
+         Fv1mWFCSvAhOX0Hd77vT+5U3V0NXNNAg8ktrn9hQ=
+Received: by mail-qk1-f174.google.com with SMTP id a203so3247493qkc.3;
+        Mon, 09 Dec 2019 07:31:53 -0800 (PST)
+X-Gm-Message-State: APjAAAUCPUNx9m6AQNQUegP7VIM9QUOC/qYVal6CW3prGSocBN7av7Xi
+        2Qfxg9h0gMP+AbGOJwBkOMm36i2tEINLNg2zBg==
+X-Google-Smtp-Source: APXvYqyfkfzQ/i4Lsc3E69M49ZOIyASsab3VnWlhaCawfK85eSyUl3IfhJlvAVUYIQ0qxm+a4uEWnbu24j4V/Gz9iWU=
+X-Received: by 2002:a37:85c4:: with SMTP id h187mr27896771qkd.223.1575905512012;
+ Mon, 09 Dec 2019 07:31:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575901405-3084-1-git-send-email-shubhrajyoti.datta@gmail.com>
+References: <20191207203553.286017-1-robdclark@gmail.com> <20191207203553.286017-2-robdclark@gmail.com>
+ <20191208144533.GA14311@pendragon.ideasonboard.com> <CAF6AEGurXhm28wJym-5GUiTzT1F96rs==GA2Xu+3_r6+gcB3qQ@mail.gmail.com>
+ <20191208182757.GE14311@pendragon.ideasonboard.com> <CAF6AEGsYa0p_6MgO+=gaok5GKkTDeUJYZw0MqiFc7+qUXuNS9A@mail.gmail.com>
+In-Reply-To: <CAF6AEGsYa0p_6MgO+=gaok5GKkTDeUJYZw0MqiFc7+qUXuNS9A@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 9 Dec 2019 09:31:40 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+8jpdNj6yZ4Mst0bVLZHKsY0ArM+wEjOraeD9Om5YyPg@mail.gmail.com>
+Message-ID: <CAL_Jsq+8jpdNj6yZ4Mst0bVLZHKsY0ArM+wEjOraeD9Om5YyPg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: display: panel: document panel-id
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        aarch64-laptops@lists.linaro.org,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 07:53:24PM +0530, shubhrajyoti.datta@gmail.com wrote:
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> 
-> Added driver for Xilinx AXI performance monitor IP.
-> 
-> Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> ---
-> v2:
-> Updated the header
-> 
->  drivers/uio/Kconfig          |  12 ++
->  drivers/uio/Makefile         |   1 +
->  drivers/uio/uio_xilinx_apm.c | 358 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 371 insertions(+)
->  create mode 100644 drivers/uio/uio_xilinx_apm.c
-> 
-> diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
-> index 202ee81..de30312 100644
-> --- a/drivers/uio/Kconfig
-> +++ b/drivers/uio/Kconfig
-> @@ -165,4 +165,16 @@ config UIO_HV_GENERIC
->  	  to network and storage devices from userspace.
->  
->  	  If you compile this as a module, it will be called uio_hv_generic.
-> +
-> +config UIO_XILINX_APM
-> +	tristate "Xilinx AXI Performance Monitor driver"
-> +	depends on MICROBLAZE || ARCH_ZYNQ || ARCH_ZYNQMP
-> +	help
-> +	  This driver is developed for AXI Performance Monitor IP, designed to
-> +	  monitor AXI4 traffic for performance analysis of AXI bus in the
-> +	  system. Driver maps HW registers and parameters to userspace.
-> +
-> +	  To compile this driver as a module, choose M here; the module
-> +	  will be called uio_xilinx_apm.
-> +
->  endif
-> diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
-> index c285dd2..b3464d8 100644
-> --- a/drivers/uio/Makefile
-> +++ b/drivers/uio/Makefile
-> @@ -11,3 +11,4 @@ obj-$(CONFIG_UIO_PRUSS)         += uio_pruss.o
->  obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
->  obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
->  obj-$(CONFIG_UIO_HV_GENERIC)	+= uio_hv_generic.o
-> +obj-$(CONFIG_UIO_XILINX_APM)	+= uio_xilinx_apm.o
-> diff --git a/drivers/uio/uio_xilinx_apm.c b/drivers/uio/uio_xilinx_apm.c
+On Sun, Dec 8, 2019 at 3:24 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Sun, Dec 8, 2019 at 10:28 AM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > On Sun, Dec 08, 2019 at 08:50:32AM -0800, Rob Clark wrote:
+> > > On Sun, Dec 8, 2019 at 6:45 AM Laurent Pinchart wrote:
+> > > > On Sat, Dec 07, 2019 at 12:35:50PM -0800, Rob Clark wrote:
+> > > > > From: Rob Clark <robdclark@chromium.org>
+> > > > >
+> > > > > For devices that have one of several possible panels installed, the
+> > > > > panel-id property gives firmware a generic way to locate and enable the
+> > > > > panel node corresponding to the installed panel.  Example of how to use
+> > > > > this property:
+> > > > >
+> > > > >     ivo_panel {
+> > > > >         compatible = "ivo,m133nwf4-r0";
+> > > > >         panel-id = <0xc5>;
+> > > > >         status = "disabled";
+> > > > >
+> > > > >         ports {
+> > > > >             port {
+> > > > >                 ivo_panel_in_edp: endpoint {
+> > > > >                     remote-endpoint = <&sn65dsi86_out_ivo>;
+> > > > >                 };
+> > > > >             };
+> > > > >         };
+> > > > >     };
+> > > > >
+> > > > >     boe_panel {
+> > > > >         compatible = "boe,nv133fhm-n61";
+> > > > >         panel-id = <0xc4>;
+> > > > >         status = "disabled";
+> > > > >
+> > > > >         ports {
+> > > > >             port {
+> > > > >                 boe_panel_in_edp: endpoint {
+> > > > >                     remote-endpoint = <&sn65dsi86_out_boe>;
+> > > > >                 };
+> > > > >             };
+> > > > >         };
+> > > > >     };
+> > > > >
+> > > > >     sn65dsi86: bridge@2c {
+> > > > >         compatible = "ti,sn65dsi86";
+> > > > >
+> > > > >         ports {
+> > > > >             #address-cells = <1>;
+> > > > >             #size-cells = <0>;
+> > > > >
+> > > > >             port@0 {
+> > > > >                 reg = <0>;
+> > > > >                 sn65dsi86_in_a: endpoint {
+> > > > >                     remote-endpoint = <&dsi0_out>;
+> > > > >                 };
+> > > > >             };
+> > > > >
+> > > > >             port@1 {
+> > > > >                 reg = <1>;
+> > > > >
+> > > > >                 sn65dsi86_out_boe: endpoint@c4 {
+> > > > >                     remote-endpoint = <&boe_panel_in_edp>;
+> > > > >                 };
+> > > > >
+> > > > >                 sn65dsi86_out_ivo: endpoint@c5 {
+> > > > >                     remote-endpoint = <&ivo_panel_in_edp>;
+> > > > >                 };
+> > > > >             };
+> > > > >         };
+> > > > >     };
+> > > > >
+> > > > > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > > > > ---
+> > > > >  .../bindings/display/panel/panel-common.yaml  | 26 +++++++++++++++++++
+> > > > >  1 file changed, 26 insertions(+)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> > > > > index ef8d8cdfcede..6113319b91dd 100644
+> > > > > --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> > > > > @@ -75,6 +75,32 @@ properties:
+> > > > >        in the device graph bindings defined in
+> > > > >        Documentation/devicetree/bindings/graph.txt.
+> > > > >
+> > > > > +  panel-id:
+> > > > > +    description:
+> > > > > +      To support the case where one of several different panels can be installed
+> > > > > +      on a device, the panel-id property can be used by the firmware to identify
+> > > > > +      which panel should have it's status changed to "ok".  This property is not
+> > > > > +      used by the HLOS itself.
+> > > >
+> > > > If your firmware can modify the status property of a panel, it can also
+> > > > add DT nodes. As discussed before, I don't think this belongs to DT.
+> > > > Even if panel-id isn't used by the operating system, you have Linux
+> > > > kernel patches in this series that show that this isn't transparent.
+> > >
+> > > I've already explained several times why this is not feasible.  It
+> > > would require DtbLoader to be familiar with each individual device,
+> > > and be rev'd every time a new device appears.  That is not practical
+> > > at all.
+> > >
+> > > (And fwiw, the ACPI tables describe each panel.. with an ACPI method
+> > > that is passed the the panel-id and returns the appropriate table..
+> > > since DT doesn't have methods, this is the solution.)
+> > >
+> > > I stand by this patch, we can't keep running away from this problem
+> > > and wave the magic firmware wand.
+> >
+> > I believe in firmware solutions more than firmware magic wands :-)
+> >
+>
+> and with that in mind, I think I've come up with a firmware solution,
+> in the form of dtb overlays :-)
+>
+> I've managed to get DtbLoader to find and load a panel overlay based
+> on the panel-id it reads, which drops all patches in the patchset
+> except the last one, which now has this delta:
+
+This looks good to me. The only slight concern I have with it is
+making the overlay filename an ABI. I don't have a better suggestion
+though. How would this work for other vendors or the same panel ID
+(for different panels) used on different platforms? For different
+vendors at least, I guess dtbloader gets the base dtb path somehow and
+the overlay's are relative to that?
+
+> ---------
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile
+> b/arch/arm64/boot/dts/qcom/Makefile
+> index 6498a1ec893f..1a61e8da2521 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +subdir-y += panels
+>  dtb-$(CONFIG_ARCH_QCOM)    += apq8016-sbc.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)    += apq8096-db820c.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)    += ipq8074-hk01.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/panels/Makefile
+> b/arch/arm64/boot/dts/qcom/panels/Makefile
 > new file mode 100644
-> index 0000000..3f69922
+> index 000000000000..dbf55f423555
 > --- /dev/null
-> +++ b/drivers/uio/uio_xilinx_apm.c
-> @@ -0,0 +1,358 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> +++ b/arch/arm64/boot/dts/qcom/panels/Makefile
+> @@ -0,0 +1,3 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_ARCH_QCOM) += panel-c4.dtb
+> +dtb-$(CONFIG_ARCH_QCOM) += panel-c5.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
+> b/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
+> new file mode 100644
+> index 000000000000..ebcf65419dad
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
+> @@ -0,0 +1,17 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
 > +/*
-> + * Xilinx AXI Performance Monitor
+> + * Panel overlay for panel-id 0xc4
 > + *
-> + * Description:
-> + * This driver is developed for AXI Performance Monitor IP,
-> + * designed to monitor AXI4 traffic for performance analysis
-> + * of AXI bus in the system. Driver maps HW registers and parameters
-> + * to userspace. Userspace need not clear the interrupt of IP since
-> + * driver clears the interrupt.
-> + *
-> + * Copyright (c) 2019 Xilinx Inc.
+> + * Copyright (c) 2019, Linaro Ltd.
 > + */
 > +
-> +#include <linux/clk.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/slab.h>
-> +#include <linux/uio_driver.h>
-> +
-> +#define XAPM_IS_OFFSET		0x0038  /* Interrupt Status Register */
-> +#define DRV_NAME		"xilinxapm_uio"
-> +#define DRV_VERSION		"1.0"
-
-No need for a version, the code is in the kernel tree, use the version
-of the kernel instead please.
-
-> +#define UIO_DUMMY_MEMSIZE	4096
-> +#define XAPM_MODE_ADVANCED	1
-> +#define XAPM_MODE_PROFILE	2
-> +#define XAPM_MODE_TRACE		3
-> +
-> +/**
-> + * struct xapm_param - HW parameters structure
-> + * @mode: Mode in which APM is working
-> + * @maxslots: Maximum number of Slots in APM
-> + * @eventcnt: Event counting enabled in APM
-> + * @eventlog: Event logging enabled in APM
-> + * @sampledcnt: Sampled metric counters enabled in APM
-> + * @numcounters: Number of counters in APM
-> + * @metricwidth: Metric Counter width (32/64)
-> + * @sampledwidth: Sampled metric counter width
-> + * @globalcntwidth: Global Clock counter width
-> + * @scalefactor: Scaling factor
-> + * @isr: Interrupts info shared to userspace
-> + * @is_32bit_filter: Flags for 32bit filter
-> + * @clk: Clock handle
-> + */
-> +struct xapm_param {
-> +	u32 mode;
-> +	u32 maxslots;
-> +	u32 eventcnt;
-> +	u32 eventlog;
-> +	u32 sampledcnt;
-> +	u32 numcounters;
-> +	u32 metricwidth;
-> +	u32 sampledwidth;
-> +	u32 globalcntwidth;
-> +	u32 scalefactor;
-> +	u32 isr;
-> +	bool is_32bit_filter;
-> +	struct clk *clk;
-
-You seem to copy this structure to hardware?  How?  This is not a
-definition of a proper hardware interface.  Or are you copying it to
-userspace?  If so, even worse!  This is not how to properly define such
-a structure at all.
-
+> +/dts-v1/;
+> +/plugin/;
+> +/ {
+> +    fragment@0 {
+> +        target-path = "/panel";
+> +        __overlay__ {
+> +            compatible = "boe,nv133fhm-n61";
+> +        };
+> +    };
 > +};
-> +
-> +/**
-> + * struct xapm_dev - Global driver structure
-> + * @info: uio_info structure
-> + * @param: xapm_param structure
-> + * @regs: IOmapped base address
+> diff --git a/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
+> b/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
+> new file mode 100644
+> index 000000000000..0ad5bb6003e3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
+> @@ -0,0 +1,17 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Panel overlay for panel-id 0xc5
+> + *
+> + * Copyright (c) 2019, Linaro Ltd.
 > + */
-> +struct xapm_dev {
-> +	struct uio_info info;
-> +	struct xapm_param param;
-> +	void __iomem *regs;
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +/ {
+> +    fragment@0 {
+> +        target-path = "/panel";
+> +        __overlay__ {
+> +            compatible = "ivo,m133nwf4-r0";
+> +        };
+> +    };
 > +};
-> +
-> +/**
-> + * xapm_handler - Interrupt handler for APM
-> + * @irq: IRQ number
-> + * @info: Pointer to uio_info structure
-> + *
-> + * Return: Always returns IRQ_HANDLED
-> + */
-> +static irqreturn_t xapm_handler(int irq, struct uio_info *info)
-> +{
-> +	struct xapm_dev *xapm = (struct xapm_dev *)info->priv;
+> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> index c35d8099d8eb..92c76afb721c 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> @@ -22,11 +22,13 @@
+>          hsuart0 = &uart6;
+>      };
+>
+> +    /*
+> +     * stub node which defines how panel is connected to bridge, which
+> +     * will be updated by panel specific overlay
+> +     */
+>      panel {
+> -        compatible = "ivo,m133nwf4-r0";
+>          power-supply = <&vlcm_3v3>;
+>          no-hpd;
+> -
+>          ports {
+>              port {
+>                  panel_in_edp: endpoint {
+> ---------
+>
+> Side note, try as I might, I couldn't get the 'target = <&phandle>'
+> approach to work in the overlays, so I ended up going with target-path
+> instead.  From digging thru the fdt_overlay code, I *think* it is
+> because I end up w/ an overlay dtb without symbols.  In the end, I
+> guess target-path works just as well.
 
-DO you need to cast?
+It's the base dtb that needs the symbols I think.
 
-> +	void *ptr;
-> +
-> +	ptr = (unsigned long *)xapm->info.mem[1].addr;
+BTW, to answer the question on #dri-devel, if you wanted to put the
+full panel into an overlay, the way to solve the problem of having
+bridge specific knowledge is defining a connector node. That should
+provide enough abstraction. Presumably the connector is actually the
+same across panels in this situation, so that should match up with the
+actual h/w. It could be possible to have a different physical
+connector populated for each possible panel, but hopefully that's not
+the common case.
 
-No need to cast.  And ptr is a void, not unsigned long *.
-
-> +	/* Clear the interrupt and copy the ISR value to userspace */
-> +	xapm->param.isr = readl(xapm->regs + XAPM_IS_OFFSET);
-> +	writel(xapm->param.isr, xapm->regs + XAPM_IS_OFFSET);
-> +	memcpy(ptr, &xapm->param, sizeof(struct xapm_param));
-
-Where did you just copy this memory to?
-
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +/**
-> + * xapm_getprop - Retrieves dts properties to param structure
-> + * @pdev: Pointer to platform device
-> + * @param: Pointer to param structure
-> + *
-> + * Returns: '0' on success and failure value on error
-> + */
-> +static int xapm_getprop(struct platform_device *pdev, struct xapm_param *param)
-> +{
-> +	u32 mode = 0;
-> +	int ret;
-> +	struct device_node *node;
-> +
-> +	node = pdev->dev.of_node;
-> +
-> +	/* Retrieve required dts properties and fill param structure */
-> +	ret = of_property_read_u32(node, "xlnx,enable-profile", &mode);
-> +	if (ret < 0)
-> +		dev_info(&pdev->dev, "no property xlnx,enable-profile\n");
-
-If it's an error, make it dev_err().  No need to be noisy otherwise.
-Same for all of these.
-
-> +	else if (mode)
-> +		param->mode = XAPM_MODE_PROFILE;
-> +
-> +	ret = of_property_read_u32(node, "xlnx,enable-trace", &mode);
-> +	if (ret < 0)
-> +		dev_info(&pdev->dev, "no property xlnx,enable-trace\n");
-> +	else if (mode)
-> +		param->mode = XAPM_MODE_TRACE;
-> +
-> +	ret = of_property_read_u32(node, "xlnx,num-monitor-slots",
-> +				   &param->maxslots);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "no property xlnx,num-monitor-slots");
-
-Doesn't of_property_read_u32() print an error if it can not be found?
-Don't duplicate the message please.  Same for all of these.
-
-
-> +		return ret;
-> +	}
-> +
-> +	ret = of_property_read_u32(node, "xlnx,enable-event-count",
-> +				   &param->eventcnt);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "no property xlnx,enable-event-count");
-> +		return ret;
-> +	}
-> +
-> +	ret = of_property_read_u32(node, "xlnx,enable-event-log",
-> +				   &param->eventlog);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "no property xlnx,enable-event-log");
-> +		return ret;
-> +	}
-> +
-> +	ret = of_property_read_u32(node, "xlnx,have-sampled-metric-cnt",
-> +				   &param->sampledcnt);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "no property xlnx,have-sampled-metric-cnt");
-> +		return ret;
-> +	}
-> +
-> +	ret = of_property_read_u32(node, "xlnx,num-of-counters",
-> +				   &param->numcounters);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "no property xlnx,num-of-counters");
-> +		return ret;
-> +	}
-> +
-> +	ret = of_property_read_u32(node, "xlnx,metric-count-width",
-> +				   &param->metricwidth);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "no property xlnx,metric-count-width");
-> +		return ret;
-> +	}
-> +
-> +	ret = of_property_read_u32(node, "xlnx,metrics-sample-count-width",
-> +				   &param->sampledwidth);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "no property metrics-sample-count-width");
-> +		return ret;
-> +	}
-> +
-> +	ret = of_property_read_u32(node, "xlnx,global-count-width",
-> +				   &param->globalcntwidth);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "no property xlnx,global-count-width");
-> +		return ret;
-> +	}
-> +
-> +	ret = of_property_read_u32(node, "xlnx,metric-count-scale",
-> +				   &param->scalefactor);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "no property xlnx,metric-count-scale");
-> +		return ret;
-> +	}
-> +
-> +	param->is_32bit_filter = of_property_read_bool(node,
-> +						"xlnx,id-filter-32bit");
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * xapm_probe - Driver probe function
-> + * @pdev: Pointer to the platform_device structure
-> + *
-> + * Returns: '0' on success and failure value on error
-> + */
-> +
-
-Why the blank line?  Why the kernel doc for static functions?
-
-> +static int xapm_probe(struct platform_device *pdev)
-> +{
-> +	struct xapm_dev *xapm;
-> +	struct resource *res;
-> +	int irq;
-> +	int ret;
-> +	void *ptr;
-> +
-> +	xapm = devm_kzalloc(&pdev->dev, (sizeof(struct xapm_dev)), GFP_KERNEL);
-> +	if (!xapm)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	xapm->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(xapm->regs)) {
-> +		dev_err(&pdev->dev, "unable to iomap registers\n");
-> +		return PTR_ERR(xapm->regs);
-> +	}
-> +
-> +	xapm->param.clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(xapm->param.clk)) {
-> +		if (PTR_ERR(xapm->param.clk) != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "axi clock error\n");
-> +		return PTR_ERR(xapm->param.clk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(xapm->param.clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Unable to enable clock.\n");
-> +		return ret;
-> +	}
-> +	pm_runtime_get_noresume(&pdev->dev);
-> +	pm_runtime_set_active(&pdev->dev);
-> +	pm_runtime_enable(&pdev->dev);
-> +	/* Initialize mode as Advanced so that if no mode in dts, default
-> +	 * is Advanced
-> +	 */
-
-Odd commenting style, this isn't the network stack :)
-
-
-> +	xapm->param.mode = XAPM_MODE_ADVANCED;
-> +	ret = xapm_getprop(pdev, &xapm->param);
-> +	if (ret < 0)
-> +		goto err_clk_dis;
-> +
-> +	xapm->info.mem[0].name = "xilinx_apm";
-
-Not driver name?  Why have that #define then?
-
-> +	xapm->info.mem[0].addr = res->start;
-> +	xapm->info.mem[0].size = resource_size(res);
-> +	xapm->info.mem[0].memtype = UIO_MEM_PHYS;
-> +
-> +	xapm->info.mem[1].addr = (unsigned long)kzalloc(UIO_DUMMY_MEMSIZE,
-> +							GFP_KERNEL);
-> +	ptr = (unsigned long *)xapm->info.mem[1].addr;
-> +	xapm->info.mem[1].size = UIO_DUMMY_MEMSIZE;
-> +	xapm->info.mem[1].memtype = UIO_MEM_LOGICAL;
-> +
-> +	xapm->info.name = "axi-pmon";
-> +	xapm->info.version = DRV_VERSION;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(&pdev->dev, "unable to get irq\n");
-> +		ret = irq;
-> +		goto err_clk_dis;
-> +	}
-> +
-> +	xapm->info.irq = irq;
-> +	xapm->info.handler = xapm_handler;
-> +	xapm->info.priv = xapm;
-> +	xapm->info.irq_flags = IRQF_SHARED;
-> +
-> +	memcpy(ptr, &xapm->param, sizeof(struct xapm_param));
-
-Where did you just copy this to?
-
-> +
-> +	ret = uio_register_device(&pdev->dev, &xapm->info);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "unable to register to UIO\n");
-> +		goto err_clk_dis;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, xapm);
-> +
-> +	dev_info(&pdev->dev, "Probed Xilinx APM\n");
-
-Again, this should be quiet if all goes well, didn't I say that before?
-
-Finally, why do you need a UIO driver at all here?  Why can't the
-current ones work properly for you?
-
-thanks,
-
-greg k-h
+Rob
