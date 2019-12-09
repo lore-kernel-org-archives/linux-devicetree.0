@@ -2,147 +2,133 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF43AC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68186C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7ECC2075B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4D72075B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:20:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="nIRaegXK";
-	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="SuMFst1G"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LDRSB5vT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfLIJQl (ORCPT
+        id S1727514AbfLIJUv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:16:41 -0500
-Received: from mx08-00252a01.pphosted.com ([91.207.212.211]:49720 "EHLO
-        mx08-00252a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727370AbfLIJQk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:16:40 -0500
-Received: from pps.filterd (m0102629.ppops.net [127.0.0.1])
-        by mx08-00252a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB99Cnw7018862
-        for <devicetree@vger.kernel.org>; Mon, 9 Dec 2019 09:16:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=raspberrypi.org; h=subject : to :
- cc : references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp;
- bh=mYEfhxjM0ILb+XMlHOtp9XHaBPVEI+/6QQqocgNXGdY=;
- b=nIRaegXKspiKE88HxNH6WjH7FyQNO5dMclhW890Uu2Fdq29E7bj8StIEi3DIiLDpD5Tt
- woBdm74F/5iAx90vefct5/fTyXpfgeTkevSleiiFaEjhwa0ZYrm8fvdYIrsMzpUq+mH0
- ELbzSFy9yrBQ4PbhZpAMiUzVsUzH6WjYy1WTDwbMP8o144d1ZtWAxqy3Tk0VPIQlScaC
- AjhScw409wDtubAiG9otQOfwCsqUgFXY27h13RIYhHUErGtT+kJ2+5KD3r2I0IOe0kFd
- G/tEXbDtsONuRzRnOqZnfZ4Jzqxa4ezZmUsczCBH9Rd+D6pY2OuZQXztnpULZrn7JGlt Dg== 
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        by mx08-00252a01.pphosted.com with ESMTP id 2wr1er0vf9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK)
-        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 09:16:39 +0000
-Received: by mail-wm1-f70.google.com with SMTP id y125so6862274wmg.1
-        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 01:16:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mYEfhxjM0ILb+XMlHOtp9XHaBPVEI+/6QQqocgNXGdY=;
-        b=SuMFst1GNtlvgI4cGzuoakXgAu2yerkgS/GDEcxL7qi9KS61f4biV8Fp04WzdqOFvn
-         j1Gp7UyQPmGUKIx4MxpdKsGM24SzZGWzt/fIRXi8bPyMFBERrKD4MBhBhYMoo8ZXUIxP
-         P48gvIosiJqetY/6b62Qk027EewfB7LmrwKB2YskMOKcQEClBnyig6OPlKOUeXTP095S
-         EbgVNQobXZjDI8CK0EhfTfs03R7Fzsd0/Uh0xNVlFtrxShdzlqfsT/p7ZEA7VFEGhgFc
-         R+Iqq3a32SCC7tlondsDN8+BEzTPt30nffEsF+4JSL4340+SFl0EpRmqR4Zs17A5lGt7
-         aYsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mYEfhxjM0ILb+XMlHOtp9XHaBPVEI+/6QQqocgNXGdY=;
-        b=uoVNUmxhTtJQo/gkieaydcHNsEYhtCmPkb1UkX3403/GG1h9ZpQalrdBqmm6T+K2qk
-         4BD1XqHlpa0sr8cdLrb7gtm4L2UO2acCUMNeIj1j+ShqSs6HmvqktF5L8lK7ls+iMat6
-         1r6cVm0Mzcc2Up/IJl+5rY/S25aZ86SsxGAI645CJP4sYi3/0YDyZxe197ARQHiR72V2
-         mAx9ZUWeniy095C63EFGq+srvCsXkq8130JaaWmcHYYETeK+4PcuFrfffpK+SVQULjWJ
-         GxBAVq/KhomfcqebCvw4YXZGcDhElqDEH3YAmNuwnihojaJ+ig3iPnQnox5JUuRXaGGf
-         gKkA==
-X-Gm-Message-State: APjAAAVC9T63UC5aF4I9rg9Rx7d9sEy24idBA3gKD8svMOXKLa+lcPWY
-        DECLl9qd2jZ/JK8GSlG6kF9huJQwzRHGr2jyEiWzCpZzhxIiBVKQ08xIbXnNeugLZrSrsOgXvcf
-        1okbFg7oC9MzK/KleM5K1WQ==
-X-Received: by 2002:adf:d4ca:: with SMTP id w10mr845422wrk.53.1575882998148;
-        Mon, 09 Dec 2019 01:16:38 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzT3Io5pOspq+kl6pPKQBqKVgBf9LVLOJQm7nVHNRzkVmlSJL3zQmrWoRTiXlnHeBQS8aQY4w==
-X-Received: by 2002:adf:d4ca:: with SMTP id w10mr845391wrk.53.1575882997834;
-        Mon, 09 Dec 2019 01:16:37 -0800 (PST)
-Received: from ?IPv6:2a00:1098:3142:14:340b:2c9a:9ebb:aeea? ([2a00:1098:3142:14:340b:2c9a:9ebb:aeea])
-        by smtp.gmail.com with ESMTPSA id f1sm12909270wml.11.2019.12.09.01.16.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 01:16:36 -0800 (PST)
-Subject: Re: [PATCH] ARM: dts: bcm2711: fix soc's node dma-ranges
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Mon, 9 Dec 2019 04:20:51 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49442 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfLIJUu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:20:50 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB99Kgt1025891;
+        Mon, 9 Dec 2019 03:20:42 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575883242;
+        bh=dmmRTLHcKKOhWpZ8gdUFaYUVoMPoJ3qut66Ws5fy6ZI=;
+        h=From:To:CC:Subject:Date;
+        b=LDRSB5vTC1A1kbf1luw+acC1iBRooExqA3ZIBN7nt/QZ7oK41NNG5FnCcGiareWWL
+         3ii3rtK1ZWbGFX/l23Jm9pTQu/RKEmeCLc8zd7frGE9fzoc74IAObIdTfRegAoc9MV
+         uR8BlKAVNvp385qooITx39/4dtOSAwhIeNiQjZfY=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB99Kgkc004900
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Dec 2019 03:20:42 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 03:20:42 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 03:20:42 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB99Kccw087697;
+        Mon, 9 Dec 2019 03:20:39 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
-Cc:     mbrugger@suse.com, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191204125633.27696-1-nsaenzjulienne@suse.de>
- <711470d3-e683-69d4-8f4e-791a76faab29@gmail.com>
- <e72de603-2ad9-5a3b-109e-8ee14bf3293c@raspberrypi.org>
- <b778e086-378d-9271-6370-7fd4e60ae250@gmail.com>
-From:   Phil Elwell <phil@raspberrypi.org>
-Message-ID: <c085e99f-c1b3-1729-0170-fa17a1aea995@raspberrypi.org>
-Date:   Mon, 9 Dec 2019 09:16:35 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Murray <andrew.murray@arm.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 00/13] Add PCIe support to TI's J721E SoC
+Date:   Mon, 9 Dec 2019 14:51:34 +0530
+Message-ID: <20191209092147.22901-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <b778e086-378d-9271-6370-7fd4e60ae250@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-09_01:2019-12-09,2019-12-08 signatures=0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06/12/2019 18:13, Florian Fainelli wrote:
-> On 12/6/19 2:16 AM, Phil Elwell wrote:
->> Hi Nicolas,
->>
->> On 06/12/2019 00:08, Florian Fainelli wrote:
->>> On 12/4/19 4:56 AM, Nicolas Saenz Julienne wrote:
->>>> Raspberry Pi's firmware has a feature to select how much memory to
->>>> reserve for its GPU called 'gpu_mem'. The possible values go from 16MB
->>>> to 944MB, with a default of 64MB. This memory resides in the topmost
->>>> part of the lower 1GB memory area and grows bigger expanding towards the
->>>> begging of memory.
->>>>
->>>> It turns out that with low 'gpu_mem' values (16MB and 32MB) the size of
->>>> the memory available to the system in the lower 1GB area can outgrow the
->>>> interconnect's dma-range as its size was selected based on the maximum
->>>> system memory available given the default gpu_mem configuration. This
->>>> makes that memory slice unavailable for DMA. And may cause nasty kernel
->>>> warnings if CMA happens to include it.
->>>>
->>>> Change soc's dma-ranges to really reflect it's HW limitation, which is
->>>> being able to only DMA to the lower 1GB area.
->>>>
->>>> Fixes: 7dbe8c62ceeb ("ARM: dts: Add minimal Raspberry Pi 4 support")
->>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->>>> ---
->>>>
->>>> NOTE: I'd appreciate if someone from the RPi foundation commented on
->>>> this as it's something that I'll propose to be backported to their tree.
->>
->> The 0x3c000000 size was a mistake that arose from c0000000 + 3c000000 =
->> fc000000, but that is mixing apples and oranges (actually DMA addresses
->> and host physical addresses). Please correct it as you are proposing.
-> 
-> Do you want to add an Acked-by or Reviewed-by tag to make this statement
-> official?
+TI's J721E SoC uses Cadence PCIe core to implement both RC mode
+and EP mode.
 
-Here you go:
+The high level features are:
+  *) Supports Legacy, MSI and MSI-X interrupt
+  *) Supports upto GEN4 speed mode
+  *) Supports SR-IOV
+  *) Supports multiple physical function
+  *) Ability to route all transactions via SMMU
 
-Reviewed-by: Phil Elwell <phil@raspberrypi.org>
+This patch series
+  *) Add support in Cadence PCIe core to be used for TI's J721E SoC
+  *) Add a driver for J721E PCIe wrapper
+
+This is a trimmed down series of the initial RFC series [1].
+
+Changes from RFC [1]:
+  *) Ability to route all transactions via SMMU is removed
+  *) SR-IOV support is removed
+  *) Miscellaneous improvement to endpoint core is removed
+
+All these will be sent as smaller series.
+
+I've also pushed the series along with device tree changes [2].
+
+[1] -> https://lkml.org/lkml/2019/6/4/619
+[2] -> https://github.com/kishon/linux-wip.git j7_pci_v1
+
+Kishon Vijay Abraham I (13):
+  PCI: cadence: Remove stray "pm_runtime_put_sync()" in error path
+  linux/kernel.h: Add PTR_ALIGN_DOWN macro
+  PCI: cadence: Add support to use custom read and write accessors
+  PCI: cadence: Add support to start link and verify link status
+  PCI: cadence: Add read and write accessors to perform only 32-bit
+    accesses
+  PCI: cadence: Allow pci_host_bridge to have custom pci_ops
+  PCI: cadence: Add new *ops* for CPU addr fixup
+  PCI: cadence: Use local management register to configure Vendor ID
+  dt-bindings: PCI: Add host mode dt-bindings for TI's J721E SoC
+  dt-bindings: PCI: Add EP mode dt-bindings for TI's J721E SoC
+  PCI: j721e: Add TI J721E PCIe driver
+  misc: pci_endpoint_test: Add J721E in pci_device_id table
+  MAINTAINERS: Add Kishon Vijay Abraham I for TI J721E SoC PCIe
+
+ .../bindings/pci/ti,j721e-pci-ep.yaml         | 113 +++++
+ .../bindings/pci/ti,j721e-pci-host.yaml       | 161 +++++++
+ MAINTAINERS                                   |   3 +-
+ drivers/misc/pci_endpoint_test.c              |   9 +
+ drivers/pci/controller/cadence/Kconfig        |  23 +
+ drivers/pci/controller/cadence/Makefile       |   1 +
+ drivers/pci/controller/cadence/pci-j721e.c    | 430 ++++++++++++++++++
+ .../pci/controller/cadence/pcie-cadence-ep.c  |  10 +-
+ .../controller/cadence/pcie-cadence-host.c    |  55 ++-
+ drivers/pci/controller/cadence/pcie-cadence.c |  48 +-
+ drivers/pci/controller/cadence/pcie-cadence.h | 133 +++++-
+ include/linux/kernel.h                        |   1 +
+ 12 files changed, 958 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+ create mode 100644 drivers/pci/controller/cadence/pci-j721e.c
+
+-- 
+2.17.1
+
