@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D552C2D0BE
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB105C04E30
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D642624656
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80EC5214D8
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:12:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DKcEK1cO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tts/uxwA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfLISL7 (ORCPT
+        id S1726687AbfLISMB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:11:59 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37145 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbfLISL7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 13:11:59 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f129so314365wmf.2
-        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 10:11:57 -0800 (PST)
+        Mon, 9 Dec 2019 13:12:01 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33143 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbfLISMA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 13:12:00 -0500
+Received: by mail-wr1-f67.google.com with SMTP id b6so17303513wrq.0
+        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 10:11:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tMr0YtGSE17WnD557NimiGUSbd3CWS+6jPhD283bpnk=;
-        b=DKcEK1cOMdwaV5V0f6q2cMbZmPW7gZYu64KpfMr2+WQ6ycKdbRUfNWPgfRV3F0vBHs
-         7UKDB03yyST3MYk9fbA9XVMuoUvaJKKQkwof4LICYRJRS3vsx2X/+IRlHHkrXtj38MZd
-         XN4l1HDeDs1f9EUr0SUtKlD6xRtsiEHYQeTGaBmIRKMTj5SVqV4HFWpcGuqRRJGdZ1gI
-         kfKDRtVBKeIares4//dnkrP4bvMLWjLbHQGX8fRDR5CGx0bHULy1wklyi2xjvByTGucj
-         bVReQzCTfZvXJkf6xdLU0s7b5fdCwsUjRbzpjiO9Igfd/61c10uwJW+il7syzp8yFqe6
-         fhoA==
+        bh=KOPwmsVGim8uksddBYEL5Xr/XEk+fQ6sygiouqBeFpU=;
+        b=Tts/uxwAulwDWx38JQ7vQN1vchjW9BMQPwqFcz5u8er0ybt0fOUvBHt+WEAB24gXyc
+         BlO6xJwA59upCQs0IseN693yMmNMgDbbFgWrWiT8ZWofkwrA7Seq9O/D4Gx//cyDdaGE
+         /guIbq5MoYH70/5n63vUCderClZlhJs3YBa2U9WpDRuoNG3S47hAE8+Ww4p9KU6i+ziJ
+         sceo5n1ghS7WbisS3mMyOWUi5Kf2+viwAkPdhnJOYSbUXUfLBHgRWi46jnVUHnae9E52
+         Wr8TWOQ6BMPwQ+bvP0D1ypo0U6Cun3Y1noijEKy7UPoDC+Idhr8iP2SN8THAoGBBnKww
+         bVHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tMr0YtGSE17WnD557NimiGUSbd3CWS+6jPhD283bpnk=;
-        b=g1p4WUxYoNcAisoQ0lCMmUjkQ5NW95xnh78KFz4zgrMljCPX4nRWzSJteR+XGWmSAH
-         X2kCESnmNBBnBXgHlon0t30E6RypzuhSmBkpf9wWMw1oHO2BvNc0t8zAvFal05c9IPz8
-         Ka/LtdMqcuymYlDVs3kxMj/y2iz8WUZBMW+WHfNmyWrtM5YN8w5w2kPXbZyiUfyDryab
-         UpRvhJAxDbjEQcFzIRyPG97tK77JeAuIBMMdO6+v+3lYuTFWeAkCFPS01Q/W8rXvyrb1
-         0v2C0gp0cxcLTrUTCbbqQJoey2QEX+3FQYBw6L3gKJjAltMz4+0PuiEGEYh7qf2cpbd9
-         rkzg==
-X-Gm-Message-State: APjAAAVsSuni4bGYlTO2caGYzGy79HlabBM1f6OgTLnIrHaUpvjGEISx
-        Pr7QWrGxTSUjhbP9mDa9/FRUnQ==
-X-Google-Smtp-Source: APXvYqyn5PjD8xxtXCXK1S6VlNWGbZuYGwg+csNTdA3fwLmXia8edlDe7V+Gqp7sUAYQaaZu77s53Q==
-X-Received: by 2002:a1c:7d92:: with SMTP id y140mr276297wmc.145.1575915117196;
-        Mon, 09 Dec 2019 10:11:57 -0800 (PST)
+        bh=KOPwmsVGim8uksddBYEL5Xr/XEk+fQ6sygiouqBeFpU=;
+        b=ja+5UTDCLjuFNl6kD/GO5jYaGZ23gjhAmPVMxF4L9e87r+B4FvzbX94Ma/mfTeyFge
+         mzPSC3k8Mg2JVbdVjDIh5KTNFgXQL0XDfjtua0g1yqLhlgA9oTO5HtRNuNBX1sIMy7Aw
+         1WHIEwZgVpdd4sYQivaAWTVIjuI8/t9C9jcz6+5wvuRKXXT7Z8EfrZyr690QjzPwQ0RH
+         pltvOwMzdwTpW5tWPnK0RmXWS81ElYUKOOXJMdNPhxqi5HI6nTgs9VU0RjYx0ZLtmdit
+         Gu+7/f4gi4MhfG0aQkx26W5eGPcrhda7Q8LX9R4+ie+lgpF3rUmvPsOGC5STQbSM+juI
+         Ud/Q==
+X-Gm-Message-State: APjAAAVYSWWhO8JOCQKRXucctF/VMVWLXr3Gjv0DrbBd5WEJALG55h7L
+        5zc5Mtr9kf/wkVXbsNecRmo8hw==
+X-Google-Smtp-Source: APXvYqwd75VErNxunler74D2aYIuUwxtIPPyshTDCbkZm56YpyIMcPHPAkjo50SdxP2In7GjOAaXhw==
+X-Received: by 2002:adf:f581:: with SMTP id f1mr3704624wro.264.1575915118236;
+        Mon, 09 Dec 2019 10:11:58 -0800 (PST)
 Received: from localhost.localdomain (adsl-62-167-101-88.adslplus.ch. [62.167.101.88])
-        by smtp.gmail.com with ESMTPSA id h2sm309838wrv.66.2019.12.09.10.11.56
+        by smtp.gmail.com with ESMTPSA id h2sm309838wrv.66.2019.12.09.10.11.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 10:11:56 -0800 (PST)
+        Mon, 09 Dec 2019 10:11:57 -0800 (PST)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
@@ -65,9 +65,9 @@ Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
         will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
         eric.auger@redhat.com, jonathan.cameron@huawei.com,
         zhangfei.gao@linaro.org
-Subject: [PATCH v3 01/13] iommu/arm-smmu-v3: Drop __GFP_ZERO flag from DMA allocation
-Date:   Mon,  9 Dec 2019 19:05:02 +0100
-Message-Id: <20191209180514.272727-2-jean-philippe@linaro.org>
+Subject: [PATCH v3 02/13] dt-bindings: document PASID property for IOMMU masters
+Date:   Mon,  9 Dec 2019 19:05:03 +0100
+Message-Id: <20191209180514.272727-3-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191209180514.272727-1-jean-philippe@linaro.org>
 References: <20191209180514.272727-1-jean-philippe@linaro.org>
@@ -78,60 +78,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since commit 518a2f1925c3 ("dma-mapping: zero memory returned from
-dma_alloc_*"), dma_alloc_* always initializes memory to zero, so there
-is no need to use dma_zalloc_* or pass the __GFP_ZERO flag anymore.
+On Arm systems, some platform devices behind an SMMU may support the PASID
+feature, which offers multiple address space. Let the firmware tell us
+when a device supports PASID.
 
-The flag was introduced by commit 04fa26c71be5 ("iommu/arm-smmu: Convert
-DMA buffer allocations to the managed API"), since the managed API
-didn't provide a dmam_zalloc_coherent() function.
-
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/iommu/iommu.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index effe72eb89e7..d4e8b7f8d9f4 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -1675,7 +1675,7 @@ static int arm_smmu_init_l2_strtab(struct arm_smmu_device *smmu, u32 sid)
+diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
+index 5a8b4624defc..3c36334e4f94 100644
+--- a/Documentation/devicetree/bindings/iommu/iommu.txt
++++ b/Documentation/devicetree/bindings/iommu/iommu.txt
+@@ -86,6 +86,12 @@ have a means to turn off translation. But it is invalid in such cases to
+ disable the IOMMU's device tree node in the first place because it would
+ prevent any driver from properly setting up the translations.
  
- 	desc->span = STRTAB_SPLIT + 1;
- 	desc->l2ptr = dmam_alloc_coherent(smmu->dev, size, &desc->l2ptr_dma,
--					  GFP_KERNEL | __GFP_ZERO);
-+					  GFP_KERNEL);
- 	if (!desc->l2ptr) {
- 		dev_err(smmu->dev,
- 			"failed to allocate l2 stream table for SID %u\n",
-@@ -2161,8 +2161,7 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
- 		return asid;
++Optional properties:
++--------------------
++- pasid-num-bits: Some masters support multiple address spaces for DMA, by
++  tagging DMA transactions with an address space identifier. By default,
++  this is 0, which means that the device only has one address space.
++
  
- 	cfg->cdptr = dmam_alloc_coherent(smmu->dev, CTXDESC_CD_DWORDS << 3,
--					 &cfg->cdptr_dma,
--					 GFP_KERNEL | __GFP_ZERO);
-+					 &cfg->cdptr_dma, GFP_KERNEL);
- 	if (!cfg->cdptr) {
- 		dev_warn(smmu->dev, "failed to allocate context descriptor\n");
- 		ret = -ENOMEM;
-@@ -2883,7 +2882,7 @@ static int arm_smmu_init_strtab_2lvl(struct arm_smmu_device *smmu)
- 
- 	l1size = cfg->num_l1_ents * (STRTAB_L1_DESC_DWORDS << 3);
- 	strtab = dmam_alloc_coherent(smmu->dev, l1size, &cfg->strtab_dma,
--				     GFP_KERNEL | __GFP_ZERO);
-+				     GFP_KERNEL);
- 	if (!strtab) {
- 		dev_err(smmu->dev,
- 			"failed to allocate l1 stream table (%u bytes)\n",
-@@ -2910,7 +2909,7 @@ static int arm_smmu_init_strtab_linear(struct arm_smmu_device *smmu)
- 
- 	size = (1 << smmu->sid_bits) * (STRTAB_STE_DWORDS << 3);
- 	strtab = dmam_alloc_coherent(smmu->dev, size, &cfg->strtab_dma,
--				     GFP_KERNEL | __GFP_ZERO);
-+				     GFP_KERNEL);
- 	if (!strtab) {
- 		dev_err(smmu->dev,
- 			"failed to allocate linear stream table (%u bytes)\n",
+ Notes:
+ ======
 -- 
 2.24.0
 
