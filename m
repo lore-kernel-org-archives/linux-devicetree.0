@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97715C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545EDC00454
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7209221556
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F677205C9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfLISnO (ORCPT
+        id S1727026AbfLISnP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:43:14 -0500
-Received: from mail.bugwerft.de ([46.23.86.59]:34256 "EHLO mail.bugwerft.de"
+        Mon, 9 Dec 2019 13:43:15 -0500
+Received: from mail.bugwerft.de ([46.23.86.59]:34260 "EHLO mail.bugwerft.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbfLISm7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1726822AbfLISm7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Mon, 9 Dec 2019 13:42:59 -0500
 Received: from zenbar.fritz.box (pD95EF75D.dip0.t-ipconnect.de [217.94.247.93])
-        by mail.bugwerft.de (Postfix) with ESMTPSA id 33BBC2E5CE1;
-        Mon,  9 Dec 2019 18:29:09 +0000 (UTC)
+        by mail.bugwerft.de (Postfix) with ESMTPSA id A76232E5CDE;
+        Mon,  9 Dec 2019 18:29:06 +0000 (UTC)
 From:   Daniel Mack <daniel@zonque.org>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
@@ -29,9 +29,9 @@ To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
 Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
         pascal.huerst@gmail.com, Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 03/10] dt-bindings: gpio: Add documentation for AD242x GPIO controllers
-Date:   Mon,  9 Dec 2019 19:35:04 +0100
-Message-Id: <20191209183511.3576038-5-daniel@zonque.org>
+Subject: [PATCH 03/10] dt-bindings: gpio: Add documentation for ad242x GPIO controllers
+Date:   Mon,  9 Dec 2019 19:35:03 +0100
+Message-Id: <20191209183511.3576038-4-daniel@zonque.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191209183511.3576038-1-daniel@zonque.org>
 References: <20191209183511.3576038-1-daniel@zonque.org>
