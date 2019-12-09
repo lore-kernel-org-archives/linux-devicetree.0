@@ -2,65 +2,101 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADFAC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6FFC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82DD82077B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E3F2080D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575916602;
+	bh=hhbUlAid62Nmj6QnboRKYMrqoC20ui0184h6mt7BBVM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=k6p/PXyqWTV/LCwu535qst11PnUCg14CB7HK8FUzbbw1gx2on7jXbnacuvdcb5ZXB
+	 bOAWWSwCl6VlajqBtsjqdThsLrIRpisr+RBegqISHicxUcy6sgiXOaLWcCwcinB26n
+	 fBYfSgIRRFeZP5gg7TKDJ58ZVABzhjDPUYneJeNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfLISbU (ORCPT
+        id S1726365AbfLISgm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:31:20 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:33948 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbfLISbU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 13:31:20 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id EDB8415434E25;
-        Mon,  9 Dec 2019 10:31:19 -0800 (PST)
-Date:   Mon, 09 Dec 2019 10:31:19 -0800 (PST)
-Message-Id: <20191209.103119.563197602023949500.davem@davemloft.net>
-To:     dmurphy@ti.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        bunk@kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        grygorii.strashko@ti.com
-Subject: Re: [PATCH net-next v2 0/2] Rebase of patches
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <898c9346-311e-4c93-9f83-afe255b54243@ti.com>
-References: <20191209175943.23110-1-dmurphy@ti.com>
-        <20191209.101005.1980841296607612612.davem@davemloft.net>
-        <898c9346-311e-4c93-9f83-afe255b54243@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Mon, 9 Dec 2019 13:36:42 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:33655 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726265AbfLISgm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 13:36:42 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ieNtd-0005gq-O4; Mon, 09 Dec 2019 19:36:37 +0100
+Date:   Mon, 9 Dec 2019 18:36:36 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/2] Add iProc IDM device support
+Message-ID: <20191209183636.6d708bfd@why>
+In-Reply-To: <bd90ba80-9aac-e406-9066-64e975e5b10b@broadcom.com>
+References: <20191202233127.31160-1-ray.jui@broadcom.com>
+        <20191207173914.353f768d@why>
+        <bd90ba80-9aac-e406-9066-64e975e5b10b@broadcom.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 09 Dec 2019 10:31:20 -0800 (PST)
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: ray.jui@broadcom.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, rayagonda.kokatanur@broadcom.com, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Dan Murphy <dmurphy@ti.com>
-Date: Mon, 9 Dec 2019 12:23:46 -0600
+On Mon, 9 Dec 2019 10:02:53 -0800
+Ray Jui <ray.jui@broadcom.com> wrote:
 
-> I understand what a cover letter is.
+> On 12/7/19 9:39 AM, Marc Zyngier wrote:
+> > On Mon,  2 Dec 2019 15:31:25 -0800
+> > Ray Jui <ray.jui@broadcom.com> wrote:
+> >   
+> >> The Broadcom iProc IDM device allows control and monitoring of ASIC internal
+> >> bus transactions. Most importantly, it can be configured to detect bus
+> >> transaction timeout. In such case, critical information such as transaction
+> >> address that caused the error, bus master ID of the transaction that caused
+> >> the error, and etc., are made available from the IDM device.  
+> > 
+> > This seems to have many of the features of an EDAC device reporting
+> > uncorrectable errors.
+> > 
+> > Is there any reason why it is not implemented as such?
+> > 
+> > Thanks,
+> > 
+> > 	M.
+> >   
+> 
+> I thought EDAC errors (in fact, in our case, that's fatal rather than
+> uncorrectable) are mostly for DDR. Is my understanding incorrect?
 
-As seen below, perhaps you don't
+No, they are for HW errors in general. There is no real limitation of
+scope, as far as I understand. Recently, the Annapurna guys came up
+with a similar HW block, and were convinced to make it an EDAC device.
 
-> The commit messages should explain in detail
-> what is being changed as the cover letters are not committed to the
-> kernel.
+See [1] for details.
 
-Not true.
+Thanks,
 
-I _always_ add them, for every networking patch series.
+	M.
 
-They go into the merge commit I create for your patch series.
+[1] https://lore.kernel.org/linux-devicetree/1570707681-865-1-git-send-email-talel@amazon.com/
+-- 
+Jazz is not dead. It just smells funny...
