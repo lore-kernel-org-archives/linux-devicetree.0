@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D1FC2BD09
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A139C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3B120CC7
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431F120882
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:21:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GCpEm5+D"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XotwPxFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfLIJVH (ORCPT
+        id S1727664AbfLIJVU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:21:07 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:59884 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727598AbfLIJVG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:21:06 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB99Kxfc046007;
-        Mon, 9 Dec 2019 03:20:59 -0600
+        Mon, 9 Dec 2019 04:21:20 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49950 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727619AbfLIJVT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:21:19 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB99LCe6080946;
+        Mon, 9 Dec 2019 03:21:12 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575883259;
-        bh=6XFbTAUZNjwfB+XXzjz0shhOgKng/V2zDEQmkwRYYTY=;
+        s=ti-com-17Q1; t=1575883272;
+        bh=YobrPQ65XL9eRBwZXhJ3WyYimyOjvLKJGFnM3tEfmto=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=GCpEm5+DP1Fjc4PrP2sa17KpQEPowhR1kSN+uDmICrxU64tQje2IY/y7SGqmSlOm9
-         36yAPuJNyrfk4o9kxfin5pN+Nz2xJt9scWhzQgrmd0E7oE1L856+uhWxMQ71u6x7fo
-         1jKcP8V1HbY+B6nP6+CX4zVQS5gMVT6REi9fBlmY=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB99KxfV042447
+        b=XotwPxFcTCJ+IQk3kLoL1x6tP2aCnh35v9/evsXiBBpMO53mriTy6h/QESs6ybOw3
+         6gsGvsyXSPXk2skQt97w28lsZKSHJpXBmhS2PpGhl/Ks9Zn4a59hLT3yYmOEYqr7Nk
+         ecBg+wwoZkbFxO6a6xcJovjv2wf0HVWNHz+ciLa0=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB99LCeB005933
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Dec 2019 03:20:59 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 9 Dec 2019 03:21:12 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 03:20:58 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 03:21:12 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 03:20:58 -0600
+ Frontend Transport; Mon, 9 Dec 2019 03:21:12 -0600
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB99Kcd3087697;
-        Mon, 9 Dec 2019 03:20:56 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB99Kcd7087697;
+        Mon, 9 Dec 2019 03:21:09 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -56,9 +56,9 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
 CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 05/13] PCI: cadence: Add read and write accessors to perform only 32-bit accesses
-Date:   Mon, 9 Dec 2019 14:51:39 +0530
-Message-ID: <20191209092147.22901-6-kishon@ti.com>
+Subject: [PATCH 09/13] dt-bindings: PCI: Add host mode dt-bindings for TI's J721E SoC
+Date:   Mon, 9 Dec 2019 14:51:43 +0530
+Message-ID: <20191209092147.22901-10-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191209092147.22901-1-kishon@ti.com>
 References: <20191209092147.22901-1-kishon@ti.com>
@@ -70,80 +70,182 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Certain platforms like TI's J721E allow only 32-bit register accesses.
-Add read and write accessors to perform only 32-bit accesses in order to
-support platfroms like TI's J721E.
+Add host mode dt-bindings for TI's J721E SoC.
 
+Cc: Rob Herring <robh+dt@kernel.org>
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/cadence/pcie-cadence.c | 40 +++++++++++++++++++
- drivers/pci/controller/cadence/pcie-cadence.h |  2 +
- 2 files changed, 42 insertions(+)
+ .../bindings/pci/ti,j721e-pci-host.yaml       | 161 ++++++++++++++++++
+ 1 file changed, 161 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
-index cd795f6fc1e2..de5b3b06f2d0 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence.c
-@@ -7,6 +7,46 @@
- 
- #include "pcie-cadence.h"
- 
-+u32 cdns_pcie_read32(void __iomem *addr, int size)
-+{
-+	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
-+	unsigned int offset = (unsigned long)addr & 0x3;
-+	u32 val = readl(aligned_addr);
+diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+new file mode 100644
+index 000000000000..96184e1f419f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+@@ -0,0 +1,161 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/pci/ti,j721e-pci-host.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-+		pr_err("Invalid Address in function:%s\n", __func__);
-+		return 0;
-+	}
++title: TI J721E PCI Host (PCIe Wrapper)
 +
-+	if (size > 2)
-+		return val;
++maintainers:
++  - Kishon Vijay Abraham I <kishon@ti.com>
 +
-+	return (val >> (8 * offset)) & ((1 << (size * 8)) - 1);
-+}
++properties:
++  compatible:
++      enum:
++          - ti,j721e-pcie-host
 +
-+void cdns_pcie_write32(void __iomem *addr, int size, u32 value)
-+{
-+	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
-+	unsigned int offset = (unsigned long)addr & 0x3;
-+	u32 mask;
-+	u32 val;
++  reg:
++    maxItems: 4
 +
-+	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-+		pr_err("Invalid Address in function:%s\n", __func__);
-+		return;
-+	}
++  reg-names:
++    items:
++      - const: intd_cfg
++      - const: user_cfg
++      - const: reg
++      - const: cfg
 +
-+	if (size > 2) {
-+		writel(value, addr);
-+		return;
-+	}
++  ti,syscon-pcie-ctrl:
++    description: Phandle to the SYSCON entry required for configuring PCIe mode
++                 and link speed.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/phandle
 +
-+	mask = ~(((1 << (size * 8)) - 1) << (offset * 8));
-+	val = readl(aligned_addr) & mask;
-+	val |= value << (offset * 8);
-+	writel(val, aligned_addr);
-+}
++  max-link-speed:
++    minimum: 1
++    maximum: 3
 +
- void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
- 				   u32 r, bool is_io,
- 				   u64 cpu_addr, u64 pci_addr, size_t size)
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index f0395eaf9df5..5171d0da37da 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -498,6 +498,8 @@ void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r);
- void cdns_pcie_disable_phy(struct cdns_pcie *pcie);
- int cdns_pcie_enable_phy(struct cdns_pcie *pcie);
- int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie);
-+u32 cdns_pcie_read32(void __iomem *addr, int size);
-+void cdns_pcie_write32(void __iomem *addr, int size, u32 value);
- extern const struct dev_pm_ops cdns_pcie_pm_ops;
- 
- #endif /* _PCIE_CADENCE_H */
++  num-lanes:
++    minimum: 1
++    maximum: 2
++
++  power-domains:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++    description: clock-specifier to represent input to the PCIe
++
++  clock-names:
++    items:
++      - const: fck
++
++  "#address-cells":
++    const: 3
++
++  "#size-cells":
++    const: 2
++
++  bus-range:
++    description: Range of bus numbers associated with this controller.
++
++  cdns,max-outbound-regions:
++    description: As defined in
++                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/int32
++      - enum: [16]
++
++  cdns,no-bar-match-nbits:
++    description: As defined in
++                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/int32
++      - enum: [64]
++
++  vendor-id:
++    const: 0x104c
++    description: As defined in
++                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
++
++  device-id:
++    const: 0xb00d
++    description: As defined in
++                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
++
++  msi-map: true
++
++  dma-coherent:
++    description: Indicates that the PCIe IP block can ensure the coherency
++
++  ranges: true
++
++  reset-gpios:
++    description: GPIO specifier for the PERST# signal
++
++  phys:
++    description: As defined in
++                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
++
++  phy-names:
++    description: As defined in
++                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - ti,syscon-pcie-ctrl
++  - max-link-speed
++  - num-lanes
++  - power-domains
++  - clocks
++  - clock-names
++  - "#address-cells"
++  - "#size-cells"
++  - bus-range
++  - cdns,max-outbound-regions
++  - cdns,no-bar-match-nbits
++  - vendor-id
++  - device-id
++  - msi-map
++  - dma-coherent
++  - ranges
++  - reset-gpios
++  - phys
++  - phy-names
++
++examples:
++  - |
++    #include <dt-bindings/soc/ti,sci_pm_domain.h>
++    #include <dt-bindings/gpio/gpio.h>
++
++
++    pcie0_rc: pcie@2900000 {
++            compatible = "ti,j721e-pcie-host";
++            reg = <0x00 0x02900000 0x00 0x1000>,
++                  <0x00 0x02907000 0x00 0x400>,
++                  <0x00 0x0d000000 0x00 0x00800000>,
++                  <0x00 0x10000000 0x00 0x00001000>;
++            reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
++            ti,syscon-pcie-ctrl = <&pcie0_ctrl>;
++            max-link-speed = <3>;
++            num-lanes = <2>;
++            power-domains = <&k3_pds 239 TI_SCI_PD_EXCLUSIVE>;
++            clocks = <&k3_clks 239 1>;
++            clock-names = "fck";
++            #address-cells = <3>;
++            #size-cells = <2>;
++            bus-range = <0x0 0xf>;
++            cdns,max-outbound-regions = <16>;
++            cdns,no-bar-match-nbits = <64>;
++            vendor-id = /bits/ 16 <0x104c>;
++            device-id = /bits/ 16 <0xb00d>;
++            msi-map = <0x0 &gic_its 0x0 0x10000>;
++            dma-coherent;
++            reset-gpios = <&exp1 6 GPIO_ACTIVE_HIGH>;
++            phys = <&serdes0_pcie_link>;
++            phy-names = "pcie_phy";
++            ranges = <0x01000000 0x0 0x10001000  0x00 0x10001000  0x0 0x0010000>,
++                     <0x02000000 0x0 0x10011000  0x00 0x10011000  0x0 0x7fef000>;
++    };
 -- 
 2.17.1
 
