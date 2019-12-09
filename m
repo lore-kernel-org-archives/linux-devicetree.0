@@ -2,148 +2,138 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101A7C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 06:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96319C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 06:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D383F206D3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 06:26:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Pk51j2EP"
+	by mail.kernel.org (Postfix) with ESMTP id 64F0720721
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 06:31:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575873105;
+	bh=JNkb10Pp1zc5am3FaANhCosXMk76s6PelvibBjYsbEY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XPqzGPt9wvGndLhwClRiaAaS8qtcN73Mz4Tw1qszrM5wEqrsMVwDlin3AtUu1ovYG
+	 tCkSZNjp3ZtMg0jJA6ZuBVEsQSNnpdfxntbUHbizHJ4jpwXNYpoT+WDH0GumpuCMpq
+	 xG5dVGw8kFCzV2mU7aiAyQAdZPWXotlUqVERs9Ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfLIG0C (ORCPT
+        id S1727023AbfLIGbp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 01:26:02 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2520 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfLIG0C (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 01:26:02 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dede8f30000>; Sun, 08 Dec 2019 22:25:55 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 08 Dec 2019 22:26:01 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 08 Dec 2019 22:26:01 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec
- 2019 06:26:00 +0000
-Received: from [10.24.193.46] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec 2019
- 06:25:57 +0000
-Subject: Re: [PATCH 05/18] phy: tegra: xusb: Add support to get companion USB
- 3 port
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <kishon@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1575629421-7039-1-git-send-email-nkristam@nvidia.com>
- <1575629421-7039-6-git-send-email-nkristam@nvidia.com>
- <20191206145740.GE2085684@ulmo>
-X-Nvconfidentiality: public
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-Message-ID: <9c93d4ff-29aa-0a59-c667-643939c46c5a@nvidia.com>
-Date:   Mon, 9 Dec 2019 11:57:51 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 9 Dec 2019 01:31:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbfLIGbo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 01:31:44 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A72FE206D3;
+        Mon,  9 Dec 2019 06:31:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575873104;
+        bh=JNkb10Pp1zc5am3FaANhCosXMk76s6PelvibBjYsbEY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Jv7TDuaJMLzYAplOE7S/vegyKqXBl777tgut/yWVB777Oc75VcrOu/z40SOYG8q0H
+         /LWCB8Okp1KJ4T1qTAscOO67lW/j7LEPxs09U61Yb0+bNpXdIh5IIuQrfxT1wmdDlN
+         es01oTBnJhrAlNGZZes3u1spL6M4crN53P9fA3VI=
+Date:   Mon, 9 Dec 2019 14:31:29 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/4] arm64: dts: ls1028a: add missing sai nodes
+Message-ID: <20191209063128.GC3365@dragon>
+References: <20191123201317.25861-1-michael@walle.cc>
+ <20191123201317.25861-3-michael@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <20191206145740.GE2085684@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575872755; bh=0DnxoHmVITIxx4h5aZuGgGhKbqv7i4rF32jKL7JlfcQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Pk51j2EPm2iQ6FZZ1kgnH7zz9zsW+yZOHRhwtuWClOuwX2cUAtiOVRuZ/PA/rXldK
-         F5msMJAgIdkDCFc3z24CxouQ2b2pxajthmutBL/xTn2N/BcSu/F9yYMbe+cZCX8faz
-         ZS0fQlT1Ko0Ypd14VGlMGVYeo5HmfHhN2BpdIgATggDVyvGKFpR4NO+wRHn2dT0Ih3
-         8iX2R/OQStyHEiG5F1d8X0YrBkbxpwwOpClAFGizEUaoCiOw0/354E+B04uUjpKgSj
-         zWpL63KBqjJXVI81lkQIh4pU5AZCcbpfsj+LJHsuxLuEpWPzo/Jb+QEX8KMmnKC027
-         U3ZogvHr6bRwg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191123201317.25861-3-michael@walle.cc>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 06-12-2019 20:27, Thierry Reding wrote:
-> On Fri, Dec 06, 2019 at 04:20:08PM +0530, Nagarjuna Kristam wrote:
->> Tegra XUSB host, device mode driver requires the USB 3 companion port
->> number for corresponding USB 2 port. Add API to retrieve the same.
->>
->> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
->> ---
->>  drivers/phy/tegra/xusb.c       | 21 +++++++++++++++++++++
->>  include/linux/phy/tegra/xusb.h |  2 ++
->>  2 files changed, 23 insertions(+)
->>
->> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
->> index 4c86c99..2e73cf8 100644
->> --- a/drivers/phy/tegra/xusb.c
->> +++ b/drivers/phy/tegra/xusb.c
->> @@ -1254,6 +1254,27 @@ int tegra_phy_xusb_utmi_port_reset(struct phy *phy)
->>  }
->>  EXPORT_SYMBOL_GPL(tegra_phy_xusb_utmi_port_reset);
->>  
->> +int tegra_xusb_padctl_get_usb3_companion(struct tegra_xusb_padctl *padctl,
->> +				    unsigned int port)
->> +{
->> +	struct tegra_xusb_usb2_port *usb2 = tegra_xusb_find_usb2_port(padctl,
->> +								      port);
->> +	struct tegra_xusb_usb3_port *usb3;
->> +	int i;
->> +
->> +	if (!usb2)
->> +		return -EINVAL;
->> +
->> +	for (i = 0; i < padctl->soc->ports.usb3.count; i++) {
->> +		usb3 = tegra_xusb_find_usb3_port(padctl, i);
->> +		if (usb3 && usb3->port == usb2->base.index)
->> +			return usb3->base.index;
->> +	}
->> +
->> +	return -1;
-> Since you return -EINVAL above, callers will have to interpret negative
-> return values as standard errors, which would make this EPERM. That does
-> not really make sense. Perhaps something like -ENODEV would be more
-> appropriate in this case?
+On Sat, Nov 23, 2019 at 09:13:15PM +0100, Michael Walle wrote:
+> The LS1028A has six SAI cores.
 > 
-> Thierry
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 42 +++++++++++++++++++
+>  1 file changed, 42 insertions(+)
 > 
-Yes, making -ENODEV instead of -1 makes it inline with generic error codes.
-Will update accordingly.
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index f2e71fd57b20..6730922c2d47 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -534,6 +534,20 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		sai3: audio-controller@f120000 {
+> +			#sound-dai-cells = <0>;
+> +			compatible = "fsl,vf610-sai";
+> +			reg = <0x0 0xf120000 0x0 0x10000>;
+> +			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
+> +				 <&clockgen 4 1>, <&clockgen 4 1>;
+> +			clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +			dma-names = "tx", "rx";
+> +			dmas = <&edma0 1 8>,
+> +			       <&edma0 1 7>;
+> +			status = "disabled";
+> +		};
+> +
+>  		sai4: audio-controller@f130000 {
+>  			#sound-dai-cells = <0>;
+>  			compatible = "fsl,vf610-sai";
+> @@ -548,6 +562,34 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		sai5: audio-controller@f140000 {
+> +			#sound-dai-cells = <0>;
+> +			compatible = "fsl,vf610-sai";
+> +			reg = <0x0 0xf140000 0x0 0x10000>;
+> +			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
+> +				 <&clockgen 4 1>, <&clockgen 4 1>;
+> +			clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +			dma-names = "tx", "rx";
+> +			dmas = <&edma0 1 12>,
+> +			       <&edma0 1 11>;
+> +			status = "disabled";
+> +		};
+> +
+> +		sai6: audio-controller@f150000 {
+> +			#sound-dai-cells = <0>;
+> +			compatible = "fsl,vf610-sai";
+> +			reg = <0x0 0xf150000 0x0 0x10000>;
+> +			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
+> +				 <&clockgen 4 1>, <&clockgen 4 1>;
+> +			clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +			dma-names = "tx", "rx";
+> +			dmas = <&edma0 1 14>,
+> +			       <&edma0 1 13>;
+> +			status = "disabled";
+> +		};
+> +
+>  		tmu: tmu@1f00000 {
 
--Nagarjuna
->> +}
->> +EXPORT_SYMBOL_GPL(tegra_xusb_padctl_get_usb3_companion);
->> +
->>  MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
->>  MODULE_DESCRIPTION("Tegra XUSB Pad Controller driver");
->>  MODULE_LICENSE("GPL v2");
->> diff --git a/include/linux/phy/tegra/xusb.h b/include/linux/phy/tegra/xusb.h
->> index 1235865..71d9569 100644
->> --- a/include/linux/phy/tegra/xusb.h
->> +++ b/include/linux/phy/tegra/xusb.h
->> @@ -21,4 +21,6 @@ int tegra_xusb_padctl_usb3_set_lfps_detect(struct tegra_xusb_padctl *padctl,
->>  int tegra_xusb_padctl_set_vbus_override(struct tegra_xusb_padctl *padctl,
->>  					bool val);
->>  int tegra_phy_xusb_utmi_port_reset(struct phy *phy);
->> +int tegra_xusb_padctl_get_usb3_companion(struct tegra_xusb_padctl *padctl,
->> +					 unsigned int port);
->>  #endif /* PHY_TEGRA_XUSB_H */
->> -- 
->> 2.7.4
->>
+Not sure what your base is, but I have tmu@1f80000.  And that makes
+the patch applying fail here.
+
+Shawn
+
+>  			compatible = "fsl,qoriq-tmu";
+>  			reg = <0x0 0x1f80000 0x0 0x10000>;
+> -- 
+> 2.20.1
+> 
