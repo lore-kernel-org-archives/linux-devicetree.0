@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58660C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975C0C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D2172075B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7E3207FD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:21:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tBlKps1/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zMp0dskh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbfLIJVQ (ORCPT
+        id S1727589AbfLIJVE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:21:16 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49928 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727619AbfLIJVQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:21:16 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB99L6FI080929;
-        Mon, 9 Dec 2019 03:21:06 -0600
+        Mon, 9 Dec 2019 04:21:04 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59874 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727579AbfLIJVE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:21:04 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB99KuVN045988;
+        Mon, 9 Dec 2019 03:20:56 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575883266;
-        bh=VZbwOGovQ4NFoflgIXWD16/wHBPSJqutZdf3/MJ6Owc=;
+        s=ti-com-17Q1; t=1575883256;
+        bh=OzxHiwIOPUOFBA7qrD6Vb+QLFWB9Mt5CRNKBBT7ftNQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=tBlKps1/rXdvKaWuN4kH+4hRxEb3a/RBfvX1CpXla6e6TjLL99B4KeXV3CMRCVOFN
-         KZh2RFMZWkvcIQWVEZWViqkbR7agu87lOHIIw6LHzDWOiqobttHcdh8HOiLhCf5mlr
-         dlwIs+DEsE3sWhDy3ZCZ88ljSGbzJNqAoh+fLUgs=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB99L6H7005774
+        b=zMp0dskhFl7i6gKryWLdosqPB/ECwjUPm/lXAmyQ7JJb5FWW8Fe5fubmhJlEE3wwd
+         gt0uezj7i0l19EVK6rx56mmikUauYQcdDWiNrgzoWd5yLECaWE2Ugj6S7WeyWp+K+F
+         GRTsJs0Fc12wo6xh1WLi4RYFdk+cQhjGB1xTmf+Y=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB99KutT063290
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Dec 2019 03:21:06 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 9 Dec 2019 03:20:56 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 03:21:05 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 03:20:55 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 03:21:05 -0600
+ Frontend Transport; Mon, 9 Dec 2019 03:20:55 -0600
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB99Kcd5087697;
-        Mon, 9 Dec 2019 03:21:02 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB99Kcd2087697;
+        Mon, 9 Dec 2019 03:20:52 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -56,9 +56,9 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
 CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 07/13] PCI: cadence: Add new *ops* for CPU addr fixup
-Date:   Mon, 9 Dec 2019 14:51:41 +0530
-Message-ID: <20191209092147.22901-8-kishon@ti.com>
+Subject: [PATCH 04/13] PCI: cadence: Add support to start link and verify link status
+Date:   Mon, 9 Dec 2019 14:51:38 +0530
+Message-ID: <20191209092147.22901-5-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191209092147.22901-1-kishon@ti.com>
 References: <20191209092147.22901-1-kishon@ti.com>
@@ -70,111 +70,147 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Cadence driver uses "mem" memory resource to obtain the offset of
-configuration space address region, memory space address region and
-message space address region. The obtained offset is used to program
-the Address Translation Unit (ATU). However certain platforms like TI's
-J721E SoC require the absolute address to be programmed in the ATU and not
-just the offset.
-
-The same problem was solved in designware driver using a platform specific
-ops for CPU addr fixup in commit a660083eb06c5bb0 ("PCI: dwc: designware:
-Add new *ops* for CPU addr fixup"). Follow a similar mechanism in
-Cadence too instead of directly using "mem" memory resource in Cadence
-PCIe core.
+Add cdns_pcie_ops to start link and verify link status. The registers
+to start link and to check link status is in Platform specific PCIe
+wrapper. Add support for platform specific drivers to add callback
+functions for the PCIe Cadence core to start link and verify link status.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- .../pci/controller/cadence/pcie-cadence-host.c    | 15 ++++-----------
- drivers/pci/controller/cadence/pcie-cadence.c     |  8 ++++++--
- drivers/pci/controller/cadence/pcie-cadence.h     |  1 +
- 3 files changed, 11 insertions(+), 13 deletions(-)
+ .../pci/controller/cadence/pcie-cadence-ep.c  |  8 ++++++
+ .../controller/cadence/pcie-cadence-host.c    | 28 +++++++++++++++++++
+ drivers/pci/controller/cadence/pcie-cadence.h | 23 +++++++++++++++
+ 3 files changed, 59 insertions(+)
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 2efc33b1cade..cf817be237af 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -105,15 +105,14 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
- static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+index 560f22b4d165..088394b6be04 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+@@ -355,8 +355,10 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
  {
- 	struct cdns_pcie *pcie = &rc->pcie;
--	struct resource *mem_res = pcie->mem_res;
- 	struct resource *bus_range = rc->bus_range;
- 	struct resource *cfg_res = rc->cfg_res;
- 	struct device *dev = pcie->dev;
- 	struct device_node *np = dev->of_node;
- 	struct of_pci_range_parser parser;
-+	u64 cpu_addr = cfg_res->start;
- 	struct of_pci_range range;
- 	u32 addr0, addr1, desc1;
--	u64 cpu_addr;
- 	int r, err;
+ 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct cdns_pcie *pcie = &ep->pcie;
++	struct device *dev = pcie->dev;
+ 	struct pci_epf *epf;
+ 	u32 cfg;
++	int ret;
  
  	/*
-@@ -126,7 +125,9 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
- 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(0), addr1);
- 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(0), desc1);
+ 	 * BIT(0) is hardwired to 1, hence function 0 is always enabled
+@@ -367,6 +369,12 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+ 		cfg |= BIT(epf->func_no);
+ 	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
  
--	cpu_addr = cfg_res->start - mem_res->start;
-+	if (pcie->ops->cpu_addr_fixup)
-+		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
++	ret = cdns_pcie_start_link(pcie, true);
++	if (ret) {
++		dev_err(dev, "Failed to start link\n");
++		return ret;
++	}
 +
- 	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(12) |
- 		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
- 	addr1 = upper_32_bits(cpu_addr);
-@@ -264,14 +265,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 	}
- 	rc->cfg_res = res;
+ 	return 0;
+ }
  
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mem");
--	if (!res) {
--		dev_err(dev, "missing \"mem\"\n");
--		return -EINVAL;
--	}
--
--	pcie->mem_res = res;
--
- 	ret = cdns_pcie_start_link(pcie, true);
- 	if (ret) {
- 		dev_err(dev, "Failed to start link\n");
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
-index de5b3b06f2d0..bd93d0f92f55 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence.c
-@@ -113,7 +113,9 @@ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
- 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(r), desc1);
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index ccf55e143e1d..0929554f5a81 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -3,6 +3,7 @@
+ // Cadence PCIe host controller driver.
+ // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
  
- 	/* Set the CPU address */
--	cpu_addr -= pcie->mem_res->start;
-+	if (pcie->ops->cpu_addr_fixup)
-+		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
++#include <linux/delay.h>
+ #include <linux/kernel.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+@@ -201,6 +202,23 @@ static int cdns_pcie_host_init(struct device *dev,
+ 	return err;
+ }
+ 
++static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
++{
++	struct device *dev = pcie->dev;
++	int retries;
 +
- 	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(nbits) |
- 		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
- 	addr1 = upper_32_bits(cpu_addr);
-@@ -140,7 +142,9 @@ void cdns_pcie_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie, u8 fn,
- 	}
- 
- 	/* Set the CPU address */
--	cpu_addr -= pcie->mem_res->start;
-+	if (pcie->ops->cpu_addr_fixup)
-+		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
++	/* Check if the link is up or not */
++	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
++		if (cdns_pcie_is_link_up(pcie)) {
++			dev_info(dev, "Link up\n");
++			return 0;
++		}
++		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
++	}
 +
- 	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(17) |
- 		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
- 	addr1 = upper_32_bits(cpu_addr);
++	return -ETIMEDOUT;
++}
++
+ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ {
+ 	struct device *dev = rc->pcie.dev;
+@@ -254,6 +272,16 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 
+ 	pcie->mem_res = res;
+ 
++	ret = cdns_pcie_start_link(pcie, true);
++	if (ret) {
++		dev_err(dev, "Failed to start link\n");
++		return ret;
++	}
++
++	ret = cdns_pcie_host_wait_for_link(pcie);
++	if (ret)
++		dev_dbg(dev, "PCIe link never came up\n");
++
+ 	ret = cdns_pcie_host_init(dev, &resources, rc);
+ 	if (ret)
+ 		goto err_init;
 diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index c879dd3d2893..ffa8b9f78ff8 100644
+index d0d91c69fa1d..f0395eaf9df5 100644
 --- a/drivers/pci/controller/cadence/pcie-cadence.h
 +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -233,6 +233,7 @@ struct cdns_pcie_ops {
+@@ -10,6 +10,11 @@
+ #include <linux/pci.h>
+ #include <linux/phy/phy.h>
+ 
++/* Parameters for the waiting for link up routine */
++#define LINK_WAIT_MAX_RETRIES	10
++#define LINK_WAIT_USLEEP_MIN	90000
++#define LINK_WAIT_USLEEP_MAX	100000
++
+ /*
+  * Local Management Registers
+  */
+@@ -226,6 +231,8 @@ enum cdns_pcie_msg_routing {
+ struct cdns_pcie_ops {
+ 	u32	(*read)(void __iomem *addr, int size);
  	void	(*write)(void __iomem *addr, int size, u32 value);
- 	int	(*start_link)(struct cdns_pcie *pcie, bool start);
- 	bool	(*is_link_up)(struct cdns_pcie *pcie);
-+	u64     (*cpu_addr_fixup)(struct cdns_pcie *pcie, u64 cpu_addr);
++	int	(*start_link)(struct cdns_pcie *pcie, bool start);
++	bool	(*is_link_up)(struct cdns_pcie *pcie);
  };
  
  /**
+@@ -447,6 +454,22 @@ static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
+ 	return readl(addr);
+ }
+ 
++static inline int cdns_pcie_start_link(struct cdns_pcie *pcie, bool start)
++{
++	if (pcie->ops->start_link)
++		return pcie->ops->start_link(pcie, start);
++
++	return 0;
++}
++
++static inline bool cdns_pcie_is_link_up(struct cdns_pcie *pcie)
++{
++	if (pcie->ops->is_link_up)
++		return pcie->ops->is_link_up(pcie);
++
++	return true;
++}
++
+ #ifdef CONFIG_PCIE_CADENCE_HOST
+ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
+ #else
 -- 
 2.17.1
 
