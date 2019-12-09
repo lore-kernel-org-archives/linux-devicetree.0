@@ -7,186 +7,87 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C26C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 13:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5BCC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 13:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00ABD206E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 13:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9AB32073D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 13:44:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U49pN4MS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/al3Bw8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfLINhq (ORCPT
+        id S1727665AbfLINoa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:37:46 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42224 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727038AbfLINhq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 08:37:46 -0500
-Received: by mail-qk1-f196.google.com with SMTP id z14so2675256qkg.9;
-        Mon, 09 Dec 2019 05:37:45 -0800 (PST)
+        Mon, 9 Dec 2019 08:44:30 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39960 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfLINoa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 08:44:30 -0500
+Received: by mail-oi1-f193.google.com with SMTP id 6so6309734oix.7;
+        Mon, 09 Dec 2019 05:44:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/xGnfoL+Q5lxOftoFuoAZhd74qwSzhnVOVjw5OvXHFM=;
-        b=U49pN4MShVa9I6gosbwKeuRR8/P41PZRcOweU0sHhzfXI8IzpGcs9sPlh23zU3+kd0
-         +lMJndGzXUoksfINbZjJUE6yVtb+3WBW7mS5Q9JmYeUhUCSIomQlwKKCpSccenO4qVOs
-         KvqNRQpR3N46pN8XTJPJ+CaKt1QVUXEvgEhaUp7oo8gwUBPQBNt2NqwwfQeLcQzNv7Nq
-         nu8UurvP+Cg0TIBnAoeXQ+ZouvttiMSUp3V3zg9/h6f/h109GCIpCoNza14pwc5+62vK
-         m7qOFGGYKTWmvSenSp8GsGyRZ2mRZMemoWQSxuKeX+Q+pHe5kMKNX0YGLB6xlDQudhWw
-         GZiQ==
+        bh=pdtrpdD1TKIjvb8irx4vWJg8+w04giYZXMmV837pN2g=;
+        b=T/al3Bw8wn27lr3SLBgNIYFJs63fsI0DIaot21MQzkCVT4iZZT2NYjs5gJSJz4znGj
+         8uHbiqVU0MyxiterYKYbi0iazUDeDA71H4Z33DYgRMdbEvSygujbrg0L+QUVoTlbBtku
+         3oPvYqYbuFQUClKdzeI724fbXIX2lYSrVb+/EjYq20tF/8KPtPYcBh9VnhEVEvqVLpOe
+         JdJKgXwu57YIVoWXwI1UMSJ++EQBYdOWDDBxFfaSBTfSk9C2EU/RY2d5kxpJMGcMG91x
+         +zIev+3/ST2HH3ioHuzEMkQXsNzh2R8/XvEySepe1mr8h67Fs/EkyUwFEGNMBsO7bUkJ
+         kTnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/xGnfoL+Q5lxOftoFuoAZhd74qwSzhnVOVjw5OvXHFM=;
-        b=uPPbt5a/PVZwDJ+jkUYATjdanZRMmkqa4UPf8nJNX/eaphlrNAc1LmMfAKVJT7H3P0
-         aNFJXXnARs6pdgtHHpQB/Ha/BFKvVFLlJ07ubHrKQTH9dZsdSuXix/pDNQkIAmocWhHB
-         bFYgmM4SW58Y2mE4S6NktuyLwnjLDk9MKYEHoV58r4Lo4DLaKWruhM75jhqEb83iPIg7
-         Xr9EBY5C1eHGAv6hCIQcjMsWBXNcCEnTC5TunIxPbofXz4QwbBo15lNXyKcBv8kMIuGP
-         qDj5fQrwHeq9crrCqSv4SF7U7sgJt2fbeZytMDFBeMHDHyRJ8UtjwDnegC5dTWXZGmfe
-         Sepw==
-X-Gm-Message-State: APjAAAXPSSM225UjbBwU17x9W8NQiyNGMegRl5gRmCLcWnYuJbZ1M4mJ
-        5MQ9QbaGpKEYyQUU68kviBb3h0UnDx4aJA3kHZQ=
-X-Google-Smtp-Source: APXvYqyy+pyt3+tHN1YUVJHOdfhc/PRYtoTCblfW0ozOp9vWQN673XU0C1+hCw+KWhrukdItq0qHZrW+JPcMOPiWEnk=
-X-Received: by 2002:a37:6c01:: with SMTP id h1mr26390419qkc.484.1575898664569;
- Mon, 09 Dec 2019 05:37:44 -0800 (PST)
+        bh=pdtrpdD1TKIjvb8irx4vWJg8+w04giYZXMmV837pN2g=;
+        b=DWwnSvgS7H4pvng+8dRmoYSx/g4zEsHa63wRT29FeLB+elSVbiB7roZY4U+ghNprFk
+         ilkOLvg03vcQ8UcyYmoSY/8HMWgQO9rKDQP69K1xIel4U4OuOckZaFwDgkRk04TW36rj
+         kZ6oXoDLZzTSYKORUvO8aNUjgLHSp+5J04QvAAnk3JBfyatmT6tO6s1w16/sUKNQrs8M
+         iISlxK9UbBEBiRTPYrP+6afvu9X1em0ET1yxq0nvY9wP7B0oNVPAvrXoaLjc5rnh+OWL
+         8bIPOpNO2C6n1tqbDftwC5RTKc1ubTDo8Tgxu98CmD5htRMtXQ59GDQ1KKF/2/9W3AAW
+         YpRg==
+X-Gm-Message-State: APjAAAX/gC54HHfxsfe6cbYg7peut0M3aC1lKNlpzEcebyxYqAu11tS0
+        PVcsuVJJjTBMF03GULpLlvEejertypCzODAXnNE=
+X-Google-Smtp-Source: APXvYqwZ7NMEhCMa1CsGy9xOP12ehMUrB/FCbl2ilogCpY1zCGGz6MQ/XHN66Y9YL/Qw/iNI5SRd5y+Jfz0YzL7xQTQ=
+X-Received: by 2002:aca:3cc3:: with SMTP id j186mr23081279oia.169.1575899069062;
+ Mon, 09 Dec 2019 05:44:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20191206184536.2507-1-linux.amoon@gmail.com> <724aa7db-3838-16f9-d344-1789ae2a5746@arm.com>
-In-Reply-To: <724aa7db-3838-16f9-d344-1789ae2a5746@arm.com>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Mon, 9 Dec 2019 08:37:28 -0500
-Message-ID: <CAMdYzYoZY5gau=DGtPhk9CPV_WcyM4wjR9o+rPyaQfOzoy2Y=Q@mail.gmail.com>
-Subject: Re: [RFCv1 0/8] RK3399 clean shutdown issue
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Anand Moon <linux.amoon@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <20191121142726.22856-1-TheSven73@gmail.com> <20191121142726.22856-3-TheSven73@gmail.com>
+ <20191209123206.GI3468@dell>
+In-Reply-To: <20191209123206.GI3468@dell>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Mon, 9 Dec 2019 08:44:18 -0500
+Message-ID: <CAGngYiX4hgEM7cjeLE-sRswDXTff92OqdBWNgx5WGNmPjuqsUA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] dt-bindings: mfd: update TI tps6105x chip bindings
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Daniel Schultz <d.schultz@phytec.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 8:29 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 06/12/2019 6:45 pm, Anand Moon wrote:
-> > Most of the RK3399 SBC boards do not perform clean
-> > shutdown and clean reboot.
->
-> FWIW reboot problems on RK3399 have been tracked down to issues in
-> upstream ATF, and are unrelated to the PMIC.
->
-> > These patches try to help resolve the issue with proper
-> > shutdown by turning off the PMIC.
->
-> As mentioned elsewhere[1], although this is what the BSP kernel seems to
-> do, and in practice it's unlikely to matter for the majority of devboard
-> users like you and me, I still feel a bit uncomfortable with this
-> solution for systems using ATF as in principle the secure world might
-> want to know about orderly shutdowns, and this effectively makes every
-> shutdown an unexpected power loss from secure software's point of view.
->
-> Robin.
+Hi Lee, thank you for the review.
 
-Since ATF is operating completely in volatile memory, and shouldn't be
-touching hardware once it passes off control to the kernel anyways,
-what is the harm of pulling the rug out from under it?
-If this idea is to prevent issues in the future, such as if ATF does
-gain the ability to preempt hardware control, then at that time ATF
-will need to be able to handle actually powering off devices using the
-same functionality.
-
-But as we discussed previously, ATF doesn't have this capability, so
-in this case any board without a dedicated power-off gpio will be
-unable to power off at all.
-Also it seems that giving ATF this functionality, with the current
-state of ATF, would be cost prohibitive.
-
-I personally feel that allowing the kernel to do this is a solution to
-the problem we have now.
-
-
+On Mon, Dec 9, 2019 at 7:32 AM Lee Jones <lee.jones@linaro.org> wrote:
 >
-> [1]
-> http://lists.infradead.org/pipermail/linux-rockchip/2019-December/028183.html
+> > Tree: next-20191118
 >
-> > For reference
-> > RK805 PMCI data sheet:
-> > [0] http://rockchip.fr/RK805%20datasheet%20V1.3.pdf
-> > RK808 PMIC data sheet:
-> > [1] http://rockchip.fr/RK808%20datasheet%20V1.4.pdf
-> > RK817 PMIC data sheet:
-> > [2] http://rockchip.fr/RK817%20datasheet%20V1.01.pdf
-> > RK818 PMIC data sheet:
-> > [3] http://rockchip.fr/RK818%20datasheet%20V1.0.pdf
-> >
-> > Reboot issue:
-> > My guess is that we need to some proper sequence of
-> > setting to PMCI to perform clean.
-> >
-> > If you have any input please share them.
-> >
-> > Tested on SBC
-> > Rock960 Model A
-> > Odroid N1
-> > Rock64
-> >
-> > -Anand Moon
-> >
-> > Anand Moon (8):
-> >    mfd: rk808: Refactor shutdown functions
-> >    mfd: rk808: use syscore for RK805 PMIC shutdown
-> >    mfd: rk808: use syscore for RK808 PMIC shutdown
-> >    mfd: rk808: use syscore for RK818 PMIC shutdown
-> >    mfd: rk808: cleanup unused function pointer
-> >    mfd: rk808: use common syscore for all PMCI for clean shutdown
-> >    arm64: rockchip: drop unused field from rk8xx i2c node
-> >    arm: rockchip: drop unused field from rk8xx i2c node
-> >
-> >   arch/arm/boot/dts/rk3036-kylin.dts            |   1 -
-> >   arch/arm/boot/dts/rk3188-px3-evb.dts          |   1 -
-> >   arch/arm/boot/dts/rk3288-evb-rk808.dts        |   1 -
-> >   arch/arm/boot/dts/rk3288-phycore-som.dtsi     |   1 -
-> >   arch/arm/boot/dts/rk3288-popmetal.dts         |   1 -
-> >   arch/arm/boot/dts/rk3288-tinker.dtsi          |   1 -
-> >   arch/arm/boot/dts/rk3288-veyron.dtsi          |   1 -
-> >   arch/arm/boot/dts/rk3288-vyasa.dts            |   1 -
-> >   arch/arm/boot/dts/rv1108-elgin-r1.dts         |   1 -
-> >   arch/arm/boot/dts/rv1108-evb.dts              |   1 -
-> >   arch/arm64/boot/dts/rockchip/px30-evb.dts     |   1 -
-> >   arch/arm64/boot/dts/rockchip/rk3328-a1.dts    |   1 -
-> >   arch/arm64/boot/dts/rockchip/rk3328-evb.dts   |   1 -
-> >   .../arm64/boot/dts/rockchip/rk3328-roc-cc.dts |   1 -
-> >   .../arm64/boot/dts/rockchip/rk3328-rock64.dts |   1 -
-> >   .../boot/dts/rockchip/rk3368-geekbox.dts      |   1 -
-> >   arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi |   1 -
-> >   .../boot/dts/rockchip/rk3368-px5-evb.dts      |   1 -
-> >   .../boot/dts/rockchip/rk3399-firefly.dts      |   1 -
-> >   .../boot/dts/rockchip/rk3399-hugsun-x99.dts   |   1 -
-> >   .../boot/dts/rockchip/rk3399-khadas-edge.dtsi |   1 -
-> >   .../boot/dts/rockchip/rk3399-leez-p710.dts    |   1 -
-> >   .../boot/dts/rockchip/rk3399-nanopi4.dtsi     |   1 -
-> >   .../boot/dts/rockchip/rk3399-orangepi.dts     |   1 -
-> >   arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi |   1 -
-> >   .../boot/dts/rockchip/rk3399-roc-pc.dtsi      |   1 -
-> >   .../boot/dts/rockchip/rk3399-rock-pi-4.dts    |   1 -
-> >   .../boot/dts/rockchip/rk3399-rock960.dtsi     |   1 -
-> >   .../boot/dts/rockchip/rk3399-rockpro64.dts    |   1 -
-> >   .../boot/dts/rockchip/rk3399-sapphire.dtsi    |   1 -
-> >   drivers/mfd/rk808.c                           | 144 +++++-------------
-> >   include/linux/mfd/rk808.h                     |   2 -
-> >   32 files changed, 42 insertions(+), 134 deletions(-)
-> >
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> Why is this in your commit message?
+
+I have been posting patches against various maintainer trees lately, which
+will not apply to mainline or next. So I have been including base tree
+information in the patch itself.
+
+Base-tree info on patches is high on developers' wish list, but not yet
+standardized. This was discussed at the 2019 kernel maintainers
+summit:
+https://lwn.net/Articles/803619/
