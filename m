@@ -2,67 +2,98 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC630C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 21:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA05C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 21:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A12D6206E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 21:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575926157;
-	bh=9iHR0ajRnJxO+Uw4M+k9lqndy9j5D0Kb4OKxkFeJEvs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=cKR8dQEY6JO3n9s/V9FGr9wkmh9SzynCpNmezxRrM3gmbXPOSVukA61twFU4W311p
-	 Uv1Okm+B4AgH7C+syRT+VIEPr6F7NyBU9Yn8IzlmSiJ4fhmawu5QfljcWBnmPztYvB
-	 EKg1/rnLaPeNAE61vMRD6IG6E3SHqvUvjybIm6sE=
+	by mail.kernel.org (Postfix) with ESMTP id 1D946206E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 21:26:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cx6utzfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfLIVP5 (ORCPT
+        id S1726483AbfLIV0G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:15:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726614AbfLIVP5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:15:57 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2539E206D5;
-        Mon,  9 Dec 2019 21:15:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575926156;
-        bh=9iHR0ajRnJxO+Uw4M+k9lqndy9j5D0Kb4OKxkFeJEvs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cs6Y+ZzYcYvWBo3EjZvgj2iG4P1jzXx0C+HWCH2wjYA6OMzuJ9MbCN7EVmp5v+JGo
-         JVLOV5esOjEG4B0WEV7YHWOsWGRtq3gZyvlGOuWooPyPVzkv4GfyzTyRKZ/P6hAEW9
-         yIqwiYXuZVRJJsXjAktiII3G2Pfbyyu0vB19kj+0=
-Date:   Mon, 9 Dec 2019 15:15:54 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
- perform only 32-bit accesses
-Message-ID: <20191209211554.GA217130@google.com>
+        Mon, 9 Dec 2019 16:26:06 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54100 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfLIV0G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 16:26:06 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9LPxaH052942;
+        Mon, 9 Dec 2019 15:25:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575926759;
+        bh=1gk21y/pQ6pPIfwAOcAQmC6TMPt+CKlLB8VJzkcowJc=;
+        h=From:To:CC:Subject:Date;
+        b=cx6utzfePBIrFOCz8SZnoLJ2TcFye6i+0O5Cj2ytVnWWShvt70gkxepyPSWe62vqA
+         /LWqqU8oOzOI3BTT0EF9lDgjdiHrdH8G+7q+Se1UYhdqeNrfs4NyV9VfiFyIcOUCcV
+         C4qcu3Yw6lOhP9wUPuwq0L5XbYnJR1G57dXa2kFY=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9LPxxV077034
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Dec 2019 15:25:59 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 15:25:59 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 15:25:59 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9LPxDe011052;
+        Mon, 9 Dec 2019 15:25:59 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <mkl@pengutronix.de>
+CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH] can: tcan4x5x: Turn on the power before parsing the config
+Date:   Mon, 9 Dec 2019 15:23:51 -0600
+Message-ID: <20191209212351.27518-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209092147.22901-6-kishon@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
-> Certain platforms like TI's J721E allow only 32-bit register accesses.
-> Add read and write accessors to perform only 32-bit accesses in order to
-> support platfroms like TI's J721E.
+The parse config function now performs action on the device either
+reading or writing and a reset.  If the regulator is managed it needs
+to be turned on.  So turn on the regulator if available if the parsing
+fails then turn off the regulator.
 
-s/platfroms/platforms/
+Fixes: a5235f3c7c23 ("can: tcan45x: Make wake-up GPIO an optional GPIO")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/net/can/m_can/tcan4x5x.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
+index 4e1789ea2bc3..515486fcb150 100644
+--- a/drivers/net/can/m_can/tcan4x5x.c
++++ b/drivers/net/can/m_can/tcan4x5x.c
+@@ -451,11 +451,11 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
+ 	priv->regmap = devm_regmap_init(&spi->dev, &tcan4x5x_bus,
+ 					&spi->dev, &tcan4x5x_regmap);
+ 
++	tcan4x5x_power_enable(priv->power, 1);
++
+ 	ret = tcan4x5x_parse_config(mcan_class);
+ 	if (ret)
+-		goto out_clk;
+-
+-	tcan4x5x_power_enable(priv->power, 1);
++		goto out_power;
+ 
+ 	ret = m_can_class_register(mcan_class);
+ 	if (ret)
+-- 
+2.23.0
+
