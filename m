@@ -2,75 +2,69 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BBFC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 06:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87F0C2BD09
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 06:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7958A207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 06:20:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CGTh9vnf"
+	by mail.kernel.org (Postfix) with ESMTP id 8BD4920726
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 06:20:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575872442;
+	bh=xx/kMdZFsXWmIP1cEByJCGhN3/wIkksEuxaZs0yioW8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q5WV9XsshY6giadYVSZLav5fFjLom/l3RYgECIPwFeAxr2hodJMEYRs1ghxgAbmTl
+	 kNGWHCDQTbUp/8ikqWGXxVrUCPWyS3fTV7KmlSHeXf1RKMENNIxiieHhBcAIghD+MB
+	 Jw2GqpiMMYZhJTL1j7lvuTB8/WBT9ESEL8ImBwVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfLIGUb (ORCPT
+        id S1727209AbfLIGUl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 01:20:31 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:29189 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726396AbfLIGU1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 01:20:27 -0500
-X-UUID: e0c41756b00f408ea1420c4be82dbc27-20191209
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=qnw6wE33vyzkOMWjMb+vL2f0wAVHY35hnYQicUwyzko=;
-        b=CGTh9vnf9a50clTnAQoaw0f/5YdaW3XVkainGr+YegszTCeJAA3LylmAD6VaJX0aHym38r48PPJMt1RFiqxpXAvxUQEnFXbikkgWv85ULDwURi94Xs+QzmP2HY1SatR8KUvCpdtaNz7tvkS/pAZXMblWgpcuxnNtkIbh8CrIr9w=;
-X-UUID: e0c41756b00f408ea1420c4be82dbc27-20191209
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <ming-fan.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1675659469; Mon, 09 Dec 2019 14:20:20 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 9 Dec 2019 14:20:05 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 9 Dec 2019 14:20:10 +0800
-From:   Ming-Fan Chen <ming-fan.chen@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Yong Wu <yong.wu@mediatek.com>, Evan Green <evgreen@chromium.org>,
-        Joerg Roedel <jroedel@suse.de>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Subject: [PATCH v2] memory: mtk-smi: Add bandwidth initial setting for MT6779
-Date:   Mon, 9 Dec 2019 14:19:28 +0800
-Message-ID: <1575872371-671-1-git-send-email-ming-fan.chen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Mon, 9 Dec 2019 01:20:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbfLIGUk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 01:20:40 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F1D920721;
+        Mon,  9 Dec 2019 06:20:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575872440;
+        bh=xx/kMdZFsXWmIP1cEByJCGhN3/wIkksEuxaZs0yioW8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RX8fG32HbIJJZGLMAaFuULZMUeNGr8rsjLwyycgNvutc2gCx6ERCv3AQlDZ1hlUIE
+         Sv44Ulyd3DTYT1kOsGqVSfzHzornvHPqYqBUcGbjN7RSlaXGTGmeKOH++tvR8Ykdq+
+         xp+YvwqF3y+MHG/cj8CWFwLpQYZzseu887FG9g74=
+Date:   Mon, 9 Dec 2019 14:20:15 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de,
+        patchwork-lst@pengutronix.de
+Subject: Re: [PATCH] arm64: dts: imx8mq: increase NOC clock to 800 MHz
+Message-ID: <20191209062014.GA3365@dragon>
+References: <20191127110509.29905-1-l.stach@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127110509.29905-1-l.stach@pengutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGQgZGVzY3JpcHRpb24gYW5kIGJhbmR3aWR0aCBpbml0aWFsIGdvbGRlbiBz
-ZXR0aW5nIGZvciBNVDY3NzkgU01JLg0KVGhlIHNldHRpbmcgbWFrZSBiZXR0ZXIgcGVyZm9ybWFu
-Y2Ugb2YgbWVtb3J5IGNvbnRyb2wgZm9yIG11bHRpbWVkaWEgbW9kdWxlcy4NCg0KY2hhbmdlbG9n
-IHNpbmNlIHYxOg0KLWFkZCBkZXNjcmlwdGlvbiBvZiBHQUxTIGZvciBtdDY3NzkgaW50byBzbWkt
-Y29tbW9uIGRvY3VtZW50YXRpb24NCi1yZW1vdmUgdW51c2VkIGRlZmluZQ0KLXJlbmFtZSBzdHJ1
-Y3R1cmUgbWVtYmVyIHRvIGNvcnJlc3BvbmQgdG8gcmVsYXRlZCByZWdpc3RlcnMNCi1yZXBsYWNl
-IHBvaW50ZXIgb2YgYXJyYXkgd2l0aCBzaW5nbGUgcG9pbnRlciB0byByZWR1Y2UgaW50ZW50aW9u
-DQoNCg0KTWluZy1GYW4gQ2hlbiAoMik6DQogIGR0LWJpbmRpbmdzOiBtZWRpYXRlazogQWRkIGJp
-bmRpbmcgZm9yIE1UNjc3OSBTTUkNCiAgbWVtb3J5OiBtdGstc21pOiBBZGQgYmFuZHdpZHRoIGlu
-aXRpYWwgZ29sZGVuIHNldHRpbmcgZm9yIE1UNjc3OQ0KDQogLi4uL21lbW9yeS1jb250cm9sbGVy
-cy9tZWRpYXRlayxzbWktY29tbW9uLnR4dCAgICAgfCAgICA1ICstDQogLi4uL21lbW9yeS1jb250
-cm9sbGVycy9tZWRpYXRlayxzbWktbGFyYi50eHQgICAgICAgfCAgICAzICstDQogZHJpdmVycy9t
-ZW1vcnkvbXRrLXNtaS5jICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTQzICsrKysrKysr
-KysrKysrKysrKystDQogMyBmaWxlcyBjaGFuZ2VkLCAxNDcgaW5zZXJ0aW9ucygrKSwgNCBkZWxl
-dGlvbnMoLSk=
+On Wed, Nov 27, 2019 at 12:05:09PM +0100, Lucas Stach wrote:
+> From: Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> The NOC clock defaults to 400 MHz. Increase it to 800 MHz for improved
+> memory performance.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 
+Applied, thanks.
