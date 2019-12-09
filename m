@@ -2,137 +2,161 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5089C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A83EC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 19:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811B32080D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F942077B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 19:50:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="A9lrbQYp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfLITeO (ORCPT
+        id S1726502AbfLITuo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:34:14 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35003 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfLITeO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 14:34:14 -0500
-Received: by mail-oi1-f193.google.com with SMTP id k196so7477121oib.2;
-        Mon, 09 Dec 2019 11:34:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gPj5BnCRFlVLAcTocdSdKOif0Ppf6lvvauzu7g3ZWKw=;
-        b=TGBAOSU73tA20LO5J0gKwaJsLh7g8tzWmTqEPLKkjtv5IWhrf4Wcmv0TXnjxqgL1jF
-         yBC1O9bdvqMQq33RimLfL/ksA1Cmyr9qX8HizrOeGMJgCGR+VypKI90KWVIoUC19NG/A
-         LxhIOMr49DTnR+kFuE1K+xhQo/h3YX60NAmSqfVkq+5yGWjSLz8cPG2muk7XT+RGrvE6
-         aGpiRRBDspUMs+FPalSct5iyOLq7ynW6eGQViB/TzVqd5+aYS9ddd2PDvQ4NUzUTgQCg
-         EElt3hH8q9QNFd9+31jFkmAGqM/x10Mo7GsOHgGzf8cyenhvU58jyvRwLv8GNEU0lGxg
-         y52A==
-X-Gm-Message-State: APjAAAW1d5eON/a4zDieha6S1Uq4P/Zz08jbswp223vrkwFt8ShnqxtS
-        59S1XLycvi56/e6LdB5kPojw8B+KYykPdKELydY=
-X-Google-Smtp-Source: APXvYqwJ0Yps000beZiYNpb0g4ISSQQDOIbeEGH4u9DT8U2zSZ93q58ESvoZEPACv8jSmyP8+1aFBlobGs4verKHE88=
-X-Received: by 2002:aca:4e87:: with SMTP id c129mr624324oib.153.1575920053160;
- Mon, 09 Dec 2019 11:34:13 -0800 (PST)
+        Mon, 9 Dec 2019 14:50:44 -0500
+Received: from mail-eopbgr40072.outbound.protection.outlook.com ([40.107.4.72]:42819
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726483AbfLITuo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 14:50:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dOGL+utWNTDRvyeUq6Oy5JLVoxBAj04zk3YlRJMvKNtQPxnN5Yk12UQLKcY9QbCX8DSFVsgOBA3N+w8qSDaHGQcwaPBJuUOqGKdVlOckSHbrq9r6eylN4kemeAtqTfSJW/fNohmfcIxvz1fDUkb23h5WdNyBcCwjStokC0yCFaUU/ftwEXqUHkbi2wHJ7A+DNRUm2r1E49a/WKH115h+vlyhV7lbFxRNNH8arzYiaMdUQ1Ykyqqak10SQ9gOrse3RhMtLEk5rMKdJ2PSn/HpvoiIUiE3l2Rp0yW/3Z/vvYbz/MmITOGqrEWHDLB4xuSCug1xBpRPVsqRkXkPwNqoUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wuL3k3OMRAuDSx5j/pqvS5ffTbqocxDy5N8f1ScvhN0=;
+ b=aSsn8OEGskpZn+3m+9zWXcGH4yxwoOLnNlX1pzIpX/Ab1NFfCjI4aJXlKssOL9gAjjm7+wXvV7FcgR0WsORCk53GninhJG0CNSEszcX4LozmNdWPqDbkwNrlxbaju8+XfzenWGcdoN6Wz1/VXxGVWKSrsGuO77xV5Q57vbyhFnCAQ8yzvV99+N70GmDrzd8lxqllCdWZ8mDTB4CtQBiX4ivGw01pDecqXvFWzz2t+NA+fbYFSYTNtC3xf09mYKcVom0+AqmEczOloHbsNv998MtyZbu5Yvoy0wKsJx5h+5OK1ia7XU++IYyPoHp1YLKDqK7GD7hkAyd/008B/49wJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wuL3k3OMRAuDSx5j/pqvS5ffTbqocxDy5N8f1ScvhN0=;
+ b=A9lrbQYpGwWyPg6EsM16e0T64Zrk21bwwuTZ9W8A/XDzALiMMK4QnH4bnzdpHBAqQ2z7MtVYzVtq9tYCgn2PbInihKKysEpZpdKQzHCCgDTZh6O78pNhofUR8c6Yz4474/aBgEUTqSuEmHE40Vl6WqYv8JDawMdfiFLRxp48Dn8=
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.234.30) by
+ VE1PR04MB6445.eurprd04.prod.outlook.com (20.179.232.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.17; Mon, 9 Dec 2019 19:50:40 +0000
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::d91b:86b1:7d97:944d]) by VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::d91b:86b1:7d97:944d%7]) with mapi id 15.20.2516.017; Mon, 9 Dec 2019
+ 19:50:40 +0000
+From:   Leo Li <leoyang.li@nxp.com>
+To:     Michael Walle <michael@walle.cc>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: RE: [PATCH v2] arm64: dts: ls1028a: fix reboot node
+Thread-Topic: [PATCH v2] arm64: dts: ls1028a: fix reboot node
+Thread-Index: AQHVrsESw4ah5znw0UmG0v9WXCnxKKeyNhjA
+Date:   Mon, 9 Dec 2019 19:50:40 +0000
+Message-ID: <VE1PR04MB6687035009C691D31844C51D8F580@VE1PR04MB6687.eurprd04.prod.outlook.com>
+References: <20191209184644.14057-1-michael@walle.cc>
+In-Reply-To: <20191209184644.14057-1-michael@walle.cc>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leoyang.li@nxp.com; 
+x-originating-ip: [64.157.242.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ce08cba7-a2af-4def-7b48-08d77ce111f3
+x-ms-traffictypediagnostic: VE1PR04MB6445:
+x-microsoft-antispam-prvs: <VE1PR04MB64458244C962DFC2567EB58B8F580@VE1PR04MB6445.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 02462830BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(346002)(396003)(376002)(189003)(199004)(13464003)(66476007)(4326008)(478600001)(64756008)(66946007)(66446008)(76116006)(66556008)(33656002)(52536014)(186003)(229853002)(9686003)(55016002)(26005)(53546011)(5660300002)(2906002)(54906003)(7696005)(305945005)(81156014)(8936002)(8676002)(110136005)(71200400001)(6506007)(81166006)(86362001)(316002)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6445;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PsB/40aM/00u7wMeZ3DaKsPoByMxhnYRBkfnac0SgpGWjXsCBRt6yGEen/Bje6LXn7V9xfHn1uECXrhcObsY3ufom+AseW1XX5Ji/YvXnq7Wev37CQkqoLLp+4uAPwKJQSkmeRViA6ItDF4uE3VC9o8Jez4htyBU4C1ZS1acEZ2qqcOilP9hXM23ZAqtpvqtA/ZGXKKfPD2kUe7zxTp2E3wLGkuw5U2yshu/pH2cbyd/Wde3q5+oCkd4h/U8Dqs3MlgnTf+MXpaRbktAOtJgV6rxuc3U7wQHsXGOIO11tTMYYYVq70Qwwu6Y4u23/39mfB/+AFuGiMe5DCgY+DRTohoigqC4FcbUL3gENcYCqxy3EbJzzBhpfmkb5tXbwbSQrq63rhWgp01ypVFe+1t0b0HXXAZT9WjST9WxZclXcakSH70L0Squeg8L6i7quETuHpI4QcSaD2jnKT5Mr4FWF1IdzcYxVVZfSwX/wo9MMyPc95s6oQkIUUeEPOPk5AR0
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <20191206134202.18784-3-chris.brandt@renesas.com> <CAMuHMdXW6_tCcx_DE66qBSTK8XmWyWm82ZD6h-N5YX_+xcvBtw@mail.gmail.com>
- <TY1PR01MB1562BC84E2ECF81487A780D38A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY1PR01MB1562BC84E2ECF81487A780D38A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 9 Dec 2019 20:34:02 +0100
-Message-ID: <CAMuHMdWM79gxugmxiQVdGoivN5mAXT+5sMNOmJ-YyPyOZ39W=Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] dt-bindings: spi: Document Renesas SPIBSC bindings
-To:     Chris Brandt <Chris.Brandt@renesas.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce08cba7-a2af-4def-7b48-08d77ce111f3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 19:50:40.5830
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uk5sKrQqzteuRlDg0QAtG48JrNrfAcqQJqEVw6f8xCF+HcSFq1z1/LgXvObiwrOkEupuGivffiCF41JjCTX3eA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6445
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Chris,
 
-On Mon, Dec 9, 2019 at 4:45 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Mon, Dec 9, 2019, Geert Uytterhoeven wrote:
-> > > +    # This example is for "External Address Space Read Mode"
-> > > +    spibsc: spi@1f800000 {
-> > > +        compatible = "renesas,r7s9210-spibsc";
-> > > +        reg = <0x1f800000 0x100>, <0x20000000 0x10000000>;
-> > > +        clocks = <&cpg CPG_MOD 83>;
-> > > +        power-domains = <&cpg>;
-> > > +        interrupts = <GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH>;
-> > > +        #address-cells = <1>;
-> > > +        #size-cells = <0>;
-> > > +    };
-> > > +    flash@20000000 {
-> >
-> > This does not describe the hardware topology: the flash node should be a
-> > subnode of the spibsc node, as it relies on the spibsc being clocked.
->
-> So for the "XIP" case, I originally tried adding an "mtd-rom" flash node
-> under the spibsc node, but then the mtd-rom part never got probed. I
-> guess that was because it didn't register a SPI controller.
 
-To probe subnodes, your node needs to either be compatible with e.g.
-"simple-bus", or have its own driver that calls of_platform_populate().
+> -----Original Message-----
+> From: Michael Walle <michael@walle.cc>
+> Sent: Monday, December 9, 2019 12:47 PM
+> To: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; lin=
+ux-
+> kernel@vger.kernel.org
+> Cc: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>; Rob
+> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
+> Michael Walle <michael@walle.cc>
+> Subject: [PATCH v2] arm64: dts: ls1028a: fix reboot node
+>=20
+> The reboot register isn't located inside the DCFG controller, but in its =
+own RST
+> controller. Fix it.
+>=20
+> Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-> But, I guess if we go your method...
-> >     spibsc: spi@1f800000 {
-> >                 compatible = "renesas,r7s9210-spibsc", "simple-pm-bus";
->
-> Then after the spibsc driver fails and the "simple-pm-bus" driver tries,
-> it will succeed and the simple-pm-bus driver will start probing the
-> subnodes (in my case, the mtd-rom).
+Acked-by: Li Yang <leoyang.li@nxp.com>
 
-Yes, and unlike "simple-bus", "simple-pm-bus" does handle Runtime PM,
-so the clock will be enabled when needed.
-BTW, I still think "simple-bus" should handle Runtime PM, and
-"simple-pm-bus" should not exist.
+> ---
+>=20
+> changes since v1:
+>  - add fixes tag
+>  - remove "ls1028a-rst" compatible string, because there is no actual
+>    driver for it. It just use the syscon driver.
+>=20
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 8b28fda2ca20..7825550b7cef 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -88,7 +88,7 @@
+>=20
+>  	reboot {
+>  		compatible =3D"syscon-reboot";
+> -		regmap =3D <&dcfg>;
+> +		regmap =3D <&rst>;
+>  		offset =3D <0xb0>;
+>  		mask =3D <0x02>;
+>  	};
+> @@ -178,6 +178,12 @@
+>  			little-endian;
+>  		};
+>=20
+> +		rst: syscon@1e60000 {
+> +			compatible =3D "syscon";
+> +			reg =3D <0x0 0x1e60000 0x0 0x10000>;
+> +			little-endian;
+> +		};
+> +
+>  		scfg: syscon@1fc0000 {
+>  			compatible =3D "fsl,ls1028a-scfg", "syscon";
+>  			reg =3D <0x0 0x1fc0000 0x0 0x10000>;
+> --
+> 2.20.1
 
-> > and applying "[PATCH] mtd: maps: physmap: Add minimal Runtime PM support"[1],
-> > the memory-mapped case should work, without your spibsc driver.
->
-> Good.
-> So we can add the SPI-BSC clocks for RZ/A1 and RZ/A2 (even without the
-> SPI-BSC driver) and still have a working solution for XIP_KERNEL.
->
-> So in the end, this all seems like a very simple solution to get
-> everything I wanted with minimal complexity.
-
-Exactly.
-
-> But, if Sergei is going a completely different route for R-Car, I guess
-> I need to understand that first what he is trying to do before I really
-> push for this driver getting in.
-> Again, this driver was only when using the SPI-BSC HW, not the full
-> (different) R/W HyperFlash controller HW. That would be a separate driver.
-
-Yeah, the "real" serial FLASH functionality needs its own driver.
-How to fit all the SPI/QSPI/HF pieces together in a working driver is
-still TBD.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
