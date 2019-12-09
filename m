@@ -2,151 +2,148 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8BDC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 04:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EE6C2BD09
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 04:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1892071A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 04:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA5F206E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 04:43:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bYE7UvRj"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="i1pfDzlf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfLIEGF (ORCPT
+        id S1726960AbfLIEnq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Dec 2019 23:06:05 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:33935 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbfLIEGF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Dec 2019 23:06:05 -0500
-Received: by mail-vk1-f193.google.com with SMTP id w67so279085vkf.1
-        for <devicetree@vger.kernel.org>; Sun, 08 Dec 2019 20:06:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SSKZQVNYBrUoRU4TPgH9Xi7HOKeo/fTJhl3EcFgABvc=;
-        b=bYE7UvRj8WqhH/yPnmNYzBwI9HgYLmCbDkmqzmiM6urz1iwQWs3gJP4jUyz3Nk3Cl4
-         mZJ0unsgC7SUGo4APlmBV0tzbpoinfMIDbAGlv5Kmp1K1xUSURUJfKfItDQyq/w535tp
-         U5hyBNlIHd4inJvg287aAk+wQyGQ+ybxr8HgY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SSKZQVNYBrUoRU4TPgH9Xi7HOKeo/fTJhl3EcFgABvc=;
-        b=ZLBec4CwnjViXIn0ONybYFZiVoCz+bl7Y/ImR7FvonWRBd6hXs6+pMyDZNhzwd4eJc
-         RpuCZQt+6PTfaYK0d3p5SzSBzLQrxsmeqtjZdfMvhqzkl3u6g2XB6wMkgyl+xkRs8Qqm
-         KHapD75k51x8EOYHcQWikDeapKlwX3lA19XdmmuyvEx9LPP103TH7AmqzJ9X5aBh82dj
-         4H5DBkBQtcpEsIb/HjCK+TqebGYy4YsWd8S8e7oC7HSXq5gr8smHGrHsA8Da/7Krrtt/
-         ut40qS2uR48HuSDemBFuFCK+g3kc6ZIBV2It1V447mK9Nfs96phScYUbk0ZtvSZ78l4Y
-         3qbw==
-X-Gm-Message-State: APjAAAXi5mow94rcw9XQwGpm9h6MUR1UW3jPxH3oPe7wbU1nmR8b8X7r
-        EjidbPZsFwa9t1+V+5BN+wE3LwgX77RDHY5dw7ZQ9g==
-X-Google-Smtp-Source: APXvYqxiLiVTMXxIQfcCgISplvC33Dty2tzSU0elJdJeDv4SwXtUrMMWJ6sQkhk52auJFaw3mV3pedUilqtbw7keBOA=
-X-Received: by 2002:a1f:8fd3:: with SMTP id r202mr22038987vkd.77.1575864364344;
- Sun, 08 Dec 2019 20:06:04 -0800 (PST)
+        Sun, 8 Dec 2019 23:43:46 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17932 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbfLIEnp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Dec 2019 23:43:45 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dedd0fa0000>; Sun, 08 Dec 2019 20:43:38 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sun, 08 Dec 2019 20:43:44 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sun, 08 Dec 2019 20:43:44 -0800
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec
+ 2019 04:43:43 +0000
+Received: from [10.24.193.46] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec 2019
+ 04:43:40 +0000
+Subject: Re: [PATCH 01/18] dt-bindings: phy: tegra-xusb: Add usb-role-switch
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <kishon@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1575629421-7039-1-git-send-email-nkristam@nvidia.com>
+ <1575629421-7039-2-git-send-email-nkristam@nvidia.com>
+ <20191206144905.GC2085684@ulmo>
+X-Nvconfidentiality: public
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+Message-ID: <59527c41-7388-b6ae-f49e-0f8eb1407063@nvidia.com>
+Date:   Mon, 9 Dec 2019 10:15:29 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191203101552.199339-1-ikjn@chromium.org> <20191203165301.GH10631@localhost>
- <CAATdQgCqYrd_aXN5GDsso+F3WadNx3DQKK3Efk3tgkrv2VXjyw@mail.gmail.com>
- <20191204075533.GI10631@localhost> <CAATdQgBcuJenS2VSm+y4Yhn5mWE1P0CGJQ3NRdoe68dd2SRPGg@mail.gmail.com>
- <20191205142641.GL10631@localhost> <CAATdQgBK4gWvR06YJ3Z_y5NeqLKYY7Ajc0KG78rG2deR3Ga11A@mail.gmail.com>
- <20191206152604.GO10631@localhost>
-In-Reply-To: <20191206152604.GO10631@localhost>
-From:   Ikjoon Jang <ikjn@chromium.org>
-Date:   Mon, 9 Dec 2019 12:05:53 +0800
-Message-ID: <CAATdQgDAZ21bEXh+YFh+fCdBxnuRi-1_x0o_hpxW0Vj0zY-j8A@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] usb: overridable hub bInterval by device node
-To:     Johan Hovold <johan@kernel.org>
-Cc:     linux-usb@vger.kernel.org,
-        GregKroah-Hartman <gregkh@linuxfoundation.org>,
-        RobHerring <robh+dt@kernel.org>,
-        MarkRutland <mark.rutland@arm.com>,
-        AlanStern <stern@rowland.harvard.edu>,
-        SuwanKim <suwan.kim027@gmail.com>,
-        "GustavoA . R . Silva" <gustavo@embeddedor.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191206144905.GC2085684@ulmo>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575866619; bh=/iLU56/spbM6Mb2IIsTD5NSr25ZYa5dT6Wh6Xh/lNbI=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=i1pfDzlfYBieWFLSrriODNoO9AUlqV+vsyiQNph2MULJPckU2bKiXECsrJXQ8t32G
+         2c588hqrVymQohOTDbwPobe81+t79pB64noYTpFAgHbAkcoxtTXN1s60xDqOBEznFO
+         D6lzqnwaKgisySj7DhWcxEkkqpr12dVtHmlPDi78Xk2iFJ2zmuvwDLD5HYQ6fDTbsL
+         CCWb13NmQnf35VJHz+m0RoGZn27f1Ka3+AYd7C/wsmxpyGqUHNin0ozl/wWmrzgGqz
+         Y5aoaZ1piCUnIx9qPCYmdrGz1Hrs2S0F8rmx2A41jAKxwMbkYunXAyo6SqTNZu8i9y
+         H4LyZknQZR3Sw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 6, 2019 at 11:25 PM Johan Hovold <johan@kernel.org> wrote:
->
-> On Fri, Dec 06, 2019 at 11:57:30AM +0800, Ikjoon Jang wrote:
-> > On Thu, Dec 5, 2019 at 10:26 PM Johan Hovold <johan@kernel.org> wrote:
-> > >
-> > > On Thu, Dec 05, 2019 at 03:32:38PM +0800, Ikjoon Jang wrote:
-> > > > On Wed, Dec 4, 2019 at 3:55 PM Johan Hovold <johan@kernel.org> wrote:
-> > >
-> > > > > But related to my question above, why do you need to do this during
-> > > > > enumeration? Why not just set the lower interval value in the hub
-> > > > > driver?
-> > > >
-> > > > Because I want device tree's bInterval to be checked against the same rules
-> > > > defined in usb_parse_endpoint(). e.g. although hardware says its maximum
-> > > > is 255, but the practical limit is still 0 to 16, so the code can
-> > > > print warnings when bInterval from device node is too weird.
-> > >
-> > > But that could be handled refactoring the code in question or similar.
-> >
-> > Yes, that should be worked. I can't exactly figure out how to refactor
-> > the code for now, but maybe parsed endpoint descriptors are being
-> > checked with default hard wired bInterval value and after that
-> > an overridden value should be checked again.
-> >
-> > Actually I don't care about the details of software policies. I just want
-> > all devices to be handled in the same manner without any further
-> > special treatments.
->
-> I'd say you're indeed trying to give a specific device special
-> treatment. ;)
 
-yeah right, I'm giving one treatment but I mean not any further.
 
->
-> > > The fundamental problem here is that you're using devicetree, which is
-> > > supposed to only describe the hardware, to encode policy which should be
-> > > deferred to user space.
-> >
-> > The hub hardware has a default bInterval inside which is actually
-> > adjustable. So I can think setting bInterval is to describe the hardware
-> > rather than policy.
->
-> No, the USB spec says bInterval is a maximum requested value and that
-> the host is free to poll more often. And that's policy.
+> On 06-12-2019 20:19, Thierry Reding wrote:
+> 
+> On Fri, Dec 06, 2019 at 04:20:04PM +0530, Nagarjuna Kristam wrote:
+>> Add usb-role-switch property for Tegra210 and Tegra186 platforms. This
+>> entry is used by XUSB pad controller driver to register for role changes
+>> for OTG/Peripheral capable USB 2 ports.
+>>
+>> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+>> ---
+>>  Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
+>> index 9fb682e..0f19ed6 100644
+>> --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
+>> +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
+>> @@ -179,6 +179,10 @@ Optional properties:
+>>    is internal. In the absence of this property the port is considered to be
+>>    external.
+>>  - vbus-supply: phandle to a regulator supplying the VBUS voltage.
+>> +- usb-role-switch: boolean property to indicate use of USB Role Switch.
+> That first sentence here seems a bit useless and vague. It doesn't
+> really convey anything other than the name already does. Perhaps
+> something like:
+> 
+> 	Boolean property to indicate that the port support OTG. If
+> 	present, the port supports switching between USB host and
+> 	peripheral roles.
+> 
+Will update this accordingly.
 
-Honestly I'm a bit confused on the border line between hardware
-and software definition. That's quite reasonable it's policy that software
-can poll more often than hardware specified, but can we think it's just
-overriding hardware property specifying maximum value from beginning?
-Is it still policy? or 'overriding hardware property' part is already not
-a hardware description? :-S
+>> +  This property is MUST for OTG,Peripheral capable USB 2 ports. Connector
+> If this is mandatory, why not add it to the list of required properties?
+> I guess since it's only mandatory for ports that support OTG, perhaps we
+> could add a section "Required properties for OTG capable ports:" or
+> something like that? Then you can also omit the second sentence in the
+> description.
+> 
+Will add section "Required properties for OTG/Peripheral capable ports:" under ports
+and add usb-role-switch there.
 
->
-> > > So I think you need to figure out an interface that allows user space to
-> > > set the polling interval for any hub at runtime instead.
-> >
-> > Changing the interval at runtime is an another way to solve the
-> > power consumption problem, but it's not so easy. At least xhci needs
-> > to restart an endpoint and no devices are changing the interval after
-> > enumeration stage.
->
-> The usb-hid driver actually supports configuring the polling rate
-> for devices like mice and keyboards after enumeration (through a module
-> parameter, but still).
->
-> Unfortunately, the xhci driver does not yet support this and always uses
-> the device maximum bInterval. A bug report for this was filed many years
-> ago, perhaps it's time to address that (adding Mathias on CC):
->
->         https://bugzilla.kernel.org/show_bug.cgi?id=82571
+>> +  should be added as subnode, see connector.txt. vbus-gpio in connector is
+> There's no file called "connector.txt". Are you referring to
+> 
+> 	Documentation/devicetree/bindings/connector/usb-connector.txt
+> 
+> ? Also, that file calls the property "vbus-gpios" and lists it as
+> optional. What would happen if we don't specify it? Doesn't that just
+> mean that we can't support role detection?
+> 
+After going through other bindings found usb/usb-conn-gpio.txt is the one that should
+be referred. Will update accordingly. All details on gpios are documented clearly
+in usb/usb-conn-gpio.txt.
 
-Thanks!
+>> +  Mandatory.
+> "mandatory"
+> 
+> Thierry
+> 
+>>  
+Will update.
 
->
-> Johan
+Thanks,
+Nagarjuna
+>>  ULPI ports:
+>>  -----------
+>> -- 
+>> 2.7.4
+>>
