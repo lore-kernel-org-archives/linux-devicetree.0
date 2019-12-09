@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE529C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 16:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6919C04E30
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 16:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89AF5207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 16:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5282080D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 16:22:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Jhg/fh6t"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dbzFKeQE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfLIQVP (ORCPT
+        id S1726843AbfLIQWX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:21:15 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43364 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfLIQVO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 11:21:14 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9GLCa7083653;
-        Mon, 9 Dec 2019 10:21:12 -0600
+        Mon, 9 Dec 2019 11:22:23 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48286 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfLIQWV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 11:22:21 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9GMI7Z104372;
+        Mon, 9 Dec 2019 10:22:18 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575908472;
-        bh=vxhkMBsN2pPnCv5+ROibr/eTdfzg7Vv+kXmb+sy+smY=;
+        s=ti-com-17Q1; t=1575908538;
+        bh=11P/kNtBZr7To0mT7AsXhF9sB871Rf94OEck46/XMgI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Jhg/fh6tPZt5NHrdIWV3b4OzYQkx9+0SKW3RoR8zD73j1TTY0TkQ3e6NJMpV70bF5
-         ZBwj0jwy4X4Lpib+pwAoLsBrw2wAlbPs6xxZ6+r8Tc5JNQ22s62ZLztFD2N6vbSjyi
-         aD0wrPWWLzkVuWz6pvbLa3kjGEpmyZYwWFKNoFHo=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9GLC9B000606
+        b=dbzFKeQEGsD5elBkX4hgBjCcgUo8rksyXW9Z82/Lri6FFb7XVyWg90B7i3sbPe0VC
+         AyOsptONJDCvWAIhaIYpEjhVJ1fxiEL/EXJYfzZE4ip0bcj2q2anZ99d6FcpR/rDzx
+         kjPXOw/WLkhgGkZ3Grddwjkt3R0FadHMkrrwjgk8=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9GMINa093851
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Dec 2019 10:21:12 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 9 Dec 2019 10:22:18 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 10:21:12 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 10:22:14 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 10:21:12 -0600
+ Frontend Transport; Mon, 9 Dec 2019 10:22:14 -0600
 Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9GL9xX003945;
-        Mon, 9 Dec 2019 10:21:10 -0600
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9GMBdO002331;
+        Mon, 9 Dec 2019 10:22:12 -0600
 From:   Jyri Sarha <jsarha@ti.com>
 To:     <kishon@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
 CC:     <tomi.valkeinen@ti.com>, <praneeth@ti.com>, <yamonkar@cadence.com>,
         <sjakhade@cadence.com>, <rogerq@ti.com>, <jsarha@ti.com>
-Subject: [PATCH 1/3] dt-bindings: phy: Add PHY_TYPE_DP definition
-Date:   Mon, 9 Dec 2019 18:21:09 +0200
-Message-ID: <89dfcd484bad19cb954ee4f74305d1aa172ea292.1575906694.git.jsarha@ti.com>
+Subject: [PATCH 2/3] dt-bindings: phy: Add lane<n>-mode property to WIZ (SERDES wrapper)
+Date:   Mon, 9 Dec 2019 18:22:11 +0200
+Message-ID: <fb79923b1591cc5f26b6973beb92ce503ad3f4d1.1575906694.git.jsarha@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1575906694.git.jsarha@ti.com>
 References: <cover.1575906694.git.jsarha@ti.com>
@@ -66,26 +66,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add definition for DisplayPort phy type.
+Add property to indicate the usage of SERDES lane controlled by the
+WIZ wrapper. The wrapper configuration has some variation depending on
+how each lane is going to be used.
 
 Signed-off-by: Jyri Sarha <jsarha@ti.com>
-Reviewed-by: Roger Quadros <rogerq@ti.com>
-Reviewed-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- include/dt-bindings/phy/phy.h | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/phy/ti,phy-j721e-wiz.yaml    | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
-index b6a1eaf1b339..1f3f866fae7b 100644
---- a/include/dt-bindings/phy/phy.h
-+++ b/include/dt-bindings/phy/phy.h
-@@ -16,5 +16,6 @@
- #define PHY_TYPE_USB2		3
- #define PHY_TYPE_USB3		4
- #define PHY_TYPE_UFS		5
-+#define PHY_TYPE_DP		6
+diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+index 94e3b4b5ed8e..399725f65278 100644
+--- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
++++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+@@ -97,6 +97,18 @@ patternProperties:
+       Torrent SERDES should follow the bindings specified in
+       Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
  
- #endif /* _DT_BINDINGS_PHY */
++  "^lane[1-4]-mode$":
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [0, 1, 2, 3, 4, 5, 6]
++    description: |
++     Integer describing static lane usage for the lane indicated in
++     the property name. For Sierra there may be properties lane0 and
++     lane1, for Torrent all lane[1-4]-mode properties may be
++     there. The constants to indicate the lane usage are defined in
++     "include/dt-bindings/phy/phy.h". The lane is assumed to be unused
++     if its lane<n>-use property does not exist.
++
+ required:
+   - compatible
+   - power-domains
 -- 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
