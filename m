@@ -2,290 +2,125 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F421C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 01:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94239C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 02:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 137E320709
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 01:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575855280;
-	bh=sKsbh4vc/QZhOZJyY/0BORyBPkmadVe3B7hraBzztg8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NuDc6LPPH0sUrioyacUJz44IxerrCj/4tOGwou12E92wETV5o6wSlqaaG09/w7oNg
-	 XGXjxH0ruX4xswkosEh1nVrXmKMCFFA+SRd07KDdCa0+EI9fd4ZKdw8XfGea01wR5z
-	 vh+v9E0eVHA0KDD3b/9HQogpcF8ycFu2fwACF7j0=
+	by mail.kernel.org (Postfix) with ESMTP id 72E74206F4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 02:00:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfLIBej (ORCPT
+        id S1726856AbfLIB76 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Dec 2019 20:34:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726635AbfLIBej (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 8 Dec 2019 20:34:39 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02F8E206D5;
-        Mon,  9 Dec 2019 01:34:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575855278;
-        bh=sKsbh4vc/QZhOZJyY/0BORyBPkmadVe3B7hraBzztg8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lKf1mIb2SqAWACNuPVUY1ktnLHHEmFexV8r6ikBgQIuFtdn0SNNzCCqj6jkas90CX
-         GceHqWOLg67Irl0jmT4GhWgGhqOiSHc9t1muWFtnYo0Rf4yHTdDybmN8Urdm5Y6iFl
-         SGFvVYsBo5WUNzVge1giUq/uPuwG8BUzIOnuN2Z0=
-Date:   Mon, 9 Dec 2019 09:34:15 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        Sun, 8 Dec 2019 20:59:58 -0500
+Received: from sender4-op-o18.zoho.com ([136.143.188.18]:17883 "EHLO
+        sender4-op-o18.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbfLIB76 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 8 Dec 2019 20:59:58 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1575856777; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=nx/Z+X629+q2nyX4BFllfyG+e+ORROPqmDFfEU+0loJIHo/ybj1ulm2q9UksTxNqhqZo6BNEIFP6kmLU4gygo2wO8pGCf2EF5boPyXb8WNeL8I3MyeVokbZnfThdybAFs2Z94OH0vOF6SQKccz2gB7jfmbH76qgjRKrzOtD6N5A=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1575856777; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=ESf2SzK4n1rGhfuHWUdei9+0zhGWSY6S3zGH3rZPrs8=; 
+        b=AIhBWSIIfoo4jElND5MEI+s6wqQIXy4+ehjMFfewaQLeWdPKmKMWLjO/AE0yCou17o4nVTvunVTrGIjCV/5BGV30YC/nnaWjmqL3e8uiOtxJiAz9f1r7XM7AJsF3s4YmRRNmhGegHrrkDuhyJMPGqmuc1dcMWC4unQ/IjPlO3go=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=dlrobertson.com;
+        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
+        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
+Received: from nessie.verizon.net (pool-173-73-58-202.washdc.fios.verizon.net [173.73.58.202]) by mx.zohomail.com
+        with SMTPS id 1575856775769662.3246858379019; Sun, 8 Dec 2019 17:59:35 -0800 (PST)
+From:   Dan Robertson <dan@dlrobertson.com>
+To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
         Rob Herring <robh+dt@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Silvano di Ninno <silvano.dininno@nxp.com>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v7 5/5] arm64: dts: imx8m: Add ddr controller nodes
-Message-ID: <20191209013414.GS3365@dragon>
-References: <cover.1574458460.git.leonard.crestez@nxp.com>
- <23e46c12c98947315229c20dea6784ad40d294c4.1574458460.git.leonard.crestez@nxp.com>
+        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        Dan Robertson <dan@dlrobertson.com>
+Message-ID: <20191209014320.13149-1-dan@dlrobertson.com>
+Subject: [PATCH v5 0/2] iio: add driver for Bosch BMA400 accelerometer
+Date:   Mon,  9 Dec 2019 01:43:18 +0000
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23e46c12c98947315229c20dea6784ad40d294c4.1574458460.git.leonard.crestez@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8BIT
+X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 11:45:04PM +0200, Leonard Crestez wrote:
-> This is used by the imx-ddrc devfreq driver to implement dynamic
-> frequency scaling of DRAM.
-> 
-> Support for proactive scaling via interconnect will come later. The
-> high-performance bus masters which need that (display, vpu, gpu) are
-> mostly not yet enabled in upstream anyway.
-> 
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mm-evk.dts  | 18 ++++++++++++++
->  arch/arm64/boot/dts/freescale/imx8mm.dtsi     | 10 ++++++++
->  .../boot/dts/freescale/imx8mn-ddr4-evk.dts    | 18 ++++++++++++++
->  arch/arm64/boot/dts/freescale/imx8mn.dtsi     | 10 ++++++++
->  arch/arm64/boot/dts/freescale/imx8mq-evk.dts  | 24 +++++++++++++++++++
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 10 ++++++++
->  6 files changed, 90 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> index 28ab17a277bb..ecf0d385c164 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> @@ -75,10 +75,28 @@
->  
->  &A53_0 {
->  	cpu-supply = <&buck2_reg>;
->  };
->  
-> +&ddrc {
-> +	operating-points-v2 = <&ddrc_opp_table>;
-> +
-> +	ddrc_opp_table: opp-table {
-> +		compatible = "operating-points-v2";
-> +
-> +		opp-25M {
-> +			opp-hz = /bits/ 64 <25000000>;
-> +		};
+This patchset adds a IIO driver for the Bosch BMA400 3-axes ultra low-power
+accelerometer. The initial implementation of the driver adds read support for
+the acceleration and temperature data registers. The driver also has support
+for reading and writing to the output data rate, oversampling ratio, and scale
+configuration registers.
 
-As an idiomatic practice, we have newline between nodes.
+The major update in this patchset version is the move from using tables
+to convert user input to/from the raw register value to using a
+function.
 
-I fixed it up and applied the patch.
+Tests run:
+ - Various tests with libiio and i2c-dev
+ - dtbs_check and dt_binding_check
 
-Shawn
+Thanks again for the reviews of patches v4! If I missed anything please
+let me know.
 
-> +		opp-100M {
-> +			opp-hz = /bits/ 64 <100000000>;
-> +		};
-> +		opp-750M {
-> +			opp-hz = /bits/ 64 <750000000>;
-> +		};
-> +	};
-> +};
-> +
->  &fec1 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_fec1>;
->  	phy-mode = "rgmii-id";
->  	phy-handle = <&ethphy0>;
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> index 6edbdfe2d0d7..3d4802375715 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> @@ -856,10 +856,20 @@
->  			#interrupt-cells = <3>;
->  			interrupt-controller;
->  			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
->  		};
->  
-> +		ddrc: memory-controller@3d400000 {
-> +			compatible = "fsl,imx8mm-ddrc", "fsl,imx8m-ddrc";
-> +			reg = <0x3d400000 0x400000>;
-> +			clock-names = "core", "pll", "alt", "apb";
-> +			clocks = <&clk IMX8MM_CLK_DRAM_CORE>,
-> +				 <&clk IMX8MM_DRAM_PLL>,
-> +				 <&clk IMX8MM_CLK_DRAM_ALT>,
-> +				 <&clk IMX8MM_CLK_DRAM_APB>;
-> +		};
-> +
->  		ddr-pmu@3d800000 {
->  			compatible = "fsl,imx8mm-ddr-pmu", "fsl,imx8m-ddr-pmu";
->  			reg = <0x3d800000 0x400000>;
->  			interrupt-parent = <&gic>;
->  			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-> index 071949412caf..b051c927c11e 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-> @@ -15,10 +15,28 @@
->  
->  &A53_0 {
->  	cpu-supply = <&buck2_reg>;
->  };
->  
-> +&ddrc {
-> +	operating-points-v2 = <&ddrc_opp_table>;
-> +
-> +	ddrc_opp_table: opp-table {
-> +		compatible = "operating-points-v2";
-> +
-> +		opp-25M {
-> +			opp-hz = /bits/ 64 <25000000>;
-> +		};
-> +		opp-100M {
-> +			opp-hz = /bits/ 64 <100000000>;
-> +		};
-> +		opp-600M {
-> +			opp-hz = /bits/ 64 <600000000>;
-> +		};
-> +	};
-> +};
-> +
->  &i2c1 {
->  	pmic@4b {
->  		compatible = "rohm,bd71847";
->  		reg = <0x4b>;
->  		pinctrl-0 = <&pinctrl_pmic>;
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> index e91625063f8e..3a79fdddc72b 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> @@ -757,10 +757,20 @@
->  			#interrupt-cells = <3>;
->  			interrupt-controller;
->  			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
->  		};
->  
-> +		ddrc: memory-controller@3d400000 {
-> +			compatible = "fsl,imx8mn-ddrc", "fsl,imx8m-ddrc";
-> +			reg = <0x3d400000 0x400000>;
-> +			clock-names = "core", "pll", "alt", "apb";
-> +			clocks = <&clk IMX8MN_CLK_DRAM_CORE>,
-> +				 <&clk IMX8MN_DRAM_PLL>,
-> +				 <&clk IMX8MN_CLK_DRAM_ALT>,
-> +				 <&clk IMX8MN_CLK_DRAM_APB>;
-> +		};
-> +
->  		ddr-pmu@3d800000 {
->  			compatible = "fsl,imx8mn-ddr-pmu", "fsl,imx8m-ddr-pmu";
->  			reg = <0x3d800000 0x400000>;
->  			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
->  		};
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-> index c36685916683..ee6dc5f07622 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-> @@ -103,10 +103,34 @@
->  
->  &A53_3 {
->  	cpu-supply = <&buck2_reg>;
->  };
->  
-> +&ddrc {
-> +	operating-points-v2 = <&ddrc_opp_table>;
-> +
-> +	ddrc_opp_table: opp-table {
-> +		compatible = "operating-points-v2";
-> +
-> +		opp-25M {
-> +			opp-hz = /bits/ 64 <25000000>;
-> +		};
-> +		opp-100M {
-> +			opp-hz = /bits/ 64 <100000000>;
-> +		};
-> +		/*
-> +		 * On imx8mq B0 PLL can't be bypassed so low bus is 166M
-> +		 */
-> +		opp-166M {
-> +			opp-hz = /bits/ 64 <166935483>;
-> +		};
-> +		opp-800M {
-> +			opp-hz = /bits/ 64 <800000000>;
-> +		};
-> +	};
-> +};
-> +
->  &fec1 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_fec1>;
->  	phy-mode = "rgmii-id";
->  	phy-handle = <&ethphy0>;
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index 7f9319452b58..d1fcf9887f8b 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -1111,10 +1111,20 @@
->  			interrupt-controller;
->  			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
->  			interrupt-parent = <&gic>;
->  		};
->  
-> +		ddrc: memory-controller@3d400000 {
-> +			compatible = "fsl,imx8mq-ddrc", "fsl,imx8m-ddrc";
-> +			reg = <0x3d400000 0x400000>;
-> +			clock-names = "core", "pll", "alt", "apb";
-> +			clocks = <&clk IMX8MQ_CLK_DRAM_CORE>,
-> +				 <&clk IMX8MQ_DRAM_PLL_OUT>,
-> +				 <&clk IMX8MQ_CLK_DRAM_ALT>,
-> +				 <&clk IMX8MQ_CLK_DRAM_APB>;
-> +		};
-> +
->  		ddr-pmu@3d800000 {
->  			compatible = "fsl,imx8mq-ddr-pmu", "fsl,imx8m-ddr-pmu";
->  			reg = <0x3d800000 0x400000>;
->  			interrupt-parent = <&gic>;
->  			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-> -- 
-> 2.17.1
-> 
+Cheers,
+
+ - Dan
+
+
+Changes in v5:
+
+ * Move to using a function instead of lookup tables for scale and
+   frequency conversions.
+ * Rename DT bindings to bosch,bma400.yaml
+ * Fixed other errors and improvements found by reviewers
+
+Changes in v4:
+
+ * Fix error in DT bindings
+ * Fix typo when setting the OSR
+ * Simplified the cached sample frequency
+ * Fix the MODULE_LICENSE
+
+Changes in v3:
+
+ * Use yaml format for DT bindings
+ * Remove strict dependency on OF
+ * Tidy Kconfig dependencies
+ * Stylistic changes
+ * Do not soft-reset device on remove
+
+Changes in v2:
+
+ * Implemented iio_info -> read_avail
+ * Stylistic changes
+ * Implemented devicetree bindings
+
+
+Dan Robertson (2):
+  dt-bindings: iio: accel: bma400: add bindings
+  iio: (bma400) add driver for the BMA400
+
+ .../bindings/iio/accel/bosch,bma400.yaml      |  39 +
+ drivers/iio/accel/Kconfig                     |  16 +
+ drivers/iio/accel/Makefile                    |   2 +
+ drivers/iio/accel/bma400.h                    |  95 ++
+ drivers/iio/accel/bma400_core.c               | 823 ++++++++++++++++++
+ drivers/iio/accel/bma400_i2c.c                |  62 ++
+ 6 files changed, 1037 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml
+ create mode 100644 drivers/iio/accel/bma400.h
+ create mode 100644 drivers/iio/accel/bma400_core.c
+ create mode 100644 drivers/iio/accel/bma400_i2c.c
+
+
+
