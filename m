@@ -2,185 +2,154 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AADC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 13:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E43FCC00454
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C332073D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 13:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B86302068E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:02:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ea0xRToy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfLIN6Z (ORCPT
+        id S1727793AbfLIOCq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:58:25 -0500
-Received: from foss.arm.com ([217.140.110.172]:33168 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727438AbfLIN6Z (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:58:25 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7696328;
-        Mon,  9 Dec 2019 05:58:24 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EFE123F718;
-        Mon,  9 Dec 2019 05:58:22 -0800 (PST)
-Subject: Re: [RFCv1 0/8] RK3399 clean shutdown issue
-To:     Peter Geis <pgwipeout@gmail.com>
-Cc:     Anand Moon <linux.amoon@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 9 Dec 2019 09:02:46 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38786 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727684AbfLIOCp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:02:45 -0500
+Received: by mail-qt1-f194.google.com with SMTP id z15so3712198qts.5;
+        Mon, 09 Dec 2019 06:02:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=9ldqJ1SZTM86i1NDUWb8AoCSQlQUTKFP3Yzg0EhQCsM=;
+        b=ea0xRToyTQAOSYaMQIUh7dMSvI/bYuX5NsGjwiP/tqHkEtEDAPmSkvqWOdiyAFHg6B
+         vDHB3pjTFIiPw0cUfdqbfcjVyw9Uxb+xzwXYjTjFA+lTSlE9pt/S8hXz7LnJFxzgb2MD
+         9Eolg70Jp3L5GJjMtq1ZRPfK4T0bkXtcC1se+gSI5YWlsfyRAxNysXN/8yBbxz5S2X3b
+         H78YA8nG8WUX/3Mm6v8Ya5uUM7FlbxN/ZtGAlOIkk9y+IfWFjghDAuvTkjhyVbKk/74v
+         F21z4Y0qHvu/3kZ59Lb+jY09NtMNBcjsqvRElL5AGwCjcVmGnaa7pOEGZ3+u+2AYSqzm
+         KUuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=9ldqJ1SZTM86i1NDUWb8AoCSQlQUTKFP3Yzg0EhQCsM=;
+        b=D9SSkkgYRdb2+2t3RFRfSZWd4iRP0agwWjB2B6/n7hYDbuvdB0cByARq/xiOpNQF0l
+         rKPLtNXImwlDRcZ6oM+YF8/ERbJyQz0fqAFuc42TFwhJxtKKCPUmxxdXmxwhowGUXnBm
+         3BinlqbfrZDN1Xv8sF1OSXT/9cSpp9Zs2dpgMUwMzSEk3hSTPNVUoGJY5HE80vBeyDYA
+         s/mHbqV3GTbsmkbBYv3kYgG3xVqOrsKXWZWeIusVW2Y75PiTqvSSRoWuy+3TIBz/8EYp
+         EUPcMPuPC9FsEySHlBLlvIWAYhIVnmFmSyluAdRJ+tOHc+76cT+F95qkeH/tJ5ntf0T9
+         g+iA==
+X-Gm-Message-State: APjAAAWNmarjo69Npfjq4tprBsTFT/OOr1/HoKx0tGLG7V6TwubMODMd
+        4x+Yz4d0zTrsGkma3nz85/M=
+X-Google-Smtp-Source: APXvYqztzrVLLGA7w+ahwGSQFwLTP6K8GAsDsLwxpdjc/fVJqXOcLNgNj4z6oBzvhbewNFKx0I1IGA==
+X-Received: by 2002:aed:2047:: with SMTP id 65mr25382186qta.78.1575900160420;
+        Mon, 09 Dec 2019 06:02:40 -0800 (PST)
+Received: from localhost.localdomain ([72.53.229.209])
+        by smtp.gmail.com with ESMTPSA id h28sm10128023qte.54.2019.12.09.06.02.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 06:02:39 -0800 (PST)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>, Pavel Machek <pavel@ucw.cz>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Daniel Schultz <d.schultz@phytec.de>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-References: <20191206184536.2507-1-linux.amoon@gmail.com>
- <724aa7db-3838-16f9-d344-1789ae2a5746@arm.com>
- <CAMdYzYoZY5gau=DGtPhk9CPV_WcyM4wjR9o+rPyaQfOzoy2Y=Q@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f7ac4ff0-5c32-9bb3-1547-ec7ac80bf38d@arm.com>
-Date:   Mon, 9 Dec 2019 13:58:21 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CAMdYzYoZY5gau=DGtPhk9CPV_WcyM4wjR9o+rPyaQfOzoy2Y=Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        linux-leds@vger.kernel.org
+Subject: [PATCH v5 2/2] dt-bindings: mfd: update TI tps6105x chip bindings
+Date:   Mon,  9 Dec 2019 09:02:34 -0500
+Message-Id: <20191209140234.6558-3-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191209140234.6558-1-TheSven73@gmail.com>
+References: <20191209140234.6558-1-TheSven73@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 09/12/2019 1:37 pm, Peter Geis wrote:
-> On Mon, Dec 9, 2019 at 8:29 AM Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> On 06/12/2019 6:45 pm, Anand Moon wrote:
->>> Most of the RK3399 SBC boards do not perform clean
->>> shutdown and clean reboot.
->>
->> FWIW reboot problems on RK3399 have been tracked down to issues in
->> upstream ATF, and are unrelated to the PMIC.
->>
->>> These patches try to help resolve the issue with proper
->>> shutdown by turning off the PMIC.
->>
->> As mentioned elsewhere[1], although this is what the BSP kernel seems to
->> do, and in practice it's unlikely to matter for the majority of devboard
->> users like you and me, I still feel a bit uncomfortable with this
->> solution for systems using ATF as in principle the secure world might
->> want to know about orderly shutdowns, and this effectively makes every
->> shutdown an unexpected power loss from secure software's point of view.
->>
->> Robin.
-> 
-> Since ATF is operating completely in volatile memory, and shouldn't be
-> touching hardware once it passes off control to the kernel anyways,
-> what is the harm of pulling the rug out from under it?
-> If this idea is to prevent issues in the future, such as if ATF does
-> gain the ability to preempt hardware control, then at that time ATF
-> will need to be able to handle actually powering off devices using the
-> same functionality.
+The driver has been extended to optionally get its operational
+mode, regulator init data and LED naming from the devicetree.
 
-It's not ATF itself I'm concerned about, but arbitrary Secure EL1 
-payloads. In theory, a TEE might want to do something like cycle keys or 
-log events in a TPM (or just encrypted in an external SPI flash), or 
-scrub secure DRAM for cold boot protection. I'm pretty sure none of us 
-are running such a thing on our boards today, but an upstream solution 
-really wants to be robust for the general case.
+Tree: next-20191118
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+ .../devicetree/bindings/mfd/tps6105x.txt      | 47 ++++++++++++++++++-
+ 1 file changed, 46 insertions(+), 1 deletion(-)
 
-> But as we discussed previously, ATF doesn't have this capability, so
-> in this case any board without a dedicated power-off gpio will be
-> unable to power off at all.
-> Also it seems that giving ATF this functionality, with the current
-> state of ATF, would be cost prohibitive.
-> 
-> I personally feel that allowing the kernel to do this is a solution to
-> the problem we have now.
+diff --git a/Documentation/devicetree/bindings/mfd/tps6105x.txt b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+index 93602c7a19c8..d15763740a3f 100644
+--- a/Documentation/devicetree/bindings/mfd/tps6105x.txt
++++ b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+@@ -7,11 +7,56 @@ Required properties:
+ - compatible:		"ti,tps61050" or "ti,tps61052"
+ - reg:			Specifies the I2C slave address
+ 
+-Example:
++Optional sub-node:
++
++This subnode selects the chip's operational mode.
++There can be at most one single available subnode.
++
++- regulator: presence of this sub-node puts the chip in regulator mode.
++	see Documentation/devicetree/bindings/regulator/regulator.txt
++
++- led: presence of this sub-node puts the chip in led mode.
++	Optional properties:
++	- function : see ../leds/common.txt
++	- color    : see ../leds/common.txt
++	- label    : see ../leds/common.txt
++			(deprecated)
++
++Example (GPIO operation only):
++
++i2c0 {
++	tps61052@33 {
++		compatible = "ti,tps61052";
++		reg = <0x33>;
++	};
++};
++
++Example (GPIO + regulator operation):
+ 
+ i2c0 {
+ 	tps61052@33 {
+ 		compatible = "ti,tps61052";
+ 		reg = <0x33>;
++
++		regulator {
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			regulator-always-on;
++		};
++	};
++};
++
++Example (GPIO + led operation):
++
++#include <dt-bindings/leds/common.h>
++
++i2c0 {
++	tps61052@33 {
++		compatible = "ti,tps61052";
++		reg = <0x33>;
++
++		led {
++			color = <LED_COLOR_ID_WHITE>;
++		};
+ 	};
+ };
+-- 
+2.17.1
 
-Sure - I do like your cool idea of using a custom reboot reason to 
-handle a 'trusted' poweroff in the U-Boot SPL - but in the meantime 
-anything would be a practical improvement over the current situation. I 
-reckon this other patch[1] (this seems to be a popular issue all of a 
-sudden!) looks like the neatest interim step.
-
-Robin.
-
-[1] 
-http://lists.infradead.org/pipermail/linux-rockchip/2019-December/028245.html
-
->>> For reference
->>> RK805 PMCI data sheet:
->>> [0] http://rockchip.fr/RK805%20datasheet%20V1.3.pdf
->>> RK808 PMIC data sheet:
->>> [1] http://rockchip.fr/RK808%20datasheet%20V1.4.pdf
->>> RK817 PMIC data sheet:
->>> [2] http://rockchip.fr/RK817%20datasheet%20V1.01.pdf
->>> RK818 PMIC data sheet:
->>> [3] http://rockchip.fr/RK818%20datasheet%20V1.0.pdf
->>>
->>> Reboot issue:
->>> My guess is that we need to some proper sequence of
->>> setting to PMCI to perform clean.
->>>
->>> If you have any input please share them.
->>>
->>> Tested on SBC
->>> Rock960 Model A
->>> Odroid N1
->>> Rock64
->>>
->>> -Anand Moon
->>>
->>> Anand Moon (8):
->>>     mfd: rk808: Refactor shutdown functions
->>>     mfd: rk808: use syscore for RK805 PMIC shutdown
->>>     mfd: rk808: use syscore for RK808 PMIC shutdown
->>>     mfd: rk808: use syscore for RK818 PMIC shutdown
->>>     mfd: rk808: cleanup unused function pointer
->>>     mfd: rk808: use common syscore for all PMCI for clean shutdown
->>>     arm64: rockchip: drop unused field from rk8xx i2c node
->>>     arm: rockchip: drop unused field from rk8xx i2c node
->>>
->>>    arch/arm/boot/dts/rk3036-kylin.dts            |   1 -
->>>    arch/arm/boot/dts/rk3188-px3-evb.dts          |   1 -
->>>    arch/arm/boot/dts/rk3288-evb-rk808.dts        |   1 -
->>>    arch/arm/boot/dts/rk3288-phycore-som.dtsi     |   1 -
->>>    arch/arm/boot/dts/rk3288-popmetal.dts         |   1 -
->>>    arch/arm/boot/dts/rk3288-tinker.dtsi          |   1 -
->>>    arch/arm/boot/dts/rk3288-veyron.dtsi          |   1 -
->>>    arch/arm/boot/dts/rk3288-vyasa.dts            |   1 -
->>>    arch/arm/boot/dts/rv1108-elgin-r1.dts         |   1 -
->>>    arch/arm/boot/dts/rv1108-evb.dts              |   1 -
->>>    arch/arm64/boot/dts/rockchip/px30-evb.dts     |   1 -
->>>    arch/arm64/boot/dts/rockchip/rk3328-a1.dts    |   1 -
->>>    arch/arm64/boot/dts/rockchip/rk3328-evb.dts   |   1 -
->>>    .../arm64/boot/dts/rockchip/rk3328-roc-cc.dts |   1 -
->>>    .../arm64/boot/dts/rockchip/rk3328-rock64.dts |   1 -
->>>    .../boot/dts/rockchip/rk3368-geekbox.dts      |   1 -
->>>    arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi |   1 -
->>>    .../boot/dts/rockchip/rk3368-px5-evb.dts      |   1 -
->>>    .../boot/dts/rockchip/rk3399-firefly.dts      |   1 -
->>>    .../boot/dts/rockchip/rk3399-hugsun-x99.dts   |   1 -
->>>    .../boot/dts/rockchip/rk3399-khadas-edge.dtsi |   1 -
->>>    .../boot/dts/rockchip/rk3399-leez-p710.dts    |   1 -
->>>    .../boot/dts/rockchip/rk3399-nanopi4.dtsi     |   1 -
->>>    .../boot/dts/rockchip/rk3399-orangepi.dts     |   1 -
->>>    arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi |   1 -
->>>    .../boot/dts/rockchip/rk3399-roc-pc.dtsi      |   1 -
->>>    .../boot/dts/rockchip/rk3399-rock-pi-4.dts    |   1 -
->>>    .../boot/dts/rockchip/rk3399-rock960.dtsi     |   1 -
->>>    .../boot/dts/rockchip/rk3399-rockpro64.dts    |   1 -
->>>    .../boot/dts/rockchip/rk3399-sapphire.dtsi    |   1 -
->>>    drivers/mfd/rk808.c                           | 144 +++++-------------
->>>    include/linux/mfd/rk808.h                     |   2 -
->>>    32 files changed, 42 insertions(+), 134 deletions(-)
->>>
->>
->> _______________________________________________
->> Linux-rockchip mailing list
->> Linux-rockchip@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-rockchip
