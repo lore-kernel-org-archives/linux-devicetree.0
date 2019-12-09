@@ -7,92 +7,81 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2198C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2AEC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B936A206D3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D74206D3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:14:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="veU94l/2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZepRliXo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbfLISND (ORCPT
+        id S1726335AbfLISO4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:13:03 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42381 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfLISND (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 13:13:03 -0500
-Received: by mail-wr1-f67.google.com with SMTP id a15so17243230wrf.9;
-        Mon, 09 Dec 2019 10:13:01 -0800 (PST)
+        Mon, 9 Dec 2019 13:14:56 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37955 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfLISO4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 13:14:56 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so17294828wrh.5;
+        Mon, 09 Dec 2019 10:14:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/Lzf1hIoDU/ZjVff0Ob50B/u4dz41ExonvLP+obnOrY=;
-        b=veU94l/2yneEs2+AYnPRfypLrEwv/lHOSPvX2FqK4ks4WOdsJkkhAm4704nkBZ/6Mi
-         lazIXl2B9ITEC8ee2XmyffCUC6U1UxH6gR89nd73H2hk9MND/KGz0gFcIDaoU59+mrNe
-         s4vvhZNA0EcQumdairxyFg8FSbETavWj4ki9o6CcpeoxWnWox79TQtPOcnpnJQek4G1R
-         WrFcNF+8ArAqMgIYmMiIF6YjptIwS/YnvFwU64wa67dKt4UvGQNRP3Oc1V+GG1r37M1p
-         dlLjbhoiVa8aQS2KZXvMnQga8nB+XqTaw/IdkyHaxjVt5G6qK6/Im8JtyYoUxV5L2iZm
-         YoqA==
+        bh=FnJ75Uhb5jjpHnizeaX4CsLk/OHrkbiFhcnav79oqNs=;
+        b=ZepRliXoJjh18TG0DzXYrDGdNUZ4IzAb77TKuwgOsSvPJaDz1TcDeZjX6wInGkCRVG
+         ZkCL/tISTqSfi8mtaj94QzFCEVEJwUuYgPaEEugEb1Y2PZFP+9AJbuGLaqpp4H3EKwRb
+         vVFHbyPM3bCNgWYTfZYzVqXJpWb6wvmgwzDLarUmlDXVP2oQZ4mTrBmx86Tsg9VZK1kg
+         MKk7guwLpdHdO4FBDKB1jbt6NG8+DWARLOhEzy6OgZpMhsE93uez4hcOqiHgJ8s+oY9B
+         0bCj4MBLeAgFynAfFteGsmUd5c0qK+nLz9Pm6Ia9P1/IeAcqxfsCJ+atrVhbYwZ+LWmP
+         Ge5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=/Lzf1hIoDU/ZjVff0Ob50B/u4dz41ExonvLP+obnOrY=;
-        b=WU8BM4CQ+wMzXkyp2S7ZTvyB0bmFLeXQl4QbkmvwgZgQLrGGk1ZvwX+UDerPpALiRT
-         cpZ2hOnluVBREy4Qz3wtmHNrc+Bhu5PchZU0hnS/KfIs9EVBR5ulFgReYtIVNbX6gUmk
-         PmIt5zNxFSePQrPfSmQFtwMpJeldKFlAsYwE6jZ2t3irlG2NEl6Cx8WrOPFfMKFZFG7Q
-         ahC7ShATXzEVuVZujwjk8wUonwfkc2fOeeQaZuCBxE7vVtZbgL8ousrLSF3H1kUa/bPB
-         WwlDkG8NLZc2NbFFE0IVaJFUqxcmpM3+s3Na4EQ3nsN73AyXLi0KM+r7VKWWcs1m6Wdk
-         BHLQ==
-X-Gm-Message-State: APjAAAXNvDzQvG5NE2DJerSdwNvmbvcMPm+VF7VW0apeQ9n4yyJpUPgg
-        vCTG//4g0tbTOspU1/ICEcI=
-X-Google-Smtp-Source: APXvYqz09GH7IbLXL1n86qn2SJ7Z7dx3lAnu4LcZ3gQ+++4bhQhZLSjmbqLnsv9mnd/KlGDUZHcj5A==
-X-Received: by 2002:a5d:5308:: with SMTP id e8mr3599909wrv.77.1575915181066;
-        Mon, 09 Dec 2019 10:13:01 -0800 (PST)
+        bh=FnJ75Uhb5jjpHnizeaX4CsLk/OHrkbiFhcnav79oqNs=;
+        b=iAans2X7FoNfRfjwOTkeLn08ALr9PuTjYdPtvTwv8OSGvXXY/tpybeubcRYkXEkqp6
+         lH2zogrEQ84uDbQYyHzkcoh9pHukVLIqDNUedrbE4UStW+2h7Ohk7nGfGn5CIrnsb3zF
+         z1I2sIFmHowH/udPFwNqZNjUjJ0xpHkh+emFZxpvmMjDdqkbr8/kE6pMwmj2cNBW68zU
+         jdpPXfeQtVxLTERU4iDHq1f8S3Pv6rN6vYWqX+8KCcDzJ4YCoV+BUZAzJQHeLrWXhle4
+         vh4lzVbVQvvNjtY2lgnmWIHKbXbBx974FvuOJk+qEwE4dj1KSQO3wiK+b0t45fSSB96G
+         vznA==
+X-Gm-Message-State: APjAAAVWvLscO5iQU2TL75TaPivyIlrreTZVQk7WE6bekriIkHAfW4cl
+        jsTZ8y9v3rgAG4eab6BY8og=
+X-Google-Smtp-Source: APXvYqxanq81MjQQ/vCG8zEAT+l265qBKg7/XDRbvi4ifBvuFeVo9EKUzboncgcnArLlYX31z3RcAw==
+X-Received: by 2002:adf:ffc7:: with SMTP id x7mr3541896wrs.159.1575915294194;
+        Mon, 09 Dec 2019 10:14:54 -0800 (PST)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id g21sm219800wmh.17.2019.12.09.10.12.58
+        by smtp.gmail.com with ESMTPSA id q3sm327849wrn.33.2019.12.09.10.14.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 10:13:00 -0800 (PST)
+        Mon, 09 Dec 2019 10:14:53 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
-Cc:     mbrugger@suse.com, phil@raspberrypi.org,
-        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: bcm2711: fix soc's node dma-ranges
-Date:   Mon,  9 Dec 2019 10:12:56 -0800
-Message-Id: <20191209181256.5854-1-f.fainelli@gmail.com>
+        linux-arm-kernel@lists.infradead.org
+Cc:     grygorii.strashko@ti.com, simon.horman@netronome.com,
+        robh+dt@kernel.org, rafal@milecki.pl, davem@davemloft.net,
+        andrew@lunn.ch, mark.rutland@arm.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: Cygnus: Fix MDIO node address/size cells
+Date:   Mon,  9 Dec 2019 10:14:49 -0800
+Message-Id: <20191209181449.6307-1-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191204125633.27696-1-nsaenzjulienne@suse.de>
-References: <20191204125633.27696-1-nsaenzjulienne@suse.de>
+In-Reply-To: <20191206181909.10962-1-f.fainelli@gmail.com>
+References: <20191206181909.10962-1-f.fainelli@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  4 Dec 2019 13:56:33 +0100, Nicolas Saenz Julienne <nsaenzjulienne@suse.de> wrote:
-> Raspberry Pi's firmware has a feature to select how much memory to
-> reserve for its GPU called 'gpu_mem'. The possible values go from 16MB
-> to 944MB, with a default of 64MB. This memory resides in the topmost
-> part of the lower 1GB memory area and grows bigger expanding towards the
-> begging of memory.
+On Fri,  6 Dec 2019 10:19:09 -0800, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> The MDIO node on Cygnus had an reversed #address-cells and
+>  #size-cells properties, correct those.
 > 
-> It turns out that with low 'gpu_mem' values (16MB and 32MB) the size of
-> the memory available to the system in the lower 1GB area can outgrow the
-> interconnect's dma-range as its size was selected based on the maximum
-> system memory available given the default gpu_mem configuration. This
-> makes that memory slice unavailable for DMA. And may cause nasty kernel
-> warnings if CMA happens to include it.
-> 
-> Change soc's dma-ranges to really reflect it's HW limitation, which is
-> being able to only DMA to the lower 1GB area.
-> 
-> Fixes: 7dbe8c62ceeb ("ARM: dts: Add minimal Raspberry Pi 4 support")
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Fixes: 40c26d3af60a ("ARM: dts: Cygnus: Add the ethernet switch and ethernet PHY")
+> Reported-by: Simon Horman <simon.horman@netronome.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
 
 Applied to devicetree/fixes, thanks!
