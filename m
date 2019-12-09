@@ -2,240 +2,291 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6B0C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 10:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A682DC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 11:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C6A2077B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 10:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 663EE207FD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 11:06:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jMjYClSK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfLIKfM (ORCPT
+        id S1727495AbfLILF4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 05:35:12 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41410 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727421AbfLIKfM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 05:35:12 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6DB5728EDB5;
-        Mon,  9 Dec 2019 10:35:09 +0000 (GMT)
-Date:   Mon, 9 Dec 2019 11:35:06 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Mon, 9 Dec 2019 06:05:56 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:56600 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfLILF4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 06:05:56 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8D02999A;
+        Mon,  9 Dec 2019 12:05:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1575889552;
+        bh=N4w4AXaS16p/lwcdBi2cR5SP3Xey0/2llcHIAVZmHOI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jMjYClSKlGqv65k+anEjhCc845ZQnnelSeRjHrx1ZoPJ/516MitNKZzs8KN3k9IDT
+         8PXnJUk5Tp/klOC19o/ECHdPvwxzEWZagboLI2SxFWEZkrIJMP9fDbxhuWl3+L7uLp
+         drm9DmTcuKdECLzM+ZSkGi5H+lUkEIIqgxKfVnUY=
+Date:   Mon, 9 Dec 2019 13:05:45 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        aarch64-laptops@lists.linaro.org,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        <linux-mtd@lists.infradead.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Bernhard Frauendienst <kernel@nospam.obeliks.de>
-Subject: Re: [PATCH v5 4/4] mtd: Add driver for concatenating devices
-Message-ID: <20191209113506.41341ed4@collabora.com>
-In-Reply-To: <20191127105522.31445-5-miquel.raynal@bootlin.com>
-References: <20191127105522.31445-1-miquel.raynal@bootlin.com>
-        <20191127105522.31445-5-miquel.raynal@bootlin.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: display: panel: document panel-id
+Message-ID: <20191209110545.GB4853@pendragon.ideasonboard.com>
+References: <20191207203553.286017-1-robdclark@gmail.com>
+ <20191207203553.286017-2-robdclark@gmail.com>
+ <20191208144533.GA14311@pendragon.ideasonboard.com>
+ <CAF6AEGurXhm28wJym-5GUiTzT1F96rs==GA2Xu+3_r6+gcB3qQ@mail.gmail.com>
+ <20191208182757.GE14311@pendragon.ideasonboard.com>
+ <CAF6AEGsYa0p_6MgO+=gaok5GKkTDeUJYZw0MqiFc7+qUXuNS9A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGsYa0p_6MgO+=gaok5GKkTDeUJYZw0MqiFc7+qUXuNS9A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 27 Nov 2019 11:55:22 +0100
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+Hi Rob,
 
-> Introduce a generic way to define concatenated MTD devices. This may
-> be very useful in the case of ie. stacked SPI-NOR. Partitions to
-> concatenate are described in an additional property of the partitions
-> subnode:
+On Sun, Dec 08, 2019 at 01:23:59PM -0800, Rob Clark wrote:
+> On Sun, Dec 8, 2019 at 10:28 AM Laurent Pinchart wrote:
+> > On Sun, Dec 08, 2019 at 08:50:32AM -0800, Rob Clark wrote:
+> > > On Sun, Dec 8, 2019 at 6:45 AM Laurent Pinchart wrote:
+> > > > On Sat, Dec 07, 2019 at 12:35:50PM -0800, Rob Clark wrote:
+> > > > > From: Rob Clark <robdclark@chromium.org>
+> > > > >
+> > > > > For devices that have one of several possible panels installed, the
+> > > > > panel-id property gives firmware a generic way to locate and enable the
+> > > > > panel node corresponding to the installed panel.  Example of how to use
+> > > > > this property:
+> > > > >
+> > > > >     ivo_panel {
+> > > > >         compatible = "ivo,m133nwf4-r0";
+> > > > >         panel-id = <0xc5>;
+> > > > >         status = "disabled";
+> > > > >
+> > > > >         ports {
+> > > > >             port {
+> > > > >                 ivo_panel_in_edp: endpoint {
+> > > > >                     remote-endpoint = <&sn65dsi86_out_ivo>;
+> > > > >                 };
+> > > > >             };
+> > > > >         };
+> > > > >     };
+> > > > >
+> > > > >     boe_panel {
+> > > > >         compatible = "boe,nv133fhm-n61";
+> > > > >         panel-id = <0xc4>;
+> > > > >         status = "disabled";
+> > > > >
+> > > > >         ports {
+> > > > >             port {
+> > > > >                 boe_panel_in_edp: endpoint {
+> > > > >                     remote-endpoint = <&sn65dsi86_out_boe>;
+> > > > >                 };
+> > > > >             };
+> > > > >         };
+> > > > >     };
+> > > > >
+> > > > >     sn65dsi86: bridge@2c {
+> > > > >         compatible = "ti,sn65dsi86";
+> > > > >
+> > > > >         ports {
+> > > > >             #address-cells = <1>;
+> > > > >             #size-cells = <0>;
+> > > > >
+> > > > >             port@0 {
+> > > > >                 reg = <0>;
+> > > > >                 sn65dsi86_in_a: endpoint {
+> > > > >                     remote-endpoint = <&dsi0_out>;
+> > > > >                 };
+> > > > >             };
+> > > > >
+> > > > >             port@1 {
+> > > > >                 reg = <1>;
+> > > > >
+> > > > >                 sn65dsi86_out_boe: endpoint@c4 {
+> > > > >                     remote-endpoint = <&boe_panel_in_edp>;
+> > > > >                 };
+> > > > >
+> > > > >                 sn65dsi86_out_ivo: endpoint@c5 {
+> > > > >                     remote-endpoint = <&ivo_panel_in_edp>;
+> > > > >                 };
+> > > > >             };
+> > > > >         };
+> > > > >     };
+> > > > >
+> > > > > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > > > > ---
+> > > > >  .../bindings/display/panel/panel-common.yaml  | 26 +++++++++++++++++++
+> > > > >  1 file changed, 26 insertions(+)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> > > > > index ef8d8cdfcede..6113319b91dd 100644
+> > > > > --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> > > > > @@ -75,6 +75,32 @@ properties:
+> > > > >        in the device graph bindings defined in
+> > > > >        Documentation/devicetree/bindings/graph.txt.
+> > > > >
+> > > > > +  panel-id:
+> > > > > +    description:
+> > > > > +      To support the case where one of several different panels can be installed
+> > > > > +      on a device, the panel-id property can be used by the firmware to identify
+> > > > > +      which panel should have it's status changed to "ok".  This property is not
+> > > > > +      used by the HLOS itself.
+> > > >
+> > > > If your firmware can modify the status property of a panel, it can also
+> > > > add DT nodes. As discussed before, I don't think this belongs to DT.
+> > > > Even if panel-id isn't used by the operating system, you have Linux
+> > > > kernel patches in this series that show that this isn't transparent.
+> > >
+> > > I've already explained several times why this is not feasible.  It
+> > > would require DtbLoader to be familiar with each individual device,
+> > > and be rev'd every time a new device appears.  That is not practical
+> > > at all.
+> > >
+> > > (And fwiw, the ACPI tables describe each panel.. with an ACPI method
+> > > that is passed the the panel-id and returns the appropriate table..
+> > > since DT doesn't have methods, this is the solution.)
+> > >
+> > > I stand by this patch, we can't keep running away from this problem
+> > > and wave the magic firmware wand.
+> >
+> > I believe in firmware solutions more than firmware magic wands :-)
 > 
->         flash0 {
->                 partitions {
->                         compatible = "fixed-partitions";
->                         part-concat = <&flash0_part1>, <&flash1_part0>;
+> and with that in mind, I think I've come up with a firmware solution,
+> in the form of dtb overlays :-)
 > 
-> 			part0@0 {
-> 				label = "part0_0";
-> 				reg = <0x0 0x800000>;
-> 			};
+> I've managed to get DtbLoader to find and load a panel overlay based
+> on the panel-id it reads, which drops all patches in the patchset
+> except the last one, which now has this delta:
+
+Thank you for looking into this, I really like the outcome :-)
+
+> ---------
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile
+> b/arch/arm64/boot/dts/qcom/Makefile
+> index 6498a1ec893f..1a61e8da2521 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +subdir-y += panels
+>  dtb-$(CONFIG_ARCH_QCOM)    += apq8016-sbc.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)    += apq8096-db820c.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)    += ipq8074-hk01.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/panels/Makefile
+> b/arch/arm64/boot/dts/qcom/panels/Makefile
+> new file mode 100644
+> index 000000000000..dbf55f423555
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/panels/Makefile
+> @@ -0,0 +1,3 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_ARCH_QCOM) += panel-c4.dtb
+> +dtb-$(CONFIG_ARCH_QCOM) += panel-c5.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
+> b/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
+> new file mode 100644
+> index 000000000000..ebcf65419dad
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
+> @@ -0,0 +1,17 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Panel overlay for panel-id 0xc4
+> + *
+> + * Copyright (c) 2019, Linaro Ltd.
+> + */
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +/ {
+> +    fragment@0 {
+> +        target-path = "/panel";
+> +        __overlay__ {
+> +            compatible = "boe,nv133fhm-n61";
+> +        };
+> +    };
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
+> b/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
+> new file mode 100644
+> index 000000000000..0ad5bb6003e3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
+> @@ -0,0 +1,17 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Panel overlay for panel-id 0xc5
+> + *
+> + * Copyright (c) 2019, Linaro Ltd.
+> + */
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +/ {
+> +    fragment@0 {
+> +        target-path = "/panel";
+> +        __overlay__ {
+> +            compatible = "ivo,m133nwf4-r0";
+> +        };
+> +    };
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> index c35d8099d8eb..92c76afb721c 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> @@ -22,11 +22,13 @@
+>          hsuart0 = &uart6;
+>      };
 > 
-> 			flash0_part1: part1@800000 {
-> 				label = "part0_1";
-> 				reg = <0x800000 0x800000>;
-
-So, flash0_part1 and flash0_part2 will be created even though the user
-probably doesn't need them?
-
-> 			};
->                 };
->         };
+> +    /*
+> +     * stub node which defines how panel is connected to bridge, which
+> +     * will be updated by panel specific overlay
+> +     */
+>      panel {
+> -        compatible = "ivo,m133nwf4-r0";
+>          power-supply = <&vlcm_3v3>;
+>          no-hpd;
+> -
+>          ports {
+>              port {
+>                  panel_in_edp: endpoint {
+> ---------
 > 
->         flash1 {
->                 partitions {
->                         compatible = "fixed-partitions";
-> 
-> 			flash0_part1: part1@0 {
-> 				label = "part1_0";
-> 				reg = <0x0 0x800000>;
-> 			};
-> 
-> 			part0@800000 {
-> 				label = "part1_1";
-> 				reg = <0x800000 0x800000>;
-> 			};
->                 };
->         };
+> Side note, try as I might, I couldn't get the 'target = <&phandle>'
+> approach to work in the overlays, so I ended up going with target-path
+> instead.  From digging thru the fdt_overlay code, I *think* it is
+> because I end up w/ an overlay dtb without symbols.  In the end, I
+> guess target-path works just as well.
 
-IMHO this representation is far from intuitive. At first glance it's not
-obvious which partitions are linked together and what's the name of the
-resulting concatenated part. I definitely prefer the solution where we
-have a virtual device describing the concatenation. I also understand
-that this goes against the #1 DT rule: "DT only decribes HW blocks, not
-how they should be used/configured", but maybe we can find a compromise
-here, like moving this description to the /chosen node?
+-- 
+Regards,
 
-chosen {
-	flash-arrays {
-		/*
-		 * my-flash-array is the MTD name if label is
-		 * not present.
-		 */
-		my-flash-array {
-			/*
-			 * We could have
-			 * compatible = "flash-array";
-			 * but we can also do without it.
-			 */
-			label = "foo";
-			flashes = <&flash1 &flash2 ...>;
-			partitions {
-				/* usual partition description. */
-				...
-			};
-		};
-	};
-};
-
-Rob, what do you think?
-
-> 
-> This is useful for boards where memory range has been extended with
-> the use of multiple flash chips as memory banks of a single MTD
-> device, with partitions spanning chip borders.
-> 
-> Suggested-by: Bernhard Frauendienst <kernel@nospam.obeliks.de>
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/mtd/Kconfig           |   8 ++
->  drivers/mtd/Makefile          |   1 +
->  drivers/mtd/mtd_virt_concat.c | 240 ++++++++++++++++++++++++++++++++++
->  3 files changed, 249 insertions(+)
->  create mode 100644 drivers/mtd/mtd_virt_concat.c
-> 
-> diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
-> index 79a8ff542883..3e1e55e7158f 100644
-> --- a/drivers/mtd/Kconfig
-> +++ b/drivers/mtd/Kconfig
-> @@ -276,6 +276,14 @@ config MTD_PARTITIONED_MASTER
->  	  the parent of the partition device be the master device, rather than
->  	  what lies behind the master.
->  
-> +config MTD_VIRT_CONCAT
-> +	tristate "Virtual concatenated MTD devices"
-> +	help
-> +	  This driver allows creation of a virtual MTD device, which
-> +	  concatenates multiple physical MTD devices into a single one.
-> +	  This is useful to create partitions bigger than the underlying
-> +	  physical chips by allowing cross-chip boundaries.
-> +
->  source "drivers/mtd/chips/Kconfig"
->  
->  source "drivers/mtd/maps/Kconfig"
-> diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
-> index 58fc327a5276..c7ee13368a66 100644
-> --- a/drivers/mtd/Makefile
-> +++ b/drivers/mtd/Makefile
-> @@ -27,6 +27,7 @@ obj-$(CONFIG_SSFDC)		+= ssfdc.o
->  obj-$(CONFIG_SM_FTL)		+= sm_ftl.o
->  obj-$(CONFIG_MTD_OOPS)		+= mtdoops.o
->  obj-$(CONFIG_MTD_SWAP)		+= mtdswap.o
-> +obj-$(CONFIG_MTD_VIRT_CONCAT)	+= mtd_virt_concat.o
-
-Can we move that code to mtdconcat? After, it's just an extension to
-the mtdconcat logic that extract the description from a DT instead of
-expecting drivers to create the concatenation on their own.
-
-
-> +
-> +static int __init mtd_virt_concat_init(void)
-> +{
-> +	struct mtd_virt_concat_node *item;
-> +	struct device_node *parts = NULL;
-> +	int ret = 0, count;
-> +
-> +	/* List all the concatenations found in DT */
-> +	do {
-> +		parts = of_find_node_with_property(parts, CONCAT_PROP);
-> +		if (!of_device_is_available(parts))
-> +			continue;
-> +
-> +		count = of_count_phandle_with_args(parts, CONCAT_PROP, NULL);
-> +		if (count < MIN_DEV_PER_CONCAT)
-> +			continue;
-> +
-> +		ret = mtd_virt_concat_create_item(parts, count);
-> +		if (ret) {
-> +			of_node_put(parts);
-> +			goto destroy_items;
-> +		}
-> +	} while (parts);
-> +
-> +	/* TODO: also parse the cmdline */
-> +
-> +	/* Create the concatenations */
-> +	list_for_each_entry(item, &concat_list, head) {
-> +		ret = mtd_virt_concat_create_join(item);
-> +		if (ret)
-> +			goto destroy_joins;
-> +	}
-> +
-> +	return 0;
-> +
-> +destroy_joins:
-> +	mtd_virt_concat_destroy_joins();
-> +destroy_items:
-> +	mtd_virt_concat_destroy_items();
-> +
-> +	return ret;
-> +}
-> +late_initcall(mtd_virt_concat_init);
-
-Right now the solution assumes all drivers are statically linked. I'm
-pretty sure we can support other cases if we use MTD notifiers to be
-informed of MTD device is addition/removal.
-
-> +
-> +static void __exit mtd_virt_concat_exit(void)
-> +{
-> +	mtd_virt_concat_destroy_joins();
-> +	mtd_virt_concat_destroy_items();
-> +}
-> +module_exit(mtd_virt_concat_exit);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Bernhard Frauendienst <kernel@nospam.obeliks.de>");
-> +MODULE_DESCRIPTION("Virtual concat MTD device driver");
-
+Laurent Pinchart
