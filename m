@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A1EC2BD09
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85154C2BD09
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CA6D20828
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BCE2072D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="p/b8yFb5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GVZ2NItQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfLIJVB (ORCPT
+        id S1727625AbfLIJVL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:21:01 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54396 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727565AbfLIJVB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:21:01 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB99KqHh100845;
-        Mon, 9 Dec 2019 03:20:52 -0600
+        Mon, 9 Dec 2019 04:21:11 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59902 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727619AbfLIJVK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:21:10 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB99L3NC046038;
+        Mon, 9 Dec 2019 03:21:03 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575883252;
-        bh=56IRQZ6d0HNeeygqitauo27pEYK2FxxPjAg9EHDISc4=;
+        s=ti-com-17Q1; t=1575883263;
+        bh=f4oXcQEVxFFKqAFQ41+Ixwr9LBwG0bHt8f5qwBY+dkI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=p/b8yFb5ni6WQ+9TItu9Nc1t1cFNlLFGunswdWZvQzaKbIdzdD3hSOI2SBXzUlDlX
-         gEDmViCotjtX1awimeDHlJ+zEAD0T4Sm1E+02YbrfvWmvF4wqO5MTkI2+30pHqSpsV
-         Bm1TNTbt//17B3uTtQP+4WZECdicQvskyufBwKkM=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB99KqEd063246
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Dec 2019 03:20:52 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+        b=GVZ2NItQK/iNov5YRB2xmesxldtYQDIUEG0D09p3eDs/8gqwkHUBxrZFzkSog+oth
+         wwcXafHTl1wpJjLE8g/bCMS0O8ob/UJpBkQULG4voHAKTClZdHlN2Bvp8RMmIoI674
+         6SGPukoDkujgh4rTS2ZyvMq9i9WWhBNorP22Ch18=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB99L2au127280;
+        Mon, 9 Dec 2019 03:21:03 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 03:20:52 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 03:21:02 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 03:20:52 -0600
+ Frontend Transport; Mon, 9 Dec 2019 03:21:02 -0600
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB99Kcd1087697;
-        Mon, 9 Dec 2019 03:20:49 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB99Kcd4087697;
+        Mon, 9 Dec 2019 03:20:59 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -56,9 +55,9 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
 CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 03/13] PCI: cadence: Add support to use custom read and write accessors
-Date:   Mon, 9 Dec 2019 14:51:37 +0530
-Message-ID: <20191209092147.22901-4-kishon@ti.com>
+Subject: [PATCH 06/13] PCI: cadence: Allow pci_host_bridge to have custom pci_ops
+Date:   Mon, 9 Dec 2019 14:51:40 +0530
+Message-ID: <20191209092147.22901-7-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191209092147.22901-1-kishon@ti.com>
 References: <20191209092147.22901-1-kishon@ti.com>
@@ -70,198 +69,66 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support to use custom read and write accessors. Platforms that
-doesn't support half word or byte access or any other constraint
-while accessing registers can use this feature to populate custom
-read and write accessors. These custom accessors are used for both
-standard register access and configuration space register access.
-This is in preparation for adding PCIe support in TI's J721E SoC which
-uses Cadence PCIe core.
+Certain platforms like TI's J721E allows only 32-bit configuration
+space access. In such cases pci_generic_config_read and
+pci_generic_config_write cannot be used. Add support in Cadence core
+to let pci_host_bridge have custom pci_ops.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/cadence/pcie-cadence.h | 99 +++++++++++++++++--
- 1 file changed, 90 insertions(+), 9 deletions(-)
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 7 ++++---
+ drivers/pci/controller/cadence/pcie-cadence.h      | 8 ++++++++
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 0929554f5a81..2efc33b1cade 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -12,8 +12,8 @@
+ 
+ #include "pcie-cadence.h"
+ 
+-static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+-				      int where)
++void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
++			       int where)
+ {
+ 	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
+ 	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
+@@ -289,7 +289,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 	list_splice_init(&resources, &bridge->windows);
+ 	bridge->dev.parent = dev;
+ 	bridge->busnr = pcie->bus;
+-	bridge->ops = &cdns_pcie_host_ops;
++	if (!bridge->ops)
++		bridge->ops = &cdns_pcie_host_ops;
+ 	bridge->map_irq = of_irq_parse_and_map_pci;
+ 	bridge->swizzle_irq = pci_common_swizzle;
+ 
 diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index a2b28b912ca4..d0d91c69fa1d 100644
+index 5171d0da37da..c879dd3d2893 100644
 --- a/drivers/pci/controller/cadence/pcie-cadence.h
 +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -223,6 +223,11 @@ enum cdns_pcie_msg_routing {
- 	MSG_ROUTING_GATHER,
- };
- 
-+struct cdns_pcie_ops {
-+	u32	(*read)(void __iomem *addr, int size);
-+	void	(*write)(void __iomem *addr, int size, u32 value);
-+};
-+
- /**
-  * struct cdns_pcie - private data for Cadence PCIe controller drivers
-  * @reg_base: IO mapped register base
-@@ -239,7 +244,7 @@ struct cdns_pcie {
- 	int			phy_count;
- 	struct phy		**phy;
- 	struct device_link	**link;
--	const struct cdns_pcie_common_ops *ops;
-+	const struct cdns_pcie_ops *ops;
- };
- 
- /**
-@@ -301,21 +306,47 @@ struct cdns_pcie_ep {
- /* Register access */
- static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
- {
-+	void __iomem *addr = pcie->reg_base + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x1, value);
-+		return;
-+	}
-+
- 	writeb(value, pcie->reg_base + reg);
- }
- 
- static inline void cdns_pcie_writew(struct cdns_pcie *pcie, u32 reg, u16 value)
- {
-+	void __iomem *addr = pcie->reg_base + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x2, value);
-+		return;
-+	}
-+
- 	writew(value, pcie->reg_base + reg);
- }
- 
- static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
- {
-+	void __iomem *addr = pcie->reg_base + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x4, value);
-+		return;
-+	}
-+
- 	writel(value, pcie->reg_base + reg);
- }
- 
- static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
- {
-+	void __iomem *addr = pcie->reg_base + reg;
-+
-+	if (pcie->ops && pcie->ops->read)
-+		return pcie->ops->read(addr, 0x4);
-+
- 	return readl(pcie->reg_base + reg);
- }
- 
-@@ -323,47 +354,97 @@ static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
- static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
- 				       u32 reg, u8 value)
- {
--	writeb(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x1, value);
-+		return;
-+	}
-+
-+	writeb(value, addr);
- }
- 
- static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
- 				       u32 reg, u16 value)
- {
--	writew(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x2, value);
-+		return;
-+	}
-+
-+	writew(value, addr);
- }
- 
- /* Endpoint Function register access */
- static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
- 					  u32 reg, u8 value)
- {
--	writeb(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x1, value);
-+		return;
-+	}
-+
-+	writeb(value, addr);
- }
- 
- static inline void cdns_pcie_ep_fn_writew(struct cdns_pcie *pcie, u8 fn,
- 					  u32 reg, u16 value)
- {
--	writew(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x2, value);
-+		return;
-+	}
-+
-+	writew(value, addr);
- }
- 
- static inline void cdns_pcie_ep_fn_writel(struct cdns_pcie *pcie, u8 fn,
- 					  u32 reg, u32 value)
- {
--	writel(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->write) {
-+		pcie->ops->write(addr, 0x4, value);
-+		return;
-+	}
-+
-+	writel(value, addr);
- }
- 
- static inline u8 cdns_pcie_ep_fn_readb(struct cdns_pcie *pcie, u8 fn, u32 reg)
- {
--	return readb(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->read)
-+		return pcie->ops->read(addr, 0x1);
-+
-+	return readb(addr);
- }
- 
- static inline u16 cdns_pcie_ep_fn_readw(struct cdns_pcie *pcie, u8 fn, u32 reg)
- {
--	return readw(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->read)
-+		return pcie->ops->read(addr, 0x2);
-+
-+	return readw(addr);
- }
- 
- static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
- {
--	return readl(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-+
-+	if (pcie->ops && pcie->ops->read)
-+		return pcie->ops->read(addr, 0x4);
-+
-+	return readl(addr);
- }
+@@ -472,11 +472,19 @@ static inline bool cdns_pcie_is_link_up(struct cdns_pcie *pcie)
  
  #ifdef CONFIG_PCIE_CADENCE_HOST
+ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
++void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
++			       int where);
+ #else
+ static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ {
+ 	return 0;
+ }
++
++static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus,
++					     unsigned int devfn,
++					     int where)
++{
++}
+ #endif
+ 
+ #ifdef CONFIG_PCIE_CADENCE_EP
 -- 
 2.17.1
 
