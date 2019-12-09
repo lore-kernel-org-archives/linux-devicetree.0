@@ -2,801 +2,175 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95722C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 17:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F2EC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 17:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1502077B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 17:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EF592077B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 17:36:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GPBtLytE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1JTyJNI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbfLIREX (ORCPT
+        id S1726335AbfLIRgg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 12:04:23 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55270 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfLIREX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 12:04:23 -0500
-Received: by mail-wm1-f68.google.com with SMTP id b11so63692wmj.4
-        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 09:04:19 -0800 (PST)
+        Mon, 9 Dec 2019 12:36:36 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37606 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfLIRgg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 12:36:36 -0500
+Received: by mail-ed1-f65.google.com with SMTP id cy15so13426357edb.4;
+        Mon, 09 Dec 2019 09:36:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5KbRRQYo8Wz6D8lPuA2WupVsNR33GV1HjXa7cdEhmB8=;
-        b=GPBtLytEPZPl5uX37kYYaLj1kxCMr0+Ah9xLG3sMgpvofNNP4ec3dgMIkKWdMiHimn
-         /nCOZylJ+br7JfVRrt9rCtqGSYfN8bKmoIioXitYHKwvFaoJZBOrtF0K7Wq0dgZfGIFL
-         afA2KCMdKrZMo5XYeekHfYNGLiyBS66HkugHjkBSfY4jwxcenRPRaTqoJRif4CXqCsuW
-         EOGBmLp1aW1EeuerLVBoYaVgXjbBRTr96c0x4Rjjfidt1cbdPCQvcbdnkJ4Te67qvkbU
-         xSGmd7GuSqk8jGxRwjwpHyGrDlq0/v+IcLsweaHgrcnW+ohyY2O1JoJMz+DKEQ87JGYh
-         NPng==
+        bh=0kz3PkuY6zG5TKkTCfKz7Uj+vm9L72lw3GtKwVj0PEI=;
+        b=J1JTyJNInKLDwjlaIxBKdAqBGu/j6yU2NSEbKLUd3sRphHjYjP0OfKjiC5aVF3gs4z
+         mFsg82fncRoMHqJnNXv7jH1T7C/mROjY2pgxr69zYQgJyRqmcoeEu1avF455CNdA0LpS
+         EI+XCobX9CCnXz7d/XFYl5HFdFuHGEAgqLytY6uCDs+UNiELjEyKtdZ7CKwUm2ft4Kah
+         tgQ1Du59KAK7I73f/qcSusR7RAK1zM3AM89YlDXE03F9hvNORq40mFNgchSsnsQkTkXO
+         ycUDVWXds3Uqnt7KVHPAdWwwuoHXk8b/6w3+BdVJ4o1DBB2JGRuH0Uk96Q+T4KOs25Jj
+         ayPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=5KbRRQYo8Wz6D8lPuA2WupVsNR33GV1HjXa7cdEhmB8=;
-        b=KuRy1FO/uH0JyWXXPJujE1W97EvKMLTXExNgNmgMx6tOdZfwkizR4cKnrlkQBP3U3C
-         Kbl7/gEF6p9L5BebGA2mBE737Pv3NU/2n/41U1T21NI1sBaqtNoRtOTkxcbccea2gZAJ
-         JV+DOTisYey2fj9zi+wgn+yTALgxrCMbCFrR6SNkqim1ymkXh60dYiUxdKO8vcCU4hOE
-         fr09fdPDen1QIobx1EFDUYInNR6i59RA+mBhm87DKqXLmKelqVtXPqhznCCyTXyE6o5j
-         LcJb6kk8R9vp+a+5n2BkvPakm7uSRfwnsf4Hn44m8XQ0S9C2N6j1J/BX7EXQwClv2Rig
-         2CNw==
-X-Gm-Message-State: APjAAAVSqLnCuwKwMuo3sRtwut8E6rjLwc18X2rKC65pRatF3l0gDT1W
-        8WHRH6oIW+Ztc2A5y1AMf2PnGA==
-X-Google-Smtp-Source: APXvYqywi6HFbl42PNcw0xKj1+BHvjh93SpPK8a68ik2vCIiu+bhzcb8OEoV4aeZCd63WAhU/ynTJA==
-X-Received: by 2002:a05:600c:2509:: with SMTP id d9mr34488wma.148.1575911058362;
-        Mon, 09 Dec 2019 09:04:18 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:3114:25b8:99b8:d7fe? ([2a01:e34:ed2f:f020:3114:25b8:99b8:d7fe])
-        by smtp.googlemail.com with ESMTPSA id d6sm287wmb.6.2019.12.09.09.04.16
+        bh=0kz3PkuY6zG5TKkTCfKz7Uj+vm9L72lw3GtKwVj0PEI=;
+        b=CX6F9Js8JAO08HSLEjIh9o775SveFr69F1pyVxQ3gX+KsqhTK8kPX/WPecxpl9g7m0
+         ATQ9WwQEFNkUSqjqxtZgEIRwX6YorrCGVlaDuPBnmdV4e1N73rMpwmtzCHZbzXG/XA6+
+         r05M058gqrgvX3xpVyWUtFdH2cgcoHnRidBfuK/9R5+RaI/bxpTQjxpMAUXhXIx2EkrI
+         4w6FYZhRdBI/Sm4s89kkm/xWYln1WEMmBdpShgljEQ73mV02xC9FoPNWj/Wla/3qqv/J
+         3xRFe9qfqvUlr2F6X1//XSVDPwdVzzY2xqvlj3Vj30FesLi429TirmmZEMMB1TbdIZp7
+         A0Hg==
+X-Gm-Message-State: APjAAAXVJ4sbUQZaVWB5qbOH2nCqinK05doM6wqyr9PfwCDCLfLUL+CF
+        e2e6wJqvNneq+QHVgx+IdxU=
+X-Google-Smtp-Source: APXvYqwYWu0SLx8WThR/um6JpxrfHv17iUwpycKSK6mu3U8G/vO5HNW1a+T+oorsThwPTKd/AMpilw==
+X-Received: by 2002:a17:906:e0c3:: with SMTP id gl3mr31569877ejb.172.1575912994004;
+        Mon, 09 Dec 2019 09:36:34 -0800 (PST)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id bs4sm7540edb.16.2019.12.09.09.36.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 09:04:17 -0800 (PST)
-Subject: Re: [PATCH v3 2/2] clocksource/drivers/timer-microchip-pit64b: add
- Microchip PIT64B support
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
-        tglx@linutronix.de
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <1575470549-702-1-git-send-email-claudiu.beznea@microchip.com>
- <1575470549-702-3-git-send-email-claudiu.beznea@microchip.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <19796bfc-144c-8129-2e06-07d882e5e9f5@linaro.org>
-Date:   Mon, 9 Dec 2019 18:04:16 +0100
+        Mon, 09 Dec 2019 09:36:32 -0800 (PST)
+Subject: Re: [PATCH 0/6] brcmstb_thermal updates for new processes
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Markus Mayer <mmayer@broadcom.com>,
+        "maintainer:BROADCOM STB AVS TMON DRIVER" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:BROADCOM STB AVS TMON DRIVER" <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191030182132.25763-1-f.fainelli@gmail.com>
+ <97fc97de-c515-7c70-0c98-44146db91b3e@gmail.com>
+ <4edae8c7-abb6-fc71-14c3-9b8ddb4e7003@gmail.com>
+ <d82e53e0-9690-3dfd-3e10-4512b097e0c9@linaro.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
+ xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
+ X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
+ AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
+ ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
+ SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
+ nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
+ qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz80nRmxvcmlhbiBG
+ YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+wmYEExECACYCGyMGCwkIBwMCBBUCCAME
+ FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
+ 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSDOwU0EVxvH8AEQAOqv6agYuT4x3DgFIJNv9i0e
+ S443rCudGwmg+CbjXGA4RUe1bNdPHYgbbIaN8PFkXfb4jqg64SyU66FXJJJO+DmPK/t7dRNA
+ 3eMB1h0GbAHlLzsAzD0DKk1ARbjIusnc02aRQNsAUfceqH5fAMfs2hgXBa0ZUJ4bLly5zNbr
+ r0t/fqZsyI2rGQT9h1D5OYn4oF3KXpSpo+orJD93PEDeseho1EpmMfsVH7PxjVUlNVzmZ+tc
+ IDw24CDSXf0xxnaojoicQi7kzKpUrJodfhNXUnX2JAm/d0f9GR7zClpQMezJ2hYAX7BvBajb
+ Wbtzwi34s8lWGI121VjtQNt64mSqsK0iQAE6OYk0uuQbmMaxbBTT63+04rTPBO+gRAWZNDmQ
+ b2cTLjrOmdaiPGClSlKx1RhatzW7j1gnUbpfUl91Xzrp6/Rr9BgAZydBE/iu57KWsdMaqu84
+ JzO9UBGomh9eyBWBkrBt+Fe1qN78kM7JO6i3/QI56NA4SflV+N4PPgI8TjDVaxgrfUTV0gVa
+ cr9gDE5VgnSeSiOleChM1jOByZu0JTShOkT6AcSVW0kCz3fUrd4e5sS3J3uJezSvXjYDZ53k
+ +0GS/Hy//7PSvDbNVretLkDWL24Sgxu/v8i3JiYIxe+F5Br8QpkwNa1tm7FK4jOd95xvYADl
+ BUI1EZMCPI7zABEBAAHCwagEGBECAAkFAlcbx/ACGwICKQkQYVeZFbVjdg7BXSAEGQECAAYF
+ Alcbx/AACgkQh9CWnEQHBwSJBw//Z5n6IO19mVzMy/ZLU/vu8flv0Aa0kwk5qvDyvuvfiDTd
+ WQzq2PLs+obX0y1ffntluhvP+8yLzg7h5O6/skOfOV26ZYD9FeV3PIgR3QYF26p2Ocwa3B/k
+ P6ENkk2pRL2hh6jaA1Bsi0P34iqC2UzzLq+exctXPa07ioknTIJ09BT31lQ36Udg7NIKalnj
+ 5UbkRjqApZ+Rp0RAP9jFtq1n/gjvZGyEfuuo/G+EVCaiCt3Vp/cWxDYf2qsX6JxkwmUNswuL
+ C3duQ0AOMNYrT6Pn+Vf0kMboZ5UJEzgnSe2/5m8v6TUc9ZbC5I517niyC4+4DY8E2m2V2LS9
+ es9uKpA0yNcd4PfEf8bp29/30MEfBWOf80b1yaubrP5y7yLzplcGRZMF3PgBfi0iGo6kM/V2
+ 13iD/wQ45QTV0WTXaHVbklOdRDXDHIpT69hFJ6hAKnnM7AhqZ70Qi31UHkma9i/TeLLzYYXz
+ zhLHGIYaR04dFT8sSKTwTSqvm8rmDzMpN54/NeDSoSJitDuIE8givW/oGQFb0HGAF70qLgp0
+ 2XiUazRyRU4E4LuhNHGsUxoHOc80B3l+u3jM6xqJht2ZyMZndbAG4LyVA2g9hq2JbpX8BlsF
+ skzW1kbzIoIVXT5EhelxYEGqLFsZFdDhCy8tjePOWK069lKuuFSssaZ3C4edHtkZ8gCfWWtA
+ 8dMsqeOIg9Trx7ZBCDOZGNAAnjYQmSb2eYOAti3PX3Ex7vI8ZhJCzsNNBEjPuBIQEAC/6NPW
+ 6EfQ91ZNU7e/oKWK91kOoYGFTjfdOatp3RKANidHUMSTUcN7J2mxww80AQHKjr3Yu2InXwVX
+ SotMMR4UrkQX7jqabqXV5G+88bj0Lkr3gi6qmVkUPgnNkIBe0gaoM523ujYKLreal2OQ3GoJ
+ PS6hTRoSUM1BhwLCLIWqdX9AdT6FMlDXhCJ1ffA/F3f3nTN5oTvZ0aVF0SvQb7eIhGVFxrlb
+ WS0+dpyulr9hGdU4kzoqmZX9T/r8WCwcfXipmmz3Zt8o2pYWPMq9Utby9IEgPwultaP06MHY
+ nhda1jfzGB5ZKco/XEaXNvNYADtAD91dRtNGMwRHWMotIGiWwhEJ6vFc9bw1xcR88oYBs+7p
+ gbFSpmMGYAPA66wdDKGj9+cLhkd0SXGht9AJyaRA5AWB85yNmqcXXLkzzh2chIpSEawRsw8B
+ rQIZXc5QaAcBN2dzGN9UzqQArtWaTTjMrGesYhN+aVpMHNCmJuISQORhX5lkjeg54oplt6Zn
+ QyIsOCH3MfG95ha0TgWwyFtdxOdY/UY2zv5wGivZ3WeS0TtQf/BcGre2y85rAohFziWOzTaS
+ BKZKDaBFHwnGcJi61Pnjkz82hena8OmsnsBIucsz4N0wE+hVd6AbDYN8ZcFNIDyt7+oGD1+c
+ PfqLz2df6qjXzq27BBUboklbGUObNwADBQ//V45Z51Q4fRl/6/+oY5q+FPbRLDPlUF2lV6mb
+ hymkpqIzi1Aj/2FUKOyImGjbLAkuBQj3uMqy+BSSXyQLG3sg8pDDe8AJwXDpG2fQTyTzQm6l
+ OnaMCzosvALk2EOPJryMkOCI52+hk67cSFA0HjgTbkAv4Mssd52y/5VZR28a+LW+mJIZDurI
+ Y14UIe50G99xYxjuD1lNdTa/Yv6qFfEAqNdjEBKNuOEUQOlTLndOsvxOOPa1mRUk8Bqm9BUt
+ LHk3GDb8bfDwdos1/h2QPEi+eI+O/bm8YX7qE7uZ13bRWBY+S4+cd+Cyj8ezKYAJo9B+0g4a
+ RVhdhc3AtW44lvZo1h2iml9twMLfewKkGV3oG35CcF9mOd7n6vDad3teeNpYd/5qYhkopQrG
+ k2oRBqxyvpSLrJepsyaIpfrt5NNaH7yTCtGXcxlGf2jzGdei6H4xQPjDcVq2Ra5GJohnb/ix
+ uOc0pWciL80ohtpSspLlWoPiIowiKJu/D/Y0bQdatUOZcGadkywCZc/dg5hcAYNYchc8AwA4
+ 2dp6w8SlIsm1yIGafWlNnfvqbRBglSTnxFuKqVggiz2zk+1wa/oP+B96lm7N4/3Aw6uy7lWC
+ HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
+ TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <3a05372b-fb5f-2043-7857-eddb172199cc@gmail.com>
+Date:   Mon, 9 Dec 2019 09:36:28 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <1575470549-702-3-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <d82e53e0-9690-3dfd-3e10-4512b097e0c9@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 04/12/2019 15:42, Claudiu Beznea wrote:
-> Add driver for Microchip PIT64B timer. Timer could be used in continuous
-> mode or oneshot mode. The hardware has 2x32 bit registers for period
-> emulating a 64 bit timer. The LSB_PR and MSB_PR registers are used to
-> set the period value (compare value). TLSB and TMSB keeps the current
-> value of the counter. After a compare the TLSB and TMSB register resets.
-> The driver uses PIT64B timer for clocksource or clockevent. First
-> requested timer would be registered as clockevent, second one would be
-> registered as clocksource. Individual PIT64B hardware resources were used
-> for clocksource and clockevent to be able to support high resolution
-> timers with this hardware implementation.
+On 12/9/19 1:04 AM, Daniel Lezcano wrote:
 > 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
+> Hi Florian,
 > 
-> Changes in v3:
-> - rework data structures:
-> 	- timer related data structure is called now mchp_pit64b_timer embedding
-> 	  base iomem, clocks, interrupt, prescaler value
-> 	- introduced struct mchp_pit64b_clksrc and struct mchp_pit64b_clkevt
-> 	  instead of mchp_pit64b_clksrc_data and mchp_pit64b_clkevt_data
-> 	- use container_of() to retrieve mchp_pit64b_timer objects on
-> 	  clocksource/clockevent specific APIs
-> 	- document data structures
-> - use raw_local_irq_save()/raw_local_irq_restore() when reading
->   MCHP_PIT64B_TLSBR and MCHP_PIT64B_TMSBR in mchp_pit64b_get_period()
-> - get rid of mchp_pit64b_read(), mchp_pit64b_write() and use instead
->   readl_relaxed(), writel_relaxed()
-> - get rid of mchp_pit64b_set_period() and inlined its instructions in
->   mchp_pit64b_reset()
-> - mchp_pit64b_reset() gets now as arguments an object of type
->   struct mchp_pit64b_timer, cycles to program and mode
-> - remove static struct clocksource mchp_pit64b_clksrc and
->   static struct clock_event_device mchp_pit64b_clkevt and instead allocate
->   and fill them in mchp_pit64b_dt_init_clksrc() and
->   mchp_pit64b_dt_init_clkevt()
-> - call mchp_pit64b_reset() in mchp_pit64b_clkevt_set_next_event() and
->   program clockevent timer with SMOD=0; if SMOD=1 the timer's period could
->   be reprogrammed also if writting TLSB, TMSB if it is running. In cases
->   were its period expired START bit still has to be set in control register.
->   In case the programming sequence is like in v2, with SMOD=1:
-> 	- program MSB_PR
-> 	- program LSB_PR
-> 	- program START bit in control register
->   for short programmed periods we may start the timer twice with this
->   programming sequence, 1st time after LSB_PR is updated (and due to SMOD=1),
->   2nd time after programming START bit in control register and in case
->   programmed period already expire
-> - simplify mchp_pit64b_interrupt() by just reading ISR register, to clear the
->   received interrupt, and just call irq_data->clkevt->event_handler(irq_data->clkevt);
-> - in mchp_pit64b_pres_compute() chose the bigest prescaler in case a good
->   one not found
-> - document mchp_pit64b_pres_prepare() and simplified it a bit
-> - enforce gclk as mandatory
-> - introduce mchp_pit64b_timer_init() and mchp_pit64b_timer_cleanup()
-> - keep the clocksource timer base address in a mchp_pit64b_cs_base variable so
->   that it could be used by mchp_pit64b_sched_read_clk()
-> - rework mchp_pit64b_dt_init() and return -EINVAL in case it was called
->   more than two times: one for initialization of clockevent, one for
->   initialization of clocksource
-> - introduce MCHP_PIT64B_MR_ONE_SHOT define
-> - move the new lines introduced in Makefile and Kconfig at the end of files
-> - collect Rob's Reviewed-by tag on patch 1/2
-> - review the commit message of patch 2/2
+> On 04/12/2019 05:50, Florian Fainelli wrote:
+>>
+>>
+>> On 11/20/2019 10:43 AM, Florian Fainelli wrote:
+>>>
+>>>
+>>> On 10/30/2019 11:21 AM, Florian Fainelli wrote:
+>>>> Hi,
+>>>>
+>>>> This patch series contains a bug fix for the existing platforms and then
+>>>> paves the way for adding support for Broadcom STB's latest chips in 16nm
+>>>> processes, and finally updates the driver with pecularities introduced
+>>>> with the 16nm, like the lack of interrupt notification from the HW.
+>>>>
+>>>> Please queue up the first patch for -stable if you want, thanks!
+>>>
+>>> Ping?
+>>
+>> Rui, anyone?
 > 
-> Changes in v2:
-> - remove clock-frequency DT binding and hardcoded it in the driver
-> - initialize best_pres variable in mchp_pit64b_pres_prepare()
-> - remove MCHP_PIT64B_DEF_FREQ 
-> - get rid of patches 3-5 from v1 [1] since there is no entry in MAINTAINERS file
->   for this entry. It was removed in
->   commit 44015a8181a5 ("MAINTAINERS: at91: remove the TC entry")
-> 
-> [1] https://lore.kernel.org/lkml/1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com/
-> 
->  drivers/clocksource/Kconfig                  |   6 +
->  drivers/clocksource/Makefile                 |   1 +
->  drivers/clocksource/timer-microchip-pit64b.c | 501 +++++++++++++++++++++++++++
->  3 files changed, 508 insertions(+)
->  create mode 100644 drivers/clocksource/timer-microchip-pit64b.c
-> 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 5fdd76cb1768..eaadbc42ce4a 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -697,4 +697,10 @@ config INGENIC_TIMER
->  	help
->  	  Support for the timer/counter unit of the Ingenic JZ SoCs.
->  
-> +config MICROCHIP_PIT64B
-> +	bool "Microchip PIT64B support"
-> +	depends on OF || COMPILE_TEST
-> +	help
-> +	  This option enables Microchip PIT64B timer.
-> +
->  endmenu
-> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-> index 4dfe4225ece7..713686faa549 100644
-> --- a/drivers/clocksource/Makefile
-> +++ b/drivers/clocksource/Makefile
-> @@ -88,3 +88,4 @@ obj-$(CONFIG_RISCV_TIMER)		+= timer-riscv.o
->  obj-$(CONFIG_CSKY_MP_TIMER)		+= timer-mp-csky.o
->  obj-$(CONFIG_GX6605S_TIMER)		+= timer-gx6605s.o
->  obj-$(CONFIG_HYPERV_TIMER)		+= hyperv_timer.o
-> +obj-$(CONFIG_MICROCHIP_PIT64B)		+= timer-microchip-pit64b.o
-> diff --git a/drivers/clocksource/timer-microchip-pit64b.c b/drivers/clocksource/timer-microchip-pit64b.c
-> new file mode 100644
-> index 000000000000..293e1ab39729
-> --- /dev/null
-> +++ b/drivers/clocksource/timer-microchip-pit64b.c
-> @@ -0,0 +1,501 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * 64-bit Periodic Interval Timer driver
-> + *
-> + * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries
-> + *
-> + * Author: Claudiu Beznea <claudiu.beznea@microchip.com>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/clockchips.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/sched_clock.h>
-> +#include <linux/slab.h>
-> +
-> +#define MCHP_PIT64B_CR			0x00	/* Control Register */
-> +#define MCHP_PIT64B_CR_START		BIT(0)
-> +#define MCHP_PIT64B_CR_SWRST		BIT(8)
-> +
-> +#define MCHP_PIT64B_MR			0x04	/* Mode Register */
-> +#define MCHP_PIT64B_MR_CONT		BIT(0)
-> +#define MCHP_PIT64B_MR_ONE_SHOT		(0)
-> +#define MCHP_PIT64B_MR_SGCLK		BIT(3)
-> +#define MCHP_PIT64B_MR_PRES		GENMASK(11, 8)
-> +
-> +#define MCHP_PIT64B_LSB_PR		0x08	/* LSB Period Register */
-> +
-> +#define MCHP_PIT64B_MSB_PR		0x0C	/* MSB Period Register */
-> +
-> +#define MCHP_PIT64B_IER			0x10	/* Interrupt Enable Register */
-> +#define MCHP_PIT64B_IER_PERIOD		BIT(0)
-> +
-> +#define MCHP_PIT64B_ISR			0x1C	/* Interrupt Status Register */
-> +#define MCHP_PIT64B_ISR_PERIOD		BIT(0)
-> +
-> +#define MCHP_PIT64B_TLSBR		0x20	/* Timer LSB Register */
-> +
-> +#define MCHP_PIT64B_TMSBR		0x24	/* Timer MSB Register */
-> +
-> +#define MCHP_PIT64B_PRES_MAX		0x10
-> +#define MCHP_PIT64B_LSBMASK		GENMASK_ULL(31, 0)
-> +#define MCHP_PIT64B_PRESCALER(p)	(MCHP_PIT64B_MR_PRES & ((p) << 8))
-> +#define MCHP_PIT64B_DEF_CS_FREQ		5000000UL	/* 5 MHz */
-> +#define MCHP_PIT64B_DEF_CE_FREQ		32768		/* 32 KHz */
-> +
-> +#define MCHP_PIT64B_NAME		"pit64b"
-> +
-> +/**
-> + * struct mchp_pit64b_timer - PIT64B timer data structure
-> + * @base: base address of PIT64B hardware block
-> + * @pclk: PIT64B's peripheral clock
-> + * @gclk: PIT64B's generic clock
-> + * @cycles: timer's number of cycles
-> + * @irq: PIT64B's Linux IRQ number
-> + * @pres: prescaler value for the chosen clock
-> + */
-> +struct mchp_pit64b_timer {
-> +	void __iomem	*base;
-> +	struct clk	*pclk;
-> +	struct clk	*gclk;
-> +	u64		cycles;
-> +	u32		irq;
+> Given comments on patch 1, I'm waiting for the V2.
 
-irq is not needed, a local variable is enough to setup the timer.
-
-
-> +	u8		pres;
-> +};
-
-The field pres and cycles are needed to reset the clockevent, is it
-really mandatory to set them again and again from the value stored?
-
-> +
-> +/**
-> + * mchp_pit64b_clksrc - PIT64B clocksource data structure
-> + * @timer: PIT64B timer
-> + * @clksrc: clocksource
-> + */
-> +struct mchp_pit64b_clksrc {
-> +	struct mchp_pit64b_timer	timer;
-> +	struct clocksource		clksrc;
-> +};
-
-clksrc would be not needed here if you use the function:
-	clocksource_mmio_init()
-
-> +#define clksrc_to_mchp_pit64b_timer(x) \
-> +	(&(container_of(x, struct mchp_pit64b_clksrc, clksrc))->timer)
-
-No dereference should happen here. We should end up with a single structure:
-
-struct mchp_pit64b_timer {
-	void *__iomem			*base;
-	struct clk			*pclk;
-	struct clk			*gclk;
-	struct clock_event_device	clkevt
-};
-
-> + * mchp_pit64b_clkevt - PIT64B clockevent data structure
-> + * @timer: PIT64B timer
-> + * @clkevt: clockevent
-> + */
-> +struct mchp_pit64b_clkevt {
-> +	struct mchp_pit64b_timer	timer;
-> +	struct clock_event_device	clkevt;
-> +};
-> +
-> +#define clkevt_to_mchp_pit64b_timer(x) \
-> +	(&(container_of(x, struct mchp_pit64b_clkevt, clkevt))->timer)
-
-Same comment.
-
-> +> +static void __iomem *mchp_pit64b_cs_base;
->
-> +static inline u64 mchp_pit64b_get_period(void __iomem *base)
-
-The 'get_period' name is confusing. Can you replace that by 'get_counter'?
-
-Also, the 'high' part change may be checked, like:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/tree/drivers/clocksource/timer-imx-sysctr.c?h=bleeding-edge#n51
-
-You should consider if using only the first 32bits wouldn't be enough
-(max duration before wrapping up). Using the 64bits here has a
-significant impact on the performances. Up to you to decide.
-
-> +{
-> +	unsigned long	flags;
-> +	u32		low, high;
-> +
-> +	raw_local_irq_save(flags);
-> +	/*
-> +	 * When using a 64 bit period TLSB must be read first, followed by the
-> +	 * read of TMSB. This sequence generates an atomic read of the 64 bit
-> +	 * timer value whatever the lapse of time between the accesses.
-> +	 */
-> +	low = readl_relaxed(base + MCHP_PIT64B_TLSBR);
-> +	high = readl_relaxed(base + MCHP_PIT64B_TMSBR);
-
-Add line for clarity.
-
-> +	raw_local_irq_restore(flags);
-> +
-> +	return (((u64)high << 32) | low);
-> +}
-> +
-> +static inline void mchp_pit64b_reset(struct mchp_pit64b_timer *timer,
-> +				     u64 cycles, u32 mode)
-> +{
-> +	u32 low, high;
-> +
-> +	low = cycles & MCHP_PIT64B_LSBMASK;
-> +	high = cycles >> 32;
-> +
-> +	mode |= MCHP_PIT64B_PRESCALER(timer->pres);
-> +	if (timer->gclk)
-> +		mode |= MCHP_PIT64B_MR_SGCLK;
-
-Why not pre-compute 'mode', make it a field of the timer struct and
-change the value at init time and in set_periodic and set_oneshot?
-
-> +	writel_relaxed(MCHP_PIT64B_CR_SWRST, timer->base + MCHP_PIT64B_CR);
-> +	writel_relaxed(mode, timer->base + MCHP_PIT64B_MR);
-> +	writel_relaxed(high, timer->base + MCHP_PIT64B_MSB_PR);
-> +	writel_relaxed(low, timer->base + MCHP_PIT64B_LSB_PR);
-> +	if (timer->irq) {
-
-Clocksource reset is only needed at init time, it can be done separetely
-and this function will be called for the clockevent only, hence the
-check won't be necessary.
-
-> +		writel_relaxed(MCHP_PIT64B_IER_PERIOD,
-> +			       timer->base + MCHP_PIT64B_IER);
-> +	}
-> +	writel_relaxed(MCHP_PIT64B_CR_START, timer->base + MCHP_PIT64B_CR);
-> +}
-> +
-> +static u64 mchp_pit64b_clksrc_read(struct clocksource *cs)
-> +{
-> +	struct mchp_pit64b_timer *timer = clksrc_to_mchp_pit64b_timer(cs);
-> +
-> +	return mchp_pit64b_get_period(timer->base);
-> +}
-> +
-> +static u64 mchp_pit64b_sched_read_clk(void)
-> +{
-> +	return mchp_pit64b_get_period(mchp_pit64b_cs_base);
-> +}
-> +
-> +static int mchp_pit64b_clkevt_shutdown(struct clock_event_device *cedev)
-> +{
-> +	struct mchp_pit64b_timer *timer = clkevt_to_mchp_pit64b_timer(cedev);
-> +
-> +	writel_relaxed(MCHP_PIT64B_CR_SWRST, timer->base + MCHP_PIT64B_CR);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mchp_pit64b_clkevt_set_periodic(struct clock_event_device *cedev)
-> +{
-> +	struct mchp_pit64b_timer *timer = clkevt_to_mchp_pit64b_timer(cedev);
-> +
-> +	mchp_pit64b_reset(timer, timer->cycles, MCHP_PIT64B_MR_CONT);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mchp_pit64b_clkevt_set_oneshot(struct clock_event_device *cedev)
-> +{
-> +	struct mchp_pit64b_timer *timer = clkevt_to_mchp_pit64b_timer(cedev);
-> +
-> +	mchp_pit64b_reset(timer, timer->cycles, MCHP_PIT64B_MR_ONE_SHOT);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mchp_pit64b_clkevt_set_next_event(unsigned long evt,
-> +					     struct clock_event_device *cedev)
-> +{
-> +	struct mchp_pit64b_timer *timer = clkevt_to_mchp_pit64b_timer(cedev);
-> +
-> +	mchp_pit64b_reset(timer, evt, MCHP_PIT64B_MR_ONE_SHOT);
-> +
-> +	return 0;
-> +}
-> +
-> +static void mchp_pit64b_clkevt_suspend(struct clock_event_device *cedev)
-> +{
-> +	struct mchp_pit64b_timer *timer = clkevt_to_mchp_pit64b_timer(cedev);
-> +
-> +	writel_relaxed(MCHP_PIT64B_CR_SWRST, timer->base + MCHP_PIT64B_CR);
-> +	if (timer->gclk)
-> +		clk_disable_unprepare(timer->gclk);
-> +	clk_disable_unprepare(timer->pclk);
-> +}
-> +
-> +static void mchp_pit64b_clkevt_resume(struct clock_event_device *cedev)
-> +{
-> +	struct mchp_pit64b_timer *timer = clkevt_to_mchp_pit64b_timer(cedev);
-> +	u32 mode = MCHP_PIT64B_MR_ONE_SHOT;
-> +
-> +	clk_prepare_enable(timer->pclk);
-> +	if (timer->gclk)
-> +		clk_prepare_enable(timer->gclk);
-> +
-> +	if (clockevent_state_periodic(cedev))
-> +		mode = MCHP_PIT64B_MR_CONT;
-> +
-> +	mchp_pit64b_reset(timer, timer->cycles, mode);
-> +}
-> +
-> +static irqreturn_t mchp_pit64b_interrupt(int irq, void *dev_id)
-> +{
-> +	struct mchp_pit64b_clkevt *irq_data = dev_id;
-> +
-> +	/* Need to clear the interrupt. */
-> +	readl_relaxed(irq_data->timer.base + MCHP_PIT64B_ISR);
-> +
-> +	irq_data->clkevt.event_handler(&irq_data->clkevt);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void __init mchp_pit64b_pres_compute(u32 *pres, u32 clk_rate,
-> +					    u32 max_rate)
-> +{
-> +	u32 tmp;
-> +
-> +	for (*pres = 0; *pres < MCHP_PIT64B_PRES_MAX; (*pres)++) {
-> +		tmp = clk_rate / (*pres + 1);
-> +		if (tmp <= max_rate)
-> +			break;
-> +	}
-> +
-> +	/* Use the bigest prescaler if we didn't match one. */
-> +	if (*pres == MCHP_PIT64B_PRES_MAX)
-> +		*pres = MCHP_PIT64B_PRES_MAX - 1;
-> +}
-> +
-> +/**
-> + * mchp_pit64b_pres_prepare - prepare PIT64B clocks and internal prescaler
-> + *
-> + * PIT64B timer may be fed by gclk or pclk. When gclk is used its rate has to
-> + * be at least 3 times lower that pclk's rate. pclk rate is fixed, gclk rate
-> + * could be changed via clock APIs. The chosen clock (pclk or gclk) could be
-> + * divided by the internal PIT64B's divider.
-> + *
-> + * This function, first tries to use GCLK by requesting the desired rate from
-> + * PMC and then using the internal PIT64B prescaller, if any, to reach the
-> + * requested rate. If PCLK/GCLK < 3 (condition requested by PIT64B hardware)
-> + * then the function falls back on using PCLK as clock source for PIT64B timer
-> + * choosing the highest prescaler in case it doesn't locate one to match the
-> + * requested frequency.
-> + *
-> + * Below is presented the PIT64B block in relation with PMC:
-> + *
-> + *                                PIT64B
-> + *  PMC             +------------------------------------+
-> + * +----+           |   +-----+                          |
-> + * |    |-->gclk -->|-->|     |    +---------+  +-----+  |
-> + * |    |           |   | MUX |--->| Divider |->|timer|  |
-> + * |    |-->pclk -->|-->|     |    +---------+  +-----+  |
-> + * +----+           |   +-----+                          |
-> + *                  |      ^                             |
-> + *                  |     sel                            |
-> + *                  +------------------------------------+
-> + *
-> + * Where:
-> + *	- gclk rate <= pclk rate/3
-> + *	- gclk rate could be requested from PMC
-> + *	- pclk rate is fixed (cannot be requested from PMC)
-> + */
-> +static int __init mchp_pit64b_pres_prepare(struct mchp_pit64b_timer *timer,
-> +					   unsigned long max_rate)
-> +{
-> +	unsigned long pclk_rate, diff = 0, best_diff = ULONG_MAX;
-> +	long gclk_round = 0;
-> +	u32 pres, best_pres = 0;
-> +
-> +	pclk_rate = clk_get_rate(timer->pclk);
-> +	if (!pclk_rate)
-> +		return -EINVAL;
-> +
-> +	/* Try using GCLK. */
-> +	gclk_round = clk_round_rate(timer->gclk, max_rate);
-> +	if (gclk_round < 0)
-> +		goto pclk;
-> +
-> +	if (pclk_rate / gclk_round < 3)
-> +		goto pclk;
-> +
-> +	mchp_pit64b_pres_compute(&pres, gclk_round, max_rate);
-> +	best_diff = abs(gclk_round / (pres + 1) - max_rate);
-> +	best_pres = pres;
-> +
-> +	if (!best_diff)
-> +		goto done;
-> +
-> +pclk:
-> +	/* Check if requested rate could be obtained using PCLK. */
-> +	mchp_pit64b_pres_compute(&pres, pclk_rate, max_rate);
-> +	diff = abs(pclk_rate / (pres + 1) - max_rate);
-> +
-> +	if (best_diff > diff) {
-> +		/* Use PCLK. */
-> +		timer->gclk = NULL;
-> +		best_pres = pres;
-> +	} else {
-> +		/* Use GCLK. */
-> +		clk_set_rate(timer->gclk, gclk_round);
-> +	}
-> +
-> +done:
-> +	timer->pres = best_pres;
-> +	pr_info("PIT64B: using clk=%s with prescaler %u, freq=%lu [Hz]\n",
-> +		timer->gclk ? "gclk" : "pclk", timer->pres,
-> +		timer->gclk ? gclk_round / (timer->pres + 1)
-> +			    : pclk_rate / (timer->pres + 1));
-> +
-> +	return 0;
-> +}
-> +
-> +static int __init mchp_pit64b_timer_init(struct device_node *node,
-> +					 struct mchp_pit64b_timer *timer,
-> +					 u32 freq, bool is_clkevt)
-> +{
-> +	int ret;
-> +
-> +	timer->pclk = of_clk_get_by_name(node, "pclk");
-> +	if (IS_ERR(timer->pclk))
-> +		return PTR_ERR(timer->pclk);
-> +
-> +	timer->gclk = of_clk_get_by_name(node, "gclk");
-> +	if (IS_ERR(timer->gclk))
-> +		return PTR_ERR(timer->gclk);
-> +
-> +	timer->base = of_iomap(node, 0);
-> +	if (!timer->base)
-> +		return -ENXIO;
-> +
-> +	if (is_clkevt) {
-> +		timer->irq = irq_of_parse_and_map(node, 0);
-> +		if (!timer->irq) {
-> +			ret = -ENODEV;
-> +			goto io_unmap;
-> +		}
-> +	}
-> +
-> +	ret = mchp_pit64b_pres_prepare(timer, freq);
-> +	if (ret)
-> +		goto irq_unmap;
-> +
-> +	ret = clk_prepare_enable(timer->pclk);
-> +	if (ret)
-> +		goto irq_unmap;
-> +
-> +	if (timer->gclk) {
-> +		ret = clk_prepare_enable(timer->gclk);
-> +		if (ret)
-> +			goto pclk_unprepare;
-> +	}
-> +
-> +	return 0;
-> +
-> +pclk_unprepare:
-> +	clk_disable_unprepare(timer->pclk);
-> +irq_unmap:
-> +	irq_dispose_mapping(timer->irq);
-> +io_unmap:
-> +	iounmap(timer->base);
-> +
-> +	return ret;
-> +}
-> +
-> +static void __init mchp_pit64b_timer_cleanup(struct mchp_pit64b_timer *timer)
-> +{
-> +	if (timer->gclk)
-> +		clk_disable_unprepare(timer->gclk);
-> +	clk_disable_unprepare(timer->pclk);
-> +	irq_dispose_mapping(timer->irq);
-> +	iounmap(timer->base);
-> +}
-> +
-> +static int __init mchp_pit64b_dt_init_clksrc(struct device_node *node)
-> +{
-> +	struct mchp_pit64b_clksrc *cs;
-> +	unsigned long clk_rate;
-> +	int ret;
-> +
-> +	cs = kzalloc(sizeof(*cs), GFP_KERNEL);
-> +	if (!cs)
-> +		return -ENOMEM;
-> +
-> +	ret = mchp_pit64b_timer_init(node, &cs->timer, MCHP_PIT64B_DEF_CS_FREQ,
-> +				     false);
-> +	if (ret)
-> +		goto free;
-> +
-> +	if (cs->timer.gclk)
-> +		clk_rate = clk_get_rate(cs->timer.gclk);
-> +	else
-> +		clk_rate = clk_get_rate(cs->timer.pclk);
-> +
-> +	clk_rate = clk_rate / (cs->timer.pres + 1);
-> +	cs->timer.cycles = ULLONG_MAX;
-> +	mchp_pit64b_reset(&cs->timer, cs->timer.cycles, MCHP_PIT64B_MR_CONT);
-> +
-> +	cs->clksrc.name = MCHP_PIT64B_NAME;
-> +	cs->clksrc.mask = CLOCKSOURCE_MASK(64);
-> +	cs->clksrc.flags = CLOCK_SOURCE_IS_CONTINUOUS;
-> +	cs->clksrc.rating = 210;
-> +	cs->clksrc.read = mchp_pit64b_clksrc_read;
-> +
-> +	ret = clocksource_register_hz(&cs->clksrc, clk_rate);
-> +	if (ret) {
-> +		pr_debug("clksrc: Failed to register PIT64B clocksource!\n");
-> +		goto timer_cleanup;
-> +	}
-> +
-> +	mchp_pit64b_cs_base = cs->timer.base;
-> +	sched_clock_register(mchp_pit64b_sched_read_clk, 64, clk_rate);
-> +
-> +	return 0;
-> +
-> +timer_cleanup:
-> +	mchp_pit64b_timer_cleanup(&cs->timer);
-> +free:
-> +	kfree(cs);
-> +	return ret;
-> +}
-> +
-> +static int __init mchp_pit64b_dt_init_clkevt(struct device_node *node)
-> +{
-> +	struct mchp_pit64b_clkevt *ce;
-> +	unsigned long clk_rate;
-> +	int ret;
-> +
-> +	ce = kzalloc(sizeof(*ce), GFP_KERNEL);
-> +	if (!ce)
-> +		return -ENOMEM;
-> +
-> +	ret = mchp_pit64b_timer_init(node, &ce->timer, MCHP_PIT64B_DEF_CE_FREQ,
-> +				     true);
-> +	if (ret)
-> +		goto free;
-> +
-> +	if (ce->timer.gclk)
-> +		clk_rate = clk_get_rate(ce->timer.gclk);
-> +	else
-> +		clk_rate = clk_get_rate(ce->timer.pclk);
-> +
-> +	clk_rate = clk_rate / (ce->timer.pres + 1);
-> +	ce->timer.cycles = DIV_ROUND_CLOSEST(clk_rate, HZ);
-> +
-> +	ce->clkevt.name = MCHP_PIT64B_NAME;
-> +	ce->clkevt.features = CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_PERIODIC;
-> +	ce->clkevt.rating = 150;
-> +	ce->clkevt.set_state_shutdown = mchp_pit64b_clkevt_shutdown;
-> +	ce->clkevt.set_state_periodic = mchp_pit64b_clkevt_set_periodic;
-> +	ce->clkevt.set_state_oneshot = mchp_pit64b_clkevt_set_oneshot;
-> +	ce->clkevt.set_next_event = mchp_pit64b_clkevt_set_next_event;
-> +	ce->clkevt.suspend = mchp_pit64b_clkevt_suspend;
-> +	ce->clkevt.resume = mchp_pit64b_clkevt_resume;
-> +	ce->clkevt.cpumask = cpumask_of(0);
-> +	ce->clkevt.irq = ce->timer.irq;
-> +
-> +	ret = request_irq(ce->timer.irq, mchp_pit64b_interrupt, IRQF_TIMER,
-> +			  "pit64b_tick", ce);
-> +	if (ret) {
-> +		pr_debug("clkevt: Failed to setup PIT64B IRQ\n");
-> +		goto timer_cleanup;
-> +	}
-> +
-> +	clockevents_config_and_register(&ce->clkevt, clk_rate, 1, ULONG_MAX);
-> +
-> +	return 0;
-> +
-> +timer_cleanup:
-> +	mchp_pit64b_timer_cleanup(&ce->timer);
-> +free:
-> +	kfree(ce);
-> +	return ret;
-> +}
-> +
-> +static int __init mchp_pit64b_dt_init(struct device_node *node)
-> +{
-> +	static int inits;
-> +
-> +	switch (inits++) {
-> +	case 0:
-> +		/* 1st request, register clockevent. */
-> +		return mchp_pit64b_dt_init_clkevt(node);
-> +	case 1:
-> +		/* 2nd request, register clocksource. */
-> +		return mchp_pit64b_dt_init_clksrc(node);
-> +	}
-> +
-> +	/* The rest, don't care. */
-> +	return -EINVAL;
-> +}
-> +
-> +TIMER_OF_DECLARE(mchp_pit64b, "microchip,sam9x60-pit64b", mchp_pit64b_dt_init);
-> 
-
-
+Yes, I will follow up with a v2 later this week. Thanks
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Florian
