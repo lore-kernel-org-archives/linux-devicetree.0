@@ -2,359 +2,133 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B87C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD13BC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 16:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 912A1207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 15:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF7620692
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 16:14:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rt4Ls1bo"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YgglzsbO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfLIP53 (ORCPT
+        id S1726614AbfLIQOg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:57:29 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40331 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfLIP53 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 10:57:29 -0500
-Received: by mail-ed1-f66.google.com with SMTP id c93so13088228edf.7;
-        Mon, 09 Dec 2019 07:57:28 -0800 (PST)
+        Mon, 9 Dec 2019 11:14:36 -0500
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:35605 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfLIQOf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 11:14:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ethsic8hVbQoP36cpzKIhflM9d/9+pupoj0j8RoOH34=;
-        b=Rt4Ls1boUpKIOaG0R+AUWQ+kggnhvizFcGQDqv3UZmhZxqJUIowYDcd+q2ph3S3Vsz
-         j3cjMoo1Ykp/+O+CtY1tqnfjesb6IHXZuoSTfDDNiKgqBWILI591Sxi3qOn1t6aCRc3f
-         EGjJdiXHE8WLtCXN1fBRdwIK9bJt9p1fEuh5XacbfoTmNCXNT5pqoFqwRX/yahKCtC7u
-         4KTBuSp++MXTjKyGIyHaHRt1uzCxm1nlsvtvL/NMkMYIcsTxqqVAM4RcDf2fGcGwu5sb
-         RZBr+L0b8Hkaui/uvbZzzi6vDE90an8Jc62H2SmBFU6jyaHXXyhQWpCHv0WGfO/xMzx/
-         HTrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ethsic8hVbQoP36cpzKIhflM9d/9+pupoj0j8RoOH34=;
-        b=L1Q3usWM2EhOtY+5t/1NDQsWhcikVuXkgiLXXJ0kIsSW+ROL0u7yVu6B8Sz+Pk0vts
-         WXkB3EOEmEMf065SwlghU45XVT4CJ5tFjFptxCqf+3lDc1SLdsoOzgEHEo5gtLrB4AjU
-         ZQc/x9+0rUEj8he9mi7/Vpxq1AoOgVtl3A6gtBYBIUelhtHfk9GLKpYuBCF1wMQWszwk
-         ZTFW9Bj9IrUEoUllzkKrs1oYK9auJ3sSQK1AoAhxoIPZq4FRdlnZUl46EiHPoFJ8BtQz
-         7OD6WIkD8aUoDnFDfx1hkhnnH9YIy+DefrKrA6vNltl5BrrGY7ETRCcRbKPZG+LxWP99
-         Ohtg==
-X-Gm-Message-State: APjAAAWPkSzuPb8d+gW4Nou6JGRRspXk/m9eBF2OkBMv350Ty2VnnvJk
-        UJ2VRkLgvYa64+r0ykUmGsLaHf3Y694WrEuV5bo=
-X-Google-Smtp-Source: APXvYqwanh4BtF4Fn1oBlCMoc2jM9L7bvkdVhk//seXBK7KNu3vMukfURFhK5m37pUmNsIQLLG7h35jkeSEkGIWMeIw=
-X-Received: by 2002:a50:f313:: with SMTP id p19mr33158997edm.57.1575907047163;
- Mon, 09 Dec 2019 07:57:27 -0800 (PST)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1575908075; x=1607444075;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=AbXRZejxfbJvwUT5PYTjIuXKm5OnarLWBVASHvDlVC8=;
+  b=YgglzsbOFnzu1g9vYxpwTxvrm/IkhiiTCZzEhI0L6/srAQHOmpBlSaj7
+   C3JZuuHRM0NgrER0VJ2LuMLM3Jgc/6DmHt+oa0LdrXHkuJ3XDMuUcJkla
+   hJ1zK4XOG96Xgd8DeC+9VerQ6qLTeceUro5ZsGqUmY9+QqzYLCqhZxgpA
+   E=;
+IronPort-SDR: 5NPnlg7itjRuqdLQIX0MmDciu2bVitEXz2U9Fmwo/KWACFlyIcXzmKnkYVnFngZJqOtG8GyZwi
+ 96b5uXRKjeUg==
+X-IronPort-AV: E=Sophos;i="5.69,296,1571702400"; 
+   d="scan'208";a="7698554"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 09 Dec 2019 16:14:34 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id DC7C2A279F;
+        Mon,  9 Dec 2019 16:14:28 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Dec 2019 16:14:27 +0000
+Received: from ua9e4f3715fbc5f.ant.amazon.com (10.43.162.249) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Dec 2019 16:14:17 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <tsahee@annapurnalabs.com>, <antoine.tenart@bootlin.com>,
+        <hhhawa@amazon.com>, <mchehab+samsung@kernel.org>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <Jonathan.Cameron@huawei.com>, <tglx@linutronix.de>,
+        <khilman@baylibre.com>, <chanho.min@lge.com>, <heiko@sntech.de>,
+        <nm@ti.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
+        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
+        <jonnyc@amazon.com>, <hanochu@amazon.com>, <barakw@amazon.com>
+Subject: [PATCH v2 2/6] arm64: dts: amazon: rename al folder to be amazon
+Date:   Mon, 9 Dec 2019 16:13:37 +0000
+Message-ID: <20191209161341.29607-3-hhhawa@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191209161341.29607-1-hhhawa@amazon.com>
+References: <20191209161341.29607-1-hhhawa@amazon.com>
 MIME-Version: 1.0
-References: <20191207203553.286017-1-robdclark@gmail.com> <20191207203553.286017-2-robdclark@gmail.com>
- <20191208144533.GA14311@pendragon.ideasonboard.com> <CAF6AEGurXhm28wJym-5GUiTzT1F96rs==GA2Xu+3_r6+gcB3qQ@mail.gmail.com>
- <20191208182757.GE14311@pendragon.ideasonboard.com> <CAF6AEGsYa0p_6MgO+=gaok5GKkTDeUJYZw0MqiFc7+qUXuNS9A@mail.gmail.com>
- <CAL_Jsq+8jpdNj6yZ4Mst0bVLZHKsY0ArM+wEjOraeD9Om5YyPg@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+8jpdNj6yZ4Mst0bVLZHKsY0ArM+wEjOraeD9Om5YyPg@mail.gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 9 Dec 2019 07:57:16 -0800
-Message-ID: <CAF6AEGtt8+SmEMnko7efiOUbdXcAy7XS6vs+rgWYM+BoXEN7SA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: display: panel: document panel-id
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        aarch64-laptops@lists.linaro.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.249]
+X-ClientProxiedBy: EX13D14UWB003.ant.amazon.com (10.43.161.162) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 7:31 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Sun, Dec 8, 2019 at 3:24 PM Rob Clark <robdclark@gmail.com> wrote:
-> >
-> > On Sun, Dec 8, 2019 at 10:28 AM Laurent Pinchart
-> > <laurent.pinchart@ideasonboard.com> wrote:
-> > >
-> > > Hi Rob,
-> > >
-> > > On Sun, Dec 08, 2019 at 08:50:32AM -0800, Rob Clark wrote:
-> > > > On Sun, Dec 8, 2019 at 6:45 AM Laurent Pinchart wrote:
-> > > > > On Sat, Dec 07, 2019 at 12:35:50PM -0800, Rob Clark wrote:
-> > > > > > From: Rob Clark <robdclark@chromium.org>
-> > > > > >
-> > > > > > For devices that have one of several possible panels installed, the
-> > > > > > panel-id property gives firmware a generic way to locate and enable the
-> > > > > > panel node corresponding to the installed panel.  Example of how to use
-> > > > > > this property:
-> > > > > >
-> > > > > >     ivo_panel {
-> > > > > >         compatible = "ivo,m133nwf4-r0";
-> > > > > >         panel-id = <0xc5>;
-> > > > > >         status = "disabled";
-> > > > > >
-> > > > > >         ports {
-> > > > > >             port {
-> > > > > >                 ivo_panel_in_edp: endpoint {
-> > > > > >                     remote-endpoint = <&sn65dsi86_out_ivo>;
-> > > > > >                 };
-> > > > > >             };
-> > > > > >         };
-> > > > > >     };
-> > > > > >
-> > > > > >     boe_panel {
-> > > > > >         compatible = "boe,nv133fhm-n61";
-> > > > > >         panel-id = <0xc4>;
-> > > > > >         status = "disabled";
-> > > > > >
-> > > > > >         ports {
-> > > > > >             port {
-> > > > > >                 boe_panel_in_edp: endpoint {
-> > > > > >                     remote-endpoint = <&sn65dsi86_out_boe>;
-> > > > > >                 };
-> > > > > >             };
-> > > > > >         };
-> > > > > >     };
-> > > > > >
-> > > > > >     sn65dsi86: bridge@2c {
-> > > > > >         compatible = "ti,sn65dsi86";
-> > > > > >
-> > > > > >         ports {
-> > > > > >             #address-cells = <1>;
-> > > > > >             #size-cells = <0>;
-> > > > > >
-> > > > > >             port@0 {
-> > > > > >                 reg = <0>;
-> > > > > >                 sn65dsi86_in_a: endpoint {
-> > > > > >                     remote-endpoint = <&dsi0_out>;
-> > > > > >                 };
-> > > > > >             };
-> > > > > >
-> > > > > >             port@1 {
-> > > > > >                 reg = <1>;
-> > > > > >
-> > > > > >                 sn65dsi86_out_boe: endpoint@c4 {
-> > > > > >                     remote-endpoint = <&boe_panel_in_edp>;
-> > > > > >                 };
-> > > > > >
-> > > > > >                 sn65dsi86_out_ivo: endpoint@c5 {
-> > > > > >                     remote-endpoint = <&ivo_panel_in_edp>;
-> > > > > >                 };
-> > > > > >             };
-> > > > > >         };
-> > > > > >     };
-> > > > > >
-> > > > > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > > > > ---
-> > > > > >  .../bindings/display/panel/panel-common.yaml  | 26 +++++++++++++++++++
-> > > > > >  1 file changed, 26 insertions(+)
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> > > > > > index ef8d8cdfcede..6113319b91dd 100644
-> > > > > > --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> > > > > > +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> > > > > > @@ -75,6 +75,32 @@ properties:
-> > > > > >        in the device graph bindings defined in
-> > > > > >        Documentation/devicetree/bindings/graph.txt.
-> > > > > >
-> > > > > > +  panel-id:
-> > > > > > +    description:
-> > > > > > +      To support the case where one of several different panels can be installed
-> > > > > > +      on a device, the panel-id property can be used by the firmware to identify
-> > > > > > +      which panel should have it's status changed to "ok".  This property is not
-> > > > > > +      used by the HLOS itself.
-> > > > >
-> > > > > If your firmware can modify the status property of a panel, it can also
-> > > > > add DT nodes. As discussed before, I don't think this belongs to DT.
-> > > > > Even if panel-id isn't used by the operating system, you have Linux
-> > > > > kernel patches in this series that show that this isn't transparent.
-> > > >
-> > > > I've already explained several times why this is not feasible.  It
-> > > > would require DtbLoader to be familiar with each individual device,
-> > > > and be rev'd every time a new device appears.  That is not practical
-> > > > at all.
-> > > >
-> > > > (And fwiw, the ACPI tables describe each panel.. with an ACPI method
-> > > > that is passed the the panel-id and returns the appropriate table..
-> > > > since DT doesn't have methods, this is the solution.)
-> > > >
-> > > > I stand by this patch, we can't keep running away from this problem
-> > > > and wave the magic firmware wand.
-> > >
-> > > I believe in firmware solutions more than firmware magic wands :-)
-> > >
-> >
-> > and with that in mind, I think I've come up with a firmware solution,
-> > in the form of dtb overlays :-)
-> >
-> > I've managed to get DtbLoader to find and load a panel overlay based
-> > on the panel-id it reads, which drops all patches in the patchset
-> > except the last one, which now has this delta:
->
-> This looks good to me. The only slight concern I have with it is
-> making the overlay filename an ABI. I don't have a better suggestion
-> though. How would this work for other vendors or the same panel ID
-> (for different panels) used on different platforms? For different
-> vendors at least, I guess dtbloader gets the base dtb path somehow and
-> the overlay's are relative to that?
+As preparation to add device tree binding for Amazon's Annapurna Labs
+Alpine v3 support. Rename al device tree folder to be amazon.
 
-Not sure if "different vendors" in this context means different
-OEMs/ODMs, or different SoC's?  This solution is snapdragon specific..
-and in this case the panel id seems to be a flat namespace (I don't
-see re-use for different panels).  But in DtbLoader I attempt loading
-a device specific path first, just in case.  In particular the paths
-DtbLoader uses (for dtb and panel overlay) are (where
-$SysVendor/$ProductName/$BoardName come from SMBIOS tables and
-$PanelId comes from a qcom specific UEFIDisplayInfo variable)
-described below:
+Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+---
+ MAINTAINERS                                          | 2 +-
+ arch/arm64/boot/dts/Makefile                         | 2 +-
+ arch/arm64/boot/dts/{al => amazon}/Makefile          | 0
+ arch/arm64/boot/dts/{al => amazon}/alpine-v2-evp.dts | 0
+ arch/arm64/boot/dts/{al => amazon}/alpine-v2.dtsi    | 0
+ 5 files changed, 2 insertions(+), 2 deletions(-)
+ rename arch/arm64/boot/dts/{al => amazon}/Makefile (100%)
+ rename arch/arm64/boot/dts/{al => amazon}/alpine-v2-evp.dts (100%)
+ rename arch/arm64/boot/dts/{al => amazon}/alpine-v2.dtsi (100%)
 
-It tries to load dtb from (in order, paths relative to
-EFI system partition where DtbLoader is installed):
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bd5847e802de..ddc84e189e45 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1519,7 +1519,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	arch/arm/mach-alpine/
+ F:	arch/arm/boot/dts/alpine*
+-F:	arch/arm64/boot/dts/al/
++F:	arch/arm64/boot/dts/amazon/*
+ F:	drivers/*/*alpine*
+ 
+ ARM/ARTPEC MACHINE SUPPORT
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index f19b762c008d..6f3e1556ce42 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ subdir-y += actions
+-subdir-y += al
+ subdir-y += allwinner
+ subdir-y += altera
++subdir-y += amazon
+ subdir-y += amd
+ subdir-y += amlogic
+ subdir-y += apm
+diff --git a/arch/arm64/boot/dts/al/Makefile b/arch/arm64/boot/dts/amazon/Makefile
+similarity index 100%
+rename from arch/arm64/boot/dts/al/Makefile
+rename to arch/arm64/boot/dts/amazon/Makefile
+diff --git a/arch/arm64/boot/dts/al/alpine-v2-evp.dts b/arch/arm64/boot/dts/amazon/alpine-v2-evp.dts
+similarity index 100%
+rename from arch/arm64/boot/dts/al/alpine-v2-evp.dts
+rename to arch/arm64/boot/dts/amazon/alpine-v2-evp.dts
+diff --git a/arch/arm64/boot/dts/al/alpine-v2.dtsi b/arch/arm64/boot/dts/amazon/alpine-v2.dtsi
+similarity index 100%
+rename from arch/arm64/boot/dts/al/alpine-v2.dtsi
+rename to arch/arm64/boot/dts/amazon/alpine-v2.dtsi
+-- 
+2.17.1
 
-1) \dtb\$SysVendor\$ProductName-$BoardName.dtb
-2) \dtb\$SysVendor\$ProductName.dtb
-
-and panel overlay dtb from:
-
-1) \dtb\$SysVendor\$ProductName-$BoardName-panel-$PanelId.dtb
-2) \dtb\$SysVendor\$ProductName-panel-$PanelId.dtb
-3) \dtb\panels\panel-$PanelId.dtb
-
-We are already using different dtb names for the main dtb compared to
-what the kernel uses.  Which isn't great.  At some point we might want
-to add SysVendor/ProductName/BoardName fields in the dtb so we could
-automate renaming and stuffing the dtb's into the correct layout.
-
-> > ---------
-> > diff --git a/arch/arm64/boot/dts/qcom/Makefile
-> > b/arch/arm64/boot/dts/qcom/Makefile
-> > index 6498a1ec893f..1a61e8da2521 100644
-> > --- a/arch/arm64/boot/dts/qcom/Makefile
-> > +++ b/arch/arm64/boot/dts/qcom/Makefile
-> > @@ -1,4 +1,5 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> > +subdir-y += panels
-> >  dtb-$(CONFIG_ARCH_QCOM)    += apq8016-sbc.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)    += apq8096-db820c.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)    += ipq8074-hk01.dtb
-> > diff --git a/arch/arm64/boot/dts/qcom/panels/Makefile
-> > b/arch/arm64/boot/dts/qcom/panels/Makefile
-> > new file mode 100644
-> > index 000000000000..dbf55f423555
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/panels/Makefile
-> > @@ -0,0 +1,3 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +dtb-$(CONFIG_ARCH_QCOM) += panel-c4.dtb
-> > +dtb-$(CONFIG_ARCH_QCOM) += panel-c5.dtb
-> > diff --git a/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
-> > b/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
-> > new file mode 100644
-> > index 000000000000..ebcf65419dad
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
-> > @@ -0,0 +1,17 @@
-> > +// SPDX-License-Identifier: BSD-3-Clause
-> > +/*
-> > + * Panel overlay for panel-id 0xc4
-> > + *
-> > + * Copyright (c) 2019, Linaro Ltd.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +/plugin/;
-> > +/ {
-> > +    fragment@0 {
-> > +        target-path = "/panel";
-> > +        __overlay__ {
-> > +            compatible = "boe,nv133fhm-n61";
-> > +        };
-> > +    };
-> > +};
-> > diff --git a/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
-> > b/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
-> > new file mode 100644
-> > index 000000000000..0ad5bb6003e3
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
-> > @@ -0,0 +1,17 @@
-> > +// SPDX-License-Identifier: BSD-3-Clause
-> > +/*
-> > + * Panel overlay for panel-id 0xc5
-> > + *
-> > + * Copyright (c) 2019, Linaro Ltd.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +/plugin/;
-> > +/ {
-> > +    fragment@0 {
-> > +        target-path = "/panel";
-> > +        __overlay__ {
-> > +            compatible = "ivo,m133nwf4-r0";
-> > +        };
-> > +    };
-> > +};
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> > b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> > index c35d8099d8eb..92c76afb721c 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> > +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> > @@ -22,11 +22,13 @@
-> >          hsuart0 = &uart6;
-> >      };
-> >
-> > +    /*
-> > +     * stub node which defines how panel is connected to bridge, which
-> > +     * will be updated by panel specific overlay
-> > +     */
-> >      panel {
-> > -        compatible = "ivo,m133nwf4-r0";
-> >          power-supply = <&vlcm_3v3>;
-> >          no-hpd;
-> > -
-> >          ports {
-> >              port {
-> >                  panel_in_edp: endpoint {
-> > ---------
-> >
-> > Side note, try as I might, I couldn't get the 'target = <&phandle>'
-> > approach to work in the overlays, so I ended up going with target-path
-> > instead.  From digging thru the fdt_overlay code, I *think* it is
-> > because I end up w/ an overlay dtb without symbols.  In the end, I
-> > guess target-path works just as well.
->
-> It's the base dtb that needs the symbols I think.
->
-> BTW, to answer the question on #dri-devel, if you wanted to put the
-> full panel into an overlay, the way to solve the problem of having
-> bridge specific knowledge is defining a connector node. That should
-> provide enough abstraction. Presumably the connector is actually the
-> same across panels in this situation, so that should match up with the
-> actual h/w. It could be possible to have a different physical
-> connector populated for each possible panel, but hopefully that's not
-> the common case.
->
-
-ok, I'm not too familiar with this connector node thing.  I think in
-the end, it is really just the compatible string that differs (ie.
-power-supply, etc would all be the same for each possible panel).  But
-it might be worth trying this connector node thing
-
-BR,
--R
