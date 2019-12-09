@@ -2,135 +2,85 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B93AC04E30
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 16:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03EAC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 16:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50F58207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 16:16:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575908205;
-	bh=l4AhqF+61Jiy/j68RJXORhPY3suI4I2IVJ52J64y4Zk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DsUgX5nTUArbcIE0WzpDGSjLaZ1Kk5GkEbhxG0irQ/WfUxw6oRELDwwOvEKrnr7Qp
-	 MdnM1CZUJvgIrLpzgyD3kWsedk57f0GHx+lHEkNLbhj9hBGoZj6PAYAYlijXCNLIc3
-	 2EGhBXrz+elYF2lvi2g78RmtC2iskL22UdYa8wQs=
+	by mail.kernel.org (Postfix) with ESMTP id B41FD20692
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 16:21:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sPV3StQq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbfLIQQl (ORCPT
+        id S1726362AbfLIQVH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:16:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfLIQQl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:16:41 -0500
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B251920828;
-        Mon,  9 Dec 2019 16:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575908199;
-        bh=l4AhqF+61Jiy/j68RJXORhPY3suI4I2IVJ52J64y4Zk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0wDWFAoulgr5XplI38skCakA+bNiEcj2Wxof1qA3rXeM9rIeY4K0yEcqH3yvjr05P
-         QIGUWPh6AIJCl7capcigI94Qpb2MYx7Ja+ANKu/yNtAKWaChuWo/kjXO4LCf5i+dRa
-         XHkcsS0d1WFvuMnWFd56LGf7qF4UGCmZm6SHt7lg=
-Received: by mail-qk1-f180.google.com with SMTP id v23so13563567qkg.2;
-        Mon, 09 Dec 2019 08:16:39 -0800 (PST)
-X-Gm-Message-State: APjAAAXIAKnW6A0hfaI7t6Vh7HPGUTtMSOfFxMYyg+r5j7Ny+cAqXnz7
-        IZAA+SUip30trvJbj/39EdOrnC+EgoPZ8doxng==
-X-Google-Smtp-Source: APXvYqzm+y1a+nHLIKKviHPGNroxVtdzzfAl0KJk/UiMX5C7PNHWL6f86VHVl/ycQZQyz1jGTdzQuSJozTV+lWFQMio=
-X-Received: by 2002:a37:85c4:: with SMTP id h187mr28125112qkd.223.1575908198803;
- Mon, 09 Dec 2019 08:16:38 -0800 (PST)
+        Mon, 9 Dec 2019 11:21:07 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:55642 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfLIQVH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 11:21:07 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9GL3un050848;
+        Mon, 9 Dec 2019 10:21:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575908463;
+        bh=j6oTo7CVj7FuC1SsWtEc1sMrNwxCQCHweFOub4ID3sE=;
+        h=From:To:CC:Subject:Date;
+        b=sPV3StQqHscdsaHS1sRGIPzRXcVB9O2HmH0QuMq9nqulQFOALFa2zdW0glW8ZTkGN
+         JZFOJZkGDbMod/sqrUQf2PV70+ggrVc2PmzZdA7HXhfC3kHNNDXVa70R0BAsC+RryZ
+         SwykPXHYS8heebmx29zhsUPmZrHSG0kXh/arOndw=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9GL224125266;
+        Mon, 9 Dec 2019 10:21:03 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 10:21:02 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 10:21:03 -0600
+Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9GL0LJ129687;
+        Mon, 9 Dec 2019 10:21:00 -0600
+From:   Jyri Sarha <jsarha@ti.com>
+To:     <kishon@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <praneeth@ti.com>, <yamonkar@cadence.com>,
+        <sjakhade@cadence.com>, <rogerq@ti.com>, <jsarha@ti.com>
+Subject: [PATCH 0/3] phy: ti: j721e-wiz: Add support for DisplayPort mode
+Date:   Mon, 9 Dec 2019 18:20:59 +0200
+Message-ID: <cover.1575906694.git.jsarha@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20191205002503.13088-1-masneyb@onstation.org> <20191205002503.13088-5-masneyb@onstation.org>
- <CAL_Jsq+jpz6_N18sChREC_xGYt9sSFZFtWr3omb_6o7+MFxuHg@mail.gmail.com> <20191209005436.GA13647@onstation.org>
-In-Reply-To: <20191209005436.GA13647@onstation.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 9 Dec 2019 10:16:26 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ2v1fL7gkAg7C3GjokV7WD87S3P5HCwi-ZJ7EOjds8Pw@mail.gmail.com>
-Message-ID: <CAL_JsqJ2v1fL7gkAg7C3GjokV7WD87S3P5HCwi-ZJ7EOjds8Pw@mail.gmail.com>
-Subject: Re: [PATCH 4/7] dt-bindings: Input: introduce new clock vibrator bindings
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linux Input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Dec 8, 2019 at 6:54 PM Brian Masney <masneyb@onstation.org> wrote:
->
-> On Thu, Dec 05, 2019 at 07:56:10AM -0600, Rob Herring wrote:
-> > On Wed, Dec 4, 2019 at 6:25 PM Brian Masney <masneyb@onstation.org> wrote:
-> > >
-> > > Add support for clock-based vibrator devices where the speed can be
-> > > controlled by changing the duty cycle.
-> > >
-> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > > ---
-> > >  .../bindings/input/clk-vibrator.yaml          | 60 +++++++++++++++++++
-> > >  1 file changed, 60 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/input/clk-vibrator.yaml b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> > > new file mode 100644
-> > > index 000000000000..2103a5694fad
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> > > @@ -0,0 +1,60 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/bindings/input/clk-vibrator.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Clock vibrator
-> > > +
-> > > +maintainers:
-> > > +  - Brian Masney <masneyb@onstation.org>
-> > > +
-> > > +description: |
-> > > +  Support for clock-based vibrator devices where the speed can be controlled
-> > > +  by changing the duty cycle.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: clk-vibrator
-> > > +
-> > > +  clocks:
-> > > +    maxItems: 1
-> > > +
-> > > +  clock-names:
-> > > +    description: output clock that controls the speed
-> > > +    items:
-> > > +      - const: core
-> >
-> > No point in making up a name when there's only one clock, so drop.
->
-> OK, will do.
->
-> >
-> > > +
-> > > +  clock-frequency: true
-> >
-> > Given the frequency is variable, what does this mean in this case?
->
-> The clock frequency is fixed. The duty cycle is what's variable.
+The wiz wrapper need slightly different configuration when the wrapped
+serdes is used for DisplayPort. This series adds devicetree properties
+for selecting the mode for each individual serdes lane separately.
 
-That sounds like a PWM then...
+The patch series should apply on top of these series:
+https://lkml.org/lkml/2019/10/23/589
+https://lkml.org/lkml/2019/10/28/197
 
-Rob
+Jyri Sarha (3):
+  dt-bindings: phy: Add PHY_TYPE_DP definition
+  dt-bindings: phy: Add lane<n>-mode property to WIZ (SERDES wrapper)
+  phy: ti: j721e-wiz: Implement DisplayPort mode to the wiz driver
+
+ .../bindings/phy/ti,phy-j721e-wiz.yaml        | 12 ++++
+ drivers/phy/ti/phy-j721e-wiz.c                | 55 +++++++++++++++++--
+ include/dt-bindings/phy/phy.h                 |  1 +
+ 3 files changed, 64 insertions(+), 4 deletions(-)
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
