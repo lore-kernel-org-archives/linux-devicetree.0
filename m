@@ -2,121 +2,104 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D73C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901F0C04E30
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 770602068E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6629C20726
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 14:07:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NIR//USz"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="aV9aeett"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfLIOCj (ORCPT
+        id S1727829AbfLIOHs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:02:39 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37291 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfLIOCj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:02:39 -0500
-Received: by mail-qt1-f194.google.com with SMTP id w47so15627992qtk.4;
-        Mon, 09 Dec 2019 06:02:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=FS4GdxXu7/QfDNL7uDYbRfkUTYRCZcMTRaDIlBmOHhE=;
-        b=NIR//USzARfjaib/j+FaNjU5EJFI57vjLwO/c/ZHkLa2+Bfm4UMI324rEdZ/Gdp3ly
-         kDvv+zkgqy7DLmjUALOgmjtHwRAWVBOWewKpBaaGRyUXj0fZuyTBZWMuzZ7HyYPB6Cc4
-         8m2wJi29Rsplx7Bwvttw2nYCPbvAPQTJ4btUVJ3lOoX/OdIawCs2SSd8REm5coH6OfE9
-         DSefBUeEYd2mgVON+3VR6Si8EMcJ0mO1sY75LLvqmcE6ZhACKG9JEAJQ0XDRrFGv4Ie2
-         BwIlFpEQeV+vk8E0lyT2Pi9hLmgcIg75VyLT1476Yqe6NhiqzJReFaCYLti/pAWhjAcp
-         l6mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FS4GdxXu7/QfDNL7uDYbRfkUTYRCZcMTRaDIlBmOHhE=;
-        b=jYwvZxZp+P1svsqFiXElpYuVIWCd4kOcrvIrr3mbZCiEOS2+xysU+oTpszKg/5F+Io
-         cqLGvU1u+kGXybpheuMDIn9BNrEzucM8Jcw7kbhOWfJEoeVV0RdGbWHja1JIkYgASxEk
-         lXSb8iRXlIOWjS6NfnLQAiOiGE6FBzTYfZnkbg0I4WvcEW7CJduykH8S8ar99v8KK6iP
-         HfZ9HOrwcym7fUUvxrt5fna/BC0w8Afm/5+S86uuhLOx368j1nqUzuyWUGAqtf1UWC95
-         jU9a6iZk3zwpf8cSbn7jZuwxl6nxqvh31+WSae149ZRQLAgH84bkiUzXIgbwGUXj/Evy
-         dLOg==
-X-Gm-Message-State: APjAAAVGh1ON5aYA3D7Stx2y9Lo6vTATS9xgorOrkt0fJmW5MAsEHrvg
-        uz74uS/WTzLzGufo/R0wxF5kYsOL
-X-Google-Smtp-Source: APXvYqw02zHBpMFCOAfyakZVuDIk8pCl6TASpy/ZWVs4rrmP6otr86I7hisTCLFDwvpRpKVMwU94Hw==
-X-Received: by 2002:aed:2b07:: with SMTP id p7mr24996770qtd.180.1575900157988;
-        Mon, 09 Dec 2019 06:02:37 -0800 (PST)
-Received: from localhost.localdomain ([72.53.229.209])
-        by smtp.gmail.com with ESMTPSA id h28sm10128023qte.54.2019.12.09.06.02.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 06:02:37 -0800 (PST)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>, Pavel Machek <pavel@ucw.cz>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: [PATCH v5 0/2] tps6105x add devicetree and leds support
-Date:   Mon,  9 Dec 2019 09:02:32 -0500
-Message-Id: <20191209140234.6558-1-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 9 Dec 2019 09:07:48 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:36290 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727818AbfLIOHs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 09:07:48 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9E2Z3K029711;
+        Mon, 9 Dec 2019 15:07:36 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=BCWX5NNeDVU6wpFJD/S/N/1xkElQUKoGoGtgt/DzrE4=;
+ b=aV9aeettm48PTkUp9/ucH7YOznx3hKtPa+AWvQmxejzR2VuSZTQ9H5x8KN77eI03s+2z
+ ZuiltkGyccdCzDLjexMNNgfG23S1jsTpd5BLde2r6UsQng/2rQSV+lVtUTYICZV4ADQ4
+ 9viHA+aY3v7oOs8x/fQQIzoOe7TsSbVeWmSbujMv0E+YQABtmTJvpf6Qx4UOkJg0KgOv
+ ew3yusQ5uJeahQKJcxiY1EzadTzDatDdnxFVEMndtatphfI8Riw67u4fBVeCxAX6uZGi
+ 8g4EZBZzw58S/ETFVA/fXKhHyldHBtiZG6YYRE7feX3sr5xYeV/iy3jep5q9QcaPKwdX qg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wraq3qshq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Dec 2019 15:07:36 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 075AB100034;
+        Mon,  9 Dec 2019 15:07:35 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CE10A20DAFE;
+        Mon,  9 Dec 2019 15:07:35 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 9 Dec
+ 2019 15:07:35 +0100
+Subject: Re: [PATCH 1/3] ARM: dts: stm32: remove useless clock-names from RTC
+ node on stm32f429
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191202145604.28872-1-benjamin.gaignard@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <49d3e0c4-7e0d-0c5f-524c-4f2f9f197582@st.com>
+Date:   Mon, 9 Dec 2019 15:07:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191202145604.28872-1-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-09_04:2019-12-09,2019-12-09 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-v4 -> v5:
-	Added Jacek Anaszewski's Acked-by tag on both patches.
-	Added Rob Herring's Reviewed-by tag on devicetree patch.
-	Lee Jones:
-	- tweaked commit message s/led/LED/
-	- use relative paths in Devicetree binding docs, line up ':'s
+Hi Benjamin,
 
-v3 -> v4:
-	Removed tps6105 mfd patch - it was accepted (Mark Brown).
-	
-	Use the new LED registration API - suggested by Jacek Anaszewski.
-	
-	Updated led dt bindings to document function, color usage.
+On 12/2/19 3:56 PM, Benjamin Gaignard wrote:
+> On stm32f4 family RTC node doesn't need clock-names property.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>   arch/arm/boot/dts/stm32f429.dtsi | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+> index 5c8a826b3195..ac9caaf4cf51 100644
+> --- a/arch/arm/boot/dts/stm32f429.dtsi
+> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+> @@ -318,7 +318,6 @@
+>   			compatible = "st,stm32-rtc";
+>   			reg = <0x40002800 0x400>;
+>   			clocks = <&rcc 1 CLK_RTC>;
+> -			clock-names = "ck_rtc";
+>   			assigned-clocks = <&rcc 1 CLK_RTC>;
+>   			assigned-clock-parents = <&rcc 1 CLK_LSE>;
+>   			interrupt-parent = <&exti>;
+> 
 
-v2 -> v3:
-	Removed tps6105x regulator patch - it was accepted (Mark Brown).
-	
-	Removed devicetree/platdata bindings for tps6105x led naming.
-	I can test only with a 4.19 vendor kernel, which does not have the
-	latest led naming infrastructure (function/color). Drop devicetree/
-	fwnode/pdata led naming in favour of hard-coding to "tps6105x::torch",
-	so the patch can be tested by me, yet remains acceptable to upstream.
+Applied on stm32-next.
 
-v1 -> v2:
-	Select chip operational mode by looking at subnode name, _not_ its
-	compatible property. Suggested by Mark Brown.
-
-I needed led operation for this mfd chip, so I added a very simple
-driver for this.
-
-My platform (arm imx6q) is devicetree-based, so I added optional
-devicetree support for this chip and its sub-drivers.
-
-Sven Van Asbroeck (2):
-  leds: tps6105x: add driver for mfd chip led mode
-  dt-bindings: mfd: update TI tps6105x chip bindings
-
- .../devicetree/bindings/mfd/tps6105x.txt      | 47 ++++++++++-
- drivers/leds/Kconfig                          | 10 +++
- drivers/leds/Makefile                         |  1 +
- drivers/leds/leds-tps6105x.c                  | 83 +++++++++++++++++++
- 4 files changed, 140 insertions(+), 1 deletion(-)
- create mode 100644 drivers/leds/leds-tps6105x.c
-
--- 
-2.17.1
-
+Thanks.
+Alex
