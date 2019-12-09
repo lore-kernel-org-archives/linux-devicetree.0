@@ -2,101 +2,93 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6FFC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA392C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E3F2080D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:36:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575916602;
-	bh=hhbUlAid62Nmj6QnboRKYMrqoC20ui0184h6mt7BBVM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=k6p/PXyqWTV/LCwu535qst11PnUCg14CB7HK8FUzbbw1gx2on7jXbnacuvdcb5ZXB
-	 bOAWWSwCl6VlajqBtsjqdThsLrIRpisr+RBegqISHicxUcy6sgiXOaLWcCwcinB26n
-	 fBYfSgIRRFeZP5gg7TKDJ58ZVABzhjDPUYneJeNo=
+	by mail.kernel.org (Postfix) with ESMTP id BBE01205C9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 18:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbfLISgm (ORCPT
+        id S1726408AbfLISmw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:36:42 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:33655 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726265AbfLISgm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 13:36:42 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ieNtd-0005gq-O4; Mon, 09 Dec 2019 19:36:37 +0100
-Date:   Mon, 9 Dec 2019 18:36:36 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Ray Jui <ray.jui@broadcom.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/2] Add iProc IDM device support
-Message-ID: <20191209183636.6d708bfd@why>
-In-Reply-To: <bd90ba80-9aac-e406-9066-64e975e5b10b@broadcom.com>
-References: <20191202233127.31160-1-ray.jui@broadcom.com>
-        <20191207173914.353f768d@why>
-        <bd90ba80-9aac-e406-9066-64e975e5b10b@broadcom.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 9 Dec 2019 13:42:52 -0500
+Received: from mail.bugwerft.de ([46.23.86.59]:34218 "EHLO mail.bugwerft.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbfLISmw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:42:52 -0500
+X-Greylist: delayed 451 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Dec 2019 13:42:50 EST
+Received: from zenbar.fritz.box (pD95EF75D.dip0.t-ipconnect.de [217.94.247.93])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 710322E5CDD;
+        Mon,  9 Dec 2019 18:29:04 +0000 (UTC)
+From:   Daniel Mack <daniel@zonque.org>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
+        pascal.huerst@gmail.com, Daniel Mack <daniel@zonque.org>
+Subject: [PATCH 02/10] dt-bindings: i2c: Add documentation for ad242x i2c controllers
+Date:   Mon,  9 Dec 2019 19:35:02 +0100
+Message-Id: <20191209183511.3576038-3-daniel@zonque.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191209183511.3576038-1-daniel@zonque.org>
+References: <20191209183511.3576038-1-daniel@zonque.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: ray.jui@broadcom.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, rayagonda.kokatanur@broadcom.com, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 9 Dec 2019 10:02:53 -0800
-Ray Jui <ray.jui@broadcom.com> wrote:
+This device must be placed as a sub-device of an AD242x MFD node.
 
-> On 12/7/19 9:39 AM, Marc Zyngier wrote:
-> > On Mon,  2 Dec 2019 15:31:25 -0800
-> > Ray Jui <ray.jui@broadcom.com> wrote:
-> >   
-> >> The Broadcom iProc IDM device allows control and monitoring of ASIC internal
-> >> bus transactions. Most importantly, it can be configured to detect bus
-> >> transaction timeout. In such case, critical information such as transaction
-> >> address that caused the error, bus master ID of the transaction that caused
-> >> the error, and etc., are made available from the IDM device.  
-> > 
-> > This seems to have many of the features of an EDAC device reporting
-> > uncorrectable errors.
-> > 
-> > Is there any reason why it is not implemented as such?
-> > 
-> > Thanks,
-> > 
-> > 	M.
-> >   
-> 
-> I thought EDAC errors (in fact, in our case, that's fatal rather than
-> uncorrectable) are mostly for DDR. Is my understanding incorrect?
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+---
+ .../bindings/i2c/adi,ad242x-i2c.yaml          | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/adi,ad242x-i2c.yaml
 
-No, they are for HW errors in general. There is no real limitation of
-scope, as far as I understand. Recently, the Annapurna guys came up
-with a similar HW block, and were convinced to make it an EDAC device.
-
-See [1] for details.
-
-Thanks,
-
-	M.
-
-[1] https://lore.kernel.org/linux-devicetree/1570707681-865-1-git-send-email-talel@amazon.com/
+diff --git a/Documentation/devicetree/bindings/i2c/adi,ad242x-i2c.yaml b/Documentation/devicetree/bindings/i2c/adi,ad242x-i2c.yaml
+new file mode 100644
+index 000000000000..ded92f8a791b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/adi,ad242x-i2c.yaml
+@@ -0,0 +1,31 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/i2c/adi,ad242x-i2c.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Analog Devices AD242x I2C controller
++
++maintainers:
++  - Daniel Mack <daniel@zonque.org>
++
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
++
++description: |
++  This module is part of the AD242x MFD device. For more details and an example
++  refer to Documentation/devicetree/bindings/mfd/ad242x.yaml.
++
++properties:
++  compatible:
++    enum:
++      - adi,ad2428w-i2c
++
++  clock-frequency:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    default: 100000
++    enum: [100000, 400000]
++    description: Specifies the I²C clock frequency in Hz.
++
++required:
++  - compatible
 -- 
-Jazz is not dead. It just smells funny...
+2.23.0
+
