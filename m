@@ -2,291 +2,118 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A682DC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 11:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A529EC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 11:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 663EE207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 11:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76E172073D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 11:25:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jMjYClSK"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="BS2aYFcH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfLILF4 (ORCPT
+        id S1727038AbfLILZi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 06:05:56 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:56600 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfLILF4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 06:05:56 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8D02999A;
-        Mon,  9 Dec 2019 12:05:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575889552;
-        bh=N4w4AXaS16p/lwcdBi2cR5SP3Xey0/2llcHIAVZmHOI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jMjYClSKlGqv65k+anEjhCc845ZQnnelSeRjHrx1ZoPJ/516MitNKZzs8KN3k9IDT
-         8PXnJUk5Tp/klOC19o/ECHdPvwxzEWZagboLI2SxFWEZkrIJMP9fDbxhuWl3+L7uLp
-         drm9DmTcuKdECLzM+ZSkGi5H+lUkEIIqgxKfVnUY=
-Date:   Mon, 9 Dec 2019 13:05:45 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        aarch64-laptops@lists.linaro.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: display: panel: document panel-id
-Message-ID: <20191209110545.GB4853@pendragon.ideasonboard.com>
-References: <20191207203553.286017-1-robdclark@gmail.com>
- <20191207203553.286017-2-robdclark@gmail.com>
- <20191208144533.GA14311@pendragon.ideasonboard.com>
- <CAF6AEGurXhm28wJym-5GUiTzT1F96rs==GA2Xu+3_r6+gcB3qQ@mail.gmail.com>
- <20191208182757.GE14311@pendragon.ideasonboard.com>
- <CAF6AEGsYa0p_6MgO+=gaok5GKkTDeUJYZw0MqiFc7+qUXuNS9A@mail.gmail.com>
+        Mon, 9 Dec 2019 06:25:38 -0500
+Received: from mail-bn7nam10on2068.outbound.protection.outlook.com ([40.107.92.68]:9184
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726297AbfLILZh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 06:25:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eviTiRoRzmCBFVHqYKMtQJMsu7Kiz6pbV1i0QSM3cnNCZ2lmyl1czSoa52f3n3U8OZJTBy+ehDdTJofmnFK3NHq63wsUxEmgoIMMUYJ1ruV9KQvIN5oPimiP65dTgiSVAAPUK/7V3fscq9XE8sI86Bla+McGQKDqL6ZbJ+slot1rq8lkJOMh1YanwtCnUPTaMVbV8TfclUP9a/joXAw9SuMUD77YgV8VhUgC0gzXWbDm0VML3VvKFfV8tZjg4X489vSRc045rHttLUPdWQ3re8Fsm0v45dWQetKGCrqPqr2riTMzTds7tNWvj+gffUL+NG8mw2MxZjgm98ppMztnRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KSLeYpcm3zb/bI0q7qENHRdu6QFbYDztrn2uPDBXkCo=;
+ b=ejVYTK3p82HhQynxazbT9X/8yR6jrLxG0uJI5+LBEheyms7zb5gPrF3VnBPpQ0gBuTlCA7I/ddjwIQffytaoBpUQE6FcQMLbhqgjbPhRFEJa3D7Hu/LD0k1e2dzP6+ZR5qK31NXWj1MC/0INlZFY9l2uODVoPJOo8cCLiGFZW4NtGpaDc2Fi5NYfjZjV6lBCHzKtHBz11PHrNh/3iLijmx6dOyFWMeooxWCe7Bg0lR28EPXrHD0r0YhmcdS2J+RgM79DvOpV/unUCt5ct4TcVY4d0s2BIXj1NI30ESOR9PtRcwDWz6kDWNxL45w+ioWfdoj4S7HQv9xxXAz/3ju0+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KSLeYpcm3zb/bI0q7qENHRdu6QFbYDztrn2uPDBXkCo=;
+ b=BS2aYFcHw9YwA9TDV9YQbc/RJNbtLGDTktrVaatX/9v2fQGsKV6QE2D7U6W/OMeB/MAV+5aNhCwlL7Mwfew4KmepBbDrrvgco1FsJux29ppAocA1YUEiMjT54xa+nsxVWH4Nh7p0f6P/WExEfVZrlzvsMN3q8txjfs07SEGUjYc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3894.namprd13.prod.outlook.com (20.180.12.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.4; Mon, 9 Dec 2019 11:25:34 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5%3]) with mapi id 15.20.2538.012; Mon, 9 Dec 2019
+ 11:25:34 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, paul.walmsley@sifive.com
+Cc:     palmer@dabbelt.com, aou@eecs.berkeley.edu, bmeng.cn@gmail.com,
+        allison@lohutok.net, alexios.zavras@intel.com, atish.patra@wdc.com,
+        tglx@linutronix.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH 0/2] L2 ccache DT and cacheinfo support to read no. of L2 cache ways enabled
+Date:   Mon,  9 Dec 2019 16:55:04 +0530
+Message-Id: <1575890706-36162-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: BM1PR01CA0100.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00::16)
+ To CH2PR13MB3368.namprd13.prod.outlook.com (2603:10b6:610:2c::26)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGsYa0p_6MgO+=gaok5GKkTDeUJYZw0MqiFc7+qUXuNS9A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: from dhananjayk-PowerEdge-R620.open-silicon.com (114.143.65.226) by BM1PR01CA0100.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00::16) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Mon, 9 Dec 2019 11:25:30 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [114.143.65.226]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 22561b52-52aa-4a99-ba30-08d77c9a81cf
+X-MS-TrafficTypeDiagnostic: CH2PR13MB3894:
+X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CH2PR13MB38944DEC6C83058C0CBEE1758C580@CH2PR13MB3894.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 02462830BE
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(39840400004)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(6636002)(81166006)(6506007)(81156014)(6666004)(1006002)(6486002)(7416002)(44832011)(305945005)(316002)(478600001)(2906002)(26005)(2616005)(956004)(16526019)(186003)(52116002)(8676002)(4326008)(8936002)(86362001)(66946007)(107886003)(6512007)(5660300002)(4744005)(36756003)(66556008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3894;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3S9P/D1Rz8CfwM91IaGcRNQRtq+5SbbbKRNGI1FRmIq9tezADJif3eGw/sKSntWQyn1paOcGjaNRRhy35BTzKGi9QBIYliiliBgLwyjx6ZLMnWBcRPipIEXMwKe3HueJHixYyuk5CT0a0cgAJ9yUsAM4a9uOsQz2y483yLjYXQhlVLGO+He7XKElfVU8L9i7wDyuYX6NKZWk2I3CHYNhg0x/hAMDdFS2s6u3kbyEIMRkNVwTzpoDsXI3anYzjJawouAyFOD/2LhFryE0FDrP2HdMfHlk1VQmwwtqWCEfMFpt8QYtKaa1oo9dxEp9ySgvTvn7bPvhfcPqbaoZay6zpFggDuyJWWy0+kusZymo5DPM99wBno9vB6zW5ybfT5DawgavRPZyyLYT2T2wcGf6VT10xF9bci9g6u/EX9dWFH5dnhodY3nxkqkfmkIS3kFx
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22561b52-52aa-4a99-ba30-08d77c9a81cf
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2019 11:25:34.5244
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 366v63BRIpKX5WT6Woa0CGZNSMs+nC7TzGHcueUMBYTsbz7dNXDO3xTSekIuSwhUM8y4IZGXYpMUWMXl7PovIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3894
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+The patchset includes the patch to implement a private attribute named
+"number_of_ways_enabled" in the cacheinfo framework. Reading this
+attribute returns the number of L2 cache ways enabled at runtime,
+The patchset also include the patch to add DT node for SiFive L2 cache
+controller.
 
-On Sun, Dec 08, 2019 at 01:23:59PM -0800, Rob Clark wrote:
-> On Sun, Dec 8, 2019 at 10:28 AM Laurent Pinchart wrote:
-> > On Sun, Dec 08, 2019 at 08:50:32AM -0800, Rob Clark wrote:
-> > > On Sun, Dec 8, 2019 at 6:45 AM Laurent Pinchart wrote:
-> > > > On Sat, Dec 07, 2019 at 12:35:50PM -0800, Rob Clark wrote:
-> > > > > From: Rob Clark <robdclark@chromium.org>
-> > > > >
-> > > > > For devices that have one of several possible panels installed, the
-> > > > > panel-id property gives firmware a generic way to locate and enable the
-> > > > > panel node corresponding to the installed panel.  Example of how to use
-> > > > > this property:
-> > > > >
-> > > > >     ivo_panel {
-> > > > >         compatible = "ivo,m133nwf4-r0";
-> > > > >         panel-id = <0xc5>;
-> > > > >         status = "disabled";
-> > > > >
-> > > > >         ports {
-> > > > >             port {
-> > > > >                 ivo_panel_in_edp: endpoint {
-> > > > >                     remote-endpoint = <&sn65dsi86_out_ivo>;
-> > > > >                 };
-> > > > >             };
-> > > > >         };
-> > > > >     };
-> > > > >
-> > > > >     boe_panel {
-> > > > >         compatible = "boe,nv133fhm-n61";
-> > > > >         panel-id = <0xc4>;
-> > > > >         status = "disabled";
-> > > > >
-> > > > >         ports {
-> > > > >             port {
-> > > > >                 boe_panel_in_edp: endpoint {
-> > > > >                     remote-endpoint = <&sn65dsi86_out_boe>;
-> > > > >                 };
-> > > > >             };
-> > > > >         };
-> > > > >     };
-> > > > >
-> > > > >     sn65dsi86: bridge@2c {
-> > > > >         compatible = "ti,sn65dsi86";
-> > > > >
-> > > > >         ports {
-> > > > >             #address-cells = <1>;
-> > > > >             #size-cells = <0>;
-> > > > >
-> > > > >             port@0 {
-> > > > >                 reg = <0>;
-> > > > >                 sn65dsi86_in_a: endpoint {
-> > > > >                     remote-endpoint = <&dsi0_out>;
-> > > > >                 };
-> > > > >             };
-> > > > >
-> > > > >             port@1 {
-> > > > >                 reg = <1>;
-> > > > >
-> > > > >                 sn65dsi86_out_boe: endpoint@c4 {
-> > > > >                     remote-endpoint = <&boe_panel_in_edp>;
-> > > > >                 };
-> > > > >
-> > > > >                 sn65dsi86_out_ivo: endpoint@c5 {
-> > > > >                     remote-endpoint = <&ivo_panel_in_edp>;
-> > > > >                 };
-> > > > >             };
-> > > > >         };
-> > > > >     };
-> > > > >
-> > > > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > > > ---
-> > > > >  .../bindings/display/panel/panel-common.yaml  | 26 +++++++++++++++++++
-> > > > >  1 file changed, 26 insertions(+)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> > > > > index ef8d8cdfcede..6113319b91dd 100644
-> > > > > --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> > > > > @@ -75,6 +75,32 @@ properties:
-> > > > >        in the device graph bindings defined in
-> > > > >        Documentation/devicetree/bindings/graph.txt.
-> > > > >
-> > > > > +  panel-id:
-> > > > > +    description:
-> > > > > +      To support the case where one of several different panels can be installed
-> > > > > +      on a device, the panel-id property can be used by the firmware to identify
-> > > > > +      which panel should have it's status changed to "ok".  This property is not
-> > > > > +      used by the HLOS itself.
-> > > >
-> > > > If your firmware can modify the status property of a panel, it can also
-> > > > add DT nodes. As discussed before, I don't think this belongs to DT.
-> > > > Even if panel-id isn't used by the operating system, you have Linux
-> > > > kernel patches in this series that show that this isn't transparent.
-> > >
-> > > I've already explained several times why this is not feasible.  It
-> > > would require DtbLoader to be familiar with each individual device,
-> > > and be rev'd every time a new device appears.  That is not practical
-> > > at all.
-> > >
-> > > (And fwiw, the ACPI tables describe each panel.. with an ACPI method
-> > > that is passed the the panel-id and returns the appropriate table..
-> > > since DT doesn't have methods, this is the solution.)
-> > >
-> > > I stand by this patch, we can't keep running away from this problem
-> > > and wave the magic firmware wand.
-> >
-> > I believe in firmware solutions more than firmware magic wands :-)
-> 
-> and with that in mind, I think I've come up with a firmware solution,
-> in the form of dtb overlays :-)
-> 
-> I've managed to get DtbLoader to find and load a panel overlay based
-> on the panel-id it reads, which drops all patches in the patchset
-> except the last one, which now has this delta:
+This patchset is based on Linux v5.4 and tested on HiFive Unleashed
+board. The cacheinfo patch depends on Christoph Hellwig's patch:
+"riscv: move sifive_l2_cache.c to drivers/soc"
 
-Thank you for looking into this, I really like the outcome :-)
+Yash Shah (2):
+  riscv: dts: Add DT support for SiFive L2 cache controller
+  riscv: cacheinfo: Add support to determine no. of L2 cache way enabled
 
-> ---------
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile
-> b/arch/arm64/boot/dts/qcom/Makefile
-> index 6498a1ec893f..1a61e8da2521 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -1,4 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> +subdir-y += panels
->  dtb-$(CONFIG_ARCH_QCOM)    += apq8016-sbc.dtb
->  dtb-$(CONFIG_ARCH_QCOM)    += apq8096-db820c.dtb
->  dtb-$(CONFIG_ARCH_QCOM)    += ipq8074-hk01.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/panels/Makefile
-> b/arch/arm64/boot/dts/qcom/panels/Makefile
-> new file mode 100644
-> index 000000000000..dbf55f423555
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/panels/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +dtb-$(CONFIG_ARCH_QCOM) += panel-c4.dtb
-> +dtb-$(CONFIG_ARCH_QCOM) += panel-c5.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
-> b/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
-> new file mode 100644
-> index 000000000000..ebcf65419dad
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/panels/panel-c4.dts
-> @@ -0,0 +1,17 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Panel overlay for panel-id 0xc4
-> + *
-> + * Copyright (c) 2019, Linaro Ltd.
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +/ {
-> +    fragment@0 {
-> +        target-path = "/panel";
-> +        __overlay__ {
-> +            compatible = "boe,nv133fhm-n61";
-> +        };
-> +    };
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
-> b/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
-> new file mode 100644
-> index 000000000000..0ad5bb6003e3
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/panels/panel-c5.dts
-> @@ -0,0 +1,17 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Panel overlay for panel-id 0xc5
-> + *
-> + * Copyright (c) 2019, Linaro Ltd.
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +/ {
-> +    fragment@0 {
-> +        target-path = "/panel";
-> +        __overlay__ {
-> +            compatible = "ivo,m133nwf4-r0";
-> +        };
-> +    };
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> index c35d8099d8eb..92c76afb721c 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> @@ -22,11 +22,13 @@
->          hsuart0 = &uart6;
->      };
-> 
-> +    /*
-> +     * stub node which defines how panel is connected to bridge, which
-> +     * will be updated by panel specific overlay
-> +     */
->      panel {
-> -        compatible = "ivo,m133nwf4-r0";
->          power-supply = <&vlcm_3v3>;
->          no-hpd;
-> -
->          ports {
->              port {
->                  panel_in_edp: endpoint {
-> ---------
-> 
-> Side note, try as I might, I couldn't get the 'target = <&phandle>'
-> approach to work in the overlays, so I ended up going with target-path
-> instead.  From digging thru the fdt_overlay code, I *think* it is
-> because I end up w/ an overlay dtb without symbols.  In the end, I
-> guess target-path works just as well.
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 26 +++++++++++++++++++++++++
+ arch/riscv/include/asm/sifive_l2_cache.h   |  2 ++
+ arch/riscv/kernel/cacheinfo.c              | 31 ++++++++++++++++++++++++++++++
+ drivers/soc/sifive/sifive_l2_cache.c       |  5 +++++
+ 4 files changed, 64 insertions(+)
 
 -- 
-Regards,
+2.7.4
 
-Laurent Pinchart
