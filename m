@@ -2,166 +2,98 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760C4C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 00:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8565AC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 00:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B976206DB
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 00:54:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="h7AuxBaB"
+	by mail.kernel.org (Postfix) with ESMTP id 4DAA1206E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 00:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575853003;
+	bh=el/OTbphV9HjIKRMZ2QKo2lfvib9RuNgPJS+Z3thZog=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p1JDqH3QguaCyBKbYCbBfehOngP9lP4CTw/ebqO95cPnQoAdDd0ZX19R5QmaXkjHp
+	 klVCW67ggq3+EJw8LYeSuqF0tFIKmwGDjd/1HnFBpXLZidie/F+/+VbRbYnZUyGOVE
+	 mIaeiHSgZJV9Buzy0w7ZUNifm7ZOoKLdGC6kOF8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfLIAyh (ORCPT
+        id S1726659AbfLIA4m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 8 Dec 2019 19:54:37 -0500
-Received: from onstation.org ([52.200.56.107]:37092 "EHLO onstation.org"
+        Sun, 8 Dec 2019 19:56:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726596AbfLIAyh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 8 Dec 2019 19:54:37 -0500
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726596AbfLIA4m (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 8 Dec 2019 19:56:42 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 68F983E995;
-        Mon,  9 Dec 2019 00:54:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1575852876;
-        bh=dGqyMsBDrjQ3UdfK1DQX10vVAD15A+SKxZss7KlSu8M=;
+        by mail.kernel.org (Postfix) with ESMTPSA id 97F3B206DB;
+        Mon,  9 Dec 2019 00:56:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575853001;
+        bh=el/OTbphV9HjIKRMZ2QKo2lfvib9RuNgPJS+Z3thZog=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h7AuxBaB5JPI1qheJo50SFsN2MviAWGUESZ7PpykmcfMNvvhnSolh+oUw1MiElcxr
-         ezki8sak4GRO0UF6Bz5RGhcRNTmrvTXS6YDFqhYprO+geG5oaKA7KPze3Y5a7QjgaE
-         HVtZmJnXTNqGIg8u9b9SHAsVZs36q42UCsBbclYw=
-Date:   Sun, 8 Dec 2019 19:54:36 -0500
-From:   Brian Masney <masneyb@onstation.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linux Input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH 4/7] dt-bindings: Input: introduce new clock vibrator
- bindings
-Message-ID: <20191209005436.GA13647@onstation.org>
-References: <20191205002503.13088-1-masneyb@onstation.org>
- <20191205002503.13088-5-masneyb@onstation.org>
- <CAL_Jsq+jpz6_N18sChREC_xGYt9sSFZFtWr3omb_6o7+MFxuHg@mail.gmail.com>
+        b=c9hAO1IfDZP+nrTOhuZ0GOxHHLzXnHkYhn2wCFOWaTPBcARl2uQSPFeKkPVcTmMUF
+         lSIYNs+VxtvZXxSo5aQO9RkHIC+UF4KLBlIjolglbr899AF/w6eurnY0M6lHPri63X
+         jp5olO3T97dRFMojqvojRCxYmfvgi7oGs1uQQDmc=
+Date:   Mon, 9 Dec 2019 08:56:26 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "H . Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH] ARM: dts: e60k02: fix power button
+Message-ID: <20191209005621.GO3365@dragon>
+References: <20191111202959.24189-1-andreas@kemnade.info>
+ <20191204123645.GL3365@dragon>
+ <20191205070612.27204646@kemnade.info>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+jpz6_N18sChREC_xGYt9sSFZFtWr3omb_6o7+MFxuHg@mail.gmail.com>
+In-Reply-To: <20191205070612.27204646@kemnade.info>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 07:56:10AM -0600, Rob Herring wrote:
-> On Wed, Dec 4, 2019 at 6:25 PM Brian Masney <masneyb@onstation.org> wrote:
-> >
-> > Add support for clock-based vibrator devices where the speed can be
-> > controlled by changing the duty cycle.
-> >
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > ---
-> >  .../bindings/input/clk-vibrator.yaml          | 60 +++++++++++++++++++
-> >  1 file changed, 60 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/input/clk-vibrator.yaml b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> > new file mode 100644
-> > index 000000000000..2103a5694fad
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> > @@ -0,0 +1,60 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/bindings/input/clk-vibrator.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Clock vibrator
-> > +
-> > +maintainers:
-> > +  - Brian Masney <masneyb@onstation.org>
-> > +
-> > +description: |
-> > +  Support for clock-based vibrator devices where the speed can be controlled
-> > +  by changing the duty cycle.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: clk-vibrator
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    description: output clock that controls the speed
-> > +    items:
-> > +      - const: core
+On Thu, Dec 05, 2019 at 07:06:12AM +0100, Andreas Kemnade wrote:
+> On Wed, 4 Dec 2019 20:36:47 +0800
+> Shawn Guo <shawnguo@kernel.org> wrote:
 > 
-> No point in making up a name when there's only one clock, so drop.
+> > On Mon, Nov 11, 2019 at 09:29:59PM +0100, Andreas Kemnade wrote:
+> > > The power button was only producing irqs, but no key events,
+> > > Forced power down with long key press works, so probably
+> > > only a short spike arrives at the SoC.
+> > > Further investigation shows that LDORTC2 is off after boot
+> > > of the vendor kernel. LDORTC2 is shared with a GPIO at the pmic
+> > > which probably transfers the button press to the SoC.
+> > > That regulator off at boot, so "regulator-boot-on" is definitively
+> > > wrong. So remove that.
+> > > 
+> > > Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>  
+> > 
+> > Do you want this go into 5.5-rc as a fix?  In that case, we may need a
+> > Fixes tag here.
+> > 
+> well, now there is 
+> regulator: core: Let boot-on regulators be powered off
+> so the power button should work after regulator_late_cleanup()
+> is called but that is usually some time after userspace has started,
+> so it would be better to have that in. And of course dt should
+> correctly describe the hardware. That would be
+> 
+> Fixes: c100ea86e6ab ("ARM: dts: add Netronix E60K02 board common file")
 
-OK, will do.
+Applied with the tag.
 
 > 
-> > +
-> > +  clock-frequency: true
-> 
-> Given the frequency is variable, what does this mean in this case?
+> BTW: I have not seen your 5.5 stuff in Linus' tree yet. Seems that Olof
+> has not sent his pull request yet or is there bigger trouble?
 
-The clock frequency is fixed. The duty cycle is what's variable.
+Now they are in v5.5-rc1.
 
-Brian
-
-
-
-> 
-> > +  enable-gpios:
-> > +    maxItems: 1
-> > +
-> > +  vcc-supply:
-> > +    description: Regulator that provides power
-> > +
-> > +required:
-> > +  - compatible
-> > +  - clocks
-> > +  - clock-names
-> > +  - clock-frequency
-> 
-> Add:
-> 
-> additionalProperties: false
-> 
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +
-> > +    vibrator {
-> > +        compatible = "clk-vibrator";
-> > +
-> > +        vcc-supply = <&pm8941_l19>;
-> > +
-> > +        clocks = <&mmcc CAMSS_GP1_CLK>;
-> > +        clock-names = "core";
-> > +        clock-frequency = <24000>;
-> > +
-> > +        enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
-> > +
-> > +        pinctrl-names = "default";
-> > +        pinctrl-0 = <&vibrator_pin>;
-> > +    };
-> > --
-> > 2.21.0
-> >
+Shawn
