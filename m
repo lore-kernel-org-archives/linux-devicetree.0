@@ -2,101 +2,95 @@ Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A1BC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 21:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED528C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 21:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97077205C9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 21:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997BB206D5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 21:52:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Tf11p4tj"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tY1B/g/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfLIVqW (ORCPT
+        id S1726642AbfLIVwR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:46:22 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41614 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfLIVqW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 16:46:22 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9LkHWS027425;
-        Mon, 9 Dec 2019 15:46:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575927977;
-        bh=2YdLKsyCyc05eFGvNNX7LFuebeJYz2yZDq4ihEl6WgU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Tf11p4tjP6YY8lqfGi/xRmyK+JyBSd6r6xexwWZcKVn7v7g3TnR3xhpoYqNjE2p3G
-         N5r+jY775xXaJJjAxrP8cbATyTpLEC2p/v2gKPCBT098BecYtMdd6Jg0Lnd4yq4h+/
-         ViGVnsxcwWBbVDEGTEUp3E0K4OIbJYKFN8zx5hOo=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9LkHU1108452;
-        Mon, 9 Dec 2019 15:46:17 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 15:46:17 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 15:46:17 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9LkHZl054583;
-        Mon, 9 Dec 2019 15:46:17 -0600
-Subject: Re: [PATCH] can: tcan4x5x: Turn on the power before parsing the
- config
-To:     Marc Kleine-Budde <mkl@pengutronix.de>
-CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20191209212351.27518-1-dmurphy@ti.com>
- <deabf78f-5b6a-f631-412d-49dd6f0c372a@pengutronix.de>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <4ae989d0-dfa9-1b0c-0f3a-0a338605c3f1@ti.com>
-Date:   Mon, 9 Dec 2019 15:44:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 16:52:17 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34127 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfLIVwR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 16:52:17 -0500
+Received: by mail-pg1-f196.google.com with SMTP id r11so7793084pgf.1
+        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 13:52:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=i5+TnwHki7CwB9DGX3Mta0rJCHBm+w/ZGchbVbmsZYk=;
+        b=tY1B/g/W6Gp0eDto/4M5qAgnEJFLIsacGgPoR131eRiJk7fUtWl4e5TQIlC1CAiwdY
+         b2TBMj1z/kkjZxyKSMYaCnnAel2maeSAGyyUqpShy5+reGnTxRvNPJnUa54b2HshK+sw
+         t+J0fkA28IJXOSml4Jbt+zWayFEF8JZiQi3qqIpF4RsKMh+2RK1GijtLBE9c5vl5ZJ2o
+         oK2ucjV+VnSS61VxdpB2OPot2SGhvHBBB+vFt9nNelUOZSqQIPhVC1ofDKm0wlM+tnbe
+         yYfDf7wS04Ibq9CrYi9EXfDHETyRs5qRNWbuNJ7rOu+M7/dQiZLDtmcjMWT9YUPboBG/
+         vJ3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=i5+TnwHki7CwB9DGX3Mta0rJCHBm+w/ZGchbVbmsZYk=;
+        b=lFnCB/hHiZmEkLJUaIuXv98UsyrxrAIciNdJeCJ0OVMIXyd/DI2yeid3Kf1hrjMHBv
+         N7sgH7HlCWpyffPyl7Czqt/1YkrdvKkiRBkC5Vu/6wuU0+pYuFZ7NceUPJYEHTXy30fC
+         H0udAJjE/R/+KBPcXQuPY+1LHWBkd4X5FG7o92BXegA/4amNfQdTq+Tbpx5WY+i+XajB
+         Gawhgg/xhmREZ8Va+TscQjjzanlN0OiR4mW0QY5rIgn0uhC6x9PLr2RKjpRQksBJG145
+         Q5EAixMuSFybZSPUTFgRXFI8CfpDSYfiOHZeMwjLde2bJZHP4hn1QaNnMuX3nLNRL0Jb
+         h3xQ==
+X-Gm-Message-State: APjAAAX4aKRYcK7MwHuFEaCVQLkSpTsY1y9aGq5Ft9wPIa53Tg11A4Jv
+        nCac9glvUqTJSjd6Mq6pOIGKYzBVQfNdaA==
+X-Google-Smtp-Source: APXvYqwJ+lQOvhufrrs8iA3BVrUFuPSN7n3NPPeGKXKlHT1K24DHqB1iVmQmDkzXvU5fBntaC/ym1Q==
+X-Received: by 2002:a63:1624:: with SMTP id w36mr19463046pgl.404.1575928336235;
+        Mon, 09 Dec 2019 13:52:16 -0800 (PST)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id i127sm465841pfe.54.2019.12.09.13.52.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Dec 2019 13:52:15 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] arm64: dts: meson: add reset controller for Meson-A1 SoC
+In-Reply-To: <1569738255-3941-2-git-send-email-xingyu.chen@amlogic.com>
+References: <1569738255-3941-1-git-send-email-xingyu.chen@amlogic.com> <1569738255-3941-2-git-send-email-xingyu.chen@amlogic.com>
+Date:   Mon, 09 Dec 2019 13:52:14 -0800
+Message-ID: <7hsgltrwtt.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <deabf78f-5b6a-f631-412d-49dd6f0c372a@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Marc
+Hi Xiangyu,
 
-On 12/9/19 3:38 PM, Marc Kleine-Budde wrote:
-> On 12/9/19 10:23 PM, Dan Murphy wrote:
->> The parse config function now performs action on the device either
->> reading or writing and a reset.  If the regulator is managed it needs
->> to be turned on.  So turn on the regulator if available if the parsing
->> fails then turn off the regulator.
->>
->> Fixes: a5235f3c7c23 ("can: tcan45x: Make wake-up GPIO an optional GPIO")
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   drivers/net/can/m_can/tcan4x5x.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
->> index 4e1789ea2bc3..515486fcb150 100644
->> --- a/drivers/net/can/m_can/tcan4x5x.c
->> +++ b/drivers/net/can/m_can/tcan4x5x.c
->> @@ -451,11 +451,11 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
->>   	priv->regmap = devm_regmap_init(&spi->dev, &tcan4x5x_bus,
->>   					&spi->dev, &tcan4x5x_regmap);
->>   
->> +	tcan4x5x_power_enable(priv->power, 1);
-> please add error handling
+Xingyu Chen <xingyu.chen@amlogic.com> writes:
 
-Ack
-
-
-> Marc
+> Add the reset controller device of Meson-A1 SoC family
 >
+> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+
+I just realized I missed the DT patch for this series.  Sorry about
+that.  Generally it helps if you (re)send the DT patches separate from
+the driver, and if if it's been a couple weeks and you haven't heard
+from me, don't hesitate to ping me.
+
+Queuing this up now, with Neils tag.  Sorry for the delay.
+
+Kevin
