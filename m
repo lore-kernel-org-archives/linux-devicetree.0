@@ -2,123 +2,110 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7C1C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 12:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31686C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 12:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B011622464
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 12:11:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575979893;
-	bh=VoTZ+YSXt6jYeDOFmlVbX/TCJXliKP5PCwhjpNG3DIg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2k2gDGTqYSww++Y+dLZnxWY/QpEjD1qdmqQ21JXBqpmuGP0elqlEtBo4ATJbwDRLL
-	 D7J5KqpO9ORmHhxCe5rvcSU0u5A0eGqDU/HsJ2Dxv20noYEVHYNjb/pK/BgRdPNUeq
-	 ATW0p/NpY1YGtfrlGopqeDFx2Ro5WsiIo9apwopI=
+	by mail.kernel.org (Postfix) with ESMTP id F3BF1208C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 12:20:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KyH5SEa3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbfLJMLd (ORCPT
+        id S1727349AbfLJMUz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:11:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:41922 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727272AbfLJMLc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:11:32 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D3D71FB;
-        Tue, 10 Dec 2019 04:11:31 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C62F3F6CF;
-        Tue, 10 Dec 2019 04:11:31 -0800 (PST)
-Date:   Tue, 10 Dec 2019 12:11:29 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Message-ID: <20191210121129.GA6110@sirena.org.uk>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
- <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
- <20191118162502.GJ9761@sirena.org.uk>
- <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
- <20191119181325.GD3634@sirena.org.uk>
- <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
- <20191119193636.GH3634@sirena.org.uk>
- <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
- <20191129120925.GA5747@sirena.org.uk>
- <ccc533df4e00bdcbe18ea45a0e0679161ff41354.camel@fi.rohmeurope.com>
+        Tue, 10 Dec 2019 07:20:55 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:40535 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727332AbfLJMUz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 07:20:55 -0500
+Received: by mail-ua1-f68.google.com with SMTP id v18so2448875uaq.7
+        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 04:20:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+GXCkz0A083CnW2Auy3zOSjwo1M0I1o2oKHeSL9F3ck=;
+        b=KyH5SEa3abXaiGToIC3ZdQDJPjQz7ehlNHa1ewyHS05ElloLcTSWUH0+HHxGSpmv35
+         0zlWrNuW20o6rR7byo5kwkQGHdbqOsjtqAk71j96a9o1pdQ8ZalAOazL9CCburkIWQg3
+         QHXevI2feYkETt3mDJ6WQBTmj6EZ2zjN/PiP6GJdTkujIbnhuW6Vce6LMqVPlCwGIfJt
+         E8byyo1vnZ1FiSNFISAIBbopXvRnZtV3tsqzNmLNKEya3TQpuE8vYslVfw1+wssR+kLR
+         KxGH+irE1aFPt39ROF9djLlen7lWYJ9nXFdNXFLZ3P2/XbWfdiiOcvpQVQe4QFLEAp4n
+         WPaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+GXCkz0A083CnW2Auy3zOSjwo1M0I1o2oKHeSL9F3ck=;
+        b=NuepZG7jkllrnXcTMmD1CjgCYEM82jcqTyi7wSZMl/qeFQgYOLyox3gi7Lmeuq7JTK
+         5bzz7CJS/pM5tCfJDjcAbD7DB4dfw6uI9tJEfX9djjcZLENcc0SSexXG041hc4AvHx3K
+         sa28VKMbbycFy7sYiHMEplbEgew7EZ+11/mxPmWhxdSzc5rRiH2FLS9zaLmIE/nup6gF
+         +nh48CMsfmxL9VrJrrbqXUQE6NmhFedtY/1+wagXv3m7/Rgft4+NPFD+ebzflwLrz0rX
+         UPAUcAjqPxjB+aNDiwRljjIngEekoywXAh9Hh41GjdFGJ17yuI0TnMNLMSL49WJQbfRZ
+         fl0Q==
+X-Gm-Message-State: APjAAAW3WwH+G37J44GBCJnB4R1FJxgn6XOTxthRYgqbhOMIgHhZb0c1
+        uXscpy+rksaYHFvWnGaOQ3IkqF58OUUrz2FE7ScUodoy
+X-Google-Smtp-Source: APXvYqyXodp8MezisX2Ogin4ZbF5PMroS3cE2mukEBRUXULiSnp8AsW1NNU4k9XYdJLiuEsKDM0ea9YUPKV0ekMZ3NQ=
+X-Received: by 2002:ab0:4ea6:: with SMTP id l38mr29080701uah.129.1575980453850;
+ Tue, 10 Dec 2019 04:20:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
-Content-Disposition: inline
-In-Reply-To: <ccc533df4e00bdcbe18ea45a0e0679161ff41354.camel@fi.rohmeurope.com>
-X-Cookie: We have ears, earther...FOUR OF THEM!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191113172514.19052-1-ludovic.Barre@st.com> <CAPDyKFooSJUn6UCE6QkFmJOCovm00ehz_nAPbiNQM3AcJT_bJQ@mail.gmail.com>
+ <c8311933-d129-4618-b81b-aa627b7b6de0@st.com> <e80f76d3-0414-4f65-c2eb-4b09aaba3840@st.com>
+In-Reply-To: <e80f76d3-0414-4f65-c2eb-4b09aaba3840@st.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 10 Dec 2019 13:20:17 +0100
+Message-ID: <CAPDyKFpkkqb3nr1wm7hjMqJCxH7QHArxSm_oWV=M55ga9+0FKw@mail.gmail.com>
+Subject: Re: [Linux-stm32] [PATCH 1/1] mmc: mmci: add threaded irq to abort
+ DPSM of non-functional state
+To:     Ludovic BARRE <ludovic.barre@st.com>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Ludovic,
 
---xHFwDpU9dbj6ez1V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, 28 Nov 2019 at 15:06, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>
+> hi Ulf
+>
+> just a gentleman ping about this thread.
+>
+> small summarize:
+> This patch return an IRQ_WAKE_THREAD only when the variant is
+> busy_timeout capable and a datatimeout occurs on R1B request.
+>
+> So the threaded irq is called only to treat this specific error.
+> Normally, there is no impact on HW flow control or for legacy variants.
 
-On Tue, Dec 10, 2019 at 11:14:48AM +0000, Vaittinen, Matti wrote:
+Yes, this should work.
 
-> Problem is that if no default voltages are given from DT, the the first
-> voltage changes are likely to be slow (require register access - I
-> guess the HW defaults are not working for many use-cases) - which may
-> be undesirable.
+>
+> In your previous message, you seem to suggest using threaded irq to
+> manage HW flow control (pio mode). But Like you mention below, the mmci
+> legacy could timing sensitive.
+>
+> For the moment, I prefer to use the threaded irq just to manage this
+> error. If needed, the irq threade could be extended later.
+>
+> What do you think about that?
 
-I don't think that's likely to be a practical problem, and it's not
-likely it'd be worse than always doing writes.  A lot of things are
-slower the first time you do them and you're still going to have to
-do the writes no matter what.
+Yes, that's fine!
 
---xHFwDpU9dbj6ez1V
-Content-Type: application/pgp-signature; name="signature.asc"
+I have another minor comment on the code, though, but posting that separately.
 
------BEGIN PGP SIGNATURE-----
+[...]
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3vi24ACgkQJNaLcl1U
-h9D/zwgAgJGg4Rzbjb/3neARAW2iuL6cC3Z2NQEUh8aJUuljcByF/iXTtlKuups0
-bGOmzkA+eYmrW2wPZPoV88r4feU8A4ri9lzgR3G8cO5n3tAT3lvMiA0ENfYm99nk
-h+YwnKi6WIhhQw4BNNdIfmqr+UfNCUIKLwpmdo2hqm8ALwp/2O9Ge1tpdqVMWfk4
-bV+sqZQW/yxKYYl2vBz9YVw2WGQV7me/vK4fPbxcjUe1nIDJ2MSR2ZZL3Io5RRZ5
-f/V3zG3Ao8ak6Hgg8HaAmZKGsJqtSn1AFwm//zV8BNDHkHC745uTnvIs702ytDgl
-o4pdZZNbPIMmyOtLJtueNJUHBCIwsw==
-=S22J
------END PGP SIGNATURE-----
-
---xHFwDpU9dbj6ez1V--
+Kind regards
+Uffe
