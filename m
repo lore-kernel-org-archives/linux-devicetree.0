@@ -2,347 +2,192 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E73C7C00454
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 12:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5117AC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 12:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7612073D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 12:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2349820836
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 12:08:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i4Vp1W98"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfLJMD1 (ORCPT
+        id S1727283AbfLJMIP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:03:27 -0500
-Received: from out28-51.mail.aliyun.com ([115.124.28.51]:52664 "EHLO
-        out28-51.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfLJMD0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 07:03:26 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07437209|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.124055-0.0147101-0.861235;DS=CONTINUE|ham_alarm|0.0131168-0.000745652-0.986138;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07394;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=25;RT=25;SR=0;TI=SMTPD_---.GEHd9lh_1575979374;
-Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GEHd9lh_1575979374)
-          by smtp.aliyun-inc.com(10.147.42.197);
-          Tue, 10 Dec 2019 20:03:08 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
-        mark.rutland@arm.com, alexandre.belloni@bootlin.com,
-        ralf@linux-mips.org, heiko@sntech.de, icenowy@aosc.io,
-        ak@linux.intel.com, laurent.pinchart@ideasonboard.com,
-        krzk@kernel.org, geert+renesas@glider.be, paul@crapouillou.net,
-        prasannatsmkumar@gmail.com, keescook@chromium.org,
-        ebiederm@xmission.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 772753199@qq.com
-Subject: [PATCH v8 4/4] MIPS: Ingenic: Add YSH & ATIL CU Neo board support.
-Date:   Tue, 10 Dec 2019 20:02:43 +0800
-Message-Id: <1575979363-25956-5-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1575979363-25956-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1575979363-25956-1-git-send-email-zhouyanjie@wanyeetech.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 10 Dec 2019 07:08:15 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34812 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbfLJMIP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 07:08:15 -0500
+Received: by mail-pl1-f196.google.com with SMTP id x17so1980804pln.1;
+        Tue, 10 Dec 2019 04:08:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=l5uHiV+Yi1b/Weaw8ObG18hI7s+mQL2W7TckPvD0Lmw=;
+        b=i4Vp1W98Nl1Bui3BDaWfwjqHavE+84yuA5Oq/NNngoDymHqy40lpX0wJWRF15laQ3H
+         RK8TOdxrCq4G/QeARICf2XgwZof7eTk1qmGv7X9T40sSWaDdIYBFm60zecRsPFFbXCKT
+         +hNlW/WYxHPKhZFf+N3HsnpbTlkrLmQ8DpTB9b2Aa+VGMvCvvr+B7kNBkx17bmB8nYtx
+         7tmApRoh8ZzY8VIiDzw6wyJOfFVCYELv6VeMJwjrHPNe2hiMgUfoNRAV18a/Y86mIuUF
+         xQust9GBGsSVyXNjUqu0yU0aB6E8D+XaNme3V++1hR5w2Ipz0qRLJZPF7fVnFZpqMWxp
+         xU2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=l5uHiV+Yi1b/Weaw8ObG18hI7s+mQL2W7TckPvD0Lmw=;
+        b=KYJygE0nYzym2qy9Z9jLEYLFwFZi1LVdApKq6bWNmp3xwsb8ALoeguEogc0qd7FHTq
+         ZkNe+GPA0UkhRSIf9bsDK6zWc0kqw1W6R/oP5v/hKLUqxJq+yPGA5dwmpMOOQPadZiUh
+         lROd9dxcAFRlwt8vmz+YkdVUiwGMVcl0YA8/2FD/CHTDEYNcxv25UjuTIqRw8gEE5PTw
+         SiQc9eKFmPMGKc46iIT0smKZMnh+4Kmj2J5B0Gu6W+AnJhXFoNdh2bAaChzhXa74KKUU
+         nuvvPmu7qh8rjG3UGGsXeRVbhXF1csvpoxDLAMe9/Gx3MeOpgm0lQG9ueG+odT4Nkd3d
+         F7gA==
+X-Gm-Message-State: APjAAAUPKNu6+Shm7Wmc3J8+ZLmF/lHUVJKU26fm7WLd2jG2IYJAX82+
+        +mkLf2pHB9LqTkoga3G2brM=
+X-Google-Smtp-Source: APXvYqzMbUr5xi4SJjUYbbZL+R0wEZ6fVbQcFoDtmRRcltk45AuEjKcpMO2nVrmYiwGmXZkR4VhLGg==
+X-Received: by 2002:a17:90a:8903:: with SMTP id u3mr4968272pjn.137.1575979694925;
+        Tue, 10 Dec 2019 04:08:14 -0800 (PST)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id r193sm3440295pfr.100.2019.12.10.04.08.09
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 10 Dec 2019 04:08:13 -0800 (PST)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     orsonzhai@gmail.com, baolin.wang@linaro.org,
+        baolin.wang7@gmail.com, freeman.liu@unisoc.com,
+        zhang.lyra@gmail.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: thermal: sprd: Add the Spreadtrum thermal documentation
+Date:   Tue, 10 Dec 2019 20:07:17 +0800
+Message-Id: <8d5358a67746b2aff5f6995cabd11d0d7c9e579e.1575978484.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a device tree for the Ingenic X1000 based YSH & ATIL CU Neo board.
-Note that this is unselectable via Kconfig until the X1000 SoC is made
-selectable in a later commit.
+From: Baolin Wang <baolin.wang@unisoc.com>
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+Add the Spreadtrum thermal documentation.
+
+Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 ---
+Changes from v1:
+ - Change to yaml format.
+---
+ .../devicetree/bindings/thermal/sprd-thermal.yaml  |   97 ++++++++++++++++++++
+ 1 file changed, 97 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
 
-Notes:
-    v1->v2:
-    Rebase on top of mips-next, use TCU for system timer and clocksource.
-    
-    v2->v3:
-    No change.
-    
-    v3->v4:
-    1.Adjust "model" in "cu1000.dts" to match the description in "devices.yaml".
-    2.Adjust "bool" in "Kconfig" to avoid duplicate names with subsequent boards.
-    
-    v4->v5:
-    1.Rename "cu1000" to "cu1000-neo" to prevent conflicts with subsequent boards
-      such as "cu1000-geo", and so on.
-    2.Remove "CONFIG_HZ=100" and "mem=32M@0x0" from defconfg.
-    3.Modify incorrect comments in DT.
-    
-    v5->v6:
-    1.Use "stdout-path = "serial2:115200n8"" instead "stdout-path = &uart2" in DT.
-    2.Remove "console=ttyS2,115200n8" and "CONFIG_CMDLINE_OVERRIDE=y" from defconfg.
-    
-    v6->v7:
-    Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
-    to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
-    the old mailbox is in an unstable state.
-    
-    v7->v8:
-    Merge [6/6] in v7 to this patch.
-
- arch/mips/boot/dts/ingenic/Makefile       |   1 +
- arch/mips/boot/dts/ingenic/cu1000-neo.dts |  99 ++++++++++++++++++++++++++
- arch/mips/configs/cu1000-neo_defconfig    | 111 ++++++++++++++++++++++++++++++
- arch/mips/jz4740/Kconfig                  |   4 ++
- 4 files changed, 215 insertions(+)
- create mode 100644 arch/mips/boot/dts/ingenic/cu1000-neo.dts
- create mode 100644 arch/mips/configs/cu1000-neo_defconfig
-
-diff --git a/arch/mips/boot/dts/ingenic/Makefile b/arch/mips/boot/dts/ingenic/Makefile
-index 9cc4844..e165429 100644
---- a/arch/mips/boot/dts/ingenic/Makefile
-+++ b/arch/mips/boot/dts/ingenic/Makefile
-@@ -2,5 +2,6 @@
- dtb-$(CONFIG_JZ4740_QI_LB60)	+= qi_lb60.dtb
- dtb-$(CONFIG_JZ4770_GCW0)	+= gcw0.dtb
- dtb-$(CONFIG_JZ4780_CI20)	+= ci20.dtb
-+dtb-$(CONFIG_X1000_CU1000_NEO)	+= cu1000-neo.dtb
- 
- obj-$(CONFIG_BUILTIN_DTB)	+= $(addsuffix .o, $(dtb-y))
-diff --git a/arch/mips/boot/dts/ingenic/cu1000-neo.dts b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
+diff --git a/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
 new file mode 100644
-index 00000000..b0733da
+index 0000000..92d208a
 --- /dev/null
-+++ b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
-@@ -0,0 +1,99 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
++++ b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+@@ -0,0 +1,97 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/sprd-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include "x1000.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/clock/ingenic,tcu.h>
++title: Spreadtrum thermal sensor controller bindings
 +
-+/ {
-+	compatible = "yna,cu1000-neo", "ingenic,x1000";
-+	model = "YSH & ATIL General Board CU Neo";
++maintainers:
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
 +
-+	aliases {
-+		serial2 = &uart2;
-+	};
++properties:
++  compatible:
++    const: sprd,ums512-thermal
 +
-+	chosen {
-+		stdout-path = "serial2:115200n8";
-+	};
++  reg:
++    maxItems: 1
 +
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x04000000>;
-+	};
-+};
++  clocks:
++    maxItems: 1
 +
-+&exclk {
-+	clock-frequency = <24000000>;
-+};
++  clock-names:
++    items:
++      - const: enable
 +
-+&tcu {
-+	/* 1500 kHz for the system timer and clocksource */
-+	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER2>;
-+	assigned-clock-rates = <1500000>, <1500000>;
++  nvmem-cells:
++    maxItems: 2
++    description:
++      Reference to nvmem nodes for the calibration data.
 +
-+	/* Use channel #0 for the system timer channel #2 for the clocksource */
-+	ingenic,pwm-channels-mask = <0xfa>;
-+};
++  nvmem-cells-names:
++    maxItems: 2
++    items:
++      - const: thm_sign_cal
++      - const: thm_ratio_cal
 +
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_uart2>;
++  "#thermal-sensor-cells":
++    const: 1
 +
-+	status = "okay";
-+};
++  child-node:
++    description: Represent one thermal sensor.
 +
-+&mac {
-+	phy-mode = "rmii";
-+	phy-handle = <&lan8720a>;
++    properties:
++      reg:
++        description: Specify the sensor id.
++        maxItems: 1
 +
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_mac>;
++      nvmem-cells:
++        maxItems: 1
++        description:
++          Reference to an nvmem node for the calibration data.
 +
-+	snps,reset-gpio = <&gpc 23 GPIO_ACTIVE_LOW>; /* PC23 */
-+	snps,reset-active-low;
-+	snps,reset-delays-us = <0 10000 30000>;
++      nvmem-cells-names:
++        maxItems: 1
++        items:
++          - const: sen_delta_cal
 +
-+	status = "okay";
-+};
++    required:
++      - reg
++      - nvmem-cells
++      - nvmem-cells-names
 +
-+&mdio {
-+	status = "okay";
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - nvmem-cells
++  - nvmem-cells-names
++  - "#thermal-sensor-cells"
 +
-+	lan8720a: ethernet-phy@0 {
-+		compatible = "ethernet-phy-id0007.c0f0", "ethernet-phy-ieee802.3-c22";
-+		reg = <0>;
-+	};
-+};
++examples:
++  - |
++        ap_thm0: thermal@32200000 {
++                compatible = "sprd,ums512-thermal";
++                reg = <0 0x32200000 0 0x10000>;
++                clock-names = "enable";
++                clocks = <&aonapb_gate 32>;
++                #thermal-sensor-cells = <1>;
++                nvmem-cells = <&thm0_sign>, <&thm0_ratio>;
++                nvmem-cell-names = "thm_sign_cal", "thm_ratio_cal";
 +
-+&msc0 {
-+	bus-width = <8>;
-+	max-frequency = <50000000>;
++                prometheus0-sensor@0 {
++                        reg = <0>;
++                        nvmem-cells = <&thm0_sen0>;
++                        nvmem-cell-names = "sen_delta_cal";
++                };
 +
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_msc0>;
-+
-+	non-removable;
-+
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	pins_uart2: uart2 {
-+		function = "uart2";
-+		groups = "uart2-data-d";
-+		bias-disable;
-+	};
-+
-+	pins_mac: mac {
-+		function = "mac";
-+		groups = "mac";
-+		bias-disable;
-+	};
-+
-+	pins_msc0: msc0 {
-+		function = "mmc0";
-+		groups = "mmc0-1bit", "mmc0-4bit", "mmc0-8bit";
-+		bias-disable;
-+	};
-+};
-diff --git a/arch/mips/configs/cu1000-neo_defconfig b/arch/mips/configs/cu1000-neo_defconfig
-new file mode 100644
-index 00000000..9f988ed
---- /dev/null
-+++ b/arch/mips/configs/cu1000-neo_defconfig
-@@ -0,0 +1,111 @@
-+CONFIG_LOCALVERSION_AUTO=y
-+CONFIG_KERNEL_GZIP=y
-+CONFIG_SYSVIPC=y
-+CONFIG_NO_HZ_IDLE=y
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_PREEMPT=y
-+CONFIG_IKCONFIG=y
-+CONFIG_IKCONFIG_PROC=y
-+CONFIG_LOG_BUF_SHIFT=14
-+CONFIG_CGROUPS=y
-+CONFIG_MEMCG=y
-+CONFIG_MEMCG_KMEM=y
-+CONFIG_CGROUP_SCHED=y
-+CONFIG_CGROUP_FREEZER=y
-+CONFIG_CGROUP_DEVICE=y
-+CONFIG_CGROUP_CPUACCT=y
-+CONFIG_NAMESPACES=y
-+CONFIG_USER_NS=y
-+CONFIG_CC_OPTIMIZE_FOR_SIZE=y
-+CONFIG_SYSCTL_SYSCALL=y
-+CONFIG_KALLSYMS_ALL=y
-+CONFIG_EMBEDDED=y
-+# CONFIG_VM_EVENT_COUNTERS is not set
-+# CONFIG_COMPAT_BRK is not set
-+CONFIG_SLAB=y
-+CONFIG_MACH_INGENIC=y
-+CONFIG_X1000_CU1000_NEO=y
-+CONFIG_HIGHMEM=y
-+CONFIG_HZ_100=y
-+# CONFIG_SECCOMP is not set
-+# CONFIG_SUSPEND is not set
-+# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
-+# CONFIG_COMPACTION is not set
-+CONFIG_CMA=y
-+CONFIG_CMA_AREAS=7
-+CONFIG_NET=y
-+CONFIG_UNIX=y
-+CONFIG_INET=y
-+CONFIG_UEVENT_HELPER=y
-+CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
-+CONFIG_DEVTMPFS=y
-+# CONFIG_FW_LOADER is not set
-+# CONFIG_ALLOW_DEV_COREDUMP is not set
-+CONFIG_NETDEVICES=y
-+CONFIG_STMMAC_ETH=y
-+CONFIG_SMSC_PHY=y
-+# CONFIG_INPUT_MOUSEDEV is not set
-+# CONFIG_INPUT_KEYBOARD is not set
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
-+CONFIG_VT_HW_CONSOLE_BINDING=y
-+CONFIG_LEGACY_PTY_COUNT=2
-+CONFIG_SERIAL_EARLYCON=y
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_8250_NR_UARTS=3
-+CONFIG_SERIAL_8250_RUNTIME_UARTS=3
-+CONFIG_SERIAL_8250_INGENIC=y
-+CONFIG_SERIAL_OF_PLATFORM=y
-+# CONFIG_HW_RANDOM is not set
-+CONFIG_GPIO_SYSFS=y
-+CONFIG_WATCHDOG=y
-+CONFIG_JZ4740_WDT=y
-+# CONFIG_HWMON is not set
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
-+# CONFIG_VGA_CONSOLE is not set
-+# CONFIG_HID is not set
-+# CONFIG_USB_SUPPORT is not set
-+CONFIG_MMC=y
-+CONFIG_MMC_JZ4740=y
-+CONFIG_RTC_CLASS=y
-+CONFIG_RTC_DRV_JZ4740=y
-+CONFIG_DMADEVICES=y
-+CONFIG_DMA_JZ4780=y
-+# CONFIG_IOMMU_SUPPORT is not set
-+CONFIG_NVMEM=y
-+CONFIG_NVMEM_SYSFS=y
-+CONFIG_EXT4_FS=y
-+# CONFIG_DNOTIFY is not set
-+CONFIG_AUTOFS_FS=y
-+CONFIG_PROC_KCORE=y
-+# CONFIG_PROC_PAGE_MONITOR is not set
-+CONFIG_TMPFS=y
-+CONFIG_CONFIGFS_FS=y
-+CONFIG_NLS=y
-+CONFIG_NLS_CODEPAGE_936=y
-+CONFIG_NLS_CODEPAGE_950=y
-+CONFIG_NLS_ASCII=y
-+CONFIG_NLS_ISO8859_1=y
-+CONFIG_NLS_UTF8=y
-+CONFIG_CRYPTO_ECHAINIV=y
-+CONFIG_CRYPTO_AES=y
-+CONFIG_CRYPTO_DEFLATE=y
-+CONFIG_CRYPTO_LZO=y
-+CONFIG_PRINTK_TIME=y
-+CONFIG_CONSOLE_LOGLEVEL_DEFAULT=15
-+CONFIG_CONSOLE_LOGLEVEL_QUIET=15
-+CONFIG_MESSAGE_LOGLEVEL_DEFAULT=7
-+CONFIG_DEBUG_INFO=y
-+CONFIG_STRIP_ASM_SYMS=y
-+CONFIG_DEBUG_FS=y
-+CONFIG_MAGIC_SYSRQ=y
-+CONFIG_PANIC_ON_OOPS=y
-+CONFIG_PANIC_TIMEOUT=10
-+# CONFIG_SCHED_DEBUG is not set
-+# CONFIG_DEBUG_PREEMPT is not set
-+CONFIG_STACKTRACE=y
-+# CONFIG_FTRACE is not set
-+CONFIG_CMDLINE_BOOL=y
-+CONFIG_CMDLINE="earlycon clk_ignore_unused"
-diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
-index 6b96844..412d2fa 100644
---- a/arch/mips/jz4740/Kconfig
-+++ b/arch/mips/jz4740/Kconfig
-@@ -16,6 +16,10 @@ config JZ4780_CI20
- 	bool "MIPS Creator CI20"
- 	select MACH_JZ4780
- 
-+config X1000_CU1000_NEO
-+	bool "YSH & ATIL CU1000 Module with Neo backplane"
-+	select MACH_X1000
-+
- endchoice
- 
- config MACH_JZ4740
++                ank1-sensor@1 {
++                        reg = <1>;
++                        nvmem-cells = <&thm0_sen1>;
++                        nvmem-cell-names = "sen_delta_cal";
++                };
++        };
++...
 -- 
-2.7.4
+1.7.9.5
 
