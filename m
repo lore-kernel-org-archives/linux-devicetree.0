@@ -2,1143 +2,343 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E0BC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 07:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC24C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 07:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05FD206E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 07:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575962027;
-	bh=1f3xF2z6IXV5Hww/LLFA/wmT8xoBof2+AMdKIPBGcA0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=gYo4rX4/SW9pK11w/lz8RbqmWoSuvgrmdEmaXjGFjuqVZo7k6TcUdm5S8/Y/+8z63
-	 ffjLkMjlHM8fMHxaEUnytRe9qfA18Q4eZf4mTkU4k8BrVEvruH6DV2N36X5xmhcQEA
-	 tTcUegDB7k9NbaKCbKUA9/605FACLOBXcsz+nixs=
+	by mail.kernel.org (Postfix) with ESMTP id E89F4206E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 07:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbfLJHNq (ORCPT
+        id S1727137AbfLJHWg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 02:13:46 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39422 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfLJHNq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 02:13:46 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y1so1493863lfb.6;
-        Mon, 09 Dec 2019 23:13:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=j0ouWls4GJBccLTWwhcTs4JscgXoQqne6AxKBOJDJsk=;
-        b=jA8bTpQFteM1DASdU/MSgc0DXQHoKcbNilSmYDy4gXIAvuoO1eZGUglDMJL4xq12Mt
-         ms6D9rmCIrPNZnCfk5VXhSPn+ZFeTPaZtOUdyPkHFMmekrlCKml67wzoVRpJ3n2hdFEH
-         mOtg62j3KDKLEdC+ILTcq+AxHSwA02aBIlDV82lBkJY4T9pA/npFSB/kny/COQGYw6pa
-         SCno0Ey7AvYYyUIV5jrdYj+6sS0Zj1SQY2fAbRVzVtn8Kw3fovD4DKAtvGsWk8oa4pwL
-         onmsnQ7hILr9qCdNvuAp1Vc9MVK/qio9r0xXiWu2CSMbflH3pcXDchCYHYUBtgMJEB7H
-         ycoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=j0ouWls4GJBccLTWwhcTs4JscgXoQqne6AxKBOJDJsk=;
-        b=lbeCw4qQBv8lV2Hx8fKpEltz3C9z58IBPAOkePLvE8bKNScZyH+X1SBvKTPPTYt2Lr
-         YLJlJeJ31+Za2HCji6UaFmQ5aOnHg6ZRlDp4PtaaOqJZ4sb4z33TwtakhrMg+664Njwo
-         adynn9AoXrQB+UjdPLorihLSkhsyzc9oNfbESSYN4FLJRdcY3PsUXvJo/LNrjWNQwcpN
-         lErLAcZW5Xr0+Ds8As3kNLdlor2Fqxz7odOuJzEFFOfIEUMEjR1Y98ABGtq7OjXP5UnJ
-         6BHzBpQ5NEZ9kUvGj0nWQVx9QNRqw2hIZxl/NpuakBVqn+o1uDRuyjfnaVoOwetgqy+R
-         11+g==
-X-Gm-Message-State: APjAAAVD58KEZgyFXO5qGpDS3C22HVaAtULWAB8VrdvYtEVVzvNKaAgo
-        VS1eFAx5VdCWFMaPHSZe1yE=
-X-Google-Smtp-Source: APXvYqyb9HRr7s2TEFTF8q+KJ167bpvLs3FBVUYB9BdZOyoi9rx28oWtRQaPJKc1MPQw9B9Aixui0A==
-X-Received: by 2002:ac2:44d9:: with SMTP id d25mr11541780lfm.15.1575962021409;
-        Mon, 09 Dec 2019 23:13:41 -0800 (PST)
-Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
-        by smtp.gmail.com with ESMTPSA id n30sm1155744lfi.54.2019.12.09.23.13.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 23:13:40 -0800 (PST)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     jassisinghbrar@gmail.com, gregkh@linuxfoundation.org,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCHv1 2/2] usb: gadget: add udc driver for max3420
-In-Reply-To: <20191210003135.32427-1-jassisinghbrar@gmail.com>
-References: <20191210003135.32427-1-jassisinghbrar@gmail.com>
-Date:   Tue, 10 Dec 2019 09:14:27 +0200
-Message-ID: <87eexclkj0.fsf@gmail.com>
+        Tue, 10 Dec 2019 02:22:36 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44713 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbfLJHWf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 02:22:35 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ieZqn-0004pV-A1; Tue, 10 Dec 2019 08:22:29 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ieZql-0006NZ-Mt; Tue, 10 Dec 2019 08:22:27 +0100
+Date:   Tue, 10 Dec 2019 08:22:27 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 4/7] pwm: Add support for Azoteq IQS620A PWM generator
+Message-ID: <20191210072227.434hyv5wl3rwztqx@pengutronix.de>
+References: <1575851866-18919-1-git-send-email-jeff@labundy.com>
+ <1575851866-18919-5-git-send-email-jeff@labundy.com>
+ <20191209073206.6pftsak5v25jdepz@pengutronix.de>
+ <20191210000252.GA6361@labundy.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191210000252.GA6361@labundy.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hello Jeff,
 
+On Tue, Dec 10, 2019 at 12:03:02AM +0000, Jeff LaBundy wrote:
+> On Mon, Dec 09, 2019 at 08:32:06AM +0100, Uwe Kleine-König wrote:
+> > On Mon, Dec 09, 2019 at 12:38:36AM +0000, Jeff LaBundy wrote:
+> > > This patch adds support for the Azoteq IQS620A, capable of generating
+> > > a 1-kHz PWM output with duty cycle between 0.4% and 100% (inclusive).
+> > > 
+> > > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+> > > ---
+> > > Changes in v2:
+> > >   - Merged 'Copyright' and 'Author' lines into one in introductory comments
+> > >   - Added 'Limitations' section to introductory comments
+> > >   - Replaced 'error' with 'ret' throughout
+> > >   - Added const qualifier to state argument of iqs620_pwm_apply and removed all
+> > >     modifications to the variable's contents
+> > >   - Updated iqs620_pwm_apply to return -ENOTSUPP or -EINVAL if the requested
+> > >     polarity is inverted or the requested period is below 1 ms, respectively
+> > >   - Updated iqs620_pwm_apply to disable the PWM output if duty cycle is zero
+> > >   - Added iqs620_pwm_get_state
+> > >   - Eliminated tabbed alignment of pwm_ops and platform_driver struct members
+> > >   - Moved notifier unregistration to already present iqs620_pwm_remove, which
+> > >     eliminated the need for a device-managed action and ready flag
+> > >   - Added a comment in iqs620_pwm_probe to explain the order of operations
+> > >   - Changed Kconfig "depends on" logic to MFD_IQS62X || COMPILE_TEST
+> > > 
+> > >  drivers/pwm/Kconfig       |  10 +++
+> > >  drivers/pwm/Makefile      |   1 +
+> > >  drivers/pwm/pwm-iqs620a.c | 206 ++++++++++++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 217 insertions(+)
+> > >  create mode 100644 drivers/pwm/pwm-iqs620a.c
+> > > 
+> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > > index bd21655..60bcf6c 100644
+> > > --- a/drivers/pwm/Kconfig
+> > > +++ b/drivers/pwm/Kconfig
+> > > @@ -222,6 +222,16 @@ config PWM_IMX_TPM
+> > >  	  To compile this driver as a module, choose M here: the module
+> > >  	  will be called pwm-imx-tpm.
+> > > 
+> > > +config PWM_IQS620A
+> > > +	tristate "Azoteq IQS620A PWM support"
+> > > +	depends on MFD_IQS62X || COMPILE_TEST
+> > > +	help
+> > > +	  Generic PWM framework driver for the Azoteq IQS620A multi-function
+> > > +	  sensor.
+> > > +
+> > > +	  To compile this driver as a module, choose M here: the module will
+> > > +	  be called pwm-iqs620a.
+> > > +
+> > >  config PWM_JZ4740
+> > >  	tristate "Ingenic JZ47xx PWM support"
+> > >  	depends on MACH_INGENIC
+> > > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> > > index 9a47507..a59c710 100644
+> > > --- a/drivers/pwm/Makefile
+> > > +++ b/drivers/pwm/Makefile
+> > > @@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
+> > >  obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
+> > >  obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
+> > >  obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
+> > > +obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
+> > >  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
+> > >  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
+> > >  obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
+> > > diff --git a/drivers/pwm/pwm-iqs620a.c b/drivers/pwm/pwm-iqs620a.c
+> > > new file mode 100644
+> > > index 0000000..1ea11b9
+> > > --- /dev/null
+> > > +++ b/drivers/pwm/pwm-iqs620a.c
+> > > @@ -0,0 +1,206 @@
+> > > +// SPDX-License-Identifier: GPL-2.0+
+> > > +/*
+> > > + * Azoteq IQS620A PWM Generator
+> > > + *
+> > > + * Copyright (C) 2019 Jeff LaBundy <jeff@labundy.com>
+> > > + *
+> > > + * Limitations:
+> > > + * - The period is not guaranteed to run to completion when the duty cycle is
+> > > + *   changed or the output is disabled.
+> > 
+> > Do you know more details here? "not guaranteed" means that the new
+> > period starts immediately when duty_cycle or the enabled bit is written?
+> > 
+> 
+> Increasing the duty cycle on-the-fly (e.g. 25% to 75%) results in the
+> following behavior (depending on where the I2C write falls):
+> 
+>                        I2C write
+>    __        __        __  V_    ______    ______    ______    __
+> __|  |______|  |______|  |_|x|__|      |__|      |__|      |__|
+>   ^---1ms---^---1ms---^---1ms---^---1ms---^---1ms---^---1ms---^
+> 
+> The PWM continues to tick at 1 ms, but the currently running period suffers
+> an extraneous pulse as the output is abruptly set high to "catch up" to the
+> new duty cycle.
+> 
+> A similar behavior can occur if the duty cycle is decreased, meaning the
+> output is abruptly set low if the I2C transaction completes in what has
+> suddenly become the inactive region of the currently running period.
+> 
+> The PWM seems to be a simple counter that rolls over at a period of 1 ms.
+> Both the counter and the IQS620_PWM_DUTY_CYCLE register effectively go to
+> a comparator whose output is ANDed with IQS620_PWR_SETTINGS_PWM_OUT which
+> then drives the PWM output.
+> 
+> As such, if either IQS620_PWM_DUTY_CYCLE or IQS620_PWR_SETTINGS_PWM_OUT
+> change, so may the PWM output state depending on the counter's value at
+> the time the I2C write is completed within the 1-ms continuous loop.
+> 
+> For v3 I will update the note as follows:
+> 
+> - Changes in duty cycle or enable/disable state are immediately reflected
+>   by the PWM output and are not aligned to the start of any period.
 
-Hi,
+I'd like to see a bit more information in the driver. Something about
+the 1ms rhythm being unaffected by the duty_cycle and enable setting.
+Maybe:
 
-jassisinghbrar@gmail.com writes:
-> From: Jassi Brar <jaswinder.singh@linaro.org>
->
-> The MAX3420 is USB2.0 only, UDC-over-SPI controller. This driver
-> also supports the peripheral mode of MAX3421.
->
-> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-> ---
->  drivers/usb/gadget/udc/Kconfig       |   10 +
->  drivers/usb/gadget/udc/Makefile      |    1 +
->  drivers/usb/gadget/udc/max3420_udc.c | 1334 ++++++++++++++++++++++++++
->  3 files changed, 1345 insertions(+)
->  create mode 100644 drivers/usb/gadget/udc/max3420_udc.c
->
-> diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kcon=
-fig
-> index ae70ce29d5e4..702cf1547c37 100644
-> --- a/drivers/usb/gadget/udc/Kconfig
-> +++ b/drivers/usb/gadget/udc/Kconfig
-> @@ -441,6 +441,16 @@ config USB_GADGET_XILINX
->  	  dynamically linked module called "udc-xilinx" and force all
->  	  gadget drivers to also be dynamically linked.
->=20=20
-> +config USB_MAX3420_UDC
-> +	tristate "MAX3420 (USB-over-SPI) support"
-> +	depends on SPI
-> +	help
-> +	  The Maxim MAX3420 chip supports USB2.0 full-speed peripheral mode.
-> +	  The MAX3420 is run by SPI interface, and hence the dependency.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called max3420_udc
-> +
->  config USB_TEGRA_XUDC
->  	tristate "NVIDIA Tegra Superspeed USB 3.0 Device Controller"
->  	depends on ARCH_TEGRA || COMPILE_TEST
-> diff --git a/drivers/usb/gadget/udc/Makefile b/drivers/usb/gadget/udc/Mak=
-efile
-> index f6777e654a8e..f5a7ce28aecd 100644
-> --- a/drivers/usb/gadget/udc/Makefile
-> +++ b/drivers/usb/gadget/udc/Makefile
-> @@ -42,3 +42,4 @@ obj-$(CONFIG_USB_GADGET_XILINX)	+=3D udc-xilinx.o
->  obj-$(CONFIG_USB_SNP_UDC_PLAT) +=3D snps_udc_plat.o
->  obj-$(CONFIG_USB_ASPEED_VHUB)	+=3D aspeed-vhub/
->  obj-$(CONFIG_USB_BDC_UDC)	+=3D bdc/
-> +obj-$(CONFIG_USB_MAX3420_UDC)	+=3D max3420_udc.o
-> diff --git a/drivers/usb/gadget/udc/max3420_udc.c b/drivers/usb/gadget/ud=
-c/max3420_udc.c
-> new file mode 100644
-> index 000000000000..0213255c4b9a
-> --- /dev/null
-> +++ b/drivers/usb/gadget/udc/max3420_udc.c
-> @@ -0,0 +1,1337 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * MAX3420 Device Controller driver for USB.
-> + *
-> + * Author: Jaswinder Singh Brar <jaswinder.singh@linaro.org>
-> + * (C) Copyright 2019 Linaro Ltd
-> + *
-> + * Based on:
-> + *	o MAX3420E datasheet
-> + *		http://datasheets.maximintegrated.com/en/ds/MAX3420E.pdf
-> + *	o MAX342{0,1}E Programming Guides
-> + *		https://pdfserv.maximintegrated.com/en/an/AN3598.pdf
-> + *		https://pdfserv.maximintegrated.com/en/an/AN3785.pdf
-> + *
-> + * This file is licenced under the GPL v2.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/prefetch.h>
-> +#include <linux/usb/ch9.h>
-> +#include <linux/usb/gadget.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/gpio/consumer.h>
-> +
-> +#define MAX3420_MAX_EPS		4
-> +#define EP_MAX_PACKET		64  /* Same for all Endpoints */
-> +#define EPNAME_SIZE		16  /* Buffer size for endpoint name */
-> +
-> +#define ACKSTAT		BIT(0)
+ - The periods run continuously with a fixed length of 1 ms which is
+   unaffected by register updates. Writing duty cycle or enable
+   registers gets active immediately which might result in glitches.
 
-Let's prepend everything with MAX3420_.
+?
 
-> +#define MAX3420_SPI_DIR_RD	0	/* read register from MAX3420 */
-> +#define MAX3420_SPI_DIR_WR	1	/* write register to MAX3420 */
-> +
-> +/* SPI commands: */
-> +#define MAX3420_SPI_DIR_SHIFT	1
-> +#define MAX3420_SPI_REG_SHIFT	3
-> +
-> +#define MAX3420_REG_EP0FIFO	0
-> +#define MAX3420_REG_EP1FIFO	1
-> +#define MAX3420_REG_EP2FIFO	2
-> +#define MAX3420_REG_EP3FIFO	3
-> +#define MAX3420_REG_SUDFIFO	4
-> +#define MAX3420_REG_EP0BC	5
-> +#define MAX3420_REG_EP1BC	6
-> +#define MAX3420_REG_EP2BC	7
-> +#define MAX3420_REG_EP3BC	8
-> +
-> +#define MAX3420_REG_EPSTALLS	9
-> +	#define bACKSTAT	BIT(6)
+> 
+> > > + * - The period is fixed to 1 ms.
+> > > + */
+> > > +
+> > > +#include <linux/device.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/mfd/iqs62x.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/pwm.h>
+> > > +#include <linux/regmap.h>
+> > > +#include <linux/slab.h>
+> > > +
+> > > +#define IQS620_PWR_SETTINGS			0xD2
+> > > +#define IQS620_PWR_SETTINGS_PWM_OUT		BIT(7)
+> > > +
+> > > +#define IQS620_PWM_DUTY_CYCLE			0xD8
+> > > +
+> > > +#define IQS620_PWM_PERIOD_NS			1000000
+> > > +
+> > > +struct iqs620_pwm_private {
+> > > +	struct iqs62x_core *iqs62x;
+> > > +	struct pwm_chip chip;
+> > > +	struct notifier_block notifier;
+> > > +};
+> > > +
+> > > +static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > +			    const struct pwm_state *state)
+> > > +{
+> > > +	struct iqs620_pwm_private *iqs620_pwm;
+> > > +	struct iqs62x_core *iqs62x;
+> > > +	unsigned int pwm_out = 0;
+> > > +	int duty_scale, ret;
+> > > +
+> > > +	if (state->polarity != PWM_POLARITY_NORMAL)
+> > > +		return -ENOTSUPP;
+> > > +
+> > > +	if (state->period < IQS620_PWM_PERIOD_NS)
+> > > +		return -EINVAL;
+> > > +
+> > > +	iqs620_pwm = container_of(chip, struct iqs620_pwm_private, chip);
+> > > +	iqs62x = iqs620_pwm->iqs62x;
+> > > +
+> > > +	duty_scale = DIV_ROUND_CLOSEST(state->duty_cycle * 256,
+> > > +				       IQS620_PWM_PERIOD_NS);
+> > > +
+> > > +	if (duty_scale) {
+> > > +		ret = regmap_write(iqs62x->map, IQS620_PWM_DUTY_CYCLE,
+> > > +				   min(duty_scale - 1, 0xFF));
+> > > +		if (ret)
+> > > +			return ret;
+> > > +
+> > > +		if (state->enabled)
+> > > +			pwm_out = IQS620_PWR_SETTINGS_PWM_OUT;
+> > > +	}
+> > > +
+> > > +	return regmap_update_bits(iqs62x->map, IQS620_PWR_SETTINGS,
+> > > +				  IQS620_PWR_SETTINGS_PWM_OUT, pwm_out);
+> > 
+> > A comment explaining the semantic here would be good. I assume
+> > IQS620_PWM_DUTY_CYCLE takes a value between 0 and 255 and the resulting
+> > duty cycle is:
+> > 
+> > 	(IQS620_PWM_DUTY_CYCLE + 1) / 256 * 1 ms
+> > 
+> > .
+> > 
+> > If this is right, please use:
+> > 
+> > 	duty_scale = (state->duty_cycle * 256) / IQS620_PWM_PERIOD_NS
+> > 
+> 
+> Sure thing, will do. I'll add a comment and round down. Your assumption is
+> correct as well.
+> 
+> > Also, when the hardware is running at
+> > 
+> > 	.enabled = 1, .duty_cycle = 1/256 ms, .period = 1ms
+> > 
+> > and you reconfigure to
+> > 
+> > 	.enabled = 0, .duty_cycle = 1ms, .period = 1ms
+> > 
+> > the output might be active for > 1/256 ms if the process is preempted
+> > between writing IQS620_PWM_DUTY_CYCLE and IQS620_PWR_SETTINGS_PWM_OUT.
+> > 
+> 
+> Good catch. I think we can solve this by writing IQS620_PWM_DUTY_CYCLE
+> first followed by IQS620_PWR_SETTINGS_PWM_OUT when the PWM is going to
+> be enabled, and the reverse when the PWM is going to be disabled (i.e.
+> turn OFF to prevent a stale duty cycle from being temporarily driven).
 
-let's avoid CaMeLcAsE :-)
+Sounds like a plan. After disabling you even don't need to write the
+duty cycle register. (But there might be a discussion ahead that
+.get_state should return the duty cycle.)
+ 
+> > > +static int iqs620_pwm_notifier(struct notifier_block *notifier,
+> > > +			       unsigned long event_flags, void *context)
+> > > +{
+> > > +	struct iqs620_pwm_private *iqs620_pwm;
+> > > +	struct pwm_state state;
+> > > +	int ret;
+> > > +
+> > > +	if (!(event_flags & BIT(IQS62X_EVENT_SYS_RESET)))
+> > > +		return NOTIFY_DONE;
+> > > +
+> > > +	iqs620_pwm = container_of(notifier, struct iqs620_pwm_private,
+> > > +				  notifier);
+> > > +	pwm_get_state(&iqs620_pwm->chip.pwms[0], &state);
+> > 
+> > Please don't call pwm API functions in callbacks. I assume you rely on
+> > pwm_get_state returning the previously set state and that
+> > iqs620_pwm_get_state isn't called. Please use pwm->state for that.
+> > 
+> 
+> Sure thing, will do. Your assumption is correct. If pwm_get_state called
+> chip->ops->get_state instead of return pwm->state as it does today, this
+> function would break because it would restore the hardware using default
+> register values (since this function follows a reset).
+> 
+> Just for my own understanding, are you saying the PWM framework reserves
+> the right to update pwm_get_state to call chip->ops->get_state some time
+> in the future? In any event I will refer to pwm->state as that is what I
+> ultimately need here.
 
-> +#define field(val, bit)	((val) << (bit))
+This already was the case for a short time before v5.4. See 01ccf903edd6
+and 40a6b9a00930. (And note that the lazyness mentioned above about not
+needing to write duty_cycle when the PWM is off is what made the
+approach break however.) I don't know yet how to proceed here. Being
+able to get the actually implemented setting would be nice, probably it
+is prudent to do this with another API function.
 
-The kernel has a bunch of helpers for this. Look at BIT() and GENMASK()
-for example.
+Other than that I consider it a layer violation to call a function that
+is designed for consumers in a lowlevel driver. I don't know if we need
+locking at some time, but if the core holded a lock when .apply is
+called, .apply calls pwm_get_state which wanted to grab the lock again
+we get a dead-lock.
 
-> +struct max3420_req {
-> +	struct usb_request usb_req;
-> +	struct list_head queue;
-> +	struct max3420_ep *ep;
-> +};
-> +
-> +struct max3420_ep {
-> +	struct max3420_udc *udc;
-> +	struct list_head queue;
-> +	char name[EPNAME_SIZE];
-> +	unsigned int maxpacket;
-> +	struct usb_ep ep_usb;
+> FWIW, I borrowed the idea from the resume callback of [0] which possibly
+> suffers the same fate if I have understood the concern correctly.
 
-considering you'll run container_of() on this ep_usb field, it's wise to
-put it as the first field in the struct. That way, compiler can optimize
-container_of() into a simple type cast.
+Yeah, there are many drivers that are not up to date with my review
+requirements. The problem is a) missing time to update them and b) for
+some drivers it's hard to get test coverage for changes.
 
-> +struct max3420_udc {
-> +	struct max3420_ep ep[MAX3420_MAX_EPS];
-> +	struct usb_gadget_driver *driver;
-> +	struct task_struct *thread_task;
-> +	int remote_wkp, is_selfpowered;
-> +	bool vbus_active, softconnect;
-> +	struct usb_ctrlrequest setup;
-> +	struct mutex spi_bus_mutex;
-> +	struct max3420_req ep0req;
-> +	struct usb_gadget gadget;
+Best regards
+Uwe
 
-likewise with gadget field.
-
-> +	struct spi_device *spi;
-> +	struct device *dev;
-> +	spinlock_t lock;
-> +	bool suspended;
-> +	u8 ep0buf[64];
-> +	u32 todo;
-> +};
-> +
-> +#define to_max3420_req(r)	container_of((r), struct max3420_req, usb_req)
-> +#define to_max3420_ep(e)	container_of((e), struct max3420_ep, ep_usb)
-> +#define to_udc(g)		container_of((g), struct max3420_udc, gadget)
-> +
-> +#define DRIVER_DESC     "MAX3420 USB Device-Mode Driver"
-> +static const char driver_name[] =3D "max3420-udc";
-> +
-> +/* Control endpoint configuration.*/
-> +static const struct usb_endpoint_descriptor ep0_desc =3D {
-> +	.bEndpointAddress	=3D USB_DIR_OUT,
-> +	.bmAttributes		=3D USB_ENDPOINT_XFER_CONTROL,
-> +	.wMaxPacketSize		=3D cpu_to_le16(EP_MAX_PACKET),
-> +};
-> +
-> +static void spi_ack_ctrl(struct max3420_udc *udc)
-> +{
-> +	struct spi_device *spi =3D udc->spi;
-> +	struct spi_transfer transfer;
-> +	struct spi_message msg;
-> +	u8 txdata[1];
-> +
-> +	memset(&transfer, 0, sizeof(transfer));
-> +
-> +	spi_message_init(&msg);
-> +
-> +	txdata[0] =3D ACKSTAT;
-> +	transfer.tx_buf =3D txdata;
-> +	transfer.len =3D 1;
-> +
-> +	spi_message_add_tail(&transfer, &msg);
-> +	spi_sync(spi, &msg);
-
-Not checking return code?
-
-> +}
-> +
-> +static u8 spi_rd8_ack(struct max3420_udc *udc, u8 reg, int actstat)
-> +{
-> +	struct spi_device *spi =3D udc->spi;
-> +	struct spi_transfer transfer;
-> +	struct spi_message msg;
-> +	u8 txdata[2], rxdata[2];
-> +
-> +	memset(&transfer, 0, sizeof(transfer));
-> +
-> +	spi_message_init(&msg);
-> +
-> +	txdata[0] =3D field(reg, MAX3420_SPI_REG_SHIFT) |
-> +			field(MAX3420_SPI_DIR_RD, MAX3420_SPI_DIR_SHIFT) |
-> +			(actstat ? ACKSTAT : 0);
-> +
-> +	transfer.tx_buf =3D txdata;
-> +	transfer.rx_buf =3D rxdata;
-> +	transfer.len =3D 2;
-> +
-> +	spi_message_add_tail(&transfer, &msg);
-> +	spi_sync(spi, &msg);
-
-Not checking return code?
-
-> +	return rxdata[1];
-> +}
-> +
-> +static u8 spi_rd8(struct max3420_udc *udc, u8 reg)
-> +{
-> +	return spi_rd8_ack(udc, reg, 0);
-> +}
-> +
-> +static void spi_wr8_ack(struct max3420_udc *udc, u8 reg, u8 val, int act=
-stat)
-> +{
-> +	struct spi_device *spi =3D udc->spi;
-> +	struct spi_transfer transfer;
-> +	struct spi_message msg;
-> +	u8 txdata[2];
-> +
-> +	memset(&transfer, 0, sizeof(transfer));
-> +
-> +	spi_message_init(&msg);
-> +
-> +	txdata[0] =3D field(reg, MAX3420_SPI_REG_SHIFT) |
-> +			field(MAX3420_SPI_DIR_WR, MAX3420_SPI_DIR_SHIFT) |
-> +			(actstat ? ACKSTAT : 0);
-> +	txdata[1] =3D val;
-> +
-> +	transfer.tx_buf =3D txdata;
-> +	transfer.len =3D 2;
-> +
-> +	spi_message_add_tail(&transfer, &msg);
-> +	spi_sync(spi, &msg);
-
-Not checking return code?
-
-> +}
-> +
-> +static void spi_wr8(struct max3420_udc *udc, u8 reg, u8 val)
-> +{
-> +	spi_wr8_ack(udc, reg, val, 0);
-> +}
-> +
-> +static void spi_rd_buf(struct max3420_udc *udc, u8 reg, void *buf, u8 le=
-n)
-> +{
-> +	struct spi_device *spi =3D udc->spi;
-> +	struct spi_transfer transfer;
-> +	struct spi_message msg;
-> +	u8 local_buf[EP_MAX_PACKET + 1] =3D {};
-> +
-> +	memset(&transfer, 0, sizeof(transfer));
-> +
-> +	spi_message_init(&msg);
-> +
-> +	local_buf[0] =3D (field(reg, MAX3420_SPI_REG_SHIFT) |
-> +			field(MAX3420_SPI_DIR_RD, MAX3420_SPI_DIR_SHIFT));
-> +
-> +	transfer.tx_buf =3D &local_buf[0];
-> +	transfer.rx_buf =3D &local_buf[0];
-> +	transfer.len =3D len + 1;
-> +
-> +	spi_message_add_tail(&transfer, &msg);
-> +	spi_sync(spi, &msg);
-
-Not checking return code?
-
-> +	memcpy(buf, &local_buf[1], len);
-> +}
-> +
-> +static void spi_wr_buf(struct max3420_udc *udc, u8 reg, void *buf, u8 le=
-n)
-> +{
-> +	struct spi_device *spi =3D udc->spi;
-> +	struct spi_transfer transfer;
-> +	struct spi_message msg;
-> +	u8 local_buf[EP_MAX_PACKET + 1] =3D {};
-> +
-> +	memset(&transfer, 0, sizeof(transfer));
-> +
-> +	spi_message_init(&msg);
-> +
-> +	local_buf[0] =3D (field(reg, MAX3420_SPI_REG_SHIFT) |
-> +			field(MAX3420_SPI_DIR_WR, MAX3420_SPI_DIR_SHIFT));
-> +	memcpy(&local_buf[1], buf, len);
-> +
-> +	transfer.tx_buf =3D local_buf;
-> +	transfer.len =3D len + 1;
-> +
-> +	spi_message_add_tail(&transfer, &msg);
-> +	spi_sync(spi, &msg);
-
-Not checking return code?
-
-> +static int spi_max3420_enable(struct max3420_ep *ep)
-> +{
-> +	struct max3420_udc *udc =3D ep->udc;
-> +	unsigned long flags;
-> +	u8 epdis, epien;
-> +	int todo;
-> +
-> +	spin_lock_irqsave(&ep->lock, flags);
-> +	todo =3D ep->todo & ENABLE_EP;
-> +	ep->todo &=3D ~ENABLE_EP;
-> +	spin_unlock_irqrestore(&ep->lock, flags);
-> +
-> +	if (!todo || ep->id =3D=3D 0)
-> +		return 0;
-> +
-> +	epien =3D spi_rd8(udc, MAX3420_REG_EPIEN);
-> +	epdis =3D spi_rd8(udc, MAX3420_REG_CLRTOGS);
-> +
-> +	if (todo =3D=3D ENABLE) {
-> +		epdis &=3D ~BIT(ep->id + 4);
-> +		epien |=3D BIT(ep->id + 1);
-> +	} else {
-> +		epdis |=3D BIT(ep->id + 4);
-> +		epien &=3D ~BIT(ep->id + 1);
-> +	}
-> +
-> +	spi_wr8(udc, MAX3420_REG_CLRTOGS, epdis);
-> +	spi_wr8(udc, MAX3420_REG_EPIEN, epien);
-> +
-> +	return 1;
-
-Usually we return 0 on success and a negative errno on failure. What do
-you mean here by return 1?
-
-> +static int spi_max3420_stall(struct max3420_ep *ep)
-> +{
-> +	struct max3420_udc *udc =3D ep->udc;
-> +	unsigned long flags;
-> +	u8 epstalls;
-> +	int todo;
-> +
-> +	spin_lock_irqsave(&ep->lock, flags);
-> +	todo =3D ep->todo & STALL_EP;
-> +	ep->todo &=3D ~STALL_EP;
-> +	spin_unlock_irqrestore(&ep->lock, flags);
-> +
-> +	if (!todo || ep->id =3D=3D 0)
-> +		return 0;
-> +
-> +	epstalls =3D spi_rd8(udc, MAX3420_REG_EPSTALLS);
-> +	if (todo =3D=3D STALL) {
-> +		ep->halted =3D 1;
-> +		epstalls |=3D BIT(ep->id + 1);
-> +	} else {
-> +		u8 clrtogs;
-> +
-> +		ep->halted =3D 0;
-> +		epstalls &=3D ~BIT(ep->id + 1);
-> +		clrtogs =3D spi_rd8(udc, MAX3420_REG_CLRTOGS);
-> +		clrtogs |=3D BIT(ep->id + 1);
-> +		spi_wr8(udc, MAX3420_REG_CLRTOGS, clrtogs);
-> +	}
-> +	spi_wr8(udc, MAX3420_REG_EPSTALLS, epstalls | bACKSTAT);
-> +
-> +	return 1;
-
-and here?
-
-> +}
-> +
-> +static int spi_max3420_rwkup(struct max3420_udc *udc)
-> +{
-> +	unsigned long flags;
-> +	int wake_remote;
-> +	u8 usbctl;
-> +
-> +	spin_lock_irqsave(&udc->lock, flags);
-> +	wake_remote =3D udc->todo & REMOTE_WAKEUP;
-> +	udc->todo &=3D ~REMOTE_WAKEUP;
-> +	spin_unlock_irqrestore(&udc->lock, flags);
-> +
-> +	if (!wake_remote || !udc->suspended)
-> +		return 0;
-> +
-> +	/* Set Remote-WkUp Signal*/
-> +	usbctl =3D spi_rd8(udc, MAX3420_REG_USBCTL);
-> +	usbctl |=3D bSIGRWU;
-> +	spi_wr8(udc, MAX3420_REG_USBCTL, usbctl);
-> +
-> +	msleep_interruptible(5);
-> +
-> +	/* Clear Remote-WkUp Signal*/
-> +	usbctl =3D spi_rd8(udc, MAX3420_REG_USBCTL);
-> +	usbctl &=3D ~bSIGRWU;
-> +	spi_wr8(udc, MAX3420_REG_USBCTL, usbctl);
-> +
-> +	udc->suspended =3D false;
-> +
-> +	return 1;
-
-here?
-
-> +}
-> +
-> +static void max3420_nuke(struct max3420_ep *ep, int status);
-> +static void __max3420_stop(struct max3420_udc *udc)
-> +{
-> +	u8 val;
-> +	int i;
-> +
-> +	/* clear all pending requests */
-> +	for (i =3D 1; i < MAX3420_MAX_EPS; i++)
-> +		max3420_nuke(&udc->ep[i], -ECONNRESET);
-> +
-> +	/* Disable IRQ to CPU */
-> +	spi_wr8(udc, MAX3420_REG_CPUCTL, 0);
-> +
-> +	val =3D spi_rd8(udc, MAX3420_REG_USBCTL);
-> +	val |=3D bPWRDOWN;
-> +	if (udc->is_selfpowered)
-> +		val &=3D ~bHOSCSTEN;
-> +	else
-> +		val |=3D bHOSCSTEN;
-> +	spi_wr8(udc, MAX3420_REG_USBCTL, val);
-> +}
-> +
-> +static void __max3420_start(struct max3420_udc *udc)
-> +{
-> +	u8 val;
-> +
-> +	/* Need this delay if bus-powered */
-> +	msleep_interruptible(250);
-
-should you check if you're bus powered?
-
-> +	/* configure SPI */
-> +	spi_wr8(udc, MAX3420_REG_PINCTL, bFDUPSPI);
-> +
-> +	/* Chip Reset */
-> +	spi_wr8(udc, MAX3420_REG_USBCTL, bCHIPRES);
-> +	msleep_interruptible(5);
-> +	spi_wr8(udc, MAX3420_REG_USBCTL, 0);
-> +
-> +	/* Poll for OSC to stabilize */
-> +	while (1) {
-> +		val =3D spi_rd8(udc, MAX3420_REG_USBIRQ);
-> +		if (val & bOSCOKIRQ)
-> +			break;
-> +		cond_resched();
-> +	}
-
-readl_poll_timeout(), maybe?
-
-> +	/* Enable PULL-UP only when Vbus detected */
-> +	val =3D spi_rd8(udc, MAX3420_REG_USBCTL);
-> +	val |=3D bVBGATE | bCONNECT;
-> +	spi_wr8(udc, MAX3420_REG_USBCTL, val);
-> +
-> +	val =3D bURESDNIRQ | bURESIRQ;
-> +	if (udc->is_selfpowered)
-> +		val |=3D bNOVBUSIRQ;
-> +	spi_wr8(udc, MAX3420_REG_USBIEN, val);
-> +
-> +	/* Enable only EP0 interrupts */
-> +	val =3D bIN0BAVIRQ | bOUT0DAVIRQ | bSUDAVIRQ;
-> +	spi_wr8(udc, MAX3420_REG_EPIEN, val);
-> +
-> +	/* Enable IRQ to CPU */
-> +	spi_wr8(udc, MAX3420_REG_CPUCTL, bIE);
-> +}
-> +
-> +static int max3420_start(struct max3420_udc *udc)
-> +{
-> +	unsigned long flags;
-> +	int todo;
-> +
-> +	spin_lock_irqsave(&udc->lock, flags);
-> +	todo =3D udc->todo & UDC_START;
-> +	udc->todo &=3D ~UDC_START;
-> +	spin_unlock_irqrestore(&udc->lock, flags);
-> +
-> +	if (!todo)
-> +		return 0;
-> +
-> +	if (udc->vbus_active && udc->softconnect)
-> +		__max3420_start(udc);
-> +	else
-> +		__max3420_stop(udc);
-> +
-> +	return 1;
-> +}
-> +
-> +static irqreturn_t max3420_vbus_handler(int irq, void *dev_id)
-> +{
-> +	struct max3420_udc *udc =3D dev_id;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&udc->lock, flags);
-> +	/* its a vbus change interrupt */
-> +	udc->vbus_active =3D !udc->vbus_active;
-> +	udc->todo |=3D UDC_START;
-> +	usb_udc_vbus_handler(&udc->gadget, udc->vbus_active);
-> +	usb_gadget_set_state(&udc->gadget, udc->vbus_active
-> +			     ? USB_STATE_POWERED : USB_STATE_NOTATTACHED);
-> +	spin_unlock_irqrestore(&udc->lock, flags);
-> +
-> +	if (udc->thread_task &&
-> +	    udc->thread_task->state !=3D TASK_RUNNING)
-> +		wake_up_process(udc->thread_task);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t max3420_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct max3420_udc *udc =3D dev_id;
-> +	struct spi_device *spi =3D udc->spi;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&udc->lock, flags);
-> +	if ((udc->todo & ENABLE_IRQ) =3D=3D 0) {
-> +		disable_irq_nosync(spi->irq);
-> +		udc->todo |=3D ENABLE_IRQ;
-> +	}
-> +	spin_unlock_irqrestore(&udc->lock, flags);
-> +
-> +	if (udc->thread_task &&
-> +	    udc->thread_task->state !=3D TASK_RUNNING)
-> +		wake_up_process(udc->thread_task);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void max3420_getstatus(struct max3420_udc *udc)
-> +{
-> +	struct max3420_ep *ep;
-> +	u16 status =3D 0;
-> +
-> +	switch (udc->setup.bRequestType & USB_RECIP_MASK) {
-> +	case USB_RECIP_DEVICE:
-> +		/* Get device status */
-> +		status =3D udc->gadget.is_selfpowered << USB_DEVICE_SELF_POWERED;
-> +		status |=3D (udc->remote_wkp << USB_DEVICE_REMOTE_WAKEUP);
-> +		break;
-> +	case USB_RECIP_INTERFACE:
-> +		if (udc->driver->setup(&udc->gadget, &udc->setup) < 0)
-> +			goto stall;
-> +		break;
-> +	case USB_RECIP_ENDPOINT:
-> +		ep =3D &udc->ep[udc->setup.wIndex & USB_ENDPOINT_NUMBER_MASK];
-> +		if (udc->setup.wIndex & USB_DIR_IN) {
-> +			if (!ep->ep_usb.caps.dir_in)
-> +				goto stall;
-> +		} else {
-> +			if (!ep->ep_usb.caps.dir_out)
-> +				goto stall;
-> +		}
-> +		if (ep->halted)
-> +			status =3D 1 << USB_ENDPOINT_HALT;
-> +		break;
-> +	default:
-> +		goto stall;
-> +	}
-> +
-> +	status =3D cpu_to_le16(status);
-> +	spi_wr_buf(udc, MAX3420_REG_EP0FIFO, &status, 2);
-> +	spi_wr8_ack(udc, MAX3420_REG_EP0BC, 2, 1);
-> +	return;
-> +stall:
-> +	dev_err(udc->dev, "Can't respond to getstatus request\n");
-> +	spi_wr8(udc, MAX3420_REG_EPSTALLS, bSTLEP0IN | bSTLEP0OUT | bSTLSTAT);
-> +}
-> +
-> +static void max3420_set_clear_feature(struct max3420_udc *udc)
-> +{
-> +	struct max3420_ep *ep;
-> +	int set =3D udc->setup.bRequest =3D=3D USB_REQ_SET_FEATURE;
-> +	unsigned long flags;
-> +	int id;
-> +
-> +	switch (udc->setup.bRequestType) {
-> +	case USB_RECIP_DEVICE:
-> +		if (udc->setup.wValue !=3D USB_DEVICE_REMOTE_WAKEUP)
-> +			break;
-> +
-> +		if (udc->setup.bRequest =3D=3D USB_REQ_SET_FEATURE)
-> +			udc->remote_wkp =3D 1;
-> +		else
-> +			udc->remote_wkp =3D 0;
-> +
-> +		return spi_ack_ctrl(udc);
-> +
-> +	case USB_RECIP_ENDPOINT:
-> +		if (udc->setup.wValue !=3D USB_ENDPOINT_HALT)
-> +			break;
-> +
-> +		id =3D udc->setup.wIndex & USB_ENDPOINT_NUMBER_MASK;
-> +		ep =3D &udc->ep[id];
-> +
-> +		spin_lock_irqsave(&ep->lock, flags);
-> +		ep->todo &=3D ~STALL_EP;
-> +		if (set)
-> +			ep->todo |=3D STALL;
-> +		else
-> +			ep->todo |=3D UNSTALL;
-> +		spin_unlock_irqrestore(&ep->lock, flags);
-> +
-> +		spi_max3420_stall(ep);
-> +		return;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	dev_err(udc->dev, "Can't respond to SET/CLEAR FEATURE\n");
-> +	spi_wr8(udc, MAX3420_REG_EPSTALLS, bSTLEP0IN | bSTLEP0OUT | bSTLSTAT);
-> +}
-> +
-> +static void max3420_handle_setup(struct max3420_udc *udc)
-> +{
-> +	struct usb_ctrlrequest setup;
-> +	u8 addr;
-> +
-> +	spi_rd_buf(udc, MAX3420_REG_SUDFIFO, (void *)&setup, 8);
-> +
-> +	udc->setup =3D setup;
-> +	udc->setup.wValue =3D cpu_to_le16(setup.wValue);
-> +	udc->setup.wIndex =3D cpu_to_le16(setup.wIndex);
-> +	udc->setup.wLength =3D cpu_to_le16(setup.wLength);
-> +
-> +	switch (udc->setup.bRequest) {
-> +	case USB_REQ_GET_STATUS:
-> +		/* Data+Status phase form udc */
-> +		if ((udc->setup.bRequestType &
-> +				(USB_DIR_IN | USB_TYPE_MASK)) !=3D
-> +				(USB_DIR_IN | USB_TYPE_STANDARD)) {
-> +			break;
-> +		}
-> +		return max3420_getstatus(udc);
-> +	case USB_REQ_SET_ADDRESS:
-> +		/* Status phase from udc */
-> +		if (udc->setup.bRequestType !=3D (USB_DIR_OUT |
-> +				USB_TYPE_STANDARD | USB_RECIP_DEVICE)) {
-> +			break;
-> +		}
-> +		addr =3D spi_rd8_ack(udc, MAX3420_REG_FNADDR, 1);
-> +		dev_dbg(udc->dev, "Assigned Address=3D%d\n", udc->setup.wValue);
-> +		return;
-> +	case USB_REQ_CLEAR_FEATURE:
-> +	case USB_REQ_SET_FEATURE:
-> +		/* Requests with no data phase, status phase from udc */
-> +		if ((udc->setup.bRequestType & USB_TYPE_MASK)
-> +				!=3D USB_TYPE_STANDARD)
-> +			break;
-> +		return max3420_set_clear_feature(udc);
-> +	default:
-> +		break;
-> +	}
-> +
-> +	if (udc->driver->setup(&udc->gadget, &setup) < 0) {
-> +		/* Stall EP0 */
-> +		spi_wr8(udc, MAX3420_REG_EPSTALLS,
-> +			bSTLEP0IN | bSTLEP0OUT | bSTLSTAT);
-> +	}
-> +}
-> +
-> +static void max3420_req_done(struct max3420_req *req, int status)
-> +{
-> +	struct max3420_ep *ep =3D req->ep;
-> +	struct max3420_udc *udc =3D ep->udc;
-> +
-> +	if (req->usb_req.status =3D=3D -EINPROGRESS)
-> +		req->usb_req.status =3D status;
-> +	else
-> +		status =3D req->usb_req.status;
-> +
-> +	if (status && status !=3D -ESHUTDOWN)
-> +		dev_err(udc->dev, "%s done %p, status %d\n",
-> +			ep->ep_usb.name, req, status);
-> +
-> +	if (req->usb_req.complete)
-> +		req->usb_req.complete(&ep->ep_usb, &req->usb_req);
-> +}
-> +
-> +static int do_data(struct max3420_udc *udc, int ep_id, int in)
-
-add a max3420_ prefix like all other functions
-
-> +{
-> +	struct max3420_ep *ep =3D &udc->ep[ep_id];
-> +	struct max3420_req *req;
-> +	int done, length, psz;
-> +	void *buf;
-> +
-> +	if (list_empty(&ep->queue))
-> +		return 0;
-> +
-> +	req =3D list_first_entry(&ep->queue, struct max3420_req, queue);
-> +	buf =3D req->usb_req.buf + req->usb_req.actual;
-> +
-> +	psz =3D ep->ep_usb.maxpacket;
-> +	length =3D req->usb_req.length - req->usb_req.actual;
-> +	length =3D min(length, psz);
-> +
-> +	if (length =3D=3D 0) {
-> +		done =3D 1;
-> +		goto xfer_done;
-> +	}
-> +
-> +	done =3D 0;
-> +	if (in) {
-> +		prefetch(buf);
-> +		spi_wr_buf(udc, MAX3420_REG_EP0FIFO + ep_id, buf, length);
-> +		spi_wr8(udc, MAX3420_REG_EP0BC + ep_id, length);
-> +		if (length < psz)
-> +			done =3D 1;
-> +	} else {
-> +		psz =3D spi_rd8(udc, MAX3420_REG_EP0BC + ep_id);
-> +		length =3D min(length, psz);
-> +		prefetchw(buf);
-> +		spi_rd_buf(udc, MAX3420_REG_EP0FIFO + ep_id, buf, length);
-> +		if (length < ep->ep_usb.maxpacket)
-> +			done =3D 1;
-> +	}
-> +
-> +	req->usb_req.actual +=3D length;
-> +
-> +	if (req->usb_req.actual =3D=3D req->usb_req.length)
-> +		done =3D 1;
-> +
-> +xfer_done:
-> +	if (done) {
-> +		unsigned long flags;
-> +
-> +		spin_lock_irqsave(&ep->lock, flags);
-> +		list_del_init(&req->queue);
-> +		spin_unlock_irqrestore(&ep->lock, flags);
-> +
-> +		if (ep_id =3D=3D 0)
-> +			spi_ack_ctrl(udc);
-> +
-> +		max3420_req_done(req, 0);
-> +	}
-> +
-> +	return 1;
-> +}
-> +
-> +static int max3420_handle_irqs(struct max3420_udc *udc)
-> +{
-> +	u8 epien, epirq, usbirq, usbien, reg[4];
-> +	int ret =3D 0;
-> +
-> +	spi_rd_buf(udc, MAX3420_REG_EPIRQ, reg, 4);
-> +	epirq =3D reg[0];
-> +	epien =3D reg[1];
-> +	usbirq =3D reg[2];
-> +	usbien =3D reg[3];
-> +
-> +	usbirq &=3D usbien;
-> +	epirq &=3D epien;
-> +
-> +	if (epirq & bSUDAVIRQ) {
-> +		spi_wr8(udc, MAX3420_REG_EPIRQ, bSUDAVIRQ);
-> +		max3420_handle_setup(udc);
-> +		return 1;
-> +	}
-> +
-> +	if (usbirq & bVBUSIRQ) {
-> +		spi_wr8(udc, MAX3420_REG_USBIRQ, bVBUSIRQ);
-> +		dev_dbg(udc->dev, "Cable plugged in\n");
-> +		return 1;
-> +	}
-> +
-> +	if (usbirq & bNOVBUSIRQ) {
-> +		spi_wr8(udc, MAX3420_REG_USBIRQ, bNOVBUSIRQ);
-> +		dev_dbg(udc->dev, "Cable pulled out\n");
-> +		return 1;
-> +	}
-> +
-> +	if (usbirq & bURESIRQ) {
-> +		spi_wr8(udc, MAX3420_REG_USBIRQ, bURESIRQ);
-> +		dev_dbg(udc->dev, "USB Reset - Start\n");
-> +		return 1;
-> +	}
-> +
-> +	if (usbirq & bURESDNIRQ) {
-> +		spi_wr8(udc, MAX3420_REG_USBIRQ, bURESDNIRQ);
-> +		dev_dbg(udc->dev, "USB Reset - END\n");
-> +		spi_wr8(udc, MAX3420_REG_USBIEN, bURESDNIRQ | bURESIRQ);
-> +		spi_wr8(udc, MAX3420_REG_EPIEN, bSUDAVIRQ | bIN0BAVIRQ
-> +			| bOUT0DAVIRQ);
-> +		return 1;
-> +	}
-> +
-> +	if (usbirq & bSUSPIRQ) {
-> +		spi_wr8(udc, MAX3420_REG_USBIRQ, bSUSPIRQ);
-> +		dev_dbg(udc->dev, "USB Suspend - Enter\n");
-> +		udc->suspended =3D true;
-> +		return 1;
-> +	}
-> +
-> +	if (usbirq & bBUSACTIRQ) {
-> +		spi_wr8(udc, MAX3420_REG_USBIRQ, bBUSACTIRQ);
-> +		dev_dbg(udc->dev, "USB Suspend - Exit\n");
-> +		udc->suspended =3D false;
-> +		return 1;
-> +	}
-> +
-> +	if (usbirq & bRWUDNIRQ) {
-> +		spi_wr8(udc, MAX3420_REG_USBIRQ, bRWUDNIRQ);
-> +		dev_dbg(udc->dev, "Asked Host to wakeup\n");
-> +		return 1;
-> +	}
-> +
-> +	if (usbirq & bOSCOKIRQ) {
-> +		spi_wr8(udc, MAX3420_REG_USBIRQ, bOSCOKIRQ);
-> +		dev_dbg(udc->dev, "Osc stabilized, start work\n");
-> +		return 1;
-> +	}
-> +
-> +	if (epirq & bOUT0DAVIRQ && do_data(udc, 0, 0)) {
-> +		spi_wr8_ack(udc, MAX3420_REG_EPIRQ, bOUT0DAVIRQ, 1);
-> +		ret =3D 1;
-> +	}
-> +
-> +	if (epirq & bIN0BAVIRQ && do_data(udc, 0, 1))
-> +		ret =3D 1;
-> +
-> +	if (epirq & bOUT1DAVIRQ && do_data(udc, 1, 0)) {
-> +		spi_wr8_ack(udc, MAX3420_REG_EPIRQ, bOUT1DAVIRQ, 1);
-> +		ret =3D 1;
-> +	}
-> +
-> +	if (epirq & bIN2BAVIRQ && do_data(udc, 2, 1))
-> +		ret =3D 1;
-> +
-> +	if (epirq & bIN3BAVIRQ && do_data(udc, 3, 1))
-> +		ret =3D 1;
-> +
-> +	return ret;
-> +}
-> +
-> +static int max3420_thread(void *dev_id)
-
-Why do you need this thread? Sure you can't live without it?
-
-> +{
-> +	struct max3420_udc *udc =3D dev_id;
-> +	struct spi_device *spi =3D udc->spi;
-> +	int i, loop_again =3D 1;
-> +	unsigned long flags;
-> +
-> +	while (!kthread_should_stop()) {
-> +		if (!loop_again) {
-> +			ktime_t kt =3D ns_to_ktime(1000 * 1000 * 250); /* 250ms */
-> +
-> +			set_current_state(TASK_INTERRUPTIBLE);
-> +
-> +			spin_lock_irqsave(&udc->lock, flags);
-> +			if (udc->todo & ENABLE_IRQ) {
-> +				enable_irq(spi->irq);
-> +				udc->todo &=3D ~ENABLE_IRQ;
-> +			}
-> +			spin_unlock_irqrestore(&udc->lock, flags);
-> +
-> +			schedule_hrtimeout(&kt, HRTIMER_MODE_REL);
-> +		}
-> +		loop_again =3D 0;
-> +
-> +		mutex_lock(&udc->spi_bus_mutex);
-> +
-> +		/* If bus-vbus_active and disconnected */
-> +		if (!udc->vbus_active || !udc->softconnect)
-> +			goto loop;
-> +
-> +		if (max3420_start(udc)) {
-> +			loop_again =3D 1;
-> +			goto loop;
-> +		}
-> +
-> +		if (max3420_handle_irqs(udc)) {
-> +			loop_again =3D 1;
-> +			goto loop;
-> +		}
-> +
-> +		if (spi_max3420_rwkup(udc)) {
-> +			loop_again =3D 1;
-> +			goto loop;
-> +		}
-> +
-> +		do_data(udc, 0, 1); /* get done with the EP0 ZLP */
-> +
-> +		for (i =3D 1; i < MAX3420_MAX_EPS; i++) {
-> +			struct max3420_ep *ep =3D &udc->ep[i];
-> +
-> +			if (spi_max3420_enable(ep))
-> +				loop_again =3D 1;
-> +			if (spi_max3420_stall(ep))
-> +				loop_again =3D 1;
-> +		}
-> +loop:
-> +		mutex_unlock(&udc->spi_bus_mutex);
-> +	}
-> +
-> +	set_current_state(TASK_RUNNING);
-> +	dev_info(udc->dev, "SPI thread exiting");
-> +	return 0;
-> +}
-> +
-> +static int max3420_ep_set_halt(struct usb_ep *_ep, int stall)
-> +{
-> +	struct max3420_ep *ep =3D to_max3420_ep(_ep);
-> +	struct max3420_udc *udc =3D ep->udc;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&ep->lock, flags);
-> +
-> +	ep->todo &=3D ~STALL_EP;
-> +	if (stall)
-> +		ep->todo |=3D STALL;
-> +	else
-> +		ep->todo |=3D UNSTALL;
-> +
-> +	spin_unlock_irqrestore(&ep->lock, flags);
-> +
-> +	wake_up_process(udc->thread_task);
-> +
-> +	dev_dbg(udc->dev, "%sStall %s\n", stall ? "" : "Un", ep->name);
-> +	return 0;
-> +}
-> +
-> +static int __max3420_ep_enable(struct max3420_ep *ep,
-> +			      const struct usb_endpoint_descriptor *desc)
-> +{
-> +	unsigned int maxp =3D usb_endpoint_maxp(desc);
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&ep->lock, flags);
-> +	ep->ep_usb.desc =3D desc;
-> +	ep->ep_usb.maxpacket =3D maxp;
-> +
-> +	ep->todo &=3D ~ENABLE_EP;
-> +	ep->todo |=3D ENABLE;
-> +	spin_unlock_irqrestore(&ep->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int max3420_ep_enable(struct usb_ep *_ep,
-> +			     const struct usb_endpoint_descriptor *desc)
-> +{
-> +	struct max3420_ep *ep =3D to_max3420_ep(_ep);
-> +	struct max3420_udc *udc =3D ep->udc;
-> +
-> +	__max3420_ep_enable(ep, desc);
-> +
-> +	wake_up_process(udc->thread_task);
-> +
-> +	return 0;
-> +}
-> +
-> +static void max3420_nuke(struct max3420_ep *ep, int status)
-> +{
-> +	struct max3420_req *req, *r;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&ep->lock, flags);
-> +
-> +	list_for_each_entry_safe(req, r, &ep->queue, queue) {
-> +
-> +		list_del_init(&req->queue);
-> +
-> +		spin_unlock_irqrestore(&ep->lock, flags);
-> +		max3420_req_done(req, status);
-> +		spin_lock_irqsave(&ep->lock, flags);
-> +	}
-> +
-> +	spin_unlock_irqrestore(&ep->lock, flags);
-> +}
-> +
-> +static void __max3420_ep_disable(struct max3420_ep *ep)
-> +{
-> +	struct max3420_udc *udc =3D ep->udc;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&ep->lock, flags);
-> +
-> +	ep->ep_usb.desc =3D NULL;
-> +
-> +	ep->todo &=3D ~ENABLE_EP;
-> +	ep->todo |=3D DISABLE;
-> +
-> +	spin_unlock_irqrestore(&ep->lock, flags);
-> +
-> +	dev_dbg(udc->dev, "Disabled %s\n", ep->name);
-> +}
-> +
-> +static int max3420_ep_disable(struct usb_ep *_ep)
-> +{
-> +	struct max3420_ep *ep =3D to_max3420_ep(_ep);
-> +	struct max3420_udc *udc =3D ep->udc;
-> +
-> +	max3420_nuke(ep, -ESHUTDOWN);
-> +
-> +	__max3420_ep_disable(ep);
-> +
-> +	wake_up_process(udc->thread_task);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct usb_request *max3420_alloc_request(struct usb_ep *_ep,
-> +						    gfp_t gfp_flags)
-> +{
-> +	struct max3420_ep *ep =3D to_max3420_ep(_ep);
-> +	struct max3420_req *req;
-> +
-> +	req =3D kzalloc(sizeof(*req), gfp_flags);
-> +	if (!req)
-> +		return NULL;
-> +
-> +	req->ep =3D ep;
-> +	INIT_LIST_HEAD(&req->queue);
-
-unnecessary list initialization
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl3vRdQACgkQzL64meEa
-mQZv9Q/9FRNlpzDhRj+xmkfmor3HqogFoQwIW56BAPqWGjhrfDDvGB2iYmjYB0aH
-5FW7av6RFmR5+Q/k2je0URe6aw9uEqr9SO1EMGbBYxxMRKobMr9SwOVGA1YSIzSA
-PdaCnvyAx0resyCyM52f0PaCOZUf+us/bUJa4nZ+niikmQA1yPfKilBd5A3DqxG2
-Xj3AANnklfVMe77h3lgoTt49SOc8yYZjpK+iDuDvcUGLiEi02HOxr3BubOAQhkjc
-pNP/GkH1Oj7FLvYRijZoHWr1Sjd08+/WIP3a7erL7B2MzTrHkdTMYyLzTqsSKeww
-fUhCkxpjE6edouJCX8xItDbuY6IZL6nnabWQWYsHSWTW9GKWmfMsCOiHvCFapVPT
-NYLsNnsLjBfloaDAR95rXYrNtta15jujGmId2Mu+nV9kMyhna+0Grcy8cXNJ5Bjf
-H2PCbJt3z/RxeFqOm/AiCftF2vBPl07OWuJSmO/whj8GS/3FtUWC06fy1VQ6cTI7
-0xyA39VjUb+oK8yWaHVgzvTjd8mx30+BtX3PP53zl40MDiHV3ZDBnllF/kGicNr8
-/a7Y62q6mal1yBGrZ7faBYnUZ0ug1NH2faNJj87hhoNkUksjDBf/g2jB1Mlc4mT1
-qqI9tzt7kgAmB2cAPoY5md0y561QB42BzyvIsgxjYkRyS2DUj9M=
-=Acbg
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
