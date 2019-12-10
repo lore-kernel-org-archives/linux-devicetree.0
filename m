@@ -2,90 +2,127 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52390C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 16:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BF3C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 16:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B1882077B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 16:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A60092073B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 16:34:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zQ7/HkMy"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wFeQndwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfLJQUY (ORCPT
+        id S1727494AbfLJQeS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:20:24 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:45018 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727178AbfLJQUY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:20:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=c6CPgm0IhvA3nyR/Q2z35omEWncDMQnrCCrPzyQjsqw=; b=zQ7/HkMyx7E/bQvQ8wnGiAEg69
-        wrwuBNQHvjITFooDPHqXzjP+oYp8DjZlT8EbI6jDKG02xyQTeqeW4P2UMdJpe4ajwHur01GjPAu8P
-        N5sULJJQTlq8XNVqXTSzm1RXsVpcuKum6ZnFH+oeLhI31klnpZfgG3VW/6sI72DN7mig=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ieiF8-0005FM-Vd; Tue, 10 Dec 2019 17:20:10 +0100
-Date:   Tue, 10 Dec 2019 17:20:10 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Landen Chao <landen.chao@mediatek.com>
-Cc:     f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com,
-        matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        davem@davemloft.net, sean.wang@mediatek.com, opensource@vdorst.com,
-        frank-w@public-files.de
-Subject: Re: [PATCH net-next 3/6] dt-bindings: net: dsa: add new MT7531
- binding to support MT7531
-Message-ID: <20191210162010.GB27714@lunn.ch>
-References: <cover.1575914275.git.landen.chao@mediatek.com>
- <1c382fd916b66bfe3ce8ef18c12f954dbcbddbbc.1575914275.git.landen.chao@mediatek.com>
+        Tue, 10 Dec 2019 11:34:18 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51142 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfLJQeR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 11:34:17 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBAGYD0o029944;
+        Tue, 10 Dec 2019 10:34:13 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575995653;
+        bh=TMX/OtqTGXcSlcQRliJXHDf+4GXR8VcwI5M8jDleaaw=;
+        h=From:To:CC:Subject:Date;
+        b=wFeQndwbuFwZfeAcWZznVdGBvAxmIRD5M2tOZ4sLa2rpR1KUQ/RNXSCQAdgZyXNsn
+         5x5vhyxOXoLkNCpfobTflR2dslHCXqBvGwTeLGaoq1A4745dArvUEyXCtN0B9C3fuE
+         46yQCxvjTTmJ0GbD1/PCeApQbBdXgN1kl0S3muaA=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBAGYDJs085479
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 10 Dec 2019 10:34:13 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
+ Dec 2019 10:34:13 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 10 Dec 2019 10:34:13 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBAGYDwN115554;
+        Tue, 10 Dec 2019 10:34:13 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <mkl@pengutronix.de>
+CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v2] can: tcan4x5x: Turn on the power before parsing the config
+Date:   Tue, 10 Dec 2019 10:32:04 -0600
+Message-ID: <20191210163204.28225-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1c382fd916b66bfe3ce8ef18c12f954dbcbddbbc.1575914275.git.landen.chao@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> +Example 4:
-> +
-> +&eth {
-> +	gmac0: mac@0 {
-> +		compatible = "mediatek,eth-mac";
-> +		reg = <0>;
-> +		phy-mode = "2500base-x";
-> +
-> +		fixed-link {
-> +			speed = <1000>;
-> +			full-duplex;
-> +			pause;
-> +		};
-> +	};
+The parse config function now performs action on the device either
+reading or writing and a reset.  If the regulator is managed it needs
+to be turned on.  So turn on the regulator if available if the parsing
+fails then turn off the regulator.
 
-2500Base-X, but fixed link speed 1000?
+Fixes: a5235f3c7c23 ("can: tcan45x: Make wake-up GPIO an optional GPIO")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
 
-> +				port@6 {
-> +					reg = <6>;
-> +					label = "cpu";
-> +					ethernet = <&gmac0>;
-> +					phy-mode = "2500base-x";
-> +
-> +					fixed-link {
-> +						speed = <1000>;
-> +						full-duplex;
-> +						pause;
-> +					};
+v2 - Added error handling and moved regulator_get to probe
 
-Same here!
+ drivers/net/can/m_can/tcan4x5x.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-     Andrew
+diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
+index 4e1789ea2bc3..ddf7db498241 100644
+--- a/drivers/net/can/m_can/tcan4x5x.c
++++ b/drivers/net/can/m_can/tcan4x5x.c
+@@ -374,11 +374,6 @@ static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
+ 	if (IS_ERR(tcan4x5x->device_state_gpio))
+ 		tcan4x5x->device_state_gpio = NULL;
+ 
+-	tcan4x5x->power = devm_regulator_get_optional(cdev->dev,
+-						      "vsup");
+-	if (PTR_ERR(tcan4x5x->power) == -EPROBE_DEFER)
+-		return -EPROBE_DEFER;
+-
+ 	return 0;
+ }
+ 
+@@ -412,6 +407,12 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
++	priv->power = devm_regulator_get_optional(&spi->dev, "vsup");
++	if (PTR_ERR(priv->power) == -EPROBE_DEFER)
++		return -EPROBE_DEFER;
++	else
++		priv->power = NULL;
++
+ 	mcan_class->device_data = priv;
+ 
+ 	m_can_class_get_clocks(mcan_class);
+@@ -451,11 +452,13 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
+ 	priv->regmap = devm_regmap_init(&spi->dev, &tcan4x5x_bus,
+ 					&spi->dev, &tcan4x5x_regmap);
+ 
+-	ret = tcan4x5x_parse_config(mcan_class);
++	ret = tcan4x5x_power_enable(priv->power, 1);
+ 	if (ret)
+ 		goto out_clk;
+ 
+-	tcan4x5x_power_enable(priv->power, 1);
++	ret = tcan4x5x_parse_config(mcan_class);
++	if (ret)
++		goto out_power;
+ 
+ 	ret = m_can_class_register(mcan_class);
+ 	if (ret)
+-- 
+2.23.0
+
