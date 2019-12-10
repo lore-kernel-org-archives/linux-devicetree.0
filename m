@@ -2,111 +2,232 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD9AC2D0D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBDAC2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040762073B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:51:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jNB9QYMe"
+	by mail.kernel.org (Postfix) with ESMTP id AF6C02077B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbfLJJvO (ORCPT
+        id S1727093AbfLJJxM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:51:14 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47096 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfLJJu7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 04:50:59 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBA9oqmK004876;
-        Tue, 10 Dec 2019 03:50:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575971452;
-        bh=lhC3vf6rK9axq0zLoFoOH6nCOYCQy/v5ElTNHSVMC78=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=jNB9QYMeWu90a6/cq5c2iASF24QjTCy82qzRUExjFmiumYxWwctepj4vW1W6UF6rN
-         osE6Ao5wmEB2XR3rzONFCxgSew5tOgIabumHw+bknqGIGbQbwr/Mg6mpgYkRKXey2b
-         nsSIAUUxLHQX8YfPqWaHTvGPB3KHdpqzu7U11JN8=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBA9oqLg090761
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Dec 2019 03:50:52 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
- Dec 2019 03:50:51 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 10 Dec 2019 03:50:51 -0600
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBA9oZVn048503;
-        Tue, 10 Dec 2019 03:50:49 -0600
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>
-CC:     <kishon@ti.com>, <adrian.hunter@intel.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <ulf.hansson@linaro.org>,
-        <zhang.chunyan@linaro.org>, <tony@atomide.com>
-Subject: [PATCH v3 4/7] mmc: sdhci: Add quirk for disabling DTO during erase command
-Date:   Tue, 10 Dec 2019 15:21:48 +0530
-Message-ID: <20191210095151.15441-5-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20191210095151.15441-1-faiz_abbas@ti.com>
-References: <20191210095151.15441-1-faiz_abbas@ti.com>
+        Tue, 10 Dec 2019 04:53:12 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37359 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbfLJJxL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 04:53:11 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iecCP-0007sy-B0; Tue, 10 Dec 2019 10:52:57 +0100
+Message-ID: <e46037cf54fb107d1f5d1ea0d618e3b4eeab1af0.camel@pengutronix.de>
+Subject: Re: [PATCH] mtd: rawnand: denali: add reset controlling
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-mtd@lists.infradead.org
+Cc:     Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marex@denx.de>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 10 Dec 2019 10:52:55 +0100
+In-Reply-To: <20191210091453.26346-1-yamada.masahiro@socionext.com>
+References: <20191210091453.26346-1-yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some controllers might prematurely issue a data timeout during an erase
-command. Add a quirk to disable the interrupt when an erase command is
-issued.
+Hi Masahiro,
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- drivers/mmc/host/sdhci.c | 5 +++++
- drivers/mmc/host/sdhci.h | 2 ++
- 2 files changed, 7 insertions(+)
+On Tue, 2019-12-10 at 18:14 +0900, Masahiro Yamada wrote:
+> According to the Denali User's Guide, this IP has two reset signals.
+> 
+>   rst_n:     reset most of FFs in the controller core
+>   reg_rst_n: reset all FFs in the register interface, and in the
+>              initialization sequence
+> 
+> This commit supports controlling those reset signals, although they
+> might be often tied up together in actual SoC integration.
+> 
+> One thing that should be kept in mind is the automated initialization
+> sequence (a.k.a. 'bootstrap' process) is kicked off when reg_rst_n is
+> deasserted.
+> 
+> When the reset is deasserted, the controller issues a RESET command
+> to the chip select 0, and attempts to read out the chip ID, and further
+> more, ONFI parameters if it is an ONFI-compliant device. Then, the
+> controller sets up the relevant registers based on the detected
+> device parameters.
+> 
+> This process is just redundant for Linux because nand_scan_ident()
+> probes devices and sets up parameters accordingly. Rather, this hardware
+> feature is annoying because it ends up with misdetection due to bugs.
+> 
+> So, commit 0615e7ad5d52 ("mtd: nand: denali: remove Toshiba and Hynix
+> specific fixup code") changed the driver to not rely on it.
+> 
+> However, there is no way to prevent it from running. The IP provides
+> the 'bootstrap_inhibit_init' port to suppress this sequence, but it is
+> usually out of software control, and dependent on SoC implementation.
+> As for the Socionext UniPhier platform, LD4 always enables it. For the
+> later SoCs, the bootstrap sequence runs depending on the boot mode.
+> 
+> I added usleep_range() to make the driver wait until the sequence
+> finishes. Otherwise, the driver would fail to detect the chip due
+> to the race between the driver and hardware-controlled sequence.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+>  .../devicetree/bindings/mtd/denali-nand.txt   |  7 ++++
+>  drivers/mtd/nand/raw/denali_dt.c              | 40 ++++++++++++++++++-
+>  2 files changed, 46 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+> index b32aed1db46d..a48b17fb969a 100644
+> --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+> @@ -14,6 +14,11 @@ Required properties:
+>      interface clock, and the ECC circuit clock.
+>    - clock-names: should contain "nand", "nand_x", "ecc"
+>  
+> +Optional properties:
+> +  - resets: may contain phandles to the controller core reset, the register
+> + reset
+> +  - reset-names: may contain "nand", "reg"
+> +
+>  Sub-nodes:
+>    Sub-nodes represent available NAND chips.
+>  
+> @@ -46,6 +51,8 @@ nand: nand@ff900000 {
+>  	reg-names = "nand_data", "denali_reg";
+>  	clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
+>  	clock-names = "nand", "nand_x", "ecc";
+> +	resets = <&nand_rst>, <&nand_reg_rst>;
+> +	reset-names = "nand", "reg";
+>  	interrupts = <0 144 4>;
+>  
+>  	nand@0 {
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 6f3d4991bee1..b8934c50b9c4 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1532,6 +1532,11 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
- 	/* Initially, a command has no error */
- 	cmd->error = 0;
- 
-+	if (cmd->opcode == MMC_ERASE &&
-+	    (host->quirks2 & SDHCI_QUIRK2_DISABLE_DTO_FOR_ERASE)) {
-+		sdhci_set_data_timeout_irq(host, false);
-+	}
-+
- 	if ((host->quirks2 & SDHCI_QUIRK2_STOP_WITH_TC) &&
- 	    cmd->opcode == MMC_STOP_TRANSMISSION)
- 		cmd->flags |= MMC_RSP_BUSY;
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index b28706a1bc6f..beda9afba3a6 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -482,6 +482,8 @@ struct sdhci_host {
-  * block count.
-  */
- #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
-+/* Controller needs to disable DTO for erase command */
-+#define SDHCI_QUIRK2_DISABLE_DTO_FOR_ERASE		(1<<19)
- 
- 	int irq;		/* Device IRQ */
- 	void __iomem *ioaddr;	/* Mapped address */
--- 
-2.19.2
+According to Documentation/devicetree/bindings/submitting-patches.txt
+this part should be a separate patch.
+
+> diff --git a/drivers/mtd/nand/raw/denali_dt.c b/drivers/mtd/nand/raw/denali_dt.c
+> index 8b779a899dcf..132bc6cc066c 100644
+> --- a/drivers/mtd/nand/raw/denali_dt.c
+> +++ b/drivers/mtd/nand/raw/denali_dt.c
+> @@ -6,6 +6,7 @@
+>   */
+>  
+>  #include <linux/clk.h>
+> +#include <linux/delay.h>
+>  #include <linux/err.h>
+>  #include <linux/io.h>
+>  #include <linux/ioport.h>
+> @@ -14,6 +15,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/reset.h>
+>  
+>  #include "denali.h"
+>  
+> @@ -22,6 +24,8 @@ struct denali_dt {
+>  	struct clk *clk;	/* core clock */
+>  	struct clk *clk_x;	/* bus interface clock */
+>  	struct clk *clk_ecc;	/* ECC circuit clock */
+> +	struct reset_control *rst;	/* core reset */
+> +	struct reset_control *rst_reg;	/* register reset */
+>  };
+>  
+>  struct denali_dt_data {
+> @@ -151,6 +155,14 @@ static int denali_dt_probe(struct platform_device *pdev)
+>  	if (IS_ERR(dt->clk_ecc))
+>  		return PTR_ERR(dt->clk_ecc);
+>  
+> +	dt->rst = devm_reset_control_get_optional_shared(dev, "nand");
+> +	if (IS_ERR(dt->rst))
+> +		return PTR_ERR(dt->rst);
+> +
+> +	dt->rst_reg = devm_reset_control_get_optional_shared(dev, "reg");
+> +	if (IS_ERR(dt->rst_reg))
+> +		return PTR_ERR(dt->rst_reg);
+> +
+>  	ret = clk_prepare_enable(dt->clk);
+>  	if (ret)
+>  		return ret;
+> @@ -166,10 +178,30 @@ static int denali_dt_probe(struct platform_device *pdev)
+>  	denali->clk_rate = clk_get_rate(dt->clk);
+>  	denali->clk_x_rate = clk_get_rate(dt->clk_x);
+>  
+> -	ret = denali_init(denali);
+> +	/*
+> +	 * Deassert the register reset, and the core reset in this order.
+> +	 * Deasserting the core reset while the register reset is asserted
+> +	 * will cause unpredictable behavior in the controller.
+> +	 */
+> +	ret = reset_control_deassert(dt->rst_reg);
+>  	if (ret)
+>  		goto out_disable_clk_ecc;
+>  
+> +	ret = reset_control_deassert(dt->rst);
+> +	if (ret)
+> +		goto out_assert_rst_reg;
+> +
+> +	/*
+> +	 * When the reset is deasserted, the initialization sequence is kicked
+> +	 * (bootstrap process). This will take a while, and the driver must
+> +	 * wait until it finished in order to avoid unpredictable behavior.
+> +	 */
+> +	usleep_range(200, 1000);
+> +
+> +	ret = denali_init(denali);
+> +	if (ret)
+> +		goto out_assert_rst;
+> +
+>  	for_each_child_of_node(dev->of_node, np) {
+>  		ret = denali_dt_chip_init(denali, np);
+>  		if (ret) {
+> @@ -184,6 +216,10 @@ static int denali_dt_probe(struct platform_device *pdev)
+>  
+>  out_remove_denali:
+>  	denali_remove(denali);
+> +out_assert_rst:
+> +	reset_control_assert(dt->rst);
+> +out_assert_rst_reg:
+> +	reset_control_assert(dt->rst_reg);
+>  out_disable_clk_ecc:
+>  	clk_disable_unprepare(dt->clk_ecc);
+>  out_disable_clk_x:
+> @@ -199,6 +235,8 @@ static int denali_dt_remove(struct platform_device *pdev)
+>  	struct denali_dt *dt = platform_get_drvdata(pdev);
+>  
+>  	denali_remove(&dt->controller);
+> +	reset_control_assert(dt->rst);
+> +	reset_control_assert(dt->rst_reg);
+>  	clk_disable_unprepare(dt->clk_ecc);
+>  	clk_disable_unprepare(dt->clk_x);
+>  	clk_disable_unprepare(dt->clk);
+
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+
+for the driver part.
+
+regards
+Philipp
 
