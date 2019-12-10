@@ -2,232 +2,149 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651FCC00454
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 14:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800D1C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 14:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31436207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 14:03:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="MUQzmcaW"
+	by mail.kernel.org (Postfix) with ESMTP id 4CE37207FF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 14:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfLJODu (ORCPT
+        id S1727007AbfLJOPV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:03:50 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:31454 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727131AbfLJODu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:03:50 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAE3Wsi012011;
-        Tue, 10 Dec 2019 15:03:36 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=N8+PdFVjbmmTn2I/xjA82hSahC5K+ZEGZOWc06jsdSY=;
- b=MUQzmcaWPIYcSTlCzircMy1rPaaNiXBKIacp8SocnyDqAKPN7Z6dONkspE43CLAWPuxn
- MuhY7GGaTL3JH06njZs7ClppQ5+O8T7WrcrMbdTTQkTs8tNnpbwhYUoqZwH7iX83doNo
- sEZiXhumdCk9xi1hE+P304zPUqOIAVrEGOURZw3y7a6oL6IEGq5vWSuEzvLeEV0xf7rd
- r/ayH/N7mh7TdKlQKS0Tew9NuXH4aIL14zSuX7vO6peXhQll1/WdDlbMK6JfBupHMusY
- +IwBIx4jMvin82oJ4JihyvzDFNMfruaYLHntijqA0T/5j6NfRd82NJqYoYxxSHY2VPzR fA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wrbrfcuhe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 10 Dec 2019 15:03:33 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6FC4610003A;
-        Tue, 10 Dec 2019 15:03:16 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5AD3E2BC7B8;
-        Tue, 10 Dec 2019 15:03:16 +0100 (CET)
-Received: from lmecxl0923.lme.st.com (10.75.127.47) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Dec
- 2019 15:03:14 +0100
-Subject: Re: [PATCH 1/1] mmc: mmci: add threaded irq to abort DPSM of
- non-functional state
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20191113172514.19052-1-ludovic.Barre@st.com>
- <CAPDyKFrZxOCkw9U05UZPRSGz2CqmhOq944z8MEVox8Y_UEYC4A@mail.gmail.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <2e5639cd-0dea-8cc1-d1aa-721025d66bac@st.com>
-Date:   Tue, 10 Dec 2019 15:03:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 10 Dec 2019 09:15:21 -0500
+Received: from skedge03.snt-world.com ([91.208.41.68]:46170 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727061AbfLJOPV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 09:15:21 -0500
+Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge03.snt-world.com (Postfix) with ESMTPS id 2C77867A918;
+        Tue, 10 Dec 2019 15:15:18 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
+ (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 10 Dec
+ 2019 15:15:17 +0100
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Tue, 10 Dec 2019 15:15:17 +0100
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+CC:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] arm64: dts: imx8mm: Add missing mux options for UART1 and
+ UART2 signals
+Thread-Topic: [PATCH] arm64: dts: imx8mm: Add missing mux options for UART1
+ and UART2 signals
+Thread-Index: AQHVr2Q/ATuBSnMk+E+vlzmoNWKRXQ==
+Date:   Tue, 10 Dec 2019 14:15:17 +0000
+Message-ID: <20191210141516.6983-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFrZxOCkw9U05UZPRSGz2CqmhOq944z8MEVox8Y_UEYC4A@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-10_03:2019-12-10,2019-12-10 signatures=0
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 2C77867A918.A01D5
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: devicetree@vger.kernel.org, festevam@gmail.com,
+        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+        s.hauer@pengutronix.de, shawnguo@kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-hi Ulf
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-Le 12/10/19 à 1:30 PM, Ulf Hansson a écrit :
-> On Wed, 13 Nov 2019 at 18:25, Ludovic Barre <ludovic.Barre@st.com> wrote:
->>
->> From: Ludovic Barre <ludovic.barre@st.com>
->>
->> If datatimeout occurs on R1B request, the Data Path State Machine stays
->> in busy and is non-functional. Only a reset aborts the DPSM.
->>
->> Like a reset must be outside of critical section, this patch adds
->> threaded irq function to release state machine. In this case,
->> the mmc_request_done is called at the end of threaded irq and
->> skipped into irq handler.
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->> ---
->>   drivers/mmc/host/mmci.c | 44 ++++++++++++++++++++++++++++++++++++-----
->>   drivers/mmc/host/mmci.h |  1 +
->>   2 files changed, 40 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
->> index 40e72c30ea84..ec6e249c87ca 100644
->> --- a/drivers/mmc/host/mmci.c
->> +++ b/drivers/mmc/host/mmci.c
->> @@ -556,6 +556,9 @@ static void mmci_dma_error(struct mmci_host *host)
->>   static void
->>   mmci_request_end(struct mmci_host *host, struct mmc_request *mrq)
->>   {
->> +       if (host->irq_action == IRQ_WAKE_THREAD)
->> +               return;
->> +
-> 
-> It seems a bit unnecessary to check this every time mmci_request_end()
-> is called.
-> 
-> How about avoiding to call mmci_request_end() for the one specific
-> condition instead? See more below.
-> 
->>          writel(0, host->base + MMCICOMMAND);
->>
->>          BUG_ON(host->data);
->> @@ -1321,6 +1324,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->>          } else if (host->variant->busy_timeout && busy_resp &&
->>                     status & MCI_DATATIMEOUT) {
->>                  cmd->error = -ETIMEDOUT;
->> +               host->irq_action = IRQ_WAKE_THREAD;
-> 
-> You could check this flag a few lines below and if it's set to
-> IRQ_WAKE_THREAD, avoid to call mmci_request_end().
+According to the reference manual and the "Pins Tool" from NXP, the
+signals for UART1 and UART2 can be muxed to the SAI2 and SAI3 pads
+respectively. Let's add the missing options.
 
-yes, it was my first implementation. after, I wanted to centralize this,
-if the irq threaded would be extend.
-But you are right, it's not the goal of this commit.
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-I resend a v2
-
-> 
->>          } else {
->>                  cmd->resp[0] = readl(base + MMCIRESPONSE0);
->>                  cmd->resp[1] = readl(base + MMCIRESPONSE1);
->> @@ -1532,9 +1536,9 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->>   {
->>          struct mmci_host *host = dev_id;
->>          u32 status;
->> -       int ret = 0;
->>
->>          spin_lock(&host->lock);
->> +       host->irq_action = IRQ_HANDLED;
->>
->>          do {
->>                  status = readl(host->base + MMCISTATUS);
->> @@ -1574,12 +1578,41 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->>                  if (host->variant->busy_detect_flag)
->>                          status &= ~host->variant->busy_detect_flag;
->>
->> -               ret = 1;
->>          } while (status);
->>
->>          spin_unlock(&host->lock);
->>
->> -       return IRQ_RETVAL(ret);
->> +       return host->irq_action;
->> +}
->> +
->> +/*
->> + * mmci_irq_threaded is call if the mmci host need to release state machines
->> + * before to terminate the request.
->> + * If datatimeout occurs on R1B request, the Data Path State Machine stays
->> + * in busy and is non-functional. Only a reset can to abort the DPSM.
->> + */
->> +static irqreturn_t mmci_irq_threaded(int irq, void *dev_id)
->> +{
->> +       struct mmci_host *host = dev_id;
->> +       unsigned long flags;
->> +
->> +       if (host->rst) {
->> +               reset_control_assert(host->rst);
->> +               udelay(2);
->> +               reset_control_deassert(host->rst);
->> +       }
->> +
->> +       spin_lock_irqsave(&host->lock, flags);
->> +       writel(host->clk_reg, host->base + MMCICLOCK);
->> +       writel(host->pwr_reg, host->base + MMCIPOWER);
->> +       writel(MCI_IRQENABLE | host->variant->start_err,
->> +              host->base + MMCIMASK0);
->> +
->> +       host->irq_action = IRQ_HANDLED;
->> +       mmci_request_end(host, host->mrq);
->> +       spin_unlock_irqrestore(&host->lock, flags);
->> +
->> +       return host->irq_action;
->>   }
->>
->>   static void mmci_request(struct mmc_host *mmc, struct mmc_request *mrq)
->> @@ -2071,8 +2104,9 @@ static int mmci_probe(struct amba_device *dev,
->>                          goto clk_disable;
->>          }
->>
->> -       ret = devm_request_irq(&dev->dev, dev->irq[0], mmci_irq, IRQF_SHARED,
->> -                       DRIVER_NAME " (cmd)", host);
->> +       ret = devm_request_threaded_irq(&dev->dev, dev->irq[0], mmci_irq,
->> +                                       mmci_irq_threaded, IRQF_SHARED,
->> +                                       DRIVER_NAME " (cmd)", host);
->>          if (ret)
->>                  goto clk_disable;
->>
->> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
->> index 158e1231aa23..5e63c0596364 100644
->> --- a/drivers/mmc/host/mmci.h
->> +++ b/drivers/mmc/host/mmci.h
->> @@ -412,6 +412,7 @@ struct mmci_host {
->>
->>          struct timer_list       timer;
->>          unsigned int            oldstat;
->> +       u32                     irq_action;
->>
->>          /* pio stuff */
->>          struct sg_mapping_iter  sg_miter;
->> --
->> 2.17.1
->>
-> 
-> Otherwise this looks good, besides my other earlier comments, of course.
-> 
-> Kind regards
-> Uffe
-> 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h b/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
+index cffa8991880d..5ccc4cc91959 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
++++ b/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
+@@ -430,18 +430,26 @@
+ #define MX8MM_IOMUXC_SAI1_MCLK_SIM_M_HRESP                                  0x1AC 0x414 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI2_RXFS_SAI2_RX_SYNC                                 0x1B0 0x418 0x000 0x0 0x0
+ #define MX8MM_IOMUXC_SAI2_RXFS_SAI5_TX_SYNC                                 0x1B0 0x418 0x4EC 0x1 0x2
++#define MX8MM_IOMUXC_SAI2_RXFS_UART1_DCE_TX                                 0x1B0 0x418 0x000 0x4 0x0
++#define MX8MM_IOMUXC_SAI2_RXFS_UART1_DTE_RX                                 0x1B0 0x418 0x4F4 0x4 0x2
+ #define MX8MM_IOMUXC_SAI2_RXFS_GPIO4_IO21                                   0x1B0 0x418 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI2_RXFS_SIM_M_HSIZE0                                 0x1B0 0x418 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI2_RXC_SAI2_RX_BCLK                                  0x1B4 0x41C 0x000 0x0 0x0
+ #define MX8MM_IOMUXC_SAI2_RXC_SAI5_TX_BCLK                                  0x1B4 0x41C 0x4E8 0x1 0x2
++#define MX8MM_IOMUXC_SAI2_RXC_UART1_DCE_RX                                  0x1B4 0x41C 0x4F4 0x4 0x3
++#define MX8MM_IOMUXC_SAI2_RXC_UART1_DTE_TX                                  0x1B4 0x41C 0x000 0x4 0x0
+ #define MX8MM_IOMUXC_SAI2_RXC_GPIO4_IO22                                    0x1B4 0x41C 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI2_RXC_SIM_M_HSIZE1                                  0x1B4 0x41C 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI2_RXD0_SAI2_RX_DATA0                                0x1B8 0x420 0x000 0x0 0x0
+ #define MX8MM_IOMUXC_SAI2_RXD0_SAI5_TX_DATA0                                0x1B8 0x420 0x000 0x1 0x0
++#define MX8MM_IOMUXC_SAI2_RXD0_UART1_DCE_RTS_B                              0x1B8 0x420 0x4F0 0x4 0x2
++#define MX8MM_IOMUXC_SAI2_RXD0_UART1_DTE_CTS_B                              0x1B8 0x420 0x000 0x4 0x0
+ #define MX8MM_IOMUXC_SAI2_RXD0_GPIO4_IO23                                   0x1B8 0x420 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI2_RXD0_SIM_M_HSIZE2                                 0x1B8 0x420 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI2_TXFS_SAI2_TX_SYNC                                 0x1BC 0x424 0x000 0x0 0x0
+ #define MX8MM_IOMUXC_SAI2_TXFS_SAI5_TX_DATA1                                0x1BC 0x424 0x000 0x1 0x0
++#define MX8MM_IOMUXC_SAI2_TXFS_UART1_DCE_CTS_B                              0x1BC 0x424 0x000 0x4 0x0
++#define MX8MM_IOMUXC_SAI2_TXFS_UART1_DTE_RTS_B                              0x1BC 0x424 0x4F0 0x4 0x3
+ #define MX8MM_IOMUXC_SAI2_TXFS_GPIO4_IO24                                   0x1BC 0x424 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI2_TXFS_SIM_M_HWRITE                                 0x1BC 0x424 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI2_TXC_SAI2_TX_BCLK                                  0x1C0 0x428 0x000 0x0 0x0
+@@ -464,21 +472,29 @@
+ #define MX8MM_IOMUXC_SAI3_RXC_SAI3_RX_BCLK                                  0x1D0 0x438 0x000 0x0 0x0
+ #define MX8MM_IOMUXC_SAI3_RXC_GPT1_CLK                                      0x1D0 0x438 0x000 0x1 0x0
+ #define MX8MM_IOMUXC_SAI3_RXC_SAI5_RX_BCLK                                  0x1D0 0x438 0x4D0 0x2 0x2
++#define MX8MM_IOMUXC_SAI3_RXC_UART2_DCE_CTS_B                               0x1D0 0x438 0x000 0x4 0x0
++#define MX8MM_IOMUXC_SAI3_RXC_UART2_DTE_RTS_B                               0x1D0 0x438 0x4F8 0x4 0x2
+ #define MX8MM_IOMUXC_SAI3_RXC_GPIO4_IO29                                    0x1D0 0x438 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_RXC_TPSMP_HTRANS1                                 0x1D0 0x438 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI3_RXD_SAI3_RX_DATA0                                 0x1D4 0x43C 0x000 0x0 0x0
+ #define MX8MM_IOMUXC_SAI3_RXD_GPT1_COMPARE1                                 0x1D4 0x43C 0x000 0x1 0x0
+ #define MX8MM_IOMUXC_SAI3_RXD_SAI5_RX_DATA0                                 0x1D4 0x43C 0x4D4 0x2 0x2
++#define MX8MM_IOMUXC_SAI3_RXD_UART2_DCE_RTS_B                               0x1D4 0x43C 0x4F8 0x4 0x3
++#define MX8MM_IOMUXC_SAI3_RXD_UART2_DTE_CTS_B                               0x1D4 0x43C 0x000 0x4 0x0
+ #define MX8MM_IOMUXC_SAI3_RXD_GPIO4_IO30                                    0x1D4 0x43C 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_RXD_TPSMP_HDATA0                                  0x1D4 0x43C 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI3_TXFS_SAI3_TX_SYNC                                 0x1D8 0x440 0x000 0x0 0x0
+ #define MX8MM_IOMUXC_SAI3_TXFS_GPT1_CAPTURE2                                0x1D8 0x440 0x000 0x1 0x0
+ #define MX8MM_IOMUXC_SAI3_TXFS_SAI5_RX_DATA1                                0x1D8 0x440 0x4D8 0x2 0x2
++#define MX8MM_IOMUXC_SAI3_TXFS_UART2_DCE_RX                                 0x1D8 0x440 0x4Fc 0x4 0x2
++#define MX8MM_IOMUXC_SAI3_TXFS_UART2_DTE_TX                                 0x1D8 0x440 0x000 0x4 0x0
+ #define MX8MM_IOMUXC_SAI3_TXFS_GPIO4_IO31                                   0x1D8 0x440 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_TXFS_TPSMP_HDATA1                                 0x1D8 0x440 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI3_TXC_SAI3_TX_BCLK                                  0x1DC 0x444 0x000 0x0 0x0
+ #define MX8MM_IOMUXC_SAI3_TXC_GPT1_COMPARE2                                 0x1DC 0x444 0x000 0x1 0x0
+ #define MX8MM_IOMUXC_SAI3_TXC_SAI5_RX_DATA2                                 0x1DC 0x444 0x4DC 0x2 0x2
++#define MX8MM_IOMUXC_SAI3_TXC_UART2_DCE_TX                                  0x1DC 0x444 0x000 0x4 0x0
++#define MX8MM_IOMUXC_SAI3_TXC_UART2_DTE_RX                                  0x1DC 0x444 0x4Fc 0x4 0x3
+ #define MX8MM_IOMUXC_SAI3_TXC_GPIO5_IO0                                     0x1DC 0x444 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_TXC_TPSMP_HDATA2                                  0x1DC 0x444 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI3_TXD_SAI3_TX_DATA0                                 0x1E0 0x448 0x000 0x0 0x0
+-- 
+2.17.1
