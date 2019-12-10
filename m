@@ -2,147 +2,211 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE45C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 01:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C43BC04E30
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 01:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6912071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 01:52:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575942720;
-	bh=KqCQz2weAnWR65cLCGRNYV4K/BKWlkR6zSJV8noJl4M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=raO4g2uhwYXKUU5hpk7m+rgly1QMYqvKZC1OM1yM1TDldfZI5vbR31J9H25Fj1TrT
-	 T0kZQwF7o08JC807nQnhxCvYtvkNQYYFBUmX0HCsB7p0WpvMZZbOFgK3UBC0b5XCsP
-	 36oDmfSxQIYdh0cOmph/FAdAqPRqu0gVYZb/D+us=
+	by mail.kernel.org (Postfix) with ESMTP id 599C420637
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 01:55:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="uZaQ7cQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfLJBwA (ORCPT
+        id S1726562AbfLJBz1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 20:52:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726502AbfLJBwA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Dec 2019 20:52:00 -0500
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 569E22080D
-        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 01:51:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575942718;
-        bh=KqCQz2weAnWR65cLCGRNYV4K/BKWlkR6zSJV8noJl4M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QBgmp/WEA/kWCJ+4xxowtAUKnN7lo0ioXQ/+OOBkTk1JJx82ejS9Gx5IkuMVffNK5
-         A/oWw39pC4eXUgKjtWuKzJ6tQcB8unMbzlia/VBBLlj/zZJyPshovwKZPVQ9Khm33b
-         Z7umV8SC/cUEMGahh9sdVfDfQF5ds9i66FLMKNn4=
-Received: by mail-qt1-f172.google.com with SMTP id j5so1252152qtq.9
-        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 17:51:58 -0800 (PST)
-X-Gm-Message-State: APjAAAW72pZUQ3gIFvCnhM9J3ev/fZqjrCtGQ13VrdSYBWuqp0SBhcsw
-        l2lHXzUgIwqkNuCpsxRW563oFzJcGyHHILTxxg==
-X-Google-Smtp-Source: APXvYqyEad6fm0J91b5vxJUTlpqjK/RvfkA5xA4LXrcK/moCxuOeAy2ZOwDen6GRbDeesm2MP0X1u0al1BP2jaCfYXc=
-X-Received: by 2002:ac8:6747:: with SMTP id n7mr27887071qtp.224.1575942717416;
- Mon, 09 Dec 2019 17:51:57 -0800 (PST)
-MIME-Version: 1.0
-References: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de>
- <e1f232f5-3847-a519-5cce-95a26512e82b@gmail.com> <87tv6idp37.fsf@mpe.ellerman.id.au>
- <67e1da87-7f5a-3972-bc16-28bae2350c12@gmail.com> <CAL_JsqKieG5=teL7gABPKbJOQfvoS9s-ZPF-=R0yEE_LUoy-Kw@mail.gmail.com>
- <20191205163538.mzunfrpox7jbrssl@linutronix.de> <084ed924-eaed-5232-a9f6-fe60128fe11a@gmail.com>
- <20191209133531.ykkknqmeeb36rv7l@linutronix.de>
-In-Reply-To: <20191209133531.ykkknqmeeb36rv7l@linutronix.de>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 9 Dec 2019 19:51:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLVJi_v9yD5khLUvJHDEXFj=eXFf-CHXz30y0mYojt-Yg@mail.gmail.com>
-Message-ID: <CAL_JsqLVJi_v9yD5khLUvJHDEXFj=eXFf-CHXz30y0mYojt-Yg@mail.gmail.com>
-Subject: Re: [RFC] Efficiency of the phandle_cache on ppc64/SLOF
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>, devicetree@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>
+        Mon, 9 Dec 2019 20:55:27 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:61825 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726538AbfLJBz0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 20:55:26 -0500
+X-UUID: 34349c59b1ea4d059b785dcfb22f0f4f-20191210
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=982g9dOwewSGMZ2O7hXVzIKUMw7xMt+hL8+JyD3K+Vs=;
+        b=uZaQ7cQe4fjytkh4JOaviVooU/CfNLnDqTsd7oedT2a33v/5AtbbMwfnyzERD/O4/2Gs9EGyjEcrtK8r2uTBHiazzsYDm1X9vKSDCslghqT3n9/0+bGvY6W5LyZx2c2p280Gv54FM3lZB00An0L7m8gfrXVFlz06/q7PIem73VU=;
+X-UUID: 34349c59b1ea4d059b785dcfb22f0f4f-20191210
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 563836277; Tue, 10 Dec 2019 09:55:07 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 10 Dec 2019 09:54:48 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 10 Dec 2019 09:54:48 +0800
+Message-ID: <1575942906.12891.6.camel@mtksdaap41>
+Subject: Re: [PATCH v2 02/14] mailbox: cmdq: variablize address shift in
+ platform
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 10 Dec 2019 09:55:06 +0800
+In-Reply-To: <1574819937-6246-4-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574819937-6246-4-git-send-email-dennis-yc.hsieh@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 7:35 AM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> On 2019-12-05 20:01:41 [-0600], Frank Rowand wrote:
-> > Is there a memory usage issue for the systems that led to this thread?
->
-> No, no memory issue led to this thread. I was just testing my patch and
-> I assumed that I did something wrong in the counting/lock drop/lock
-> acquire/allocate path because the array was hardly used. So I started to
-> look deeper=E2=80=A6
-> Once I figured out everything was fine, I was curious if everyone is
-> aware of the different phandle creation by dtc vs POWER. And I posted
-> the mail in the thread.
-> Once you confirmed that everything is "known / not an issue" I was ready
-> to take off [0].
->
-> Later more replies came in such as one mail [1] from Rob describing the
-> original reason with 814 phandles. _Here_ I was just surprised that 1024
-> were used over 64 entries for a benefit of 60ms. I understand that this
-> is low concern for you because that memory is released if modules are
-> not enabled. I usually see that module support is left enabled.
->
-> However, Rob suggested / asked about the fixed size array (this is how I
-> understood it):
-> |And yes, as mentioned earlier I don't like the complexity. I didn't
-> |from the start and I'm  I'm still of the opinion we should have a
-> |fixed or 1 time sized true cache (i.e. smaller than total # of
-> |phandles). That would solve the RT memory allocation and locking issue
-> |too.
->
-> so I attempted to ask if we should have the fixed size array maybe
-> with the hash_32() instead the mask. This would make my other patch
-> obsolete because the fixed size array should not have a RT issue. The
-> hash_32() part here would address the POWER issue where the cache is
-> currently not used efficiently.
->
-> If you want instead to keep things as-is then this is okay from my side.
-> If you want to keep this cache off on POWER then I could contribute a
-> patch doing so.
+SGksIERlbm5pczoNCg0KT24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjU4ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IFNvbWUgZ2NlIGhhcmR3YXJlIHNoaWZ0IHBjIGFuZCBlbmQgYWRk
+cmVzcyBpbiByZWdpc3RlciB0byBzdXBwb3J0DQo+IGxhcmdlIGRyYW0gYWRkcmVzc2luZy4NCj4g
+SW1wbGVtZW50IGdjZSBhZGRyZXNzIHNoaWZ0IHdoZW4gd3JpdGUgb3IgcmVhZCBwYyBhbmQgZW5k
+IHJlZ2lzdGVyLg0KPiBBbmQgYWRkIHNoaWZ0IGJpdCBpbiBwbGF0Zm9ybSBkZWZpbml0aW9uLg0K
+PiANCj4gU2lnbmVkLW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVk
+aWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMg
+ICAgICAgfCA1NyArKysrKysrKysrKysrKysrKystLS0tLS0NCj4gIGRyaXZlcnMvc29jL21lZGlh
+dGVrL210ay1jbWRxLWhlbHBlci5jICAgfCAgMyArLQ0KPiAgaW5jbHVkZS9saW51eC9tYWlsYm94
+L210ay1jbWRxLW1haWxib3guaCB8ICAyICsNCj4gIDMgZmlsZXMgY2hhbmdlZCwgNDggaW5zZXJ0
+aW9ucygrKSwgMTQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tYWls
+Ym94L210ay1jbWRxLW1haWxib3guYyBiL2RyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94
+LmMNCj4gaW5kZXggOWE2Y2U5ZjVhN2RiLi5kNTUzNjU2M2ZjZTEgMTAwNjQ0DQo+IC0tLSBhL2Ry
+aXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMNCj4gKysrIGIvZHJpdmVycy9tYWlsYm94
+L210ay1jbWRxLW1haWxib3guYw0KPiBAQCAtNzYsOCArNzYsMjEgQEAgc3RydWN0IGNtZHEgew0K
+PiAgCXN0cnVjdCBjbWRxX3RocmVhZAkqdGhyZWFkOw0KPiAgCXN0cnVjdCBjbGsJCSpjbG9jazsN
+Cj4gIAlib29sCQkJc3VzcGVuZGVkOw0KPiArCXU4CQkJc2hpZnRfcGE7DQo+ICB9Ow0KPiAgDQo+
+ICtzdHJ1Y3QgZ2NlX3BsYXQgew0KPiArCXUzMiB0aHJlYWRfbnI7DQo+ICsJdTggc2hpZnQ7DQo+
+ICt9Ow0KPiArDQo+ICt1OCBjbWRxX21ib3hfc2hpZnQoc3RydWN0IG1ib3hfY2hhbiAqY2hhbikN
+Cj4gK3sNCj4gKwlzdHJ1Y3QgY21kcSAqY21kcSA9IGNvbnRhaW5lcl9vZihjaGFuLT5tYm94LCBz
+dHJ1Y3QgY21kcSwgbWJveCk7DQo+ICsNCj4gKwlyZXR1cm4gY21kcS0+c2hpZnRfcGE7DQo+ICt9
+DQoNCkVYUE9SVF9TWU1CT0woY21kcV9tYm94X3NoaWZ0KTsNCg0KPiArDQo+ICBzdGF0aWMgaW50
+IGNtZHFfdGhyZWFkX3N1c3BlbmQoc3RydWN0IGNtZHEgKmNtZHEsIHN0cnVjdCBjbWRxX3RocmVh
+ZCAqdGhyZWFkKQ0KPiAgew0KPiAgCXUzMiBzdGF0dXM7DQo+IEBAIC0xNzYsNiArMTg5LDcgQEAg
+c3RhdGljIHZvaWQgY21kcV90YXNrX3JlbW92ZV93ZmUoc3RydWN0IGNtZHFfdGFzayAqdGFzaykN
+Cj4gIHsNCj4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSB0YXNrLT5jbWRxLT5tYm94LmRldjsNCj4g
+IAl1NjQgKmJhc2UgPSB0YXNrLT5wa3QtPnZhX2Jhc2U7DQo+ICsJc3RydWN0IGNtZHEgKmNtZHEg
+PSB0YXNrLT5jbWRxOw0KPiAgCWludCBpOw0KPiAgDQo+ICAJZG1hX3N5bmNfc2luZ2xlX2Zvcl9j
+cHUoZGV2LCB0YXNrLT5wYV9iYXNlLCB0YXNrLT5wa3QtPmNtZF9idWZfc2l6ZSwNCj4gQEAgLTE4
+Myw3ICsxOTcsNyBAQCBzdGF0aWMgdm9pZCBjbWRxX3Rhc2tfcmVtb3ZlX3dmZShzdHJ1Y3QgY21k
+cV90YXNrICp0YXNrKQ0KPiAgCWZvciAoaSA9IDA7IGkgPCBDTURRX05VTV9DTUQodGFzay0+cGt0
+KTsgaSsrKQ0KPiAgCQlpZiAoY21kcV9jb21tYW5kX2lzX3dmZShiYXNlW2ldKSkNCj4gIAkJCWJh
+c2VbaV0gPSAodTY0KUNNRFFfSlVNUF9CWV9PRkZTRVQgPDwgMzIgfA0KPiAtCQkJCSAgQ01EUV9K
+VU1QX1BBU1M7DQo+ICsJCQkJICBDTURRX0pVTVBfUEFTUyA+PiBjbWRxLT5zaGlmdF9wYTsNCg0K
+Y21kcSBpcyBvbmx5IHVzZWQgaGVyZSwgc28gSSB3b3VsZCBsaWtlDQoNCkNNRFFfSlVNUF9QQVNT
+ID4+IHRhc2stPmNtZHEtPnNoaWZ0X3BhOw0KDQo+ICAJZG1hX3N5bmNfc2luZ2xlX2Zvcl9kZXZp
+Y2UoZGV2LCB0YXNrLT5wYV9iYXNlLCB0YXNrLT5wa3QtPmNtZF9idWZfc2l6ZSwNCj4gIAkJCQkg
+ICBETUFfVE9fREVWSUNFKTsNCj4gIH0NCj4gQEAgLTIyMSwxMyArMjM1LDE1IEBAIHN0YXRpYyB2
+b2lkIGNtZHFfdGFza19oYW5kbGVfZXJyb3Ioc3RydWN0IGNtZHFfdGFzayAqdGFzaykNCj4gIHsN
+Cj4gIAlzdHJ1Y3QgY21kcV90aHJlYWQgKnRocmVhZCA9IHRhc2stPnRocmVhZDsNCj4gIAlzdHJ1
+Y3QgY21kcV90YXNrICpuZXh0X3Rhc2s7DQo+ICsJc3RydWN0IGNtZHEgKmNtZHEgPSB0YXNrLT5j
+bWRxOw0KPiAgDQo+ICAJZGV2X2Vycih0YXNrLT5jbWRxLT5tYm94LmRldiwgInRhc2sgMHglcCBl
+cnJvclxuIiwgdGFzayk7DQo+ICAJV0FSTl9PTihjbWRxX3RocmVhZF9zdXNwZW5kKHRhc2stPmNt
+ZHEsIHRocmVhZCkgPCAwKTsNCj4gIAluZXh0X3Rhc2sgPSBsaXN0X2ZpcnN0X2VudHJ5X29yX251
+bGwoJnRocmVhZC0+dGFza19idXN5X2xpc3QsDQo+ICAJCQlzdHJ1Y3QgY21kcV90YXNrLCBsaXN0
+X2VudHJ5KTsNCj4gIAlpZiAobmV4dF90YXNrKQ0KPiAtCQl3cml0ZWwobmV4dF90YXNrLT5wYV9i
+YXNlLCB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIpOw0KPiArCQl3cml0ZWwobmV4
+dF90YXNrLT5wYV9iYXNlID4+IGNtZHEtPnNoaWZ0X3BhLA0KPiArCQkgICAgICAgdGhyZWFkLT5i
+YXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4gIAljbWRxX3RocmVhZF9yZXN1bWUodGhyZWFk
+KTsNCj4gIH0NCj4gIA0KPiBAQCAtMjU3LDcgKzI3Myw3IEBAIHN0YXRpYyB2b2lkIGNtZHFfdGhy
+ZWFkX2lycV9oYW5kbGVyKHN0cnVjdCBjbWRxICpjbWRxLA0KPiAgCWVsc2UNCj4gIAkJcmV0dXJu
+Ow0KPiAgDQo+IC0JY3Vycl9wYSA9IHJlYWRsKHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJf
+QUREUik7DQo+ICsJY3Vycl9wYSA9IHJlYWRsKHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJf
+QUREUikgPDwgY21kcS0+c2hpZnRfcGE7DQo+ICANCj4gIAlsaXN0X2Zvcl9lYWNoX2VudHJ5X3Nh
+ZmUodGFzaywgdG1wLCAmdGhyZWFkLT50YXNrX2J1c3lfbGlzdCwNCj4gIAkJCQkgbGlzdF9lbnRy
+eSkgew0KPiBAQCAtMzczLDE2ICszODksMjAgQEAgc3RhdGljIGludCBjbWRxX21ib3hfc2VuZF9k
+YXRhKHN0cnVjdCBtYm94X2NoYW4gKmNoYW4sIHZvaWQgKmRhdGEpDQo+ICAJCVdBUk5fT04oY2xr
+X2VuYWJsZShjbWRxLT5jbG9jaykgPCAwKTsNCj4gIAkJV0FSTl9PTihjbWRxX3RocmVhZF9yZXNl
+dChjbWRxLCB0aHJlYWQpIDwgMCk7DQo+ICANCj4gLQkJd3JpdGVsKHRhc2stPnBhX2Jhc2UsIHRo
+cmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJfQUREUik7DQo+IC0JCXdyaXRlbCh0YXNrLT5wYV9i
+YXNlICsgcGt0LT5jbWRfYnVmX3NpemUsDQo+ICsJCXdyaXRlbCh0YXNrLT5wYV9iYXNlID4+IGNt
+ZHEtPnNoaWZ0X3BhLA0KPiArCQkgICAgICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9B
+RERSKTsNCj4gKwkJd3JpdGVsKCh0YXNrLT5wYV9iYXNlICsgcGt0LT5jbWRfYnVmX3NpemUpID4+
+IGNtZHEtPnNoaWZ0X3BhLA0KPiAgCQkgICAgICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfRU5E
+X0FERFIpOw0KPiArDQo+ICAJCXdyaXRlbCh0aHJlYWQtPnByaW9yaXR5LCB0aHJlYWQtPmJhc2Ug
+KyBDTURRX1RIUl9QUklPUklUWSk7DQo+ICAJCXdyaXRlbChDTURRX1RIUl9JUlFfRU4sIHRocmVh
+ZC0+YmFzZSArIENNRFFfVEhSX0lSUV9FTkFCTEUpOw0KPiAgCQl3cml0ZWwoQ01EUV9USFJfRU5B
+QkxFRCwgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfRU5BQkxFX1RBU0spOw0KPiAgCX0gZWxzZSB7
+DQo+ICAJCVdBUk5fT04oY21kcV90aHJlYWRfc3VzcGVuZChjbWRxLCB0aHJlYWQpIDwgMCk7DQo+
+IC0JCWN1cnJfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIpOw0K
+PiAtCQllbmRfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9FTkRfQUREUik7DQo+
+ICsJCWN1cnJfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIpIDw8
+DQo+ICsJCQljbWRxLT5zaGlmdF9wYTsNCj4gKwkJZW5kX3BhID0gcmVhZGwodGhyZWFkLT5iYXNl
+ICsgQ01EUV9USFJfRU5EX0FERFIpIDw8DQo+ICsJCQljbWRxLT5zaGlmdF9wYTsNCj4gIA0KPiAg
+CQkvKg0KPiAgCQkgKiBBdG9taWMgZXhlY3V0aW9uIHNob3VsZCByZW1vdmUgdGhlIGZvbGxvd2lu
+ZyB3ZmUsIGkuZS4gb25seQ0KPiBAQCAtMzk1LDcgKzQxNSw3IEBAIHN0YXRpYyBpbnQgY21kcV9t
+Ym94X3NlbmRfZGF0YShzdHJ1Y3QgbWJveF9jaGFuICpjaGFuLCB2b2lkICpkYXRhKQ0KPiAgCQkJ
+CWNtZHFfdGhyZWFkX3dhaXRfZW5kKHRocmVhZCwgZW5kX3BhKTsNCj4gIAkJCQlXQVJOX09OKGNt
+ZHFfdGhyZWFkX3N1c3BlbmQoY21kcSwgdGhyZWFkKSA8IDApOw0KPiAgCQkJCS8qIHNldCB0byB0
+aGlzIHRhc2sgZGlyZWN0bHkgKi8NCj4gLQkJCQl3cml0ZWwodGFzay0+cGFfYmFzZSwNCj4gKwkJ
+CQl3cml0ZWwodGFzay0+cGFfYmFzZSA+PiBjbWRxLT5zaGlmdF9wYSwNCj4gIAkJCQkgICAgICAg
+dGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4gIAkJCX0gZWxzZSB7DQo+ICAJ
+CQkJY21kcV90YXNrX2luc2VydF9pbnRvX3RocmVhZCh0YXNrKTsNCj4gQEAgLTQwNywxNCArNDI3
+LDE0IEBAIHN0YXRpYyBpbnQgY21kcV9tYm94X3NlbmRfZGF0YShzdHJ1Y3QgbWJveF9jaGFuICpj
+aGFuLCB2b2lkICpkYXRhKQ0KPiAgCQkJaWYgKGN1cnJfcGEgPT0gZW5kX3BhIC0gQ01EUV9JTlNU
+X1NJWkUgfHwNCj4gIAkJCSAgICBjdXJyX3BhID09IGVuZF9wYSkgew0KPiAgCQkJCS8qIHNldCB0
+byB0aGlzIHRhc2sgZGlyZWN0bHkgKi8NCj4gLQkJCQl3cml0ZWwodGFzay0+cGFfYmFzZSwNCj4g
+KwkJCQl3cml0ZWwodGFzay0+cGFfYmFzZSA+PiBjbWRxLT5zaGlmdF9wYSwNCj4gIAkJCQkgICAg
+ICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4gIAkJCX0gZWxzZSB7DQo+
+ICAJCQkJY21kcV90YXNrX2luc2VydF9pbnRvX3RocmVhZCh0YXNrKTsNCj4gIAkJCQlzbXBfbWIo
+KTsgLyogbW9kaWZ5IGp1bXAgYmVmb3JlIGVuYWJsZSB0aHJlYWQgKi8NCj4gIAkJCX0NCj4gIAkJ
+fQ0KPiAtCQl3cml0ZWwodGFzay0+cGFfYmFzZSArIHBrdC0+Y21kX2J1Zl9zaXplLA0KPiArCQl3
+cml0ZWwoKHRhc2stPnBhX2Jhc2UgKyBwa3QtPmNtZF9idWZfc2l6ZSkgPj4gY21kcS0+c2hpZnRf
+cGEsDQo+ICAJCSAgICAgICB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9FTkRfQUREUik7DQo+ICAJ
+CWNtZHFfdGhyZWFkX3Jlc3VtZSh0aHJlYWQpOw0KPiAgCX0NCj4gQEAgLTQ2MSw2ICs0ODEsNyBA
+QCBzdGF0aWMgaW50IGNtZHFfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4g
+IAlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsNCj4gIAlzdHJ1Y3QgY21kcSAqY21kcTsNCj4gIAlpbnQg
+ZXJyLCBpOw0KPiArCXN0cnVjdCBnY2VfcGxhdCAqcGxhdF9kYXRhOw0KPiAgDQo+ICAJY21kcSA9
+IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqY21kcSksIEdGUF9LRVJORUwpOw0KPiAgCWlmICgh
+Y21kcSkNCj4gQEAgLTQ3OSw3ICs1MDAsMTQgQEAgc3RhdGljIGludCBjbWRxX3Byb2JlKHN0cnVj
+dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJCXJldHVybiAtRUlOVkFMOw0KPiAgCX0NCj4g
+IA0KPiAtCWNtZHEtPnRocmVhZF9uciA9ICh1MzIpKHVuc2lnbmVkIGxvbmcpb2ZfZGV2aWNlX2dl
+dF9tYXRjaF9kYXRhKGRldik7DQo+ICsJcGxhdF9kYXRhID0gKHN0cnVjdCBnY2VfcGxhdCAqKW9m
+X2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KPiArCWlmICghcGxhdF9kYXRhKSB7DQo+ICsJ
+CWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIGdldCBtYXRjaCBkYXRhXG4iKTsNCj4gKwkJcmV0dXJu
+IC1FSU5WQUw7DQo+ICsJfQ0KPiArDQo+ICsJY21kcS0+dGhyZWFkX25yID0gcGxhdF9kYXRhLT50
+aHJlYWRfbnI7DQo+ICsJY21kcS0+c2hpZnRfcGEgPSBwbGF0X2RhdGEtPnNoaWZ0Ow0KPiAgCWNt
+ZHEtPmlycV9tYXNrID0gR0VOTUFTSyhjbWRxLT50aHJlYWRfbnIgLSAxLCAwKTsNCj4gIAllcnIg
+PSBkZXZtX3JlcXVlc3RfaXJxKGRldiwgY21kcS0+aXJxLCBjbWRxX2lycV9oYW5kbGVyLCBJUlFG
+X1NIQVJFRCwNCj4gIAkJCSAgICAgICAibXRrX2NtZHEiLCBjbWRxKTsNCj4gQEAgLTU0Miw5ICs1
+NzAsMTIgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkZXZfcG1fb3BzIGNtZHFfcG1fb3BzID0gew0K
+PiAgCS5yZXN1bWUgPSBjbWRxX3Jlc3VtZSwNCj4gIH07DQo+ICANCj4gK3N0YXRpYyBjb25zdCBz
+dHJ1Y3QgZ2NlX3BsYXQgZ2NlX3BsYXRfdjIgPSB7LnRocmVhZF9uciA9IDE2LCAuc2hpZnQgPSAw
+fTsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZ2NlX3BsYXQgZ2NlX3BsYXRfdjMgPSB7LnRocmVh
+ZF9uciA9IDI0LCAuc2hpZnQgPSAwfTsNCg0KRm9yIGdsb2JhbCB2YXJpYWJsZSwgeW91IG5lZWQg
+bm90IHRvIGluaXRpYWxpemUgaXQgdG8gemVyby4NCg0KPiArDQo+ICBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IG9mX2RldmljZV9pZCBjbWRxX29mX2lkc1tdID0gew0KPiAtCXsuY29tcGF0aWJsZSA9ICJt
+ZWRpYXRlayxtdDgxNzMtZ2NlIiwgLmRhdGEgPSAodm9pZCAqKTE2fSwNCj4gLQl7LmNvbXBhdGli
+bGUgPSAibWVkaWF0ZWssbXQ4MTgzLWdjZSIsIC5kYXRhID0gKHZvaWQgKikyNH0sDQo+ICsJey5j
+b21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1nY2UiLCAuZGF0YSA9ICh2b2lkICopJmdjZV9w
+bGF0X3YyfSwNCj4gKwl7LmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLWdjZSIsIC5kYXRh
+ID0gKHZvaWQgKikmZ2NlX3BsYXRfdjN9LA0KPiAgCXt9DQo+ICB9Ow0KPiAgDQo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyBiL2RyaXZlcnMvc29j
+L21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IGluZGV4IDlhZGQwZmQ1ZmE2Yy4uMjc0ZjZm
+MzExZDA1IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxw
+ZXIuYw0KPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiBA
+QCAtMjgxLDYgKzI4MSw3IEBAIEVYUE9SVF9TWU1CT0woY21kcV9wa3RfcG9sbF9tYXNrKTsNCj4g
+IA0KPiAgc3RhdGljIGludCBjbWRxX3BrdF9maW5hbGl6ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCkN
+Cj4gIHsNCj4gKwlzdHJ1Y3QgY21kcV9jbGllbnQgKmNsID0gcGt0LT5jbDsNCj4gIAlzdHJ1Y3Qg
+Y21kcV9pbnN0cnVjdGlvbiBpbnN0ID0geyB7MH0gfTsNCj4gIAlpbnQgZXJyOw0KPiAgDQo+IEBA
+IC0yOTMsNyArMjk0LDcgQEAgc3RhdGljIGludCBjbWRxX3BrdF9maW5hbGl6ZShzdHJ1Y3QgY21k
+cV9wa3QgKnBrdCkNCj4gIA0KPiAgCS8qIEpVTVAgdG8gZW5kICovDQo+ICAJaW5zdC5vcCA9IENN
+RFFfQ09ERV9KVU1QOw0KPiAtCWluc3QudmFsdWUgPSBDTURRX0pVTVBfUEFTUzsNCj4gKwlpbnN0
+LnZhbHVlID0gQ01EUV9KVU1QX1BBU1MgPj4gY21kcV9tYm94X3NoaWZ0KGNsLT5jaGFuKTsNCg0K
+Y2wgaXMgdXNlZCBvbmx5IGhlcmUsIHNvIEkgd291bGQgbGlrZQ0KDQpjbWRxX21ib3hfc2hpZnQo
+cGt0LT5jbC0+Y2hhbik7DQoNClJlZ2FyZHMsDQpDSw0KDQo+ICAJZXJyID0gY21kcV9wa3RfYXBw
+ZW5kX2NvbW1hbmQocGt0LCBpbnN0KTsNCj4gIA0KPiAgCXJldHVybiBlcnI7DQo+IGRpZmYgLS1n
+aXQgYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oIGIvaW5jbHVkZS9s
+aW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiBpbmRleCBhNGRjNDVmYmVjMGEuLmRm
+ZTViMmViODVjYyAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRx
+LW1haWxib3guaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJv
+eC5oDQo+IEBAIC04OCw0ICs4OCw2IEBAIHN0cnVjdCBjbWRxX3BrdCB7DQo+ICAJdm9pZAkJCSpj
+bDsNCj4gIH07DQo+ICANCj4gK3U4IGNtZHFfbWJveF9zaGlmdChzdHJ1Y3QgbWJveF9jaGFuICpj
+aGFuKTsNCj4gKw0KPiAgI2VuZGlmIC8qIF9fTVRLX0NNRFFfTUFJTEJPWF9IX18gKi8NCg0K
 
-It turns out there's actually a bug in the current implementation. If
-we have multiple phandles with the same mask, then we leak node
-references if we miss in the cache and re-assign the cache entry.
-Easily fixed I suppose, but holding a ref count for a cached entry
-seems wrong. That means we never have a ref count of 0 on every node
-with a phandle.
-
-I've done some more experiments with the performance. I've come to the
-conclusion that just measuring boot time is not a good way at least if
-the time is not a significant percentage of the total. I couldn't get
-any measurable data. I'm using a RK3399 Rock960 board. It has 190
-phandles. I get about 1500 calls to of_find_node_by_phandle() during
-boot. Note that about the first 300 are before we have any timekeeping
-(the prior measurements also would not account for this). Those calls
-have no cache in the current implementation and are cached in my
-implementation.
-
-no cache:  20124 us
-current cache: 819 us
-
-new cache (64 entry): 4342 us
-new cache (128 entry): 2875 us
-new cache (256 entry): 1235 us
-
-To get some idea on the time spent before timekeeping is up, if we
-take the avg miss time is ~17us (20124/1200), then we're spending
-about ~5ms on lookups before the cache is enabled. I'd estimate the
-new cache takes ~400us before timekeeping is up as there's 11 misses
-early.
-
-From these numbers, it seems the miss rate has a significant impact on
-performance for the different sizes. But taken from the original 20+
-ms, they all look like good improvement.
-
-Rob
