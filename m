@@ -2,122 +2,226 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D925CC2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3DFC2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF34A2073B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE0A2073B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:17:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b7HSxYUq"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ZICkPQ0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfLJJOC (ORCPT
+        id S1726983AbfLJJRT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:14:02 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40871 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfLJJOC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 04:14:02 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c14so19104575wrn.7
-        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 01:13:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=B63WesuGLdNVCzlGVgtcrtdlXTE/3v6MnyY3zv3G9ws=;
-        b=b7HSxYUqlLNqzneUOd44nLhL9XHNxJjgPvjEOiqGtXHLAbTh+oIbyz4ZyTIFSTbD64
-         DEXWoN/fFGADQVt7fqdLzmTP8esSWiO5Ei3ZjOPzPP4LsmzLaLVODvu1Ct/dQs2lqJRn
-         OJC4kM4LIAseN43bh7y4zZcNV6Z1PX07G9T84Z81E1cW0NRaZRWns3iI8C1z0U168sr+
-         rJTtcfcj4DNiGsEP3cDtpsZxGYHk6JkOmP/vSbjrQzrPYcCPEN6UPNzILwz9WCXNphvp
-         WsYozi0s1G434e6vMqGu8XX1qmVpZ0tLPgDDzv79zDi6M0teZIbYQ76eXhn0veRkZKtP
-         u4pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=B63WesuGLdNVCzlGVgtcrtdlXTE/3v6MnyY3zv3G9ws=;
-        b=bMSX87Z0h3C70Ju8sJnVLuWLGvq4EYNonYKwQ0yOLZoNk4ltVCYhvc6qNkot8pKdXT
-         0/exXIUcTfQV5BTMHZFsCf797+MauHKdT4RBPMGMlVmxmRqv8U4yGby5hsDrCI3NFBVa
-         9yPMqjwWT11FDWCD036vL3rR7DSBFQqwHEzqwCCXrqYV2MTAo0KIsomEGCHNaV3MDRCz
-         vyczOcF+NueWth+HEL5MiSN+2Qy/Gfj8WTBgneQIirEitwEoERSkKz69AR5AuzTHst9v
-         r4Io7u/DGddk9DD3ahvX4IFGM0jiajJNfApeUuZyFLotQYv107oRoV3Ql7tzYw06eHe4
-         Ml4w==
-X-Gm-Message-State: APjAAAW/qehEKj2zPxH816MrodtBLM5+5EAIF/qiDs1f6DY2g66dpzMl
-        Gsidz2gOFdw2fXTkaKHLlD1G7w==
-X-Google-Smtp-Source: APXvYqxk5k21iFZ4KWmyRAtmnKPgQrcN6gRJTh9ZNTyKlRxVIzHzX8f0yf1RaS4DCqcNR74upbZFPg==
-X-Received: by 2002:adf:fe4d:: with SMTP id m13mr1777747wrs.179.1575969238339;
-        Tue, 10 Dec 2019 01:13:58 -0800 (PST)
-Received: from dell (h185-20-99-176.host.redstation.co.uk. [185.20.99.176])
-        by smtp.gmail.com with ESMTPSA id e10sm2305538wma.46.2019.12.10.01.13.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 01:13:57 -0800 (PST)
-Date:   Tue, 10 Dec 2019 09:13:51 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH v3 2/6] mfd: rn5t618: prepare for irq handling
-Message-ID: <20191210091351.GS3468@dell>
-References: <20191129212045.18325-1-andreas@kemnade.info>
- <20191129212045.18325-3-andreas@kemnade.info>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191129212045.18325-3-andreas@kemnade.info>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 10 Dec 2019 04:17:19 -0500
+Received: from conuserg-08.nifty.com ([210.131.2.75]:50741 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726975AbfLJJRT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 04:17:19 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id xBA9F3nk002286;
+        Tue, 10 Dec 2019 18:15:03 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com xBA9F3nk002286
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1575969304;
+        bh=fZSJ9406U2jMjTj0MJPsSAKAuiCbOY7z777j3BlnS64=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZICkPQ0qlKaZ5gvesye64Ajer4Y29LiQHJTthQMyXqWchv1Oz6XlkHQGYD46IHJVb
+         oETXHqu+ORXaEeG2zHFMNaJ8eoHO2Vw5BKDohlNsjkKWCdgyYpZPX2e8Y5c05iVQ+J
+         lpEEVP48mVGbii42pFZXO41SCVxny/qq5XKolD5ekOkNNKd+jsgDOFzwHfL46T1QbH
+         EciXXoHdlaw8FYEn/Qg/Q4d4FhPPrRvw7TM4vumikxXMK6F/dUBL9xdOL3tkht9bc4
+         b+iqdsdNEcaOtiy//c13esKtEgHx/A0AvXUDXTgL4nXUWmmHGDA+5F6DeMQ94K1nGw
+         HD1IxhqkAZl8Q==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marex@denx.de>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mtd: rawnand: denali: add reset controlling
+Date:   Tue, 10 Dec 2019 18:14:53 +0900
+Message-Id: <20191210091453.26346-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 29 Nov 2019, Andreas Kemnade wrote:
+According to the Denali User's Guide, this IP has two reset signals.
 
-> rn5t618 currently lacks irq handling. To prepare implementation
+  rst_n:     reset most of FFs in the controller core
+  reg_rst_n: reset all FFs in the register interface, and in the
+             initialization sequence
 
-"RN5T618"
-"IRQ"
+This commit supports controlling those reset signals, although they
+might be often tied up together in actual SoC integration.
 
-> in a rn5t618-irq.c, move main file to rn5t618-core.c
+One thing that should be kept in mind is the automated initialization
+sequence (a.k.a. 'bootstrap' process) is kicked off when reg_rst_n is
+deasserted.
 
-Why do you *need* to call it "core"?
+When the reset is deasserted, the controller issues a RESET command
+to the chip select 0, and attempts to read out the chip ID, and further
+more, ONFI parameters if it is an ONFI-compliant device. Then, the
+controller sets up the relevant registers based on the detected
+device parameters.
 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
->  drivers/mfd/Makefile                      | 2 ++
->  drivers/mfd/{rn5t618.c => rn5t618-core.c} | 0
->  2 files changed, 2 insertions(+)
->  rename drivers/mfd/{rn5t618.c => rn5t618-core.c} (100%)
-> 
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index c1067ea46204..110ea700231b 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -216,6 +216,8 @@ obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
->  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
->  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
->  obj-$(CONFIG_MFD_RK808)		+= rk808.o
-> +
-> +rn5t618-objs			:= rn5t618-core.o
->  obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
->  obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
->  obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
-> diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618-core.c
-> similarity index 100%
-> rename from drivers/mfd/rn5t618.c
-> rename to drivers/mfd/rn5t618-core.c
+This process is just redundant for Linux because nand_scan_ident()
+probes devices and sets up parameters accordingly. Rather, this hardware
+feature is annoying because it ends up with misdetection due to bugs.
 
+So, commit 0615e7ad5d52 ("mtd: nand: denali: remove Toshiba and Hynix
+specific fixup code") changed the driver to not rely on it.
+
+However, there is no way to prevent it from running. The IP provides
+the 'bootstrap_inhibit_init' port to suppress this sequence, but it is
+usually out of software control, and dependent on SoC implementation.
+As for the Socionext UniPhier platform, LD4 always enables it. For the
+later SoCs, the bootstrap sequence runs depending on the boot mode.
+
+I added usleep_range() to make the driver wait until the sequence
+finishes. Otherwise, the driver would fail to detect the chip due
+to the race between the driver and hardware-controlled sequence.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ .../devicetree/bindings/mtd/denali-nand.txt   |  7 ++++
+ drivers/mtd/nand/raw/denali_dt.c              | 40 ++++++++++++++++++-
+ 2 files changed, 46 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+index b32aed1db46d..a48b17fb969a 100644
+--- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+@@ -14,6 +14,11 @@ Required properties:
+     interface clock, and the ECC circuit clock.
+   - clock-names: should contain "nand", "nand_x", "ecc"
+ 
++Optional properties:
++  - resets: may contain phandles to the controller core reset, the register
++ reset
++  - reset-names: may contain "nand", "reg"
++
+ Sub-nodes:
+   Sub-nodes represent available NAND chips.
+ 
+@@ -46,6 +51,8 @@ nand: nand@ff900000 {
+ 	reg-names = "nand_data", "denali_reg";
+ 	clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
+ 	clock-names = "nand", "nand_x", "ecc";
++	resets = <&nand_rst>, <&nand_reg_rst>;
++	reset-names = "nand", "reg";
+ 	interrupts = <0 144 4>;
+ 
+ 	nand@0 {
+diff --git a/drivers/mtd/nand/raw/denali_dt.c b/drivers/mtd/nand/raw/denali_dt.c
+index 8b779a899dcf..132bc6cc066c 100644
+--- a/drivers/mtd/nand/raw/denali_dt.c
++++ b/drivers/mtd/nand/raw/denali_dt.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/clk.h>
++#include <linux/delay.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
+ #include <linux/ioport.h>
+@@ -14,6 +15,7 @@
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
++#include <linux/reset.h>
+ 
+ #include "denali.h"
+ 
+@@ -22,6 +24,8 @@ struct denali_dt {
+ 	struct clk *clk;	/* core clock */
+ 	struct clk *clk_x;	/* bus interface clock */
+ 	struct clk *clk_ecc;	/* ECC circuit clock */
++	struct reset_control *rst;	/* core reset */
++	struct reset_control *rst_reg;	/* register reset */
+ };
+ 
+ struct denali_dt_data {
+@@ -151,6 +155,14 @@ static int denali_dt_probe(struct platform_device *pdev)
+ 	if (IS_ERR(dt->clk_ecc))
+ 		return PTR_ERR(dt->clk_ecc);
+ 
++	dt->rst = devm_reset_control_get_optional_shared(dev, "nand");
++	if (IS_ERR(dt->rst))
++		return PTR_ERR(dt->rst);
++
++	dt->rst_reg = devm_reset_control_get_optional_shared(dev, "reg");
++	if (IS_ERR(dt->rst_reg))
++		return PTR_ERR(dt->rst_reg);
++
+ 	ret = clk_prepare_enable(dt->clk);
+ 	if (ret)
+ 		return ret;
+@@ -166,10 +178,30 @@ static int denali_dt_probe(struct platform_device *pdev)
+ 	denali->clk_rate = clk_get_rate(dt->clk);
+ 	denali->clk_x_rate = clk_get_rate(dt->clk_x);
+ 
+-	ret = denali_init(denali);
++	/*
++	 * Deassert the register reset, and the core reset in this order.
++	 * Deasserting the core reset while the register reset is asserted
++	 * will cause unpredictable behavior in the controller.
++	 */
++	ret = reset_control_deassert(dt->rst_reg);
+ 	if (ret)
+ 		goto out_disable_clk_ecc;
+ 
++	ret = reset_control_deassert(dt->rst);
++	if (ret)
++		goto out_assert_rst_reg;
++
++	/*
++	 * When the reset is deasserted, the initialization sequence is kicked
++	 * (bootstrap process). This will take a while, and the driver must
++	 * wait until it finished in order to avoid unpredictable behavior.
++	 */
++	usleep_range(200, 1000);
++
++	ret = denali_init(denali);
++	if (ret)
++		goto out_assert_rst;
++
+ 	for_each_child_of_node(dev->of_node, np) {
+ 		ret = denali_dt_chip_init(denali, np);
+ 		if (ret) {
+@@ -184,6 +216,10 @@ static int denali_dt_probe(struct platform_device *pdev)
+ 
+ out_remove_denali:
+ 	denali_remove(denali);
++out_assert_rst:
++	reset_control_assert(dt->rst);
++out_assert_rst_reg:
++	reset_control_assert(dt->rst_reg);
+ out_disable_clk_ecc:
+ 	clk_disable_unprepare(dt->clk_ecc);
+ out_disable_clk_x:
+@@ -199,6 +235,8 @@ static int denali_dt_remove(struct platform_device *pdev)
+ 	struct denali_dt *dt = platform_get_drvdata(pdev);
+ 
+ 	denali_remove(&dt->controller);
++	reset_control_assert(dt->rst);
++	reset_control_assert(dt->rst_reg);
+ 	clk_disable_unprepare(dt->clk_ecc);
+ 	clk_disable_unprepare(dt->clk_x);
+ 	clk_disable_unprepare(dt->clk);
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.1
+
