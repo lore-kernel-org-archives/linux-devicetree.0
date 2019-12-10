@@ -2,73 +2,76 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D32BC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20019C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 328EC20836
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC03A207FF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:15:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Ax41RgSa"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FwUBWi9X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfLJSNU (ORCPT
+        id S1727770AbfLJSPs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 13:13:20 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:33496 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727603AbfLJSNU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 13:13:20 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r67so7719054pjb.0
-        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 10:13:20 -0800 (PST)
+        Tue, 10 Dec 2019 13:15:48 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32913 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727702AbfLJSPs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 13:15:48 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 6so9288371pgk.0
+        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 10:15:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:in-reply-to:references:date:message-id
          :mime-version;
-        bh=4lLGRmsliIpZ0UpKU0IEWW602jVUv7+6lHITbij3O5Y=;
-        b=Ax41RgSauchkK4JBfY5KiQhx0ZqAGsHlTIabiht9+ufmYPy0A/k6fzpIOehD7/e1BZ
-         rVNN9fQqcCTUysbKXiB+vDRvErr1DyzQPtKiTYcJqj2GHjmATSk3qucVeOLVRCkOhEIu
-         K5dAVffJQTTNp4WTUL3ki2V3LvaaviZN1KCbOON0El12ZWTLGoM+UwftSpRs5Plgaxb3
-         JVbzGapJbO730NFVsQnawfZ+KVkgcjfTaxggwi194/nxW0zjNi9K7TZVjJ07vcCzE4r5
-         L/qmEmEiYuVsMLunBZzzlhPYONXzzXDmajP/VEpXPY6582YOziMrl931APa+/HAqnF5W
-         wXGg==
+        bh=kfLit8LCSQ20powxSKYWCP8N8M+8XWObHNOV3Cp5ZFE=;
+        b=FwUBWi9X6lnjaJWijeU8P6xQR2Yp703scW9SLcH8NgPLyKR/nUa8y4eOqMcVaRTSk4
+         tcvmrhzkqYkS8gpG+GVfApk07EkDCKXveshyGFCdzPWWOsUOOu5tV3DS3LXnxD3QRB+m
+         bZrv45p67LNVj/kJTeKbtMT3wdS3ewyDaRbSiw+weCRaMrSD2ttdqr1VKNOnHk0ewkTL
+         NsDbcRNLkRIk8bPKhl3CylU/tCFIocywzPTKj/ZlQBT0Tl6XHmo6DECLYUYfUHKvAkai
+         u1igvJdm9ZujDZNoRpz0k6oiOYkjyr/mxpOEQr/iw0EFosNHKmcKqsLwNrwSMw0hWN6M
+         hIgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=4lLGRmsliIpZ0UpKU0IEWW602jVUv7+6lHITbij3O5Y=;
-        b=gzArQMfJgXYPxdPki2kdAN20NX8ksKoIGDJ70m/LmAGBVDjR+11bFfmPuxwE2dThnQ
-         MAO2RhI+Xu05w/fyyCDPWNUP3RlLR45n9SeyilVxDbxjoPivhB7G0LQMIS2SlAMECi3s
-         Tn6FlroTy9pEoVxPhFKke98M5GUUgUIhWbVHdTvix/PkSNLpTmIK9/dXj+F+srsDf6aw
-         UrUlGNGTJuBOE26g/bqsAZkaHD4zir9DMWGUouk8LfFDylovf2aav3PBtJSB11ow0urv
-         htPbjUCTNRJwoi5pVaWQy5eLqapRe3Fg91q8gE7bDyHtRg4XJwqLgzAyqvJTIsM4LlEO
-         57rw==
-X-Gm-Message-State: APjAAAVRMkZkruiIDNgUc4zQUu10nYGkFZtU7EsWEHLhbOcCkWZvE5mw
-        6dc5vUVIIvPacYRfPMPXG4yktQ==
-X-Google-Smtp-Source: APXvYqxJRm4sHGA5uWrmJ+2D9cTFf8Qb8j2tRTkfuT9957FR3ONic55nbNNuLrP58IxTnaW0jHeS9g==
-X-Received: by 2002:a17:902:b611:: with SMTP id b17mr22648668pls.210.1576001599750;
-        Tue, 10 Dec 2019 10:13:19 -0800 (PST)
+        bh=kfLit8LCSQ20powxSKYWCP8N8M+8XWObHNOV3Cp5ZFE=;
+        b=NPsrVfSFQhQ5OkIa87JDsM5Z23rn2CElVftKfGDyhPOLuFEsLx2TGqQjRKJaX25e3W
+         AInOo/o53fSDJYh3l/zOoP0FSFWk+OBTkpaKBCDoyyFogkZ1oyyYvMC661pOKzuGwBJ0
+         0GhAY5w5gfXBanF1DdQCJ/501OZNTYtVz5PFqPDM7dEeyvskhaBScxq6KGuUYsvdXVzU
+         UiLvWZkxtfJaBXkg4BhF9p4Z7mL6TvSX02cpwSp/z9Lu0jzdTXAheSiNvDxXy/ZiloTq
+         +6Eqz0kK/vfkPKK37HJlH6+p+2sL9dq/cxl3AbrTOLwCle40LZrRcRsLOZYOqgAj/XZ9
+         wyVg==
+X-Gm-Message-State: APjAAAX1wIErp22ADEml5ZXaFjxPxaHIh1aoCRt9SMWtWZcj2EhaIc1B
+        u2cDuXk5a0Vyio3CyrhLJsZg1NwF5aIjIg==
+X-Google-Smtp-Source: APXvYqwpRGFP81NCx9NWPduL64oaXvGdMHqxm0bX+hBAxyEfO2ttMxw7y0Q9JTow9L1V6Lb4JcuPPw==
+X-Received: by 2002:aa7:9197:: with SMTP id x23mr37703857pfa.163.1576001747315;
+        Tue, 10 Dec 2019 10:15:47 -0800 (PST)
 Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id u123sm1382107pfb.109.2019.12.10.10.13.18
+        by smtp.gmail.com with ESMTPSA id 17sm4363066pfv.142.2019.12.10.10.15.46
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 10 Dec 2019 10:13:18 -0800 (PST)
+        Tue, 10 Dec 2019 10:15:46 -0800 (PST)
 From:   Kevin Hilman <khilman@baylibre.com>
-To:     Anand Moon <linux.amoon@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+To:     Jian Hu <jian.hu@amlogic.com>,
         Jerome Brunet <jbrunet@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC-next 0/1] Odroid C2: Enable DVFS for cpu
-In-Reply-To: <CANAwSgQx3LjQe60TGgKyk6B5BD5y1caS2tA+O+GFES7=qCFeKg@mail.gmail.com>
-References: <20191101143126.2549-1-linux.amoon@gmail.com> <7hfthtrvvv.fsf@baylibre.com> <c89791de-0a46-3ce2-b3e2-3640c364cd0f@baylibre.com> <CANAwSgQx3LjQe60TGgKyk6B5BD5y1caS2tA+O+GFES7=qCFeKg@mail.gmail.com>
-Date:   Tue, 10 Dec 2019 10:13:18 -0800
-Message-ID: <7hfthsqcap.fsf@baylibre.com>
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: meson-a1: add I2C nodes
+In-Reply-To: <e90e00e1-c868-ce09-6f79-deb62da72b43@amlogic.com>
+References: <20191202111253.94872-1-jian.hu@amlogic.com> <7hsgltqfdx.fsf@baylibre.com> <e90e00e1-c868-ce09-6f79-deb62da72b43@amlogic.com>
+Date:   Tue, 10 Dec 2019 10:15:45 -0800
+Message-ID: <7hblsgqc6m.fsf@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
@@ -76,49 +79,128 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Anand Moon <linux.amoon@gmail.com> writes:
+Jian Hu <jian.hu@amlogic.com> writes:
 
-> Hi Neil / Kevin,
+> Hi Kevin
 >
-> On Tue, 10 Dec 2019 at 14:13, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> On 09/12/2019 23:12, Kevin Hilman wrote:
->> > Anand Moon <linux.amoon@gmail.com> writes:
->> >
->> >> Some how this patch got lost, so resend this again.
->> >>
->> >> [0] https://patchwork.kernel.org/patch/11136545/
->> >>
->> >> This patch enable DVFS on GXBB Odroid C2.
->> >>
->> >> DVFS has been tested by running the arm64 cpuburn
->> >> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
->> >> PM-QA testing
->> >> [2] https://git.linaro.org/power/pm-qa.git [cpufreq testcase]
->> >>
->> >> Tested on latest U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
->> >
->> > Have you tested with the Harkernel u-boot?
->> >
->> > Last I remember, enabling CPUfreq will cause system hangs with the
->> > Hardkernel u-boot because of improperly enabled frequencies, so I'm not
->> > terribly inclined to merge this patch.
+> Thanks for your review
 >
-> HK u-boot have many issue with loading the kernel, with load address
-> *it's really hard to build the kernel for HK u-boot*,
-> to get the configuration correctly.
->
-> Well I have tested with mainline u-boot with latest ATF .
-> I would prefer mainline u-boot for all the Amlogic SBC, since
-> they sync with latest driver changes.
+> On 2019/12/10 6:54, Kevin Hilman wrote:
+>> Hi Jian,
+>> 
+>> Jian Hu <jian.hu@amlogic.com> writes:
+>> 
+>>> There are four I2C controllers in A1 series,
+>>> Share the same comptible with AXG.The I2C nodes
+>>> depend on pinmux and clock controller.
+>>>
+>>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>>> ---
+>>>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 149 ++++++++++++++++++++++
+>>>   1 file changed, 149 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>>> index eab2ecd36aa8..d0a73d953f5e 100644
+>>> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>>> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>>> @@ -16,6 +16,13 @@
+>>>   	#address-cells = <2>;
+>>>   	#size-cells = <2>;
+>>>   
+>>> +	aliases {
+>>> +		i2c0 = &i2c0;
+>>> +		i2c1 = &i2c1;
+>>> +		i2c2 = &i2c2;
+>>> +		i2c3 = &i2c3;
+>>> +	};
+>>> +
+>>>   	cpus {
+>>>   		#address-cells = <2>;
+>>>   		#size-cells = <0>;
+>>> @@ -117,6 +124,46 @@
+>>>   				};
+>>>   			};
+>>>   
+>>> +			i2c0: i2c@1400 {
+>>> +				compatible = "amlogic,meson-axg-i2c";
+>>> +				reg = <0x0 0x1400 0x0 0x24>;
+>> 
+>> The AXG DT files use 0x20 for the length.  You are using 0x24.  I don't
+>> see any additional registers added to the driver, so this doesn't look right.
+> In fact, For G12 series and A1, the length should be 0x24. A new 
+> register is added, And it is for IRQ handler timeout. If the 
+> transmission is exceeding a limited time, it will abort the 
+> transmission.Now the function is not used, There is completion to deal 
+> the timeout in the driver. I will set the length 0x20 becouse of the new 
+> register is not used.
 
-Yes, we would all prefer mainline u-boot, but the mainline kernel needs
-to support the vendor u-boot that is shipping with the boards.  So
-until Hardkernel (and other vendors) switch to mainline u-boot we do not
-want to have upstream kernel defaults that will not boot with the vendor
-u-boot.
+Yes, we can extend it to 0x24 when support for the new register is
+added, because that will mean adding a new compatible string also.
 
-We can always support these features, but they just cannot be enabled
-by default.
+>> 
+>>> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
+>>> +				#address-cells = <1>;
+>>> +				#size-cells = <0>;
+>>> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
+>>> +				status = "disabled";
+>>> +			};
+>>> +
+>>> +			i2c1: i2c@5c00 {
+>>> +				compatible = "amlogic,meson-axg-i2c";
+>>> +				reg = <0x0 0x5c00 0x0 0x24>;
+>>> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
+>>> +				#address-cells = <1>;
+>>> +				#size-cells = <0>;
+>>> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
+>>> +				status = "disabled";
+>>> +			};
+>>> +
+>>> +			i2c2: i2c@6800 {
+>>> +				compatible = "amlogic,meson-axg-i2c";
+>>> +				reg = <0x0 0x6800 0x0 0x24>;
+>>> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
+>>> +				#address-cells = <1>;
+>>> +				#size-cells = <0>;
+>>> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
+>>> +				status = "disabled";
+>>> +			};
+>>> +
+>>> +			i2c3: i2c@6c00 {
+>>> +				compatible = "amlogic,meson-axg-i2c";
+>>> +				reg = <0x0 0x6c00 0x0 0x24>;
+>>> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
+>>> +				#address-cells = <1>;
+>>> +				#size-cells = <0>;
+>>> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
+>>> +				status = "disabled";
+>>> +			};
+>>> +
+>>>   			uart_AO: serial@1c00 {
+>>>   				compatible = "amlogic,meson-gx-uart",
+>>>   					     "amlogic,meson-ao-uart";
+>>> @@ -171,3 +218,105 @@
+>>>   		#clock-cells = <0>;
+>>>   	};
+>>>   };
+>>> +
+>>> +&periphs_pinctrl {
+>>> +	i2c0_f11_pins:i2c0-f11 {
+>>> +		mux {
+>>> +			groups = "i2c0_sck_f11",
+>>> +				"i2c0_sda_f12";
+>>> +			function = "i2c0";
+>>> +			bias-pull-up;
+>>> +			drive-strength-microamp = <3000>;
+>> 
+>> Can you also add some comment to the changelog about the need for
+>> drive-strength compared to AXG.
+>
+> OK, Drive strength function is added for GPIO pins from G12 series.
+> So does A1 series.
+
+Yes, that's what I assumed.  Please add that to the changelog as one of
+the new features in A1 compared to AXG.
+
+Thanks,
 
 Kevin
