@@ -2,232 +2,113 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBDAC2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12FCC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 10:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF6C02077B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F582053B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 10:17:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fcSvCZuD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfLJJxM (ORCPT
+        id S1727196AbfLJKRU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:53:12 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37359 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbfLJJxL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 04:53:11 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iecCP-0007sy-B0; Tue, 10 Dec 2019 10:52:57 +0100
-Message-ID: <e46037cf54fb107d1f5d1ea0d618e3b4eeab1af0.camel@pengutronix.de>
-Subject: Re: [PATCH] mtd: rawnand: denali: add reset controlling
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-mtd@lists.infradead.org
-Cc:     Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marex@denx.de>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Tue, 10 Dec 2019 05:17:20 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51619 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727127AbfLJKRT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 05:17:19 -0500
+Received: by mail-wm1-f67.google.com with SMTP id g206so2493679wme.1
+        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 02:17:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=xmLlcTghzPFIQ8mfUoSKx274MOGK7c0q1BOLA3zin5c=;
+        b=fcSvCZuDu/jCInvDVS5idg2zFC+JxUezgWsEzS5YwYFM1JFAhzC92Nm24kZZOmk094
+         RfkjjBX4Tl7pVGKiTXkb6ZXjC8C5cdJ/xvvMdZu5xSlYUlCaPYcv4skpDFMDdUy6wKkE
+         j81+cogTRKJl+jY4iIEWkAoeVhuzbSa1Sg3rYZ2J/NAC82qC8k4qMSaQ9SRIMQ1Xs9VM
+         XIeopc2OHN73WVTc7bcO1iL6c8KxgROgkxyPTdf8WVQ+OZrbg/S39bH4Efd6uV/iI781
+         OYm3bzPYAf5N4zJXWgkloQEMKq6WKNRc1Jp54ueSiHCXeH4J9ka0xLNn64pC13mRi3qz
+         2oMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=xmLlcTghzPFIQ8mfUoSKx274MOGK7c0q1BOLA3zin5c=;
+        b=qSvt+riAGv7lokTa9VJZtxpxOGu9pgE6DmTZzIkkixCINdkbcfwIbg+9f4LkGAR4tk
+         WI0YMLsVleVFPGbiEI6jcFQ1Qxkq57MIEQX0b6f4hSHkAp9V+rsBwg65hckmk3Ovw7+W
+         ilAXSSTgD7rcZKgA7jhy94qeMYk8BajYtyqE/u9EqRv6VmCWvete6i6AiumB+j6L238n
+         0D4joATFYNHnaJndNrj22MnV3xkTtpo2Tt1X0o03/c4d5F+5pfJUP3lgG8m1NVCbzSyB
+         e3rEvBaqzTzNsCkJtZoPajdhc/SOKZ8DUxbHdKOQCnGaHSXZcGc3nc+XLeFuiGP7y0GZ
+         O7EQ==
+X-Gm-Message-State: APjAAAVjPUmZeewkQrdzMILw8P6jnghV54T2gmx8r83Z0t01zVeMH0MU
+        H8to+Gnl/5KUOUpHcLqiqjFmDw==
+X-Google-Smtp-Source: APXvYqwVnyN4tOCPyX/fALkBBhtIPe2HLM6zr6GYhucBkFtEKMV/e/35eKhQlSa5MVPgf6uQKl+RIQ==
+X-Received: by 2002:a05:600c:507:: with SMTP id i7mr4398123wmc.135.1575973037693;
+        Tue, 10 Dec 2019 02:17:17 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id g2sm2697067wrw.76.2019.12.10.02.17.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 02:17:17 -0800 (PST)
+References: <20191202111253.94872-1-jian.hu@amlogic.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Jian Hu <jian.hu@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        "Rob Herring" <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Mark Rutland <mark.rutland@arm.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 10 Dec 2019 10:52:55 +0100
-In-Reply-To: <20191210091453.26346-1-yamada.masahiro@socionext.com>
-References: <20191210091453.26346-1-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: meson-a1: add I2C nodes
+In-reply-to: <20191202111253.94872-1-jian.hu@amlogic.com>
+Date:   Tue, 10 Dec 2019 11:17:16 +0100
+Message-ID: <1j8snkh4cz.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Masahiro,
 
-On Tue, 2019-12-10 at 18:14 +0900, Masahiro Yamada wrote:
-> According to the Denali User's Guide, this IP has two reset signals.
-> 
->   rst_n:     reset most of FFs in the controller core
->   reg_rst_n: reset all FFs in the register interface, and in the
->              initialization sequence
-> 
-> This commit supports controlling those reset signals, although they
-> might be often tied up together in actual SoC integration.
-> 
-> One thing that should be kept in mind is the automated initialization
-> sequence (a.k.a. 'bootstrap' process) is kicked off when reg_rst_n is
-> deasserted.
-> 
-> When the reset is deasserted, the controller issues a RESET command
-> to the chip select 0, and attempts to read out the chip ID, and further
-> more, ONFI parameters if it is an ONFI-compliant device. Then, the
-> controller sets up the relevant registers based on the detected
-> device parameters.
-> 
-> This process is just redundant for Linux because nand_scan_ident()
-> probes devices and sets up parameters accordingly. Rather, this hardware
-> feature is annoying because it ends up with misdetection due to bugs.
-> 
-> So, commit 0615e7ad5d52 ("mtd: nand: denali: remove Toshiba and Hynix
-> specific fixup code") changed the driver to not rely on it.
-> 
-> However, there is no way to prevent it from running. The IP provides
-> the 'bootstrap_inhibit_init' port to suppress this sequence, but it is
-> usually out of software control, and dependent on SoC implementation.
-> As for the Socionext UniPhier platform, LD4 always enables it. For the
-> later SoCs, the bootstrap sequence runs depending on the boot mode.
-> 
-> I added usleep_range() to make the driver wait until the sequence
-> finishes. Otherwise, the driver would fail to detect the chip due
-> to the race between the driver and hardware-controlled sequence.
+On Mon 02 Dec 2019 at 12:12, Jian Hu <jian.hu@amlogic.com> wrote:
+
+> There are four I2C controllers in A1 series,
+> Share the same comptible with AXG.The I2C nodes
+> depend on pinmux and clock controller.
 >
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
 > ---
-> 
->  .../devicetree/bindings/mtd/denali-nand.txt   |  7 ++++
->  drivers/mtd/nand/raw/denali_dt.c              | 40 ++++++++++++++++++-
->  2 files changed, 46 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> index b32aed1db46d..a48b17fb969a 100644
-> --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> @@ -14,6 +14,11 @@ Required properties:
->      interface clock, and the ECC circuit clock.
->    - clock-names: should contain "nand", "nand_x", "ecc"
+>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 149 ++++++++++++++++++++++
+>  1 file changed, 149 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> index eab2ecd36aa8..d0a73d953f5e 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> @@ -16,6 +16,13 @@
+>  	#address-cells = <2>;
+>  	#size-cells = <2>;
 >  
-> +Optional properties:
-> +  - resets: may contain phandles to the controller core reset, the register
-> + reset
-> +  - reset-names: may contain "nand", "reg"
+> +	aliases {
+> +		i2c0 = &i2c0;
+> +		i2c1 = &i2c1;
+> +		i2c2 = &i2c2;
+> +		i2c3 = &i2c3;
+> +	};
 > +
->  Sub-nodes:
->    Sub-nodes represent available NAND chips.
->  
-> @@ -46,6 +51,8 @@ nand: nand@ff900000 {
->  	reg-names = "nand_data", "denali_reg";
->  	clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
->  	clock-names = "nand", "nand_x", "ecc";
-> +	resets = <&nand_rst>, <&nand_reg_rst>;
-> +	reset-names = "nand", "reg";
->  	interrupts = <0 144 4>;
->  
->  	nand@0 {
 
-According to Documentation/devicetree/bindings/submitting-patches.txt
-this part should be a separate patch.
+I wonder if assigning i2c bus alias in the SoC dtsi is such a good idea.
 
-> diff --git a/drivers/mtd/nand/raw/denali_dt.c b/drivers/mtd/nand/raw/denali_dt.c
-> index 8b779a899dcf..132bc6cc066c 100644
-> --- a/drivers/mtd/nand/raw/denali_dt.c
-> +++ b/drivers/mtd/nand/raw/denali_dt.c
-> @@ -6,6 +6,7 @@
->   */
->  
->  #include <linux/clk.h>
-> +#include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/io.h>
->  #include <linux/ioport.h>
-> @@ -14,6 +15,7 @@
->  #include <linux/of.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
-> +#include <linux/reset.h>
->  
->  #include "denali.h"
->  
-> @@ -22,6 +24,8 @@ struct denali_dt {
->  	struct clk *clk;	/* core clock */
->  	struct clk *clk_x;	/* bus interface clock */
->  	struct clk *clk_ecc;	/* ECC circuit clock */
-> +	struct reset_control *rst;	/* core reset */
-> +	struct reset_control *rst_reg;	/* register reset */
->  };
->  
->  struct denali_dt_data {
-> @@ -151,6 +155,14 @@ static int denali_dt_probe(struct platform_device *pdev)
->  	if (IS_ERR(dt->clk_ecc))
->  		return PTR_ERR(dt->clk_ecc);
->  
-> +	dt->rst = devm_reset_control_get_optional_shared(dev, "nand");
-> +	if (IS_ERR(dt->rst))
-> +		return PTR_ERR(dt->rst);
-> +
-> +	dt->rst_reg = devm_reset_control_get_optional_shared(dev, "reg");
-> +	if (IS_ERR(dt->rst_reg))
-> +		return PTR_ERR(dt->rst_reg);
-> +
->  	ret = clk_prepare_enable(dt->clk);
->  	if (ret)
->  		return ret;
-> @@ -166,10 +178,30 @@ static int denali_dt_probe(struct platform_device *pdev)
->  	denali->clk_rate = clk_get_rate(dt->clk);
->  	denali->clk_x_rate = clk_get_rate(dt->clk_x);
->  
-> -	ret = denali_init(denali);
-> +	/*
-> +	 * Deassert the register reset, and the core reset in this order.
-> +	 * Deasserting the core reset while the register reset is asserted
-> +	 * will cause unpredictable behavior in the controller.
-> +	 */
-> +	ret = reset_control_deassert(dt->rst_reg);
->  	if (ret)
->  		goto out_disable_clk_ecc;
->  
-> +	ret = reset_control_deassert(dt->rst);
-> +	if (ret)
-> +		goto out_assert_rst_reg;
-> +
-> +	/*
-> +	 * When the reset is deasserted, the initialization sequence is kicked
-> +	 * (bootstrap process). This will take a while, and the driver must
-> +	 * wait until it finished in order to avoid unpredictable behavior.
-> +	 */
-> +	usleep_range(200, 1000);
-> +
-> +	ret = denali_init(denali);
-> +	if (ret)
-> +		goto out_assert_rst;
-> +
->  	for_each_child_of_node(dev->of_node, np) {
->  		ret = denali_dt_chip_init(denali, np);
->  		if (ret) {
-> @@ -184,6 +216,10 @@ static int denali_dt_probe(struct platform_device *pdev)
->  
->  out_remove_denali:
->  	denali_remove(denali);
-> +out_assert_rst:
-> +	reset_control_assert(dt->rst);
-> +out_assert_rst_reg:
-> +	reset_control_assert(dt->rst_reg);
->  out_disable_clk_ecc:
->  	clk_disable_unprepare(dt->clk_ecc);
->  out_disable_clk_x:
-> @@ -199,6 +235,8 @@ static int denali_dt_remove(struct platform_device *pdev)
->  	struct denali_dt *dt = platform_get_drvdata(pdev);
->  
->  	denali_remove(&dt->controller);
-> +	reset_control_assert(dt->rst);
-> +	reset_control_assert(dt->rst_reg);
->  	clk_disable_unprepare(dt->clk_ecc);
->  	clk_disable_unprepare(dt->clk_x);
->  	clk_disable_unprepare(dt->clk);
-
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-for the driver part.
-
-regards
-Philipp
-
+Such aliases are usually assigned as needed by each board design:
+meson-a1-ad401.dts in your case.
