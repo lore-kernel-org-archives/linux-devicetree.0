@@ -2,87 +2,94 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B268C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 22:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE34DC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 22:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E3E2053B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 22:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B2E206EC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 22:27:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xZWRhz+C"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kqjOHnsT";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="IC44f+FS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfLJWCl (ORCPT
+        id S1727054AbfLJW1Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:02:41 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:46138 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbfLJWCl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:02:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=oNrhFWA1lMqgOP0XHTa3xdZ+GV9N7jCyBqMVj23yRHs=; b=xZWRhz+CFM5NfZoAhdE/Gf5Ate
-        jwkCAm8gpKDWE3b5P9ajfLkTLdVB6mq5zla3yoyBXTl7B6q88/vbXgqargSm/6APZB/TKAoXevZv4
-        oTGN3doiai+QIEhx1FqEk3Fa7u7QZwAndwta5kY3sotOnTY49pV6t4NxXfpKEYe8xkuI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ienaR-0007qA-JO; Tue, 10 Dec 2019 23:02:31 +0100
-Date:   Tue, 10 Dec 2019 23:02:31 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Marek Behun <marek.behun@nic.cz>
-Cc:     Landen Chao <landen.chao@mediatek.com>, f.fainelli@gmail.com,
-        vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        davem@davemloft.net, sean.wang@mediatek.com, opensource@vdorst.com,
-        frank-w@public-files.de
-Subject: Re: [PATCH net-next 4/6] net: dsa: mt7530: Add the support of MT7531
- switch
-Message-ID: <20191210220231.GA30053@lunn.ch>
-References: <cover.1575914275.git.landen.chao@mediatek.com>
- <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
- <20191210163557.GC27714@lunn.ch>
- <20191210213351.2df6acbf@nic.cz>
+        Tue, 10 Dec 2019 17:27:25 -0500
+Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:60998
+        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726062AbfLJW1Z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:27:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576016844;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        bh=qs09g72P2WzVk9kLKtCbEP5yzZXU32zVewyt6/1ZN4c=;
+        b=kqjOHnsTX2ImT7/4FP7DdoMUB5nfkElAn5lfjIGOr1BUXTNLbnOGdXR2SQbqbily
+        +Jqr/eaEeeVBfMB3Ayoq5W7hM6swlmE+JVTpDKgSxbOit6qoCcR62rzwM1tpKBq7ueT
+        0LiLyX53+lIJMROVszvtN46WIVAKPW7knAdLRV0I=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576016844;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
+        bh=qs09g72P2WzVk9kLKtCbEP5yzZXU32zVewyt6/1ZN4c=;
+        b=IC44f+FS9xUHKxAV0bz6aLrPNMNm3SPR84JAo62z10KRmD3MDNydi2Cvu7H8jF7d
+        CWZHQe8bgGVzVKiT4EYX2vgnzfNHsE4HFeqkQE7j7cOnBXqcptBunlwsGNTOIlJ0nvH
+        LfoMSpM9b+yxd4PWBHzMThiyr+seyepHFOU993LA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A8DA2C2BB50
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Tue, 10 Dec 2019 22:27:24 +0000
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        rnayak@codeaurora.org, lsrao@codeaurora.org, mka@chromium.org,
+        swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc7180: Add wakeup parent for TLMM
+Message-ID: <0101016ef1ec96ab-5815fb77-649a-4783-95ca-cc32d7161d47-000000@us-west-2.amazonses.com>
+References: <1572419178-5750-1-git-send-email-mkshah@codeaurora.org>
+ <1572419178-5750-3-git-send-email-mkshah@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191210213351.2df6acbf@nic.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1572419178-5750-3-git-send-email-mkshah@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-SES-Outgoing: 2019.12.10-54.240.27.10
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 09:33:51PM +0100, Marek Behun wrote:
-> On Tue, 10 Dec 2019 17:35:57 +0100
-> Andrew Lunn <andrew@lunn.ch> wrote:
-> 
-> > On Tue, Dec 10, 2019 at 04:14:40PM +0800, Landen Chao wrote:
-> > > Add new support for MT7531:
-> > > 
-> > > MT7531 is the next generation of MT7530. It is also a 7-ports switch with
-> > > 5 giga embedded phys, 2 cpu ports, and the same MAC logic of MT7530. Cpu
-> > > port 6 only supports HSGMII interface. Cpu port 5 supports either RGMII
-> > > or HSGMII in different HW sku.  
-> > 
-> > Hi Landen
-> > 
-> > Looking at the code, you seem to treat HSGMII as 2500Base-X. Is this
-> > correct? Or is it SGMII over clocked to 2.5Gbps?
-> > 
-> > 	 Andrew
-> 
-> How would that work? Would 10 and 100 be overclocked to 25 and 250?
+On Wed, Oct 30 2019 at 01:07 -0600, Maulik Shah wrote:
+>Specify wakeup parent irqchip for sc7180 TLMM.
+>
+>Cc: devicetree@vger.kernel.org
+>Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Reviewed-by: Lina Iyer <ilina@codeaurora.org>
 
-No. SGMII clocked up to 2.5G does not support any of the lower
-speeds. And inband signalling does not make much sense, the control
-word is all wrong.
-
-     Andrew
+>---
+> arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
+> 1 file changed, 1 insertion(+)
+>
+>diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>index 69d5e2c..9040eee 100644
+>--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>@@ -321,6 +321,7 @@
+> 			interrupt-controller;
+> 			#interrupt-cells = <2>;
+> 			gpio-ranges = <&tlmm 0 0 120>;
+>+			wakeup-parent = <&pdc>;
+>
+> 			qup_uart2_default: qup-uart2-default {
+> 				pinmux {
+>-- 
+>QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>of Code Aurora Forum, hosted by The Linux Foundation
+>
