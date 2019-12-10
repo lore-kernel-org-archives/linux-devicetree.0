@@ -2,291 +2,147 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F330C2D0BE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 04:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6BFC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 05:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E55AB206E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 04:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165C420663
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 05:18:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="h3tTN+1W";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="UfqGKbFz"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qyd8Ajmd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfLJErh (ORCPT
+        id S1726018AbfLJFSc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 23:47:37 -0500
-Received: from a27-56.smtp-out.us-west-2.amazonses.com ([54.240.27.56]:57758
-        "EHLO a27-56.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726890AbfLJErh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 23:47:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575953255;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=mpAwQ0yghqGsPhLD+klLGT0jWL2m9olWHP42MbTN74M=;
-        b=h3tTN+1WLLUIqdIbkEahtkDdxI4CMkQEus8oeX+ADtUsPuVkhRc49qofDr1WQc15
-        +M3UvngO+7EM9HNzZ9i59evYYCa8udj5PAK1ycE2+L7xsT7wyg9iL8T7y/7igCM2JMP
-        eOuIrPK0Jz6Y6c2RZHrTTFc9dFoWwCztrBTb0DLw=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575953255;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=mpAwQ0yghqGsPhLD+klLGT0jWL2m9olWHP42MbTN74M=;
-        b=UfqGKbFzpC3l+WSrZYhtcksQIHwZlmrC8mdyKlHJHcIAUtYD2gY+N3fgervxXp3B
-        1XXX1zFNPutBIzZtLT/ODbkvMQroEQaKGtifL0ELDaAhzd7lit71TxUpBa5JvDQ0ei4
-        pID6nShGgTM9ICFvN/7V5w+Zs9XW+A1PjcU6Bh7s=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3E672C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH 1/7] clk: qcom: add support for setting the duty cycle
-To:     Brian Masney <masneyb@onstation.org>, sboyd@kernel.org,
-        dmitry.torokhov@gmail.com, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-References: <20191205002503.13088-1-masneyb@onstation.org>
- <20191205002503.13088-2-masneyb@onstation.org>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <0101016eee224b83-b0577d24-8f51-4e1a-9afb-b3f518e5ba77-000000@us-west-2.amazonses.com>
-Date:   Tue, 10 Dec 2019 04:47:35 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 10 Dec 2019 00:18:32 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:60003 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725962AbfLJFSc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 00:18:32 -0500
+X-UUID: 1a45ddfda67644daa0b60742d67ad7c5-20191210
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=U5dn9iiS6Lkny5IY/aF5ZMW3uyg18odEyEQls0K5nvY=;
+        b=qyd8AjmdbjWrwWMz26LJC1Y0teT8iupvnBZhwcdqezVOyapKuZ6JuPGHwB5lJ6OCUd0ND2MzXmjqO1/6kcSU3SRRJ6PcUlVmsYdtA9CaZw8+Te+6SFz7r7vCKWlNTVGA+RerLfZYQ9QrGmO727OeofMwRSW3msB5i1qnXiESX+U=;
+X-UUID: 1a45ddfda67644daa0b60742d67ad7c5-20191210
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2041595387; Tue, 10 Dec 2019 13:18:25 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 10 Dec 2019 13:17:28 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 10 Dec 2019 13:18:28 +0800
+Message-ID: <1575955103.31262.10.camel@mtksdaap41>
+Subject: Re: [PATCH v2 08/14] soc: mediatek: cmdq: add write_s function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 10 Dec 2019 13:18:23 +0800
+In-Reply-To: <1574819937-6246-10-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574819937-6246-10-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20191205002503.13088-2-masneyb@onstation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SES-Outgoing: 2019.12.10-54.240.27.56
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-TM-SNTS-SMTP: 19114C2D8273052152C91583BBC66896FDADFDC8BD073E8DD6DB629FEDD384B22000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Brian,
+SGksIERlbm5pczoNCg0KT24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjU4ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IGFkZCB3cml0ZV9zIGZ1bmN0aW9uIGluIGNtZHEgaGVscGVyIGZ1
+bmN0aW9ucyB3aGljaA0KPiB3cml0ZXMgdmFsdWUgY29udGFpbnMgaW4gaW50ZXJuYWwgcmVnaXN0
+ZXIgdG8gYWRkcmVzcw0KPiB3aXRoIGxhcmdlIGRtYSBhY2Nlc3Mgc3VwcG9ydC4NCj4gDQo+IFNp
+Z25lZC1vZmYtYnk6IERlbm5pcyBZQyBIc2llaCA8ZGVubmlzLXljLmhzaWVoQG1lZGlhdGVrLmNv
+bT4NCj4gLS0tDQo+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyAgIHwg
+NDAgKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICBpbmNsdWRlL2xpbnV4L21haWxib3gvbXRr
+LWNtZHEtbWFpbGJveC5oIHwgIDIgKysNCj4gIGluY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210
+ay1jbWRxLmggICAgfCAxMiArKysrKysrDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDU0IGluc2VydGlv
+bnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1o
+ZWxwZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IGluZGV4
+IDljYzIzNGYwOGVjNS4uMmVkYmMwOTU0ZDk3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9t
+ZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9t
+dGstY21kcS1oZWxwZXIuYw0KPiBAQCAtMTUsMTEgKzE1LDE4IEBADQo+ICAjZGVmaW5lIENNRFFf
+RU9DX0NNRAkJKCh1NjQpKChDTURRX0NPREVfRU9DIDw8IENNRFFfT1BfQ09ERV9TSElGVCkpIFwN
+Cj4gIAkJCQk8PCAzMiB8IENNRFFfRU9DX0lSUV9FTikNCj4gICNkZWZpbmUgQ01EUV9SRUdfVFlQ
+RQkJMQ0KPiArI2RlZmluZSBDTURRX0FERFJfSElHSChhZGRyKQkoKHUzMikoKChhZGRyKSA+PiAx
+NikgJiBHRU5NQVNLKDMxLCAwKSkpDQo+ICsjZGVmaW5lIENNRFFfQUREUl9MT1dfQklUCUJJVCgx
+KQ0KPiArI2RlZmluZSBDTURRX0FERFJfTE9XKGFkZHIpCSgodTE2KShhZGRyKSB8IENNRFFfQURE
+Ul9MT1dfQklUKQ0KPiAgDQo+ICBzdHJ1Y3QgY21kcV9pbnN0cnVjdGlvbiB7DQo+ICAJdW5pb24g
+ew0KPiAgCQl1MzIgdmFsdWU7DQo+ICAJCXUzMiBtYXNrOw0KPiArCQlzdHJ1Y3Qgew0KPiArCQkJ
+dTE2IGFyZ19jOw0KPiArCQkJdTE2IGFyZ19iOw0KPiArCQl9Ow0KPiAgCX07DQo+ICAJdW5pb24g
+ew0KPiAgCQl1MTYgb2Zmc2V0Ow0KPiBAQCAtMjI0LDYgKzIzMSwzOSBAQCBpbnQgY21kcV9wa3Rf
+d3JpdGVfbWFzayhzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTggc3Vic3lzLA0KPiAgfQ0KPiAgRVhQ
+T1JUX1NZTUJPTChjbWRxX3BrdF93cml0ZV9tYXNrKTsNCj4gIA0KPiAraW50IGNtZHFfcGt0X3dy
+aXRlX3Moc3RydWN0IGNtZHFfcGt0ICpwa3QsIHBoeXNfYWRkcl90IGFkZHIsIHUxNiByZWdfaWR4
+LA0KPiArCQkgICAgIHUzMiBtYXNrKQ0KPiArew0KPiArCXN0cnVjdCBjbWRxX2luc3RydWN0aW9u
+IGluc3QgPSB7IHswfSB9Ow0KPiArCWNvbnN0IHUxNiBkc3RfcmVnX2lkeCA9IENNRFFfU1BSX1RF
+TVA7DQo+ICsJaW50IGVycjsNCj4gKw0KPiArCWlmIChtYXNrICE9IFUzMl9NQVgpIHsNCj4gKwkJ
+aW5zdC5vcCA9IENNRFFfQ09ERV9NQVNLOw0KPiArCQlpbnN0Lm1hc2sgPSB+bWFzazsNCj4gKwkJ
+ZXJyID0gY21kcV9wa3RfYXBwZW5kX2NvbW1hbmQocGt0LCBpbnN0KTsNCj4gKwkJaWYgKGVyciA8
+IDApDQo+ICsJCQlyZXR1cm4gZXJyOw0KPiArDQo+ICsJCWluc3QubWFzayA9IDA7DQo+ICsJCWlu
+c3Qub3AgPSBDTURRX0NPREVfV1JJVEVfU19NQVNLOw0KPiArCX0gZWxzZSB7DQo+ICsJCWluc3Qu
+b3AgPSBDTURRX0NPREVfV1JJVEVfUzsNCj4gKwl9DQo+ICsNCj4gKwllcnIgPSBjbWRxX3BrdF9h
+c3NpZ24ocGt0LCBkc3RfcmVnX2lkeCwgQ01EUV9BRERSX0hJR0goYWRkcikpOw0KDQpZb3UgY29t
+YmluZSBhc3NpZ24gYW5kIHdyaXRlX3MgaW4gdGhpcyBmdW5jdGlvbiwgc28geW91IGFsd2F5cyBv
+Y2N1cHkNCnJlZ2lzdGVyIENNRFFfU1BSX1RFTVAgZm9yIHRoaXMgcHVycG9zZSwgY2xpZW50IGNv
+dWxkIG5vdCB1c2UNCkNNRFFfU1BSX1RFTVAgZm9yIG90aGVyIHB1cnBvc2UuIFNvIEkgd291bGQg
+bGlrZSB5b3UganVzdCBkbyB3cml0ZV9zIGluDQp0aGlzIGZ1bmN0aW9uLiBTbyB0aGUgY29kZSBp
+biBjbGllbnQgd291bGQgYmU6DQoNCmNtZHFfcGt0X2Fzc2lnbihwa3QsIGhpZ2hfYWRkcl9yZWdf
+aWR4LCBDTURRX0FERFJfSElHSChhZGRyKSk7DQpjbWRxX3BrdF93cml0ZV9zKHBrdCwgaGlnaF9h
+ZGRyX3JlZ19pZHgsIENNRFFfQUREUl9MT1coYWRkciksDQpzcmNfcmVnX2lkeCwgbWFzayk7DQoN
+CkxldCBjbGllbnQgdG8gZGVjaWRlIHdoaWNoIHJlZ2lzdGVyIGZvciBoaWdoIGFkZHJlc3MuDQoN
+CkFub3RoZXIgYmVuZWZpdCBvZiBub3QgY29tYmluaW5nIGluc3RydWN0aW9uIGlzIHRoYXQgY2xp
+ZW50IGRyaXZlciBvd25lcg0Kd291bGQgYmUgbW9yZSBjbGVhciBhYm91dCB3aGljaCBjb21tYW5k
+IGlzIGluIGNvbW1hbmQgYnVmZmVyIGFuZCBpdCdzDQplYXNpZXIgZm9yIHRoZW0gdG8gZGVidWcu
+DQoNCj4gKwlpZiAoZXJyIDwgMCkNCj4gKwkJcmV0dXJuIGVycjsNCj4gKw0KPiArCWluc3QuYXJn
+X2JfdCA9IENNRFFfUkVHX1RZUEU7DQo+ICsJaW5zdC5zb3AgPSBkc3RfcmVnX2lkeDsNCj4gKwlp
+bnN0Lm9mZnNldCA9IENNRFFfQUREUl9MT1coYWRkcik7DQo+ICsJaW5zdC5hcmdfYiA9IHJlZ19p
+ZHg7DQoNCkkgc2VlbXMgYXJnX2IgaGFzIGEgbWVhbmluZ2Z1bCBuYW1lLg0KDQpSZWdhcmRzLA0K
+Q0sNCg0KPiArDQo+ICsJcmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7
+DQo+ICt9DQo+ICtFWFBPUlRfU1lNQk9MKGNtZHFfcGt0X3dyaXRlX3MpOw0KPiArDQo+ICBpbnQg
+Y21kcV9wa3Rfd2ZlKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgZXZlbnQpDQo+ICB7DQo+ICAJ
+c3RydWN0IGNtZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9IH07DQo+IGRpZmYgLS1naXQgYS9p
+bmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oIGIvaW5jbHVkZS9saW51eC9t
+YWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiBpbmRleCAxMjFjM2JiNmQzZGUuLjhlZjg3ZTFi
+ZDAzYiAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxi
+b3guaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oDQo+
+IEBAIC01OSw2ICs1OSw4IEBAIGVudW0gY21kcV9jb2RlIHsNCj4gIAlDTURRX0NPREVfSlVNUCA9
+IDB4MTAsDQo+ICAJQ01EUV9DT0RFX1dGRSA9IDB4MjAsDQo+ICAJQ01EUV9DT0RFX0VPQyA9IDB4
+NDAsDQo+ICsJQ01EUV9DT0RFX1dSSVRFX1MgPSAweDkwLA0KPiArCUNNRFFfQ09ERV9XUklURV9T
+X01BU0sgPSAweDkxLA0KPiAgCUNNRFFfQ09ERV9MT0dJQyA9IDB4YTAsDQo+ICB9Ow0KPiAgDQo+
+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oIGIvaW5j
+bHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiBpbmRleCBjNjZiM2EwZGEyYTIu
+LjU2ZmYxOTcwMTk3YyAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsv
+bXRrLWNtZHEuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5o
+DQo+IEBAIC0xMDYsNiArMTA2LDE4IEBAIGludCBjbWRxX3BrdF93cml0ZShzdHJ1Y3QgY21kcV9w
+a3QgKnBrdCwgdTggc3Vic3lzLCB1MTYgb2Zmc2V0LCB1MzIgdmFsdWUpOw0KPiAgaW50IGNtZHFf
+cGt0X3dyaXRlX21hc2soc3RydWN0IGNtZHFfcGt0ICpwa3QsIHU4IHN1YnN5cywNCj4gIAkJCXUx
+NiBvZmZzZXQsIHUzMiB2YWx1ZSwgdTMyIG1hc2spOw0KPiAgDQo+ICsvKioNCj4gKyAqIGNtZHFf
+cGt0X3dyaXRlX3NfbWFzaygpIC0gYXBwZW5kIHdyaXRlX3MgY29tbWFuZCB0byB0aGUgQ01EUSBw
+YWNrZXQNCj4gKyAqIEBwa3Q6CXRoZSBDTURRIHBhY2tldA0KPiArICogQGFkZHI6CXRoZSBwaHlz
+aWNhbCBhZGRyZXNzIG9mIHJlZ2lzdGVyIG9yIGRtYQ0KPiArICogQHJlZ19pZHg6CXRoZSBDTURR
+IGludGVybmFsIHJlZ2lzdGVyIElEIHdoaWNoIGNhY2hlIHNvdXJjZSB2YWx1ZQ0KPiArICogQG1h
+c2s6CXRoZSBzcGVjaWZpZWQgdGFyZ2V0IHJlZ2lzdGVyIG1hc2sNCj4gKyAqDQo+ICsgKiBSZXR1
+cm46IDAgZm9yIHN1Y2Nlc3M7IGVsc2UgdGhlIGVycm9yIGNvZGUgaXMgcmV0dXJuZWQNCj4gKyAq
+Lw0KPiAraW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNtZHFfcGt0ICpwa3QsIHBoeXNfYWRk
+cl90IGFkZHIsIHUxNiByZWdfaWR4LA0KPiArCQkgICAgIHUzMiBtYXNrKTsNCj4gKw0KPiAgLyoq
+DQo+ICAgKiBjbWRxX3BrdF93ZmUoKSAtIGFwcGVuZCB3YWl0IGZvciBldmVudCBjb21tYW5kIHRv
+IHRoZSBDTURRIHBhY2tldA0KPiAgICogQHBrdDoJdGhlIENNRFEgcGFja2V0DQoNCg==
 
-On 12/5/2019 5:54 AM, Brian Masney wrote:
-> Add support for setting the duty cycle via the D register for the
-> Qualcomm clocks.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
-> A few quirks that were noted when varying the speed of CAMSS_GP1_CLK on
-> msm8974 (Nexus 5 phone):
-> 
->    - The mnd_width is set to 8 bits, however the d width is actually 7
->      bits, at least for this clock. I'm not sure about the other clocks.
-> 
->    - When the d register has a value less than 17, the following error
->      from update_config() is shown: rcg didn't update its configuration.
->      So this patch keeps the value of the d register within the range
->      [17, 127].
-> 
-> I'm not sure about the relationship of the m, n, and d values,
-> especially how the 50% duty cycle is calculated by inverting the n
-> value, so that's why I'm saving the duty cycle ratio for
-> get_duty_cycle().
-> 
->   drivers/clk/qcom/clk-rcg.h  |  4 +++
->   drivers/clk/qcom/clk-rcg2.c | 61 +++++++++++++++++++++++++++++++++++--
->   2 files changed, 63 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/qcom/clk-rcg.h b/drivers/clk/qcom/clk-rcg.h
-> index 78358b81d249..c3b8732cec8f 100644
-> --- a/drivers/clk/qcom/clk-rcg.h
-> +++ b/drivers/clk/qcom/clk-rcg.h
-> @@ -139,6 +139,8 @@ extern const struct clk_ops clk_dyn_rcg_ops;
->    * @freq_tbl: frequency table
->    * @clkr: regmap clock handle
->    * @cfg_off: defines the cfg register offset from the CMD_RCGR + CFG_REG
-> + * @duty_cycle_num: Numerator of the duty cycle ratio
-> + * @duty_cycle_den: Denominator of the duty cycle ratio
->    */
->   struct clk_rcg2 {
->   	u32			cmd_rcgr;
-> @@ -149,6 +151,8 @@ struct clk_rcg2 {
->   	const struct freq_tbl	*freq_tbl;
->   	struct clk_regmap	clkr;
->   	u8			cfg_off;
-> +	int			duty_cycle_num;
-> +	int			duty_cycle_den;
->   };
->   
->   #define to_clk_rcg2(_hw) container_of(to_clk_regmap(_hw), struct clk_rcg2, clkr)
-> diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
-> index 8f4b9bec2956..8d685baefe50 100644
-> --- a/drivers/clk/qcom/clk-rcg2.c
-> +++ b/drivers/clk/qcom/clk-rcg2.c
-> @@ -258,7 +258,11 @@ static int clk_rcg2_determine_floor_rate(struct clk_hw *hw,
->   	return _freq_tbl_determine_rate(hw, rcg->freq_tbl, req, FLOOR);
->   }
->   
-> -static int __clk_rcg2_configure(struct clk_rcg2 *rcg, const struct freq_tbl *f)
-> +static int __clk_rcg2_configure_with_duty_cycle(struct clk_rcg2 *rcg,
-> +						const struct freq_tbl *f,
-> +						int d_reg_val,
-> +						int duty_cycle_num,
-> +						int duty_cycle_den)
->   {
->   	u32 cfg, mask;
->   	struct clk_hw *hw = &rcg->clkr.hw;
-> @@ -280,9 +284,12 @@ static int __clk_rcg2_configure(struct clk_rcg2 *rcg, const struct freq_tbl *f)
->   			return ret;
->   
->   		ret = regmap_update_bits(rcg->clkr.regmap,
-> -				RCG_D_OFFSET(rcg), mask, ~f->n);
-> +				RCG_D_OFFSET(rcg), mask, d_reg_val);
->   		if (ret)
->   			return ret;
-> +
-> +		rcg->duty_cycle_num = duty_cycle_num;
-> +		rcg->duty_cycle_den = duty_cycle_den;
->   	}
->   
->   	mask = BIT(rcg->hid_width) - 1;
-> @@ -295,6 +302,12 @@ static int __clk_rcg2_configure(struct clk_rcg2 *rcg, const struct freq_tbl *f)
->   					mask, cfg);
->   }
->   
-> +static int __clk_rcg2_configure(struct clk_rcg2 *rcg, const struct freq_tbl *f)
-> +{
-> +	/* Set a 50% duty cycle */
-> +	return __clk_rcg2_configure_with_duty_cycle(rcg, f, ~f->n, 1, 2);
-> +}
-> +
->   static int clk_rcg2_configure(struct clk_rcg2 *rcg, const struct freq_tbl *f)
->   {
->   	int ret;
-> @@ -353,6 +366,32 @@ static int clk_rcg2_set_floor_rate_and_parent(struct clk_hw *hw,
->   	return __clk_rcg2_set_rate(hw, rate, FLOOR);
->   }
->   
-> +static int clk_rcg2_get_duty_cycle(struct clk_hw *hw, struct clk_duty *duty)
-> +{
-> +	struct clk_rcg2 *rcg = to_clk_rcg2(hw);
-> +
-> +	duty->num = rcg->duty_cycle_num;
-> +	duty->den = rcg->duty_cycle_den;
-> +
-> +	return 0;
-> +}
-> +
-> +static int clk_rcg2_set_duty_cycle(struct clk_hw *hw, struct clk_duty *duty)
-> +{
-> +	struct clk_rcg2 *rcg = to_clk_rcg2(hw);
-> +	int ret, d_reg_val, mask;
-> +
-> +	mask = BIT(rcg->mnd_width - 1) - 1;
-> +	d_reg_val = mask - (((mask - 17) * duty->num) / duty->den);
-> +	ret = __clk_rcg2_configure_with_duty_cycle(rcg, rcg->freq_tbl,
-> +						   d_reg_val, duty->num,
-> +						   duty->den);
-
-The duty-cycle calculation is not accurate.
-There is already a plan to submit the duty-cycle changes from my side.
-> +	if (ret)
-> +		return ret;
-> +
-> +	return update_config(rcg);
-> +}
-> +
->   const struct clk_ops clk_rcg2_ops = {
->   	.is_enabled = clk_rcg2_is_enabled,
->   	.get_parent = clk_rcg2_get_parent,
-> @@ -361,6 +400,8 @@ const struct clk_ops clk_rcg2_ops = {
->   	.determine_rate = clk_rcg2_determine_rate,
->   	.set_rate = clk_rcg2_set_rate,
->   	.set_rate_and_parent = clk_rcg2_set_rate_and_parent,
-> +	.get_duty_cycle = clk_rcg2_get_duty_cycle,
-> +	.set_duty_cycle = clk_rcg2_set_duty_cycle,
->   };
->   EXPORT_SYMBOL_GPL(clk_rcg2_ops);
->   
-> @@ -372,6 +413,8 @@ const struct clk_ops clk_rcg2_floor_ops = {
->   	.determine_rate = clk_rcg2_determine_floor_rate,
->   	.set_rate = clk_rcg2_set_floor_rate,
->   	.set_rate_and_parent = clk_rcg2_set_floor_rate_and_parent,
-> +	.get_duty_cycle = clk_rcg2_get_duty_cycle,
-> +	.set_duty_cycle = clk_rcg2_set_duty_cycle,
->   };
->   EXPORT_SYMBOL_GPL(clk_rcg2_floor_ops);
->   
-> @@ -499,6 +542,8 @@ const struct clk_ops clk_edp_pixel_ops = {
->   	.set_rate = clk_edp_pixel_set_rate,
->   	.set_rate_and_parent = clk_edp_pixel_set_rate_and_parent,
->   	.determine_rate = clk_edp_pixel_determine_rate,
-> +	.get_duty_cycle = clk_rcg2_get_duty_cycle,
-> +	.set_duty_cycle = clk_rcg2_set_duty_cycle,
->   };
->   EXPORT_SYMBOL_GPL(clk_edp_pixel_ops);
->   
-> @@ -557,6 +602,8 @@ const struct clk_ops clk_byte_ops = {
->   	.set_rate = clk_byte_set_rate,
->   	.set_rate_and_parent = clk_byte_set_rate_and_parent,
->   	.determine_rate = clk_byte_determine_rate,
-> +	.get_duty_cycle = clk_rcg2_get_duty_cycle,
-> +	.set_duty_cycle = clk_rcg2_set_duty_cycle,
->   };
->   EXPORT_SYMBOL_GPL(clk_byte_ops);
->   
-> @@ -627,6 +674,8 @@ const struct clk_ops clk_byte2_ops = {
->   	.set_rate = clk_byte2_set_rate,
->   	.set_rate_and_parent = clk_byte2_set_rate_and_parent,
->   	.determine_rate = clk_byte2_determine_rate,
-> +	.get_duty_cycle = clk_rcg2_get_duty_cycle,
-> +	.set_duty_cycle = clk_rcg2_set_duty_cycle,
->   };
->   EXPORT_SYMBOL_GPL(clk_byte2_ops);
->   
-> @@ -717,6 +766,8 @@ const struct clk_ops clk_pixel_ops = {
->   	.set_rate = clk_pixel_set_rate,
->   	.set_rate_and_parent = clk_pixel_set_rate_and_parent,
->   	.determine_rate = clk_pixel_determine_rate,
-> +	.get_duty_cycle = clk_rcg2_get_duty_cycle,
-> +	.set_duty_cycle = clk_rcg2_set_duty_cycle,
->   };
->   EXPORT_SYMBOL_GPL(clk_pixel_ops);
->   
-> @@ -804,6 +855,8 @@ const struct clk_ops clk_gfx3d_ops = {
->   	.set_rate = clk_gfx3d_set_rate,
->   	.set_rate_and_parent = clk_gfx3d_set_rate_and_parent,
->   	.determine_rate = clk_gfx3d_determine_rate,
-> +	.get_duty_cycle = clk_rcg2_get_duty_cycle,
-> +	.set_duty_cycle = clk_rcg2_set_duty_cycle,
->   };
->   EXPORT_SYMBOL_GPL(clk_gfx3d_ops);
->   
-> @@ -942,6 +995,8 @@ const struct clk_ops clk_rcg2_shared_ops = {
->   	.determine_rate = clk_rcg2_determine_rate,
->   	.set_rate = clk_rcg2_shared_set_rate,
->   	.set_rate_and_parent = clk_rcg2_shared_set_rate_and_parent,
-> +	.get_duty_cycle = clk_rcg2_get_duty_cycle,
-> +	.set_duty_cycle = clk_rcg2_set_duty_cycle,
->   };
->   EXPORT_SYMBOL_GPL(clk_rcg2_shared_ops);
->   
-> @@ -1081,6 +1136,8 @@ static const struct clk_ops clk_rcg2_dfs_ops = {
->   	.get_parent = clk_rcg2_get_parent,
->   	.determine_rate = clk_rcg2_dfs_determine_rate,
->   	.recalc_rate = clk_rcg2_dfs_recalc_rate,
-> +	.get_duty_cycle = clk_rcg2_get_duty_cycle,
-> +	.set_duty_cycle = clk_rcg2_set_duty_cycle,
->   };
-> 
-
-Why do you want to support duty-cycle for other RCGs when you are 
-specifically want it for GP clocks only.
-The DFS can never handle duty-cycle set/get.
-
->   static int clk_rcg2_enable_dfs(const struct clk_rcg_dfs_data *data,
-> 
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
