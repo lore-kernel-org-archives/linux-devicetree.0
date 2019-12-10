@@ -2,131 +2,88 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 045EDC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA44C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D25E320836
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A7D207FF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:47:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575971279;
+	bh=D4AC6P6Yy74InbEmSTYhO16RbW/RiPQChSmnYv+Qaq8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KEXRjDXL6XbJ3JT8NlgHZrRpHdWmKqFEvMbZ4G4NyWBhblG36o2cOt+oCf01sgzTO
+	 gBb7eiHh9tsnFWFLex3Gqxpy80wLhQEXVmtWMtRf44FDII4IrUhK3LY5Vq8APvfO/E
+	 IW9XU7fKVkczFqXUmi8oByOebbzUVcATg9yZ6CJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfLJJl6 (ORCPT
+        id S1726915AbfLJJr7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:41:58 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33393 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfLJJl6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 04:41:58 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iec1b-0006gj-AJ; Tue, 10 Dec 2019 10:41:47 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iec1Y-0003yz-IK; Tue, 10 Dec 2019 10:41:44 +0100
-Date:   Tue, 10 Dec 2019 10:41:44 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     support.opensource@diasemi.com, lee.jones@linaro.org,
-        robh+dt@kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, joel@jms.id.au, andrew@aj.id.au,
-        lgirdwood@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20191210094144.mxximpuouchy3fqu@pengutronix.de>
-References: <20191129172537.31410-1-m.felsch@pengutronix.de>
- <20191129172537.31410-4-m.felsch@pengutronix.de>
- <20191204134631.GT1998@sirena.org.uk>
+        Tue, 10 Dec 2019 04:47:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbfLJJr7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 04:47:59 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37F862077B;
+        Tue, 10 Dec 2019 09:47:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575971278;
+        bh=D4AC6P6Yy74InbEmSTYhO16RbW/RiPQChSmnYv+Qaq8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0vktHRO0e7gXqk1Cy7zrhdmFFm+miqbXodEdCmeveI1ZF8MeIaUyXfeU3MAyn5pQg
+         DUkVAsDkFI1BrFoYBj1FKxuWnzv+ApvUKWb7+wO/5SQn6uOHnmbp6+pWLXkZHlheFw
+         gEogYU9//1tyUNF90Dyld+NS/celYATgequ9sWCQ=
+Date:   Tue, 10 Dec 2019 10:47:56 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Corentin Labbe <clabbe@baylibre.com>
+Cc:     mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
+        georgii.staroselskii@emlid.com, aleksandr.aleksandrov@emlid.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: allwinner: restore hdmi_con_in node
+Message-ID: <20191210094756.izblh6jotzrozazt@gilmour.lan>
+References: <1575970087-11667-1-git-send-email-clabbe@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="v3ytm4gh3zbiiwst"
 Content-Disposition: inline
-In-Reply-To: <20191204134631.GT1998@sirena.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:09:56 up 25 days, 28 min, 32 users,  load average: 0.08, 0.04,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <1575970087-11667-1-git-send-email-clabbe@baylibre.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark,
 
-On 19-12-04 13:46, Mark Brown wrote:
-> On Fri, Nov 29, 2019 at 06:25:34PM +0100, Marco Felsch wrote:
-> 
-> > +  Optional regulator device-specific properties:
-> > +  - dlg,vsel-sense-gpios : A GPIO reference to a local general purpose input,
-> > +    the datasheet calls it GPI. The regulator sense the input signal and select
-> > +    the active or suspend voltage settings. If the signal is active the
-> > +    active-settings are applied else the suspend-settings are applied.
-> > +    Attention: Sharing the same GPI for other purposes or across multiple
-> > +    regulators is possible but the polarity setting must equal.
-> 
-> I'm really confused by this.  As far as I understand it it seems
-> to be doing pinmuxing on the chip using the GPIO bindings which
-> is itself a bit odd and I don't see anything here that configures
-> whatever sets the state of the pins.  Don't we need another GPIO
-> to set the vsel-sense inputs on the PMIC?
+--v3ytm4gh3zbiiwst
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yes the PMIC is very configurable and it took a while till I understand
-it.. @Adam please correct me if I'm wrong.
+On Tue, Dec 10, 2019 at 09:28:07AM +0000, Corentin Labbe wrote:
+> Compiling today next (20191210) fail to build with
+> arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts:53.25-55.4: ERROR (phandle_references): /soc/hdmi@1ee0000/ports/port@1/endpoint: Reference to non-existent node or label "hdmi_con_in"
+>
+> This patch fixes the build by restoring this node.
+>
+> Fixes: b120a822ef10 ("ARM: dts: allwinner: Split out non-SoC specific parts of Neutis N5")
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 
-The PMIC regulators regardless of the type: ldo or buck can be
-simplified drawn as:
+I've squashed it into that patch, thanks!
+Maxime
 
+--v3ytm4gh3zbiiwst
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-da9062-gpio               da9062-regulator
-    
-  +-------------------------------------------------------
-  |                  PMIC
-  |    
-  > GPIO0            +--------------------------+
-  |                  |         REGULATOR-0      |
-  > GPIO1 -------+   |                          |
-  |              +-- > vsel-in    voltage-a-out <
-  > GPIO2        |   |                          |
-  |              |   > enable-in  voltage-b-out <
-  |              |   |                          |
-  |              |   +--------------------------+
-  |              |                              
-  |              |   +--------------------------+                          
-  |              |   |         REGULATOR-1      |                          
-  |              |   |                          |                          
-  |              +-- > vsel-in    voltage-a-out <                          
-  |                  |                          |                          
-  |                  > enable-in  voltage-b-out <
-  |                  |                          |
-  |                  +--------------------------+
-  |
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXe9pzAAKCRDj7w1vZxhR
+xbrgAP466fwwI4Z5SDYusy+EmYVr/WTP7aRe6IEUFCWGYiH/0wD/ZXIjO8PPhwRS
+nd4miSulZvCk+n6lo+7jmb8pc/Ahwwk=
+=MiLv
+-----END PGP SIGNATURE-----
 
-The 'vsel-in' and 'enable-in' regulator inputs must be routed to the
-PMIC GPIOs which must be configured as input. If this is a pinmux in
-your opinion, then yes we need to do that. IMHO it isn't a pinmux
-because from the regulator point of view it is just a GPIO which comes
-from our own gpio-dev (da9062-gpio). So the abstraction is vald. Anyway
-I'm with you that this isn't the typical use-case.
-
-Regards,
-  Marco 
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--v3ytm4gh3zbiiwst--
