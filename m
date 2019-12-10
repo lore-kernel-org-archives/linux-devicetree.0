@@ -2,132 +2,233 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0F3C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 03:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBBFC2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 03:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B156A206E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 03:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143E22077B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 03:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QTLKkzN1"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZQVxtU4M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfLJDYW (ORCPT
+        id S1726689AbfLJDuf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 22:24:22 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:15293 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726619AbfLJDYV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 22:24:21 -0500
-X-UUID: 8216b702f0474a769ccc7fd844c488fe-20191210
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=N2521TvN7lGfbMtCwquz/uaxFLQnHeWy5RUtdl0dTwM=;
-        b=QTLKkzN1s1QAbU82SxZhyEb1RMZB1gojbsBr3Ns6L9ViA560aiskVJcXvGpIOXE/1k6Pmg7ZcaBXCcxgE7mDjlMXObUMZgwisn3FIP47BT91bQomth+zaqfsacXgW17xfP84W+ld67EDpf7AJrO7vFDe2Ic64QQafFHoFiB+zjY=;
-X-UUID: 8216b702f0474a769ccc7fd844c488fe-20191210
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 435904122; Tue, 10 Dec 2019 11:24:15 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 10 Dec 2019 11:23:44 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 10 Dec 2019 11:23:35 +0800
-Message-ID: <1575948247.9195.0.camel@mtksdaap41>
-Subject: Re: [PATCH v2 07/14] soc: mediatek: cmdq: add assign function
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 10 Dec 2019 11:24:07 +0800
-In-Reply-To: <1574819937-6246-9-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574819937-6246-9-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 9 Dec 2019 22:50:35 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7373 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbfLJDuf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 22:50:35 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5def16040000>; Mon, 09 Dec 2019 19:50:28 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 09 Dec 2019 19:50:34 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 09 Dec 2019 19:50:34 -0800
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Dec
+ 2019 03:50:33 +0000
+Received: from [10.24.193.46] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Dec
+ 2019 03:50:30 +0000
+Subject: Re: [PATCH 03/18] phy: tegra: xusb: Add usb-role-switch support
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <kishon@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1575629421-7039-1-git-send-email-nkristam@nvidia.com>
+ <1575629421-7039-4-git-send-email-nkristam@nvidia.com>
+ <20191206145445.GD2085684@ulmo>
+X-Nvconfidentiality: public
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+Message-ID: <9ce40f6c-e742-79f0-ee99-517571c46bc3@nvidia.com>
+Date:   Tue, 10 Dec 2019 09:22:23 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20191206145445.GD2085684@ulmo>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575949828; bh=aIFYXzL74CPu1pOPMHd8motPMl3uNcZkSE0kei/OXaE=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ZQVxtU4Mh0l2o2B8MfVPxBw8aF1y6zRSLnWEkqN6KX5J9iB+2eR4fdcF2SW7O1o7c
+         pmr9ZarKPuitlQ6MaKsgaRA0p949nstsW1za16xvtp8Av5qH+kb0kq2zokfdJe9in1
+         hma/T05tg9T+1/ZqJ8WewV7I6lwD1+Ol0LkwpwsAt5zICIKN97lVFUwb79/LKtlAYp
+         J+MyIm+/Lx7ow9OkP+0GsMp+f0z4/3sYJuvCRmIcLL/v5mTYKsX0xsWnV2mNCTkaog
+         zHMbwqJGYWWEQsCLziqvkebPduYJLDHAh/LCRG1GjWFT0RwqYg9EQxBqy6Y59rOJG8
+         Q7lnJr9hZMq0w==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIERlbm5pczoNCg0KT24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjU4ICswODAwLCBEZW5uaXMg
-WUMgSHNpZWggd3JvdGU6DQo+IEFkZCBhc3NpZ24gZnVuY3Rpb24gaW4gY21kcSBoZWxwZXIgd2hp
-Y2ggYXNzaWduIGNvbnN0YW50IHZhbHVlIGludG8NCj4gaW50ZXJuYWwgcmVnaXN0ZXIgYnkgaW5k
-ZXguDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15Yy5oc2ll
-aEBtZWRpYXRlay5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEt
-aGVscGVyLmMgICB8IDI0ICsrKysrKysrKysrKysrKysrKysrKysrLQ0KPiAgaW5jbHVkZS9saW51
-eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaCB8ICAxICsNCj4gIGluY2x1ZGUvbGludXgvc29j
-L21lZGlhdGVrL210ay1jbWRxLmggICAgfCAxOCArKysrKysrKysrKysrKysrKysNCj4gIDMgZmls
-ZXMgY2hhbmdlZCwgNDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jIGIvZHJpdmVycy9z
-b2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gaW5kZXggODQyMWI0MDkwMzA0Li45Y2My
-MzRmMDhlYzUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhl
-bHBlci5jDQo+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+
-IEBAIC0xNCw2ICsxNCw3IEBADQo+ICAjZGVmaW5lIENNRFFfRU9DX0lSUV9FTgkJQklUKDApDQo+
-ICAjZGVmaW5lIENNRFFfRU9DX0NNRAkJKCh1NjQpKChDTURRX0NPREVfRU9DIDw8IENNRFFfT1Bf
-Q09ERV9TSElGVCkpIFwNCj4gIAkJCQk8PCAzMiB8IENNRFFfRU9DX0lSUV9FTikNCj4gKyNkZWZp
-bmUgQ01EUV9SRUdfVFlQRQkJMQ0KPiAgDQo+ICBzdHJ1Y3QgY21kcV9pbnN0cnVjdGlvbiB7DQo+
-ICAJdW5pb24gew0KPiBAQCAtMjMsOCArMjQsMTcgQEAgc3RydWN0IGNtZHFfaW5zdHJ1Y3Rpb24g
-ew0KPiAgCXVuaW9uIHsNCj4gIAkJdTE2IG9mZnNldDsNCj4gIAkJdTE2IGV2ZW50Ow0KPiArCQl1
-MTYgcmVnX2RzdDsNCj4gKwl9Ow0KPiArCXVuaW9uIHsNCj4gKwkJdTggc3Vic3lzOw0KPiArCQlz
-dHJ1Y3Qgew0KPiArCQkJdTggc29wOjU7DQo+ICsJCQl1OCBhcmdfY190OjE7DQo+ICsJCQl1OCBh
-cmdfYl90OjE7DQo+ICsJCQl1OCBkc3RfdDoxOw0KPiArCQl9Ow0KPiAgCX07DQo+IC0JdTggc3Vi
-c3lzOw0KPiAgCXU4IG9wOw0KPiAgfTsNCj4gIA0KPiBAQCAtMjc5LDYgKzI4OSwxOCBAQCBpbnQg
-Y21kcV9wa3RfcG9sbF9tYXNrKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1OCBzdWJzeXMsDQo+ICB9
-DQo+ICBFWFBPUlRfU1lNQk9MKGNtZHFfcGt0X3BvbGxfbWFzayk7DQo+ICANCj4gK2ludCBjbWRx
-X3BrdF9hc3NpZ24oc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiByZWdfaWR4LCB1MzIgdmFsdWUp
-DQo+ICt7DQo+ICsJc3RydWN0IGNtZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9IH07DQo+ICsN
-Cj4gKwlpbnN0Lm9wID0gQ01EUV9DT0RFX0xPR0lDOw0KPiArCWluc3QuZHN0X3QgPSBDTURRX1JF
-R19UWVBFOw0KPiArCWluc3QucmVnX2RzdCA9IHJlZ19pZHg7DQo+ICsJaW5zdC52YWx1ZSA9IHZh
-bHVlOw0KPiArCXJldHVybiBjbWRxX3BrdF9hcHBlbmRfY29tbWFuZChwa3QsIGluc3QpOw0KPiAr
-fQ0KPiArRVhQT1JUX1NZTUJPTChjbWRxX3BrdF9hc3NpZ24pOw0KPiArDQo+ICBzdGF0aWMgaW50
-IGNtZHFfcGt0X2ZpbmFsaXplKHN0cnVjdCBjbWRxX3BrdCAqcGt0KQ0KPiAgew0KPiAgCXN0cnVj
-dCBjbWRxX2NsaWVudCAqY2wgPSBwa3QtPmNsOw0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51
-eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaCBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGst
-Y21kcS1tYWlsYm94LmgNCj4gaW5kZXggZGZlNWIyZWI4NWNjLi4xMjFjM2JiNmQzZGUgMTAwNjQ0
-DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4gKysr
-IGIvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiBAQCAtNTksNiAr
-NTksNyBAQCBlbnVtIGNtZHFfY29kZSB7DQo+ICAJQ01EUV9DT0RFX0pVTVAgPSAweDEwLA0KPiAg
-CUNNRFFfQ09ERV9XRkUgPSAweDIwLA0KPiAgCUNNRFFfQ09ERV9FT0MgPSAweDQwLA0KPiArCUNN
-RFFfQ09ERV9MT0dJQyA9IDB4YTAsDQo+ICB9Ow0KPiAgDQo+ICBlbnVtIGNtZHFfY2Jfc3RhdHVz
-IHsNCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgg
-Yi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oDQo+IGluZGV4IGE3NGMxZDVh
-Y2RmMy4uYzY2YjNhMGRhMmEyIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRp
-YXRlay9tdGstY21kcS5oDQo+ICsrKyBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1j
-bWRxLmgNCj4gQEAgLTEyLDYgKzEyLDEwIEBADQo+ICAjaW5jbHVkZSA8bGludXgvdGltZXIuaD4N
-Cj4gIA0KPiAgI2RlZmluZSBDTURRX05PX1RJTUVPVVQJCTB4ZmZmZmZmZmZ1DQo+ICsjZGVmaW5l
-IENNRFFfU1BSX1RFTVAJCTANCj4gKyNkZWZpbmUgQ01EUV9TUFIxCQkxDQo+ICsjZGVmaW5lIENN
-RFFfU1BSMgkJMg0KPiArI2RlZmluZSBDTURRX1NQUjMJCTMNCg0KVGhlc2UgZG9lcyBub3QgcmVs
-YXRlIHRvIGFzc2lnbiBmdW5jdGlvbiwgc28gcmVtb3ZlIHRoZW0uDQoNClJlZ2FyZHMsDQpDSw0K
-DQo+ICANCj4gIHN0cnVjdCBjbWRxX3BrdDsNCj4gIA0KPiBAQCAtMTUyLDYgKzE1NiwyMCBAQCBp
-bnQgY21kcV9wa3RfcG9sbChzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTggc3Vic3lzLA0KPiAgICov
-DQo+ICBpbnQgY21kcV9wa3RfcG9sbF9tYXNrKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1OCBzdWJz
-eXMsDQo+ICAJCSAgICAgICB1MTYgb2Zmc2V0LCB1MzIgdmFsdWUsIHUzMiBtYXNrKTsNCj4gKw0K
-PiArLyoqDQo+ICsgKiBjbWRxX3BrdF9hc3NpZ24oKSAtIEFwcGVuZCBsb2dpYyBhc3NpZ24gY29t
-bWFuZCB0byB0aGUgQ01EUSBwYWNrZXQsIGFzayBHQ0UNCj4gKyAqCQkgICAgICAgdG8gZXhlY3V0
-ZSBhbiBpbnN0cnVjdGlvbiB0aGF0IHNldCBhIGNvbnN0YW50IHZhbHVlIGludG8NCj4gKyAqCQkg
-ICAgICAgaW50ZXJuYWwgcmVnaXN0ZXIgYW5kIHVzZSBhcyB2YWx1ZSwgbWFzayBvciBhZGRyZXNz
-IGluDQo+ICsgKgkJICAgICAgIHJlYWQvd3JpdGUgaW5zdHJ1Y3Rpb24uDQo+ICsgKiBAcGt0Ogl0
-aGUgQ01EUSBwYWNrZXQNCj4gKyAqIEByZWdfaWR4Ogl0aGUgQ01EUSBpbnRlcm5hbCByZWdpc3Rl
-ciBJRA0KPiArICogQHZhbHVlOgl0aGUgc3BlY2lmaWVkIHZhbHVlDQo+ICsgKg0KPiArICogUmV0
-dXJuOiAwIGZvciBzdWNjZXNzOyBlbHNlIHRoZSBlcnJvciBjb2RlIGlzIHJldHVybmVkDQo+ICsg
-Ki8NCj4gK2ludCBjbWRxX3BrdF9hc3NpZ24oc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiByZWdf
-aWR4LCB1MzIgdmFsdWUpOw0KPiArDQo+ICAvKioNCj4gICAqIGNtZHFfcGt0X2ZsdXNoX2FzeW5j
-KCkgLSB0cmlnZ2VyIENNRFEgdG8gYXN5bmNocm9ub3VzbHkgZXhlY3V0ZSB0aGUgQ01EUQ0KPiAg
-ICogICAgICAgICAgICAgICAgICAgICAgICAgIHBhY2tldCBhbmQgY2FsbCBiYWNrIGF0IHRoZSBl
-bmQgb2YgZG9uZSBwYWNrZXQNCg0K
 
+
+On 06-12-2019 20:24, Thierry Reding wrote:
+> On Fri, Dec 06, 2019 at 04:20:06PM +0530, Nagarjuna Kristam wrote:
+>> If usb-role-switch property is present in USB 2 port, register
+>> usb-role-switch to receive usb role changes.
+>>
+>> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+>> ---
+>>  drivers/phy/tegra/Kconfig |  1 +
+>>  drivers/phy/tegra/xusb.c  | 40 ++++++++++++++++++++++++++++++++++++++++
+>>  drivers/phy/tegra/xusb.h  |  3 +++
+>>  3 files changed, 44 insertions(+)
+>>
+>> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+>> index f9817c3..df07c4d 100644
+>> --- a/drivers/phy/tegra/Kconfig
+>> +++ b/drivers/phy/tegra/Kconfig
+>> @@ -2,6 +2,7 @@
+>>  config PHY_TEGRA_XUSB
+>>  	tristate "NVIDIA Tegra XUSB pad controller driver"
+>>  	depends on ARCH_TEGRA
+>> +	select USB_CONN_GPIO
+>>  	help
+>>  	  Choose this option if you have an NVIDIA Tegra SoC.
+>>  
+>> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+>> index f98ec39..da60a63 100644
+>> --- a/drivers/phy/tegra/xusb.c
+>> +++ b/drivers/phy/tegra/xusb.c
+>> @@ -523,6 +523,7 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
+>>  	port->dev.type = &tegra_xusb_port_type;
+>>  	port->dev.of_node = of_node_get(np);
+>>  	port->dev.parent = padctl->dev;
+>> +	port->dev.driver = padctl->dev->driver;
+>>  
+>>  	err = dev_set_name(&port->dev, "%s-%u", name, index);
+>>  	if (err < 0)
+>> @@ -532,6 +533,7 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
+>>  	if (err < 0)
+>>  		goto unregister;
+>>  
+>> +	dev_set_drvdata(&port->dev, port);
+> You never seem to use dev_get_drvdata() to get at this. Also, you can
+> get at it via container_of(), so this is only marginally useful to begin
+> with.
+> 
+Its actually used in API tegra_xusb_role_sw_set, but thats in patch 0004.
+Will move this line to 0004 patch to align with the usage.
+
+>>  	return 0;
+>>  
+>>  unregister:
+>> @@ -541,6 +543,7 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
+>>  
+>>  static void tegra_xusb_port_unregister(struct tegra_xusb_port *port)
+>>  {
+>> +	usb_role_switch_unregister(port->usb_role_sw);
+>>  	device_unregister(&port->dev);
+>>  }
+>>  
+>> @@ -551,11 +554,39 @@ static const char *const modes[] = {
+>>  	[USB_DR_MODE_OTG] = "otg",
+>>  };
+>>  
+>> +static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
+>> +{
+>> +	dev_dbg(dev, "%s calling notifier for role is %d\n", __func__, role);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
+>> +{
+>> +	int err = 0;
+>> +	struct usb_role_switch_desc role_sx_desc = {
+>> +					.set = tegra_xusb_role_sw_set,
+>> +					.fwnode = dev_fwnode(&port->dev),
+>> +						   };
+>> +
+>> +	port->usb_role_sw = usb_role_switch_register(&port->dev,
+>> +						&role_sx_desc);
+>> +	if (IS_ERR(port->usb_role_sw)) {
+>> +		err = PTR_ERR(port->usb_role_sw);
+>> +		if (err != EPROBE_DEFER)
+>> +			dev_err(&port->dev, "Failed to register USB role SW: %d",
+>> +				err);
+>> +	}
+>> +
+>> +	return err;
+>> +}
+>> +
+>>  static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
+>>  {
+>>  	struct tegra_xusb_port *port = &usb2->base;
+>>  	struct device_node *np = port->dev.of_node;
+>>  	const char *mode;
+>> +	int err;
+>>  
+>>  	usb2->internal = of_property_read_bool(np, "nvidia,internal");
+>>  
+>> @@ -572,6 +603,15 @@ static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
+>>  		usb2->mode = USB_DR_MODE_HOST;
+>>  	}
+>>  
+>> +	if (of_property_read_bool(np, "usb-role-switch")) {
+>> +		/* populate connector entry */
+>> +		of_platform_populate(np, NULL, NULL, &port->dev);
+> I think we want to clean this up on failure, don't we? Otherwise we
+> might end up trying to register the same platform device multiple times.
+> Also, do we want to depopulate when the port is removed again?
+> 
+> Have you tried unloading and loading the driver to see if that works?
+> 
+> Thierry
+> 
+platform needs to be depopulate on error/remove and will add corresponding code.
+padctl driver can be unloaded after unloading all dependent drivers. re-loading
+caused failure of usb role switch due to missing depopulate. Will update changes
+to consider the same.
+
+Thanks,
+Nagarjuna
+>> +
+>> +		err = tegra_xusb_setup_usb_role_switch(port);
+>> +		if (err < 0)
+>> +			return err;
+>> +	}
+>> +
+>>  	usb2->supply = devm_regulator_get(&port->dev, "vbus");
+>>  	return PTR_ERR_OR_ZERO(usb2->supply);
+>>  }
+>> diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
+>> index da94fcc..9f27899 100644
+>> --- a/drivers/phy/tegra/xusb.h
+>> +++ b/drivers/phy/tegra/xusb.h
+>> @@ -12,6 +12,7 @@
+>>  #include <linux/workqueue.h>
+>>  
+>>  #include <linux/usb/otg.h>
+>> +#include <linux/usb/role.h>
+>>  
+>>  /* legacy entry points for backwards-compatibility */
+>>  int tegra_xusb_padctl_legacy_probe(struct platform_device *pdev);
+>> @@ -266,6 +267,8 @@ struct tegra_xusb_port {
+>>  	struct list_head list;
+>>  	struct device dev;
+>>  
+>> +	struct usb_role_switch *usb_role_sw;
+>> +
+>>  	const struct tegra_xusb_port_ops *ops;
+>>  };
+>>  
+>> -- 
+>> 2.7.4
+>>
