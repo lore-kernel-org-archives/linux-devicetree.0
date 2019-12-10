@@ -2,209 +2,147 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8A4C2D0C4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4E1C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0052077B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9136A205ED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:37:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tJ3H+WLl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lCHh5BlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfLJJgU (ORCPT
+        id S1727022AbfLJJh1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:36:20 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:45252 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727289AbfLJJgP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 04:36:15 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBA9aAi7130979;
-        Tue, 10 Dec 2019 03:36:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575970570;
-        bh=uWER0qb6H5Cf0hNtns4SWA9SPJe2wvekXab6TK1FJts=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=tJ3H+WLlIxHX6Xqz1ljZfOS1xsQNYkaVZsbp6MHg1MFBmyBGLix6zNDfiyeP+Mhmu
-         aaikRRr2UQzcaCV7hOwuZ6d2z37ehciM+UtFNDAsctPoYg93HSu+PDW/wHrvTYyOvo
-         jJPvAaLyOCJ5/+6ZiDhnTLZMt5GOjGRIMIXQ1bSI=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBA9aAfc107589
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Dec 2019 03:36:10 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
- Dec 2019 03:36:10 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 10 Dec 2019 03:36:10 -0600
-Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBA9a5iN014629;
-        Tue, 10 Dec 2019 03:36:08 -0600
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH 2/2] arm64: dts: ti: k3-am65: Add OSPI DT node
-Date:   Tue, 10 Dec 2019 15:06:19 +0530
-Message-ID: <20191210093619.22481-2-vigneshr@ti.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191210093619.22481-1-vigneshr@ti.com>
-References: <20191210093619.22481-1-vigneshr@ti.com>
+        Tue, 10 Dec 2019 04:37:27 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:38542 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfLJJh0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 04:37:26 -0500
+Received: by mail-ua1-f67.google.com with SMTP id z17so6929896uac.5
+        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 01:37:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uCytU3M00vgppQHFdUfwUVTCWccLfFwVZT8F9TsGTdM=;
+        b=lCHh5BlRESGFd8IJw3pd1l7zQCwFYi9SIVuZFu2W54pNbR2iW2Ic1sRAzJQzShL+V8
+         FhndlgDjLhVagoGevcG/kw8XbnLp28EXuw2/Xg3DVYY3SagNVnO4Cn+FmvNTGYE5olT2
+         g1TXLaqWyF10MT3XiskpBKKxDaApmX0A/elIkUrQMpK1xVMvFR2hUc+8XTF0e9kJvvcH
+         U3MHLUQcu6nhmTRgP16una9achLbMN+1uc57r3BdGo3Ugy8I5nseuohBp2cFX8+NHq11
+         YNv9Fk4nAaJNRjJGET0HwK8mBFY+nJhevmfoHDEly0HWcp84CoabM7lydd4+l0wWh95x
+         VJ/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uCytU3M00vgppQHFdUfwUVTCWccLfFwVZT8F9TsGTdM=;
+        b=STudD7aXbApRsURSF+Ic6fIcKRH6v8Eb7wZWFWiHq4hsqDzAde4In8Tw+2Qne7+xIU
+         W2buBiyzm7wIEjK75FQwRI7ytYvXOXyw1ZmUnvMy3MhQ13gnmauzBTb4ywASvT3XRRpM
+         95hrWeyAG5xm/02zqP0mL+5UkeMmepDSCdv79PZtWj9/loLwgSFQa86RL25s6L4qbQgO
+         MTc5wpdmOhdlx6TAAezGfZ2guLKlIMBVxW8GL5ldZEYuQnh+V1uV+ehJavjCwohz1509
+         vHJ91nkS0CR16y5a4+H6TbDrIoEARWHsRfI0PoPgHADjcS5YC4x10nnaDDxmsqH+3JCk
+         V5NA==
+X-Gm-Message-State: APjAAAVUhzYP8Lpr05jln6ijOjIQoB1NKGA4oM4BE0FzIlpL+DytI0Y/
+        mJtJV3hvINa2DOUbSOqsD5RU5dwovwuqs4xraUNNMA==
+X-Google-Smtp-Source: APXvYqw8/vUxHXJk8srw/I46Ax82pbKgk3Cmvfv6WFW1zub4DRuJ6pt9rcaoDRoxeYXRCfvktNah3Ok5+A/sr3ZmrXw=
+X-Received: by 2002:ab0:4ea6:: with SMTP id l38mr28555420uah.129.1575970645669;
+ Tue, 10 Dec 2019 01:37:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191202144104.5069-1-jun.nie@linaro.org> <20191202144104.5069-5-jun.nie@linaro.org>
+ <20191202175202.GA6488@infradead.org> <CABymUCM09L3TfLsPhLWPkoYXJ6OVGhHvd9_o4FCO07_Z3Y6A8w@mail.gmail.com>
+ <20191203073620.GA360@infradead.org> <CABymUCNHMKvVCkKdwnOcDZC9rNhLTEHLfLoH_O+CEf9XuZY+_A@mail.gmail.com>
+ <20191204150043.3a82cec0@xhacker.debian>
+In-Reply-To: <20191204150043.3a82cec0@xhacker.debian>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 10 Dec 2019 10:36:49 +0100
+Message-ID: <CAPDyKFrreSgNfHX9hSKvYO7UxBEyqu0DSxX9NGp4phbR-F1fxQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] mmc: sdhci: Add DMA memory boundary workaround
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Jun Nie <jun.nie@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-AM654 SoC has two Cadence OSPI controller instances under Flash
-subsystem (FSS). Add DT nodes for the same.
+On Wed, 4 Dec 2019 at 08:14, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wr=
+ote:
+>
+> On Wed, 4 Dec 2019 14:00:08 +0800 Jun Nie wrote:
+>
+> >
+> >
+> > Christoph Hellwig <hch@infradead.org> =E4=BA=8E2019=E5=B9=B412=E6=9C=88=
+3=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=883:36=E5=86=99=E9=81=93=EF=BC=
+=9A
+> > >
+> > > On Tue, Dec 03, 2019 at 11:29:15AM +0800, Jun Nie wrote:
+> > > > Thanks for the reminder! So I need to parse the segment_boundary fr=
+om
+> > > > device tree and use below code to set it, right?
+> > > > For the max_segments accounting error, I did not see it so far thou=
+gh I
+> > > > believe it is true in theory. Maybe it is due to segment boundary v=
+alue is
+> > > > very large.
+> > > >
+> > > > +++ b/drivers/mmc/core/queue.c
+> > > > @@ -374,6 +374,7 @@ static void mmc_setup_queue(struct mmc_queue *m=
+q,
+> > > > struct mmc_card *card)
+> > > >                 WARN(!blk_queue_can_use_dma_map_merging(mq->queue,
+> > > >                                                         mmc_dev(hos=
+t)),
+> > > >                      "merging was advertised but not possible");
+> > > > +       blk_queue_segment_boundary(mq->queue, mmc->segment_boundary=
+);
+> > > >         blk_queue_max_segments(mq->queue, mmc_get_max_segments(host=
+));
+> > >
+> > > Yes, I think should do it.  Maybe modulo a check if the low-level
+> > > driver actually sets a segment boundary.
+> >
+> > For the block device, such as SD card, it is right solution. But I
+> > have concern on SDIO case. Maybe we should add workaround together
+> > with block layer segment boundary restriction. How do you think about
+> > it?
+> >
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       | 38 +++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-am65.dtsi           | 11 +++++-
- .../arm64/boot/dts/ti/k3-am654-base-board.dts | 36 ++++++++++++++++++
- 3 files changed, 83 insertions(+), 2 deletions(-)
+Yes, buffers for SDIO are a consern. Especially since those buffers
+are allocated by SDIO func drivers or even from upper layers, such as
+the network stacks, for example.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-index 7bdf5342f58f..aec720f35578 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-@@ -95,4 +95,42 @@ adc {
- 			compatible = "ti,am654-adc", "ti,am3359-adc";
- 		};
- 	};
-+
-+	fss: fss@47000000 {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ospi0: spi@47040000 {
-+			compatible = "ti,am654-ospi", "cdns,qspi-nor";
-+			reg = <0x0 0x47040000 0x0 0x100>,
-+				<0x5 0x00000000 0x1 0x0000000>;
-+			interrupts = <GIC_SPI 552 IRQ_TYPE_LEVEL_HIGH>;
-+			cdns,fifo-depth = <256>;
-+			cdns,fifo-width = <4>;
-+			cdns,trigger-address = <0x50000000>;
-+			clocks = <&k3_clks 55 5>;
-+			assigned-clocks = <&k3_clks 55 5>;
-+			assigned-clock-parents = <&k3_clks 55 7>;
-+			assigned-clock-rates = <166666666>;
-+			power-domains = <&k3_pds 55 TI_SCI_PD_EXCLUSIVE>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		ospi1: spi@47050000 {
-+			compatible = "ti,am654-ospi", "cdns,qspi-nor";
-+			reg = <0x0 0x47050000 0x0 0x100>,
-+				<0x7 0x00000000 0x1 0x00000000>;
-+			interrupts = <GIC_SPI 553 IRQ_TYPE_LEVEL_HIGH>;
-+			cdns,fifo-depth = <256>;
-+			cdns,fifo-width = <4>;
-+			cdns,trigger-address = <0x58000000>;
-+			clocks = <&k3_clks 55 16>;
-+			power-domains = <&k3_pds 55 TI_SCI_PD_EXCLUSIVE>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/ti/k3-am65.dtsi b/arch/arm64/boot/dts/ti/k3-am65.dtsi
-index 6dfccd5d56c8..d38720bc2551 100644
---- a/arch/arm64/boot/dts/ti/k3-am65.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65.dtsi
-@@ -80,7 +80,11 @@ cbass_main: interconnect@100000 {
- 			 <0x00 0x42040000 0x00 0x42040000 0x00 0x03ac2400>,
- 			 <0x00 0x45100000 0x00 0x45100000 0x00 0x00c24000>,
- 			 <0x00 0x46000000 0x00 0x46000000 0x00 0x00200000>,
--			 <0x00 0x47000000 0x00 0x47000000 0x00 0x00068400>;
-+			 <0x00 0x47000000 0x00 0x47000000 0x00 0x00068400>,
-+			 <0x00 0x50000000 0x00 0x50000000 0x00 0x8000000>,
-+			 <0x00 0x70000000 0x00 0x70000000 0x00 0x200000>,
-+			 <0x05 0x00000000 0x05 0x00000000 0x01 0x0000000>,
-+			 <0x07 0x00000000 0x07 0x00000000 0x01 0x0000000>;
- 
- 		cbass_mcu: interconnect@28380000 {
- 			compatible = "simple-bus";
-@@ -94,7 +98,10 @@ cbass_mcu: interconnect@28380000 {
- 				 <0x00 0x42040000 0x00 0x42040000 0x00 0x03ac2400>, /* WKUP */
- 				 <0x00 0x45100000 0x00 0x45100000 0x00 0x00c24000>, /* MMRs, remaining NAVSS */
- 				 <0x00 0x46000000 0x00 0x46000000 0x00 0x00200000>, /* CPSW */
--				 <0x00 0x47000000 0x00 0x47000000 0x00 0x00068400>; /* OSPI space 1 */
-+				 <0x00 0x47000000 0x00 0x47000000 0x00 0x00068400>, /* OSPI space 1 */
-+				 <0x00 0x50000000 0x00 0x50000000 0x00 0x8000000>, /*  FSS OSPI0 data region 1 */
-+				 <0x05 0x00000000 0x05 0x00000000 0x01 0x0000000>, /* FSS OSPI0 data region 3*/
-+				 <0x07 0x00000000 0x07 0x00000000 0x01 0x0000000>; /* FSS OSPI1 data region 3*/
- 
- 			cbass_wakeup: interconnect@42040000 {
- 				compatible = "simple-bus";
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-index 8a85b482ad31..94bec7aa9baf 100644
---- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-@@ -69,6 +69,22 @@ AM65X_WKUP_IOPAD(0x0030, PIN_INPUT, 7) /* (R5) WKUP_GPIO0_24 */
- 			AM65X_WKUP_IOPAD(0x003c, PIN_INPUT, 7) /* (P2) WKUP_GPIO0_27 */
- 		>;
- 	};
-+
-+	mcu_fss0_ospi0_pins_default: mcu-fss0-ospi0-pins_default {
-+		pinctrl-single,pins = <
-+			AM65X_WKUP_IOPAD(0x0000, PIN_OUTPUT, 0) /* (V1) MCU_OSPI0_CLK */
-+			AM65X_WKUP_IOPAD(0x0008, PIN_INPUT, 0)	 /* (U2) MCU_OSPI0_DQS */
-+			AM65X_WKUP_IOPAD(0x000c, PIN_INPUT, 0)  /* (U4) MCU_OSPI0_D0 */
-+			AM65X_WKUP_IOPAD(0x0010, PIN_INPUT, 0)  /* (U5) MCU_OSPI0_D1 */
-+			AM65X_WKUP_IOPAD(0x0014, PIN_INPUT, 0)  /* (T2) MCU_OSPI0_D2 */
-+			AM65X_WKUP_IOPAD(0x0018, PIN_INPUT, 0)  /* (T3) MCU_OSPI0_D3 */
-+			AM65X_WKUP_IOPAD(0x001c, PIN_INPUT, 0)  /* (T4) MCU_OSPI0_D4 */
-+			AM65X_WKUP_IOPAD(0x0020, PIN_INPUT, 0)  /* (T5) MCU_OSPI0_D5 */
-+			AM65X_WKUP_IOPAD(0x0024, PIN_INPUT, 0)  /* (R2) MCU_OSPI0_D6 */
-+			AM65X_WKUP_IOPAD(0x0028, PIN_INPUT, 0)  /* (R3) MCU_OSPI0_D7 */
-+			AM65X_WKUP_IOPAD(0x002c, PIN_OUTPUT, 0) /* (R4) MCU_OSPI0_CSn0 */
-+		>;
-+	};
- };
- 
- &main_pmx0 {
-@@ -339,3 +355,23 @@ &mailbox0_cluster10 {
- &mailbox0_cluster11 {
- 	status = "disabled";
- };
-+
-+&ospi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcu_fss0_ospi0_pins_default>;
-+
-+	flash@0{
-+		compatible = "jedec,spi-nor";
-+		reg = <0x0>;
-+		spi-tx-bus-width = <1>;
-+		spi-rx-bus-width = <8>;
-+		spi-max-frequency = <40000000>;
-+		cdns,tshsl-ns = <60>;
-+		cdns,tsd2d-ns = <60>;
-+		cdns,tchsh-ns = <60>;
-+		cdns,tslch-ns = <60>;
-+		cdns,read-delay = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+};
--- 
-2.24.0
+I think SDIO func drivers simply need to respect the constraints the
+host has set via the .segment_boundary, .max_seg_size, .max_segs, etc.
+We should export SDIO func APIs to make the information available for
+the SDIO func drivers.
 
+>
+> Another trouble is how to workaround if the sg is constructed by mmc and
+> no block layer interactions at all. e.g __mmc_blk_ioctl_cmd(), and all
+> those sgs in mmc_test.c
+
+Those should be easier to fix, as the buffer/sg allocation can be
+fixed internally by mmc core. Just post some patches. :-)
+
+I am more worried about SDIO, as those buffers are not that easy to control=
+.
+
+Note that, there have been suggestions on adding an SDIO interface
+where an sg can be passed [1]. Unfurtunate those patches got stuck and
+didn't make it.
+
+Kind regards
+Uffe
+
+[1]
+https://patchwork.kernel.org/patch/10123143/
