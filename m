@@ -2,138 +2,94 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307C0C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242BDC00454
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0477B20637
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="EFHEE4np"
+	by mail.kernel.org (Postfix) with ESMTP id E31672053B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576014750;
+	bh=2ykNyvGZMJo7g3XX2Ffo2Sm4t/OZWneo6t2EKj0O0vs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=SuyidYEYYqh6UvJtqcIMYte+A8xjMaoFJNiKJQ70/D0wD6uKpbJ4lqypaet3xVNoT
+	 2s4rKwDS1x+1RD2UzSaxaD6hvczhN+GAqwRfijFw2ixNml/7uOdFY0Gl+eTFFYdtt8
+	 1kgVcR+jmdGsKUL+FQsYS5OxIrtLHy0u9gjCWewE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbfLJVrR (ORCPT
+        id S1727414AbfLJVHp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:47:17 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40814 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729700AbfLJVrM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 16:47:12 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so391827plp.7
-        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 13:47:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=iqFEfJ5VTHI7kv90uHb92Xkx2XtyoVgSFCJnm1RQLQU=;
-        b=EFHEE4npHM3CozjgfjX1aweI4Bpjv9tMkX7xoMDlYeDvYISZA1sB3lk/hc1BhVkwtP
-         dIuPZnj/E+ceF7h3Lg/s6mSR+sX02nUmEwnoilqX5KdbLwi4R8FOG1pyrZwWvIxQul4l
-         yDXbRQB8pTU8Q6o4BhW36BY/0LNhm55Qyx66I1fZVehSiVDY4Dy1hEe75GmrPHauDAn3
-         CYyTr50CFdq/4RtMbtJitPUhC98IGnL0uiQ87KciKaY12CPMslMMGAOlsmfy8DFhva2W
-         Z5IaHcTcHflle6A/9NHtMDvq0Kxrofj54cjqMwbMsl2tqxES0SWNEBT+iqIYuS5mhuYB
-         BTQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=iqFEfJ5VTHI7kv90uHb92Xkx2XtyoVgSFCJnm1RQLQU=;
-        b=HhKvmzb6f4LiQf+IPYsgIjoSPr8k7vR894qwlgGwbthxmsI0HNbt/nh8w+qXRH0G+x
-         Gf31OSYdSZgh7iCZvZM59ldXtqpkbRvudpUZgOF9hIwu/kPwbXhfDQ7mQG1WCXzgF9ky
-         UgABacdNkuN1m+Lz0xWgpTOrNj0SqnEIeTe7nw/Ct+OJdJWxEz4LstSNkfHtTTo3xRb1
-         087d3uEFhJf4ZuT9JwG4Xnu1BJNKlAWJ+zr85P4HykEU5IS/V+9iGMeITYAcOny03TNH
-         ghR5u4FXB/yEZWe1vDB0M9YDkLmtdVDRzefjszEtfQ5DGd+8xUKkRPO0atT2b/SDxuZu
-         TjOg==
-X-Gm-Message-State: APjAAAX9sL4enc72bvyIa1UIPZY5nPyqOYAslIp5jM7UkWjumU874aO1
-        LCJPLBkArVedBUVtM/4DZy8vMZOKpwel3Q==
-X-Google-Smtp-Source: APXvYqyWouSgn/WCq+jtqr4txQVR8xZ2GAJa0L6IdvZrZdsbAFw3Sl3H8rvTIGgfc48jOCynsAqafw==
-X-Received: by 2002:a17:90a:86c7:: with SMTP id y7mr7936504pjv.102.1576014431457;
-        Tue, 10 Dec 2019 13:47:11 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id z1sm4338pfk.61.2019.12.10.13.47.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 10 Dec 2019 13:47:10 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Anand Moon <linux.amoon@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC-next 0/1] Odroid C2: Enable DVFS for cpu
-In-Reply-To: <CAFBinCBfgxXhPKpBLdoq9AimrpaneYFgzgJoDyC-2xhbHmihpA@mail.gmail.com>
-References: <20191101143126.2549-1-linux.amoon@gmail.com> <7hfthtrvvv.fsf@baylibre.com> <c89791de-0a46-3ce2-b3e2-3640c364cd0f@baylibre.com> <CANAwSgQx3LjQe60TGgKyk6B5BD5y1caS2tA+O+GFES7=qCFeKg@mail.gmail.com> <7hfthsqcap.fsf@baylibre.com> <CAFBinCBfgxXhPKpBLdoq9AimrpaneYFgzgJoDyC-2xhbHmihpA@mail.gmail.com>
-Date:   Tue, 10 Dec 2019 13:47:09 -0800
-Message-ID: <7hpngvontu.fsf@baylibre.com>
+        Tue, 10 Dec 2019 16:07:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727335AbfLJVHo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:07:44 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C86E82467E;
+        Tue, 10 Dec 2019 21:07:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576012064;
+        bh=2ykNyvGZMJo7g3XX2Ffo2Sm4t/OZWneo6t2EKj0O0vs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=tiZ5TXWGgfMMcgH1qAGW16vBSyFbf8QVFgba/3MyF+aPuDTbo4hJyiKvDLa/T3dHf
+         QC17RvTnsNWgjsiKExbDTckPZJk/RCI/j1M9mCOmDjgARxC0K8V6pKEybDPhvvojm+
+         0dNknNsvmHuDSPRrzN1/QfLHPNP0Fm1IwVXvM5HU=
+Date:   Tue, 10 Dec 2019 15:07:41 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        will@kernel.org, robin.murphy@arm.com, eric.auger@redhat.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+Subject: Re: [PATCH v3 12/13] PCI/ATS: Add PASID stubs
+Message-ID: <20191210210741.GA143420@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209180514.272727-13-jean-philippe@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+On Mon, Dec 09, 2019 at 07:05:13PM +0100, Jean-Philippe Brucker wrote:
+> The SMMUv3 driver, which may be built without CONFIG_PCI, will soon gain
+> PASID support.  Partially revert commit c6e9aefbf9db ("PCI/ATS: Remove
+> unused PRI and PASID stubs") to re-introduce the PASID stubs, and avoid
+> adding more #ifdefs to the SMMU driver.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-> On Tue, Dec 10, 2019 at 7:13 PM Kevin Hilman <khilman@baylibre.com> wrote:
->>
->> Anand Moon <linux.amoon@gmail.com> writes:
->>
->> > Hi Neil / Kevin,
->> >
->> > On Tue, 10 Dec 2019 at 14:13, Neil Armstrong <narmstrong@baylibre.com> wrote:
->> >>
->> >> On 09/12/2019 23:12, Kevin Hilman wrote:
->> >> > Anand Moon <linux.amoon@gmail.com> writes:
->> >> >
->> >> >> Some how this patch got lost, so resend this again.
->> >> >>
->> >> >> [0] https://patchwork.kernel.org/patch/11136545/
->> >> >>
->> >> >> This patch enable DVFS on GXBB Odroid C2.
->> >> >>
->> >> >> DVFS has been tested by running the arm64 cpuburn
->> >> >> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
->> >> >> PM-QA testing
->> >> >> [2] https://git.linaro.org/power/pm-qa.git [cpufreq testcase]
->> >> >>
->> >> >> Tested on latest U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
->> >> >
->> >> > Have you tested with the Harkernel u-boot?
->> >> >
->> >> > Last I remember, enabling CPUfreq will cause system hangs with the
->> >> > Hardkernel u-boot because of improperly enabled frequencies, so I'm not
->> >> > terribly inclined to merge this patch.
->> >
->> > HK u-boot have many issue with loading the kernel, with load address
->> > *it's really hard to build the kernel for HK u-boot*,
->> > to get the configuration correctly.
->> >
->> > Well I have tested with mainline u-boot with latest ATF .
->> > I would prefer mainline u-boot for all the Amlogic SBC, since
->> > they sync with latest driver changes.
->>
->> Yes, we would all prefer mainline u-boot, but the mainline kernel needs
->> to support the vendor u-boot that is shipping with the boards.  So
->> until Hardkernel (and other vendors) switch to mainline u-boot we do not
->> want to have upstream kernel defaults that will not boot with the vendor
->> u-boot.
->>
->> We can always support these features, but they just cannot be enabled
->> by default.
-> (I don't have an Odroid-C2 but I'm curious)
-> should Anand submit a patch to mainline u-boot instead?
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-It would be in addition to $SUBJECT patch, not instead, I think.
-
-> the &scpi_clocks node could be enabled at runtime by mainline u-boot
-
-That would work, but I don't know about u-boot maintainers opinions on
-this kind of thing, so let's see what Neil thinks.
-
-Kevin
-
-
+> ---
+>  include/linux/pci-ats.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> index 5d62e78946a3..d08f0869f121 100644
+> --- a/include/linux/pci-ats.h
+> +++ b/include/linux/pci-ats.h
+> @@ -33,6 +33,9 @@ void pci_disable_pasid(struct pci_dev *pdev);
+>  int pci_pasid_features(struct pci_dev *pdev);
+>  int pci_max_pasids(struct pci_dev *pdev);
+>  #else /* CONFIG_PCI_PASID */
+> +static inline int pci_enable_pasid(struct pci_dev *pdev, int features)
+> +{ return -EINVAL; }
+> +static inline void pci_disable_pasid(struct pci_dev *pdev) { }
+>  static inline int pci_pasid_features(struct pci_dev *pdev)
+>  { return -EINVAL; }
+>  static inline int pci_max_pasids(struct pci_dev *pdev)
+> -- 
+> 2.24.0
+> 
