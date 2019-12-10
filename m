@@ -2,150 +2,104 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AECC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 08:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C3BC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 08:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 247BF207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 08:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12FED207FF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 08:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575966799;
+	bh=/VKW1xCEg210bfqLE1Nq6Wbt7xZ9sCqggKeIj+4r4iM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bgCen4xYy7SLE2wT/48ffArBOJZehcP1dYK/9HLeXFLTgU3TUzFjbXq9WM6+lENrc
+	 j9iSvqEBBDOdDvKjGdnjEqyH69za+ld3KbUjJ5jLYSUGXlx2IoEIliL+DpveXonid3
+	 li3mHTqIFB9MpYDajdq+ahBVv9js6G8vdgDDDTYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfLJI2D (ORCPT
+        id S1727053AbfLJIdS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 03:28:03 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45969 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfLJI2D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 03:28:03 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ieasC-0000yJ-9K; Tue, 10 Dec 2019 09:28:00 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ieasB-0003K2-Dx; Tue, 10 Dec 2019 09:27:59 +0100
-Date:   Tue, 10 Dec 2019 09:27:59 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Support Opensource <Support.Opensource@diasemi.com>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: Input: da9062 - fix
- dlg,disable-key-power description
-Message-ID: <20191210082759.2hf6ekuqgs2uzzm2@pengutronix.de>
-References: <20191127132304.22924-1-m.felsch@pengutronix.de>
- <20191127132304.22924-4-m.felsch@pengutronix.de>
- <AM5PR1001MB099439FC20DAEBFC6584081280430@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+        Tue, 10 Dec 2019 03:33:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726750AbfLJIdS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 03:33:18 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7F7E2073D;
+        Tue, 10 Dec 2019 08:33:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575966798;
+        bh=/VKW1xCEg210bfqLE1Nq6Wbt7xZ9sCqggKeIj+4r4iM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s+faPYDTzs2fjIOG25xbjNzX5+L5kLZ4YBBGtFU8GvSMzxQgJdfBdWRCIZU9JSm5K
+         wzF7eZsdVZwaNYh12PbpSI///dDqSL84OfMBNzyR+54x8afL/0QJzR2WDxVrgtaheq
+         t8Dade4ctF1cUXwXyUTwe+6i2FWCB6jZXYktIBjs=
+Date:   Tue, 10 Dec 2019 09:33:15 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: set GPU clock to 432 MHz
+Message-ID: <20191210083315.gixyhp2a4pg7oi7z@gilmour.lan>
+References: <20191203021420.164129-1-anarsoul@gmail.com>
+ <20191209193112.qr6un5ryhyxwu6a5@hendrix.lan>
+ <CA+E=qVcxXu4CggnhZFti-J4MB5m3pvoxKCHnH6ap-4OSZMzCFQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM5PR1001MB099439FC20DAEBFC6584081280430@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:18:03 up 24 days, 23:36, 31 users,  load average: 0.00, 0.00,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <CA+E=qVcxXu4CggnhZFti-J4MB5m3pvoxKCHnH6ap-4OSZMzCFQ@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adam,
+On Mon, Dec 09, 2019 at 12:23:18PM -0800, Vasily Khoruzhick wrote:
+> On Mon, Dec 9, 2019 at 12:03 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > On Mon, Dec 02, 2019 at 06:14:20PM -0800, Vasily Khoruzhick wrote:
+> > > That's what BSP kernel sets it to and it seems to work fine.
+> > >
+> > > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > > ---
+> > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > index 27e48234f1c2..0051f39b3d98 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > @@ -976,6 +976,9 @@ mali: gpu@1c40000 {
+> > >                       clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
+> > >                       clock-names = "bus", "core";
+> > >                       resets = <&ccu RST_BUS_GPU>;
+> > > +
+> > > +                     assigned-clocks = <&ccu CLK_GPU>;
+> > > +                     assigned-clock-rates = <432000000>;
+> > >               };
+> >
+> > This doesn't really guarantee anything. If the GPU needs to remain at
+> > that rate, it should be set in the driver. I just saw that you did
+> > send a PR in github, I just merged it.
+>
+> Lima doesn't set GPU frequency at all since it's different for
+> different SoCs and we don't support operation points nor frequency
+> scaling yet.
 
-On 19-12-02 12:15, Adam Thomson wrote:
-> On 27 November 2019 13:23, Marco Felsch wrote:
-> 
-> > There was a bug within the driver since commit f889beaaab1c ("Input:
-> > da9063 - report KEY_POWER instead of KEY_SLEEP during power
-> > key-press"). Since we fixed the bug the KEY_POWER will be reported
-> > always so we need to adapt the dt-bindings too. Make the description
-> > more precise while on it.
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> > v2:
-> > - change description according Dmitry's suggestion.
-> > 
-> >  Documentation/devicetree/bindings/input/da9062-onkey.txt | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/da9062-onkey.txt
-> > b/Documentation/devicetree/bindings/input/da9062-onkey.txt
-> > index 0005b2bdcdd7..9f895454179d 100644
-> > --- a/Documentation/devicetree/bindings/input/da9062-onkey.txt
-> > +++ b/Documentation/devicetree/bindings/input/da9062-onkey.txt
-> > @@ -15,9 +15,8 @@ Required properties:
-> > 
-> >  Optional properties:
-> > 
-> > -- dlg,disable-key-power : Disable power-down using a long key-press. If this
-> > -    entry exists the OnKey driver will remove support for the KEY_POWER key
-> > -    press when triggered using a long press of the OnKey.
-> > +- dlg,disable-key-power : If this property is present, the host will not be
-> > +    issuing shutdown command over I2C in response to a long key-press.
-> 
-> This also changes behaviour of button press reporting as the driver will not
-> report a longer press (i.e. a button hold where the driver polls for release).
-> It will only report a short key press to user-space with this property provided.
-> 
-> The question here is do we still want to support long press reporting but
-> without the I2C sequence for shutdown? If so the driver needs to be updated to
-> work this way as right now it doesn't.
+You don't really need frequency scaling though, you just need to set
+it to any of the OPP. And if that's still too complicated, the binding
+mandates to associate a vendor compatible, so you can base the
+information on that.
 
-Good point. I checked the driver and the documentation for the
-da9062/3 again and it seems that we interrupt the pmic hw by doing the
-shutdown by itself. As the documentation says:
+> So this change effectively sets GPU frequency to 432MHz on A64 when
+> using lima.
 
-DA9063:
-If the hardware reset was initiated by a (debounced) press of nONKEY (or
-GPIO14 and GPIO15 together) longer than SD_DELAY, the DA9063 initially
-only asserts control bit KEY_RESET in the fault register and signals a
-non-maskable interrupt allowing the host to clear the armed reset
-sequence within 1 s. If the host does not clear KEY_RESET then a
-shutdown to RESET mode is executed. KEY_SD_MODE determines if normal
-power sequence timing or a fast shutdown is implemented.
+Right before the driver is probed. For all you now, that frequency can
+be changed to anything else at the very next operation and you'd end
+up in the exact same situation than the one you're trying to fix.
 
-DA9062:
-If the reset was initiated by a user’s long press of nONKEY, initially
-only KEY_RESET is set and the nIRQ port will be asserted. KEY_RESET
-signals the host that a shutdown sequence is started. If the host does
-not then clear KEY_RESET within 1 s by writing a 1 to the related bit in
-register FAULT_LOG, the shutdown sequence will complete. When the reset
-condition has disappeared, DA9062 requires a supply (VSYS >
-VDD_FAULT_UPPER) that provides enough power to start-up from the
-POWERDOWN mode.
-
-So we don't need to check for the KEY_RESET? This would cleanup the code
-a bit.
-
-Regards,
-  Marco 
-
-> > 
-> >  - dlg,key-opmode : Set the nONKEY behaviour. This value is initial set by the
-> >      otp values. See nONKEY_PIN register description for more information.
-> > --
-> > 2.20.1
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Maxime
