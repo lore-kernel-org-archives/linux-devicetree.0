@@ -2,211 +2,96 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99A7C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 20:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E39C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 20:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB31206D5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 20:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18FC020828
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 20:09:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="muNxyZVX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j54TP/nA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726071AbfLJUHX (ORCPT
+        id S1726598AbfLJUJP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:07:23 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45993 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbfLJUHX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 15:07:23 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 203so14717297lfa.12
-        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 12:07:20 -0800 (PST)
+        Tue, 10 Dec 2019 15:09:15 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44541 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfLJUJP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 15:09:15 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q10so21538171wrm.11;
+        Tue, 10 Dec 2019 12:09:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IVcVWrTqzzoJOExedrP/w3aCQxV5GwfvKkNgJHaUgQY=;
-        b=muNxyZVX+j2ePeHGmZ8JuT3kaQ7OHqbg1mVUZHgJU3kcA/u0qsdDaR4cFFP/metLVh
-         UYCcgR2D0Dr+DVzcO9ocmf4B1J5rqOBrmJNsfcAI0+GMRmC9Yimt7i/vhqgMfclsjWbp
-         PzMoMBCVu7Q9K9s/uIuVB9GjrlC3tZ4Dnl2x74Qas0MWU8AaRFdGiISXZ++PHkUr99li
-         pKBeyZERVNJ2WxVWTFgwOh3V+mjAsbNAZ91cwwdPS8fTGS0Hs647lOtWUqMQYFAldCpn
-         9mGK7HvPh6FjisA2/sdwfPdV/a7dDqrSa5Xp5CDiV0/M1bkIvKNm5DEj5zaHDSp5qoSJ
-         c17Q==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6AQpS5vqGgn6cf28d0t5hILD50hP2Bm2ar9YDrMWAUM=;
+        b=j54TP/nAwGznoZrN5sbykaR8He5pb7OtuziWr36u24bFjtgGC4fQqmYI7bt0kQ38Qz
+         AIIBe0vVsCM7FpOz0f27YlcWHKCgzIuAx7vTuT4eMaNThvOD+jLiiZDSAkx0gylHcr8R
+         lQ1uKTx1wQOijjR0jD4PsHKZ8GtZ1JqwSElf5tOW344+hb00eWcRKg25W0y9nlwXFTwO
+         4eCh01Ccn+W/AYaYvwNxY7ecHXsrmeWhzU7dg3GtqxJd/YFZpbVffV9zh31G4a8xmoqq
+         acMn+8dd9s/BK4xl7KbvCHa6yaKsJRYFirKOgOPqreB84RBGY39kNaYP+wIVoIe0uNp5
+         6fIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=IVcVWrTqzzoJOExedrP/w3aCQxV5GwfvKkNgJHaUgQY=;
-        b=fak1ku3Ds5WP/eP+x/uSfXvoA2m9lA2qFGkwg3a63LWd38qkKtu/h4XpCCNgfgQRK/
-         trJcQs4cbgow7gDc1kfeoRpajXfIIfi5yDA3XKY5luiTHx+TtL8NBCxrttrt1sUeXD80
-         JXw/r1M/jt2EnugNJ1nQcVHv/yIx6/OiiZhfWvmvob8jWefZz2sqqIKa/9Aqnj8xbbiO
-         +l9J41ezV/cpR+Y6gO22VsAlqfL1a53T3/e+gaRAC1WmnAKzs10btKs3SY6XtduBk/7R
-         RRNBgO7hjL0z+Nez6PKmqUhF4HW3Egn7knYUJCk+G1C1KUmRuBrF4/9CBgPW4z29qqnr
-         rCEQ==
-X-Gm-Message-State: APjAAAXAnHe6Bh+8Z3fsmbu0uN4zjOdBP8eEGs9fuxWLTGpSo6KxidQe
-        PjcuJnZirv51iLfNYGmymzzi3w==
-X-Google-Smtp-Source: APXvYqy7jA1CkGtuRr5UKn5k9QWlLPx4dGI/unO0eIDc3ayyv08uFHffOSNGvFma2xOaj8U/PD/aXw==
-X-Received: by 2002:a19:760c:: with SMTP id c12mr12867007lff.60.1576008440109;
-        Tue, 10 Dec 2019 12:07:20 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:88a:ffe6:e26c:e506:75a0:c93a])
-        by smtp.gmail.com with ESMTPSA id j19sm2323761lja.100.2019.12.10.12.07.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Dec 2019 12:07:19 -0800 (PST)
-Subject: Re: [PATCH v2 2/6] dt-bindings: spi: Document Renesas SPIBSC bindings
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Brandt <chris.brandt@renesas.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6AQpS5vqGgn6cf28d0t5hILD50hP2Bm2ar9YDrMWAUM=;
+        b=L2t8D7IEqJB7L3kNpoLLXl73+iiCe/zr4iULV1An5FXx0FNeOZEZAqiiOztLWn2J8e
+         qmkMbeX+RNJr4Jryj51cIgBoeGixYXC/u5FEoLbPv4EAKH3zxKjQkjT/vJ5gQ7KsGA1z
+         8PEw2uWwyikoZ2PZrKmBGxFvmbNbK/N9wi04UGe4nq71XHn5fylyMv3QMC2zKYv3lMnL
+         U5FMbvZWPeRcH8QJBZH3uXC5G1EGrHupZf1N0SRG9Ek8ahvP9fDpES1YzlAvZbDHdFF/
+         4a8PMLr1xU7aXbj6XX6+fp/jCiBs/TMp7sm/Z6hLzR1jzRbzA5TM6yxc90/o4muUFnYi
+         iQKw==
+X-Gm-Message-State: APjAAAVpytTHvBPz+njRzSlg5SlulQaWP/rCzTpIqPBt8Gdfo8aBFJlj
+        3rl/x96KIsAPYpXU3h5oBHE=
+X-Google-Smtp-Source: APXvYqxMVlaHW5ay98kOIFO+brzIC+QLtbbjUCNbwV2fRMJftfklsg7j/ydpu5uw9XjJbdY3Vj3f5Q==
+X-Received: by 2002:adf:dfc1:: with SMTP id q1mr5177155wrn.155.1576008552975;
+        Tue, 10 Dec 2019 12:09:12 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id w19sm4113643wmc.22.2019.12.10.12.09.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 12:09:12 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     kishon@ti.com
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <20191206134202.18784-3-chris.brandt@renesas.com>
- <CAMuHMdXW6_tCcx_DE66qBSTK8XmWyWm82ZD6h-N5YX_+xcvBtw@mail.gmail.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <0cbd8556-cf17-7d6b-5c12-e8d663a39cfa@cogentembedded.com>
-Date:   Tue, 10 Dec 2019 23:07:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
-MIME-Version: 1.0
-In-Reply-To: <CAMuHMdXW6_tCcx_DE66qBSTK8XmWyWm82ZD6h-N5YX_+xcvBtw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+        Al Cooper <alcooperx@gmail.com>,
+        Ray Jui <ray.jui@broadcom.com>, Tejun Heo <tj@kernel.org>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
+        Parallel ATA drivers)),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
+        bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH 0/2] phy: brcm-sata: Support for 7216
+Date:   Tue, 10 Dec 2019 12:08:50 -0800
+Message-Id: <20191210200852.24945-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
+Hi Kishon,
 
-On 12/09/2019 05:09 PM, Geert Uytterhoeven wrote:
+This patch series adds support for our latest 7216 class of devices
+which are taped out in a 16nm process and use a different SATA PHY AFE
+that requires a custom initialization sequence.
 
->> Document the bindings used by the Renesas SPI bus space controller.
->>
->> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
->> ---
->> v2:
->>  * change to YAML format
->>  * add interrupts property
->>  * Used more terms directly from the hardware manual
-> 
-> Thanks for the update!
-> 
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/renesas,spibsc.yaml
-[...]
->> +properties:
->> +  compatible:
->> +    oneOf:
->> +      - items:
->> +          - enum:
->> +              - renesas,r7s72100-spibsc     # RZ/A1
->> +              - renesas,r7s9210-spibsc      # RZ/A2
->> +
->> +  reg:
->> +    minItems: 2
->> +    maxItems: 2
->> +    items:
->> +      - description: Registers
->> +      - description: Memory Mapped Address Space
-> 
-> The second one is not needed, if you would add "ranges" for the
-> memory-mapped mode.
+Thanks!
 
-   I'm not sure we can do that. The flash bus is accessed via a window
-with the high bits in the DREAR reg, even in the direct read mode...
+Florian Fainelli (2):
+  dt-bindings: phy: Document BCM7216 SATA PHY compatible string
+  phy: brcm-sata: Implement 7216 initialization sequence
 
-> 
->> +
->> +  interrupts:
->> +    description: Some HW versions do not contain interrupts
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  flash:
->> +    description: |
->> +      (Optional) In order to use the HW for R/W access ("Manual Mode"), a "flash"
->> +      subnode must be present with a "compatible" property that contains
->> +      "jedec,spi-nor". If a spi-nor property is not found, the HW is assumed to be
->> +      already operating in "External Address Space Read Mode".
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - '#address-cells'
->> +  - '#size-cells'
-> 
-> I would make the flash subnode mandatory.
+ .../devicetree/bindings/phy/brcm-sata-phy.txt |   1 +
+ drivers/phy/broadcom/phy-brcm-sata.c          | 120 ++++++++++++++++++
+ 2 files changed, 121 insertions(+)
 
-   Agreed.
+-- 
+2.17.1
 
->> +
->> +examples:
->> +  - |
->> +    # This example is for "Manual Mode"
->> +    spibsc: spi@1f800000 {
->> +        compatible = "renesas,r7s9210-spibsc";
->> +        reg = <0x1f800000 0x100>, <0x20000000 0x10000000>;
->> +        clocks = <&cpg CPG_MOD 83>;
->> +        power-domains = <&cpg>;
->> +        interrupts = <GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH>;
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        flash@0 {
->> +            compatible = "jedec,spi-nor";
->> +            reg = <0>;
->> +            spi-max-frequency = <40000000>;
->> +
->> +            partitions {
->> +                compatible = "fixed-partitions";
->> +                #address-cells = <1>;
->> +                #size-cells = <1>;
->> +
->> +                partition@0000000 {
->> +                    label = "u-boot";
->> +                    reg = <0x00000000 0x80000>;
->> +                };
->> +            };
->> +        };
->> +
->> +    # This example is for "External Address Space Read Mode"
->> +    spibsc: spi@1f800000 {
->> +        compatible = "renesas,r7s9210-spibsc";
->> +        reg = <0x1f800000 0x100>, <0x20000000 0x10000000>;
->> +        clocks = <&cpg CPG_MOD 83>;
->> +        power-domains = <&cpg>;
->> +        interrupts = <GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH>;
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +    };
->> +    flash@20000000 {
-> 
-> This does not describe the hardware topology: the flash node should be
-> a subnode of the spibsc node, as it relies on the spibsc being clocked.
-
-   ACK.
-
-[...]
-
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-
-MBR, Sergei
