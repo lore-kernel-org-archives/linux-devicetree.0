@@ -2,94 +2,67 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE34DC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 22:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E66B1C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B2E206EC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 22:27:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kqjOHnsT";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="IC44f+FS"
+	by mail.kernel.org (Postfix) with ESMTP id BFE4820836
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfLJW1Z (ORCPT
+        id S1728188AbfLJWcn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:27:25 -0500
-Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:60998
-        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726062AbfLJW1Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:27:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576016844;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        bh=qs09g72P2WzVk9kLKtCbEP5yzZXU32zVewyt6/1ZN4c=;
-        b=kqjOHnsTX2ImT7/4FP7DdoMUB5nfkElAn5lfjIGOr1BUXTNLbnOGdXR2SQbqbily
-        +Jqr/eaEeeVBfMB3Ayoq5W7hM6swlmE+JVTpDKgSxbOit6qoCcR62rzwM1tpKBq7ueT
-        0LiLyX53+lIJMROVszvtN46WIVAKPW7knAdLRV0I=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576016844;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
-        bh=qs09g72P2WzVk9kLKtCbEP5yzZXU32zVewyt6/1ZN4c=;
-        b=IC44f+FS9xUHKxAV0bz6aLrPNMNm3SPR84JAo62z10KRmD3MDNydi2Cvu7H8jF7d
-        CWZHQe8bgGVzVKiT4EYX2vgnzfNHsE4HFeqkQE7j7cOnBXqcptBunlwsGNTOIlJ0nvH
-        LfoMSpM9b+yxd4PWBHzMThiyr+seyepHFOU993LA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A8DA2C2BB50
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Tue, 10 Dec 2019 22:27:24 +0000
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        rnayak@codeaurora.org, lsrao@codeaurora.org, mka@chromium.org,
-        swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc7180: Add wakeup parent for TLMM
-Message-ID: <0101016ef1ec96ab-5815fb77-649a-4783-95ca-cc32d7161d47-000000@us-west-2.amazonses.com>
-References: <1572419178-5750-1-git-send-email-mkshah@codeaurora.org>
- <1572419178-5750-3-git-send-email-mkshah@codeaurora.org>
+        Tue, 10 Dec 2019 17:32:43 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:33624 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728109AbfLJWcm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:32:42 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ieo3b-0001KO-MX; Tue, 10 Dec 2019 23:32:39 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Cc:     dianders@chromium.org, linux-bluetooth@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/1] ARM: dts: rockchip: Add brcm bluetooth for rk3288-veyron
+Date:   Tue, 10 Dec 2019 23:32:38 +0100
+Message-ID: <4093066.yl7jOIBBcd@phil>
+In-Reply-To: <20191127223909.253873-2-abhishekpandit@chromium.org>
+References: <20191127223909.253873-1-abhishekpandit@chromium.org> <20191127223909.253873-2-abhishekpandit@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1572419178-5750-3-git-send-email-mkshah@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-SES-Outgoing: 2019.12.10-54.240.27.10
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 30 2019 at 01:07 -0600, Maulik Shah wrote:
->Specify wakeup parent irqchip for sc7180 TLMM.
->
->Cc: devicetree@vger.kernel.org
->Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Lina Iyer <ilina@codeaurora.org>
+Am Mittwoch, 27. November 2019, 23:39:09 CET schrieb Abhishek Pandit-Subedi:
+> This enables the Broadcom uart bluetooth driver on uart0 and gives it
+> ownership of its gpios. In order to use this, you must enable the
+> following kconfig options:
+> - CONFIG_BT_HCIUART_BCM
+> - CONFIG_SERIAL_DEV
+> 
+> This is applicable to rk3288-veyron series boards that use the bcm43540
+> wifi+bt chips.
+> 
+> As part of this change, also refactor the pinctrl across the various
+> boards. All the boards using broadcom bluetooth shouldn't touch the
+> bt_dev_wake pin.
+> 
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 
->---
-> arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
-> 1 file changed, 1 insertion(+)
->
->diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->index 69d5e2c..9040eee 100644
->--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->@@ -321,6 +321,7 @@
-> 			interrupt-controller;
-> 			#interrupt-cells = <2>;
-> 			gpio-ranges = <&tlmm 0 0 120>;
->+			wakeup-parent = <&pdc>;
->
-> 			qup_uart2_default: qup-uart2-default {
-> 				pinmux {
->-- 
->QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->of Code Aurora Forum, hosted by The Linux Foundation
->
+applied for 5.6 with Matthias' Rb.
+
+Thanks
+Heiko
+
+
