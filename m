@@ -2,94 +2,101 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242BDC00454
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4728C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 21:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E31672053B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014750;
-	bh=2ykNyvGZMJo7g3XX2Ffo2Sm4t/OZWneo6t2EKj0O0vs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=SuyidYEYYqh6UvJtqcIMYte+A8xjMaoFJNiKJQ70/D0wD6uKpbJ4lqypaet3xVNoT
-	 2s4rKwDS1x+1RD2UzSaxaD6hvczhN+GAqwRfijFw2ixNml/7uOdFY0Gl+eTFFYdtt8
-	 1kgVcR+jmdGsKUL+FQsYS5OxIrtLHy0u9gjCWewE=
+	by mail.kernel.org (Postfix) with ESMTP id 9F9782053B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 21:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfLJVHp (ORCPT
+        id S1726714AbfLJV6e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:07:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54190 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:58:34 -0500
+Received: from muru.com ([72.249.23.125]:44922 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727335AbfLJVHo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:07:44 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C86E82467E;
-        Tue, 10 Dec 2019 21:07:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012064;
-        bh=2ykNyvGZMJo7g3XX2Ffo2Sm4t/OZWneo6t2EKj0O0vs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tiZ5TXWGgfMMcgH1qAGW16vBSyFbf8QVFgba/3MyF+aPuDTbo4hJyiKvDLa/T3dHf
-         QC17RvTnsNWgjsiKExbDTckPZJk/RCI/j1M9mCOmDjgARxC0K8V6pKEybDPhvvojm+
-         0dNknNsvmHuDSPRrzN1/QfLHPNP0Fm1IwVXvM5HU=
-Date:   Tue, 10 Dec 2019 15:07:41 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        will@kernel.org, robin.murphy@arm.com, eric.auger@redhat.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-Subject: Re: [PATCH v3 12/13] PCI/ATS: Add PASID stubs
-Message-ID: <20191210210741.GA143420@google.com>
+        id S1726417AbfLJV6e (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:58:34 -0500
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id DF892820B;
+        Tue, 10 Dec 2019 21:59:12 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, Jean Pihet <jean.pihet@newoldbits.com>
+Subject: [PATCH 1/2] ARM: dts: Configure interconnect target module for am4 qspi
+Date:   Tue, 10 Dec 2019 13:58:30 -0800
+Message-Id: <20191210215831.6199-1-tony@atomide.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209180514.272727-13-jean-philippe@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 07:05:13PM +0100, Jean-Philippe Brucker wrote:
-> The SMMUv3 driver, which may be built without CONFIG_PCI, will soon gain
-> PASID support.  Partially revert commit c6e9aefbf9db ("PCI/ATS: Remove
-> unused PRI and PASID stubs") to re-introduce the PASID stubs, and avoid
-> adding more #ifdefs to the SMMU driver.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+We can now probe devices with device tree only configuration using
+ti-sysc interconnect target module driver. Let's configure the
+module, but keep the legacy "ti,hwmods" peroperty to avoid new boot
+time warnings. The legacy property will be removed in later patches
+together with the legacy platform data.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jean Pihet <jean.pihet@newoldbits.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/am4372.dtsi | 38 ++++++++++++++++++++++++++---------
+ 1 file changed, 28 insertions(+), 10 deletions(-)
 
-> ---
->  include/linux/pci-ats.h | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> index 5d62e78946a3..d08f0869f121 100644
-> --- a/include/linux/pci-ats.h
-> +++ b/include/linux/pci-ats.h
-> @@ -33,6 +33,9 @@ void pci_disable_pasid(struct pci_dev *pdev);
->  int pci_pasid_features(struct pci_dev *pdev);
->  int pci_max_pasids(struct pci_dev *pdev);
->  #else /* CONFIG_PCI_PASID */
-> +static inline int pci_enable_pasid(struct pci_dev *pdev, int features)
-> +{ return -EINVAL; }
-> +static inline void pci_disable_pasid(struct pci_dev *pdev) { }
->  static inline int pci_pasid_features(struct pci_dev *pdev)
->  { return -EINVAL; }
->  static inline int pci_max_pasids(struct pci_dev *pdev)
-> -- 
-> 2.24.0
-> 
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -305,17 +305,35 @@ gpmc: gpmc@50000000 {
+ 			status = "disabled";
+ 		};
+ 
+-		qspi: spi@47900000 {
+-			compatible = "ti,am4372-qspi";
+-			reg = <0x47900000 0x100>,
+-			      <0x30000000 0x4000000>;
+-			reg-names = "qspi_base", "qspi_mmap";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
++		target-module@47900000 {
++			compatible = "ti,sysc-omap4", "ti,sysc";
+ 			ti,hwmods = "qspi";
+-			interrupts = <0 138 0x4>;
+-			num-cs = <4>;
+-			status = "disabled";
++			reg = <0x47900000 0x4>,
++			      <0x47900010 0x4>;
++			reg-names = "rev", "sysc";
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>,
++					<SYSC_IDLE_SMART_WKUP>;
++			clocks = <&l3s_clkctrl AM4_L3S_QSPI_CLKCTRL 0>;
++			clock-names = "fck";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x47900000 0x1000>,
++				 <0x30000000 0x30000000 0x4000000>;
++
++			qspi: spi@0 {
++				compatible = "ti,am4372-qspi";
++				reg = <0 0x100>,
++				      <0x30000000 0x4000000>;
++				reg-names = "qspi_base", "qspi_mmap";
++				clocks = <&dpll_per_m2_div4_ck>;
++				clock-names = "fck";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				interrupts = <0 138 0x4>;
++				num-cs = <4>;
++			};
+ 		};
+ 
+ 		dss: dss@4832a000 {
+-- 
+2.24.0
