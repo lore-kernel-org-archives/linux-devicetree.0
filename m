@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7810C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 15:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CE9C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 15:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 883C422464
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 15:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BCE420836
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 15:42:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JnGRUlhX"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LPVoBq1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfLJPmT (ORCPT
+        id S1727332AbfLJPma (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 10:42:19 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39066 "EHLO
+        Tue, 10 Dec 2019 10:42:30 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35267 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727440AbfLJPmR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 10:42:17 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y11so20599374wrt.6
-        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 07:42:16 -0800 (PST)
+        with ESMTP id S1727559AbfLJPmU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 10:42:20 -0500
+Received: by mail-wr1-f67.google.com with SMTP id g17so20645806wro.2
+        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 07:42:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=DYGCPlFYfMEo2ftPv0Z0kGJqzS3pUpAwvlGql73I9Zo=;
-        b=JnGRUlhX7iRqoMyv7JDwrWvHc2bZ1iB+KpNAHCFq0O9OVhsjih/fG50MoAkvz/PDit
-         IM2Gk/ygL2VBxPBxuxWdSmiSWRF3V8hCXX2vf3KPfZkV1e/esNFP1Rs7yOSf/95Dy+67
-         QaakjZbFwax/LcTA+kHx2vbCl+rW8/i6+j/07QVVbA8TXDZ6HpAa2PZkpdrINqMY1mLC
-         XzvgbFqz6EsntOXM5CaWKRrDamJhBtXfVzh5PDYVk6kJyGkqLVRbrEFcNGQ5oGxFQuqy
-         fN94q7TYNyysZcvEqjnibJowJMHmT4F+9/ktkez/dojR0ZX3nSAPTIKsO5Xl3T+3vIYH
-         QMuw==
+        bh=/574D719hbFtQpR50xV1oDzZQDR7UpeMjBxjWf2LMEo=;
+        b=LPVoBq1So4qyMrTR+XkJPFLk0fCI/JMo6fHIL7ZvJQFP+iF/VwW9zbcurfwdUVe/8R
+         PPQIbOosvDVevQBjk2ZAN6pzCR25dQEOUz6A7Rgk02axmMl8zKYp+1PdX/62C88tqpri
+         MVACKdVsGOc1XbRj+4D2Qb37NoUGdkxiJ143IpdNBaZzomoYvBTgEzpKgp6E+aiicouf
+         gGrOA69XXQYSY83R8KWa0VY+9eza8BtLBzOUNfXzgcm3wTLXtF0EEVw8at4f+1bA1T/c
+         mPttVS9TercNqow84ffMUOw1YDrvfXqckvTuwMNxLQDywjE4TKr6U7IkiXsZ6xJjDGgR
+         UB2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=DYGCPlFYfMEo2ftPv0Z0kGJqzS3pUpAwvlGql73I9Zo=;
-        b=ijcrYz3YVisrVRhV4tT6JrjyYzIimoVNfeeX2fZylI5GZbpDBIHu4YIGQ++ouwsCnV
-         SdB3+ow5ss/oHTlPt/gMmQzP08Nm9TIWfzAuMYifSafHv33IwRV38vKCMXS1z9383MFx
-         y79SExOJqQ8m8qw9hKYrDckgW3DI/Dereo3hvTotj64oYmnjTc+34mTcA+3IC0CzhtHb
-         1hwLJWJRppyne2lCujMxdaKR5u8+DvrZfvmj6g4EWkYgf86Hr89erjqSldrxG3Qnoxhr
-         +O6zo5ww/bl2ndqVAc2iSOhbJ5LdoUPEdMLo4GwvJfcDSArMlHO/8HuH+Xm2w0cbDC86
-         k2Zg==
-X-Gm-Message-State: APjAAAXS1pBu1bQxo55Ast2pvKiPzHma3pkphmYHRKcFuSVVTibyqmGM
-        sLcD+0jG4Auox3hP2kHV5T6KNz97wpC5xE6t3I4=
-X-Google-Smtp-Source: APXvYqw5F0u16O8eA21qt4EDgRqamkoRROndktfP1CGYcsyRpfJ2HD9IhxtTNmPlYsdjzWHbJAoXQg==
-X-Received: by 2002:a5d:5308:: with SMTP id e8mr3999583wrv.77.1575992536121;
-        Tue, 10 Dec 2019 07:42:16 -0800 (PST)
+        bh=/574D719hbFtQpR50xV1oDzZQDR7UpeMjBxjWf2LMEo=;
+        b=grwtzHrv+NSXfqiSSyk4DoJ1G0t9YygkaMHar/Q0bGcTYJsUA5tbLIknCfGlb1HlIC
+         7lZiV/+nsB/0ALL4bxPQVP834nLav6DmKU5zJiOEjvsmM9T8bGHpBYp7rj/9pzKT0CZ3
+         dpw4wW1ePNiryQRrGjxf7TsWCiFux2brK/BY0Bssnv0DJSnE0tPqfBBgJv5GOT0ZlkVE
+         cyRo+7MaNb5m92zD8OeBQ4nNHjIzizBjeCbZyWxYpn8WOr0kCWRzL0VHK82AR6FWdBz1
+         +UuiUYTZOGkkl0Xw1ZH2F0RCTvUSpG3+KNnN5q6Yqs9jnOZya6/S4r+LWWAEul4IfYB1
+         RYdA==
+X-Gm-Message-State: APjAAAWbfS9znEmawSxzD4eGDzY8ortZSOrU9qD87zia3ZuYZuDF+foX
+        O6F0eFJnePRUHALeMH6V1KgfhA==
+X-Google-Smtp-Source: APXvYqyoLlaT2Ui3vB4/R0BIlcScHAbDp9A3rKt/+vQxe3CMTESCcRkjuqrLIGbffyTHZELVGhXe3A==
+X-Received: by 2002:a5d:51cc:: with SMTP id n12mr4046468wrv.177.1575992539004;
+        Tue, 10 Dec 2019 07:42:19 -0800 (PST)
 Received: from khouloud-ThinkPad-T470p.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id o7sm3469085wmc.41.2019.12.10.07.42.15
+        by smtp.googlemail.com with ESMTPSA id o7sm3469085wmc.41.2019.12.10.07.42.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 07:42:15 -0800 (PST)
+        Tue, 10 Dec 2019 07:42:18 -0800 (PST)
 From:   Khouloud Touil <ktouil@baylibre.com>
 To:     bgolaszewski@baylibre.com, robh+dt@kernel.org,
         mark.rutland@arm.com, srinivas.kandagatla@linaro.org,
@@ -61,9 +61,9 @@ To:     bgolaszewski@baylibre.com, robh+dt@kernel.org,
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-i2c@vger.kernel.org, linus.walleij@linaro.org,
         Khouloud Touil <ktouil@baylibre.com>
-Subject: [PATCH v2 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
-Date:   Tue, 10 Dec 2019 16:41:54 +0100
-Message-Id: <20191210154157.21930-2-ktouil@baylibre.com>
+Subject: [PATCH v2 4/4] eeprom: at24: remove the write-protect pin support
+Date:   Tue, 10 Dec 2019 16:41:57 +0100
+Message-Id: <20191210154157.21930-5-ktouil@baylibre.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191210154157.21930-1-ktouil@baylibre.com>
 References: <20191210154157.21930-1-ktouil@baylibre.com>
@@ -72,54 +72,71 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Several memories have a write-protect pin, that when pulled high, it
-blocks the write operation.
+NVMEM framework is an interface for the at24 EEPROMs as well as for
+other drivers, instead of passing the wp-gpios over the different
+drivers each time, it would be better to pass it over the NVMEM
+subsystem once and for all.
 
-On some boards, this pin is connected to a GPIO and pulled high by
-default, which forces the user to manually change its state before
-writing.
-
-Instead of modifying all the memory drivers to check this pin, make
-the NVMEM subsystem check if the write-protect GPIO being passed
-through the nvmem_config or defined in the device tree and pull it
-low whenever writing to the memory.
-
-Add a new optional property to the device tree binding document, which
-allows to specify the GPIO line to which the write-protect pin is
-connected.
+Removing the support for the write-protect pin after adding it to the
+NVMEM subsystem.
 
 Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
 ---
- Documentation/devicetree/bindings/nvmem/nvmem.yaml | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/misc/eeprom/at24.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/nvmem.yaml b/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-index 1c75a059206c..ea012b2f2e77 100644
---- a/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-@@ -34,6 +34,14 @@ properties:
-     description:
-       Mark the provider as read only.
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index 0681d5fdd538..8fce49a6d9cd 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -22,7 +22,6 @@
+ #include <linux/nvmem-provider.h>
+ #include <linux/regmap.h>
+ #include <linux/pm_runtime.h>
+-#include <linux/gpio/consumer.h>
  
-+  wp-gpios:
-+    description:
-+      GPIO to which the write-protect pin of the chip is connected.
-+      The write-protect GPIO is asserted, when it's driven high
-+      (logical '1') to block the write operation. It's deasserted,
-+      when it's driven low (logical '0') to allow writing.
-+    maxItems: 1
-+
- patternProperties:
-   "^.*@[0-9a-f]+$":
-     type: object
-@@ -66,6 +74,7 @@ examples:
-       qfprom: eeprom@700000 {
-           #address-cells = <1>;
-           #size-cells = <1>;
-+          wp-gpios = <&gpio1 3 0>;
+ /* Address pointer is 16 bit. */
+ #define AT24_FLAG_ADDR16	BIT(7)
+@@ -89,8 +88,6 @@ struct at24_data {
  
-           /* ... */
+ 	struct nvmem_device *nvmem;
  
+-	struct gpio_desc *wp_gpio;
+-
+ 	/*
+ 	 * Some chips tie up multiple I2C addresses; dummy devices reserve
+ 	 * them for us, and we'll use them with SMBus calls.
+@@ -457,12 +454,10 @@ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
+ 	 * from this host, but not from other I2C masters.
+ 	 */
+ 	mutex_lock(&at24->lock);
+-	gpiod_set_value_cansleep(at24->wp_gpio, 0);
+ 
+ 	while (count) {
+ 		ret = at24_regmap_write(at24, buf, off, count);
+ 		if (ret < 0) {
+-			gpiod_set_value_cansleep(at24->wp_gpio, 1);
+ 			mutex_unlock(&at24->lock);
+ 			pm_runtime_put(dev);
+ 			return ret;
+@@ -472,7 +467,6 @@ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
+ 		count -= ret;
+ 	}
+ 
+-	gpiod_set_value_cansleep(at24->wp_gpio, 1);
+ 	mutex_unlock(&at24->lock);
+ 
+ 	pm_runtime_put(dev);
+@@ -662,9 +656,6 @@ static int at24_probe(struct i2c_client *client)
+ 	at24->client[0].client = client;
+ 	at24->client[0].regmap = regmap;
+ 
+-	at24->wp_gpio = devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_HIGH);
+-	if (IS_ERR(at24->wp_gpio))
+-		return PTR_ERR(at24->wp_gpio);
+ 
+ 	writable = !(flags & AT24_FLAG_READONLY);
+ 	if (writable) {
 -- 
 2.17.1
 
