@@ -2,216 +2,147 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0FCC2BD09
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 01:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE45C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 01:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659AF2073D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 01:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A6912071E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 01:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575942720;
+	bh=KqCQz2weAnWR65cLCGRNYV4K/BKWlkR6zSJV8noJl4M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=raO4g2uhwYXKUU5hpk7m+rgly1QMYqvKZC1OM1yM1TDldfZI5vbR31J9H25Fj1TrT
+	 T0kZQwF7o08JC807nQnhxCvYtvkNQYYFBUmX0HCsB7p0WpvMZZbOFgK3UBC0b5XCsP
+	 36oDmfSxQIYdh0cOmph/FAdAqPRqu0gVYZb/D+us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbfLJBbG (ORCPT
+        id S1726538AbfLJBwA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 20:31:06 -0500
-Received: from out28-148.mail.aliyun.com ([115.124.28.148]:58987 "EHLO
-        out28-148.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727221AbfLJBbF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 20:31:05 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07499074|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0583385-0.00383119-0.93783;DS=CONTINUE|ham_system_inform|0.242812-0.00141908-0.755769;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07389;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=22;RT=22;SR=0;TI=SMTPD_---.GDx8B-U_1575941442;
-Received: from 192.168.88.128(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GDx8B-U_1575941442)
-          by smtp.aliyun-inc.com(10.147.40.44);
-          Tue, 10 Dec 2019 09:30:43 +0800
-Subject: Re: [PATCH v7 6/6] MIPS: CU1000: Add devicetree & config with
- PDMA/MSC/RTC/WDT/NET enabled.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1575896438-9562-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1575896438-9562-7-git-send-email-zhouyanjie@wanyeetech.com>
- <1575904048.3.2@crapouillou.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
-        ebiederm@xmission.com, ralf@linux-mips.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        krzk@kernel.org, geert+renesas@glider.be,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 772753199@qq.com
-From:   zhouyanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <5DEEF542.2000503@wanyeetech.com>
-Date:   Tue, 10 Dec 2019 09:30:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Mon, 9 Dec 2019 20:52:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726502AbfLJBwA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Dec 2019 20:52:00 -0500
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 569E22080D
+        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 01:51:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575942718;
+        bh=KqCQz2weAnWR65cLCGRNYV4K/BKWlkR6zSJV8noJl4M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QBgmp/WEA/kWCJ+4xxowtAUKnN7lo0ioXQ/+OOBkTk1JJx82ejS9Gx5IkuMVffNK5
+         A/oWw39pC4eXUgKjtWuKzJ6tQcB8unMbzlia/VBBLlj/zZJyPshovwKZPVQ9Khm33b
+         Z7umV8SC/cUEMGahh9sdVfDfQF5ds9i66FLMKNn4=
+Received: by mail-qt1-f172.google.com with SMTP id j5so1252152qtq.9
+        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 17:51:58 -0800 (PST)
+X-Gm-Message-State: APjAAAW72pZUQ3gIFvCnhM9J3ev/fZqjrCtGQ13VrdSYBWuqp0SBhcsw
+        l2lHXzUgIwqkNuCpsxRW563oFzJcGyHHILTxxg==
+X-Google-Smtp-Source: APXvYqyEad6fm0J91b5vxJUTlpqjK/RvfkA5xA4LXrcK/moCxuOeAy2ZOwDen6GRbDeesm2MP0X1u0al1BP2jaCfYXc=
+X-Received: by 2002:ac8:6747:: with SMTP id n7mr27887071qtp.224.1575942717416;
+ Mon, 09 Dec 2019 17:51:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1575904048.3.2@crapouillou.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de>
+ <e1f232f5-3847-a519-5cce-95a26512e82b@gmail.com> <87tv6idp37.fsf@mpe.ellerman.id.au>
+ <67e1da87-7f5a-3972-bc16-28bae2350c12@gmail.com> <CAL_JsqKieG5=teL7gABPKbJOQfvoS9s-ZPF-=R0yEE_LUoy-Kw@mail.gmail.com>
+ <20191205163538.mzunfrpox7jbrssl@linutronix.de> <084ed924-eaed-5232-a9f6-fe60128fe11a@gmail.com>
+ <20191209133531.ykkknqmeeb36rv7l@linutronix.de>
+In-Reply-To: <20191209133531.ykkknqmeeb36rv7l@linutronix.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 9 Dec 2019 19:51:45 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLVJi_v9yD5khLUvJHDEXFj=eXFf-CHXz30y0mYojt-Yg@mail.gmail.com>
+Message-ID: <CAL_JsqLVJi_v9yD5khLUvJHDEXFj=eXFf-CHXz30y0mYojt-Yg@mail.gmail.com>
+Subject: Re: [RFC] Efficiency of the phandle_cache on ppc64/SLOF
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>, devicetree@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul,
-
-On 2019年12月09日 23:07, Paul Cercueil wrote:
-> Hi Zhou,
+On Mon, Dec 9, 2019 at 7:35 AM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
 >
-> You modify here in patch [06/06] two files that were introduced in 
-> [04/06]. Just merge the two patches into one then, and make it last in 
-> the patchset.
+> On 2019-12-05 20:01:41 [-0600], Frank Rowand wrote:
+> > Is there a memory usage issue for the systems that led to this thread?
 >
-
-Sure, I will merge the two patches in v8.
-
-Thanks and best regards!
-
-> -Paul
+> No, no memory issue led to this thread. I was just testing my patch and
+> I assumed that I did something wrong in the counting/lock drop/lock
+> acquire/allocate path because the array was hardly used. So I started to
+> look deeper=E2=80=A6
+> Once I figured out everything was fine, I was curious if everyone is
+> aware of the different phandle creation by dtc vs POWER. And I posted
+> the mail in the thread.
+> Once you confirmed that everything is "known / not an issue" I was ready
+> to take off [0].
 >
+> Later more replies came in such as one mail [1] from Rob describing the
+> original reason with 814 phandles. _Here_ I was just surprised that 1024
+> were used over 64 entries for a benefit of 60ms. I understand that this
+> is low concern for you because that memory is released if modules are
+> not enabled. I usually see that module support is left enabled.
 >
-> Le lun., déc. 9, 2019 at 21:00, 周琰杰 (Zhou Yanjie) 
-> <zhouyanjie@wanyeetech.com> a écrit :
->> Add the CU1000 Neo devicetree and defconfig with PDMA, MMC, RTC, WDT
->> and NET enabled.
->>
->> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->> ---
->>
->> Notes:
->>     v7:
->>     New patch, merge[06/12],[08/12],[10/12],[12/12] in v6.
->>
->>  arch/mips/boot/dts/ingenic/cu1000-neo.dts | 47 
->> +++++++++++++++++++++++++++++++
->>  arch/mips/configs/cu1000-neo_defconfig    | 17 +++++++++--
->>  2 files changed, 62 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/mips/boot/dts/ingenic/cu1000-neo.dts 
->> b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
->> index 6f1a7e9..b0733da 100644
->> --- a/arch/mips/boot/dts/ingenic/cu1000-neo.dts
->> +++ b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
->> @@ -43,10 +43,57 @@
->>      status = "okay";
->>  };
->>
->> +&mac {
->> +    phy-mode = "rmii";
->> +    phy-handle = <&lan8720a>;
->> +
->> +    pinctrl-names = "default";
->> +    pinctrl-0 = <&pins_mac>;
->> +
->> +    snps,reset-gpio = <&gpc 23 GPIO_ACTIVE_LOW>; /* PC23 */
->> +    snps,reset-active-low;
->> +    snps,reset-delays-us = <0 10000 30000>;
->> +
->> +    status = "okay";
->> +};
->> +
->> +&mdio {
->> +    status = "okay";
->> +
->> +    lan8720a: ethernet-phy@0 {
->> +        compatible = "ethernet-phy-id0007.c0f0", 
->> "ethernet-phy-ieee802.3-c22";
->> +        reg = <0>;
->> +    };
->> +};
->> +
->> +&msc0 {
->> +    bus-width = <8>;
->> +    max-frequency = <50000000>;
->> +
->> +    pinctrl-names = "default";
->> +    pinctrl-0 = <&pins_msc0>;
->> +
->> +    non-removable;
->> +
->> +    status = "okay";
->> +};
->> +
->>  &pinctrl {
->>      pins_uart2: uart2 {
->>          function = "uart2";
->>          groups = "uart2-data-d";
->>          bias-disable;
->>      };
->> +
->> +    pins_mac: mac {
->> +        function = "mac";
->> +        groups = "mac";
->> +        bias-disable;
->> +    };
->> +
->> +    pins_msc0: msc0 {
->> +        function = "mmc0";
->> +        groups = "mmc0-1bit", "mmc0-4bit", "mmc0-8bit";
->> +        bias-disable;
->> +    };
->>  };
->> diff --git a/arch/mips/configs/cu1000-neo_defconfig 
->> b/arch/mips/configs/cu1000-neo_defconfig
->> index 4fafe92..9f988ed 100644
->> --- a/arch/mips/configs/cu1000-neo_defconfig
->> +++ b/arch/mips/configs/cu1000-neo_defconfig
->> @@ -16,8 +16,6 @@ CONFIG_CGROUP_DEVICE=y
->>  CONFIG_CGROUP_CPUACCT=y
->>  CONFIG_NAMESPACES=y
->>  CONFIG_USER_NS=y
->> -CONFIG_BLK_DEV_INITRD=y
->> -CONFIG_INITRAMFS_SOURCE="arch/mips/boot/ramdisk.cpio.gz"
->>  CONFIG_CC_OPTIMIZE_FOR_SIZE=y
->>  CONFIG_SYSCTL_SYSCALL=y
->>  CONFIG_KALLSYMS_ALL=y
->> @@ -35,11 +33,17 @@ CONFIG_HZ_100=y
->>  # CONFIG_COMPACTION is not set
->>  CONFIG_CMA=y
->>  CONFIG_CMA_AREAS=7
->> +CONFIG_NET=y
->> +CONFIG_UNIX=y
->> +CONFIG_INET=y
->>  CONFIG_UEVENT_HELPER=y
->>  CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
->>  CONFIG_DEVTMPFS=y
->>  # CONFIG_FW_LOADER is not set
->>  # CONFIG_ALLOW_DEV_COREDUMP is not set
->> +CONFIG_NETDEVICES=y
->> +CONFIG_STMMAC_ETH=y
->> +CONFIG_SMSC_PHY=y
->>  # CONFIG_INPUT_MOUSEDEV is not set
->>  # CONFIG_INPUT_KEYBOARD is not set
->>  # CONFIG_INPUT_MOUSE is not set
->> @@ -55,17 +59,26 @@ CONFIG_SERIAL_8250_INGENIC=y
->>  CONFIG_SERIAL_OF_PLATFORM=y
->>  # CONFIG_HW_RANDOM is not set
->>  CONFIG_GPIO_SYSFS=y
->> +CONFIG_WATCHDOG=y
->> +CONFIG_JZ4740_WDT=y
->>  # CONFIG_HWMON is not set
->>  # CONFIG_LCD_CLASS_DEVICE is not set
->>  # CONFIG_BACKLIGHT_CLASS_DEVICE is not set
->>  # CONFIG_VGA_CONSOLE is not set
->>  # CONFIG_HID is not set
->>  # CONFIG_USB_SUPPORT is not set
->> +CONFIG_MMC=y
->> +CONFIG_MMC_JZ4740=y
->> +CONFIG_RTC_CLASS=y
->> +CONFIG_RTC_DRV_JZ4740=y
->> +CONFIG_DMADEVICES=y
->> +CONFIG_DMA_JZ4780=y
->>  # CONFIG_IOMMU_SUPPORT is not set
->>  CONFIG_NVMEM=y
->>  CONFIG_NVMEM_SYSFS=y
->>  CONFIG_EXT4_FS=y
->>  # CONFIG_DNOTIFY is not set
->> +CONFIG_AUTOFS_FS=y
->>  CONFIG_PROC_KCORE=y
->>  # CONFIG_PROC_PAGE_MONITOR is not set
->>  CONFIG_TMPFS=y
->> -- 
->> 2.7.4
->>
+> However, Rob suggested / asked about the fixed size array (this is how I
+> understood it):
+> |And yes, as mentioned earlier I don't like the complexity. I didn't
+> |from the start and I'm  I'm still of the opinion we should have a
+> |fixed or 1 time sized true cache (i.e. smaller than total # of
+> |phandles). That would solve the RT memory allocation and locking issue
+> |too.
 >
+> so I attempted to ask if we should have the fixed size array maybe
+> with the hash_32() instead the mask. This would make my other patch
+> obsolete because the fixed size array should not have a RT issue. The
+> hash_32() part here would address the POWER issue where the cache is
+> currently not used efficiently.
+>
+> If you want instead to keep things as-is then this is okay from my side.
+> If you want to keep this cache off on POWER then I could contribute a
+> patch doing so.
 
+It turns out there's actually a bug in the current implementation. If
+we have multiple phandles with the same mask, then we leak node
+references if we miss in the cache and re-assign the cache entry.
+Easily fixed I suppose, but holding a ref count for a cached entry
+seems wrong. That means we never have a ref count of 0 on every node
+with a phandle.
+
+I've done some more experiments with the performance. I've come to the
+conclusion that just measuring boot time is not a good way at least if
+the time is not a significant percentage of the total. I couldn't get
+any measurable data. I'm using a RK3399 Rock960 board. It has 190
+phandles. I get about 1500 calls to of_find_node_by_phandle() during
+boot. Note that about the first 300 are before we have any timekeeping
+(the prior measurements also would not account for this). Those calls
+have no cache in the current implementation and are cached in my
+implementation.
+
+no cache:  20124 us
+current cache: 819 us
+
+new cache (64 entry): 4342 us
+new cache (128 entry): 2875 us
+new cache (256 entry): 1235 us
+
+To get some idea on the time spent before timekeeping is up, if we
+take the avg miss time is ~17us (20124/1200), then we're spending
+about ~5ms on lookups before the cache is enabled. I'd estimate the
+new cache takes ~400us before timekeeping is up as there's 11 misses
+early.
+
+From these numbers, it seems the miss rate has a significant impact on
+performance for the different sizes. But taken from the original 20+
+ms, they all look like good improvement.
+
+Rob
