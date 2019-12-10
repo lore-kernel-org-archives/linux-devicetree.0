@@ -2,123 +2,66 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD06C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 03:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 367B1C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 04:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC0920726
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 03:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0619B207FF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 04:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfLJD5K (ORCPT
+        id S1726822AbfLJET3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 22:57:10 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:38470 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbfLJD5J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 22:57:09 -0500
-Received: from [10.28.19.135] (10.28.19.135) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 10 Dec
- 2019 11:57:40 +0800
-Subject: Re: [PATCH] arm64: dts: a1: add saradc controller
-To:     Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>, <linux-iio@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <1575358332-44866-1-git-send-email-xingyu.chen@amlogic.com>
- <7hpngxqfa7.fsf@baylibre.com>
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-Message-ID: <9a2ddfa3-28f3-7d15-bb25-5b84078b77c7@amlogic.com>
-Date:   Tue, 10 Dec 2019 11:57:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <7hpngxqfa7.fsf@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.28.19.135]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+        Mon, 9 Dec 2019 23:19:29 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:39710 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbfLJET3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 23:19:29 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7D48C154F0608;
+        Mon,  9 Dec 2019 20:19:26 -0800 (PST)
+Date:   Mon, 09 Dec 2019 20:19:26 -0800 (PST)
+Message-Id: <20191209.201926.728362288698200079.davem@davemloft.net>
+To:     dmurphy@ti.com
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        bunk@kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        grygorii.strashko@ti.com
+Subject: Re: [PATCH net-next v3 0/2] Fix Tx/Rx FIFO depth for DP83867
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191209201025.5757-1-dmurphy@ti.com>
+References: <20191209201025.5757-1-dmurphy@ti.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 09 Dec 2019 20:19:26 -0800 (PST)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Kevin
+From: Dan Murphy <dmurphy@ti.com>
+Date: Mon, 9 Dec 2019 14:10:23 -0600
 
-On 2019/12/10 6:56, Kevin Hilman wrote:
-> Xingyu Chen <xingyu.chen@amlogic.com> writes:
->
->> The saradc controller in Meson-A1 is the same as the Meson-G12 series SoCs,
->> so we use the same compatible string.
->>
->> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
->>
->> ---
->> This patch is based on A1 clock patchset at [0].
->>
->> [0] https://lore.kernel.org/linux-amlogic/20191129144605.182774-1-jian.hu@amlogic.com
->> ---
->>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 15 +++++++++++++++
->>   1 file changed, 15 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> index 7210ad0..cad1756 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> @@ -93,6 +93,21 @@
->>   				clock-names = "xtal", "pclk", "baud";
->>   				status = "disabled";
->>   			};
->> +
->> +			saradc: adc@2c00 {
->> +				compatible = "amlogic,meson-g12a-saradc",
->> +					     "amlogic,meson-saradc";
->> +				reg = <0x0 0x2c00 0x0 0x48>;
-> Why 0x48 here?  AXG uses 0x38 and you're not adding any more registers
-> to this driver.
+> The DP83867 supports both the RGMII and SGMII modes.  The Tx and Rx FIFO depths
+> are configurable in these modes but may not applicable for both modes.
+> 
+> When the device is configured for RGMII mode the Tx FIFO depth is applicable
+> and for SGMII mode both Tx and Rx FIFO depth settings are applicable.  When
+> the driver was originally written only the RGMII device was available and there
+> were no standard fifo-depth DT properties.
+> 
+> The patchset converts the special ti,fifo-depth property to the standard
+> tx-fifo-depth property while still allowing the ti,fifo-depth property to be
+> set as to maintain backward compatibility.
+> 
+> In addition to this change the rx-fifo-depth property support was added and only
+> written when the device is configured for SGMII mode.
 
-Thanks for you review.
-
-The saradc introduces 4 new registers (as shown below) begin with g12a 
-platform, and these registers are used
-to save the sampling value of corresponding channel. In other words, we 
-can choose fifo or new registers to save
-sampling value, but it is not supported by the current driver.
-
-dout register  |---> fifo
-                          |---> channel regs -|
-                                                            |--- channel-0
-                                                            |--- channel-1
-                                                            | ...
-                                                            | --- channel-7
-
-AO_SAR_ADC_CHNL01：saving sampling data of channel 0/1
-AO_SAR_ADC_CHNL23:   saving sampling data of channel 2/3
-AO_SAR_ADC_CHNL45:   saving sampling data of channel 4/5
-AO_SAR_ADC_CHNL67:   saving sampling data of channel 6/7
-
-
-This patch use the 0x48 to describe the registers length just follow the 
-file meson-g12-common.dtsi. and it doesn't
-affect the driver because of the mapped regiter length is limited by 
-max_register member in struct regmap_config.
-
-I can replace 0x48 with 0x38 in next patch if necessary.
-
-> Kevin
->
-> .
->
+Series applied, thanks.
