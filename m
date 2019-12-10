@@ -2,168 +2,127 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61035C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 14:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D16C2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 15:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3367920637
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 14:50:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vYOET9ni"
+	by mail.kernel.org (Postfix) with ESMTP id BE4DA2077B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 15:03:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575990180;
+	bh=K76G3cVUUeYZUUxq73YqLUM6DOi9jrR8rIey74F35F8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bW8mv8cTzZfuZTpDQ2SjKKcq50NqAH81eD5u/tqncdTChMmealZDsBs+6LFkdviXS
+	 FuyVc9L6970BRuYiHhGiTg07u1NsC5NHmKcWHwKg1NN8h2HAVlv4+qgi2R2rUXXNxz
+	 vFz6zs51efPL9/Aef4PMtADWguthC4ks8+W7ukyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfLJOuR (ORCPT
+        id S1727492AbfLJPDA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:50:17 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46245 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbfLJOuR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 09:50:17 -0500
-Received: by mail-io1-f66.google.com with SMTP id t26so7630172ioi.13;
-        Tue, 10 Dec 2019 06:50:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EopU7gHpRZaFwvjzHn1zzfgni4g/N/UohJ2TWwA1/m0=;
-        b=vYOET9ni2r/x+WsiXrE22CAhuCTJnazMZnB6tLnbsJJvL+/CzhU1nqV1u6g92L2TNW
-         9sAEay9IDtRMUHOayxwKfjT2r9lN4koXTLKoLVKDzZBZDWLgiNin4xODz2NgytLN1/72
-         hSSQLiWGAvpQ7f2Y//zUXwIJC82LiIBHDcfAmnjHonbk5FQwzEZiOjSEo0561jYZhJQq
-         9yWghFa/pG9x9CtBfd3VU/Oe4JciVfoezbgYDgf4VpZQxVfHPdKyvhhMhqOAQUU3XcXu
-         VPxq27c1c96xJRk8NXIqa8i9pLr3WYopimSbG/2WEAdS8VXGN5q5zikx6CNmL00QOCP9
-         dCMA==
+        Tue, 10 Dec 2019 10:03:00 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38766 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727272AbfLJPDA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 10:03:00 -0500
+Received: by mail-lj1-f193.google.com with SMTP id k8so20232792ljh.5;
+        Tue, 10 Dec 2019 07:02:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EopU7gHpRZaFwvjzHn1zzfgni4g/N/UohJ2TWwA1/m0=;
-        b=pZ5JkB9yXAmlgCcVOaYlWXNeqyJDdFlc9JGT8462BRLf5t+5gAUM7FoNsaOckUTU2i
-         HSfkW/SM9WBY9L3Ewvxc6Peiv8YP7dfL6FaATIFF7JFezO/zf73pW1er5Q3iL3emiWAI
-         OsdFspy6BFmNrqeSCWfJw7E5DKFj9gG4w6GGemR3IZf0OYE9guqo9RGPZ1+/XM9wwcZi
-         A5MQTKf5+DdeEcVi4YvzQU/EvX+kx9dDnRituhAmfELakFMyBbwA9VuGN8PtZ7TMzT5A
-         mKOfVioxTgPtoIbE4AbWTrPRoFIEXVogQzRwoLO7WoZEbH6Igd+v/NjPq9uUKBn2EQIh
-         6e5w==
-X-Gm-Message-State: APjAAAX3fKvm/QgQ6nsN2Bp8TjqKemxUXnHPp+GZzGxX6MY569tLyUVF
-        v3YNfw0CT40zEcPJy9oswAepx4St1dM9sn/vlZA=
-X-Google-Smtp-Source: APXvYqyg+Q4PiSVD+TRIfNYYQb9a80Ve7CWTpf0XRMvR2kxSQvCVSYQFM+LAKN06jjFUHKWALrHPxHKTq7zl/ShAp7s=
-X-Received: by 2002:a6b:e008:: with SMTP id z8mr24398133iog.246.1575989416712;
- Tue, 10 Dec 2019 06:50:16 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zZvlC4T9nIKrmQ0za8Fs/QkXcNOS/gB1wIJZfDFQaxw=;
+        b=NUecQHZ3IkeyD16Naef7ZaGgEeLuY5VXoi+u9DxfhKmzYjm21jH36a1ucl9QRzow0N
+         CvZmHfvhw9dyXdWLvS7amu+1llZXCMdu2JZ7wfzg3TGgRLz6EyQRqtUyBi4Q1WpK6ezZ
+         k9t6wecnzk7O8f8VERMFDM6Sqm/Au256B1UxlKFaK6tIOfXz+EUz91z22Tv8gqZcQR/C
+         4AscOLwy3irOIMC5Cx8W1Fcj86iNjHk0gutplRHYTxfrl8zEc5aDHCjLy51GdvCyEDSE
+         S7TdtpNhRMntZ5mtxxmnzzH7/S2Uu3lp2dxFmWh/ORK9W55SldPqIlg3TkD4FE+pP6MX
+         Xx3w==
+X-Gm-Message-State: APjAAAVafjyDw9UJED8RpQJ7IL2UmahkaQFH4hDyfTsFeoM52dzQZIW7
+        0wJg8klEzZ9vLXS+oaioH6A43QPZ
+X-Google-Smtp-Source: APXvYqyYOVuyJGcheKE6lebutv2vO1Q1g7X4vaGbCew/f8TJnvXKBtkx8qoTAWNpjTw/AY/O3Bn8hA==
+X-Received: by 2002:a2e:9e16:: with SMTP id e22mr12832375ljk.220.1575990178082;
+        Tue, 10 Dec 2019 07:02:58 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id i19sm2047375ljj.24.2019.12.10.07.02.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 07:02:57 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1ieh2Q-0007jT-Bt; Tue, 10 Dec 2019 16:02:58 +0100
+Date:   Tue, 10 Dec 2019 16:02:58 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org,
+        GregKroah-Hartman <gregkh@linuxfoundation.org>,
+        RobHerring <robh+dt@kernel.org>,
+        MarkRutland <mark.rutland@arm.com>,
+        AlanStern <stern@rowland.harvard.edu>,
+        SuwanKim <suwan.kim027@gmail.com>,
+        "GustavoA . R . Silva" <gustavo@embeddedor.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [PATCH v4 2/2] usb: overridable hub bInterval by device node
+Message-ID: <20191210150258.GR10631@localhost>
+References: <20191203101552.199339-1-ikjn@chromium.org>
+ <20191203165301.GH10631@localhost>
+ <CAATdQgCqYrd_aXN5GDsso+F3WadNx3DQKK3Efk3tgkrv2VXjyw@mail.gmail.com>
+ <20191204075533.GI10631@localhost>
+ <CAATdQgBcuJenS2VSm+y4Yhn5mWE1P0CGJQ3NRdoe68dd2SRPGg@mail.gmail.com>
+ <20191205142641.GL10631@localhost>
+ <CAATdQgBK4gWvR06YJ3Z_y5NeqLKYY7Ajc0KG78rG2deR3Ga11A@mail.gmail.com>
+ <20191206152604.GO10631@localhost>
+ <CAATdQgDAZ21bEXh+YFh+fCdBxnuRi-1_x0o_hpxW0Vj0zY-j8A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191101143126.2549-1-linux.amoon@gmail.com> <7hfthtrvvv.fsf@baylibre.com>
- <c89791de-0a46-3ce2-b3e2-3640c364cd0f@baylibre.com>
-In-Reply-To: <c89791de-0a46-3ce2-b3e2-3640c364cd0f@baylibre.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Tue, 10 Dec 2019 20:20:05 +0530
-Message-ID: <CANAwSgQx3LjQe60TGgKyk6B5BD5y1caS2tA+O+GFES7=qCFeKg@mail.gmail.com>
-Subject: Re: [RFC-next 0/1] Odroid C2: Enable DVFS for cpu
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAATdQgDAZ21bEXh+YFh+fCdBxnuRi-1_x0o_hpxW0Vj0zY-j8A@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Neil / Kevin,
-
-On Tue, 10 Dec 2019 at 14:13, Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 09/12/2019 23:12, Kevin Hilman wrote:
-> > Anand Moon <linux.amoon@gmail.com> writes:
+On Mon, Dec 09, 2019 at 12:05:53PM +0800, Ikjoon Jang wrote:
+> On Fri, Dec 6, 2019 at 11:25 PM Johan Hovold <johan@kernel.org> wrote:
 > >
-> >> Some how this patch got lost, so resend this again.
-> >>
-> >> [0] https://patchwork.kernel.org/patch/11136545/
-> >>
-> >> This patch enable DVFS on GXBB Odroid C2.
-> >>
-> >> DVFS has been tested by running the arm64 cpuburn
-> >> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
-> >> PM-QA testing
-> >> [2] https://git.linaro.org/power/pm-qa.git [cpufreq testcase]
-> >>
-> >> Tested on latest U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
+> > On Fri, Dec 06, 2019 at 11:57:30AM +0800, Ikjoon Jang wrote:
+> > > On Thu, Dec 5, 2019 at 10:26 PM Johan Hovold <johan@kernel.org> wrote:
+
+> > > > The fundamental problem here is that you're using devicetree, which is
+> > > > supposed to only describe the hardware, to encode policy which should be
+> > > > deferred to user space.
+> > >
+> > > The hub hardware has a default bInterval inside which is actually
+> > > adjustable. So I can think setting bInterval is to describe the hardware
+> > > rather than policy.
 > >
-> > Have you tested with the Harkernel u-boot?
-> >
-> > Last I remember, enabling CPUfreq will cause system hangs with the
-> > Hardkernel u-boot because of improperly enabled frequencies, so I'm not
-> > terribly inclined to merge this patch.
+> > No, the USB spec says bInterval is a maximum requested value and that
+> > the host is free to poll more often. And that's policy.
+> 
+> Honestly I'm a bit confused on the border line between hardware
+> and software definition. That's quite reasonable it's policy that software
+> can poll more often than hardware specified, but can we think it's just
+> overriding hardware property specifying maximum value from beginning?
+> Is it still policy? or 'overriding hardware property' part is already not
+> a hardware description? :-S
 
-HK u-boot have many issue with loading the kernel, with load address
-*it's really hard to build the kernel for HK u-boot*,
-to get the configuration correctly.
+The hardware is supposed to give you the upper limit, and then software
+is allowed to poll more often if it wants to and is able to do so.
 
-Well I have tested with mainline u-boot with latest ATF .
-I would prefer mainline u-boot for all the Amlogic SBC, since
-they sync with latest driver changes.
+In this case that decision depends partly on what is connected to the
+hub but also on how that device in turn has been configured,
+specifically, whether runtime PM has been enabled or not.
 
->
-> Same, since the bootloader boots with the max supported freq of the board,
-> there is not real need of DVFS except for specific low-power use-cases.
->
-> And still, some early boards still use the bad SCPI freq table, we can't break them.
->
-> Neil
->
-I will leave this to your expert domain knowledge if you want to
-enable this now.
+Someone who doesn't use the downstream device, or who prefers to never
+suspend it, may not be willing to pay the price for polling the hub more
+frequently, for example. 
 
-Here is output of on the latest kernel.
-*cpupower*
-#  cpupower frequency-info
-analyzing CPU 0:
-  driver: scpi-cpufreq
-  CPUs which run at the same hardware frequency: 0 1 2 3
-  CPUs which need to have their frequency coordinated by software: 0 1 2 3
-  maximum transition latency: 200 us
-  hardware limits: 100.0 MHz - 1.54 GHz
-  available frequency steps:  100.0 MHz, 250 MHz, 500 MHz, 1000 MHz,
-1.30 GHz, 1.54 GHz
-  available cpufreq governors: conservative ondemand userspace
-powersave performance schedutil
-  current policy: frequency should be within 100.0 MHz and 100.0 MHz.
-                  The governor "ondemand" may decide which speed to use
-                  within this range.
-  current CPU frequency: 100.0 MHz (asserted by call to hardware)
+So this ends up being very much a policy decision which should be left
+for user space.
 
-*powertop*
-# powertop
-            Package |            CPU 0
- 100 MHz    47.1%   |  100 MHz    41.5%
- 250 MHz     0.0%   |  250 MHz     0.0%
- 500 MHz     0.0%   |  500 MHz     0.0%
-1000 MHz     0.0%   | 1000 MHz     0.0%
-1296 MHz     0.0%   | 1296 MHz     0.0%
-1.54 GHz     0.0%   | 1.54 GHz     0.0%
-Idle        52.9%   | Idle        58.5%
+But if you can come up with a generic interface for this, it could be
+useful in other setups as well (non-DT, hot-pluggable, etc).
 
-> >
-> >> Patch based on my next-20191031 for 5.5.x kernel.
-> >> Hope this is not late entry.
-> >
-> > Re: "too late".  FYI... when you post things as RFC, it means you're
-> > looking for comments (Request For Comment) but that it's not intended
-> > for merging.
-
-Ok  thanks for this input.
-
-> >
-> > I didn't see any comments on this, but I also didn't see a non-RFC
-> > follow-up, so I didn't queue it for v5.5.
-No problem.
-> >
-> > Kevin
-> >
->
--Anand
+Johan
