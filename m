@@ -2,214 +2,137 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CCCC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 12:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7026C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 12:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5102020838
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 12:31:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QayVJLfz"
+	by mail.kernel.org (Postfix) with ESMTP id BCBB82077B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 12:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbfLJMbT (ORCPT
+        id S1727211AbfLJMl6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:31:19 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:33095 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727211AbfLJMbS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 07:31:18 -0500
-Received: by mail-ua1-f68.google.com with SMTP id v19so6360028uap.0
-        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 04:31:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Cu4xcLC6fx43ALyB2PH7P6iHLVvlsMlK6QGD81ONfJA=;
-        b=QayVJLfzwhxAFLgXNRzLMZdJ0IvLzxp4+fLYkgsafsn6S05wJNPxe1W2fAZYyUBGR8
-         BcCeWqYv6slEWraMiYfCcPv4pF0tfY9IyHA+7AWdiyjqH31IZzLc5y/xNthjj+0mqejq
-         /gjucQhq10JYIm5v0/LMFDew4Ilc+OXTn08xJPNEu664cWU63FxtQ7yCvrJrZZa8xDGP
-         W9EiAP+c5SMOv4CIfQw/j0wZDvKbWs+qtoigdrFb6GjKOwnzrUG6gxYkrj4TJEB4DeJS
-         YgnZ+BySLGuychJ02elTMZf7LBTg/2mNw+VpOcdbROX8BTpOTFbTDzDl1jY4Q1isKofp
-         L0Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Cu4xcLC6fx43ALyB2PH7P6iHLVvlsMlK6QGD81ONfJA=;
-        b=A0hvumZFD1Zd3mgrikZXGScyd5YfpRL0XyvKJ1gBCgszdr+IlotwZci7cb5WDND759
-         EtUJSMsEQGsJ/+gc9wZi+avv/iAzMCobjlB/WGqJH21amYrgM8v8Hpxgi4SP0k3MlO7J
-         CVYwOpvJWpAwCsKEtoGzW7G8bgIDe9F/9Xwzids4YMcy5cYTIRJha6LrBpV43UKhh5Ze
-         5vRGs4WulL+HgMkG9xz+6xyrEGx1I6SyP4/5JBicJFtJc4O0Ut0pGwhQeG+Ed9tQB3my
-         1OwWoy/vTRSZBnznOZq560PiT/XCyKRjUme9bcUxFc/1j/Zf4UjaC9emsujawfwwghJ8
-         wGcA==
-X-Gm-Message-State: APjAAAUuOtAIEV9avzR0VBDZH5OrBccGhJNxmY/VqLiK40ITH+auL3DI
-        x2Gh/yT3wNLfhnPcp5oL4CCa3XRt1mVQ6TlLkp9NbQ==
-X-Google-Smtp-Source: APXvYqyrTM1DC8Fmp+/CAB2noSeEwqc06KeL4uYpQ1xlDaNR2EbcD+cNIjYR1xbMle/tNoYu8/S+qEj9nJ91/lu54KE=
-X-Received: by 2002:ab0:2759:: with SMTP id c25mr3460125uap.104.1575981077116;
- Tue, 10 Dec 2019 04:31:17 -0800 (PST)
+        Tue, 10 Dec 2019 07:41:58 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:55286 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbfLJMl6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 07:41:58 -0500
+X-AuditID: c0a8fbf4-199ff70000001fa6-b0-5def92928a3f
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 72.EB.08102.2929FED5; Tue, 10 Dec 2019 13:41:54 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Tue, 10 Dec 2019 13:41:49 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "corbet@lwn.net" <corbet@lwn.net>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "hofrat@osadl.org" <hofrat@osadl.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Thread-Topic: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Thread-Index: AQHVndzxthsd4Y8wKkm7W/92Uslk+KeRDPcAgAAbkICAAZUNgIAACqYAgAAMmACADvFigIAASP2AgBE6YYCAAA/YgIAACHeA
+Date:   Tue, 10 Dec 2019 12:41:47 +0000
+Message-ID: <557a4c5993a6fb16710342438f74f92bdfb40ec0.camel@fi.rohmeurope.com>
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+         <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+         <20191118162502.GJ9761@sirena.org.uk>
+         <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
+         <20191119181325.GD3634@sirena.org.uk>
+         <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
+         <20191119193636.GH3634@sirena.org.uk>
+         <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
+         <20191129120925.GA5747@sirena.org.uk>
+         <ccc533df4e00bdcbe18ea45a0e0679161ff41354.camel@fi.rohmeurope.com>
+         <20191210121129.GA6110@sirena.org.uk>
+In-Reply-To: <20191210121129.GA6110@sirena.org.uk>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AB9C9F4EC100FC4ABA3424286CA79A0F@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191113172514.19052-1-ludovic.Barre@st.com>
-In-Reply-To: <20191113172514.19052-1-ludovic.Barre@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 10 Dec 2019 13:30:41 +0100
-Message-ID: <CAPDyKFrZxOCkw9U05UZPRSGz2CqmhOq944z8MEVox8Y_UEYC4A@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mmc: mmci: add threaded irq to abort DPSM of
- non-functional state
-To:     Ludovic Barre <ludovic.Barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta0xbVRzPuW8eVy+ls0emU26yTDf30mlOlmn44LI7YtS5ZIkmyC5woY20
+        JbcFB35hzg3aMQRkmTQ8Nh4bYWhdR/eEBQsIVkUbCmOuDLHNIptpIwILG9u8d9cNPp1f/r/X
+        Ocn/MLjuFJ3CmCx2SbaI+TwVT/S23zuzvqYmlrHJf38rag2M0qgsepJGsw1+Ah2dilAo0lsG
+        UFP/MIkO/9RFoubY1yRyOMpJdN37HYGGzk4CNDk3ANB8sBxDtYunMPRPxQ0SnTjUSqCzTYsA
+        jVyqp5D3728B+uF0kELf9E/QqO1qAEP1bUMEis04MBTwb0cT/gEKHQiM4+hgTz+NHoydIVDl
+        8I60VUJnYycQYuMHaaGx8zPhomuCFlq6pzHB0+GghNBYNyW0VH5FCn9V9BHC/M/VhFDZ1QGE
+        myfchDA4fh4TjjUuYEL76Tu08K9n1fvcRwnbskR70W5TnmXjW3sTjDO3rxAFVbp91QeOUKUg
+        mOQEcQzktsCKaBSoWMeNAtgYeMUJ4hU8BGDdeDnmBAxDcdug8xqtavTcenj0bgulYpyrS4S+
+        vgQVJ3N7YdftMKFpRHh8/h6mYQu8PvkbocYQ3Go4H3lPHbPcu9D5RRhoVeUkDPQNP/LGca/C
+        shv7cRUD7nnoKI1iWpcBem7eIbU7c7C1+1dcwyvgdPjB/3Me9ixMPerCuZeh+9JGDaZB/93X
+        tJRUWHt4itaukAR/rIsQVeAZ17IC15LZtWR2LTO7lpmPA7IDQLNoys8T7dLmDbJUuEG2Gs3K
+        kW01e4C2eLMXwEPfTh/AGOADzzIYv4KNlMQydE9lWXOKjaLNmCkX5ks2H4AMzuvZwUPRDB2b
+        IxaXSLL1MbWSIXgDu2aqOkPHqV2fSFKBJD9mn2MYHrJjVUpokizlSftyTfn2JRpj4tTw+BS9
+        TbLkSLJYaDdmqruRaVOWQ6USld7Lqp21FYhmZapZ/WAdUzXd0Iwz/Q1tzbiOsFgtUoqBDatS
+        TpUaCy1Pim4BAwP4ZHZrtcImKr/vSc4tpQJTKhw56tNsdnGJSikFnvum7aO/z3T/kVbyy5qB
+        Gv2mN0vr9c1NPQ+vxc4tmLzZu15a+frIyd5UR43nyNN7ikO7PmS+dLvNQXfHMcOLn/POc2KU
+        DONlL+yk/pwbFCqycj81zaUWLRYlpX+8J3f2KrYl7+30zvPBsUj7SGj/lXfSk0Pfez/IpkLw
+        jYveHfZaE0/YjOLmtbhsE/8DnRHE3joEAAA=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 13 Nov 2019 at 18:25, Ludovic Barre <ludovic.Barre@st.com> wrote:
->
-> From: Ludovic Barre <ludovic.barre@st.com>
->
-> If datatimeout occurs on R1B request, the Data Path State Machine stays
-> in busy and is non-functional. Only a reset aborts the DPSM.
->
-> Like a reset must be outside of critical section, this patch adds
-> threaded irq function to release state machine. In this case,
-> the mmc_request_done is called at the end of threaded irq and
-> skipped into irq handler.
->
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  drivers/mmc/host/mmci.c | 44 ++++++++++++++++++++++++++++++++++++-----
->  drivers/mmc/host/mmci.h |  1 +
->  2 files changed, 40 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> index 40e72c30ea84..ec6e249c87ca 100644
-> --- a/drivers/mmc/host/mmci.c
-> +++ b/drivers/mmc/host/mmci.c
-> @@ -556,6 +556,9 @@ static void mmci_dma_error(struct mmci_host *host)
->  static void
->  mmci_request_end(struct mmci_host *host, struct mmc_request *mrq)
->  {
-> +       if (host->irq_action == IRQ_WAKE_THREAD)
-> +               return;
-> +
-
-It seems a bit unnecessary to check this every time mmci_request_end()
-is called.
-
-How about avoiding to call mmci_request_end() for the one specific
-condition instead? See more below.
-
->         writel(0, host->base + MMCICOMMAND);
->
->         BUG_ON(host->data);
-> @@ -1321,6 +1324,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->         } else if (host->variant->busy_timeout && busy_resp &&
->                    status & MCI_DATATIMEOUT) {
->                 cmd->error = -ETIMEDOUT;
-> +               host->irq_action = IRQ_WAKE_THREAD;
-
-You could check this flag a few lines below and if it's set to
-IRQ_WAKE_THREAD, avoid to call mmci_request_end().
-
->         } else {
->                 cmd->resp[0] = readl(base + MMCIRESPONSE0);
->                 cmd->resp[1] = readl(base + MMCIRESPONSE1);
-> @@ -1532,9 +1536,9 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->  {
->         struct mmci_host *host = dev_id;
->         u32 status;
-> -       int ret = 0;
->
->         spin_lock(&host->lock);
-> +       host->irq_action = IRQ_HANDLED;
->
->         do {
->                 status = readl(host->base + MMCISTATUS);
-> @@ -1574,12 +1578,41 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->                 if (host->variant->busy_detect_flag)
->                         status &= ~host->variant->busy_detect_flag;
->
-> -               ret = 1;
->         } while (status);
->
->         spin_unlock(&host->lock);
->
-> -       return IRQ_RETVAL(ret);
-> +       return host->irq_action;
-> +}
-> +
-> +/*
-> + * mmci_irq_threaded is call if the mmci host need to release state machines
-> + * before to terminate the request.
-> + * If datatimeout occurs on R1B request, the Data Path State Machine stays
-> + * in busy and is non-functional. Only a reset can to abort the DPSM.
-> + */
-> +static irqreturn_t mmci_irq_threaded(int irq, void *dev_id)
-> +{
-> +       struct mmci_host *host = dev_id;
-> +       unsigned long flags;
-> +
-> +       if (host->rst) {
-> +               reset_control_assert(host->rst);
-> +               udelay(2);
-> +               reset_control_deassert(host->rst);
-> +       }
-> +
-> +       spin_lock_irqsave(&host->lock, flags);
-> +       writel(host->clk_reg, host->base + MMCICLOCK);
-> +       writel(host->pwr_reg, host->base + MMCIPOWER);
-> +       writel(MCI_IRQENABLE | host->variant->start_err,
-> +              host->base + MMCIMASK0);
-> +
-> +       host->irq_action = IRQ_HANDLED;
-> +       mmci_request_end(host, host->mrq);
-> +       spin_unlock_irqrestore(&host->lock, flags);
-> +
-> +       return host->irq_action;
->  }
->
->  static void mmci_request(struct mmc_host *mmc, struct mmc_request *mrq)
-> @@ -2071,8 +2104,9 @@ static int mmci_probe(struct amba_device *dev,
->                         goto clk_disable;
->         }
->
-> -       ret = devm_request_irq(&dev->dev, dev->irq[0], mmci_irq, IRQF_SHARED,
-> -                       DRIVER_NAME " (cmd)", host);
-> +       ret = devm_request_threaded_irq(&dev->dev, dev->irq[0], mmci_irq,
-> +                                       mmci_irq_threaded, IRQF_SHARED,
-> +                                       DRIVER_NAME " (cmd)", host);
->         if (ret)
->                 goto clk_disable;
->
-> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-> index 158e1231aa23..5e63c0596364 100644
-> --- a/drivers/mmc/host/mmci.h
-> +++ b/drivers/mmc/host/mmci.h
-> @@ -412,6 +412,7 @@ struct mmci_host {
->
->         struct timer_list       timer;
->         unsigned int            oldstat;
-> +       u32                     irq_action;
->
->         /* pio stuff */
->         struct sg_mapping_iter  sg_miter;
-> --
-> 2.17.1
->
-
-Otherwise this looks good, besides my other earlier comments, of course.
-
-Kind regards
-Uffe
+SGVsbG8gTWFyaywNCg0KT24gVHVlLCAyMDE5LTEyLTEwIGF0IDEyOjExICswMDAwLCBNYXJrIEJy
+b3duIHdyb3RlOg0KPiBPbiBUdWUsIERlYyAxMCwgMjAxOSBhdCAxMToxNDo0OEFNICswMDAwLCBW
+YWl0dGluZW4sIE1hdHRpIHdyb3RlOg0KPiANCj4gPiBQcm9ibGVtIGlzIHRoYXQgaWYgbm8gZGVm
+YXVsdCB2b2x0YWdlcyBhcmUgZ2l2ZW4gZnJvbSBEVCwgdGhlIHRoZQ0KPiA+IGZpcnN0DQo+ID4g
+dm9sdGFnZSBjaGFuZ2VzIGFyZSBsaWtlbHkgdG8gYmUgc2xvdyAocmVxdWlyZSByZWdpc3RlciBh
+Y2Nlc3MgLSBJDQo+ID4gZ3Vlc3MgdGhlIEhXIGRlZmF1bHRzIGFyZSBub3Qgd29ya2luZyBmb3Ig
+bWFueSB1c2UtY2FzZXMpIC0gd2hpY2gNCj4gPiBtYXkNCj4gPiBiZSB1bmRlc2lyYWJsZS4NCj4g
+DQo+IEkgZG9uJ3QgdGhpbmsgdGhhdCdzIGxpa2VseSB0byBiZSBhIHByYWN0aWNhbCBwcm9ibGVt
+LCBhbmQgaXQncyBub3QNCj4gbGlrZWx5IGl0J2QgYmUgd29yc2UgdGhhbiBhbHdheXMgZG9pbmcg
+d3JpdGVzLiAgQSBsb3Qgb2YgdGhpbmdzIGFyZQ0KPiBzbG93ZXIgdGhlIGZpcnN0IHRpbWUgeW91
+IGRvIHRoZW0gYW5kIHlvdSdyZSBzdGlsbCBnb2luZyB0byBoYXZlIHRvDQo+IGRvIHRoZSB3cml0
+ZXMgbm8gbWF0dGVyIHdoYXQuDQoNClRoZSB0aGluZyBpcyB0aGF0IGlmIHdlIGRvIGluaXRpYWwg
+c2V0dGluZyBvZiB2b2x0YWdlcyAoYmFzZWQgb24NCmJpbmRpbmcgZGF0YSkgd2UgY2FuIHNldCB0
+aGUgdm9sdGFnZXMgdG8gcmVnaXN0ZXJzIGJlZm9yZSB3ZSBzd2l0Y2ggdG8NCnRoYXQgcnVuLWxl
+dmVsLiBJZiB3ZSBkb24ndCBkbyBpbml0aWFsIHNldHRpbmcgdGhlbiB3ZSB3aWxsIG9ubHkgZG8N
+CnNldHRpbmcgd2hlbiB2b2x0YWdlIGNoYW5nZSBpcyBhY3R1YWxseSByZXF1ZXN0ZWQgLSB3aGlj
+aCBtYXkgYmUgdG9vDQpsYXRlLiAoSSBhY3R1YWxseSBoZWFyZCBzb21ld2hlcmUgdGhhdCB0aGVy
+ZSBpcyA0MCB1UyB0aW1lIGxpbWl0IC0gYnV0DQpJIGRvbid0IHNlZSBob3cgdGhpcyBpcyBjb3Vu
+dGVkLiBTdGFydGluZyBmcm9tIHdoYXQ/IC0gYW5kIEkgZG9uJ3Qgc2VlDQpob3cgdGhpcyBpcyBn
+dWFyYW50ZWVkIGV2ZW4gd2l0aCBHUElPIGlmIGludGVycnVwdHMgYXJlIHRvIGJlIHNlcnZlZCku
+DQoNCk9UT0gsIEkgYWxzbyBoZWFyZCB0aGF0IHRoZSBTb0MgcHJvYmFibHkgcmVxdWlyZSBhdCBs
+ZWFzdCB0d28gb2YgdGhlDQpidWNrcyB0byBiZSBjb250cm9sbGVkIGFzIGEgZ3JvdXAgKGJ1Y2tz
+IGNvbm5lY3RlZCB0byBTUkFNIGFuZCBDT1JFKSAtDQpwcm9iYWJseSBhbGwgZm91ci4NCg0KU28s
+IEkgYW0gYWdhaW4gd29uZGVyaW5nIGlmIEkgc2hvdWxkIGp1c3QgdXBzdHJlYW0gdGhlIGJhc2lj
+IGNvbnRyb2wNCndpdGggSTJDIGZvciBTb0NzIHdoaWNoIGRvIG5vdCByZXF1aXJlIGZhc3QgRFZT
+IHZvbHRhZ2UgY2hhbmdlcyBhbmQNCnBlcmhhcHMgbWFpbnRhaW4vcHJvdmlkZSBvd24gc2V0IG9m
+IHBhdGNoZXMgd2l0aCBhZGRpdGlvbmFsIGludGVyZmFjZQ0KZm9yIHJ1bi1sZXZlbCBjb250cm9s
+IGZvciB0aG9zZSBjdXN0b21lcnMgd2hvIHJlcXVpcmUgaXQuLi4gU29ycnkgZm9yDQpiZWluZyBz
+dWNoIGEgZGlmZmljdWx0IGd1eS4gRGVjaXNpb24gbWFraW5nIHNlZW1zIHRvIG5vdCBiZSBteSBz
+dHJvbmcNCnBvaW50IDovDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0K
