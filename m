@@ -2,205 +2,135 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20019C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65528C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC03A207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF3720637
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:24:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FwUBWi9X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGUEOSg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfLJSPs (ORCPT
+        id S1727645AbfLJSYs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 13:15:48 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:32913 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727702AbfLJSPs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 13:15:48 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 6so9288371pgk.0
-        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 10:15:47 -0800 (PST)
+        Tue, 10 Dec 2019 13:24:48 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43311 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727637AbfLJSYs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 13:24:48 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 9so14509989lfq.10;
+        Tue, 10 Dec 2019 10:24:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=kfLit8LCSQ20powxSKYWCP8N8M+8XWObHNOV3Cp5ZFE=;
-        b=FwUBWi9X6lnjaJWijeU8P6xQR2Yp703scW9SLcH8NgPLyKR/nUa8y4eOqMcVaRTSk4
-         tcvmrhzkqYkS8gpG+GVfApk07EkDCKXveshyGFCdzPWWOsUOOu5tV3DS3LXnxD3QRB+m
-         bZrv45p67LNVj/kJTeKbtMT3wdS3ewyDaRbSiw+weCRaMrSD2ttdqr1VKNOnHk0ewkTL
-         NsDbcRNLkRIk8bPKhl3CylU/tCFIocywzPTKj/ZlQBT0Tl6XHmo6DECLYUYfUHKvAkai
-         u1igvJdm9ZujDZNoRpz0k6oiOYkjyr/mxpOEQr/iw0EFosNHKmcKqsLwNrwSMw0hWN6M
-         hIgg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=J3Fx8Ozru3AuGWOjWvc6Qigb/OUj/LedRTw55RBNbbg=;
+        b=aGUEOSg85AsreT39QBDzBQYeDUNVNG8qxblS0lqPAOh/mvDWQmp+aYHdObab0Ywr6/
+         1D/erTOfgbnefovIimaS5RxuhRJzRjZAzlWjw+3mBPmcQTd3cYE2mBsLarWUoVtX7VYk
+         oT+kg9iQJ6uc+Cxr22Q7UnhkUxJfa576lHzRkcvAz+SzCjgx3b657NXs3xUVmfkE4IXQ
+         +OmlBtcQ2A/XCmuzcQIKUq2k08SSI4a+CsQhJbgXsRpIErzjxtkzDQQX3pQSEaVaDuJs
+         aJeWxBsqMyv+4hceKG1UHxRONlmh9VgsaJS7tWPIZJuR1h3F3dx7ySRJQCm1E0wNvqH0
+         amvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=kfLit8LCSQ20powxSKYWCP8N8M+8XWObHNOV3Cp5ZFE=;
-        b=NPsrVfSFQhQ5OkIa87JDsM5Z23rn2CElVftKfGDyhPOLuFEsLx2TGqQjRKJaX25e3W
-         AInOo/o53fSDJYh3l/zOoP0FSFWk+OBTkpaKBCDoyyFogkZ1oyyYvMC661pOKzuGwBJ0
-         0GhAY5w5gfXBanF1DdQCJ/501OZNTYtVz5PFqPDM7dEeyvskhaBScxq6KGuUYsvdXVzU
-         UiLvWZkxtfJaBXkg4BhF9p4Z7mL6TvSX02cpwSp/z9Lu0jzdTXAheSiNvDxXy/ZiloTq
-         +6Eqz0kK/vfkPKK37HJlH6+p+2sL9dq/cxl3AbrTOLwCle40LZrRcRsLOZYOqgAj/XZ9
-         wyVg==
-X-Gm-Message-State: APjAAAX1wIErp22ADEml5ZXaFjxPxaHIh1aoCRt9SMWtWZcj2EhaIc1B
-        u2cDuXk5a0Vyio3CyrhLJsZg1NwF5aIjIg==
-X-Google-Smtp-Source: APXvYqwpRGFP81NCx9NWPduL64oaXvGdMHqxm0bX+hBAxyEfO2ttMxw7y0Q9JTow9L1V6Lb4JcuPPw==
-X-Received: by 2002:aa7:9197:: with SMTP id x23mr37703857pfa.163.1576001747315;
-        Tue, 10 Dec 2019 10:15:47 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id 17sm4363066pfv.142.2019.12.10.10.15.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 10 Dec 2019 10:15:46 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jian Hu <jian.hu@amlogic.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: meson-a1: add I2C nodes
-In-Reply-To: <e90e00e1-c868-ce09-6f79-deb62da72b43@amlogic.com>
-References: <20191202111253.94872-1-jian.hu@amlogic.com> <7hsgltqfdx.fsf@baylibre.com> <e90e00e1-c868-ce09-6f79-deb62da72b43@amlogic.com>
-Date:   Tue, 10 Dec 2019 10:15:45 -0800
-Message-ID: <7hblsgqc6m.fsf@baylibre.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=J3Fx8Ozru3AuGWOjWvc6Qigb/OUj/LedRTw55RBNbbg=;
+        b=q8h2vAdskh7ZhZi57zvQZUQO5oofGECf/dxuguTPNCmk6z+AxWDysA+xOwIq3QVaei
+         YC4Yr4VgwpwjmtoowwGn5emQaiczC8md1x+uDiWPJSdQ9BGKZe4Yt3sS2Tma/8ej+84W
+         gAsPMM93BPVrckbMZzOAvQU59J1orAhdGPwUSV9hZWMMocfOcHwMT3ZUPdm+2nm9osUN
+         tMBflmlL1Ccii6X9xPVFki8bQ2yGPedK7U6Et5d8NrqcypgaxOiXtGG/+HhH2LymEpXR
+         ZEx6mir8fzG4s6cAk8iyBEySSoqVWxMGD+zOCLZeArtgAvGu8UGAGIfjxKLFiWpRGpHM
+         blhQ==
+X-Gm-Message-State: APjAAAV0ttT/w6z3uwq4axt55goUyxAMRKAngBSsudicHRFNK7+0Imrx
+        7I24dKXOYK9ht9hD28sPxOk=
+X-Google-Smtp-Source: APXvYqxF07iQXmiNXjFleXUWs9rwRg1kwAjgSyuguUjGbybN4u6GkAQPSegzeXZQNvdtozsIzp8rUg==
+X-Received: by 2002:a19:4a12:: with SMTP id x18mr16433639lfa.158.1576002286171;
+        Tue, 10 Dec 2019 10:24:46 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id b17sm1999915lfp.15.2019.12.10.10.24.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2019 10:24:45 -0800 (PST)
+Subject: Re: [PATCH v3 09/15] ASoC: tegra: Add fallback for audio mclk
+To:     Mark Brown <broonie@kernel.org>, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, tglx@linutronix.de, allison@lohutok.net,
+        pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        mturquette@baylibre.com, horms+renesas@verge.net.au,
+        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
+        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
+        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
+        markz@nvidia.com, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, alexios.zavras@intel.com,
+        alsa-devel@alsa-project.org
+References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
+ <1575600535-26877-10-git-send-email-skomatineni@nvidia.com>
+ <20191209164027.GG5483@sirena.org.uk>
+ <7fe879fd-dae3-1e64-1031-cd9f00e31552@gmail.com>
+ <20191209204735.GK5483@sirena.org.uk>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <560185d9-32fd-a85e-5feb-105f79b953c6@gmail.com>
+Date:   Tue, 10 Dec 2019 21:24:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191209204735.GK5483@sirena.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Jian Hu <jian.hu@amlogic.com> writes:
+09.12.2019 23:47, Mark Brown пишет:
+> On Mon, Dec 09, 2019 at 11:31:59PM +0300, Dmitry Osipenko wrote:
+>> 09.12.2019 19:40, Mark Brown пишет:
+> 
+>>> Why would this need to be a stable fix?  Presumably people with stable
+>>> kernels are using the old device tree anyway?
+> 
+>> At least Rob Herring is asking to maintain backwards compatibility
+>> because some ditros are using newer device-trees with stable kernels.
+> 
+> You're talking about forwards compatibility not backwards here.  Are
+> those distros actually using LTS kernels?
 
-> Hi Kevin
->
-> Thanks for your review
->
-> On 2019/12/10 6:54, Kevin Hilman wrote:
->> Hi Jian,
->> 
->> Jian Hu <jian.hu@amlogic.com> writes:
->> 
->>> There are four I2C controllers in A1 series,
->>> Share the same comptible with AXG.The I2C nodes
->>> depend on pinmux and clock controller.
->>>
->>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->>> ---
->>>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 149 ++++++++++++++++++++++
->>>   1 file changed, 149 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->>> index eab2ecd36aa8..d0a73d953f5e 100644
->>> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->>> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->>> @@ -16,6 +16,13 @@
->>>   	#address-cells = <2>;
->>>   	#size-cells = <2>;
->>>   
->>> +	aliases {
->>> +		i2c0 = &i2c0;
->>> +		i2c1 = &i2c1;
->>> +		i2c2 = &i2c2;
->>> +		i2c3 = &i2c3;
->>> +	};
->>> +
->>>   	cpus {
->>>   		#address-cells = <2>;
->>>   		#size-cells = <0>;
->>> @@ -117,6 +124,46 @@
->>>   				};
->>>   			};
->>>   
->>> +			i2c0: i2c@1400 {
->>> +				compatible = "amlogic,meson-axg-i2c";
->>> +				reg = <0x0 0x1400 0x0 0x24>;
->> 
->> The AXG DT files use 0x20 for the length.  You are using 0x24.  I don't
->> see any additional registers added to the driver, so this doesn't look right.
-> In fact, For G12 series and A1, the length should be 0x24. A new 
-> register is added, And it is for IRQ handler timeout. If the 
-> transmission is exceeding a limited time, it will abort the 
-> transmission.Now the function is not used, There is completion to deal 
-> the timeout in the driver. I will set the length 0x20 becouse of the new 
-> register is not used.
+I think openSUSE Leap could be one of those distros that use LTS kernel
+with newer device-trees, but that's not 100%. Maybe Rob could help
+clarifying that.
 
-Yes, we can extend it to 0x24 when support for the new register is
-added, because that will mean adding a new compatible string also.
+>> I'm personally also tending to use the newer DTB with older kernel
+>> version whenever there is a need to check something using stable kernel.
+>> Perhaps losing sound is not very important, but will be nicer if that
+>> doesn't happen.
+> 
+> That really does sound like a "you broke it, you get all the pieces"
+> situation TBH...  I'd be a lot more comfortable if the stable kernels
+> were sticking to bugfix only though I do appreciate that they're not
+> really that any more.
 
->> 
->>> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
->>> +				#address-cells = <1>;
->>> +				#size-cells = <0>;
->>> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
->>> +				status = "disabled";
->>> +			};
->>> +
->>> +			i2c1: i2c@5c00 {
->>> +				compatible = "amlogic,meson-axg-i2c";
->>> +				reg = <0x0 0x5c00 0x0 0x24>;
->>> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
->>> +				#address-cells = <1>;
->>> +				#size-cells = <0>;
->>> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
->>> +				status = "disabled";
->>> +			};
->>> +
->>> +			i2c2: i2c@6800 {
->>> +				compatible = "amlogic,meson-axg-i2c";
->>> +				reg = <0x0 0x6800 0x0 0x24>;
->>> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
->>> +				#address-cells = <1>;
->>> +				#size-cells = <0>;
->>> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
->>> +				status = "disabled";
->>> +			};
->>> +
->>> +			i2c3: i2c@6c00 {
->>> +				compatible = "amlogic,meson-axg-i2c";
->>> +				reg = <0x0 0x6c00 0x0 0x24>;
->>> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
->>> +				#address-cells = <1>;
->>> +				#size-cells = <0>;
->>> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
->>> +				status = "disabled";
->>> +			};
->>> +
->>>   			uart_AO: serial@1c00 {
->>>   				compatible = "amlogic,meson-gx-uart",
->>>   					     "amlogic,meson-ao-uart";
->>> @@ -171,3 +218,105 @@
->>>   		#clock-cells = <0>;
->>>   	};
->>>   };
->>> +
->>> +&periphs_pinctrl {
->>> +	i2c0_f11_pins:i2c0-f11 {
->>> +		mux {
->>> +			groups = "i2c0_sck_f11",
->>> +				"i2c0_sda_f12";
->>> +			function = "i2c0";
->>> +			bias-pull-up;
->>> +			drive-strength-microamp = <3000>;
->> 
->> Can you also add some comment to the changelog about the need for
->> drive-strength compared to AXG.
->
-> OK, Drive strength function is added for GPIO pins from G12 series.
-> So does A1 series.
+In some cases it could be painful to maintain device-tree compatibility
+for platforms like NVIDIA Tegra SoCs because hardware wasn't modeled
+correctly from the start.
 
-Yes, that's what I assumed.  Please add that to the changelog as one of
-the new features in A1 compared to AXG.
+I agree that people should use relevant device-trees. It's quite a lot
+of hassle to care about compatibility for platforms that are permanently
+in a development state. It could be more reasonable to go through the
+pain if kernel required a full-featured device tree for every SoC from
+the start.
 
-Thanks,
-
-Kevin
+But maybe Tegra / device-tree maintainers have a different opinion.
+IIUC, device-trees are meant to be stable and software-agnostic, at
+least that was the case not so long time ago and I don't think that this
+premise changed.
