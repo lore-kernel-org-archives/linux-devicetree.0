@@ -2,67 +2,128 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1359FC2D0BE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 06:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0720DC2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 06:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDE9A208C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 06:06:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575957973;
-	bh=7jrlVMx0ZzN8zh1j+zKOid+hTzkpiUjgtIFq4JSpg6I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XedcEUHRK6K27R2pMGPWhXzve9vNW6J1kAT5xlULXnpCzOSDjMhjTGsauIqyAAcfc
-	 Imszy3lMZ3Z7yZ+7VdovmzwkLcjSER0YUrKMdk35xDrgqxM6oXE3fWT44uXoyUh8Eq
-	 gxQZEYPnjp/i4kqNjei0P3864gaVDIlt3OYS2wUs=
+	by mail.kernel.org (Postfix) with ESMTP id CFF6D206E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 06:43:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rKWS+sYV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbfLJGGN (ORCPT
+        id S1726917AbfLJGnX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 01:06:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfLJGGN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 01:06:13 -0500
-Received: from localhost (unknown [106.201.45.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B48E20652;
-        Tue, 10 Dec 2019 06:06:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575957972;
-        bh=7jrlVMx0ZzN8zh1j+zKOid+hTzkpiUjgtIFq4JSpg6I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ucQdf7FkoTg2736i3S9t5VD2PhKieI8Q8tXbvLnZ6AyrjXkUoVI/BQxM030+TQzSh
-         NsiMdS5s90672ZogBXyNWkVA7C3Th101EqPWnUkbffMw+Ys7QJz3qJHJx/LkZzu7ps
-         HAqM2s16ENGnXa/U3nL5678vjZABI7nvYINhU9Ck=
-Date:   Tue, 10 Dec 2019 11:36:08 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: dmaengine: rcar-dmac: Document r8a77961
+        Tue, 10 Dec 2019 01:43:23 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:44048 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727139AbfLJGnW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 01:43:22 -0500
+Received: by mail-pj1-f65.google.com with SMTP id w5so6978376pjh.11
+        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 22:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BEsOQpnU2Fph1cy4J7fXWqX+qA8/k32HrrzkPViDr9g=;
+        b=rKWS+sYVsja9k0hTYRx7AD3FmdiYxmyDQegsZbxb9XSsVmjse2VRHmD+zciVbY9xfd
+         Df1mS1W9/8ZsA4GVQIWMK851Wpq/RDC1D7KDrTFZD7tNqf0pzshtKjLPJfHkL3c5Fs+z
+         PUsrAKqyP1GkR+Vh2SA8as16BNtsRfBKNmqdp/t3/i2dbbVGTQqsYIpsYfHxDrMiX+L0
+         zTE4tXxRLhskmHL/IrAXD3zA8kxQ/IsiTVimAe7BYhO6yxeMPhXSOwmdvgnsu2dJo0pD
+         6yfz739bpjiHyJe9zckZeSWxbYYVdFEDPIPWjJjYRZ+GRkTFoainVrKadvRc5Lx22kxI
+         4uwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BEsOQpnU2Fph1cy4J7fXWqX+qA8/k32HrrzkPViDr9g=;
+        b=gO7lLR8jkR12A+f7BzeDHTZx7+qabeQe0z7F6438TPsZCnl0aeWfGRym4wchED6iLy
+         Do2LCYh9EXy5XxUmQ2DpHyXfim+jBx30oWagC1rnbzKxAX/ePKNjL7JYd55HY5WmiQPw
+         6sJxS121hWgbtbVKWQOwGPzyGw8Ii5600rglZQl4oIK5mQOd5xLzwHWSwJVXKJGv1RcR
+         0q6HrLJSGXiJgLViizuI3J2jCLKJtG2OdVOprdSJlsw1cNawLguAhIWyZ3Hv4To5pYEA
+         jAXv0WmgEgjoSbWdcIXj1t+CU5MIHAgJXbni9sDcoPsBMPg/1hKY+xPUxEZN+Q1CCD83
+         Gf/g==
+X-Gm-Message-State: APjAAAXeaOqMJzCBMfGRANpZOwI0hpstWrqdkqsAWkTTUjX44+tiMrf3
+        teLtsF02Jx/bNBo1B9IRjtDIUg==
+X-Google-Smtp-Source: APXvYqwmAHfbEzPNm/4WgwvG4FJ85rMoFfIuvn1FMXhgED7o/6LqgNh4zD7c3ekP+QYYweyaLz2cHQ==
+X-Received: by 2002:a17:902:6b49:: with SMTP id g9mr34119958plt.156.1575960201667;
+        Mon, 09 Dec 2019 22:43:21 -0800 (PST)
+Received: from localhost ([122.171.112.123])
+        by smtp.gmail.com with ESMTPSA id s7sm1509431pjk.22.2019.12.09.22.43.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Dec 2019 22:43:20 -0800 (PST)
+Date:   Tue, 10 Dec 2019 12:13:19 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "andrew-sh.cheng" <andrew-sh.cheng@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>,
+        srv_heupstream@mediatek.com, linux-pm@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        fan.chen@mediatek.com, devicetree@vger.kernel.org
+Subject: Re: [v5, PATCH 4/5] cpufreq: mediatek: add opp notification for SVS
  support
-Message-ID: <20191210060608.GR82508@vkoul-mobl>
-References: <20191205133736.5934-1-geert+renesas@glider.be>
+Message-ID: <20191210064319.f4ksrxozp3gv4xry@vireshk-i7>
+References: <1574769046-28449-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1574769046-28449-5-git-send-email-andrew-sh.cheng@mediatek.com>
+ <20191127083619.etocnhpyyut3hzwq@vireshk-i7>
+ <1575874588.13494.4.camel@mtksdaap41>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191205133736.5934-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1575874588.13494.4.camel@mtksdaap41>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 05-12-19, 14:37, Geert Uytterhoeven wrote:
-> Document support for the system DMA controller in the Renesas R-Car
-> M3-W+ (R8A77961) SoC.
+On 09-12-19, 14:56, andrew-sh.cheng wrote:
+> On Wed, 2019-11-27 at 14:06 +0530, Viresh Kumar wrote:
+> > On 26-11-19, 19:50, Andrew-sh.Cheng wrote:
+> > > +		if (!IS_ERR(opp_item))
+> > > +			dev_pm_opp_put(opp_item);
+> > > +		else
+> > > +			freq = 0;
+> > > +
+> > 
+> > What is the purpose of the above code ?
+> When dev_pm_opp_find_freq_ceil() doesn't find matching opp item, freq
+> value won't be set.
+> Set it as 0 for below checking
+> > 
+> > > +		/* case of current opp is disabled */
+> > > +		if (freq == 0 || freq != info->opp_freq) {
+> > > +			// find an enable opp item
+> > > +			freq = 1;
+> > > +			opp_item = dev_pm_opp_find_freq_ceil(info->cpu_dev,
+> > > +							     &freq);
+> > > +			if (!IS_ERR(opp_item)) {
+> > > +				dev_pm_opp_put(opp_item);
+> > > +				policy = cpufreq_cpu_get(info->opp_cpu);
+> > > +				if (policy) {
+> > > +					cpufreq_driver_target(policy,
+> > > +						freq / 1000,
+> > > +						CPUFREQ_RELATION_L);
+> > 
+> > Why don't you simply call this instead of all the code in the else
+> > block ?
+> These else code is used to check "current opp item is disabled or not".
+> If not, do nothing.
+> If current opp item is disabled, need to find an not-disabled opp item,
+> and set frequency to it.
 
-Applied, thanks
+Right. So this notifier helper of yours receive the opp which is getting
+disabled, why don't you compare its frequency directly to see if the current OPP
+is getting disabled ?
 
 -- 
-~Vinod
+viresh
