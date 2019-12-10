@@ -2,171 +2,176 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C21C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 02:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7454C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 02:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F66B207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 02:34:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HOOfNE7L"
+	by mail.kernel.org (Postfix) with ESMTP id 7FC512073D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 02:46:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbfLJCes (ORCPT
+        id S1726682AbfLJCqL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 21:34:48 -0500
-Received: from mail-eopbgr10088.outbound.protection.outlook.com ([40.107.1.88]:45433
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726509AbfLJCer (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Dec 2019 21:34:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dfAowhx6GWUHJy2IxK6qwgTRXjdKy44VmOh/3VV+tApB+1DFevzBKp8G5gczVZ7YbDMVE4XW2iziMFZIT5rsyKQTzyB7tIdqTWYYfF7SZA0PrYf/IRRYd5NUrcF4c1uGSMe7Xpb51q1qIR2dfFW/4PG2ZrvFT0AJv3avEkJCbYx74qNhp89NYwgZv+BcRc7h6CQ539fE60fMimY2iEkG2Jh0BrTnU22LlhdxlFDdK5crePJI43eN82Z6WC7XzGUtZq8+TibFE703WbSQInz/h9JIPCLNuQFlq790+VQV/IQNBSrcIo9NF1uC6r5Kvm8/R9DUqO1SxQtdU8CcFAJrxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3rStWe+TjU9Ro35O6Hig088w3MqyV1pwn9vFSozj9KU=;
- b=lEaLy041fWgp5POkGzpWcPmZSSJyxe2vTG3/qFYVxOYKOb+117jc2PIp8bg9YQgFdq84Y+uUBubYoGMlrw9c7cE3g6Ene8JKJ1oBtQ9Y/9IHa37AjkSGpePmcFVzIDSnetR7y37HvlJJl+93FmxJCAGhY+Y/cbntJrx3MM0aFt7oC1nXlQuLflvOuijOCLy81W0dcJ9yEdl906iRmoaHt5QKQuT39W22YpmV1I3CNbx7+KrdAqXzFtzu7vxl2/LiTghd65jf7aGinfC2PeX+LCsdIl4I9mkh0n01vuN3yxcdJ5r7n3nbFWpU+EZR0moGZb25OmBBpkdv+0TXV2ig2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3rStWe+TjU9Ro35O6Hig088w3MqyV1pwn9vFSozj9KU=;
- b=HOOfNE7LyMNK6c5hl3dJocjpRFmQQPpw9od+5ezlsArWFHH6Zc/lZJHWL/qshcrxeet9A9PqSgz3Q78YnV/fQv90MY3pH6KI+5+OJrcr7uS23RmDUDaWRZlkkQ8M4iVRMYL5x2qFE+PtmJ74E4TQO30fWIIYIlrvPDSi1mTNiic=
-Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com (10.169.132.138) by
- VI1PR0401MB2335.eurprd04.prod.outlook.com (10.169.136.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.17; Tue, 10 Dec 2019 02:34:31 +0000
-Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com
- ([fe80::391e:6024:cefd:6d51]) by VI1PR0401MB2237.eurprd04.prod.outlook.com
- ([fe80::391e:6024:cefd:6d51%4]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
- 02:34:30 +0000
-From:   "Y.b. Lu" <yangbo.lu@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     Ashish Kumar <ashish.kumar@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Alison Wang <alison.wang@nxp.com>,
-        "Amit Jain (aj)" <amit.jain_1@nxp.com>,
-        "catalin.horghidan@nxp.com" <catalin.horghidan@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Jiafei Pan <jiafei.pan@nxp.com>, Leo Li <leoyang.li@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Mon, 9 Dec 2019 21:46:11 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:48644 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbfLJCqL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 21:46:11 -0500
+Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 10 Dec
+ 2019 10:46:42 +0800
+Subject: Re: [PATCH] arm64: dts: meson-a1: add I2C nodes
+To:     Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "rajat.srivastava@nxp.com" <rajat.srivastava@nxp.com>,
-        Rajesh Bhagat <rajesh.bhagat@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Xiaobo Xie <xiaobo.xie@nxp.com>,
-        Michael Walle <michael@walle.cc>, Yinbo Zhu <yinbo.zhu@nxp.com>
-Subject: RE: [PATCH v1 3/4] arm64: dts: ls1028a: fix little-big endian issue
- for dcfg
-Thread-Topic: [PATCH v1 3/4] arm64: dts: ls1028a: fix little-big endian issue
- for dcfg
-Thread-Index: AQHVUnFULi52wD5vaE6y0evvPl+NNKezNm2AgAAo2GA=
-Date:   Tue, 10 Dec 2019 02:34:30 +0000
-Message-ID: <VI1PR0401MB2237D2D6708807511BDB8788F85B0@VI1PR0401MB2237.eurprd04.prod.outlook.com>
-References: <20190814072649.8237-3-yinbo.zhu@nxp.com>
- <20191210000623.22321-1-michael@walle.cc>
-In-Reply-To: <20191210000623.22321-1-michael@walle.cc>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yangbo.lu@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6c9cbf6e-5ad0-4730-40cf-08d77d197c45
-x-ms-traffictypediagnostic: VI1PR0401MB2335:|VI1PR0401MB2335:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0401MB233578102CF0A485F37A10C3F85B0@VI1PR0401MB2335.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:913;
-x-forefront-prvs: 02475B2A01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(376002)(366004)(39860400002)(189003)(199004)(13464003)(6916009)(33656002)(64756008)(4326008)(76116006)(66946007)(66446008)(66556008)(66476007)(5660300002)(8676002)(52536014)(305945005)(229853002)(9686003)(55016002)(81156014)(81166006)(478600001)(26005)(86362001)(2906002)(8936002)(6506007)(7696005)(53546011)(186003)(54906003)(316002)(71190400001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2335;H:VI1PR0401MB2237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XWfDF16pmTXSd487xSKs0lutqGdO3fJFMUW53KeSIAtBe0tCXxt2WIKa9+qIv7IK5qnur6/5P5wUjXwglNkqOX5nQC6kVFepz6OlbrJwfZcHiaidsXAMgCQOPkq7MrtvntpoPY3/mVrh+THjJpCrW4t5Z/NCRWQiaPDuaF7q3OyEwEdXkKveVa4GQI3tnAxAzW6Nco0sJlgupeVzlUDOcyHkh80j0kBmoOeBJ5rGGmS1BTYztPsIH5tRHguffnum9AAEl0/gnA7AAz/FeXAy1WXGpi52Cokjtv2VIzM8vBEtLCUcsGnha+9Iu4lvyAIj+0ZgmF+WrxhDNYlYwPNhqlwQCsGQS8DlPcu2Cp7YyFVEIv9VyXnibn8Wc9WMJ1KOX2a5f0/IOASvjoAiL72XO7SQqLtCSXaIxMSSHsJRf6Hf7SI2wpey5RpSMjpSV8q5J0TjBqm3PN9xSKpm1Rdv48EkD2/D+PcO+S9kXGofeN+Zd1tdSU/tP830JwcvfhZ0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20191202111253.94872-1-jian.hu@amlogic.com>
+ <7hsgltqfdx.fsf@baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <e90e00e1-c868-ce09-6f79-deb62da72b43@amlogic.com>
+Date:   Tue, 10 Dec 2019 10:46:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c9cbf6e-5ad0-4730-40cf-08d77d197c45
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 02:34:30.8062
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: inhC5TjVZnnF1gtcBx27H+ZX/fGc5BR/7k90pnVkFrZwV52MJoF8dmaSCnq+Ei1HZksx58hSycKZfxo05BLgpw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2335
+In-Reply-To: <7hsgltqfdx.fsf@baylibre.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.99]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-+ Shawn,
+Hi Kevin
 
-> -----Original Message-----
-> From: Michael Walle <michael@walle.cc>
-> Sent: Tuesday, December 10, 2019 8:06 AM
-> To: Yinbo Zhu <yinbo.zhu@nxp.com>
-> Cc: Ashish Kumar <ashish.kumar@nxp.com>; Alexandru Marginean
-> <alexandru.marginean@nxp.com>; Alison Wang <alison.wang@nxp.com>;
-> Amit Jain (aj) <amit.jain_1@nxp.com>; catalin.horghidan@nxp.com; Claudiu
-> Manoil <claudiu.manoil@nxp.com>; devicetree@vger.kernel.org; Jiafei Pan
-> <jiafei.pan@nxp.com>; Leo Li <leoyang.li@nxp.com>;
-> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> linuxppc-dev@lists.ozlabs.org; mark.rutland@arm.com;
-> rajat.srivastava@nxp.com; Rajesh Bhagat <rajesh.bhagat@nxp.com>;
-> robh+dt@kernel.org; Vabhav Sharma <vabhav.sharma@nxp.com>; Xiaobo Xie
-> <xiaobo.xie@nxp.com>; Y.b. Lu <yangbo.lu@nxp.com>; Michael Walle
-> <michael@walle.cc>
-> Subject: Re: [PATCH v1 3/4] arm64: dts: ls1028a: fix little-big endian is=
-sue for
-> dcfg
->=20
+Thanks for your review
 
-[Y.b. Lu] Acked-by: Yangbo Lu <yangbo.lu@nxp.com>
-
-Hi Shawn, could you help to review and merge the two dts patches of this pa=
-tch-set?
-Thanks.
-
-> > dcfg use little endian that SoC register value will be correct
-> >
-> > Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> This patch is still missing. Any news?
->=20
-> Tested-by: Michael Walle <michael@walle.cc>
->=20
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > index b0d4f8916ede..5538e8e354b2 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > @@ -162,7 +162,7 @@
-> >  		dcfg: syscon@1e00000 {
-> >  			compatible =3D "fsl,ls1028a-dcfg", "syscon";
-> >  			reg =3D <0x0 0x1e00000 0x0 0x10000>;
-> > -			big-endian;
-> > +			little-endian;
-> >  		};
-> >
-> >  		scfg: syscon@1fc0000 {
-> > --
-> > 2.17.1
-> >
+On 2019/12/10 6:54, Kevin Hilman wrote:
+> Hi Jian,
+> 
+> Jian Hu <jian.hu@amlogic.com> writes:
+> 
+>> There are four I2C controllers in A1 series,
+>> Share the same comptible with AXG.The I2C nodes
+>> depend on pinmux and clock controller.
+>>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> ---
+>>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 149 ++++++++++++++++++++++
+>>   1 file changed, 149 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> index eab2ecd36aa8..d0a73d953f5e 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> @@ -16,6 +16,13 @@
+>>   	#address-cells = <2>;
+>>   	#size-cells = <2>;
+>>   
+>> +	aliases {
+>> +		i2c0 = &i2c0;
+>> +		i2c1 = &i2c1;
+>> +		i2c2 = &i2c2;
+>> +		i2c3 = &i2c3;
+>> +	};
+>> +
+>>   	cpus {
+>>   		#address-cells = <2>;
+>>   		#size-cells = <0>;
+>> @@ -117,6 +124,46 @@
+>>   				};
+>>   			};
+>>   
+>> +			i2c0: i2c@1400 {
+>> +				compatible = "amlogic,meson-axg-i2c";
+>> +				reg = <0x0 0x1400 0x0 0x24>;
+> 
+> The AXG DT files use 0x20 for the length.  You are using 0x24.  I don't
+> see any additional registers added to the driver, so this doesn't look right.
+In fact, For G12 series and A1, the length should be 0x24. A new 
+register is added, And it is for IRQ handler timeout. If the 
+transmission is exceeding a limited time, it will abort the 
+transmission.Now the function is not used, There is completion to deal 
+the timeout in the driver. I will set the length 0x20 becouse of the new 
+register is not used.
+> 
+>> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			i2c1: i2c@5c00 {
+>> +				compatible = "amlogic,meson-axg-i2c";
+>> +				reg = <0x0 0x5c00 0x0 0x24>;
+>> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			i2c2: i2c@6800 {
+>> +				compatible = "amlogic,meson-axg-i2c";
+>> +				reg = <0x0 0x6800 0x0 0x24>;
+>> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			i2c3: i2c@6c00 {
+>> +				compatible = "amlogic,meson-axg-i2c";
+>> +				reg = <0x0 0x6c00 0x0 0x24>;
+>> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>>   			uart_AO: serial@1c00 {
+>>   				compatible = "amlogic,meson-gx-uart",
+>>   					     "amlogic,meson-ao-uart";
+>> @@ -171,3 +218,105 @@
+>>   		#clock-cells = <0>;
+>>   	};
+>>   };
+>> +
+>> +&periphs_pinctrl {
+>> +	i2c0_f11_pins:i2c0-f11 {
+>> +		mux {
+>> +			groups = "i2c0_sck_f11",
+>> +				"i2c0_sda_f12";
+>> +			function = "i2c0";
+>> +			bias-pull-up;
+>> +			drive-strength-microamp = <3000>;
+> 
+> Can you also add some comment to the changelog about the need for
+> drive-strength compared to AXG.
+OK, Drive strength function is added for GPIO pins from G12 series.
+So does A1 series.
+> 
+>> +		};
+>> +	};
+> 
+> Kevin
+> 
+> .
+> 
