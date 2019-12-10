@@ -2,110 +2,111 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02269C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D70C2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 19:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEA03214AF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576004376;
-	bh=30nTRPWcWNZXdJXjfm6kVShgPUOYSA9w8Z775GWHsk4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S+4x5y359xCsRWq6VmEjmbBRwvsNzYWGtF+R84drAbYagrAZFTLynsaHgCk931mYY
-	 vwrsD4nz0D7PjXK+v8YdosgvK8z8l6+Pd9MtLH1TbAR7hDF5WMQBVE+7HMiNgLfhrT
-	 hbV2YMnE6cNtS7aThyMLiNAuCnLAnajoxYqmsf60=
+	by mail.kernel.org (Postfix) with ESMTP id 9456020637
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 19:11:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X2LURZ9N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbfLJS7g (ORCPT
+        id S1727711AbfLJTLr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 13:59:36 -0500
-Received: from foss.arm.com ([217.140.110.172]:53924 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727625AbfLJS7f (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 13:59:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66C4C328;
-        Tue, 10 Dec 2019 10:59:35 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8A9D3F6CF;
-        Tue, 10 Dec 2019 10:59:34 -0800 (PST)
-Date:   Tue, 10 Dec 2019 18:59:33 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, allison@lohutok.net,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        mturquette@baylibre.com, horms+renesas@verge.net.au,
-        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
-        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, alexios.zavras@intel.com,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH v3 09/15] ASoC: tegra: Add fallback for audio mclk
-Message-ID: <20191210185933.GJ6110@sirena.org.uk>
-References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-10-git-send-email-skomatineni@nvidia.com>
- <20191209164027.GG5483@sirena.org.uk>
- <7fe879fd-dae3-1e64-1031-cd9f00e31552@gmail.com>
- <20191209204735.GK5483@sirena.org.uk>
- <560185d9-32fd-a85e-5feb-105f79b953c6@gmail.com>
+        Tue, 10 Dec 2019 14:11:47 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36908 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727666AbfLJTLr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 14:11:47 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p14so304885pfn.4
+        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 11:11:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wqyrsFbKvAgp1XOGnCH1wihydXPeMNhbMwSDb6gzLcg=;
+        b=X2LURZ9NmX6JBqBK3oxesIlMMR02B+nouIyC4ZFJa8JQnpsZPNoDo7vG7uH78lI//0
+         EHGMq5EtoA1LEtSTATvh53dflMWpvv4dxei5fiGtwxdumT6QTNN0f15rtqWFX+xqE8zT
+         A94HXIB24npveHSn1Zh2MhQjUTjPQE1liCZAUP5F8Wcslb82YS9rLKhWGR9ms5pHmD3U
+         5NbkIz7oKAvoN8FEUN7wNn+JO3ZMCTp23A2EZUOpWt/a6Wxmyr+b4/PrAzKmpZNpheSK
+         e4UppKMOciQExedz02GtK+SmHVx8n1sKczl7Fws73NsMhE8t2lsvADK/n7JCEsnbISCD
+         TVOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wqyrsFbKvAgp1XOGnCH1wihydXPeMNhbMwSDb6gzLcg=;
+        b=TMjvm4YuEP0QGjQF02vh4AxJpUkOXzubeA6JHHNy3aEVEP6D73eUWVJOmjOKYF1ikC
+         5J1zJTfE3IybJ+PPbF2eKex/Q5ubCGPcJEWlsehtyfBe5gwvMqjzzt2r1jGfhJGt0l4H
+         u17ezdUJgZb3AOcO45+hkqq9K6kWfXlYa0xGt/z7/kSnJFo566KjawrCUmB+fQyvlS0Y
+         2QX7aeNPhX48JLVr5oVGG4wiaxGjxLsHjfSaagPUxSbKXVMYXz79shZy8iS6xPZq/mTx
+         DJupkXZvntfa4cPpcENEZligzfExqyhHoWJDVI+U7mqaIupTkOcyPY+APOGCjxkNK+5n
+         LCSA==
+X-Gm-Message-State: APjAAAUy1od7KjRIc3KIKEx4aOrZYtfuDaJX7/xQY8baks+BD8rrPaNA
+        tSqy2nhHmz13kE52Z1xVqhCv4jdyBJQ=
+X-Google-Smtp-Source: APXvYqyrDn4v27jGvSfMZp0Xc8hNq7oBuPploYRqtNc5nHYG0C8cSi5ilO4ThU7xeu5otzhHy6atng==
+X-Received: by 2002:a63:496:: with SMTP id 144mr27081792pge.207.1576005106666;
+        Tue, 10 Dec 2019 11:11:46 -0800 (PST)
+Received: from yoga ([2607:fb90:8497:e902:4ce0:3dff:fe1c:88ba])
+        by smtp.gmail.com with ESMTPSA id e10sm4574017pfm.3.2019.12.10.11.11.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 11:11:46 -0800 (PST)
+Date:   Tue, 10 Dec 2019 11:11:42 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v3 2/5] phy: qcom-qmp: Increase PHY ready timeout
+Message-ID: <20191210191142.GF314059@yoga>
+References: <20191107000917.1092409-1-bjorn.andersson@linaro.org>
+ <20191107000917.1092409-3-bjorn.andersson@linaro.org>
+ <CAE=gft5mLSqsJzj=DtesH3G68_wSKUr8rZ5iubOerimQmZKegA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XigHxYirkHk2Kxsx"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <560185d9-32fd-a85e-5feb-105f79b953c6@gmail.com>
-X-Cookie: We have ears, earther...FOUR OF THEM!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAE=gft5mLSqsJzj=DtesH3G68_wSKUr8rZ5iubOerimQmZKegA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue 10 Dec 10:47 PST 2019, Evan Green wrote:
 
---XigHxYirkHk2Kxsx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Wed, Nov 6, 2019 at 4:09 PM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > It's typical for the QHP PHY to take slightly above 1ms to initialize,
+> > so increase the timeout of the PHY ready check to 10ms - as already done
+> > in the downstream PCIe driver.
+> >
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> Tested-by: Evan Green <evgreen@chromium.org>
+> 
 
-On Tue, Dec 10, 2019 at 09:24:43PM +0300, Dmitry Osipenko wrote:
+Thanks.
 
-> In some cases it could be painful to maintain device-tree compatibility
-> for platforms like NVIDIA Tegra SoCs because hardware wasn't modeled
-> correctly from the start.
+> Should this have a Fixes tag for 14ced7e3a1ae9 ("phy: qcom-qmp:
+> Correct ready status, again")?
 
-> I agree that people should use relevant device-trees. It's quite a lot
-> of hassle to care about compatibility for platforms that are permanently
-> in a development state. It could be more reasonable to go through the
-> pain if kernel required a full-featured device tree for every SoC from
-> the start.
+For UFS it would be 885bd765963b ("phy: qcom-qmp: Correct READY_STATUS
+poll break condition"), but I think that before the two we would exit
+the poll immediately, so we would only hit the timeout in the "error"
+case - where the PHY did come up in a timely fashion.
 
-We absolutely should support the newer kernel with older device tree
-case, what's less clear to me is the new device tree with old kernel
-which is applying LTS updates case.  That does seem incredibly
-specialist - I'd honestly never heard of people doing that before this
-thread.
+So I don't think there is a particular commit to "Fixes:"...
 
---XigHxYirkHk2Kxsx
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+But given that this is no longer only needed for the (new) QHP PCIe
+instance it would be reasonable to Cc: stable, to get it into v5.4
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3v6xQACgkQJNaLcl1U
-h9DaRQf/a3YemFgucFyV5HfTaJz5xFhKVR+h6YPRh1yMll+FZbh9bfsgwoQ0yWWe
-pu3FNb2UWObN6Yd0c6nIxiIJAqyvPridz15jnQ8mfGSTehSRsbHf6YkTUsDeSpik
-LZTQ4pCWNtrA5vJuFJ3i9DMNfOFTQjBOTwnFM0JcecBddROFtPhAG5CseblR7BlT
-hBvipkmnrquc66L0hFpbqBoBN4RvHAaYBa+t8GZntPUqrQyN1XxtjJW4Ye+IRS7u
-CsSsnVe5WUhZp70+Fa2UxTXhtAnmpTl5cFixH6fq6ynxgwgueKOHDfmLNB/wSR4I
-Cg0W+t7FHmBN2Wrd/7z/avBc1teFeA==
-=c8lH
------END PGP SIGNATURE-----
-
---XigHxYirkHk2Kxsx--
+Regards,
+Bjorn
