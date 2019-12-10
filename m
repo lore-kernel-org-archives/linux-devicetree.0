@@ -2,128 +2,128 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F60C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 20:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE7CC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 20:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79493207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 20:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E8D92077B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 20:05:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bF1BYIQW"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="NqY1B5Lj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfLJUBm (ORCPT
+        id S1726045AbfLJUFC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:01:42 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40337 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbfLJUBl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 15:01:41 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t14so4574902wmi.5;
-        Tue, 10 Dec 2019 12:01:40 -0800 (PST)
+        Tue, 10 Dec 2019 15:05:02 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42316 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfLJUFC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 15:05:02 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 66so16668201otd.9;
+        Tue, 10 Dec 2019 12:05:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nmiFtfH4zmI+d20vCYAm1VeLBaZ07Zt3ioT6CWVzqDc=;
-        b=bF1BYIQWLFMMrcr24viNLkeckeUBHH/F4yPVsqbPK8jlmb9fsdBmdSJsAvlBFrj+8X
-         bRK5OhSveg1c4CMNErYEBv9hSSfW67mHi0GMvz0ZTX6kZ9PS4OX/UlqTsMoFdYsdYS4m
-         J1NDuHX00Vr3dreTnl8ciWn0MEh8hE3Rzqcf75YWVnRHhm4rK8bv1ZxdLpjZonbT/Otz
-         WOBOwkGPQ9XeYLZDHPZWWeHdZS6HE24WrU1paJYZYlBVmWPZGPe4vHTPJMaSr1r31jnt
-         foDxA6RpcP0K2doYXZp6POoqIqed98X+8hIxGNoad+DqwooUjXFGRk7OtpiqbFgdmes/
-         E9yA==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ffu1c8lDFafmMWH7UIK/Jm4IFvQzvK0JEWcwhE/AfdQ=;
+        b=NqY1B5LjJU0vM1d4WpeD0ZeoqgIt8hI6csNKV63oMHCy3CIGP/mE+VFXtRsCWysuOH
+         cBLhJFhVVWspwhg/0iJ+LYahN59cIYX4PzSNnSoLhTclj18oWAVTNbPbGXKwVUcG1m5b
+         vIqO9tIcWm1mHn3TDhenvm/Kb7y5VviWObIh9zOffAVbOM+2BsUKYe/3mp7ItszjjpU7
+         4r0dzTo0MHzXV0SdMbgtbegD81UW42uChbRS654dX25anJKmSBszdBRt0XPRpcJGh616
+         Zi7BSVuJofr6eR1H3qChHVMLTUpJyFOV8FSWll960WfMQRcJGW+9xU5/6Be4ts7TsrE1
+         dVPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=nmiFtfH4zmI+d20vCYAm1VeLBaZ07Zt3ioT6CWVzqDc=;
-        b=Ox45uzfT3WK10DQ5SSMJJJp29q+z3VIsQofFM5CpmdB8Uk3tQ+8yQvZztjMKl+LoI4
-         t9PBVNLiB5p9/SbnmmhBTjvwmJ6YaZis+c0rWhilJrBa1tpTMeuAFfMYlkA8Dbt4STIZ
-         affRn9KpAjf2g26Q1aI1CMsSBGs2Qcy4kTuIMWGIhdemLHyb6zdIcN0Ncp/5skQr4I3K
-         Ma+YZjxiP2OrTNo2KthOlmKZJ9/oNtoAPhUMEdE2o9+6W/GHOc8kNPsL9PfYAquPphpa
-         POp/dwg3lhTgdsR8U2XiadDBZ7q70lxS6QCh/MBgnccpZc/wXzrsxzKXrpBh9LMDzivi
-         AmNQ==
-X-Gm-Message-State: APjAAAWPkUAhv0g+5TJGE+Q7mbI5TGMk/A1FfIUmmrKE+Rtn8VqyjdK7
-        pku4oQncwpA+2iO/y2EnarIA5Gci
-X-Google-Smtp-Source: APXvYqyxTzQiISiyiySr5mOjJCeNCRcQVLWQj/qvpaAyrCdmqRhSRsupu8PvYO1Bny3Pj3g+m/FjVg==
-X-Received: by 2002:a1c:4008:: with SMTP id n8mr6720483wma.121.1576008099430;
-        Tue, 10 Dec 2019 12:01:39 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id z6sm4352255wmz.12.2019.12.10.12.01.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 12:01:38 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE)
-Subject: [PATCH 1/2] dt-bindings: reset: Document BCM7216 RESCAL reset controller
-Date:   Tue, 10 Dec 2019 11:59:02 -0800
-Message-Id: <20191210195903.24127-2-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191210195903.24127-1-f.fainelli@gmail.com>
-References: <20191210195903.24127-1-f.fainelli@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ffu1c8lDFafmMWH7UIK/Jm4IFvQzvK0JEWcwhE/AfdQ=;
+        b=WTd3AbWGofBBIl6yvzkncMGPhFjibDOCy5STmhtT3w+33Gze4vLtl159i+lZmpUn8Q
+         TZpbUyaP4HyzLC3vkoyzx8z1iudHznYi89OpHFbKUcXM6gBJm37C/OAg6Ldbts3VYLyl
+         +QnH51MuFMoqjHZNMPej/Nt20yh2V9VCqZ9g8iUp1xepRqB3tlt2YRgAWaFG0h1IXR21
+         yqyzTbYTPIbdMpG+VRJ0k8kNMCb9z97V+FnlzjvroO6YvUr5Gb4V2HaoIQpDEYLLYyJS
+         O0KChN2lgEav1NOmdUpFkP/xBl6rAbjC7TbFDqQg+mmNpOocNQFyneDvQKAZplB6ky6L
+         CQ7A==
+X-Gm-Message-State: APjAAAUA5jJ5r7LmNb57sehwLa1K+SUjJjeNus9fjnmtVCXB0zg2whZR
+        2a4v+WBsV//s9L6kUTf+6yejLO2u8PqwoBHBcy0=
+X-Google-Smtp-Source: APXvYqyQXxbMb0eeNtonRVid5JNsQL8VWcdzxoDr8Caq2Q5ouK3M+5t6gh12myZjJdQRIwE/4kJ8HDen46CJJDc7XCI=
+X-Received: by 2002:a05:6830:1b71:: with SMTP id d17mr19510797ote.42.1576008301566;
+ Tue, 10 Dec 2019 12:05:01 -0800 (PST)
+MIME-Version: 1.0
+References: <20191101143126.2549-1-linux.amoon@gmail.com> <7hfthtrvvv.fsf@baylibre.com>
+ <c89791de-0a46-3ce2-b3e2-3640c364cd0f@baylibre.com> <CANAwSgQx3LjQe60TGgKyk6B5BD5y1caS2tA+O+GFES7=qCFeKg@mail.gmail.com>
+ <7hfthsqcap.fsf@baylibre.com>
+In-Reply-To: <7hfthsqcap.fsf@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 10 Dec 2019 21:04:50 +0100
+Message-ID: <CAFBinCBfgxXhPKpBLdoq9AimrpaneYFgzgJoDyC-2xhbHmihpA@mail.gmail.com>
+Subject: Re: [RFC-next 0/1] Odroid C2: Enable DVFS for cpu
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Anand Moon <linux.amoon@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jim Quinlan <jim2101024@gmail.com>
+On Tue, Dec 10, 2019 at 7:13 PM Kevin Hilman <khilman@baylibre.com> wrote:
+>
+> Anand Moon <linux.amoon@gmail.com> writes:
+>
+> > Hi Neil / Kevin,
+> >
+> > On Tue, 10 Dec 2019 at 14:13, Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >>
+> >> On 09/12/2019 23:12, Kevin Hilman wrote:
+> >> > Anand Moon <linux.amoon@gmail.com> writes:
+> >> >
+> >> >> Some how this patch got lost, so resend this again.
+> >> >>
+> >> >> [0] https://patchwork.kernel.org/patch/11136545/
+> >> >>
+> >> >> This patch enable DVFS on GXBB Odroid C2.
+> >> >>
+> >> >> DVFS has been tested by running the arm64 cpuburn
+> >> >> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
+> >> >> PM-QA testing
+> >> >> [2] https://git.linaro.org/power/pm-qa.git [cpufreq testcase]
+> >> >>
+> >> >> Tested on latest U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
+> >> >
+> >> > Have you tested with the Harkernel u-boot?
+> >> >
+> >> > Last I remember, enabling CPUfreq will cause system hangs with the
+> >> > Hardkernel u-boot because of improperly enabled frequencies, so I'm not
+> >> > terribly inclined to merge this patch.
+> >
+> > HK u-boot have many issue with loading the kernel, with load address
+> > *it's really hard to build the kernel for HK u-boot*,
+> > to get the configuration correctly.
+> >
+> > Well I have tested with mainline u-boot with latest ATF .
+> > I would prefer mainline u-boot for all the Amlogic SBC, since
+> > they sync with latest driver changes.
+>
+> Yes, we would all prefer mainline u-boot, but the mainline kernel needs
+> to support the vendor u-boot that is shipping with the boards.  So
+> until Hardkernel (and other vendors) switch to mainline u-boot we do not
+> want to have upstream kernel defaults that will not boot with the vendor
+> u-boot.
+>
+> We can always support these features, but they just cannot be enabled
+> by default.
+(I don't have an Odroid-C2 but I'm curious)
+should Anand submit a patch to mainline u-boot instead? the
+&scpi_clocks node could be enabled at runtime by mainline u-boot
 
-BCM7216 has a special purpose RESCAL reset controller for its SATA and
-PCIe0/1 instances. This is a simple reset controller with #reset-cells
-set to 0.
 
-Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- .../reset/brcm,bcm7216-pcie-sata-rescal.txt   | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm7216-pcie-sata-rescal.txt
-
-diff --git a/Documentation/devicetree/bindings/reset/brcm,bcm7216-pcie-sata-rescal.txt b/Documentation/devicetree/bindings/reset/brcm,bcm7216-pcie-sata-rescal.txt
-new file mode 100644
-index 000000000000..ceaf7ee58726
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/brcm,bcm7216-pcie-sata-rescal.txt
-@@ -0,0 +1,26 @@
-+BCM7216 RESCAL reset controller
-+===============================
-+
-+This document describes the BCM7216 RESCAL reset controller which is
-+responsible for controlling the reset of the SATA and PCIe0/1 instances on
-+BCM7216.
-+
-+Please also refer to reset.txt in this directory for common reset controller
-+binding usage.
-+
-+Required properties:
-+- compatible: should be brcm,bcm7216-pcie-sata-rescal
-+- reg: register base and length
-+- #reset-cells: must be set to 0
-+
-+Example:
-+
-+rescal: reset {
-+	compatible = "brcm,bcm7216-pcie-sata-rescal";
-+	reg = <0x8b2c800>;
-+	#reset-cells = <0>;
-+};
-+
-+&pcie0 {
-+	resets = <&rescal>;
-+};
--- 
-2.17.1
-
+Martin
