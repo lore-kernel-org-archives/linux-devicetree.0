@@ -2,171 +2,116 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABAEC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 23:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4328C2D0C4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 23:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C0632073B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 23:49:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576021795;
-	bh=O8g07w6nqDMkqHZMoDdxx6Q9u1cAy0psqnVVzTIGPiM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=FqaDw9BuCAJhAvURpKUgkK2kS28klVpGUXxH4nO/rPxBoc2aUzI7vu09R6eDLmH1W
-	 hId+LdNdY5/NV2cQXTTVU8CJB44oJG7Dz9/IOZddsLS0w+hf7SQt3jW2ssHPmKEGNP
-	 ajRjXQSepbJ3o4Fl5f69G1g9DiGGDYuC3MSfmChc=
+	by mail.kernel.org (Postfix) with ESMTP id 899A42073D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 23:55:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hAbRMVrs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfLJXty (ORCPT
+        id S1725999AbfLJXzJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 18:49:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbfLJXty (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 18:49:54 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A12420663;
-        Tue, 10 Dec 2019 23:49:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576021793;
-        bh=O8g07w6nqDMkqHZMoDdxx6Q9u1cAy0psqnVVzTIGPiM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=la5NazEa8jCiN8xpow1GMbHqtzlSPcvayJlXzlc0OPZhelaViQxAwI2g6eSSjIZVC
-         ANXVK0kb/uZAPSxPZArh6VIy79tz3xc94Z18P+Y0QRmArXEa+vD0cLlzsikh9dWRmN
-         5KgGu6fFgANshBXJQCvZ4zdq3o1uQ60sh2qRzMw4=
-Date:   Tue, 10 Dec 2019 17:49:51 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        gustavo.pimentel@synopsys.com, andrew.murray@arm.com,
-        robh@kernel.org, linux-kernel@vger.kernel.org,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v10 2/3] PCI: dwc: intel: PCIe RC controller driver
-Message-ID: <20191210234951.GA175479@google.com>
+        Tue, 10 Dec 2019 18:55:09 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41853 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbfLJXzG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 18:55:06 -0500
+Received: by mail-lf1-f65.google.com with SMTP id m30so15167019lfp.8
+        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 15:55:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KNrohwDsHeZAs+ReIm2Q7EwJ5Hy4Jj8HAR5cu/mtLgY=;
+        b=hAbRMVrsm1W4JYpKwlAZvEdT933tVqy6w6wMCc7wU8/Lzg2mVB1osVcU1cB1VPIwef
+         /CJ1Z+GY10xo0IaUThsb3JldrQHfnpRtZ+VnPK7s3az7eI6tLGGac3UF6CMi+x8B/A/1
+         8+qpg93GpxCpp1pUX4fIrdIuGw4RKwqJ8QFN70tRaGYx3wAqVnCknrRCklxxZ39x2+Sf
+         YDS5h08LVLC1Bz4+lYzG2wPIQ//3LBMqGB4aSpxRJxEGo7cfDj8zA4SPv6LQrdn4zTsA
+         VHZQaf+j3+knILNMuVh6kZ5BZX6O6cnqzRPCFIPpaNnTzSJnNse3mOlmdzQONBiyngEE
+         dC8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KNrohwDsHeZAs+ReIm2Q7EwJ5Hy4Jj8HAR5cu/mtLgY=;
+        b=Dmabyrvk14+uk+mtUmAwSAFvQ0Zf3wJtw/d1D5Pwd8YtUfR9j/ta8WMGEj4LUNjtTO
+         U6gNc9c2Y8TZUm0M1g5vkZt4SymbewpPjEHk8A9fV+Jxw3b851Nkj0fhfcIwcupL7BHn
+         uhDFR1G36cRROdVpsiCoVUGsEZqZbWz9THaHcl4tHpkob9OoWfbD9EFTKUUzBhd+kwCG
+         BXvhWDyImGe/EzqXUVo26bRFyyOqUor7xidVIKsRRTPQpDiK3ghsvOaxgDvF0y0RwG3o
+         nCoodON1CIxR4xeNjvQroV8HApsn5H9Z0z0HsHQJhQ7WedMuc18PKpm79+QN6Odj6PdA
+         IoLA==
+X-Gm-Message-State: APjAAAV5DNIpcZONIw56qxiIvw3k+67Bx8dlcXL1/rW8q9WUHYIVwUmX
+        cZ6AjsV64FLrLyTz65111/QgV6lbM/Rn38PzMhXpvQ==
+X-Google-Smtp-Source: APXvYqwx5LuKLDN3XiVpf1hl60Rh8HBmOKd1FntsXqq8U8VXeEmmPKwaFk+urFzUVIAbBMMQifWAms3QKp/FaSKlGkM=
+X-Received: by 2002:a19:c648:: with SMTP id w69mr325542lff.44.1576022103954;
+ Tue, 10 Dec 2019 15:55:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f6325a23635ca56fd3aa616160b5cf967d62d01a.1575612493.git.eswara.kota@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191120133409.9217-1-peter.ujfalusi@ti.com> <20191120133409.9217-2-peter.ujfalusi@ti.com>
+ <CACRpkdbXX3=1EGpGRf6NgwUfY2Q0AKbGM8gJvVpY+BRAo5MQvQ@mail.gmail.com>
+ <d423bc53-31df-b1b4-37da-932b7208a29e@ti.com> <CACRpkdafEdsN6i16SA175wE4J_4+EhS5Uw4Qsg=cZ=EuDYHmgg@mail.gmail.com>
+ <20191203235113.GA12929@bogus>
+In-Reply-To: <20191203235113.GA12929@bogus>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 11 Dec 2019 00:54:52 +0100
+Message-ID: <CACRpkdZOn8vGjxCUBd9c-SQSkmwxpS+bbRk7TiOWJcpTz9BsBQ@mail.gmail.com>
+Subject: Re: [RFC 1/2] dt-bindings: gpio: Document shared GPIO line usage
+To:     Rob Herring <robh@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 03:27:49PM +0800, Dilip Kota wrote:
-> Add support to PCIe RC controller on Intel Gateway SoCs.
-> PCIe controller is based of Synopsys DesignWare PCIe core.
-> 
-> Intel PCIe driver requires Upconfigure support, Fast Training
-> Sequence and link speed configurations. So adding the respective
-> helper functions in the PCIe DesignWare framework.
-> It also programs hardware autonomous speed during speed
-> configuration so defining it in pci_regs.h.
-> 
-> Also, mark Intel PCIe driver depends on MSI IRQ Domain
-> as Synopsys DesignWare framework depends on the
-> PCI_MSI_IRQ_DOMAIN.
-> 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+On Wed, Dec 4, 2019 at 12:51 AM Rob Herring <robh@kernel.org> wrote:
+> On Thu, Nov 28, 2019 at 11:06:35AM +0100, Linus Walleij wrote:
 
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -14,6 +14,8 @@
->  
->  #include "pcie-designware.h"
->  
-> +extern const unsigned char pcie_link_speed[];
+> > The ambition to use refcounted GPIOs to solve this
+> > usecase is probably wrong, I would say try to go for a
+> > GPIO-based reset controller instead.
+>
+> Yes, but I think we can have that AND use the existing binding.
+>
+> > The fact that some Linux drivers are already using explicit
+> > GPIO's for their reset handling is maybe unfortunate,
+> > they will simply have to grow code to deal with a reset
+> > alternatively to GPIO, like first try to grab a reset
+> > handle and if that doesn't fall back to use a GPIO.
+>
+> I think this could just be all handled within the reset subsystem given
+> that we've been consistent in using 'reset-gpios' (GPIO regulators are
+> similar, but we never had such consistency with GPIO names for
+> regulators). We can implement a reset driver for the 'reset-gpios'
+> property that deals with the sharing. Drivers to DT nodes doesn't have
+> to be 1:1. It's convenient when they are, but that's encoding the OS's
+> (current) driver structure into DT.
 
-This shouldn't be needed; there's a declaration in drivers/pci/pci.h.
+This seems like a good approach if it can be made to work.
+reset-gpios should have the right polarity flags (else drivers
+and/or device trees need to be fixed...) so the driver can simply
+scan over them and try to build a consensus on how to assert
+or deassert a shared reset-gpios line.
 
-> +struct intel_pcie_soc {
-> +	unsigned int pcie_ver;
-> +	unsigned int pcie_atu_offset;
-> +	u32 num_viewport;
-> +};
+It is also a natural placeholder for the connection to device
+core that will inevitably need to happen the day the device
+hierarchy needs to be torn up/down for a reset on some
+random device.
 
-Looks a little strange to have the fields below lined up but the ones
-above not.
+Peter, will you have a go at it?
 
-> +struct intel_pcie_port {
-> +	struct dw_pcie		pci;
-> +	void __iomem		*app_base;
-> +	struct gpio_desc	*reset_gpio;
-> +	u32			rst_intrvl;
-> +	u32			max_speed;
-> +	u32			link_gen;
-> +	u32			max_width;
-> +	u32			n_fts;
-> +	struct clk		*core_clk;
-> +	struct reset_control	*core_rst;
-> +	struct phy		*phy;
-> +	u8			pcie_cap_ofst;
-> +};
-> +
-> +static void pcie_update_bits(void __iomem *base, u32 ofs, u32 mask, u32 val)
-> +{
-> +	u32 old;
-> +
-> +	old = readl(base + ofs);
-> +	val = (old & ~mask) | (val & mask);
-> +
-> +	if (val != old)
-> +		writel(val, base + ofs);
-
-I assume this is never used on registers where the "old & ~mask" part
-contains RW1C bits?  If there are RW1C bits in that part, this will
-corrupt them.
-
-> +	if (!lpp->pcie_cap_ofst) {
-> +		ret = dw_pcie_find_capability(&lpp->pci, PCI_CAP_ID_EXP);
-> +		if (!ret) {
-> +			ret = -ENXIO;
-> +			dev_err(dev, "Invalid PCIe capability offset\n");
-
-Some of your messages start with a capital letter, others not.
-
-> +int intel_pcie_msi_init(struct pcie_port *pp)
-
-You might add a comment here like the one at
-ks_pcie_am654_msi_host_init().  Since the users of the
-.msi_host_init() function pointer only call the function if the
-pointer is non-NULL, it's not completely obvious why you have this
-stub function.
-
-> +{
-> +	/* PCIe MSI/MSIx is handled by MSI in x86 processor */
-> +	return 0;
-> +}
-
-> +	/*
-> +	 * Intel PCIe doesn't configure IO region, so set viewport
-> +	 * to not to perform IO region access.
-
-s/to not to/to not/
-
-> +	 */
-> +	pci->num_viewport = data->num_viewport;
-> +
-> +	dev_info(dev, "Intel PCIe Root Complex Port init done\n");
-
-Probably superfluous.
-
-> +
-> +	return ret;
-
-Since the return value is known here:
-
-  return 0;
-
-> +}
+Yours,
+Linus Walleij
