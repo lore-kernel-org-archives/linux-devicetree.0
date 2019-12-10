@@ -2,72 +2,178 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9F1C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 16:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7A1C2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 16:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 051302073B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 16:36:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="SFM7xI1R"
+	by mail.kernel.org (Postfix) with ESMTP id BBA1C2073D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 16:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfLJQgF (ORCPT
+        id S1727518AbfLJQju (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:36:05 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:45056 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfLJQgF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:36:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=DzFAbvMnFDJrtj129D8qEMUGAMQFKhsLP+2fDTyYMQo=; b=SFM7xI1RQ7aCYT8cx44YVcesCV
-        jfhQuKv3tUystlLupj4IQV7r3NzRxTvRu7e9w6YMa2iS5WYkDGuM5VbNZNQJ/bnr/WGcGQ32hJj63
-        kQbNnqScPTiGh1evXqlQYe6fYO3PHLTlaegwGSF5iwZh+dQBH/qWThDtodmY/oSNWaN8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ieiUP-0005Jr-IM; Tue, 10 Dec 2019 17:35:57 +0100
-Date:   Tue, 10 Dec 2019 17:35:57 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Landen Chao <landen.chao@mediatek.com>
-Cc:     f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com,
-        matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        davem@davemloft.net, sean.wang@mediatek.com, opensource@vdorst.com,
-        frank-w@public-files.de
-Subject: Re: [PATCH net-next 4/6] net: dsa: mt7530: Add the support of MT7531
- switch
-Message-ID: <20191210163557.GC27714@lunn.ch>
-References: <cover.1575914275.git.landen.chao@mediatek.com>
- <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
+        Tue, 10 Dec 2019 11:39:50 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:56727 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfLJQju (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 11:39:50 -0500
+X-Originating-IP: 90.182.112.136
+Received: from localhost (136.112.broadband15.iol.cz [90.182.112.136])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 2F5696000D;
+        Tue, 10 Dec 2019 16:39:46 +0000 (UTC)
+Date:   Tue, 10 Dec 2019 17:39:44 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com,
+        leoyang.li@nxp.com, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Martin Fuzzey <mfuzzey@parkeon.com>
+Subject: Re: [v5,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+Message-ID: <20191210163944.GS1463890@piout.net>
+References: <20190919014520.15500-1-biwen.li@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190919014520.15500-1-biwen.li@nxp.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 04:14:40PM +0800, Landen Chao wrote:
-> Add new support for MT7531:
+Hi,
+
+On 19/09/2019 09:45:19+0800, Biwen Li wrote:
+> Add some properties for pcf85263/pcf85363 as follows:
+>   - nxp,rtc-interrupt-type: integer type
+>   - nxp,rtc-interrupt-output-pin: string type
+>   - quartz-load-femtofarads: integer type
+>   - quartz-drive-strength-ohms: integer type
+>   - nxp,quartz-low-jitter: bool type
+>   - wakeup-source: bool type
 > 
-> MT7531 is the next generation of MT7530. It is also a 7-ports switch with
-> 5 giga embedded phys, 2 cpu ports, and the same MAC logic of MT7530. Cpu
-> port 6 only supports HSGMII interface. Cpu port 5 supports either RGMII
-> or HSGMII in different HW sku.
+> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v5:
+> 	- Replace nxp,quartz-drive-strength with
+> 	  quartz-drive-strength-ohms
+> 	- Select ohm unit for quartz drive strength
+> 
+> Change in v4:
+> 	- Drop robust defines in include/dt-bindings/rtc/pcf85363.h
+> 	- Add nxp,rtc-interrupt-type property
+> 	- Replace interrupt-output-pin with nxp,rtc-interrupt-output-pin
+> 
+> Change in v3:
+> 	- None
+> 
+> Change in v2:
+> 	- Replace properties name
+> 	  quartz-load-capacitance -> quartz-load-femtofarads
+> 	  quartz-drive-strength -> nxp,quartz-drive-strength
+> 	  quartz-low-jitter -> nxp,quartz-low-jitter
+> 	- Replace drive strength name
+> 	  PCF85263_QUARTZDRIVE_NORMAL -> PCF85263_QUARTZDRIVE_100ko
+> 	  PCF85263_QUARTZDRIVE_LOW -> PCF85263_QUARTZDRIVE_60ko
+> 	  PCF85263_QUARTZDRIVE_HIGH -> PCF85263_QUARTZDRIVE_500ko
+> 	- Set default interrupt-output-pin as "INTA"
+> 
+>  .../devicetree/bindings/rtc/pcf85363.txt      | 44 ++++++++++++++++++-
+>  include/dt-bindings/rtc/pcf85363.h            | 14 ++++++
+>  2 files changed, 57 insertions(+), 1 deletion(-)
+>  create mode 100644 include/dt-bindings/rtc/pcf85363.h
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> index 94adc1cf93d9..7f907581d5db 100644
+> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> @@ -8,10 +8,52 @@ Required properties:
+>  Optional properties:
+>  - interrupts: IRQ line for the RTC (not implemented).
+>  
+> +- nxp,rtc-interrupt-type: integer property, represent the interrupt's
+> +  type. Valid values are
+> +  INT_PIE(periodic interrupt enable),
+> +  INT_OIE(offset correction interrupt enable),
+> +  INT_A1IE(alarm1 interrupt enable),
+> +  INT_A2IE(alarm2 interrupt enable),
+> +  INT_TSRIE(timestamp register interrupt enable)
+> +  INT_BSIE(battery switch interrupt enable),
+> +  INT_WDIE(WatchDog interrupt enable,and
+> +  compose these values such as: INT_A1IE | INT_A2IE,
+> +  but currently only support INT_A1IE, default value is INT_A1IE.
+> +  The property and property nxp,rtc-interrupt-output-pin
+> +  work together to generate some interrupts on some pins.
+> +
+> +- nxp,rtc-interrupt-output-pin: The interrupt output pin must be
+> +  "INTA" or "INTB", default value is "INTA". The property and property
+> +  nxp,rtc-interrupt-type work together to generate some interrupts on
+> +  some pins.
+> +
 
-Hi Landen
+This binding is still not working. What if you need INT_A1 on INTA and
+INT_WD on INTB?
 
-Looking at the code, you seem to treat HSGMII as 2500Base-X. Is this
-correct? Or is it SGMII over clocked to 2.5Gbps?
+> +- quartz-load-femtofarads: The internal capacitor to select for the quartz,
+> +  expressed in femto Farad (fF). Valid values are 6000, 7000 and 12500.
+> +  Default value is 12500fF.
+> +
+> +- quartz-drive-strength-ohms: Drive strength for the quartz,
+> +  expressed in ohm, Valid values are 60000, 100000 and 500000.
+> +  Default value is 100000 ohm.
+> +
+> +- nxp,quartz-low-jitter: Boolean property, if present enables low jitter mode
+> +  which reduces jitter at the cost of increased power consumption.
+> +
+> +- wakeup-source: Boolean property, Please refer to
+> +  Documentation/devicetree/bindings/power/wakeup-source.txt
+> +
+>  Example:
+>  
+>  pcf85363: pcf85363@51 {
+>  	compatible = "nxp,pcf85363";
+>  	reg = <0x51>;
+> -};
+>  
+> +	interrupt-parent = <&gpio1>;
+> +	interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +	wakeup-source;
+> +	nxp,rtc-interrupt-output-pin = "INTA";
+> +	nxp,rtc-interrupt-type = <INT_A1IE>;
+> +	quartz-load-femtofarads = <12500>;
+> +	quartz-drive-strength-ohms = <60000>;
+> +	nxp,quartz-low-jitter;
+> +};
+> diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
+> new file mode 100644
+> index 000000000000..6340bf2da8f5
+> --- /dev/null
+> +++ b/include/dt-bindings/rtc/pcf85363.h
+> @@ -0,0 +1,14 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _DT_BINDINGS_RTC_PCF85363_H
+> +#define _DT_BINDINGS_RTC_PCF85363_H
+> +
+> +/* Interrupt type */
+> +#define INT_WDIE	(1 << 0)
+> +#define INT_BSIE	(1 << 1)
+> +#define INT_TSRIE	(1 << 2)
+> +#define INT_A2IE	(1 << 3)
+> +#define INT_A1IE	(1 << 4)
+> +#define INT_OIE		(1 << 5)
+> +#define INT_PIE		(1 << 6)
 
-	 Andrew
+Please remove IE from the define names. i.e INT_WDIE is a bit enabling
+INT_WD, you don't get an interrupt when the watchdog is enabled but
+rather when it expires.
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
