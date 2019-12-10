@@ -2,176 +2,98 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7454C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 02:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57646C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 02:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC512073D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 02:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2097F206E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 02:49:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="iXHtkFlw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfLJCqL (ORCPT
+        id S1726602AbfLJCtt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 21:46:11 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:48644 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbfLJCqL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 21:46:11 -0500
-Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 10 Dec
- 2019 10:46:42 +0800
-Subject: Re: [PATCH] arm64: dts: meson-a1: add I2C nodes
-To:     Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191202111253.94872-1-jian.hu@amlogic.com>
- <7hsgltqfdx.fsf@baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <e90e00e1-c868-ce09-6f79-deb62da72b43@amlogic.com>
-Date:   Tue, 10 Dec 2019 10:46:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 9 Dec 2019 21:49:49 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:40597 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726509AbfLJCtt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 21:49:49 -0500
+X-UUID: 9c5509bccf6f4399b862490ffa15bd33-20191210
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3p9xe1k8UZpHU7V65IFk3agqCgquUJjR9B/HHNjxoE4=;
+        b=iXHtkFlw5EqtcJGCRYIPyntinI+xVifE0nr4IvDgZRIl/aq4thDe3nIk9dpHgyrYFJW1BHUFdu3st2/sl8tVzGiUPavST++VF5LAuVQzb6fGTE398Cc8hjl+iNhjcQaiS6tIBarGU632FVV3ao18dQPePtT+3mScB4p/kRiohKo=;
+X-UUID: 9c5509bccf6f4399b862490ffa15bd33-20191210
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2088386181; Tue, 10 Dec 2019 10:49:42 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 10 Dec 2019 10:49:20 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 10 Dec 2019 10:49:09 +0800
+Message-ID: <1575946181.16676.4.camel@mtksdaap41>
+Subject: Re: [PATCH v2 04/14] mailbox: mediatek: cmdq: clear task in channel
+ before shutdown
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 10 Dec 2019 10:49:41 +0800
+In-Reply-To: <1574819937-6246-6-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574819937-6246-6-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <7hsgltqfdx.fsf@baylibre.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.99]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kevin
+SGksIERlbm5pczoNCg0KT24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjU4ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IERvIHN1Y2Nlc3MgY2FsbGJhY2sgaW4gY2hhbm5lbCB3aGVuIHNo
+dXRkb3duLiBGb3IgdGhvc2UgdGFzayBub3QgZmluaXNoLA0KPiBjYWxsYmFjayB3aXRoIGVycm9y
+IGNvZGUgdGh1cyBjbGllbnQgaGFzIGNoYW5jZSB0byBjbGVhbnVwIG9yIHJlc2V0Lg0KPiANCj4g
+U2lnbmVkLW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsu
+Y29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMgfCAyNiAr
+KysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2VydGlv
+bnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJv
+eC5jIGIvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1haWxib3guYw0KPiBpbmRleCBmZDUxOWI2
+ZjUxOGIuLmMxMmE3NjhkMTE3NSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tYWlsYm94L210ay1j
+bWRxLW1haWxib3guYw0KPiArKysgYi9kcml2ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5j
+DQo+IEBAIC00NTAsNiArNDUwLDMyIEBAIHN0YXRpYyBpbnQgY21kcV9tYm94X3N0YXJ0dXAoc3Ry
+dWN0IG1ib3hfY2hhbiAqY2hhbikNCj4gIA0KPiAgc3RhdGljIHZvaWQgY21kcV9tYm94X3NodXRk
+b3duKHN0cnVjdCBtYm94X2NoYW4gKmNoYW4pDQo+ICB7DQo+ICsJc3RydWN0IGNtZHFfdGhyZWFk
+ICp0aHJlYWQgPSAoc3RydWN0IGNtZHFfdGhyZWFkICopY2hhbi0+Y29uX3ByaXY7DQo+ICsJc3Ry
+dWN0IGNtZHEgKmNtZHEgPSBkZXZfZ2V0X2RydmRhdGEoY2hhbi0+bWJveC0+ZGV2KTsNCj4gKwlz
+dHJ1Y3QgY21kcV90YXNrICp0YXNrLCAqdG1wOw0KPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+
+ICsNCj4gKwlzcGluX2xvY2tfaXJxc2F2ZSgmdGhyZWFkLT5jaGFuLT5sb2NrLCBmbGFncyk7DQo+
+ICsJaWYgKGxpc3RfZW1wdHkoJnRocmVhZC0+dGFza19idXN5X2xpc3QpKQ0KPiArCQlnb3RvIGRv
+bmU7DQo+ICsNCj4gKwlXQVJOX09OKGNtZHFfdGhyZWFkX3N1c3BlbmQoY21kcSwgdGhyZWFkKSA8
+IDApOw0KPiArDQo+ICsJLyogbWFrZSBzdXJlIGV4ZWN1dGVkIHRhc2tzIGhhdmUgc3VjY2VzcyBj
+YWxsYmFjayAqLw0KPiArCWNtZHFfdGhyZWFkX2lycV9oYW5kbGVyKGNtZHEsIHRocmVhZCk7DQo+
+ICsJaWYgKGxpc3RfZW1wdHkoJnRocmVhZC0+dGFza19idXN5X2xpc3QpKQ0KPiArCQlnb3RvIGRv
+bmU7DQo+ICsNCj4gKwlsaXN0X2Zvcl9lYWNoX2VudHJ5X3NhZmUodGFzaywgdG1wLCAmdGhyZWFk
+LT50YXNrX2J1c3lfbGlzdCwNCj4gKwkJCQkgbGlzdF9lbnRyeSkgew0KPiArCQljbWRxX3Rhc2tf
+ZXhlY19kb25lKHRhc2ssIC1FQ09OTkFCT1JURUQpOw0KPiArCQlrZnJlZSh0YXNrKTsNCj4gKwl9
+DQo+ICsNCj4gKwljbWRxX3RocmVhZF9kaXNhYmxlKGNtZHEsIHRocmVhZCk7DQo+ICsJY2xrX2Rp
+c2FibGUoY21kcS0+Y2xvY2spOw0KPiArZG9uZToNCg0KY21kcV90aHJlYWRfcmVzdW1lKHRocmVh
+ZCk7DQoNClJlZ2FyZHMsDQpDSw0KDQo+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmdGhyZWFk
+LT5jaGFuLT5sb2NrLCBmbGFncyk7DQo+ICB9DQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+bWJveF9jaGFuX29wcyBjbWRxX21ib3hfY2hhbl9vcHMgPSB7DQoNCg==
 
-Thanks for your review
-
-On 2019/12/10 6:54, Kevin Hilman wrote:
-> Hi Jian,
-> 
-> Jian Hu <jian.hu@amlogic.com> writes:
-> 
->> There are four I2C controllers in A1 series,
->> Share the same comptible with AXG.The I2C nodes
->> depend on pinmux and clock controller.
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> ---
->>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 149 ++++++++++++++++++++++
->>   1 file changed, 149 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> index eab2ecd36aa8..d0a73d953f5e 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> @@ -16,6 +16,13 @@
->>   	#address-cells = <2>;
->>   	#size-cells = <2>;
->>   
->> +	aliases {
->> +		i2c0 = &i2c0;
->> +		i2c1 = &i2c1;
->> +		i2c2 = &i2c2;
->> +		i2c3 = &i2c3;
->> +	};
->> +
->>   	cpus {
->>   		#address-cells = <2>;
->>   		#size-cells = <0>;
->> @@ -117,6 +124,46 @@
->>   				};
->>   			};
->>   
->> +			i2c0: i2c@1400 {
->> +				compatible = "amlogic,meson-axg-i2c";
->> +				reg = <0x0 0x1400 0x0 0x24>;
-> 
-> The AXG DT files use 0x20 for the length.  You are using 0x24.  I don't
-> see any additional registers added to the driver, so this doesn't look right.
-In fact, For G12 series and A1, the length should be 0x24. A new 
-register is added, And it is for IRQ handler timeout. If the 
-transmission is exceeding a limited time, it will abort the 
-transmission.Now the function is not used, There is completion to deal 
-the timeout in the driver. I will set the length 0x20 becouse of the new 
-register is not used.
-> 
->> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
->> +				status = "disabled";
->> +			};
->> +
->> +			i2c1: i2c@5c00 {
->> +				compatible = "amlogic,meson-axg-i2c";
->> +				reg = <0x0 0x5c00 0x0 0x24>;
->> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
->> +				status = "disabled";
->> +			};
->> +
->> +			i2c2: i2c@6800 {
->> +				compatible = "amlogic,meson-axg-i2c";
->> +				reg = <0x0 0x6800 0x0 0x24>;
->> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
->> +				status = "disabled";
->> +			};
->> +
->> +			i2c3: i2c@6c00 {
->> +				compatible = "amlogic,meson-axg-i2c";
->> +				reg = <0x0 0x6c00 0x0 0x24>;
->> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
->> +				status = "disabled";
->> +			};
->> +
->>   			uart_AO: serial@1c00 {
->>   				compatible = "amlogic,meson-gx-uart",
->>   					     "amlogic,meson-ao-uart";
->> @@ -171,3 +218,105 @@
->>   		#clock-cells = <0>;
->>   	};
->>   };
->> +
->> +&periphs_pinctrl {
->> +	i2c0_f11_pins:i2c0-f11 {
->> +		mux {
->> +			groups = "i2c0_sck_f11",
->> +				"i2c0_sda_f12";
->> +			function = "i2c0";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
-> 
-> Can you also add some comment to the changelog about the need for
-> drive-strength compared to AXG.
-OK, Drive strength function is added for GPIO pins from G12 series.
-So does A1 series.
-> 
->> +		};
->> +	};
-> 
-> Kevin
-> 
-> .
-> 
