@@ -2,80 +2,109 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09528C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 07:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2812EC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 07:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D772073B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 07:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDAD6206E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 07:50:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pnYDze4P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfLJHoI (ORCPT
+        id S1727048AbfLJHu0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 02:44:08 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:40189 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfLJHoI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 02:44:08 -0500
-Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 9618DCED2A;
-        Tue, 10 Dec 2019 08:53:16 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH v2 1/1] ARM: dts: rockchip: Add brcm bluetooth for
- rk3288-veyron
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <1788857.Va9C3Z3akr@diego>
-Date:   Tue, 10 Dec 2019 08:44:05 +0100
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        BlueZ <linux-bluetooth@vger.kernel.org>,
-        linux-rockchip@lists.infradead.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <B42F187B-C289-4140-841D-D1BF219E72D7@holtmann.org>
-References: <20191127223909.253873-1-abhishekpandit@chromium.org>
- <20191127223909.253873-2-abhishekpandit@chromium.org>
- <61639BAF-5AA0-4264-906F-E24E2A30088D@holtmann.org>
- <1788857.Va9C3Z3akr@diego>
-To:     =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Tue, 10 Dec 2019 02:50:26 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:12613 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726071AbfLJHu0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 02:50:26 -0500
+X-UUID: 328127590f9f48e6a0b31a4a1175a6c3-20191210
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=JL3qkLaljq80IvyBNK1e0OAptSLHH1w7K2FYS4Mu4+8=;
+        b=pnYDze4PDw3LNvqsJ9N4j1pEKHzA6nP7bTtf5VdAtRdg62/wshCcXA0I+rXCj4TpesT5BKuR2OnBUtsFti05F5uz5aoa0Dn1bFAyp8bWKaypVtKNJFFueIH+Npb4YKMWPQS7hSoATkJZX6KjTIEtJeVh7L5xYseeyUOkPZ4JRGo=;
+X-UUID: 328127590f9f48e6a0b31a4a1175a6c3-20191210
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1483728837; Tue, 10 Dec 2019 15:50:22 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 10 Dec 2019 15:50:03 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 10 Dec 2019 15:50:26 +0800
+Message-ID: <1575964221.13210.1.camel@mtksdaap41>
+Subject: Re: [PATCH v2 11/14] soc: mediatek: cmdq: export finalize function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 10 Dec 2019 15:50:21 +0800
+In-Reply-To: <1574819937-6246-13-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574819937-6246-13-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Heiko,
-
->>> This enables the Broadcom uart bluetooth driver on uart0 and gives it
->>> ownership of its gpios. In order to use this, you must enable the
->>> following kconfig options:
->>> - CONFIG_BT_HCIUART_BCM
->>> - CONFIG_SERIAL_DEV
->>> 
->>> This is applicable to rk3288-veyron series boards that use the bcm43540
->>> wifi+bt chips.
->>> 
->>> As part of this change, also refactor the pinctrl across the various
->>> boards. All the boards using broadcom bluetooth shouldn't touch the
->>> bt_dev_wake pin.
->> 
->> so have these changes being merged?
-> 
-> not yet
-> 
-> Doug wanted to give a Reviewed-by, once the underlying bluetooth
-> changes got merged - not sure what the status is though.
-
-the Bluetooth changes have been merged into net-next.
-
-Regards
-
-Marcel
+SGksIERlbm5pczoNCg0KT24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjU4ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IEV4cG9ydCBmaW5hbGl6ZSBmdW5jdGlvbiB0byBjbGllbnQgd2hp
+Y2ggaGVscHMgYXBwZW5kIGVvYyBhbmQganVtcA0KPiBjb21tYW5kIHRvIHBrdC4NCg0KUmV2aWV3
+ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+DQoNCj4gDQo+IFNpZ25lZC1vZmYtYnk6
+IERlbm5pcyBZQyBIc2llaCA8ZGVubmlzLXljLmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+
+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyB8IDcgKystLS0tLQ0KPiAg
+aW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCAgfCA4ICsrKysrKysrDQo+ICAy
+IGZpbGVzIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+IA0KPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgYi9kcml2
+ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiBpbmRleCAyNDRiODUyOGViMTYu
+LjM4ZTBjMTNlMTkyMiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNt
+ZHEtaGVscGVyLmMNCj4gKysrIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVy
+LmMNCj4gQEAgLTM5Miw3ICszOTIsNyBAQCBpbnQgY21kcV9wa3RfYXNzaWduKHN0cnVjdCBjbWRx
+X3BrdCAqcGt0LCB1MTYgcmVnX2lkeCwgdTMyIHZhbHVlKQ0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJP
+TChjbWRxX3BrdF9hc3NpZ24pOw0KPiAgDQo+IC1zdGF0aWMgaW50IGNtZHFfcGt0X2ZpbmFsaXpl
+KHN0cnVjdCBjbWRxX3BrdCAqcGt0KQ0KPiAraW50IGNtZHFfcGt0X2ZpbmFsaXplKHN0cnVjdCBj
+bWRxX3BrdCAqcGt0KQ0KPiAgew0KPiAgCXN0cnVjdCBjbWRxX2NsaWVudCAqY2wgPSBwa3QtPmNs
+Ow0KPiAgCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHswfSB9Ow0KPiBAQCAtNDEy
+LDYgKzQxMiw3IEBAIHN0YXRpYyBpbnQgY21kcV9wa3RfZmluYWxpemUoc3RydWN0IGNtZHFfcGt0
+ICpwa3QpDQo+ICANCj4gIAlyZXR1cm4gZXJyOw0KPiAgfQ0KPiArRVhQT1JUX1NZTUJPTChjbWRx
+X3BrdF9maW5hbGl6ZSk7DQo+ICANCj4gIHN0YXRpYyB2b2lkIGNtZHFfcGt0X2ZsdXNoX2FzeW5j
+X2NiKHN0cnVjdCBjbWRxX2NiX2RhdGEgZGF0YSkNCj4gIHsNCj4gQEAgLTQ0NiwxMCArNDQ3LDYg
+QEAgaW50IGNtZHFfcGt0X2ZsdXNoX2FzeW5jKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCBjbWRxX2Fz
+eW5jX2ZsdXNoX2NiIGNiLA0KPiAgCXVuc2lnbmVkIGxvbmcgZmxhZ3MgPSAwOw0KPiAgCXN0cnVj
+dCBjbWRxX2NsaWVudCAqY2xpZW50ID0gKHN0cnVjdCBjbWRxX2NsaWVudCAqKXBrdC0+Y2w7DQo+
+ICANCj4gLQllcnIgPSBjbWRxX3BrdF9maW5hbGl6ZShwa3QpOw0KPiAtCWlmIChlcnIgPCAwKQ0K
+PiAtCQlyZXR1cm4gZXJyOw0KPiAtDQo+ICAJcGt0LT5jYi5jYiA9IGNiOw0KPiAgCXBrdC0+Y2Iu
+ZGF0YSA9IGRhdGE7DQo+ICAJcGt0LT5hc3luY19jYi5jYiA9IGNtZHFfcGt0X2ZsdXNoX2FzeW5j
+X2NiOw0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEu
+aCBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gaW5kZXggNGJjZTI0
+MGRiYjU2Li45OThiYzkwZjlkYTkgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21l
+ZGlhdGVrL210ay1jbWRxLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRr
+LWNtZHEuaA0KPiBAQCAtMjA0LDYgKzIwNCwxNCBAQCBpbnQgY21kcV9wa3RfcG9sbF9tYXNrKHN0
+cnVjdCBjbWRxX3BrdCAqcGt0LCB1OCBzdWJzeXMsDQo+ICAgKi8NCj4gIGludCBjbWRxX3BrdF9h
+c3NpZ24oc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiByZWdfaWR4LCB1MzIgdmFsdWUpOw0KPiAg
+DQo+ICsvKioNCj4gKyAqIGNtZHFfcGt0X2ZpbmFsaXplKCkgLSBBcHBlbmQgRU9DIGFuZCBqdW1w
+IGNvbW1hbmQgdG8gcGt0Lg0KPiArICogQHBrdDoJdGhlIENNRFEgcGFja2V0DQo+ICsgKg0KPiAr
+ICogUmV0dXJuOiAwIGZvciBzdWNjZXNzOyBlbHNlIHRoZSBlcnJvciBjb2RlIGlzIHJldHVybmVk
+DQo+ICsgKi8NCj4gK2ludCBjbWRxX3BrdF9maW5hbGl6ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCk7
+DQo+ICsNCj4gIC8qKg0KPiAgICogY21kcV9wa3RfZmx1c2hfYXN5bmMoKSAtIHRyaWdnZXIgQ01E
+USB0byBhc3luY2hyb25vdXNseSBleGVjdXRlIHRoZSBDTURRDQo+ICAgKiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgcGFja2V0IGFuZCBjYWxsIGJhY2sgYXQgdGhlIGVuZCBvZiBkb25lIHBhY2tl
+dA0KDQo=
 
