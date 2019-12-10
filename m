@@ -2,71 +2,74 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 110DAC2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 19:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A60C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 19:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBCE620828
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 19:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C89320652
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 19:37:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="twAiZfuN"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="CNMRtLPl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfLJTfB (ORCPT
+        id S1726739AbfLJThi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:35:01 -0500
-Received: from mail-lf1-f54.google.com ([209.85.167.54]:38535 "EHLO
-        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbfLJTfB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 14:35:01 -0500
-Received: by mail-lf1-f54.google.com with SMTP id r14so14697125lfm.5
-        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 11:34:59 -0800 (PST)
+        Tue, 10 Dec 2019 14:37:38 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37955 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbfLJThi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 14:37:38 -0500
+Received: by mail-lf1-f66.google.com with SMTP id r14so14703315lfm.5
+        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 11:37:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:organization:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=/MlFCGYOJd4yPMFMfvXQ0lFAzUxfflNeb6cfS7BReFQ=;
-        b=twAiZfuN/fa82Ozs4/HtT1+8+UGvhi+44FNPK673RM264nDBovGGos5xicL5W7zSy4
-         w/IqDnBH9LgGWonp68IkrU6o5WBtMwAB7urw8ITsq+xGn5phUZsPSqxYneBwL7RYo0HJ
-         mpHWzYTSBL4wFCunv49+OAPA4RJc89sR1+hGldrdo4AbPBvfyirNFroyRnaC3rbHyVk7
-         XsMICyRAVeWjdY/TX5+e1Z1PuvranIS5Y7BbBv6nNuFSA7M5GQPQ8Pojr59lKY2xyq5X
-         3/w9b/0ofIsbj/GgsvrDOPl97YtLttG96VKUI6Qa9EWkhIQ/e2H4d1yMWQrNqiPob2E5
-         5CKg==
+        h=subject:from:to:cc:references:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iVJKBlhEYT6S4kQZRu/hdIVpnnDPFI8gf9sf12wfx90=;
+        b=CNMRtLPlIp77f0IVCJYc6IX1Y09b5Wqnv9CF96KD6ytBL4eDUSJ80kH1zFvGs0aGpB
+         SkmFjdxaicjcndoWwMrAm3tQ5Vw4g1iE/Pe7QQ5xWiwGDSGnJRJHjD4QHxyhTfGIdhj3
+         4ueE3qEswRNpoLloqIKeAKd6Sw4d8+IC3pPHu+5zgVcw9k8z0biTS6cvB6pjcSYuoqyG
+         6RmjKc+jctS4BGy769thvk+IfJabmbWSzKC8OK5lnqhP6prbF2PTR8w1m3rWL6Rp05Fm
+         2TUqqdigReR2A4kQ3NbA/klRYOF+v62hjosjyK32VddWLcz5+VcfGE1z2OQji383Hm6S
+         rzoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:organization:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=/MlFCGYOJd4yPMFMfvXQ0lFAzUxfflNeb6cfS7BReFQ=;
-        b=Edx0yHPiDLjwVdSBAY1UTTR91QW8Lz9bvKiznbm/y9zDca4i8peoUXfmezBHrFp/gu
-         Qa5L9jYwR0u5XlCniWzBPPe6/lUhXPy3X/pc5sw08CBbcYnMp4pPC1QknQCWedJV74L0
-         AYTAfqq9wiEVsVxq4Sou8jvscd1m3T92emgJkZlBxtMEh0VatU5Ou5WHelwDQ2s1CwcY
-         c1YYJgP9b3jIzYQYKusZRhMcytsrDr845hOqFKbwlhP9Ctz64ipHa5mvS6vWrj3+lYF1
-         UQ4h5I2QKQ7e9iPPvmV+2y3wSPOdbHsr3xprj+0TDqXXjhNLy9N4dO4R5z4wiTFBuP0U
-         9RMQ==
-X-Gm-Message-State: APjAAAVWIcpcZcMxpXwUjGNPpIN0aFDs4yJqHX3kESraaCzNJpnqR68W
-        s1FbXxN/ecXXetIDN3l93Uw3Xg==
-X-Google-Smtp-Source: APXvYqx5dQp4pwVFUIKxulstm9a5RUmfOGMJ6Pw45woqxDqHxX6pBfMzfGFrKSpfpMOCK8bPF2w2Qg==
-X-Received: by 2002:ac2:4add:: with SMTP id m29mr19716431lfp.190.1576006498971;
-        Tue, 10 Dec 2019 11:34:58 -0800 (PST)
+        h=x-gm-message-state:subject:from:to:cc:references:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=iVJKBlhEYT6S4kQZRu/hdIVpnnDPFI8gf9sf12wfx90=;
+        b=ICY6yihD2GEBPxucxHLgPuVIRSxbACMUk1lAQgikGJrSe2E7jgiixnzLHqVo4TFCvi
+         vAO92nuG+J0RWieVO5g9cfpjqQe3KpBWsR0+Y5b4m9vviFivzUycyOvC3mckk+/KpbOo
+         hB3LQdjCS3hBPkN+BwFbYmWCqzzCNQNA4NDU2taTB6s+80Na9u2zjwWy2iRlQfIw69nP
+         EgsPKOWh/msjyo8ahX6IsrqrDxHK6GHzvBoJkJUEuFbdoHuamm803CXGD3SVyHWs0i0O
+         y+AcOg3lsoZCtW01jNDZJWKgU5yzg+jLctz/EaevTK6t9eF+uhfzoY0oSUXElAN+NBQD
+         hVkw==
+X-Gm-Message-State: APjAAAWfQAH7OKJE0WnU93RzBItclwRROkj7OFk9eOyqm3UZJmOE88vv
+        Gbt3kpaGExBHC1HtsdRF11l+cQ==
+X-Google-Smtp-Source: APXvYqwYZYNq7GNw2QOsd8P7bDup+PoLnIVJpWUvM2k28qn2ZLKHEDQXTHn7SBLoQSvanHoE22KBmw==
+X-Received: by 2002:ac2:5dc7:: with SMTP id x7mr20113199lfq.24.1576006656477;
+        Tue, 10 Dec 2019 11:37:36 -0800 (PST)
 Received: from wasted.cogentembedded.com ([2a00:1fa0:88a:ffe6:e26c:e506:75a0:c93a])
-        by smtp.gmail.com with ESMTPSA id m11sm2129287lfj.89.2019.12.10.11.34.57
+        by smtp.gmail.com with ESMTPSA id y29sm2311376ljd.88.2019.12.10.11.37.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Dec 2019 11:34:58 -0800 (PST)
+        Tue, 10 Dec 2019 11:37:35 -0800 (PST)
+Subject: [PATCH RFC 1/2] dt-bindings: memory: document Renesas RPC-IF bindings
 From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH RFC 0/2] Add Renesas RPC-IF support
 To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 Cc:     Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
         Mason Yang <masonccyang@mxic.com.tw>,
         linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
 Organization: Cogent Embedded
-Message-ID: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
-Date:   Tue, 10 Dec 2019 22:34:56 +0300
+Message-ID: <bd2c82fa-b0f0-9274-8c69-d13f7cddefc5@cogentembedded.com>
+Date:   Tue, 10 Dec 2019 22:37:34 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
  Thunderbird/52.2.1
 MIME-Version: 1.0
+In-Reply-To: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-MW
 Content-Transfer-Encoding: 7bit
@@ -75,19 +78,75 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
+Renesas Reduced Pin Count Interface (RPC-IF) allows a SPI flash or
+HyperFlash connected to the SoC to be accessed via the external address
+space read mode or the manual mode.
 
-Here's a set of 2 patches against Linus' repo. Renesas Reduced Pin Count
-Interface (RPC-IF) allows a SPI flash or HyperFlash connected to the SoC
-to be accessed via the external address space read mode or the manual mode.
-The memory controller driver for RPC-IF registers either the SPI or HyperFLash
-subdevice, depending on the contents of the device tree subnode; it also
-provides the abstract "back end" API that can be used by the "front end"
-SPI/MTD drivers to talk to the real hardware...
+Document the device tree bindings for the Renesas RPC-IF found in the R-Car
+gen3 SoCs.
 
 Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
 
-[1/2] dt-bindings: memory: document Renesas RPC-IF bindings
-[2/2] memory: add Renesas RPC-IF driver
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-MBR, Sergei
+---
+ Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.txt |   52 ++++++++++
+ 1 file changed, 52 insertions(+)
+
+Index: linux/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.txt
+===================================================================
+--- /dev/null
++++ linux/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.txt
+@@ -0,0 +1,52 @@
++Renesas Reduced Pin Count Interface (RPC-IF)
++--------------------------------------------
++
++Renesas RPC-IF allows a SPI flash or HyperFlash connected to the SoC to
++be accessed via the external address space read mode or the manual mode.
++
++Required properties:
++- compatible: should be an SoC-specific compatible value, followed by
++		"renesas,rcar-gen3-rpc-if" as a fallback.
++		supported SoC-specific values are:
++		"renesas,r8a77980-rpc-if" (R-Car V3H),
++		"renesas,r8a77995-rpc-if" (R-Car D3).
++- reg: should list 3 register areas:
++	1st for the RPC-IF registers,
++	2nd for the direct mapping read mode,
++	3rd for the write buffer area.
++- reg-names: should contain "regs", "dirmap", and "wbuf".
++- clocks: should contain the clock phandle/specifier pair for the module clock.
++- power-domains: should contain the power domain phandle/specifier pair.
++- resets: should contain the reset controller phandle/specifier pair.
++- #address-cells: should be 1.
++- #size-cells: should be 0.
++
++The flash chip itself should be represented by a subnode of the RPC-IF node.
++The flash interface is selected based on the "compatible" property of this
++subnode:
++- if it contains "jedec,spi-nor", then SPI is used;
++- if it contains "cfi-flash", then HyperFlash is used.
++
++Example:
++
++	rpc: spi@ee200000 {
++		compatible = "renesas,r8a77995-rpc-if",
++			     "renesas,rcar-gen3-rpc-if";
++		reg = <0 0xee200000 0 0x200>,
++		      <0 0x08000000 0 0x4000000>,
++		      <0 0xee208000 0 0x100>;
++		reg-names = "regs", "dirmap", "wbuf";
++		clocks = <&cpg CPG_MOD 917>;
++		power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++		resets = <&cpg 917>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		flash@0 {
++			compatible = "jedec,spi-nor";
++			reg = <0>;
++			spi-max-frequency = <40000000>;
++			spi-tx-bus-width = <1>;
++			spi-rx-bus-width = <1>;
++		};
++	};
