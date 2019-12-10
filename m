@@ -2,210 +2,139 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA37C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F247C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667B4206EC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4387E20663
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:41:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/8vG0ml"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RVgrOMkT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbfLJSaG (ORCPT
+        id S1727633AbfLJSle (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 13:30:06 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37473 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbfLJSaF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 13:30:05 -0500
-Received: by mail-lf1-f68.google.com with SMTP id b15so14525467lfc.4;
-        Tue, 10 Dec 2019 10:30:03 -0800 (PST)
+        Tue, 10 Dec 2019 13:41:34 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40840 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727631AbfLJSle (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 13:41:34 -0500
+Received: by mail-pf1-f196.google.com with SMTP id q8so260688pfh.7
+        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 10:41:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qJU4Pmn8p+BP6WtR4OMNjM0SlbVb7r9lcUi4XdHIpn4=;
-        b=X/8vG0mliUAaIF4AfnO5i7Xkz0m6r0I1Guf84MbCuz9S76xmx4xu/0UiO32//pvXxl
-         I+SYlBnp2QkEqd1Td3/X9xRrrYwwoZPSucVDR4luj0Bq+LC6c6y+QUU4ITNMep/ISIag
-         YiHUno0cnwaF4V+dCzvQFmBt3VxXvVEA19HrnKjaPbI0ApizKiFWEFqig6jKb3Ft7wf9
-         m6Rh7P1C/ZnJvCNbQFw6shgZuNq0gjdey2Cy78F1sO0jLbUXdNb+JAHKJRgIf8TgIiwW
-         03hIVUOa9YUiEZdWTX3Zjbd6qqyE7w1PQqA3iDFJUFBzyy5HDMpEXCd4DGKiJCgfnEOf
-         6ZyA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=wTwfKnj9eczpa2pB2PlbhOCyosSLl37njomT+ws8Zog=;
+        b=RVgrOMkTunRC9OxL5bW0If9c94cX0AI3qE8o5LSXokwULZQBNlz3J+ZHFxD2aSZ+AN
+         e+Q1LzgnEoidJXYohDJtMYRb9MC6Mu+DHArZuxrjH+kTm2xwOLz/hChE405Wmyl6+A6t
+         yrH4qIIuMfE5MzIGCGMzHnt8Bj4ksmHwe845S9Id2ehdc0N8e8pdXa0Sn/DMVcHsNyOU
+         XlWo/LNUUvy9nOJvz4FJI0UiB2c79gMHNrT1uLuhHtgLfjCb6w2YKw3D1v+hTXZmo4CW
+         PjiQAjUCEz7AUqYD00+BjsAE+5HDpNCNye/JECrpwP0lL4PcBSJp4Koc6toEBKzrNg99
+         4Cgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qJU4Pmn8p+BP6WtR4OMNjM0SlbVb7r9lcUi4XdHIpn4=;
-        b=XO3+LTzsMMaozr/TzkGXJTiL48LRDzStO7xGeuMH+ZOXpiPVIMiGrMFnzK8rJPBe1R
-         UvRbCLI+rg44VPagixB4GcoTXxj0dCLAc2EVyaQOp/MzQMncJQRVvJBt38vhbGv+2zrB
-         OS+djYPwAnhG0siYjpeb/ydJD0M74I/HgUNeYAp4/3WceeVwf5dgeISY7jIRe1GY8sUW
-         UbCp2VhyEViSOGDGssp++QiHCHmo/D2OPzy3degUcNPuv8Eit9WRjuzLmSthHSFpYwmc
-         42/3cl/GOYdjrWmRz4QqsTsOzWduH8O3zMk2t7iGRqkVXRo44CnJHzTiaf3az6xXFD8K
-         Xo7A==
-X-Gm-Message-State: APjAAAWlQn1bCsfzbom5Ex4dRshhmn4QAyoHgql/JK4CDX+sR8VMYEaJ
-        NsWjzWeYkLh7FNVFu/1KVFs=
-X-Google-Smtp-Source: APXvYqyO2DJRFRYreVbJWU1FOfHdesOW3uMVxL4CrJOhxgLnOJJWcJ1dSr+dh7dlPGifSs3bh7KGqA==
-X-Received: by 2002:a19:5013:: with SMTP id e19mr20136293lfb.8.1576002602556;
-        Tue, 10 Dec 2019 10:30:02 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id g5sm2018377lfc.11.2019.12.10.10.30.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 10:30:01 -0800 (PST)
-Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        mturquette@baylibre.com, horms+renesas@verge.net.au,
-        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
-        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        alexios.zavras@intel.com, alsa-devel@alsa-project.org
-References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-4-git-send-email-skomatineni@nvidia.com>
- <7cf4ff77-2f33-4ee5-0e09-5aa6aef3e8be@gmail.com>
- <ad3a6743-4b36-fa25-9cc7-72803038ecc5@gmail.com>
- <dc7a057a-0bed-0e6f-0987-edcfec47f867@gmail.com>
- <288a1701-def6-d628-26bc-a305f817bdb1@gmail.com>
- <78644d45-2ae3-121f-99fc-0a46f205907d@nvidia.com>
- <b35916e1-c6ee-52ca-9111-5ae109437b6e@nvidia.com>
- <ccb715cc-c927-ea91-a26e-24d6eeeeef1a@gmail.com>
- <ee1d39d4-9a57-da9b-fce6-8130dac1d2fd@nvidia.com>
- <db3bee1e-1bfa-2f9e-9ed1-91b98554556a@gmail.com>
- <22a2f8bd-561d-f4c6-4eef-bb61095c53b2@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <5a5cfa74-66be-5c7a-04eb-88c355851c59@gmail.com>
-Date:   Tue, 10 Dec 2019 21:30:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=wTwfKnj9eczpa2pB2PlbhOCyosSLl37njomT+ws8Zog=;
+        b=aCGPtQIuBalIzk6/8cfuZfQE/DCohaGHcRlgzfegYRYe9mOJK4ClgW+GKTsCEiUa6/
+         bpVXWaFc6ys4nHZbXfBv1E0TW0q0e/Wfa6H+wNHTq62yvU9kfHvbUs+ejIGgPsCXV3b+
+         dG72X2FGUDEYBDb7DLpfThFxadR2n3uIThGmrm3Dg3filn2XF6Mk028zusbLdf1RVzfZ
+         a0vHwxjWEsnBGCXqXOvTsnJmzUper1fjmoMXs4pXGgGcR+9l8RRHj1eaSGT9O3Mxmu5j
+         HTr7ZF1Lxw1vZ6KXn3y1BrdGDxl6poSj77OLGTCkwEKnG+xB4h1iRXD0VAzY/kp2oabb
+         0rbQ==
+X-Gm-Message-State: APjAAAVXIKTm9g+b/dXH9xFjPgkZvGGHGRmT6xBropG3FP+vYywZ3v+8
+        o3W+EdtX8EfP1k/Ded2umUrryYnpnwFvtg==
+X-Google-Smtp-Source: APXvYqyU5AsS15FX5JR/4v9ywiSr7NjSeduEieNn9GzLr/P45Zt9Avb7WkbCrH/jY/mSnrUTizA8mA==
+X-Received: by 2002:a63:5525:: with SMTP id j37mr25733818pgb.180.1576003293591;
+        Tue, 10 Dec 2019 10:41:33 -0800 (PST)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id d14sm3711274pjz.12.2019.12.10.10.41.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 10 Dec 2019 10:41:29 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>, linux-iio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: a1: add saradc controller
+In-Reply-To: <9a2ddfa3-28f3-7d15-bb25-5b84078b77c7@amlogic.com>
+References: <1575358332-44866-1-git-send-email-xingyu.chen@amlogic.com> <7hpngxqfa7.fsf@baylibre.com> <9a2ddfa3-28f3-7d15-bb25-5b84078b77c7@amlogic.com>
+Date:   Tue, 10 Dec 2019 10:41:28 -0800
+Message-ID: <7h1rtcqazr.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <22a2f8bd-561d-f4c6-4eef-bb61095c53b2@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-10.12.2019 20:48, Sowjanya Komatineni пишет:
-> 
-> On 12/10/19 9:41 AM, Dmitry Osipenko wrote:
->> 09.12.2019 23:46, Sowjanya Komatineni пишет:
->>> On 12/9/19 12:12 PM, Dmitry Osipenko wrote:
->>>> 08.12.2019 00:36, Sowjanya Komatineni пишет:
->>>>> On 12/7/19 11:59 AM, Sowjanya Komatineni wrote:
->>>>>> On 12/7/19 8:00 AM, Dmitry Osipenko wrote:
->>>>>>> 07.12.2019 18:53, Dmitry Osipenko пишет:
->>>>>>>> 07.12.2019 18:47, Dmitry Osipenko пишет:
->>>>>>>>> 07.12.2019 17:28, Dmitry Osipenko пишет:
->>>>>>>>>> 06.12.2019 05:48, Sowjanya Komatineni пишет:
->>>>>>>>>>> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2, clk_out_3
->>>>>>>>>>> with
->>>>>>>>>>> mux and gate for each of these clocks.
->>>>>>>>>>>
->>>>>>>>>>> Currently these PMC clocks are registered by Tegra clock driver
->>>>>>>>>>> using
->>>>>>>>>>> clk_register_mux and clk_register_gate by passing PMC base address
->>>>>>>>>>> and register offsets and PMC programming for these clocks happens
->>>>>>>>>>> through direct PMC access by the clock driver.
->>>>>>>>>>>
->>>>>>>>>>> With this, when PMC is in secure mode any direct PMC access
->>>>>>>>>>> from the
->>>>>>>>>>> non-secure world does not go through and these clocks will not be
->>>>>>>>>>> functional.
->>>>>>>>>>>
->>>>>>>>>>> This patch adds these clocks registration with PMC as a clock
->>>>>>>>>>> provider
->>>>>>>>>>> for these clocks. clk_ops callback implementations for these
->>>>>>>>>>> clocks
->>>>>>>>>>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC
->>>>>>>>>>> programming
->>>>>>>>>>> in secure mode and non-secure mode.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>>>> ---
->>>>>>>>> [snip]
->>>>>>>>>
->>>>>>>>>>> +
->>>>>>>>>>> +static const struct clk_ops pmc_clk_gate_ops = {
->>>>>>>>>>> +    .is_enabled = pmc_clk_is_enabled,
->>>>>>>>>>> +    .enable = pmc_clk_enable,
->>>>>>>>>>> +    .disable = pmc_clk_disable,
->>>>>>>>>>> +};
->>>>>>>>>> What's the benefit of separating GATE from the MUX?
->>>>>>>>>>
->>>>>>>>>> I think it could be a single clock.
->>>>>>>>> According to TRM:
->>>>>>>>>
->>>>>>>>> 1. GATE and MUX are separate entities.
->>>>>>>>>
->>>>>>>>> 2. GATE is the parent of MUX (see PMC's CLK_OUT paths diagram in
->>>>>>>>> TRM).
->>>>>>>>>
->>>>>>>>> 3. PMC doesn't gate EXTPERIPH clock but could "force-enable" it,
->>>>>>>>> correct?
->>>>> Was following existing clk-tegra-pmc as I am not sure of reason for
->>>>> having these clocks registered as separate mux and gate clocks.
->>>>>
->>>>> Yes, PMC clocks can be registered as single clock and can use clk_ops
->>>>> for set/get parent and enable/disable.
->>>>>
->>>>> enable/disable of PMC clocks is for force-enable to force the clock to
->>>>> run regardless of ACCEPT_REQ or INVERT_REQ.
->>>>>
->>>>>>>> 4. clk_m_div2/4 are internal PMC OSC dividers and thus these clocks
->>>>>>>> should belong to PMC.
->>>>>>> Also, it should be "osc" and not "clk_m".
->>>>>> I followed the same parents as it were in existing clk-tegra-pmc
->>>>>> driver.
->>>>>>
->>>>>> Yeah they are wrong and they should be from osc and not clk_m.
->>>>>>
->>>>>> Will fix in next version.
->>>>>>
->>>> Could you please describe the full EXTPERIPH clock topology and how the
->>>> pinmux configuration is related to it all?
->>>>
->>>> What is internal to the Tegra chip and what are the external outputs?
->>>>
->>>> Is it possible to bypass PMC on T30+ for the EXTPERIPH clocks?
->>> PMC CLK1/2/3 possible sources are OSC_DIV1, OSC_DIV2, OSC_DIV4,
->>> EXTPERIPH from CAR.
->>>
->>> OSC_DIV1/2/4 are with internal dividers at the OSC Pads
->>>
->>> EXTPERIPH is from CAR and it has reset and enable controls along with
->>> clock source selections to choose one of the PLLA_OUT0, CLK_S,
->>> PLLP_OUT0, CLK_M, PLLE_OUT0
->> Are you sure that EXTPERIPH has a reset? What will it reset? Why it's
->> not documented in TRM?
-> Yes, Extperiph1/2/3 has RST part of CAR RST_DEVICES_V bits 24/25/26
-
-Are these bits not documented in a public TRMs? I checked
-T30/114/124/210 TRMs and CLK_RST_CONTROLLER_RST_DEVICES_V_0 doesn't have
-those bits in the docs.
-
->>> So, PMC CLK1/2/4 possible parents are OSC_DIV1, OSC_DIV2, OSC_DIV4, EXTERN.
->>>
->>>
->>> CLK1/2/3 also has Pinmux to route EXTPERIPH output on to these pins.
->> Could you please clarify what are "these" pins? Perhaps you meant the
->> EXTERN pin of PMC?
-> By CLK1/2/3 pins, I am referring to CLK_OUT_1/2/3 pins from Tegra
-
-I see now what you meant, thanks.
-
-[snip}
+WGluZ3l1IENoZW4gPHhpbmd5dS5jaGVuQGFtbG9naWMuY29tPiB3cml0ZXM6DQoNCj4gSGksIEtl
+dmluDQo+DQo+IE9uIDIwMTkvMTIvMTAgNjo1NiwgS2V2aW4gSGlsbWFuIHdyb3RlOg0KPj4gWGlu
+Z3l1IENoZW4gPHhpbmd5dS5jaGVuQGFtbG9naWMuY29tPiB3cml0ZXM6DQo+Pg0KPj4+IFRoZSBz
+YXJhZGMgY29udHJvbGxlciBpbiBNZXNvbi1BMSBpcyB0aGUgc2FtZSBhcyB0aGUgTWVzb24tRzEy
+IHNlcmllcyBTb0NzLA0KPj4+IHNvIHdlIHVzZSB0aGUgc2FtZSBjb21wYXRpYmxlIHN0cmluZy4N
+Cj4+Pg0KPj4+IFNpZ25lZC1vZmYtYnk6IFhpbmd5dSBDaGVuIDx4aW5neXUuY2hlbkBhbWxvZ2lj
+LmNvbT4NCj4+Pg0KPj4+IC0tLQ0KPj4+IFRoaXMgcGF0Y2ggaXMgYmFzZWQgb24gQTEgY2xvY2sg
+cGF0Y2hzZXQgYXQgWzBdLg0KPj4+DQo+Pj4gWzBdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xp
+bnV4LWFtbG9naWMvMjAxOTExMjkxNDQ2MDUuMTgyNzc0LTEtamlhbi5odUBhbWxvZ2ljLmNvbQ0K
+Pj4+IC0tLQ0KPj4+ICAgYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWExLmR0c2kg
+fCAxNSArKysrKysrKysrKysrKysNCj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxNSBpbnNlcnRpb25z
+KCspDQo+Pj4NCj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21l
+c29uLWExLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tYTEuZHRzaQ0K
+Pj4+IGluZGV4IDcyMTBhZDAuLmNhZDE3NTYgMTAwNjQ0DQo+Pj4gLS0tIGEvYXJjaC9hcm02NC9i
+b290L2R0cy9hbWxvZ2ljL21lc29uLWExLmR0c2kNCj4+PiArKysgYi9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2FtbG9naWMvbWVzb24tYTEuZHRzaQ0KPj4+IEBAIC05Myw2ICs5MywyMSBAQA0KPj4+ICAg
+CQkJCWNsb2NrLW5hbWVzID0gInh0YWwiLCAicGNsayIsICJiYXVkIjsNCj4+PiAgIAkJCQlzdGF0
+dXMgPSAiZGlzYWJsZWQiOw0KPj4+ICAgCQkJfTsNCj4+PiArDQo+Pj4gKwkJCXNhcmFkYzogYWRj
+QDJjMDAgew0KPj4+ICsJCQkJY29tcGF0aWJsZSA9ICJhbWxvZ2ljLG1lc29uLWcxMmEtc2FyYWRj
+IiwNCj4+PiArCQkJCQkgICAgICJhbWxvZ2ljLG1lc29uLXNhcmFkYyI7DQo+Pj4gKwkJCQlyZWcg
+PSA8MHgwIDB4MmMwMCAweDAgMHg0OD47DQo+PiBXaHkgMHg0OCBoZXJlPyAgQVhHIHVzZXMgMHgz
+OCBhbmQgeW91J3JlIG5vdCBhZGRpbmcgYW55IG1vcmUgcmVnaXN0ZXJzDQo+PiB0byB0aGlzIGRy
+aXZlci4NCj4NCj4gVGhhbmtzIGZvciB5b3UgcmV2aWV3Lg0KPg0KPiBUaGUgc2FyYWRjIGludHJv
+ZHVjZXMgNCBuZXcgcmVnaXN0ZXJzIChhcyBzaG93biBiZWxvdykgYmVnaW4gd2l0aCBnMTJhIA0K
+PiBwbGF0Zm9ybSwgYW5kIHRoZXNlIHJlZ2lzdGVycyBhcmUgdXNlZA0KPiB0byBzYXZlIHRoZSBz
+YW1wbGluZyB2YWx1ZSBvZiBjb3JyZXNwb25kaW5nIGNoYW5uZWwuIEluIG90aGVyIHdvcmRzLCB3
+ZSANCj4gY2FuIGNob29zZSBmaWZvIG9yIG5ldyByZWdpc3RlcnMgdG8gc2F2ZQ0KPiBzYW1wbGlu
+ZyB2YWx1ZSwgYnV0IGl0IGlzIG5vdCBzdXBwb3J0ZWQgYnkgdGhlIGN1cnJlbnQgZHJpdmVyLg0K
+Pg0KPiBkb3V0IHJlZ2lzdGVywqAgfC0tLT4gZmlmbw0KPiAgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwtLS0+IGNoYW5uZWwgcmVncyAtfA0KPiAgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+fC0tLSBjaGFubmVsLTANCj4gIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwtLS0gY2hhbm5lbC0xDQo+ICDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IC4uLg0KPiAgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+fCAtLS0gY2hhbm5lbC03DQo+DQo+IEFPX1NBUl9BRENfQ0hOTDAx77yac2F2aW5nIHNhbXBsaW5n
+IGRhdGEgb2YgY2hhbm5lbCAwLzENCj4gQU9fU0FSX0FEQ19DSE5MMjM6wqDCoCBzYXZpbmcgc2Ft
+cGxpbmcgZGF0YSBvZiBjaGFubmVsIDIvMw0KPiBBT19TQVJfQURDX0NITkw0NTrCoMKgIHNhdmlu
+ZyBzYW1wbGluZyBkYXRhIG9mIGNoYW5uZWwgNC81DQo+IEFPX1NBUl9BRENfQ0hOTDY3OsKgwqAg
+c2F2aW5nIHNhbXBsaW5nIGRhdGEgb2YgY2hhbm5lbCA2LzcNCg0KSSB1bmRlcnN0YW5kIHRoZXJl
+IGFyZSBuZXcgcmVnaXN0ZXJzIGluIHRoZSBoYXJkd2FyZSwgYnV0IEkgZG9uJ3QgdGhpbmsNCnRo
+ZSBjdXJyZW50IGRyaXZlciBpcyB1c2luZyB0aG9zZS4gIFBsZWFzZSBjb3JyZWN0IG1lIGlmIEkn
+bSB3cm9uZy4NCg0KPiBUaGlzIHBhdGNoIHVzZSB0aGUgMHg0OCB0byBkZXNjcmliZSB0aGUgcmVn
+aXN0ZXJzIGxlbmd0aCBqdXN0IGZvbGxvdyB0aGUgDQo+IGZpbGUgbWVzb24tZzEyLWNvbW1vbi5k
+dHNpLg0KDQpPSywgbXkgZmF1bHQuIEkgd2FzIGNvbXBhcmluZyB3aXRoIEFYRyBpbnN0ZWFkIG9m
+IEcxMkEuICBCdXQgc3RpbGwsIGlmDQp0aGUgZHJpdmVyIGlzIG5vdCB1c2luZyB0aG9zZSByZWdp
+c3RlcnMsIHRoZW4gZzEyIERUIGZpbGVzIGFyZSB3cm9uZyB0b28uDQoNClRoYXQgYmVpbmcgc2Fp
+ZCwgSSdtIG5vdCBnb2luZyB0byBiZSB0b28gcGlja3kgYWJvdXQgdGhhdC4gIA0KDQo+IGFuZCBp
+dCBkb2Vzbid0IGFmZmVjdCB0aGUgZHJpdmVyIGJlY2F1c2Ugb2YgdGhlIG1hcHBlZCByZWdpdGVy
+IGxlbmd0aA0KPiBpcyBsaW1pdGVkIGJ5IG1heF9yZWdpc3RlciBtZW1iZXIgaW4gc3RydWN0IHJl
+Z21hcF9jb25maWcuDQo+DQo+IEkgY2FuIHJlcGxhY2UgMHg0OCB3aXRoIDB4MzggaW4gbmV4dCBw
+YXRjaCBpZiBuZWNlc3NhcnkuDQoNClNpbmNlIEcxMiBpcyBhbHJlYWR5IHVzaW5nIDB4NDggYW5k
+IHRoaXMgZGV2aWNlIGlzIGNvbXBhdGlibGUgd2l0aCBHMTIsDQpJJ20gZmluZSBsZWF2aW5nIGl0
+IGF0IDB4NDguDQoNClRoYW5rcywNCg0KS2V2aW4NCg0K
