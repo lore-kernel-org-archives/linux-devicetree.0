@@ -2,165 +2,119 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4500BC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 16:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A575BC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 16:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 218FB2073D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 16:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7882D20828
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 16:44:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="wVpn3HTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfLJQnC (ORCPT
+        id S1727553AbfLJQon (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:43:02 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:48999 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbfLJQnC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 11:43:02 -0500
-X-Originating-IP: 90.182.112.136
-Received: from localhost (136.112.broadband15.iol.cz [90.182.112.136])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id CF5E640012;
-        Tue, 10 Dec 2019 16:42:58 +0000 (UTC)
-Date:   Tue, 10 Dec 2019 17:42:56 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com,
-        Ran Bi <ran.bi@mediatek.com>
-Subject: Re: [PATCH v6 6/6] rtc: Add support for the MediaTek MT6358 RTC
-Message-ID: <20191210164256.GU1463890@piout.net>
-References: <1575639183-17606-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1575639183-17606-7-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Tue, 10 Dec 2019 11:44:43 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:45094 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727535AbfLJQon (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 11:44:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Rn2HvqUHje4jyefJaRJuKH2kWexnmyg8GPKQ4GzLFWc=; b=wVpn3HTICHNgC9ULY2Ni+q5WSm
+        qKK4GV1kc8Lqc5rDEyR9hpDxFPB4NsGXGITz+Bi0AWbnAqbUqGMrgApLpKR5CtjMDadASUVPown4s
+        hJPvnSKRM3gb7aI0BnYJY2YyJEJv6yJHS8AhZYj9RdytbiKywITF0ZDNnq2NT4k+wZ0s=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ieico-0005OE-FG; Tue, 10 Dec 2019 17:44:38 +0100
+Date:   Tue, 10 Dec 2019 17:44:38 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Landen Chao <landen.chao@mediatek.com>
+Cc:     f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com,
+        matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        davem@davemloft.net, sean.wang@mediatek.com, opensource@vdorst.com,
+        frank-w@public-files.de
+Subject: Re: [PATCH net-next 4/6] net: dsa: mt7530: Add the support of MT7531
+ switch
+Message-ID: <20191210164438.GD27714@lunn.ch>
+References: <cover.1575914275.git.landen.chao@mediatek.com>
+ <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575639183-17606-7-git-send-email-hsin-hsiung.wang@mediatek.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06/12/2019 21:33:03+0800, Hsin-Hsiung Wang wrote:
-> From: Ran Bi <ran.bi@mediatek.com>
-> 
-> This add support for the MediaTek MT6358 RTC. Driver using
-> compatible data to store different RTC_WRTGR address offset.
-> 
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> +static int
+> +mt7531_ind_mmd_phy_read(struct mt7530_priv *priv, int port, int devad,
+> +			int regnum)
+> +{
+> +	struct mii_bus *bus = priv->bus;
+> +	struct mt7530_dummy_poll p;
+> +	u32 reg, val;
+> +	int ret;
+> +
+> +	INIT_MT7530_DUMMY_POLL(&p, priv, MT7531_PHY_IAC);
+> +
+> +	mutex_lock_nested(&bus->mdio_lock, MDIO_MUTEX_NESTED);
+> +
+> +	ret = readx_poll_timeout(_mt7530_unlocked_read, &p, val,
+> +				 !(val & PHY_ACS_ST), 20, 100000);
+> +	if (ret < 0) {
+> +		dev_err(priv->dev, "poll timeout\n");
+> +		goto out;
+> +	}
+> +
+> +	reg = MDIO_CL45_ADDR | MDIO_PHY_ADDR(port) | MDIO_DEV_ADDR(devad) |
+> +	      regnum;
 
-> ---
->  drivers/rtc/rtc-mt6397.c | 38 ++++++++++++++++++++++++++++++--------
->  1 file changed, 30 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index b216bdc..631e275 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -12,6 +12,7 @@
->  #include <linux/irqdomain.h>
->  #include <linux/platform_device.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_device.h>
->  #include <linux/of_irq.h>
->  #include <linux/io.h>
->  #include <linux/mfd/mt6397/core.h>
-> @@ -19,7 +20,8 @@
->  #define RTC_BBPU		0x0000
->  #define RTC_BBPU_CBUSY		BIT(6)
->  
-> -#define RTC_WRTGR		0x003c
-> +#define RTC_WRTGR_MT6358	0x3a
-> +#define RTC_WRTGR_MT6397	0x3c
->  
->  #define RTC_IRQ_STA		0x0002
->  #define RTC_IRQ_STA_AL		BIT(0)
-> @@ -63,6 +65,10 @@
->  #define RTC_NUM_YEARS		128
->  #define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
->  
-> +struct mtk_rtc_data {
-> +	u32			wrtgr;
-> +};
-> +
->  struct mt6397_rtc {
->  	struct device		*dev;
->  	struct rtc_device	*rtc_dev;
-> @@ -70,15 +76,34 @@ struct mt6397_rtc {
->  	struct regmap		*regmap;
->  	int			irq;
->  	u32			addr_base;
-> +	const struct mtk_rtc_data *data;
-> +};
-> +
-> +static const struct mtk_rtc_data mt6358_rtc_data = {
-> +	.wrtgr = RTC_WRTGR_MT6358,
->  };
->  
-> +static const struct mtk_rtc_data mt6397_rtc_data = {
-> +	.wrtgr = RTC_WRTGR_MT6397,
-> +};
-> +
-> +static const struct of_device_id mt6397_rtc_of_match[] = {
-> +	{ .compatible = "mediatek,mt6358-rtc",
-> +		.data = (void *)&mt6358_rtc_data, },
-> +	{ .compatible = "mediatek,mt6397-rtc",
-> +		.data = (void *)&mt6397_rtc_data, },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
-> +
->  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
->  {
->  	unsigned long timeout = jiffies + HZ;
->  	int ret;
->  	u32 data;
->  
-> -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
-> +	ret = regmap_write(rtc->regmap,
-> +			   rtc->addr_base + rtc->data->wrtgr, 1);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -333,6 +358,9 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	rtc->addr_base = res->start;
->  
-> +	rtc->data = (struct mtk_rtc_data *)
-> +			of_device_get_match_data(&pdev->dev);
-> +
->  	rtc->irq = platform_get_irq(pdev, 0);
->  	if (rtc->irq < 0)
->  		return rtc->irq;
-> @@ -406,12 +434,6 @@ static int mt6397_rtc_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
->  			mt6397_rtc_resume);
->  
-> -static const struct of_device_id mt6397_rtc_of_match[] = {
-> -	{ .compatible = "mediatek,mt6397-rtc", },
-> -	{ }
-> -};
-> -MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
-> -
->  static struct platform_driver mtk_rtc_driver = {
->  	.driver = {
->  		.name = "mt6397-rtc",
-> -- 
-> 2.6.4
+It might be better to call this mt7531_ind_c45_phy_read()
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> +static int
+> +mt7531_ind_phy_read(struct dsa_switch *ds, int port, int regnum)
+> +{
+> +	struct mt7530_priv *priv = ds->priv;
+> +	struct mii_bus *bus = priv->bus;
+> +	struct mt7530_dummy_poll p;
+> +	int ret;
+> +	u32 val;
+> +
+> +	INIT_MT7530_DUMMY_POLL(&p, priv, MT7531_PHY_IAC);
+> +
+> +	mutex_lock_nested(&bus->mdio_lock, MDIO_MUTEX_NESTED);
+> +
+> +	ret = readx_poll_timeout(_mt7530_unlocked_read, &p, val,
+> +				 !(val & PHY_ACS_ST), 20, 100000);
+> +	if (ret < 0) {
+> +		dev_err(priv->dev, "poll timeout\n");
+> +		goto out;
+> +	}
+> +
+> +	val = MDIO_CL22_READ | MDIO_PHY_ADDR(port) | MDIO_REG_ADDR(regnum);
+
+This is then mt7531_ind_c22_phy_read().
+
+And then you can add a wrapper around this to provide
+
+mt7531_phy_read() which can do both C22 and C45.
+
+> +	[ID_MT7531] = {
+> +		.id = ID_MT7531,
+> +		.setup = mt7531_setup,
+> +		.phy_read = mt7531_ind_phy_read,
+
+and use it here.
+
+  Andrew
