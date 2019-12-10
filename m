@@ -2,75 +2,150 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A61C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 11:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48BFC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 11:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EADD2073D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 11:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B29720828
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 11:38:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DYqzdHVF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbfLJLPG (ORCPT
+        id S1727407AbfLJLiU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:15:06 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:48211 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbfLJLPF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 06:15:05 -0500
-X-Originating-IP: 90.182.112.136
-Received: from localhost (136.112.broadband15.iol.cz [90.182.112.136])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 8657040008;
-        Tue, 10 Dec 2019 11:14:55 +0000 (UTC)
-Date:   Tue, 10 Dec 2019 12:14:52 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Peter Rosin <peda@axentia.se>
-Cc:     Rob Herring <robh@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH] dt-bindings: arm: Remove leftover axentia.txt
-Message-ID: <20191210111452.GJ1463890@piout.net>
-References: <20191120145536.17884-1-robh@kernel.org>
- <20191210110419.GI1463890@piout.net>
- <0ea488f6-adf9-d2fe-ef55-373a70cf04fe@axentia.se>
+        Tue, 10 Dec 2019 06:38:20 -0500
+Received: from mout.gmx.net ([212.227.15.15]:39033 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727374AbfLJLhx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 06:37:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1575977828;
+        bh=He5CmkAr29FB4eRkHCWB5ZuYfLynVAdGIaPMEFclt6s=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=DYqzdHVF3y06fAIXaE34SiDAOXxtMS0iMf4tbr1NeEs2LTBwlLeLZU1UnvRoNYZww
+         p5qEgZyz8GYP9B7mBKQoLECKd85cU+Ydm//VbFwzzwZ2BRS/MQacS1jWkp8niWsGj6
+         4lzXDmK9bdKNTGVlshtPgFE61gIVkJtAFfVI1JdM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.53.43.95] ([185.53.43.95]) by web-mail.gmx.net
+ (3c-app-gmx-bs14.server.lan [172.19.170.66]) (via HTTP); Tue, 10 Dec 2019
+ 12:37:08 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0ea488f6-adf9-d2fe-ef55-373a70cf04fe@axentia.se>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Message-ID: <trinity-be64e2d4-f70d-4bd8-82aa-fb5b07de0149-1575977828752@3c-app-gmx-bs14>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Landen Chao" <landen.chao@mediatek.com>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com,
+        vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        davem@davemloft.net, sean.wang@mediatek.com, opensource@vdorst.com,
+        "Landen Chao" <landen.chao@mediatek.com>
+Subject: Aw: [PATCH net-next 0/6] net-next: dsa: mt7530: add support for
+ MT7531
+Content-Type: text/plain; charset=UTF-8
+Date:   Tue, 10 Dec 2019 12:37:08 +0100
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <cover.1575914275.git.landen.chao@mediatek.com>
+References: <cover.1575914275.git.landen.chao@mediatek.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:4r71h9Id7lIxLvhWGaanz8HzVDn2EN4RDfdcEk93knYE5eLJt3mSN3keYSRt852HP3ezg
+ dBD8EAohBV7/z3Y8L50s6x5trisCsEm6WrRDoVWkLUFLmAGr3SvqFvfvqV16qZptKs7OhfEkt1Sz
+ CQoqy0ysdmK0EJJq9zNF+DEcPm2gfIXsZtClhWjqR8iEdZtNUbr25JKrrlOLilkTkONwxoDzuLHA
+ Y8oGaZngiKm8j8U8UI9maT/CVxDsGfaTyb1PD1kGDS0RghX7ngay1cM+xlKnsfZ7a+1P+WaxaPDs
+ 84=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Y+zfh0Nni9M=:d1BklLbL735ejs8j88j0bC
+ mpbX9pJBwfbOSVwp4/Bishz6v3EBsAU68LYy+DejDCXgRBUODaqznRkE6gafuko9FT5rhQ89z
+ 6CVr7ZfYWtHIJ87rlcCwkxZB3xZnyL4SS7nctqsOS6W4Vs+VfChBOXhta1UvEjIdyzxn3Eww3
+ grYrGOhh5F5jdlWrgCKws7kVbFZqXndDhKHLgIbBso0nm3Kd9u2RG88Jx2lNnrPc61Ibe8VUz
+ THLjI6IVcGDARMHSJXKicoghxd0NjJaW625vZahyqr+Jhxtx9S7KOCNE6rYbh4arVnY8JvtHD
+ Fpuh0OxLyldsAwhIBIGsiYm1ZD0OI2jIKAKuYgQ/1Z6lyJQdgnIM5CstNNgssoBZrlSjW1Y/a
+ AxpHrfoB2W8RowBd5H3l1y0VreRKuDNqqtS6Pe/rBrN9PTw6b6ZyLJ4YXoLNQBjw/aE9hmaQm
+ bTfXsL83vCcBAhOSlqdT78pJ0iPVjbF8ntMYxUBV+nJxp5Ck1a4CJWRmH+W/eZpqrhuVeGtfV
+ ymxyiR+9Gi8t/oRhwoBqXqACKgkw/nZEuF+0WcftL6SQvQc1cRcn9sh2BMiWJPzIMH+Sro6fp
+ Gfrm1FMebISZYVCIcGhZmXnqdyfHKtpMhJgoIGqiU0Dy04dck/X/RX4Eb8ZJgT1Ag7aQGApaN
+ wjmIBkZAioBxyr5MYv0J7q31pbvBdZuMhNIqGUkaoMEaMpCIRWK7MAo8tV42PhudlRCE=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10/12/2019 11:10:33+0000, Peter Rosin wrote:
-> On 2019-12-10 12:04, Alexandre Belloni wrote:
-> > On 20/11/2019 08:55:36-0600, Rob Herring wrote:
-> >> The bindings described in axentia.txt are already covered by
-> >> atmel-at91.yaml, so remove the file.
-> >>
-> >> Cc: Peter Rosin <peda@axentia.se>
-> >> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> >> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> >> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-> >> Signed-off-by: Rob Herring <robh@kernel.org>
-> > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> 
-> Right, this one fell of out of my memory due to overload. Sorry.
-> 
-> Acked-by: Peter Rosin <peda@axentia.se>
-> 
+Hi
 
-Rob, I assume you are going to apply it in your tree. If you want that
-to go through arm-soc, tell me, I can apply it too.
+thank you for the DSA-driver, works so far, but a bit to improve:
 
+i got some retransmitts on RX (TX looks good)...i guess a clk/pll problem
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Iperf3-Client (BPI-R64,192.168.0.19):
+
+root@bpi-r64:~# iperf3 -c 192.168.0.21
+Connecting to host 192.168.0.21, port 5201
+[  5] local 192.168.0.19 port 56412 connected to 192.168.0.21 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec   114 MBytes   957 Mbits/sec    0   1003 KBytes
+[  5]   1.00-2.00   sec   113 MBytes   944 Mbits/sec    0   1.08 MBytes
+[  5]   2.00-3.00   sec   112 MBytes   941 Mbits/sec    0   1.08 MBytes
+[  5]   3.00-4.00   sec   112 MBytes   941 Mbits/sec    0   1.08 MBytes
+[  5]   4.00-5.00   sec   112 MBytes   942 Mbits/sec    0   1.08 MBytes
+[  5]   5.00-6.00   sec   112 MBytes   944 Mbits/sec    0   1.21 MBytes
+[  5]   6.00-7.00   sec   112 MBytes   944 Mbits/sec    0   1.27 MBytes
+[  5]   7.00-8.00   sec   112 MBytes   943 Mbits/sec    0   1.27 MBytes
+[  5]   8.00-9.00   sec   111 MBytes   934 Mbits/sec    0   1.27 MBytes
+[  5]   9.00-10.00  sec   112 MBytes   944 Mbits/sec    0   1.27 MBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  1.10 GBytes   943 Mbits/sec    0             sender
+[  5]   0.00-10.00  sec  1.10 GBytes   941 Mbits/sec                  receiver
+
+iperf Done.
+
+root@bpi-r64:~# iperf3 -c 192.168.0.21 -R
+Connecting to host 192.168.0.21, port 5201
+Reverse mode, remote host 192.168.0.21 is sending
+[  5] local 192.168.0.19 port 56420 connected to 192.168.0.21 port 5201
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec   112 MBytes   941 Mbits/sec
+[  5]   1.00-2.00   sec   112 MBytes   941 Mbits/sec
+[  5]   2.00-3.00   sec   111 MBytes   933 Mbits/sec
+[  5]   3.00-4.00   sec   112 MBytes   941 Mbits/sec
+[  5]   4.00-5.00   sec   112 MBytes   937 Mbits/sec
+[  5]   5.00-6.00   sec   112 MBytes   941 Mbits/sec
+[  5]   6.00-7.00   sec   111 MBytes   933 Mbits/sec
+[  5]   7.00-8.00   sec   112 MBytes   939 Mbits/sec
+[  5]   8.00-9.00   sec   112 MBytes   936 Mbits/sec
+[  5]   9.00-10.00  sec   112 MBytes   941 Mbits/sec
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  1.10 GBytes   942 Mbits/sec  605             sender
+[  5]   0.00-10.00  sec  1.09 GBytes   939 Mbits/sec                  receiver
+
+iperf Done.
+
+Iperf3-Server (my Laptop,192.168.0.21, reverse mode only):
+
+Accepted connection from 192.168.0.19, port 56418
+[  5] local 192.168.0.21 port 5201 connected to 192.168.0.19 port 56420
+[ ID] Interval           Transfer     Bandwidth       Retr  Cwnd
+[  5]   0.00-1.00   sec   115 MBytes   965 Mbits/sec    0    772 KBytes
+[  5]   1.00-2.00   sec   112 MBytes   944 Mbits/sec    0    772 KBytes
+[  5]   2.00-3.00   sec   111 MBytes   933 Mbits/sec  157    643 KBytes
+[  5]   3.00-4.00   sec   112 MBytes   944 Mbits/sec    0    755 KBytes
+[  5]   4.00-5.00   sec   111 MBytes   933 Mbits/sec  141    625 KBytes
+[  5]   5.00-6.00   sec   112 MBytes   944 Mbits/sec    0    740 KBytes
+[  5]   6.00-7.00   sec   111 MBytes   933 Mbits/sec  307    438 KBytes
+[  5]   7.00-8.00   sec   111 MBytes   933 Mbits/sec    0    585 KBytes
+[  5]   8.00-9.00   sec   112 MBytes   944 Mbits/sec    0    700 KBytes
+[  5]   9.00-10.00  sec   112 MBytes   944 Mbits/sec    0    803 KBytes
+[  5]  10.00-10.00  sec  0.00 Bytes  0.00 bits/sec    0    803 KBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bandwidth       Retr
+[  5]   0.00-10.00  sec  1.10 GBytes   942 Mbits/sec  605             sender
+[  5]   0.00-10.00  sec  0.00 Bytes  0.00 bits/sec                  receiver
+
+regards Frank
+
+[1] https://github.com/frank-w/BPI-R2-4.14/tree/5.5-r64-netnext
