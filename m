@@ -2,103 +2,140 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2280FC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 23:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65612C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69CA20663
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 23:30:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="cgpB9lst";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rMYazVOw"
+	by mail.kernel.org (Postfix) with ESMTP id 3DB7D206D9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLJXaq (ORCPT
+        id S1727573AbfLJXfb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 18:30:46 -0500
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:36633 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725999AbfLJXaq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 18:30:46 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id A872122627;
-        Tue, 10 Dec 2019 18:30:44 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Tue, 10 Dec 2019 18:30:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=KewIFKwD0k1qZtpv8/vXSRFOEyol5yj
-        yCj+BNo+n0KQ=; b=cgpB9lst8+3l5mRDQ3IEKYJP8mRmKqsQHbS9WT+5OBxKoyo
-        0jbY5bLqMXyhv+ioPdmaOW17z1aU1LYJFMOaygIN1fR5C6hD0V20hMo3BT1LlzLA
-        IFG7ukqYAz84x4IY5BZ9rHr/LlXmLJvlQSKl5oOyQIXoyu9JNXJMrYYJ0e9pgqtB
-        wpLokJZ9pn9rf1f0jECc40WAKf9ZnJa9/w4Vckq9bRM6D2EQSHG/lWl7CrecQ8Sq
-        +VmUofEt2v/MRHcRs5Jwg7oO/EILnXoFUVbuvhMpSecrKX6NlW0mqMnjx/Q3vNS3
-        D0LSNz8YUsXo7Miwi1GN0zEVANPGe3tnPG+RcQg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=KewIFK
-        wD0k1qZtpv8/vXSRFOEyol5yjyCj+BNo+n0KQ=; b=rMYazVOwcL2T/FbaAPnmYz
-        D7NeDJOu5c9BanlfZi2xOoEcLtm4Y4TD4jTiQxdZWAuyUOMFXk6pDSnknI4x38Lu
-        tJ0nQ12FAqaQN/mX3vdTal8CZhXTG2aDLeOcD7e/k0ejsTrKYzvgJKQ/gZV8QM52
-        kqxr/s+IfBN3UbXkFOwF4NC4IKvS1cQo1KJ7/c2jOHyXQmM2zXo+yf6MNmx/0Zyl
-        MafMOJJpplZFsQpJp4jLQc5AMKLRKphdscC/UAgJhpYmBvi1Kmf5ULWutDPQs1AD
-        kg6pT/Lintk1AotWOI1QaTi+SertEteS3iw/Ano7y4fGmMlkxbD3eSiKVCMLPymQ
-        ==
-X-ME-Sender: <xms:oyrwXbX5h3bcQzK2DXOMAW8HNHvBsiI5Cw0JFwXweYJ-nj5-eD7A0w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelgedgtdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:oyrwXbf6xOV5QTAYLLJmzVLmiVzjJntDeC9Gxnl5X6edn89nmRNomw>
-    <xmx:oyrwXWyJhlRmEslO2GvRoY6pRmofVGsNHtmrvfXGU3YZsWRoNTiHyQ>
-    <xmx:oyrwXeESoUgQX5dfbVu4_HfW6xkNOCkSNstbdpHRrcXN81s-iyEDow>
-    <xmx:pCrwXdf5OC7zCLBhZGpyIiWJFRlRpNyfBH46x4hEBkrV_EXNYzbu0A>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 219FCE00A2; Tue, 10 Dec 2019 18:30:43 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-679-g1f7ccac-fmstable-20191210v1
-Mime-Version: 1.0
-Message-Id: <e8d37ccd-ffe3-4969-b2db-9519e68da086@www.fastmail.com>
-In-Reply-To: <1575566112-11658-2-git-send-email-eajames@linux.ibm.com>
-References: <1575566112-11658-1-git-send-email-eajames@linux.ibm.com>
- <1575566112-11658-2-git-send-email-eajames@linux.ibm.com>
-Date:   Wed, 11 Dec 2019 10:02:22 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Eddie James" <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, "Jason Cooper" <jason@lakedaemon.net>,
-        linux-aspeed@lists.ozlabs.org, "Marc Zyngier" <maz@kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>, tglx@linutronix.de,
-        mark.rutland@arm.com, "Joel Stanley" <joel@jms.id.au>
-Subject: =?UTF-8?Q?Re:_[PATCH_v2_01/12]_dt-bindings:_interrupt-controller:_Add_As?=
- =?UTF-8?Q?peed_SCU_interrupt_controller?=
-Content-Type: text/plain
+        Tue, 10 Dec 2019 18:35:31 -0500
+Received: from muru.com ([72.249.23.125]:45146 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727595AbfLJXfa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 18:35:30 -0500
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id D59CA8387;
+        Tue, 10 Dec 2019 23:36:08 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tero Kristo <t-kristo@ti.com>
+Subject: [PATCH 2/9] ARM: OMAP2+: Drop legacy platform data for omap4 dmic
+Date:   Tue, 10 Dec 2019 15:35:17 -0800
+Message-Id: <20191210233524.46875-3-tony@atomide.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191210233524.46875-1-tony@atomide.com>
+References: <20191210233524.46875-1-tony@atomide.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+We can now probe devices with ti-sysc interconnect driver and dts
+data. Let's drop the related platform data and custom ti,hwmods
+dts property.
 
+As we're just dropping data, and the early platform data init
+is based on the custom ti,hwmods property, we want to drop both
+the platform data and ti,hwmods property in a single patch.
 
-On Fri, 6 Dec 2019, at 03:45, Eddie James wrote:
-> Document the Aspeed SCU interrupt controller and add an include file
-> for the interrupts it provides.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes since v1:
->  - Remove 'reg' required property.
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/omap4-l4-abe.dtsi        |  1 -
+ arch/arm/mach-omap2/omap_hwmod_44xx_data.c | 43 ----------------------
+ 2 files changed, 44 deletions(-)
 
-Hmm, I have a series that rearranges the SCU bindings to fix up some
-issues we have with dtc warnings. I'm happy for this to go in now as it's
-consistent with what we have as my patches are not yet merged,  but
-we should circle back later.
-
-Acked-by: Andrew Jeffery <andrew@aj.id.au>
+diff --git a/arch/arm/boot/dts/omap4-l4-abe.dtsi b/arch/arm/boot/dts/omap4-l4-abe.dtsi
+--- a/arch/arm/boot/dts/omap4-l4-abe.dtsi
++++ b/arch/arm/boot/dts/omap4-l4-abe.dtsi
+@@ -219,7 +219,6 @@ target-module@2a000 {			/* 0x4012a000, ap 10 0a.0 */
+ 
+ 		target-module@2e000 {			/* 0x4012e000, ap 12 0c.0 */
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
+-			ti,hwmods = "dmic";
+ 			reg = <0x2e000 0x4>,
+ 			      <0x2e010 0x4>;
+ 			reg-names = "rev", "sysc";
+diff --git a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
+@@ -407,40 +407,6 @@ static struct omap_hwmod omap44xx_dma_system_hwmod = {
+ 	.dev_attr	= &dma_dev_attr,
+ };
+ 
+-/*
+- * 'dmic' class
+- * digital microphone controller
+- */
+-
+-static struct omap_hwmod_class_sysconfig omap44xx_dmic_sysc = {
+-	.rev_offs	= 0x0000,
+-	.sysc_offs	= 0x0010,
+-	.sysc_flags	= (SYSC_HAS_EMUFREE | SYSC_HAS_RESET_STATUS |
+-			   SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET),
+-	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
+-			   SIDLE_SMART_WKUP),
+-	.sysc_fields	= &omap_hwmod_sysc_type2,
+-};
+-
+-static struct omap_hwmod_class omap44xx_dmic_hwmod_class = {
+-	.name	= "dmic",
+-	.sysc	= &omap44xx_dmic_sysc,
+-};
+-
+-/* dmic */
+-static struct omap_hwmod omap44xx_dmic_hwmod = {
+-	.name		= "dmic",
+-	.class		= &omap44xx_dmic_hwmod_class,
+-	.clkdm_name	= "abe_clkdm",
+-	.main_clk	= "func_dmic_abe_gfclk",
+-	.prcm = {
+-		.omap4 = {
+-			.clkctrl_offs = OMAP4_CM1_ABE_DMIC_CLKCTRL_OFFSET,
+-			.context_offs = OMAP4_RM_ABE_DMIC_CONTEXT_OFFSET,
+-			.modulemode   = MODULEMODE_SWCTRL,
+-		},
+-	},
+-};
+ 
+ /*
+  * 'dsp' class
+@@ -2277,14 +2243,6 @@ static struct omap_hwmod_ocp_if omap44xx_l4_cfg__dma_system = {
+ 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+ };
+ 
+-/* l4_abe -> dmic */
+-static struct omap_hwmod_ocp_if omap44xx_l4_abe__dmic = {
+-	.master		= &omap44xx_l4_abe_hwmod,
+-	.slave		= &omap44xx_dmic_hwmod,
+-	.clk		= "ocp_abe_iclk",
+-	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+-};
+-
+ /* dsp -> iva */
+ static struct omap_hwmod_ocp_if omap44xx_dsp__iva = {
+ 	.master		= &omap44xx_dsp_hwmod,
+@@ -2789,7 +2747,6 @@ static struct omap_hwmod_ocp_if *omap44xx_hwmod_ocp_ifs[] __initdata = {
+ 	&omap44xx_l4_wkup__ctrl_module_pad_wkup,
+ 	&omap44xx_l3_instr__debugss,
+ 	&omap44xx_l4_cfg__dma_system,
+-	&omap44xx_l4_abe__dmic,
+ 	&omap44xx_dsp__iva,
+ 	/* &omap44xx_dsp__sl2if, */
+ 	&omap44xx_l4_cfg__dsp,
+-- 
+2.24.0
