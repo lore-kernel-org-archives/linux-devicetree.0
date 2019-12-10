@@ -2,174 +2,67 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD19DC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 06:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1359FC2D0BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 06:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D28C20663
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 06:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE9A208C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 06:06:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575957973;
+	bh=7jrlVMx0ZzN8zh1j+zKOid+hTzkpiUjgtIFq4JSpg6I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XedcEUHRK6K27R2pMGPWhXzve9vNW6J1kAT5xlULXnpCzOSDjMhjTGsauIqyAAcfc
+	 Imszy3lMZ3Z7yZ+7VdovmzwkLcjSER0YUrKMdk35xDrgqxM6oXE3fWT44uXoyUh8Eq
+	 gxQZEYPnjp/i4kqNjei0P3864gaVDIlt3OYS2wUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfLJGFw (ORCPT
+        id S1727242AbfLJGGN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 01:05:52 -0500
-Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:22537 "EHLO
-        ironport.ite.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfLJGFw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 01:05:52 -0500
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 10 Dec 2019 14:05:50 +0800
-Received: from csbcas.internal.ite.com.tw (csbcas1.internal.ite.com.tw [192.168.65.46])
-        by mse.ite.com.tw with ESMTP id xBA65mA8018391;
-        Tue, 10 Dec 2019 14:05:48 +0800 (GMT-8)
-        (envelope-from allen.chen@ite.com.tw)
-Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
- csbcas1.internal.ite.com.tw (192.168.65.45) with Microsoft SMTP Server (TLS)
- id 14.3.352.0; Tue, 10 Dec 2019 14:05:48 +0800
-From:   allen <allen.chen@ite.com.tw>
-CC:     Allen Chen <allen.chen@ite.com.tw>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 3/4] dt-bindings: Add binding for IT6505.
-Date:   Tue, 10 Dec 2019 13:53:41 +0800
-Message-ID: <1575957299-12977-4-git-send-email-allen.chen@ite.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1575957299-12977-1-git-send-email-allen.chen@ite.com.tw>
-References: <1575957299-12977-1-git-send-email-allen.chen@ite.com.tw>
+        Tue, 10 Dec 2019 01:06:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725942AbfLJGGN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 01:06:13 -0500
+Received: from localhost (unknown [106.201.45.82])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B48E20652;
+        Tue, 10 Dec 2019 06:06:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575957972;
+        bh=7jrlVMx0ZzN8zh1j+zKOid+hTzkpiUjgtIFq4JSpg6I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ucQdf7FkoTg2736i3S9t5VD2PhKieI8Q8tXbvLnZ6AyrjXkUoVI/BQxM030+TQzSh
+         NsiMdS5s90672ZogBXyNWkVA7C3Th101EqPWnUkbffMw+Ys7QJz3qJHJx/LkZzu7ps
+         HAqM2s16ENGnXa/U3nL5678vjZABI7nvYINhU9Ck=
+Date:   Tue, 10 Dec 2019 11:36:08 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: dmaengine: rcar-dmac: Document r8a77961
+ support
+Message-ID: <20191210060608.GR82508@vkoul-mobl>
+References: <20191205133736.5934-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [192.168.70.14]
-X-MAIL: mse.ite.com.tw xBA65mA8018391
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191205133736.5934-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a DT binding documentation for IT6505.
+On 05-12-19, 14:37, Geert Uytterhoeven wrote:
+> Document support for the system DMA controller in the Renesas R-Car
+> M3-W+ (R8A77961) SoC.
 
-Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
----
- .../bindings/display/bridge/ite,it6505.yaml        | 99 ++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+Applied, thanks
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-new file mode 100644
-index 00000000..23a106a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-@@ -0,0 +1,99 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/ite,it6505.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ITE it6505 Device Tree Bindings
-+
-+maintainers:
-+  - Allen Chen <allen.chen@ite.com.tw>
-+
-+description: |
-+  The IT6505 is a high-performance DisplayPort 1.1a transmitter,
-+fully compliant with DisplayPort 1.1a, HDCP 1.3 specifications.
-+The IT6505 supports color depth of up to 36 bits (12 bits/color)
-+and ensures robust transmission of high-quality uncompressed video
-+content, along with uncompressed and compressed digital audio content.
-+
-+  Aside from the various video output formats supported, the IT6505
-+also encodes and transmits up to 8 channels of I2S digital audio,
-+with sampling rate up to 192kHz and sample size up to 24 bits.
-+In addition, an S/PDIF input port takes in compressed audio of up to
-+192kHz frame rate.
-+
-+  Each IT6505 chip comes preprogrammed with an unique HDCP key,
-+in compliance with the HDCP 1.3 standard so as to provide secure
-+transmission of high-definition content. Users of the IT6505 need not
-+purchase any HDCP keys or ROMs.
-+
-+properties:
-+  compatible:
-+    const: ite,it6505
-+
-+  reg:
-+    - maxItems: 1
-+    - description: i2c address of the bridge
-+
-+  ovdd-supply:
-+    - maxItems: 1
-+    - description: I/O voltage
-+
-+  pwr18-supply:
-+    - maxItems: 1
-+    - description: core voltage
-+
-+  interrupts:
-+    - maxItems: 1
-+    - description: interrupt specifier of INT pin
-+
-+  reset-gpios:
-+    - maxItems: 1
-+    - description: gpio specifier of RESET pin
-+
-+  hpd-gpios:
-+    - maxItems: 1
-+    - description:
-+        - Hotplug detect GPIO
-+        - Indicates which GPIO should be used for hotplug detection
-+
-+  extcon:
-+    - maxItems: 1
-+    - description: extcon specifier for the Power Delivery
-+
-+  port:
-+    - type: object
-+    - description: A port node pointing to DPI host port node
-+
-+required:
-+  - compatible
-+  - reg
-+  - ovdd-supply
-+  - pwr18-supply
-+  - interrupts
-+  - reset-gpios
-+  - hpd-gpios
-+  - extcon
-+
-+examples:
-+  - |
-+    dp-bridge@5c {
-+        compatible = "ite,it6505";
-+        interrupts = <152 IRQ_TYPE_EDGE_RISING 152 0>;
-+        reg = <0x5c>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&it6505_pins>;
-+        ovdd-supply = <&mt6358_vsim1_reg>;
-+        pwr18-supply = <&it6505_pp18_reg>;
-+        reset-gpios = <&pio 179 1>;
-+        hpd-gpios = <&pio 9 0>;
-+        extcon = <&usbc_extcon>;
-+
-+        port {
-+            it6505_in: endpoint {
-+                remote-endpoint = <&dpi_out>;
-+            };
-+        };
-+    };
-+
-+---
 -- 
-1.9.1
-
+~Vinod
