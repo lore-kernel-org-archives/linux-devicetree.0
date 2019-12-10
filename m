@@ -2,87 +2,131 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1A1C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045EDC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CAC20726
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:41:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575970860;
-	bh=rXiWjC0C2pFz1m1mewguEYBdET4p356PjzRIiT7GIUg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NAykwZ3BOa5JtcuBB6QZatQCJ1W9RfP4P43ML6tzqwqF80awVvnrjahkDwGqjfug2
-	 a3dJFOXDbfvQYIzga6hUB35jh97kAhXLHFLD0ITDc4M7Ok21m4Tm1WlHxpMlMkSaLw
-	 YYI77resN2aupHdoMSLqhOIoCHKiJmwAXIr6A3cg=
+	by mail.kernel.org (Postfix) with ESMTP id D25E320836
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 09:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfLJJlA (ORCPT
+        id S1726915AbfLJJl6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:41:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbfLJJlA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:41:00 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17C0C20663;
-        Tue, 10 Dec 2019 09:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575970859;
-        bh=rXiWjC0C2pFz1m1mewguEYBdET4p356PjzRIiT7GIUg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TDP1G8eLXvPf0sI3iSZYCxkxoqJvjl2n3kbJn7lyM0D5dRe1+clfrVAWUPiaav6WF
-         Ls6hYNAVCMMjMifHG+8zCjYmu214bWZiezN+ADSJtrRcDH3h9B6lFzhli4aUcduplT
-         uzmlvvhstSKU/wIJENKW+HHFzmaqY604Fj8Ofhk4=
-Date:   Tue, 10 Dec 2019 10:40:57 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] arm64: dts: allwiner: Fix typo in dual licensed
- SPDX identifier
-Message-ID: <20191210094057.ojenu74cmjcuaq73@gilmour.lan>
-References: <20191209182024.20509-1-peron.clem@gmail.com>
+        Tue, 10 Dec 2019 04:41:58 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33393 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfLJJl6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 04:41:58 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iec1b-0006gj-AJ; Tue, 10 Dec 2019 10:41:47 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iec1Y-0003yz-IK; Tue, 10 Dec 2019 10:41:44 +0100
+Date:   Tue, 10 Dec 2019 10:41:44 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     support.opensource@diasemi.com, lee.jones@linaro.org,
+        robh+dt@kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, joel@jms.id.au, andrew@aj.id.au,
+        lgirdwood@gmail.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+References: <20191129172537.31410-1-m.felsch@pengutronix.de>
+ <20191129172537.31410-4-m.felsch@pengutronix.de>
+ <20191204134631.GT1998@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="q5d4baoofanzj4pg"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191209182024.20509-1-peron.clem@gmail.com>
+In-Reply-To: <20191204134631.GT1998@sirena.org.uk>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:09:56 up 25 days, 28 min, 32 users,  load average: 0.08, 0.04,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Mark,
 
---q5d4baoofanzj4pg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 19-12-04 13:46, Mark Brown wrote:
+> On Fri, Nov 29, 2019 at 06:25:34PM +0100, Marco Felsch wrote:
+> 
+> > +  Optional regulator device-specific properties:
+> > +  - dlg,vsel-sense-gpios : A GPIO reference to a local general purpose input,
+> > +    the datasheet calls it GPI. The regulator sense the input signal and select
+> > +    the active or suspend voltage settings. If the signal is active the
+> > +    active-settings are applied else the suspend-settings are applied.
+> > +    Attention: Sharing the same GPI for other purposes or across multiple
+> > +    regulators is possible but the polarity setting must equal.
+> 
+> I'm really confused by this.  As far as I understand it it seems
+> to be doing pinmuxing on the chip using the GPIO bindings which
+> is itself a bit odd and I don't see anything here that configures
+> whatever sets the state of the pins.  Don't we need another GPIO
+> to set the vsel-sense inputs on the PMIC?
 
-On Mon, Dec 09, 2019 at 07:20:22PM +0100, Cl=E9ment P=E9ron wrote:
-> With dual licensed SPDX identifier the "OR" should
-> be uppercase.
->
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+Yes the PMIC is very configurable and it took a while till I understand
+it.. @Adam please correct me if I'm wrong.
 
-Applied, thanks!
-Maxime
+The PMIC regulators regardless of the type: ldo or buck can be
+simplified drawn as:
 
---q5d4baoofanzj4pg
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXe9oKQAKCRDj7w1vZxhR
-xX4DAPwNlr4EMNiMHoyTLLO0bo5xLU9WWV6hkoT9iI+1hdNtCQEA9dm44ukjGX+g
-sTQyp0ZoJFLctSwVzyuLipTN/0glfAw=
-=G1aM
------END PGP SIGNATURE-----
+da9062-gpio               da9062-regulator
+    
+  +-------------------------------------------------------
+  |                  PMIC
+  |    
+  > GPIO0            +--------------------------+
+  |                  |         REGULATOR-0      |
+  > GPIO1 -------+   |                          |
+  |              +-- > vsel-in    voltage-a-out <
+  > GPIO2        |   |                          |
+  |              |   > enable-in  voltage-b-out <
+  |              |   |                          |
+  |              |   +--------------------------+
+  |              |                              
+  |              |   +--------------------------+                          
+  |              |   |         REGULATOR-1      |                          
+  |              |   |                          |                          
+  |              +-- > vsel-in    voltage-a-out <                          
+  |                  |                          |                          
+  |                  > enable-in  voltage-b-out <
+  |                  |                          |
+  |                  +--------------------------+
+  |
 
---q5d4baoofanzj4pg--
+The 'vsel-in' and 'enable-in' regulator inputs must be routed to the
+PMIC GPIOs which must be configured as input. If this is a pinmux in
+your opinion, then yes we need to do that. IMHO it isn't a pinmux
+because from the regulator point of view it is just a GPIO which comes
+from our own gpio-dev (da9062-gpio). So the abstraction is vald. Anyway
+I'm with you that this isn't the typical use-case.
+
+Regards,
+  Marco 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
