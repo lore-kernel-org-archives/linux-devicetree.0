@@ -2,110 +2,179 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C568C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7810C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 11:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F025720828
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FECD2073B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 11:51:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M6jVIcNx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfLJLsl (ORCPT
+        id S1727242AbfLJLvO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:48:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:41164 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727219AbfLJLsj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:48:39 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AF9A1FB;
-        Tue, 10 Dec 2019 03:48:39 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E9073F6CF;
-        Tue, 10 Dec 2019 03:48:38 -0800 (PST)
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: set GPU clock to 432 MHz
-To:     Maxime Ripard <mripard@kernel.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>
-References: <20191203021420.164129-1-anarsoul@gmail.com>
- <20191209193112.qr6un5ryhyxwu6a5@hendrix.lan>
- <CA+E=qVcxXu4CggnhZFti-J4MB5m3pvoxKCHnH6ap-4OSZMzCFQ@mail.gmail.com>
- <20191210083315.gixyhp2a4pg7oi7z@gilmour.lan>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <72b49266-fd4b-13ea-3126-e9d2d1037f2e@arm.com>
-Date:   Tue, 10 Dec 2019 11:48:36 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Dec 2019 06:51:14 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33302 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727227AbfLJLvN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 06:51:13 -0500
+Received: by mail-wr1-f67.google.com with SMTP id b6so19737840wrq.0
+        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 03:51:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LbaT//1CIWZj7PovMzq7HWVulVly+//fBwXIOhYXXwc=;
+        b=M6jVIcNxsWiSx0G4DH486LOjGMSySbL/rK8GfSc8+rQwZYOdfM0hIU1PvKF8AaUSJI
+         08KxCjCqdIq/JO8lfp1vEcXPA+8r9hei6j7yOVE+8aMmKu6noRaoKXKOvvc5SZ+Ju61T
+         2YTFnkLeIzmo68cW5OQtM1+SsCGxYCCNnAM8vJ+0lQ4xBawva5yWqfm355BlUtoZz0MV
+         taRmME8SIp3aJTeGGoQT0gSFTfr3HfbQIGswiKPyjJSLPlO9NjNSZP/b6myOIbGE7tl+
+         IIFCeyF/y68zlzMnTPs3HgvDfym+NRmjYtz6LYhJzRt+apEluV3o9dknCq1aVVF9KH+r
+         KgBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=LbaT//1CIWZj7PovMzq7HWVulVly+//fBwXIOhYXXwc=;
+        b=D/Rne42W8Bhn1hpATzENvWmlSX8RwSwhERjCLE45s4zdgd0kJ1WP/J9PFutNlc4s5d
+         0vs18WWfWKDKwqkgEkFWZ97yJTENWy79qTptdZ/7c1yh8AOtWsi508zCA7Hkdva+5e3B
+         PW/NFwf70xV4Ry6V818eXDIBZcAWQ3+kQwXD+KmJJAhkWrZHIYQxXWu9B6ziCIgLDTKT
+         WTR0LUd46MX4SXC2ZikXV2j4Le/X6cjxJGSYO0s4HmgE01b9gP6djzETALQTNLnmOL3l
+         vL09FK/Vgl+2R6rVr563FoOa+oS7HrJQFxCEkYaA0YZaJzBCuLHpZTwLUsH0gZcA+T4p
+         GPZg==
+X-Gm-Message-State: APjAAAX61ohcIYg4z2HVVStaNKubf6dHQVNa/N8wfOAoqGyKvWbQk1/f
+        MbHJzwgbTFpvjf91fFDgcEad5Q==
+X-Google-Smtp-Source: APXvYqwvFc8Lxa1iFphn/dCM4UiwsnLfnObrmZlv0DxIgU35Zl75XDXezvxqCjfsSoYtNWg8MxqvKw==
+X-Received: by 2002:a5d:5345:: with SMTP id t5mr2925064wrv.0.1575978670794;
+        Tue, 10 Dec 2019 03:51:10 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:683a:fee4:9950:e8ce? ([2a01:e34:ed2f:f020:683a:fee4:9950:e8ce])
+        by smtp.googlemail.com with ESMTPSA id x26sm2773387wmc.30.2019.12.10.03.51.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2019 03:51:10 -0800 (PST)
+Subject: Re: [PATCH v3 2/2] clocksource/drivers/timer-microchip-pit64b: add
+ Microchip PIT64B support
+To:     Claudiu.Beznea@microchip.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
+        tglx@linutronix.de
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1575470549-702-1-git-send-email-claudiu.beznea@microchip.com>
+ <1575470549-702-3-git-send-email-claudiu.beznea@microchip.com>
+ <19796bfc-144c-8129-2e06-07d882e5e9f5@linaro.org>
+ <3e49256f-9452-cede-5fa8-443c15857e1b@microchip.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <d104a0d3-950d-3132-4bf8-d06ccb7c6f25@linaro.org>
+Date:   Tue, 10 Dec 2019 12:51:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191210083315.gixyhp2a4pg7oi7z@gilmour.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <3e49256f-9452-cede-5fa8-443c15857e1b@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10/12/2019 8:33 am, Maxime Ripard wrote:
-> On Mon, Dec 09, 2019 at 12:23:18PM -0800, Vasily Khoruzhick wrote:
->> On Mon, Dec 9, 2019 at 12:03 PM Maxime Ripard <mripard@kernel.org> wrote:
->>> On Mon, Dec 02, 2019 at 06:14:20PM -0800, Vasily Khoruzhick wrote:
->>>> That's what BSP kernel sets it to and it seems to work fine.
->>>>
->>>> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
->>>> ---
->>>>   arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 3 +++
->>>>   1 file changed, 3 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>>> index 27e48234f1c2..0051f39b3d98 100644
->>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>>> @@ -976,6 +976,9 @@ mali: gpu@1c40000 {
->>>>                        clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
->>>>                        clock-names = "bus", "core";
->>>>                        resets = <&ccu RST_BUS_GPU>;
->>>> +
->>>> +                     assigned-clocks = <&ccu CLK_GPU>;
->>>> +                     assigned-clock-rates = <432000000>;
->>>>                };
+On 10/12/2019 12:43, Claudiu.Beznea@microchip.com wrote:
+> 
+> 
+> On 09.12.2019 19:04, Daniel Lezcano wrote:
+>> On 04/12/2019 15:42, Claudiu Beznea wrote:
+>>> Add driver for Microchip PIT64B timer. Timer could be used in continuous
+>>> mode or oneshot mode. The hardware has 2x32 bit registers for period
+>>> emulating a 64 bit timer. The LSB_PR and MSB_PR registers are used to
+>>> set the period value (compare value). TLSB and TMSB keeps the current
+>>> value of the counter. After a compare the TLSB and TMSB register resets.
+>>> The driver uses PIT64B timer for clocksource or clockevent. First
+>>> requested timer would be registered as clockevent, second one would be
+>>> registered as clocksource. Individual PIT64B hardware resources were used
+>>> for clocksource and clockevent to be able to support high resolution
+>>> timers with this hardware implementation.
 >>>
->>> This doesn't really guarantee anything. If the GPU needs to remain at
->>> that rate, it should be set in the driver. I just saw that you did
->>> send a PR in github, I just merged it.
+>>> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+>>> ---
+
+[ ... ]
+
+>> Also, the 'high' part change may be checked, like:
 >>
->> Lima doesn't set GPU frequency at all since it's different for
->> different SoCs and we don't support operation points nor frequency
->> scaling yet.
+>> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/tree/drivers/clocksource/timer-imx-sysctr.c?h=bleeding-edge#n51
 > 
-> You don't really need frequency scaling though, you just need to set
-> it to any of the OPP. And if that's still too complicated, the binding
-> mandates to associate a vendor compatible, so you can base the
-> information on that.
+> The IP guarantees that the reading of counter is atomic if
+> MCHP_PIT64B_TLSBR is read first. With this, would you still want to add the
+> check you mention above?
 
-Right, even just wiring up minimal OPP support with the userspace 
-governor would be really useful for SoCs like RK3328, where the GPU PLL 
-defaults to something pathetic, but the most useful upper frequencies 
-typically require regulator adjustment as well.
+No, sorry I should have read the comment :/
 
-Robin.
+[ ... ]
 
->> So this change effectively sets GPU frequency to 432MHz on A64 when
->> using lima.
-> 
-> Right before the driver is probed. For all you now, that frequency can
-> be changed to anything else at the very next operation and you'd end
-> up in the exact same situation than the one you're trying to fix.
-> 
-> Maxime
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
