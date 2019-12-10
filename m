@@ -2,125 +2,225 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89278C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 00:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB642C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 00:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1CC206D5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 00:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B8F2073D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 00:54:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BqPM+szU"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XXH6hTtn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfLJAcE (ORCPT
+        id S1727437AbfLJAyg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 19:32:04 -0500
-Received: from mail-pg1-f169.google.com ([209.85.215.169]:36751 "EHLO
-        mail-pg1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727383AbfLJAcD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 19:32:03 -0500
-Received: by mail-pg1-f169.google.com with SMTP id k3so7322279pgc.3
-        for <devicetree@vger.kernel.org>; Mon, 09 Dec 2019 16:32:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=8evBcz4lmmsnelwBpdcYncDfyag5sO5/iQnS/q4ZdNE=;
-        b=BqPM+szUPCtHdlyak+LwpzgEOtKX16NXvlBrqw1oVUryWfUXIp90VOF1E3XkoVSLjL
-         v43BwyV/WnDbyLBsEZMyFSgvd8sh7K15AHZDwGGW9fVSBDAMrcJfF4lspFglA1wMfeNw
-         Qwfz05tPp/L9QkOyXdxyRhCYxNV9FKbcWrf3M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=8evBcz4lmmsnelwBpdcYncDfyag5sO5/iQnS/q4ZdNE=;
-        b=VlPtIoBjFTNzfctRgoB7o25yl7S834OO8L3qpfhI7sFxKKRnrR4it8wXXa0Lqu3svm
-         WV0rJGpzorNXtcfxSA2I7R4brqswuhjtat1EJENT9ri88XaU/4N29jE4pbUTPW+6gA9z
-         9WW43IBtzo4a4FhXd7i6wxsBId2HBHbPkB4v5FtXsmEmuhXhs+1LyXx+fcQByGw0Su9J
-         kPoijKzxFO4y+4sMnjtthARPeVemWr9mWz1kK/4PfLQwCnjUxPshQwN2Pnn2HyEsImJR
-         56LD8qTSwIFw4H813A5uUXbU7YTVuGv+dT+1FFKvA5K0qqTtHi+k3NGuPEmKtboJa7VK
-         OVCQ==
-X-Gm-Message-State: APjAAAXFElO5xKuXnMP0DRiUfUPPfA8lc7pUiZ74f34yd7Pf8AxP+l8U
-        3YK19F5IusUExdfVB5xgl9Yf1A==
-X-Google-Smtp-Source: APXvYqy4D9BE4heIvg/4fO4ARmu8vxDMpm3JJunhQwLtFR2lpNylP9ta2onTMh67OOu6CvvoPTIJWg==
-X-Received: by 2002:a62:a117:: with SMTP id b23mr33014552pff.174.1575937923008;
-        Mon, 09 Dec 2019 16:32:03 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id m45sm461387pje.32.2019.12.09.16.32.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 16:32:02 -0800 (PST)
-Date:   Mon, 9 Dec 2019 16:32:01 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        BlueZ <linux-bluetooth@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 1/1] ARM: dts: rockchip: Add brcm bluetooth for
- rk3288-veyron
-Message-ID: <20191210003201.GR228856@google.com>
-References: <20191127223909.253873-1-abhishekpandit@chromium.org>
- <20191127223909.253873-2-abhishekpandit@chromium.org>
- <61639BAF-5AA0-4264-906F-E24E2A30088D@holtmann.org>
- <1788857.Va9C3Z3akr@diego>
- <CAD=FV=Xdrw1FC=DktQ8HjdEJcCKvdA3sx78gg-rn8=bBq=WrEw@mail.gmail.com>
+        Mon, 9 Dec 2019 19:54:36 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16186 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbfLJAyg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 19:54:36 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5deeecb60000>; Mon, 09 Dec 2019 16:54:14 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 09 Dec 2019 16:54:34 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 09 Dec 2019 16:54:34 -0800
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Dec
+ 2019 00:54:34 +0000
+Received: from [10.2.174.71] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Dec
+ 2019 00:54:32 +0000
+Subject: Re: [PATCH v3 08/15] ASoC: tegra: Add audio mclk control through
+ clk_out_1 and extern1
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
+        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
+        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
+        <josephl@nvidia.com>, <vidyas@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
+References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
+ <1575600535-26877-9-git-send-email-skomatineni@nvidia.com>
+ <0ce2e83b-800c-da1e-7a3c-3cf1427cfe20@gmail.com>
+ <2eeceabe-b5f0-6f9e-ff8c-4ac6167b7cc3@nvidia.com>
+ <5d26e32c-a346-4d42-9872-840964512144@gmail.com>
+ <79661e2f-dcd4-6dd5-9b4d-9dcc40de478a@nvidia.com>
+ <664a0b15-7136-2a11-f0a0-06f32cca1a9c@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <d984ca35-2c8f-d28c-e3c8-688f76ecd98f@nvidia.com>
+Date:   Mon, 9 Dec 2019 16:54:31 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=Xdrw1FC=DktQ8HjdEJcCKvdA3sx78gg-rn8=bBq=WrEw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <664a0b15-7136-2a11-f0a0-06f32cca1a9c@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575939254; bh=oDpjvhPKdKxOplyhkA/Vfi4vK8JfrUiRbAih49q1Mfs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=XXH6hTtnAn/LTfi8HDcMWBLKXf7wQZ8g4Jd0G2RFr5XlQ4/e9PjS+vRf7+eEliPRc
+         qHVjDkvIMROEDusdyotvvJVYpuQzMsXNBKW0cQ64dsYkUUAXOqmRPlBREQ/Zlh1CqD
+         B5zp50Z0ru9e7dsc8/5Y6lNtJfYovm980v0EeldVnao/o23euDd3uXtLH/ANKMHxMk
+         cpxwmYQ+64ZKXtZXXf+WPSX/NQDdB0S3fexhbfdH4ku92wEyOOQJMfxVsjiMYfXx6G
+         nbcWaO27zdlPinIjs0FVkpgR1Hndq8h3wkOwmj908Cz/UEC74zYWXV7Dt+kadzOQZu
+         F3CCjYSv0fehA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 03:56:14PM -0800, Doug Anderson wrote:
-> Hi,
-> 
-> On Sun, Dec 8, 2019 at 4:03 PM Heiko Stübner <heiko@sntech.de> wrote:
-> >
-> > Am Montag, 9. Dezember 2019, 00:48:31 CET schrieb Marcel Holtmann:
-> > > > This enables the Broadcom uart bluetooth driver on uart0 and gives it
-> > > > ownership of its gpios. In order to use this, you must enable the
-> > > > following kconfig options:
-> > > > - CONFIG_BT_HCIUART_BCM
-> > > > - CONFIG_SERIAL_DEV
-> > > >
-> > > > This is applicable to rk3288-veyron series boards that use the bcm43540
-> > > > wifi+bt chips.
-> > > >
-> > > > As part of this change, also refactor the pinctrl across the various
-> > > > boards. All the boards using broadcom bluetooth shouldn't touch the
-> > > > bt_dev_wake pin.
-> > >
-> > > so have these changes being merged?
-> >
-> > not yet
-> >
-> > Doug wanted to give a Reviewed-by, once the underlying bluetooth
-> > changes got merged - not sure what the status is though.
-> 
-> I have been out for the last week and am a bit backlogged.
-> 
-> I notice that this landed in our 4.19 kernel with +Matthias's
-> Reviewed-by at <https://crrev.com/c/1772261>.  I don't feel any need
-> to re-review this myself if Matthias has taken a final look on it, so
-> unless he knows a reason why it shouldn't land then I'd say go ahead
-> and land it.
 
-Sorry, should have replied here in the first place. The changes look
-good to me.
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+On 12/9/19 3:12 PM, Dmitry Osipenko wrote:
+> 10.12.2019 02:05, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 12/9/19 12:06 PM, Dmitry Osipenko wrote:
+>>> 07.12.2019 22:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On 12/7/19 6:58 AM, Dmitry Osipenko wrote:
+>>>>> 06.12.2019 05:48, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> Current ASoC driver uses extern1 as cdev1 clock from Tegra30 onwards
+>>>>>> through device tree.
+>>>>>>
+>>>>>> Actual audio mclk is clk_out_1 and to use PLLA for mclk rate control=
+,
+>>>>>> need to clk_out_1_mux parent to extern1 and extern1 parent to
+>>>>>> PLLA_OUT0.
+>>>>>>
+>>>>>> Currently Tegra clock driver init sets the parents and enables both
+>>>>>> clk_out_1 and extern1 clocks. But these clocks parent and enables
+>>>>>> should
+>>>>>> be controlled by ASoC driver.
+>>>>>>
+>>>>>> Clock parents can be specified in device tree using assigned-clocks
+>>>>>> and assigned-clock-parents.
+>>>>>>
+>>>>>> To enable audio mclk, both clk_out_1 and extern1 clocks need to be
+>>>>>> enabled.
+>>>>>>
+>>>>>> This patch configures parents for clk_out_1 and extern1 clocks if
+>>>>>> device
+>>>>>> tree does not specify clock parents inorder to support old device tr=
+ee
+>>>>>> and controls mclk using both clk_out_1 and extern1 clocks.
+>>>>>>
+>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>> ---
+>>>>>>  =C2=A0=C2=A0 sound/soc/tegra/tegra_asoc_utils.c | 66
+>>>>>> ++++++++++++++++++++++++++++++++++++++
+>>>>>>  =C2=A0=C2=A0 sound/soc/tegra/tegra_asoc_utils.h |=C2=A0 1 +
+>>>>>>  =C2=A0=C2=A0 2 files changed, 67 insertions(+)
+>>>>>>
+>>>>>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>> b/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>> index 536a578e9512..8e3a3740df7c 100644
+>>>>>> --- a/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>> @@ -60,6 +60,7 @@ int tegra_asoc_utils_set_rate(struct
+>>>>>> tegra_asoc_utils_data *data, int srate,
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->set_mclk =3D 0;
+>>>>>>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(d=
+ata->clk_cdev1);
+>>>>>> +=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->clk_extern1);
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->cl=
+k_pll_a_out0);
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->cl=
+k_pll_a);
+>>>>>>  =C2=A0=C2=A0 @@ -89,6 +90,14 @@ int tegra_asoc_utils_set_rate(struc=
+t
+>>>>>> tegra_asoc_utils_data *data, int srate,
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return=
+ err;
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>  =C2=A0=C2=A0 +=C2=A0=C2=A0=C2=A0 if (!IS_ERR_OR_NULL(data->clk_exte=
+rn1)) {
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D clk_prepare_enab=
+le(data->clk_extern1);
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err) {
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+dev_err(data->dev, "Can't enable extern1: %d\n", err);
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+return err;
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>>> +
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D clk_prepare_enable(dat=
+a->clk_cdev1);
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err) {
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_er=
+r(data->dev, "Can't enable cdev1: %d\n", err);
+>>>>>> @@ -109,6 +118,7 @@ int tegra_asoc_utils_set_ac97_rate(struct
+>>>>>> tegra_asoc_utils_data *data)
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int err;
+>>>>>>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(d=
+ata->clk_cdev1);
+>>>>>> +=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->clk_extern1);
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->cl=
+k_pll_a_out0);
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->cl=
+k_pll_a);
+>>>>>>  =C2=A0=C2=A0 @@ -142,6 +152,14 @@ int tegra_asoc_utils_set_ac97_rat=
+e(struct
+>>>>>> tegra_asoc_utils_data *data)
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return=
+ err;
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>  =C2=A0=C2=A0 +=C2=A0=C2=A0=C2=A0 if (!IS_ERR_OR_NULL(data->clk_exte=
+rn1)) {
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D clk_prepare_enab=
+le(data->clk_extern1);
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err) {
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+dev_err(data->dev, "Can't enable extern1: %d\n", err);
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+return err;
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>> Why this is needed given that clk_extern1 is either a child of MCLK o=
+r
+>>>>> MCLK itself (on T20)? The child clocks are enabled when the parent is
+>>>>> enabled.
+>>>> For T30 and later, clk_extern1 is one of the source for clk_out_1_mux.
+>>>> clk_extern1 is in CAR and it has its own gate and mux.
+>>>>
+>>>> As audio mclk related clocks (clk_out_1, clk_out_1_mux, and extern1) a=
+re
+>>>> moved into ASoC driver from clock driver
+>>>>
+>>>> need to enable extern1 gate as well along with clk_out1 for T30 throug=
+h
+>>>> T210.
+>>>>
+>>>> Just FYI, extern1 enable here happens only when data->clk_extern1 is
+>>>> available which is for T30 onwards.
+>>> clk_out_1 is the parent of extern1, thus extern1 is enabled by the clk
+>>> core whenever clk_out_1 is enabled because data->clk_cdev1=3Dclk_out_1.=
+ An
+>>> I missing something?
+>>>
+>>> [snip]
+>> extern1 is the parent for clk_out_1. explained extern1 clock path to
+>> clk_out in reply to your comment in other patch of this series.
+> Right, I meant extern1 the parent of clk_out_1, sorry for the confusion.
+> So when clk_out_1 (child) is enabled, extern1 (parent) is enabled as well=
+.
+>
+> I'll take a closer look at the other email tomorrow.
+yes, will remove explicitly enabling extern1 in next version.
