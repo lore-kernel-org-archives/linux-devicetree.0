@@ -2,211 +2,132 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EACC2D0C5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 10:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A72C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 10:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10FC92073B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 10:33:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Lg3zVhYI";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="hP7S+Su5"
+	by mail.kernel.org (Postfix) with ESMTP id 5C3F12077B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 10:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbfLJKds (ORCPT
+        id S1727131AbfLJKkG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:33:48 -0500
-Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:32810
-        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726574AbfLJKds (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:33:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575974026;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=oPcXVs4sL0jagQxzN++WYvN2FEBiS1MvQ1+FLl0GrXM=;
-        b=Lg3zVhYIoRjIld+taplBBX23mprv1Eg7OlBvBueC3Wc+mUpik7RYm0tFyOvCZHf+
-        xM3/ICcRir5BpB9WMXKPojWLe/UchXnOSiXNE/avh0gY9hbO9Vrt9CTlk1G0LnghVVn
-        LZjJ5VauoyurZWq7uMJc/nkrUVjkNWWCIqjGgHd0=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575974026;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=oPcXVs4sL0jagQxzN++WYvN2FEBiS1MvQ1+FLl0GrXM=;
-        b=hP7S+Su5DANVDSOweFKmBO5en3dtGC7yGiwCNuvbYLYYVCZZJw93vt9layKoVx3d
-        ULSxEn5qo1elCjvBKRK89Sn/tNAxyw8AgFB1ZAeDcmYYU5CtLFny+ZfPGROvwpx497l
-        bkElB2NX5abjP9yMMGmQ0u6a0ug4aCcqJL7FGqFM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 14BEEC447A4
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v5 13/13] arm64: dts: sc7180: Add qupv3_0 and qupv3_1
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Roja Rani Yarubandi <rojay@codeaurora.org>
-References: <20191108092824.9773-1-rnayak@codeaurora.org>
- <20191108092824.9773-14-rnayak@codeaurora.org>
- <CAD=FV=VUoj1egZqw9koNHDPBCCEh_XZ5nZAPNKcnya2UACG8hw@mail.gmail.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <0101016eef5f3e13-a3071a8d-10d8-41fc-b635-9a2d2dcc8a68-000000@us-west-2.amazonses.com>
-Date:   Tue, 10 Dec 2019 10:33:46 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 10 Dec 2019 05:40:06 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:50958 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfLJKkG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 05:40:06 -0500
+X-AuditID: c0a8fbf4-199ff70000001fa6-8f-5def76030a76
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 42.1B.08102.3067FED5; Tue, 10 Dec 2019 11:40:03 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Tue, 10 Dec 2019 11:39:58 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "hofrat@osadl.org" <hofrat@osadl.org>,
+        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Thread-Topic: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Thread-Index: AQHVndzxthsd4Y8wKkm7W/92Uslk+KeRDPcAgAAbkICAAZUNgIAACqYAgAAMmACADvFigIAASP2AgARwk4CAAFfQAIAADk+AgAMPioCAAAc/gIAAESOAgAkyBwA=
+Date:   Tue, 10 Dec 2019 10:39:57 +0000
+Message-ID: <aea80c251dbafa8f2cd433eaf397a754812338d8.camel@fi.rohmeurope.com>
+References: <20191119181325.GD3634@sirena.org.uk>
+         <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
+         <20191119193636.GH3634@sirena.org.uk>
+         <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
+         <20191129120925.GA5747@sirena.org.uk>
+         <297fa021fb243072dbbb7bca455e57c13e8c6843.camel@fi.rohmeurope.com>
+         <20191202131140.GD1998@sirena.org.uk>
+         <72a1f4c5768b8c08c2669ea01e60d1b614095a43.camel@fi.rohmeurope.com>
+         <20191204124717.GR1998@sirena.org.uk>
+         <6f7b96c71bd1257b0b218a092f8aca7f32ef5468.camel@fi.rohmeurope.com>
+         <20191204141433.GU1998@sirena.org.uk>
+In-Reply-To: <20191204141433.GU1998@sirena.org.uk>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7EDEB04F51B872489D3A15D2A5378E04@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=VUoj1egZqw9koNHDPBCCEh_XZ5nZAPNKcnya2UACG8hw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SES-Outgoing: 2019.12.10-54.240.27.10
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta0wUVxjNnffiDh0XKFeqpN3U2NoAYvxxE03RJtaxbZq2/jAxpTiUKbtx
+        2V1ndo2PGqkGYReCWKEtW96P8nCtFUFbAxa2IHR9UFpWMbqYVbSilkWrKGppZ5gq/Lrnfuc7
+        53w3+S6DG7x0HGO2OkTJKliMVATR2fjkSAK+JZy6ZE8jh+oGAjTKHfuORvfL/QQqCY1QaKQz
+        F6DK7nMkyj/dSqKa8DckcrnySHSp7QcC9R29AtCVBz0ATQzmYaj4aQOG7hYMk6h6bx2BjlY+
+        BeiPE2UUarvzPUCnDg5S6FB3kEb1FwYwVFbfR6DwPReGBvyrUdDfQ6E9A0M4yunoptHU+SME
+        Kjy3ZmU8763wAj48lEPzFd4d/E+eIM3Xto9ifEuzi+Ivn2+n+NrCAyR/s+AXgp84s5/gC1ub
+        AX+j+jDB9w4dx/ivKyYxvvHgQ5r/uyX+A27DnBXpgmPLOnOmNenNjXNMx/t7aHt75NbcyhI8
+        GxREuoGOgdwy+PuxfNoNIhgDFwCw0XcX1y59AAZ+HlcuDENxK6D7Iq0KorkEWPK4llJ7cK5U
+        Dx9NTlIqEcVthK23rxFakwCrJp5gGnYDePLPhSomuIXQnVNGqpjl3ofB0/WYFnaZgHmFXdOE
+        jlsKG6bGp40AtwC6ssemjXAuFrbceEhqY3Owrr0f13AMHL029X/dCDsmQ4Q6NM69Dg+fSNKk
+        K2FX7z1aw6/A4vwQrc0wF/5aOkIUgRc9sxI8M2rPLLVnltozS10FyGYAswSzJVNwiMmJkuhM
+        lGymLOX41JbVArTtu/8j+Ne31gcwBvjAPAYzxrCHLOFUQ2S6LWObSZBNaZLTIso+ABncGM32
+        7h1LNbAZwrbtomR7Rr3EEMZYdlFof6qBU7M2iaJdlJ6x8xnGCNkmh2I6VxIzxa2fmS2OGRpj
+        dKp5RFy0LFozRElwOkxp6oKkycqGqJReydU7FTkr24UspapJ/eANpmi0vAZnusvra3ADYbVZ
+        xbhYtlRN4tRWk9P6POgWiGWAMYrNVI30yhd87nNLicCUCFeG+jTZIcxQcdmg68MiLPDxqt6o
+        f3Y+fut6fMP4eLHJKicNr1r+8pmlbVfZHS+crdqQ8uqp94qDTYu/NI8l0+A13WD15pTVHcw7
+        Qd3Nk8Nr0uZd2tfs/TbmkcjuMzT57e+mNB0ILX/wW8TuTQs6wfqPvnp7/hefLCmXNgcWeRPS
+        ye1nd19fu+svvF9vT/z8mJGQTULyYlyShf8AEWHJOj8EAAA=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 12/6/2019 5:55 PM, Doug Anderson wrote:
-> Hi,
-> 
-> On Fri, Nov 8, 2019 at 5:29 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
->>
->> From: Roja Rani Yarubandi <rojay@codeaurora.org>
->>
->> Add QUP SE instances configuration for sc7180.
->>
->> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sc7180-idp.dts | 146 +++++
->>   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 675 ++++++++++++++++++++++++
->>   2 files changed, 821 insertions(+)
-> 
-> Comments below could be done in a follow-up patch if it makes more sense.
-> 
-> 
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index e1d6278d85f7..666e9b92c7ad 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> 
-> At the top of this file, please add aliases for all i2c and spi
-> devices (like sdm845 did).  Right now trying to use command line i2c
-> tools is super confusing because busses are super jumbled.
-
-sure, I'll add it.
-
-> 
-> 
->> +                       i2c2: i2c@888000 {
->> +                               compatible = "qcom,geni-i2c";
->> +                               reg = <0 0x00888000 0 0x4000>;
->> +                               clock-names = "se";
->> +                               clocks = <&gcc GCC_QUPV3_WRAP0_S2_CLK>;
->> +                               pinctrl-names = "default";
->> +                               pinctrl-0 = <&qup_i2c2_default>;
->> +                               interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
->> +                               #address-cells = <1>;
->> +                               #size-cells = <0>;
->> +                               status = "disabled";
->> +                       };
-> 
-> Where is spi2?
-> 
-> 
->> +                       i2c4: i2c@890000 {
->> +                               compatible = "qcom,geni-i2c";
->> +                               reg = <0 0x00890000 0 0x4000>;
->> +                               clock-names = "se";
->> +                               clocks = <&gcc GCC_QUPV3_WRAP0_S4_CLK>;
->> +                               pinctrl-names = "default";
->> +                               pinctrl-0 = <&qup_i2c4_default>;
->> +                               interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
->> +                               #address-cells = <1>;
->> +                               #size-cells = <0>;
->> +                               status = "disabled";
->> +                       };
-> 
-> Where is spi4?
-> 
-> 
->> +                       i2c7: i2c@a84000 {
->> +                               compatible = "qcom,geni-i2c";
->> +                               reg = <0 0x00a84000 0 0x4000>;
->> +                               clock-names = "se";
->> +                               clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
->> +                               pinctrl-names = "default";
->> +                               pinctrl-0 = <&qup_i2c7_default>;
->> +                               interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
->> +                               #address-cells = <1>;
->> +                               #size-cells = <0>;
->> +                               status = "disabled";
->> +                       };
-> 
-> Where is spi7?
-> 
-> 
->> +                       i2c9: i2c@a8c000 {
->> +                               compatible = "qcom,geni-i2c";
->> +                               reg = <0 0x00a8c000 0 0x4000>;
->> +                               clock-names = "se";
->> +                               clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
->> +                               pinctrl-names = "default";
->> +                               pinctrl-0 = <&qup_i2c9_default>;
->> +                               interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
->> +                               #address-cells = <1>;
->> +                               #size-cells = <0>;
->> +                               status = "disabled";
->> +                       };
-> 
-> Where is spi9?
-
-so looks like these qup instances (qup2/4/7/9) can only be configured to be used as i2c or uart
-and not spi since we have only 2 pins for them and spi needs 4.
-  
-> 
->> +                       qup_spi1_default: qup-spi1-default {
->> +                               pinmux {
->> +                                       pins = "gpio0", "gpio1",
->> +                                              "gpio2", "gpio3",
->> +                                              "gpio12", "gpio94";
-> 
-> Please just mux one of the chip selects by default.  It seems like it
-> would be _much_ more common to have a single SPI device on the bus and
-> then every board doesn't have to override this.
-> 
-> 
->> +                       qup_spi6_default: qup-spi6-default {
->> +                               pinmux {
->> +                                       pins = "gpio59", "gpio60",
->> +                                              "gpio61", "gpio62",
->> +                                              "gpio68", "gpio72";
-> 
-> Please just mux one of the chip selects by default.  It seems like it
-> would be _much_ more common to have a single SPI device on the bus and
-> then every board doesn't have to override this.
-> 
-> 
->> +                       qup_spi10_default: qup-spi10-default {
->> +                               pinmux {
->> +                                       pins = "gpio86", "gpio87",
->> +                                              "gpio88", "gpio89",
->> +                                              "gpio90", "gpio91";
-> 
-> Please just mux one of the chip selects by default.  It seems like it
-> would be _much_ more common to have a single SPI device on the bus and
-> then every board doesn't have to override this.
-
-yes, i will fix all of them to remove the additional chip select muxes.
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+DQpPbiBXZWQsIDIwMTktMTItMDQgYXQgMTQ6MTQgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
+IE9uIFdlZCwgRGVjIDA0LCAyMDE5IGF0IDAxOjEzOjA4UE0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0
+dGkgd3JvdGU6DQo+IA0KPiA+IEkgdGhpbmsgSSBvbmNlIGFnYWluIGV4cGxhaW5lZCBteXNlbGYg
+YmFkbHkuIFRoZXJlIGNhbiBiZSBvbmx5IG9uZQ0KPiA+IGdyb3VwIHdpdGggNCBSVU4gc3RhdGVz
+IHNlbGVjdGVkIGJ5IGNvbWJpbmF0aW9uIG9mIDIgR1BJTyBsaW5lcy4NCj4gPiBidWNrcw0KPiA+
+IDEsMiw2IGFuZCA3IGNhbiBlYWNoIGVpdGhlciBiZSBhc3NpZ25lZCBpbnRvIHRoaXMgb25lIGdy
+b3VwIG9yDQo+ID4gY29udHJvbGxlZCBpbmRpdmlkdWFsbHkgdmlhIEkyQy4gQnV0IEkgZG91YnQg
+YXNzaWduaW5nIG9ubHkgb25lIG9mDQo+ID4gdGhlDQo+ID4gYnVja3MgaW4gdGhpcyBncm91cCBp
+cyB0aGUgdHlwaWNhbCB1c2UtY2FzZS4gV2hhdCB3ZSB3b3VsZCBuZWVkDQo+ID4gd291bGQNCj4g
+DQo+IEkgZG9uJ3QgdGhpbmsgdGhpcyBpcyBhcyB1bnVzdWFsIGFzIHlvdSdyZSB0aGlua2luZyAt
+IHRoZQ0KPiByZWd1bGF0b3JzIHBlb3BsZSB3YW50IHRvIGNvbnRyb2wgcXVpY2tseSBhcmUgdXN1
+YWxseSB0aGUgbWFpbg0KPiBDUFUgc3VwcGx5IHJlZ3VsYXRvcnMgYW5kIHRoZXNlIG9mdGVuIHZh
+cnkgaW5kZXBlbmRlbnRseSBvZg0KPiBhbnl0aGluZyBlbHNlLg0KDQpIbW0uIEkgc2VlIHlvdXIg
+cG9pbnQuIFlvdSBtaWdodCBiZSBjb3JyZWN0LiBBbGxvd2luZyBvbmx5IG9uZSBidWNrIHRvDQpi
+ZSBhc3NpZ25lZCBpbiAncnVuLWxldmVsIGdyb3VwJyAodG8gYmUgY29udHJvbGxlZCBieSBHUElP
+cykgd291bGQgYmUNCnRvdGFsbHkgcG9zc2libGUgd2l0aCBjdXJyZW50IHJlZ3VsYXRvciBBUEkg
+LSBhbmQgaXQgbWlnaHQgYmUgdXNlZnVsDQpmb3Igc2NhbGluZyB0aGUgQ1BVIHZvbHRhZ2UuIEkg
+YXBwcmVjaWF0ZSB5b3VyIGhlbHAgYW5kIGV4cGVyaWVuY2UgaGVyZQ0KOikgSW1wbGVtZW50aW5n
+IGl0IHdvdWxkIGJlIGFsc28gcHJldHR5IHNpbXBsZSwgY2FjaGluZyBhbmQgY29udHJvbGxpbmcN
+CnRoZSBydW4tbGV2ZWwgdm9sdGFnZXMgaXMgYWxyZWFkeSB0aGVyZSBpbiBwYXRjaCAxMiwgSSBq
+dXN0IHNob3VsZA0KcmVzdHJpY3QgdGhlIGdyb3VwIHNpemUgdG8gb25lIGJ1Y2suIEkgd2lsbCBz
+ZWUgaG93IGl0IHdvcmtzIGFuZCBhbHNvDQphc2sgaWYgbXkgY29sbGVhZ3VlcyBrbm93IHdoZXRo
+ZXIgdGhpcyBpcyB2YWx1YWJsZSB3aXRoIG91ciBjdXJyZW50DQpjdXN0b21lcidzIFNPQ3MuIFRo
+YW5rcyBhIGJ1bmNoIQ0KDQpCciwNCglNYXR0aSBWYWl0dGluZW4NCg==
