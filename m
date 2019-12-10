@@ -2,89 +2,96 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65528C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA37C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF3720637
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 667B4206EC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 18:30:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGUEOSg8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/8vG0ml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfLJSYs (ORCPT
+        id S1727520AbfLJSaG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 13:24:48 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43311 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727637AbfLJSYs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 13:24:48 -0500
-Received: by mail-lf1-f67.google.com with SMTP id 9so14509989lfq.10;
-        Tue, 10 Dec 2019 10:24:46 -0800 (PST)
+        Tue, 10 Dec 2019 13:30:06 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37473 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbfLJSaF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 13:30:05 -0500
+Received: by mail-lf1-f68.google.com with SMTP id b15so14525467lfc.4;
+        Tue, 10 Dec 2019 10:30:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=J3Fx8Ozru3AuGWOjWvc6Qigb/OUj/LedRTw55RBNbbg=;
-        b=aGUEOSg85AsreT39QBDzBQYeDUNVNG8qxblS0lqPAOh/mvDWQmp+aYHdObab0Ywr6/
-         1D/erTOfgbnefovIimaS5RxuhRJzRjZAzlWjw+3mBPmcQTd3cYE2mBsLarWUoVtX7VYk
-         oT+kg9iQJ6uc+Cxr22Q7UnhkUxJfa576lHzRkcvAz+SzCjgx3b657NXs3xUVmfkE4IXQ
-         +OmlBtcQ2A/XCmuzcQIKUq2k08SSI4a+CsQhJbgXsRpIErzjxtkzDQQX3pQSEaVaDuJs
-         aJeWxBsqMyv+4hceKG1UHxRONlmh9VgsaJS7tWPIZJuR1h3F3dx7ySRJQCm1E0wNvqH0
-         amvQ==
+        bh=qJU4Pmn8p+BP6WtR4OMNjM0SlbVb7r9lcUi4XdHIpn4=;
+        b=X/8vG0mliUAaIF4AfnO5i7Xkz0m6r0I1Guf84MbCuz9S76xmx4xu/0UiO32//pvXxl
+         I+SYlBnp2QkEqd1Td3/X9xRrrYwwoZPSucVDR4luj0Bq+LC6c6y+QUU4ITNMep/ISIag
+         YiHUno0cnwaF4V+dCzvQFmBt3VxXvVEA19HrnKjaPbI0ApizKiFWEFqig6jKb3Ft7wf9
+         m6Rh7P1C/ZnJvCNbQFw6shgZuNq0gjdey2Cy78F1sO0jLbUXdNb+JAHKJRgIf8TgIiwW
+         03hIVUOa9YUiEZdWTX3Zjbd6qqyE7w1PQqA3iDFJUFBzyy5HDMpEXCd4DGKiJCgfnEOf
+         6ZyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=J3Fx8Ozru3AuGWOjWvc6Qigb/OUj/LedRTw55RBNbbg=;
-        b=q8h2vAdskh7ZhZi57zvQZUQO5oofGECf/dxuguTPNCmk6z+AxWDysA+xOwIq3QVaei
-         YC4Yr4VgwpwjmtoowwGn5emQaiczC8md1x+uDiWPJSdQ9BGKZe4Yt3sS2Tma/8ej+84W
-         gAsPMM93BPVrckbMZzOAvQU59J1orAhdGPwUSV9hZWMMocfOcHwMT3ZUPdm+2nm9osUN
-         tMBflmlL1Ccii6X9xPVFki8bQ2yGPedK7U6Et5d8NrqcypgaxOiXtGG/+HhH2LymEpXR
-         ZEx6mir8fzG4s6cAk8iyBEySSoqVWxMGD+zOCLZeArtgAvGu8UGAGIfjxKLFiWpRGpHM
-         blhQ==
-X-Gm-Message-State: APjAAAV0ttT/w6z3uwq4axt55goUyxAMRKAngBSsudicHRFNK7+0Imrx
-        7I24dKXOYK9ht9hD28sPxOk=
-X-Google-Smtp-Source: APXvYqxF07iQXmiNXjFleXUWs9rwRg1kwAjgSyuguUjGbybN4u6GkAQPSegzeXZQNvdtozsIzp8rUg==
-X-Received: by 2002:a19:4a12:: with SMTP id x18mr16433639lfa.158.1576002286171;
-        Tue, 10 Dec 2019 10:24:46 -0800 (PST)
+        bh=qJU4Pmn8p+BP6WtR4OMNjM0SlbVb7r9lcUi4XdHIpn4=;
+        b=XO3+LTzsMMaozr/TzkGXJTiL48LRDzStO7xGeuMH+ZOXpiPVIMiGrMFnzK8rJPBe1R
+         UvRbCLI+rg44VPagixB4GcoTXxj0dCLAc2EVyaQOp/MzQMncJQRVvJBt38vhbGv+2zrB
+         OS+djYPwAnhG0siYjpeb/ydJD0M74I/HgUNeYAp4/3WceeVwf5dgeISY7jIRe1GY8sUW
+         UbCp2VhyEViSOGDGssp++QiHCHmo/D2OPzy3degUcNPuv8Eit9WRjuzLmSthHSFpYwmc
+         42/3cl/GOYdjrWmRz4QqsTsOzWduH8O3zMk2t7iGRqkVXRo44CnJHzTiaf3az6xXFD8K
+         Xo7A==
+X-Gm-Message-State: APjAAAWlQn1bCsfzbom5Ex4dRshhmn4QAyoHgql/JK4CDX+sR8VMYEaJ
+        NsWjzWeYkLh7FNVFu/1KVFs=
+X-Google-Smtp-Source: APXvYqyO2DJRFRYreVbJWU1FOfHdesOW3uMVxL4CrJOhxgLnOJJWcJ1dSr+dh7dlPGifSs3bh7KGqA==
+X-Received: by 2002:a19:5013:: with SMTP id e19mr20136293lfb.8.1576002602556;
+        Tue, 10 Dec 2019 10:30:02 -0800 (PST)
 Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id b17sm1999915lfp.15.2019.12.10.10.24.44
+        by smtp.googlemail.com with ESMTPSA id g5sm2018377lfc.11.2019.12.10.10.30.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 10:24:45 -0800 (PST)
-Subject: Re: [PATCH v3 09/15] ASoC: tegra: Add fallback for audio mclk
-To:     Mark Brown <broonie@kernel.org>, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Tue, 10 Dec 2019 10:30:01 -0800 (PST)
+Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
+ into PMC driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
         thierry.reding@gmail.com, jonathanh@nvidia.com,
         mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, allison@lohutok.net,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
         mturquette@baylibre.com, horms+renesas@verge.net.au,
         Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
         spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
         daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
         markz@nvidia.com, devicetree@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, alexios.zavras@intel.com,
-        alsa-devel@alsa-project.org
+        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        alexios.zavras@intel.com, alsa-devel@alsa-project.org
 References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-10-git-send-email-skomatineni@nvidia.com>
- <20191209164027.GG5483@sirena.org.uk>
- <7fe879fd-dae3-1e64-1031-cd9f00e31552@gmail.com>
- <20191209204735.GK5483@sirena.org.uk>
+ <1575600535-26877-4-git-send-email-skomatineni@nvidia.com>
+ <7cf4ff77-2f33-4ee5-0e09-5aa6aef3e8be@gmail.com>
+ <ad3a6743-4b36-fa25-9cc7-72803038ecc5@gmail.com>
+ <dc7a057a-0bed-0e6f-0987-edcfec47f867@gmail.com>
+ <288a1701-def6-d628-26bc-a305f817bdb1@gmail.com>
+ <78644d45-2ae3-121f-99fc-0a46f205907d@nvidia.com>
+ <b35916e1-c6ee-52ca-9111-5ae109437b6e@nvidia.com>
+ <ccb715cc-c927-ea91-a26e-24d6eeeeef1a@gmail.com>
+ <ee1d39d4-9a57-da9b-fce6-8130dac1d2fd@nvidia.com>
+ <db3bee1e-1bfa-2f9e-9ed1-91b98554556a@gmail.com>
+ <22a2f8bd-561d-f4c6-4eef-bb61095c53b2@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <560185d9-32fd-a85e-5feb-105f79b953c6@gmail.com>
-Date:   Tue, 10 Dec 2019 21:24:43 +0300
+Message-ID: <5a5cfa74-66be-5c7a-04eb-88c355851c59@gmail.com>
+Date:   Tue, 10 Dec 2019 21:30:00 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20191209204735.GK5483@sirena.org.uk>
+In-Reply-To: <22a2f8bd-561d-f4c6-4eef-bb61095c53b2@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -93,44 +100,112 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-09.12.2019 23:47, Mark Brown пишет:
-> On Mon, Dec 09, 2019 at 11:31:59PM +0300, Dmitry Osipenko wrote:
->> 09.12.2019 19:40, Mark Brown пишет:
+10.12.2019 20:48, Sowjanya Komatineni пишет:
 > 
->>> Why would this need to be a stable fix?  Presumably people with stable
->>> kernels are using the old device tree anyway?
-> 
->> At least Rob Herring is asking to maintain backwards compatibility
->> because some ditros are using newer device-trees with stable kernels.
-> 
-> You're talking about forwards compatibility not backwards here.  Are
-> those distros actually using LTS kernels?
+> On 12/10/19 9:41 AM, Dmitry Osipenko wrote:
+>> 09.12.2019 23:46, Sowjanya Komatineni пишет:
+>>> On 12/9/19 12:12 PM, Dmitry Osipenko wrote:
+>>>> 08.12.2019 00:36, Sowjanya Komatineni пишет:
+>>>>> On 12/7/19 11:59 AM, Sowjanya Komatineni wrote:
+>>>>>> On 12/7/19 8:00 AM, Dmitry Osipenko wrote:
+>>>>>>> 07.12.2019 18:53, Dmitry Osipenko пишет:
+>>>>>>>> 07.12.2019 18:47, Dmitry Osipenko пишет:
+>>>>>>>>> 07.12.2019 17:28, Dmitry Osipenko пишет:
+>>>>>>>>>> 06.12.2019 05:48, Sowjanya Komatineni пишет:
+>>>>>>>>>>> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2, clk_out_3
+>>>>>>>>>>> with
+>>>>>>>>>>> mux and gate for each of these clocks.
+>>>>>>>>>>>
+>>>>>>>>>>> Currently these PMC clocks are registered by Tegra clock driver
+>>>>>>>>>>> using
+>>>>>>>>>>> clk_register_mux and clk_register_gate by passing PMC base address
+>>>>>>>>>>> and register offsets and PMC programming for these clocks happens
+>>>>>>>>>>> through direct PMC access by the clock driver.
+>>>>>>>>>>>
+>>>>>>>>>>> With this, when PMC is in secure mode any direct PMC access
+>>>>>>>>>>> from the
+>>>>>>>>>>> non-secure world does not go through and these clocks will not be
+>>>>>>>>>>> functional.
+>>>>>>>>>>>
+>>>>>>>>>>> This patch adds these clocks registration with PMC as a clock
+>>>>>>>>>>> provider
+>>>>>>>>>>> for these clocks. clk_ops callback implementations for these
+>>>>>>>>>>> clocks
+>>>>>>>>>>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC
+>>>>>>>>>>> programming
+>>>>>>>>>>> in secure mode and non-secure mode.
+>>>>>>>>>>>
+>>>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>>>>>> ---
+>>>>>>>>> [snip]
+>>>>>>>>>
+>>>>>>>>>>> +
+>>>>>>>>>>> +static const struct clk_ops pmc_clk_gate_ops = {
+>>>>>>>>>>> +    .is_enabled = pmc_clk_is_enabled,
+>>>>>>>>>>> +    .enable = pmc_clk_enable,
+>>>>>>>>>>> +    .disable = pmc_clk_disable,
+>>>>>>>>>>> +};
+>>>>>>>>>> What's the benefit of separating GATE from the MUX?
+>>>>>>>>>>
+>>>>>>>>>> I think it could be a single clock.
+>>>>>>>>> According to TRM:
+>>>>>>>>>
+>>>>>>>>> 1. GATE and MUX are separate entities.
+>>>>>>>>>
+>>>>>>>>> 2. GATE is the parent of MUX (see PMC's CLK_OUT paths diagram in
+>>>>>>>>> TRM).
+>>>>>>>>>
+>>>>>>>>> 3. PMC doesn't gate EXTPERIPH clock but could "force-enable" it,
+>>>>>>>>> correct?
+>>>>> Was following existing clk-tegra-pmc as I am not sure of reason for
+>>>>> having these clocks registered as separate mux and gate clocks.
+>>>>>
+>>>>> Yes, PMC clocks can be registered as single clock and can use clk_ops
+>>>>> for set/get parent and enable/disable.
+>>>>>
+>>>>> enable/disable of PMC clocks is for force-enable to force the clock to
+>>>>> run regardless of ACCEPT_REQ or INVERT_REQ.
+>>>>>
+>>>>>>>> 4. clk_m_div2/4 are internal PMC OSC dividers and thus these clocks
+>>>>>>>> should belong to PMC.
+>>>>>>> Also, it should be "osc" and not "clk_m".
+>>>>>> I followed the same parents as it were in existing clk-tegra-pmc
+>>>>>> driver.
+>>>>>>
+>>>>>> Yeah they are wrong and they should be from osc and not clk_m.
+>>>>>>
+>>>>>> Will fix in next version.
+>>>>>>
+>>>> Could you please describe the full EXTPERIPH clock topology and how the
+>>>> pinmux configuration is related to it all?
+>>>>
+>>>> What is internal to the Tegra chip and what are the external outputs?
+>>>>
+>>>> Is it possible to bypass PMC on T30+ for the EXTPERIPH clocks?
+>>> PMC CLK1/2/3 possible sources are OSC_DIV1, OSC_DIV2, OSC_DIV4,
+>>> EXTPERIPH from CAR.
+>>>
+>>> OSC_DIV1/2/4 are with internal dividers at the OSC Pads
+>>>
+>>> EXTPERIPH is from CAR and it has reset and enable controls along with
+>>> clock source selections to choose one of the PLLA_OUT0, CLK_S,
+>>> PLLP_OUT0, CLK_M, PLLE_OUT0
+>> Are you sure that EXTPERIPH has a reset? What will it reset? Why it's
+>> not documented in TRM?
+> Yes, Extperiph1/2/3 has RST part of CAR RST_DEVICES_V bits 24/25/26
 
-I think openSUSE Leap could be one of those distros that use LTS kernel
-with newer device-trees, but that's not 100%. Maybe Rob could help
-clarifying that.
+Are these bits not documented in a public TRMs? I checked
+T30/114/124/210 TRMs and CLK_RST_CONTROLLER_RST_DEVICES_V_0 doesn't have
+those bits in the docs.
 
->> I'm personally also tending to use the newer DTB with older kernel
->> version whenever there is a need to check something using stable kernel.
->> Perhaps losing sound is not very important, but will be nicer if that
->> doesn't happen.
-> 
-> That really does sound like a "you broke it, you get all the pieces"
-> situation TBH...  I'd be a lot more comfortable if the stable kernels
-> were sticking to bugfix only though I do appreciate that they're not
-> really that any more.
+>>> So, PMC CLK1/2/4 possible parents are OSC_DIV1, OSC_DIV2, OSC_DIV4, EXTERN.
+>>>
+>>>
+>>> CLK1/2/3 also has Pinmux to route EXTPERIPH output on to these pins.
+>> Could you please clarify what are "these" pins? Perhaps you meant the
+>> EXTERN pin of PMC?
+> By CLK1/2/3 pins, I am referring to CLK_OUT_1/2/3 pins from Tegra
 
-In some cases it could be painful to maintain device-tree compatibility
-for platforms like NVIDIA Tegra SoCs because hardware wasn't modeled
-correctly from the start.
+I see now what you meant, thanks.
 
-I agree that people should use relevant device-trees. It's quite a lot
-of hassle to care about compatibility for platforms that are permanently
-in a development state. It could be more reasonable to go through the
-pain if kernel required a full-featured device tree for every SoC from
-the start.
-
-But maybe Tegra / device-tree maintainers have a different opinion.
-IIUC, device-trees are meant to be stable and software-agnostic, at
-least that was the case not so long time ago and I don't think that this
-premise changed.
+[snip}
