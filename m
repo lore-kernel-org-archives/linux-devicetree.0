@@ -2,157 +2,146 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 007B6C2D0C4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 11:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301E0C2D0C4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 11:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B982077B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 11:12:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="qQxbrYM3"
+	by mail.kernel.org (Postfix) with ESMTP id 0F4C7207FF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 11:14:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfLJLMS (ORCPT
+        id S1727039AbfLJLO5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:12:18 -0500
-Received: from mail-dm6nam10on2040.outbound.protection.outlook.com ([40.107.93.40]:6238
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727018AbfLJLMR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:12:17 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IZgKU5Qwaxa0Rq8RN0lRD2uXsA7jozOKb+Wc8i+VtfzRd1VJ4+EooB+exvKnzxrkq1QFmlZUNwfjw4knx6UZJ5QPQbqSf9LXz4jq5D8LfiZN3qnJDRe3rHyzWFH/ym7OKOKoVf57M5kmCN5YonjVoX/ia3ir1CvS0ZEmr7zmgpqLJWrOBDEywldweCq7pv+N5TOZ7qguCRbplph7GSJ9EuCqNOD9KluzGI3Vx4o+VPn1yDeTPU34EnQXnWlUSN3bWk1pdir9rr6xoWOsYuoRWvRW9a89fc91kxWf/iaDOqE4I8hZQQZ9mKPhb+tDn6/xkrTNYS36UVXn4CdomoZrJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YbCalaTn2X7HF4eRtvgddainZMNLa53BndvIrXNSIWM=;
- b=CU+vbEvlN974++ikVC9Bo61UmwUvinnCqq3q+SUV/bwc5NHqTvPA90yJbR8qFZe4JswuUb2XBObC2Fl92LpQq/FNI2KXrT+k/KTI1UlPDhgYSMtD54gbkN+xYOnpECGVXKHxbinxty7TA4iiUFNnH+DmW55msOpP/PxQLp5YFtgN3OepuJj8x2mkTqMd3U5CPfOV51a11ysCVvHuIKeqbcysnLhEmYqeU0I2jAKA2lHZ69IvPnO4Agh2a1FRCidmPXP8iqGOeVffD3h9gDOoAxA0xF5ZAw4s4SrXKqDWGTz670Y/lXtnQoankb33S+PRua2WvQwTAC1wmK/PxRInng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YbCalaTn2X7HF4eRtvgddainZMNLa53BndvIrXNSIWM=;
- b=qQxbrYM3VMr8uChXawMgU/us8WnmKTrxnD5Kou57ZmgaTLzhc2thyh8WzZGjPRt5+pGJprOJD+jAYbE/oTgns42K1a2wi4FAOmTqvrcYsoAYNP600AK3x2IecsDJCnjP85EfuFK/YQgk0O4W9qe6j6+Sa3OM8ILKxYBxktrzF6M=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=yash.shah@sifive.com; 
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
- CH2PR13MB3656.namprd13.prod.outlook.com (20.180.4.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.14; Tue, 10 Dec 2019 11:11:44 +0000
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::eccb:16ac:e897:85d5]) by CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::eccb:16ac:e897:85d5%3]) with mapi id 15.20.2538.012; Tue, 10 Dec 2019
- 11:11:44 +0000
-From:   Yash Shah <yash.shah@sifive.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com,
-        paul.walmsley@sifive.com
-Cc:     aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net,
-        maz@kernel.org, bmeng.cn@gmail.com, atish.patra@wdc.com,
-        sagar.kadam@sifive.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com,
-        Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v4 1/6] genirq: introduce irq_domain_translate_onecell
-Date:   Tue, 10 Dec 2019 16:41:09 +0530
-Message-Id: <1575976274-13487-2-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
-References: <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
-Content-Type: text/plain
-X-ClientProxiedBy: PN1PR0101CA0028.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c00:c::14) To CH2PR13MB3368.namprd13.prod.outlook.com
- (2603:10b6:610:2c::26)
+        Tue, 10 Dec 2019 06:14:57 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:52354 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbfLJLO5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 06:14:57 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-45-5def7e2e2cac
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id DA.5B.08102.E2E7FED5; Tue, 10 Dec 2019 12:14:54 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Tue, 10 Dec 2019 12:14:49 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "hofrat@osadl.org" <hofrat@osadl.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>
+Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Thread-Topic: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Thread-Index: AQHVndzxthsd4Y8wKkm7W/92Uslk+KeRDPcAgAAbkICAAZUNgIAACqYAgAAMmACADvFigIAASP2AgBE6YYA=
+Date:   Tue, 10 Dec 2019 11:14:48 +0000
+Message-ID: <ccc533df4e00bdcbe18ea45a0e0679161ff41354.camel@fi.rohmeurope.com>
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+         <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+         <20191118162502.GJ9761@sirena.org.uk>
+         <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
+         <20191119181325.GD3634@sirena.org.uk>
+         <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
+         <20191119193636.GH3634@sirena.org.uk>
+         <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
+         <20191129120925.GA5747@sirena.org.uk>
+In-Reply-To: <20191129120925.GA5747@sirena.org.uk>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D3CB460A3994D2478F0D8B51544C9882@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Received: from dhananjayk-PowerEdge-R620.open-silicon.com (114.143.65.226) by PN1PR0101CA0028.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:c::14) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Tue, 10 Dec 2019 11:11:39 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [114.143.65.226]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8228d1a2-39fb-4756-38cc-08d77d61bd71
-X-MS-TrafficTypeDiagnostic: CH2PR13MB3656:
-X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CH2PR13MB3656CF4A1F58D4DEAC4B415A8C5B0@CH2PR13MB3656.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2201;
-X-Forefront-PRVS: 02475B2A01
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(396003)(39850400004)(366004)(136003)(346002)(376002)(199004)(189003)(36756003)(66476007)(1006002)(107886003)(52116002)(6666004)(66946007)(6506007)(26005)(956004)(316002)(2616005)(81166006)(8936002)(81156014)(16526019)(186003)(8676002)(44832011)(6636002)(5660300002)(86362001)(6486002)(7416002)(66556008)(6512007)(4326008)(478600001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3656;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: sifive.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XHRUh+TyfD8O0J13qczc8vdv91+bw/fvj0g6GLx42eVbjH5cal7IpuOajTg260yF4fRrEPC3NYakrCPUyyApA2SL8fkWDvqrISBa7KrQHseIUXE66CYHvvsDL2AzGgcEZlNDbaf48LYPKiU5EVhEMDqtet4KIQa8yFr60HKcWZMW+21aJ0ul9Mkinfi6OMLemu2DcU8U7XBIdLSy0qmsV6Z25fcgqy6zA55hdQX6ioonT5M9HQTVnzBDZxTIoIxxf9qLf3wQieFQJWAmtBnDqc+ZmdkriyOfUCLk8Oi1k5I1qlbStxVYWrhJpxH/rWqI2RdJbotlBwZ2hB7Fhb9IPDhVHBJvGxMY2HJWnJsNdSs8q+MIi4kh4Vs4e86AjqnsQQAlKcoBF9WKHRFvbtU+F/5zAxN+yg7t9z5b1M28JxX60hkaGnjeThzaZVfsgZ9F
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8228d1a2-39fb-4756-38cc-08d77d61bd71
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2019 11:11:44.1946
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HOvu+lzzAoOJBYfbEd7kZExGsJMSDwucYOHgIgptRG+Nf0PM0DHI7Ybl1BVy/7Gmv8MfgBlZnob8bO109oyhrg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3656
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TfUwTZxzH99w7L+fOCvYZcyTULc5FUDZNnhiymJjNM1mmiVmMZgyv60kb
+        +0Ku7SK6LSyLYIGhZsJolRd5k2F9K3UiAae1KMOlC+FFyAbaWRmwjU6mEIew3XFT+Oe57/2+
+        z+f3/V3yOwbX+OgkxmR1iJJVMOuoWOJa48zF1LTPo5nrOv6CqK67j0YFEw00elTRRaDScIRC
+        kWsFAFUFQyQquu0nUU20nEQu12ES/XzpAoE6m+8CdPdxB0BTvYcxdPzpaQw9LB4m0an8OgI1
+        Vz0FqKf1JIUu/XEOoJtneil0NjhEo/o73Rg6Wd9JoOikC0PdXe+goa4OCn3ZPYCjQ+1BGs31
+        XyRQSWjLpmTeW+kFfHTgEM1Xeg/yVzxDNF/bNobxviYXxf/S30bxtSVfk/xo8Q2Cn/rxGMGX
+        +JsAP3LqPMHfGriM8d9UPsH4xjPTNP+3L3k7tzsuQy84PtlhyraufXtPnDF0oRnPGdXubzgd
+        JfNAubYQxDCQWw8f1FwFhSCW0XB9AJbc9tHqSyeA3i9GsULAMBSXAQsHaQVI4FJh6T+1lHIH
+        59zxcLisjFKMZdwe6P/9PqFeEmD11Aymaj0s7b0DFE1wr8EGz835Osu9D7879yephrkJWH3i
+        OqkYMdybsH22f14D7hXoypuYB3BOC30j06Q6Ngfr2n7CVZ0Ix+7P/V/XwfYnYUIZGudWw/Ot
+        a1V0E+wbHAeqToHHi8K0OsNS+IM7QhwFyz2LEjwLtGcR7VlEexbR1YBsAtAimMzZgkNMT5NE
+        Z5pkM1rkx8c2iw+o2/eoBfwb2BoAGAMC4CUG0yWykQPRTM0Svc2QaxTsxizJaRbtAQAZXJfA
+        3sqfyNSwBiH3gCjZnlkvM4ROy64KH8vUcErWPlHMEaVn7gqG0UF256dy06WSmC3u32syOxZs
+        jIlRmscmJdhFq0GUBKfDmKUsSJZd3hDFipdzl3wm46w9R7DIVRXtAunM0bGKGpxprqiXz6By
+        agirzSomaVnTQRngFMDotD6PGwdaBuiWsRuVdvHyj/i827gchMlBLoPygXaHsGAl5YG3Vv62
+        PE1aM9sSKt+wMd/87Vev79PP/LrdXrCzat3e6cSU0Ee5Yebewy3RFTs+KO7xb9g2WNybsUZ3
+        5IbfyerffWHr5ve+fzAyqtUkR3YbXr3cPvvh5Cp4Ja7lxSKLuWx9Sl/j5rPewPW6Ofqemy5t
+        DRzpGa4Jnnicldrh1k86diXDOB1hNwrpb+CSXfgPYDOpqkUEAAA=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a new function irq_domain_translate_onecell() that is to be used as
-the translate function in struct irq_domain_ops.
-
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- include/linux/irqdomain.h |  5 +++++
- kernel/irq/irqdomain.c    | 17 +++++++++++++++++
- 2 files changed, 22 insertions(+)
-
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 583e7ab..cad9eb8 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -426,6 +426,11 @@ int irq_domain_translate_twocell(struct irq_domain *d,
- 				 unsigned long *out_hwirq,
- 				 unsigned int *out_type);
- 
-+int irq_domain_translate_onecell(struct irq_domain *d,
-+				 struct irq_fwspec *fwspec,
-+				 unsigned long *out_hwirq,
-+				 unsigned int *out_type);
-+
- /* IPI functions */
- int irq_reserve_ipi(struct irq_domain *domain, const struct cpumask *dest);
- int irq_destroy_ipi(unsigned int irq, const struct cpumask *dest);
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 132672b..cf57d87d 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -987,6 +987,23 @@ const struct irq_domain_ops irq_domain_simple_ops = {
- EXPORT_SYMBOL_GPL(irq_domain_simple_ops);
- 
- /**
-+ * irq_domain_translate_onecell() - Generic translate for direct one cell
-+ * bindings
-+ */
-+int irq_domain_translate_onecell(struct irq_domain *d,
-+				 struct irq_fwspec *fwspec,
-+				 unsigned long *out_hwirq,
-+				 unsigned int *out_type)
-+{
-+	if (WARN_ON(fwspec->param_count < 1))
-+		return -EINVAL;
-+	*out_hwirq = fwspec->param[0];
-+	*out_type = IRQ_TYPE_NONE;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(irq_domain_translate_onecell);
-+
-+/**
-  * irq_domain_translate_twocell() - Generic translate for direct two cell
-  * bindings
-  *
--- 
-2.7.4
-
+SGVsbG8gTWFyaywNCg0KT24gRnJpLCAyMDE5LTExLTI5IGF0IDEyOjA5ICswMDAwLCBNYXJrIEJy
+b3duIHdyb3RlOg0KPiBPbiBGcmksIE5vdiAyOSwgMjAxOSBhdCAwNzo0ODoxM0FNICswMDAwLCBW
+YWl0dGluZW4sIE1hdHRpIHdyb3RlOg0KPiA+IE9uIFR1ZSwgMjAxOS0xMS0xOSBhdCAxOTozNiAr
+MDAwMCwgTWFyayBCcm93biB3cm90ZToNCj4gVGhlIGNwdWZyZXEgY29kZSBpcyBhbGwgdGhlcmUg
+aW4ga2VybmVsIC0gZHJpdmVycy9jcHVmcmVxLiAgSSBjYW4ndA0KPiByZW1lbWJlciBpZiBBbmRy
+b2lkIHN0aWxsIGhhcyBhIGN1c3RvbSBnb3Zlcm5vciBpbiB0aGVpciB0cmVlcyBidXQgaXQNCj4g
+ZG9lc24ndCByZWFsbHkgbWFrZSBtdWNoIGRpZmZlcmVuY2UgaW4gdGVybXMgb2YgaG93IGl0IGlu
+dGVyYWN0cyB3aXRoDQo+IHRoZSByZWd1bGF0b3IgZHJpdmVycy4NCj4gDQo+ID4gQW55d2F5cywg
+bXkgaWRlYSB3YXMgdG8gc2V0IHRoZSBpbml0YWwgdm9sdGFnZSB2YWx1ZXMgZm9yIHRoZXNlDQo+
+ID4gc3RhdGVzDQo+ID4gdmlhIERUIC0gYnV0IGFsbG93IHRoZSB2b2x0YWdlcyB0byBiZSBjaGFu
+Z2VkIGF0IHJ1bi10aW1lIHRvbyAoSQ0KPiA+IGd1ZXNzDQo+ID4gdGhpcyBpZGVhIGlzIHZpc2li
+bGUgaW4gdGhlIHBhdGNoIDEyKS4NCj4gDQo+IEl0J2QgYmUgbXVjaCBiZXR0ZXIgaWYgeW91IGNv
+dWxkIGF2b2lkIHB1dHRpbmcgdGhlIHZvbHRhZ2VzIGluIHRoZQ0KPiBiaW5kaW5nIGlmIHRoZXkn
+cmUgbm90IHN0cmljdGx5IHJlcXVpcmVkLg0KDQpZb3Ugc3VnZ2VzdGVkIGluIHRoZSBvdGhlciBt
+YWlsIHRoYXQgaXQgbWlnaHQgYmUgd29ydGggbWFraW5nIGEgcnVuLQ0KbGV2ZWwgJ2dyb3VwJyBj
+b25zaXN0aW5nIG9ubHkgb25lIGJ1Y2sgZm9yIGZhc3Qgdm9sdGFnZSBjaGFuZ2VzIHZpYQ0KR1BJ
+T3MuIFNvIEkgYW0gYmFjayB0byBhZGRpbmcgdGhlIHJ1bi1sZXZlbCBzdXBwb3J0IHRvIHRoZSBC
+RDcxODI4DQpkcml2ZXIuIFdoaWNoIGxlYWQgbWUgYmFjayB0byB0aGlzLg0KDQpUaGUgUE1JQyBz
+dXBwb3J0cyB3aWRlIHJhbmdlIG9mIHZvbHRhZ2VzIGZvciB0aGVzZSBEVlMgYnVja3MgLSBidXQg
+b25seQ0KNCBvZiB0aGVzZSB2b2x0YWdlcyBjYW4gYmUgc2VsZWN0ZWQgdG8gYmUgc3dpdGNoZWQg
+ZmFzdCB2aWEgR1BJTyBsaW5lDQpzdGF0ZXMuIEVnLCBpbiBIVyBsZXZlbCB3ZSBjYW4gc2V0IFJV
+TjAgdm9sdGFnZSAoc2VsZWN0ZWQgd2hlbiBib3RoDQpHUElPIGxpbmVzIGFyZSBMT1cpIHRvIG9u
+ZSByZWdpc3Rlci4gUlVOMSB2b2x0YWdlIChzZWxlY3RlZCB3aGVuIG9uZQ0KR1BJTyBpcyBoaWdo
+LCBvdGhlciBsb3cpIHRvIHNlY29uZCByZWdpc3Rlci4gU2FtZSBmb3IgUlVOMiBhbmQgUlVOMw0K
+dm9sdGFnZXMuDQoNCkkgY291bGQgbWFrZSB0aGlzIHNvIHRoYXQgaW5pdGlhbGx5IHRoZXJlIGlz
+IHRoZSBIVyBkZWZhdWx0IHZvbHRhZ2VzDQphcmUgcmVhZCB1cCBieSBkcml2ZXIgYW5kIGNhY2hl
+ZCB0byBiZSB1c2VkIGZvciBlYWNoIGxldmVsLiBXaGVuIG5ldw0Kdm9sdGFnZSBpcyByZXF1ZXN0
+ZWQgYnkgdGhlIGNvbnN1bWVyLCBjb3JyZWN0IFJVTiBsZXZlbCBpcyBzZWxlY3RlZCBvcg0KaWYg
+bWF0Y2hpbmcgdm9sdGFnZSBpcyBub3Qgc2V0IHRvIGFueSBSVU4gbGV2ZWwsIHRoZW4gaXQgaXMg
+d3JpdHRlbiB0bw0Kb25lIG9mIHRoZSBydW4gbGV2ZWwgcmVnaXN0ZXJzIChhbmQgY2FjaGUpLg0K
+DQpQcm9ibGVtIGlzIHRoYXQgaWYgbm8gZGVmYXVsdCB2b2x0YWdlcyBhcmUgZ2l2ZW4gZnJvbSBE
+VCwgdGhlIHRoZSBmaXJzdA0Kdm9sdGFnZSBjaGFuZ2VzIGFyZSBsaWtlbHkgdG8gYmUgc2xvdyAo
+cmVxdWlyZSByZWdpc3RlciBhY2Nlc3MgLSBJDQpndWVzcyB0aGUgSFcgZGVmYXVsdHMgYXJlIG5v
+dCB3b3JraW5nIGZvciBtYW55IHVzZS1jYXNlcykgLSB3aGljaCBtYXkNCmJlIHVuZGVzaXJhYmxl
+Lg0KDQpTbyBJIHN0aWxsIHRoaW5rIHRoZSBEVCBiaW5kaW5ncyBmb3Igc2V0dGluZyB0aGVzZSBp
+bml0aWFsIHZhbHVlcyBtaWdodA0KYmUgdGhlIG1vc3QgY29udmVuaWVudCB3YXkgaWYgd2UgYXJl
+IG5vdCBhZGRpbmcgY3VzdG9tIEFQSSBmb3IgdGhpcy4NCkhlbmNlIEkgcGxhbiB0byBrZWVwIHRo
+aXMgYmluZGluZy4gUGxlYXNlIGxldCBtZSBrbm93IGlmIHlvdSBoYXZlDQpiZXR0ZXIgaWRlYXMg
+b3IgaWYgdGhpcyBpcyBhYnNvbHV0ZWx5IGEgbm8gZ28uDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5l
+bg0K
