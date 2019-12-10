@@ -2,51 +2,140 @@ Return-Path: <SRS0=BuJn=2A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4FEC2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 15:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407EFC2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 15:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADFA520836
-	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 15:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 168842053B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 10 Dec 2019 15:17:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="pQG2hmmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbfLJPRP (ORCPT
+        id S1727482AbfLJPRU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 10:17:15 -0500
-Received: from muru.com ([72.249.23.125]:44596 "EHLO muru.com"
+        Tue, 10 Dec 2019 10:17:20 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:48955 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727211AbfLJPRP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 10:17:15 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 3C33880E1;
-        Tue, 10 Dec 2019 15:17:53 +0000 (UTC)
-Date:   Tue, 10 Dec 2019 07:17:11 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Mans Rullgard <mans@mansr.com>
-Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: am335x-sancloud-bbe: fix phy mode
-Message-ID: <20191210151711.GK35479@atomide.com>
-References: <20191201170706.7173-1-mans@mansr.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191201170706.7173-1-mans@mansr.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        id S1727448AbfLJPRU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 10:17:20 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47XNvw6cFPz9txNy;
+        Tue, 10 Dec 2019 16:17:16 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=pQG2hmmL; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id evbLJu89xxoe; Tue, 10 Dec 2019 16:17:16 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47XNvw5b4hz9txNq;
+        Tue, 10 Dec 2019 16:17:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1575991036; bh=p/RN9wGhuytc2JKpwnOpBoY/ljEFeRGohPJvKHyg07M=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=pQG2hmmLGeKr7afIsn4MGxkLUDeBbXB1/yLQk52nFJ10g1ixc+1FJjhWLuFU1AacW
+         GJvPXJ0hzT1xkLqhsG5mo4n8iuNqzozvY0L2DG8qQ381DuFZf1dzwWhLXEQtjS69jq
+         I66FNHT+JNDI99vBfZYE3lar3AR/FJKd1HIOHmSM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4F5BA8B754;
+        Tue, 10 Dec 2019 16:17:18 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id MuGuyZPvd_AU; Tue, 10 Dec 2019 16:17:18 +0100 (CET)
+Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 819338B819;
+        Tue, 10 Dec 2019 16:17:17 +0100 (CET)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id F13FF6373D; Tue, 10 Dec 2019 15:17:16 +0000 (UTC)
+Message-Id: <539a3b82463f64e8055f166c915f0e90f752c7b0.1575990944.git.christophe.leroy@c-s.fr>
+In-Reply-To: <1cdd0a26d7e1545f32c8bc4dc7458ebecdd6aaed.1575990944.git.christophe.leroy@c-s.fr>
+References: <1cdd0a26d7e1545f32c8bc4dc7458ebecdd6aaed.1575990944.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2 2/2] spi: fsl: simplify error path in of_fsl_spi_probe()
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        kbuild test robot <lkp@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 10 Dec 2019 15:17:16 +0000 (UTC)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Mans Rullgard <mans@mansr.com> [191201 09:15]:
-> The phy mode should be rgmii-id.  For some reason, it used to work with
-> rgmii-txid but doesn't any more.
+No need to 'goto err;' for just doing a return.
+return directly from where the error happens.
 
-Applying into fixes thanks.
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ drivers/spi/spi-fsl-spi.c | 27 +++++++++------------------
+ 1 file changed, 9 insertions(+), 18 deletions(-)
 
-Tony
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index 2d85c81983b1..e991c6ff4e7a 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -725,8 +725,8 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
+ 	struct device_node *np = ofdev->dev.of_node;
+ 	struct spi_master *master;
+ 	struct resource mem;
+-	int irq = 0, type;
+-	int ret = -ENOMEM;
++	int irq, type;
++	int ret;
+ 
+ 	ret = of_mpc8xxx_spi_probe(ofdev);
+ 	if (ret)
+@@ -741,10 +741,8 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
+ 
+ 		if (spisel_boot) {
+ 			pinfo->immr_spi_cs = ioremap(get_immrbase() + IMMR_SPI_CS_OFFSET, 4);
+-			if (!pinfo->immr_spi_cs) {
+-				ret = -ENOMEM;
+-				goto err;
+-			}
++			if (!pinfo->immr_spi_cs)
++				return -ENOMEM;
+ 		}
+ #endif
+ 		/*
+@@ -763,24 +761,17 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
+ 
+ 	ret = of_address_to_resource(np, 0, &mem);
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	irq = of_irq_to_resource(np, 0, NULL);
+-	if (irq <= 0) {
+-		ret = -EINVAL;
+-		goto err;
+-	}
++	if (irq <= 0)
++		return -EINVAL;
+ 
+ 	master = fsl_spi_probe(dev, &mem, irq);
+-	if (IS_ERR(master)) {
+-		ret = PTR_ERR(master);
+-		goto err;
+-	}
++	if (IS_ERR(master))
++		return PTR_ERR(master);
+ 
+ 	return 0;
+-
+-err:
+-	return ret;
+ }
+ 
+ static int of_fsl_spi_remove(struct platform_device *ofdev)
+-- 
+2.13.3
+
