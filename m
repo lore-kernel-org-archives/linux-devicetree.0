@@ -2,105 +2,86 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44968C2BD09
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 04:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE244C2D0C4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 05:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0F220836
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 04:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B323520652
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 05:06:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bRSo4UIz";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="YE690hR2"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="wETvnV3e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfLKEh6 (ORCPT
+        id S1726613AbfLKFG5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 23:37:58 -0500
-Received: from a27-185.smtp-out.us-west-2.amazonses.com ([54.240.27.185]:46526
-        "EHLO a27-185.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726631AbfLKEh6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 23:37:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576039077;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=TZs1q5iCCLqj3ymqIoenTw7yehpn45zKyXEbFODyeuA=;
-        b=bRSo4UIzhLqXSQiMUpCL6p5TDJq4VaLEjlqUjqhTrPat0w1a8hd/HjmmGfBWw8u4
-        Pr1gdX4xjYMoPb1veiIVBGPaLz0N2fKmR0qj9oM3rnqR9mxBwjyDj5NEx2KAuyVxefy
-        aFxeH3M9MnND7dZ/qBe/KUV+SNQlvuD+N0yAihhM=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576039077;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=TZs1q5iCCLqj3ymqIoenTw7yehpn45zKyXEbFODyeuA=;
-        b=YE690hR21SN8LgNOB4LCfarF8BEAdo4jAcPMsllIF02VU62kqnd3gabsOUn1CZGl
-        HSZ8SFd4NpQhUuSGYAJDytIa5baO1rlCQNWfWgEKOHHzUATjp6XF5ZVQX2OHCz9Ppra
-        Os51dMIDt/qKt3czwgKaUGW1iOKUvilx8MCpF6zw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 35A2EC447AC
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 2/2] arm64: dts: sc7180: Add a comment to i2c7 about
- external pullup
-To:     Douglas Anderson <dianders@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     mka@chromium.org, Roja Rani Yarubandi <rojay@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20191210163530.1.I69a6c29e08924229d160b651769c84508a07b3c6@changeid>
- <20191210163530.2.I8d4cbb3d7ac5824f8e950c53038df8c27a512905@changeid>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <0101016ef33fd5d9-8367442a-f863-4f64-9787-f49c716156e5-000000@us-west-2.amazonses.com>
-Date:   Wed, 11 Dec 2019 04:37:57 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <20191210163530.2.I8d4cbb3d7ac5824f8e950c53038df8c27a512905@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SES-Outgoing: 2019.12.11-54.240.27.185
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Wed, 11 Dec 2019 00:06:57 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:40411 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfLKFG4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 00:06:56 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id xBB56RdY030450;
+        Wed, 11 Dec 2019 14:06:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com xBB56RdY030450
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576040787;
+        bh=YtASyUS1UyPV1rSLOWOP9wW3Od7ds2m3vN7ApaY5Vfk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=wETvnV3eobnEfUxcfdrivgO82tMV7fypCJBC97uKPCtRZvBqSnX+wRrmycB4wcwqr
+         2LdRYpXlhvJJ4JfIQiSnT2CV47XRCFdMX2db1cudzBBl2pftJTTF8EzLKQPTCmi0Vx
+         BM1cZThZlpcfGGh9E6w0IWhzkivvtHIEWTsegbU36FRY3koZVJf3Si99IIAMB7dNhV
+         MjkLuruE26sH3PuCfkVLTzkkbr76wOEY9TGwONrfv1SXKvVqqMvwtWKMopwPwvxj4O
+         VdAc6J2/qbev64v/DwyvDY8TueYY369O0WvBJQFTyaNHtD/Zli95wugqYqRQWiEp1A
+         /6uPLEXMOZIXA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: uniphier: add pinmux nodes for I2C ch5, ch6
+Date:   Wed, 11 Dec 2019 14:06:26 +0900
+Message-Id: <20191211050626.862-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The next generation SoC can connect on-board slave devices via
+I2C ch5 and ch6.
 
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-On 12/11/2019 6:05 AM, Douglas Anderson wrote:
-> Make i2c7 symmetric with the other i2c busses and comment that we have
-> no internal pull because there is an external one.
-> 
-> Fixes: ba3fc6496366 ("arm64: dts: sc7180: Add qupv3_0 and qupv3_1")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+ arch/arm/boot/dts/uniphier-pinctrl.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
-
-> 
->   arch/arm64/boot/dts/qcom/sc7180-idp.dts | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 5eab3a282eba..05d30a56eca9 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -311,6 +311,8 @@ &qup_i2c7_default {
->   	pinconf {
->   		pins = "gpio6", "gpio7";
->   		drive-strength = <2>;
-> +
-> +		/* Has external pullup */
->   		bias-disable;
->   	};
->   };
-> 
-
+diff --git a/arch/arm/boot/dts/uniphier-pinctrl.dtsi b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+index 1fee5ffbfb9c..bfdfb764b25b 100644
+--- a/arch/arm/boot/dts/uniphier-pinctrl.dtsi
++++ b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+@@ -106,6 +106,16 @@
+ 		function = "i2c4";
+ 	};
+ 
++	pinctrl_i2c5: i2c5 {
++		groups = "i2c5";
++		function = "i2c5";
++	};
++
++	pinctrl_i2c6: i2c6 {
++		groups = "i2c6";
++		function = "i2c6";
++	};
++
+ 	pinctrl_nand: nand {
+ 		groups = "nand";
+ 		function = "nand";
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
+
