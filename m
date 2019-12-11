@@ -2,104 +2,95 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252CDC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 11:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CE4C00454
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 11:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8332222C4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 11:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A79208C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 11:55:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ncWJrcRf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfLKLtF (ORCPT
+        id S1727469AbfLKLzH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 06:49:05 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:49254 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727477AbfLKLtF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 06:49:05 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-9a-5df0d7ae1537
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 34.B2.08102.EA7D0FD5; Wed, 11 Dec 2019 12:49:02 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Wed, 11 Dec 2019 12:48:56 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Subject: Re: [PATCH v6 12/15] rtc: bd70528 add BD71828 support
-Thread-Topic: [PATCH v6 12/15] rtc: bd70528 add BD71828 support
-Thread-Index: AQHVsAgtLDOE1gVnBUinFPzstDImkqe0vi8AgAAC8oA=
-Date:   Wed, 11 Dec 2019 11:48:56 +0000
-Message-ID: <830dad816b6d7f375e7c821e8e435931d1cd4afa.camel@fi.rohmeurope.com>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-         <16a2492d4c70a80628dbf1a64a85c5b554c7f6e4.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191211113828.GW1463890@piout.net>
-In-Reply-To: <20191211113828.GW1463890@piout.net>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0A0135D61D3D4542ABB9B3608955BE32@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xTVxjfuff23gN49VBwHOo08266OSOORJOTxTkX5nb5ZzHRZK8QvI47
-        SoS2uS0bbv/gCNWiM+jAzQaq1qIMG6sFHyMwXcOzGpQOCmaiKyKJOis6wfkY7t4Whb/Od77f
-        63zJdyCtr+MMsMBkkxWTVCiwicy5+icnlh0bGMt5u/GHBcTT28+RbdHDHPlvTwdHHtQGGVId
-        GWHJyLltgOxv69GRHeebdKTskI8lf548zpBr4+2ATPRtp0jV0yMUubfzqo4ctHsY0rj/KSB/
-        NNew5OTfxwDpONrHkrqBXorU1HUx5O59B0V6g2tJdTDKkaFgO0vKegdpUt7axpHJ8AmG7Or5
-        aM180evyAvHJ4z1AvDtYzoku73fir84hTvQ3OFjxSriFFc/Wejnx0K4fdeLEhd2MOHrQx4id
-        g6cp8SfXI0r07WwDYv3Rh5z4j3/BOvR50qpNku3r9QX5puWrNyYZw6eyLMN0yeVLIaoU9NEV
-        IAFitAKHIj9zFSAR6lE/wK7AMzZ+6QK4vO+6ikDIolW44jKnCVJRFnZdtDMah0a/JeEbVQdi
-        TiloNf634fYU6T0cqqli4vU7+N54S4zDoEXYPzAc8+TRx7ijZyr4PMB3fLcpjZOAMnHpmJ/V
-        aoDmY0dpNNanURr2jz7UxV+NsKfl4tQEc/HN65NTfQG3Poowmj+NlmBf8/K4dA3eXjPMxeuF
-        uGpHJFbzKBl37xthKsHLzhkJzmm1c4baOUPtnKE+AHQNABdJBYX5kk3OzFDk4gzFbCxSjy/N
-        RX4QX7sHZ8CzQHYAUBAEQDqkhLk83T2Wo5+9yZy3xShZjblKcaFsDQAMaSGV77RHc/R8nrTl
-        W1kxP4fmQUZI49+I7M7RIy1rsyxbZOU5+gqEAua5ftU0WZHz5ZKvCgpt0zAFEzTzREOqVTbl
-        yYpUbDPmauuRa1X3Q4NmqbmWsCrnrRapSO3GpUGwFFberHXTsK22zk3rGZPZJBvSeLuWhDSq
-        sdj0IugWSINASOHdmtEs9e+98LmlRlBqhCNPG81qk6YhQylo8Fa+u6G1uvnS1tnu9O55uGRF
-        lhC6L7c8HvZcG+0SGqO/eyLuiGWyiZQ3dW6YsL/efuRKwgdnK7t/Wfm9dOGzJVdXfug3LD3z
-        ycDE0J2y9GV0fcberW9mfTMJx19ljKHjn4b3/WXI/uKlU4eT39+4+DXY5ECG7M1z8N4bGYtS
-        sGMtLTBWo5T5Fq1Ypf8B6qHyojgEAAA=
+        Wed, 11 Dec 2019 06:55:07 -0500
+Received: from mail-lj1-f181.google.com ([209.85.208.181]:39087 "EHLO
+        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727477AbfLKLzF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 06:55:05 -0500
+Received: by mail-lj1-f181.google.com with SMTP id e10so23711538ljj.6
+        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 03:55:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=sSCSwi4tL2gSoLi0SB1Zb0lQ5xCfi5HKWemF61Tzx+I=;
+        b=ncWJrcRfya3aIal/xfx31cPYnjb0jIANHRvoKxGWeiayZpfBfjfPnE0YYrDp+JP/JN
+         JRHr306IHYr0vdzrfNvtB4WTzQ7S9PbhRNW1RPJgntYXI3WyAThd7TSxQp4uAo7ulRGt
+         h05Bl/wxYCPYtVcSIqfTefh2I7YPluN2RYXGMhlZO9mjfRoiFRu4XBWvdeABW9tI0Woq
+         cjZ5OfUgstaEa1kTM3LsFrs8YNJ1blG3lvQu1IwbKwggQUlCjTEliK7iJLW/1gXbQUQD
+         LFntE3n5JEtD7k+Tx8H3JDEAdPIs8zDIsckDnLuuw6OBoCHWMGBmyjVmudymfWDbPA/T
+         ROCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sSCSwi4tL2gSoLi0SB1Zb0lQ5xCfi5HKWemF61Tzx+I=;
+        b=m6G4g6E33/muTLo0AUdIIztLAud9IjTB8YF1gycJTThB0q68pcABbL+gNhYZoa9vF2
+         zeECbjVgvxLMh4hFiZIX0RSqLFo1k9X2GC/RfC17BxqzQNhFOSGNj5KIuOqIKh8ytvqg
+         OdBhrQngEDvQXWxBz6XabO0L7sQEUgRCXT5NOPLjx0fvl1xPfZL+h4Akg1gF/sy8zw89
+         Ea08QX3O15ZwUdFQSCL0hy3gvz0LBtnDuPzNzrxzyRGFIliruHQCwsLGQJuPAuDQivnk
+         yLdXafUBAZdwigfZodNebBSoyv0gkhQjVBsgkBiUyya4abSVA6I3Rm9sNREGXCjfGViA
+         6viw==
+X-Gm-Message-State: APjAAAVpaijHvmuzHTxtkT+2YrNOHA0MitT1DPTxeI9kFbYqGOnEBTUO
+        OPBa09SrurZUp/ZaL1ZooQi91A==
+X-Google-Smtp-Source: APXvYqyxVqOz8Db6hEgBLl01dJ0CRuuTtPam3VcN0qN+qAyJOl2HJjGGT9tjrnbBw7wHJgPXct+Vdw==
+X-Received: by 2002:a05:651c:327:: with SMTP id b7mr1765267ljp.22.1576065303308;
+        Wed, 11 Dec 2019 03:55:03 -0800 (PST)
+Received: from localhost.localdomain (95-28-65-22.broadband.corbina.ru. [95.28.65.22])
+        by smtp.googlemail.com with ESMTPSA id 138sm1055875lfa.76.2019.12.11.03.55.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 03:55:02 -0800 (PST)
+From:   Andrey Konovalov <andrey.konovalov@linaro.org>
+To:     mchehab@kernel.org, robh+dt@kernel.org
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        dave.stevenson@raspberrypi.com, peter.griffin@linaro.org
+Subject: [PATCH 0/2] Add IMX219 CMOS image sensor support
+Date:   Wed, 11 Dec 2019 14:54:39 +0300
+Message-Id: <20191211115441.10637-1-andrey.konovalov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGVsbG8gQWxleGFuZHJlLA0KDQpPbiBXZWQsIDIwMTktMTItMTEgYXQgMTI6MzggKzAxMDAsIEFs
-ZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBIaSwNCj4gDQo+IEkganVzdCByZWFsaXNlZCB0aGUg
-c3ViamVjdCBpcyBtaXNzaW5nIGEgY29sb24sIGl0IHNob3VsZCBiZToNCj4gDQo+IHJ0YzogYmQ3
-MDUyODogYWRkIEJENzE4Mjggc3VwcG9ydA0KDQpSaWdodC4gVGhhbmtzIGZvciBwb2ludGluZyBp
-dCBvdXQgOikNCg0KPiBQbGVhc2UgZml4IGl0IGluIGNhc2UgeW91IGV2ZXIgaGF2ZSB0byByZXNl
-bmQgZm9yIGFub3RoZXIgcmVhc29uLg0KDQpXaWxsIGRvIDopDQoNCkJyLA0KCU1hdHRpIFZhaXR0
-aW5lbg0KDQo=
+This patchset adds support for IMX290 CMOS image sensor from Sony.
+Sony IMX219 is an 8MPix, 1/4.0-inch CMOS active pixel digital image sensor
+with an active array size of 3280H x 2464V. It is programmable through
+I2C interface. Image data are sent through MIPI CSI-2, which can be configured
+as either 2 or 4 data lanes, but this driver currently only supports 2 lanes.
+The currently supported resolutions are 3280x2464 @ 15fps, 1920x1080 @ 30fps
+(cropped FOV), and 1640x1232 (2x2 binned) @ 30fps.
+
+The driver has been tested with Raspberry Pi Camera Module v2 connected to
+Raspberry Pi Zero W.
+
+Thanks,
+Andrey
+
+Andrey Konovalov (1):
+  dt-bindings: media: i2c: Add IMX219 CMOS sensor binding
+Dave Stevenson (1):
+  media: i2c: Add driver for Sony IMX219 sensor
+
+ .../devicetree/bindings/media/i2c/imx219.yaml      |  112 ++
+ MAINTAINERS                                        |    8 +
+ drivers/media/i2c/Kconfig                          |   12 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/imx219.c                         | 1248 ++++++++++++++++++++
+ 5 files changed, 1381 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/imx219.yaml
+ create mode 100644 drivers/media/i2c/imx219.c
+
+
