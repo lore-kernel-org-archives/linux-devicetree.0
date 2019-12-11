@@ -2,153 +2,213 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46675C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 13:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4E2C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 13:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2228D20836
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 13:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3830B208C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 13:22:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYtttMhY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbfLKNPo (ORCPT
+        id S1729438AbfLKNWI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:15:44 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:12596 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729299AbfLKNPo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 08:15:44 -0500
-Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 11 Dec
- 2019 21:16:13 +0800
-Subject: Re: [PATCH] arm64: dts: meson: add A1 periphs and PLL clock nodes
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191211070835.83489-1-jian.hu@amlogic.com>
- <1jimmnkxj5.fsf@starbuckisacylon.baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <a171b388-7f92-17cd-8b9a-dcb1c846b6f7@amlogic.com>
-Date:   Wed, 11 Dec 2019 21:16:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 11 Dec 2019 08:22:08 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41326 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729132AbfLKNWH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 08:22:07 -0500
+Received: by mail-pl1-f195.google.com with SMTP id bd4so1422577plb.8;
+        Wed, 11 Dec 2019 05:22:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wL3VegZeG6jSDZ1lQ26BJg9kkfIICZ20YiNfjrSGi9I=;
+        b=WYtttMhYD3mso0o2sHaeizx0l2vT34aK1v7JOPL/YmqWSgy6FDqkP4/s39v4rdZBIO
+         +DCIhh1L+9GAMtrZ83NQvwXttHyABVJckxAe1HWTHuI2U7+WhM3a/J+cq+zQxZmc8Vzh
+         nCVc333eRYkkHYrkCW/709kjB4eR9SNCQxBmn9vfTxeMKsBetUzruJqIkg2mErv9Y46y
+         qFyy9i0RaBL7+kC7smxX3l8ZlNC3foUZbUtEAG9Tb2ZnxUvLCtyZp5DgWeqsr4bePPpW
+         R5jEy9DAO10joTuB3niFo1VcZzxqCLkRm0mI3+eWlZsS2QfG5tSmovAhFYNQeH1EFZcx
+         Vgrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wL3VegZeG6jSDZ1lQ26BJg9kkfIICZ20YiNfjrSGi9I=;
+        b=ifCBg8mqyt8l7H2H6uBaZgAPqRxAjE3xKcq3CbcojIT78L7UHKeMxrzWTyc9t8H1Dk
+         SfH/0lOl0sTyTRxqvMsdvtoph2JEzeXtv8w5M8W8/htpSRc6IRLI5LBh8kcP82WM93XN
+         OJZvo5VnWOjaoU1kABLEq3adOpvQjNFgS7WlNT8sQ8E9fbVsTWs4kvGDO1RRXRqZUT4e
+         ij61Fus6wVZBIVhRyL2PLsZZOQDJMx6nre0o92WHyqLo6dpLlXPcz3ULS5v6GJg/T4gs
+         nEe91fWjFvmjYtwRCYhUoKZ4kjDD9xFiTP8JviCptbVLJEdixDNdleSAzU/jogQKzu+P
+         fCgQ==
+X-Gm-Message-State: APjAAAWLK5/tydDOvZ9L9cV/JqYleCB69zvEIQ/drHPflNCc7eKOMdz7
+        Dc6tOdUpwobb5FWRKK3Kcno8MWACr2Q1OfU6bOVBnCcNsGc=
+X-Google-Smtp-Source: APXvYqwC8BI6qwyH+dGs9Gu3TdTluWXkwRuBt4B2QdBTOVLqQE4/BDTxe1J81h7lkPFcSLFykPDw6CZEDBM0j61z8rA=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr3591149pjq.132.1576070526864;
+ Wed, 11 Dec 2019 05:22:06 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1jimmnkxj5.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.99]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+References: <20191211010308.1525-1-dan@dlrobertson.com> <20191211010308.1525-3-dan@dlrobertson.com>
+In-Reply-To: <20191211010308.1525-3-dan@dlrobertson.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 11 Dec 2019 15:21:56 +0200
+Message-ID: <CAHp75VdAJwMkPZQLLQrOk4HABjG-parEOmH8S-6kU+zyYnnfww@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] iio: (bma400) add driver for the BMA400
+To:     Dan Robertson <dan@dlrobertson.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Dec 11, 2019 at 3:20 AM Dan Robertson <dan@dlrobertson.com> wrote:
+>
+> Add a IIO driver for the Bosch BMA400 3-axes ultra-low power accelerometer.
+> The driver supports reading from the acceleration and temperature
+> registers. The driver also supports reading and configuring the output data
+> rate, oversampling ratio, and scale.
 
+> +#define BMA400_LP_OSR_SHIFT         0x05
+> +#define BMA400_NP_OSR_SHIFT         0x04
+> +#define BMA400_SCALE_SHIFT          0x06
 
-On 2019/12/11 17:43, Jerome Brunet wrote:
-> 
-> On Wed 11 Dec 2019 at 08:08, Jian Hu <jian.hu@amlogic.com> wrote:
-> 
->> Add A1 periphs and PLL clock controller nodes, Some clocks
->> in periphs controller are the parents of PLL clocks, Meanwhile
->> some clocks in PLL controller are those of periphs clocks.
->> They rely on each other.
-> 
->> Compared with the previous series,
->> the register region is only for the clock. So syscon is not
->> used in A1.
-> 
-> Again, while this is valuable information for the maintainer to keep up,
-> it is not something that should appear in the commit description.
-> 
-> The evolution of your commit should be described after the '---'
-> 
-OK, I will put the compared message after the '---'
-> Also, this obviously depends on another series. It should be mentioned
-> accordingly
-OK, I will add the dependent clock patchset.
-> 
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> ---
->>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 26 +++++++++++++++++++++++
->>   1 file changed, 26 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> index 7210ad049d1d..de43a010fa6e 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> @@ -5,6 +5,8 @@
->>   
->>   #include <dt-bindings/interrupt-controller/irq.h>
->>   #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +#include <dt-bindings/clock/a1-pll-clkc.h>
->> +#include <dt-bindings/clock/a1-clkc.h>
-> 
-> When possible, please order the includes alpha-numerically
-> 
-OK, I will reorder it.
->>   
->>   / {
->>   	compatible = "amlogic,a1";
->> @@ -74,6 +76,30 @@
->>   			#size-cells = <2>;
->>   			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
->>   
->> +			clkc_periphs: periphs-clock-controller@800 {
->                                               ^
->>From DT spec: "The name of a node should be somewhat generic, reflecting
-> the function of the device and not its precise programming model."
-> 
-> Here, an appropriate node name would be "clock-controller", not
-> "periphs-clock-controller"
-OK, I will change the node name.
-> 
->> +				compatible = "amlogic,a1-periphs-clkc";
->> +				#clock-cells = <1>;
->> +				reg = <0 0x800 0 0x104>;
->> +				clocks = <&clkc_pll CLKID_FCLK_DIV2>,
->> +					<&clkc_pll CLKID_FCLK_DIV3>,
->> +					<&clkc_pll CLKID_FCLK_DIV5>,
->> +					<&clkc_pll CLKID_FCLK_DIV7>,
->> +					<&clkc_pll CLKID_HIFI_PLL>,
->> +					<&xtal>;
->> +				clock-names = "fclk_div2", "fclk_div3",
->> +					"fclk_div5", "fclk_div7",
->> +					"hifi_pll", "xtal";
->> +			};
->> +
->> +			clkc_pll: pll-clock-controller@7c80 {
-> 
-> Please order nodes by address when they have one.
-> This clock controller should appear after the uarts
-OK, I will reorder it.
-> 
->> +				compatible = "amlogic,a1-pll-clkc";
->> +				#clock-cells = <1>;
->> +				reg = <0 0x7c80 0 0x21c>;
->> +				clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
->> +					<&clkc_periphs CLKID_XTAL_HIFIPLL>;
->> +				clock-names = "xtal_fixpll", "xtal_hifipll";
->> +			};
->> +
->>   			uart_AO: serial@1c00 {
->>   				compatible = "amlogic,meson-gx-uart",
->>   					     "amlogic,meson-ao-uart";
-> 
-> .
-> 
+I'm not sure why this is being defined as hex number instead of plain decimal...
+
+> +#define BMA400_TWO_BITS_MASK        GENMASK(1, 0)
+> +#define BMA400_LP_OSR_MASK          GENMASK(6, BMA400_LP_OSR_SHIFT)
+> +#define BMA400_NP_OSR_MASK          GENMASK(5, BMA400_NP_OSR_SHIFT)
+> +#define BMA400_ACC_ODR_MASK         GENMASK(3, 0)
+> +#define BMA400_ACC_SCALE_MASK       GENMASK(7, BMA400_SCALE_SHIFT)
+
+And here simple better to put same numbers. It will help to read.
+
+...
+
+> +extern const struct regmap_config bma400_regmap_config;
+
+> +const struct regmap_config bma400_regmap_config = {
+> +       .reg_bits = 8,
+> +       .val_bits = 8,
+> +       .max_register = BMA400_CMD_REG,
+> +       .cache_type = REGCACHE_RBTREE,
+> +       .writeable_reg = bma400_is_writable_reg,
+> +       .volatile_reg = bma400_is_volatile_reg,
+> +};
+> +EXPORT_SYMBOL(bma400_regmap_config);
+
+I'm not sure I got the idea why this one is being exported.
+
+...
+
+> +               if (odr < BMA400_ACC_ODR_MIN_RAW ||
+> +                   odr > BMA400_ACC_ODR_MAX_RAW) {
+
+One line?
+
+> +                       ret = -EINVAL;
+> +                       goto error;
+> +               }
+
+...
+
+> +               if (uhz || hz % BMA400_ACC_ODR_MIN_WHOLE_HZ)
+> +                       return -EINVAL;
+> +
+> +               val = hz / BMA400_ACC_ODR_MIN_WHOLE_HZ;
+> +               idx = __ffs(val);
+> +
+
+> +               if (val ^ BIT(idx))
+
+Seems like funny way of checking is_power_of_2(). But it's up to maintainers.
+And your variant may even be better here (in code generation perspective)...
+
+However, the whole idea here is, IIUC, to have something like
+
+  hz = 2^idx * BMA400_ACC_ODR_MIN_WHOLE_HZ
+
+I think you may do it without divisions, i.e. call __ffs() first and then do
+   idx = __ffs(...);
+   val = hz >> idx;
+   if (val != BMA400_ACC_ODR_MIN_WHOLE_HZ)
+    return -EINVAL;
+
+or something like above.
+
+> +                       return -EINVAL;
+
+...
+
+> +       odr = (~BMA400_ACC_ODR_MASK & val) | idx;
+
+I'm wondering why Yoda style is being used here.
+
+...
+
+> +static void bma400_accel_scale_from_raw(int raw, unsigned int *val)
+> +{
+> +       *val = BMA400_SCALE_MIN * (1 << raw);
+
+Isn't it the same as
+    *val = BMA400_SCALE_MIN << raw;
+?
+
+> +}
+
+...
+
+> +       if (val % BMA400_SCALE_MIN || scale ^ BIT(raw))
+
+Similar comment as above about divisions, is_power_of_2(), etc.
+
+> +               return -EINVAL;
+
+...
+
+> +       ret = regmap_read(data->regmap, BMA400_ACC_CONFIG0_REG, &val);
+> +       if (ret < 0)
+
+I'm wondering if in all of these regmap_read()...
+
+> +               return ret;
+
+> +       ret = regmap_write(data->regmap, BMA400_ACC_CONFIG0_REG,
+> +                          mode | (val & ~BMA400_TWO_BITS_MASK));
+> +       if (ret < 0) {
+
+...and regmap_write() calls you ever can get a positive returned code.
+
+> +               dev_err(data->dev, "Failed to write to power-mode\n");
+> +               return ret;
+> +       }
+
+...
+
+> +       regmap = devm_regmap_init_i2c(client, &bma400_regmap_config);
+
+> +
+
+Redundant blank line.
+
+> +       if (IS_ERR(regmap)) {
+> +               dev_err(&client->dev, "failed to create regmap\n");
+> +               return PTR_ERR(regmap);
+> +       }
+
+-- 
+With Best Regards,
+Andy Shevchenko
