@@ -2,118 +2,400 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CC4C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EE0C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 17:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59096222C4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:59:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="jurDyqf3"
+	by mail.kernel.org (Postfix) with ESMTP id CE8DA24653
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 17:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730158AbfLKQ7Q (ORCPT
+        id S1730278AbfLKRCW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:59:16 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38905 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729524AbfLKQ7Q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 11:59:16 -0500
-Received: by mail-lf1-f65.google.com with SMTP id r14so17276761lfm.5
-        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 08:59:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+OBvsbhhaV/Nkh0t6XL7r4WLvzMB1HQ/Vdl1HVxYR18=;
-        b=jurDyqf3tIog/ejAUZaLycO34N8KiI4Awp+FQOlcOCL238YDJudC7F3OP9g6wE1QdC
-         d1mDfawrQGCzvbehV5vFrb/I1d11Zg/1w3p1uQU617TDv5eKzPFYxCYvSaN0XIZ5Zyqj
-         0IIf3LxAm+hHSX4rEfjyi6cOKJxW2jNpG5sC4/EXU0+PNGz5yz4ic1Gqm9E+21+I90/3
-         cej9yMP3MKqaNbhaaNiQ5gOx3B5oZRzMYGzrIp61LTCeeqFzE6A3EVKLcbwTbLtDD2hr
-         Afn657Ar+x3b9Lk1RXu0SRI86EhXErhv+uxnJ8j3PNqIamKAGtGDQ08tYsPCm4tcXeLQ
-         hr1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+OBvsbhhaV/Nkh0t6XL7r4WLvzMB1HQ/Vdl1HVxYR18=;
-        b=iY/3uWX8NqImHykdZx/ittcGPUWY598jlqvoPJFyFRHKhC544vJmpNS5fjnOwwFeaP
-         tPSH/eTU2qr5W4b3kusmnrpp8ue/T3fVllijcIHcizJZMyij55JJJdMDjD7DgV1BDkd4
-         Zde5wUsah72EhlijgXMykQ4uLLBYfMT5XgiS2epp0y2SX9CAc9rlIXflSMdjMF4x5K64
-         shPkXUmzF2gztpWpiLqUWAE/2UDmGdtv9t1KojisW+YlLuMAmQgJRIsQ2PeQ8FqqRqLV
-         3DJgq342W8+nhSvJ13vDwq5J+dhrsNdvu9Ty/Zjr8ws4wuqgpoyOb/rpuRGyYcY9j8X6
-         aU7A==
-X-Gm-Message-State: APjAAAVhmh/yC5+KBWtWcKnLYmEDuU4inaADbIrXnzeMat1zxVkwrMqx
-        na7obin2o+j6nLONAwKYv2efCQ==
-X-Google-Smtp-Source: APXvYqyLrrNTZ+ZczBugvf7NBEXUx+ADh5x/GWtLiz70XCnE+brPzuR8g/rq/yJ2AZjQPtsI5l9Htg==
-X-Received: by 2002:ac2:4553:: with SMTP id j19mr3042430lfm.142.1576083554279;
-        Wed, 11 Dec 2019 08:59:14 -0800 (PST)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id m13sm1492536lfo.40.2019.12.11.08.59.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Dec 2019 08:59:13 -0800 (PST)
-Date:   Wed, 11 Dec 2019 08:58:55 -0800
-From:   Olof Johansson <olof@lixom.net>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     soc@kernel.org, Rob Herring <robh@kernel.org>,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [GIT PULL] PCI: dt: Remove magic numbers for legacy PCI IRQ
- interrupts
-Message-ID: <20191211165855.kfoz2x63kw3gnlmm@localhost>
-References: <20191211161808.7566-1-andrew.murray@arm.com>
+        Wed, 11 Dec 2019 12:02:22 -0500
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:48003 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729512AbfLKRCW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 12:02:22 -0500
+X-Originating-IP: 93.34.114.233
+Received: from uno.localdomain (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id E0793E0005;
+        Wed, 11 Dec 2019 17:02:14 +0000 (UTC)
+Date:   Wed, 11 Dec 2019 18:04:23 +0100
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Niklas Soderlund <niklas.soderlund@ragnatech.se>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2] media: bindings: video-interfaces: Update the example
+Message-ID: <20191211170408.66dk3z4qqfp2yvlb@uno.localdomain>
+References: <20191111140055.88054-1-jacopo+renesas@jmondi.org>
+ <20191111170230.GQ18424@paasikivi.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bn3dcm2p6npado5x"
 Content-Disposition: inline
-In-Reply-To: <20191211161808.7566-1-andrew.murray@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191111170230.GQ18424@paasikivi.fi.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 04:18:08PM +0000, Andrew Murray wrote:
-> Hi Arnd,
-> 
-> Please consider this pull request.
-> 
-> The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-> 
->   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://linux-arm.org/linux-am.git tags/pci-dt-intx-defines-5.5-rc1
-> 
-> for you to fetch changes up to d50e85b9ad3d4287ab3c5108b7b36ad4fd50e5b4:
-> 
->   dt-bindings: PCI: Use IRQ flags for legacy PCI IRQ interrupts (2019-12-11 16:05:55 +0000)
-> 
-> ----------------------------------------------------------------
-> PCI: dt: Remove magic numbers for legacy PCI IRQ interrupts
-> 
-> PCI devices can trigger interrupts via 4 physical/virtual lines known
-> as INTA, INTB, INTC or INTD. Due to interrupt swizzling it is often
-> required to describe the interrupt mapping in the device tree. Let's
-> avoid the existing magic numbers and replace them with a #define to
-> improve clarity.
-> 
-> This is based on v5.5-rc1. As this series covers multiple architectures
-> and updates include/dt-bindings it was felt that it may be more
-> convenient to merge in one go.
 
-That's a pretty high-effort way of doing this, with potential for messy
-conflicts.
+--bn3dcm2p6npado5x
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-The standard way of making sweeping changes across the tree is usually to
-get the new interface/definition added in one release, and then moving
-usage over through the various maintainers in the release after since
-the define is then in the base tree for everybody. Would you mind using
-the same approach here, please? Especially since this is mostly a cleanup.
+Hi Sakari,
+    thanks for review
 
+On Mon, Nov 11, 2019 at 07:02:30PM +0200, Sakari Ailus wrote:
+> Hi Jacopo,
+>
+> On Mon, Nov 11, 2019 at 03:00:55PM +0100, Jacopo Mondi wrote:
+> > The example provided by the video-interface.txt file uses compatible
+> > values for drivers which are have been removed a long time ago. To avoid
+> > generating confusion, replace the existing example with a new one using
+> > upstream maintained and more modern devices.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >
+> > Re-proposing the example update, taking into account Niklas' comments about
+> > removing most of the commits there.
+> >
+> > Laurent suggested to move the example to json-schema, but being this file mostly
+> > used as reference for the common video properties description, I'm not sure
+> > bindings in yaml format make sense here.
+>
+> I think the proposal makes sense as such, but this patch is just updating
+> the example. The two seem unrelated.
+>
 
-Thanks,
+With your and Rob's ack, I'll resubmit the example update. Let's
+address yaml conversion later.
 
--Olof
+> >
+> >
+> > ---
+> >  .../bindings/media/video-interfaces.txt       | 210 ++++++++++--------
+> >  1 file changed, 116 insertions(+), 94 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > index f884ada0bffc..955bd6f52cda 100644
+> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > @@ -153,123 +153,145 @@ Optional endpoint properties
+> >  Example
+> >  -------
+> >
+> > -The example snippet below describes two data pipelines.  ov772x and imx074 are
+> > -camera sensors with a parallel and serial (MIPI CSI-2) video bus respectively.
+> > -Both sensors are on the I2C control bus corresponding to the i2c0 controller
+> > -node.  ov772x sensor is linked directly to the ceu0 video host interface.
+> > -imx074 is linked to ceu0 through the MIPI CSI-2 receiver (csi2). ceu0 has a
+> > -(single) DMA engine writing captured data to memory.  ceu0 node has a single
+> > -'port' node which may indicate that at any time only one of the following data
+> > -pipelines can be active: ov772x -> ceu0 or imx074 -> csi2 -> ceu0.
+> > -
+> > -	ceu0: ceu@fe910000 {
+> > -		compatible = "renesas,sh-mobile-ceu";
+> > -		reg = <0xfe910000 0xa0>;
+> > -		interrupts = <0x880>;
+> > -
+> > -		mclk: master_clock {
+> > -			compatible = "renesas,ceu-clock";
+> > -			#clock-cells = <1>;
+> > -			clock-frequency = <50000000>;	/* Max clock frequency */
+> > -			clock-output-names = "mclk";
+> > -		};
+> > +The example snippet below describes two data pipelines connected to a video
+> > +DMA engine (VIN4) which has a direct parallel video bus connection to an HDMI
+> > +video decoder at port@0 and a data path to a CSI-2 receiver connected to an
+> > +image sensor (imx074) at port@1.
+> >
+> > -		port {
+> > +The parallel HDMI video decoder links directly to the VIN input port 0, and the
+> > +bus configuration at both ends is specified in each endpoint.
+> > +
+> > +The imx074 sensor connects to the CSI-2 receiver and the MIPI CSI-2 serial bus
+> > +configuration is specified in the respective endpoints as well. The CSI-2
+> > +receiver is then linked to the DMA engine through a direct data path which does
+> > +not require any endpoint configuration.
+> > +
+> > +i2c0: i2c@e6500000 {
+> > +
+> > +	hdmi-decoder@4c {
+> > +		compatible = "adi,adv7612";
+> > +		reg = <0x4c>;
+> > +
+> > +		ports {
+> >  			#address-cells = <1>;
+> >  			#size-cells = <0>;
+> >
+> > -			/* Parallel bus endpoint */
+> > -			ceu0_1: endpoint@1 {
+> > -				reg = <1>;		/* Local endpoint # */
+> > -				remote = <&ov772x_1_1>;	/* Remote phandle */
+> > -				bus-width = <8>;	/* Used data lines */
+> > -				data-shift = <2>;	/* Lines 9:2 are used */
+> > -
+> > -				/* If hsync-active/vsync-active are missing,
+> > -				   embedded BT.656 sync is used */
+> > -				hsync-active = <0>;	/* Active low */
+> > -				vsync-active = <0>;	/* Active low */
+> > -				data-active = <1>;	/* Active high */
+> > -				pclk-sample = <1>;	/* Rising */
+> > -			};
+> > -
+> > -			/* MIPI CSI-2 bus endpoint */
+> > -			ceu0_0: endpoint@0 {
+> > +			port@0 {
+> >  				reg = <0>;
+> > -				remote = <&csi2_2>;
+> > +				adv7612_in: endpoint {
+> > +					remote-endpoint = <&hdmi_con_in>;
+> > +				};
+> >  			};
+> > -		};
+> > -	};
+> >
+> > -	i2c0: i2c@fff20000 {
+> > -		...
+> > -		ov772x_1: camera@21 {
+> > -			compatible = "ovti,ov772x";
+> > -			reg = <0x21>;
+> > -			vddio-supply = <&regulator1>;
+> > -			vddcore-supply = <&regulator2>;
+> > -
+> > -			clock-frequency = <20000000>;
+> > -			clocks = <&mclk 0>;
+> > -			clock-names = "xclk";
+> > -
+> > -			port {
+> > -				/* With 1 endpoint per port no need for addresses. */
+> > -				ov772x_1_1: endpoint {
+> > +			port@2 {
+> > +				reg = <2>;
+> > +				adv7612_out: endpoint {
+> > +					bus-type = 5;
+> >  					bus-width = <8>;
+> > -					remote-endpoint = <&ceu0_1>;
+> > -					hsync-active = <1>;
+> > -					vsync-active = <0>; /* Who came up with an
+> > -							       inverter here ?... */
+> > -					data-active = <1>;
+> > -					pclk-sample = <1>;
+> > +					pclk-sample = <0>;
+> > +					hsync-active = <0>;
+> > +					vsync-active = <1>;
+> > +					remote-endpoint = <&vin4_digital_in>;
+> >  				};
+> >  			};
+> >  		};
+> > +	};
+> >
+> > -		imx074: camera@1a {
+> > -			compatible = "sony,imx074";
+> > -			reg = <0x1a>;
+> > -			vddio-supply = <&regulator1>;
+> > -			vddcore-supply = <&regulator2>;
+> > -
+> > -			clock-frequency = <30000000>;	/* Shared clock with ov772x_1 */
+> > -			clocks = <&mclk 0>;
+> > -			clock-names = "sysclk";		/* Assuming this is the
+> > -							   name in the datasheet */
+> > -			port {
+> > -				imx074_1: endpoint {
+> > -					clock-lanes = <0>;
+> > -					data-lanes = <1 2>;
+> > -					remote-endpoint = <&csi2_1>;
+> > -				};
+> > +	imx074: camera@1a {
+>
+> Could you use a different sensor? There are no bindings for imx074 and the
+> SoC camera driver for it is about to be removed.
+>
+
+Right, I'll use a supported sensor.
+
+> > +		compatible = "sony,imx074";
+> > +		reg = <0x1a>;
+> > +
+> > +		rotation = <180>;
+> > +
+> > +		port {
+> > +			imx074_1: endpoint {
+> > +				bus-type = 4;
+> > +				data-lanes = <1 2>;
+> > +				remote-endpoint = <&csi20_in>;
+> >  			};
+> >  		};
+> >  	};
+> > +};
+> > +
+> > +csi20: csi2@fea80000 {
+> > +	compatible = "renesas,r8a7795-csi2";
+> > +	reg = <0 0xfea80000 0 0x10000>;
+> > +	interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
+> > +	clocks = <&cpg CPG_MOD 714>;
+> > +	power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> > +	resets = <&cpg 714>;
+> >
+> > -	csi2: csi2@ffc90000 {
+> > -		compatible = "renesas,sh-mobile-csi2";
+> > -		reg = <0xffc90000 0x1000>;
+> > -		interrupts = <0x17a0>;
+> > +	ports {
+> >  		#address-cells = <1>;
+> >  		#size-cells = <0>;
+> >
+> > -		port@1 {
+> > -			compatible = "renesas,csi2c";	/* One of CSI2I and CSI2C. */
+> > -			reg = <1>;			/* CSI-2 PHY #1 of 2: PHY_S,
+> > -							   PHY_M has port address 0,
+> > -							   is unused. */
+> > -			csi2_1: endpoint {
+> > -				clock-lanes = <0>;
+> > -				data-lanes = <2 1>;
+> > +		port@0 {
+> > +			reg = <0>;
+> > +
+> > +			csi20_in: endpoint {
+> > +				bus-type = 4;
+>
+> bus-type isn't defined for renesas,r8a7795-csi2. Do you need it here?
+>
+
+No, I could drop it.
+
+> > +				data-lanes = <1 2>;
+> >  				remote-endpoint = <&imx074_1>;
+> >  			};
+> >  		};
+> > -		port@2 {
+> > -			reg = <2>;			/* port 2: link to the CEU */
+> >
+> > -			csi2_2: endpoint {
+> > -				remote-endpoint = <&ceu0_0>;
+> > +		port@1 {
+> > +			reg = <1>;
+> > +
+> > +			csi20vin4: endpoint {
+> > +				remote-endpoint = <&vin4csi20>;
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +vin4: video@e6ef4000 {
+> > +	compatible = "renesas,vin-r8a7795";
+> > +	reg = <0 0xe6ef4000 0 0x1000>;
+> > +	interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> > +	clocks = <&cpg CPG_MOD 807>;
+> > +	power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> > +	resets = <&cpg 807>;
+> > +	renesas,id = <4>;
+> > +
+> > +	ports {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		/* Parallel input port: HDMI decoder */
+> > +		port@0 {
+> > +			reg = <0>;
+> > +
+> > +			vin4_digital_in: endpoint {
+> > +				bus-type = 5;
+>
+> Does this device support other kinds of busses on this interface? If not,
+> you can move it to the driver (the bindings don't document this either).
+>
+
+No, I could drop it from here.
+
+> > +				bus-width = <8>;
+> > +				data-shift = <2>;
+> > +				data-active = <1>;
+> > +				pclk-sample = <0>;
+> > +				hsync-active = <0>;
+> > +				vsync-active = <0>;
+>
+> None of these seem to be documented for renesas,vin-r8a7795 . I guess they
+> should be.
+>
+
+They are. Quoting renesas,vin.txt:
+
+      Endpoint nodes of port@0 support the optional properties listed in
+      the Gen2 per-board settings description.
+
+Some of the properties above are not listed though. I'll drop the
+unsupported ones.
+
+Thanks
+   j
+
+> > +				remote-endpoint = <&adv7612_out>;
+> > +			};
+> > +		};
+> > +
+> > +
+> > +		/* Data path to the MIPI CSI-2 receiver. */
+> > +		port@1 {
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +
+> > +			reg =<1>;
+> > +
+> > +			vin4csi20: endpoint@0 {
+> > +				reg = <0>;
+> > +				remote-endpoint = <&csi20vin4>;
+> > +			};
+> > +
+> > +			/* Not connected in this example. */
+> > +			vin4csi41: endpoint@3 {
+> > +				reg = <3>;
+> > +				remote-endpoint = <&csi41vin4>;
+> >  			};
+> >  		};
+> >  	};
+> > +};
+>
+> --
+> Kind regards,
+>
+> Sakari Ailus
+
+--bn3dcm2p6npado5x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl3xIZcACgkQcjQGjxah
+VjzVRA/+Kv+8EARSACUsV9syHQQUFiDatDV9/CLaAIN8kJsDxvPO27XUx6pCh3Ih
+JCPFFwLVFBg2fRzEPxjn9tGjntAjrRMG3C0nA2damj44FW+Fv3iulzdr6HjCCLIg
+fq3d2aXylDZakNl77gR/0Z6ZQE03r0KGADV294JW2lebVfwOeuuk5e0TH1y+A/IY
+QNu5TupoTarEE1kDjIQTHObJYeHdcJpQc7HJ5CGp2yIcb2zsmqPSL4RIvYdzINOi
+AaN5GKeZt5VwJnIussZQqDXNbePzkvfZ7j85eXSIyHciZrVx+YE/QP2gErpTDaZ1
+n4tjHbP4jSaX+OLqnVfcEvUKvEF6Tuof2eaqQmv1OaQ3BdZeUnfjL6cOwjzLsbHk
+tmTvA5JdQUCOXE2cpDmmLFr0vi25V60PwmSRtH47AG387obRGev8O+GtXVCiq1pG
+5K0B/NC6kyrgbLOx5Et8+KE+uyqPajJzfq8K6GJRPTUk1cAJ8xbm4590ugls5jXU
+12/QmA2uvU8iDKTnsFIETHoIaDOyhGsdg05Es7ULLYmOt2jKk+6ks765U2I4RY/S
+qG1fwT6/wcrR9o1kN0lPWnh0P4zDXc1NFPD3nXbZw66LvuCGk0T0LQ+JgNzdLRA+
++bXmTb2Y9SjPZSHy6ZD4Gi/oAEAOzaPZ0BuiKlRRVSxG/1hkWbs=
+=w+6B
+-----END PGP SIGNATURE-----
+
+--bn3dcm2p6npado5x--
