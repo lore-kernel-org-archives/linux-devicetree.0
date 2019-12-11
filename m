@@ -2,103 +2,111 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EEDC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 07:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD11C2BD09
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 07:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E14214AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 07:02:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EbQPfpnX"
+	by mail.kernel.org (Postfix) with ESMTP id 6354620836
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 07:08:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfLKHCU (ORCPT
+        id S1727891AbfLKHIj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:02:20 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43566 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfLKHCU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 02:02:20 -0500
-Received: by mail-pl1-f195.google.com with SMTP id q16so1028621plr.10
-        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 23:02:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R08vSO6u5igpmjKjGC9D9Rc8bVfKHww3KSNBkb72big=;
-        b=EbQPfpnXvegQePc3hEqXeNp6CZ97qUrsRtSRXq3taulR6nVc6G9mVUWISzUOH4Wla+
-         oDz+BSHgoD4gSfPif3/OxzS0cGYLYNFMxS4PnLqnht4hjOR3LU3dfOl5RHbvwo5AMMPP
-         jFbsJWCaAcIxNaYFAXnONMXtYIdo6Vx1uhk3zi8qAJPxBZRQV+pWRUUrGv2ZAe+b39A4
-         jiPlzCt8fn3zg1a6vHQqDuJjgI2mU8GjFmpgUwMGQOM7J1ZpNypch3s+bpnJxBX/SjV2
-         gIp1JkyEhHB/dZykup6Ucnd5mQOlMnf8QkEidHOaMT1nr9nks0jd/MWuNTkOhYi9iESc
-         nTdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R08vSO6u5igpmjKjGC9D9Rc8bVfKHww3KSNBkb72big=;
-        b=OnBiXHs1oaj0i5kDQlpETJZaaLtPWjXVTosdaVRjwWZyfPoZGWseD2qHboTvsZQwYZ
-         BZi2LBov0+rsoSCE+eIMwjKLuUEbmO2JhQb9kJiaTpX54GvJk3ZfESkplvR143Shziyg
-         aDKe3/WG3SJEILqtUlFZ4jVYoGi/BScCDEFDMg7EkSNJB5YK4LQbdb+AsaguJbDJyVOz
-         kFv+QfVLEzDtfoEhyYIvff+eII4muGwkTv9D2cWQQbBk1dLBwNC1b2p4MdoiVmgr/D1v
-         H84RgA/R85cje0GqMuB0A81sZdDrDG6hnd2tGQ/aGlX2stSsE3zxVs3TrOYBZTYeCPp6
-         SMgQ==
-X-Gm-Message-State: APjAAAU3SJJsiXD20tyqvZkG3/1KQ2Cl1Uj7mi84T6zVgJCz5R0uUU3q
-        RvPZXQKriZTuouWs/K1Bg0vIWg==
-X-Google-Smtp-Source: APXvYqxHIlKXfSm0XPqRQmElKLjwtt+RZCLKkIRACmHo2HN9+dAciIGlYFN98DvSZJzP54TeBK13ag==
-X-Received: by 2002:a17:90a:1aa3:: with SMTP id p32mr1877886pjp.8.1576047739635;
-        Tue, 10 Dec 2019 23:02:19 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e27sm1483040pfm.26.2019.12.10.23.02.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 23:02:19 -0800 (PST)
-Date:   Tue, 10 Dec 2019 23:02:16 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH 0/3] Add DT nodes for watchdog and llcc for SC7180 and
- SM8150 SoCs
-Message-ID: <20191211070216.GF3143381@builder>
-References: <0101016ef3391259-59ec5f0a-2ae7-45a8-881e-edc2d0bf7b26-000000@us-west-2.amazonses.com>
+        Wed, 11 Dec 2019 02:08:39 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:15962 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfLKHIj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 02:08:39 -0500
+Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 11 Dec 2019
+ 15:09:10 +0800
+From:   Jian Hu <jian.hu@amlogic.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH] arm64: dts: meson: add A1 periphs and PLL clock nodes
+Date:   Wed, 11 Dec 2019 15:08:34 +0800
+Message-ID: <20191211070835.83489-1-jian.hu@amlogic.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016ef3391259-59ec5f0a-2ae7-45a8-881e-edc2d0bf7b26-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.28.8.25]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 10 Dec 20:30 PST 2019, Sai Prakash Ranjan wrote:
+Add A1 periphs and PLL clock controller nodes, Some clocks
+in periphs controller are the parents of PLL clocks, Meanwhile
+some clocks in PLL controller are those of periphs clocks.
+They rely on each other. Compared with the previous series,
+the register region is only for the clock. So syscon is not
+used in A1.
 
-> This series adds device tree node for watchdog on SC7180 and SM8150.
-> It also adds a node for LLCC (Last level cache controller) on SC7180.
-> 
-> Patch 3 depends on the dt binding change to LLCC node name:
->  - https://patchwork.kernel.org/patch/11246055/
-> 
+Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 26 +++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-Series applied
+diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+index 7210ad049d1d..de43a010fa6e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+@@ -5,6 +5,8 @@
+ 
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/a1-pll-clkc.h>
++#include <dt-bindings/clock/a1-clkc.h>
+ 
+ / {
+ 	compatible = "amlogic,a1";
+@@ -74,6 +76,30 @@
+ 			#size-cells = <2>;
+ 			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
+ 
++			clkc_periphs: periphs-clock-controller@800 {
++				compatible = "amlogic,a1-periphs-clkc";
++				#clock-cells = <1>;
++				reg = <0 0x800 0 0x104>;
++				clocks = <&clkc_pll CLKID_FCLK_DIV2>,
++					<&clkc_pll CLKID_FCLK_DIV3>,
++					<&clkc_pll CLKID_FCLK_DIV5>,
++					<&clkc_pll CLKID_FCLK_DIV7>,
++					<&clkc_pll CLKID_HIFI_PLL>,
++					<&xtal>;
++				clock-names = "fclk_div2", "fclk_div3",
++					"fclk_div5", "fclk_div7",
++					"hifi_pll", "xtal";
++			};
++
++			clkc_pll: pll-clock-controller@7c80 {
++				compatible = "amlogic,a1-pll-clkc";
++				#clock-cells = <1>;
++				reg = <0 0x7c80 0 0x21c>;
++				clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
++					<&clkc_periphs CLKID_XTAL_HIFIPLL>;
++				clock-names = "xtal_fixpll", "xtal_hifipll";
++			};
++
+ 			uart_AO: serial@1c00 {
+ 				compatible = "amlogic,meson-gx-uart",
+ 					     "amlogic,meson-ao-uart";
+-- 
+2.24.0
 
-Thanks,
-Bjorn
-
-> Sai Prakash Ranjan (3):
->   arm64: dts: qcom: sc7180: Add APSS watchdog node
->   arm64: dts: qcom: sm8150: Add APSS watchdog node
->   arm64: dts: qcom: sc7180: Add Last level cache controller node
-> 
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 13 +++++++++++++
->  arch/arm64/boot/dts/qcom/sm8150.dtsi |  6 ++++++
->  2 files changed, 19 insertions(+)
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
