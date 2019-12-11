@@ -2,71 +2,93 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A891C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 02:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00E5C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 02:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5870F2077B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 02:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8747D205ED
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 02:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfLKCoj (ORCPT
+        id S1727077AbfLKCuT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:44:39 -0500
-Received: from mga07.intel.com ([134.134.136.100]:38038 "EHLO mga07.intel.com"
+        Tue, 10 Dec 2019 21:50:19 -0500
+Received: from mga06.intel.com ([134.134.136.31]:12510 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbfLKCoj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 21:44:39 -0500
+        id S1726619AbfLKCuT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 21:50:19 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 18:44:38 -0800
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 18:50:18 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="363456285"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 10 Dec 2019 18:44:38 -0800
-Received: from [10.226.38.24] (unknown [10.226.38.24])
-        by linux.intel.com (Postfix) with ESMTP id D04125808CC;
-        Tue, 10 Dec 2019 18:44:36 -0800 (PST)
-Subject: Re: [PATCH v7 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        peter.harliman.liem@intel.com, Ramuthevar@smile.fi.intel.com
-References: <20191210025301.29551-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191210025301.29551-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191210135450.GX32742@smile.fi.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
+   d="scan'208";a="220346267"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Dec 2019 18:50:16 -0800
+From:   "Ramuthevar,Vadivel MuruganX" 
         <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <6dac436f-956f-534e-7e15-7aa2f0881217@linux.intel.com>
-Date:   Wed, 11 Dec 2019 10:44:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191210135450.GX32742@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com
+Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, peter.harliman.liem@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v7 0/2] phy: intel-lgm-emmc: Add support for eMMC PHY
+Date:   Wed, 11 Dec 2019 10:50:09 +0800
+Message-Id: <20191211025011.12156-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Add eMMC-PHY support for Intel LGM SoC
 
-On 10/12/2019 9:54 PM, Andy Shevchenko wrote:
-> On Tue, Dec 10, 2019 at 10:53:01AM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add support for eMMC PHY on Intel's Lightning Mountain SoC.
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> Signed-off-by: Ramuthevar,Vadivel MuruganX <vadivel.muruganx.ramuthevar@linux.intel.com>
-> Something wrong with the second SoB. And why you have two to begin with?
+changes in v7:
+ Rebased to maintainer kernel tree phy-tag-5.5
 
-Thanks Andy,  Good catch, I will correct it and send patch again.
+changes in v6:
+   - cobined comaptible strings
+   - added as contiguous and can be a single entry for reg properties
+changes in v5:
+   - earlier Review-by tag given by Rob
+   - rework done with syscon parent node.
 
-Best Regards
-vadivel
+ changes in v4:
+   - As per Rob's review: validate 5.2 and 5.3
+   - drop unrelated items.
+
+ changes in v3:
+   - resolve 'make dt_binding_check' warnings
+
+ changes in v2:
+   As per Rob Herring review comments, the following updates
+  - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
+  - filename is the compatible string plus .yaml
+  - LGM: Lightning Mountain
+  - update maintainer
+  - add intel,syscon under property list
+  - keep one example instead of two
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
+  phy: intel-lgm-emmc: Add support for eMMC PHY
+
+ .../bindings/phy/intel,lgm-emmc-phy.yaml           |  62 +++++
+ drivers/phy/Kconfig                                |   1 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/intel/Kconfig                          |   9 +
+ drivers/phy/intel/Makefile                         |   2 +
+ drivers/phy/intel/phy-intel-emmc.c                 | 283 +++++++++++++++++++++
+ 6 files changed, 358 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+ create mode 100644 drivers/phy/intel/Kconfig
+ create mode 100644 drivers/phy/intel/Makefile
+ create mode 100644 drivers/phy/intel/phy-intel-emmc.c
+
+-- 
+2.11.0
+
