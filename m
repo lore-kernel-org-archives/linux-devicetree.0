@@ -2,145 +2,94 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F38B1C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 00:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FABC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 00:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CACAA206D9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 00:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 232382073D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 00:30:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XSRuM9us"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="ZgyUrBP/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nvtlJ7x+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfLKAHJ (ORCPT
+        id S1726691AbfLKAaa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 19:07:09 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36125 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbfLKAHF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 19:07:05 -0500
-Received: by mail-lf1-f67.google.com with SMTP id n12so15232403lfe.3
-        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 16:07:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1vKqFJGzj7zP9jxAQ/Fxr2GBQpU3k9RbiY8pAqobny0=;
-        b=XSRuM9usxGH3asxsaXj6dtz/rkxCqUZFsZF5E4NGQqMDAp8E9lnlB+IjoaarN/OcLF
-         6kfzdeD7826IhCPZ5O6JrA8MGb9occsM9FiL9Vs/S+qBbYfkhtvWrTfo7ngFAUkg0N4H
-         FmwRtLnR+G9u0bDUKY0cfsesfzjhERZqREW85OTjJk3Ng2GYBExYhSUmqO95axW6mJ5I
-         tGppw7/OBBZMk7c9RuDKpECoEMPMCXKLcYVpWT/d30bvWHHmQdhx9ptWTmxKh9Pe7XlF
-         5rPW3o7FVr2ADMe58rF6XyObuJNbJx4yZtERJmIXkxtn8KANzhb+I578JOxBvtm6uC3b
-         uXnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1vKqFJGzj7zP9jxAQ/Fxr2GBQpU3k9RbiY8pAqobny0=;
-        b=dlbQUKDy1e21EgvKXa+8j6vy9OCzSHJlMYMyX6hoTwYPu98IxtvaSCxdAwy9xBaps9
-         UknaZi5FkfrHQIhtutkYKslSzWdBG2yVr3mnnBsWzkMK1Pn8eEF1YuszQpbbDYOxGHnL
-         AMZw/Z9vdlmxlW3C2G9uqaib6tW8aNDZCl3bDGxrOrwcF6AwgcZgwBQgnGUhgiitn4t/
-         s2XQ5gw4msw2cgjzzrEvVOjtRSCjnvzTw/7UZImGWtRxCbDM3KHuNwbWVczPE8jwkh48
-         6JJhj804FHyupndAU3MUr21Bm/gDTIpT2tjitbdOo+dwPs7Btt+kd0cihCGeB8A1DF/e
-         B4pw==
-X-Gm-Message-State: APjAAAVQ8d3n2LTufADD8pvEJ4XXtFYxp7weFdgsxT2udz8nxcM5Xtk8
-        U4CroA465jeFthYOeeT3tx+zTXylJvm5LiS1V/hmiw==
-X-Google-Smtp-Source: APXvYqxVW0ZSopDXaAGHYtoUrhx2h12DD/w/jNt0W6I1hMAEhJb0fNLsF9WPsuEKi7yK29CRbsxEeBcvpTHHaU7Qj4s=
-X-Received: by 2002:a19:c648:: with SMTP id w69mr349735lff.44.1576022823210;
- Tue, 10 Dec 2019 16:07:03 -0800 (PST)
-MIME-Version: 1.0
-References: <20191120133409.9217-1-peter.ujfalusi@ti.com> <20191120133409.9217-2-peter.ujfalusi@ti.com>
- <CACRpkdbXX3=1EGpGRf6NgwUfY2Q0AKbGM8gJvVpY+BRAo5MQvQ@mail.gmail.com>
- <d423bc53-31df-b1b4-37da-932b7208a29e@ti.com> <CACRpkdafEdsN6i16SA175wE4J_4+EhS5Uw4Qsg=cZ=EuDYHmgg@mail.gmail.com>
- <89afb07f-fb70-3f44-2396-df350ca15690@ti.com>
-In-Reply-To: <89afb07f-fb70-3f44-2396-df350ca15690@ti.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Dec 2019 01:06:51 +0100
-Message-ID: <CACRpkdYe47SZDW1JXT6g5n+AEOYd2PH92YtBnjQsd=Z2GJroZQ@mail.gmail.com>
-Subject: Re: [RFC 1/2] dt-bindings: gpio: Document shared GPIO line usage
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 10 Dec 2019 19:30:30 -0500
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:40251 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726771AbfLKAaa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 19:30:30 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 4452222611;
+        Tue, 10 Dec 2019 19:30:29 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Tue, 10 Dec 2019 19:30:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=rLVrKFn1e9XoYm6vW5UZkkz+J1OlgvA
+        Bn/hbvdEf6xA=; b=ZgyUrBP/dSEnxvkY8KRknAovC8fWiLWxAPri0JddEv2wpbt
+        8XkYPg5v8z5UXGDEisPsuEoguh3mRqAVQHXpbATiKvYx25KzbxCfIrGnwp+vCsDy
+        gEZaIh707rLLt39hQzqkgQXTuikj9yuLv0PIDu71XYhcUZCJr+mv19PYl4pbbA0W
+        zOrfA4k802Vw4UlRG4vWFViv5Db2wmRbTbecFUAtO0zwZh6ERsKImcwmISBslW85
+        /UzAWLmiW+Sv7r7mX7AKXZXViKvEetc89firz44/ciq67vejDeNv7SknrXU0xbHZ
+        3bciUhf0IenO5HEihvu+bHV5GUq3Go2THcDbMIQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=rLVrKF
+        n1e9XoYm6vW5UZkkz+J1OlgvABn/hbvdEf6xA=; b=nvtlJ7x+wA/3kzg2Vj2QeI
+        4ZdRaAYkzOJ8nFpvZTNBFjG+jumNaaEOGCysWN+TuheV50JcVW/pnbugHFaR/3FK
+        LrWetfs88GNVS4RrJxiZ9N5SHZuwYeqJ6Yzkn5qd80nmjUuHwz1ZEPKFnN1fg+3s
+        7NSWdMyGS2b4SGwfiaa1bQlUY7gICDxPlVxYfjEIvWSjqf1fZG8iLCbAx+8aIs2y
+        83iqIVwJ3V56POQMCB5mWCkATs5SZNhwvZicRviaQxo+GjGFY3c5Qg2GY6LTpPGT
+        v9X1fCOZLiYPG9BpU2JvGw1WvsDnLZnRcxahVBs8IO6ZCXdOl/USgxKElmqcSXjA
+        ==
+X-ME-Sender: <xms:pDjwXd6WSiamRPJa797sIeihJCfVdWmpfrTYEjpEVlNsFUn2ImAykQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelgedgudeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:pDjwXRnnsIz2Z6fl4VVFFtDKTCw-QGxnmLZXw4WwIZWCtezQk_H5Qg>
+    <xmx:pDjwXVznhDxidgYEiQfUhJs98QI_EhDN3Rfv92z2Au_LoZdRh77nzw>
+    <xmx:pDjwXcD5Su1ORQaB7qjaBXd9Aj-R-8cquiYTuTCU3Wp_Ao01UlPZeQ>
+    <xmx:pTjwXf3rmlvC0YvFlR76PhhH0DlvrPevgkwR3gQPH2T36otpJnsozg>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 4A7B7E00A2; Tue, 10 Dec 2019 19:30:28 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-679-g1f7ccac-fmstable-20191210v1
+Mime-Version: 1.0
+Message-Id: <40bf8eb4-2998-43fd-af61-c9063b09ced9@www.fastmail.com>
+In-Reply-To: <1575566112-11658-3-git-send-email-eajames@linux.ibm.com>
+References: <1575566112-11658-1-git-send-email-eajames@linux.ibm.com>
+ <1575566112-11658-3-git-send-email-eajames@linux.ibm.com>
+Date:   Wed, 11 Dec 2019 11:02:08 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Eddie James" <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, "Jason Cooper" <jason@lakedaemon.net>,
+        linux-aspeed@lists.ozlabs.org, "Marc Zyngier" <maz@kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>, tglx@linutronix.de,
+        mark.rutland@arm.com, "Joel Stanley" <joel@jms.id.au>
+Subject: Re: [PATCH v2 02/12] irqchip: Add Aspeed SCU interrupt controller
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 10:31 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> On 28/11/2019 12.06, Linus Walleij wrote:
 
-> > The ambition to use refcounted GPIOs to solve this
-> > usecase is probably wrong, I would say try to go for a
-> > GPIO-based reset controller instead.
->
-> I did that. A bit more lines of code than the gpio-shared.
-> Only works if all clients are converted to reset controller, all must
-> use reset_control_get_shared()
 
-I don't think that's too much to ask, the usecase needs to
-be expressed somewhere whether in code or DT properties.
+On Fri, 6 Dec 2019, at 03:45, Eddie James wrote:
+> The Aspeed SOCs provide some interrupts through the System Control
+> Unit registers. Add an interrupt controller that provides these
+> interrupts to the system.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 
-> But my biggest issue was that how would you put a resets/reset-names to
-> DT for a device where the gpio is used for enabling an output/input pin
-> and not to place the device or part of the device to reset.
-
-Rob suggest using GPIOs but represent them in the Linux kernel
-as resets.
-
-This would be a semantic effect of the line being named "reset-gpios"
-as Rob pointed out. Name implies usage. We can formalize it
-with DT YAML as well, these days, then it is impossible to get it
-wrong, as long as the bindings are correct.
-
-When you call the reset subsystem to create the reset handle
-it can be instructed to look for a GPIO, possibly shared, and
-this way replace the current explicit GPIO handling code
-in the driver. It will just look as a reset no matter how many
-other device or just this one is using it.
-
-> Sure, one can say that something is in 'reset' when it is not enabled,
-> but do you put the LCD backlight to 'reset' when you turn it off?
->
-> Is your DC motor in 'reset' when it is not working?
->
-> GPIO stands for General Purpose Input/Output, one of the purpose is to
-> enable/disable things, reset things, turn on/off things or anything one
-> could use 3.3V (or more/less).
-
-Answered by explict interpretation of DT bindings
-named "reset-gpios". Those are resets, nothing else.
-
-> > The fact that some Linux drivers are already using explicit
-> > GPIO's for their reset handling is maybe unfortunate,
-> > they will simply have to grow code to deal with a reset
-> > alternatively to GPIO, like first try to grab a reset
-> > handle and if that doesn't fall back to use a GPIO.
->
-> Sure, it can be done, but when we hit a case when the reset framework is
-> not fitting for some devices use of the shared GPIO, then what we will do?
-
-That can be said about literally anything we do in any
-framework we design. Rough consensus and running code.
-Bad paths will be taken sometimes, hopefully not too much.
-We clean up the mess we create and refactor as we go
-along, it is always optimistic design.
-
-> How would it satisfy the regulator use case? We put the regulators to
-> 'reset' when they are turned off / disabled?
-
-We don't try to fix that now, if it's not broken don't fix it.
-Let's try to fix the reset problem instead.
-
-Yours,
-Linus Walleij
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
