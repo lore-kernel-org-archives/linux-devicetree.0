@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CEAAC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 06:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34465C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 06:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7705208C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 06:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3DEB214AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 06:20:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F9nIloV3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z5oQQgTX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbfLKGTy (ORCPT
+        id S1726487AbfLKGUB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 01:19:54 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40627 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727784AbfLKGTy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 01:19:54 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q8so1257445pfh.7
-        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 22:19:53 -0800 (PST)
+        Wed, 11 Dec 2019 01:20:01 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41976 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfLKGUB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 01:20:01 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x8so10243759pgk.8
+        for <devicetree@vger.kernel.org>; Tue, 10 Dec 2019 22:20:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5SzZg/Any9b15PYJNx4TC/3Ha5cPQwIvnngJiL/O6D4=;
-        b=F9nIloV3mkfv1BWp4npou4P6BtwgDkiffAbTsdiUkTmBcHM/KBFN58cVt+AMC4V8xS
-         EAtttKKXOtsz9hji7eGv+2L61RmSt+L/GOvR0AmDuMjRiqHdL24NpwSqf5AKFEBLj9mL
-         j/glY6I+kVN+ezQ23A2VtUe6jlGtYhFQjGA+U=
+        bh=X6L+fh7OnQT1zXjxbAvo/8bLa08LP3Xh+NSarGpgTMs=;
+        b=Z5oQQgTXY4M6w80jvS8rMzJy3iV0k0Ioluhy9WOof/EljqU5L25IBI5TrJiv2MPv2/
+         ZAdWLRg5wfZCQvim6rfZTBj9z25P26KtH1s1AzSnzzPlTT6u+aYp+TS6Y+1Y5TFWyLde
+         IhqEz3MP4XMcs0mI2gspvBvXTVdwI7XXk53Us=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5SzZg/Any9b15PYJNx4TC/3Ha5cPQwIvnngJiL/O6D4=;
-        b=m9yew7om2ekewjVBy30MknLTME5KgacS53okbkt5BD6ludZQqRqx5gVWqkct/4vwVX
-         C9nQFLFGy2qfACFJF48YDIEXRG80LOLXB+AyGFHZFDQMxS7AN5LGECwjdJAcjigFiFsy
-         IAgh8IZkUdcnvNkmoYd4if2IbfguI+k3gBm+BSDpl2SahJYrqF0m96hRVav0+wIBcujP
-         Lg2fDaHE9L0sakHqz5H/32oh9GKUYF+ANs57zTZSUf6uUEPnkPxss7hCU2hB9E9/Tk7/
-         sfMFN9fDFdYWaELmFIOCo8LCsoJxPPjFCdiKHVsSapS4Tepa52LhTZ8+Ya59mmLR3VSC
-         izug==
-X-Gm-Message-State: APjAAAXheRVxhPcl+vOzlryscK+/JI6NBBI1KxI68RQwjRM7d4KvQxZM
-        +Jl2wX0WtGhHP1epRVxkMDIwKw==
-X-Google-Smtp-Source: APXvYqwq5ql9gkBVGJtQCkgVSEUeNJ/97XFaS3CTKAxAX61qj+67JfQL5hpgXLD4RlP2wt4YbE8eUQ==
-X-Received: by 2002:a63:220b:: with SMTP id i11mr2311164pgi.50.1576045193287;
-        Tue, 10 Dec 2019 22:19:53 -0800 (PST)
+        bh=X6L+fh7OnQT1zXjxbAvo/8bLa08LP3Xh+NSarGpgTMs=;
+        b=KIDB/9NjHRO7m1xudhGbKB1xDmpwYi86Yaw24n9KAi9MJQvgQeVfvcrm7kqs4aj/T5
+         wdPu6qHdTsOmuByTKjpO7HNPq3pF2U8mlM+ERkYaMIz6m2o/n9odakgV87yCa6i47uxE
+         NchZ/tLlGb20ri37rKELqx+PU2pN33UFkGryRT1ZJlkI0mRnftu1wGyP6Md/tb8hxEvH
+         DG3AIWsh0croy+XgPbKW+5djBWif87I2UWsMDmaJ+bdHKFjpY61k5b8kr6VBwiubO0C+
+         TXvWYPt8acxmW1wld1MRY7s7rPVkDy77P13uIJ1Kpx8aBJtTEqNlUmMmkZ17gemmtDrP
+         lrkA==
+X-Gm-Message-State: APjAAAWtAKti0DVF0PjiNiBOl0lpr0Xr6flUklo7X2KBXSX03dL9mjpV
+        LwhUOM/mwpQjj2LudCL+VsSYxg==
+X-Google-Smtp-Source: APXvYqzz1QtCUz1uFE8/wLLLXuMve6JE06CMZfgpamSZFnEjX9LIPf3aMha3XlLC6WjMVamquljU6Q==
+X-Received: by 2002:a63:e0f:: with SMTP id d15mr2264222pgl.255.1576045200089;
+        Tue, 10 Dec 2019 22:20:00 -0800 (PST)
 Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id h5sm1225579pfk.30.2019.12.10.22.19.50
+        by smtp.gmail.com with ESMTPSA id h5sm1225579pfk.30.2019.12.10.22.19.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 22:19:52 -0800 (PST)
+        Tue, 10 Dec 2019 22:19:59 -0800 (PST)
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
 To:     dri-devel@lists.freedesktop.org
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -68,9 +68,9 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Matthias Brugger <mbrugger@suse.com>,
         Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH RESEND 3/4] dt-bindings: drm/bridge: Add GPIO display mux binding
-Date:   Wed, 11 Dec 2019 14:19:10 +0800
-Message-Id: <20191211061911.238393-4-hsinyi@chromium.org>
+Subject: [PATCH RESEND 4/4] drm: bridge: Generic GPIO mux driver
+Date:   Wed, 11 Dec 2019 14:19:11 +0800
+Message-Id: <20191211061911.238393-5-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.24.0.525.g8f36a354ae-goog
 In-Reply-To: <20191211061911.238393-1-hsinyi@chromium.org>
 References: <20191211061911.238393-1-hsinyi@chromium.org>
@@ -83,113 +83,363 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Nicolas Boichat <drinkcat@chromium.org>
 
-Add bindings for Generic GPIO mux driver.
+This driver supports single input, 2 output display mux (e.g.
+HDMI mux), that provide its status via a GPIO.
 
 Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 ---
-Change from RFC to v1:
-- txt to yaml
----
- .../bindings/display/bridge/gpio-mux.yaml     | 89 +++++++++++++++++++
- 1 file changed, 89 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
+ drivers/gpu/drm/bridge/Kconfig            |  10 +
+ drivers/gpu/drm/bridge/Makefile           |   1 +
+ drivers/gpu/drm/bridge/generic-gpio-mux.c | 306 ++++++++++++++++++++++
+ 3 files changed, 317 insertions(+)
+ create mode 100644 drivers/gpu/drm/bridge/generic-gpio-mux.c
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml b/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index 1f3fc6bec842..4734f6993858 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -54,6 +54,16 @@ config DRM_DUMB_VGA_DAC
+ 	  Support for non-programmable RGB to VGA DAC bridges, such as ADI
+ 	  ADV7123, TI THS8134 and THS8135 or passive resistor ladder DACs.
+ 
++config DRM_GENERIC_GPIO_MUX
++	tristate "Generic GPIO-controlled mux"
++	depends on OF
++	select DRM_KMS_HELPER
++	---help---
++	  This bridge driver models a GPIO-controlled display mux with one
++	  input, 2 outputs (e.g. an HDMI mux). The hardware decides which output
++	  is active, reports it as a GPIO, and the driver redirects calls to the
++	  appropriate downstream bridge (if any).
++
+ config DRM_LVDS_ENCODER
+ 	tristate "Transparent parallel to LVDS encoder support"
+ 	depends on OF
+diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+index 7a1e0ec032e6..1c0c92667ac4 100644
+--- a/drivers/gpu/drm/bridge/Makefile
++++ b/drivers/gpu/drm/bridge/Makefile
+@@ -3,6 +3,7 @@ obj-$(CONFIG_DRM_ANALOGIX_ANX7688) += analogix-anx7688.o
+ obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+ obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
+ obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
++obj-$(CONFIG_DRM_GENERIC_GPIO_MUX) += generic-gpio-mux.o
+ obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
+ obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
+ obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
+diff --git a/drivers/gpu/drm/bridge/generic-gpio-mux.c b/drivers/gpu/drm/bridge/generic-gpio-mux.c
 new file mode 100644
-index 000000000000..cef098749066
+index 000000000000..ba08321dcc17
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
-@@ -0,0 +1,89 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/gpio-mux.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/gpu/drm/bridge/generic-gpio-mux.c
+@@ -0,0 +1,306 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Generic gpio mux bridge driver
++ *
++ * Copyright 2016 Google LLC
++ */
 +
-+title: Generic display mux (1 input, 2 outputs)
 +
-+maintainers:
-+  - Nicolas Boichat <drinkcat@chromium.org>
++#include <linux/gpio.h>
++#include <linux/interrupt.h>
++#include <linux/platform_device.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/of_graph.h>
++#include <drm/drm_bridge.h>
++#include <drm/drm_crtc_helper.h>
++#include <drm/drm_probe_helper.h>
 +
-+description: |
-+  This bindings describes a simple display (e.g. HDMI) mux, that has 1
-+  input, and 2 outputs. The mux status is controlled by hardware, and
-+  its status is read back using a GPIO.
++struct gpio_display_mux {
++	struct device *dev;
 +
-+properties:
-+  compatible:
-+    const: gpio-display-mux
++	struct gpio_desc *gpiod_detect;
++	int detect_irq;
 +
-+  detect-gpios:
-+    maxItems: 1
-+    description: GPIO that indicates the active output
++	struct drm_bridge bridge;
 +
-+  ports:
-+    type: object
++	struct drm_bridge *next[2];
++};
 +
-+    properties:
-+      port@0:
-+        type: object
-+        description: |
-+          Video port for input.
++static inline struct gpio_display_mux *bridge_to_gpio_display_mux(
++		struct drm_bridge *bridge)
++{
++	return container_of(bridge, struct gpio_display_mux, bridge);
++}
 +
-+      port@1:
-+        type: object
-+        description: |
-+          2 video ports for output.
-+          The reg value in the endpoints matches the GPIO status: when
-+          GPIO is asserted, endpoint with reg value <1> is selected.
++static irqreturn_t gpio_display_mux_det_threaded_handler(int unused, void *data)
++{
++	struct gpio_display_mux *gpio_display_mux = data;
++	int active = gpiod_get_value(gpio_display_mux->gpiod_detect);
 +
-+    required:
-+      - port@0
-+      - port@1
++	dev_dbg(gpio_display_mux->dev, "Interrupt %d!\n", active);
 +
-+required:
-+  - compatible
-+  - detect-gpios
-+  - ports
++	if (gpio_display_mux->bridge.dev)
++		drm_kms_helper_hotplug_event(gpio_display_mux->bridge.dev);
 +
-+examples:
-+  - |
-+    hdmi_mux: hdmi_mux {
-+      compatible = "gpio-display-mux";
-+      status = "okay";
-+      detect-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
-+      pinctrl-names = "default";
-+      pinctrl-0 = <&hdmi_mux_pins>;
-+      ddc-i2c-bus = <&hdmiddc0>;
++	return IRQ_HANDLED;
++}
 +
-+      ports {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++static int gpio_display_mux_attach(struct drm_bridge *bridge)
++{
++	struct gpio_display_mux *gpio_display_mux =
++			bridge_to_gpio_display_mux(bridge);
++	struct drm_bridge *next;
++	int i;
 +
-+        port@0 { /* input */
-+          reg = <0>;
++	for (i = 0; i < ARRAY_SIZE(gpio_display_mux->next); i++) {
++		next = gpio_display_mux->next[i];
++		if (next)
++			next->encoder = bridge->encoder;
++	}
 +
-+          hdmi_mux_in: endpoint {
-+            remote-endpoint = <&hdmi0_out>;
-+          };
-+        };
++	return 0;
++}
 +
-+        port@1 { /* output */
-+          reg = <1>;
++static bool gpio_display_mux_mode_fixup(struct drm_bridge *bridge,
++				const struct drm_display_mode *mode,
++				struct drm_display_mode *adjusted_mode)
++{
++	struct gpio_display_mux *gpio_display_mux =
++		bridge_to_gpio_display_mux(bridge);
++	int active;
++	struct drm_bridge *next;
 +
-+          #address-cells = <1>;
-+          #size-cells = <0>;
++	active = gpiod_get_value(gpio_display_mux->gpiod_detect);
++	next = gpio_display_mux->next[active];
 +
-+          hdmi_mux_out_anx: endpoint@0 {
-+            reg = <0>;
-+            remote-endpoint = <&anx7688_in>;
-+          };
++	if (next && next->funcs->mode_fixup)
++		return next->funcs->mode_fixup(next, mode, adjusted_mode);
++	else
++		return true;
++}
 +
-+          hdmi_mux_out_hdmi: endpoint@1 {
-+            reg = <1>;
-+            remote-endpoint = <&hdmi_connector_in>;
-+          };
-+        };
-+      };
-+    };
++static void gpio_display_mux_mode_set(struct drm_bridge *bridge,
++				struct drm_display_mode *mode,
++				struct drm_display_mode *adjusted_mode)
++{
++	struct gpio_display_mux *gpio_display_mux =
++		bridge_to_gpio_display_mux(bridge);
++	int active;
++	struct drm_bridge *next;
++
++	active = gpiod_get_value(gpio_display_mux->gpiod_detect);
++	next = gpio_display_mux->next[active];
++
++	if (next && next->funcs->mode_set)
++		next->funcs->mode_set(next, mode, adjusted_mode);
++}
++
++/**
++ * Since this driver _reacts_ to mux changes, we need to make sure all
++ * downstream bridges are pre-enabled.
++ */
++static void gpio_display_mux_pre_enable(struct drm_bridge *bridge)
++{
++	struct gpio_display_mux *gpio_display_mux =
++		bridge_to_gpio_display_mux(bridge);
++	struct drm_bridge *next;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(gpio_display_mux->next); i++) {
++		next = gpio_display_mux->next[i];
++		if (next && next->funcs->pre_enable)
++			next->funcs->pre_enable(next);
++	}
++}
++
++static void gpio_display_mux_post_disable(struct drm_bridge *bridge)
++{
++	struct gpio_display_mux *gpio_display_mux =
++		bridge_to_gpio_display_mux(bridge);
++	struct drm_bridge *next;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(gpio_display_mux->next); i++) {
++		next = gpio_display_mux->next[i];
++		if (next && next->funcs->post_disable)
++			next->funcs->post_disable(next);
++	}
++}
++
++/**
++ * In an ideal mux driver, only the currently selected bridge should be enabled.
++ * For the sake of simplicity, we just just enable/disable all downstream
++ * bridges at the same time.
++ */
++static void gpio_display_mux_enable(struct drm_bridge *bridge)
++{
++	struct gpio_display_mux *gpio_display_mux =
++		bridge_to_gpio_display_mux(bridge);
++	struct drm_bridge *next;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(gpio_display_mux->next); i++) {
++		next = gpio_display_mux->next[i];
++		if (next && next->funcs->enable)
++			next->funcs->enable(next);
++	}
++}
++
++static void gpio_display_mux_disable(struct drm_bridge *bridge)
++{
++	struct gpio_display_mux *gpio_display_mux =
++		bridge_to_gpio_display_mux(bridge);
++	struct drm_bridge *next;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(gpio_display_mux->next); i++) {
++		next = gpio_display_mux->next[i];
++		if (next && next->funcs->disable)
++			next->funcs->disable(next);
++	}
++}
++
++static const struct drm_bridge_funcs gpio_display_mux_bridge_funcs = {
++	.attach = gpio_display_mux_attach,
++	.mode_fixup = gpio_display_mux_mode_fixup,
++	.disable = gpio_display_mux_disable,
++	.post_disable = gpio_display_mux_post_disable,
++	.mode_set = gpio_display_mux_mode_set,
++	.pre_enable = gpio_display_mux_pre_enable,
++	.enable = gpio_display_mux_enable,
++};
++
++static int gpio_display_mux_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct gpio_display_mux *gpio_display_mux;
++	struct device_node *port, *ep, *remote;
++	int ret;
++	u32 reg;
++
++	gpio_display_mux = devm_kzalloc(dev, sizeof(*gpio_display_mux),
++					GFP_KERNEL);
++	if (!gpio_display_mux)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, gpio_display_mux);
++	gpio_display_mux->dev = &pdev->dev;
++
++	gpio_display_mux->bridge.of_node = dev->of_node;
++
++	gpio_display_mux->gpiod_detect =
++		devm_gpiod_get(dev, "detect", GPIOD_IN);
++	if (IS_ERR(gpio_display_mux->gpiod_detect))
++		return PTR_ERR(gpio_display_mux->gpiod_detect);
++
++	gpio_display_mux->detect_irq =
++		gpiod_to_irq(gpio_display_mux->gpiod_detect);
++	if (gpio_display_mux->detect_irq < 0) {
++		dev_err(dev, "Failed to get output irq %d\n",
++			gpio_display_mux->detect_irq);
++		return -ENODEV;
++	}
++
++	port = of_graph_get_port_by_id(dev->of_node, 1);
++	if (!port) {
++		dev_err(dev, "Missing output port node\n");
++		return -EINVAL;
++	}
++
++	for_each_child_of_node(port, ep) {
++		if (!ep->name || (of_node_cmp(ep->name, "endpoint") != 0)) {
++			of_node_put(ep);
++			continue;
++		}
++
++		if (of_property_read_u32(ep, "reg", &reg) < 0 ||
++				reg >= ARRAY_SIZE(gpio_display_mux->next)) {
++			dev_err(dev,
++			    "Missing/invalid reg property for endpoint %s\n",
++				ep->full_name);
++			of_node_put(ep);
++			of_node_put(port);
++			return -EINVAL;
++		}
++
++		remote = of_graph_get_remote_port_parent(ep);
++		if (!remote) {
++			dev_err(dev,
++			    "Missing connector/bridge node for endpoint %s\n",
++				ep->full_name);
++			of_node_put(ep);
++			of_node_put(port);
++			return -EINVAL;
++		}
++		of_node_put(ep);
++
++		if (of_device_is_compatible(remote, "hdmi-connector")) {
++			of_node_put(remote);
++			continue;
++		}
++
++		gpio_display_mux->next[reg] = of_drm_find_bridge(remote);
++		if (!gpio_display_mux->next[reg]) {
++			dev_err(dev, "Waiting for external bridge %s\n",
++				remote->name);
++			of_node_put(remote);
++			of_node_put(port);
++			return -EPROBE_DEFER;
++		}
++
++		of_node_put(remote);
++	}
++	of_node_put(port);
++
++	gpio_display_mux->bridge.funcs = &gpio_display_mux_bridge_funcs;
++	drm_bridge_add(&gpio_display_mux->bridge);
++
++	ret = devm_request_threaded_irq(dev, gpio_display_mux->detect_irq,
++				NULL,
++				gpio_display_mux_det_threaded_handler,
++				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
++					IRQF_ONESHOT,
++				"gpio-display-mux-det", gpio_display_mux);
++	if (ret) {
++		dev_err(dev, "Failed to request MUX_DET threaded irq\n");
++		goto err_bridge_remove;
++	}
++
++	return 0;
++
++err_bridge_remove:
++	drm_bridge_remove(&gpio_display_mux->bridge);
++
++	return ret;
++}
++
++static int gpio_display_mux_remove(struct platform_device *pdev)
++{
++	struct gpio_display_mux *gpio_display_mux = platform_get_drvdata(pdev);
++
++	drm_bridge_remove(&gpio_display_mux->bridge);
++
++	return 0;
++}
++
++static const struct of_device_id gpio_display_mux_match[] = {
++	{ .compatible = "gpio-display-mux", },
++	{},
++};
++
++struct platform_driver gpio_display_mux_driver = {
++	.probe = gpio_display_mux_probe,
++	.remove = gpio_display_mux_remove,
++	.driver = {
++		.name = "gpio-display-mux",
++		.of_match_table = gpio_display_mux_match,
++	},
++};
++
++module_platform_driver(gpio_display_mux_driver);
++
++MODULE_DESCRIPTION("GPIO-controlled display mux");
++MODULE_AUTHOR("Nicolas Boichat <drinkcat@chromium.org>");
++MODULE_LICENSE("GPL v2");
 -- 
 2.24.0.525.g8f36a354ae-goog
 
