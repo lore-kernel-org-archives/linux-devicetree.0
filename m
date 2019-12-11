@@ -2,81 +2,80 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B217C00454
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 22:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89B7C00454
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 22:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFFF7205C9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 22:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFBF21556
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 22:47:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d5WomvyX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nTEeQ13N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfLKWNx (ORCPT
+        id S1726518AbfLKWrw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 17:13:53 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:36938 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfLKWNt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 17:13:49 -0500
-Received: by mail-il1-f196.google.com with SMTP id t9so244050iln.4
-        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 14:13:49 -0800 (PST)
+        Wed, 11 Dec 2019 17:47:52 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44088 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbfLKWrw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 17:47:52 -0500
+Received: by mail-io1-f67.google.com with SMTP id w3so554117iot.11
+        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 14:47:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7WK0R3vgtayVNUB5s3/ppzS6WIJXfYbPpsi6siOolE4=;
-        b=d5WomvyX4tnC/dQgAK832nGB1Kl75yZmGi7AihNVzJoCrM+aW4Ie3qCVKGeOPc5KJm
-         snJvRR06tTFUg6q/r4CpZg+XqLsV0mSiWfTAT+ctzmceBh1B3nzgA92CF4cf6SHIA3h8
-         ov94DUQkYXaaarV15MIN98KM6+XFZCUv+7GaE=
+        bh=1r7bbFb7oJgGBdqZ0SCWluBGjxFxUq9kfW1qtiJYFQE=;
+        b=nTEeQ13NOraW2TRdVVr19eQqaxBh7/d5/OQfm1sl20BBJCpCBBPBGI+X9Stm5w3tD7
+         avT/gbZ4vjcRBZWZhwLAk9oyI5s4te+KpcyDRfSk2qUcKkaF68irXOUFaxm10Bcr6SnZ
+         AYOlrqPwZk/O4RmIDUXvYirp675oauG3tFEc0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7WK0R3vgtayVNUB5s3/ppzS6WIJXfYbPpsi6siOolE4=;
-        b=AkQSsS62Ph2k5bnbz0FeQXcn6oHQUNIyEWS6kO299msWUsIcfpErQmA0Wi5aKkCPOz
-         nnBtIBsfNFhJGQcKqh256l0EYOc5QjlSY9Ii5Ckay+F8mb0Lzg8Gzw5dmhw9WtPHm4cd
-         7M2BMQJaoKHXrneGVGW1ma0rdb6aKAC6baHSdxBNaQrObR6AOJhcawNmFrpBc1q/MwO0
-         WHp7dr0hjLOvFQVKsxHlolkIL27e6gdx3JQ3nVHWs57cbSysEuloKoD0Lk/K2fNqpDqQ
-         3dNkVXRT9tzAX7imyzr8i9wTJiYZHwwBBfJIF5lkHA954UjNO9SzFOITYcyPazHUCPl9
-         nZJw==
-X-Gm-Message-State: APjAAAWmZt05/Uj9U/9ydXOoy+xuCT7gwtc0POr2KeYtoBchRsEblDwW
-        DWqh5IOh4m4IwZUytpQ0t7IZ9uyppoU=
-X-Google-Smtp-Source: APXvYqwK6xjajPt1SjEtZj/90BJw0vJ9ja8Up33sNz1gGHqnhuSsiAprNOyAxSi+8xWOFG6bYIlzIA==
-X-Received: by 2002:a92:6b01:: with SMTP id g1mr5198355ilc.54.1576102428873;
-        Wed, 11 Dec 2019 14:13:48 -0800 (PST)
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com. [209.85.166.44])
-        by smtp.gmail.com with ESMTPSA id l16sm809441ioj.70.2019.12.11.14.13.47
+        bh=1r7bbFb7oJgGBdqZ0SCWluBGjxFxUq9kfW1qtiJYFQE=;
+        b=uRsPW5p52XOfaGttvdmpsngfugNLDfmQSx/QxzBjyIftRdTriuTAuoyDsMbNYWdPG4
+         FsaA3m1Ao2hczJZ4S6asxde0c+yNANyHpGF/91uJOxYKJBCyQygNLxww/KOoPNo2H5WX
+         gbOiZGeNjfxmEk+avk3B+m0jLc/XA9f1dMG4fOLobQffEDIfwd9euSIRJwbUP650BdGD
+         dD2aYlQH7gtbWvFPd+ISNWRo45quAkvKUQbA8WYs0sL80pXAsEMRdD///spFuoeIT6Q1
+         hQSrf35A6Qv3hw6+pEyhoOLRVcMKtFCHeBZjpFUT3i8E+xRLx4ErgnCt9SVm5qI1SMFt
+         ECOw==
+X-Gm-Message-State: APjAAAUnMiv5BD7fV/LQyu5NojqkHhGeAbyZlBatN7pXUve3L/RX9LON
+        f/SeM6NvuBmZ58yd/Kgse8W7lh2wdkA=
+X-Google-Smtp-Source: APXvYqx+YeF+kGu8E51PAhWMPd9VtG4F/pkLhCfhkBWpGgJy3XkIW9QjO2ond6DjjGnEokj9aHhPHw==
+X-Received: by 2002:a6b:b846:: with SMTP id i67mr509251iof.124.1576104470469;
+        Wed, 11 Dec 2019 14:47:50 -0800 (PST)
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com. [209.85.166.41])
+        by smtp.gmail.com with ESMTPSA id q9sm810235iod.79.2019.12.11.14.47.48
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 14:13:47 -0800 (PST)
-Received: by mail-io1-f44.google.com with SMTP id v3so514254ioj.5
-        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 14:13:47 -0800 (PST)
-X-Received: by 2002:a6b:5503:: with SMTP id j3mr425338iob.142.1576102426904;
- Wed, 11 Dec 2019 14:13:46 -0800 (PST)
+        Wed, 11 Dec 2019 14:47:49 -0800 (PST)
+Received: by mail-io1-f41.google.com with SMTP id f82so570376ioa.9
+        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 14:47:48 -0800 (PST)
+X-Received: by 2002:a6b:be84:: with SMTP id o126mr503493iof.269.1576104467910;
+ Wed, 11 Dec 2019 14:47:47 -0800 (PST)
 MIME-Version: 1.0
-References: <1574940787-1004-1-git-send-email-sanm@codeaurora.org> <1574940787-1004-4-git-send-email-sanm@codeaurora.org>
-In-Reply-To: <1574940787-1004-4-git-send-email-sanm@codeaurora.org>
+References: <1575520881-31458-1-git-send-email-sanm@codeaurora.org> <1575520881-31458-2-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <1575520881-31458-2-git-send-email-sanm@codeaurora.org>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 11 Dec 2019 14:13:34 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XWsN72pvtHubq2UOgvm6oPs2s+RA61ct5XPGsBDbA13w@mail.gmail.com>
-Message-ID: <CAD=FV=XWsN72pvtHubq2UOgvm6oPs2s+RA61ct5XPGsBDbA13w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: usb: qcom,dwc3: Add compatible for SC7180
+Date:   Wed, 11 Dec 2019 14:47:36 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=W_z=_j==DSFbtCmTihmSyRtH85VnKpw03E=gATcqJx2Q@mail.gmail.com>
+Message-ID: <CAD=FV=W_z=_j==DSFbtCmTihmSyRtH85VnKpw03E=gATcqJx2Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] phy: qcom-qusb2: Add QUSB2 PHY support for SC7180
 To:     Sandeep Maheswaram <sanm@codeaurora.org>
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
         Stephen Boyd <swboyd@chromium.org>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-usb@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+        <devicetree@vger.kernel.org>, Manu Gautam <mgautam@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -85,13 +84,175 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi,
 
-On Thu, Nov 28, 2019 at 3:33 AM Sandeep Maheswaram <sanm@codeaurora.org> wrote:
+On Wed, Dec 4, 2019 at 8:43 PM Sandeep Maheswaram <sanm@codeaurora.org> wrote:
 >
-> Add compatible for SC7180 in usb dwc3 bindings.
+> Add QUSB2 PHY config data and compatible for SC7180.
 >
 > Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/phy/qualcomm/phy-qcom-qusb2.c | 57 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 56 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+> index bf94a52..32a567b 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * Copyright (c) 2017, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+>   */
+>
+>  #include <linux/clk.h>
+> @@ -177,6 +177,41 @@ static const struct qusb2_phy_init_tbl msm8998_init_tbl[] = {
+>         QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_DIGITAL_TIMERS_TWO, 0x19),
+>  };
+>
+> +static const unsigned int sc7180_regs_layout[] = {
+> +       [QUSB2PHY_PLL_CORE_INPUT_OVERRIDE] = 0xa8,
+> +       [QUSB2PHY_PLL_STATUS]           = 0x1a0,
+> +       [QUSB2PHY_PORT_TUNE1]           = 0x240,
+> +       [QUSB2PHY_PORT_TUNE2]           = 0x244,
+> +       [QUSB2PHY_PORT_TUNE3]           = 0x248,
+> +       [QUSB2PHY_PORT_TUNE4]           = 0x24c,
+> +       [QUSB2PHY_PORT_TUNE5]           = 0x250,
+> +       [QUSB2PHY_PORT_TEST1]           = 0x254,
+> +       [QUSB2PHY_PORT_TEST2]           = 0x258,
+> +       [QUSB2PHY_PORT_POWERDOWN]       = 0x210,
+> +       [QUSB2PHY_INTR_CTRL]            = 0x230,
+> +};
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+This table is exactly the same as "sdm845_regs_layout".  Just refer to
+the "sdm845_regs_layout" below.  This should be OK because in general
+the Linux convention is to name things (filenames, drivers, etc) based
+on the first SoC that used it, but if it really bothers you you can
+add a comment.  ;-)
+
+
+> +static const struct qusb2_phy_init_tbl sc7180_init_tbl[] = {
+> +       QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_ANALOG_CONTROLS_TWO, 0x03),
+> +       QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_CLOCK_INVERTERS, 0x7c),
+> +       QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_CMODE, 0x80),
+> +       QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_LOCK_DELAY, 0x0a),
+> +       QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_DIGITAL_TIMERS_TWO, 0x19),
+> +       QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_BIAS_CONTROL_1, 0x40),
+> +       QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_BIAS_CONTROL_2, 0x22),
+
+Compared to sdm845, I see PLL_BIAS_CONTROL_2, was 0x20 and now it's
+0x22.  Is this really a SoC-level tuning value (should be 0x22 on 100%
+of all sc7180 boards and 0x20 on 100% of all sdm845 boards), or is
+this really a board-specific tuning parameter that we need a device
+tree property to control?
+
+
+> +       QUSB2_PHY_INIT_CFG(QUSB2PHY_PWR_CTRL2, 0x21),
+> +       QUSB2_PHY_INIT_CFG(QUSB2PHY_IMP_CTRL1, 0x08),
+
+Compared to sdm845, I see IMP_CTRL1 was 0x0 and now it's 0x8.  If I
+understand correctly, though, this is a board-specific tuning
+parameter.  ...and, in fact, the device tree that's been submitted for
+sc7180-idp has:
+
+qcom,imp-res-offset-value = <8>;
+
+...so I think you should match sdm845 and leave this as 0x0.
+
+
+> +       QUSB2_PHY_INIT_CFG(QUSB2PHY_IMP_CTRL2, 0x58),
+> +
+> +       QUSB2_PHY_INIT_CFG_L(QUSB2PHY_PORT_TUNE1, 0xc5),
+
+Compared to sdm845, I see PORT_TUNE1 was 0x30 and now it's 0xc5.  If I
+understand correctly, though, this is a board-specific tuning
+parameter and should be controlled by:
+
+override_hstx_trim
+override_preemphasis
+override_preemphasis_width
+
+...so you should make sure those are set right and then leave this as
+matching sdm845.  If we truly think that (for some reason) nearly all
+sc7180 boards will need a value that's closer to 0xc5 then we could
+possibly justify this change, but I'd need a lot of convincing.
+
+
+> +       QUSB2_PHY_INIT_CFG_L(QUSB2PHY_PORT_TUNE2, 0x29),
+> +       QUSB2_PHY_INIT_CFG_L(QUSB2PHY_PORT_TUNE3, 0xca),
+> +       QUSB2_PHY_INIT_CFG_L(QUSB2PHY_PORT_TUNE4, 0x04),
+> +       QUSB2_PHY_INIT_CFG_L(QUSB2PHY_PORT_TUNE5, 0x03),
+> +
+> +       QUSB2_PHY_INIT_CFG(QUSB2PHY_CHG_CTRL2, 0x30),
+
+Compared to sdm845, I see CHG_CTRL2 was 0x0 and now it's 0x30.  Is
+this really a SoC-level tuning value (should be 0x30 on 100% of all
+sc7180 boards and 0x0 on 100% of all sdm845 boards), or is this really
+a board-specific tuning parameter that we need a device tree property
+to control?
+
+
+Overall summary is that from everything i see I think:
+
+1. Probably the BIAS_CONTROL_2 and CHG_CTRL2 changes are really board
+specific and need device tree properties.
+
+2. Once we add the device tree properties, I think we can just totally
+get rid of the sc7180 tables.  Then in the sc7180 device tree we could
+probably do:
+
+"qcom,sc7180-qusb2-phy", "qcom,sdm845-qusb2-phy";
+
+...which says that we have a sc7180 PHY but it's (as far as we know)
+compatible with the sdm845 PHY driver.  Then we don't need any sc7180
+changes in this file at all.
+
+
+> +};
+> +
+>  static const unsigned int sdm845_regs_layout[] = {
+>         [QUSB2PHY_PLL_CORE_INPUT_OVERRIDE] = 0xa8,
+>         [QUSB2PHY_PLL_STATUS]           = 0x1a0,
+> @@ -212,6 +247,8 @@ static const struct qusb2_phy_init_tbl sdm845_init_tbl[] = {
+>         QUSB2_PHY_INIT_CFG(QUSB2PHY_CHG_CTRL2, 0x0),
+>  };
+>
+> +
+> +
+
+Eliminate arbitrary spacing changes from your patch.
+
+
+>  struct qusb2_phy_cfg {
+>         const struct qusb2_phy_init_tbl *tbl;
+>         /* number of entries in the table */
+> @@ -258,6 +295,19 @@ static const struct qusb2_phy_cfg msm8998_phy_cfg = {
+>         .update_tune1_with_efuse = true,
+>  };
+>
+> +static const struct qusb2_phy_cfg sc7180_phy_cfg = {
+> +       .tbl            = sc7180_init_tbl,
+> +       .tbl_num        = ARRAY_SIZE(sc7180_init_tbl),
+> +       .regs           = sc7180_regs_layout,
+> +
+> +       .disable_ctrl   = (PWR_CTRL1_VREF_SUPPLY_TRIM | PWR_CTRL1_CLAMP_N_EN |
+> +                          POWER_DOWN),
+> +       .mask_core_ready = CORE_READY_STATUS,
+> +       .has_pll_override = true,
+> +       .autoresume_en    = BIT(0),
+> +       .update_tune1_with_efuse = true,
+> +};
+> +
+>  static const struct qusb2_phy_cfg sdm845_phy_cfg = {
+>         .tbl            = sdm845_init_tbl,
+>         .tbl_num        = ARRAY_SIZE(sdm845_init_tbl),
+> @@ -271,6 +321,8 @@ static const struct qusb2_phy_cfg sdm845_phy_cfg = {
+>         .update_tune1_with_efuse = true,
+>  };
+>
+> +
+> +
+
+Eliminate arbitrary spacing changes from your patch.
+
+
+-Doug
