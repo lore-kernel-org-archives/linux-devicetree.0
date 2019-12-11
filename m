@@ -2,60 +2,59 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED13C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4CFC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3AB424654
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4231A214D8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UCgE1MfH"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dc90FDkW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbfLKODL (ORCPT
+        id S1729894AbfLKODV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:03:11 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48004 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729522AbfLKODL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 09:03:11 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2bZl034187;
-        Wed, 11 Dec 2019 08:02:38 -0600
+        Wed, 11 Dec 2019 09:03:21 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59032 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729879AbfLKODS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 09:03:18 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2ixx050827;
+        Wed, 11 Dec 2019 08:02:44 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576072958;
-        bh=4kLYBFMhQh0382iTclezUOe469xMQFfT70DHrwfXTIA=;
+        s=ti-com-17Q1; t=1576072964;
+        bh=UM8/u53XsBwB94ruO456WyvvKOCh907SO2nSTuYe0Ns=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=UCgE1MfHPYGRm/As8Cp/3R3DIhJ3fqpMNwawBBtd4RCGGhzYbZVBgIqYrjzbnSbaV
-         Dyoxbo44do0yd+94MumCS+xV4PQ9BSI8EpczzA+xNpJubd9qOCtnDXncN7shRJZs6J
-         Qn1JRzK94KLhQYQfwElT02NXUqs4KKJYhAELBHiM=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBE2b09124452
+        b=dc90FDkWILc0RC3rnR6MZf4VMXhrI8HpxU+U/cCDWa8NjNLOQ3SrgmXgThI3BXy4y
+         moC2q0WUgJVmi/4igm1WGtYQ9AeoslKh8qcbLn8CXRAcvq9zkkc1RmEnWXGV5zbcKM
+         yFKv6LknQwyXnXV9H2SQ4qvoijLRDLcljbKy/tsE=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBE2iHZ023535
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Dec 2019 08:02:37 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 11 Dec 2019 08:02:44 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Dec 2019 08:02:37 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 08:02:43 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Dec 2019 08:02:37 -0600
+ Frontend Transport; Wed, 11 Dec 2019 08:02:43 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2afl007398;
-        Wed, 11 Dec 2019 08:02:37 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2afs007398;
+        Wed, 11 Dec 2019 08:02:43 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
         <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>
 CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v4 01/10] clk: ti: dra7: add cam clkctrl data
-Date:   Wed, 11 Dec 2019 08:05:49 -0600
-Message-ID: <20191211140558.10407-2-bparrot@ti.com>
+Subject: [Patch v4 08/10] arm: dts: dra76-evm: Add CAL and OV5640 nodes
+Date:   Wed, 11 Dec 2019 08:05:56 -0600
+Message-ID: <20191211140558.10407-9-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191211140558.10407-1-bparrot@ti.com>
 References: <20191211140558.10407-1-bparrot@ti.com>
@@ -67,81 +66,71 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add clkctrl data for CAM domain.
+Add device nodes for CSI2 camera board OV5640.
+Add the CAL port nodes with the necessary linkage to the ov5640 nodes.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/clk/ti/clk-7xx.c         | 19 +++++++++++++++++++
- include/dt-bindings/clock/dra7.h | 10 ++++++++++
- 2 files changed, 29 insertions(+)
+ arch/arm/boot/dts/dra76-evm.dts | 35 +++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/drivers/clk/ti/clk-7xx.c b/drivers/clk/ti/clk-7xx.c
-index 34e49f909a07..ddfce4b050e5 100644
---- a/drivers/clk/ti/clk-7xx.c
-+++ b/drivers/clk/ti/clk-7xx.c
-@@ -151,6 +151,24 @@ static const struct omap_clkctrl_reg_data dra7_vpe_clkctrl_regs[] __initconst =
- 	{ 0 },
+diff --git a/arch/arm/boot/dts/dra76-evm.dts b/arch/arm/boot/dts/dra76-evm.dts
+index 1fb6f13fb5e2..a17d4875bb2e 100644
+--- a/arch/arm/boot/dts/dra76-evm.dts
++++ b/arch/arm/boot/dts/dra76-evm.dts
+@@ -116,6 +116,12 @@
+ 		regulator-min-microvolt = <1800000>;
+ 		regulator-max-microvolt = <1800000>;
+ 	};
++
++	clk_ov5640_fixed: clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <24000000>;
++	};
  };
  
-+static const char * const dra7_cam_gfclk_mux_parents[] __initconst = {
-+	"l3_iclk_div",
-+	"core_iss_main_clk",
-+	NULL,
-+};
-+
-+static const struct omap_clkctrl_bit_data dra7_cam_bit_data[] __initconst = {
-+	{ 24, TI_CLK_MUX, dra7_cam_gfclk_mux_parents, NULL },
-+	{ 0 },
-+};
-+
-+static const struct omap_clkctrl_reg_data dra7_cam_clkctrl_regs[] __initconst = {
-+	{ DRA7_CAM_VIP1_CLKCTRL, dra7_cam_bit_data, CLKF_HW_SUP, "l3_iclk_div" },
-+	{ DRA7_CAM_VIP2_CLKCTRL, dra7_cam_bit_data, CLKF_HW_SUP, "l3_iclk_div" },
-+	{ DRA7_CAM_VIP3_CLKCTRL, dra7_cam_bit_data, CLKF_HW_SUP, "l3_iclk_div" },
-+	{ 0 },
-+};
-+
- static const struct omap_clkctrl_reg_data dra7_coreaon_clkctrl_regs[] __initconst = {
- 	{ DRA7_COREAON_SMARTREFLEX_MPU_CLKCTRL, NULL, CLKF_SW_SUP, "wkupaon_iclk_mux" },
- 	{ DRA7_COREAON_SMARTREFLEX_CORE_CLKCTRL, NULL, CLKF_SW_SUP, "wkupaon_iclk_mux" },
-@@ -783,6 +801,7 @@ const struct omap_clkctrl_data dra7_clkctrl_data[] __initconst = {
- 	{ 0x4a008c00, dra7_atl_clkctrl_regs },
- 	{ 0x4a008d20, dra7_l4cfg_clkctrl_regs },
- 	{ 0x4a008e20, dra7_l3instr_clkctrl_regs },
-+	{ 0x4a009020, dra7_cam_clkctrl_regs },
- 	{ 0x4a009120, dra7_dss_clkctrl_regs },
- 	{ 0x4a009320, dra7_l3init_clkctrl_regs },
- 	{ 0x4a0093b0, dra7_pcie_clkctrl_regs },
-diff --git a/include/dt-bindings/clock/dra7.h b/include/dt-bindings/clock/dra7.h
-index 2b765e579b2a..2c058a534bab 100644
---- a/include/dt-bindings/clock/dra7.h
-+++ b/include/dt-bindings/clock/dra7.h
-@@ -34,6 +34,11 @@
- #define DRA7_VPE_CLKCTRL_INDEX(offset)	((offset) - DRA7_VPE_CLKCTRL_OFFSET)
- #define DRA7_VPE_CLKCTRL	DRA7_VPE_CLKCTRL_INDEX(0x64)
+ &i2c1 {
+@@ -317,6 +323,27 @@
+ 	};
+ };
  
-+/* vip clocks */
-+#define DRA7_VIP1_CLKCTRL	DRA7_CLKCTRL_INDEX(0x20)
-+#define DRA7_VIP2_CLKCTRL	DRA7_CLKCTRL_INDEX(0x28)
-+#define DRA7_VIP3_CLKCTRL	DRA7_CLKCTRL_INDEX(0x30)
++&i2c5 {
++	status = "okay";
++	clock-frequency = <400000>;
 +
- /* coreaon clocks */
- #define DRA7_SMARTREFLEX_MPU_CLKCTRL	DRA7_CLKCTRL_INDEX(0x28)
- #define DRA7_SMARTREFLEX_CORE_CLKCTRL	DRA7_CLKCTRL_INDEX(0x38)
-@@ -202,6 +207,11 @@
- #define DRA7_VPE_CLKCTRL_INDEX(offset)	((offset) - DRA7_VPE_CLKCTRL_OFFSET)
- #define DRA7_VPE_VPE_CLKCTRL	DRA7_VPE_CLKCTRL_INDEX(0x64)
- 
-+/* vip clocks */
-+#define DRA7_CAM_VIP1_CLKCTRL	DRA7_CLKCTRL_INDEX(0x20)
-+#define DRA7_CAM_VIP2_CLKCTRL	DRA7_CLKCTRL_INDEX(0x28)
-+#define DRA7_CAM_VIP3_CLKCTRL	DRA7_CLKCTRL_INDEX(0x30)
++	ov5640@3c {
++		compatible = "ovti,ov5640";
++		reg = <0x3c>;
 +
- /* coreaon clocks */
- #define DRA7_COREAON_SMARTREFLEX_MPU_CLKCTRL	DRA7_CLKCTRL_INDEX(0x28)
- #define DRA7_COREAON_SMARTREFLEX_CORE_CLKCTRL	DRA7_CLKCTRL_INDEX(0x38)
++		clocks = <&clk_ov5640_fixed>;
++		clock-names = "xclk";
++
++		port {
++			csi2_cam0: endpoint {
++				remote-endpoint = <&csi2_phy0>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
++		};
++	};
++};
++
+ &cpu0 {
+ 	vdd-supply = <&buck10_reg>;
+ };
+@@ -447,3 +474,11 @@
+ 		max-bitrate = <5000000>;
+ 	};
+ };
++
++&csi2_0 {
++	csi2_phy0: endpoint {
++		remote-endpoint = <&csi2_cam0>;
++		clock-lanes = <0>;
++		data-lanes = <1 2>;
++	};
++};
 -- 
 2.17.1
 
