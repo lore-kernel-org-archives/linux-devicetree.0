@@ -2,68 +2,71 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB723C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 02:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A891C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 02:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4112077B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 02:37:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576031867;
-	bh=U8f1XcZK3n6lSl5R6lQHzlwPeNFYsDJY2wujLIgOgzg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ycpbn+uw8s0hEd8PwYIVnF3U+Utg2Am0VhqHfh4pW8YzuAfTys8Yl0NFsNcsoW5hM
-	 e2U4LyPy4TW84aK1sgkNp/txQbnrc03++cqf6wubOf96cMUnqOABw4m9lyOMyOSFZP
-	 y0BSY6enwUZQNcHqd0RMp+mI/DaPuYRzcXRfngrc=
+	by mail.kernel.org (Postfix) with ESMTP id 5870F2077B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 02:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfLKChr (ORCPT
+        id S1727779AbfLKCoj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:37:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59586 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 21:44:39 -0500
+Received: from mga07.intel.com ([134.134.136.100]:38038 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727656AbfLKChr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 21:37:47 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAC8E205ED;
-        Wed, 11 Dec 2019 02:37:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576031866;
-        bh=U8f1XcZK3n6lSl5R6lQHzlwPeNFYsDJY2wujLIgOgzg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rWN08mI7F053i2jf5SNTd8dUIADCnpj4/50DSSEvKtWSB3EK/oddoKp6ph4bwGpAI
-         +JXPoWFuQ5NvFb22jA1Rkz/c/xc84q1rekUPcYfzpjZZrxOCuKX+b6Q5NfsRFPU0gj
-         T93+0G6f3NKGIWdq1gzTucfgqGRyGFj8IheACLaA=
-Date:   Wed, 11 Dec 2019 10:37:38 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-imx@nxp.com,
-        =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
-Subject: Re: [PATCH RESEND 1/1] ARM: dts: imx7s: Add power domain for imx7d
- HSIC
-Message-ID: <20191211023737.GE15858@dragon>
-References: <1575342112-14702-1-git-send-email-peter.chen@nxp.com>
+        id S1726619AbfLKCoj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 21:44:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 18:44:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="363456285"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 10 Dec 2019 18:44:38 -0800
+Received: from [10.226.38.24] (unknown [10.226.38.24])
+        by linux.intel.com (Postfix) with ESMTP id D04125808CC;
+        Tue, 10 Dec 2019 18:44:36 -0800 (PST)
+Subject: Re: [PATCH v7 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        peter.harliman.liem@intel.com, Ramuthevar@smile.fi.intel.com
+References: <20191210025301.29551-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20191210025301.29551-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20191210135450.GX32742@smile.fi.intel.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <6dac436f-956f-534e-7e15-7aa2f0881217@linux.intel.com>
+Date:   Wed, 11 Dec 2019 10:44:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20191210135450.GX32742@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1575342112-14702-1-git-send-email-peter.chen@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 11:01:52AM +0800, Peter Chen wrote:
-> Otherwise, the system will hang if USB driver try to access
-> portsc register.
-> 
-> Cc: André Draszik <git@andred.net>
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Hi,
 
-Applied, thanks.
+On 10/12/2019 9:54 PM, Andy Shevchenko wrote:
+> On Tue, Dec 10, 2019 at 10:53:01AM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add support for eMMC PHY on Intel's Lightning Mountain SoC.
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> Signed-off-by: Ramuthevar,Vadivel MuruganX <vadivel.muruganx.ramuthevar@linux.intel.com>
+> Something wrong with the second SoB. And why you have two to begin with?
+
+Thanks Andy,Â  Good catch, I will correct it and send patch again.
+
+Best Regards
+vadivel
