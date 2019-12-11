@@ -2,190 +2,254 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A73AC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 17:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C39C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 17:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4A62054F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 17:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5BD922527
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 17:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730823AbfLKRJa (ORCPT
+        id S1730612AbfLKRK6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:09:30 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46045 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730812AbfLKRJa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 12:09:30 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1if5UG-0005Y6-BL; Wed, 11 Dec 2019 18:09:20 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1if5UE-0002i5-93; Wed, 11 Dec 2019 18:09:18 +0100
-Date:   Wed, 11 Dec 2019 18:09:18 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
-References: <20191129172537.31410-1-m.felsch@pengutronix.de>
- <20191129172537.31410-4-m.felsch@pengutronix.de>
- <20191204134631.GT1998@sirena.org.uk>
- <20191210094144.mxximpuouchy3fqu@pengutronix.de>
- <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+        Wed, 11 Dec 2019 12:10:58 -0500
+Received: from relay11.mail.gandi.net ([217.70.178.231]:60313 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729512AbfLKRK5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 12:10:57 -0500
+Received: from uno.lan (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id DE8F710000F;
+        Wed, 11 Dec 2019 17:10:53 +0000 (UTC)
+From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
+To:     robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: media: renesas,ceu: Convert to yaml
+Date:   Wed, 11 Dec 2019 18:13:00 +0100
+Message-Id: <20191211171300.87023-1-jacopo+renesas@jmondi.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 17:23:39 up 26 days,  7:42, 33 users,  load average: 0.00, 0.00,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adam,
+Convert the Renesas CEU bindings description to yaml schema and remove
+the existing textual bindings document.
 
-On 19-12-11 16:14, Adam Thomson wrote:
-> On 10 December 2019 09:42, Marco Felsch wrote:
-> 
-> > Hi Mark,
-> > 
-> > On 19-12-04 13:46, Mark Brown wrote:
-> > > On Fri, Nov 29, 2019 at 06:25:34PM +0100, Marco Felsch wrote:
-> > >
-> > > > +  Optional regulator device-specific properties:
-> > > > +  - dlg,vsel-sense-gpios : A GPIO reference to a local general purpose input,
-> > > > +    the datasheet calls it GPI. The regulator sense the input signal and select
-> > > > +    the active or suspend voltage settings. If the signal is active the
-> > > > +    active-settings are applied else the suspend-settings are applied.
-> > > > +    Attention: Sharing the same GPI for other purposes or across multiple
-> > > > +    regulators is possible but the polarity setting must equal.
-> > >
-> > > I'm really confused by this.  As far as I understand it it seems
-> > > to be doing pinmuxing on the chip using the GPIO bindings which
-> > > is itself a bit odd and I don't see anything here that configures
-> > > whatever sets the state of the pins.  Don't we need another GPIO
-> > > to set the vsel-sense inputs on the PMIC?
-> > 
-> > Yes the PMIC is very configurable and it took a while till I understand
-> > it.. @Adam please correct me if I'm wrong.
-> > 
-> > The PMIC regulators regardless of the type: ldo or buck can be
-> > simplified drawn as:
-> > 
-> > 
-> > 
-> > da9062-gpio               da9062-regulator
-> > 
-> >   +-------------------------------------------------------
-> >   |                  PMIC
-> >   |
-> >   > GPIO0            +--------------------------+
-> >   |                  |         REGULATOR-0      |
-> >   > GPIO1 -------+   |                          |
-> >   |              +-- > vsel-in    voltage-a-out <
-> >   > GPIO2        |   |                          |
-> >   |              |   > enable-in  voltage-b-out <
-> >   |              |   |                          |
-> >   |              |   +--------------------------+
-> >   |              |
-> >   |              |   +--------------------------+
-> >   |              |   |         REGULATOR-1      |
-> >   |              |   |                          |
-> >   |              +-- > vsel-in    voltage-a-out <
-> >   |                  |                          |
-> >   |                  > enable-in  voltage-b-out <
-> >   |                  |                          |
-> >   |                  +--------------------------+
-> >   |
-> > 
-> > The 'vsel-in' and 'enable-in' regulator inputs must be routed to the
-> > PMIC GPIOs which must be configured as input. If this is a pinmux in
-> > your opinion, then yes we need to do that. IMHO it isn't a pinmux
-> > because from the regulator point of view it is just a GPIO which comes
-> > from our own gpio-dev (da9062-gpio). So the abstraction is vald. Anyway
-> > I'm with you that this isn't the typical use-case.
-> 
-> We've had this discussion before and to me it felt more like pinmux than GPIO
-> although I understand we're configuring the GPIO pin as input before then
-> configuring a regulator to take that specific internal GPIO as the control
-> signal. We're defining a specific role to this pin in HW rather than it being a
-> general software handled GPI so it feels like this would be neater under pinmux.
-> There does still need to be a mapping between that pin and the regulator which I
-> guess would be served by passing the pin to the regulator through generic pinmux
-> bindings and then in the regulator code you're simply just enabling the
-> regulator to be controlled from that pin. The HW lets you control multiple
-> regulators from the same input pin so there's a flexibility there to be
-> captured, as you mention.
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-I know that we already had this discussion but the result was to wait
-for the maintainers input. Since Linus is the pinctrl/gpio maintainer
-and Mark the regulator maintainer we now have some input so we can move
-forward. Linus made some comments on the dt-bindings and on the code but
-he didn't pointed out that this usage is wrong. So I guessed it would be
-fine for him. Mark did his first comments now and I explained the
-current state..
+---
+v1 -> v2:
+- Dual license as suggested by Rob
+- Fix compatible string for r7s72100-ceu
+- Add 'default' to bus-width endpoint property
 
-I discussed it with a colleague again and he mentioned that pinctrl
-should be named pinctrl instead it should be named padctrl. We don't
-reconfigure the pad to a other function it is still a device general
-purpose input pad. The hw-signal flow goes always trough the gpio block
-so one argument more for my solution. Also we don't configure the "pad"
-to be a vsel/ena-pin. The hw-pad can only be a gpio or has an alternate
-function (WDKICK for GPIO0, Seq. SYS_EN for GPIO2, Seq. PWR_EN for GPIO4).
-Instead we tell the regulator to use _this_ GPIO e.g. for voltage
-selection so we go the other way around. My last argument why pinctrl
-isn't the correct place is that the GPIO1 can be used for
-regulator-0:vsel-in and for regulator-1:enable-in. So this pad would
-have different states which is invalid IMHO.
+Thanks
+   j
+---
+ .../devicetree/bindings/media/renesas,ceu.txt | 86 -------------------
+ .../bindings/media/renesas,ceu.yaml           | 78 +++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 79 insertions(+), 87 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.yaml
 
-Regards,
-  Marco
+diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+deleted file mode 100644
+index 3e2a2652eb19..000000000000
+--- a/Documentation/devicetree/bindings/media/renesas,ceu.txt
++++ /dev/null
+@@ -1,86 +0,0 @@
+-Renesas Capture Engine Unit (CEU)
+-----------------------------------------------
+-
+-The Capture Engine Unit is the image capture interface found in the Renesas
+-SH Mobile, R-Mobile and RZ SoCs.
+-
+-The interface supports a single parallel input with data bus width of 8 or 16
+-bits.
+-
+-Required properties:
+-- compatible: Shall be one of the following values:
+-	"renesas,r7s72100-ceu" for CEU units found in RZ/A1H and RZ/A1M SoCs
+-	"renesas,r8a7740-ceu" for CEU units found in R-Mobile A1 R8A7740 SoCs
+-- reg: Registers address base and size.
+-- interrupts: The interrupt specifier.
+-
+-The CEU supports a single parallel input and should contain a single 'port'
+-subnode with a single 'endpoint'. Connection to input devices are modeled
+-according to the video interfaces OF bindings specified in:
+-[1] Documentation/devicetree/bindings/media/video-interfaces.txt
+-
+-Optional endpoint properties applicable to parallel input bus described in
+-the above mentioned "video-interfaces.txt" file are supported.
+-
+-- hsync-active: See [1] for description. If property is not present,
+-  default is active high.
+-- vsync-active: See [1] for description. If property is not present,
+-  default is active high.
+-- bus-width: See [1] for description. Accepted values are '8' and '16'.
+-  If property is not present, default is '8'.
+-- field-even-active: See [1] for description. If property is not present,
+-  an even field is identified by a logic 0 (active-low signal).
+-
+-Example:
+-
+-The example describes the connection between the Capture Engine Unit and an
+-OV7670 image sensor connected to i2c1 interface.
+-
+-ceu: ceu@e8210000 {
+-	reg = <0xe8210000 0x209c>;
+-	compatible = "renesas,r7s72100-ceu";
+-	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
+-
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&vio_pins>;
+-
+-	status = "okay";
+-
+-	port {
+-		ceu_in: endpoint {
+-			remote-endpoint = <&ov7670_out>;
+-
+-			hsync-active = <1>;
+-			vsync-active = <0>;
+-		};
+-	};
+-};
+-
+-i2c1: i2c@fcfee400 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c1_pins>;
+-
+-	status = "okay";
+-
+-	clock-frequency = <100000>;
+-
+-	ov7670: camera@21 {
+-		compatible = "ovti,ov7670";
+-		reg = <0x21>;
+-
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&vio_pins>;
+-
+-		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
+-		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
+-
+-		port {
+-			ov7670_out: endpoint {
+-				remote-endpoint = <&ceu_in>;
+-
+-				hsync-active = <1>;
+-				vsync-active = <0>;
+-			};
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.yaml b/Documentation/devicetree/bindings/media/renesas,ceu.yaml
+new file mode 100644
+index 000000000000..8e9251a0f9ef
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/renesas,ceu.yaml
+@@ -0,0 +1,78 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/renesas,ceu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas Capture Engine Unit (CEU) Bindings
++
++maintainers:
++  - Jacopo Mondi <jacopo+renesas@jmondi.org>
++  - linux-renesas-soc@vger.kernel.org
++
++description: |+
++  The Capture Engine Unit is the image capture interface found in the Renesas SH
++  Mobile, R-Mobile and RZ SoCs. The interface supports a single parallel input
++  with data bus width of 8 or 16 bits.
++
++properties:
++  compatible:
++    enum:
++      - renesas,r7s72100-ceu
++      - renesas,r8a7740-ceu
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  port:
++    type: object
++    additionalProperties: false
++
++    properties:
++       endpoint:
++         type: object
++         additionalProperties: false
++
++         # Properties described in
++         # Documentation/devicetree/bindings/media/video-interfaces.txt
++         properties:
++           remote-endpoint: true
++           hsync-active: true
++           vsync-active: true
++           field-even-active: false
++           bus-width:
++             enum: [8, 16]
++             default: 8
++
++         required:
++           - remote-endpoint
++
++    required:
++      - endpoint
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - port
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    ceu: ceu@e8210000 {
++        reg = <0xe8210000 0x209c>;
++        compatible = "renesas,r7s72100-ceu";
++        interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
++
++        port {
++            ceu_in: endpoint {
++                remote-endpoint = <&ov7670_out>;
++                hsync-active = <1>;
++                vsync-active = <0>;
++            };
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index eefa1e066655..df75855839f1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10276,7 +10276,7 @@ L:	linux-media@vger.kernel.org
+ L:	linux-renesas-soc@vger.kernel.org
+ T:	git git://linuxtv.org/media_tree.git
+ S:	Supported
+-F:	Documentation/devicetree/bindings/media/renesas,ceu.txt
++F:	Documentation/devicetree/bindings/media/renesas,ceu.yaml
+ F:	drivers/media/platform/renesas-ceu.c
+ F:	include/media/drv-intf/renesas-ceu.h
 
-> > Regards,
-> >   Marco
-> > 
-> > --
-> > Pengutronix e.K.                           |                             |
-> > Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-> > 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> 
+--
+2.24.0
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
