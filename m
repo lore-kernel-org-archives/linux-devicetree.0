@@ -6,79 +6,65 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA32FC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 03:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8868C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 03:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F2A2077B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 03:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF6C20838
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 03:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576034068;
-	bh=Ut608EWmoKpCpeQTzJgsEa7BVoL4dGTgh87HRiPQsmY=;
+	s=default; t=1576034293;
+	bh=kLxDvysWfIkrsHjdaUyETI6sk4hgGH41h30oWXgMtZY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ls3Ja6X/+z+H7rWw4hzRHlEXQn75etQUNjZdYWat9Z+0TPuTSw5PkzzNdu1eVQR72
-	 RNa9fvj+J6/frHIIbM3Jx1KIDULCFfMWRGzl6xXkymuSD7DYbR2uod3UupZC9XPr11
-	 A//f4A3njZnrx5zQx5A1qJX7y319ncQxwrQbzo4E=
+	b=XmwuXqkSpJHsqCohi1mCRxq3V44bi5G0e8KrjdFcZDCnr0/YgiiMFrVazx7LgXDcR
+	 So+6xKBJ6Sko5CLszMe4rkKQ8gIOI6KXhBL/QBnx5d8W6uGGFDoQZqMhP3YBfBjN/q
+	 JF3y0s2EvU0ndL1ZzaZQRUrEt/PCM9HdqtocZRtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfLKDO1 (ORCPT
+        id S1726642AbfLKDSM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 22:14:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51516 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 22:18:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbfLKDO1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 22:14:27 -0500
+        id S1727059AbfLKDSM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 22:18:12 -0500
 Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7843D2073B;
-        Wed, 11 Dec 2019 03:14:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76DC020836;
+        Wed, 11 Dec 2019 03:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576034066;
-        bh=Ut608EWmoKpCpeQTzJgsEa7BVoL4dGTgh87HRiPQsmY=;
+        s=default; t=1576034291;
+        bh=kLxDvysWfIkrsHjdaUyETI6sk4hgGH41h30oWXgMtZY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KH6ClGGtvP3KOoN6fGzLlT//jCsfFMl66C9rsYgWPb4Gc2MIJXVDtLmhlxYyHVDom
-         LtVYKsWNLUnCZ3yhw1nH/NzhUFDjk+arbWJ2xGwlYiug7CznrvCAPGRPGwEDHt/j/Q
-         0pb2BWHkcJHw9B4ZYqdCX3fMsSljpBIDu75tWOFA=
-Date:   Wed, 11 Dec 2019 11:14:14 +0800
+        b=Aoe/Pi0EhdH/Wd6om7KZ13rv4vRlkKEO4OPEDvYo3wsTTbbbaOR0q/M7A1UeQXAak
+         doHbNeuvVNZJ/y8l7yGpGQNUgYT9CjUXSSN2+ZrH/LrwOW1DwPzQUGdUNepHNg/Duk
+         rJTQiSoLw84yO5iwLm95dcyd77t6uCDkzcj5xsTs=
+Date:   Wed, 11 Dec 2019 11:18:03 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Ashish Kumar <Ashish.Kumar@nxp.com>
-Cc:     devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch v2 0/5] Add dts support for various NXP boards
-Message-ID: <20191211031413.GG15858@dragon>
-References: <1575457098-18368-1-git-send-email-Ashish.Kumar@nxp.com>
+To:     Ioana Ciornei <ioana.ciornei@nxp.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] arm64: dts: lx2160a: add EMDIO1 and phy nodes
+Message-ID: <20191211031802.GH15858@dragon>
+References: <20191204165828.29893-1-ioana.ciornei@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575457098-18368-1-git-send-email-Ashish.Kumar@nxp.com>
+In-Reply-To: <20191204165828.29893-1-ioana.ciornei@nxp.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 04:28:13PM +0530, Ashish Kumar wrote:
-> This patch series add dts support for various boards like 1028ardb,
-> 1028aqds, ls1046afrwy, ls1046ardb and ls1088ardb.
-> QSPI dts nodes are sorted alphabeticaly and dtsi nodes are sorted
-> addresswise.
+On Wed, Dec 04, 2019 at 06:58:26PM +0200, Ioana Ciornei wrote:
+> This patch set adds the External MDIO1 node and the two
+> RGMII PHYs connected to it.
 > 
-> Patch 1 adds support for ls1028ardb and ls1028aqds.
+> Changes in v2:
+>  - added a newline between nodes in 2/2
+>  - moved the WRIOP node (sorted by unit address) in 1/2
 > 
-> Patch 2 adds support for ls1046afrwy.
-> 
-> Patch 3 adds support for ls1046ardb.
-> 
-> Patch 4 adds support for ls2080a.
-> 
-> Patch 5 adds support for ls1088ardb and ls1088aqds.
-> 
-> Ashish Kumar (4):
->   arm64: dts: ls1028a: Add FlexSPI support
->   arm64: dts: ls1046a: Update QSPI node properties of ls1046ardb
->   arm64: dts: ls208x: Remove non-compatible driver device from qspi node
->   arm64: dts: ls1088a: Add QSPI support for NXP LS1088
-> 
-> Kuldeep Singh (1):
->   arm64: dts: ls1046a: Add QSPI node for ls1046afrwy
+> Ioana Ciornei (2):
+>   arm64: dts: lx2160a: add emdio1 node
+>   arm64: dts: lx2160a: add RGMII phy nodes
 
-Applied all, thanks.
+Applied both, thanks.
