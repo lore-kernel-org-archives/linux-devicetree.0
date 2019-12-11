@@ -2,164 +2,336 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 735F9C2D0C7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 09:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23D9C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 09:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4BD205C9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 09:38:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XkzWPC34"
+	by mail.kernel.org (Postfix) with ESMTP id 99DC6205C9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 09:39:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbfLKJiU (ORCPT
+        id S1728731AbfLKJjR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:38:20 -0500
-Received: from mail-eopbgr50061.outbound.protection.outlook.com ([40.107.5.61]:13786
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727851AbfLKJiT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:38:19 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IUYYgIY+0his54nLgiEHrzAJ+2iZYMwrsUNgCysO/R8i8/8/3iJK1eAj+ofeXB26ogK4sSc1TfrZ1A3lxXWX3rNTxIcF4ovBDGCVF+3s+auHO762JAvSScZ5Qz7OeyDaNOCYjL5dkxRB882jXVIDuZpy2BGzMQMYVBpp9MGuZOZQ0ZKRtOVztE9hh5VT4BU0ORY98/eCQudyF98MAWOz8eHnVw+0umgZ2wcwKB8W1H1VH+lZHamyxZiKRPge3LM5wED9v7f/hHLP9+SBtDA/zyDQTv1AgLGvPcuvnrXuhU88vXErbE7vs6qrhqxixwLfKhvPqBBNO6MwcIQmcu5pBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zJnAbYY3NBzgSR37R6v8xD9PjuwgO9sReQvcAnaZBRI=;
- b=FmFc/06iYtAJ9Pz4gWO8d18tCFn1qMSQqNHnSohcmoKxqU85cBLM0OFMdAOjxPd5q+8ltYwR7TtwgBnyMSw36GdVwrXeMdqJZyREAijOQYYMVt9yzwvnHBE9Ff8EMvCrVSut9LDL9v2GMHJPR35b2SKzKo8LRaFV4H4Qz98u1VLNTOtZjg7eVFBRUkczIF+fJ5fECbUPPtIPZdwi2Wo+rJg167yL1NgNitFw+ey+b/sQt+0b3OExgzTGzZTKAmxVbHi4phZKeFFCbVy7WSn+2l2+HdJXRvEcHBwH/4asYmQSw1JqhVotSTkqCzhseak2UmLb5Rh1Z0XWnNnZdE7juA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zJnAbYY3NBzgSR37R6v8xD9PjuwgO9sReQvcAnaZBRI=;
- b=XkzWPC34+O/xfWADKcFiDjNBBPOqAYaYh/8kNa7Ghvur/VjQZDt8zpTpy4wdKIEsnPMsECX2CEDOInRg/t8poeQb5Y/ny35ur0I6ZunJgh94k6/ge11PEfIOaakERJ1mxcMnBUlKWCQYa4vbz9PujO/iTYHUCeQ6fJxgRVRQ9oQ=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB5311.eurprd04.prod.outlook.com (20.177.52.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.15; Wed, 11 Dec 2019 09:38:13 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::2c49:44c8:2c02:68b1]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::2c49:44c8:2c02:68b1%5]) with mapi id 15.20.2538.016; Wed, 11 Dec 2019
- 09:38:13 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/3] ARM: dts: imx6ul-14x14-evk: Add sensors' GPIO
- regulator
-Thread-Topic: [PATCH 1/3] ARM: dts: imx6ul-14x14-evk: Add sensors' GPIO
- regulator
-Thread-Index: AQHVikhFuKo1SLIff0mMLrsG10nb5A==
-Date:   Wed, 11 Dec 2019 09:38:13 +0000
-Message-ID: <VI1PR04MB7023B082934A79C181DAE7DDEE5A0@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <1571906920-29966-1-git-send-email-Anson.Huang@nxp.com>
- <VI1PR04MB7023CD288FCC57806F067FD9EE5B0@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <DB3PR0402MB3916D3DB4C0CE0017FC2D4B1F55A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20191211072721.ze6yn2felxyae5eb@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [92.121.36.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3d8c2ccb-f361-4767-cdd7-08d77e1dd7fa
-x-ms-traffictypediagnostic: VI1PR04MB5311:|VI1PR04MB5311:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB5311395B84B83573861883B7EE5A0@VI1PR04MB5311.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 024847EE92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(366004)(136003)(346002)(396003)(199004)(189003)(8676002)(110136005)(64756008)(66476007)(54906003)(66446008)(4326008)(4001150100001)(66946007)(6636002)(91956017)(76116006)(186003)(478600001)(71200400001)(316002)(66556008)(33656002)(7416002)(2906002)(44832011)(52536014)(6506007)(53546011)(26005)(86362001)(8936002)(55016002)(81156014)(5660300002)(81166006)(9686003)(7696005)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5311;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wWMqsRJI3zam74mh+vhm26F8dGvA6zMNo0EB/JBpd9Bw3tOMTZX6me14+pvokG9Iw602VUTYBZP00nLf5PfmXWNRJYbh0p8kV8IOpua2LFA5KU454WnLRAh1lBw8Li97TD8TjOeWAsYrUc6o8Aqhihf8QgUKhE/lvKodqilgXXbOHhpTki9xki7cPASnhPwPJLOzsIuepe17narlV3P5qC38DXGGXEPOKUd8kKNda9I0tnW9UhNL08vd6k8R1tmI6ldBuxuAIcOCxjIyzVlELn9YnFnuvIC9We0v5VIpXpLW1kPrSlHKJJxHpn4SADLvV9Nj+pSVtvFuHAFGhSs0enOoazkYrg+vAwNshxZuIlgwRONUZAEV1rF62MRZAukQk2H6rR7CQ1rOdmlkkmGQHXFkaKQxevxvIQ7Ji6BAHtMfBrQ4ol6ysWn1aDdRKeYMhauoLX32CXi6hQsFCvz8nu9+7CWJXfrF8UaUxZ8Qa0DzZDUiZad02fHuENWxbu6W
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 11 Dec 2019 04:39:17 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44922 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727318AbfLKJjQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 04:39:16 -0500
+Received: by mail-lj1-f193.google.com with SMTP id c19so23182276lji.11;
+        Wed, 11 Dec 2019 01:39:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z0LVkx6Lz7YHGD9HdOs7ard3b56r5aoIxN04Xkg/KKU=;
+        b=V5xOpCugj+DqN8gl4HlSYU9vi4MHbQa+ycE+pwJdcl/17VHftrvD7GI/osZ5iwwJZ3
+         MCPSmtKpK1J3Rh52G3fp5ZXjicCutniAqGfu1nNOhlBdpbG5T+hZqnAB4/sBZx3Uzq6p
+         FpBEncdnAZwm3LAGdDMZO6kRpmdkEYX5VvMsaDy+QrDpBDj7pQKScw4LZhAtQEmO5fWp
+         msskmmA6kDoTUUpE3I7GBB1f/VGp4od+jWnEHHjaIQE49LKvPPlXYO6XVMTDAbQwO5fw
+         q0HHRYRd1w6CXlz6UU7eesYtbRD/c1aYwl5YAZWUxE8rnxPHbEVMHYAxTVvYnJrKXe+k
+         XJ5A==
+X-Gm-Message-State: APjAAAVwVqbkzGfkE7an/tA+gPGhJJ9HZArh/n8Sd4o4Sj+4LIxMw5Rd
+        e9+aSBlAC3AfyW0ultk/WFk=
+X-Google-Smtp-Source: APXvYqwOUGc7Vz4cT9efOkD/HRbfrYFI+6QKqqWriurKoDsjcySNfvBeangIVYNUdVtVdSgA41yjOw==
+X-Received: by 2002:a05:651c:2011:: with SMTP id s17mr1310874ljo.43.1576057152820;
+        Wed, 11 Dec 2019 01:39:12 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id l7sm800792lfc.80.2019.12.11.01.39.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 01:39:12 -0800 (PST)
+Date:   Wed, 11 Dec 2019 11:39:00 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: [PATCH v6 04/15] mfd: rohm PMICs - use platform_device_id to match
+ MFD sub-devices
+Message-ID: <e5998dff02b4e155059f38614191daf32a778a0a.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d8c2ccb-f361-4767-cdd7-08d77e1dd7fa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 09:38:13.7241
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ux64KqaQ+ej0538RNyQz1pQivll94wLsdzA3NIyvK75WXP4+Ho3Q9dXcbfXrnj3QhvFA4o0TzSuRXJ3XUWA0sA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5311
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-12-11 9:27 AM, Marco Felsch wrote:=0A=
-> On 19-12-11 01:06, Anson Huang wrote:=0A=
->>> Subject: Re: [PATCH 1/3] ARM: dts: imx6ul-14x14-evk: Add sensors' GPIO=
-=0A=
->>> regulator=0A=
->>>=0A=
->>> On 24.10.2019 11:51, Anson Huang wrote:=0A=
->>>> On i.MX6UL 14x14 EVK board, sensors' power are controlled by=0A=
->>>> GPIO5_IO02, add GPIO regulator for sensors to manage their power.=0A=
->>>>=0A=
->>>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>=0A=
->>>=0A=
->>> For me this breaks network boot on imx6ul evk, relevant log snippet is =
-this:=0A=
->>>=0A=
->>>       fec 20b4000.ethernet eth0: Unable to connect to phy=0A=
->>>       IP-Config: Failed to open eth0=0A=
->>>=0A=
->>> Looking at schematics (SPF-28616_C2.pdf) I see that SNVS_TAMPER2 pin is=
-=0A=
->>> connected to PERI_PWREN which controls VPERI_3V3 which is used across=
-=0A=
->>> the board:=0A=
->>>    * Sensors (VSENSOR_3V3)=0A=
->>>    * Ethernet (VENET_3V3)=0A=
->>>    * Bluetooth=0A=
->>>    * CAN=0A=
->>>    * Arduino header=0A=
->>>    * Camera=0A=
->>>=0A=
->>> Maybe there are board revision differences? As far as I can tell this r=
-egulator=0A=
->>> is not specific to sensors so it should be always on.=0A=
->>=0A=
->> You are correct, this regulator controls many other peripherals, I shoul=
-d make it always ON for now=0A=
->> to make sure NOT break other peripheral, and after all other peripherals=
- controlled=0A=
->> by this regulator have added this regulator management, then the always =
-ON can be=0A=
->> removed.=0A=
-> =0A=
-> IMHO marking the regulator as always on shouldn't be the fix. Is it to=0A=
-> much work to add all required regulators? At least please add a comment=
-=0A=
-> which describes the need of the always-on property.=0A=
-=0A=
-I don't have the hardware to test all affected peripherals on hand and =0A=
-no familiarity with stuff like CAN.=0A=
-=0A=
-Renaming reg_sensor and adding a comment makes sense.=0A=
-=0A=
---=0A=
-Regards,=0A=
-Leonard=0A=
+Thanks to Stephen Boyd I today learned we can use platform_device_id
+to do device and module matching for MFD sub-devices!
+
+Do device matching using the platform_device_id instead of using
+explicit module_aliases to load modules and custom parent-data field
+to do module loading and sub-device matching.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+
+No changes since v5
+
+ drivers/clk/clk-bd718x7.c             | 12 ++++++++-
+ drivers/mfd/rohm-bd70528.c            |  3 +--
+ drivers/mfd/rohm-bd718x7.c            | 39 ++++++++++++++++++++++-----
+ drivers/regulator/bd718x7-regulator.c | 17 +++++++++---
+ include/linux/mfd/rohm-generic.h      |  3 +--
+ 5 files changed, 58 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
+index 00926c587390..33699ee1bdf3 100644
+--- a/drivers/clk/clk-bd718x7.c
++++ b/drivers/clk/clk-bd718x7.c
+@@ -74,6 +74,7 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 		.name = "bd718xx-32k-out",
+ 		.ops = &bd71837_clk_ops,
+ 	};
++	enum rohm_chip_type chip = platform_get_device_id(pdev)->driver_data;
+ 
+ 	c = devm_kzalloc(&pdev->dev, sizeof(*c), GFP_KERNEL);
+ 	if (!c)
+@@ -87,7 +88,7 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "No parent clk found\n");
+ 		return -EINVAL;
+ 	}
+-	switch (mfd->chip_type) {
++	switch (chip) {
+ 	case ROHM_CHIP_TYPE_BD71837:
+ 	case ROHM_CHIP_TYPE_BD71847:
+ 		c->reg = BD718XX_REG_OUT32K;
+@@ -121,11 +122,20 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 	return rval;
+ }
+ 
++static const struct platform_device_id bd718x7_clk_id[] = {
++	{ "bd71837-clk", ROHM_CHIP_TYPE_BD71837 },
++	{ "bd71847-clk", ROHM_CHIP_TYPE_BD71847 },
++	{ "bd70528-clk", ROHM_CHIP_TYPE_BD70528 },
++	{ },
++};
++MODULE_DEVICE_TABLE(platform, bd718x7_clk_id);
++
+ static struct platform_driver bd71837_clk = {
+ 	.driver = {
+ 		.name = "bd718xx-clk",
+ 	},
+ 	.probe = bd71837_clk_probe,
++	.id_table = bd718x7_clk_id,
+ };
+ 
+ module_platform_driver(bd71837_clk);
+diff --git a/drivers/mfd/rohm-bd70528.c b/drivers/mfd/rohm-bd70528.c
+index ef6786fd3b00..5c44d3b77b3e 100644
+--- a/drivers/mfd/rohm-bd70528.c
++++ b/drivers/mfd/rohm-bd70528.c
+@@ -48,7 +48,7 @@ static struct mfd_cell bd70528_mfd_cells[] = {
+ 	 * We use BD71837 driver to drive the clock block. Only differences to
+ 	 * BD70528 clock gate are the register address and mask.
+ 	 */
+-	{ .name = "bd718xx-clk", },
++	{ .name = "bd70528-clk", },
+ 	{ .name = "bd70528-wdt", },
+ 	{
+ 		.name = "bd70528-power",
+@@ -236,7 +236,6 @@ static int bd70528_i2c_probe(struct i2c_client *i2c,
+ 
+ 	dev_set_drvdata(&i2c->dev, &bd70528->chip);
+ 
+-	bd70528->chip.chip_type = ROHM_CHIP_TYPE_BD70528;
+ 	bd70528->chip.regmap = devm_regmap_init_i2c(i2c, &bd70528_regmap);
+ 	if (IS_ERR(bd70528->chip.regmap)) {
+ 		dev_err(&i2c->dev, "Failed to initialize Regmap\n");
+diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
+index 85e7f5133365..bb86ec829079 100644
+--- a/drivers/mfd/rohm-bd718x7.c
++++ b/drivers/mfd/rohm-bd718x7.c
+@@ -30,14 +30,24 @@ static struct gpio_keys_platform_data bd718xx_powerkey_data = {
+ 	.name = "bd718xx-pwrkey",
+ };
+ 
+-static struct mfd_cell bd718xx_mfd_cells[] = {
++static struct mfd_cell bd71837_mfd_cells[] = {
+ 	{
+ 		.name = "gpio-keys",
+ 		.platform_data = &bd718xx_powerkey_data,
+ 		.pdata_size = sizeof(bd718xx_powerkey_data),
+ 	},
+-	{ .name = "bd718xx-clk", },
+-	{ .name = "bd718xx-pmic", },
++	{ .name = "bd71837-clk", },
++	{ .name = "bd71837-pmic", },
++};
++
++static struct mfd_cell bd71847_mfd_cells[] = {
++	{
++		.name = "gpio-keys",
++		.platform_data = &bd718xx_powerkey_data,
++		.pdata_size = sizeof(bd718xx_powerkey_data),
++	},
++	{ .name = "bd71847-clk", },
++	{ .name = "bd71847-pmic", },
+ };
+ 
+ static const struct regmap_irq bd718xx_irqs[] = {
+@@ -124,6 +134,9 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
+ {
+ 	struct bd718xx *bd718xx;
+ 	int ret;
++	unsigned int chip_type;
++	struct mfd_cell *mfd;
++	int cells;
+ 
+ 	if (!i2c->irq) {
+ 		dev_err(&i2c->dev, "No IRQ configured\n");
+@@ -136,8 +149,21 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
+ 		return -ENOMEM;
+ 
+ 	bd718xx->chip_irq = i2c->irq;
+-	bd718xx->chip.chip_type = (unsigned int)(uintptr_t)
+-				of_device_get_match_data(&i2c->dev);
++	chip_type = (unsigned int)(uintptr_t)
++		    of_device_get_match_data(&i2c->dev);
++	switch (chip_type) {
++	case ROHM_CHIP_TYPE_BD71837:
++		mfd = bd71837_mfd_cells;
++		cells = ARRAY_SIZE(bd71837_mfd_cells);
++		break;
++	case ROHM_CHIP_TYPE_BD71847:
++		mfd = bd71847_mfd_cells;
++		cells = ARRAY_SIZE(bd71847_mfd_cells);
++		break;
++	default:
++		dev_err(&i2c->dev, "Unknown device type");
++		return -EINVAL;
++	}
+ 	bd718xx->chip.dev = &i2c->dev;
+ 	dev_set_drvdata(&i2c->dev, bd718xx);
+ 
+@@ -170,8 +196,7 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
+ 	button.irq = ret;
+ 
+ 	ret = devm_mfd_add_devices(bd718xx->chip.dev, PLATFORM_DEVID_AUTO,
+-				   bd718xx_mfd_cells,
+-				   ARRAY_SIZE(bd718xx_mfd_cells), NULL, 0,
++				   mfd, cells, NULL, 0,
+ 				   regmap_irq_get_domain(bd718xx->irq_data));
+ 	if (ret)
+ 		dev_err(&i2c->dev, "Failed to create subdevices\n");
+diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
+index 13a43eee2e46..6beaf867d9cb 100644
+--- a/drivers/regulator/bd718x7-regulator.c
++++ b/drivers/regulator/bd718x7-regulator.c
+@@ -1164,6 +1164,7 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 
+ 	int i, j, err;
+ 	bool use_snvs;
++	enum rohm_chip_type chip = platform_get_device_id(pdev)->driver_data;
+ 
+ 	mfd = dev_get_drvdata(pdev->dev.parent);
+ 	if (!mfd) {
+@@ -1172,8 +1173,8 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 		goto err;
+ 	}
+ 
+-	if (mfd->chip.chip_type >= ROHM_CHIP_TYPE_AMOUNT ||
+-	    !pmic_regulators[mfd->chip.chip_type].r_datas) {
++	if (chip >= ROHM_CHIP_TYPE_AMOUNT || chip < 0 ||
++	    !pmic_regulators[chip].r_datas) {
+ 		dev_err(&pdev->dev, "Unsupported chip type\n");
+ 		err = -EINVAL;
+ 		goto err;
+@@ -1215,13 +1216,13 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	for (i = 0; i < pmic_regulators[mfd->chip.chip_type].r_amount; i++) {
++	for (i = 0; i < pmic_regulators[chip].r_amount; i++) {
+ 
+ 		const struct regulator_desc *desc;
+ 		struct regulator_dev *rdev;
+ 		const struct bd718xx_regulator_data *r;
+ 
+-		r = &pmic_regulators[mfd->chip.chip_type].r_datas[i];
++		r = &pmic_regulators[chip].r_datas[i];
+ 		desc = &r->desc;
+ 
+ 		config.dev = pdev->dev.parent;
+@@ -1281,11 +1282,19 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 	return err;
+ }
+ 
++static const struct platform_device_id bd718x7_pmic_id[] = {
++	{ "bd71837-pmic", ROHM_CHIP_TYPE_BD71837 },
++	{ "bd71847-pmic", ROHM_CHIP_TYPE_BD71847 },
++	{ },
++};
++MODULE_DEVICE_TABLE(platform, bd718x7_pmic_id);
++
+ static struct platform_driver bd718xx_regulator = {
+ 	.driver = {
+ 		.name = "bd718xx-pmic",
+ 	},
+ 	.probe = bd718xx_probe,
++	.id_table = bd718x7_pmic_id,
+ };
+ 
+ module_platform_driver(bd718xx_regulator);
+diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
+index bff15ac26f2c..922f88008232 100644
+--- a/include/linux/mfd/rohm-generic.h
++++ b/include/linux/mfd/rohm-generic.h
+@@ -4,7 +4,7 @@
+ #ifndef __LINUX_MFD_ROHM_H__
+ #define __LINUX_MFD_ROHM_H__
+ 
+-enum {
++enum rohm_chip_type {
+ 	ROHM_CHIP_TYPE_BD71837 = 0,
+ 	ROHM_CHIP_TYPE_BD71847,
+ 	ROHM_CHIP_TYPE_BD70528,
+@@ -12,7 +12,6 @@ enum {
+ };
+ 
+ struct rohm_regmap_dev {
+-	unsigned int chip_type;
+ 	struct device *dev;
+ 	struct regmap *regmap;
+ };
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
