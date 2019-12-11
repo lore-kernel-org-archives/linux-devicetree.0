@@ -2,125 +2,94 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FEDC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 17:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F25BC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 17:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF892073D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 17:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A7E20637
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 17:38:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="V4+/p/si"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="DGwWSWUp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbfLKRMO (ORCPT
+        id S1730107AbfLKRiF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:12:14 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:59149 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730612AbfLKRMO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 12:12:14 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 3B76F23E21;
-        Wed, 11 Dec 2019 18:12:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1576084331;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ohz81SjZe6gFLPc5Ph1X3XNnqxjcs7aG++kYioy2jnU=;
-        b=V4+/p/sisQZV37Uda6bmGtr3rqwlyMYtZw0lEk9rD8fQ7L9LHkRfmp4mbhjOFXgARBr8yu
-        QBA+eteWJMakBFePbrZId5JlCDs1ulzRHISzb68qdMm/9XyEo+Kfw+OQquA30AkGGCZmsF
-        fRXeWQQVdqS9YOV5WSH4W/sUerWjmBo=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v3] arm64: dts: ls1028a: fix reboot node
-Date:   Wed, 11 Dec 2019 18:11:45 +0100
-Message-Id: <20191211171145.14736-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Wed, 11 Dec 2019 12:38:05 -0500
+Received: from mailgw01.mediatek.com ([216.200.240.184]:48911 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729912AbfLKRiE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 12:38:04 -0500
+X-UUID: d81845a974bf4976925fb686cac3625e-20191211
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=1G2ecBdsGiCmLvqUgkfBXFA90ZxkA0MFjUV6DWvTWiU=;
+        b=DGwWSWUpOHud9U+BecPSZboTGtDN5+pl0bibZT0pvigmxn/OxFgM2hdKQfzgIkbgTdICIdqDJodzNWyLbb3MUsUQJzA1hUZANcIGQIyoAkkYPoxuQVyRuVeRASpaIEHiICrbSoDTpFRARrOSbLzqielxESeWNnEEA9JkI2/ij5M=;
+X-UUID: d81845a974bf4976925fb686cac3625e-20191211
+Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
+        (envelope-from <landen.chao@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 217714657; Wed, 11 Dec 2019 09:38:01 -0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS62N1.mediatek.inc (172.29.193.41) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 11 Dec 2019 09:36:52 -0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Dec 2019 01:35:41 +0800
+Message-ID: <1576085745.23763.53.camel@mtksdccf07>
+Subject: Re: [PATCH net-next 4/6] net: dsa: mt7530: Add the support of
+ MT7531 switch
+From:   Landen Chao <landen.chao@mediatek.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "vivien.didelot@savoirfairelinux.com" 
+        <vivien.didelot@savoirfairelinux.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        "opensource@vdorst.com" <opensource@vdorst.com>,
+        "frank-w@public-files.de" <frank-w@public-files.de>
+Date:   Thu, 12 Dec 2019 01:35:45 +0800
+In-Reply-To: <20191210163557.GC27714@lunn.ch>
+References: <cover.1575914275.git.landen.chao@mediatek.com>
+         <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
+         <20191210163557.GC27714@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 3B76F23E21
-X-Spamd-Result: default: False [6.40 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         MID_CONTAINS_FROM(1.00)[];
-         NEURAL_HAM(-0.00)[-0.689];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The reboot register isn't located inside the DCFG controller, but in its
-own RST controller. Fix it.
-
-Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
-Signed-off-by: Michael Walle <michael@walle.cc>
----
-
-changes since v2:
- - rebase to shawnguo/linux/for-next
-
-changes since v1:
- - add fixes tag
- - remove "ls1028a-rst" compatible string, because there is no actual
-   driver for it. It just use the syscon driver.
-
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 261663f4a2db..301a76e441fc 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -88,7 +88,7 @@
- 
- 	reboot {
- 		compatible ="syscon-reboot";
--		regmap = <&dcfg>;
-+		regmap = <&rst>;
- 		offset = <0xb0>;
- 		mask = <0x02>;
- 	};
-@@ -178,6 +178,12 @@
- 			big-endian;
- 		};
- 
-+		rst: syscon@1e60000 {
-+			compatible = "syscon";
-+			reg = <0x0 0x1e60000 0x0 0x10000>;
-+			little-endian;
-+		};
-+
- 		scfg: syscon@1fc0000 {
- 			compatible = "fsl,ls1028a-scfg", "syscon";
- 			reg = <0x0 0x1fc0000 0x0 0x10000>;
--- 
-2.20.1
+SGkgQW5kcmV3LA0KDQpPbiBXZWQsIDIwMTktMTItMTEgYXQgMDA6MzUgKzA4MDAsIEFuZHJldyBM
+dW5uIHdyb3RlOg0KPiBPbiBUdWUsIERlYyAxMCwgMjAxOSBhdCAwNDoxNDo0MFBNICswODAwLCBM
+YW5kZW4gQ2hhbyB3cm90ZToNCj4gPiBBZGQgbmV3IHN1cHBvcnQgZm9yIE1UNzUzMToNCj4gPiAN
+Cj4gPiBNVDc1MzEgaXMgdGhlIG5leHQgZ2VuZXJhdGlvbiBvZiBNVDc1MzAuIEl0IGlzIGFsc28g
+YSA3LXBvcnRzIHN3aXRjaCB3aXRoDQo+ID4gNSBnaWdhIGVtYmVkZGVkIHBoeXMsIDIgY3B1IHBv
+cnRzLCBhbmQgdGhlIHNhbWUgTUFDIGxvZ2ljIG9mIE1UNzUzMC4gQ3B1DQo+ID4gcG9ydCA2IG9u
+bHkgc3VwcG9ydHMgSFNHTUlJIGludGVyZmFjZS4gQ3B1IHBvcnQgNSBzdXBwb3J0cyBlaXRoZXIg
+UkdNSUkNCj4gPiBvciBIU0dNSUkgaW4gZGlmZmVyZW50IEhXIHNrdS4NCj4gDQo+IEhpIExhbmRl
+bg0KPiANCj4gTG9va2luZyBhdCB0aGUgY29kZSwgeW91IHNlZW0gdG8gdHJlYXQgSFNHTUlJIGFz
+IDI1MDBCYXNlLVguIElzIHRoaXMNCj4gY29ycmVjdD8gT3IgaXMgaXQgU0dNSUkgb3ZlciBjbG9j
+a2VkIHRvIDIuNUdicHM/DQpBZnRlciByZS1yZWFkIE1UNzYyMiB0cmVhZFswXSBhZ2FpbiwgYW5k
+IGFjY29yZGluZyB0byB0aGUgY29uZmlndXJhYmxlDQpwYXJ0IG9mIHRoaXMgSVAsIGl0IGlzIGNs
+b3NlciB0byAyNTAwQmFzZS1YIGRlZmluaXRpb246DQpgYFBIWV9JTlRFUkZBQ0VfTU9ERV8yNTAw
+QkFTRVhgYA0KICAgIFRoaXMgZGVmaW5lcyBhIHZhcmlhbnQgb2YgMTAwMEJBU0UtWCB3aGljaCBp
+cyBjbG9ja2VkIDIuNSB0aW1lcw0KZmFzdGVyLCB0aGFuIHRoZSA4MDIuMyBzdGFuZGFyZCBnaXZp
+bmcgYSBmaXhlZCBiaXQgcmF0ZSBvZiAzLjEyNUdiYXVkLg0KDQpJZiBIU0dNSUkgbWVhbnMgU0dN
+SUkgb3ZlciBjbG9ja2VkIHRvIDIuNUdicHMsIHRoZSBpbnRyb2R1Y3Rpb24gbmVlZHMgdG8NCmJl
+IGNoYW5nZWQgdG8gInN1cHBvcnQgU0dNSUkvMTAwMEJhc2UtWC8yNTAwQmFzZS14Ii4NCg0KWzBd
+Og0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTA1NzUyNy8NCj4gDQo+IAkg
+QW5kcmV3DQoNClJlZ2FyZHMgTGFuZGVuDQo=
 
