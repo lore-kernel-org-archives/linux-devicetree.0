@@ -2,72 +2,74 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5D7C2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 09:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6E1C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 09:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB4221556
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 09:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576056070;
-	bh=gzDA3JJnu708N4xoucs8RAE4lUx+pZwj+RYMbSyB3LU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mNl6qjk8SqfLtm6h9i1s1dHuX0k/YhbHpSCTSQIMqJ8DMEIG4hsWyla8UdKgSCYB4
-	 ni4OWADukrp8jgcmmSYmeAUToNwPZEdDyCVKdGcXrhfs2LMc4ZE/c5mAeUXWyqHwGK
-	 7PKAaiogDFi/5x7d0u5jKClIg/sgRGYyYu14vOzw=
+	by mail.kernel.org (Postfix) with ESMTP id 45B57214D8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 09:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbfLKJVF (ORCPT
+        id S1728511AbfLKJ2C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:21:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33862 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 04:28:02 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:53326 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726983AbfLKJVF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:21:05 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A737214AF;
-        Wed, 11 Dec 2019 09:21:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576056064;
-        bh=gzDA3JJnu708N4xoucs8RAE4lUx+pZwj+RYMbSyB3LU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JnhSW1JjOn7hiWYurytdcwcMptqWolC9yyigMO0/FpxLCa5iiqrgR63k5Q2YHyQWG
-         GcHfSJXjhE2NURShz8DRmpToqMSOurOrLthtFKiaBuJV1mzu0bqb7I4NPZHiyIa6wP
-         i1gxUGE2PFeSIsKe4xTvrGaqsYRuTNSKJ8303yEU=
-Date:   Wed, 11 Dec 2019 17:20:53 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        id S1727493AbfLKJ2C (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Dec 2019 04:28:02 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1ieyHc-00086w-WE; Wed, 11 Dec 2019 17:27:49 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1ieyHW-0003GG-03; Wed, 11 Dec 2019 17:27:42 +0800
+Date:   Wed, 11 Dec 2019 17:27:41 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Anand Moon <linux.amoon@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] arm64: dts: ls1028a: put SAIs into async mode
-Message-ID: <20191211092052.GX15858@dragon>
-References: <20191129210937.26808-1-michael@walle.cc>
+        Mark Rutland <mark.rutland@arm.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+Subject: Re: [PATCHv1 0/3] Enable crypto module on Amlogic GXBB SoC platform
+Message-ID: <20191211092741.totwucrkversjbav@gondor.apana.org.au>
+References: <20191211084112.971-1-linux.amoon@gmail.com>
+ <a4610efc-844a-2d43-5db1-cf813102e701@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191129210937.26808-1-michael@walle.cc>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <a4610efc-844a-2d43-5db1-cf813102e701@baylibre.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 10:09:37PM +0100, Michael Walle wrote:
-> The LS1028A SoC has only unidirectional SAIs. Therefore, it doesn't make
-> sense to have the RX and TX part synchronous. Even worse, the RX part
-> wont work out of the box because by default it is configured as
-> synchronous to the TX part. And as said before, the pinmux of the SoC
-> can only be configured to route either the RX or the TX signals to the
-> SAI but never both at the same time. Thus configure the asynchronous
-> mode by default.
+On Wed, Dec 11, 2019 at 09:53:56AM +0100, Neil Armstrong wrote:
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+> On 11/12/2019 09:41, Anand Moon wrote:
+> > [sudo] password for alarm:
+> > [  903.867059] tcrypt:
+> > [  903.867059] testing speed of async ecb(aes) (ecb(aes-arm64)) encryption
+> 
+> Wow, I'm surprised it works on GXBB, Amlogic completely removed HW crypto for GXBB in all their
+> vendor BSPs, in Linux, U-Boot and ATF chain.
+> 
+> Could you run more tests to be sure it's really functional ?
 
-Applied, thanks.
+Well as you can see from the tcrypt output, it's actually using
+aes-arm64 which is certainly not the amlogic driver.  Presumably
+the amlogic driver failed to load/register.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
