@@ -2,166 +2,160 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F70C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 19:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34169C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 19:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B7C2173E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 19:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B9A12173E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 19:25:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=newoldbits-com.20150623.gappssmtp.com header.i=@newoldbits-com.20150623.gappssmtp.com header.b="d0Wtr6CE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ov2+zkYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfLKTSH (ORCPT
+        id S1726828AbfLKTZi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 14:18:07 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34230 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfLKTSH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 14:18:07 -0500
-Received: by mail-lj1-f194.google.com with SMTP id m6so25373285ljc.1
-        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 11:18:05 -0800 (PST)
+        Wed, 11 Dec 2019 14:25:38 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46293 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbfLKTZi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 14:25:38 -0500
+Received: by mail-il1-f195.google.com with SMTP id t17so20424224ilm.13
+        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 11:25:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=newoldbits-com.20150623.gappssmtp.com; s=20150623;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=PUVn6x+YmbLcVEGS+44vGZB1xImdawS2bJb4bjzB/Lo=;
-        b=d0Wtr6CEP2m8c26QMdPD3e7CCan6DC6h8yp6G19dle2Emr5AL5IkVH4cHqqvuIwnPW
-         ySJGJv5GWqK05mtTfWD48L9/dzwfodaAn1vSCIjmtbR6mFi94khuxp57veQwz8xkluzO
-         y+9TAXWCxvLKnNSqmcD09j4Xv323mVOZMVetUZk6aYJbhKbH0KlE7tsFBz6Il9vHLBa4
-         k6VJpDdkx1UCewkmahPD1D7qjROoTV0s+NYcaT9T20Ia+NnWk9/hPSCBDxQ20ilV7uXX
-         2UAkmPt5HUjghpLdj74kYCkDigPeCmFOt5f6WvqTFiu1R46O4hacqFHISK3EntGNOViI
-         gDUw==
+        bh=AuPspogaaJ+YoXMUXjj634J3GCNOXTkD4GxSk/Fu5dA=;
+        b=Ov2+zkYxARX/4G2CFUTDrTcWVYed0ALV7FAdS21qi5jU0vfvH/ZWc6qkFyMVL/CgBS
+         +ER5AJeTdE2I8ujQ4UsDX4voFpXv0+pzIzsxksN+QOO5l1nU9CKKyJSKVKsZifYCWudi
+         aNB4asF6dcNFFMM2FGpYupn60GCY0GLjGLUsA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PUVn6x+YmbLcVEGS+44vGZB1xImdawS2bJb4bjzB/Lo=;
-        b=G2jOYQZ6mScvjHjnp+gLiwdzjryccfTaG+zeh2POpxbvefCj+GcBlHDXFX5DDDe3jd
-         GMYXtbjpfnCph+NGgxJsY4fg43IijRos45WYj8jpB434VkC4q+d2Ml81qCmwJOMAfNhz
-         oJ10ddxsImV78nvwyFBS02v68jFBnV3RZlc1T4/KLP8t2gK31UP55AuZ3GEijF5P56Yg
-         CB6kKOOC22iGtv1PAIbO2t3BzEnmh5a4PVQ71MLLLORRPayxRdeltAgCzG37joAJU1rs
-         FgOikoOg3Zu/A+rqEpGy2ZeoYVjlqKrvWf2dW1fmUvHOuP7/qNjy2R3sOfdgsnJIX1KI
-         88kw==
-X-Gm-Message-State: APjAAAXrCul6q5FRacLjBlae1nARhwoMIqTtzxDL2C6CWk7fxO6ewtQ3
-        MQxld3LfTByYmicWf4DdpnsMzK3jywQ/f5iYpBLlDQ==
-X-Google-Smtp-Source: APXvYqyjKbPaI3zT1yZniEuJJBcMQJnIP0RzCBZN0kh76f1QePOZ8LdtNvtzNT5Z+C7I7Y5gQOZshIEymKcgEVhyhJg=
-X-Received: by 2002:a2e:95c4:: with SMTP id y4mr3365973ljh.38.1576091884795;
- Wed, 11 Dec 2019 11:18:04 -0800 (PST)
+        bh=AuPspogaaJ+YoXMUXjj634J3GCNOXTkD4GxSk/Fu5dA=;
+        b=sltOlXdTMND8AYae2Zc9A6mWUN+9JyM6J7eB+fFIFOke9OY7FX/AYACuD+ZEChSB8R
+         knA626ZTrlmFw8en9833lhefs7toF13gExkRlj+o4qcD6iQhNxx1g3wVslndoY7uYOp/
+         mdeGFHqOVYzuEejHcmWGCCWYqDLRdM2EpvAh27BBdUl3lVYHEHqAjjgVdoblpEUsRmpJ
+         N1AQP2/0RSiGTPK4rP3BC2mucjhJ2Dc/p7QnsH5bQdC5e2tRUcVXEYAUg5DsXalEi7lK
+         +WnpBnq9YbJ5E8oojkUa9qdDTwonD8i0ls+Sf+ufxgWFCPp9hPM2XCVRJQ3LfRoIkKdy
+         6mqw==
+X-Gm-Message-State: APjAAAX5Iwf6JCeI5YBHzXAhrE+bTwxrOnzqfUOp22By6eirVi8FFFUT
+        JXLSrQUvP7QkhC1xwcaehvi/j4Q8vyc=
+X-Google-Smtp-Source: APXvYqwMpqBMDfRQmH3gtTuJIQF27t4zgsoMRfIDzifUQHTpKTuvMTbSmhkoFCAovX4dwEr+TiO0wg==
+X-Received: by 2002:a92:3583:: with SMTP id c3mr3203814ilf.248.1576092337153;
+        Wed, 11 Dec 2019 11:25:37 -0800 (PST)
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com. [209.85.166.181])
+        by smtp.gmail.com with ESMTPSA id l15sm719959iom.81.2019.12.11.11.25.36
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 11:25:36 -0800 (PST)
+Received: by mail-il1-f181.google.com with SMTP id n1so5927904ilm.6
+        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 11:25:36 -0800 (PST)
+X-Received: by 2002:a92:d581:: with SMTP id a1mr4302609iln.218.1576092336013;
+ Wed, 11 Dec 2019 11:25:36 -0800 (PST)
 MIME-Version: 1.0
-References: <20191210215831.6199-1-tony@atomide.com> <20191210215831.6199-2-tony@atomide.com>
-In-Reply-To: <20191210215831.6199-2-tony@atomide.com>
-From:   Jean Pihet <jean.pihet@newoldbits.com>
-Date:   Wed, 11 Dec 2019 20:17:53 +0100
-Message-ID: <CAORVsuXXtCroRbXS0wBtkDqnefxtCJMG0+t7LG5AWtWvwrObQA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: OMAP2+: Drop legacy platform data for am4 qspi
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     linux-omap@vger.kernel.org,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org
+References: <cover.1576037078.git.saiprakash.ranjan@codeaurora.org> <0101016ef3391ded-57772416-f32d-40e8-acb5-5dd1b6064f73-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016ef3391ded-57772416-f32d-40e8-acb5-5dd1b6064f73-000000@us-west-2.amazonses.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 11 Dec 2019 11:25:23 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=X3Akg07hetQOgd0P_wTVWs3QpuCNQ8O6qQ5LK2ZeWSaQ@mail.gmail.com>
+Message-ID: <CAD=FV=X3Akg07hetQOgd0P_wTVWs3QpuCNQ8O6qQ5LK2ZeWSaQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: sc7180: Add APSS watchdog node
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tony,
+Sai,
 
-On Tue, Dec 10, 2019 at 10:58 PM Tony Lindgren <tony@atomide.com> wrote:
+On Tue, Dec 10, 2019 at 8:30 PM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
 >
-> We can now probe devices with ti-sysc interconnect driver and dts
-> data. Let's drop the related platform data and custom ti,hwmods
-> dts property.
+> Add APSS (Application Processor Subsystem) watchdog
+> DT node for SC7180 SoC.
 >
-> As we're just dropping data, and the early platform data init
-> is based on the custom ti,hwmods property, we want to drop both
-> the platform data and ti,hwmods property in a single patch.
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 666e9b92c7ad..a6773ad3738b 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1038,6 +1038,12 @@
+>                         };
+>                 };
+>
+> +               watchdog@17c10000 {
+> +                       compatible = "qcom,apss-wdt-sc7180", "qcom,kpss-wdt";
 
-Tested OK on AM4376 QSPI. The correct fck is found and the hwmod
-warning is gone.
-Acked-by: Jean Pihet <jean.pihet@newoldbits.com>
+If you haven't already done it (I couldn't find it), can you please
+add this to "Documentation/devicetree/bindings/watchdog/qcom-wdt.txt"?
+ Presumably at the same time it would be good to change the format of
+that file to .yaml.
+
+
+Unrelated to sc7180, but it also feels like something is awfully
+screwy here in terms of the various Qualcomm device tree files
+referring to watchdog timers.  It feels wrong, but perhaps you can
+educate me on how it works and I'll see the light.  Specifically:
+
+1. It seems like the same node is used for two things on other Qualcomm SoCs
+
+If I grep the bindings for "qcom,kpss-timer" or "qcom,scss-timer", I
+get two hits:
+
+Documentation/devicetree/bindings/timer/qcom,msm-timer.txt
+Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+
+...and, in fact, there appear to be two drivers claiming compatibility here:
+
+drivers/clocksource/timer-qcom.c
+drivers/watchdog/qcom-wdt.c
+
+That seems super odd to me.  Is that really right?  We have two
+drivers probing against the same device tree nodes?  ...and that's OK?
+ If so, why does only one of the bindings list the SoC-specific
+bindings names?
+
+
+2. The actual nodes look really wonky.  A few examples below:
+
+2a) arch/arm/boot/dts/qcom-apq8064.dtsi:
+compatible = "qcom,kpss-timer", "qcom,kpss-wdt-apq8064", "qcom,msm-timer";
+
+...why is the SoC-specific compatible string in the middle?  The
+SoC-specific one should be first.
+
+2b) arch/arm/boot/dts/qcom-ipq4019.dtsi:
+compatible = "qcom,kpss-wdt", "qcom,kpss-wdt-ipq4019";
+
+...same question, but in this case there is no "msm-timer" at the end?
+
+2c) arch/arm64/boot/dts/qcom/qcs404.dtsi
+compatible = "qcom,kpss-wdt";
+
+...no SoC-specific string at all?
+
 
 Thanks!
-Jean
 
->
-> Cc: Jean Pihet <jean.pihet@newoldbits.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  arch/arm/boot/dts/am4372.dtsi              |  1 -
->  arch/arm/mach-omap2/omap_hwmod_43xx_data.c | 34 ----------------------
->  2 files changed, 35 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> --- a/arch/arm/boot/dts/am4372.dtsi
-> +++ b/arch/arm/boot/dts/am4372.dtsi
-> @@ -307,7 +307,6 @@ gpmc: gpmc@50000000 {
->
->                 target-module@47900000 {
->                         compatible = "ti,sysc-omap4", "ti,sysc";
-> -                       ti,hwmods = "qspi";
->                         reg = <0x47900000 0x4>,
->                               <0x47900010 0x4>;
->                         reg-names = "rev", "sysc";
-> diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-> --- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-> +++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-> @@ -315,32 +315,6 @@ static struct omap_hwmod am43xx_usb_otg_ss1_hwmod = {
->         },
->  };
->
-> -static struct omap_hwmod_class_sysconfig am43xx_qspi_sysc = {
-> -       .rev_offs       = 0,
-> -       .sysc_offs      = 0x0010,
-> -       .sysc_flags     = SYSC_HAS_SIDLEMODE,
-> -       .idlemodes      = (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
-> -                               SIDLE_SMART_WKUP),
-> -       .sysc_fields    = &omap_hwmod_sysc_type2,
-> -};
-> -
-> -static struct omap_hwmod_class am43xx_qspi_hwmod_class = {
-> -       .name   = "qspi",
-> -       .sysc   = &am43xx_qspi_sysc,
-> -};
-> -
-> -static struct omap_hwmod am43xx_qspi_hwmod = {
-> -       .name           = "qspi",
-> -       .class          = &am43xx_qspi_hwmod_class,
-> -       .clkdm_name     = "l3s_clkdm",
-> -       .main_clk       = "l3s_gclk",
-> -       .prcm = {
-> -               .omap4 = {
-> -                       .clkctrl_offs = AM43XX_CM_PER_QSPI_CLKCTRL_OFFSET,
-> -                       .modulemode   = MODULEMODE_SWCTRL,
-> -               },
-> -       },
-> -};
->
->  /*
->   * 'adc/tsc' class
-> @@ -681,13 +655,6 @@ static struct omap_hwmod_ocp_if am43xx_l3_s__usbotgss1 = {
->         .user           = OCP_USER_MPU | OCP_USER_SDMA,
->  };
->
-> -static struct omap_hwmod_ocp_if am43xx_l3_s__qspi = {
-> -       .master         = &am33xx_l3_s_hwmod,
-> -       .slave          = &am43xx_qspi_hwmod,
-> -       .clk            = "l3s_gclk",
-> -       .user           = OCP_USER_MPU | OCP_USER_SDMA,
-> -};
-> -
->  static struct omap_hwmod_ocp_if am43xx_dss__l3_main = {
->         .master         = &am43xx_dss_core_hwmod,
->         .slave          = &am33xx_l3_main_hwmod,
-> @@ -783,7 +750,6 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
->         &am43xx_l4_wkup__smartreflex1,
->         &am43xx_l4_wkup__timer1,
->         &am43xx_l4_wkup__adc_tsc,
-> -       &am43xx_l3_s__qspi,
->         &am33xx_l4_per__dcan0,
->         &am33xx_l4_per__dcan1,
->         &am33xx_l4_ls__timer2,
-> --
-> 2.24.0
+-Doug
