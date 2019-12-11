@@ -2,265 +2,129 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF9FC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F45C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D03B020836
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4128B214D8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729686AbfLKOgz (ORCPT
+        id S1729780AbfLKOmD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:36:55 -0500
-Received: from mga04.intel.com ([192.55.52.120]:41331 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729513AbfLKOgz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:36:55 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 06:36:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="220476305"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 11 Dec 2019 06:36:41 -0800
-Received: from andy by smile with local (Exim 4.93-RC7)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1if36W-0000CJ-VS; Wed, 11 Dec 2019 16:36:40 +0200
-Date:   Wed, 11 Dec 2019 16:36:40 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        sakari.ailus@linux.intel.com, drinkcat@chromium.org,
-        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [V6, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
-Message-ID: <20191211143640.GU32742@smile.fi.intel.com>
-References: <20191211112849.16705-1-dongchun.zhu@mediatek.com>
- <20191211112849.16705-3-dongchun.zhu@mediatek.com>
+        Wed, 11 Dec 2019 09:42:03 -0500
+Received: from skedge04.snt-world.com ([91.208.41.69]:58784 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729929AbfLKOmD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 09:42:03 -0500
+X-Greylist: delayed 333 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Dec 2019 09:42:01 EST
+Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 51D1D6285B9;
+        Wed, 11 Dec 2019 15:36:25 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
+ (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 11 Dec
+ 2019 15:36:24 +0100
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Wed, 11 Dec 2019 15:36:24 +0100
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Adam Ford <aford173@gmail.com>, Horia Geanta <horia.geanta@nxp.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "Herbert Xu" <herbert@gondor.apana.org.au>,
+        Fabio Estevam <festevam@gmail.com>,
+        "Sascha Hauer" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 2/2] arm64: dts: imx8mm: Add Crypto CAAM support
+Thread-Topic: [PATCH 2/2] arm64: dts: imx8mm: Add Crypto CAAM support
+Thread-Index: AQHVp9OTS5mnZfHbzke4GpMb7fpZMqeyADMAgAMAHAA=
+Date:   Wed, 11 Dec 2019 14:36:24 +0000
+Message-ID: <fd146818-98c9-7092-5d49-a985db5900c7@kontron.de>
+References: <20191130225153.30111-1-aford173@gmail.com>
+ <20191130225153.30111-2-aford173@gmail.com>
+ <VI1PR0402MB348586BEDA9BE13CEB10C75698580@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <CAHCN7x+roEAmteNLT9KkLxPvL6AFFHMUW=J_cLcSdE50kODZQQ@mail.gmail.com>
+In-Reply-To: <CAHCN7x+roEAmteNLT9KkLxPvL6AFFHMUW=J_cLcSdE50kODZQQ@mail.gmail.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <ACEAAA732C76144993E26E2C6A1682CB@snt-world.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211112849.16705-3-dongchun.zhu@mediatek.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 51D1D6285B9.A01DE
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: aford173@gmail.com, aymen.sghaier@nxp.com,
+        davem@davemloft.net, devicetree@vger.kernel.org, festevam@gmail.com,
+        herbert@gondor.apana.org.au, horia.geanta@nxp.com,
+        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 07:28:49PM +0800, Dongchun Zhu wrote:
-> Add a V4L2 sub-device driver for OV02A10 image sensor. The OV02A10 is a
-> 1/5" CMOS sensor from Omnivision, asupporting output format: 10-bit Raw.
-> 
-> This chip has a single MIPI lane interface and use the I2C bus for
-> control and the CSI-2 bus for data.
-
-...
-
-> +#define OV02A10_MASK_8_BITS                            0xff
-
-Besides GENMASK() why do you need a definition here? What's the point?
-
-...
-
-> +static int ov02a10_entity_init_cfg(struct v4l2_subdev *sd,
-> +				   struct v4l2_subdev_pad_config *cfg)
-> +{
-> +	struct v4l2_subdev_format fmt = {
-> +		.which = cfg ? V4L2_SUBDEV_FORMAT_TRY
-> +			     : V4L2_SUBDEV_FORMAT_ACTIVE,
-> +		.format = {
-> +			.width = 1600,
-
-> +			.height = 1200
-
-Leave comma here.
-
-> +		}
-> +	};
-> +
-> +	ov02a10_set_fmt(sd, cfg, &fmt);
-> +
-> +	return 0;
-> +}
-
-...
-
-> +	ret = i2c_smbus_write_byte_data(client, OV02A10_REG_GAIN,
-> +					(val & OV02A10_MASK_8_BITS));
-
-Too many parentheses.
-
-> +	if (ret < 0)
-> +		return ret;
-
-...
-
-> +static int ov02a10_set_vblank(struct ov02a10 *ov02a10, int val)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-
-if you do
-
-	int vts = val + ov02a10->cur_mode->height - OV02A10_BASIC_LINE;
-
-you may increase readability below...
-
-> +	int ret;
-> +
-> +	ret = i2c_smbus_write_byte_data(client, REG_PAGE_SWITCH, REG_ENABLE);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = i2c_smbus_write_byte_data(client, OV02A10_REG_VTS_H,
-> +					(((val + ov02a10->cur_mode->height -
-> +					OV02A10_BASIC_LINE) >>
-> +					OV02A10_VTS_SHIFT) &
-> +					OV02A10_MASK_8_BITS));
-
-	ret = i2c_smbus_write_byte_data(client, OV02A10_REG_VTS_H,
-					(vts >> OV02A10_VTS_SHIFT) &
-					OV02A10_MASK_8_BITS));
-
-And actually why do you need this mask here? Isn't enough to call
-
-	ret = i2c_smbus_write_byte_data(client, OV02A10_REG_VTS_H,
-					vts >> OV02A10_VTS_SHIFT);
-
-here...
-
-
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = i2c_smbus_write_byte_data(client, OV02A10_REG_VTS_L,
-> +					((val + ov02a10->cur_mode->height -
-> +					OV02A10_BASIC_LINE) &
-> +					OV02A10_MASK_8_BITS));
-
-...and
-
-	ret = i2c_smbus_write_byte_data(client, OV02A10_REG_VTS_L, vts);
-
-here?
-
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return i2c_smbus_write_byte_data(client, REG_GLOBAL_EFFECTIVE,
-> +					 REG_ENABLE);
-> +}
-
-...
-
-> +static int ov02a10_check_hwcfg(struct device *dev, struct ov02a10 *ov02a10)
-> +{
-> +	struct fwnode_handle *ep;
-> +	struct fwnode_handle *fwnode = dev_fwnode(dev);
-> +	struct v4l2_fwnode_endpoint bus_cfg = {
-
-> +		.bus_type = V4L2_MBUS_CSI2_DPHY
-
-Leave comma here.
-
-> +	};
-> +	unsigned int i, j;
-> +	int ret;
-
-> +	if (!fwnode)
-> +		return -ENXIO;
-
-A bit strange error code here.
-
-> +
-> +	ep = fwnode_graph_get_next_endpoint(fwnode, NULL);
-> +	if (!ep)
-> +		return -ENXIO;
-> +
-> +	ret = v4l2_fwnode_endpoint_alloc_parse(ep, &bus_cfg);
-> +	fwnode_handle_put(ep);
-> +	if (ret)
-> +		return ret;
-
-> +	if (!bus_cfg.nr_of_link_frequencies) {
-> +		dev_err(dev, "no link frequencies defined");
-> +		ret = -EINVAL;
-> +		goto check_hwcfg_error;
-> +	}
-
-I still think it's redundant check, though it's up to maintainers.
-
-> +
-> +	for (i = 0; i < ARRAY_SIZE(link_freq_menu_items); i++) {
-> +		for (j = 0; j < bus_cfg.nr_of_link_frequencies; j++) {
-> +			if (link_freq_menu_items[i] ==
-> +				bus_cfg.link_frequencies[j])
-> +				break;
-> +		}
-> +
-> +		if (j == bus_cfg.nr_of_link_frequencies) {
-> +			dev_err(dev, "no link frequency %lld supported",
-> +				link_freq_menu_items[i]);
-> +			ret = -EINVAL;
-> +			goto check_hwcfg_error;
-> +		}
-> +	}
-> +
-> +check_hwcfg_error:
-> +	v4l2_fwnode_endpoint_free(&bus_cfg);
-> +
-> +	return ret;
-> +}
-
-...
-
-> +static int ov02a10_probe(struct i2c_client *client)
-> +{
-
-> +	/* Optional indication of physical rotation of sensor */
-> +	ret = fwnode_property_read_u32(dev_fwnode(dev), "rotation", &rotation);
-
-> +	if (!ret) {
-
-Why not positive conditional?
-
-> +		ov02a10->upside_down = rotation == 180;
-> +		if (rotation == 180) {
-> +			ov02a10->upside_down = true;
-> +			ov02a10->fmt.code = MEDIA_BUS_FMT_SRGGB10_1X10;
-> +		}
-> +	} else {
-> +		dev_warn(dev, "failed to get rotation\n");
-> +	}
-> +
-> +	/* Optional indication of mipi TX speed */
-> +	ret = fwnode_property_read_u32(dev_fwnode(dev), "ovti,mipi-tx-speed",
-> +				       &clock_lane_tx_speed);
-> +
-
-> +	if (!ret)
-
-Ditto.
-
-> +		ov02a10->mipi_clock_tx_speed = clock_lane_tx_speed;
-> +	else
-> +		dev_warn(dev, "failed to get mipi tx speed, using default...\n");
-> +
-
-> +	return ret;
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+SGkgQWRhbSwNCg0KT24gMDkuMTIuMTkgMTc6NDcsIEFkYW0gRm9yZCB3cm90ZToNCj4gT24gTW9u
+LCBEZWMgOSwgMjAxOSBhdCAxMDoyMyBBTSBIb3JpYSBHZWFudGEgPGhvcmlhLmdlYW50YUBueHAu
+Y29tPiB3cm90ZToNCj4+DQo+PiBPbiAxMi8xLzIwMTkgMTI6NTIgQU0sIEFkYW0gRm9yZCB3cm90
+ZToNCj4+PiBUaGUgaS5NWDhNIE1pbmkgc3VwcG9ydHMgdGhlIHNhbWUgY3J5cHRvIGVuZ2luZSBh
+cyB3aGF0IGlzIGluDQo+Pj4gdGhlIGkuTVg4TVEsIGJ1dCBpdCBpcyBub3QgY3VycmVudGx5IHBy
+ZXNlbnQgaW4gdGhlIGRldmljZSB0cmVlLA0KPj4+IGJlY2F1c2UgaXQgbWF5IGJlIHJlc3JpY3Rl
+ZCBieSBzZWN1cml0eSBmZWF0dXJlcy4NCj4+Pg0KPj4gV2hhdCBleGFjdGx5IGFyZSB5b3UgcmVm
+ZXJyaW5nIHRvPw0KPiANCj4gSSBkb24ndCBrbm93IHRoaXMgaGFyZHdhcmUgdmVyeSB3ZWxsLCBi
+dXQgb24gYSBkaWZmZXJlbnQgcGxhdGZvcm0sIHdlDQo+IG5lZWRlZCB0byBtYWtlIHRoZSBjcnlw
+dG8gZW5naW5lcyBhcyBkaXNhYmxlZCBpZiB0aGV5IHdlcmUgYmVpbmcNCj4gYWNjZXNzZWQgdGhy
+b3VnaCBzZWN1cmUgb3BlcmF0aW9ucyB3aGljaCBtYWRlIGl0IHVuYXZhaWxhYmxlIHRvIExpbnV4
+DQo+IHdpdGhvdXQgdXNpbmcgc29tZSBzcGVjaWFsIGJhcnJpZXJzLiBJIGRpZG4ndCBoYXZlIHRo
+ZSBzcGVjaWFsDQo+IGhhcmR3YXJlIG9uIHRoZSBvdGhlciBwbGF0Zm9ybSB0aGF0IHJlcXVpcmVk
+IGl0IHRoYXQgd2F5LCBzbyBJIGNhbid0DQo+IHJlYWxseSBleHBsYWluIGl0IHdlbGwuICBJIGtu
+b3cgb24gdGhvc2Ugc3BlY2lhbCBjYXNlcywgYmVjYXVzZSBzb21lDQo+IHBlb3BsZSB3ZXJlIGFj
+Y2Vzc2luZyB0aGVzZSByZWdpc3RlcnMgdGhyb3VnaCBvdGhlciBtZWFucywgdGhlIGRldmljZXMN
+Cj4gaGFkIHRvIGJlIG1hcmtlZCBhcyAnZGlzYWJsZWQnIHNvIHRvIGF2b2lkIGJyZWFraW5nIHNv
+bWV0aGluZy4gIFNpbmNlDQo+IEkgd2Fzbid0IHN1cmUgaWYgdGhpcyB3YXMgbGVmdCBvdXQgb2Yg
+dGhlIGkuTVg4TSBNaW5pIG9uIHB1cnBvc2UsIEkNCj4gbGV0IHRoaXMgZGlzYWJsZWQganVzdCBp
+biBjYXNlIHRoaXMgaGFyZHdhcmUgcGxhdGZvcm0gd2FzIGFsc28NCj4gYWZmZWN0ZWQgaW4gYSBz
+aW1pbGFyIGFuZCBwZW9wbGUgd2FudGluZyB0byB1c2UgaXQgY291bGQgbWFyayBpdCBhcw0KPiAn
+b2theScNCg0KSSBkb24ndCBrbm93IGVub3VnaCBhYm91dCB0aGlzIHRvIHVuZGVyc3RhbmQgdGhl
+IHByb2JsZW0geW91J3JlIA0KZGVzY3JpYmluZy4gSXQgc2VlbXMgbGlrZSBtb3N0IFNvQ3MgaGF2
+ZSB0aGUgQ0FBTSBlbmFibGVkIGJ5IGRlZmF1bHQgaW4gDQp0aGUgZGV2aWNldHJlZS4gT24gZmly
+c3QgZ2xhbmNlIEkgY291bGQgb25seSBmaW5kIGZzbC1seDIxNjBhLmR0c2kgdGhhdCANCmhhcyBp
+dCBkaXNhYmxlZC4NCg0KPiANCj4gYWRhbQ0KPiANCj4+DQo+Pj4gVGhpcyBwYXRjaCBwbGFjZXMg
+aW4gaW50byB0aGUgZGV2aWNlIHRyZWUgYW5kIG1hcmtzIGl0IGFzIGRpc2FibGVkLA0KPj4+IGJ1
+dCBhbnlvbmUgbm90IHJlc3RyaWN0aW5nIHRoZSBDQUFNIHdpdGggc2VjdXJlIG1vZGUgZnVuY3Rp
+b25zDQo+Pj4gY2FuIG1hcmsgaXQgYXMgZW5hYmxlZC4NCj4+Pg0KPj4gRXZlbiBpZiAtIGR1ZSB0
+byBleHBvcnQgY29udHJvbCByZWd1bGF0aW9ucyAtIENBQU0gaXMgInRyaW1tZWQgZG93biIsDQo+
+PiBpdCBsb3NlcyBvbmx5IHRoZSBlbmNyeXB0aW9uIGNhcGFiaWxpdGllcyAoaGFzaGluZyBldGMu
+IHN0aWxsIHdvcmtpbmcpLg0KDQpJIGRvbid0IGtub3cgbXVjaCBhYm91dCB0aGlzLCBidXQgYXMg
+SG9yaWEgc2FpZCB0aGUgQ0FBTSBtaWdodCBoYXZlIA0KbGltaXRlZCBjYXBhYmlsaXRpZXMgaW4g
+c29tZSBjYXNlcyBidXQgd291bGQgc3RpbGwgd29yay4NCg0KVGhlcmVmb3JlIEkgdGhpbmsgdGhl
+IENBQU0gc2hvdWxkIGJlIGVuYWJsZWQgYnkgZGVmYXVsdCBhcyBpdCBhbHJlYWR5IGlzIA0KZG9u
+ZSBmb3IgbW9zdCBvdGhlciBTb0NzLg0KDQpSZWdhcmRzLA0KRnJpZWRlcg0KDQo+Pg0KPj4gQWdh
+aW4sIHBsZWFzZSBjbGFyaWZ5IHdoYXQgeW91IG1lYW4gYnkgInNlY3VyZSBtb2RlIGZ1bmN0aW9u
+cyIsDQo+PiAic2VjdXJpdHkgZmVhdHVyZXMiIGV0Yy4NCj4+DQo+PiBIb3JpYQ0KPiANCj4gX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnDQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
+YXJtLWtlcm5lbA0KPiA=
