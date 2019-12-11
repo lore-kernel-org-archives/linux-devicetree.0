@@ -2,128 +2,152 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2C9C47409
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C362CC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50AD12073D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:23:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EvXF3Rnx"
+	by mail.kernel.org (Postfix) with ESMTP id 950602073D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:32:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576081933;
+	bh=X8bPj0TycJovcfs5WcvCdkqzw+mMSQeVYGNNyHBCS5c=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=pr2lLWzarJtzJr871f725dJWOmmvQ6I13Im02huUUAtkfkz3q/o305afhu4dP6gOS
+	 g7wJpFhAtSzzu4vElykATEczpxje8mauJJmQcjoOelodFZUC0GW9+ZOxIg+JQemIKD
+	 7eL3pkUjWmdJOofGDeWJFaZGvwbbLuT2MmqlUZ+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730612AbfLKQXI (ORCPT
+        id S1729522AbfLKQcN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:23:08 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:10999 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730571AbfLKQXG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 11:23:06 -0500
-X-UUID: 14a59d9eee5944789d8c9ae7788ba1f3-20191212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=xMYI/rBhHY4Sx0dFvP6i+g8yPPuQV+8OY+pjlW+wWM8=;
-        b=EvXF3RnxSWxiv2c1tBtEICNgrR7YzBlZcAJB+hqUUnAVxU5JRvl82Bsjj6dTu7cOO3WEE7bnuUZEqRuhf+CRHNO89aNYOi2IDxFINQG1ZWhuIScYiIJjfuh2KADpKs6RKR+irCsaQ798JUnIi4BdCQ+J4TcCGgKE0stIcVZrsNs=;
-X-UUID: 14a59d9eee5944789d8c9ae7788ba1f3-20191212
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <jiaxin.yu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1850835644; Thu, 12 Dec 2019 00:23:03 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 12 Dec 2019 00:22:23 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Dec 2019 00:22:13 +0800
-From:   Jiaxin Yu <jiaxin.yu@mediatek.com>
-To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
-        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
-        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>
-CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>
-Subject: [PATCH v6 1/2] dt-bindings: mediatek: mt8183: Add #reset-cells
-Date:   Thu, 12 Dec 2019 00:22:35 +0800
-Message-ID: <1576081356-18298-2-git-send-email-jiaxin.yu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1576081356-18298-1-git-send-email-jiaxin.yu@mediatek.com>
-References: <1576081356-18298-1-git-send-email-jiaxin.yu@mediatek.com>
+        Wed, 11 Dec 2019 11:32:13 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43581 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729267AbfLKQcM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 11:32:12 -0500
+Received: by mail-oi1-f193.google.com with SMTP id x14so13763353oic.10;
+        Wed, 11 Dec 2019 08:32:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XGNDrBcqUYBtKiIo+15fNrK7jgez1KzgJhEnUaSBLgQ=;
+        b=YYwR0ZdUtd+duHGS4HpRki5v9+ZsutN7fn0YU/pJMlscNaYJ0NPGTSMJqT2u54huv5
+         Ug2BXNr4JXsfSvVQZHTk3XSckeXDo1rmPugyR7SwgLpAzQ80tjvMxCq2v0W51l7lhhhG
+         tC8LXIIm5WaeiP1vFZL4Ebm6++Rk2cByNw9CusKMOvhNFAdO/UvYviIgRQxswqPoKRl9
+         Gt7Yz3vpu18Z54Or/slls7H4lwVrYHV299huAEcex09+r8oGgQZ1Ef+tIm3E7rw8Wix3
+         PENE9iFPV1/wLnHOmgW8pmRLLNq+LKC38gpS0Zknl9KCG8YHI5s4FaVcaOsBGtdeigcV
+         VDZA==
+X-Gm-Message-State: APjAAAX/j5wygdaPns/9DYbqNCJjuZb1aaHmSI5FNvZb97l5TiuAkaGG
+        XJz3pEjZMRT3XaXVsE++s7Q3DZQ=
+X-Google-Smtp-Source: APXvYqzgROOzztOOeR9jvM10GQEB8EXSYcu/WPcKrTjVmKN/tY6KlFUjLvh+7QJaML9PdKKpYwBV4g==
+X-Received: by 2002:a54:4485:: with SMTP id v5mr3288106oiv.144.1576081931501;
+        Wed, 11 Dec 2019 08:32:11 -0800 (PST)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id f3sm1002180oto.57.2019.12.11.08.32.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 08:32:10 -0800 (PST)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH] dt-bindings: memory-controllers: tegra: Fix type references
+Date:   Wed, 11 Dec 2019 10:32:10 -0600
+Message-Id: <20191211163210.9778-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 53FB9AB0FF4671BAF7EB700E0F72317E5E11C0BE438D010CF69C6EE81A75401F2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RnJvbTogInlvbmcubGlhbmciIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCg0KQWRkICNyZXNl
-dC1jZWxscyBwcm9wZXJ0eSBhbmQgdXBkYXRlIGV4YW1wbGUNCg0KU2lnbmVkLW9mZi1ieTogeW9u
-Zy5saWFuZyA8eW9uZy5saWFuZ0BtZWRpYXRlay5jb20+DQotLS0NCiAuLi4vZGV2aWNldHJlZS9i
-aW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dCAgfCAxMCArKysrKystLS0NCiAuLi4vcmVzZXQt
-Y29udHJvbGxlci9tdDI3MTItcmVzZXRzLmggICAgICAgICAgfCAyMiArKysrKysrKysrKysrKysr
-KysrDQogLi4uL3Jlc2V0LWNvbnRyb2xsZXIvbXQ4MTgzLXJlc2V0cy5oICAgICAgICAgIHwgMTcg
-KysrKysrKysrKysrKysNCiAzIGZpbGVzIGNoYW5nZWQsIDQ2IGluc2VydGlvbnMoKyksIDMgZGVs
-ZXRpb25zKC0pDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQt
-Y29udHJvbGxlci9tdDI3MTItcmVzZXRzLmgNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dA0KaW5kZXggOTIxODFiNjQ4
-ZjUyLi41YTc2YWMyNjJmOGQgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3Mvd2F0Y2hkb2cvbXRrLXdkdC50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dA0KQEAgLTQsNiArNCw3IEBAIFJlcXVp
-cmVkIHByb3BlcnRpZXM6DQogDQogLSBjb21wYXRpYmxlIHNob3VsZCBjb250YWluOg0KIAkibWVk
-aWF0ZWssbXQyNzAxLXdkdCIsICJtZWRpYXRlayxtdDY1ODktd2R0IjogZm9yIE1UMjcwMQ0KKwki
-bWVkaWF0ZWssbXQyNzEyLXdkdCIsICJtZWRpYXRlayxtdDY1ODktd2R0IjogZm9yIE1UMjcxMg0K
-IAkibWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDY1ODkNCiAJIm1lZGlhdGVrLG10Njc5Ny13
-ZHQiLCAibWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDY3OTcNCiAJIm1lZGlhdGVrLG10NzYy
-Mi13ZHQiLCAibWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDc2MjINCkBAIC0xNCwxMSArMTUs
-MTQgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCiANCiBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KIC0g
-dGltZW91dC1zZWM6IGNvbnRhaW5zIHRoZSB3YXRjaGRvZyB0aW1lb3V0IGluIHNlY29uZHMuDQor
-LSAjcmVzZXQtY2VsbHM6IFNob3VsZCBiZSAxLg0KIA0KIEV4YW1wbGU6DQogDQotd2R0OiB3YXRj
-aGRvZ0AxMDAwMDAwMCB7DQotCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2NTg5LXdkdCI7DQot
-CXJlZyA9IDwweDEwMDAwMDAwIDB4MTg+Ow0KK3dhdGNoZG9nOiB3YXRjaGRvZ0AxMDAwNzAwMCB7
-DQorCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLXdkdCIsDQorCQkgICAgICJtZWRpYXRl
-ayxtdDY1ODktd2R0IjsNCisJcmVnID0gPDAgMHgxMDAwNzAwMCAwIDB4MTAwPjsNCiAJdGltZW91
-dC1zZWMgPSA8MTA+Ow0KKwkjcmVzZXQtY2VsbHMgPSA8MT47DQogfTsNCmRpZmYgLS1naXQgYS9p
-bmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xsZXIvbXQyNzEyLXJlc2V0cy5oIGIvaW5j
-bHVkZS9kdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaA0KbmV3IGZp
-bGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAwMDAwMC4uOWU3ZWU3NjJmMDc2DQotLS0gL2Rl
-di9udWxsDQorKysgYi9pbmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xsZXIvbXQyNzEy
-LXJlc2V0cy5oDQpAQCAtMCwwICsxLDIyIEBADQorLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6
-IEdQTC0yLjAgKi8NCisvKg0KKyAqIENvcHlyaWdodCAoYykgMjAxOSBNZWRpYVRlayBJbmMuDQor
-ICogQXV0aG9yOiBZb25nIExpYW5nIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCisgKi8NCisN
-CisjaWZuZGVmIF9EVF9CSU5ESU5HU19SRVNFVF9DT05UUk9MTEVSX01UMjcxMg0KKyNkZWZpbmUg
-X0RUX0JJTkRJTkdTX1JFU0VUX0NPTlRST0xMRVJfTVQyNzEyDQorDQorI2RlZmluZSBNVDI3MTJf
-VE9QUkdVX0lORlJBX1NXX1JTVAkJCQkwDQorI2RlZmluZSBNVDI3MTJfVE9QUkdVX01NX1NXX1JT
-VAkJCQkJMQ0KKyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9NRkdfU1dfUlNUCQkJCTINCisjZGVmaW5l
-IE1UMjcxMl9UT1BSR1VfVkVOQ19TV19SU1QJCQkJMw0KKyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9W
-REVDX1NXX1JTVAkJCQk0DQorI2RlZmluZSBNVDI3MTJfVE9QUkdVX0lNR19TV19SU1QJCQkJNQ0K
-KyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9JTkZSQV9BT19TV19SU1QJCQkJOA0KKyNkZWZpbmUgTVQy
-NzEyX1RPUFJHVV9VU0JfU1dfUlNUCQkJCTkNCisjZGVmaW5lIE1UMjcxMl9UT1BSR1VfQVBNSVhF
-RF9TV19SU1QJCQkJMTANCisNCisjZGVmaW5lIE1UMjcxMl9UT1BSR1VfU1dfUlNUX05VTQkJCQkx
-MQ0KKw0KKyNlbmRpZiAgLyogX0RUX0JJTkRJTkdTX1JFU0VUX0NPTlRST0xMRVJfTVQyNzEyICov
-DQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210ODE4
-My1yZXNldHMuaCBiL2luY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdDgxODMt
-cmVzZXRzLmgNCmluZGV4IDg4MDRlMzRlYmRkNC4uYTFiYmQ0MWUwZDEyIDEwMDY0NA0KLS0tIGEv
-aW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210ODE4My1yZXNldHMuaA0KKysr
-IGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210ODE4My1yZXNldHMuaA0K
-QEAgLTc4LDQgKzc4LDIxIEBADQogI2RlZmluZSBNVDgxODNfSU5GUkFDRkdfQU9fSTJDN19TV19S
-U1QJCQkJMTI2DQogI2RlZmluZSBNVDgxODNfSU5GUkFDRkdfQU9fSTJDOF9TV19SU1QJCQkJMTI3
-DQogDQorI2RlZmluZSBNVDgxODNfSU5GUkFDRkdfU1dfUlNUX05VTQkJCQkxMjgNCisNCisjZGVm
-aW5lIE1UODE4M19UT1BSR1VfTU1fU1dfUlNUCQkJCQkxDQorI2RlZmluZSBNVDgxODNfVE9QUkdV
-X01GR19TV19SU1QJCQkJMg0KKyNkZWZpbmUgTVQ4MTgzX1RPUFJHVV9WRU5DX1NXX1JTVAkJCQkz
-DQorI2RlZmluZSBNVDgxODNfVE9QUkdVX1ZERUNfU1dfUlNUCQkJCTQNCisjZGVmaW5lIE1UODE4
-M19UT1BSR1VfSU1HX1NXX1JTVAkJCQk1DQorI2RlZmluZSBNVDgxODNfVE9QUkdVX01EX1NXX1JT
-VAkJCQkJNw0KKyNkZWZpbmUgTVQ4MTgzX1RPUFJHVV9DT05OX1NXX1JTVAkJCQk5DQorI2RlZmlu
-ZSBNVDgxODNfVE9QUkdVX0NPTk5fTUNVX1NXX1JTVAkJCQkxMg0KKyNkZWZpbmUgTVQ4MTgzX1RP
-UFJHVV9JUFUwX1NXX1JTVAkJCQkxNA0KKyNkZWZpbmUgTVQ4MTgzX1RPUFJHVV9JUFUxX1NXX1JT
-VAkJCQkxNQ0KKyNkZWZpbmUgTVQ4MTgzX1RPUFJHVV9BVURJT19TV19SU1QJCQkJMTcNCisjZGVm
-aW5lIE1UODE4M19UT1BSR1VfQ0FNU1lTX1NXX1JTVAkJCQkxOA0KKw0KKyNkZWZpbmUgTVQ4MTgz
-X1RPUFJHVV9TV19SU1RfTlVNCQkJCTE5DQorDQogI2VuZGlmICAvKiBfRFRfQklORElOR1NfUkVT
-RVRfQ09OVFJPTExFUl9NVDgxODMgKi8NCi0tIA0KMi4xOC4wDQo=
+Json-schema requires a $ref to be under an 'allOf' if there are
+additional constraints otherwise the additional constraints are
+ignored. (Note that this behavior will be changed in draft8.)
+
+Fixes: 641262f5e1ed ("dt-bindings: memory: Add binding for NVIDIA Tegra30 External Memory Controller")
+Fixes: 785685b7a106 ("dt-bindings: memory: Add binding for NVIDIA Tegra30 Memory Controller")
+Fixes: 8da65c377b21 ("dt-bindings: memory: tegra30: Convert to Tegra124 YAML")
+Cc: Dmitry Osipenko <digetx@gmail.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>
+Cc: linux-tegra@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+I'll take this via the DT tree for rc2.
+
+ .../bindings/memory-controllers/nvidia,tegra124-mc.yaml  | 3 ++-
+ .../bindings/memory-controllers/nvidia,tegra30-emc.yaml  | 9 ++++++---
+ .../bindings/memory-controllers/nvidia,tegra30-mc.yaml   | 3 ++-
+ 3 files changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
+index 30d9fb193d7f..22a94b6fdbde 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
++++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
+@@ -60,7 +60,8 @@ patternProperties:
+             maximum: 1066000000
+ 
+           nvidia,emem-configuration:
+-            $ref: /schemas/types.yaml#/definitions/uint32-array
++            allOf:
++              - $ref: /schemas/types.yaml#/definitions/uint32-array
+             description: |
+               Values to be written to the EMEM register block. See section
+               "15.6.1 MC Registers" in the TRM.
+diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
+index 7fe0ca14e324..e4135bac6957 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
++++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
+@@ -56,7 +56,8 @@ patternProperties:
+             maximum: 900000000
+ 
+           nvidia,emc-auto-cal-interval:
+-            $ref: /schemas/types.yaml#/definitions/uint32
++            allOf:
++              - $ref: /schemas/types.yaml#/definitions/uint32
+             description:
+               Pad calibration interval in microseconds.
+             minimum: 0
+@@ -78,7 +79,8 @@ patternProperties:
+               Mode Register 0.
+ 
+           nvidia,emc-zcal-cnt-long:
+-            $ref: /schemas/types.yaml#/definitions/uint32
++            allOf:
++              - $ref: /schemas/types.yaml#/definitions/uint32
+             description:
+               Number of EMC clocks to wait before issuing any commands after
+               sending ZCAL_MRW_CMD.
+@@ -96,7 +98,8 @@ patternProperties:
+               FBIO "read" FIFO periodic resetting enabled.
+ 
+           nvidia,emc-configuration:
+-            $ref: /schemas/types.yaml#/definitions/uint32-array
++            allOf:
++              - $ref: /schemas/types.yaml#/definitions/uint32-array
+             description:
+               EMC timing characterization data. These are the registers
+               (see section "18.13.2 EMC Registers" in the TRM) whose values
+diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
+index 84fd57bcf0dc..4b9196c83291 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
++++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
+@@ -77,7 +77,8 @@ patternProperties:
+             maximum: 900000000
+ 
+           nvidia,emem-configuration:
+-            $ref: /schemas/types.yaml#/definitions/uint32-array
++            allOf:
++              - $ref: /schemas/types.yaml#/definitions/uint32-array
+             description: |
+               Values to be written to the EMEM register block. See section
+               "18.13.1 MC Registers" in the TRM.
+-- 
+2.20.1
 
