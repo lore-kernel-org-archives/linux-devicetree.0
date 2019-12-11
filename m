@@ -2,163 +2,107 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7906DC2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 20:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8266EC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 20:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2C124653
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 20:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BB92173E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 20:31:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="orgHVXb3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfLKU23 (ORCPT
+        id S1726463AbfLKUb4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 15:28:29 -0500
-Received: from mga11.intel.com ([192.55.52.93]:60169 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726242AbfLKU23 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 15:28:29 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 12:28:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,303,1571727600"; 
-   d="scan'208";a="245423821"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 11 Dec 2019 12:28:20 -0800
-Received: from andy by smile with local (Exim 4.93-RC7)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1if8ao-0005om-8s; Wed, 11 Dec 2019 22:28:18 +0200
-Date:   Wed, 11 Dec 2019 22:28:18 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        Wed, 11 Dec 2019 15:31:56 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38414 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfLKUb4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 15:31:56 -0500
+Received: by mail-pl1-f193.google.com with SMTP id a17so39121pls.5;
+        Wed, 11 Dec 2019 12:31:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3/hSvLwudWoN+XB6HWteXACnz1YCPLXglnwpmxopZ+U=;
+        b=orgHVXb3Fpmfg7W8yttF3NemcT87svc1e27QdNm2SE6bOsNJk83szXiD4eT3iS6Cg0
+         zpj9sfIWomAbpFUpRGeXDHCLV/yulMMmqhKceF1wYi0olUR10GZSjm/wpHjzYFmjHuUD
+         eRBQa+aXghUUtmZSGpJv8ICRRkg9Lz87i9GEn13ahz63SWSsvPMjOwDrAjPEYX+mWKai
+         OehB+EhlcdWumJ8b7TpB+LkoN21NJY5y3+5X8hdYYIkwCVbAxiZQsWUitSauCb2Lqktu
+         ecZ/wVBxiUXVxDPDo9hCZLlYx0aNgVfZkI/M8ymac0NMVwLLNHxPEzj/vmlI20vszSRh
+         OP7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3/hSvLwudWoN+XB6HWteXACnz1YCPLXglnwpmxopZ+U=;
+        b=PgvXlQyUEL/wfRfIp7KfkRT76Hou0RK/U/EU2A/ohceU+y5YoccAnkSwi7nbkpc8RA
+         aMUzSJ8oKj9Ackf+Ux88RuoOa6RA9FC4NS2lE+VerWkhb72XoM3VqOBBl1M4Edx0Q4HN
+         MJwJWwsPnsU2Z7agDHGTWobpuvN75JTDqO5rd9GogR+Jy+sBw9k08Y9WPC2xH+QatsCm
+         GDY9sZFA7tp3NqqTAU4l2iz1FO9Q941HcA9unMUEJ4VZtXzS6/ni0Gkz7ORx006/oci/
+         KkUR4E0kOapaHCmCrCx0frHEe0SrxxcEXb5sUbfalUGBQYolls/DUZn1AAISqTyQVU+1
+         nScA==
+X-Gm-Message-State: APjAAAXk6Rl5bDZIP2xSctqTChinRqNnVeWZmFf9HMjZ66v+MSyu4QLf
+        vHrMQoGcJg8yFXxDcUJYoHM=
+X-Google-Smtp-Source: APXvYqz9LDJfuBSN3rWSsIsBVJ8ollAAEg3nqsBeGqaPCp5Jf59583LSmX1aTye4SdtIkza1iG4nGQ==
+X-Received: by 2002:a17:902:7207:: with SMTP id ba7mr5476246plb.254.1576096315871;
+        Wed, 11 Dec 2019 12:31:55 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a19sm917570pju.11.2019.12.11.12.31.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 12:31:55 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org, daniel.lezcano@linaro.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM STB AVS TMON
+        DRIVER), Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>,
-        Tomohiro Kusumi <kusumi.tomohiro@gmail.com>,
-        "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>,
-        Frederic Barrat <fbarrat@linux.vnet.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        David Kershner <david.kershner@unisys.com>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Sagar Dharia <sdharia@codeaurora.org>,
-        Johan Hovold <johan@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        openbmc@lists.ozlabs.org, Robin Murphy <robin.murphy@arm.com>,
-        Ryan Chen <ryan_chen@aspeedtech.com>
-Subject: Re: [PATCH v11 06/14] peci: Add Aspeed PECI adapter driver
-Message-ID: <20191211202818.GD32742@smile.fi.intel.com>
-References: <20191211194624.2872-1-jae.hyun.yoo@linux.intel.com>
- <20191211194624.2872-7-jae.hyun.yoo@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211194624.2872-7-jae.hyun.yoo@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        linux-pm@vger.kernel.org (open list:BROADCOM STB AVS TMON DRIVER),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 0/6] brcmstb_thermal updates for new processes
+Date:   Wed, 11 Dec 2019 12:31:37 -0800
+Message-Id: <20191211203143.2952-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 11:46:16AM -0800, Jae Hyun Yoo wrote:
-> This commit adds Aspeed PECI adapter driver for Aspeed
-> AST24xx/25xx/26xx SoCs.
+Hi,
 
-...
+This patch series contains a bug fix for the existing platforms and then
+paves the way for adding support for Broadcom STB's latest chips in 16nm
+processes, and finally updates the driver with pecularities introduced
+with the 16nm, like the lack of interrupt notification from the HW.
 
-> +#define   ASPEED_PECI_CMD_IDLE_MASK		(ASPEED_PECI_CMD_STS_MASK | \
-> +						 ASPEED_PECI_CMD_PIN_MON)
+Please queue up the first patch for -stable if you want, thanks!
 
-Better looking when the value completely occupies second line without touching
-the first.
+Changes in v2:
 
-...
+- kept defined constants in patch #1 and keep using them for subsequent
+  patches
+- add Reviewed-by tags to patches #3 through #6
+- rebase against v5.5.-rc1
 
-> +static int aspeed_peci_check_idle(struct aspeed_peci *priv)
-> +{
-> +	ulong timeout = jiffies + usecs_to_jiffies(ASPEED_PECI_IDLE_CHECK_TIMEOUT_USEC);
-> +	u32 cmd_sts;
+Florian Fainelli (6):
+  thermal: brcmstb_thermal: Do not use DT coefficients
+  thermal: brcmstb_thermal: Prepare to support a different process
+  dt-bindings: thermal: Define BCM7216 thermal sensor compatible
+  thermal: brcmstb_thermal: Add 16nm process thermal parameters
+  thermal: brcmstb_thermal: Restructure interrupt registration
+  thermal: brcmstb_thermal: Register different ops per process
 
-Like in the previous patch this one has hard to read timeout loops with inefficient code.
-
-> +	for (;;) {
-> +		cmd_sts = readl(priv->base + ASPEED_PECI_CMD);
-> +		if (!(cmd_sts & ASPEED_PECI_CMD_IDLE_MASK))
-> +			break;
-
-> +		if (time_after(jiffies, timeout)) {
-
-This is actually main exit condition (vs. infinite loop).
-
-> +			cmd_sts = readl(priv->base + ASPEED_PECI_CMD);
-
-This make no sense. If you would like to have one more iteration, just spell it
-explicitly.
-
-> +			break;
-> +		}
-
-> +		usleep_range((ASPEED_PECI_IDLE_CHECK_INTERVAL_USEC >> 2) + 1,
-> +			     ASPEED_PECI_IDLE_CHECK_INTERVAL_USEC);
-> +	}
-> +
-
-> +	return !(cmd_sts & ASPEED_PECI_CMD_IDLE_MASK) ? 0 : -ETIMEDOUT;
-
-Ditto.
-
-> +}
-
-Now look at the other variant:
-
-	do {
-		...do something...
-		if (success)
-			return 0;
-		usleep(...);
-	} while (time_before(...));
-
-	return -ETIMEDOUT;
-
-* Easy
-* less LOCs
-* guaranteed always to be at least one iteration
-* has explicitly spelled exit condition
-
-BUT!
-
-In this very case you may do even better if you read iopoll.h, i.e
-readl_poll_timeout() has this functionality embedded in the macro.
+ .../bindings/thermal/brcm,avs-tmon.txt        |  8 +-
+ drivers/thermal/broadcom/brcmstb_thermal.c    | 99 ++++++++++++-------
+ 2 files changed, 67 insertions(+), 40 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
