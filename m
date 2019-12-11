@@ -2,120 +2,113 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41856C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 07:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9274C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 07:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB072077B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 07:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA32D214D8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 07:33:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576049621;
+	bh=wqq8HXBEy6kKnW9r+Hvsm89s6WjUyuoqKasNSnB5z9g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h3RiTDb5lj1gVmZ7I0H4T3A30votm+4iNNIpLaMz3BAxLHJqkkfVIGUKBy5F/0cww
+	 yzLTw83pqiyIYIsZ4l1McxnLSDDKdIKF4Mi8MD1mlP2NMB9+Ulgy6A2TXbAx10Sj0v
+	 Ih5ZWYAU47FXp1vwaiAQ0zYSbgbMZuOWDjzB0DQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfLKH1Y (ORCPT
+        id S1726082AbfLKHdl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:27:24 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39885 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfLKH1Y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 02:27:24 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iewP4-0006T3-E2; Wed, 11 Dec 2019 08:27:22 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iewP3-0004Eh-6N; Wed, 11 Dec 2019 08:27:21 +0100
-Date:   Wed, 11 Dec 2019 08:27:21 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/3] ARM: dts: imx6ul-14x14-evk: Add sensors' GPIO
- regulator
-Message-ID: <20191211072721.ze6yn2felxyae5eb@pengutronix.de>
-References: <1571906920-29966-1-git-send-email-Anson.Huang@nxp.com>
- <VI1PR04MB7023CD288FCC57806F067FD9EE5B0@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <DB3PR0402MB3916D3DB4C0CE0017FC2D4B1F55A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        Wed, 11 Dec 2019 02:33:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725800AbfLKHdl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Dec 2019 02:33:41 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 481F72054F;
+        Wed, 11 Dec 2019 07:33:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576049620;
+        bh=wqq8HXBEy6kKnW9r+Hvsm89s6WjUyuoqKasNSnB5z9g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NHj44Wu15jmo2iRTAz85IvchxlBdOCwYDSFxy+6nIgsr+YjswMDHpdEpcXbl65DuL
+         mG5JVy5OIFLHkqyq6X/lgloXVAVayxLuxUal4pjCj7R0txuaq0IuDqfZSIq8cYthoM
+         WM9r4pO+1yUXsOqglsnceKydti2pe189rgzw+wBU=
+Date:   Wed, 11 Dec 2019 15:33:31 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     Jon Nettleton <jon@solid-run.com>,
+        Rabeeh Khoury <rabeeh@solid-run.com>,
+        Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] arm64: dts: lx2160a: add MDIO descriptions
+Message-ID: <20191211073330.GO15858@dragon>
+References: <20191209120010.GG25745@shell.armlinux.org.uk>
+ <E1ieHiP-0004wT-2O@rmk-PC.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB3916D3DB4C0CE0017FC2D4B1F55A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:22:06 up 25 days, 22:40, 33 users,  load average: 0.00, 0.00,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <E1ieHiP-0004wT-2O@rmk-PC.armlinux.org.uk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19-12-11 01:06, Anson Huang wrote:
+On Mon, Dec 09, 2019 at 12:00:37PM +0000, Russell King wrote:
+> Add MDIO descriptions to the lx2160a dtsi file, so we can use them in
+> the SolidRun Clearfog CX platform.
 > 
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> ---
+>  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> > Subject: Re: [PATCH 1/3] ARM: dts: imx6ul-14x14-evk: Add sensors' GPIO
-> > regulator
-> > 
-> > On 24.10.2019 11:51, Anson Huang wrote:
-> > > On i.MX6UL 14x14 EVK board, sensors' power are controlled by
-> > > GPIO5_IO02, add GPIO regulator for sensors to manage their power.
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > 
-> > For me this breaks network boot on imx6ul evk, relevant log snippet is this:
-> > 
-> >      fec 20b4000.ethernet eth0: Unable to connect to phy
-> >      IP-Config: Failed to open eth0
-> > 
-> > Looking at schematics (SPF-28616_C2.pdf) I see that SNVS_TAMPER2 pin is
-> > connected to PERI_PWREN which controls VPERI_3V3 which is used across
-> > the board:
-> >   * Sensors (VSENSOR_3V3)
-> >   * Ethernet (VENET_3V3)
-> >   * Bluetooth
-> >   * CAN
-> >   * Arduino header
-> >   * Camera
-> > 
-> > Maybe there are board revision differences? As far as I can tell this regulator
-> > is not specific to sensors so it should be always on.
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> index 0bd98f179bfa..617e1f1a2339 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> @@ -863,6 +863,26 @@
+>  			fsl,extts-fifo;
+>  		};
+>  
+> +		emdio1: mdio@8b96000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x00 0x8b96000 0x00 0x1000>;
+> +			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+> +			little-endian;
+> +			#address-cells = <0x01>;
+> +			#size-cells = <0x00>;
+> +			status = "disabled";
+> +		};
+> +
+> +		emdio2: mdio@8b97000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x00 0x8b97000 0x00 0x1000>;
+> +			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
+> +			little-endian;
+> +			#address-cells = <0x01>;
+> +			#size-cells = <0x00>;
+> +			status = "disabled";
+> +		};
+> +
+
+Ioana Ciornei already had a patch [1] adding emdio1, but unfortunately,
+emdio2 was missing from there.
+
+Shawn
+
+[1] https://lkml.org/lkml/2019/12/4/675
+
+>  		fsl_mc: fsl-mc@80c000000 {
+>  			compatible = "fsl,qoriq-mc";
+>  			reg = <0x00000008 0x0c000000 0 0x40>,
+> -- 
+> 2.20.1
 > 
-> You are correct, this regulator controls many other peripherals, I should make it always ON for now
-> to make sure NOT break other peripheral, and after all other peripherals controlled
-> by this regulator have added this regulator management, then the always ON can be
-> removed.
-
-IMHO marking the regulator as always on shouldn't be the fix. Is it to
-much work to add all required regulators? At least please add a comment
-which describes the need of the always-on property.
-
-Regards,
-  Marco 
-
-> Thanks,
-> Anson
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
