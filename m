@@ -2,153 +2,109 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0F8C2BD09
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 08:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DCAC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 08:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94BAD214AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 08:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C172054F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 08:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hy8zA17V"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VrSyV1Cp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfLKIJm (ORCPT
+        id S1727888AbfLKINj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 03:09:42 -0500
-Received: from mail-eopbgr10044.outbound.protection.outlook.com ([40.107.1.44]:32051
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726543AbfLKIJm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 03:09:42 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VhfKxSKaBCL7oTe5WS0EOrzd46MqLnrFz4mmKZrWoyWEvSn6/VgYWXixy3RWBZmrjnfvR/iW+zRw7KeNgbQ0FviWBbdUThskxSAH/Fc7db9QD5XmYFrDk3wqhYehNDYtOdfIZnTgexyFFaSLb4b03rt2It3toMZTF0+9YJfhqoMkVn5tQJ0Ibn/qQBmoeUvsGdd4j4l6f97cHrxqHKu7/InZo4o9OWLgVHctBAIbBzAIs0/LOV51+ylM9qvN7/V8UkMAEGG9qKdxUjl+S1/83whbMnPGZ9MZiq3Mc4LUAvUWV4K6rQLfSl58JiDq9MsUwuhHWH0knRq90AnVTf5XQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CY43+1YJu09T2gmZkR/fFiUsp4P9KFzFb9FUwGAZieQ=;
- b=RdinnvKyBDMcRd5yHGwMGZtvwHXlQaK74MGbCvxAmSwPdLC60ozmfLnHAfM0Qb4W96Y9bK11+AvtbgmENXQmIMf1ZW3hbPRfWwEIB5ZC/RY3iUvkI130cGOuPBs//6cgk8iKz2yRMo2JKxSN8am29W/5CEZacxecUNx9eEeiFQL+sxfqx/uMxRkxZAAPv+PhWmHcX9zerhHrzQUvOJfTJxHgQm4t91PAgTGbZmH5dzROKRwI5kd5f89iDkPBNUfZZNqq/QPRTRLzkF15uDzrWFafZBgS/gknb30/xwqmbUvd+0Fin6ugiqQi3NkgTn8L7cIkyBTFayhqfamvG3xNAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CY43+1YJu09T2gmZkR/fFiUsp4P9KFzFb9FUwGAZieQ=;
- b=hy8zA17VWK3OrP0u96sUXg7IThjqK+mkG1f+phNWi2yQ0YmGHGpB5Do0vO7ZuFI9/zUVzBMjozEwsDi/H8/dO7spZdYbhDOl+MM/UrwT/Mkvnj4y871WS6s3NuifE4O+6L+eOpvqcRIYEINUpWEwJ/UipCtjXiBIFdM5D5xbALE=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
- VI1PR04MB6222.eurprd04.prod.outlook.com (20.179.24.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.14; Wed, 11 Dec 2019 08:09:39 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::c947:5ae7:2a68:a4f2]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::c947:5ae7:2a68:a4f2%3]) with mapi id 15.20.2516.019; Wed, 11 Dec 2019
- 08:09:39 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Robin Gong <yibin.gong@nxp.com>
-CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, Peng Ma <peng.ma@nxp.com>
-Subject: [v4 2/2] arm64: dts: ls1028a: Update edma compatible to fit eDMA
- driver
-Thread-Topic: [v4 2/2] arm64: dts: ls1028a: Update edma compatible to fit eDMA
- driver
-Thread-Index: AQHVr/pVLFcNUBU5x0yRpJwDJ3vngA==
-Date:   Wed, 11 Dec 2019 08:09:39 +0000
-Message-ID: <20191211080749.30751-2-peng.ma@nxp.com>
-References: <20191211080749.30751-1-peng.ma@nxp.com>
-In-Reply-To: <20191211080749.30751-1-peng.ma@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SGXP274CA0012.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::24)
- To VI1PR04MB4431.eurprd04.prod.outlook.com (2603:10a6:803:6f::13)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0d902cc3-ebce-48ff-61eb-08d77e117818
-x-ms-traffictypediagnostic: VI1PR04MB6222:|VI1PR04MB6222:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB6222DCC4B6E4C60DDD61CA93ED5A0@VI1PR04MB6222.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 024847EE92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(366004)(136003)(376002)(199004)(189003)(8936002)(8676002)(6506007)(5660300002)(44832011)(6512007)(4326008)(2906002)(36756003)(6636002)(66446008)(71200400001)(186003)(81166006)(26005)(2616005)(52116002)(64756008)(110136005)(66556008)(1076003)(66476007)(6486002)(81156014)(478600001)(54906003)(86362001)(316002)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6222;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jsx34WGeCfk63oNUUfhMXqojF7xilNN+fBswtDpBC6EbpLlE0J0dYX3HGQAXEkQbLZodtPbZzcOeTLJi1hqEFiodsab41TUclIxYkurq0l1eF9rZReXneFt/aU7GENg4DTynacQOM2EJRGrtI8eoAUtKGAx2OFPa1HY5zpDClOXDg69F7WhCEMdlhqVhINZvPGcK5MjsmWhxzq1/IPmTToa4HbWxW2o8k/rSxO6H3HRrZj+7CL4mnged4HvHX5beS8WLP2JpTSdgTQIW92jQpLE2oHxoDL08FmZK7vskxL0+NEjk0UrbU1s/G2DWGS3A0TDKI1d1wIHRTwBLyh9QceOgIltpXwOCm+pF7yPRLU2RDi0phPZPHh9pma84d9NVyI1JYPAYBut9AidG6GjbjOa7TuY2lzANnXnM8HROJZEQ6YjSyfG3VmPo7GVel3Ad
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 11 Dec 2019 03:13:39 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:10703 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727547AbfLKINj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 03:13:39 -0500
+X-UUID: 8ce0a82ac5d84fa5b3d915213eed691f-20191211
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=LMtGwOTN7KKUaEd8A9wg9LxG6VsxXxh0GBa84A4j5NY=;
+        b=VrSyV1Cp/l36nS3QpKYFQo/XlsRas7PPPnVbCA0Vmr0Xq/oddPdYCRZ+S1LbSxLa35dk22OAX4BCsnJciiodIVZTT0ChjctJfIyvGXWxdOJosTtSwLsF9p3akTdDJSv8K+NEZp+u963N+G6BOLk9LhnhyLF5R0EpP+D0ff2xj7o=;
+X-UUID: 8ce0a82ac5d84fa5b3d915213eed691f-20191211
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <michael.kao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1353820062; Wed, 11 Dec 2019 16:13:33 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 11 Dec 2019 16:13:09 +0800
+Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 11 Dec 2019 16:12:57 +0800
+Message-ID: <1576052012.1631.13.camel@mtksdccf07>
+Subject: Re: [PATCH] [RESEND] arm64: dts: mt8173: Add dynamic power node.
+From:   Michael Kao <michael.kao@mediatek.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <hsinyi@chromium.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Dawei Chien <dawei.chien@mediatek.com>, <mn.tsou@mediatek.com>
+Date:   Wed, 11 Dec 2019 16:13:32 +0800
+In-Reply-To: <4aaf8cee-eaa2-5de4-37f0-094b9bc8da22@linaro.org>
+References: <20191122090610.17015-1-michael.kao@mediatek.com>
+         <4aaf8cee-eaa2-5de4-37f0-094b9bc8da22@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d902cc3-ebce-48ff-61eb-08d77e117818
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 08:09:39.3070
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2qKfU6odnM+cRP4zHfEBmD+6wPo1I2vZ4ftqUJrxVnAb1uasLGwYhSMJx/KVLvDH
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6222
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The eDMA of LS1028A soc has a little bit different from others, So we
-should distinguish them in driver by compatible.
-
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
----
-Changed for v4
-	- Add new change patch
-
- Documentation/devicetree/bindings/dma/fsl-edma.txt | 1 +
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi     | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/fsl-edma.txt b/Documenta=
-tion/devicetree/bindings/dma/fsl-edma.txt
-index 29dd3ccb1235..e77b08ebcd06 100644
---- a/Documentation/devicetree/bindings/dma/fsl-edma.txt
-+++ b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-@@ -10,6 +10,7 @@ Required properties:
- - compatible :
- 	- "fsl,vf610-edma" for eDMA used similar to that on Vybrid vf610 SoC
- 	- "fsl,imx7ulp-edma" for eDMA2 used similar to that on i.mx7ulp
-+	- "fsl,fsl,ls1028a-edma" for eDMA used similar to that on Vybrid vf610 So=
-C
- - reg : Specifies base physical address(s) and size of the eDMA registers.
- 	The 1st region is eDMA control register's address and size.
- 	The 2nd and the 3rd regions are programmable channel multiplexing
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls1028a.dtsi
-index 8e8a77eb596a..b3716a89fa0d 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -316,7 +316,7 @@
-=20
- 		edma0: dma-controller@22c0000 {
- 			#dma-cells =3D <2>;
--			compatible =3D "fsl,vf610-edma";
-+			compatible =3D "fsl,ls1028a-edma";
- 			reg =3D <0x0 0x22c0000 0x0 0x10000>,
- 			      <0x0 0x22d0000 0x0 0x10000>,
- 			      <0x0 0x22e0000 0x0 0x10000>;
---=20
-2.17.1
+T24gVGh1LCAyMDE5LTEyLTA1IGF0IDE3OjAwICswMTAwLCBEYW5pZWwgTGV6Y2FubyB3cm90ZToN
+Cj4gSGkgTWljaGFlbCwNCj4gDQo+IA0KPiBPbiAyMi8xMS8yMDE5IDEwOjA2LCBtaWNoYWVsLmth
+b0BtZWRpYXRlay5jb20gd3JvdGU6DQo+ID4gRnJvbTogIm1pY2hhZWwua2FvIiA8bWljaGFlbC5r
+YW9AbWVkaWF0ZWsuY29tPg0KPiA+IA0KPiA+IFRoaXMgZGV2aWNlIG5vZGUgaXMgZm9yIGNhbGN1
+bGF0aW5nIGR5bmFtaWMgcG93ZXIgaW4gbVcuDQo+ID4gU2luY2UgbXQ4MTczIGhhcyB0d28gY2x1
+c3RlcnMsIHRoZXJlIGFyZSB0d28gZHluYW1pYyBwb3dlcg0KPiA+IGNvZWZmaWNpZW50IGFzIHdl
+bGwuDQo+IA0KPiBBcmUgeW91IHN1cmUgYWJvdXQgdGhlIHZhbHVlcz8gVXN1YWxseSwgQmlnIGlz
+IH54NCBsaXR0bGUsIGhlcmUgaXQgaXMgfngyLg0KDQpIaSBEYW5pZWwsDQoNCkkgaGF2ZSBjb25m
+aXJtZWQgYWdhaW4gd2l0aCBvdXIgSUMgZGVzaWduZXIuDQpUaGUgZHluYW1pYyBwb3dlciBjb2Vm
+ZmljaWVudHMgYXJlIHRoZXNlIHZhbHVlIGlzIHJpZ2h0Lg0KRGVzaWduZXIgY29tbWVudCB0aGF0
+IGl0IGlzIHJlc3VsdCBmcm9tIGRpZmZlcmVudCBJQyBpbXBsZW1lbnQuDQo+IA0KPiA+IFNpZ25l
+ZC1vZmYtYnk6IERhd2VpIENoaWVuIDxkYXdlaS5jaGllbkBtZWRpYXRlay5jb20+DQo+ID4gU2ln
+bmVkLW9mZi1ieTogTWljaGFlbC5LYW8gPG1pY2hhZWwua2FvQG1lZGlhdGVrLmNvbT4NCj4gPiAN
+Cj4gPiAtLS0NCj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxNzMuZHRzaSB8
+IDQgKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4g
+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTczLmR0c2kgYi9h
+cmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My5kdHNpDQo+ID4gaW5kZXggMTVmMTg0
+MmY2ZGYzLi5iMDNjYTVhNzEzMzggMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0
+cy9tZWRpYXRlay9tdDgxNzMuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVk
+aWF0ZWsvbXQ4MTczLmR0c2kNCj4gPiBAQCAtMTU3LDYgKzE1Nyw3IEBADQo+ID4gIAkJCWVuYWJs
+ZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gIAkJCWNwdS1pZGxlLXN0YXRlcyA9IDwmQ1BVX1NMRUVQ
+XzA+Ow0KPiA+ICAJCQkjY29vbGluZy1jZWxscyA9IDwyPjsNCj4gPiArCQkJZHluYW1pYy1wb3dl
+ci1jb2VmZmljaWVudCA9IDwyNjM+Ow0KPiA+ICAJCQljbG9ja3MgPSA8JmluZnJhY2ZnIENMS19J
+TkZSQV9DQTUzU0VMPiwNCj4gPiAgCQkJCSA8JmFwbWl4ZWRzeXMgQ0xLX0FQTUlYRURfTUFJTlBM
+TD47DQo+ID4gIAkJCWNsb2NrLW5hbWVzID0gImNwdSIsICJpbnRlcm1lZGlhdGUiOw0KPiA+IEBA
+IC0xNzAsNiArMTcxLDcgQEANCj4gPiAgCQkJZW5hYmxlLW1ldGhvZCA9ICJwc2NpIjsNCj4gPiAg
+CQkJY3B1LWlkbGUtc3RhdGVzID0gPCZDUFVfU0xFRVBfMD47DQo+ID4gIAkJCSNjb29saW5nLWNl
+bGxzID0gPDI+Ow0KPiA+ICsJCQlkeW5hbWljLXBvd2VyLWNvZWZmaWNpZW50ID0gPDI2Mz47DQo+
+ID4gIAkJCWNsb2NrcyA9IDwmaW5mcmFjZmcgQ0xLX0lORlJBX0NBNTNTRUw+LA0KPiA+ICAJCQkJ
+IDwmYXBtaXhlZHN5cyBDTEtfQVBNSVhFRF9NQUlOUExMPjsNCj4gPiAgCQkJY2xvY2stbmFtZXMg
+PSAiY3B1IiwgImludGVybWVkaWF0ZSI7DQo+ID4gQEAgLTE4Myw2ICsxODUsNyBAQA0KPiA+ICAJ
+CQllbmFibGUtbWV0aG9kID0gInBzY2kiOw0KPiA+ICAJCQljcHUtaWRsZS1zdGF0ZXMgPSA8JkNQ
+VV9TTEVFUF8wPjsNCj4gPiAgCQkJI2Nvb2xpbmctY2VsbHMgPSA8Mj47DQo+ID4gKwkJCWR5bmFt
+aWMtcG93ZXItY29lZmZpY2llbnQgPSA8NTMwPjsNCj4gPiAgCQkJY2xvY2tzID0gPCZpbmZyYWNm
+ZyBDTEtfSU5GUkFfQ0E3MlNFTD4sDQo+ID4gIAkJCQkgPCZhcG1peGVkc3lzIENMS19BUE1JWEVE
+X01BSU5QTEw+Ow0KPiA+ICAJCQljbG9jay1uYW1lcyA9ICJjcHUiLCAiaW50ZXJtZWRpYXRlIjsN
+Cj4gPiBAQCAtMTk2LDYgKzE5OSw3IEBADQo+ID4gIAkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7
+DQo+ID4gIAkJCWNwdS1pZGxlLXN0YXRlcyA9IDwmQ1BVX1NMRUVQXzA+Ow0KPiA+ICAJCQkjY29v
+bGluZy1jZWxscyA9IDwyPjsNCj4gPiArCQkJZHluYW1pYy1wb3dlci1jb2VmZmljaWVudCA9IDw1
+MzA+Ow0KPiA+ICAJCQljbG9ja3MgPSA8JmluZnJhY2ZnIENMS19JTkZSQV9DQTcyU0VMPiwNCj4g
+PiAgCQkJCSA8JmFwbWl4ZWRzeXMgQ0xLX0FQTUlYRURfTUFJTlBMTD47DQo+ID4gIAkJCWNsb2Nr
+LW5hbWVzID0gImNwdSIsICJpbnRlcm1lZGlhdGUiOw0KPiA+IA0KPiANCj4gDQoNCg==
 
