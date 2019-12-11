@@ -2,96 +2,111 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD97C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 08:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB0EC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 08:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A6620836
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 08:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F24FF214AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 08:41:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JVeIF5c0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbfLKIdf convert rfc822-to-8bit (ORCPT
+        id S1727848AbfLKIlV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 03:33:35 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46932 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfLKIdf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 03:33:35 -0500
-Received: by mail-ed1-f65.google.com with SMTP id m8so18639328edi.13;
-        Wed, 11 Dec 2019 00:33:33 -0800 (PST)
+        Wed, 11 Dec 2019 03:41:21 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37283 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfLKIlV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 03:41:21 -0500
+Received: by mail-pj1-f65.google.com with SMTP id ep17so8658915pjb.4;
+        Wed, 11 Dec 2019 00:41:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s5qKVi0ow9j/+PgSK4g7oFXUi7s8J1QUH2gPB5uRhng=;
+        b=JVeIF5c0x4qPWCcRQP89soeeVAzZ+l7bIv8ArdHIFudN0Hmn6FnS3jwrXH8LqY1GUZ
+         o/amn2pnA2gMC9sf4y2ZK3GJRo8vvpAS9I3soADsyhkeqWeP5IgYcq+tKLlygr6dBAX9
+         dvJnhKdBZy11kJmY8BpIwOpGm9CU7HgzZLyzt2u5d4bXEz+6pKq/0MxAfiLG5gZfNS5A
+         WNVP4/9bZCspt9mlzv273V/drsUYEnATBzarGAk0HBVv/pqpmwiJpILtkBK16uwnzfbw
+         IXEb9fameNjYyZTl2vd4vIGY0uXi5Xgny2ofeE3HuFxA/brdfHJP0BwWnw+agIFavjJp
+         /xTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HzQhBjl4CEATxmwnIgxUg2g0u1Z69db5jVtArs+GAuc=;
-        b=dQRppAsGdy3FvauCVF7oYCrZHl2I79rgZuPJixQwb4C5MoZZyaEyIBUsVRdPfqbxnU
-         xHvrBCtCUZkSdJw7ivlikRK4LrKHAjrZC2/+QVci0YUwhCQHqi80Zw8jxpOMznTnrUYy
-         YBcg3r+7KDWSwQI1oihAooUVaRIJl/82wd7zSSMvK3D+qi42a4PzkccRo3fNxTyeYkEe
-         vWgYZ5/GXBSaF2lZNzFsOKGPPnP6En3vq1RyUMDjC+Ho1LIitEkT+f98ukzQheyq+xto
-         jQb9YRu/uJmLvcIeY//ekghPAtVom0ckfVpbwomS194Cm5ycV8oPChQTj81QqmmJEWNl
-         CHqQ==
-X-Gm-Message-State: APjAAAVyD03+ZwIcumqlYlcHnrCmyb6A0bLQ4vR+bjI/jG9vOHZFVvnN
-        Fc4ORy6zCZ+uYSuIWoAAM7kxMWDWPx0=
-X-Google-Smtp-Source: APXvYqzwQTuYd/TjOPWeR3KKV7am/bZZPm2uZWfhkZtV7xZYTGc/D59x8oNVY8mQByduPUhvCHkP0w==
-X-Received: by 2002:a50:ce56:: with SMTP id k22mr1969229edj.34.1576053212561;
-        Wed, 11 Dec 2019 00:33:32 -0800 (PST)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
-        by smtp.gmail.com with ESMTPSA id bx25sm22710edb.80.2019.12.11.00.33.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 00:33:32 -0800 (PST)
-Received: by mail-wr1-f46.google.com with SMTP id t2so23051585wrr.1;
-        Wed, 11 Dec 2019 00:33:32 -0800 (PST)
-X-Received: by 2002:adf:81e3:: with SMTP id 90mr2310139wra.23.1576053211823;
- Wed, 11 Dec 2019 00:33:31 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s5qKVi0ow9j/+PgSK4g7oFXUi7s8J1QUH2gPB5uRhng=;
+        b=c0ZGFoaiMOEZyPZpETiS+PyRfUidwkIE7Tz6nRJq4oGsHsmMVtyf9nx5sn6DhiKIym
+         i1aZfy1GGbEhal0OE6S9X4y+WeF/I4pPMfVPRW+feY+I/in7wA//n3gsMdWj/77M2RTn
+         5wZRMli277/l6zLg/WQHUnxLVZ0Ukrmxquwni1le/wA3qaLHg/1iCouQiNgDYFScaRvf
+         WJhNOZUFNS8nQisjWCarS/htZUkVGflPeLEuSLPHEtOMLD9uJQp9QdnboSbDJ5XayW0H
+         MARv/x2dBXtpsK3I+aErIdG5LoXVcnkcMTkd8VIaXDDhJonO00dxSOTIFQWV0BBIXPx2
+         ps4Q==
+X-Gm-Message-State: APjAAAXnfVfWqqg6sJR4BU4PjlW0BmsD6Byz+EHYrvNcIjXWiuraMzV/
+        GtVYtAvQrI89hchM4l/tHtU=
+X-Google-Smtp-Source: APXvYqyyMQ+AucG9e2uc2shvqk0QaTaNbnFgmIxAXSBua1SEP5Al4wKFWdYvh7CtBxgLX2DYFTKOHw==
+X-Received: by 2002:a17:902:7c83:: with SMTP id y3mr2037257pll.34.1576053680345;
+        Wed, 11 Dec 2019 00:41:20 -0800 (PST)
+Received: from localhost.localdomain ([103.51.73.137])
+        by smtp.gmail.com with ESMTPSA id e16sm1806233pgk.77.2019.12.11.00.41.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 00:41:19 -0800 (PST)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+Subject: [PATCHv1 0/3] Enable crypto module on Amlogic GXBB SoC platform
+Date:   Wed, 11 Dec 2019 08:41:09 +0000
+Message-Id: <20191211084112.971-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191210174710.10649-1-peron.clem@gmail.com> <20191211080633.a6yzwbxi7fcmislp@gilmour.lan>
-In-Reply-To: <20191211080633.a6yzwbxi7fcmislp@gilmour.lan>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Wed, 11 Dec 2019 16:33:19 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66mWgDKyZEWVVYqq5McOaYmiY0PSP7iXE8TBtVZv03u1Q@mail.gmail.com>
-Message-ID: <CAGb2v66mWgDKyZEWVVYqq5McOaYmiY0PSP7iXE8TBtVZv03u1Q@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pwm: allwinner: Fix missing header in H6 example
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 4:06 PM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> On Tue, Dec 10, 2019 at 06:47:10PM +0100, Clément Péron wrote:
-> > Latest linux-next doesn't build due to the following error:
-> >
-> > Error: Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.example.dts:35.37-38
-> > syntax error
-> > FATAL ERROR: Unable to parse input tree
-> > make[1]: *** [Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.example.dt.yaml]
-> > Error 1
-> >
-> > This is due to missing header in the device-tree yaml example.
-> >
-> > Fix this by adding the missing headers.
-> >
-> > Fixes: 4ee929b3f08e ("dt-bindings: pwm: allwinner: Add H6 PWM description")
-> > Reported-by: Rob Herring <robh+dt@kernel.org>
-> > Signed-off-by: Clément Péron <peron.clem@gmail.com>
->
-> Applied, thanks!
-> Maxime
+Below changes enable cryto module on Amlogic GXBB SoC.
 
-Maybe squash it instead? :)
+I was realy happy to get this feature working on Odroid C2 SBC.
+I will try on other SBC in the future.
 
-ChenYu
+Tested with loading tcrypt module.
+# sudo modprobe tcrypt sec=1 mode=200
+[sudo] password for alarm:
+[  903.867059] tcrypt:
+[  903.867059] testing speed of async ecb(aes) (ecb(aes-arm64)) encryption
+[  903.870265] tcrypt: test 0 (128 bit key, 16 byte blocks): 1922107 operations in 1 seconds (30753712 bytes)
+[  904.872802] tcrypt: test 1 (128 bit key, 64 byte blocks): 679032 operations in 1 seconds (43458048 bytes)
+[  905.872717] tcrypt: test 2 (128 bit key, 256 byte blocks): 190190 operations in 1 seconds (48688640 bytes)
+[  906.872793] tcrypt: test 3 (128 bit key, 1024 byte blocks): 49014 operations in 1 seconds (50190336 bytes)
+[  907.872808] tcrypt: test 4 (128 bit key, 1472 byte blocks): 34342 operations in 1 seconds (50551424 bytes)
+[  908.876828] tcrypt: test 5 (128 bit key, 8192 byte blocks): 6199 operations in 1 seconds (50782208 bytes)
+
+-Anand
+
+Anand Moon (3):
+  arm64: dts: amlogic: adds crypto hardware node for GXBB SoCs
+  dt-bindings: crypto: Add compatible string for amlogic GXBB SoC
+  crypto: amlogic: Add new compatible string for amlogic GXBB SoC
+
+ .../devicetree/bindings/crypto/amlogic,gxl-crypto.yaml |  1 +
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi            | 10 ++++++++++
+ drivers/crypto/amlogic/amlogic-gxl-core.c              |  1 +
+ 3 files changed, 12 insertions(+)
+
+-- 
+2.24.0
+
