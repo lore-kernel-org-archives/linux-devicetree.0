@@ -2,97 +2,103 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0440EC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 02:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B7EC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 02:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D582E206EC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 02:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1099620836
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 02:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576030662;
+	bh=nsAKjl153J0JJUCjGK9PiMgZyuqUToi/dFZG+kBnD8Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vTLWZPEeLo3OEyYEQwx1e56asfzA5Pps9YHDN2T/X2h/le88Qe3dpKGgMNY+eGnBD
+	 2LJ3GtFa37zdB7YVA4JvMT/x/Q3aoti7ZS+HAq3vFERDs0KZyCvsBQmuDdqqjO+/WW
+	 Umg8aGn6N5XaPS/It16jOhbuEEIk+/RtYAk2cw8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbfLKCQp (ORCPT
+        id S1726888AbfLKCRl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:16:45 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:10885 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbfLKCQo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 21:16:44 -0500
-Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 11 Dec
- 2019 10:17:13 +0800
-Subject: Re: [PATCH] arm64: dts: meson-a1: add I2C nodes
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191202111253.94872-1-jian.hu@amlogic.com>
- <1j8snkh4cz.fsf@starbuckisacylon.baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <be7f27d2-5601-0d0c-9c62-7206e7de0411@amlogic.com>
-Date:   Wed, 11 Dec 2019 10:17:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 10 Dec 2019 21:17:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726500AbfLKCRl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 21:17:41 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B743206EC;
+        Wed, 11 Dec 2019 02:17:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576030660;
+        bh=nsAKjl153J0JJUCjGK9PiMgZyuqUToi/dFZG+kBnD8Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FB4e1hbKhPhj0z40cj0Hmp0JwXqAAWSkrUd6Gu3DIpVTKk9P0tLagZQwdKff4I755
+         HdwmwRM+w1AUJZ1p0iOldxPBwPpgWx65e0HyRMuogibSzFwMcudvXh9e0y/QTzyvnS
+         p+BpHxjJP5i7DLd9syIB+TI0U5bZebie0jVv3s7k=
+Date:   Wed, 11 Dec 2019 10:17:23 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] arm64: dts: ls1028a: fix reboot node
+Message-ID: <20191211021722.GA15858@dragon>
+References: <20191123000709.13162-1-michael@walle.cc>
+ <20191209034722.GZ3365@dragon>
+ <67346b48fa7e236ea31e3ecb1a108f28@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <1j8snkh4cz.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.99]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67346b48fa7e236ea31e3ecb1a108f28@walle.cc>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi jerome
+On Mon, Dec 09, 2019 at 10:02:02AM +0100, Michael Walle wrote:
+> Am 2019-12-09 04:47, schrieb Shawn Guo:
+> >On Sat, Nov 23, 2019 at 01:07:09AM +0100, Michael Walle wrote:
+> >>The reboot register isn't located inside the DCFG controller,
+> >>but in its
+> >>own RST controller. Fix it.
+> >>
+> >>Signed-off-by: Michael Walle <michael@walle.cc>
+> >>---
+> >> arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 8 +++++++-
+> >> 1 file changed, 7 insertions(+), 1 deletion(-)
+> >>
+> >>diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> >>b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> >>index 72b9a75976a1..dc75534a4754 100644
+> >>--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> >>+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> >>@@ -102,7 +102,7 @@
+> >>
+> >> 	reboot {
+> >> 		compatible ="syscon-reboot";
+> >>-		regmap = <&dcfg>;
+> >>+		regmap = <&rst>;
+> >> 		offset = <0xb0>;
+> >> 		mask = <0x02>;
+> >> 	};
+> >>@@ -161,6 +161,12 @@
+> >> 			big-endian;
+> >> 		};
+> >>
+> >>+		rst: syscon@1e60000 {
+> >>+			compatible = "fsl,ls1028a-rst", "syscon";
+> >
+> >Compatible "fsl,ls1028a-rst" seems undocumented?
+> 
+> it is the same with fsl,ls1028a-scfg and fsl,ls1028a-dcfg. So maybe
+> I should just drop the "fsl,ls1028a-rst". What do you think?
 
-Thanks for your review
+Drop it or document it.  I'm fine with either way.
 
-On 2019/12/10 18:17, Jerome Brunet wrote:
-> 
-> On Mon 02 Dec 2019 at 12:12, Jian Hu <jian.hu@amlogic.com> wrote:
-> 
->> There are four I2C controllers in A1 series,
->> Share the same comptible with AXG.The I2C nodes
->> depend on pinmux and clock controller.
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> ---
->>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 149 ++++++++++++++++++++++
->>   1 file changed, 149 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> index eab2ecd36aa8..d0a73d953f5e 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> @@ -16,6 +16,13 @@
->>   	#address-cells = <2>;
->>   	#size-cells = <2>;
->>   
->> +	aliases {
->> +		i2c0 = &i2c0;
->> +		i2c1 = &i2c1;
->> +		i2c2 = &i2c2;
->> +		i2c3 = &i2c3;
->> +	};
->> +
-> 
-> I wonder if assigning i2c bus alias in the SoC dtsi is such a good idea.
-> 
-> Such aliases are usually assigned as needed by each board design:
-> meson-a1-ad401.dts in your case.
-> 
-You are right, I will set i2c bus alias in dts file.
-> .
-> 
+Shawn
