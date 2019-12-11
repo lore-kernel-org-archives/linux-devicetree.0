@@ -2,164 +2,181 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD17C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 10:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AB0C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 10:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928742073B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 10:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0298221556
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 10:34:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AlEFjwGw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HKFA7/+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbfLKKY4 (ORCPT
+        id S1728863AbfLKKeK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:24:56 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35542 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727469AbfLKKY4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 05:24:56 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBAOj8Q115655;
-        Wed, 11 Dec 2019 04:24:45 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576059885;
-        bh=W+RMFciMhRgB2xiAH7N3KcyPOaKYa0Y2g73Ycx9qJBU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=AlEFjwGweVEw8qSb+hWRM560R4gcZ7LdQZ7uT5KGIJsgTrfW8NMyt7CLxYaIfAK7/
-         9i+s5zTdbewcepjqroGmDL/g963+nLlM7PN4rIUCzTtx7AnaFGJ6YvBuMudA2LnFlu
-         E9LCQFxJqBv/nvaI1HudJqEX0eIujtBgobWH2jN8=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBAOjKf030751;
-        Wed, 11 Dec 2019 04:24:45 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Dec 2019 04:24:43 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Dec 2019 04:24:43 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBAOeLj096803;
-        Wed, 11 Dec 2019 04:24:40 -0600
-Subject: Re: [PATCH v7 11/12] firmware: ti_sci: rm: Add support for tx_tdtype
- parameter for tx channel
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <tony@atomide.com>, <j-keerthy@ti.com>, <vigneshr@ti.com>
-References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
- <20191209094332.4047-12-peter.ujfalusi@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <3d3a4f1d-e449-88d6-ec5a-5ce516faf436@ti.com>
-Date:   Wed, 11 Dec 2019 12:24:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 11 Dec 2019 05:34:10 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36919 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728862AbfLKKeK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 05:34:10 -0500
+Received: by mail-il1-f193.google.com with SMTP id t9so19002324iln.4;
+        Wed, 11 Dec 2019 02:34:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dOmVU46s6nV+n0B47S9FUyCMpYjTYJPpLDGRrRSRigA=;
+        b=HKFA7/+6tylk60vhCVFcqc+BPuWBQ2OPBDe/7Z1erDUzjZdWn9QRbN1+/YWglnVRpn
+         ZEyMWn00OVns4EbGCXtpU0/dDnHxoV6ixZFCdS3p6uqgLHVrt7kJ8l70cPNODSJznmew
+         GTBvgWCcv11jqKiEUs9GCmdP+MvSIzaoYt4vmnWj7dbIAUv9FbR5qKotm0PRAVXDA4yH
+         iahuo7fjQTrLs2z8qdkGTk6OINGZMKPhehiZrx8Ftzw0pVNfprfG0jAgUzM98MrZPrJ4
+         MVTIOpe1l90Vv9OxHIKbGaI6szxgpEIcRlCp4fhF/GOmKxA/RdL2O4OnEza9M4B+RC5g
+         JZiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dOmVU46s6nV+n0B47S9FUyCMpYjTYJPpLDGRrRSRigA=;
+        b=P8ACIax9nG7oH77diyXogQ3PPKvKmW1kUmR8ewb+DEUBO1uigoTsx+kRozMdlRPOKQ
+         Tcwk7YdkKNrXmvrHK3KxReC13gOZcAB6jrv5NH/iC52UstMaaEWZf2T/KsdFVQyoMEJt
+         f2ycVGMWX3dVenbGlHnNsoQQeuXeO51FqlpsgvHqKqrx0zy6jgzQxLEasH5QNyizvzr2
+         es9y1/CuAnsKJUHNMGKtVJId5IlA/m0dFKxHZY65f20w864H33Ym+rNfmimZGGRiii0S
+         fCgI6U9qMTH+GkaMZ5rHRe11pTMHqaNbwyEgz06/fxIUA9lKwfWJDT+ZCAvSLQ+qW9CU
+         i8Wg==
+X-Gm-Message-State: APjAAAXRnlFW7xNyNFW1OwXd1DD9NzA3+Nyuk2oRakJDDcjUw5Or1Ina
+        eLmnk5R05Ii7pBCX74zBJ23ynrmuToIXVvLKAGI=
+X-Google-Smtp-Source: APXvYqx9ymukFe/tBUQNK7wtKGmsWiAPG+2T6ub8VNY5LvUHiZqsh0RhNmlZhmC+X9W69a0rPzCnGegI2mJzlejoBIk=
+X-Received: by 2002:a92:3919:: with SMTP id g25mr2235862ila.221.1576060449476;
+ Wed, 11 Dec 2019 02:34:09 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191209094332.4047-12-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191211084112.971-1-linux.amoon@gmail.com> <a4610efc-844a-2d43-5db1-cf813102e701@baylibre.com>
+ <CANAwSgQOTA0mSvFW5otaCzFPHidhY7VFcrXZHjCD-1XkQpcx3w@mail.gmail.com> <20191211095043.3kngq7wh77xvadge@gondor.apana.org.au>
+In-Reply-To: <20191211095043.3kngq7wh77xvadge@gondor.apana.org.au>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Wed, 11 Dec 2019 16:03:58 +0530
+Message-ID: <CANAwSgTNX1Q4VWymXYyvcByFhr+f3C9AqpG2G7dQp+0DPLR-JA@mail.gmail.com>
+Subject: Re: [PATCHv1 0/3] Enable crypto module on Amlogic GXBB SoC platform
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 09/12/2019 11:43, Peter Ujfalusi wrote:
-> The system controller's resource manager have support for configuring the
-> TDTYPE of TCHAN_CFG register on j721e.
-> With this parameter the teardown completion can be controlled:
-> TDTYPE == 0: Return without waiting for peer to complete the teardown
-> TDTYPE == 1: Wait for peer to complete the teardown
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Hi Herbert,
 
-Hi Peter,
+On Wed, 11 Dec 2019 at 15:20, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> On Wed, Dec 11, 2019 at 03:07:53PM +0530, Anand Moon wrote:
+> >
+> > name         : ecb(aes)
+> > driver       : ecb-aes-gxl
+> > module       : kernel
+> > priority     : 400
+> > refcnt       : 1
+> > selftest     : passed
+> > internal     : no
+> > type         : skcipher
+> > async        : yes
+> > blocksize    : 16
+> > min keysize  : 16
+> > max keysize  : 32
+> > ivsize       : 0
+> > chunksize    : 16
+> > walksize     : 16
+> >
+> > name         : cbc(aes)
+> > driver       : cbc-aes-gxl
+> > module       : kernel
+> > priority     : 400
+> > refcnt       : 1
+> > selftest     : passed
+> > internal     : no
+> > type         : skcipher
+> > async        : yes
+> > blocksize    : 16
+> > min keysize  : 16
+> > max keysize  : 32
+> > ivsize       : 16
+> > chunksize    : 16
+> > walksize     : 16
+>
+> Oh so you did actually get them loaded.  You need to run tcrypt with
+> mode=500 instead of 200 to test the async ciphers.  Does that work?
+>
+> Thanks,
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
 
-You somehow dropped my reviewed by tag from this patch, this appears 
-identical to the v6 one. So,
+I get kernel panic, I will try to look into this much closely.
 
-Reviewed-by: Tero Kristo <t-kristo@ti.com>
+[alarm@alarm ~]$ sudo modprobe tcrypt sec=1 mode=500
+[sudo] password for alarm:
+[  754.382673] tcrypt:
+[  754.382673] testing speed of async ecb(aes) (ecb-aes-gxl) encryption
+[  754.385583] tcrypt: test 0 (128 bit key, 16 byte blocks):
+[  754.385774] SError Interrupt on CPU1, code 0xbf000000 -- SError
+[  754.385776] CPU: 1 PID: 121 Comm: da832000.crypto Not tainted
+5.5.0-rc1-00012-g6794862a16ef-dirty #3
+[  754.385778] Hardware name: Hardkernel ODROID-C2 (DT)
+[  754.385779] pstate: 60000005 (nZCv daif -PAN -UAO)
+[  754.385781] pc : wait_for_completion_interruptible_timeout+0x20/0x120
+[  754.385782] lr : meson_handle_cipher_request+0x344/0x700
+[  754.385783] sp : ffff800011e9bca0
+[  754.385784] x29: ffff800011e9bca0 x28: 0000000000000040
+[  754.385787] x27: 0000000000000010 x26: 0000000000000000
+[  754.385789] x25: 0000000000000000 x24: 0000000005300080
+[  754.385792] x23: 0000000000000002 x22: ffff00006d08aa00
+[  754.385795] x21: ffff00007f68c4d0 x20: ffff00007f68c4c8
+[  754.385797] x19: 000000000000007d x18: 00000000000000ab
+[  754.385800] x17: 000000000000006c x16: 000000000000001b
+[  754.385802] x15: 000000000000000c x14: 0000000000000010
+[  754.385805] x13: 0000000000000000 x12: 0000000000000000
+[  754.385808] x11: 0000000000000001 x10: ffff8000119d7e80
+[  754.385810] x9 : 0000000000000000 x8 : ffff800011add000
+[  754.385813] x7 : 0000000000000000 x6 : 0000000000000000
+[  754.385815] x5 : 0000000000000000 x4 : 0000000080800010
+[  754.385818] x3 : ffff800011acd000 x2 : 000000006d093002
+[  754.385820] x1 : 000000000000007d x0 : ffff00007f68c4c8
+[  754.385824] Kernel panic - not syncing: Asynchronous SError Interrupt
+[  754.385825] CPU: 1 PID: 121 Comm: da832000.crypto Not tainted
+5.5.0-rc1-00012-g6794862a16ef-dirty #3
+[  754.385827] Hardware name: Hardkernel ODROID-C2 (DT)
+[  754.385828] Call trace:
+[  754.385829]  dump_backtrace+0x0/0x188
+[  754.385830]  show_stack+0x14/0x20
+[  754.385831]  dump_stack+0xb4/0xfc
+[  754.385832]  panic+0x158/0x320
+[  754.385833]  nmi_panic+0x84/0x88
+[  754.385834]  arm64_serror_panic+0x74/0x80
+[  754.385835]  do_serror+0x80/0x138
+[  754.385836]  el1_error+0x84/0x100
+[  754.385838]  wait_for_completion_interruptible_timeout+0x20/0x120
+[  754.385839]  meson_handle_cipher_request+0x344/0x700
+[  754.385840]  crypto_pump_work+0x10c/0x228
+[  754.385841]  kthread_worker_fn+0xa8/0x188
+[  754.385842]  kthread+0xf0/0x120
+[  754.385843]  ret_from_fork+0x10/0x18
+[  754.385862] SMP: stopping secondary CPUs
+[  754.385863] Kernel Offset: disabled
+[  754.385864] CPU features: 0x00002,24002004
+[  754.385865] Memory Limit: none
 
-> ---
->   drivers/firmware/ti_sci.c              | 1 +
->   drivers/firmware/ti_sci.h              | 7 +++++++
->   include/linux/soc/ti/ti_sci_protocol.h | 2 ++
->   3 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-> index 4126be9e3216..f13e4a96f3b7 100644
-> --- a/drivers/firmware/ti_sci.c
-> +++ b/drivers/firmware/ti_sci.c
-> @@ -2412,6 +2412,7 @@ static int ti_sci_cmd_rm_udmap_tx_ch_cfg(const struct ti_sci_handle *handle,
->   	req->fdepth = params->fdepth;
->   	req->tx_sched_priority = params->tx_sched_priority;
->   	req->tx_burst_size = params->tx_burst_size;
-> +	req->tx_tdtype = params->tx_tdtype;
->   
->   	ret = ti_sci_do_xfer(info, xfer);
->   	if (ret) {
-> diff --git a/drivers/firmware/ti_sci.h b/drivers/firmware/ti_sci.h
-> index f0d068c03944..255327171dae 100644
-> --- a/drivers/firmware/ti_sci.h
-> +++ b/drivers/firmware/ti_sci.h
-> @@ -910,6 +910,7 @@ struct rm_ti_sci_msg_udmap_rx_flow_opt_cfg {
->    *   12 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::tx_credit_count
->    *   13 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::fdepth
->    *   14 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::tx_burst_size
-> + *   15 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::tx_tdtype
->    *
->    * @nav_id: SoC device ID of Navigator Subsystem where tx channel is located
->    *
-> @@ -973,6 +974,11 @@ struct rm_ti_sci_msg_udmap_rx_flow_opt_cfg {
->    *
->    * @tx_burst_size: UDMAP transmit channel burst size configuration to be
->    * programmed into the tx_burst_size field of the TCHAN_TCFG register.
-> + *
-> + * @tx_tdtype: UDMAP transmit channel teardown type configuration to be
-> + * programmed into the tdtype field of the TCHAN_TCFG register:
-> + * 0 - Return immediately
-> + * 1 - Wait for completion message from remote peer
->    */
->   struct ti_sci_msg_rm_udmap_tx_ch_cfg_req {
->   	struct ti_sci_msg_hdr hdr;
-> @@ -994,6 +1000,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg_req {
->   	u16 fdepth;
->   	u8 tx_sched_priority;
->   	u8 tx_burst_size;
-> +	u8 tx_tdtype;
->   } __packed;
->   
->   /**
-> diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
-> index 9531ec823298..f3aed0b91564 100644
-> --- a/include/linux/soc/ti/ti_sci_protocol.h
-> +++ b/include/linux/soc/ti/ti_sci_protocol.h
-> @@ -342,6 +342,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg {
->   #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID        BIT(11)
->   #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_CREDIT_COUNT_VALID      BIT(12)
->   #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FDEPTH_VALID            BIT(13)
-> +#define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_TDTYPE_VALID            BIT(15)
->   	u16 nav_id;
->   	u16 index;
->   	u8 tx_pause_on_err;
-> @@ -359,6 +360,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg {
->   	u16 fdepth;
->   	u8 tx_sched_priority;
->   	u8 tx_burst_size;
-> +	u8 tx_tdtype;
->   };
->   
->   /**
-> 
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-Anand
