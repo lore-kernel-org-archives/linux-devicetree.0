@@ -2,388 +2,101 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE5EC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 21:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87B4C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 21:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC47320409
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 21:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99733222C4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 21:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hqTkm8Gh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="btsGbM8j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfLKVih (ORCPT
+        id S1726647AbfLKVye (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 16:38:37 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40487 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfLKVih (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 16:38:37 -0500
-Received: by mail-lf1-f66.google.com with SMTP id i23so5412062lfo.7
-        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 13:38:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=R26EY7063ftF6OanXZF13KqC7WSutYgJ/cSOxLnyVS8=;
-        b=hqTkm8GhFYskVJypRDlT94mghkQCelcHWpxduPE1aNlU7fXTvOtzfUlWVns0CYwQ4Y
-         2BXYXEhmmixSgkNFSnKc9xTafNOQzi9Z82s1zJvBO9Rm2if7x7mp8fAI/XTBN8vkxcuE
-         qNhN0nvq2CcS0+X+il9RMXtdo3FJlhIPjh6326Nk+xOSY+LKoePjUShz7fEgu4j3qlTK
-         CBwmLEZ5kzGJ6UEA3YAkl8LA4TkMiyAEOpBgwVTH+A7+mIUj9bUErbDuWBGA85pamnU2
-         LME3TWOqJIQVMl+caoEjBRK7y79ZshHqw9tU5OB+vvpuZyKNdGouo0wI1ktV1fXRRMh5
-         WA9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=R26EY7063ftF6OanXZF13KqC7WSutYgJ/cSOxLnyVS8=;
-        b=q1GVBoMjnLJpyJDi/sQvb840Gf0vdM8DFfX/rwUfKtj7W03MfufXycc1EHDgu59T/9
-         cnMwG5tHYFoPoIwTWw93zFom653VcAVjpV3X0PX79gZdQvLLWpwQz88Tccam0RZ2OUJK
-         O6IhVglnpf+WQ+LTuVwojI1n47lua8tSS0ptyR53SnZnrc8wNdoZZdayb/IJPBkPp6zJ
-         0oXp4gwvhOE3xUZ7INwCHOnKrhsgc94vHjbY+IFa+Jc2QbT5mszyevEaCgvyW/kgWH2B
-         UqzJPUnp1gxVxfWxUyQspAKdsTzZxy6411YdKWAg+Zc3C1gqtbetIhU0cQ4/esBZ1xIc
-         1ykw==
-X-Gm-Message-State: APjAAAXpAae2bTGb0gXLvpP5P/Yk/KxvLSnBIUZz/+sZLUGozsVJt9f+
-        M9hrzQxb0+1lVTwcUETkAK9tfQ==
-X-Google-Smtp-Source: APXvYqzJ1IAnbjjV+tYZon2wGYd5eWtvVB63gwh4N+DvRlPTGW9569s1+RJ0u8pDny6W+0rqiFe61A==
-X-Received: by 2002:ac2:5a43:: with SMTP id r3mr3721261lfn.150.1576100314067;
-        Wed, 11 Dec 2019 13:38:34 -0800 (PST)
-Received: from localhost.bredbandsbolaget (c-21cd225c.014-348-6c756e10.bbcust.telenor.se. [92.34.205.33])
-        by smtp.gmail.com with ESMTPSA id e8sm2074199ljb.45.2019.12.11.13.38.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 13:38:32 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 4/4] iio: accel: bma180: BMA254 support
-Date:   Wed, 11 Dec 2019 22:38:19 +0100
-Message-Id: <20191211213819.14024-4-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191211213819.14024-1-linus.walleij@linaro.org>
-References: <20191211213819.14024-1-linus.walleij@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 11 Dec 2019 16:54:34 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:36682 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726313AbfLKVyd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Dec 2019 16:54:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Message-Id:Date:Subject:Cc:To:From:Sender:
+        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=6yDIvGoEIdyIxWF4uOpwl8SQIQb1Tz6fEiyEFR/vABg=; b=btsGbM8jl3/83x2vaz+Bu9vkPR
+        oncI5rXnHyzJHeeQG4CCOneCvIO9dpFec6j6+bvJQGjUfznYKnEEK4O7LdAFeYerGMSWh4bFHK3YG
+        YpypQ31UjiTHMg6pfxgOmaDhZgyx7y2XAAsOEFHWPZSoN+/J8WstATNPi04+nJ26OWb4=;
+Received: from p5dcc331a.dip0.t-ipconnect.de ([93.204.51.26] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1if9w9-0002EV-Up; Wed, 11 Dec 2019 22:54:26 +0100
+Received: from andi by eeepc with local (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1if9w5-00005W-CD; Wed, 11 Dec 2019 22:54:21 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
+        phh@phh.me, letux-kernel@openphoenux.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v4 0/5] Add rtc support for rn5t618 mfd 
+Date:   Wed, 11 Dec 2019 22:54:04 +0100
+Message-Id: <20191211215409.32764-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds support for the BMA254 variant of this
-accelerometer. The only difference for the simple IIO
-driver is that values are 12 bit and the temperature
-offset differs by 1 degree.
+In the variant RC5T619 the mfd has an RTC. This patchset adds
+support for it. To do so it adds the missing register defines in 
+rn5t618.h and general irq handling for that.
+It seems that the irq definitions are the same except missing RTC
+but due to missing ability to test that I do not add them here.
 
-Cc: Peter Meerwald <pmeerw@pmeerw.net>
-Cc: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- .../devicetree/bindings/iio/accel/bma180.txt  |   7 +-
- drivers/iio/accel/Kconfig                     |   4 +-
- drivers/iio/accel/bma180.c                    | 108 +++++++++++++++---
- 3 files changed, 100 insertions(+), 19 deletions(-)
+The rtc driver itself is based on 
+https://github.com/kobolabs/Kobo-Reader/blob/master/hw/imx6sll-clara/kernel.tar.bz2
+but heavily reworked.
 
-diff --git a/Documentation/devicetree/bindings/iio/accel/bma180.txt b/Documentation/devicetree/bindings/iio/accel/bma180.txt
-index 3b25b4c4d446..f53237270b32 100644
---- a/Documentation/devicetree/bindings/iio/accel/bma180.txt
-+++ b/Documentation/devicetree/bindings/iio/accel/bma180.txt
-@@ -1,11 +1,14 @@
--* Bosch BMA180 / BMA250 triaxial acceleration sensor
-+* Bosch BMA180 / BMA25x triaxial acceleration sensor
- 
- http://omapworld.com/BMA180_111_1002839.pdf
- http://ae-bst.resource.bosch.com/media/products/dokumente/bma250/bst-bma250-ds002-05.pdf
- 
- Required properties:
- 
--  - compatible : should be "bosch,bma180" or "bosch,bma250"
-+  - compatible : should be one of:
-+    "bosch,bma180"
-+    "bosch,bma250"
-+    "bosch,bma254"
-   - reg : the I2C address of the sensor
- 
- Optional properties:
-diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-index d4ef35aeb579..2f10fd7954fc 100644
---- a/drivers/iio/accel/Kconfig
-+++ b/drivers/iio/accel/Kconfig
-@@ -89,13 +89,13 @@ config ADXL372_I2C
- 	  module will be called adxl372_i2c.
- 
- config BMA180
--	tristate "Bosch BMA180/BMA250 3-Axis Accelerometer Driver"
-+	tristate "Bosch BMA180/BMA25x 3-Axis Accelerometer Driver"
- 	depends on I2C
- 	select IIO_BUFFER
- 	select IIO_TRIGGERED_BUFFER
- 	help
- 	  Say Y here if you want to build a driver for the Bosch BMA180 or
--	  BMA250 triaxial acceleration sensor.
-+	  BMA25x triaxial acceleration sensor.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called bma180.
-diff --git a/drivers/iio/accel/bma180.c b/drivers/iio/accel/bma180.c
-index f583f10ccbb9..952b2918525b 100644
---- a/drivers/iio/accel/bma180.c
-+++ b/drivers/iio/accel/bma180.c
-@@ -9,6 +9,7 @@
-  * SPI is not supported by driver
-  * BMA180: 7-bit I2C slave address 0x40 or 0x41
-  * BMA250: 7-bit I2C slave address 0x18 or 0x19
-+ * BMA254: 7-bit I2C slave address 0x18 or 0x19
-  */
- 
- #include <linux/module.h>
-@@ -34,17 +35,20 @@
- enum chip_ids {
- 	BMA180,
- 	BMA250,
-+	BMA254,
- };
- 
- struct bma180_data;
- 
- struct bma180_part_info {
-+	u8 chip_id;
- 	const struct iio_chan_spec *channels;
- 	unsigned int num_channels;
- 	const int *scale_table;
- 	unsigned int num_scales;
- 	const int *bw_table;
- 	unsigned int num_bw;
-+	int center_temp;
- 
- 	u8 int_reset_reg, int_reset_mask;
- 	u8 sleep_reg, sleep_mask;
-@@ -52,6 +56,7 @@ struct bma180_part_info {
- 	u8 scale_reg, scale_mask;
- 	u8 power_reg, power_mask, lowpower_val;
- 	u8 int_enable_reg, int_enable_mask;
-+	u8 int_map_reg, int_enable_dataready_int1_mask;
- 	u8 softreset_reg;
- 
- 	int (*chip_config)(struct bma180_data *data);
-@@ -90,6 +95,8 @@ struct bma180_part_info {
- #define BMA180_RESET_VAL	0xb6
- 
- #define BMA180_ID_REG_VAL	0x03
-+#define BMA250_ID_REG_VAL	0x03
-+#define BMA254_ID_REG_VAL	0xfa /* 250 decimal */
- 
- /* Chip power modes */
- #define BMA180_LOW_POWER	0x03
-@@ -110,6 +117,23 @@ struct bma180_part_info {
- #define BMA250_INT1_DATA_MASK	BIT(0)
- #define BMA250_INT_RESET_MASK	BIT(7) /* Reset pending interrupts */
- 
-+#define BMA254_RANGE_REG	0x0f
-+#define BMA254_BW_REG		0x10
-+#define BMA254_POWER_REG	0x11
-+#define BMA254_RESET_REG	0x14
-+#define BMA254_INT_ENABLE_REG	0x17
-+#define BMA254_INT_MAP_REG	0x1a
-+#define BMA254_INT_RESET_REG	0x21
-+
-+#define BMA254_RANGE_MASK	GENMASK(3, 0) /* Range of accel values */
-+#define BMA254_BW_MASK		GENMASK(4, 0) /* Accel bandwidth */
-+#define BMA254_SUSPEND_MASK	BIT(7) /* chip will sleep */
-+#define BMA254_LOWPOWER_MASK	BIT(6)
-+#define BMA254_DATA_INTEN_MASK	BIT(4)
-+#define BMA254_INT2_DATA_MASK	BIT(7)
-+#define BMA254_INT1_DATA_MASK	BIT(0)
-+#define BMA254_INT_RESET_MASK	BIT(7) /* Reset pending interrupts */
-+
- struct bma180_data {
- 	struct regulator *vdd_supply;
- 	struct regulator *vddio_supply;
-@@ -135,8 +159,8 @@ enum bma180_chan {
- static int bma180_bw_table[] = { 10, 20, 40, 75, 150, 300 }; /* Hz */
- static int bma180_scale_table[] = { 1275, 1863, 2452, 3727, 4903, 9709, 19417 };
- 
--static int bma250_bw_table[] = { 8, 16, 31, 63, 125, 250 }; /* Hz */
--static int bma250_scale_table[] = { 0, 0, 0, 38344, 0, 76590, 0, 0, 153180, 0,
-+static int bma25x_bw_table[] = { 8, 16, 31, 63, 125, 250 }; /* Hz */
-+static int bma25x_scale_table[] = { 0, 0, 0, 38344, 0, 76590, 0, 0, 153180, 0,
- 	0, 0, 306458 };
- 
- static int bma180_get_data_reg(struct bma180_data *data, enum bma180_chan chan)
-@@ -310,8 +334,11 @@ static int bma180_chip_init(struct bma180_data *data)
- 
- 	if (ret < 0)
- 		return ret;
--	if (ret != BMA180_ID_REG_VAL)
-+	if (ret != data->part_info->chip_id) {
-+		dev_err(&data->client->dev, "wrong chip ID %d expected %d\n",
-+			ret, data->part_info->chip_id);
- 		return -ENODEV;
-+	}
- 
- 	ret = bma180_soft_reset(data);
- 	if (ret)
-@@ -358,7 +385,7 @@ static int bma180_chip_config(struct bma180_data *data)
- 	return ret;
- }
- 
--static int bma250_chip_config(struct bma180_data *data)
-+static int bma25x_chip_config(struct bma180_data *data)
- {
- 	int ret = bma180_chip_init(data);
- 
-@@ -370,8 +397,12 @@ static int bma250_chip_config(struct bma180_data *data)
- 	ret = bma180_set_scale(data, 38344); /* 2 G */
- 	if (ret)
- 		goto err;
--	ret = bma180_set_bits(data, BMA250_INT_MAP_REG,
--		BMA250_INT1_DATA_MASK, 1);
-+	/*
-+	 * This enables dataready interrupt on the INT1 pin
-+	 * FIXME: support using the INT2 pin
-+	 */
-+	ret = bma180_set_bits(data, data->part_info->int_map_reg,
-+		data->part_info->int_enable_dataready_int1_mask, 1);
- 	if (ret)
- 		goto err;
- 
-@@ -397,7 +428,7 @@ static void bma180_chip_disable(struct bma180_data *data)
- 	dev_err(&data->client->dev, "failed to disable the chip\n");
- }
- 
--static void bma250_chip_disable(struct bma180_data *data)
-+static void bma25x_chip_disable(struct bma180_data *data)
- {
- 	if (bma180_set_new_data_intr_state(data, false))
- 		goto err;
-@@ -500,7 +531,7 @@ static int bma180_read_raw(struct iio_dev *indio_dev,
- 			return -EINVAL;
- 		}
- 	case IIO_CHAN_INFO_OFFSET:
--		*val = 48; /* 0 LSB @ 24 degree C */
-+		*val = data->part_info->center_temp;
- 		return IIO_VAL_INT;
- 	default:
- 		return -EINVAL;
-@@ -630,14 +661,24 @@ static const struct iio_chan_spec bma250_channels[] = {
- 	IIO_CHAN_SOFT_TIMESTAMP(4),
- };
- 
-+static const struct iio_chan_spec bma254_channels[] = {
-+	BMA180_ACC_CHANNEL(X, 12),
-+	BMA180_ACC_CHANNEL(Y, 12),
-+	BMA180_ACC_CHANNEL(Z, 12),
-+	BMA180_TEMP_CHANNEL,
-+	IIO_CHAN_SOFT_TIMESTAMP(4),
-+};
-+
- static const struct bma180_part_info bma180_part_info[] = {
- 	[BMA180] = {
-+		.chip_id = BMA180_ID_REG_VAL,
- 		.channels = bma180_channels,
- 		.num_channels = ARRAY_SIZE(bma180_channels),
- 		.scale_table = bma180_scale_table,
- 		.num_scales = ARRAY_SIZE(bma180_scale_table),
- 		.bw_table = bma180_bw_table,
- 		.num_bw = ARRAY_SIZE(bma180_bw_table),
-+		.center_temp = 48, /* 0 LSB @ 24 degree C */
- 		.int_reset_reg = BMA180_CTRL_REG0,
- 		.int_reset_mask = BMA180_RESET_INT,
- 		.sleep_reg = BMA180_CTRL_REG0,
-@@ -656,12 +697,14 @@ static const struct bma180_part_info bma180_part_info[] = {
- 		.chip_disable = bma180_chip_disable,
- 	},
- 	[BMA250] = {
-+		.chip_id = BMA250_ID_REG_VAL,
- 		.channels = bma250_channels,
- 		.num_channels = ARRAY_SIZE(bma250_channels),
--		.scale_table = bma250_scale_table,
--		.num_scales = ARRAY_SIZE(bma250_scale_table),
--		.bw_table = bma250_bw_table,
--		.num_bw = ARRAY_SIZE(bma250_bw_table),
-+		.scale_table = bma25x_scale_table,
-+		.num_scales = ARRAY_SIZE(bma25x_scale_table),
-+		.bw_table = bma25x_bw_table,
-+		.num_bw = ARRAY_SIZE(bma25x_bw_table),
-+		.center_temp = 48, /* 0 LSB @ 24 degree C */
- 		.int_reset_reg = BMA250_INT_RESET_REG,
- 		.int_reset_mask = BMA250_INT_RESET_MASK,
- 		.sleep_reg = BMA250_POWER_REG,
-@@ -675,9 +718,39 @@ static const struct bma180_part_info bma180_part_info[] = {
- 		.lowpower_val = 1,
- 		.int_enable_reg = BMA250_INT_ENABLE_REG,
- 		.int_enable_mask = BMA250_DATA_INTEN_MASK,
-+		.int_map_reg = BMA250_INT_MAP_REG,
-+		.int_enable_dataready_int1_mask = BMA250_INT1_DATA_MASK,
- 		.softreset_reg = BMA250_RESET_REG,
--		.chip_config = bma250_chip_config,
--		.chip_disable = bma250_chip_disable,
-+		.chip_config = bma25x_chip_config,
-+		.chip_disable = bma25x_chip_disable,
-+	},
-+	[BMA254] = {
-+		.chip_id = BMA254_ID_REG_VAL,
-+		.channels = bma254_channels,
-+		.num_channels = ARRAY_SIZE(bma254_channels),
-+		.scale_table = bma25x_scale_table,
-+		.num_scales = ARRAY_SIZE(bma25x_scale_table),
-+		.bw_table = bma25x_bw_table,
-+		.num_bw = ARRAY_SIZE(bma25x_bw_table),
-+		.center_temp = 46, /* 0 LSB @ 23 degree C */
-+		.int_reset_reg = BMA254_INT_RESET_REG,
-+		.int_reset_mask = BMA254_INT_RESET_MASK,
-+		.sleep_reg = BMA254_POWER_REG,
-+		.sleep_mask = BMA254_SUSPEND_MASK,
-+		.bw_reg = BMA254_BW_REG,
-+		.bw_mask = BMA254_BW_MASK,
-+		.scale_reg = BMA254_RANGE_REG,
-+		.scale_mask = BMA254_RANGE_MASK,
-+		.power_reg = BMA254_POWER_REG,
-+		.power_mask = BMA254_LOWPOWER_MASK,
-+		.lowpower_val = 1,
-+		.int_enable_reg = BMA254_INT_ENABLE_REG,
-+		.int_enable_mask = BMA254_DATA_INTEN_MASK,
-+		.int_map_reg = BMA254_INT_MAP_REG,
-+		.int_enable_dataready_int1_mask = BMA254_INT1_DATA_MASK,
-+		.softreset_reg = BMA254_RESET_REG,
-+		.chip_config = bma25x_chip_config,
-+		.chip_disable = bma25x_chip_disable,
- 	},
- };
- 
-@@ -918,6 +991,7 @@ static SIMPLE_DEV_PM_OPS(bma180_pm_ops, bma180_suspend, bma180_resume);
- static const struct i2c_device_id bma180_ids[] = {
- 	{ "bma180", BMA180 },
- 	{ "bma250", BMA250 },
-+	{ "bma254", BMA254 },
- 	{ }
- };
- 
-@@ -932,6 +1006,10 @@ static const struct of_device_id bma180_of_match[] = {
- 		.compatible = "bosch,bma250",
- 		.data = (void *)BMA250
- 	},
-+	{
-+		.compatible = "bosch,bma254",
-+		.data = (void *)BMA254
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, bma180_of_match);
-@@ -951,5 +1029,5 @@ module_i2c_driver(bma180_driver);
- 
- MODULE_AUTHOR("Kravchenko Oleksandr <x0199363@ti.com>");
- MODULE_AUTHOR("Texas Instruments, Inc.");
--MODULE_DESCRIPTION("Bosch BMA180/BMA250 triaxial acceleration sensor");
-+MODULE_DESCRIPTION("Bosch BMA180/BMA25x triaxial acceleration sensor");
- MODULE_LICENSE("GPL");
+It was tested on the Kobo Clara HD.
+
+Changes in v4:
+- use macros for IRQ definitions
+- merge rn5t618-core.c and rn5t618-irq.c
+
+Changes in v3:
+- alignment cleanup
+- output cleanup, remove useless toggling of alarm flag in rtc probe
+- updated bindings description, so patch 1/5 becomes 2/6 and so on
+
+Changes in v2:
+- no dead code in irq code
+- various improvements and cleanups in rtc driver itself
+
+Andreas Kemnade (5):
+  dt-bindings: mfd: rn5t618: Document optional property interrupts
+  mfd: rn5t618: add IRQ support
+  mfd: rn5t618: add RTC related registers
+  mfd: rn5t618: add more subdevices
+  rtc: rc5t619: add ricoh rc5t619 RTC driver
+
+ Documentation/devicetree/bindings/mfd/rn5t618.txt |   4 +
+ drivers/mfd/Kconfig                               |   1 +
+ drivers/mfd/rn5t618.c                             | 106 +++++-
+ drivers/rtc/Kconfig                               |  10 +
+ drivers/rtc/Makefile                              |   1 +
+ drivers/rtc/rtc-rc5t619.c                         | 444 ++++++++++++++++++++++
+ include/linux/mfd/rn5t618.h                       |  26 ++
+ 7 files changed, 590 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/rtc/rtc-rc5t619.c
+
 -- 
-2.21.0
+2.11.0
 
