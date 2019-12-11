@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BDEC2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 13:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13C7C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 13:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C10A24653
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 13:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D15F24681
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 13:10:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="Mv+8Ay9s";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="rJHSb6XL"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="YvpZXPo6";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="llt2f1cR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbfLKNKg (ORCPT
+        id S1729447AbfLKNJm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:10:36 -0500
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:12210 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728912AbfLKNJo (ORCPT
+        Wed, 11 Dec 2019 08:09:42 -0500
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:56504 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729370AbfLKNJl (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:09:44 -0500
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBBD4Bee020469;
-        Wed, 11 Dec 2019 05:09:31 -0800
+        Wed, 11 Dec 2019 08:09:41 -0500
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBBD7a3e010249;
+        Wed, 11 Dec 2019 05:09:34 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=proofpoint;
- bh=A71GnE9au1Zk8JhbrK/vkGU/jJdQUGIGvVnNNAp1d+Y=;
- b=Mv+8Ay9sMEpOYeFyWwy/LFZtFdooFQu6GuJLmHv1wutQZJMQGuaoAszWmMME7Lt71Wyj
- yEj+6Z4ppwcvykYByfQFfErtz8tKG9bOiWpiDs3U+MTKLmUzw/8EYuav1T+YW4i+O0be
- 6He2hPuDLlgUukB0OiJ5yWt3DOINMdO9/6NwrOnjDEbGw+YY0pt9MWz6zjhOZA/ADFIP
- GFz1IUrsjvtVPCZPax7TQRwqIbeUr2CAszOiT4grez/i8FmvA1c9hMBM0sw5Gx5xveYO
- qX0wvhCVvJ00/IA39J/5qZ2jxuYgkORty+B0dBJ4SnGVAMPnCp+s2t4MXJPdgRQL1rD9 WA== 
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2175.outbound.protection.outlook.com [104.47.59.175])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2wr9dfp688-1
+ bh=d1s9SV8J28xt9xT3FU99IXHgJ/UsYBNBEhLvoNjc6rQ=;
+ b=YvpZXPo66qMwI7BG+45rZnxyQJ1WTyRojGRqZftUM52H/yM2YhyOzHt1OtqTitEqy4Hc
+ FNyYT91dHXzRMm2h9ul+zOMsZi8OFekNQk2OP88Ifz7huZFQVQYaS15xtUiiZR73q5kD
+ yInNA8G/1rPla/80zbXjs1sA2C/jvDFg+dNaFACF/H048LZAjMpXy6lZVT4lLJC3dEdY
+ 6oppgpdXpeQtmy8KYwJOOnqy7YlIEoFb3PslqpILdWRxQ4dIMkcvKr3g7nt8Lk4LphYl
+ 3h0A96nPpR/nW/CTxqwBiOMsmbZdTsDGL4goBYDWh0hsoeNcW2GJGp6zN08K3B5NjAqL +w== 
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2170.outbound.protection.outlook.com [104.47.57.170])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 2wra70e3wc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Dec 2019 05:09:31 -0800
+        Wed, 11 Dec 2019 05:09:34 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UBDN8uWHytzOT6w8/OmPVwQMQm9XcN5VpGhR2Wr1sOAyIaoTLj8EdzxCozM/9Buni3FkeN27UH5LsR86JFGBXZo3L3Q65eNwqRSYFm3GVbM6T2iXEe4/7nsUuKu63crd14d57ajOWocCYbN1lDo/Igl2KzP/OJ3inb4twWEuLgZQ/7fBKZw3IrHG5FGSVyXPvY38RHqFrVTmp7lb8CQeqz7LvSnz7IJ4wG3sYsBntbrakTXaOG5jbeU54n3uvzJNbQhlMGcpsBuZeRH9ByoGqXDHto6NuE+Tk7S1RwkAJhwS7LwNxCOObsXtpa1osIvGkIONbMGiM3aDBoS6SxD9tQ==
+ b=V4e035f2T8AnUmE8RPj1x4XaOmN+gYIH2pPuz9yXRVL7WAatWKBPe1RK7nWuNp/hUw49+5G0WenZ1AKqgQBc08fExbrW59H+Y8gh+ZIlqMy1kuZik6QFNMBW5TgK8Gx/HLrvyMk/tuwhr0u/kPshs9E09wyYn1bB/Z9OgR2bhkGflG162gKT5XFkPXKIQn5wEevJJy3pshkHgx+IIGJg8ifOwOKD2y0YT+oNFy1hUMXBbL7wivo55KmilxWC98uOpqx0mqyTEsNgITWgqquKFvsJtd+EfPAD2K/5lRFv+RU7//BF4jARWzFIAnG+ismhNWjrcgK1dzX8xGRUZ6LCUQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A71GnE9au1Zk8JhbrK/vkGU/jJdQUGIGvVnNNAp1d+Y=;
- b=NUqB2F1WllpjSOugoEDJx7ccFZYeB4W87OA7QN8F8I08vDtxSTndTg7xHqO6mmfiCMsZULAiTvGUp5pu/6S3V0S/s0L17Lw64H7TaHy/puUfgw2/SumXP4tr7WRoxOl2aiVO2iz09gyVma1kMi58N2s7xb01hIVuyKEYNxSffxNqwInM+Ch32le8VGnKlS5Sf5yq+IuccNsJGbH3gdmtnyWi7oTq4sLn+rlWQJfmwrBDVptlXsOJRBMpgsRvFTgK19mSjIaiGwEo5vqdeogzW8XHCQC0/Ug0MhmQa9p4F3H48dnuR5CByUp6Jy3Wo3z+kytB2VM0GEDL6mXrWcttYQ==
+ bh=d1s9SV8J28xt9xT3FU99IXHgJ/UsYBNBEhLvoNjc6rQ=;
+ b=R77eAkFiExh7HW5ZnDhUIrAdsri2VgscXhTIW+09koPTtjFMk2tmbmAtZZmb4kmCBtGQfn0h+ySrLbAEmfP339W548IMmJHMNejOH3gEq2wvg/hhKZXSUJR44M4O2GfX76O/XlLZBhQ9HP3gN3F9P2RBd/wsK2g8oENWsJaMr67Lh9PNiQ15E7vMGBtMihVmPCUrCnd8FAu+nhffAWiOJ8kDfHYHwTAEkYuet9+yTUjiHUtq6cMO4Tg2YjweOeNbc9PT+Jcr5onzYf0lvUBDddZae84uhLJlaYpTEIPqOb8thA+EMjYefcp+a5rtvb0pV5gH4Ok7IuwQrEVgrtLUSg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  199.43.4.28) smtp.rcpttodomain=ti.com smtp.mailfrom=cadence.com; dmarc=pass
  (p=none sp=none pct=100) action=none header.from=cadence.com; dkim=none
@@ -54,28 +54,29 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A71GnE9au1Zk8JhbrK/vkGU/jJdQUGIGvVnNNAp1d+Y=;
- b=rJHSb6XLQ/P4snm581A20nhB+fih+28wHZ0kkyXfJwIH5OXLj/7XLMGwG3+LzsvDIRosZzSy9JnHE0UGINBk3NB5empYaY0t/zTllFOWngsNgkFlpNiSyn6wj894JLa4lxEBY2o/Yjvl5mBvF2UivrHsyirLev4l8gNi/mvGj88=
-Received: from DM5PR07CA0044.namprd07.prod.outlook.com (2603:10b6:3:16::30) by
- BN7PR07MB4849.namprd07.prod.outlook.com (2603:10b6:406:ef::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.14; Wed, 11 Dec 2019 13:09:28 +0000
-Received: from DM6NAM12FT057.eop-nam12.prod.protection.outlook.com
- (2a01:111:f400:fe59::208) by DM5PR07CA0044.outlook.office365.com
- (2603:10b6:3:16::30) with Microsoft SMTP Server (version=TLS1_2,
+ bh=d1s9SV8J28xt9xT3FU99IXHgJ/UsYBNBEhLvoNjc6rQ=;
+ b=llt2f1cRBe6XI+sxVKHkVRObarTqULbDwIV8MLGJDhkMb/3niVLrY+Z8qgbL0JanEtkiUjrt+A8bNrOQXVJ6HV1t8bqbifX1aIb4UDuuqp6b/+XegnO/qxtPgXpE6VXFwgNIJAt5+5TflsC4ouIxhPgEiVwlZNztY8d6qyGw2Zs=
+Received: from BYAPR07CA0063.namprd07.prod.outlook.com (2603:10b6:a03:60::40)
+ by SN2PR07MB2542.namprd07.prod.outlook.com (2603:10b6:804:8::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.13; Wed, 11 Dec
+ 2019 13:09:31 +0000
+Received: from DM6NAM12FT046.eop-nam12.prod.protection.outlook.com
+ (2a01:111:f400:fe59::200) by BYAPR07CA0063.outlook.office365.com
+ (2603:10b6:a03:60::40) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.15 via Frontend
- Transport; Wed, 11 Dec 2019 13:09:28 +0000
+ Transport; Wed, 11 Dec 2019 13:09:31 +0000
 Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
  199.43.4.28 as permitted sender) receiver=protection.outlook.com;
  client-ip=199.43.4.28; helo=rmmaillnx1.cadence.com;
 Received: from rmmaillnx1.cadence.com (199.43.4.28) by
- DM6NAM12FT057.mail.protection.outlook.com (10.13.178.73) with Microsoft SMTP
+ DM6NAM12FT046.mail.protection.outlook.com (10.13.178.142) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.18 via Frontend Transport; Wed, 11 Dec 2019 13:09:28 +0000
+ 15.20.2495.18 via Frontend Transport; Wed, 11 Dec 2019 13:09:30 +0000
 Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id xBBD9L5c006811
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id xBBD9L5e006811
         (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Wed, 11 Dec 2019 08:09:26 -0500
+        Wed, 11 Dec 2019 08:09:28 -0500
 X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
 Received: from maileu3.global.cadence.com (10.160.88.99) by
  maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
@@ -84,20 +85,20 @@ Received: from vleu-orange.cadence.com (10.160.88.83) by
  maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
  15.0.1367.3 via Frontend Transport; Wed, 11 Dec 2019 14:09:22 +0100
 Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id xBBD9Mnr011616;
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id xBBD9MOg011669;
         Wed, 11 Dec 2019 14:09:22 +0100
 Received: (from yamonkar@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id xBBD9LaD011610;
-        Wed, 11 Dec 2019 14:09:21 +0100
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id xBBD9MW1011667;
+        Wed, 11 Dec 2019 14:09:22 +0100
 From:   Yuti Amonkar <yamonkar@cadence.com>
 To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <kishon@ti.com>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
 CC:     <jsarha@ti.com>, <tomi.valkeinen@ti.com>, <praneeth@ti.com>,
         <mparab@cadence.com>, <sjakhade@cadence.com>,
         <yamonkar@cadence.com>
-Subject: [RESEND PATCH v1 03/15] phy: cadence-dp: Rename to phy-cadence-torrent
-Date:   Wed, 11 Dec 2019 14:09:08 +0100
-Message-ID: <1576069760-11473-4-git-send-email-yamonkar@cadence.com>
+Subject: [RESEND PATCH v1 05/15] phy: cadence-torrent: Add wrapper for PHY register access
+Date:   Wed, 11 Dec 2019 14:09:10 +0100
+Message-ID: <1576069760-11473-6-git-send-email-yamonkar@cadence.com>
 X-Mailer: git-send-email 2.4.5
 In-Reply-To: <1576069760-11473-1-git-send-email-yamonkar@cadence.com>
 References: <1576069760-11473-1-git-send-email-yamonkar@cadence.com>
@@ -105,96 +106,257 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-OrganizationHeadersPreserved: maileu3.global.cadence.com
 X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(376002)(346002)(39860400002)(36092001)(189003)(199004)(81166006)(81156014)(478600001)(2616005)(8676002)(26005)(336012)(426003)(26826003)(186003)(8936002)(2906002)(6666004)(4326008)(42186006)(316002)(356004)(107886003)(54906003)(70586007)(70206006)(86362001)(36756003)(5660300002)(110136005)(76130400001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR07MB4849;H:rmmaillnx1.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(396003)(39860400002)(189003)(199004)(36092001)(2616005)(26005)(426003)(316002)(70586007)(186003)(70206006)(336012)(478600001)(107886003)(26826003)(4326008)(8676002)(86362001)(356004)(81156014)(81166006)(76130400001)(5660300002)(42186006)(2906002)(6666004)(110136005)(30864003)(36756003)(8936002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN2PR07MB2542;H:rmmaillnx1.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b12433d4-b429-4865-b057-08d77e3b5a6d
-X-MS-TrafficTypeDiagnostic: BN7PR07MB4849:
-X-Microsoft-Antispam-PRVS: <BN7PR07MB484994C0B6E15562FA299E13D25A0@BN7PR07MB4849.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2000;
+X-MS-Office365-Filtering-Correlation-Id: bd07d194-000d-435a-a3d2-08d77e3b5be0
+X-MS-TrafficTypeDiagnostic: SN2PR07MB2542:
+X-Microsoft-Antispam-PRVS: <SN2PR07MB254204E378B0A2097D781B5BD25A0@SN2PR07MB2542.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1091;
 X-Forefront-PRVS: 024847EE92
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vowH8tU7U1byKLzyPtUtUGEEqEmmUiTo8YNjDbiK4BWeI5TbJSau16UrZhcjkbGVNavO+Qk/ZTEwKBfRDXynpjxRXVhfIIZ9+9kvy7AyWJwGdBB3DZM0dDHkizfw7rZTlBDV0SwlAAGnVAX4ULjtZtOMafsdsctv30ak5JVgat0op0wFH4Zx1CceTP4qeAIfj3mpPmQUR2faWmL3C0+jj7ht5W2QdZSGrRs9+oFovpB88guP0F8tgxHiD0U+QO2BkjkbjAZOcOL2tiWZ7CV9mES3mYSwy7l/A5k5H1mzhHm28D8x149Nf2yeRxyyObvqf99JBWHPJlU/TyXeTjLCqN1ydE+bdJ4LfyvckzROMTDaDdq38KtQyE5RDR9OQWmnM6MOFmcY8QWy9+Ed5TWr5QDiw5pKZ72pNYpQ+6ut9DpLwcVuyu2KsRLavQaCPS9WhGTEzY60bE3tk9LbntPcbA/8iLSABEPVYWQrkc6o2dRBoFKF1MnDkKI7V0HX6vXo
+X-Microsoft-Antispam-Message-Info: X6CGUsbZpXbqaq5odabTvQnN7nrsKg2N9cXxnIVNQCcmfhMq/yeSkz1K8+QCcBvskSlY9HMBLgA9kuQbR0IJ50XCDSW4KgYccNLs2vpzlctdfmF3xMq/Qr8cLKRMTrcrUwrzCa0bQmPk3KxU7KfF/X4XJwpSiy4axMlxG55w3fqfkX5QRng+m8B0yH5HhbR3G4C0xD9fVmuYxyRYFSwyx9tOo4T98o84uCqzlsPn40Uho113lOuGLR2o5s3TOokQu63E2xYOvJSqiLBMl8kv2MKuwuyVOYX7JeThvHkxDclyidtQbMjjXnquME1ktO4E7NlnsFFD0qcdz1ZvQFPK3VRRZI1TQTBRAsf87JRtBlDEdFEySvr2N2m6G1WDaqpvBHvdnqqSz9qRWrbGceCUpIWVWDyQhOpei7n7MI8Oez1aqi3zE/CQuj5y3iGSwbxMR2SmqrhMlM003gAVt0k3AxpbGmvNmgzAQIRSDXA04ID0f9tcbUeqx/pbNmr6rCE8
 X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2019 13:09:28.0862
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2019 13:09:30.5172
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b12433d4-b429-4865-b057-08d77e3b5a6d
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd07d194-000d-435a-a3d2-08d77e3b5be0
 X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR07MB4849
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR07MB2542
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-12-11_03:2019-12-11,2019-12-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 mlxscore=0
- malwarescore=0 suspectscore=0 phishscore=0 impostorscore=0 spamscore=0
- priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912110111
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 mlxlogscore=999
+ suspectscore=0 malwarescore=0 phishscore=0 lowpriorityscore=0
+ impostorscore=0 mlxscore=0 bulkscore=0 priorityscore=1501 adultscore=0
+ clxscore=1015 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912110112
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rename Cadence DP PHY driver from phy-cadence-dp to phy-cadence-torrent
-to make it more generic for future use. Modifiy Makefile and Kconfig
-accordingly. Also, change driver compatible from "cdns,dp-phy" to
-"cdns,torrent-phy".
+From: Swapnil Jakhade <sjakhade@cadence.com>
 
-Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+Add a wrapper function to write Torrent PHY registers to improve
+code readability.
+
+Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
 ---
- drivers/phy/cadence/Kconfig                                     | 6 +++---
- drivers/phy/cadence/Makefile                                    | 2 +-
- drivers/phy/cadence/{phy-cadence-dp.c => phy-cadence-torrent.c} | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
- rename drivers/phy/cadence/{phy-cadence-dp.c => phy-cadence-torrent.c} (99%)
+ drivers/phy/cadence/phy-cadence-torrent.c | 142 ++++++++++++++++--------------
+ 1 file changed, 77 insertions(+), 65 deletions(-)
 
-diff --git a/drivers/phy/cadence/Kconfig b/drivers/phy/cadence/Kconfig
-index b2db916d..4595458 100644
---- a/drivers/phy/cadence/Kconfig
-+++ b/drivers/phy/cadence/Kconfig
-@@ -3,13 +3,13 @@
- # Phy drivers for Cadence PHYs
- #
- 
--config PHY_CADENCE_DP
--	tristate "Cadence MHDP DisplayPort PHY driver"
-+config PHY_CADENCE_TORRENT
-+	tristate "Cadence Torrent PHY driver"
- 	depends on OF
- 	depends on HAS_IOMEM
- 	select GENERIC_PHY
- 	help
--	  Support for Cadence MHDP DisplayPort PHY.
-+	  Support for Cadence Torrent PHY.
- 
- config PHY_CADENCE_DPHY
- 	tristate "Cadence D-PHY Support"
-diff --git a/drivers/phy/cadence/Makefile b/drivers/phy/cadence/Makefile
-index 8f89560..6a7ffc6 100644
---- a/drivers/phy/cadence/Makefile
-+++ b/drivers/phy/cadence/Makefile
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
--obj-$(CONFIG_PHY_CADENCE_DP)	+= phy-cadence-dp.o
-+obj-$(CONFIG_PHY_CADENCE_TORRENT)	+= phy-cadence-torrent.o
- obj-$(CONFIG_PHY_CADENCE_DPHY)	+= cdns-dphy.o
- obj-$(CONFIG_PHY_CADENCE_SIERRA)	+= phy-cadence-sierra.o
-diff --git a/drivers/phy/cadence/phy-cadence-dp.c b/drivers/phy/cadence/phy-cadence-torrent.c
-similarity index 99%
-rename from drivers/phy/cadence/phy-cadence-dp.c
-rename to drivers/phy/cadence/phy-cadence-torrent.c
-index bc10cb2..beb80f7 100644
---- a/drivers/phy/cadence/phy-cadence-dp.c
+diff --git a/drivers/phy/cadence/phy-cadence-torrent.c b/drivers/phy/cadence/phy-cadence-torrent.c
+index eb61005..59c85d8 100644
+--- a/drivers/phy/cadence/phy-cadence-torrent.c
 +++ b/drivers/phy/cadence/phy-cadence-torrent.c
-@@ -521,7 +521,7 @@ static int cdns_dp_phy_probe(struct platform_device *pdev)
- 
- static const struct of_device_id cdns_dp_phy_of_match[] = {
- 	{
--		.compatible = "cdns,dp-phy"
-+		.compatible = "cdns,torrent-phy"
- 	},
- 	{}
+@@ -132,6 +132,14 @@ static const struct phy_ops cdns_torrent_phy_ops = {
+ 	.owner		= THIS_MODULE,
  };
+ 
++/* PHY mmr access functions */
++
++static void cdns_torrent_phy_write(struct cdns_torrent_phy *cdns_phy,
++				   u32 offset, u32 val)
++{
++	writel(val, cdns_phy->sd_base + offset);
++}
++
+ static int cdns_torrent_dp_init(struct phy *phy)
+ {
+ 	unsigned char lane_bits;
+@@ -234,34 +242,35 @@ static
+ void cdns_torrent_dp_pma_cmn_cfg_25mhz(struct cdns_torrent_phy *cdns_phy)
+ {
+ 	/* refclock registers - assumes 25 MHz refclock */
+-	writel(0x0019, cdns_phy->sd_base + CMN_SSM_BIAS_TMR);
+-	writel(0x0032, cdns_phy->sd_base + CMN_PLLSM0_PLLPRE_TMR);
+-	writel(0x00D1, cdns_phy->sd_base + CMN_PLLSM0_PLLLOCK_TMR);
+-	writel(0x0032, cdns_phy->sd_base + CMN_PLLSM1_PLLPRE_TMR);
+-	writel(0x00D1, cdns_phy->sd_base + CMN_PLLSM1_PLLLOCK_TMR);
+-	writel(0x007D, cdns_phy->sd_base + CMN_BGCAL_INIT_TMR);
+-	writel(0x007D, cdns_phy->sd_base + CMN_BGCAL_ITER_TMR);
+-	writel(0x0019, cdns_phy->sd_base + CMN_IBCAL_INIT_TMR);
+-	writel(0x001E, cdns_phy->sd_base + CMN_TXPUCAL_INIT_TMR);
+-	writel(0x0006, cdns_phy->sd_base + CMN_TXPUCAL_ITER_TMR);
+-	writel(0x001E, cdns_phy->sd_base + CMN_TXPDCAL_INIT_TMR);
+-	writel(0x0006, cdns_phy->sd_base + CMN_TXPDCAL_ITER_TMR);
+-	writel(0x02EE, cdns_phy->sd_base + CMN_RXCAL_INIT_TMR);
+-	writel(0x0006, cdns_phy->sd_base + CMN_RXCAL_ITER_TMR);
+-	writel(0x0002, cdns_phy->sd_base + CMN_SD_CAL_INIT_TMR);
+-	writel(0x0002, cdns_phy->sd_base + CMN_SD_CAL_ITER_TMR);
+-	writel(0x000E, cdns_phy->sd_base + CMN_SD_CAL_REFTIM_START);
+-	writel(0x012B, cdns_phy->sd_base + CMN_SD_CAL_PLLCNT_START);
++	cdns_torrent_phy_write(cdns_phy, CMN_SSM_BIAS_TMR, 0x0019);
++	cdns_torrent_phy_write(cdns_phy, CMN_PLLSM0_PLLPRE_TMR, 0x0032);
++	cdns_torrent_phy_write(cdns_phy, CMN_PLLSM0_PLLLOCK_TMR, 0x00D1);
++	cdns_torrent_phy_write(cdns_phy, CMN_PLLSM1_PLLPRE_TMR, 0x0032);
++	cdns_torrent_phy_write(cdns_phy, CMN_PLLSM1_PLLLOCK_TMR, 0x00D1);
++	cdns_torrent_phy_write(cdns_phy, CMN_BGCAL_INIT_TMR, 0x007D);
++	cdns_torrent_phy_write(cdns_phy, CMN_BGCAL_ITER_TMR, 0x007D);
++	cdns_torrent_phy_write(cdns_phy, CMN_IBCAL_INIT_TMR, 0x0019);
++	cdns_torrent_phy_write(cdns_phy, CMN_TXPUCAL_INIT_TMR, 0x001E);
++	cdns_torrent_phy_write(cdns_phy, CMN_TXPUCAL_ITER_TMR, 0x0006);
++	cdns_torrent_phy_write(cdns_phy, CMN_TXPDCAL_INIT_TMR, 0x001E);
++	cdns_torrent_phy_write(cdns_phy, CMN_TXPDCAL_ITER_TMR, 0x0006);
++	cdns_torrent_phy_write(cdns_phy, CMN_RXCAL_INIT_TMR, 0x02EE);
++	cdns_torrent_phy_write(cdns_phy, CMN_RXCAL_ITER_TMR, 0x0006);
++	cdns_torrent_phy_write(cdns_phy, CMN_SD_CAL_INIT_TMR, 0x0002);
++	cdns_torrent_phy_write(cdns_phy, CMN_SD_CAL_ITER_TMR, 0x0002);
++	cdns_torrent_phy_write(cdns_phy, CMN_SD_CAL_REFTIM_START, 0x000E);
++	cdns_torrent_phy_write(cdns_phy, CMN_SD_CAL_PLLCNT_START, 0x012B);
++
+ 	/* PLL registers */
+-	writel(0x0409, cdns_phy->sd_base + CMN_PDIAG_PLL0_CP_PADJ_M0);
+-	writel(0x1001, cdns_phy->sd_base + CMN_PDIAG_PLL0_CP_IADJ_M0);
+-	writel(0x0F08, cdns_phy->sd_base + CMN_PDIAG_PLL0_FILT_PADJ_M0);
+-	writel(0x0004, cdns_phy->sd_base + CMN_PLL0_DSM_DIAG_M0);
+-	writel(0x00FA, cdns_phy->sd_base + CMN_PLL0_VCOCAL_INIT_TMR);
+-	writel(0x0004, cdns_phy->sd_base + CMN_PLL0_VCOCAL_ITER_TMR);
+-	writel(0x00FA, cdns_phy->sd_base + CMN_PLL1_VCOCAL_INIT_TMR);
+-	writel(0x0004, cdns_phy->sd_base + CMN_PLL1_VCOCAL_ITER_TMR);
+-	writel(0x0318, cdns_phy->sd_base + CMN_PLL0_VCOCAL_REFTIM_START);
++	cdns_torrent_phy_write(cdns_phy, CMN_PDIAG_PLL0_CP_PADJ_M0, 0x0409);
++	cdns_torrent_phy_write(cdns_phy, CMN_PDIAG_PLL0_CP_IADJ_M0, 0x1001);
++	cdns_torrent_phy_write(cdns_phy, CMN_PDIAG_PLL0_FILT_PADJ_M0, 0x0F08);
++	cdns_torrent_phy_write(cdns_phy, CMN_PLL0_DSM_DIAG_M0, 0x0004);
++	cdns_torrent_phy_write(cdns_phy, CMN_PLL0_VCOCAL_INIT_TMR, 0x00FA);
++	cdns_torrent_phy_write(cdns_phy, CMN_PLL0_VCOCAL_ITER_TMR, 0x0004);
++	cdns_torrent_phy_write(cdns_phy, CMN_PLL1_VCOCAL_INIT_TMR, 0x00FA);
++	cdns_torrent_phy_write(cdns_phy, CMN_PLL1_VCOCAL_ITER_TMR, 0x0004);
++	cdns_torrent_phy_write(cdns_phy, CMN_PLL0_VCOCAL_REFTIM_START, 0x0318);
+ }
+ 
+ static
+@@ -269,41 +278,41 @@ void cdns_torrent_dp_pma_cmn_vco_cfg_25mhz(struct cdns_torrent_phy *cdns_phy)
+ {
+ 	/* Assumes 25 MHz refclock */
+ 	switch (cdns_phy->max_bit_rate) {
+-		/* Setting VCO for 10.8GHz */
++	/* Setting VCO for 10.8GHz */
+ 	case 2700:
+ 	case 5400:
+-		writel(0x01B0, cdns_phy->sd_base + CMN_PLL0_INTDIV_M0);
+-		writel(0x0000, cdns_phy->sd_base + CMN_PLL0_FRACDIVL_M0);
+-		writel(0x0002, cdns_phy->sd_base + CMN_PLL0_FRACDIVH_M0);
+-		writel(0x0120, cdns_phy->sd_base + CMN_PLL0_HIGH_THR_M0);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_INTDIV_M0, 0x01B0);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_FRACDIVL_M0, 0x0000);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_FRACDIVH_M0, 0x0002);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_HIGH_THR_M0, 0x0120);
+ 		break;
+-		/* Setting VCO for 9.72GHz */
++	/* Setting VCO for 9.72GHz */
+ 	case 2430:
+ 	case 3240:
+-		writel(0x0184, cdns_phy->sd_base + CMN_PLL0_INTDIV_M0);
+-		writel(0xCCCD, cdns_phy->sd_base + CMN_PLL0_FRACDIVL_M0);
+-		writel(0x0002, cdns_phy->sd_base + CMN_PLL0_FRACDIVH_M0);
+-		writel(0x0104, cdns_phy->sd_base + CMN_PLL0_HIGH_THR_M0);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_INTDIV_M0, 0x0184);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_FRACDIVL_M0, 0xCCCD);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_FRACDIVH_M0, 0x0002);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_HIGH_THR_M0, 0x0104);
+ 		break;
+-		/* Setting VCO for 8.64GHz */
++	/* Setting VCO for 8.64GHz */
+ 	case 2160:
+ 	case 4320:
+-		writel(0x0159, cdns_phy->sd_base + CMN_PLL0_INTDIV_M0);
+-		writel(0x999A, cdns_phy->sd_base + CMN_PLL0_FRACDIVL_M0);
+-		writel(0x0002, cdns_phy->sd_base + CMN_PLL0_FRACDIVH_M0);
+-		writel(0x00E7, cdns_phy->sd_base + CMN_PLL0_HIGH_THR_M0);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_INTDIV_M0, 0x0159);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_FRACDIVL_M0, 0x999A);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_FRACDIVH_M0, 0x0002);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_HIGH_THR_M0, 0x00E7);
+ 		break;
+-		/* Setting VCO for 8.1GHz */
++	/* Setting VCO for 8.1GHz */
+ 	case 8100:
+-		writel(0x0144, cdns_phy->sd_base + CMN_PLL0_INTDIV_M0);
+-		writel(0x0000, cdns_phy->sd_base + CMN_PLL0_FRACDIVL_M0);
+-		writel(0x0002, cdns_phy->sd_base + CMN_PLL0_FRACDIVH_M0);
+-		writel(0x00D8, cdns_phy->sd_base + CMN_PLL0_HIGH_THR_M0);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_INTDIV_M0, 0x0144);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_FRACDIVL_M0, 0x0000);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_FRACDIVH_M0, 0x0002);
++		cdns_torrent_phy_write(cdns_phy, CMN_PLL0_HIGH_THR_M0, 0x00D8);
+ 		break;
+ 	}
+ 
+-	writel(0x0002, cdns_phy->sd_base + CMN_PDIAG_PLL0_CTRL_M0);
+-	writel(0x0318, cdns_phy->sd_base + CMN_PLL0_VCOCAL_PLLCNT_START);
++	cdns_torrent_phy_write(cdns_phy, CMN_PDIAG_PLL0_CTRL_M0, 0x0002);
++	cdns_torrent_phy_write(cdns_phy, CMN_PLL0_VCOCAL_PLLCNT_START, 0x0318);
+ }
+ 
+ static void cdns_torrent_dp_pma_cmn_rate(struct cdns_torrent_phy *cdns_phy)
+@@ -313,7 +322,7 @@ static void cdns_torrent_dp_pma_cmn_rate(struct cdns_torrent_phy *cdns_phy)
+ 	unsigned int i;
+ 
+ 	/* 16'h0000 for single DP link configuration */
+-	writel(0x0000, cdns_phy->sd_base + PHY_PLL_CFG);
++	cdns_torrent_phy_write(cdns_phy, PHY_PLL_CFG, 0x0000);
+ 
+ 	switch (cdns_phy->max_bit_rate) {
+ 	case 1620:
+@@ -324,7 +333,7 @@ static void cdns_torrent_dp_pma_cmn_rate(struct cdns_torrent_phy *cdns_phy)
+ 	case 2430:
+ 	case 2700:
+ 		clk_sel_val = 0x0701;
+-		 hsclk_div_val = 1;
++		hsclk_div_val = 1;
+ 		break;
+ 	case 3240:
+ 		clk_sel_val = 0x0b00;
+@@ -341,13 +350,14 @@ static void cdns_torrent_dp_pma_cmn_rate(struct cdns_torrent_phy *cdns_phy)
+ 		break;
+ 	}
+ 
+-	writel(clk_sel_val, cdns_phy->sd_base + CMN_PDIAG_PLL0_CLK_SEL_M0);
++	cdns_torrent_phy_write(cdns_phy,
++			       CMN_PDIAG_PLL0_CLK_SEL_M0, clk_sel_val);
+ 
+ 	/* PMA lane configuration to deal with multi-link operation */
+-	for (i = 0; i < cdns_phy->num_lanes; i++) {
+-		writel(hsclk_div_val,
+-		       cdns_phy->sd_base + (XCVR_DIAG_HSCLK_DIV | (i << 11)));
+-	}
++	for (i = 0; i < cdns_phy->num_lanes; i++)
++		cdns_torrent_phy_write(cdns_phy,
++				       (XCVR_DIAG_HSCLK_DIV | (i << 11)),
++				       hsclk_div_val);
+ }
+ 
+ static void cdns_torrent_dp_pma_lane_cfg(struct cdns_torrent_phy *cdns_phy,
+@@ -356,15 +366,17 @@ static void cdns_torrent_dp_pma_lane_cfg(struct cdns_torrent_phy *cdns_phy,
+ 	unsigned int lane_bits = (lane & LANE_MASK) << 11;
+ 
+ 	/* Writing Tx/Rx Power State Controllers registers */
+-	writel(0x00FB, cdns_phy->sd_base + (TX_PSC_A0 | lane_bits));
+-	writel(0x04AA, cdns_phy->sd_base + (TX_PSC_A2 | lane_bits));
+-	writel(0x04AA, cdns_phy->sd_base + (TX_PSC_A3 | lane_bits));
+-	writel(0x0000, cdns_phy->sd_base + (RX_PSC_A0 | lane_bits));
+-	writel(0x0000, cdns_phy->sd_base + (RX_PSC_A2 | lane_bits));
+-	writel(0x0000, cdns_phy->sd_base + (RX_PSC_A3 | lane_bits));
+-
+-	writel(0x0001, cdns_phy->sd_base + (XCVR_DIAG_PLLDRC_CTRL | lane_bits));
+-	writel(0x0000, cdns_phy->sd_base + (XCVR_DIAG_HSCLK_SEL | lane_bits));
++	cdns_torrent_phy_write(cdns_phy, (TX_PSC_A0 | lane_bits), 0x00FB);
++	cdns_torrent_phy_write(cdns_phy, (TX_PSC_A2 | lane_bits), 0x04AA);
++	cdns_torrent_phy_write(cdns_phy, (TX_PSC_A3 | lane_bits), 0x04AA);
++	cdns_torrent_phy_write(cdns_phy, (RX_PSC_A0 | lane_bits), 0x0000);
++	cdns_torrent_phy_write(cdns_phy, (RX_PSC_A2 | lane_bits), 0x0000);
++	cdns_torrent_phy_write(cdns_phy, (RX_PSC_A3 | lane_bits), 0x0000);
++
++	cdns_torrent_phy_write(cdns_phy,
++			       (XCVR_DIAG_PLLDRC_CTRL | lane_bits), 0x0001);
++	cdns_torrent_phy_write(cdns_phy,
++			       (XCVR_DIAG_HSCLK_SEL | lane_bits), 0x0000);
+ }
+ 
+ static void cdns_torrent_dp_run(struct cdns_torrent_phy *cdns_phy)
 -- 
 2.7.4
 
