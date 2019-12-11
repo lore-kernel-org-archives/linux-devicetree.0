@@ -2,152 +2,209 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C362CC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7366CC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950602073D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:32:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576081933;
-	bh=X8bPj0TycJovcfs5WcvCdkqzw+mMSQeVYGNNyHBCS5c=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=pr2lLWzarJtzJr871f725dJWOmmvQ6I13Im02huUUAtkfkz3q/o305afhu4dP6gOS
-	 g7wJpFhAtSzzu4vElykATEczpxje8mauJJmQcjoOelodFZUC0GW9+ZOxIg+JQemIKD
-	 7eL3pkUjWmdJOofGDeWJFaZGvwbbLuT2MmqlUZ+8=
+	by mail.kernel.org (Postfix) with ESMTP id 5439024653
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbfLKQcN (ORCPT
+        id S1730811AbfLKQpR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:32:13 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43581 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729267AbfLKQcM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 11:32:12 -0500
-Received: by mail-oi1-f193.google.com with SMTP id x14so13763353oic.10;
-        Wed, 11 Dec 2019 08:32:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XGNDrBcqUYBtKiIo+15fNrK7jgez1KzgJhEnUaSBLgQ=;
-        b=YYwR0ZdUtd+duHGS4HpRki5v9+ZsutN7fn0YU/pJMlscNaYJ0NPGTSMJqT2u54huv5
-         Ug2BXNr4JXsfSvVQZHTk3XSckeXDo1rmPugyR7SwgLpAzQ80tjvMxCq2v0W51l7lhhhG
-         tC8LXIIm5WaeiP1vFZL4Ebm6++Rk2cByNw9CusKMOvhNFAdO/UvYviIgRQxswqPoKRl9
-         Gt7Yz3vpu18Z54Or/slls7H4lwVrYHV299huAEcex09+r8oGgQZ1Ef+tIm3E7rw8Wix3
-         PENE9iFPV1/wLnHOmgW8pmRLLNq+LKC38gpS0Zknl9KCG8YHI5s4FaVcaOsBGtdeigcV
-         VDZA==
-X-Gm-Message-State: APjAAAX/j5wygdaPns/9DYbqNCJjuZb1aaHmSI5FNvZb97l5TiuAkaGG
-        XJz3pEjZMRT3XaXVsE++s7Q3DZQ=
-X-Google-Smtp-Source: APXvYqzgROOzztOOeR9jvM10GQEB8EXSYcu/WPcKrTjVmKN/tY6KlFUjLvh+7QJaML9PdKKpYwBV4g==
-X-Received: by 2002:a54:4485:: with SMTP id v5mr3288106oiv.144.1576081931501;
-        Wed, 11 Dec 2019 08:32:11 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id f3sm1002180oto.57.2019.12.11.08.32.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 08:32:10 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH] dt-bindings: memory-controllers: tegra: Fix type references
-Date:   Wed, 11 Dec 2019 10:32:10 -0600
-Message-Id: <20191211163210.9778-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 11 Dec 2019 11:45:17 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44311 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730315AbfLKQpR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 11:45:17 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1if56e-0003fN-Rr; Wed, 11 Dec 2019 17:44:56 +0100
+Message-ID: <fe8b8b2aac6d92a1d7ffc32ea012db9898ab6857.camel@pengutronix.de>
+Subject: Re: [PATCH v6 2/2] watchdog: mtk_wdt: mt8183: Add reset controller
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Jiaxin Yu <jiaxin.yu@mediatek.com>, yong.liang@mediatek.com,
+        wim@linux-watchdog.org, linux@roeck-us.net, matthias.bgg@gmail.com,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     yingjoe.chen@mediatek.com, sboyd@kernel.org
+Date:   Wed, 11 Dec 2019 17:44:55 +0100
+In-Reply-To: <1576081356-18298-3-git-send-email-jiaxin.yu@mediatek.com>
+References: <1576081356-18298-1-git-send-email-jiaxin.yu@mediatek.com>
+         <1576081356-18298-3-git-send-email-jiaxin.yu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Json-schema requires a $ref to be under an 'allOf' if there are
-additional constraints otherwise the additional constraints are
-ignored. (Note that this behavior will be changed in draft8.)
+Hi,
 
-Fixes: 641262f5e1ed ("dt-bindings: memory: Add binding for NVIDIA Tegra30 External Memory Controller")
-Fixes: 785685b7a106 ("dt-bindings: memory: Add binding for NVIDIA Tegra30 Memory Controller")
-Fixes: 8da65c377b21 ("dt-bindings: memory: tegra30: Convert to Tegra124 YAML")
-Cc: Dmitry Osipenko <digetx@gmail.com>
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-tegra@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-I'll take this via the DT tree for rc2.
+On Thu, 2019-12-12 at 00:22 +0800, Jiaxin Yu wrote:
+> From: "yong.liang" <yong.liang@mediatek.com>
+> 
+> Add reset controller API in watchdog driver.
+> Besides watchdog, MTK toprgu module alsa provide sub-system (eg, audio,
+> camera, codec and connectivity) software reset functionality.
 
- .../bindings/memory-controllers/nvidia,tegra124-mc.yaml  | 3 ++-
- .../bindings/memory-controllers/nvidia,tegra30-emc.yaml  | 9 ++++++---
- .../bindings/memory-controllers/nvidia,tegra30-mc.yaml   | 3 ++-
- 3 files changed, 10 insertions(+), 5 deletions(-)
+Do any of the listed sub-systems use the reset_control_reset()
+functionality? Is there no delay requirement between assert and
+deassert? Otherwise it would be safer not to implement the .reset()
+operation at all.
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
-index 30d9fb193d7f..22a94b6fdbde 100644
---- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
-@@ -60,7 +60,8 @@ patternProperties:
-             maximum: 1066000000
- 
-           nvidia,emem-configuration:
--            $ref: /schemas/types.yaml#/definitions/uint32-array
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32-array
-             description: |
-               Values to be written to the EMEM register block. See section
-               "15.6.1 MC Registers" in the TRM.
-diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
-index 7fe0ca14e324..e4135bac6957 100644
---- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
-@@ -56,7 +56,8 @@ patternProperties:
-             maximum: 900000000
- 
-           nvidia,emc-auto-cal-interval:
--            $ref: /schemas/types.yaml#/definitions/uint32
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-             description:
-               Pad calibration interval in microseconds.
-             minimum: 0
-@@ -78,7 +79,8 @@ patternProperties:
-               Mode Register 0.
- 
-           nvidia,emc-zcal-cnt-long:
--            $ref: /schemas/types.yaml#/definitions/uint32
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-             description:
-               Number of EMC clocks to wait before issuing any commands after
-               sending ZCAL_MRW_CMD.
-@@ -96,7 +98,8 @@ patternProperties:
-               FBIO "read" FIFO periodic resetting enabled.
- 
-           nvidia,emc-configuration:
--            $ref: /schemas/types.yaml#/definitions/uint32-array
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32-array
-             description:
-               EMC timing characterization data. These are the registers
-               (see section "18.13.2 EMC Registers" in the TRM) whose values
-diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
-index 84fd57bcf0dc..4b9196c83291 100644
---- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
-@@ -77,7 +77,8 @@ patternProperties:
-             maximum: 900000000
- 
-           nvidia,emem-configuration:
--            $ref: /schemas/types.yaml#/definitions/uint32-array
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32-array
-             description: |
-               Values to be written to the EMEM register block. See section
-               "18.13.1 MC Registers" in the TRM.
--- 
-2.20.1
+> 
+> Signed-off-by: yong.liang <yong.liang@mediatek.com>
+> ---
+>  drivers/watchdog/Kconfig   |   1 +
+>  drivers/watchdog/mtk_wdt.c | 109 ++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 109 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 2e07caab9db2..629249fe5305 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -717,6 +717,7 @@ config MEDIATEK_WATCHDOG
+>  	tristate "Mediatek SoCs watchdog support"
+>  	depends on ARCH_MEDIATEK || COMPILE_TEST
+>  	select WATCHDOG_CORE
+> +	select RESET_CONTROLLER
+>  	help
+>  	  Say Y here to include support for the watchdog timer
+>  	  in Mediatek SoCs.
+> diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
+> index 9c3d0033260d..667380031dfd 100644
+> --- a/drivers/watchdog/mtk_wdt.c
+> +++ b/drivers/watchdog/mtk_wdt.c
+> @@ -9,6 +9,9 @@
+>   * Based on sunxi_wdt.c
+>   */
+>  
+> +#include <dt-bindings/reset-controller/mt2712-resets.h>
+> +#include <dt-bindings/reset-controller/mt8183-resets.h>
+> +#include <linux/delay.h>
+>  #include <linux/err.h>
+>  #include <linux/init.h>
+>  #include <linux/io.h>
+> @@ -16,10 +19,12 @@
+>  #include <linux/module.h>
+>  #include <linux/moduleparam.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/slab.h>
+
+What is this required for?
+
+>  #include <linux/types.h>
+>  #include <linux/watchdog.h>
+> -#include <linux/delay.h>
+>
+>  #define WDT_MAX_TIMEOUT		31
+>  #define WDT_MIN_TIMEOUT		1
+> @@ -44,6 +49,9 @@
+>  #define WDT_SWRST		0x14
+>  #define WDT_SWRST_KEY		0x1209
+>  
+> +#define WDT_SWSYSRST		0x18U
+> +#define WDT_SWSYS_RST_KEY	0x88000000
+> +
+>  #define DRV_NAME		"mtk-wdt"
+>  #define DRV_VERSION		"1.0"
+>  
+> @@ -53,8 +61,97 @@ static unsigned int timeout;
+>  struct mtk_wdt_dev {
+>  	struct watchdog_device wdt_dev;
+>  	void __iomem *wdt_base;
+> +	spinlock_t lock; /* protects WDT_SWSYSRST reg */
+> +	struct reset_controller_dev rcdev;
+> +};
+> +
+> +struct mtk_wdt_data {
+> +	int infracfg_sw_rst_num;
+
+This is not used at all, better remove it.
+
+> +	int toprgu_sw_rst_num;
+> +};
+> +
+> +static const struct mtk_wdt_data mt2712_data = {
+> +	.toprgu_sw_rst_num = MT2712_TOPRGU_SW_RST_NUM,
+> +};
+> +
+> +static const struct mtk_wdt_data mt8183_data = {
+> +	.infracfg_sw_rst_num = MT8183_INFRACFG_SW_RST_NUM,
+
+Same as above.
+
+> +	.toprgu_sw_rst_num = MT8183_TOPRGU_SW_RST_NUM,
+> +};
+> +
+> +static int toprgu_reset_update(struct reset_controller_dev *rcdev,
+> +			       unsigned long id, bool assert)
+> +{
+> +	unsigned int tmp;
+> +	unsigned long flags;
+> +
+
+This empty line can be removed.
+
+> +	struct mtk_wdt_dev *data =
+> +		 container_of(rcdev, struct mtk_wdt_dev, rcdev);
+> +
+> +	spin_lock_irqsave(&data->lock, flags);
+> +
+> +	tmp = readl(data->wdt_base + WDT_SWSYSRST);
+> +	if (assert)
+> +		tmp |= BIT(id);
+> +	else
+> +		tmp &= ~BIT(id);
+> +	tmp |= WDT_SWSYS_RST_KEY;
+> +	writel(tmp, data->wdt_base + WDT_SWSYSRST);
+> +
+> +	spin_unlock_irqrestore(&data->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int toprgu_reset_assert(struct reset_controller_dev *rcdev,
+> +			       unsigned long id)
+> +{
+> +	return toprgu_reset_update(rcdev, id, true);
+> +}
+> +
+> +static int toprgu_reset_deassert(struct reset_controller_dev *rcdev,
+> +				 unsigned long id)
+> +{
+> +	return toprgu_reset_update(rcdev, id, false);
+> +}
+> +
+> +static int toprgu_reset(struct reset_controller_dev *rcdev,
+> +			unsigned long id)
+> +{
+> +	int ret;
+> +
+> +	ret = toprgu_reset_assert(rcdev, id);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return toprgu_reset_deassert(rcdev, id);
+> +}
+
+As mentioned above, is this needed? Does this work for all modules?
+Only implement this if you are sure both are true.
+
+regards
+Philipp
 
