@@ -2,202 +2,134 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76857C00454
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 13:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81153C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD0D2465B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 13:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C85214D8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:02:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UMp7LFUI"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QHTS0au7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbfLKNkV (ORCPT
+        id S1729778AbfLKOCu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:40:21 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:31774 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729438AbfLKNkV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:40:21 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBBDb2YD005490;
-        Wed, 11 Dec 2019 14:40:10 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=yAqm9sZp35cLmzHCOHCPDTCRBjuP7SiwSxl28sXlrQg=;
- b=UMp7LFUIJcMpL/ztTzkeuNKPIoW5d2MdO7D/MLpo+4fZDT9Cmc1SpOSuw/HEaQMgQKJo
- EK+l8gh7NZ4ruBUdTHv11v+53EQwTcTh10rqgrckblxKuuNoQh8P0BaRMyVjb9drkOUj
- 6OAx/XUm9yn8OQkniTn9nqFn7A3ljOC04dz5GZtlxxG9nJvTtgb8u1JcYS0xgm+sm7HN
- 9q6AN822uTyn3MkRPFVHWWINqeq4T9JmDeZeuYeZ7sbng+4n50HqbhZlmi5Q2MvAD/LV
- W7VhrIXpwcVGfzIxguHIrjZpiiFyZOAkMEVxJJYn+O800N1tH5NgZn0DX8wcUljM+H0a pQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wrbrfjcgn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Dec 2019 14:40:10 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3F3E5100038;
-        Wed, 11 Dec 2019 14:40:08 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2C32A2B5440;
-        Wed, 11 Dec 2019 14:40:08 +0100 (CET)
-Received: from lmecxl0923.lme.st.com (10.75.127.47) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
- 2019 14:40:07 +0100
-From:   Ludovic Barre <ludovic.Barre@st.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH V2] mmc: mmci: add threaded irq to abort DPSM of non-functional state
-Date:   Wed, 11 Dec 2019 14:39:34 +0100
-Message-ID: <20191211133934.16932-1-ludovic.Barre@st.com>
+        Wed, 11 Dec 2019 09:02:50 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44640 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729686AbfLKOCt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 09:02:49 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2k6j113649;
+        Wed, 11 Dec 2019 08:02:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576072966;
+        bh=bfalUsxFj27T0FowFliUu6eiLC2NXWQoppPanqn7G9I=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=QHTS0au7DK1ABhxpI1YHvoBbbJeQiauwzfEQkuPEjmU7Fzdf/PVJ0If1uxu9wIHTb
+         +mccxBRkRIYhOuuoAkUWvDZGRLI3WpHdWFJcXXd8KQHR6lwzboSJgpdyafghAF72I3
+         LatvDiKGx9mQHqc8AAcD9SsEV9ecOUmbTMW0/qBk=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBE2kt3023573
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Dec 2019 08:02:46 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
+ Dec 2019 08:02:45 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 11 Dec 2019 08:02:45 -0600
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2afu007398;
+        Wed, 11 Dec 2019 08:02:45 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
+        <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v4 10/10] arm64: dts: k3-am654-base-board: Add CSI2 OV5640 camera
+Date:   Wed, 11 Dec 2019 08:05:58 -0600
+Message-ID: <20191211140558.10407-11-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191211140558.10407-1-bparrot@ti.com>
+References: <20191211140558.10407-1-bparrot@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-11_03:2019-12-11,2019-12-11 signatures=0
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+Add support for the OV5640 CSI camera:
+- add the OV5640 nodes
+- add the CAL node linkage
+- enable CAL node
 
-If datatimeout occurs on R1B request, the Data Path State Machine stays
-in busy and is non-functional. Only a reset aborts the DPSM.
-
-Like a reset must be outside of critical section, this patch adds
-threaded irq function to release state machine. In this case,
-the mmc_request_done is called at the end of threaded irq and
-skipped into irq handler.
-
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
-change V2:
- -check IRQ_WAKE_THREAD only in mmci_cmd_irq error part,
-  to avoid this test in mmci_request_end.
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
----
- drivers/mmc/host/mmci.c | 46 +++++++++++++++++++++++++++++++++++------
- drivers/mmc/host/mmci.h |  1 +
- 2 files changed, 41 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index 40e72c30ea84..2b91757e3e84 100644
---- a/drivers/mmc/host/mmci.c
-+++ b/drivers/mmc/host/mmci.c
-@@ -1321,6 +1321,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
- 	} else if (host->variant->busy_timeout && busy_resp &&
- 		   status & MCI_DATATIMEOUT) {
- 		cmd->error = -ETIMEDOUT;
-+		host->irq_action = IRQ_WAKE_THREAD;
- 	} else {
- 		cmd->resp[0] = readl(base + MMCIRESPONSE0);
- 		cmd->resp[1] = readl(base + MMCIRESPONSE1);
-@@ -1339,7 +1340,10 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
- 				return;
- 			}
- 		}
--		mmci_request_end(host, host->mrq);
+diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+index 8a85b482ad31..f918c5804589 100644
+--- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+@@ -53,6 +53,12 @@
+ 			gpios = <&wkup_gpio0 27 GPIO_ACTIVE_LOW>;
+ 		};
+ 	};
 +
-+		if (host->irq_action != IRQ_WAKE_THREAD)
-+			mmci_request_end(host, host->mrq);
++	clk_ov5640_fixed: clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <24000000>;
++	};
+ };
+ 
+ &wkup_pmx0 {
+@@ -184,6 +190,23 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_i2c1_pins_default>;
+ 	clock-frequency = <400000>;
 +
- 	} else if (sbc) {
- 		mmci_start_command(host, host->mrq->cmd, 0);
- 	} else if (!host->variant->datactrl_first &&
-@@ -1532,9 +1536,9 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
- {
- 	struct mmci_host *host = dev_id;
- 	u32 status;
--	int ret = 0;
- 
- 	spin_lock(&host->lock);
-+	host->irq_action = IRQ_HANDLED;
- 
- 	do {
- 		status = readl(host->base + MMCISTATUS);
-@@ -1574,12 +1578,41 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
- 		if (host->variant->busy_detect_flag)
- 			status &= ~host->variant->busy_detect_flag;
- 
--		ret = 1;
- 	} while (status);
- 
- 	spin_unlock(&host->lock);
- 
--	return IRQ_RETVAL(ret);
-+	return host->irq_action;
-+}
++	ov5640@3c {
++		compatible = "ovti,ov5640";
++		reg = <0x3c>;
 +
-+/*
-+ * mmci_irq_threaded is call if the mmci host need to release state machines
-+ * before to terminate the request.
-+ * If datatimeout occurs on R1B request, the Data Path State Machine stays
-+ * in busy and is non-functional. Only a reset can to abort the DPSM.
-+ */
-+static irqreturn_t mmci_irq_threaded(int irq, void *dev_id)
-+{
-+	struct mmci_host *host = dev_id;
-+	unsigned long flags;
++		clocks = <&clk_ov5640_fixed>;
++		clock-names = "xclk";
 +
-+	if (host->rst) {
-+		reset_control_assert(host->rst);
-+		udelay(2);
-+		reset_control_deassert(host->rst);
-+	}
++		port {
++			csi2_cam0: endpoint {
++				remote-endpoint = <&csi2_phy0>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
++		};
++	};
 +
-+	spin_lock_irqsave(&host->lock, flags);
-+	writel(host->clk_reg, host->base + MMCICLOCK);
-+	writel(host->pwr_reg, host->base + MMCIPOWER);
-+	writel(MCI_IRQENABLE | host->variant->start_err,
-+	       host->base + MMCIMASK0);
+ };
+ 
+ &main_i2c2 {
+@@ -339,3 +362,12 @@
+ &mailbox0_cluster11 {
+ 	status = "disabled";
+ };
 +
-+	host->irq_action = IRQ_HANDLED;
-+	mmci_request_end(host, host->mrq);
-+	spin_unlock_irqrestore(&host->lock, flags);
++&csi2_0 {
++	csi2_phy0: endpoint {
++		remote-endpoint = <&csi2_cam0>;
++		clock-lanes = <0>;
++		data-lanes = <1 2>;
++	};
++};
 +
-+	return host->irq_action;
- }
- 
- static void mmci_request(struct mmc_host *mmc, struct mmc_request *mrq)
-@@ -2071,8 +2104,9 @@ static int mmci_probe(struct amba_device *dev,
- 			goto clk_disable;
- 	}
- 
--	ret = devm_request_irq(&dev->dev, dev->irq[0], mmci_irq, IRQF_SHARED,
--			DRIVER_NAME " (cmd)", host);
-+	ret = devm_request_threaded_irq(&dev->dev, dev->irq[0], mmci_irq,
-+					mmci_irq_threaded, IRQF_SHARED,
-+					DRIVER_NAME " (cmd)", host);
- 	if (ret)
- 		goto clk_disable;
- 
-diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-index 158e1231aa23..5e63c0596364 100644
---- a/drivers/mmc/host/mmci.h
-+++ b/drivers/mmc/host/mmci.h
-@@ -412,6 +412,7 @@ struct mmci_host {
- 
- 	struct timer_list	timer;
- 	unsigned int		oldstat;
-+	u32			irq_action;
- 
- 	/* pio stuff */
- 	struct sg_mapping_iter	sg_miter;
 -- 
 2.17.1
 
