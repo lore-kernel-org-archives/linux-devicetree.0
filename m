@@ -2,103 +2,128 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60886C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92049C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FEC2214AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C2B3214AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:58:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BoVkXOzl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbfLKOzP (ORCPT
+        id S1726242AbfLKO6c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:55:15 -0500
-Received: from muru.com ([72.249.23.125]:45526 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728370AbfLKOzP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:55:15 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 0058680FA;
-        Wed, 11 Dec 2019 14:55:52 +0000 (UTC)
-Date:   Wed, 11 Dec 2019 06:55:11 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     "Andrew F. Davis" <afd@ti.com>, linux-omap@vger.kernel.org,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 9/9] ARM: OMAP2+: Drop legacy platform data for dra7
- timers except timer1 to 4
-Message-ID: <20191211145511.GP35479@atomide.com>
-References: <20191210233524.46875-1-tony@atomide.com>
- <20191210233524.46875-10-tony@atomide.com>
- <84c0944d-0e75-4c1f-9220-bf4eb9396040@ti.com>
- <629f9571-d5d7-b85d-ff34-ef35f9fec821@ti.com>
+        Wed, 11 Dec 2019 09:58:32 -0500
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:18315 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727457AbfLKO6b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 09:58:31 -0500
+X-UUID: 5d7e1418eea649028d9a5f19c247b90f-20191211
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=xMYI/rBhHY4Sx0dFvP6i+g8yPPuQV+8OY+pjlW+wWM8=;
+        b=BoVkXOzlh+CkpDJ8kRSSwTiTzA19IVePpQPd804E++fNsGtTykqV2vJWY+B1EwnYH70GU81nM66HNU0MSYsx2qMIX9+2b5c/VeWM3h4f1eRTdVNW41+Nd7/FvprPa1V9OxACNR9IEZg/XihAFojqsohETiEnBJ+Si9vDGMCreQM=;
+X-UUID: 5d7e1418eea649028d9a5f19c247b90f-20191211
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <jiaxin.yu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1672120066; Wed, 11 Dec 2019 22:58:18 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 11 Dec 2019 22:58:04 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 11 Dec 2019 22:58:14 +0800
+From:   Jiaxin Yu <jiaxin.yu@mediatek.com>
+To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
+        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>
+CC:     <yinjoe.chen@mediatek.com>, <sboyd@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: mediatek: mt8183: Add #reset-cells
+Date:   Wed, 11 Dec 2019 22:58:11 +0800
+Message-ID: <1576076292-17860-2-git-send-email-jiaxin.yu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1576076292-17860-1-git-send-email-jiaxin.yu@mediatek.com>
+References: <1576076292-17860-1-git-send-email-jiaxin.yu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <629f9571-d5d7-b85d-ff34-ef35f9fec821@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 32B4F87D8BA1B488805744BF36500BE1CB6DDECC72B354E8A73C00CE6E6E22D32000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [191211 13:00]:
-> On 11/12/2019 04:10, Andrew F. Davis wrote:
-> > On 12/10/19 6:35 PM, Tony Lindgren wrote:
-> > > We can now probe devices with ti-sysc interconnect driver and dts
-> > > data. Let's drop the related platform data and custom ti,hwmods
-> > > dts property.
-> > > 
-> > > As we're just dropping data, and the early platform data init
-> > > is based on the custom ti,hwmods property, we want to drop both
-> > > the platform data and ti,hwmods property in a single patch.
-...
-
-> > > @@ -2069,12 +1783,6 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
-> > >   	NULL,
-> > >   };
-> > > -/* GP-only hwmod links */
-> > > -static struct omap_hwmod_ocp_if *dra7xx_gp_hwmod_ocp_ifs[] __initdata = {
-> > > -	&dra7xx_l4_wkup__timer12,
-> > > -	NULL,
-> > > -};
-> > > -
-> > >   /* SoC variant specific hwmod links */
-> > >   static struct omap_hwmod_ocp_if *dra76x_hwmod_ocp_ifs[] __initdata = {
-> > >   	&dra7xx_l4_per3__usb_otg_ss4,
-> > > @@ -2124,8 +1832,5 @@ int __init dra7xx_hwmod_init(void)
-> > >   		}
-> > >   	}
-> > > -	if (!ret && omap_type() == OMAP2_DEVICE_TYPE_GP)
-> > > -		ret = omap_hwmod_register_links(dra7xx_gp_hwmod_ocp_ifs);
-> > > -
-> > 
-> > 
-> > Maybe I'm missing it but how is this logic getting replicated when using
-> > ti,sync? We runtime detect here if we are on an HS device and if so let
-> > the secure world manage these device's pm/clocks, without this the
-> > non-secure side managment will be unconditional.
-> 
-> This is handled by the clkctrl driver itself. timer12 is marked as NON-SEC
-> device supported only, so it doesn't get registered on HS chips.
-> 
-> I guess the lack of the clock fails the ti-sysc part of the registration
-> logic also. Tony?
-
-Yes it should bail out with a clock error. To avoid an error for that
-in dmesg the timer needs to be tagged with status = "disabled" though.
-
-For drivers, we have soc_device_match() to use that should work for
-detecting SoCs type on boot. Maybe cat /sys/bus/soc/devices/soc0/type
-to confirm this as I don't think we're currently using it for
-detecting HS SoCs anywhere.
-
-Regards,
-
-Tony
-
+RnJvbTogInlvbmcubGlhbmciIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCg0KQWRkICNyZXNl
+dC1jZWxscyBwcm9wZXJ0eSBhbmQgdXBkYXRlIGV4YW1wbGUNCg0KU2lnbmVkLW9mZi1ieTogeW9u
+Zy5saWFuZyA8eW9uZy5saWFuZ0BtZWRpYXRlay5jb20+DQotLS0NCiAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dCAgfCAxMCArKysrKystLS0NCiAuLi4vcmVzZXQt
+Y29udHJvbGxlci9tdDI3MTItcmVzZXRzLmggICAgICAgICAgfCAyMiArKysrKysrKysrKysrKysr
+KysrDQogLi4uL3Jlc2V0LWNvbnRyb2xsZXIvbXQ4MTgzLXJlc2V0cy5oICAgICAgICAgIHwgMTcg
+KysrKysrKysrKysrKysNCiAzIGZpbGVzIGNoYW5nZWQsIDQ2IGluc2VydGlvbnMoKyksIDMgZGVs
+ZXRpb25zKC0pDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQt
+Y29udHJvbGxlci9tdDI3MTItcmVzZXRzLmgNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dA0KaW5kZXggOTIxODFiNjQ4
+ZjUyLi41YTc2YWMyNjJmOGQgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3Mvd2F0Y2hkb2cvbXRrLXdkdC50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dA0KQEAgLTQsNiArNCw3IEBAIFJlcXVp
+cmVkIHByb3BlcnRpZXM6DQogDQogLSBjb21wYXRpYmxlIHNob3VsZCBjb250YWluOg0KIAkibWVk
+aWF0ZWssbXQyNzAxLXdkdCIsICJtZWRpYXRlayxtdDY1ODktd2R0IjogZm9yIE1UMjcwMQ0KKwki
+bWVkaWF0ZWssbXQyNzEyLXdkdCIsICJtZWRpYXRlayxtdDY1ODktd2R0IjogZm9yIE1UMjcxMg0K
+IAkibWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDY1ODkNCiAJIm1lZGlhdGVrLG10Njc5Ny13
+ZHQiLCAibWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDY3OTcNCiAJIm1lZGlhdGVrLG10NzYy
+Mi13ZHQiLCAibWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDc2MjINCkBAIC0xNCwxMSArMTUs
+MTQgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCiANCiBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KIC0g
+dGltZW91dC1zZWM6IGNvbnRhaW5zIHRoZSB3YXRjaGRvZyB0aW1lb3V0IGluIHNlY29uZHMuDQor
+LSAjcmVzZXQtY2VsbHM6IFNob3VsZCBiZSAxLg0KIA0KIEV4YW1wbGU6DQogDQotd2R0OiB3YXRj
+aGRvZ0AxMDAwMDAwMCB7DQotCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2NTg5LXdkdCI7DQot
+CXJlZyA9IDwweDEwMDAwMDAwIDB4MTg+Ow0KK3dhdGNoZG9nOiB3YXRjaGRvZ0AxMDAwNzAwMCB7
+DQorCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLXdkdCIsDQorCQkgICAgICJtZWRpYXRl
+ayxtdDY1ODktd2R0IjsNCisJcmVnID0gPDAgMHgxMDAwNzAwMCAwIDB4MTAwPjsNCiAJdGltZW91
+dC1zZWMgPSA8MTA+Ow0KKwkjcmVzZXQtY2VsbHMgPSA8MT47DQogfTsNCmRpZmYgLS1naXQgYS9p
+bmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xsZXIvbXQyNzEyLXJlc2V0cy5oIGIvaW5j
+bHVkZS9kdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaA0KbmV3IGZp
+bGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAwMDAwMC4uOWU3ZWU3NjJmMDc2DQotLS0gL2Rl
+di9udWxsDQorKysgYi9pbmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xsZXIvbXQyNzEy
+LXJlc2V0cy5oDQpAQCAtMCwwICsxLDIyIEBADQorLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6
+IEdQTC0yLjAgKi8NCisvKg0KKyAqIENvcHlyaWdodCAoYykgMjAxOSBNZWRpYVRlayBJbmMuDQor
+ICogQXV0aG9yOiBZb25nIExpYW5nIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCisgKi8NCisN
+CisjaWZuZGVmIF9EVF9CSU5ESU5HU19SRVNFVF9DT05UUk9MTEVSX01UMjcxMg0KKyNkZWZpbmUg
+X0RUX0JJTkRJTkdTX1JFU0VUX0NPTlRST0xMRVJfTVQyNzEyDQorDQorI2RlZmluZSBNVDI3MTJf
+VE9QUkdVX0lORlJBX1NXX1JTVAkJCQkwDQorI2RlZmluZSBNVDI3MTJfVE9QUkdVX01NX1NXX1JT
+VAkJCQkJMQ0KKyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9NRkdfU1dfUlNUCQkJCTINCisjZGVmaW5l
+IE1UMjcxMl9UT1BSR1VfVkVOQ19TV19SU1QJCQkJMw0KKyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9W
+REVDX1NXX1JTVAkJCQk0DQorI2RlZmluZSBNVDI3MTJfVE9QUkdVX0lNR19TV19SU1QJCQkJNQ0K
+KyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9JTkZSQV9BT19TV19SU1QJCQkJOA0KKyNkZWZpbmUgTVQy
+NzEyX1RPUFJHVV9VU0JfU1dfUlNUCQkJCTkNCisjZGVmaW5lIE1UMjcxMl9UT1BSR1VfQVBNSVhF
+RF9TV19SU1QJCQkJMTANCisNCisjZGVmaW5lIE1UMjcxMl9UT1BSR1VfU1dfUlNUX05VTQkJCQkx
+MQ0KKw0KKyNlbmRpZiAgLyogX0RUX0JJTkRJTkdTX1JFU0VUX0NPTlRST0xMRVJfTVQyNzEyICov
+DQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210ODE4
+My1yZXNldHMuaCBiL2luY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdDgxODMt
+cmVzZXRzLmgNCmluZGV4IDg4MDRlMzRlYmRkNC4uYTFiYmQ0MWUwZDEyIDEwMDY0NA0KLS0tIGEv
+aW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210ODE4My1yZXNldHMuaA0KKysr
+IGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210ODE4My1yZXNldHMuaA0K
+QEAgLTc4LDQgKzc4LDIxIEBADQogI2RlZmluZSBNVDgxODNfSU5GUkFDRkdfQU9fSTJDN19TV19S
+U1QJCQkJMTI2DQogI2RlZmluZSBNVDgxODNfSU5GUkFDRkdfQU9fSTJDOF9TV19SU1QJCQkJMTI3
+DQogDQorI2RlZmluZSBNVDgxODNfSU5GUkFDRkdfU1dfUlNUX05VTQkJCQkxMjgNCisNCisjZGVm
+aW5lIE1UODE4M19UT1BSR1VfTU1fU1dfUlNUCQkJCQkxDQorI2RlZmluZSBNVDgxODNfVE9QUkdV
+X01GR19TV19SU1QJCQkJMg0KKyNkZWZpbmUgTVQ4MTgzX1RPUFJHVV9WRU5DX1NXX1JTVAkJCQkz
+DQorI2RlZmluZSBNVDgxODNfVE9QUkdVX1ZERUNfU1dfUlNUCQkJCTQNCisjZGVmaW5lIE1UODE4
+M19UT1BSR1VfSU1HX1NXX1JTVAkJCQk1DQorI2RlZmluZSBNVDgxODNfVE9QUkdVX01EX1NXX1JT
+VAkJCQkJNw0KKyNkZWZpbmUgTVQ4MTgzX1RPUFJHVV9DT05OX1NXX1JTVAkJCQk5DQorI2RlZmlu
+ZSBNVDgxODNfVE9QUkdVX0NPTk5fTUNVX1NXX1JTVAkJCQkxMg0KKyNkZWZpbmUgTVQ4MTgzX1RP
+UFJHVV9JUFUwX1NXX1JTVAkJCQkxNA0KKyNkZWZpbmUgTVQ4MTgzX1RPUFJHVV9JUFUxX1NXX1JT
+VAkJCQkxNQ0KKyNkZWZpbmUgTVQ4MTgzX1RPUFJHVV9BVURJT19TV19SU1QJCQkJMTcNCisjZGVm
+aW5lIE1UODE4M19UT1BSR1VfQ0FNU1lTX1NXX1JTVAkJCQkxOA0KKw0KKyNkZWZpbmUgTVQ4MTgz
+X1RPUFJHVV9TV19SU1RfTlVNCQkJCTE5DQorDQogI2VuZGlmICAvKiBfRFRfQklORElOR1NfUkVT
+RVRfQ09OVFJPTExFUl9NVDgxODMgKi8NCi0tIA0KMi4xOC4wDQo=
 
