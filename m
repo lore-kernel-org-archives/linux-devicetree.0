@@ -2,222 +2,144 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD64C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 19:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C23C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 19:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91863206A5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 19:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F162206A5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 19:17:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="BAtcnlT6"
+	dkim=pass (2048-bit key) header.d=newoldbits-com.20150623.gappssmtp.com header.i=@newoldbits-com.20150623.gappssmtp.com header.b="QeQ8lQGX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbfLKTJu (ORCPT
+        id S1726987AbfLKTRT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 14:09:50 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44173 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbfLKTJu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 14:09:50 -0500
-Received: by mail-lf1-f67.google.com with SMTP id v201so17521950lfa.11
-        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 11:09:48 -0800 (PST)
+        Wed, 11 Dec 2019 14:17:19 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45900 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfLKTRT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 14:17:19 -0500
+Received: by mail-lj1-f196.google.com with SMTP id d20so25309640ljc.12
+        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 11:17:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=F2hQxSbx80dzLoD4LOY/tQag3ZJk3szWSla+aYe1eXQ=;
-        b=BAtcnlT6l6osRO74rPsAcoDcc7Pz5AYSWxMDHZnkVtqtiMNRq3KTghuXR3LRUeC9FN
-         epR2ZIgbZ13gPSCJBuA6N8ySJ44OEe+ebev3VWjXhTbW/ub94AEPDCROZKc5xz7IXqDn
-         gwQnZHAoJrzKOqKEh8YC9JUeyRRDgTzv8i7nIhwg0GXeIBeFMA1Qq/VTm7PCVN3a751T
-         Qu2ryWBegnDr2vryhXyaVmH0gzRUMCWa0FmLXrrbYkZaPb89koL7AiwUKWJASsgMOT8l
-         GGxqE8KFhs6DZkjKcVosiY39EC6rS5oN25gpJ7CrAtnxg+r/zENASUiAsNpNT2dEm9Wq
-         xOwg==
+        d=newoldbits-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1AN7tQu9E9F6CdQAkLeGav9Txv7MLGF3KKMoUN11PvY=;
+        b=QeQ8lQGXrcaZThSohmj5J4TTft2Hk+yT4BAC0TNFBi5uyW2IaFb19TgIFO4MFkhwD4
+         S0lBFjWpveGnFzflxslGepWBXAcZ+Qp7EqBBlBLj7TclbZ/wxc2bj4wlOI2v+IpcOIXv
+         dqK3hKlZGA6ZiPCWmYV6EinkhyrPTtwoVvaBTPK64jUizGTiHRtZ+gjXmPGOH9QdtnLm
+         6d++npDsoXzfj8VDoUMgnvqU3e2xI73Az5D4nHts5G3FaSj+ViWTTjBZOlsnMFg2PyYJ
+         1sYpbylZoOH/a5gbV1wlDhJkz7DdsNI/pP5F2jmHpMyFSyvhdIHLWS88WCHN9kkCO7nT
+         kSRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=F2hQxSbx80dzLoD4LOY/tQag3ZJk3szWSla+aYe1eXQ=;
-        b=eOCANlvZhEApTTYxFTvKyytGRlIvVBa1s6ekoTZR/oEuBkP/XniC7Ws2fbOCNoTxNK
-         bEBKjbkziLRUjJCh3wXYkPeVX5+fC1RceRhe4vKYEju0c4Fg2hZV6Uvl2ubs0Yoiz5rJ
-         6wG289yH6qGpjbtBRpN7S4otKwINH3upgDGEOsfp2Ph3/LByAkLsF4aJOxf2UuxKENiN
-         L6v0gT1TqKnsgFnEASmgDYx3OEUL1HPR3l2zMY3OKQwzTt8ied4ehzfELGKIGos7HTeb
-         SWtijEpVo26yaIwd8hfwanptnsgOs94jxZqR6sEeRSmhVs4iXnGsobgVy2pJXDaSUjxv
-         XrAw==
-X-Gm-Message-State: APjAAAUmOGKkoMXOrkoTho2I/JmAOReEdILg4ZnjxdIGCxWNGS2h2Kry
-        jqRfOKlqhk1+vqBiRJPyGIXM6Q==
-X-Google-Smtp-Source: APXvYqwTP8Syk9MFdAQXoVHE+1eQSGVsmkwJrqYhkYsHqy4MBoe0ip6R2MXyz6m6Qk6ncdoSD8mJ+A==
-X-Received: by 2002:a19:f10e:: with SMTP id p14mr3282287lfh.3.1576091387397;
-        Wed, 11 Dec 2019 11:09:47 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:8d8:12fe:a87e:d4b8:621e:2b62])
-        by smtp.gmail.com with ESMTPSA id i5sm1708098ljj.29.2019.12.11.11.09.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Dec 2019 11:09:46 -0800 (PST)
-Subject: Re: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
-To:     Chris Brandt <Chris.Brandt@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com>
- <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
-Date:   Wed, 11 Dec 2019 22:09:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1AN7tQu9E9F6CdQAkLeGav9Txv7MLGF3KKMoUN11PvY=;
+        b=kwk2Ha3xdLMCBRdKXDYH7jwxayAJ2D7es3ZyWE+71+tIQ2KoLb8Mw7BEPp7xJaEo2j
+         PesyoVP5noNLJmbZwCKYifuv8aixbvglYeJAY1YjQ70XJCaXwj+y+BayChmTyOaadOt1
+         QlMbBiIe/SMWPcD2+V0UKfLZ3vy9xAd4z806k97wHpX8YN5hVFsBrZtuWVkvQII0igcD
+         Z0y9YFmuC/3cIrn6ikSeKVw4A49Bg7Jnz69lVFF+XXsW3MV8W8OzSUgCZ2/20A4pHgMO
+         qe1qBQYVn8S4aeGQDtAAKfHwAaFPEFOAaBdTOAQVJznrCCk4fl9BvrjEo7XA46fEQPCc
+         CC8Q==
+X-Gm-Message-State: APjAAAX4QKJMer3ARCwk4zOEcZRHSZx4xjHMEw4xqTF1yAVEPrPllVBs
+        TRoOSC/A9tuMzKrraIX+LT97T0thx0mAlgZmvMQvWQ==
+X-Google-Smtp-Source: APXvYqyv09qAzakZNbU22xLMm5awfN09PNZBeZ1R+OinwKrNzz9E6Lx7pD0YcJkonKfsJewyU0RjeSfCXuWiwL/be7k=
+X-Received: by 2002:a05:651c:32b:: with SMTP id b11mr3366910ljp.203.1576091837445;
+ Wed, 11 Dec 2019 11:17:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+References: <20191210215831.6199-1-tony@atomide.com>
+In-Reply-To: <20191210215831.6199-1-tony@atomide.com>
+From:   Jean Pihet <jean.pihet@newoldbits.com>
+Date:   Wed, 11 Dec 2019 20:17:06 +0100
+Message-ID: <CAORVsuWOh2kVuo5MscT3EG+SJdLCBQqYHnvCbVE-DqeEHgO5bA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: Configure interconnect target module for
+ am4 qspi
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     linux-omap@vger.kernel.org,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/09/2019 06:10 PM, Chris Brandt wrote:
+Hi Tony,
 
->>> The Renesas SPI Bus Space Controller (SPIBSC) HW was specifically
->>> designed for accessing Serial flash devices (QSPI,
->>
->>    The initial design did only support SPI, hence the SPI in the name.
-> 
-> The more important part is the "Bus Space Controller". Meaning the main 
-> purpose of this hardware was to allow the CPU to access serial flash 
-> directly (as in, XIP).
-> 
-> "SPI-BSC" was the internal name for the HW but does not appear in any of
-> the hardware manual. The hardware manuals (even the MCUs) only say "SPI
-> Multi I/O Bus Controller".
-> Even the R-car gen3 manual says 'SPI':  "SPI Multi I/O Bus Controller 
-> (RPC)".
-> 
-> I have no idea why the R-Car people felt they needed to put "RPC" in the
-> hardware manual as the title of the chapter. (Although, "Multi I/O" is 
-> just as bad as a name)
->  
-> I did make the request to the RZ/G team to not put "RPC" in the title of
-> the chapter in any future RZ/G hardware manuals.
-> 
-> Since QSPI, HyperFlash and OctaFlash are all 'serial' Flash 
-> technologies, I would be find with a driver name of "SBSC" ("Serial Bus Space 
-> Controller") which at least looks closer to what is in all the hardware 
-> manuals.
+On Tue, Dec 10, 2019 at 10:58 PM Tony Lindgren <tony@atomide.com> wrote:
+>
+> We can now probe devices with device tree only configuration using
+> ti-sysc interconnect target module driver. Let's configure the
+> module, but keep the legacy "ti,hwmods" peroperty to avoid new boot
+> time warnings. The legacy property will be removed in later patches
+> together with the legacy platform data.
+>
+> Cc: Jean Pihet <jean.pihet@newoldbits.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 
-   How about "Serial Flash Controller" instead?
+Tested OK on AM4376 QSPI.
+Acked-by: Jean Pihet <jean.pihet@newoldbits.com>
 
->>    SPIBSC is also misleading... RPC-IF seems misleading too as it's only
->> spelled out in the R-Car gen3 and RZ/A2H manuals.
-> 
-> In the RZ/A2 manual, "RPC" is only used to label the 3 new external pins
-> that were added for HyperFlash.
+Thanks!
+Jean
 
-   Sorry, I was to hasty to check the RZ/A2H manual before typing. :-/
-
->   RPC_RESET# , RPC_WP# , RPC_INT#
-> But of course they were just copied from the R-Car manual.
-> 
-> But, maybe that's enough about the name for now.
-
-   OK. :-)
-
->>> This driver has been tested on an RZ/A1H RSK and RZ/A2M EVB.
->>
->>    In the SPI mode only, I assume?
-> 
-> Yes. At the moment, there are only requests from users for QSPI flash access
-> (RZ/A and RZ/G users).
-
-   I keep being told by the management that we need HyperFlash too. :-)
-In our BSP development, our engineers went "same hardware, 2 drivers"
-way (with different "compatibles" per driver)...
-
-> The RZ/A2M EVB was laid out to support all the different combinations of
-> serial flashes (by populating different chips). That is why there is 
-> already Segger J-link support for QSPI, Hyper and Octa for the RZ/A2.
-> 
-> I will admit, to developed this driver for the "SPI-BSC" HW, I have been
-> using an XIP kernel (XIP from another HyperFlash / HyperRAM combo chip 
-> on the board) because I didn't feel like moving all the switches to use 
-> SDRAM and a uImage kernel.
-> The RZ/A2M has a HyperFlash controller (for R/W), a OctaBus controller 
-> (for R/W) and the SPI BSC (Read-only).
-
-   Seen these...
-
->>    What I have now is the core driver (or rather a library) placed under
->> drivers/memory/ and the SPI and HyperFlash front ends in drivers/spi/ and
->> drivers/mtd/hyperbus/ respectfully.
->> I'm almost ready to post the core driver/bindings, the SPI driver still needs
->> some Mark Brown's comments addressed, and the HyperFlash driver is also ready
->> but needs the existing HyperBus infrastructure properly fixed up (having a
->> draft patch now)...
-
-> But are these for the HyperBus controller? Or the SPI-BSC controller?
-> They are 2 different controllers, so you would think they would have 2 different drivers.
-
-   R-Car gen3 only has RPC-IF, no separate HyperBus controller, so the second case.
-
->>> The testing mostly consisted of formatting an area as JFFS2 and doing
->>> copying of files and such.
->>
->>    Did the same (or at least tried to :-) and I must admit that writing
->> doesn't work with any of the front ends... I still need to get this fixed.
-
-   The last word from our BSP people was that JFFS2 doesn't work with the HyperFLash
-dedicated BSP driver... :-/
-
-> That's the part I'm confused about. I saw the last patch series that 
-> made it up to v17 but still didn't get in. Although, it did look very 
-> complicated.
-> You can see from my SPI-BSC driver, it's basically 2 function: a SPI 
-
-   I'll read/try it next thing...
-
-> write and SPI read. The upper layer sends you down data to write, and you 
-> just write it. In theory, if a HyperFlash MTD layer was sending down 
-> data, the commands bytes would be different, but the procedure would be the 
-> same.
-
-   Yeah, the commands are different...
-
->>> While the HW changed a little between the RZ/A1 and RZ/A2 generations,
->>> the IP block in the RZ/A2M was taken from the R-Car H3 design, so in
->>> theory this driver should work for R-Car Gen3 as well.
->>
->>    I don't think it's a good idea to use the SPI dedicated driver on R-Car
->> gen3, I would rather see the RZ/A1 using the RPC-IF driver/library to reduce
->> the code duplication...
-> 
-> I agree on not having competing drivers. Especially since future RZ/A 
-> and RZ/G devices will most likely continue to include this HW.
-
-> However, the driver I posted is pretty simple and works. Does the 
-> HyperFlash MTD
-
-   There's no HF library, only front end driver.
-   The real library covers both SPI and HF. The only difference between the two
-is the h/w setup (minor difference).
-
-> library that you are proposing have a very different API than 
-> just 'send bytes' and 'receive bytes'?
-
-   There's "prepare" and "transfer" APIs and also "direct map read" API.
-
-> Chris
-
-MBR, Sergei
+> ---
+>  arch/arm/boot/dts/am4372.dtsi | 38 ++++++++++++++++++++++++++---------
+>  1 file changed, 28 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+> --- a/arch/arm/boot/dts/am4372.dtsi
+> +++ b/arch/arm/boot/dts/am4372.dtsi
+> @@ -305,17 +305,35 @@ gpmc: gpmc@50000000 {
+>                         status = "disabled";
+>                 };
+>
+> -               qspi: spi@47900000 {
+> -                       compatible = "ti,am4372-qspi";
+> -                       reg = <0x47900000 0x100>,
+> -                             <0x30000000 0x4000000>;
+> -                       reg-names = "qspi_base", "qspi_mmap";
+> -                       #address-cells = <1>;
+> -                       #size-cells = <0>;
+> +               target-module@47900000 {
+> +                       compatible = "ti,sysc-omap4", "ti,sysc";
+>                         ti,hwmods = "qspi";
+> -                       interrupts = <0 138 0x4>;
+> -                       num-cs = <4>;
+> -                       status = "disabled";
+> +                       reg = <0x47900000 0x4>,
+> +                             <0x47900010 0x4>;
+> +                       reg-names = "rev", "sysc";
+> +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
+> +                                       <SYSC_IDLE_NO>,
+> +                                       <SYSC_IDLE_SMART>,
+> +                                       <SYSC_IDLE_SMART_WKUP>;
+> +                       clocks = <&l3s_clkctrl AM4_L3S_QSPI_CLKCTRL 0>;
+> +                       clock-names = "fck";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       ranges = <0x0 0x47900000 0x1000>,
+> +                                <0x30000000 0x30000000 0x4000000>;
+> +
+> +                       qspi: spi@0 {
+> +                               compatible = "ti,am4372-qspi";
+> +                               reg = <0 0x100>,
+> +                                     <0x30000000 0x4000000>;
+> +                               reg-names = "qspi_base", "qspi_mmap";
+> +                               clocks = <&dpll_per_m2_div4_ck>;
+> +                               clock-names = "fck";
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +                               interrupts = <0 138 0x4>;
+> +                               num-cs = <4>;
+> +                       };
+>                 };
+>
+>                 dss: dss@4832a000 {
+> --
+> 2.24.0
