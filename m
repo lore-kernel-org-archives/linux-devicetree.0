@@ -2,117 +2,150 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940D7C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 23:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C327C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 23:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE37214AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 23:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A98B214AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 23:49:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576108148;
+	bh=f0rMuDibQwxhGxUg6uCBllNAF042fhNbWR73lcnFA0s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZydNjHnFwOZ04pTNpD4LJoxoYBz+9Z5RtYWVjXfurZZZrDb45l1TZTMQrogiJ7QF+
+	 uGlJFtzc6YxPrXyF2C9oCQ3KcDcVbdC1J4Y11qUigIEKydL6zuUFHVPen3ZyQPCZT1
+	 LNlov8c4z0NVrxrWSx7u4OSZTeotuHRTbLBJLyj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLKXqb (ORCPT
+        id S1726783AbfLKXtI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 18:46:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:52186 "EHLO foss.arm.com"
+        Wed, 11 Dec 2019 18:49:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbfLKXqa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 18:46:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0CC51FB;
-        Wed, 11 Dec 2019 15:46:29 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 661923F52E;
-        Wed, 11 Dec 2019 15:46:29 -0800 (PST)
-Date:   Wed, 11 Dec 2019 23:46:27 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
-        lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        gustavo.pimentel@synopsys.com, robh@kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v10 2/3] PCI: dwc: intel: PCIe RC controller driver
-Message-ID: <20191211234627.GC24359@e119886-lin.cambridge.arm.com>
-References: <7f5f0eec-465e-9c21-35ac-b6906119ed5e@linux.intel.com>
- <20191211142022.GA26342@google.com>
+        id S1726631AbfLKXtH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Dec 2019 18:49:07 -0500
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A64322527;
+        Wed, 11 Dec 2019 23:49:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576108146;
+        bh=f0rMuDibQwxhGxUg6uCBllNAF042fhNbWR73lcnFA0s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tOQAAN2yPQE77usTWwPzLjvFzL7kgJNKo2v80h0m193+YlCOdgA7eXX7/ytci5LDA
+         hii5vGrI23lJWPFZhX49AD2kwaZkeR/seuajCWRW9TEhC1sE20/qoIokJdZFL8Sfl0
+         CMJy5m8+9+0vgLOm1lXj09+47pSeXQy2Oi1y08p8=
+Received: by mail-qv1-f46.google.com with SMTP id b18so208325qvo.8;
+        Wed, 11 Dec 2019 15:49:06 -0800 (PST)
+X-Gm-Message-State: APjAAAWBccKOPYZDkkYHgkTXf7tFgdr1J3m3NcWR0dHyzMUaweZVRWtA
+        VGeyuZx+jTpesnBjVviSJwnpm+bbLzXxPxftQQ==
+X-Google-Smtp-Source: APXvYqyAtcvaKLnFbjGmpBBTnIi8tjdx6h1ib4i2dfveW/ALXlUBKsl5hTyKms4SutCfdrYnxMCs1YSJ54xgO/8xlmU=
+X-Received: by 2002:ad4:450a:: with SMTP id k10mr5348785qvu.136.1576108145643;
+ Wed, 11 Dec 2019 15:49:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211142022.GA26342@google.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+References: <20191211232345.24810-1-robh@kernel.org>
+In-Reply-To: <20191211232345.24810-1-robh@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 11 Dec 2019 17:48:54 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKfV-4mx_uidUupQJT4qfq+y+qx1=S=Du-Qsaweh4CPUQ@mail.gmail.com>
+Message-ID: <CAL_JsqKfV-4mx_uidUupQJT4qfq+y+qx1=S=Du-Qsaweh4CPUQ@mail.gmail.com>
+Subject: Re: [PATCH] of: Rework and simplify phandle cache to use a fixed size
+To:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 08:20:22AM -0600, Bjorn Helgaas wrote:
-> On Wed, Dec 11, 2019 at 05:59:58PM +0800, Dilip Kota wrote:
-> > 
-> > On 12/11/2019 7:49 AM, Bjorn Helgaas wrote:
-> > > On Fri, Dec 06, 2019 at 03:27:49PM +0800, Dilip Kota wrote:
-> > > > Add support to PCIe RC controller on Intel Gateway SoCs.
-> > > > PCIe controller is based of Synopsys DesignWare PCIe core.
-> > > > 
-> > > > Intel PCIe driver requires Upconfigure support, Fast Training
-> > > > Sequence and link speed configurations. So adding the respective
-> > > > helper functions in the PCIe DesignWare framework.
-> > > > It also programs hardware autonomous speed during speed
-> > > > configuration so defining it in pci_regs.h.
-> > > > 
-> > > > Also, mark Intel PCIe driver depends on MSI IRQ Domain
-> > > > as Synopsys DesignWare framework depends on the
-> > > > PCI_MSI_IRQ_DOMAIN.
-> > > > 
-> > > > Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> > > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> > > > Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> 
-> > > > +static void pcie_update_bits(void __iomem *base, u32 ofs, u32 mask, u32 val)
-> > > > +{
-> > > > +	u32 old;
-> > > > +
-> > > > +	old = readl(base + ofs);
-> > > > +	val = (old & ~mask) | (val & mask);
-> > > > +
-> > > > +	if (val != old)
-> > > > +		writel(val, base + ofs);
-> > > I assume this is never used on registers where the "old & ~mask" part
-> > > contains RW1C bits?  If there are RW1C bits in that part, this will
-> > > corrupt them.
-> > There is no impact because RW1C bits of respective registers are 0s at the
-> > time of this function call.
-> 
-> Sounds ... dangerous, but I'll take your word for it.
-> 
-> > I see, this patch series is merged in the maintainer tree.
-> > Should i need to submit as a separate patch on top of maintainer tree or
-> > submit the new version of whole patch series?
-> > Please let me know the best practice.
-> 
-> Sorry, I didn't realize this had already been merged to Lorenzo's
-> tree.  But it's not upstream (in Linus' tree) yet.  I don't know how
-> Andrew and Lorenzo want to handle this.  None of these are important,
-> so you could just ignore these comments.
-> 
-> What I personally would do is rebase the branch, e.g.,
-> lpieralisi/pci/dwc, and apply an incremental patch.  But it's up to
-> Andrew and Lorenzo whether they want to do anything.
+On Wed, Dec 11, 2019 at 5:23 PM Rob Herring <robh@kernel.org> wrote:
+>
+> The phandle cache was added to speed up of_find_node_by_phandle() by
+> avoiding walking the whole DT to find a matching phandle. The
+> implementation has several shortcomings:
+>
+>   - The cache is designed to work on a linear set of phandle values.
+>     This is true for dtc generated DTs, but not for other cases such as
+>     Power.
+>   - The cache isn't enabled until of_core_init() and a typical system
+>     may see hundreds of calls to of_find_node_by_phandle() before that
+>     point.
+>   - The cache is freed and re-allocated when the number of phandles
+>     changes.
+>   - It takes a raw spinlock around a memory allocation which breaks on
+>     RT.
+>
+> Change the implementation to a fixed size and use hash_32() as the
+> cache index. This greatly simplifies the implementation. It avoids
+> the need for any re-alloc of the cache and taking a reference on nodes
+> in the cache. We only have a single source of removing cache entries
+> which is of_detach_node().
+>
+> Using hash_32() removes any assumption on phandle values improving
+> the hit rate for non-linear phandle values. The effect on linear values
+> using hash_32() is about a 10% collision. The chances of thrashing on
+> colliding values seems to be low.
+>
+> To compare performance, I used a RK3399 board which is a pretty typical
+> system. I found that just measuring boot time as done previously is
+> noisy and may be impacted by other things. Also bringing up secondary
+> cores causes some issues with measuring, so I booted with 'nr_cpus=1'.
+> With no caching, calls to of_find_node_by_phandle() take about 20124 us
+> for 1248 calls. There's an additional 288 calls before time keeping is
+> up. Using the average time per hit/miss with the cache, we can calculate
+> these calls to take 690 us (277 hit / 11 miss) with a 128 entry cache
+> and 13319 us with no cache or an uninitialized cache.
+>
+> Comparing the 3 implementations the time spent in
+> of_find_node_by_phandle() is:
+>
+> no cache:        20124 us (+ 13319 us)
+> 128 entry cache:  5134 us (+ 690 us)
+> current cache:     819 us (+ 13319 us)
+>
+> We could move the allocation of the cache earlier to improve the
+> current cache, but that just further complicates the situation as it
+> needs to be after slab is up, so we can't do it when unflattening (which
+> uses memblock).
+>
+> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Segher Boessenkool <segher@kernel.crashing.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/of/base.c       | 133 ++++++++--------------------------------
+>  drivers/of/dynamic.c    |   2 +-
+>  drivers/of/of_private.h |   4 +-
+>  drivers/of/overlay.c    |  10 ---
+>  4 files changed, 28 insertions(+), 121 deletions(-)
 
-Hi Dilip,
+[...]
 
-Thanks for taking on this additional feedback.
+> -       if (phandle_cache) {
+> -               if (phandle_cache[masked_handle] &&
+> -                   handle == phandle_cache[masked_handle]->phandle)
+> -                       np = phandle_cache[masked_handle];
+> -               if (np && of_node_check_flag(np, OF_DETACHED)) {
+> -                       WARN_ON(1); /* did not uncache np on node removal */
+> -                       of_node_put(np);
+> -                       phandle_cache[masked_handle] = NULL;
+> -                       np = NULL;
+> -               }
+> +       if (phandle_cache[handle_hash] &&
+> +           handle == phandle_cache[handle_hash]->phandle)
+> +               np = phandle_cache[handle_hash];
+> +       if (np && of_node_check_flag(np, OF_DETACHED)) {
+> +               WARN_ON(1); /* did not uncache np on node removal */
 
-I'd be happy for you to send an additional patch ontop of your v11 (head of
-lpieralisi/pci/dwc) and we'll squash it in.
+BTW, I don't think this check is even valid. If we failed to detach
+and remove the node from the cache, then we could be accessing np
+after freeing it.
 
-Thanks,
-
-Andrew Murray
-
-> 
-> Bjorn
+Rob
