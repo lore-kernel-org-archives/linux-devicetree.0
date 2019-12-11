@@ -2,69 +2,247 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8868C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 03:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A72AC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 03:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF6C20838
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 03:18:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576034293;
-	bh=kLxDvysWfIkrsHjdaUyETI6sk4hgGH41h30oWXgMtZY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XmwuXqkSpJHsqCohi1mCRxq3V44bi5G0e8KrjdFcZDCnr0/YgiiMFrVazx7LgXDcR
-	 So+6xKBJ6Sko5CLszMe4rkKQ8gIOI6KXhBL/QBnx5d8W6uGGFDoQZqMhP3YBfBjN/q
-	 JF3y0s2EvU0ndL1ZzaZQRUrEt/PCM9HdqtocZRtQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1C0542073B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 03:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfLKDSM (ORCPT
+        id S1726874AbfLKD2O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 22:18:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbfLKDSM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Dec 2019 22:18:12 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76DC020836;
-        Wed, 11 Dec 2019 03:18:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576034291;
-        bh=kLxDvysWfIkrsHjdaUyETI6sk4hgGH41h30oWXgMtZY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Aoe/Pi0EhdH/Wd6om7KZ13rv4vRlkKEO4OPEDvYo3wsTTbbbaOR0q/M7A1UeQXAak
-         doHbNeuvVNZJ/y8l7yGpGQNUgYT9CjUXSSN2+ZrH/LrwOW1DwPzQUGdUNepHNg/Duk
-         rJTQiSoLw84yO5iwLm95dcyd77t6uCDkzcj5xsTs=
-Date:   Wed, 11 Dec 2019 11:18:03 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] arm64: dts: lx2160a: add EMDIO1 and phy nodes
-Message-ID: <20191211031802.GH15858@dragon>
-References: <20191204165828.29893-1-ioana.ciornei@nxp.com>
+        Tue, 10 Dec 2019 22:28:14 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:56887 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfLKD2O (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 22:28:14 -0500
+Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 11 Dec 2019
+ 11:28:41 +0800
+From:   Jian Hu <jian.hu@amlogic.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v2] arm64: dts: meson-a1: add I2C nodes
+Date:   Wed, 11 Dec 2019 11:28:02 +0800
+Message-ID: <20191211032802.83309-1-jian.hu@amlogic.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204165828.29893-1-ioana.ciornei@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.28.8.25]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 06:58:26PM +0200, Ioana Ciornei wrote:
-> This patch set adds the External MDIO1 node and the two
-> RGMII PHYs connected to it.
-> 
-> Changes in v2:
->  - added a newline between nodes in 2/2
->  - moved the WRIOP node (sorted by unit address) in 1/2
-> 
-> Ioana Ciornei (2):
->   arm64: dts: lx2160a: add emdio1 node
->   arm64: dts: lx2160a: add RGMII phy nodes
+There are four I2C controllers in A1 series,
+Share the same comptible with AXG. Compared to AXG,
+Drive strength feature is newly added in A1.
+This patch depends on A1 clock driver.
 
-Applied both, thanks.
+Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+
+---
+This patch depends on A1 clock patchset at[0]
+
+Changes since v1 at [1]:
+-change reg length to 0x20
+-assign i2c bus alias in dts file
+-add new feature note compared to AXG in changelog
+
+[0] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
+[1] https://lkml.kernel.org/r/20191202111253.94872-1-jian.hu@amlogic.com
+---
+---
+ .../arm64/boot/dts/amlogic/meson-a1-ad401.dts |   4 +
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi     | 142 ++++++++++++++++++
+ 2 files changed, 146 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+index 69c25c68c358..2d0457976233 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+@@ -13,6 +13,10 @@
+ 
+ 	aliases {
+ 		serial0 = &uart_AO_B;
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
++		i2c3 = &i2c3;
+ 	};
+ 
+ 	chosen {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+index eab2ecd36aa8..66d5206a57de 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+@@ -117,6 +117,46 @@
+ 				};
+ 			};
+ 
++			i2c0: i2c@1400 {
++				compatible = "amlogic,meson-axg-i2c";
++				reg = <0x0 0x1400 0x0 0x20>;
++				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				clocks = <&clkc_periphs CLKID_I2C_M_A>;
++				status = "disabled";
++			};
++
++			i2c1: i2c@5c00 {
++				compatible = "amlogic,meson-axg-i2c";
++				reg = <0x0 0x5c00 0x0 0x20>;
++				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				clocks = <&clkc_periphs CLKID_I2C_M_B>;
++				status = "disabled";
++			};
++
++			i2c2: i2c@6800 {
++				compatible = "amlogic,meson-axg-i2c";
++				reg = <0x0 0x6800 0x0 0x20>;
++				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				clocks = <&clkc_periphs CLKID_I2C_M_C>;
++				status = "disabled";
++			};
++
++			i2c3: i2c@6c00 {
++				compatible = "amlogic,meson-axg-i2c";
++				reg = <0x0 0x6c00 0x0 0x20>;
++				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				clocks = <&clkc_periphs CLKID_I2C_M_D>;
++				status = "disabled";
++			};
++
+ 			uart_AO: serial@1c00 {
+ 				compatible = "amlogic,meson-gx-uart",
+ 					     "amlogic,meson-ao-uart";
+@@ -171,3 +211,105 @@
+ 		#clock-cells = <0>;
+ 	};
+ };
++
++&periphs_pinctrl {
++	i2c0_f11_pins:i2c0-f11 {
++		mux {
++			groups = "i2c0_sck_f11",
++				"i2c0_sda_f12";
++			function = "i2c0";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c0_f9_pins:i2c0-f9 {
++		mux {
++			groups = "i2c0_sck_f9",
++				"i2c0_sda_f10";
++			function = "i2c0";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c1_x_pins:i2c1-x {
++		mux {
++			groups = "i2c1_sck_x",
++				"i2c1_sda_x";
++			function = "i2c1";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c1_a_pins:i2c1-a {
++		mux {
++			groups = "i2c1_sck_a",
++				"i2c1_sda_a";
++			function = "i2c1";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c2_x0_pins:i2c2-x0 {
++		mux {
++			groups = "i2c2_sck_x0",
++				"i2c2_sda_x1";
++			function = "i2c2";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c2_x15_pins:i2c2-x15 {
++		mux {
++			groups = "i2c2_sck_x15",
++				"i2c2_sda_x16";
++			function = "i2c2";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c2_a4_pins:i2c2-a4 {
++		mux {
++			groups = "i2c2_sck_a4",
++				"i2c2_sda_a5";
++			function = "i2c2";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c2_a8_pins:i2c2-a8 {
++		mux {
++			groups = "i2c2_sck_a8",
++				"i2c2_sda_a9";
++			function = "i2c2";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c3_x_pins:i2c3-x {
++		mux {
++			groups = "i2c3_sck_x",
++				"i2c3_sda_x";
++			function = "i2c3";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c3_f_pins:i2c3-f {
++		mux {
++			groups = "i2c3_sck_f",
++				"i2c3_sda_f";
++			function = "i2c3";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++};
+-- 
+2.24.0
+
