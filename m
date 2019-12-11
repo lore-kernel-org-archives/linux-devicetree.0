@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FEBC2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F779C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3F922B48
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06753208C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079998;
-	bh=IMKUB3WFZG/+SvJTD6DakkLU6JGoz3fFgZ4SomQZJQc=;
+	s=default; t=1576080147;
+	bh=etoHb+N2upRHCrg7AxpFPKl/JHHQbFBSU4cuwZv9h84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mk1dl+6YZZDrWQVHZmWnitym55S4UhkfHQcbT7IV28rpBKtPkqOWGME5xEneVO/fF
-	 xhaFJe4X/nUKmTRTEGqSHSok7ooLIZH7HOF3AJG0MZyeOQMRtQmWyh7Um/MtXlsXz6
-	 k+th/xqm07Z//zoCfdOG3Nb+Huw6AZt6mQ9FNNrs=
+	b=K6xRqrta0rSS7Ym+tPpx7VVdau6S+3nm6FqzTqYfV04h6z3TpW68O2Oi2NLENcwud
+	 rZYbt0Lk8QaTKskhhZoPSUwqgxws2tW++bCNAW+re8TGfQXITAlXRz+r8WoXMrIwcD
+	 10PrItGNbhwS82xMC8y9/qxTbUG4hm5GQEEzz7v4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbfLKP7x (ORCPT
+        id S1732076AbfLKQCW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:59:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38404 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:02:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731544AbfLKPN6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:58 -0500
+        id S1731378AbfLKPNO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 664BA24689;
-        Wed, 11 Dec 2019 15:13:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6790D24680;
+        Wed, 11 Dec 2019 15:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077238;
-        bh=IMKUB3WFZG/+SvJTD6DakkLU6JGoz3fFgZ4SomQZJQc=;
+        s=default; t=1576077193;
+        bh=etoHb+N2upRHCrg7AxpFPKl/JHHQbFBSU4cuwZv9h84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=is+9F5t0XtX/Z6al/ApsVcyz/eaIp+3c6AEzjNYwEB9L+nQG5W9csovDxjqtrTEeV
-         nXMNEywUWT/1CSiEQaZufwW1lGkZn05oBP0SG9/SS0IEdj++qDZ3j3F/IDL5VS6/w9
-         oqKg+ULuN0MeZmwe9ORfrvL9yh6BXADFCYhQiK6o=
+        b=x2hS8y4laDYzGqYrLV/88CRdmaB0niRQDue8ZxFYEbsRzh44Myqrs/LnTW1YfarEM
+         5JLrTjAf9lqyf6QHoN925tuEYUrTzWydNgrEdAjqu0n3f/WJSa+0IG81uBCynP/E/4
+         wNh4HfK9r/q0Vd8Rt1GIEy35tC9u/2McG4gRWf/w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erhard Furtner <erhard_f@mailbox.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 116/134] of: unittest: fix memory leak in attach_node_and_children
-Date:   Wed, 11 Dec 2019 10:11:32 -0500
-Message-Id: <20191211151150.19073-116-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 076/134] dt-bindings: Improve validation build error handling
+Date:   Wed, 11 Dec 2019 10:10:52 -0500
+Message-Id: <20191211151150.19073-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -61,45 +60,84 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Erhard Furtner <erhard_f@mailbox.org>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 2aacace6dbbb6b6ce4e177e6c7ea901f389c0472 ]
+[ Upstream commit 93512dad334deb444619505f1fbb761156f7471b ]
 
-In attach_node_and_children memory is allocated for full_name via
-kasprintf. If the condition of the 1st if is not met the function
-returns early without freeing the memory. Add a kfree() to fix that.
+Schema errors can cause make to exit before useful information is
+printed. This leaves developers wondering what's wrong. It can be
+overcome passing '-k' to make, but that's not an obvious solution.
+There's 2 scenarios where this happens.
 
-This has been detected with kmemleak:
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205327
+When using DT_SCHEMA_FILES to validate with a single schema, any error
+in the schema results in processed-schema.yaml being empty causing a
+make error. The result is the specific errors in the schema are never
+shown because processed-schema.yaml is the first target built. Simply
+making processed-schema.yaml last in extra-y ensures the full schema
+validation with detailed error messages happen first.
 
-It looks like the leak was introduced by this commit:
-Fixes: 5babefb7f7ab ("of: unittest: allow base devicetree to have symbol metadata")
+The 2nd problem is while schema errors are ignored for
+processed-schema.yaml, full validation of the schema still runs in
+parallel and any schema validation errors will still stop the build when
+running validation of dts files. The fix is to not add the schema
+examples to extra-y in this case. This means 'dtbs_check' is no longer a
+superset of 'dt_binding_check'. Update the documentation to make this
+clear.
 
-Signed-off-by: Erhard Furtner <erhard_f@mailbox.org>
-Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
 Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/unittest.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/Makefile  | 5 ++++-
+ Documentation/devicetree/writing-schema.rst | 6 ++++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 92e895d864584..ca7823eef2b40 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1146,8 +1146,10 @@ static void attach_node_and_children(struct device_node *np)
- 	full_name = kasprintf(GFP_KERNEL, "%pOF", np);
+diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+index 5138a2f6232aa..646cb35253733 100644
+--- a/Documentation/devicetree/bindings/Makefile
++++ b/Documentation/devicetree/bindings/Makefile
+@@ -12,7 +12,6 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
+ 	$(call if_changed,chk_binding)
  
- 	if (!strcmp(full_name, "/__local_fixups__") ||
--	    !strcmp(full_name, "/__fixups__"))
-+	    !strcmp(full_name, "/__fixups__")) {
-+		kfree(full_name);
- 		return;
-+	}
+ DT_TMP_SCHEMA := processed-schema.yaml
+-extra-y += $(DT_TMP_SCHEMA)
  
- 	dup = of_find_node_by_path(full_name);
- 	kfree(full_name);
+ quiet_cmd_mk_schema = SCHEMA  $@
+       cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
+@@ -26,8 +25,12 @@ DT_DOCS = $(shell \
+ 
+ DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
+ 
++ifeq ($(CHECK_DTBS),)
+ extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
+ extra-y += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
++endif
+ 
+ $(obj)/$(DT_TMP_SCHEMA): $(DT_SCHEMA_FILES) FORCE
+ 	$(call if_changed,mk_schema)
++
++extra-y += $(DT_TMP_SCHEMA)
+diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
+index f4a638072262f..83e04e5c342da 100644
+--- a/Documentation/devicetree/writing-schema.rst
++++ b/Documentation/devicetree/writing-schema.rst
+@@ -130,11 +130,13 @@ binding schema. All of the DT binding documents can be validated using the
+ 
+     make dt_binding_check
+ 
+-In order to perform validation of DT source files, use the `dtbs_check` target::
++In order to perform validation of DT source files, use the ``dtbs_check`` target::
+ 
+     make dtbs_check
+ 
+-This will first run the `dt_binding_check` which generates the processed schema.
++Note that ``dtbs_check`` will skip any binding schema files with errors. It is
++necessary to use ``dt_binding_check`` to get all the validation errors in the
++binding schema files.
+ 
+ It is also possible to run checks with a single schema file by setting the
+ ``DT_SCHEMA_FILES`` variable to a specific schema file.
 -- 
 2.20.1
 
