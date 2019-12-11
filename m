@@ -2,77 +2,91 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88860C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 19:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1937C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 19:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580F721556
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 19:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF8021556
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 19:30:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0/wx5BRx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="HuirdDTm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfLKT1P (ORCPT
+        id S1727327AbfLKTa0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 14:27:15 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:48686 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbfLKT1O (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 14:27:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=fhhzlnh0YMGIMRykWTm4rFFLUMRsYVi5NX6Vsu+Wz9k=; b=0/wx5BRx38jwBupSBL9HPDq+Op
-        4XueCGjMApYHbc+xiDtJoqQ9UauFW2OCaMQQGSjhWNbdSGh6A4tqk4HR+ycvlZpZSvkY4VN929aDZ
-        lsooxXG98r2sDAlaF2LQAar50cl7CsEAieCTcLjrUlq7BEeM+cJDRDyJM75MDOFUa3QA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1if7dX-0006xS-2G; Wed, 11 Dec 2019 20:27:03 +0100
-Date:   Wed, 11 Dec 2019 20:27:03 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Landen Chao <landen.chao@mediatek.com>
-Cc:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "vivien.didelot@savoirfairelinux.com" 
-        <vivien.didelot@savoirfairelinux.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        "opensource@vdorst.com" <opensource@vdorst.com>,
-        "frank-w@public-files.de" <frank-w@public-files.de>
-Subject: Re: [PATCH net-next 4/6] net: dsa: mt7530: Add the support of MT7531
- switch
-Message-ID: <20191211192703.GC30053@lunn.ch>
-References: <cover.1575914275.git.landen.chao@mediatek.com>
- <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
- <20191210164438.GD27714@lunn.ch>
- <1576088280.23763.73.camel@mtksdccf07>
+        Wed, 11 Dec 2019 14:30:26 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:32647 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbfLKTa0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 14:30:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576092624;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=5RQDqOdQgPLbxOS9f72dxcG6QE/zOy/OAhZhNoF+uBw=;
+        b=HuirdDTm/QIBd5Sly2GQi0RLdiNLOWqL4aO4lf7vN6CftmRecPm35mtW48r4CFK4pV
+        qhu5V2QL3o0dY8F2Rhv257wNBgaoUCS9nuqBV8Z3w0QyB7zP/XId+wN9bb1/uWwMznlm
+        JqyEz6qzMbXWnfKVKSrVYyDpeHVXhLW6akHGfBVJQbFnp5wC/AYJS88CMFXBGlrAoMEM
+        u+lw1D/3lGv9Mnsgnxcr8Jda7F8fRx/ulDlxRxvMrMhYb2c3NI2uLaxHMzFpEV0WA+br
+        w7DhDmS3enrCx7NBKZte4goqHACkBBiCcJywuk7cxROulY7H34FViy418XMtShKKhyam
+        v9SA==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXtc/vtBNY3Q=="
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 46.0.2 AUTH)
+        with ESMTPSA id R01a59vBBJUMopK
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 11 Dec 2019 20:30:22 +0100 (CET)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Damien Riegel <damien.riegel@savoirfairelinux.com>,
+        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH] arm64: dts: qcom: pm8916: Add vibration motor node
+Date:   Wed, 11 Dec 2019 20:29:06 +0100
+Message-Id: <20191211192906.56638-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576088280.23763.73.camel@mtksdccf07>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> Do you also hint at using the same number of parameters for
-> mt7531_ind_c22_phy_read() and mt7531_ind_c45_phy_read()?
+PM8916 has one vibration motor driver that is already supported
+by the pm8xxx-vibrator driver.
 
-That is up to you. It just seems like your MDIO bus can do both C22
-and C45. And somebody might connect an external C45 PHY, so you might
-as well support it.
+Add a node describing it to pm8916.dtsi.
+Keep it disabled by default since not all devices make use of it.
 
-   Andrew
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+ arch/arm64/boot/dts/qcom/pm8916.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/pm8916.dtsi b/arch/arm64/boot/dts/qcom/pm8916.dtsi
+index 9dd2df1cbf47..0bcdf0471107 100644
+--- a/arch/arm64/boot/dts/qcom/pm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8916.dtsi
+@@ -111,6 +111,12 @@ pm8916_1: pm8916@1 {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
++		pm8916_vib: vibrator@c000 {
++			compatible = "qcom,pm8916-vib";
++			reg = <0xc000>;
++			status = "disabled";
++		};
++
+ 		wcd_codec: codec@f000 {
+ 			compatible = "qcom,pm8916-wcd-analog-codec";
+ 			reg = <0xf000 0x200>;
+-- 
+2.24.0
+
