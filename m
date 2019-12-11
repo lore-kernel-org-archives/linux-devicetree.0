@@ -2,101 +2,201 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9D5C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 18:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A57CC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 18:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 652EC2464B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 18:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9510206C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 18:57:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="IMZ7lXdP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BLWJejK8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfLKS4a (ORCPT
+        id S1726487AbfLKS5B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:56:30 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44197 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfLKS4a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 13:56:30 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q10so25248976wrm.11
-        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 10:56:29 -0800 (PST)
+        Wed, 11 Dec 2019 13:57:01 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34025 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbfLKS5B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 13:57:01 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t2so25283869wrr.1;
+        Wed, 11 Dec 2019 10:56:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9Tz9pIN2heTTfzmNoMIKpO2fPp6d1pAsyI6xzTnA+qI=;
-        b=IMZ7lXdPcaddSS42p3tQ9T3A3Ilo5OSdEpFoZds+SEPA6Zjrojzc6LbOTgCv7rh1w+
-         qEO44GuqOKkJssd1DvtBVfcsT/XNCU1WOMh/3NACLLjZNclt+mWVm/Qf4RoC4o7hlmHp
-         QDatOt+M10o3kL7n1Hhn6ply6OLPIqI6u2lLYA/56AWvOEIAziBqeHKZESObuermyGX9
-         18Zx0XTy60zvJr4DbfQK0gLlv7rd1Rx8QIc/ub9zwaK2IIkZOnU1fHRcHwwvyFlvhd7z
-         FNU9SSJ85BsJhWoNNWU6om2ZMiF9mLyspN79RFOJmdIZpOwkTgpNUF7wwy6jLo+4yKcZ
-         sYTA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KO/PT8YLg9RE0kmC/cdfWjmy4qJpLFmVv6I9AqT2IME=;
+        b=BLWJejK8wwGAIZq0IZsPphS4B/jXMihyQhqxthJHRW9eBM1c6wHy401tZwbU22fLmd
+         7ftCoDklFyL8nxk/6NA128si+/76UhuDzpjzvEqeRiyYYcaUZ6WlXAFJBXq6a1WQmrME
+         LJV8GFYe80r+Vn5F2niayTIUcg7bhP7wIjoytsL3Q6vRHvdYOJ0hapEBFjxi5W5HXeHa
+         pTXjrOwfkNpP16qY8R482aY5YHahjwXxVZNJj3sWZmSEzTxBJdUcgcHct4JyMdwir+Hr
+         MT/QWRXsYzih99fWESTxBg8qFatIn5F1mfMF6JRSi7u24Q/IO8W655YsI9CNS9fqw8sr
+         K8mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=9Tz9pIN2heTTfzmNoMIKpO2fPp6d1pAsyI6xzTnA+qI=;
-        b=fpI4EdlwKJGV1G0Bgr9402JDVWS7hsKJ0KeomYTiOt5628SisI+c0OzARAPnip/pEj
-         /c9l/CjZKRjq+7d23jPF5m2ehh+Wc+JXy1ZXNlOFRDrgd2Q/efvKBq6mD95KskHzONH7
-         6Prrcc2GyNwTyRacxVhNqH8uUTrxvAfMHdc51YbzcH12WpFVe3kzlJ8yNOG12hq3V7zh
-         ujZYXKqfF+aJbWGzRZud1tA2cCWKmeCVZR3002Wa745u1dWnTb9320E5JC6Fyv89UCJz
-         GYjoCYJlKyvXgaP01E2aM9eyzyk2QfV/sYW5q4nQXLlCUBxsyTEB6XgjtCRrblE3q0rK
-         JlAw==
-X-Gm-Message-State: APjAAAUNmaZxJGCA+FxCFbWoFO2mfIaKOlALcl1PwsLeX2GTFqJe4Qte
-        Aepawt65R1e6mXb+PvmXfps=
-X-Google-Smtp-Source: APXvYqzcWWb+dGKAOnXS5ntWbseCwnHKeTnfpps3hlwccdtyqe3xHXISmdPW1AISV1UTvARq5Ja5Hw==
-X-Received: by 2002:a5d:494b:: with SMTP id r11mr1460395wrs.184.1576090588522;
-        Wed, 11 Dec 2019 10:56:28 -0800 (PST)
-Received: from [192.168.0.52] (HSI-KBW-109-192-080-035.hsi6.kabel-badenwuerttemberg.de. [109.192.80.35])
-        by smtp.gmail.com with ESMTPSA id a186sm3450785wmd.41.2019.12.11.10.56.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Dec 2019 10:56:27 -0800 (PST)
-Message-ID: <1576090586.2695.1.camel@googlemail.com>
-Subject: Re: [PATCH v2 4/4] ARM: dts: phycore-imx6: set buck regulator modes
- explicitly
-From:   Christoph Fritz <chf.fritz@googlemail.com>
-Reply-To: chf.fritz@googlemail.com
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Wed, 11 Dec 2019 19:56:26 +0100
-In-Reply-To: <20191204125336.GM3365@dragon>
-References: <1573652416-9848-1-git-send-email-chf.fritz@googlemail.com>
-         <1573652416-9848-5-git-send-email-chf.fritz@googlemail.com>
-         <AM5PR1001MB099480739860863EB08EA73280760@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-         <1574973044.2362.11.camel@googlemail.com> <20191204125336.GM3365@dragon>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.12.9-1+b1 
-Mime-Version: 1.0
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=KO/PT8YLg9RE0kmC/cdfWjmy4qJpLFmVv6I9AqT2IME=;
+        b=TJnadXC58osjlZHmy1K6ApS/UTDcqO8Ow0fu8mTbYRl1W+RHgPGz4SmjtjEsfj3PC1
+         q7m60T++raKRYGVBotz+LZknz4N8FFQO9rQG+2XErvdF4JLM1trldPU63Oohb4WRf1X5
+         exfh2dlHbDc+aSmgmW31bg5kEG0hzlGMdOlzlcH/5kW2lPFcgDz8lt/zawVoY4bndAWQ
+         TLcmaFs+XviHgUNT/8yB9+cECrd5m0FeSdsvElSwzOJgze/f8ZppS/QXCbP7SbAIAVWu
+         NYHMH4RzcuSqdmHKnX1oMmxCREnuq7fzgDSR/shLBt5zQBGqyiuGraA5hysi1i/++qVQ
+         wSrQ==
+X-Gm-Message-State: APjAAAUqd9U4Nes9QrvwPXKBlgIarSFSRiuAVO99m032DiE6EWUDui8k
+        siiODqIko0up3UFsUVGCK9M=
+X-Google-Smtp-Source: APXvYqxrtqrMKDwyn2AocAF/cW9glC8Bys26t2rGFL7Cn6+JE+RyFaHBNH4dyboFxEod46hvOWq+Iw==
+X-Received: by 2002:a5d:4c85:: with SMTP id z5mr1431993wrs.42.1576090617636;
+        Wed, 11 Dec 2019 10:56:57 -0800 (PST)
+Received: from ziggy.stardust ([37.223.145.31])
+        by smtp.gmail.com with ESMTPSA id x6sm3753232wmi.44.2019.12.11.10.56.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 10:56:57 -0800 (PST)
+Subject: Re: [PATCH v17 6/6] arm64: dts: add gce node for mt8183
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+References: <20191121015410.18852-1-bibby.hsieh@mediatek.com>
+ <20191121015410.18852-7-bibby.hsieh@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <889e7c63-6922-2ff7-c74e-b87766f22771@gmail.com>
+Date:   Wed, 11 Dec 2019 19:56:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191121015410.18852-7-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 2019-12-04 at 20:53 +0800, Shawn Guo wrote:
-> On Thu, Nov 28, 2019 at 09:30:44PM +0100, Christoph Fritz wrote:
-> > Hi Shawn,
-> > 
-> >  any chance to get this patch queued for the upcoming kernel?
+
+
+On 21/11/2019 02:54, Bibby Hsieh wrote:
+> add gce device node for mt8183
 > 
-> Sorry, no.  I need to wait for DA9063_BUCK_MODE_SYNC landing on 5.5-rc1,
-> and then apply this DTS patch.
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
 
+Applied to v5.5-next/dts64
 
-DA9063_BUCK_MODE_SYNC is now available in 5.5-rc1, could you queue this
-patch now?
+Thanks!
 
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index 6cbbd7726d36..954bcd766c97 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -9,6 +9,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/power/mt8183-power.h>
+> +#include <dt-bindings/gce/mt8183-gce.h>
+>  #include "mt8183-pinfunc.h"
+>  
+>  / {
+> @@ -336,6 +337,15 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		gce: mailbox@10238000 {
+> +			compatible = "mediatek,mt8183-gce";
+> +			reg = <0 0x10238000 0 0x4000>;
+> +			interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_LOW>;
+> +			#mbox-cells = <3>;
+> +			clocks = <&infracfg CLK_INFRA_GCE>;
+> +			clock-names = "gce";
+> +		};
+> +
+>  		uart0: serial@11002000 {
+>  			compatible = "mediatek,mt8183-uart",
+>  				     "mediatek,mt6577-uart";
+> 
