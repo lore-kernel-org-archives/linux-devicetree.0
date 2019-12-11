@@ -2,233 +2,104 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47E6C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FEBC2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D77121556
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="fcYbF9M0"
+	by mail.kernel.org (Postfix) with ESMTP id 0E3F922B48
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576079998;
+	bh=IMKUB3WFZG/+SvJTD6DakkLU6JGoz3fFgZ4SomQZJQc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mk1dl+6YZZDrWQVHZmWnitym55S4UhkfHQcbT7IV28rpBKtPkqOWGME5xEneVO/fF
+	 xhaFJe4X/nUKmTRTEGqSHSok7ooLIZH7HOF3AJG0MZyeOQMRtQmWyh7Um/MtXlsXz6
+	 k+th/xqm07Z//zoCfdOG3Nb+Huw6AZt6mQ9FNNrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388212AbfLKPu4 (ORCPT
+        id S1729945AbfLKP7x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:50:56 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:46536 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731716AbfLKPuz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 10:50:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1576079439; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RAVv3nHLEk4RhtK2wNxT3ZoIYEuNj+Sa4a9OHRLEg+4=;
-        b=fcYbF9M0WWNNHOSZVEr3yqqvshp+T3gCdnENeCtOquVxjdmey5y+VHle0wEGjpGppX80go
-        ytchmUZhOsAk5z08V62GwKywziD1nubcqX2VJ+IfojC7sWs4dfbKsUhSpLQjIfodugtKkW
-        WSRYcQ/Cofy4OltczOiUYW03O5aevxY=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     od@zcrc.me, linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 3/3] power/supply: Add generic USB charger driver
-Date:   Wed, 11 Dec 2019 16:50:32 +0100
-Message-Id: <20191211155032.167032-3-paul@crapouillou.net>
-In-Reply-To: <20191211155032.167032-1-paul@crapouillou.net>
-References: <20191211155032.167032-1-paul@crapouillou.net>
+        Wed, 11 Dec 2019 10:59:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38404 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731544AbfLKPN6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:58 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 664BA24689;
+        Wed, 11 Dec 2019 15:13:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077238;
+        bh=IMKUB3WFZG/+SvJTD6DakkLU6JGoz3fFgZ4SomQZJQc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=is+9F5t0XtX/Z6al/ApsVcyz/eaIp+3c6AEzjNYwEB9L+nQG5W9csovDxjqtrTEeV
+         nXMNEywUWT/1CSiEQaZufwW1lGkZn05oBP0SG9/SS0IEdj++qDZ3j3F/IDL5VS6/w9
+         oqKg+ULuN0MeZmwe9ORfrvL9yh6BXADFCYhQiK6o=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Erhard Furtner <erhard_f@mailbox.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 116/134] of: unittest: fix memory leak in attach_node_and_children
+Date:   Wed, 11 Dec 2019 10:11:32 -0500
+Message-Id: <20191211151150.19073-116-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This simple charger driver uses the USB role switch framework to detect
-the presence of a charger. The USB charger will report as online when
-the USB role is set to device, and offline otherwise.
+From: Erhard Furtner <erhard_f@mailbox.org>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+[ Upstream commit 2aacace6dbbb6b6ce4e177e6c7ea901f389c0472 ]
+
+In attach_node_and_children memory is allocated for full_name via
+kasprintf. If the condition of the 1st if is not met the function
+returns early without freeing the memory. Add a kfree() to fix that.
+
+This has been detected with kmemleak:
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=205327
+
+It looks like the leak was introduced by this commit:
+Fixes: 5babefb7f7ab ("of: unittest: allow base devicetree to have symbol metadata")
+
+Signed-off-by: Erhard Furtner <erhard_f@mailbox.org>
+Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/of/unittest.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Notes:
-    v2: Instead of detecting charger state from USB PHY, we detect it from the
-        USB role in use.
-
- drivers/power/supply/Kconfig               |   8 ++
- drivers/power/supply/Makefile              |   1 +
- drivers/power/supply/generic-usb-charger.c | 124 +++++++++++++++++++++
- 3 files changed, 133 insertions(+)
- create mode 100644 drivers/power/supply/generic-usb-charger.c
-
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index 27164a1d3c7c..c4221bcabee4 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -51,6 +51,14 @@ config GENERIC_ADC_BATTERY
- 	  Say Y here to enable support for the generic battery driver
- 	  which uses IIO framework to read adc.
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 92e895d864584..ca7823eef2b40 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1146,8 +1146,10 @@ static void attach_node_and_children(struct device_node *np)
+ 	full_name = kasprintf(GFP_KERNEL, "%pOF", np);
  
-+config GENERIC_USB_CHARGER
-+	tristate "Generic USB charger"
-+	depends on USB_SUPPORT
-+	select USB_ROLE_SWITCH
-+	help
-+	  Say Y here to enable a generic USB charger driver which uses
-+	  the USB role switch framework to detect the presence of the charger.
-+
- config MAX8925_POWER
- 	tristate "MAX8925 battery charger support"
- 	depends on MFD_MAX8925
-diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-index 6c7da920ea83..03f9b553bdfc 100644
---- a/drivers/power/supply/Makefile
-+++ b/drivers/power/supply/Makefile
-@@ -8,6 +8,7 @@ power_supply-$(CONFIG_LEDS_TRIGGERS)	+= power_supply_leds.o
- obj-$(CONFIG_POWER_SUPPLY)	+= power_supply.o
- obj-$(CONFIG_POWER_SUPPLY_HWMON) += power_supply_hwmon.o
- obj-$(CONFIG_GENERIC_ADC_BATTERY)	+= generic-adc-battery.o
-+obj-$(CONFIG_GENERIC_USB_CHARGER)	+= generic-usb-charger.o
+ 	if (!strcmp(full_name, "/__local_fixups__") ||
+-	    !strcmp(full_name, "/__fixups__"))
++	    !strcmp(full_name, "/__fixups__")) {
++		kfree(full_name);
+ 		return;
++	}
  
- obj-$(CONFIG_PDA_POWER)		+= pda_power.o
- obj-$(CONFIG_APM_POWER)		+= apm_power.o
-diff --git a/drivers/power/supply/generic-usb-charger.c b/drivers/power/supply/generic-usb-charger.c
-new file mode 100644
-index 000000000000..0493fafbd4c0
---- /dev/null
-+++ b/drivers/power/supply/generic-usb-charger.c
-@@ -0,0 +1,124 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Simple USB charger driver
-+ * Copyright (c) 2019 Paul Cercueil <paul@crapouillou.net>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/power_supply.h>
-+#include <linux/usb/role.h>
-+
-+struct usb_charger {
-+	struct notifier_block nb;
-+	struct usb_role_switch *role;
-+	struct power_supply_desc desc;
-+	struct power_supply *charger;
-+};
-+
-+static enum power_supply_property usb_charger_properties[] = {
-+	POWER_SUPPLY_PROP_ONLINE,
-+};
-+
-+static int usb_charger_get_property(struct power_supply *psy,
-+				    enum power_supply_property psp,
-+				    union power_supply_propval *val)
-+{
-+	struct usb_charger *charger = power_supply_get_drvdata(psy);
-+	enum usb_role role;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_ONLINE:
-+		role = usb_role_switch_get_role(charger->role);
-+		val->intval = role == USB_ROLE_DEVICE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int usb_charger_event(struct notifier_block *nb,
-+			     unsigned long event, void *d)
-+{
-+	struct usb_charger *charger = container_of(nb, struct usb_charger, nb);
-+
-+	power_supply_changed(charger->charger);
-+
-+	return 0;
-+}
-+
-+static void usb_charger_unregister(void *data)
-+{
-+	struct usb_charger *charger = data;
-+
-+	usb_role_switch_unregister_notifier(charger->role, &charger->nb);
-+}
-+
-+static int usb_charger_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct power_supply_desc *desc;
-+	struct usb_charger *charger;
-+	struct power_supply_config cfg = {
-+		.of_node = dev->of_node,
-+	};
-+	int err;
-+
-+	charger = devm_kzalloc(dev, sizeof(*charger), GFP_KERNEL);
-+	if (!charger)
-+		return -ENOMEM;
-+
-+	cfg.drv_data = charger;
-+	charger->nb.notifier_call = usb_charger_event;
-+
-+	charger->role = usb_role_switch_get(dev);
-+	if (IS_ERR(charger->role)) {
-+		if (PTR_ERR(charger->role) != -EPROBE_DEFER)
-+			dev_err(dev, "Unable to get USB role");
-+		return PTR_ERR(charger->role);
-+	}
-+
-+	desc = &charger->desc;
-+	desc->name = "usb-charger";
-+	desc->properties = usb_charger_properties;
-+	desc->num_properties = ARRAY_SIZE(usb_charger_properties);
-+	desc->get_property = usb_charger_get_property;
-+	desc->type = POWER_SUPPLY_TYPE_USB;
-+
-+	charger->charger = devm_power_supply_register(dev, desc, &cfg);
-+	if (IS_ERR(charger->charger)) {
-+		dev_err(dev, "Unable to register charger");
-+		return PTR_ERR(charger->charger);
-+	}
-+
-+	err = usb_role_switch_register_notifier(charger->role, &charger->nb);
-+	if (err) {
-+		dev_err(dev, "Unable to register USB role switch notifier");
-+		return err;
-+	}
-+
-+	return devm_add_action_or_reset(dev, usb_charger_unregister, charger);
-+}
-+
-+static const struct of_device_id usb_charger_of_match[] = {
-+	{ .compatible = "usb-charger" },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, usb_charger_of_match);
-+
-+static struct platform_driver usb_charger_driver = {
-+	.driver = {
-+		.name = "usb-charger",
-+		.of_match_table = of_match_ptr(usb_charger_of_match),
-+	},
-+	.probe = usb_charger_probe,
-+};
-+module_platform_driver(usb_charger_driver);
-+
-+MODULE_DESCRIPTION("Simple USB charger driver");
-+MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-+MODULE_LICENSE("GPL");
+ 	dup = of_find_node_by_path(full_name);
+ 	kfree(full_name);
 -- 
-2.24.0
+2.20.1
 
