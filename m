@@ -2,400 +2,530 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EE0C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 17:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBF0C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 17:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE8DA24653
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 17:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD67221556
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 17:04:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bqUA6UxS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730278AbfLKRCW (ORCPT
+        id S1726444AbfLKREF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:02:22 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:48003 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729512AbfLKRCW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 12:02:22 -0500
-X-Originating-IP: 93.34.114.233
-Received: from uno.localdomain (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id E0793E0005;
-        Wed, 11 Dec 2019 17:02:14 +0000 (UTC)
-Date:   Wed, 11 Dec 2019 18:04:23 +0100
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Niklas Soderlund <niklas.soderlund@ragnatech.se>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2] media: bindings: video-interfaces: Update the example
-Message-ID: <20191211170408.66dk3z4qqfp2yvlb@uno.localdomain>
-References: <20191111140055.88054-1-jacopo+renesas@jmondi.org>
- <20191111170230.GQ18424@paasikivi.fi.intel.com>
+        Wed, 11 Dec 2019 12:04:05 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:52928 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfLKREF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 12:04:05 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBH3w3I110448;
+        Wed, 11 Dec 2019 11:03:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576083838;
+        bh=zw/ObHKIAbfCMx6QqTwwg+lNLwK3WZGdUp0tLw7VNXI=;
+        h=From:To:CC:Subject:Date;
+        b=bqUA6UxS1abEWsAABuJseVDBkFp3g5MgGpPBCjYXbfapk8GckTexlNRKGQFdn0JG6
+         kDJeOubh7Rp/Ku61Cb43pQ2LY9qOWrGmhAu1EL1CfY27C9qJvoP4WfNI1vY8f0R5+n
+         l/NelMV8mxLXBGZURAKcxZIkB8UZVWNUyS2CuHq4=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBH3wJH038753
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Dec 2019 11:03:58 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
+ Dec 2019 11:03:57 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 11 Dec 2019 11:03:57 -0600
+Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBH3s6f099151;
+        Wed, 11 Dec 2019 11:03:55 -0600
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH v2 1/3] arm64: dts: ti: k3-j721e: Add DT nodes for few peripherials
+Date:   Wed, 11 Dec 2019 22:34:12 +0530
+Message-ID: <20191211170414.7026-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bn3dcm2p6npado5x"
-Content-Disposition: inline
-In-Reply-To: <20191111170230.GQ18424@paasikivi.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Enable I2Cs, ADCs, OSPIs and UFS peripherals present on J721e.
 
---bn3dcm2p6npado5x
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+---
+v2:
 
-Hi Sakari,
-    thanks for review
+Add GPIO expander IRQ lines
 
-On Mon, Nov 11, 2019 at 07:02:30PM +0200, Sakari Ailus wrote:
-> Hi Jacopo,
->
-> On Mon, Nov 11, 2019 at 03:00:55PM +0100, Jacopo Mondi wrote:
-> > The example provided by the video-interface.txt file uses compatible
-> > values for drivers which are have been removed a long time ago. To avoid
-> > generating confusion, replace the existing example with a new one using
-> > upstream maintained and more modern devices.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >
-> > Re-proposing the example update, taking into account Niklas' comments about
-> > removing most of the commits there.
-> >
-> > Laurent suggested to move the example to json-schema, but being this file mostly
-> > used as reference for the common video properties description, I'm not sure
-> > bindings in yaml format make sense here.
->
-> I think the proposal makes sense as such, but this patch is just updating
-> the example. The two seem unrelated.
->
+ .../dts/ti/k3-j721e-common-proc-board.dts     | 150 ++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     |  99 ++++++++++++
+ .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      | 104 ++++++++++++
+ arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi   |  45 ++++++
+ 4 files changed, 398 insertions(+)
 
-With your and Rob's ack, I'll resubmit the example update. Let's
-address yaml conversion later.
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+index 2a3cd6174504..7a5c3d4adadd 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+@@ -67,6 +67,46 @@ main_usbss1_pins_default: main_usbss1_pins_default {
+ 			J721E_IOPAD(0x214, PIN_OUTPUT, 4) /* (V4) MCAN1_TX.USB1_DRVVBUS */
+ 		>;
+ 	};
++
++	main_i2c1_exp4_pins_default: main-i2c1-exp4-pins-default {
++		pinctrl-single,pins = <
++			J721E_IOPAD(0x230, PIN_INPUT, 7) /* (U2) ECAP0_IN_APWM_OUT.GPIO1_11 */
++		>;
++	};
++
++	main_i2c0_pins_default: main-i2c0-pins-default {
++		pinctrl-single,pins = <
++			J721E_IOPAD(0x220, PIN_INPUT_PULLUP, 0) /* (AC5) I2C0_SCL */
++			J721E_IOPAD(0x224, PIN_INPUT_PULLUP, 0) /* (AA5) I2C0_SDA */
++		>;
++	};
++
++	main_i2c1_pins_default: main-i2c1-pins-default {
++		pinctrl-single,pins = <
++			J721E_IOPAD(0x228, PIN_INPUT_PULLUP, 0) /* (Y6) I2C1_SCL */
++			J721E_IOPAD(0x22c, PIN_INPUT_PULLUP, 0) /* (AA6) I2C1_SDA */
++		>;
++	};
++
++	main_i2c3_pins_default: main-i2c3-pins-default {
++		pinctrl-single,pins = <
++			J721E_IOPAD(0x270, PIN_INPUT_PULLUP, 4) /* (T26) MMC2_CLK.I2C3_SCL */
++			J721E_IOPAD(0x274, PIN_INPUT_PULLUP, 4) /* (T25) MMC2_CMD.I2C3_SDA */
++		>;
++	};
++
++	main_i2c6_pins_default: main-i2c6-pins-default {
++		pinctrl-single,pins = <
++			J721E_IOPAD(0x1d0, PIN_INPUT_PULLUP, 2) /* (AA3) SPI0_D1.I2C6_SCL */
++			J721E_IOPAD(0x1e4, PIN_INPUT_PULLUP, 2) /* (Y2) SPI1_D1.I2C6_SDA */
++		>;
++	};
++
++	main_i2c1_exp4_pins_default: main-i2c1-exp4-pins-default {
++		pinctrl-single,pins = <
++			J721E_IOPAD(0x230, PIN_INPUT, 7) /* (U2) ECAP0_IN_APWM_OUT.GPIO1_11 */
++		 >;
++	};
+ };
+ 
+ &wkup_pmx0 {
+@@ -75,6 +115,19 @@ sw11_button_pins_default: sw11_button_pins_default {
+ 			J721E_WKUP_IOPAD(0xcc, PIN_INPUT, 7) /* (G28) WKUP_GPIO0_7 */
+ 		>;
+ 	};
++
++	mcu_fss0_ospi1_pins_default: mcu-fss0-ospi1-pins-default {
++		pinctrl-single,pins = <
++			J721E_WKUP_IOPAD(0x34, PIN_OUTPUT, 0) /* (F22) MCU_OSPI1_CLK */
++			J721E_WKUP_IOPAD(0x50, PIN_OUTPUT, 0) /* (C22) MCU_OSPI1_CSn0 */
++			J721E_WKUP_IOPAD(0x40, PIN_INPUT, 0) /* (D22) MCU_OSPI1_D0 */
++			J721E_WKUP_IOPAD(0x44, PIN_INPUT, 0) /* (G22) MCU_OSPI1_D1 */
++			J721E_WKUP_IOPAD(0x48, PIN_INPUT, 0) /* (D23) MCU_OSPI1_D2 */
++			J721E_WKUP_IOPAD(0x4c, PIN_INPUT, 0) /* (C23) MCU_OSPI1_D3 */
++			J721E_WKUP_IOPAD(0x3c, PIN_INPUT, 0) /* (B23) MCU_OSPI1_DQS */
++			J721E_WKUP_IOPAD(0x38, PIN_INPUT, 0) /* (A23) MCU_OSPI1_LBCLKO */
++		>;
++	};
+ };
+ 
+ &wkup_uart0 {
+@@ -279,3 +332,100 @@ &usb1 {
+ 	dr_mode = "host";
+ 	maximum-speed = "high-speed";
+ };
++
++&ospi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mcu_fss0_ospi1_pins_default>;
++
++	flash@0{
++		compatible = "jedec,spi-nor";
++		reg = <0x0>;
++		spi-tx-bus-width = <1>;
++		spi-rx-bus-width = <4>;
++		spi-max-frequency = <40000000>;
++		cdns,tshsl-ns = <60>;
++		cdns,tsd2d-ns = <60>;
++		cdns,tchsh-ns = <60>;
++		cdns,tslch-ns = <60>;
++		cdns,read-delay = <2>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++	};
++};
++
++&tscadc0 {
++	adc {
++		ti,adc-channels = <0 1 2 3 4 5 6 7>;
++	};
++};
++
++&tscadc1 {
++	adc {
++		ti,adc-channels = <0 1 2 3 4 5 6 7>;
++	};
++};
++
++&main_i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_i2c0_pins_default>;
++	clock-frequency = <400000>;
++
++	exp1: gpio@20 {
++		compatible = "ti,tca6416";
++		reg = <0x20>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	exp2: gpio@22 {
++		compatible = "ti,tca6424";
++		reg = <0x22>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++};
++
++&main_i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_i2c1_pins_default>;
++	clock-frequency = <400000>;
++
++	exp4: gpio@20 {
++		compatible = "ti,tca6408";
++		reg = <0x20>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&main_i2c1_exp4_pins_default>;
++		interrupt-parent = <&main_gpio1>;
++		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++};
++
++&main_i2c3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_i2c3_pins_default>;
++	clock-frequency = <400000>;
++
++	exp3: gpio@20 {
++		compatible = "ti,tca6408";
++		reg = <0x20>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++};
++
++&main_i2c6 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_i2c6_pins_default>;
++	clock-frequency = <400000>;
++
++	exp5: gpio@20 {
++		compatible = "ti,tca6408";
++		reg = <0x20>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+index 1e4c2b78d66d..4f14b9a645c5 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+@@ -596,4 +596,103 @@ usb1: usb@6400000 {
+ 			dr_mode = "otg";
+ 		};
+ 	};
++
++	main_i2c0: i2c@2000000 {
++		compatible = "ti,j721e-i2c", "ti,omap4-i2c";
++		reg = <0x0 0x2000000 0x0 0x100>;
++		interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-names = "fck";
++		clocks = <&k3_clks 187 0>;
++		power-domains = <&k3_pds 187 TI_SCI_PD_SHARED>;
++	};
++
++	main_i2c1: i2c@2010000 {
++		compatible = "ti,j721e-i2c", "ti,omap4-i2c";
++		reg = <0x0 0x2010000 0x0 0x100>;
++		interrupts = <GIC_SPI 201 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-names = "fck";
++		clocks = <&k3_clks 188 0>;
++		power-domains = <&k3_pds 188 TI_SCI_PD_EXCLUSIVE>;
++	};
++
++	main_i2c2: i2c@2020000 {
++		compatible = "ti,j721e-i2c", "ti,omap4-i2c";
++		reg = <0x0 0x2020000 0x0 0x100>;
++		interrupts = <GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-names = "fck";
++		clocks = <&k3_clks 189 0>;
++		power-domains = <&k3_pds 189 TI_SCI_PD_EXCLUSIVE>;
++	};
++
++	main_i2c3: i2c@2030000 {
++		compatible = "ti,j721e-i2c", "ti,omap4-i2c";
++		reg = <0x0 0x2030000 0x0 0x100>;
++		interrupts = <GIC_SPI 203 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-names = "fck";
++		clocks = <&k3_clks 190 0>;
++		power-domains = <&k3_pds 190 TI_SCI_PD_EXCLUSIVE>;
++	};
++
++	main_i2c4: i2c@2040000 {
++		compatible = "ti,j721e-i2c", "ti,omap4-i2c";
++		reg = <0x0 0x2040000 0x0 0x100>;
++		interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-names = "fck";
++		clocks = <&k3_clks 191 0>;
++		power-domains = <&k3_pds 191 TI_SCI_PD_EXCLUSIVE>;
++	};
++
++	main_i2c5: i2c@2050000 {
++		compatible = "ti,j721e-i2c", "ti,omap4-i2c";
++		reg = <0x0 0x2050000 0x0 0x100>;
++		interrupts = <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-names = "fck";
++		clocks = <&k3_clks 192 0>;
++		power-domains = <&k3_pds 192 TI_SCI_PD_EXCLUSIVE>;
++	};
++
++	main_i2c6: i2c@2060000 {
++		compatible = "ti,j721e-i2c", "ti,omap4-i2c";
++		reg = <0x0 0x2060000 0x0 0x100>;
++		interrupts = <GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-names = "fck";
++		clocks = <&k3_clks 193 0>;
++		power-domains = <&k3_pds 193 TI_SCI_PD_EXCLUSIVE>;
++	};
++
++	ufs_wrapper: ufs-wrapper@4e80000 {
++		compatible = "ti,j721e-ufs";
++		reg = <0x0 0x4e80000 0x0 0x100>;
++		power-domains = <&k3_pds 277 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 277 1>;
++		assigned-clocks = <&k3_clks 277 1>;
++		assigned-clock-parents = <&k3_clks 277 4>;
++		ranges;
++		#address-cells = <2>;
++		#size-cells = <2>;
++
++		ufs@4e84000 {
++			compatible = "cdns,ufshc-m31-16nm", "jedec,ufs-2.0";
++			reg = <0x0 0x4e84000 0x0 0x10000>;
++			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++			freq-table-hz = <250000000 250000000>, <19200000 19200000>, <19200000 19200000>;
++			clocks = <&k3_clks 277 0>, <&k3_clks 277 1>, <&k3_clks 277 1>;
++			clock-names = "core_clk", "phy_clk", "ref_clk";
++			dma-coherent;
++		};
++	};
+ };
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+index 555dc7b7aedc..7cf1490f3928 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+@@ -121,4 +121,108 @@ wkup_gpio1: gpio@42100000 {
+ 		clocks = <&k3_clks 114 0>;
+ 		clock-names = "gpio";
+ 	};
++
++	mcu_i2c0: i2c@40b00000 {
++		compatible = "ti,j721e-i2c", "ti,omap4-i2c";
++		reg = <0x0 0x40b00000 0x0 0x100>;
++		interrupts = <GIC_SPI 852 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-names = "fck";
++		clocks = <&k3_clks 194 0>;
++		power-domains = <&k3_pds 194 TI_SCI_PD_EXCLUSIVE>;
++	};
++
++	mcu_i2c1: i2c@40b10000 {
++		compatible = "ti,j721e-i2c", "ti,omap4-i2c";
++		reg = <0x0 0x40b10000 0x0 0x100>;
++		interrupts = <GIC_SPI 853 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-names = "fck";
++		clocks = <&k3_clks 195 0>;
++		power-domains = <&k3_pds 195 TI_SCI_PD_EXCLUSIVE>;
++	};
++
++	wkup_i2c0: i2c@42120000 {
++		compatible = "ti,j721e-i2c", "ti,omap4-i2c";
++		reg = <0x0 0x42120000 0x0 0x100>;
++		interrupts = <GIC_SPI 896 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-names = "fck";
++		clocks = <&k3_clks 197 0>;
++		power-domains = <&k3_pds 197 TI_SCI_PD_SHARED>;
++	};
++
++	fss: fss@47000000 {
++		compatible = "simple-bus";
++		reg = <0x0 0x47000000 0x0 0x100>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		ospi0: spi@47040000 {
++			compatible = "ti,am654-ospi";
++			reg = <0x0 0x47040000 0x0 0x100>,
++				<0x5 0x00000000 0x1 0x0000000>;
++			interrupts = <GIC_SPI 840 IRQ_TYPE_LEVEL_HIGH>;
++			cdns,fifo-depth = <256>;
++			cdns,fifo-width = <4>;
++			cdns,trigger-address = <0x0>;
++			clocks = <&k3_clks 103 0>;
++			assigned-clocks = <&k3_clks 103 0>;
++			assigned-clock-parents = <&k3_clks 103 2>;
++			assigned-clock-rates = <166666666>;
++			power-domains = <&k3_pds 103 TI_SCI_PD_EXCLUSIVE>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		ospi1: spi@47050000 {
++			compatible = "ti,am654-ospi";
++			reg = <0x0 0x47050000 0x0 0x100>,
++				<0x7 0x00000000 0x1 0x00000000>;
++			interrupts = <GIC_SPI 841 IRQ_TYPE_LEVEL_HIGH>;
++			cdns,fifo-depth = <256>;
++			cdns,fifo-width = <4>;
++			cdns,trigger-address = <0x0>;
++			clocks = <&k3_clks 104 0>;
++			power-domains = <&k3_pds 104 TI_SCI_PD_EXCLUSIVE>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
++
++	tscadc0: tscadc@40200000 {
++		compatible = "ti,am3359-tscadc";
++		reg = <0x0 0x40200000 0x0 0x1000>;
++		interrupts = <GIC_SPI 860 IRQ_TYPE_LEVEL_HIGH>;
++		power-domains = <&k3_pds 0 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 0 1>;
++		assigned-clocks = <&k3_clks 0 3>;
++		assigned-clock-rates = <60000000>;
++		clock-names = "adc_tsc_fck";
++
++		adc {
++			#io-channel-cells = <1>;
++			compatible = "ti,am3359-adc";
++		};
++	};
++
++	tscadc1: tscadc@40210000 {
++		compatible = "ti,am3359-tscadc";
++		reg = <0x0 0x40210000 0x0 0x1000>;
++		interrupts = <GIC_SPI 861 IRQ_TYPE_LEVEL_HIGH>;
++		power-domains = <&k3_pds 1 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 1 1>;
++		assigned-clocks = <&k3_clks 1 3>;
++		assigned-clock-rates = <60000000>;
++		clock-names = "adc_tsc_fck";
++
++		adc {
++			#io-channel-cells = <1>;
++			compatible = "ti,am3359-adc";
++		};
++	};
+ };
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
+index 1884fc70148f..7680109ca60a 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
+@@ -27,3 +27,48 @@ secure_ddr: optee@9e800000 {
+ 		};
+ 	};
+ };
++
++&wkup_pmx0 {
++	wkup_i2c0_pins_default: wkup_i2c0_pins_default {
++		pinctrl-single,pins = <
++			J721E_WKUP_IOPAD(0xf8, PIN_INPUT_PULLUP, 0) /* (J25) WKUP_I2C0_SCL */
++			J721E_WKUP_IOPAD(0xfc, PIN_INPUT_PULLUP, 0) /* (H24) WKUP_I2C0_SDA */
++		>;
++	};
++
++	mcu_fss0_ospi0_pins_default: mcu-fss0-ospi0-pins-default {
++		pinctrl-single,pins = <
++			J721E_WKUP_IOPAD(0x0000, PIN_OUTPUT, 0) /* MCU_OSPI0_CLK */
++			J721E_WKUP_IOPAD(0x0008, PIN_INPUT, 0)  /* MCU_OSPI0_DQS */
++			J721E_WKUP_IOPAD(0x000c, PIN_INPUT, 0)  /* MCU_OSPI0_D0 */
++			J721E_WKUP_IOPAD(0x0010, PIN_INPUT, 0)  /* MCU_OSPI0_D1 */
++			J721E_WKUP_IOPAD(0x0014, PIN_INPUT, 0)  /* MCU_OSPI0_D2 */
++			J721E_WKUP_IOPAD(0x0018, PIN_INPUT, 0)  /* MCU_OSPI0_D3 */
++			J721E_WKUP_IOPAD(0x001c, PIN_INPUT, 0)  /* MCU_OSPI0_D4 */
++			J721E_WKUP_IOPAD(0x0020, PIN_INPUT, 0)  /* MCU_OSPI0_D5 */
++			J721E_WKUP_IOPAD(0x0024, PIN_INPUT, 0)  /* MCU_OSPI0_D6 */
++			J721E_WKUP_IOPAD(0x0028, PIN_INPUT, 0)  /* MCU_OSPI0_D7 */
++			J721E_WKUP_IOPAD(0x002c, PIN_OUTPUT, 0) /* MCU_OSPI0_CSn0 */
++		>;
++	};
++};
++
++&ospi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mcu_fss0_ospi0_pins_default>;
++
++	flash@0{
++		compatible = "jedec,spi-nor";
++		reg = <0x0>;
++		spi-tx-bus-width = <1>;
++		spi-rx-bus-width = <8>;
++		spi-max-frequency = <40000000>;
++		cdns,tshsl-ns = <60>;
++		cdns,tsd2d-ns = <60>;
++		cdns,tchsh-ns = <60>;
++		cdns,tslch-ns = <60>;
++		cdns,read-delay = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++	};
++};
+-- 
+2.24.0
 
-> >
-> >
-> > ---
-> >  .../bindings/media/video-interfaces.txt       | 210 ++++++++++--------
-> >  1 file changed, 116 insertions(+), 94 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > index f884ada0bffc..955bd6f52cda 100644
-> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > @@ -153,123 +153,145 @@ Optional endpoint properties
-> >  Example
-> >  -------
-> >
-> > -The example snippet below describes two data pipelines.  ov772x and imx074 are
-> > -camera sensors with a parallel and serial (MIPI CSI-2) video bus respectively.
-> > -Both sensors are on the I2C control bus corresponding to the i2c0 controller
-> > -node.  ov772x sensor is linked directly to the ceu0 video host interface.
-> > -imx074 is linked to ceu0 through the MIPI CSI-2 receiver (csi2). ceu0 has a
-> > -(single) DMA engine writing captured data to memory.  ceu0 node has a single
-> > -'port' node which may indicate that at any time only one of the following data
-> > -pipelines can be active: ov772x -> ceu0 or imx074 -> csi2 -> ceu0.
-> > -
-> > -	ceu0: ceu@fe910000 {
-> > -		compatible = "renesas,sh-mobile-ceu";
-> > -		reg = <0xfe910000 0xa0>;
-> > -		interrupts = <0x880>;
-> > -
-> > -		mclk: master_clock {
-> > -			compatible = "renesas,ceu-clock";
-> > -			#clock-cells = <1>;
-> > -			clock-frequency = <50000000>;	/* Max clock frequency */
-> > -			clock-output-names = "mclk";
-> > -		};
-> > +The example snippet below describes two data pipelines connected to a video
-> > +DMA engine (VIN4) which has a direct parallel video bus connection to an HDMI
-> > +video decoder at port@0 and a data path to a CSI-2 receiver connected to an
-> > +image sensor (imx074) at port@1.
-> >
-> > -		port {
-> > +The parallel HDMI video decoder links directly to the VIN input port 0, and the
-> > +bus configuration at both ends is specified in each endpoint.
-> > +
-> > +The imx074 sensor connects to the CSI-2 receiver and the MIPI CSI-2 serial bus
-> > +configuration is specified in the respective endpoints as well. The CSI-2
-> > +receiver is then linked to the DMA engine through a direct data path which does
-> > +not require any endpoint configuration.
-> > +
-> > +i2c0: i2c@e6500000 {
-> > +
-> > +	hdmi-decoder@4c {
-> > +		compatible = "adi,adv7612";
-> > +		reg = <0x4c>;
-> > +
-> > +		ports {
-> >  			#address-cells = <1>;
-> >  			#size-cells = <0>;
-> >
-> > -			/* Parallel bus endpoint */
-> > -			ceu0_1: endpoint@1 {
-> > -				reg = <1>;		/* Local endpoint # */
-> > -				remote = <&ov772x_1_1>;	/* Remote phandle */
-> > -				bus-width = <8>;	/* Used data lines */
-> > -				data-shift = <2>;	/* Lines 9:2 are used */
-> > -
-> > -				/* If hsync-active/vsync-active are missing,
-> > -				   embedded BT.656 sync is used */
-> > -				hsync-active = <0>;	/* Active low */
-> > -				vsync-active = <0>;	/* Active low */
-> > -				data-active = <1>;	/* Active high */
-> > -				pclk-sample = <1>;	/* Rising */
-> > -			};
-> > -
-> > -			/* MIPI CSI-2 bus endpoint */
-> > -			ceu0_0: endpoint@0 {
-> > +			port@0 {
-> >  				reg = <0>;
-> > -				remote = <&csi2_2>;
-> > +				adv7612_in: endpoint {
-> > +					remote-endpoint = <&hdmi_con_in>;
-> > +				};
-> >  			};
-> > -		};
-> > -	};
-> >
-> > -	i2c0: i2c@fff20000 {
-> > -		...
-> > -		ov772x_1: camera@21 {
-> > -			compatible = "ovti,ov772x";
-> > -			reg = <0x21>;
-> > -			vddio-supply = <&regulator1>;
-> > -			vddcore-supply = <&regulator2>;
-> > -
-> > -			clock-frequency = <20000000>;
-> > -			clocks = <&mclk 0>;
-> > -			clock-names = "xclk";
-> > -
-> > -			port {
-> > -				/* With 1 endpoint per port no need for addresses. */
-> > -				ov772x_1_1: endpoint {
-> > +			port@2 {
-> > +				reg = <2>;
-> > +				adv7612_out: endpoint {
-> > +					bus-type = 5;
-> >  					bus-width = <8>;
-> > -					remote-endpoint = <&ceu0_1>;
-> > -					hsync-active = <1>;
-> > -					vsync-active = <0>; /* Who came up with an
-> > -							       inverter here ?... */
-> > -					data-active = <1>;
-> > -					pclk-sample = <1>;
-> > +					pclk-sample = <0>;
-> > +					hsync-active = <0>;
-> > +					vsync-active = <1>;
-> > +					remote-endpoint = <&vin4_digital_in>;
-> >  				};
-> >  			};
-> >  		};
-> > +	};
-> >
-> > -		imx074: camera@1a {
-> > -			compatible = "sony,imx074";
-> > -			reg = <0x1a>;
-> > -			vddio-supply = <&regulator1>;
-> > -			vddcore-supply = <&regulator2>;
-> > -
-> > -			clock-frequency = <30000000>;	/* Shared clock with ov772x_1 */
-> > -			clocks = <&mclk 0>;
-> > -			clock-names = "sysclk";		/* Assuming this is the
-> > -							   name in the datasheet */
-> > -			port {
-> > -				imx074_1: endpoint {
-> > -					clock-lanes = <0>;
-> > -					data-lanes = <1 2>;
-> > -					remote-endpoint = <&csi2_1>;
-> > -				};
-> > +	imx074: camera@1a {
->
-> Could you use a different sensor? There are no bindings for imx074 and the
-> SoC camera driver for it is about to be removed.
->
-
-Right, I'll use a supported sensor.
-
-> > +		compatible = "sony,imx074";
-> > +		reg = <0x1a>;
-> > +
-> > +		rotation = <180>;
-> > +
-> > +		port {
-> > +			imx074_1: endpoint {
-> > +				bus-type = 4;
-> > +				data-lanes = <1 2>;
-> > +				remote-endpoint = <&csi20_in>;
-> >  			};
-> >  		};
-> >  	};
-> > +};
-> > +
-> > +csi20: csi2@fea80000 {
-> > +	compatible = "renesas,r8a7795-csi2";
-> > +	reg = <0 0xfea80000 0 0x10000>;
-> > +	interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-> > +	clocks = <&cpg CPG_MOD 714>;
-> > +	power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-> > +	resets = <&cpg 714>;
-> >
-> > -	csi2: csi2@ffc90000 {
-> > -		compatible = "renesas,sh-mobile-csi2";
-> > -		reg = <0xffc90000 0x1000>;
-> > -		interrupts = <0x17a0>;
-> > +	ports {
-> >  		#address-cells = <1>;
-> >  		#size-cells = <0>;
-> >
-> > -		port@1 {
-> > -			compatible = "renesas,csi2c";	/* One of CSI2I and CSI2C. */
-> > -			reg = <1>;			/* CSI-2 PHY #1 of 2: PHY_S,
-> > -							   PHY_M has port address 0,
-> > -							   is unused. */
-> > -			csi2_1: endpoint {
-> > -				clock-lanes = <0>;
-> > -				data-lanes = <2 1>;
-> > +		port@0 {
-> > +			reg = <0>;
-> > +
-> > +			csi20_in: endpoint {
-> > +				bus-type = 4;
->
-> bus-type isn't defined for renesas,r8a7795-csi2. Do you need it here?
->
-
-No, I could drop it.
-
-> > +				data-lanes = <1 2>;
-> >  				remote-endpoint = <&imx074_1>;
-> >  			};
-> >  		};
-> > -		port@2 {
-> > -			reg = <2>;			/* port 2: link to the CEU */
-> >
-> > -			csi2_2: endpoint {
-> > -				remote-endpoint = <&ceu0_0>;
-> > +		port@1 {
-> > +			reg = <1>;
-> > +
-> > +			csi20vin4: endpoint {
-> > +				remote-endpoint = <&vin4csi20>;
-> > +			};
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +vin4: video@e6ef4000 {
-> > +	compatible = "renesas,vin-r8a7795";
-> > +	reg = <0 0xe6ef4000 0 0x1000>;
-> > +	interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> > +	clocks = <&cpg CPG_MOD 807>;
-> > +	power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-> > +	resets = <&cpg 807>;
-> > +	renesas,id = <4>;
-> > +
-> > +	ports {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		/* Parallel input port: HDMI decoder */
-> > +		port@0 {
-> > +			reg = <0>;
-> > +
-> > +			vin4_digital_in: endpoint {
-> > +				bus-type = 5;
->
-> Does this device support other kinds of busses on this interface? If not,
-> you can move it to the driver (the bindings don't document this either).
->
-
-No, I could drop it from here.
-
-> > +				bus-width = <8>;
-> > +				data-shift = <2>;
-> > +				data-active = <1>;
-> > +				pclk-sample = <0>;
-> > +				hsync-active = <0>;
-> > +				vsync-active = <0>;
->
-> None of these seem to be documented for renesas,vin-r8a7795 . I guess they
-> should be.
->
-
-They are. Quoting renesas,vin.txt:
-
-      Endpoint nodes of port@0 support the optional properties listed in
-      the Gen2 per-board settings description.
-
-Some of the properties above are not listed though. I'll drop the
-unsupported ones.
-
-Thanks
-   j
-
-> > +				remote-endpoint = <&adv7612_out>;
-> > +			};
-> > +		};
-> > +
-> > +
-> > +		/* Data path to the MIPI CSI-2 receiver. */
-> > +		port@1 {
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +
-> > +			reg =<1>;
-> > +
-> > +			vin4csi20: endpoint@0 {
-> > +				reg = <0>;
-> > +				remote-endpoint = <&csi20vin4>;
-> > +			};
-> > +
-> > +			/* Not connected in this example. */
-> > +			vin4csi41: endpoint@3 {
-> > +				reg = <3>;
-> > +				remote-endpoint = <&csi41vin4>;
-> >  			};
-> >  		};
-> >  	};
-> > +};
->
-> --
-> Kind regards,
->
-> Sakari Ailus
-
---bn3dcm2p6npado5x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl3xIZcACgkQcjQGjxah
-VjzVRA/+Kv+8EARSACUsV9syHQQUFiDatDV9/CLaAIN8kJsDxvPO27XUx6pCh3Ih
-JCPFFwLVFBg2fRzEPxjn9tGjntAjrRMG3C0nA2damj44FW+Fv3iulzdr6HjCCLIg
-fq3d2aXylDZakNl77gR/0Z6ZQE03r0KGADV294JW2lebVfwOeuuk5e0TH1y+A/IY
-QNu5TupoTarEE1kDjIQTHObJYeHdcJpQc7HJ5CGp2yIcb2zsmqPSL4RIvYdzINOi
-AaN5GKeZt5VwJnIussZQqDXNbePzkvfZ7j85eXSIyHciZrVx+YE/QP2gErpTDaZ1
-n4tjHbP4jSaX+OLqnVfcEvUKvEF6Tuof2eaqQmv1OaQ3BdZeUnfjL6cOwjzLsbHk
-tmTvA5JdQUCOXE2cpDmmLFr0vi25V60PwmSRtH47AG387obRGev8O+GtXVCiq1pG
-5K0B/NC6kyrgbLOx5Et8+KE+uyqPajJzfq8K6GJRPTUk1cAJ8xbm4590ugls5jXU
-12/QmA2uvU8iDKTnsFIETHoIaDOyhGsdg05Es7ULLYmOt2jKk+6ks765U2I4RY/S
-qG1fwT6/wcrR9o1kN0lPWnh0P4zDXc1NFPD3nXbZw66LvuCGk0T0LQ+JgNzdLRA+
-+bXmTb2Y9SjPZSHy6ZD4Gi/oAEAOzaPZ0BuiKlRRVSxG/1hkWbs=
-=w+6B
------END PGP SIGNATURE-----
-
---bn3dcm2p6npado5x--
