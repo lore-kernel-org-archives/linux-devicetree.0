@@ -2,104 +2,112 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8DEC2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 006CAC2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAD102077B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078511;
-	bh=R7eY9aHdrcCt7uzhurYIB7GJmkTeGmIKSQ3WZRcxiD0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TEscGlbjFlJ3YWe7ojV1XjcPA3jG9PUSS1FoL1KMej/xlbWsPQzjqCH/V4MNdV+4h
-	 kxaXCVpP0YCDwkwpKzNT2LcmcWJ1AP4E/kQ7rcBRUXaDGF57UV16argCavqNr4H4o1
-	 yjusi7yA+PX9NeT6hJ0f6eOERvtsFSr3Xn+EDvmU=
+	by mail.kernel.org (Postfix) with ESMTP id C05862073D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ZlMuCBpv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387526AbfLKP2B (ORCPT
+        id S1730219AbfLKPun (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:28:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387512AbfLKP17 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:59 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4A602467A;
-        Wed, 11 Dec 2019 15:27:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078077;
-        bh=R7eY9aHdrcCt7uzhurYIB7GJmkTeGmIKSQ3WZRcxiD0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jG4YodmOpIcc9B00/nc0VJmISlUsjA11KjiA7XA4I3QZ4Quw0CYbuCOy44XXPU8nN
-         rVfawpCrhuCtQXet3/meivWsrFlNkDezgonZ+K3CYBxXw2qsvhi9GCkuUV+PGxW3kz
-         jo11BuL+rThxDIQ1X9FuSK4AufZeISKeZR4haM80=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erhard Furtner <erhard_f@mailbox.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 68/79] of: unittest: fix memory leak in attach_node_and_children
-Date:   Wed, 11 Dec 2019 10:26:32 -0500
-Message-Id: <20191211152643.23056-68-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
-References: <20191211152643.23056-1-sashal@kernel.org>
+        Wed, 11 Dec 2019 10:50:43 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:46474 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730557AbfLKPuj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 10:50:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1576079437; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=eyHslJzjVa1ut29atCn8FHuMjuQZsdMV5FkGrDuakgI=;
+        b=ZlMuCBpvsUIzRzP/io42tvAT+E9mKmAIajMDbtavzOClfCHRGLdx9kK95nlS7PLiRBt39g
+        xcNPvErDQGRe4WZejsYe6YiJeg3d9pHm86dRc0hbqBASPxumHaY/ycKPhz5I2cpaFDPFKV
+        oMfNne0EmtF17f8LxJjA3pgDINGV+co=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     od@zcrc.me, linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 1/3] dt-bindings: power/supply: Document generic USB charger
+Date:   Wed, 11 Dec 2019 16:50:30 +0100
+Message-Id: <20191211155032.167032-1-paul@crapouillou.net>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Erhard Furtner <erhard_f@mailbox.org>
+Add documentation about the devicetree bindings for the generic USB
+charger.
 
-[ Upstream commit 2aacace6dbbb6b6ce4e177e6c7ea901f389c0472 ]
-
-In attach_node_and_children memory is allocated for full_name via
-kasprintf. If the condition of the 1st if is not met the function
-returns early without freeing the memory. Add a kfree() to fix that.
-
-This has been detected with kmemleak:
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205327
-
-It looks like the leak was introduced by this commit:
-Fixes: 5babefb7f7ab ("of: unittest: allow base devicetree to have symbol metadata")
-
-Signed-off-by: Erhard Furtner <erhard_f@mailbox.org>
-Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/of/unittest.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 68f52966bbc04..808571f7f6ef9 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1133,8 +1133,10 @@ static void attach_node_and_children(struct device_node *np)
- 	full_name = kasprintf(GFP_KERNEL, "%pOF", np);
- 
- 	if (!strcmp(full_name, "/__local_fixups__") ||
--	    !strcmp(full_name, "/__fixups__"))
-+	    !strcmp(full_name, "/__fixups__")) {
-+		kfree(full_name);
- 		return;
-+	}
- 
- 	dup = of_find_node_by_path(full_name);
- 	kfree(full_name);
+Notes:
+    v2: Convert to YAML
+
+ .../bindings/power/supply/usb-charger.yaml    | 41 +++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/usb-charger.yaml
+
+diff --git a/Documentation/devicetree/bindings/power/supply/usb-charger.yaml b/Documentation/devicetree/bindings/power/supply/usb-charger.yaml
+new file mode 100644
+index 000000000000..dcd705df6e73
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/usb-charger.yaml
+@@ -0,0 +1,41 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/supply/usb-charger.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Generic USB charger driver bindings
++
++maintainers:
++  - Paul Cercueil <paul@crapouillou.net>
++
++description: |
++  Devicetree bindings for a generic USB charger.
++
++  The node should be either a child of a USB node, or connect to the USB
++  node through the graph. The USB node must have the usb-role-switch property
++  set. The USB charger will report as online when the USB role is set to device,
++  and offline otherwise.
++
++properties:
++  compatible:
++    const: usb-charger
++
++  port: true
++
++required:
++  - compatible
++
++additionalProperties: false
++
++examples:
++  - |+
++    usb_charger: usb-charger {
++      compatible = "usb-charger";
++
++      port {
++        usb_charger_ep: endpoint {
++          remote-endpoint = <&usb_otg>;
++        };
++      };
++    };
 -- 
-2.20.1
+2.24.0
 
