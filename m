@@ -2,308 +2,411 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475DEC2D0C7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 12:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E10C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 12:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2336A21D7D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 12:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A820721556
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 12:56:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ss9Wt906"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbfLKMvN (ORCPT
+        id S1727477AbfLKM4T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:51:13 -0500
-Received: from out28-50.mail.aliyun.com ([115.124.28.50]:48537 "EHLO
-        out28-50.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729279AbfLKMvN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 07:51:13 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.517458-0.00300237-0.479539;DS=CONTINUE|ham_system_inform|0.226974-0.000175547-0.77285;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16368;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.GF0GTgF_1576068628;
-Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GF0GTgF_1576068628)
-          by smtp.aliyun-inc.com(10.147.40.200);
-          Wed, 11 Dec 2019 20:50:39 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Wed, 11 Dec 2019 07:56:19 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:50782 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727457AbfLKM4T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 07:56:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1576068975; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MzbWFtPuCcnhFwOWpViIm3T0O0lp/iGewXYHGMpkmrY=;
+        b=ss9Wt906Q94x4yhCdeSjeDbeY8nQHc1TWPYeeR0CZZRNQwH/yzoCptKQlJCLXMDkWz2ufM
+        zGduJOyAAJ8aFywdohmHrmYnUWHI+WzL3jnQPthLx6jQWV8jQLMyyGV9iaoUGBFgdAqRa9
+        8l9Jm6wFpcHE+ram8FLswwBLDDN8FBg=
+Date:   Wed, 11 Dec 2019 13:56:04 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v8 4/4] MIPS: Ingenic: Add YSH & ATIL CU Neo board
+ support.
+To:     zhouyanjie <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
-        mark.rutland@arm.com, linus.walleij@linaro.org,
-        zhenwenjin@gmail.com, sernia.zhou@foxmail.com
-Subject: [PATCH v7 1/4] pinctrl: Ingenic: Fix bugs in X1000 and X1500.
-Date:   Wed, 11 Dec 2019 20:50:22 +0800
-Message-Id: <1576068625-125234-2-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576068625-125234-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1576068625-125234-1-git-send-email-zhouyanjie@wanyeetech.com>
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
+        alexandre.belloni@bootlin.com, ralf@linux-mips.org,
+        heiko@sntech.de, icenowy@aosc.io, ak@linux.intel.com,
+        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
+        geert+renesas@glider.be, prasannatsmkumar@gmail.com,
+        keescook@chromium.org, ebiederm@xmission.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, 772753199@qq.com
+Message-Id: <1576068964.3.0@crapouillou.net>
+In-Reply-To: <5DF0CCCA.60404@wanyeetech.com>
+References: <1575979363-25956-1-git-send-email-zhouyanjie@wanyeetech.com>
+        <1575979363-25956-5-git-send-email-zhouyanjie@wanyeetech.com>
+        <1575998343.3.2@crapouillou.net> <5DF0CCCA.60404@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-1.Fix the pullup parameter of X1000.
-2.X1000 and X1500 have only one set of uart1 hwflow pin mapping,
-  so modify "uart1_hwflow_d" to "uart1_hwflow".
-3.X1000 has only one set of mmc1 pin mapping, so modify
-  "mmc1-1bit-e/mmc1-4bit-e" to "mmc1-1bit/mmc1-4bit".
-4.X1000 has only one regular externel memory controller that
-  does not support nand flash, so change "nemc_" to "emc_".
-5.X1500 has only one set of mmc, so modify "mmc0_" to "mmc_".
+Hi Zhou,
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
 
-Notes:
-    v1->v2:
-    Modify "nemc_" to "emc_" because X1000 has only one regular externel
-    memory controller that does not support nand flash.
-    
-    v2->v3:
-    No change.
-    
-    v3->v4:
-    No change.
-    
-    v4->v5:
-    No change.
-    
-    v5->v6:
-    No change.
-    
-    v6->v7:
-    Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
-    to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
-    the old mailbox is in an unstable state.
+Le mer., d=C3=A9c. 11, 2019 at 19:02, zhouyanjie=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+>=20
+>=20
+> On 2019=E5=B9=B412=E6=9C=8811=E6=97=A5 01:19, Paul Cercueil wrote:
+>> Hi Zhou,
+>>=20
+>>=20
+>> Le mar., d=C3=A9c. 10, 2019 at 20:02, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou =
+Yanjie)=20
+>> =7F<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+>>> Add a device tree for the Ingenic X1000 based YSH & ATIL CU Neo=20
+>>> board.
+>>> Note that this is unselectable via Kconfig until the X1000 SoC is=20
+>>> made
+>>> selectable in a later commit.
+>>=20
+>> I believe it is now selectable via Kconfig, right?
+>>=20
+>=20
+> Oh, apologize for my careless, it should be selectable now.
+> Do I need to send a v9 to fix the commit message?
 
- drivers/pinctrl/pinctrl-ingenic.c | 94 +++++++++++++++++++--------------------
- 1 file changed, 47 insertions(+), 47 deletions(-)
+Maybe Paul Burton can just remove the last sentence when merging.
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index 6e26830..059e39a 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -1017,7 +1017,7 @@ static const struct ingenic_chip_info jz4780_chip_info = {
- };
- 
- static const u32 x1000_pull_ups[4] = {
--	0xffffffff, 0x8dffffff, 0x7d3fffff, 0xffffffff,
-+	0xffffffff, 0xfdffffff, 0x0dffffff, 0x0000003f,
- };
- 
- static const u32 x1000_pull_downs[4] = {
-@@ -1028,7 +1028,7 @@ static int x1000_uart0_data_pins[] = { 0x4a, 0x4b, };
- static int x1000_uart0_hwflow_pins[] = { 0x4c, 0x4d, };
- static int x1000_uart1_data_a_pins[] = { 0x04, 0x05, };
- static int x1000_uart1_data_d_pins[] = { 0x62, 0x63, };
--static int x1000_uart1_hwflow_d_pins[] = { 0x64, 0x65, };
-+static int x1000_uart1_hwflow_pins[] = { 0x64, 0x65, };
- static int x1000_uart2_data_a_pins[] = { 0x02, 0x03, };
- static int x1000_uart2_data_d_pins[] = { 0x65, 0x64, };
- static int x1000_mmc0_1bit_pins[] = { 0x18, 0x19, 0x17, };
-@@ -1036,20 +1036,20 @@ static int x1000_mmc0_4bit_pins[] = { 0x16, 0x15, 0x14, };
- static int x1000_mmc0_8bit_pins[] = { 0x13, 0x12, 0x11, 0x10, };
- static int x1000_mmc1_1bit_pins[] = { 0x40, 0x41, 0x42, };
- static int x1000_mmc1_4bit_pins[] = { 0x43, 0x44, 0x45, };
--static int x1000_nemc_8bit_data_pins[] = {
-+static int x1000_emc_8bit_data_pins[] = {
- 	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
- };
--static int x1000_nemc_16bit_data_pins[] = {
-+static int x1000_emc_16bit_data_pins[] = {
- 	0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
- };
--static int x1000_nemc_addr_pins[] = {
-+static int x1000_emc_addr_pins[] = {
- 	0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
- 	0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,
- };
--static int x1000_nemc_rd_we_pins[] = { 0x30, 0x31, };
--static int x1000_nemc_wait_pins[] = { 0x34, };
--static int x1000_nemc_cs1_pins[] = { 0x32, };
--static int x1000_nemc_cs2_pins[] = { 0x33, };
-+static int x1000_emc_rd_we_pins[] = { 0x30, 0x31, };
-+static int x1000_emc_wait_pins[] = { 0x34, };
-+static int x1000_emc_cs1_pins[] = { 0x32, };
-+static int x1000_emc_cs2_pins[] = { 0x33, };
- static int x1000_i2c0_pins[] = { 0x38, 0x37, };
- static int x1000_i2c1_a_pins[] = { 0x01, 0x00, };
- static int x1000_i2c1_c_pins[] = { 0x5b, 0x5a, };
-@@ -1078,7 +1078,7 @@ static int x1000_uart0_data_funcs[] = { 0, 0, };
- static int x1000_uart0_hwflow_funcs[] = { 0, 0, };
- static int x1000_uart1_data_a_funcs[] = { 2, 2, };
- static int x1000_uart1_data_d_funcs[] = { 1, 1, };
--static int x1000_uart1_hwflow_d_funcs[] = { 1, 1, };
-+static int x1000_uart1_hwflow_funcs[] = { 1, 1, };
- static int x1000_uart2_data_a_funcs[] = { 2, 2, };
- static int x1000_uart2_data_d_funcs[] = { 0, 0, };
- static int x1000_mmc0_1bit_funcs[] = { 1, 1, 1, };
-@@ -1086,15 +1086,15 @@ static int x1000_mmc0_4bit_funcs[] = { 1, 1, 1, };
- static int x1000_mmc0_8bit_funcs[] = { 1, 1, 1, 1, 1, };
- static int x1000_mmc1_1bit_funcs[] = { 0, 0, 0, };
- static int x1000_mmc1_4bit_funcs[] = { 0, 0, 0, };
--static int x1000_nemc_8bit_data_funcs[] = { 0, 0, 0, 0, 0, 0, 0, 0, };
--static int x1000_nemc_16bit_data_funcs[] = { 0, 0, 0, 0, 0, 0, 0, 0, };
--static int x1000_nemc_addr_funcs[] = {
-+static int x1000_emc_8bit_data_funcs[] = { 0, 0, 0, 0, 0, 0, 0, 0, };
-+static int x1000_emc_16bit_data_funcs[] = { 0, 0, 0, 0, 0, 0, 0, 0, };
-+static int x1000_emc_addr_funcs[] = {
- 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- };
--static int x1000_nemc_rd_we_funcs[] = { 0, 0, };
--static int x1000_nemc_wait_funcs[] = { 0, };
--static int x1000_nemc_cs1_funcs[] = { 0, };
--static int x1000_nemc_cs2_funcs[] = { 0, };
-+static int x1000_emc_rd_we_funcs[] = { 0, 0, };
-+static int x1000_emc_wait_funcs[] = { 0, };
-+static int x1000_emc_cs1_funcs[] = { 0, };
-+static int x1000_emc_cs2_funcs[] = { 0, };
- static int x1000_i2c0_funcs[] = { 0, 0, };
- static int x1000_i2c1_a_funcs[] = { 2, 2, };
- static int x1000_i2c1_c_funcs[] = { 0, 0, };
-@@ -1116,7 +1116,7 @@ static const struct group_desc x1000_groups[] = {
- 	INGENIC_PIN_GROUP("uart0-hwflow", x1000_uart0_hwflow),
- 	INGENIC_PIN_GROUP("uart1-data-a", x1000_uart1_data_a),
- 	INGENIC_PIN_GROUP("uart1-data-d", x1000_uart1_data_d),
--	INGENIC_PIN_GROUP("uart1-hwflow-d", x1000_uart1_hwflow_d),
-+	INGENIC_PIN_GROUP("uart1-hwflow", x1000_uart1_hwflow),
- 	INGENIC_PIN_GROUP("uart2-data-a", x1000_uart2_data_a),
- 	INGENIC_PIN_GROUP("uart2-data-d", x1000_uart2_data_d),
- 	INGENIC_PIN_GROUP("mmc0-1bit", x1000_mmc0_1bit),
-@@ -1124,13 +1124,13 @@ static const struct group_desc x1000_groups[] = {
- 	INGENIC_PIN_GROUP("mmc0-8bit", x1000_mmc0_8bit),
- 	INGENIC_PIN_GROUP("mmc1-1bit", x1000_mmc1_1bit),
- 	INGENIC_PIN_GROUP("mmc1-4bit", x1000_mmc1_4bit),
--	INGENIC_PIN_GROUP("nemc-8bit-data", x1000_nemc_8bit_data),
--	INGENIC_PIN_GROUP("nemc-16bit-data", x1000_nemc_16bit_data),
--	INGENIC_PIN_GROUP("nemc-addr", x1000_nemc_addr),
--	INGENIC_PIN_GROUP("nemc-rd-we", x1000_nemc_rd_we),
--	INGENIC_PIN_GROUP("nemc-wait", x1000_nemc_wait),
--	INGENIC_PIN_GROUP("nemc-cs1", x1000_nemc_cs1),
--	INGENIC_PIN_GROUP("nemc-cs2", x1000_nemc_cs2),
-+	INGENIC_PIN_GROUP("emc-8bit-data", x1000_emc_8bit_data),
-+	INGENIC_PIN_GROUP("emc-16bit-data", x1000_emc_16bit_data),
-+	INGENIC_PIN_GROUP("emc-addr", x1000_emc_addr),
-+	INGENIC_PIN_GROUP("emc-rd-we", x1000_emc_rd_we),
-+	INGENIC_PIN_GROUP("emc-wait", x1000_emc_wait),
-+	INGENIC_PIN_GROUP("emc-cs1", x1000_emc_cs1),
-+	INGENIC_PIN_GROUP("emc-cs2", x1000_emc_cs2),
- 	INGENIC_PIN_GROUP("i2c0-data", x1000_i2c0),
- 	INGENIC_PIN_GROUP("i2c1-data-a", x1000_i2c1_a),
- 	INGENIC_PIN_GROUP("i2c1-data-c", x1000_i2c1_c),
-@@ -1149,21 +1149,21 @@ static const struct group_desc x1000_groups[] = {
- 
- static const char *x1000_uart0_groups[] = { "uart0-data", "uart0-hwflow", };
- static const char *x1000_uart1_groups[] = {
--	"uart1-data-a", "uart1-data-d", "uart1-hwflow-d",
-+	"uart1-data-a", "uart1-data-d", "uart1-hwflow",
- };
- static const char *x1000_uart2_groups[] = { "uart2-data-a", "uart2-data-d", };
- static const char *x1000_mmc0_groups[] = {
- 	"mmc0-1bit", "mmc0-4bit", "mmc0-8bit",
- };
- static const char *x1000_mmc1_groups[] = {
--	"mmc1-1bit-e", "mmc1-4bit-e",
-+	"mmc1-1bit", "mmc1-4bit",
- };
--static const char *x1000_nemc_groups[] = {
--	"nemc-8bit-data", "nemc-16bit-data",
--	"nemc-addr", "nemc-rd-we", "nemc-wait",
-+static const char *x1000_emc_groups[] = {
-+	"emc-8bit-data", "emc-16bit-data",
-+	"emc-addr", "emc-rd-we", "emc-wait",
- };
--static const char *x1000_cs1_groups[] = { "nemc-cs1", };
--static const char *x1000_cs2_groups[] = { "nemc-cs2", };
-+static const char *x1000_cs1_groups[] = { "emc-cs1", };
-+static const char *x1000_cs2_groups[] = { "emc-cs2", };
- static const char *x1000_i2c0_groups[] = { "i2c0-data", };
- static const char *x1000_i2c1_groups[] = { "i2c1-data-a", "i2c1-data-c", };
- static const char *x1000_i2c2_groups[] = { "i2c2-data", };
-@@ -1184,9 +1184,9 @@ static const struct function_desc x1000_functions[] = {
- 	{ "uart2", x1000_uart2_groups, ARRAY_SIZE(x1000_uart2_groups), },
- 	{ "mmc0", x1000_mmc0_groups, ARRAY_SIZE(x1000_mmc0_groups), },
- 	{ "mmc1", x1000_mmc1_groups, ARRAY_SIZE(x1000_mmc1_groups), },
--	{ "nemc", x1000_nemc_groups, ARRAY_SIZE(x1000_nemc_groups), },
--	{ "nemc-cs1", x1000_cs1_groups, ARRAY_SIZE(x1000_cs1_groups), },
--	{ "nemc-cs2", x1000_cs2_groups, ARRAY_SIZE(x1000_cs2_groups), },
-+	{ "emc", x1000_emc_groups, ARRAY_SIZE(x1000_emc_groups), },
-+	{ "emc-cs1", x1000_cs1_groups, ARRAY_SIZE(x1000_cs1_groups), },
-+	{ "emc-cs2", x1000_cs2_groups, ARRAY_SIZE(x1000_cs2_groups), },
- 	{ "i2c0", x1000_i2c0_groups, ARRAY_SIZE(x1000_i2c0_groups), },
- 	{ "i2c1", x1000_i2c1_groups, ARRAY_SIZE(x1000_i2c1_groups), },
- 	{ "i2c2", x1000_i2c2_groups, ARRAY_SIZE(x1000_i2c2_groups), },
-@@ -1224,11 +1224,11 @@ static int x1500_uart0_data_pins[] = { 0x4a, 0x4b, };
- static int x1500_uart0_hwflow_pins[] = { 0x4c, 0x4d, };
- static int x1500_uart1_data_a_pins[] = { 0x04, 0x05, };
- static int x1500_uart1_data_d_pins[] = { 0x62, 0x63, };
--static int x1500_uart1_hwflow_d_pins[] = { 0x64, 0x65, };
-+static int x1500_uart1_hwflow_pins[] = { 0x64, 0x65, };
- static int x1500_uart2_data_a_pins[] = { 0x02, 0x03, };
- static int x1500_uart2_data_d_pins[] = { 0x65, 0x64, };
--static int x1500_mmc0_1bit_pins[] = { 0x18, 0x19, 0x17, };
--static int x1500_mmc0_4bit_pins[] = { 0x16, 0x15, 0x14, };
-+static int x1500_mmc_1bit_pins[] = { 0x18, 0x19, 0x17, };
-+static int x1500_mmc_4bit_pins[] = { 0x16, 0x15, 0x14, };
- static int x1500_i2c0_pins[] = { 0x38, 0x37, };
- static int x1500_i2c1_a_pins[] = { 0x01, 0x00, };
- static int x1500_i2c1_c_pins[] = { 0x5b, 0x5a, };
-@@ -1247,11 +1247,11 @@ static int x1500_uart0_data_funcs[] = { 0, 0, };
- static int x1500_uart0_hwflow_funcs[] = { 0, 0, };
- static int x1500_uart1_data_a_funcs[] = { 2, 2, };
- static int x1500_uart1_data_d_funcs[] = { 1, 1, };
--static int x1500_uart1_hwflow_d_funcs[] = { 1, 1, };
-+static int x1500_uart1_hwflow_funcs[] = { 1, 1, };
- static int x1500_uart2_data_a_funcs[] = { 2, 2, };
- static int x1500_uart2_data_d_funcs[] = { 0, 0, };
--static int x1500_mmc0_1bit_funcs[] = { 1, 1, 1, };
--static int x1500_mmc0_4bit_funcs[] = { 1, 1, 1, };
-+static int x1500_mmc_1bit_funcs[] = { 1, 1, 1, };
-+static int x1500_mmc_4bit_funcs[] = { 1, 1, 1, };
- static int x1500_i2c0_funcs[] = { 0, 0, };
- static int x1500_i2c1_a_funcs[] = { 2, 2, };
- static int x1500_i2c1_c_funcs[] = { 0, 0, };
-@@ -1268,11 +1268,11 @@ static const struct group_desc x1500_groups[] = {
- 	INGENIC_PIN_GROUP("uart0-hwflow", x1500_uart0_hwflow),
- 	INGENIC_PIN_GROUP("uart1-data-a", x1500_uart1_data_a),
- 	INGENIC_PIN_GROUP("uart1-data-d", x1500_uart1_data_d),
--	INGENIC_PIN_GROUP("uart1-hwflow-d", x1500_uart1_hwflow_d),
-+	INGENIC_PIN_GROUP("uart1-hwflow", x1500_uart1_hwflow),
- 	INGENIC_PIN_GROUP("uart2-data-a", x1500_uart2_data_a),
- 	INGENIC_PIN_GROUP("uart2-data-d", x1500_uart2_data_d),
--	INGENIC_PIN_GROUP("mmc0-1bit", x1500_mmc0_1bit),
--	INGENIC_PIN_GROUP("mmc0-4bit", x1500_mmc0_4bit),
-+	INGENIC_PIN_GROUP("mmc-1bit", x1500_mmc_1bit),
-+	INGENIC_PIN_GROUP("mmc-4bit", x1500_mmc_4bit),
- 	INGENIC_PIN_GROUP("i2c0-data", x1500_i2c0),
- 	INGENIC_PIN_GROUP("i2c1-data-a", x1500_i2c1_a),
- 	INGENIC_PIN_GROUP("i2c1-data-c", x1500_i2c1_c),
-@@ -1288,10 +1288,10 @@ static const struct group_desc x1500_groups[] = {
- 
- static const char *x1500_uart0_groups[] = { "uart0-data", "uart0-hwflow", };
- static const char *x1500_uart1_groups[] = {
--	"uart1-data-a", "uart1-data-d", "uart1-hwflow-d",
-+	"uart1-data-a", "uart1-data-d", "uart1-hwflow",
- };
- static const char *x1500_uart2_groups[] = { "uart2-data-a", "uart2-data-d", };
--static const char *x1500_mmc0_groups[] = { "mmc0-1bit", "mmc0-4bit", };
-+static const char *x1500_mmc_groups[] = { "mmc-1bit", "mmc-4bit", };
- static const char *x1500_i2c0_groups[] = { "i2c0-data", };
- static const char *x1500_i2c1_groups[] = { "i2c1-data-a", "i2c1-data-c", };
- static const char *x1500_i2c2_groups[] = { "i2c2-data", };
-@@ -1307,7 +1307,7 @@ static const struct function_desc x1500_functions[] = {
- 	{ "uart0", x1500_uart0_groups, ARRAY_SIZE(x1500_uart0_groups), },
- 	{ "uart1", x1500_uart1_groups, ARRAY_SIZE(x1500_uart1_groups), },
- 	{ "uart2", x1500_uart2_groups, ARRAY_SIZE(x1500_uart2_groups), },
--	{ "mmc0", x1500_mmc0_groups, ARRAY_SIZE(x1500_mmc0_groups), },
-+	{ "mmc", x1500_mmc_groups, ARRAY_SIZE(x1500_mmc_groups), },
- 	{ "i2c0", x1500_i2c0_groups, ARRAY_SIZE(x1500_i2c0_groups), },
- 	{ "i2c1", x1500_i2c1_groups, ARRAY_SIZE(x1500_i2c1_groups), },
- 	{ "i2c2", x1500_i2c2_groups, ARRAY_SIZE(x1500_i2c2_groups), },
--- 
-2.7.4
+-Paul
+
+
+>> For the whole series:
+>> Acked-by: Paul Cercueil <paul@crapouillou.net>
+>>=20
+>> Cheers,
+>> Paul
+>>=20
+>>=20
+>>> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wa=
+nyeetech.com>
+>>> ---
+>>>=20
+>>> Notes:
+>>>     v1->v2:
+>>>     Rebase on top of mips-next, use TCU for system timer and=20
+>>> =7F=7Fclocksource.
+>>>=20
+>>>     v2->v3:
+>>>     No change.
+>>>=20
+>>>     v3->v4:
+>>>     1.Adjust "model" in "cu1000.dts" to match the description in=20
+>>> =7F=7F"devices.yaml".
+>>>     2.Adjust "bool" in "Kconfig" to avoid duplicate names with=20
+>>> =7F=7Fsubsequent boards.
+>>>=20
+>>>     v4->v5:
+>>>     1.Rename "cu1000" to "cu1000-neo" to prevent conflicts with=20
+>>> =7F=7Fsubsequent boards
+>>>       such as "cu1000-geo", and so on.
+>>>     2.Remove "CONFIG_HZ=3D100" and "mem=3D32M@0x0" from defconfg.
+>>>     3.Modify incorrect comments in DT.
+>>>=20
+>>>     v5->v6:
+>>>     1.Use "stdout-path =3D "serial2:115200n8"" instead "stdout-path =3D=
+=20
+>>> =7F=7F&uart2" in DT.
+>>>     2.Remove "console=3DttyS2,115200n8" and=20
+>>> "CONFIG_CMDLINE_OVERRIDE=3Dy" =7F=7Ffrom defconfg.
+>>>=20
+>>>     v6->v7:
+>>>     Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
+>>>     to "=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeetec=
+h.com>" because
+>>>     the old mailbox is in an unstable state.
+>>>=20
+>>>     v7->v8:
+>>>     Merge [6/6] in v7 to this patch.
+>>>=20
+>>>  arch/mips/boot/dts/ingenic/Makefile       |   1 +
+>>>  arch/mips/boot/dts/ingenic/cu1000-neo.dts |  99=20
+>>> =7F=7F++++++++++++++++++++++++++
+>>>  arch/mips/configs/cu1000-neo_defconfig    | 111=20
+>>> =7F=7F++++++++++++++++++++++++++++++
+>>>  arch/mips/jz4740/Kconfig                  |   4 ++
+>>>  4 files changed, 215 insertions(+)
+>>>  create mode 100644 arch/mips/boot/dts/ingenic/cu1000-neo.dts
+>>>  create mode 100644 arch/mips/configs/cu1000-neo_defconfig
+>>>=20
+>>> diff --git a/arch/mips/boot/dts/ingenic/Makefile=20
+>>> =7F=7Fb/arch/mips/boot/dts/ingenic/Makefile
+>>> index 9cc4844..e165429 100644
+>>> --- a/arch/mips/boot/dts/ingenic/Makefile
+>>> +++ b/arch/mips/boot/dts/ingenic/Makefile
+>>> @@ -2,5 +2,6 @@
+>>>  dtb-$(CONFIG_JZ4740_QI_LB60)    +=3D qi_lb60.dtb
+>>>  dtb-$(CONFIG_JZ4770_GCW0)    +=3D gcw0.dtb
+>>>  dtb-$(CONFIG_JZ4780_CI20)    +=3D ci20.dtb
+>>> +dtb-$(CONFIG_X1000_CU1000_NEO)    +=3D cu1000-neo.dtb
+>>>=20
+>>>  obj-$(CONFIG_BUILTIN_DTB)    +=3D $(addsuffix .o, $(dtb-y))
+>>> diff --git a/arch/mips/boot/dts/ingenic/cu1000-neo.dts=20
+>>> =7F=7Fb/arch/mips/boot/dts/ingenic/cu1000-neo.dts
+>>> new file mode 100644
+>>> index 00000000..b0733da
+>>> --- /dev/null
+>>> +++ b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
+>>> @@ -0,0 +1,99 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +/dts-v1/;
+>>> +
+>>> +#include "x1000.dtsi"
+>>> +#include <dt-bindings/gpio/gpio.h>
+>>> +#include <dt-bindings/clock/ingenic,tcu.h>
+>>> +
+>>> +/ {
+>>> +    compatible =3D "yna,cu1000-neo", "ingenic,x1000";
+>>> +    model =3D "YSH & ATIL General Board CU Neo";
+>>> +
+>>> +    aliases {
+>>> +        serial2 =3D &uart2;
+>>> +    };
+>>> +
+>>> +    chosen {
+>>> +        stdout-path =3D "serial2:115200n8";
+>>> +    };
+>>> +
+>>> +    memory {
+>>> +        device_type =3D "memory";
+>>> +        reg =3D <0x0 0x04000000>;
+>>> +    };
+>>> +};
+>>> +
+>>> +&exclk {
+>>> +    clock-frequency =3D <24000000>;
+>>> +};
+>>> +
+>>> +&tcu {
+>>> +    /* 1500 kHz for the system timer and clocksource */
+>>> +    assigned-clocks =3D <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER2>;
+>>> +    assigned-clock-rates =3D <1500000>, <1500000>;
+>>> +
+>>> +    /* Use channel #0 for the system timer channel #2 for the=20
+>>> =7F=7Fclocksource */
+>>> +    ingenic,pwm-channels-mask =3D <0xfa>;
+>>> +};
+>>> +
+>>> +&uart2 {
+>>> +    pinctrl-names =3D "default";
+>>> +    pinctrl-0 =3D <&pins_uart2>;
+>>> +
+>>> +    status =3D "okay";
+>>> +};
+>>> +
+>>> +&mac {
+>>> +    phy-mode =3D "rmii";
+>>> +    phy-handle =3D <&lan8720a>;
+>>> +
+>>> +    pinctrl-names =3D "default";
+>>> +    pinctrl-0 =3D <&pins_mac>;
+>>> +
+>>> +    snps,reset-gpio =3D <&gpc 23 GPIO_ACTIVE_LOW>; /* PC23 */
+>>> +    snps,reset-active-low;
+>>> +    snps,reset-delays-us =3D <0 10000 30000>;
+>>> +
+>>> +    status =3D "okay";
+>>> +};
+>>> +
+>>> +&mdio {
+>>> +    status =3D "okay";
+>>> +
+>>> +    lan8720a: ethernet-phy@0 {
+>>> +        compatible =3D "ethernet-phy-id0007.c0f0",=20
+>>> =7F=7F"ethernet-phy-ieee802.3-c22";
+>>> +        reg =3D <0>;
+>>> +    };
+>>> +};
+>>> +
+>>> +&msc0 {
+>>> +    bus-width =3D <8>;
+>>> +    max-frequency =3D <50000000>;
+>>> +
+>>> +    pinctrl-names =3D "default";
+>>> +    pinctrl-0 =3D <&pins_msc0>;
+>>> +
+>>> +    non-removable;
+>>> +
+>>> +    status =3D "okay";
+>>> +};
+>>> +
+>>> +&pinctrl {
+>>> +    pins_uart2: uart2 {
+>>> +        function =3D "uart2";
+>>> +        groups =3D "uart2-data-d";
+>>> +        bias-disable;
+>>> +    };
+>>> +
+>>> +    pins_mac: mac {
+>>> +        function =3D "mac";
+>>> +        groups =3D "mac";
+>>> +        bias-disable;
+>>> +    };
+>>> +
+>>> +    pins_msc0: msc0 {
+>>> +        function =3D "mmc0";
+>>> +        groups =3D "mmc0-1bit", "mmc0-4bit", "mmc0-8bit";
+>>> +        bias-disable;
+>>> +    };
+>>> +};
+>>> diff --git a/arch/mips/configs/cu1000-neo_defconfig=20
+>>> =7F=7Fb/arch/mips/configs/cu1000-neo_defconfig
+>>> new file mode 100644
+>>> index 00000000..9f988ed
+>>> --- /dev/null
+>>> +++ b/arch/mips/configs/cu1000-neo_defconfig
+>>> @@ -0,0 +1,111 @@
+>>> +CONFIG_LOCALVERSION_AUTO=3Dy
+>>> +CONFIG_KERNEL_GZIP=3Dy
+>>> +CONFIG_SYSVIPC=3Dy
+>>> +CONFIG_NO_HZ_IDLE=3Dy
+>>> +CONFIG_HIGH_RES_TIMERS=3Dy
+>>> +CONFIG_PREEMPT=3Dy
+>>> +CONFIG_IKCONFIG=3Dy
+>>> +CONFIG_IKCONFIG_PROC=3Dy
+>>> +CONFIG_LOG_BUF_SHIFT=3D14
+>>> +CONFIG_CGROUPS=3Dy
+>>> +CONFIG_MEMCG=3Dy
+>>> +CONFIG_MEMCG_KMEM=3Dy
+>>> +CONFIG_CGROUP_SCHED=3Dy
+>>> +CONFIG_CGROUP_FREEZER=3Dy
+>>> +CONFIG_CGROUP_DEVICE=3Dy
+>>> +CONFIG_CGROUP_CPUACCT=3Dy
+>>> +CONFIG_NAMESPACES=3Dy
+>>> +CONFIG_USER_NS=3Dy
+>>> +CONFIG_CC_OPTIMIZE_FOR_SIZE=3Dy
+>>> +CONFIG_SYSCTL_SYSCALL=3Dy
+>>> +CONFIG_KALLSYMS_ALL=3Dy
+>>> +CONFIG_EMBEDDED=3Dy
+>>> +# CONFIG_VM_EVENT_COUNTERS is not set
+>>> +# CONFIG_COMPAT_BRK is not set
+>>> +CONFIG_SLAB=3Dy
+>>> +CONFIG_MACH_INGENIC=3Dy
+>>> +CONFIG_X1000_CU1000_NEO=3Dy
+>>> +CONFIG_HIGHMEM=3Dy
+>>> +CONFIG_HZ_100=3Dy
+>>> +# CONFIG_SECCOMP is not set
+>>> +# CONFIG_SUSPEND is not set
+>>> +# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+>>> +# CONFIG_COMPACTION is not set
+>>> +CONFIG_CMA=3Dy
+>>> +CONFIG_CMA_AREAS=3D7
+>>> +CONFIG_NET=3Dy
+>>> +CONFIG_UNIX=3Dy
+>>> +CONFIG_INET=3Dy
+>>> +CONFIG_UEVENT_HELPER=3Dy
+>>> +CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
+>>> +CONFIG_DEVTMPFS=3Dy
+>>> +# CONFIG_FW_LOADER is not set
+>>> +# CONFIG_ALLOW_DEV_COREDUMP is not set
+>>> +CONFIG_NETDEVICES=3Dy
+>>> +CONFIG_STMMAC_ETH=3Dy
+>>> +CONFIG_SMSC_PHY=3Dy
+>>> +# CONFIG_INPUT_MOUSEDEV is not set
+>>> +# CONFIG_INPUT_KEYBOARD is not set
+>>> +# CONFIG_INPUT_MOUSE is not set
+>>> +# CONFIG_SERIO is not set
+>>> +CONFIG_VT_HW_CONSOLE_BINDING=3Dy
+>>> +CONFIG_LEGACY_PTY_COUNT=3D2
+>>> +CONFIG_SERIAL_EARLYCON=3Dy
+>>> +CONFIG_SERIAL_8250=3Dy
+>>> +CONFIG_SERIAL_8250_CONSOLE=3Dy
+>>> +CONFIG_SERIAL_8250_NR_UARTS=3D3
+>>> +CONFIG_SERIAL_8250_RUNTIME_UARTS=3D3
+>>> +CONFIG_SERIAL_8250_INGENIC=3Dy
+>>> +CONFIG_SERIAL_OF_PLATFORM=3Dy
+>>> +# CONFIG_HW_RANDOM is not set
+>>> +CONFIG_GPIO_SYSFS=3Dy
+>>> +CONFIG_WATCHDOG=3Dy
+>>> +CONFIG_JZ4740_WDT=3Dy
+>>> +# CONFIG_HWMON is not set
+>>> +# CONFIG_LCD_CLASS_DEVICE is not set
+>>> +# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
+>>> +# CONFIG_VGA_CONSOLE is not set
+>>> +# CONFIG_HID is not set
+>>> +# CONFIG_USB_SUPPORT is not set
+>>> +CONFIG_MMC=3Dy
+>>> +CONFIG_MMC_JZ4740=3Dy
+>>> +CONFIG_RTC_CLASS=3Dy
+>>> +CONFIG_RTC_DRV_JZ4740=3Dy
+>>> +CONFIG_DMADEVICES=3Dy
+>>> +CONFIG_DMA_JZ4780=3Dy
+>>> +# CONFIG_IOMMU_SUPPORT is not set
+>>> +CONFIG_NVMEM=3Dy
+>>> +CONFIG_NVMEM_SYSFS=3Dy
+>>> +CONFIG_EXT4_FS=3Dy
+>>> +# CONFIG_DNOTIFY is not set
+>>> +CONFIG_AUTOFS_FS=3Dy
+>>> +CONFIG_PROC_KCORE=3Dy
+>>> +# CONFIG_PROC_PAGE_MONITOR is not set
+>>> +CONFIG_TMPFS=3Dy
+>>> +CONFIG_CONFIGFS_FS=3Dy
+>>> +CONFIG_NLS=3Dy
+>>> +CONFIG_NLS_CODEPAGE_936=3Dy
+>>> +CONFIG_NLS_CODEPAGE_950=3Dy
+>>> +CONFIG_NLS_ASCII=3Dy
+>>> +CONFIG_NLS_ISO8859_1=3Dy
+>>> +CONFIG_NLS_UTF8=3Dy
+>>> +CONFIG_CRYPTO_ECHAINIV=3Dy
+>>> +CONFIG_CRYPTO_AES=3Dy
+>>> +CONFIG_CRYPTO_DEFLATE=3Dy
+>>> +CONFIG_CRYPTO_LZO=3Dy
+>>> +CONFIG_PRINTK_TIME=3Dy
+>>> +CONFIG_CONSOLE_LOGLEVEL_DEFAULT=3D15
+>>> +CONFIG_CONSOLE_LOGLEVEL_QUIET=3D15
+>>> +CONFIG_MESSAGE_LOGLEVEL_DEFAULT=3D7
+>>> +CONFIG_DEBUG_INFO=3Dy
+>>> +CONFIG_STRIP_ASM_SYMS=3Dy
+>>> +CONFIG_DEBUG_FS=3Dy
+>>> +CONFIG_MAGIC_SYSRQ=3Dy
+>>> +CONFIG_PANIC_ON_OOPS=3Dy
+>>> +CONFIG_PANIC_TIMEOUT=3D10
+>>> +# CONFIG_SCHED_DEBUG is not set
+>>> +# CONFIG_DEBUG_PREEMPT is not set
+>>> +CONFIG_STACKTRACE=3Dy
+>>> +# CONFIG_FTRACE is not set
+>>> +CONFIG_CMDLINE_BOOL=3Dy
+>>> +CONFIG_CMDLINE=3D"earlycon clk_ignore_unused"
+>>> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
+>>> index 6b96844..412d2fa 100644
+>>> --- a/arch/mips/jz4740/Kconfig
+>>> +++ b/arch/mips/jz4740/Kconfig
+>>> @@ -16,6 +16,10 @@ config JZ4780_CI20
+>>>      bool "MIPS Creator CI20"
+>>>      select MACH_JZ4780
+>>>=20
+>>> +config X1000_CU1000_NEO
+>>> +    bool "YSH & ATIL CU1000 Module with Neo backplane"
+>>> +    select MACH_X1000
+>>> +
+>>>  endchoice
+>>>=20
+>>>  config MACH_JZ4740
+>>> --
+>>> 2.7.4
+>>>=20
+>>=20
+>=20
+
+=
 
