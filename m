@@ -2,108 +2,134 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78282C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C91C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F08E214D8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080433;
-	bh=FsGRS6i1JQA/Fs5w9IlywZtU1wgcApDmYXC3E95CFLc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l8e5SE1tAd2mWlXHAVJ6qs2nZtKpBgsbtav96gTSsXoJaivM9znprhXRZsOY2y0pk
-	 HLxuBWDr2pZNkwF7OkG7MtFHN8seFwnX1YbOL1sIpiOJTqhM6KTL//ijOmQA/b5k02
-	 lqJ/FFcUa0c91O7zoHsOYsfvi18H5QWiQs5uWBOk=
+	by mail.kernel.org (Postfix) with ESMTP id 8DDEB20836
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="wcCk/jTn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730758AbfLKQHM (ORCPT
+        id S1731655AbfLKQI4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:07:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34268 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730713AbfLKPMb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:31 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 075382467F;
-        Wed, 11 Dec 2019 15:12:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077150;
-        bh=FsGRS6i1JQA/Fs5w9IlywZtU1wgcApDmYXC3E95CFLc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fL88RWqaLkWJ+vbzYl2yvCOP7tJXpUh0zmEms1zT0lefMNEJYWnXMLWj3XH35oR1k
-         32AsMzzGtcjynUj4cVVnBf39ON380OsLMwaUa91sKzqY35snDWrDtNayrmcSNEgxP4
-         +YYVnY4MBzHgmnqf8630pZ0LlDGgDhUxygXnWC1o=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavel Modilaynen <pavel.modilaynen@axis.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 037/134] dtc: Use pkg-config to locate libyaml
-Date:   Wed, 11 Dec 2019 10:10:13 -0500
-Message-Id: <20191211151150.19073-37-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        Wed, 11 Dec 2019 11:08:56 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39456 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731064AbfLKQIz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 11:08:55 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y1so5814031lfb.6
+        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 08:08:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7tqplQQb9CHWGQTUQAovBElvDHnJZMbpYf+CcpC4kqQ=;
+        b=wcCk/jTnkASJR6Sp/LYKO/aXJ7GWZ8rt2oRypmgmWabEkCBK/cKu2NrwVq/17FV8tI
+         t8yWfb8AWXbvEC/SrExJq/b1iu5pzWFwfpyvs6DaxjS4mHCuqftAMSTM+KRfYHSxUwjv
+         rGQaDG8b8/7PtjZd8u88TM+BiNgMFo7S/W8OZINIzpJJ4eRtGG5eCE6PmW8CmIaH5F8d
+         XqRYgOE582W9iKhrrr8OR5UcKjnMscE3yjhUAou7rAYKCERvfVpsIBRG+djXzSoJgKlG
+         eketxGshmv8KyDlmzBI1mFELQnNUOH9w8fYc2ITrvlY7hd9sLE55fL+XxkmcymfpWGaF
+         /jhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=7tqplQQb9CHWGQTUQAovBElvDHnJZMbpYf+CcpC4kqQ=;
+        b=PzduaLs77jj5Mu49pvXp5G+2OG32dzIeTLDcmeLnfecnpBfG0H4Zdk7Tx8lttKrzSX
+         5ids3ryf4qoEo5o/xpX9apno++W90HVnt22keGB/YWFxeJMIixSfkEyIB8h1KoEZNF+T
+         raZ4d6dekxUi1hnul9Os+0VJW9LFUg2+IqLL+BlENHpsSWmH4klM1Lqf/WUDhRUHAaWA
+         17GtYdbEvpMc+vTK31doJwV+vfR4OKyKkrHclZOuAJSQz+Te1PrDfuvZHpqfqqnzYq5g
+         TBFqsiDVatthOVse17cYjJmMZtG6LLdK/5E8b9FRYAFArfAXZnV+QXW2vGDzfViZYDF/
+         LA5w==
+X-Gm-Message-State: APjAAAU+59+f/+0/kEimHpb8Fj3tffIcBEXQtAqZEr54VAQLmAGUoGdO
+        QzRcZC91y4jHwn2OvmzMFAg+yQ==
+X-Google-Smtp-Source: APXvYqw6vroN4zWGsiE3et8xvPmJr20vyWmpeLQ82KdA0bF4KoKWTmc/RVLOq511WAvgGFLqkk/0uA==
+X-Received: by 2002:ac2:5ec3:: with SMTP id d3mr2706348lfq.176.1576080533659;
+        Wed, 11 Dec 2019 08:08:53 -0800 (PST)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:8d8:12fe:a87e:d4b8:621e:2b62])
+        by smtp.gmail.com with ESMTPSA id h24sm1407649ljl.80.2019.12.11.08.08.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Dec 2019 08:08:52 -0800 (PST)
+Subject: Re: [PATCH RFC 0/2] Add Renesas RPC-IF support
+To:     Chris Brandt <Chris.Brandt@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
+ <TY1PR01MB156234F5B44BB43D3DCA98128A5A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <03a630e2-280f-98b7-a9c8-6533716720e5@cogentembedded.com>
+Date:   Wed, 11 Dec 2019 19:08:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <TY1PR01MB156234F5B44BB43D3DCA98128A5A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Pavel Modilaynen <pavel.modilaynen@axis.com>
+HEllo
 
-[ Upstream commit 067c650c456e758f933aaf87a202f841d34be269 ]
+On 12/11/2019 05:33 PM, Chris Brandt wrote:
 
-Using Makefile's wildcard with absolute path to detect
-the presence of libyaml results in false-positive
-detection when cross-compiling e.g. in yocto environment.
-The latter results in build error:
-| scripts/dtc/yamltree.o: In function `yaml_propval_int':
-| yamltree.c: undefined reference to `yaml_sequence_start_event_initialize'
-| yamltree.c: undefined reference to `yaml_emitter_emit'
-| yamltree.c: undefined reference to `yaml_scalar_event_initialize'
-...
-Use pkg-config to locate libyaml to address this scenario.
+>> Here's a set of 2 patches against Linus' repo. Renesas Reduced Pin Count
+>> Interface (RPC-IF) allows a SPI flash or HyperFlash connected to the SoC to
+>> be accessed via the external address space read mode or the manual mode.
+> 
+> Looking at this driver, all it is are APIs. Meaning another driver is 
+> needed to sit in between the MTD layer and this HW driver layer.
 
-Signed-off-by: Pavel Modilaynen <pavel.modilaynen@axis.com>
-[robh: silence stderr]
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- scripts/dtc/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+   Between the hardware and SPI, and between the hardware and HyperFlash
+infrastructure. There's a lot of the common hardware code common between
+these 2 driver areas.
 
-diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-index 82160808765c3..b5a5b1c548c9b 100644
---- a/scripts/dtc/Makefile
-+++ b/scripts/dtc/Makefile
-@@ -11,7 +11,7 @@ dtc-objs	+= dtc-lexer.lex.o dtc-parser.tab.o
- # Source files need to get at the userspace version of libfdt_env.h to compile
- HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
- 
--ifeq ($(wildcard /usr/include/yaml.h),)
-+ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
- ifneq ($(CHECK_DTBS),)
- $(error dtc needs libyaml for DT schema validation support. \
- 	Install the necessary libyaml development package.)
-@@ -19,7 +19,7 @@ endif
- HOST_EXTRACFLAGS += -DNO_YAML
- else
- dtc-objs	+= yamltree.o
--HOSTLDLIBS_dtc	:= -lyaml
-+HOSTLDLIBS_dtc	:= $(shell pkg-config yaml-0.1 --libs)
- endif
- 
- # Generated files need one more search path to include headers in source tree
--- 
-2.20.1
+> In the driver that I did, if the "RPC" HW is going to be used to control
+> a SPI Flash device, it registered a spi controller and then the MTD 
+> layer could access the device just like any other SPI controller driver. No
+> additional drivers are needed.
 
+   We're already been thru that with Mason's patch -- I don't want the code
+duplicated between 2 drivers.
+
+> Looking at the hyperbus driver that is in drivers/mtd/hyperbus/, it 
+> seems that if the "RPC" HW is going to be used to control HyperFlash, then 
+
+   Sure. But the code controlling RPC hardware is largely the same b/w 2 cases.
+
+> all you would need to do is register a hyperbus controller using 
+> hyperbus_register_device(). Then the MTD layer could read/write the flash using 
+> normal MTD CFI interface.
+
+   That's what I do (the current realization makes too many assumptions about
+the HF hardware (both direct read and write). 
+
+> Why do you think you need another layer in between the HW driver and the
+> MTD layer?
+
+   Because we don't want any duplicated code. Also, think about DT -- it
+describes the hardware, not the driver configuration.
+
+> Is your goal to make a multi-layered system where the HW jumps back and forth
+> in between operating modes at runtime? I'm not sure of the use case for all of
+> this.
+
+   My goal is to prevent the code duplication (and keep DT sane too).
+
+> Chris
+
+MBR, Sergei
