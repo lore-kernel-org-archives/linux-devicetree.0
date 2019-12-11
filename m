@@ -2,411 +2,537 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E10C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 12:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C99C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 12:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A820721556
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 12:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B10E208C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 12:59:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ss9Wt906"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jIRkfM0D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfLKM4T (ORCPT
+        id S1728128AbfLKM7d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:56:19 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:50782 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727457AbfLKM4T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 07:56:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1576068975; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MzbWFtPuCcnhFwOWpViIm3T0O0lp/iGewXYHGMpkmrY=;
-        b=ss9Wt906Q94x4yhCdeSjeDbeY8nQHc1TWPYeeR0CZZRNQwH/yzoCptKQlJCLXMDkWz2ufM
-        zGduJOyAAJ8aFywdohmHrmYnUWHI+WzL3jnQPthLx6jQWV8jQLMyyGV9iaoUGBFgdAqRa9
-        8l9Jm6wFpcHE+ram8FLswwBLDDN8FBg=
-Date:   Wed, 11 Dec 2019 13:56:04 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v8 4/4] MIPS: Ingenic: Add YSH & ATIL CU Neo board
- support.
-To:     zhouyanjie <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
-        alexandre.belloni@bootlin.com, ralf@linux-mips.org,
-        heiko@sntech.de, icenowy@aosc.io, ak@linux.intel.com,
-        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
-        geert+renesas@glider.be, prasannatsmkumar@gmail.com,
-        keescook@chromium.org, ebiederm@xmission.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, 772753199@qq.com
-Message-Id: <1576068964.3.0@crapouillou.net>
-In-Reply-To: <5DF0CCCA.60404@wanyeetech.com>
-References: <1575979363-25956-1-git-send-email-zhouyanjie@wanyeetech.com>
-        <1575979363-25956-5-git-send-email-zhouyanjie@wanyeetech.com>
-        <1575998343.3.2@crapouillou.net> <5DF0CCCA.60404@wanyeetech.com>
+        Wed, 11 Dec 2019 07:59:33 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40004 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbfLKM7d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 07:59:33 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBCxTL8013499;
+        Wed, 11 Dec 2019 06:59:29 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576069169;
+        bh=baJMs1qT8nX731wdMO5cztekY1CtD2a4IS8Tibr9IWU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=jIRkfM0D8Wi7aHqT70EJbYNWewSGyd6Oj3gPyQrpLU55opOf0x2/drJ1hOMW1oIEc
+         JvKIgbWWFWoMk0Tlv7oXR21cHBiPsC02eEheewGntZd0wJdcUK6ThF+FV238dJaMj8
+         faNtHgcoGVHlP5zByii7zBpZhXLzWf/oGOrG9csY=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBCxTSX031447
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Dec 2019 06:59:29 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
+ Dec 2019 06:59:24 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 11 Dec 2019 06:59:24 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBCxMHq032710;
+        Wed, 11 Dec 2019 06:59:23 -0600
+Subject: Re: [PATCH 9/9] ARM: OMAP2+: Drop legacy platform data for dra7
+ timers except timer1 to 4
+To:     "Andrew F. Davis" <afd@ti.com>, Tony Lindgren <tony@atomide.com>,
+        <linux-omap@vger.kernel.org>
+CC:     =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        <devicetree@vger.kernel.org>, Keerthy <j-keerthy@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+References: <20191210233524.46875-1-tony@atomide.com>
+ <20191210233524.46875-10-tony@atomide.com>
+ <84c0944d-0e75-4c1f-9220-bf4eb9396040@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <629f9571-d5d7-b85d-ff34-ef35f9fec821@ti.com>
+Date:   Wed, 11 Dec 2019 14:59:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <84c0944d-0e75-4c1f-9220-bf4eb9396040@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Zhou,
+On 11/12/2019 04:10, Andrew F. Davis wrote:
+> On 12/10/19 6:35 PM, Tony Lindgren wrote:
+>> We can now probe devices with ti-sysc interconnect driver and dts
+>> data. Let's drop the related platform data and custom ti,hwmods
+>> dts property.
+>>
+>> As we're just dropping data, and the early platform data init
+>> is based on the custom ti,hwmods property, we want to drop both
+>> the platform data and ti,hwmods property in a single patch.
+>>
+>> Cc: Keerthy <j-keerthy@ti.com>
+>> Cc: Tero Kristo <t-kristo@ti.com>
+>> Signed-off-by: Tony Lindgren <tony@atomide.com>
+>> ---
+>>   arch/arm/boot/dts/dra7-l4.dtsi            |  12 -
+>>   arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 295 ----------------------
+>>   2 files changed, 307 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+>> --- a/arch/arm/boot/dts/dra7-l4.dtsi
+>> +++ b/arch/arm/boot/dts/dra7-l4.dtsi
+>> @@ -1233,7 +1233,6 @@ timer4: timer@0 {
+>>   
+>>   		target-module@3e000 {			/* 0x4803e000, ap 11 56.0 */
+>>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
+>> -			ti,hwmods = "timer9";
+>>   			reg = <0x3e000 0x4>,
+>>   			      <0x3e010 0x4>;
+>>   			reg-names = "rev", "sysc";
+>> @@ -1842,7 +1841,6 @@ i2c5: i2c@0 {
+>>   
+>>   		target-module@86000 {			/* 0x48086000, ap 41 5e.0 */
+>>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
+>> -			ti,hwmods = "timer10";
+>>   			reg = <0x86000 0x4>,
+>>   			      <0x86010 0x4>;
+>>   			reg-names = "rev", "sysc";
+>> @@ -1870,7 +1868,6 @@ timer10: timer@0 {
+>>   
+>>   		target-module@88000 {			/* 0x48088000, ap 43 66.0 */
+>>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
+>> -			ti,hwmods = "timer11";
+>>   			reg = <0x88000 0x4>,
+>>   			      <0x88010 0x4>;
+>>   			reg-names = "rev", "sysc";
+>> @@ -3357,7 +3354,6 @@ target-module@1e000 {			/* 0x4881e000, ap 93 2c.0 */
+>>   
+>>   		target-module@20000 {			/* 0x48820000, ap 5 08.0 */
+>>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
+>> -			ti,hwmods = "timer5";
+>>   			reg = <0x20000 0x4>,
+>>   			      <0x20010 0x4>;
+>>   			reg-names = "rev", "sysc";
+>> @@ -3385,7 +3381,6 @@ timer5: timer@0 {
+>>   
+>>   		target-module@22000 {			/* 0x48822000, ap 7 24.0 */
+>>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
+>> -			ti,hwmods = "timer6";
+>>   			reg = <0x22000 0x4>,
+>>   			      <0x22010 0x4>;
+>>   			reg-names = "rev", "sysc";
+>> @@ -3413,7 +3408,6 @@ timer6: timer@0 {
+>>   
+>>   		target-module@24000 {			/* 0x48824000, ap 9 26.0 */
+>>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
+>> -			ti,hwmods = "timer7";
+>>   			reg = <0x24000 0x4>,
+>>   			      <0x24010 0x4>;
+>>   			reg-names = "rev", "sysc";
+>> @@ -3441,7 +3435,6 @@ timer7: timer@0 {
+>>   
+>>   		target-module@26000 {			/* 0x48826000, ap 11 0c.0 */
+>>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
+>> -			ti,hwmods = "timer8";
+>>   			reg = <0x26000 0x4>,
+>>   			      <0x26010 0x4>;
+>>   			reg-names = "rev", "sysc";
+>> @@ -3469,7 +3462,6 @@ timer8: timer@0 {
+>>   
+>>   		target-module@28000 {			/* 0x48828000, ap 13 16.0 */
+>>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
+>> -			ti,hwmods = "timer13";
+>>   			reg = <0x28000 0x4>,
+>>   			      <0x28010 0x4>;
+>>   			reg-names = "rev", "sysc";
+>> @@ -3497,7 +3489,6 @@ timer13: timer@0 {
+>>   
+>>   		target-module@2a000 {			/* 0x4882a000, ap 15 10.0 */
+>>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
+>> -			ti,hwmods = "timer14";
+>>   			reg = <0x2a000 0x4>,
+>>   			      <0x2a010 0x4>;
+>>   			reg-names = "rev", "sysc";
+>> @@ -3525,7 +3516,6 @@ timer14: timer@0 {
+>>   
+>>   		target-module@2c000 {			/* 0x4882c000, ap 17 02.0 */
+>>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
+>> -			ti,hwmods = "timer15";
+>>   			reg = <0x2c000 0x4>,
+>>   			      <0x2c010 0x4>;
+>>   			reg-names = "rev", "sysc";
+>> @@ -3553,7 +3543,6 @@ timer15: timer@0 {
+>>   
+>>   		target-module@2e000 {			/* 0x4882e000, ap 19 14.0 */
+>>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
+>> -			ti,hwmods = "timer16";
+>>   			reg = <0x2e000 0x4>,
+>>   			      <0x2e010 0x4>;
+>>   			reg-names = "rev", "sysc";
+>> @@ -4453,7 +4442,6 @@ segment@20000 {					/* 0x4ae20000 */
+>>   
+>>   		target-module@0 {			/* 0x4ae20000, ap 19 08.0 */
+>>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
+>> -			ti,hwmods = "timer12";
+>>   			reg = <0x0 0x4>,
+>>   			      <0x10 0x4>;
+>>   			reg-names = "rev", "sysc";
+>> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> @@ -1157,185 +1157,6 @@ static struct omap_hwmod dra7xx_timer4_hwmod = {
+>>   	},
+>>   };
+>>   
+>> -/* timer5 */
+>> -static struct omap_hwmod dra7xx_timer5_hwmod = {
+>> -	.name		= "timer5",
+>> -	.class		= &dra7xx_timer_hwmod_class,
+>> -	.clkdm_name	= "ipu_clkdm",
+>> -	.main_clk	= "timer5_gfclk_mux",
+>> -	.prcm = {
+>> -		.omap4 = {
+>> -			.clkctrl_offs = DRA7XX_CM_IPU_TIMER5_CLKCTRL_OFFSET,
+>> -			.context_offs = DRA7XX_RM_IPU_TIMER5_CONTEXT_OFFSET,
+>> -			.modulemode   = MODULEMODE_SWCTRL,
+>> -		},
+>> -	},
+>> -};
+>> -
+>> -/* timer6 */
+>> -static struct omap_hwmod dra7xx_timer6_hwmod = {
+>> -	.name		= "timer6",
+>> -	.class		= &dra7xx_timer_hwmod_class,
+>> -	.clkdm_name	= "ipu_clkdm",
+>> -	.main_clk	= "timer6_gfclk_mux",
+>> -	.prcm = {
+>> -		.omap4 = {
+>> -			.clkctrl_offs = DRA7XX_CM_IPU_TIMER6_CLKCTRL_OFFSET,
+>> -			.context_offs = DRA7XX_RM_IPU_TIMER6_CONTEXT_OFFSET,
+>> -			.modulemode   = MODULEMODE_SWCTRL,
+>> -		},
+>> -	},
+>> -};
+>> -
+>> -/* timer7 */
+>> -static struct omap_hwmod dra7xx_timer7_hwmod = {
+>> -	.name		= "timer7",
+>> -	.class		= &dra7xx_timer_hwmod_class,
+>> -	.clkdm_name	= "ipu_clkdm",
+>> -	.main_clk	= "timer7_gfclk_mux",
+>> -	.prcm = {
+>> -		.omap4 = {
+>> -			.clkctrl_offs = DRA7XX_CM_IPU_TIMER7_CLKCTRL_OFFSET,
+>> -			.context_offs = DRA7XX_RM_IPU_TIMER7_CONTEXT_OFFSET,
+>> -			.modulemode   = MODULEMODE_SWCTRL,
+>> -		},
+>> -	},
+>> -};
+>> -
+>> -/* timer8 */
+>> -static struct omap_hwmod dra7xx_timer8_hwmod = {
+>> -	.name		= "timer8",
+>> -	.class		= &dra7xx_timer_hwmod_class,
+>> -	.clkdm_name	= "ipu_clkdm",
+>> -	.main_clk	= "timer8_gfclk_mux",
+>> -	.prcm = {
+>> -		.omap4 = {
+>> -			.clkctrl_offs = DRA7XX_CM_IPU_TIMER8_CLKCTRL_OFFSET,
+>> -			.context_offs = DRA7XX_RM_IPU_TIMER8_CONTEXT_OFFSET,
+>> -			.modulemode   = MODULEMODE_SWCTRL,
+>> -		},
+>> -	},
+>> -};
+>> -
+>> -/* timer9 */
+>> -static struct omap_hwmod dra7xx_timer9_hwmod = {
+>> -	.name		= "timer9",
+>> -	.class		= &dra7xx_timer_hwmod_class,
+>> -	.clkdm_name	= "l4per_clkdm",
+>> -	.main_clk	= "timer9_gfclk_mux",
+>> -	.prcm = {
+>> -		.omap4 = {
+>> -			.clkctrl_offs = DRA7XX_CM_L4PER_TIMER9_CLKCTRL_OFFSET,
+>> -			.context_offs = DRA7XX_RM_L4PER_TIMER9_CONTEXT_OFFSET,
+>> -			.modulemode   = MODULEMODE_SWCTRL,
+>> -		},
+>> -	},
+>> -};
+>> -
+>> -/* timer10 */
+>> -static struct omap_hwmod dra7xx_timer10_hwmod = {
+>> -	.name		= "timer10",
+>> -	.class		= &dra7xx_timer_1ms_hwmod_class,
+>> -	.clkdm_name	= "l4per_clkdm",
+>> -	.main_clk	= "timer10_gfclk_mux",
+>> -	.prcm = {
+>> -		.omap4 = {
+>> -			.clkctrl_offs = DRA7XX_CM_L4PER_TIMER10_CLKCTRL_OFFSET,
+>> -			.context_offs = DRA7XX_RM_L4PER_TIMER10_CONTEXT_OFFSET,
+>> -			.modulemode   = MODULEMODE_SWCTRL,
+>> -		},
+>> -	},
+>> -};
+>> -
+>> -/* timer11 */
+>> -static struct omap_hwmod dra7xx_timer11_hwmod = {
+>> -	.name		= "timer11",
+>> -	.class		= &dra7xx_timer_hwmod_class,
+>> -	.clkdm_name	= "l4per_clkdm",
+>> -	.main_clk	= "timer11_gfclk_mux",
+>> -	.prcm = {
+>> -		.omap4 = {
+>> -			.clkctrl_offs = DRA7XX_CM_L4PER_TIMER11_CLKCTRL_OFFSET,
+>> -			.context_offs = DRA7XX_RM_L4PER_TIMER11_CONTEXT_OFFSET,
+>> -			.modulemode   = MODULEMODE_SWCTRL,
+>> -		},
+>> -	},
+>> -};
+>> -
+>> -/* timer12 */
+>> -static struct omap_hwmod dra7xx_timer12_hwmod = {
+>> -	.name		= "timer12",
+>> -	.class		= &dra7xx_timer_hwmod_class,
+>> -	.clkdm_name	= "wkupaon_clkdm",
+>> -	.main_clk	= "secure_32k_clk_src_ck",
+>> -	.prcm = {
+>> -		.omap4 = {
+>> -			.clkctrl_offs = DRA7XX_CM_WKUPAON_TIMER12_CLKCTRL_OFFSET,
+>> -			.context_offs = DRA7XX_RM_WKUPAON_TIMER12_CONTEXT_OFFSET,
+>> -		},
+>> -	},
+>> -};
+>> -
+>> -/* timer13 */
+>> -static struct omap_hwmod dra7xx_timer13_hwmod = {
+>> -	.name		= "timer13",
+>> -	.class		= &dra7xx_timer_hwmod_class,
+>> -	.clkdm_name	= "l4per3_clkdm",
+>> -	.main_clk	= "timer13_gfclk_mux",
+>> -	.prcm = {
+>> -		.omap4 = {
+>> -			.clkctrl_offs = DRA7XX_CM_L4PER3_TIMER13_CLKCTRL_OFFSET,
+>> -			.context_offs = DRA7XX_RM_L4PER3_TIMER13_CONTEXT_OFFSET,
+>> -			.modulemode   = MODULEMODE_SWCTRL,
+>> -		},
+>> -	},
+>> -};
+>> -
+>> -/* timer14 */
+>> -static struct omap_hwmod dra7xx_timer14_hwmod = {
+>> -	.name		= "timer14",
+>> -	.class		= &dra7xx_timer_hwmod_class,
+>> -	.clkdm_name	= "l4per3_clkdm",
+>> -	.main_clk	= "timer14_gfclk_mux",
+>> -	.prcm = {
+>> -		.omap4 = {
+>> -			.clkctrl_offs = DRA7XX_CM_L4PER3_TIMER14_CLKCTRL_OFFSET,
+>> -			.context_offs = DRA7XX_RM_L4PER3_TIMER14_CONTEXT_OFFSET,
+>> -			.modulemode   = MODULEMODE_SWCTRL,
+>> -		},
+>> -	},
+>> -};
+>> -
+>> -/* timer15 */
+>> -static struct omap_hwmod dra7xx_timer15_hwmod = {
+>> -	.name		= "timer15",
+>> -	.class		= &dra7xx_timer_hwmod_class,
+>> -	.clkdm_name	= "l4per3_clkdm",
+>> -	.main_clk	= "timer15_gfclk_mux",
+>> -	.prcm = {
+>> -		.omap4 = {
+>> -			.clkctrl_offs = DRA7XX_CM_L4PER3_TIMER15_CLKCTRL_OFFSET,
+>> -			.context_offs = DRA7XX_RM_L4PER3_TIMER15_CONTEXT_OFFSET,
+>> -			.modulemode   = MODULEMODE_SWCTRL,
+>> -		},
+>> -	},
+>> -};
+>> -
+>> -/* timer16 */
+>> -static struct omap_hwmod dra7xx_timer16_hwmod = {
+>> -	.name		= "timer16",
+>> -	.class		= &dra7xx_timer_hwmod_class,
+>> -	.clkdm_name	= "l4per3_clkdm",
+>> -	.main_clk	= "timer16_gfclk_mux",
+>> -	.prcm = {
+>> -		.omap4 = {
+>> -			.clkctrl_offs = DRA7XX_CM_L4PER3_TIMER16_CLKCTRL_OFFSET,
+>> -			.context_offs = DRA7XX_RM_L4PER3_TIMER16_CONTEXT_OFFSET,
+>> -			.modulemode   = MODULEMODE_SWCTRL,
+>> -		},
+>> -	},
+>> -};
+>> -
+>>   /*
+>>    * 'usb_otg_ss' class
+>>    *
+>> @@ -1818,102 +1639,6 @@ static struct omap_hwmod_ocp_if dra7xx_l4_per1__timer4 = {
+>>   	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>>   };
+>>   
+>> -/* l4_per3 -> timer5 */
+>> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer5 = {
+>> -	.master		= &dra7xx_l4_per3_hwmod,
+>> -	.slave		= &dra7xx_timer5_hwmod,
+>> -	.clk		= "l3_iclk_div",
+>> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> -};
+>> -
+>> -/* l4_per3 -> timer6 */
+>> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer6 = {
+>> -	.master		= &dra7xx_l4_per3_hwmod,
+>> -	.slave		= &dra7xx_timer6_hwmod,
+>> -	.clk		= "l3_iclk_div",
+>> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> -};
+>> -
+>> -/* l4_per3 -> timer7 */
+>> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer7 = {
+>> -	.master		= &dra7xx_l4_per3_hwmod,
+>> -	.slave		= &dra7xx_timer7_hwmod,
+>> -	.clk		= "l3_iclk_div",
+>> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> -};
+>> -
+>> -/* l4_per3 -> timer8 */
+>> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer8 = {
+>> -	.master		= &dra7xx_l4_per3_hwmod,
+>> -	.slave		= &dra7xx_timer8_hwmod,
+>> -	.clk		= "l3_iclk_div",
+>> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> -};
+>> -
+>> -/* l4_per1 -> timer9 */
+>> -static struct omap_hwmod_ocp_if dra7xx_l4_per1__timer9 = {
+>> -	.master		= &dra7xx_l4_per1_hwmod,
+>> -	.slave		= &dra7xx_timer9_hwmod,
+>> -	.clk		= "l3_iclk_div",
+>> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> -};
+>> -
+>> -/* l4_per1 -> timer10 */
+>> -static struct omap_hwmod_ocp_if dra7xx_l4_per1__timer10 = {
+>> -	.master		= &dra7xx_l4_per1_hwmod,
+>> -	.slave		= &dra7xx_timer10_hwmod,
+>> -	.clk		= "l3_iclk_div",
+>> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> -};
+>> -
+>> -/* l4_per1 -> timer11 */
+>> -static struct omap_hwmod_ocp_if dra7xx_l4_per1__timer11 = {
+>> -	.master		= &dra7xx_l4_per1_hwmod,
+>> -	.slave		= &dra7xx_timer11_hwmod,
+>> -	.clk		= "l3_iclk_div",
+>> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> -};
+>> -
+>> -/* l4_wkup -> timer12 */
+>> -static struct omap_hwmod_ocp_if dra7xx_l4_wkup__timer12 = {
+>> -	.master		= &dra7xx_l4_wkup_hwmod,
+>> -	.slave		= &dra7xx_timer12_hwmod,
+>> -	.clk		= "wkupaon_iclk_mux",
+>> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> -};
+>> -
+>> -/* l4_per3 -> timer13 */
+>> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer13 = {
+>> -	.master		= &dra7xx_l4_per3_hwmod,
+>> -	.slave		= &dra7xx_timer13_hwmod,
+>> -	.clk		= "l3_iclk_div",
+>> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> -};
+>> -
+>> -/* l4_per3 -> timer14 */
+>> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer14 = {
+>> -	.master		= &dra7xx_l4_per3_hwmod,
+>> -	.slave		= &dra7xx_timer14_hwmod,
+>> -	.clk		= "l3_iclk_div",
+>> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> -};
+>> -
+>> -/* l4_per3 -> timer15 */
+>> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer15 = {
+>> -	.master		= &dra7xx_l4_per3_hwmod,
+>> -	.slave		= &dra7xx_timer15_hwmod,
+>> -	.clk		= "l3_iclk_div",
+>> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> -};
+>> -
+>> -/* l4_per3 -> timer16 */
+>> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer16 = {
+>> -	.master		= &dra7xx_l4_per3_hwmod,
+>> -	.slave		= &dra7xx_timer16_hwmod,
+>> -	.clk		= "l3_iclk_div",
+>> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> -};
+>> -
+>>   /* l4_per3 -> usb_otg_ss1 */
+>>   static struct omap_hwmod_ocp_if dra7xx_l4_per3__usb_otg_ss1 = {
+>>   	.master		= &dra7xx_l4_per3_hwmod,
+>> @@ -2045,17 +1770,6 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
+>>   	&dra7xx_l4_per1__timer2,
+>>   	&dra7xx_l4_per1__timer3,
+>>   	&dra7xx_l4_per1__timer4,
+>> -	&dra7xx_l4_per3__timer5,
+>> -	&dra7xx_l4_per3__timer6,
+>> -	&dra7xx_l4_per3__timer7,
+>> -	&dra7xx_l4_per3__timer8,
+>> -	&dra7xx_l4_per1__timer9,
+>> -	&dra7xx_l4_per1__timer10,
+>> -	&dra7xx_l4_per1__timer11,
+>> -	&dra7xx_l4_per3__timer13,
+>> -	&dra7xx_l4_per3__timer14,
+>> -	&dra7xx_l4_per3__timer15,
+>> -	&dra7xx_l4_per3__timer16,
+>>   	&dra7xx_l4_per3__usb_otg_ss1,
+>>   	&dra7xx_l4_per3__usb_otg_ss2,
+>>   	&dra7xx_l4_per3__usb_otg_ss3,
+>> @@ -2069,12 +1783,6 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
+>>   	NULL,
+>>   };
+>>   
+>> -/* GP-only hwmod links */
+>> -static struct omap_hwmod_ocp_if *dra7xx_gp_hwmod_ocp_ifs[] __initdata = {
+>> -	&dra7xx_l4_wkup__timer12,
+>> -	NULL,
+>> -};
+>> -
+>>   /* SoC variant specific hwmod links */
+>>   static struct omap_hwmod_ocp_if *dra76x_hwmod_ocp_ifs[] __initdata = {
+>>   	&dra7xx_l4_per3__usb_otg_ss4,
+>> @@ -2124,8 +1832,5 @@ int __init dra7xx_hwmod_init(void)
+>>   		}
+>>   	}
+>>   
+>> -	if (!ret && omap_type() == OMAP2_DEVICE_TYPE_GP)
+>> -		ret = omap_hwmod_register_links(dra7xx_gp_hwmod_ocp_ifs);
+>> -
+> 
+> 
+> Maybe I'm missing it but how is this logic getting replicated when using
+> ti,sync? We runtime detect here if we are on an HS device and if so let
+> the secure world manage these device's pm/clocks, without this the
+> non-secure side managment will be unconditional.
 
+This is handled by the clkctrl driver itself. timer12 is marked as 
+NON-SEC device supported only, so it doesn't get registered on HS chips.
 
-Le mer., d=C3=A9c. 11, 2019 at 19:02, zhouyanjie=20
-<zhouyanjie@wanyeetech.com> a =C3=A9crit :
->=20
->=20
-> On 2019=E5=B9=B412=E6=9C=8811=E6=97=A5 01:19, Paul Cercueil wrote:
->> Hi Zhou,
->>=20
->>=20
->> Le mar., d=C3=A9c. 10, 2019 at 20:02, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou =
-Yanjie)=20
->> =7F<zhouyanjie@wanyeetech.com> a =C3=A9crit :
->>> Add a device tree for the Ingenic X1000 based YSH & ATIL CU Neo=20
->>> board.
->>> Note that this is unselectable via Kconfig until the X1000 SoC is=20
->>> made
->>> selectable in a later commit.
->>=20
->> I believe it is now selectable via Kconfig, right?
->>=20
->=20
-> Oh, apologize for my careless, it should be selectable now.
-> Do I need to send a v9 to fix the commit message?
+I guess the lack of the clock fails the ti-sysc part of the registration 
+logic also. Tony?
 
-Maybe Paul Burton can just remove the last sentence when merging.
-
--Paul
-
-
->> For the whole series:
->> Acked-by: Paul Cercueil <paul@crapouillou.net>
->>=20
->> Cheers,
->> Paul
->>=20
->>=20
->>> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wa=
-nyeetech.com>
->>> ---
->>>=20
->>> Notes:
->>>     v1->v2:
->>>     Rebase on top of mips-next, use TCU for system timer and=20
->>> =7F=7Fclocksource.
->>>=20
->>>     v2->v3:
->>>     No change.
->>>=20
->>>     v3->v4:
->>>     1.Adjust "model" in "cu1000.dts" to match the description in=20
->>> =7F=7F"devices.yaml".
->>>     2.Adjust "bool" in "Kconfig" to avoid duplicate names with=20
->>> =7F=7Fsubsequent boards.
->>>=20
->>>     v4->v5:
->>>     1.Rename "cu1000" to "cu1000-neo" to prevent conflicts with=20
->>> =7F=7Fsubsequent boards
->>>       such as "cu1000-geo", and so on.
->>>     2.Remove "CONFIG_HZ=3D100" and "mem=3D32M@0x0" from defconfg.
->>>     3.Modify incorrect comments in DT.
->>>=20
->>>     v5->v6:
->>>     1.Use "stdout-path =3D "serial2:115200n8"" instead "stdout-path =3D=
-=20
->>> =7F=7F&uart2" in DT.
->>>     2.Remove "console=3DttyS2,115200n8" and=20
->>> "CONFIG_CMDLINE_OVERRIDE=3Dy" =7F=7Ffrom defconfg.
->>>=20
->>>     v6->v7:
->>>     Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
->>>     to "=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeetec=
-h.com>" because
->>>     the old mailbox is in an unstable state.
->>>=20
->>>     v7->v8:
->>>     Merge [6/6] in v7 to this patch.
->>>=20
->>>  arch/mips/boot/dts/ingenic/Makefile       |   1 +
->>>  arch/mips/boot/dts/ingenic/cu1000-neo.dts |  99=20
->>> =7F=7F++++++++++++++++++++++++++
->>>  arch/mips/configs/cu1000-neo_defconfig    | 111=20
->>> =7F=7F++++++++++++++++++++++++++++++
->>>  arch/mips/jz4740/Kconfig                  |   4 ++
->>>  4 files changed, 215 insertions(+)
->>>  create mode 100644 arch/mips/boot/dts/ingenic/cu1000-neo.dts
->>>  create mode 100644 arch/mips/configs/cu1000-neo_defconfig
->>>=20
->>> diff --git a/arch/mips/boot/dts/ingenic/Makefile=20
->>> =7F=7Fb/arch/mips/boot/dts/ingenic/Makefile
->>> index 9cc4844..e165429 100644
->>> --- a/arch/mips/boot/dts/ingenic/Makefile
->>> +++ b/arch/mips/boot/dts/ingenic/Makefile
->>> @@ -2,5 +2,6 @@
->>>  dtb-$(CONFIG_JZ4740_QI_LB60)    +=3D qi_lb60.dtb
->>>  dtb-$(CONFIG_JZ4770_GCW0)    +=3D gcw0.dtb
->>>  dtb-$(CONFIG_JZ4780_CI20)    +=3D ci20.dtb
->>> +dtb-$(CONFIG_X1000_CU1000_NEO)    +=3D cu1000-neo.dtb
->>>=20
->>>  obj-$(CONFIG_BUILTIN_DTB)    +=3D $(addsuffix .o, $(dtb-y))
->>> diff --git a/arch/mips/boot/dts/ingenic/cu1000-neo.dts=20
->>> =7F=7Fb/arch/mips/boot/dts/ingenic/cu1000-neo.dts
->>> new file mode 100644
->>> index 00000000..b0733da
->>> --- /dev/null
->>> +++ b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
->>> @@ -0,0 +1,99 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/dts-v1/;
->>> +
->>> +#include "x1000.dtsi"
->>> +#include <dt-bindings/gpio/gpio.h>
->>> +#include <dt-bindings/clock/ingenic,tcu.h>
->>> +
->>> +/ {
->>> +    compatible =3D "yna,cu1000-neo", "ingenic,x1000";
->>> +    model =3D "YSH & ATIL General Board CU Neo";
->>> +
->>> +    aliases {
->>> +        serial2 =3D &uart2;
->>> +    };
->>> +
->>> +    chosen {
->>> +        stdout-path =3D "serial2:115200n8";
->>> +    };
->>> +
->>> +    memory {
->>> +        device_type =3D "memory";
->>> +        reg =3D <0x0 0x04000000>;
->>> +    };
->>> +};
->>> +
->>> +&exclk {
->>> +    clock-frequency =3D <24000000>;
->>> +};
->>> +
->>> +&tcu {
->>> +    /* 1500 kHz for the system timer and clocksource */
->>> +    assigned-clocks =3D <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER2>;
->>> +    assigned-clock-rates =3D <1500000>, <1500000>;
->>> +
->>> +    /* Use channel #0 for the system timer channel #2 for the=20
->>> =7F=7Fclocksource */
->>> +    ingenic,pwm-channels-mask =3D <0xfa>;
->>> +};
->>> +
->>> +&uart2 {
->>> +    pinctrl-names =3D "default";
->>> +    pinctrl-0 =3D <&pins_uart2>;
->>> +
->>> +    status =3D "okay";
->>> +};
->>> +
->>> +&mac {
->>> +    phy-mode =3D "rmii";
->>> +    phy-handle =3D <&lan8720a>;
->>> +
->>> +    pinctrl-names =3D "default";
->>> +    pinctrl-0 =3D <&pins_mac>;
->>> +
->>> +    snps,reset-gpio =3D <&gpc 23 GPIO_ACTIVE_LOW>; /* PC23 */
->>> +    snps,reset-active-low;
->>> +    snps,reset-delays-us =3D <0 10000 30000>;
->>> +
->>> +    status =3D "okay";
->>> +};
->>> +
->>> +&mdio {
->>> +    status =3D "okay";
->>> +
->>> +    lan8720a: ethernet-phy@0 {
->>> +        compatible =3D "ethernet-phy-id0007.c0f0",=20
->>> =7F=7F"ethernet-phy-ieee802.3-c22";
->>> +        reg =3D <0>;
->>> +    };
->>> +};
->>> +
->>> +&msc0 {
->>> +    bus-width =3D <8>;
->>> +    max-frequency =3D <50000000>;
->>> +
->>> +    pinctrl-names =3D "default";
->>> +    pinctrl-0 =3D <&pins_msc0>;
->>> +
->>> +    non-removable;
->>> +
->>> +    status =3D "okay";
->>> +};
->>> +
->>> +&pinctrl {
->>> +    pins_uart2: uart2 {
->>> +        function =3D "uart2";
->>> +        groups =3D "uart2-data-d";
->>> +        bias-disable;
->>> +    };
->>> +
->>> +    pins_mac: mac {
->>> +        function =3D "mac";
->>> +        groups =3D "mac";
->>> +        bias-disable;
->>> +    };
->>> +
->>> +    pins_msc0: msc0 {
->>> +        function =3D "mmc0";
->>> +        groups =3D "mmc0-1bit", "mmc0-4bit", "mmc0-8bit";
->>> +        bias-disable;
->>> +    };
->>> +};
->>> diff --git a/arch/mips/configs/cu1000-neo_defconfig=20
->>> =7F=7Fb/arch/mips/configs/cu1000-neo_defconfig
->>> new file mode 100644
->>> index 00000000..9f988ed
->>> --- /dev/null
->>> +++ b/arch/mips/configs/cu1000-neo_defconfig
->>> @@ -0,0 +1,111 @@
->>> +CONFIG_LOCALVERSION_AUTO=3Dy
->>> +CONFIG_KERNEL_GZIP=3Dy
->>> +CONFIG_SYSVIPC=3Dy
->>> +CONFIG_NO_HZ_IDLE=3Dy
->>> +CONFIG_HIGH_RES_TIMERS=3Dy
->>> +CONFIG_PREEMPT=3Dy
->>> +CONFIG_IKCONFIG=3Dy
->>> +CONFIG_IKCONFIG_PROC=3Dy
->>> +CONFIG_LOG_BUF_SHIFT=3D14
->>> +CONFIG_CGROUPS=3Dy
->>> +CONFIG_MEMCG=3Dy
->>> +CONFIG_MEMCG_KMEM=3Dy
->>> +CONFIG_CGROUP_SCHED=3Dy
->>> +CONFIG_CGROUP_FREEZER=3Dy
->>> +CONFIG_CGROUP_DEVICE=3Dy
->>> +CONFIG_CGROUP_CPUACCT=3Dy
->>> +CONFIG_NAMESPACES=3Dy
->>> +CONFIG_USER_NS=3Dy
->>> +CONFIG_CC_OPTIMIZE_FOR_SIZE=3Dy
->>> +CONFIG_SYSCTL_SYSCALL=3Dy
->>> +CONFIG_KALLSYMS_ALL=3Dy
->>> +CONFIG_EMBEDDED=3Dy
->>> +# CONFIG_VM_EVENT_COUNTERS is not set
->>> +# CONFIG_COMPAT_BRK is not set
->>> +CONFIG_SLAB=3Dy
->>> +CONFIG_MACH_INGENIC=3Dy
->>> +CONFIG_X1000_CU1000_NEO=3Dy
->>> +CONFIG_HIGHMEM=3Dy
->>> +CONFIG_HZ_100=3Dy
->>> +# CONFIG_SECCOMP is not set
->>> +# CONFIG_SUSPEND is not set
->>> +# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
->>> +# CONFIG_COMPACTION is not set
->>> +CONFIG_CMA=3Dy
->>> +CONFIG_CMA_AREAS=3D7
->>> +CONFIG_NET=3Dy
->>> +CONFIG_UNIX=3Dy
->>> +CONFIG_INET=3Dy
->>> +CONFIG_UEVENT_HELPER=3Dy
->>> +CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
->>> +CONFIG_DEVTMPFS=3Dy
->>> +# CONFIG_FW_LOADER is not set
->>> +# CONFIG_ALLOW_DEV_COREDUMP is not set
->>> +CONFIG_NETDEVICES=3Dy
->>> +CONFIG_STMMAC_ETH=3Dy
->>> +CONFIG_SMSC_PHY=3Dy
->>> +# CONFIG_INPUT_MOUSEDEV is not set
->>> +# CONFIG_INPUT_KEYBOARD is not set
->>> +# CONFIG_INPUT_MOUSE is not set
->>> +# CONFIG_SERIO is not set
->>> +CONFIG_VT_HW_CONSOLE_BINDING=3Dy
->>> +CONFIG_LEGACY_PTY_COUNT=3D2
->>> +CONFIG_SERIAL_EARLYCON=3Dy
->>> +CONFIG_SERIAL_8250=3Dy
->>> +CONFIG_SERIAL_8250_CONSOLE=3Dy
->>> +CONFIG_SERIAL_8250_NR_UARTS=3D3
->>> +CONFIG_SERIAL_8250_RUNTIME_UARTS=3D3
->>> +CONFIG_SERIAL_8250_INGENIC=3Dy
->>> +CONFIG_SERIAL_OF_PLATFORM=3Dy
->>> +# CONFIG_HW_RANDOM is not set
->>> +CONFIG_GPIO_SYSFS=3Dy
->>> +CONFIG_WATCHDOG=3Dy
->>> +CONFIG_JZ4740_WDT=3Dy
->>> +# CONFIG_HWMON is not set
->>> +# CONFIG_LCD_CLASS_DEVICE is not set
->>> +# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
->>> +# CONFIG_VGA_CONSOLE is not set
->>> +# CONFIG_HID is not set
->>> +# CONFIG_USB_SUPPORT is not set
->>> +CONFIG_MMC=3Dy
->>> +CONFIG_MMC_JZ4740=3Dy
->>> +CONFIG_RTC_CLASS=3Dy
->>> +CONFIG_RTC_DRV_JZ4740=3Dy
->>> +CONFIG_DMADEVICES=3Dy
->>> +CONFIG_DMA_JZ4780=3Dy
->>> +# CONFIG_IOMMU_SUPPORT is not set
->>> +CONFIG_NVMEM=3Dy
->>> +CONFIG_NVMEM_SYSFS=3Dy
->>> +CONFIG_EXT4_FS=3Dy
->>> +# CONFIG_DNOTIFY is not set
->>> +CONFIG_AUTOFS_FS=3Dy
->>> +CONFIG_PROC_KCORE=3Dy
->>> +# CONFIG_PROC_PAGE_MONITOR is not set
->>> +CONFIG_TMPFS=3Dy
->>> +CONFIG_CONFIGFS_FS=3Dy
->>> +CONFIG_NLS=3Dy
->>> +CONFIG_NLS_CODEPAGE_936=3Dy
->>> +CONFIG_NLS_CODEPAGE_950=3Dy
->>> +CONFIG_NLS_ASCII=3Dy
->>> +CONFIG_NLS_ISO8859_1=3Dy
->>> +CONFIG_NLS_UTF8=3Dy
->>> +CONFIG_CRYPTO_ECHAINIV=3Dy
->>> +CONFIG_CRYPTO_AES=3Dy
->>> +CONFIG_CRYPTO_DEFLATE=3Dy
->>> +CONFIG_CRYPTO_LZO=3Dy
->>> +CONFIG_PRINTK_TIME=3Dy
->>> +CONFIG_CONSOLE_LOGLEVEL_DEFAULT=3D15
->>> +CONFIG_CONSOLE_LOGLEVEL_QUIET=3D15
->>> +CONFIG_MESSAGE_LOGLEVEL_DEFAULT=3D7
->>> +CONFIG_DEBUG_INFO=3Dy
->>> +CONFIG_STRIP_ASM_SYMS=3Dy
->>> +CONFIG_DEBUG_FS=3Dy
->>> +CONFIG_MAGIC_SYSRQ=3Dy
->>> +CONFIG_PANIC_ON_OOPS=3Dy
->>> +CONFIG_PANIC_TIMEOUT=3D10
->>> +# CONFIG_SCHED_DEBUG is not set
->>> +# CONFIG_DEBUG_PREEMPT is not set
->>> +CONFIG_STACKTRACE=3Dy
->>> +# CONFIG_FTRACE is not set
->>> +CONFIG_CMDLINE_BOOL=3Dy
->>> +CONFIG_CMDLINE=3D"earlycon clk_ignore_unused"
->>> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
->>> index 6b96844..412d2fa 100644
->>> --- a/arch/mips/jz4740/Kconfig
->>> +++ b/arch/mips/jz4740/Kconfig
->>> @@ -16,6 +16,10 @@ config JZ4780_CI20
->>>      bool "MIPS Creator CI20"
->>>      select MACH_JZ4780
->>>=20
->>> +config X1000_CU1000_NEO
->>> +    bool "YSH & ATIL CU1000 Module with Neo backplane"
->>> +    select MACH_X1000
->>> +
->>>  endchoice
->>>=20
->>>  config MACH_JZ4740
->>> --
->>> 2.7.4
->>>=20
->>=20
->=20
-
-=
-
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
