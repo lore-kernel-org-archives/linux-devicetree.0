@@ -2,192 +2,128 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058D7C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 00:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E27C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 01:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA46A206D5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 00:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAC2420838
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 01:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MSQi9449"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="T3SunRuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfLKAqH (ORCPT
+        id S1726364AbfLKBGW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Dec 2019 19:46:07 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44229 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfLKAqH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Dec 2019 19:46:07 -0500
-Received: by mail-ot1-f65.google.com with SMTP id x3so17245625oto.11;
-        Tue, 10 Dec 2019 16:46:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dNo8gQB2Lns6lssefACZcuCEFfgXMn9otoHM3Ump6ZU=;
-        b=MSQi9449EbBVtE8SBD/GOeFr9lc1VEeadwIPv0OUHQIqzCemeFd7M/BqaTHJH2HbFC
-         VyC2WdGAJ0Oy7BMvm6c+VXsJmVA9T5O44nKl/i7bv6PirSOnQbfzSRo6tWVFKd5w1Tzp
-         EM+9Ny2MRBFb5NHvtnHw5Dye3NOTdNk7MqGkiIxyjoSL4Fv19pYxLtPnlF66mlPaY0BU
-         ccadh1t27sktMAwSiei7ID54Jtbum+31GKoG2tV0xt3XzxvvBIYyHzo1sRSy99F1emGF
-         BpQeZnZqYUN6v+/AO5QZoW5U5JqSERSUYzkuCLqTi/DD2JIqIxn8V8guYI5nTfJyhAcF
-         Toaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dNo8gQB2Lns6lssefACZcuCEFfgXMn9otoHM3Ump6ZU=;
-        b=YqcGZO+Ni9INFPO5Azmc4aJmV13XVhoWEiC/RLvx8iXp/UOL+6IZl20XkuvlbrEpeg
-         79jnf94A4odAphi3f064Scrw3z3YsUEIdGjeGb9ucQfjcDPsQnwayJdY4+h35GdBNdGL
-         S6gbCiNMmeVQuhTEfjLfF03DS9MioAggST7JUy9QLW2O1e36bHDFVxLGNJF3N7VA7OpE
-         mqzM/RBSIj+MPgk/ov9CGw5GJR9STCKmVo/UUT86JjEx4kgmDY7NKcT+1PzOGNngmtYT
-         gpLvJZCnENsg0mPEs0xWWh1Bv/D8u6uW8fYX7m/3LDSGSsFfA7OCGmW+M11Nz3iUz0cF
-         9fkA==
-X-Gm-Message-State: APjAAAXz1o4+FH5gPoIocJXydWYmteqp6s24sLCAuVdjliXSdsyZDxu4
-        yvFPKKmjQ1vC08WISTm8wDvEuXO1yUU7lYgA8Co=
-X-Google-Smtp-Source: APXvYqxlHTr1UZyzC6aCajvAM4W2Nsg3YlT+KI7UUGo3jxS4zv5rW02mvvBuzLyLP3MDtSmh3sJHzcCwjpOwaw6OzaY=
-X-Received: by 2002:a9d:4f0e:: with SMTP id d14mr452420otl.90.1576025165539;
- Tue, 10 Dec 2019 16:46:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20191014141718.22603-1-narmstrong@baylibre.com>
- <20191014141718.22603-2-narmstrong@baylibre.com> <20191023201141.GA21235@bogus>
- <CA+3zgmsJPsvXgsjDQKKrSG+UNdY3SK+hKCTD2X3hGG+OXejHig@mail.gmail.com>
- <CAKgpwJWU3jB0DWEKE09TOV+YLceBFJ75ZirAXQbuhj8v3FwjXg@mail.gmail.com>
- <c32007f5-88b9-45c5-b542-b1dc4dbc76ea@baylibre.com> <CAKgpwJVHF6Ytdt9kq5SwiixFDLym_UPG51aXag1nVVay0pzofQ@mail.gmail.com>
- <45212db9-e366-2669-5c0a-3c5bd06287f6@synopsys.com> <ce35b6d2-7ed1-be2d-6e38-4c6e89340a40@baylibre.com>
-In-Reply-To: <ce35b6d2-7ed1-be2d-6e38-4c6e89340a40@baylibre.com>
-From:   Tim <elatllat@gmail.com>
-Date:   Tue, 10 Dec 2019 19:45:54 -0500
-Message-ID: <CA+3zgmtWQwdJG5NT-t7__Mqt5u_U3m4+HEL6p4PWxx5NES7_AQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] doc: dt: bindings: usb: dwc3: Update entries for
- disabling SS instances in park mode
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "khilman@baylibre.com" <khilman@baylibre.com>,
+        Tue, 10 Dec 2019 20:06:22 -0500
+Received: from mail-eopbgr20080.outbound.protection.outlook.com ([40.107.2.80]:10886
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726362AbfLKBGW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Dec 2019 20:06:22 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FVqLXKOrQzJK2OANme7zss5w1WCYHjm1x08B8d1JXt9jjzOGdotLa88SiQWYmT69hbzRqFRzoLNtbumyXhjCiCIqiyokYHrVOJ8XshRkOv2rrSv/eUIURwAvPiS7qIT0EByQk0wqNdbo28ZZOrnTKFbwyxeV7/AkJRmqgKQRXzd6cNVIrKnAkakMl71txvHFvmFBoFGjmTCtvFPX/oucdtm3TIMG4UdsP7vlPX87y5je4IpywjpgWc/1Fytsc9AprafACibWiDJbWq7COLCA1DBRa18JAnP/DDLp5alF6Zt5t7rUQT3s+QWRWJBMnbJlORfamXFCQjO4XlPrJsCX5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lP2NOVOLsq+AI4DJZBETqqWXxPuUTGlYLuEPgi11Fc8=;
+ b=Ux8VZQT99jzwUT+flkhcEzHJSwC09alhbRJ/RaZBUcOEgwW5qh8jJ47+UoFRqInsBcQ+ks2g7gaFhi+MN4y/mC5JpE+bOimv8Gk+B3XJIJy0gIYTE+lgOxcxW7Tl6f7cbO1NPPAKz7b6xJyQygjHUSvfGEF2Gq6NK2GA6omTOCQVYJTjWd7p9acwU/D1MqNs7JMzSKJfT623+9YnluDoSXPhobkrTXl6jqn85PHc4vet4CISY4XJg6hgaz2hopxAgvTiHku1tOmbQHendTR/7MvshdrRLhyJzRK1aTktq/wKaNnPWUvYquwZGVG9MQcOUPuqHrrzXAGxO4FKj17acA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lP2NOVOLsq+AI4DJZBETqqWXxPuUTGlYLuEPgi11Fc8=;
+ b=T3SunRuLE2uoNcRJikVzZCJlxbTDqKXvwqStdwFuDnwmqh6HMdxcXdu7B8GHJTSo0CV1L8K6BrwSxTG68bvR2E66nJlaTxV4y74f74eE1kGA08JR6rpKqOOLzhrHxiEWOS0QmPpgw/YiMLb5hdwWcsQfhHzAjeg0zk8kTi8DrRk=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3818.eurprd04.prod.outlook.com (52.134.71.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.14; Wed, 11 Dec 2019 01:06:17 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::b5ce:fe6b:6c06:fdb1]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::b5ce:fe6b:6c06:fdb1%6]) with mapi id 15.20.2516.018; Wed, 11 Dec 2019
+ 01:06:17 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Leonard Crestez <leonard.crestez@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-amlogic@lists.infradead.org" 
-        <linux-amlogic@lists.infradead.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dongjin Kim <tobetter@gmail.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/3] ARM: dts: imx6ul-14x14-evk: Add sensors' GPIO
+ regulator
+Thread-Topic: [PATCH 1/3] ARM: dts: imx6ul-14x14-evk: Add sensors' GPIO
+ regulator
+Thread-Index: AQHVikhFrshNJnCYpE+PA285m4wtLae0aMuQ
+Date:   Wed, 11 Dec 2019 01:06:17 +0000
+Message-ID: <DB3PR0402MB3916D3DB4C0CE0017FC2D4B1F55A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1571906920-29966-1-git-send-email-Anson.Huang@nxp.com>
+ <VI1PR04MB7023CD288FCC57806F067FD9EE5B0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB7023CD288FCC57806F067FD9EE5B0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 15fc07c5-c717-429c-19be-08d77dd65379
+x-ms-traffictypediagnostic: DB3PR0402MB3818:|DB3PR0402MB3818:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB38183E1B1397BA05D21BA1BAF55A0@DB3PR0402MB3818.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 024847EE92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(366004)(136003)(346002)(39860400002)(199004)(189003)(4326008)(186003)(26005)(8936002)(7696005)(44832011)(55016002)(53546011)(2906002)(66556008)(64756008)(9686003)(76116006)(33656002)(66476007)(8676002)(52536014)(478600001)(66446008)(54906003)(110136005)(6506007)(81156014)(66946007)(86362001)(316002)(71200400001)(81166006)(5660300002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3818;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rK9Ow2rWuvLI5y5L7F3yKKlUdFO81DFXaG6YwzlR/wqLfbYID9cpZ+ma/IgLCEH+860w9xw/r6hmYslwNXfRjODe5Uw88ncT+9Hh1O1FIMouZ9wowmUUkQS/KuIx8lr6R3Jb4a8VKcV0tsnNM6/Bny4KSzx4shsNBv+eVlmSozjk56Z7tFp+TKy+6dOStXkIyHe37XOSEas2WErJ6xvL80oi3mIcTaJeynpdDsQvjR2boKEWRtz2reHSAcpbb1MTVos+PnJm1h8ucqVhRxO5dJuxIJskjX0U7srO80DK6KPQefkeXOeBla75LjCTYmCxwQctO27/U3bK89GUszmEdt7bfsCBgI9JoH6CCHUbFQb2gA3ZtVjsS358lR23NPzjrs8kr6ntVKWZ86JdBwwRWIC1Uy12MLr2S3u+iZcRder3ge7M8IdaWdAc4DXW+H5oX52lOti56kDo5/P3Gen/xLezBZL5Zi2bJgHLwBN2mDnUM+A5Yf5V8dHgCCaECCde
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15fc07c5-c717-429c-19be-08d77dd65379
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 01:06:17.1963
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BCaaHA9awY1rthJBpTjgea/HzcOllJKqIjJnocFJPVo/PyqhJG+U/O/bQ5cUwORy/ej12Qf+C/dwesh4llL3Ww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3818
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Just writing to say;
-this patch is still performing well on 5.5.0-rc1, and
-there is no speed improvement by adding DWC3_GUCTL_NAK_PER_ENH_HS BIT(17)
-    I get up to 3890 ms second lag with "ping -s 5120 $IP" when
-copying between USB HDDs either way, but at least this patch stops the
-crashing.
-
-
-On Tue, Dec 10, 2019 at 3:55 AM Neil Armstrong <narmstrong@baylibre.com> wr=
-ote:
->
-> Hi,
->
-> On 12/11/2019 21:03, Thinh Nguyen wrote:
-> > Hi,
-> >
-> > Jun Li wrote:
-> >> This bug exists on all current versions per information I got from Syn=
-opsys.
-> >> + Thinh Nguyen <thinhn@synopsys.com>.
-> >>
-> >> Li Jun
-> >
-> > The GUCTL1.PARKMODE_DISABLE_SS is only available in dwc_usb3 controller
-> > running in host mode. This should not be set for other IPs.
-> >
-> > This can be disabled by default based on IP, but I recommend to have a
-> > property to enable this feature for devices that need this.
->
-> Thanks, so this patchset is the right way to solve this.
->
-> Felipe, would it be possible to have it merged for next release ?
-> Should I resend it ?
->
-> Thanks,
-> Neil
->
-> >
-> >
-> >>
-> >> Neil Armstrong <narmstrong@baylibre.com> =E4=BA=8E2019=E5=B9=B411=E6=
-=9C=8812=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=885:00=E5=86=99=E9=81=
-=93=EF=BC=9A
-> >>> Hi Li,
-> >>>
-> >>> On 11/11/2019 02:58, Jun Li wrote:
-> >>>> Hi Neil
-> >>>>
-> >>>> As I got the information from Synopsys, this bug exists on current I=
-P versions,
-> >>>> and per my tests with external USB3 hub + 2 Super speed udisks on da=
-ta
-> >>>> read by dd, I can reproduce this issue with different kernel version=
-s, also I
-> >>>> didn't see obvious performance drop by dd tests after disable park m=
-ode for
-> >>>> super speed, so should we just disable it by default so no need a qu=
-irk?
-> >>> I don't have any opinion on this, I think the USB & DWC3 maintainers =
-should decide
-> >>> how to handle this.
-> >>>
-> >>> Did Synopsys specified a range of affected IP version ?
-> >>>
-> >>> Neil
-> >>>
-> >>>> Li Jun
-> >>>>
-> >>>> Tim <elatllat@gmail.com> =E4=BA=8E2019=E5=B9=B411=E6=9C=8811=E6=97=
-=A5=E5=91=A8=E4=B8=80 =E4=B8=8A=E5=8D=888:42=E5=86=99=E9=81=93=EF=BC=9A
-> >>>>> Thanks for working on this Neil,
-> >>>>> Is there something that needs doing for this patch to make it into =
-5.3 or 5.4?
-> >>>>> As previously mentioned the patch set fixes the issue on affected h=
-ardware;
-> >>>>>      https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__patchwo=
-rk.kernel.org_patch_11164515_&d=3DDwIFaQ&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=3Du9F=
-YoxKtyhjrGFcyixFYqTjw1ZX0VsG2d8FCmzkTY-w&m=3DBCfRHM9e86039Su0-QvK_yUjNnYrnl=
-_BcvxTtViypT8&s=3DaV5u7uxNX6oTLB3_-qNuzrNvyiqx_rPC6P9TMqG-LNE&e=3D
-> >>>>>
-> >>>>>
-> >>>>>
-> >>>>> On Wed, Oct 23, 2019 at 4:11 PM Rob Herring <robh@kernel.org> wrote=
-:
-> >>>>>> On Mon, Oct 14, 2019 at 04:17:16PM +0200, Neil Armstrong wrote:
-> >>>>>>> This patch updates the documentation with the information related
-> >>>>>>> to the quirks that needs to be added for disabling all SuperSpeed=
- XHCi
-> >>>>>>> instances in park mode.
-> >>>>>>>
-> >>>>>>> CC: Dongjin Kim <tobetter@gmail.com>
-> >>>>>>> Cc: Jianxin Pan <jianxin.pan@amlogic.com>
-> >>>>>>> Reported-by: Tim <elatllat@gmail.com>
-> >>>>>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> >>>>>>> ---
-> >>>>>>>   Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
-> >>>>>>>   1 file changed, 2 insertions(+)
-> >>>>>> Sigh, what's one more to the never ending list of quirks...
-> >>>>>>
-> >>>>>> Acked-by: Rob Herring <robh@kernel.org>
-> >
-> > BR,
-> > Thinh
-> >
->
+DQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzNdIEFSTTogZHRzOiBpbXg2dWwtMTR4MTQtZXZr
+OiBBZGQgc2Vuc29ycycgR1BJTw0KPiByZWd1bGF0b3INCj4gDQo+IE9uIDI0LjEwLjIwMTkgMTE6
+NTEsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+IE9uIGkuTVg2VUwgMTR4MTQgRVZLIGJvYXJkLCBz
+ZW5zb3JzJyBwb3dlciBhcmUgY29udHJvbGxlZCBieQ0KPiA+IEdQSU81X0lPMDIsIGFkZCBHUElP
+IHJlZ3VsYXRvciBmb3Igc2Vuc29ycyB0byBtYW5hZ2UgdGhlaXIgcG93ZXIuDQo+ID4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gDQo+IEZv
+ciBtZSB0aGlzIGJyZWFrcyBuZXR3b3JrIGJvb3Qgb24gaW14NnVsIGV2aywgcmVsZXZhbnQgbG9n
+IHNuaXBwZXQgaXMgdGhpczoNCj4gDQo+ICAgICAgZmVjIDIwYjQwMDAuZXRoZXJuZXQgZXRoMDog
+VW5hYmxlIHRvIGNvbm5lY3QgdG8gcGh5DQo+ICAgICAgSVAtQ29uZmlnOiBGYWlsZWQgdG8gb3Bl
+biBldGgwDQo+IA0KPiBMb29raW5nIGF0IHNjaGVtYXRpY3MgKFNQRi0yODYxNl9DMi5wZGYpIEkg
+c2VlIHRoYXQgU05WU19UQU1QRVIyIHBpbiBpcw0KPiBjb25uZWN0ZWQgdG8gUEVSSV9QV1JFTiB3
+aGljaCBjb250cm9scyBWUEVSSV8zVjMgd2hpY2ggaXMgdXNlZCBhY3Jvc3MNCj4gdGhlIGJvYXJk
+Og0KPiAgICogU2Vuc29ycyAoVlNFTlNPUl8zVjMpDQo+ICAgKiBFdGhlcm5ldCAoVkVORVRfM1Yz
+KQ0KPiAgICogQmx1ZXRvb3RoDQo+ICAgKiBDQU4NCj4gICAqIEFyZHVpbm8gaGVhZGVyDQo+ICAg
+KiBDYW1lcmENCj4gDQo+IE1heWJlIHRoZXJlIGFyZSBib2FyZCByZXZpc2lvbiBkaWZmZXJlbmNl
+cz8gQXMgZmFyIGFzIEkgY2FuIHRlbGwgdGhpcyByZWd1bGF0b3INCj4gaXMgbm90IHNwZWNpZmlj
+IHRvIHNlbnNvcnMgc28gaXQgc2hvdWxkIGJlIGFsd2F5cyBvbi4NCg0KWW91IGFyZSBjb3JyZWN0
+LCB0aGlzIHJlZ3VsYXRvciBjb250cm9scyBtYW55IG90aGVyIHBlcmlwaGVyYWxzLCBJIHNob3Vs
+ZCBtYWtlIGl0IGFsd2F5cyBPTiBmb3Igbm93DQp0byBtYWtlIHN1cmUgTk9UIGJyZWFrIG90aGVy
+IHBlcmlwaGVyYWwsIGFuZCBhZnRlciBhbGwgb3RoZXIgcGVyaXBoZXJhbHMgY29udHJvbGxlZA0K
+YnkgdGhpcyByZWd1bGF0b3IgaGF2ZSBhZGRlZCB0aGlzIHJlZ3VsYXRvciBtYW5hZ2VtZW50LCB0
+aGVuIHRoZSBhbHdheXMgT04gY2FuIGJlDQpyZW1vdmVkLg0KDQpUaGFua3MsDQpBbnNvbg0K
