@@ -2,131 +2,241 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 283FAC2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F22C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC50208C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C5C208C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:14:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Lm5F6nqi"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="wML3HsBD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730783AbfLKPKh (ORCPT
+        id S1730575AbfLKQOP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:10:37 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15745 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730487AbfLKPKg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 10:10:36 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df106e40000>; Wed, 11 Dec 2019 07:10:28 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 11 Dec 2019 07:10:34 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 11 Dec 2019 07:10:34 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
- 2019 15:10:31 +0000
-Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by
- DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Wed, 11 Dec 2019 15:10:30 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id 66AC6447B2; Wed, 11 Dec 2019 17:10:28 +0200 (EET)
-Date:   Wed, 11 Dec 2019 17:10:28 +0200
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mperttunen@nvidia.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <allison@lohutok.net>, <pgaikwad@nvidia.com>,
-        <mturquette@baylibre.com>, <horms+renesas@verge.net.au>,
-        <Jisheng.Zhang@synaptics.com>, <krzk@kernel.org>, <arnd@arndb.de>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>, <vidyas@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
-Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-Message-ID: <20191211151028.GZ28289@pdeschrijver-desktop.Nvidia.com>
-References: <ad3a6743-4b36-fa25-9cc7-72803038ecc5@gmail.com>
- <dc7a057a-0bed-0e6f-0987-edcfec47f867@gmail.com>
- <288a1701-def6-d628-26bc-a305f817bdb1@gmail.com>
- <78644d45-2ae3-121f-99fc-0a46f205907d@nvidia.com>
- <b35916e1-c6ee-52ca-9111-5ae109437b6e@nvidia.com>
- <ccb715cc-c927-ea91-a26e-24d6eeeeef1a@gmail.com>
- <ee1d39d4-9a57-da9b-fce6-8130dac1d2fd@nvidia.com>
- <49da77dc-b346-68eb-9ef8-42cfb3221489@nvidia.com>
- <3f1c9325-3017-62be-1e3b-82fd28540fdf@nvidia.com>
- <6fcbff3d-8695-7cd0-60de-6eb523b6964c@gmail.com>
-MIME-Version: 1.0
+        Wed, 11 Dec 2019 11:14:15 -0500
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.5]:41876 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729522AbfLKQOP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:14:15 -0500
+Received: from [85.158.142.98] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-5.bemta.az-a.eu-central-1.aws.symcld.net id 24/AF-19908-3D511FD5; Wed, 11 Dec 2019 16:14:11 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1WTfUxTVxjGOffethekeiltOBKRWaaLG610xHH
+  BbZk4kquOhW1ZtumQXeRKG6FgWxi4LMMPpJY4O6AgDQhKgQDqJihCxbER+bB8Rb6sONnQzgFu
+  k4rgJh9ZLxfc9t/vfZ8n7/uck3NwVJQj8MWZNB2jUdMJUr4Hpty0crOsX+KMDiq9s4K09uPkk
+  2IbRppGHXyy5HoPj5ztnUfJalMjRv483QrImQE9QubNVSJk7f0hHnmkpgcl60rmANlvLeKTk9
+  ZBlMy8dl3w1ipqMMsqoB7ZMwVUo/mugLrpbEOp2urjfOqnoSY+VWf5iuo9dQZQJ+eDqKnatVE
+  eu3gqdWxS2mc8peGSHUs2rk3rLhrDMsAlsQG444AoR+Hc9McG4OHiNgx2zzQjXFEH4OyJv/ls
+  gREdKHxW82CxEBEmBLaXOxGuGAXQ0nGZzw7jEyTM7fhlkcXETnjy7C2MZZR4yoPmhTCWvYk42
+  NByWGAAuMvDwOmFDZw9HBpv3kFYxoj10GwaWRwjJGhoqvwRcLvaASx5OiVgBXfiDVgzaES4Q/
+  jBJ4dqUG6XDxx2lCz2IUFAS1MvyrEEjt9f4HF+Bt44bAdcPxB233IssRRW2M08jv1gX0k2YHN
+  CIhLm5/gt28t68zGOSWjJzsQ4y4twoSWdayfDzuH6pa0vwaPO00sT18DWi+cw9iiQqMDgwuw4
+  YgSbzP9JzXEgLL36mM/xK7DizEPUvHgVXvBGoQMrBVg1CI3VqOKVukRalSBTBAXJFIpgWbDs1
+  aDX5PRBGS1nUmR7GbVOQ7tUOf25Vq5NT9ybECdXM7pa4HqecQfQngaQNfOHvAWsxhGpREjNTE
+  aLVsYmxaUraa0yRpOSwGhbwBocl0Lh22JntMhLw8QzaftUCa5HvixD3FMqFo55u2ShNplO1Kr
+  iOckGZLhxvPgsKsLUSWrG10e4hTURrEmZon4+Yvmr9AE/X28hcHNzE3kmM5pEle7/+gTwwYHU
+  W3iPneKpUuueb5pwhUBcIY7H/cmG0NH/Sr4ZSLH+nQeFF5o3bB/23PNu2evvRW4Lm5if66vdv
+  XmkUp+VnbEjqezLqt7689V7bA0RoasMMRfXn+q2jga+ebBr8MQVoqlo+u6h8LLkmBeOHf11l3
+  Fra165xuZ/Lyrk8bkVNmlEiOJ8eG7k0HhDVN6WjZ3HTGPfkLyR3xW3xR0P0+JHnznEX3t9mot
+  Gphb5N3i7b9Vvs6Ts3vd+StToTio1PDwjuCrgI2Sq0Z+xpAZ3Fjr1B+yJBWrN9pwrqx/99W3A
+  hy0D+Rtbu1I9wtbVBBz55APJ/p5c36bQ+B329v1JngVTjmpT27Wrl63ppt8k+Lp6Q0FTVsgPA
+  xeKIr67TUpOf19l+2KyObBLimmVtOJlVKOl/wFy6hilpQQAAA==
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-28.tower-223.messagelabs.com!1576080850!204737!1
+X-Originating-IP: [104.47.14.53]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.22; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 19680 invoked from network); 11 Dec 2019 16:14:11 -0000
+Received: from mail-vi1eur04lp2053.outbound.protection.outlook.com (HELO EUR04-VI1-obe.outbound.protection.outlook.com) (104.47.14.53)
+  by server-28.tower-223.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 11 Dec 2019 16:14:11 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PKxKuCIRIHurc9OxCuwuvLAEEJc1THNaRPIKAV4LeH1/j35rN9rF4bbf5vJ0iBL1oGTX8xkQHs0+4vs+6/v+UMpqG+pUvVOfJdLX53gS7jF1l8VQg3xrtjQiRGZnoNYaJfHlXaDCpwWVnub91NFP7RPH3FheV+EC5AQWXaKEx4KZwG8m8rIv1JFpIVXoXSWBcvC3dT0o+koNRvBB7FTrItpcsw9/YdW4+dcWPkUYfPJc9wP6KRyxv147Vne8ArT1BoU1QkXrmPNkTQcWiyXRZfKMyOZTux1qm3DCUEEuHlupN2l6A7Ve6zcP5w10SRULSonTy5lLNrFlbog75xYImg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AV4w6flc1LNMDmaF8PBCJQQ4yDNZ/5O4DTfYvofgX4A=;
+ b=OOsnjoI8dGAYpzbpO+mz7020aKzZmZ4vXLkUF1t29ajWNw2/6Q21iu5txB3iOhewVqao6vKAv2mi8LOMsIIKeX5curlDXDhn/s3sR70C20TcHPuX9KTlJzGQfjnPHGTk8c/5AT/UFODGjlrKBjyvQ8ihQDIxms06nQ88M/bF4Ax5ViN3r8zzeLGtjNyUlM59GPnVwA2J1UHhadwM85zbs/hPbh83HTlc651Xd4RI+hru627YiwaM7gf41zN91aEcKMIL0gmmIVl9zjZ5AIUh0AaMT+14zMl9XFc3cw88KbS+K9bOKGRW1QkCeAoH25IpeR+ccsC8vxMdTEJtvGiZMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AV4w6flc1LNMDmaF8PBCJQQ4yDNZ/5O4DTfYvofgX4A=;
+ b=wML3HsBDuPy42q0zIZDcBzzkvZGTlPEVRIZ1iYFs7gFMGK+xAW6uoNyjnY/1IUpHJZIzHVKTm93FLG4c6kEJundX0jHeTWkinDBG+t6URYcOA6NS9Z2thAwF2hmT8uP61trZldhq5hwLbB0qCDE9L/kJWvrucQuZI1MXsSp05B8=
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
+ AM5PR1001MB0993.EURPRD10.PROD.OUTLOOK.COM (10.169.154.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.14; Wed, 11 Dec 2019 16:14:09 +0000
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df%7]) with mapi id 15.20.2516.019; Wed, 11 Dec 2019
+ 16:14:09 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>,
+        Mark Brown <broonie@kernel.org>
+CC:     Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Thread-Topic: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Thread-Index: AQHVptoKIWnW5XGNx0qiesHaa7KQWaeqBMOAgAkpmQCAAfp+EA==
+Date:   Wed, 11 Dec 2019 16:14:09 +0000
+Message-ID: <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <20191129172537.31410-1-m.felsch@pengutronix.de>
+ <20191129172537.31410-4-m.felsch@pengutronix.de>
+ <20191204134631.GT1998@sirena.org.uk>
+ <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+In-Reply-To: <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.240.73.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0ba1fc48-a343-4396-6502-08d77e552796
+x-ms-traffictypediagnostic: AM5PR1001MB0993:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR1001MB09933A83114E60F8B00C477BA75A0@AM5PR1001MB0993.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 024847EE92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(39860400002)(396003)(346002)(376002)(199004)(189003)(53546011)(66476007)(66446008)(186003)(2906002)(52536014)(76116006)(64756008)(9686003)(55016002)(66946007)(26005)(86362001)(66556008)(8936002)(5660300002)(6506007)(54906003)(110136005)(478600001)(7696005)(33656002)(71200400001)(966005)(81156014)(8676002)(7416002)(4326008)(81166006)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB0993;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: J3sMxB7NYJyFdUcdBWzTaLsyf/I6yD+Kyi+oAz5uXiPKXwDylbhQvR30AVnXAtIJypLkOmYLuXOPaPLHslDod9K/S1yTlNS5gLbeUtmBd5h0QQBe2tkyM7jxq9BEL+X015J8bPKXho42/dbPB9Vxi2Je0XkaEJAvBSd6tsBIwXaus7TufnlOFxDZMtKVk0wsHEGkhJWL057SH/Rght1bj1Y0ArhqKcdzKpUvZ338NBTztpjRhm96XQMhnfzYnKoCJLsuHioTCnUHdevedhV9xu5ObBsCp5vt2GpEr96yBjrc7RCBRgnOenv2MpIgRLA6fd+R+STjbYtnJclyb0LKd0LSMkyXWavsXgUSLADeOeHlliTMuBZqkLS2AQo1IzkLKl1NhF6zdHDpzGwPa00NwUUK1SqvNDrCNE4xBKsEfZUg3YTuW3O9CaVDFWppheWl97VoaJSDUjl+WboYhDDus2fbItdLc2TcBeVW+nxCPEE=
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <6fcbff3d-8695-7cd0-60de-6eb523b6964c@gmail.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576077028; bh=VvDMrUYT7taYzbMa3m3Y5QwG5+rFZtiGCZ+lwUnZ+H4=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=Lm5F6nqi5lm9oF3AFvMVlJyM+vsVmkKVxMC3aCEATgZO2h7/YDOmlhxTh16jJsYJc
-         RiTDpkOAGndf7f5g1VHhTGp0uN0v291Ea9MpN52Vs9fo5PtJEB6Zx5z61K91j3ytjq
-         mff6ObVy21nYWvLr+C7tSIvriqp0/PQ0hSigNsBE/FlJGH+QmpZXlRv7KroBogN+1w
-         Cz7mjfNTukwY2nltQx3atJPxUyEKwDEJnOP/0N6zXKUqC2iRiQJTV8QETKFJ8qqemu
-         yrIV5TJcqcqdsN6mPTX3i85m8T+/UOb2TOeAfLfE+x5CnmT8RyiTFIDmSn7YykhuIu
-         1ZWP3M73v2MFg==
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ba1fc48-a343-4396-6502-08d77e552796
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 16:14:09.5882
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4VWJQ23V7FoYM5Gh3qCXrR4JtPCu6Lf4obwBSx08HRV1S51HSXNikG+uprB8oXz9nP+AIoCTCtzvHERu0U4Hwjk8jvTyVpav2ntto3goBGw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB0993
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 08:41:56PM +0300, Dmitry Osipenko wrote:
+On 10 December 2019 09:42, Marco Felsch wrote:
 
-..
-
+> Hi Mark,
+>=20
+> On 19-12-04 13:46, Mark Brown wrote:
+> > On Fri, Nov 29, 2019 at 06:25:34PM +0100, Marco Felsch wrote:
 > >
-> > PMC clock gate is based on the state of CLKx_ACCEPT_REQ and FORCE_EN
-> > like explained above.
+> > > +  Optional regulator device-specific properties:
+> > > +  - dlg,vsel-sense-gpios : A GPIO reference to a local general purpo=
+se input,
+> > > +    the datasheet calls it GPI. The regulator sense the input signal=
+ and select
+> > > +    the active or suspend voltage settings. If the signal is active =
+the
+> > > +    active-settings are applied else the suspend-settings are applie=
+d.
+> > > +    Attention: Sharing the same GPI for other purposes or across mul=
+tiple
+> > > +    regulators is possible but the polarity setting must equal.
 > >
-> > CLKx_ACCEPT_REQ is 0 default and FORCE_EN acts as gate to enable/disable
-> > EXTPERIPH clock output to PMC CLK_OUT_1/2/3.
-> 
-> [and to enable OSC as well]
-> 
-> > So I believe we need to register as MUX and Gate rather than as a single
-> > clock. Please confirm.
-> 
-> 1. The force-enabling is applied to both OSC and EXTERN sources of
-> PMC_CLK_OUT_x by PMC at once.
-> 
-> 2. Both of PMC's force-enabling and OSC/EXTERN selection is internal to PMC.
-> 
-> Should be better to define it as a single "pmc_clk_out_x". I don't see
-> any good reasons for differentiating PMC's Gate from the MUX, it's a
-> single hardware unit from a point of view of the rest of the system.
-> 
-> Peter, do you have any objections?
+> > I'm really confused by this.  As far as I understand it it seems
+> > to be doing pinmuxing on the chip using the GPIO bindings which
+> > is itself a bit odd and I don't see anything here that configures
+> > whatever sets the state of the pins.  Don't we need another GPIO
+> > to set the vsel-sense inputs on the PMIC?
+>=20
+> Yes the PMIC is very configurable and it took a while till I understand
+> it.. @Adam please correct me if I'm wrong.
+>=20
+> The PMIC regulators regardless of the type: ldo or buck can be
+> simplified drawn as:
+>=20
+>=20
+>=20
+> da9062-gpio               da9062-regulator
+>=20
+>   +-------------------------------------------------------
+>   |                  PMIC
+>   |
+>   > GPIO0            +--------------------------+
+>   |                  |         REGULATOR-0      |
+>   > GPIO1 -------+   |                          |
+>   |              +-- > vsel-in    voltage-a-out <
+>   > GPIO2        |   |                          |
+>   |              |   > enable-in  voltage-b-out <
+>   |              |   |                          |
+>   |              |   +--------------------------+
+>   |              |
+>   |              |   +--------------------------+
+>   |              |   |         REGULATOR-1      |
+>   |              |   |                          |
+>   |              +-- > vsel-in    voltage-a-out <
+>   |                  |                          |
+>   |                  > enable-in  voltage-b-out <
+>   |                  |                          |
+>   |                  +--------------------------+
+>   |
+>=20
+> The 'vsel-in' and 'enable-in' regulator inputs must be routed to the
+> PMIC GPIOs which must be configured as input. If this is a pinmux in
+> your opinion, then yes we need to do that. IMHO it isn't a pinmux
+> because from the regulator point of view it is just a GPIO which comes
+> from our own gpio-dev (da9062-gpio). So the abstraction is vald. Anyway
+> I'm with you that this isn't the typical use-case.
 
-The reason to have separate gate and mux clocks, is to preserve compatibility
-with existing users.
-Otherwise the current users would need to figure out if there's a
-single clock or 2 clocks to configure. I don't think adding that code in
-each user is worth it only to have a sligthly nicer modelling of the
-hardware.
+We've had this discussion before and to me it felt more like pinmux than GP=
+IO
+although I understand we're configuring the GPIO pin as input before then
+configuring a regulator to take that specific internal GPIO as the control
+signal. We're defining a specific role to this pin in HW rather than it bei=
+ng a
+general software handled GPI so it feels like this would be neater under pi=
+nmux.
+There does still need to be a mapping between that pin and the regulator wh=
+ich I
+guess would be served by passing the pin to the regulator through generic p=
+inmux
+bindings and then in the regulator code you're simply just enabling the
+regulator to be controlled from that pin. The HW lets you control multiple
+regulators from the same input pin so there's a flexibility there to be
+captured, as you mention.
 
-Cheers,
-
-Peter.
+>=20
+> Regards,
+>   Marco
+>=20
+> --
+> Pengutronix e.K.                           |                             =
+|
+> Steuerwalder Str. 21                       | http://www.pengutronix.de/  =
+|
+> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    =
+|
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 =
+|
