@@ -2,109 +2,97 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3F3C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F211C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E1FC205C9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FCCC2073D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 16:22:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="XHByjpVp"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CTpH30TN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbfLKQU4 (ORCPT
+        id S1730233AbfLKQWz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:20:56 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45839 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729278AbfLKQU4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 11:20:56 -0500
-Received: by mail-lj1-f193.google.com with SMTP id d20so24699713ljc.12
-        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 08:20:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tD2y5jZ8oTLJe6LbTN27zTEPS2JKCut3FdE1zrzBkUs=;
-        b=XHByjpVpksAhQp6qWGC8ANRLf3D8pRxjhxA0kZBgeoQGbehbI4T4UsJjHdjOSy3qGm
-         lUR2sJZ7SZ8KAasxNhMFG8wLboHF8Zhuv/dN4u9DCZ5V4ZcQbl9wog+i3wbxinYLhBn9
-         MWXrZ28CAqcehkq7JynVp3OljN9N9gEfCTpst2pHJdC3HM3jJEPO1gskys5+aLtTz/0D
-         sZ9MGH3g1KvShyB5NXhEXXirzTrpo14gy5QN41m5YeZTKRpCjKTtkOrWf0IA3LPwDp1W
-         +PsL2xzzi6yBkHO+ybkGzuDYvoNZ/nsonXCW4Er4mOvDb5LTfMggKU4Onf4p87/ZLLUS
-         iNDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=tD2y5jZ8oTLJe6LbTN27zTEPS2JKCut3FdE1zrzBkUs=;
-        b=T3ILpvZf64ovYKr0fZNIqfGlhUhiMkvOGZrfpV4QTYnut/XnRnnXsu2zs8tlPHSbGu
-         QhGV7CSG16BXHT9QJsbYTvSdbl68gouko5y+frP2fkg1+Do75X9n+h00MmpNHS0ZH+F5
-         1yHTfyVNXa+u7hHrX4j8C5qqDEdTfj9eKnU3zz7KeETlBY5pYAx3f1ATU9/X+kguB1Gf
-         8MsbnYhhvNS+dAiMR++azsS3veyrSzIYOVEkPC+jqntAy9jRIKQGrwWUKxlVNfLWWbuO
-         8o5rRfZfHKJLh0qbKwLAMnf10r5xgCfuxsFYj0e60x6zK9NuiuPwPWGcRhkijQ4CH4NJ
-         qwVQ==
-X-Gm-Message-State: APjAAAV4YJ4GuOd5S1o5TF/K7+O6xjXtdqq6o1G2nUj8s2LyrgLPLKbz
-        qYaTpLr04XoxwJ6/GIH9K4RINw==
-X-Google-Smtp-Source: APXvYqx7JrnjYVzZSKhxIhgqUUFwGRNOWBlKZgUUrH2giZBqcw9jTeOd1HzQIZ2qu+jUtLHmUW373g==
-X-Received: by 2002:a2e:b017:: with SMTP id y23mr2776840ljk.229.1576081254052;
-        Wed, 11 Dec 2019 08:20:54 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:8d8:12fe:a87e:d4b8:621e:2b62])
-        by smtp.gmail.com with ESMTPSA id n19sm1434257lfl.85.2019.12.11.08.20.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Dec 2019 08:20:53 -0800 (PST)
-Subject: Re: [PATCH RFC 0/2] Add Renesas RPC-IF support
-To:     Chris Brandt <Chris.Brandt@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
-References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
- <TY1PR01MB156234F5B44BB43D3DCA98128A5A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <0af05149-78f5-8639-4a23-84edda0073ea@cogentembedded.com>
-Date:   Wed, 11 Dec 2019 19:20:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Wed, 11 Dec 2019 11:22:55 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:24794 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730219AbfLKQWz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 11:22:55 -0500
+X-UUID: 73e49ec7508844cf8842576d5af10895-20191212
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=iimza8cqkvrV1lF7V0mYtKiaYJScHBfp3AjzMCxE4gQ=;
+        b=CTpH30TN4MmOSrnL9IVid5HNqTGghWnqq9dsYcUVwkjXzAKx1Z1fdk6SNy1brspl32QzavMWw+uizFf1w2kxZvnngpm24ZChzD7x8oKBSL6b6wgHHlMeuj6+wcLVXvtLhESq9N2kdimZYolQ9BaDoLgPdEpd8KQID1dvWKZu/Hc=;
+X-UUID: 73e49ec7508844cf8842576d5af10895-20191212
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <jiaxin.yu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 792463200; Thu, 12 Dec 2019 00:22:49 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 12 Dec 2019 00:22:23 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Dec 2019 00:22:06 +0800
+From:   Jiaxin Yu <jiaxin.yu@mediatek.com>
+To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
+        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>
+CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>
+Subject: [PATCH v6 0/2] ASoC: mt8183: fix audio playback slowly after playback
+Date:   Thu, 12 Dec 2019 00:22:34 +0800
+Message-ID: <1576081356-18298-1-git-send-email-jiaxin.yu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-In-Reply-To: <TY1PR01MB156234F5B44BB43D3DCA98128A5A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/11/2019 05:33 PM, Chris Brandt wrote:
+RnJvbTogInlvbmcubGlhbmciIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCg0KVGhpcyBzZXJp
+ZXMgcGF0Y2hlcyBhZGQgcmVzZXQgY29udHJvbGxlciBmb3IgTVQ4MTgzLCBhbmQgYXVkaW8gd2ls
+bCB1c2UgaXQgaW4gDQptYWNoaW5lIGRyaXZlciBkdXJpbmcgYm9vdHVwLCB0aGV5IGRlcGVuZCBv
+biB0aGUgZm9yLW5leHQuDQoNCnY2IGNoYW5nZXM6DQoJMS4gU2ltcGxpZnkgdG9wcnVnX3Jlc2V0
+X2Fzc2VydCgpICYgdG9wcnVnX3Jlc2V0X2RlYXNzZXJ0KCkuDQoJMi4gQWRkIG1lbWJlcnMgZm9y
+IG10MjcxMl9kYXRhICYgbXQ4MTgzX2RhdGEuDQoNCnY1IGNoYW5nZXM6DQoJMS4gQWRkIFNpZ25l
+ZC1vZmYtYnkgdGFnIGFuZCBSZXZpZXdlZC1ieSB0YWcuDQoNCnY0IGNoYW5nZXM6DQoJMS4gRml4
+ZWQgd3Jvbmcgc2lnbmVkLW9mZiBhcyBjb3JyZWN0IG1haWwgc3VmZml4Lg0KCTIuIEZpeGVkIHBh
+dGNoIHN1YmplY3QgdGhhdCBhZGQgcGF0Y2ggdmVyc2lvbi4NCg0KdjMgY2hhbmdlczoNCgkxLiBo
+dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MjgzLyBhbmQgDQoJICAgaHR0
+cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTE2NDMwNS8gaGFzIGJlZW4gbWVyZ2Vk
+Lg0KCTIuIENoYW5nZSB0aGUgbmFtZSBvZiBtdGtfd2R0X2NvbXBhdGlibGUgdG8gbXRrX3dkdF9k
+YXRhLg0KCTMuIFJlbW92ZSB0b3ByZ3VfcmVzZXQgc3RydWN0IGFuZCB1c2UgbXRrX3dkdF9kZXYg
+aW5zdGVhZC4NCgk0LiBHZXQgdGhlIHZhbHVlIG9mIHN3X3JzdF9udW0gZnJvbSAuaCBmaWxlLg0K
+CTUuIEFkZGRkIG10MjcxMi1yZXNldHMuaCBmb3IgbXQyNzEyLg0KCTYuIEltcHJvdmUgY29tbWl0
+IG1lc3NhZ2UuDQoNCnYyIGNoYW5nZXM6DQoJMS4gcmVtb3ZlICJXSVAiIHRoYXQgaW4gdGhlIHRp
+dGxlIG9mIHBhdGNoZXMNCgkyLiBhZGQgaHlwZXIgbGluayBmb3IgdGhlIHBhdGNoIHRoYXQgZGVw
+ZW5kcyBvbg0KCTMuIHBhdGNod29yayBsaXN0Og0KCQlodHRwczovL3BhdGNod29yay5rZXJuZWwu
+b3JnL2NvdmVyLzExMTY0Mjg1Lw0KCQlodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNo
+LzExMTY0Mjk1Lw0KCQlodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0Mjk5
+Lw0KCQlodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MjgzLw0KCQlodHRw
+czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MzA1Lw0KDQp2MSBjaGFuZ2VzOg0K
+CTEuIHBhdGNod29yayBsaXN0Og0KCQlodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL2NvdmVy
+LzExMTY0MTczLw0KCQlodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MTgx
+Lw0KCQlodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MTg1Lw0KCQlodHRw
+czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MTg3Lw0KCQlodHRwczovL3BhdGNo
+d29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MTc1Lw0KDQp5b25nLmxpYW5nICgyKToNCiAgYXJt
+NjQ6IGR0czogbXQ4MTgzOiBBZGQgcmVzZXQtY2VsbHMgaW4gaW5mcmFjZmcNCiAgY2xrOiByZXNl
+dDogTW9kaWZ5IHJlc2V0LWNvbnRyb2xsZXIgZHJpdmVyDQoNCiAuLi4vZGV2aWNldHJlZS9iaW5k
+aW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dCAgfCAgMTAgKy0NCiBkcml2ZXJzL3dhdGNoZG9nL0tj
+b25maWcgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvd2F0Y2hkb2cvbXRr
+X3dkdC5jICAgICAgICAgICAgICAgICAgICB8IDEwOSArKysrKysrKysrKysrKysrKy0NCiAuLi4v
+cmVzZXQtY29udHJvbGxlci9tdDI3MTItcmVzZXRzLmggICAgICAgICAgfCAgMjIgKysrKw0KIC4u
+Li9yZXNldC1jb250cm9sbGVyL210ODE4My1yZXNldHMuaCAgICAgICAgICB8ICAxNyArKysNCiA1
+IGZpbGVzIGNoYW5nZWQsIDE1NSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xsZXIvbXQyNzEy
+LXJlc2V0cy5oDQoNCi0tIA0KMi4xOC4wDQo=
 
->> Here's a set of 2 patches against Linus' repo. Renesas Reduced Pin Count
->> Interface (RPC-IF) allows a SPI flash or HyperFlash connected to the SoC to
->> be accessed via the external address space read mode or the manual mode.
-> 
-> Looking at this driver, all it is are APIs. Meaning another driver is 
-> needed to sit in between the MTD layer and this HW driver layer.
-> 
-> In the driver that I did, if the "RPC" HW is going to be used to control
-> a SPI Flash device, it registered a spi controller and then the MTD 
-> layer could access the device
-
-   Via the SPI-to-MTD sublayer for (at least) direct mapping -- grep for "dirmap"
-in drivers/mtd/spi-nor/spi-nor.c...
-
-> just like any other SPI controller driver. No
-> additional drivers are needed.
-
-   Then why do we have *struct* spi_controller_mem_ops? Do All drivers implement
-such ops?
-
-[...]
-
-MBR, Sergei
