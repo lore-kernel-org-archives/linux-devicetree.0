@@ -2,60 +2,59 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FF4C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A957AC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45B1221556
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801EE2465A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v8JzNP8i"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q5J/DIHe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729791AbfLKOEx (ORCPT
+        id S1729828AbfLKOFJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:04:53 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59222 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729118AbfLKOEx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 09:04:53 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBE4n3B051378;
-        Wed, 11 Dec 2019 08:04:49 -0600
+        Wed, 11 Dec 2019 09:05:09 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51844 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729787AbfLKOEy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 09:04:54 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBE4p8E037846;
+        Wed, 11 Dec 2019 08:04:51 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576073089;
-        bh=9c9r2rgu7cA4e7hTk+vRl0o/jW0NtUzZ1SWlXrHSIJU=;
+        s=ti-com-17Q1; t=1576073091;
+        bh=L5dCzJ4MLlvcQIUgsV2WIumOeP0eGuScyKg7KrivO0o=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=v8JzNP8iYUmF3fXRioR0na0FFomF63F2WCFizd5i87cdwW+iqZp0uTMYs5DZRIOei
-         S9gjGJom4SOK5fPXPaNQ3HuVVS8v9ExrgO6rkGv6XayPt7PL0CBXXhUXkBFasP1OOg
-         xDPWFh++4dIXcsyQtJCzaAwXzP0GkH9nlYU2d5E0=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBE4nk6097464
+        b=q5J/DIHeZDofArp2czPkOaC7bBcFNu5A6mDLd57d4A/J63vhUXl+EZ2qNyCWbymL/
+         MP3zZmJWp6rK8sfHyKApdWHV+lUCejqZNUUOnK5ANKfxwJg7qkx0OGcW2VaCvZbRcF
+         i0V1bARBxCyiW8NCj9tDuvPNirh94hQRg2zprT6c=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBE4paP128184
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Dec 2019 08:04:49 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 11 Dec 2019 08:04:51 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Dec 2019 08:04:49 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 08:04:51 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Dec 2019 08:04:49 -0600
+ Frontend Transport; Wed, 11 Dec 2019 08:04:51 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBE4m6f088450;
-        Wed, 11 Dec 2019 08:04:49 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBE4m6h088450;
+        Wed, 11 Dec 2019 08:04:51 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
         <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>
 CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v5 1/3] clk: ti: dra7: add vpe clkctrl data
-Date:   Wed, 11 Dec 2019 08:08:08 -0600
-Message-ID: <20191211140810.10657-2-bparrot@ti.com>
+Subject: [Patch v5 3/3] ARM: dts: dra7: Add ti-sysc node for VPE
+Date:   Wed, 11 Dec 2019 08:08:10 -0600
+Message-ID: <20191211140810.10657-4-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191211140810.10657-1-bparrot@ti.com>
 References: <20191211140810.10657-1-bparrot@ti.com>
@@ -67,68 +66,56 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add clkctrl data for VPE.
+Add VPE node as a child of l4 interconnect in order for it to probe
+using ti-sysc.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/clk/ti/clk-7xx.c         |  6 ++++++
- include/dt-bindings/clock/dra7.h | 10 ++++++++++
- 2 files changed, 16 insertions(+)
+ arch/arm/boot/dts/dra7-l4.dtsi | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/ti/clk-7xx.c b/drivers/clk/ti/clk-7xx.c
-index 5f46782cebeb..34e49f909a07 100644
---- a/drivers/clk/ti/clk-7xx.c
-+++ b/drivers/clk/ti/clk-7xx.c
-@@ -146,6 +146,11 @@ static const struct omap_clkctrl_reg_data dra7_rtc_clkctrl_regs[] __initconst =
- 	{ 0 },
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+index 7e7aa101d8a4..8fe428ac12d8 100644
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -4189,12 +4189,34 @@
+ 			ranges = <0x0 0x1b0000 0x10000>;
+ 		};
+ 
+-		target-module@1d0000 {			/* 0x489d0000, ap 27 30.0 */
+-			compatible = "ti,sysc";
+-			status = "disabled";
++		target-module@1d0010 {			/* 0x489d0000, ap 27 30.0 */
++			compatible = "ti,sysc-omap4", "ti,sysc";
++			reg = <0x1d0010 0x4>;
++			reg-names = "sysc";
++			ti,sysc-midle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			clocks = <&vpe_clkctrl DRA7_VPE_VPE_CLKCTRL 0>;
++			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0x1d0000 0x10000>;
++
++			vpe: vpe@0 {
++				compatible = "ti,dra7-vpe";
++				reg = <0x0000 0x120>,
++				      <0x0700 0x80>,
++				      <0x5700 0x18>,
++				      <0xd000 0x400>;
++				reg-names = "vpe_top",
++					    "sc",
++					    "csc",
++					    "vpdma";
++				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
++			};
+ 		};
+ 	};
  };
- 
-+static const struct omap_clkctrl_reg_data dra7_vpe_clkctrl_regs[] __initconst = {
-+	{ DRA7_VPE_VPE_CLKCTRL, NULL, CLKF_HW_SUP, "dpll_core_h23x2_ck" },
-+	{ 0 },
-+};
-+
- static const struct omap_clkctrl_reg_data dra7_coreaon_clkctrl_regs[] __initconst = {
- 	{ DRA7_COREAON_SMARTREFLEX_MPU_CLKCTRL, NULL, CLKF_SW_SUP, "wkupaon_iclk_mux" },
- 	{ DRA7_COREAON_SMARTREFLEX_CORE_CLKCTRL, NULL, CLKF_SW_SUP, "wkupaon_iclk_mux" },
-@@ -769,6 +774,7 @@ const struct omap_clkctrl_data dra7_clkctrl_data[] __initconst = {
- 	{ 0x4a005550, dra7_ipu_clkctrl_regs },
- 	{ 0x4a005620, dra7_dsp2_clkctrl_regs },
- 	{ 0x4a005720, dra7_rtc_clkctrl_regs },
-+	{ 0x4a005760, dra7_vpe_clkctrl_regs },
- 	{ 0x4a008620, dra7_coreaon_clkctrl_regs },
- 	{ 0x4a008720, dra7_l3main1_clkctrl_regs },
- 	{ 0x4a008920, dra7_ipu2_clkctrl_regs },
-diff --git a/include/dt-bindings/clock/dra7.h b/include/dt-bindings/clock/dra7.h
-index 72f2e8411523..2b765e579b2a 100644
---- a/include/dt-bindings/clock/dra7.h
-+++ b/include/dt-bindings/clock/dra7.h
-@@ -29,6 +29,11 @@
- #define DRA7_RTC_CLKCTRL_INDEX(offset)	((offset) - DRA7_RTC_CLKCTRL_OFFSET)
- #define DRA7_RTCSS_CLKCTRL	DRA7_RTC_CLKCTRL_INDEX(0x44)
- 
-+/* vpe clocks */
-+#define DRA7_VPE_CLKCTRL_OFFSET	0x60
-+#define DRA7_VPE_CLKCTRL_INDEX(offset)	((offset) - DRA7_VPE_CLKCTRL_OFFSET)
-+#define DRA7_VPE_CLKCTRL	DRA7_VPE_CLKCTRL_INDEX(0x64)
-+
- /* coreaon clocks */
- #define DRA7_SMARTREFLEX_MPU_CLKCTRL	DRA7_CLKCTRL_INDEX(0x28)
- #define DRA7_SMARTREFLEX_CORE_CLKCTRL	DRA7_CLKCTRL_INDEX(0x38)
-@@ -192,6 +197,11 @@
- /* rtc clocks */
- #define DRA7_RTC_RTCSS_CLKCTRL	DRA7_CLKCTRL_INDEX(0x44)
- 
-+/* vpe clocks */
-+#define DRA7_VPE_CLKCTRL_OFFSET	0x60
-+#define DRA7_VPE_CLKCTRL_INDEX(offset)	((offset) - DRA7_VPE_CLKCTRL_OFFSET)
-+#define DRA7_VPE_VPE_CLKCTRL	DRA7_VPE_CLKCTRL_INDEX(0x64)
-+
- /* coreaon clocks */
- #define DRA7_COREAON_SMARTREFLEX_MPU_CLKCTRL	DRA7_CLKCTRL_INDEX(0x28)
- #define DRA7_COREAON_SMARTREFLEX_CORE_CLKCTRL	DRA7_CLKCTRL_INDEX(0x38)
 -- 
 2.17.1
 
