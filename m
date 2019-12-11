@@ -2,537 +2,224 @@ Return-Path: <SRS0=G+GX=2B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C99C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 12:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3758DC00454
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 13:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B10E208C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 12:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038A520836
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 13:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jIRkfM0D"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="AeaObzsi";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="dq925cxW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfLKM7d (ORCPT
+        id S1729370AbfLKNJr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:59:33 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40004 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbfLKM7d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 07:59:33 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBCxTL8013499;
-        Wed, 11 Dec 2019 06:59:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576069169;
-        bh=baJMs1qT8nX731wdMO5cztekY1CtD2a4IS8Tibr9IWU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=jIRkfM0D8Wi7aHqT70EJbYNWewSGyd6Oj3gPyQrpLU55opOf0x2/drJ1hOMW1oIEc
-         JvKIgbWWFWoMk0Tlv7oXR21cHBiPsC02eEheewGntZd0wJdcUK6ThF+FV238dJaMj8
-         faNtHgcoGVHlP5zByii7zBpZhXLzWf/oGOrG9csY=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBCxTSX031447
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Dec 2019 06:59:29 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Dec 2019 06:59:24 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Dec 2019 06:59:24 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBCxMHq032710;
-        Wed, 11 Dec 2019 06:59:23 -0600
-Subject: Re: [PATCH 9/9] ARM: OMAP2+: Drop legacy platform data for dra7
- timers except timer1 to 4
-To:     "Andrew F. Davis" <afd@ti.com>, Tony Lindgren <tony@atomide.com>,
-        <linux-omap@vger.kernel.org>
-CC:     =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        <devicetree@vger.kernel.org>, Keerthy <j-keerthy@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-References: <20191210233524.46875-1-tony@atomide.com>
- <20191210233524.46875-10-tony@atomide.com>
- <84c0944d-0e75-4c1f-9220-bf4eb9396040@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <629f9571-d5d7-b85d-ff34-ef35f9fec821@ti.com>
-Date:   Wed, 11 Dec 2019 14:59:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 11 Dec 2019 08:09:47 -0500
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:33276 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729469AbfLKNJq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Dec 2019 08:09:46 -0500
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBBD48ZN020455;
+        Wed, 11 Dec 2019 05:09:40 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=vMkbLO17azLuNd0Mml0yUUzSefeiNPLw9O43k2jMHSg=;
+ b=AeaObzsiZOW4Kh8hrbftvm/Pjd2AOK3hLqkmetA23Y1TvqyksC1Ut3Aog67BqU6AWXVa
+ hnh/Tqt1/rVxTue9zCZx0NCJSMknoc/tzbc7V+EaRoISHmrtxQ3Qu09n6JkF2/CbN+/U
+ 1LS5LjZKbW1CIMsuI3cuPO7beYbQJaipF7y72LNa/0U0rWSFzNP3FonGgQmVKZ+e1PhC
+ CYdsQis+eMBa+2KEWfonwrrLuGL1v1FHWAhKwU5G549A1XORG7rrKpHPTysh80EBOpb+
+ fY44OWHOKzAE/is5dQ1DmFt23x59Wq/DUu5xajHQcYVxrnXLqaFKv/o6cLW9EbQX6xAK 4A== 
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2176.outbound.protection.outlook.com [104.47.57.176])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2wr9dfp68k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Dec 2019 05:09:40 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ajq4OLAx2gLWQSzOsaZPZvsMZOxaYuQ/777SvlXD1twl3y8F1brEQXdBBmZN+rjQn6zg9klqOiUi4+ipQfRc8smXtEPc4zV2QGlIPwcPmnalM99ILDPIy936Da9H5B7et/DG1NvQruBawZ82UbHkXDUPWBsduhgiESgtmuSIJiSJwtaClvJ9MCce1KomWeq+Vshb0kgkDQNAG73m1UClisOAikavpZkVr8uz3p9XN68i1D8oGHnHwTcyJY0YZhrQhnio6kW+EXzoyYYYqLQvP/ng+lPd+HBeJ6I212VzxIfP+aumR7ts3LHNs0XRbIXauROwqrXHInFgdDR5mkup6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vMkbLO17azLuNd0Mml0yUUzSefeiNPLw9O43k2jMHSg=;
+ b=NC+rv95+us+IzUZc6iYSlhGMdreZ57q6KiMt1Qnd98v8ZlFrcus/WtvSgesj9X+gCJhK0xWF5eV5z6AiAldovxbD7Cy4EH14VpfB+CHJUFCRiVVKYkuJQz+vKAbKlEaDhbKa29hLncUxB+NDskjEQoACz5bYEi4bCHLaz2im97QbUpFzsC22ZON+/ZegwcPM851IzUCvwt2AGrsJnsJjlRI5tLoarlE3kcMiFwXsbrQfbVBLu2MN8cqBYOvF4BlcjPCfQbkGaYY0FnRfGkuKfvxz6ZJzzIQgpjQnh8VgZXpP4dsHBxHSjfflnOObB5blxe63wmKtVDLol+2UJNCkOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 199.43.4.28) smtp.rcpttodomain=ti.com smtp.mailfrom=cadence.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=cadence.com; dkim=none
+ (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vMkbLO17azLuNd0Mml0yUUzSefeiNPLw9O43k2jMHSg=;
+ b=dq925cxWzz0LFTcIvRDnS5a1AGekCH/2E5JScjm8/+16nBgEFqV+ZdBpx5h5ERlm6SArJFK44qlxBNNRQ0/5ArU3FoIpVORfYRACPonrJk9IA9nfcN2hwSnJBDNSqdCM2gVdoeqMxc+2MWCGrLcLYIUojo7Se0Vbst4601B5RGA=
+Received: from DM5PR07CA0116.namprd07.prod.outlook.com (2603:10b6:4:ae::45) by
+ CY4PR07MB3094.namprd07.prod.outlook.com (2603:10b6:903:ce::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.12; Wed, 11 Dec 2019 13:09:37 +0000
+Received: from MW2NAM12FT052.eop-nam12.prod.protection.outlook.com
+ (2a01:111:f400:fe5a::205) by DM5PR07CA0116.outlook.office365.com
+ (2603:10b6:4:ae::45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.17 via Frontend
+ Transport; Wed, 11 Dec 2019 13:09:37 +0000
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 199.43.4.28 as permitted sender) receiver=protection.outlook.com;
+ client-ip=199.43.4.28; helo=rmmaillnx1.cadence.com;
+Received: from rmmaillnx1.cadence.com (199.43.4.28) by
+ MW2NAM12FT052.mail.protection.outlook.com (10.13.180.196) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.18 via Frontend Transport; Wed, 11 Dec 2019 13:09:36 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id xBBD9L5j006811
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Wed, 11 Dec 2019 08:09:34 -0500
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Wed, 11 Dec 2019 14:09:23 +0100
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Wed, 11 Dec 2019 14:09:23 +0100
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id xBBD9N9s011697;
+        Wed, 11 Dec 2019 14:09:23 +0100
+Received: (from yamonkar@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id xBBD9NXq011696;
+        Wed, 11 Dec 2019 14:09:23 +0100
+From:   Yuti Amonkar <yamonkar@cadence.com>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <kishon@ti.com>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <jsarha@ti.com>, <tomi.valkeinen@ti.com>, <praneeth@ti.com>,
+        <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <yamonkar@cadence.com>
+Subject: [RESEND PATCH v1 10/15] phy: cadence-torrent: Add PHY lane reset support
+Date:   Wed, 11 Dec 2019 14:09:15 +0100
+Message-ID: <1576069760-11473-11-git-send-email-yamonkar@cadence.com>
+X-Mailer: git-send-email 2.4.5
+In-Reply-To: <1576069760-11473-1-git-send-email-yamonkar@cadence.com>
+References: <1576069760-11473-1-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
-In-Reply-To: <84c0944d-0e75-4c1f-9220-bf4eb9396040@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(376002)(396003)(36092001)(189003)(199004)(76130400001)(5660300002)(54906003)(336012)(356004)(8676002)(4326008)(2616005)(426003)(81156014)(8936002)(81166006)(186003)(70586007)(70206006)(26826003)(36756003)(107886003)(6666004)(26005)(478600001)(2906002)(42186006)(316002)(110136005)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR07MB3094;H:rmmaillnx1.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 89aecc47-351c-4118-b972-08d77e3b5f76
+X-MS-TrafficTypeDiagnostic: CY4PR07MB3094:
+X-Microsoft-Antispam-PRVS: <CY4PR07MB30943C13E192F302EB0AA5D1D25A0@CY4PR07MB3094.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
+X-Forefront-PRVS: 024847EE92
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: t2o+TgrzpieNeIUVFHOyzoGlLHkYyfeW9LFAwwyn1OxhN+di/7PGH6G8cwVQcTa9vrd4bGbdQali6V/CXXdgaTnsFyIqHc6re2y7pUGxx0+aIHzmq3p7U7oCBrZNEXQtHhqiG9qpGPh3ihU1bXW1b4qKZ39SQmNXPn0sg0cLfv7IsXru6hvKhmHouQxvsoS+r88EuZ9F6HSMWepO3162vyCTBV33pw6krJEop0aepwYu4OhfmUro3A/4mU1FAL1R/UzzK4NuKCDUfkxNrQPWCGdDm2EeotXrwJsawL2mHOokWqIlx5O6iLDhymeGQ51ZuxzysayFNmygf3h9q695rEExXC64zZVaWD9vBSYLItcm3P0GzOgYRBUb92NO/2vrLcbNv6Ur7fKxJygvE+/gTXXQMK8OfthjG3oygiBMskhPpZVE2fQ8+0W7pP0CDY0zNZ8GVOha1qd4XWy5Vje9iNdDyx3rYoi/o+WB+0J/nhK1E4SqVudscnSt1mBGXeNQ
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2019 13:09:36.4519
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89aecc47-351c-4118-b972-08d77e3b5f76
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR07MB3094
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-11_03:2019-12-11,2019-12-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 mlxscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 impostorscore=0 spamscore=0
+ priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=871
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912110111
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/12/2019 04:10, Andrew F. Davis wrote:
-> On 12/10/19 6:35 PM, Tony Lindgren wrote:
->> We can now probe devices with ti-sysc interconnect driver and dts
->> data. Let's drop the related platform data and custom ti,hwmods
->> dts property.
->>
->> As we're just dropping data, and the early platform data init
->> is based on the custom ti,hwmods property, we want to drop both
->> the platform data and ti,hwmods property in a single patch.
->>
->> Cc: Keerthy <j-keerthy@ti.com>
->> Cc: Tero Kristo <t-kristo@ti.com>
->> Signed-off-by: Tony Lindgren <tony@atomide.com>
->> ---
->>   arch/arm/boot/dts/dra7-l4.dtsi            |  12 -
->>   arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 295 ----------------------
->>   2 files changed, 307 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
->> --- a/arch/arm/boot/dts/dra7-l4.dtsi
->> +++ b/arch/arm/boot/dts/dra7-l4.dtsi
->> @@ -1233,7 +1233,6 @@ timer4: timer@0 {
->>   
->>   		target-module@3e000 {			/* 0x4803e000, ap 11 56.0 */
->>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
->> -			ti,hwmods = "timer9";
->>   			reg = <0x3e000 0x4>,
->>   			      <0x3e010 0x4>;
->>   			reg-names = "rev", "sysc";
->> @@ -1842,7 +1841,6 @@ i2c5: i2c@0 {
->>   
->>   		target-module@86000 {			/* 0x48086000, ap 41 5e.0 */
->>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
->> -			ti,hwmods = "timer10";
->>   			reg = <0x86000 0x4>,
->>   			      <0x86010 0x4>;
->>   			reg-names = "rev", "sysc";
->> @@ -1870,7 +1868,6 @@ timer10: timer@0 {
->>   
->>   		target-module@88000 {			/* 0x48088000, ap 43 66.0 */
->>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
->> -			ti,hwmods = "timer11";
->>   			reg = <0x88000 0x4>,
->>   			      <0x88010 0x4>;
->>   			reg-names = "rev", "sysc";
->> @@ -3357,7 +3354,6 @@ target-module@1e000 {			/* 0x4881e000, ap 93 2c.0 */
->>   
->>   		target-module@20000 {			/* 0x48820000, ap 5 08.0 */
->>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
->> -			ti,hwmods = "timer5";
->>   			reg = <0x20000 0x4>,
->>   			      <0x20010 0x4>;
->>   			reg-names = "rev", "sysc";
->> @@ -3385,7 +3381,6 @@ timer5: timer@0 {
->>   
->>   		target-module@22000 {			/* 0x48822000, ap 7 24.0 */
->>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
->> -			ti,hwmods = "timer6";
->>   			reg = <0x22000 0x4>,
->>   			      <0x22010 0x4>;
->>   			reg-names = "rev", "sysc";
->> @@ -3413,7 +3408,6 @@ timer6: timer@0 {
->>   
->>   		target-module@24000 {			/* 0x48824000, ap 9 26.0 */
->>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
->> -			ti,hwmods = "timer7";
->>   			reg = <0x24000 0x4>,
->>   			      <0x24010 0x4>;
->>   			reg-names = "rev", "sysc";
->> @@ -3441,7 +3435,6 @@ timer7: timer@0 {
->>   
->>   		target-module@26000 {			/* 0x48826000, ap 11 0c.0 */
->>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
->> -			ti,hwmods = "timer8";
->>   			reg = <0x26000 0x4>,
->>   			      <0x26010 0x4>;
->>   			reg-names = "rev", "sysc";
->> @@ -3469,7 +3462,6 @@ timer8: timer@0 {
->>   
->>   		target-module@28000 {			/* 0x48828000, ap 13 16.0 */
->>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
->> -			ti,hwmods = "timer13";
->>   			reg = <0x28000 0x4>,
->>   			      <0x28010 0x4>;
->>   			reg-names = "rev", "sysc";
->> @@ -3497,7 +3489,6 @@ timer13: timer@0 {
->>   
->>   		target-module@2a000 {			/* 0x4882a000, ap 15 10.0 */
->>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
->> -			ti,hwmods = "timer14";
->>   			reg = <0x2a000 0x4>,
->>   			      <0x2a010 0x4>;
->>   			reg-names = "rev", "sysc";
->> @@ -3525,7 +3516,6 @@ timer14: timer@0 {
->>   
->>   		target-module@2c000 {			/* 0x4882c000, ap 17 02.0 */
->>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
->> -			ti,hwmods = "timer15";
->>   			reg = <0x2c000 0x4>,
->>   			      <0x2c010 0x4>;
->>   			reg-names = "rev", "sysc";
->> @@ -3553,7 +3543,6 @@ timer15: timer@0 {
->>   
->>   		target-module@2e000 {			/* 0x4882e000, ap 19 14.0 */
->>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
->> -			ti,hwmods = "timer16";
->>   			reg = <0x2e000 0x4>,
->>   			      <0x2e010 0x4>;
->>   			reg-names = "rev", "sysc";
->> @@ -4453,7 +4442,6 @@ segment@20000 {					/* 0x4ae20000 */
->>   
->>   		target-module@0 {			/* 0x4ae20000, ap 19 08.0 */
->>   			compatible = "ti,sysc-omap4-timer", "ti,sysc";
->> -			ti,hwmods = "timer12";
->>   			reg = <0x0 0x4>,
->>   			      <0x10 0x4>;
->>   			reg-names = "rev", "sysc";
->> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->> @@ -1157,185 +1157,6 @@ static struct omap_hwmod dra7xx_timer4_hwmod = {
->>   	},
->>   };
->>   
->> -/* timer5 */
->> -static struct omap_hwmod dra7xx_timer5_hwmod = {
->> -	.name		= "timer5",
->> -	.class		= &dra7xx_timer_hwmod_class,
->> -	.clkdm_name	= "ipu_clkdm",
->> -	.main_clk	= "timer5_gfclk_mux",
->> -	.prcm = {
->> -		.omap4 = {
->> -			.clkctrl_offs = DRA7XX_CM_IPU_TIMER5_CLKCTRL_OFFSET,
->> -			.context_offs = DRA7XX_RM_IPU_TIMER5_CONTEXT_OFFSET,
->> -			.modulemode   = MODULEMODE_SWCTRL,
->> -		},
->> -	},
->> -};
->> -
->> -/* timer6 */
->> -static struct omap_hwmod dra7xx_timer6_hwmod = {
->> -	.name		= "timer6",
->> -	.class		= &dra7xx_timer_hwmod_class,
->> -	.clkdm_name	= "ipu_clkdm",
->> -	.main_clk	= "timer6_gfclk_mux",
->> -	.prcm = {
->> -		.omap4 = {
->> -			.clkctrl_offs = DRA7XX_CM_IPU_TIMER6_CLKCTRL_OFFSET,
->> -			.context_offs = DRA7XX_RM_IPU_TIMER6_CONTEXT_OFFSET,
->> -			.modulemode   = MODULEMODE_SWCTRL,
->> -		},
->> -	},
->> -};
->> -
->> -/* timer7 */
->> -static struct omap_hwmod dra7xx_timer7_hwmod = {
->> -	.name		= "timer7",
->> -	.class		= &dra7xx_timer_hwmod_class,
->> -	.clkdm_name	= "ipu_clkdm",
->> -	.main_clk	= "timer7_gfclk_mux",
->> -	.prcm = {
->> -		.omap4 = {
->> -			.clkctrl_offs = DRA7XX_CM_IPU_TIMER7_CLKCTRL_OFFSET,
->> -			.context_offs = DRA7XX_RM_IPU_TIMER7_CONTEXT_OFFSET,
->> -			.modulemode   = MODULEMODE_SWCTRL,
->> -		},
->> -	},
->> -};
->> -
->> -/* timer8 */
->> -static struct omap_hwmod dra7xx_timer8_hwmod = {
->> -	.name		= "timer8",
->> -	.class		= &dra7xx_timer_hwmod_class,
->> -	.clkdm_name	= "ipu_clkdm",
->> -	.main_clk	= "timer8_gfclk_mux",
->> -	.prcm = {
->> -		.omap4 = {
->> -			.clkctrl_offs = DRA7XX_CM_IPU_TIMER8_CLKCTRL_OFFSET,
->> -			.context_offs = DRA7XX_RM_IPU_TIMER8_CONTEXT_OFFSET,
->> -			.modulemode   = MODULEMODE_SWCTRL,
->> -		},
->> -	},
->> -};
->> -
->> -/* timer9 */
->> -static struct omap_hwmod dra7xx_timer9_hwmod = {
->> -	.name		= "timer9",
->> -	.class		= &dra7xx_timer_hwmod_class,
->> -	.clkdm_name	= "l4per_clkdm",
->> -	.main_clk	= "timer9_gfclk_mux",
->> -	.prcm = {
->> -		.omap4 = {
->> -			.clkctrl_offs = DRA7XX_CM_L4PER_TIMER9_CLKCTRL_OFFSET,
->> -			.context_offs = DRA7XX_RM_L4PER_TIMER9_CONTEXT_OFFSET,
->> -			.modulemode   = MODULEMODE_SWCTRL,
->> -		},
->> -	},
->> -};
->> -
->> -/* timer10 */
->> -static struct omap_hwmod dra7xx_timer10_hwmod = {
->> -	.name		= "timer10",
->> -	.class		= &dra7xx_timer_1ms_hwmod_class,
->> -	.clkdm_name	= "l4per_clkdm",
->> -	.main_clk	= "timer10_gfclk_mux",
->> -	.prcm = {
->> -		.omap4 = {
->> -			.clkctrl_offs = DRA7XX_CM_L4PER_TIMER10_CLKCTRL_OFFSET,
->> -			.context_offs = DRA7XX_RM_L4PER_TIMER10_CONTEXT_OFFSET,
->> -			.modulemode   = MODULEMODE_SWCTRL,
->> -		},
->> -	},
->> -};
->> -
->> -/* timer11 */
->> -static struct omap_hwmod dra7xx_timer11_hwmod = {
->> -	.name		= "timer11",
->> -	.class		= &dra7xx_timer_hwmod_class,
->> -	.clkdm_name	= "l4per_clkdm",
->> -	.main_clk	= "timer11_gfclk_mux",
->> -	.prcm = {
->> -		.omap4 = {
->> -			.clkctrl_offs = DRA7XX_CM_L4PER_TIMER11_CLKCTRL_OFFSET,
->> -			.context_offs = DRA7XX_RM_L4PER_TIMER11_CONTEXT_OFFSET,
->> -			.modulemode   = MODULEMODE_SWCTRL,
->> -		},
->> -	},
->> -};
->> -
->> -/* timer12 */
->> -static struct omap_hwmod dra7xx_timer12_hwmod = {
->> -	.name		= "timer12",
->> -	.class		= &dra7xx_timer_hwmod_class,
->> -	.clkdm_name	= "wkupaon_clkdm",
->> -	.main_clk	= "secure_32k_clk_src_ck",
->> -	.prcm = {
->> -		.omap4 = {
->> -			.clkctrl_offs = DRA7XX_CM_WKUPAON_TIMER12_CLKCTRL_OFFSET,
->> -			.context_offs = DRA7XX_RM_WKUPAON_TIMER12_CONTEXT_OFFSET,
->> -		},
->> -	},
->> -};
->> -
->> -/* timer13 */
->> -static struct omap_hwmod dra7xx_timer13_hwmod = {
->> -	.name		= "timer13",
->> -	.class		= &dra7xx_timer_hwmod_class,
->> -	.clkdm_name	= "l4per3_clkdm",
->> -	.main_clk	= "timer13_gfclk_mux",
->> -	.prcm = {
->> -		.omap4 = {
->> -			.clkctrl_offs = DRA7XX_CM_L4PER3_TIMER13_CLKCTRL_OFFSET,
->> -			.context_offs = DRA7XX_RM_L4PER3_TIMER13_CONTEXT_OFFSET,
->> -			.modulemode   = MODULEMODE_SWCTRL,
->> -		},
->> -	},
->> -};
->> -
->> -/* timer14 */
->> -static struct omap_hwmod dra7xx_timer14_hwmod = {
->> -	.name		= "timer14",
->> -	.class		= &dra7xx_timer_hwmod_class,
->> -	.clkdm_name	= "l4per3_clkdm",
->> -	.main_clk	= "timer14_gfclk_mux",
->> -	.prcm = {
->> -		.omap4 = {
->> -			.clkctrl_offs = DRA7XX_CM_L4PER3_TIMER14_CLKCTRL_OFFSET,
->> -			.context_offs = DRA7XX_RM_L4PER3_TIMER14_CONTEXT_OFFSET,
->> -			.modulemode   = MODULEMODE_SWCTRL,
->> -		},
->> -	},
->> -};
->> -
->> -/* timer15 */
->> -static struct omap_hwmod dra7xx_timer15_hwmod = {
->> -	.name		= "timer15",
->> -	.class		= &dra7xx_timer_hwmod_class,
->> -	.clkdm_name	= "l4per3_clkdm",
->> -	.main_clk	= "timer15_gfclk_mux",
->> -	.prcm = {
->> -		.omap4 = {
->> -			.clkctrl_offs = DRA7XX_CM_L4PER3_TIMER15_CLKCTRL_OFFSET,
->> -			.context_offs = DRA7XX_RM_L4PER3_TIMER15_CONTEXT_OFFSET,
->> -			.modulemode   = MODULEMODE_SWCTRL,
->> -		},
->> -	},
->> -};
->> -
->> -/* timer16 */
->> -static struct omap_hwmod dra7xx_timer16_hwmod = {
->> -	.name		= "timer16",
->> -	.class		= &dra7xx_timer_hwmod_class,
->> -	.clkdm_name	= "l4per3_clkdm",
->> -	.main_clk	= "timer16_gfclk_mux",
->> -	.prcm = {
->> -		.omap4 = {
->> -			.clkctrl_offs = DRA7XX_CM_L4PER3_TIMER16_CLKCTRL_OFFSET,
->> -			.context_offs = DRA7XX_RM_L4PER3_TIMER16_CONTEXT_OFFSET,
->> -			.modulemode   = MODULEMODE_SWCTRL,
->> -		},
->> -	},
->> -};
->> -
->>   /*
->>    * 'usb_otg_ss' class
->>    *
->> @@ -1818,102 +1639,6 @@ static struct omap_hwmod_ocp_if dra7xx_l4_per1__timer4 = {
->>   	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->>   };
->>   
->> -/* l4_per3 -> timer5 */
->> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer5 = {
->> -	.master		= &dra7xx_l4_per3_hwmod,
->> -	.slave		= &dra7xx_timer5_hwmod,
->> -	.clk		= "l3_iclk_div",
->> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->> -};
->> -
->> -/* l4_per3 -> timer6 */
->> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer6 = {
->> -	.master		= &dra7xx_l4_per3_hwmod,
->> -	.slave		= &dra7xx_timer6_hwmod,
->> -	.clk		= "l3_iclk_div",
->> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->> -};
->> -
->> -/* l4_per3 -> timer7 */
->> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer7 = {
->> -	.master		= &dra7xx_l4_per3_hwmod,
->> -	.slave		= &dra7xx_timer7_hwmod,
->> -	.clk		= "l3_iclk_div",
->> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->> -};
->> -
->> -/* l4_per3 -> timer8 */
->> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer8 = {
->> -	.master		= &dra7xx_l4_per3_hwmod,
->> -	.slave		= &dra7xx_timer8_hwmod,
->> -	.clk		= "l3_iclk_div",
->> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->> -};
->> -
->> -/* l4_per1 -> timer9 */
->> -static struct omap_hwmod_ocp_if dra7xx_l4_per1__timer9 = {
->> -	.master		= &dra7xx_l4_per1_hwmod,
->> -	.slave		= &dra7xx_timer9_hwmod,
->> -	.clk		= "l3_iclk_div",
->> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->> -};
->> -
->> -/* l4_per1 -> timer10 */
->> -static struct omap_hwmod_ocp_if dra7xx_l4_per1__timer10 = {
->> -	.master		= &dra7xx_l4_per1_hwmod,
->> -	.slave		= &dra7xx_timer10_hwmod,
->> -	.clk		= "l3_iclk_div",
->> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->> -};
->> -
->> -/* l4_per1 -> timer11 */
->> -static struct omap_hwmod_ocp_if dra7xx_l4_per1__timer11 = {
->> -	.master		= &dra7xx_l4_per1_hwmod,
->> -	.slave		= &dra7xx_timer11_hwmod,
->> -	.clk		= "l3_iclk_div",
->> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->> -};
->> -
->> -/* l4_wkup -> timer12 */
->> -static struct omap_hwmod_ocp_if dra7xx_l4_wkup__timer12 = {
->> -	.master		= &dra7xx_l4_wkup_hwmod,
->> -	.slave		= &dra7xx_timer12_hwmod,
->> -	.clk		= "wkupaon_iclk_mux",
->> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->> -};
->> -
->> -/* l4_per3 -> timer13 */
->> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer13 = {
->> -	.master		= &dra7xx_l4_per3_hwmod,
->> -	.slave		= &dra7xx_timer13_hwmod,
->> -	.clk		= "l3_iclk_div",
->> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->> -};
->> -
->> -/* l4_per3 -> timer14 */
->> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer14 = {
->> -	.master		= &dra7xx_l4_per3_hwmod,
->> -	.slave		= &dra7xx_timer14_hwmod,
->> -	.clk		= "l3_iclk_div",
->> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->> -};
->> -
->> -/* l4_per3 -> timer15 */
->> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer15 = {
->> -	.master		= &dra7xx_l4_per3_hwmod,
->> -	.slave		= &dra7xx_timer15_hwmod,
->> -	.clk		= "l3_iclk_div",
->> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->> -};
->> -
->> -/* l4_per3 -> timer16 */
->> -static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer16 = {
->> -	.master		= &dra7xx_l4_per3_hwmod,
->> -	.slave		= &dra7xx_timer16_hwmod,
->> -	.clk		= "l3_iclk_div",
->> -	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->> -};
->> -
->>   /* l4_per3 -> usb_otg_ss1 */
->>   static struct omap_hwmod_ocp_if dra7xx_l4_per3__usb_otg_ss1 = {
->>   	.master		= &dra7xx_l4_per3_hwmod,
->> @@ -2045,17 +1770,6 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
->>   	&dra7xx_l4_per1__timer2,
->>   	&dra7xx_l4_per1__timer3,
->>   	&dra7xx_l4_per1__timer4,
->> -	&dra7xx_l4_per3__timer5,
->> -	&dra7xx_l4_per3__timer6,
->> -	&dra7xx_l4_per3__timer7,
->> -	&dra7xx_l4_per3__timer8,
->> -	&dra7xx_l4_per1__timer9,
->> -	&dra7xx_l4_per1__timer10,
->> -	&dra7xx_l4_per1__timer11,
->> -	&dra7xx_l4_per3__timer13,
->> -	&dra7xx_l4_per3__timer14,
->> -	&dra7xx_l4_per3__timer15,
->> -	&dra7xx_l4_per3__timer16,
->>   	&dra7xx_l4_per3__usb_otg_ss1,
->>   	&dra7xx_l4_per3__usb_otg_ss2,
->>   	&dra7xx_l4_per3__usb_otg_ss3,
->> @@ -2069,12 +1783,6 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
->>   	NULL,
->>   };
->>   
->> -/* GP-only hwmod links */
->> -static struct omap_hwmod_ocp_if *dra7xx_gp_hwmod_ocp_ifs[] __initdata = {
->> -	&dra7xx_l4_wkup__timer12,
->> -	NULL,
->> -};
->> -
->>   /* SoC variant specific hwmod links */
->>   static struct omap_hwmod_ocp_if *dra76x_hwmod_ocp_ifs[] __initdata = {
->>   	&dra7xx_l4_per3__usb_otg_ss4,
->> @@ -2124,8 +1832,5 @@ int __init dra7xx_hwmod_init(void)
->>   		}
->>   	}
->>   
->> -	if (!ret && omap_type() == OMAP2_DEVICE_TYPE_GP)
->> -		ret = omap_hwmod_register_links(dra7xx_gp_hwmod_ocp_ifs);
->> -
-> 
-> 
-> Maybe I'm missing it but how is this logic getting replicated when using
-> ti,sync? We runtime detect here if we are on an HS device and if so let
-> the secure world manage these device's pm/clocks, without this the
-> non-secure side managment will be unconditional.
+From: Swapnil Jakhade <sjakhade@cadence.com>
 
-This is handled by the clkctrl driver itself. timer12 is marked as 
-NON-SEC device supported only, so it doesn't get registered on HS chips.
+Add reset support for PHY lane group.
 
-I guess the lack of the clock fails the ti-sysc part of the registration 
-logic also. Tony?
+Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+---
+ drivers/phy/cadence/phy-cadence-torrent.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/drivers/phy/cadence/phy-cadence-torrent.c b/drivers/phy/cadence/phy-cadence-torrent.c
+index 6c3eaaa..ebc3b68 100644
+--- a/drivers/phy/cadence/phy-cadence-torrent.c
++++ b/drivers/phy/cadence/phy-cadence-torrent.c
+@@ -18,6 +18,7 @@
+ #include <linux/of_device.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
++#include <linux/reset.h>
+ 
+ #define REF_CLK_19_2MHz		19200000
+ #define REF_CLK_25MHz		25000000
+@@ -144,6 +145,7 @@ struct cdns_torrent_phy {
+ 	void __iomem *sd_base; /* SD0801 registers base */
+ 	u32 num_lanes; /* Number of lanes to use */
+ 	u32 max_bit_rate; /* Maximum link bit rate to use (in Mbps) */
++	struct reset_control *phy_rst;
+ 	struct device *dev;
+ 	struct clk *clk;
+ 	unsigned long ref_clk_rate;
+@@ -182,9 +184,14 @@ static void cdns_dp_phy_write_field(struct cdns_torrent_phy *cdns_phy,
+ 				    unsigned char num_bits,
+ 				    unsigned int val);
+ 
++static int cdns_torrent_phy_on(struct phy *phy);
++static int cdns_torrent_phy_off(struct phy *phy);
++
+ static const struct phy_ops cdns_torrent_phy_ops = {
+ 	.init		= cdns_torrent_dp_init,
+ 	.exit		= cdns_torrent_dp_exit,
++	.power_on	= cdns_torrent_phy_on,
++	.power_off	= cdns_torrent_phy_off,
+ 	.owner		= THIS_MODULE,
+ };
+ 
+@@ -317,6 +324,9 @@ static int cdns_torrent_dp_init(struct phy *phy)
+ 
+ 	/* take out of reset */
+ 	cdns_dp_phy_write_field(cdns_phy, PHY_RESET, 8, 1, 1);
++
++	cdns_torrent_phy_on(phy);
++
+ 	ret = cdns_torrent_dp_wait_pma_cmn_ready(cdns_phy);
+ 	if (ret)
+ 		return ret;
+@@ -945,6 +955,21 @@ static void cdns_dp_phy_write_field(struct cdns_torrent_phy *cdns_phy,
+ 			      start_bit))));
+ }
+ 
++static int cdns_torrent_phy_on(struct phy *phy)
++{
++	struct cdns_torrent_phy *cdns_phy = phy_get_drvdata(phy);
++
++	/* Take the PHY lane group out of reset */
++	return reset_control_deassert(cdns_phy->phy_rst);
++}
++
++static int cdns_torrent_phy_off(struct phy *phy)
++{
++	struct cdns_torrent_phy *cdns_phy = phy_get_drvdata(phy);
++
++	return reset_control_assert(cdns_phy->phy_rst);
++}
++
+ static int cdns_torrent_phy_probe(struct platform_device *pdev)
+ {
+ 	struct resource *regs;
+@@ -976,6 +1001,8 @@ static int cdns_torrent_phy_probe(struct platform_device *pdev)
+ 	if (IS_ERR(cdns_phy->sd_base))
+ 		return PTR_ERR(cdns_phy->sd_base);
+ 
++	cdns_phy->phy_rst = devm_reset_control_array_get_exclusive(dev);
++
+ 	err = device_property_read_u32(dev, "num_lanes",
+ 				       &cdns_phy->num_lanes);
+ 	if (err)
+-- 
+2.7.4
+
