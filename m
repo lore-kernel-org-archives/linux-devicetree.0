@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77DFC00454
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF937C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA5C214D8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1EFA214D8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Dec 2019 14:03:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dgAz4l8N"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tmVbB+3i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbfLKOD3 (ORCPT
+        id S1729837AbfLKODO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:03:29 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59022 "EHLO
+        Wed, 11 Dec 2019 09:03:14 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59002 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729686AbfLKODP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 09:03:15 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2c7a050806;
-        Wed, 11 Dec 2019 08:02:38 -0600
+        with ESMTP id S1729686AbfLKODL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 09:03:11 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2fsT050816;
+        Wed, 11 Dec 2019 08:02:41 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576072958;
-        bh=9amqIT/f1jOkWzSxPUQbHpxBfg7WY/+ml8BadDaKf1w=;
+        s=ti-com-17Q1; t=1576072961;
+        bh=bdAAbSW/GJ/N3Y+tA5v3DGB94y/2ZOABVe73adT4xmc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=dgAz4l8N77wO/m9qC7DLn4ktOy88JPrsBxP6qBaosN+k0GZQfTyokWe0SqGA4YEye
-         dRjAEa5GQo8utY8L3LKz3W0VGOUuG9qu0XtbodCnI1kDCBhahBbw0QvGC30b5/gvwM
-         ePGSLtBBK7rpCd2kL0NUaoNG/3J9VMVfmP1gdclw=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBE2c2X094033
+        b=tmVbB+3iyWRJbu0R8eXXOxxO5HkFGGWsKdokzkxEBqMnOm4gPATiy5yLIhhRNtKwe
+         5oEGlJrPtB8IBjRZqt0M4j90O6C5xZDCWPuWMQDkPkL7qVayrJzPwUdq7E4OYpsQUO
+         tGGdbzgvZtpqgzAEVXKHF1lZheAoZ2CVcl9QxwAs=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBE2fDp124514
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Dec 2019 08:02:38 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 11 Dec 2019 08:02:41 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Dec 2019 08:02:38 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 08:02:40 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Dec 2019 08:02:38 -0600
+ Frontend Transport; Wed, 11 Dec 2019 08:02:40 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2afm007398;
-        Wed, 11 Dec 2019 08:02:38 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2afp007398;
+        Wed, 11 Dec 2019 08:02:40 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
         <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>
 CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v4 02/10] ARM: dts: dra7: add cam clkctrl node
-Date:   Wed, 11 Dec 2019 08:05:50 -0600
-Message-ID: <20191211140558.10407-3-bparrot@ti.com>
+Subject: [Patch v4 05/10] ARM: dts: DRA72: Add CAL dtsi node
+Date:   Wed, 11 Dec 2019 08:05:53 -0600
+Message-ID: <20191211140558.10407-6-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191211140558.10407-1-bparrot@ti.com>
 References: <20191211140558.10407-1-bparrot@ti.com>
@@ -66,44 +66,67 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add clkctrl nodes for CAM domain.
-
-Note that because of the current dts node name dependency for mapping to
-clock domain, we must still use "cam-clkctrl@" naming instead of generic
-"clock@" naming for the node. And because of this, it's probably best to
-apply the dts node addition together along with the other clock changes.
+This patch adds the required dtsi node to support the Camera
+Adaptation Layer (CAL) for the DRA72 family of devices.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm/boot/dts/dra7xx-clocks.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/boot/dts/dra72x.dtsi | 42 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-index d1c2406ec71c..199f8d483f75 100644
---- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-@@ -1734,6 +1734,20 @@
- 		};
+diff --git a/arch/arm/boot/dts/dra72x.dtsi b/arch/arm/boot/dts/dra72x.dtsi
+index f5762709c853..82b57a35abc0 100644
+--- a/arch/arm/boot/dts/dra72x.dtsi
++++ b/arch/arm/boot/dts/dra72x.dtsi
+@@ -17,6 +17,48 @@
  	};
+ };
  
-+	cam_cm: cam-cm@1000 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x1000 0x100>;
++&l4_per2 {
++	target-module@5b000 {			/* 0x4845b000, ap 59 46.0 */
++		compatible = "ti,sysc-omap4", "ti,sysc";
++		reg = <0x5b000 0x4>,
++		      <0x5b010 0x4>;
++		reg-names = "rev", "sysc";
++		ti,sysc-midle = <SYSC_IDLE_FORCE>,
++				<SYSC_IDLE_NO>;
++		ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++				<SYSC_IDLE_NO>;
++		clocks = <&cam_clkctrl DRA7_CAM_VIP2_CLKCTRL 0>;
++		clock-names = "fck";
 +		#address-cells = <1>;
 +		#size-cells = <1>;
-+		ranges = <0 0x1000 0x100>;
++		ranges = <0x0 0x5b000 0x1000>;
 +
-+		cam_clkctrl: cam-clkctrl@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x2c>;
-+			#clock-cells = <2>;
++		cal: cal@0 {
++			compatible = "ti,dra72-cal";
++			reg = <0x0000 0x400>,
++			      <0x0800 0x40>,
++			      <0x0900 0x40>;
++			reg-names = "cal_top",
++				    "cal_rx_core0",
++				    "cal_rx_core1";
++			interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++			ti,camerrx-control = <&scm_conf 0xE94>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				csi2_0: port@0 {
++					reg = <0>;
++				};
++				csi2_1: port@1 {
++					reg = <1>;
++				};
++			};
 +		};
 +	};
++};
 +
- 	dss_cm: dss-cm@1100 {
- 		compatible = "ti,omap4-cm";
- 		reg = <0x1100 0x100>;
+ &dss {
+ 	reg = <0x58000000 0x80>,
+ 	      <0x58004054 0x4>,
 -- 
 2.17.1
 
