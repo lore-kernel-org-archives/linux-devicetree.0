@@ -2,113 +2,174 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71964C2D0C9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F891C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50CF9227BF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B2822527
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:09:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fWA8oi4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbfLLQHZ (ORCPT
+        id S1729749AbfLLQJY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:07:25 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43405 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729247AbfLLQHZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 11:07:25 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ifQzq-00041M-VG; Thu, 12 Dec 2019 17:07:22 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ifQzq-0006tq-55; Thu, 12 Dec 2019 17:07:22 +0100
-Date:   Thu, 12 Dec 2019 17:07:22 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl: Enable egalax touch screen
-Message-ID: <20191212160722.wgqjeeknvm257hwi@pengutronix.de>
-References: <20191212160220.2265521-1-sjoerd.simons@collabora.co.uk>
+        Thu, 12 Dec 2019 11:09:24 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38641 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729709AbfLLQJY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 11:09:24 -0500
+Received: by mail-io1-f66.google.com with SMTP id v3so3360666ioj.5
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 08:09:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZSuulaHZP7wrCDMhvr1mBj+rW2++SNmugkVI+athuy0=;
+        b=fWA8oi4BNyT1AqiAexpCYnMadFV+cK60+9u4U1OnYTHAl/RMEBEZ1qUyJVXYWlq3AK
+         1leJZGQkxQSsY3/UJ2F5h18b+SaKi1Ry6fQ3COI85Vg+fxU9oDxBY1qGfUS0JTTufQJq
+         47xWja5YZkpXtzKA6w1TMeZbU4DNqk5ccNV54=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZSuulaHZP7wrCDMhvr1mBj+rW2++SNmugkVI+athuy0=;
+        b=pwjazzXmVUMYA9JAqNglffuLlzzCn1X7+5dIJx6Eq51vXznJkcxdADMIlIRb8ze7nE
+         sLqP2ocOwm78trrV11V0CAdESPtzOP/r0iK/ZfKsGKDqitcahwrQt6Ko4ESi2aC9zyv+
+         J8oGDTsHbe40TUs/o6TK2B3vu2dceHuQNrlt3qzO2TjFuxSuoO29vtumU92mxoZUvGtO
+         rhheMCMtmILPB2DdB6f9NA1UyTGGEpQF7OeCmdJoOKZ20NOtOimX6KdaL7ge1duJRE5V
+         hRbMQ83Ypt46irwDemSYCbhW7Ok2+K9Kx5IjuQhNtOuGRWPTtiZ8xigcWuELVsexU0cO
+         DmcQ==
+X-Gm-Message-State: APjAAAVBY/vywHKvZliaL7BUr1KEbDXpZm8wgimRZNyJnXNNHZ8P5hKd
+        MPZvF7aI7CnHP02/R9FnfIKNKn5MewQ=
+X-Google-Smtp-Source: APXvYqwQvhtGY4DB3GekCJhEBq0uk6slqkxbbHXB3Y3L1WecZ0d/i9bG8/3Ilagfc/AUFkgKGFNYTw==
+X-Received: by 2002:a5e:850e:: with SMTP id i14mr3839327ioj.226.1576166963131;
+        Thu, 12 Dec 2019 08:09:23 -0800 (PST)
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com. [209.85.166.50])
+        by smtp.gmail.com with ESMTPSA id k1sm332154ioa.26.2019.12.12.08.09.21
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 08:09:21 -0800 (PST)
+Received: by mail-io1-f50.google.com with SMTP id a22so3379942ios.3
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 08:09:21 -0800 (PST)
+X-Received: by 2002:a02:2385:: with SMTP id u127mr8799499jau.127.1576166960582;
+ Thu, 12 Dec 2019 08:09:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212160220.2265521-1-sjoerd.simons@collabora.co.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 17:04:57 up 27 days,  7:23, 36 users,  load average: 0.04, 0.19,
- 0.15
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <1574934847-30372-1-git-send-email-rkambl@codeaurora.org>
+ <1574934847-30372-2-git-send-email-rkambl@codeaurora.org> <CAHLCerOVH1xLjMmDNFVx=YYYTA3MipaOhHZ-AYtxEnDFgRbSJg@mail.gmail.com>
+In-Reply-To: <CAHLCerOVH1xLjMmDNFVx=YYYTA3MipaOhHZ-AYtxEnDFgRbSJg@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 12 Dec 2019 08:09:08 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UDGcnLLkBiTBr5GgrzNH20qf9pDQW8wdoqsbO4832M4Q@mail.gmail.com>
+Message-ID: <CAD=FV=UDGcnLLkBiTBr5GgrzNH20qf9pDQW8wdoqsbO4832M4Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: sc7180: Add device node support
+ for TSENS in SC7180
+To:     Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Rajeshwari <rkambl@codeaurora.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        sivaa@codeaurora.org, sanm@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sjoerd,
+Hi,
 
-On 19-12-12 17:02, Sjoerd Simons wrote:
-> Sabrelite boards can have an lvds screen attached with a built-in i2c touch
-> screen. Enable this in the dtsi.
+On Thu, Dec 12, 2019 at 3:00 AM Amit Kucheria
+<amit.kucheria@verdurent.com> wrote:
+>
+> Hi Rajeshwari,
+>
+> On Thu, Nov 28, 2019 at 3:25 PM Rajeshwari <rkambl@codeaurora.org> wrote:
+> >
+> > Add TSENS node and user thermal zone for TSENS sensors in SC7180.
+> >
+> > Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 527 +++++++++++++++++++++++++++++++++++
+> >  1 file changed, 527 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index 666e9b9..6656ffc 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > @@ -911,6 +911,26 @@
+> >                         status = "disabled";
+> >                 };
+> >
+> > +               tsens0: thermal-sensor@c263000 {
+> > +                       compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
+> > +                       reg = <0 0x0c263000 0 0x1ff>, /* TM */
+> > +                               <0 0x0c222000 0 0x1ff>; /* SROT */
+> > +                       #qcom,sensors = <15>;
+> > +                       interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       interrupt-names = "uplow";
+> > +                       #thermal-sensor-cells = <1>;
+> > +               };
+> > +
+> > +               tsens1: thermal-sensor@c265000 {
+> > +                       compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
+> > +                       reg = <0 0x0c265000 0 0x1ff>, /* TM */
+> > +                               <0 0x0c223000 0 0x1ff>; /* SROT */
+> > +                       #qcom,sensors = <10>;
+> > +                       interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       interrupt-names = "uplow";
+> > +                       #thermal-sensor-cells = <1>;
+> > +               };
+> > +
+> >                 spmi_bus: spmi@c440000 {
+> >                         compatible = "qcom,spmi-pmic-arb";
+> >                         reg = <0 0x0c440000 0 0x1100>,
+> > @@ -1121,6 +1141,513 @@
+> >                 };
+> >         };
+> >
+> > +       thermal-zones {
+> > +               cpu0-thermal {
+> > +                       polling-delay-passive = <250>;
+> > +                       polling-delay = <1000>;
+> > +
+> > +                       thermal-sensors = <&tsens0 1>;
+> > +
+> > +                       trips {
+> > +                               cpu0_alert0: trip-point0 {
+> > +                                       temperature = <90000>;
+> > +                                       hysteresis = <2000>;
+> > +                                       type = "passive";
+> > +                               };
+> > +
+> > +                               cpu0_alert1: trip-point1 {
+> > +                                       temperature = <95000>;
+> > +                                       hysteresis = <2000>;
+> > +                                       type = "passive";
+> > +                               };
+> > +
+> > +                               cpu0_crit: cpu_crit {
+> > +                                       temperature = <110000>;
+> > +                                       hysteresis = <1000>;
+> > +                                       type = "critical";
+> > +                               };
+>
+> Where are the cooling maps for all the cpu thermal zones? A passive
+> trip point w/o a cooling map is not of much use. If you are waiting
+> for cpufreq support to land before adding them, then remove the
+> passive trip points for now and add them along with the cooling maps
+> when you have cooling devices.
 
-Can this be any screen available on the market?
+I will note that cpufreq support has landed in the qcom tree::
 
-> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-> ---
-> 
->  arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-> index 8468216dae9b..382b127b2251 100644
-> --- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-> @@ -416,6 +416,14 @@ &i2c3 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_i2c3>;
->  	status = "okay";
-> +
-> +	touchscreen@4 {
-> +		compatible = "eeti,egalax_ts";
-> +		reg = <0x04>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
-> +		wakeup-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=86899d8235ea0d3d7c293404fb43a6fabff866e6
 
-The wakeup-gpio and the irq-line are sharing the same gpio line?
+...so I guess the right thing is to send a patch adding the cooling
+maps for the cpu thermal zones?
 
-Regards,
-  Marco 
-
-> +	};
->  };
->  
->  &iomuxc {
-> -- 
-> 2.24.0
-> 
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+-Doug
