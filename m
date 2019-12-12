@@ -2,397 +2,157 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 438B6C00454
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 22:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D2AC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 22:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 050252173E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 22:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576189104;
-	bh=oe6Yp4g352vu1xp6IWNIh7iJAfEzPglzyvwwZlxIE4Q=;
-	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
-	b=0BvVZUDnYvFkB8T/vQMRRtsbRMGU2Fn+8ogh8jnUiTmW/dqrY6vtVLOuCBHMIl2dH
-	 vCrYK1ghkZRih7HvaNmho8ZOWlmiTYFAT82QzcjnrdfmADHJWPQQ8jKHtttVvb82JG
-	 JftmWgfp9bMm+38QSQMQYXk/9XSlyAlEn9jRu94k=
+	by mail.kernel.org (Postfix) with ESMTP id 912A521556
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 22:28:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="bbQoruq+";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="WFfnIHHe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731045AbfLLWST (ORCPT
+        id S1731092AbfLLW2i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 17:18:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730896AbfLLWST (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Dec 2019 17:18:19 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 12 Dec 2019 17:28:38 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:60110 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731072AbfLLW2i (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Dec 2019 17:28:38 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7FF1206DA;
-        Thu, 12 Dec 2019 22:18:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576189097;
-        bh=oe6Yp4g352vu1xp6IWNIh7iJAfEzPglzyvwwZlxIE4Q=;
-        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
-        b=vbhgzLqYSVQfwaF3qnIV8bC36/wQTXHrJ2H/2hzKe1W2enC//2Td3Ur1br4xPri99
-         LToooulyWpOWwAu8OGdKqBBmiC4C1DQ2/yNpftLHoyJGsXm3PSWfZs6RVCqJuzfaPt
-         xxkX1g27/oDc8tOifR2SfsgUeDYlEOcddI1Vmv7U=
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1311A4231F;
+        Thu, 12 Dec 2019 22:28:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1576189717; bh=/6iZ3+O9b5lzKsvg1LXSJXuRIbDXwA9hJN2sUu7S3Z0=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=bbQoruq+FYsHi9JLQv7MU8aVWDsK55qr+SbMfYcKnJUusSKqY9VrcaxiQ9t4H0+UU
+         kTVtKr0pLqvF+0wwkOcFrAAzxGeQBsocfyp0kaoYp/RcFrzfVepba1lpVHdwWxuQoM
+         Jrb0EPKof+O+xH29+wo3yJqhZGF7pW4qMnQzjbY4O8j4IykZdvZGVxRLxjfOkDBGZZ
+         KFivyK4RNmYbxdMefALVu3wTeovVz9TczJzO8itnGRLrx9WriH+eAw009Nrf2PurK/
+         EHFC9fU4McQXT2JhkXO5EVjgop4ntk6sr7cAh1o/5OyMrGetQT6YB5h2j2J+kr51sy
+         aFmJTWJp75H0w==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 8F6CEA0089;
+        Thu, 12 Dec 2019 22:28:28 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.13.188.44) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 12 Dec 2019 14:28:27 -0800
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.13.188.44) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Thu, 12 Dec 2019 14:28:26 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=drOUq9bO/08NLFOJweULM9yW9hB8ninhp2KzcdHDl77cKArgwztiZIlO8Wm9c5XvV87Q7qx8T2FSxKVJ2xbdmFAv7N7RujhnxgY8Q3ubossdko320E2W1nahDJt6kEKjNzPUrpMIAkQP/MZ3ywUeHNsz3To5eP24SdSV2Laa4SSx6EhTL60E69iWt86HarCqpx6Kc2Vcuu8mPyJ6GZ9BNcUhmBzGat9i5S5wGYn+i7QDxNvEOSNBGZqKjM/EG4dksUb3aH3kSkxnPOX3E/MU+6SWnPXNAShKkyzAP9RPfXRpucGJeuWGWuznAFsivhVLrpc0KlMlaIgBLAQB0UpmLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/6iZ3+O9b5lzKsvg1LXSJXuRIbDXwA9hJN2sUu7S3Z0=;
+ b=OTwXI4EWE+Cd87MHaWzBHMYdvNhHloceMZJQx4DWzcbgGP7GA/6r9cATmtj8Q6dF0T9nw/+AljR0tW2NC349WWp9XfrCiZUW8k5PAqaZT4be0BZ4ijUFa1hBzDbEyGYg14WEmv4A2g+1J0IUj+7YIv2lFlkPwXyvd/hWHxTONdYJ9Hj7/jRoY1Bb9EA35olVORCJwWXra/s8WziIEMsNThVVmTEQbiyQgjt5969tNe2Y1c404l1EhDimKBk0E+LhFseR/93PGGimqj17FWgzKxJa+aISjb76jAD5V5HNfN9MGvarj9Xp6/FljejtfCGYJPDsRtVIUcc136RbDnMbwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/6iZ3+O9b5lzKsvg1LXSJXuRIbDXwA9hJN2sUu7S3Z0=;
+ b=WFfnIHHec9HqvWjtfA4PVdfz3M1/bJnr2k0v0qwgkR1hZAUNrOm4OlXSfLD2baKw0AJ8LR+Uv8EsPJlmEzzuG00kzr2Md1LW0CEvrc/RKIJgVdf8e9wISFw+hmywFSsvu+NgAFgv9iPuvzlBY2JU7Dp+bQ2ESjt/oElINVdhk/g=
+Received: from CY4PR1201MB0037.namprd12.prod.outlook.com (10.172.78.22) by
+ CY4PR1201MB0184.namprd12.prod.outlook.com (10.172.78.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.14; Thu, 12 Dec 2019 22:28:25 +0000
+Received: from CY4PR1201MB0037.namprd12.prod.outlook.com
+ ([fe80::5d88:202f:2fff:24b4]) by CY4PR1201MB0037.namprd12.prod.outlook.com
+ ([fe80::5d88:202f:2fff:24b4%8]) with mapi id 15.20.2516.018; Thu, 12 Dec 2019
+ 22:28:25 +0000
+From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     John Youn <John.Youn@synopsys.com>
+Subject: Re: [RFC PATCH 13/14] usb: devicetree: dwc3: Add property to disable
+ mult TRB fetch
+Thread-Topic: [RFC PATCH 13/14] usb: devicetree: dwc3: Add property to disable
+ mult TRB fetch
+Thread-Index: AQHVsJb46NEi1uYe2UuKB8LR+8hjAae2KKoAgADtFgA=
+Date:   Thu, 12 Dec 2019 22:28:25 +0000
+Message-ID: <6193f738-03ac-51b5-cdf0-d9b252a50146@synopsys.com>
+References: <cover.1576118671.git.thinhn@synopsys.com>
+ <b791f032edb8e6a739c342dbd0d2d5faa66ddfb8.1576118671.git.thinhn@synopsys.com>
+ <87mubyvtuh.fsf@kernel.org>
+In-Reply-To: <87mubyvtuh.fsf@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=thinhn@synopsys.com; 
+x-originating-ip: [149.117.75.11]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6255f92f-d6f8-4dbe-9016-08d77f529ab9
+x-ms-traffictypediagnostic: CY4PR1201MB0184:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1201MB01849A7789D7E2DE1A49F4C4AA550@CY4PR1201MB0184.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0249EFCB0B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(346002)(136003)(396003)(366004)(199004)(189003)(64756008)(6512007)(478600001)(2906002)(66476007)(6506007)(86362001)(66556008)(316002)(110136005)(6486002)(31686004)(107886003)(66946007)(186003)(4326008)(8936002)(76116006)(81156014)(31696002)(8676002)(2616005)(71200400001)(81166006)(66446008)(5660300002)(26005)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB0184;H:CY4PR1201MB0037.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1ShioNQCTLsbHwqXHX/u6E+0LihVlBjq9lOOeXHr0uW/UZT4J3kR0khGsuEElQKUXVzqN2vJwmjoF9fZPCN5g7GhVlRqV8x8Xjfr03nTYc8OLrhxmVQi5B4MPxwP6zLyDlpI5Z/UtJmIA99UvqxmqbwBtsaJ7QnVwqvZ/MRAo5vycR1GjsAPrRMZW/6RPaaVcybM1Yx3BkNMdM4f2ZXzYXSmaMrD5WJ0MmntJ8/5pm/Ec48tlES8sBQSUqM0WXxnM5jOWWtfRLxYoviWe2WVQQjV4+KwM8v6G8L2tK2B6qI3DVbGGgweEPRr7R9syw4AeOJD6HPx9Kv6lJMoAWqhoh3U64b3xtKmmZMXr1TWZ6UwzNxAu2c7daT12ZQW2U5X8k7kuxtjCanolS6EqooJkyAqDdwKPDQ2uHYvyLAebRN8ZPBRjJE57TBfFqNb5Ofe
 Content-Type: text/plain; charset="utf-8"
+Content-ID: <4A4BCAB2AE099049935A9A4C803EE412@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191205072653.34701-2-wen.he_1@nxp.com>
-References: <20191205072653.34701-1-wen.he_1@nxp.com> <20191205072653.34701-2-wen.he_1@nxp.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Wen He <wen.he_1@nxp.com>
-To:     Li Yang <leoyang.li@nxp.com>, Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Michael Walle <michael@walle.cc>,
-        Rob Herring <robh+dt@kernel.org>, Wen He <wen.he_1@nxp.com>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v11 2/2] clk: ls1028a: Add clock driver for Display output interface
-User-Agent: alot/0.8.1
-Date:   Thu, 12 Dec 2019 14:18:16 -0800
-Message-Id: <20191212221817.B7FF1206DA@mail.kernel.org>
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6255f92f-d6f8-4dbe-9016-08d77f529ab9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 22:28:25.3333
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qep5yCPBVCvgWa5TwcW7N+dj5GpeQV3jszmoVloh3E8wiJUfTCT7NHPHQPbq7HFl40l3ASInQV7xvnsVGt/TEw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0184
+X-OriginatorOrg: synopsys.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Wen He (2019-12-04 23:26:53)
-> Add clock driver for QorIQ LS1028A Display output interfaces(LCD, DPHY),
-> as implemented in TSMC CLN28HPM PLL, this PLL supports the programmable
-> integer division and range of the display output pixel clock's 27-594MHz.
->=20
-> Signed-off-by: Wen He <wen.he_1@nxp.com>
-> Signed-off-by: Michael Walle <michael@walle.cc>
-
-Is Michael the author? SoB chain is backwards here.
-
-> diff --git a/drivers/clk/clk-plldig.c b/drivers/clk/clk-plldig.c
-> new file mode 100644
-> index 000000000000..1942686f0254
-> --- /dev/null
-> +++ b/drivers/clk/clk-plldig.c
-> @@ -0,0 +1,297 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2019 NXP
-> + *
-> + * Clock driver for LS1028A Display output interfaces(LCD, DPHY).
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/bitfield.h>
-> +
-> +/* PLLDIG register offsets and bit masks */
-> +#define PLLDIG_REG_PLLSR            0x24
-> +#define PLLDIG_LOCK_MASK            BIT(2)
-> +#define PLLDIG_REG_PLLDV            0x28
-> +#define PLLDIG_MFD_MASK             GENMASK(7, 0)
-> +#define PLLDIG_RFDPHI1_MASK         GENMASK(30, 25)
-> +#define PLLDIG_REG_PLLFM            0x2c
-> +#define PLLDIG_SSCGBYP_ENABLE       BIT(30)
-> +#define PLLDIG_REG_PLLFD            0x30
-> +#define PLLDIG_FDEN                 BIT(30)
-> +#define PLLDIG_FRAC_MASK            GENMASK(15, 0)
-> +#define PLLDIG_REG_PLLCAL1          0x38
-> +#define PLLDIG_REG_PLLCAL2          0x3c
-> +
-> +/* Range of the VCO frequencies, in Hz */
-> +#define PLLDIG_MIN_VCO_FREQ         650000000
-> +#define PLLDIG_MAX_VCO_FREQ         1300000000
-> +
-> +/* Range of the output frequencies, in Hz */
-> +#define PHI1_MIN_FREQ               27000000
-> +#define PHI1_MAX_FREQ               600000000
-> +
-> +/* Maximum value of the reduced frequency divider */
-> +#define MAX_RFDPHI1          63UL
-> +
-> +/* Best value of multiplication factor divider */
-> +#define PLLDIG_DEFAULT_MFD   44
-> +
-> +/*
-> + * Denominator part of the fractional part of the
-> + * loop multiplication factor.
-> + */
-> +#define MFDEN          20480
-> +
-> +static const struct clk_parent_data parent_data[] =3D {
-> +       {.index =3D 0},
-
-Nitpick: Add spaces after { and before }
-
-> +};
-> +
-> +struct clk_plldig {
-> +       struct clk_hw hw;
-> +       void __iomem *regs;
-> +       unsigned int vco_freq;
-> +};
-> +
-> +#define to_clk_plldig(_hw)     container_of(_hw, struct clk_plldig, hw)
-> +
-> +static int plldig_enable(struct clk_hw *hw)
-> +{
-> +       struct clk_plldig *data =3D to_clk_plldig(hw);
-> +       u32 val;
-> +
-> +       val =3D readl(data->regs + PLLDIG_REG_PLLFM);
-> +       /*
-> +        * Use Bypass mode with PLL off by default, the frequency oversho=
-ot
-> +        * detector output was disable. SSCG Bypass mode should be enable.
-> +        */
-> +       val |=3D PLLDIG_SSCGBYP_ENABLE;
-> +       writel(val, data->regs + PLLDIG_REG_PLLFM);
-> +
-> +       return 0;
-> +}
-> +
-> +static void plldig_disable(struct clk_hw *hw)
-> +{
-> +       struct clk_plldig *data =3D to_clk_plldig(hw);
-> +       u32 val;
-> +
-> +       val =3D readl(data->regs + PLLDIG_REG_PLLFM);
-> +
-> +       val &=3D ~PLLDIG_SSCGBYP_ENABLE;
-> +       val |=3D FIELD_PREP(PLLDIG_SSCGBYP_ENABLE, 0x0);
-> +
-> +       writel(val, data->regs + PLLDIG_REG_PLLFM);
-> +}
-> +
-> +static int plldig_is_enabled(struct clk_hw *hw)
-> +{
-> +       struct clk_plldig *data =3D to_clk_plldig(hw);
-> +
-> +       return (readl(data->regs + PLLDIG_REG_PLLFM) &
-
-Please drop useless parenthesis.
-
-> +                             PLLDIG_SSCGBYP_ENABLE);
-> +}
-> +
-> +static unsigned long plldig_recalc_rate(struct clk_hw *hw,
-> +                                       unsigned long parent_rate)
-> +{
-> +       struct clk_plldig *data =3D to_clk_plldig(hw);
-> +       u32 val, rfdphi1;
-> +
-> +       val =3D readl(data->regs + PLLDIG_REG_PLLDV);
-> +
-> +       /* Check if PLL is bypassed */
-> +       if (val & PLLDIG_SSCGBYP_ENABLE)
-> +               return parent_rate;
-> +
-> +       rfdphi1 =3D FIELD_GET(PLLDIG_RFDPHI1_MASK, val);
-> +
-> +       /*
-> +        * If RFDPHI1 has a value of 1 the VCO frequency is also divided =
-by
-> +        * one.
-> +        */
-> +       if (!rfdphi1)
-> +               rfdphi1 =3D 1;
-> +
-> +       return DIV_ROUND_UP(data->vco_freq, rfdphi1);
-> +}
-> +
-> +static unsigned long plldig_calc_target_div(unsigned long vco_freq,
-> +                                           unsigned long target_rate)
-> +{
-> +       unsigned long div;
-> +
-> +       div =3D DIV_ROUND_CLOSEST(vco_freq, target_rate);
-> +       div =3D max(1UL, div);
-> +       div =3D min(div, MAX_RFDPHI1);
-
-Use clamp().
-
-> +
-> +       return div;
-> +}
-> +
-> +static int plldig_determine_rate(struct clk_hw *hw,
-> +                                struct clk_rate_request *req)
-> +{
-> +       struct clk_plldig *data =3D to_clk_plldig(hw);
-> +       unsigned int div;
-> +
-> +       if (req->rate < PHI1_MIN_FREQ)
-> +               req->rate =3D PHI1_MIN_FREQ;
-> +       if (req->rate > PHI1_MAX_FREQ)
-> +               req->rate =3D PHI1_MAX_FREQ;
-
-Use clamp()
-
-> +
-> +       div =3D plldig_calc_target_div(data->vco_freq, req->rate);
-> +       req->rate =3D DIV_ROUND_UP(data->vco_freq, div);
-> +
-> +       return 0;
-> +}
-> +
-> +static int plldig_set_rate(struct clk_hw *hw, unsigned long rate,
-> +               unsigned long parent_rate)
-> +{
-> +       struct clk_plldig *data =3D to_clk_plldig(hw);
-> +       unsigned int val, cond;
-> +       unsigned int rfdphi1;
-> +
-> +       if (rate < PHI1_MIN_FREQ)
-> +               rate =3D PHI1_MIN_FREQ;
-> +       if (rate > PHI1_MAX_FREQ)
-> +               rate =3D PHI1_MAX_FREQ;
-
-Use clamp()
-
-> +
-> +       rfdphi1 =3D plldig_calc_target_div(data->vco_freq, rate);
-> +
-> +       /* update the divider value */
-> +       val =3D readl(data->regs + PLLDIG_REG_PLLDV);
-> +       val &=3D ~PLLDIG_RFDPHI1_MASK;
-> +       val |=3D FIELD_PREP(PLLDIG_RFDPHI1_MASK, rfdphi1);
-> +       writel(val, data->regs + PLLDIG_REG_PLLDV);
-> +
-> +       /* delay 200us make sure that old lock state is cleared */
-> +       udelay(200);
-
-Please remove 'delay 200us' from the comment. Just say that we're waiting
-for old lock state to clear. It's clear from the code how much time it
-is.
-
-> +
-> +       /* Wait until PLL is locked or timeout (maximum 1000 usecs) */
-
-Drop the time. It's a millisecond.
-
-> +       return readl_poll_timeout_atomic(data->regs + PLLDIG_REG_PLLSR, c=
-ond,
-> +                                        cond & PLLDIG_LOCK_MASK, 0,
-> +                                        USEC_PER_MSEC);
-> +}
-> +
-> +static const struct clk_ops plldig_clk_ops =3D {
-> +       .enable =3D plldig_enable,
-> +       .disable =3D plldig_disable,
-> +       .is_enabled =3D plldig_is_enabled,
-> +       .recalc_rate =3D plldig_recalc_rate,
-> +       .determine_rate =3D plldig_determine_rate,
-> +       .set_rate =3D plldig_set_rate,
-> +};
-> +
-> +static int plldig_init(struct clk_hw *hw)
-> +{
-> +       struct clk_plldig *data =3D to_clk_plldig(hw);
-> +       struct clk_hw *parent =3D clk_hw_get_parent(hw);
-> +       unsigned long parent_rate =3D clk_hw_get_rate(parent);
-> +       unsigned long val;
-> +       unsigned long long lltmp;
-> +       unsigned int mfd, fracdiv =3D 0;
-> +
-> +       if (!parent)
-> +               return -EINVAL;
-> +
-> +       if (data->vco_freq) {
-> +               mfd =3D data->vco_freq / parent_rate;
-> +               lltmp =3D data->vco_freq % parent_rate;
-> +               lltmp *=3D MFDEN;
-> +               do_div(lltmp, parent_rate);
-> +               fracdiv =3D lltmp;
-> +       } else {
-> +               mfd =3D PLLDIG_DEFAULT_MFD;
-> +               data->vco_freq =3D parent_rate * mfd;
-> +       }
-> +
-> +       val =3D FIELD_PREP(PLLDIG_MFD_MASK, mfd);
-> +       writel(val, data->regs + PLLDIG_REG_PLLDV);
-> +
-> +       if (fracdiv) {
-> +               val =3D FIELD_PREP(PLLDIG_FRAC_MASK, fracdiv);
-> +               /* Enable fractional divider */
-
-Remove useless comment please. Or move above the if condition.
-
-> +               val |=3D PLLDIG_FDEN;
-> +               writel(val, data->regs + PLLDIG_REG_PLLFD);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int plldig_clk_probe(struct platform_device *pdev)
-> +{
-> +       struct clk_plldig *data;
-> +       struct resource *mem;
-> +       struct device *dev =3D &pdev->dev;
-> +       int ret;
-> +
-> +       data =3D devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       data->regs =3D devm_ioremap_resource(dev, mem);
-
-We have devm_platform_ioremap_resource() for this now.
-
-> +       if (IS_ERR(data->regs))
-> +               return PTR_ERR(data->regs);
-> +
-> +       data->hw.init =3D CLK_HW_INIT_PARENTS_DATA("dpclk",
-> +                                                parent_data,
-> +                                                &plldig_clk_ops,
-> +                                                0);
-> +
-> +       ret =3D devm_clk_hw_register(dev, &data->hw);
-> +       if (ret) {
-> +               dev_err(dev, "failed to register %s clock\n",
-> +                                               dev->of_node->name);
-> +               return ret;
-> +       }
-> +
-> +       ret =3D devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
-> +                                         &data->hw);
-> +       if (ret) {
-> +               dev_err(dev, "unable to add clk provider\n");
-> +               return ret;
-> +       }
-> +
-> +       /*
-> +        * The frequency of the VCO cannot be changed during runtime.
-> +        * Therefore, let the user specify a desired frequency.
-> +        */
-> +       if (!of_property_read_u32(dev->of_node, "fsl,vco-hz",
-> +                                 &data->vco_freq)) {
-> +               if (data->vco_freq < PLLDIG_MIN_VCO_FREQ ||
-> +                   data->vco_freq > PLLDIG_MAX_VCO_FREQ)
-> +                       return -EINVAL;
-> +       }
-> +
-> +       return plldig_init(&data->hw);
-> +}
-> +
-> +static const struct of_device_id plldig_clk_id[] =3D {
-> +       { .compatible =3D "fsl,ls1028a-plldig"},
-
-Nitpick: Add a space before }
-
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, plldig_clk_id);
-> +
+SGksDQoNCkZlbGlwZSBCYWxiaSB3cm90ZToNCj4gSGksDQo+DQo+IFRoaW5oIE5ndXllbiA8VGhp
+bmguTmd1eWVuQHN5bm9wc3lzLmNvbT4gd3JpdGVzOg0KPj4gRFdDX3VzYjMyIGhhcyBhIGZlYXR1
+cmUgd2hlcmUgaXQgY2FuIGlzc3VlIG11bHRpcGxlIFRSQiBmZXRjaCByZXF1ZXN0cy4NCj4+IEFk
+ZCBhIG5ldyBwcm9wZXJ0eSB0byBsaW1pdCBhbmQgb25seSBkbyBvbmx5IHNpbmdsZSBUUkIgZmV0
+Y2ggcmVxdWVzdC4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBUaGluaCBOZ3V5ZW4gPHRoaW5obkBz
+eW5vcHN5cy5jb20+DQo+PiAtLS0NCj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3VzYi9kd2MzLnR4dCB8IDIgKysNCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9u
+cygrKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvdXNiL2R3YzMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9k
+d2MzLnR4dA0KPj4gaW5kZXggZmYzNWZhNmRlMmViLi4yOWQ2ZjliMWZjNzAgMTAwNjQ0DQo+PiAt
+LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3YzMudHh0DQo+PiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3YzMudHh0DQo+PiBA
+QCAtMTA4LDYgKzEwOCw4IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+PiAgICAtIHNucHMsbnVt
+LXRyYi1wcmVmZXRjaDogbWF4IHZhbHVlIHRvIGRvIFRSQnMgY2FjaGUgZm9yIERXQ191c2IzMi4g
+VGhlIHZhbHVlDQo+PiAgIAkJCWNhbiBiZSBmcm9tIDEgdG8gRFdDX1VTQjMyX0NBQ0hFX1RSQlNf
+UEVSX1RSQU5TRkVSLg0KPj4gICAJCQlEZWZhdWx0IHZhbHVlIGlzIERXQ19VU0IzMl9DQUNIRV9U
+UkJTX1BFUl9UUkFOU0ZFUi4NCj4+ICsgLSBzbnBzLGRpcy1tdWx0LXRyYi1mZXRjaDogc2V0IHRv
+IGlzc3VlIG9ubHkgc2luZ2xlIFRSQiBmZXRjaCByZXF1ZXN0IGluDQo+PiArCQkJRFdDX3VzYjMy
+Lg0KPiB0d28gcXVlc3Rpb25zOg0KPg0KPiAtIGhvdyBpcyB0aGlzIGRpZmZlcmVudCBmcm9tIHBh
+c3NpbmcgMSB0byB0aGUgcHJldmlvdXMgRFQgYmluZGluZw0KDQpUaGUgcHJldmlvdXMgRFQgYmlu
+ZGluZyBpcyByZWxhdGVkIHRvIHRoZSBudW1iZXIgVFJCcyB0byBjYWNoZSB3aGlsZSANCnRoaXMg
+b25lIGlzIHJlbGF0ZWQgdG8gd2hldGhlciB0aGUgY29udHJvbGxlciB3aWxsIHNlbmQgbXVsdGlw
+bGUgDQooaW50ZXJuYWwpIGZldGNoIGNvbW1hbmRzIHRvIGZldGNoIHRoZSBUUkJzLg0KDQo+IC0g
+ZG8gd2Uga25vdyBvZiBhbnlib2R5IGhhdmluZyBpc3N1ZXMgd2l0aCBtdWx0aS10cmIgcHJlZmV0
+Y2g/DQoNCk5vLCB3ZSBhZGRlZCB0aGlzIGZvciB2YXJpb3VzIGludGVybmFsIHRlc3RzLg0KDQpC
+UiwNClRoaW5oDQo=
