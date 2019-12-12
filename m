@@ -2,114 +2,117 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A22C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 08:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90343C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 08:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84096214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 08:06:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576137968;
-	bh=HoR/BLFtmwi38GLpSsDPB8K0R+D4dcvK56fVCK0tR7s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=XzP9n9uDN5Hp8MPnUJuzfKS7QD0qKTF79/Upmem5RLxkT3DLtMXESP4c5nqOQxFRP
-	 GQx17KHGZg3vGU3ZebFFS3DC8oYxZHKeQW9mUWpjtEd08UBNLZl2LjEv87Pwrr2VEI
-	 OBnw7HqMdC13tvgdQl3q6MYbtwYpskYVkg4M4F7k=
+	by mail.kernel.org (Postfix) with ESMTP id 6740B214AF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 08:17:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="l+U2Sw+3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbfLLIGI (ORCPT
+        id S1728193AbfLLIRA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 03:06:08 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45845 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728147AbfLLIGH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 03:06:07 -0500
-Received: by mail-lj1-f196.google.com with SMTP id d20so1162777ljc.12;
-        Thu, 12 Dec 2019 00:06:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=39HIJuHZ8Kr9jnNgUEG20ZXIWXqKC42ITM1S74AQ/bk=;
-        b=uAJFSqU/HRXk2CC1kQ6ezwrvIfqBnZPl+AJwS8ygQnZQcNY20grUpZAGjGEoW72EEl
-         AZC+0Y22X35tHHC7iW3GqPQpVkWN02fbxQQMO6zenfTYAlzbAtCMFVsAMv8mbTtN0w54
-         rQFug/KOvrGE5M2+KkWVH+Y6ZE3RPZCRN3UqhDnPjaMi/LPnk525U+A1FO4MUjvyrR71
-         kCVYORgiL5I2biPOsoS7uKhz8F4fO9dVS0ilrpC8U3wAM9yIcYY/0HrnlB/4zgaYjTLF
-         kRoY+W+1VyWvafGVdRZy7qiIxGLK382bgr+5jLYKdcoz5HThpG49K1T/1vSVzojofVoj
-         9XUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=39HIJuHZ8Kr9jnNgUEG20ZXIWXqKC42ITM1S74AQ/bk=;
-        b=IHt2iLcZroJ8PrUDUxwh9Gc7s1X3Rbsf8/48kw19ez1PbCE6tO+pddaxHadhk1g92i
-         3T8PsNpdfyz+QZ1NO8Vlw/CWwi+UuBwtUXdE/Z89Q/TE63cPboJXzrZ45Re690qfYLnx
-         Iv/TwLSTsz7VJx0CdjVCBL++FLj+mTEU4IumSOyyHdryJbSM5bjSvwzuFYQaKsxDNgU2
-         5lqcATdgUmZAeSzx/zX5EesJ/g5tvY+46OzqwdLc/J3nmWZmrxVOMQCl6SwTOCYQ4vmr
-         O6OQLDvRl6Pxwn6GXf9yHMsg1AHmMLDaO+krc7qAvTNMvOKsAUGaLqHFYsY+mddXQviV
-         Hljw==
-X-Gm-Message-State: APjAAAWsv3KCFxCqGxvnUKAS4oQ4e89W3lGn2nlZo+3m1h2gNe1OjZUF
-        33zX+qbPfnVNV/D0+KArcupQzxVPupq3mw==
-X-Google-Smtp-Source: APXvYqwixWwRIYU8AcBc8/Id3rU4oUKuVgvXy/a/NwKBNmqYzefpOSVS9rpZTuumKCjAKc6s3Hr5Zw==
-X-Received: by 2002:a2e:b4e7:: with SMTP id s7mr4506318ljm.58.1576137965388;
-        Thu, 12 Dec 2019 00:06:05 -0800 (PST)
-Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
-        by smtp.gmail.com with ESMTPSA id p26sm2475840lfh.64.2019.12.12.00.06.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 00:06:02 -0800 (PST)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     John Youn <John.Youn@synopsys.com>
-Subject: Re: [RFC PATCH 06/14] usb: devicetree: dwc3: Add max lane and lsm
-In-Reply-To: <aa9816c1efcdd492d698b421a94f0771961f414e.1576118671.git.thinhn@synopsys.com>
-References: <cover.1576118671.git.thinhn@synopsys.com> <aa9816c1efcdd492d698b421a94f0771961f414e.1576118671.git.thinhn@synopsys.com>
-Date:   Thu, 12 Dec 2019 10:06:46 +0200
-Message-ID: <87v9qmvug9.fsf@kernel.org>
+        Thu, 12 Dec 2019 03:17:00 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:63288 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726382AbfLLIRA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Dec 2019 03:17:00 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBC8DAAo003441;
+        Thu, 12 Dec 2019 09:16:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=KsOBRBxWPhArWs9FKdG6YL4u5JqiyaVQsva4ZRyLfUM=;
+ b=l+U2Sw+3S5Qt8f6sZFDqdyII+hJpuDX71t7BGx1q2JiXki9K5UtQWlpu6h75hNa/+OdO
+ 3nfKh7vB7tbzKpFhMfKFbC95L1IWb6OnOCRlzrUgC5x+2fYuQu7vwgS3xK1r+a6cpxPD
+ XnnLku/CZqnWnpjgwdHBepA7sVKInP1xAvLfbHVygG1Cvy3LbWx1EuyVaH5ZLNSw2b/e
+ TW6m6xp/kjxXqq/Z6rPgKvUJ/wsHCqGSUmQVgul6SrKs7obanfHU/abC8GSHXyC/ZMJt
+ ZIeiwvw9TsxjRgzhz4xEh/UGTCCP/14G3xPP8h4V9Opy5DnPufSDRHT4wndvo0yDxhpR kg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wt5wv3dpf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Dec 2019 09:16:49 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A1A75100048;
+        Thu, 12 Dec 2019 09:16:48 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 749142A96FD;
+        Thu, 12 Dec 2019 09:16:48 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 12 Dec
+ 2019 09:16:48 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Thu, 12 Dec 2019 09:16:47 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: pwm: fix nodename pattern
+Thread-Topic: [PATCH] dt-bindings: pwm: fix nodename pattern
+Thread-Index: AQHVsDO3MV8l3Qp4hkSb3+FMjTJqHqe1R/UAgADP3oA=
+Date:   Thu, 12 Dec 2019 08:16:47 +0000
+Message-ID: <60921a82-9241-9c6e-0a17-0bd93dc52978@st.com>
+References: <20191211150021.20125-1-benjamin.gaignard@st.com>
+ <CAL_JsqJKWoX_kY2kSieOA-wXO5xKtDbhXPMCjg-d4FHHEvOmHg@mail.gmail.com>
+In-Reply-To: <CAL_JsqJKWoX_kY2kSieOA-wXO5xKtDbhXPMCjg-d4FHHEvOmHg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F6BB0E9CA0FA9F408718F9859B2DA2E8@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-12_01:2019-12-12,2019-12-12 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Thinh Nguyen <Thinh.Nguyen@synopsys.com> writes:
-
-> Add a new property to set maximum number of lanes and transfer rated
-                                                                 ^^^^^
-                                                                 rate?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl3x9RYACgkQzL64meEa
-mQZtThAAo+OMckopLC49s+9B+5LJYr9HUklgDOWNbS5sNhH3DQOoWAC+n4SDv3CN
-ml/iHID4obiOBVFaCHqAZj6DRvUBffA12Nv6K7wbaG7GQfmo/iGvpCHl1kSFqH5+
-WZXDOMA5yunAxZ5p7I+8314mM188qwCtTbrhWJXdnUq8Ft1TFon1BDVUt9pnSUpx
-1tWsbfS1ZT8WFEhf6vSqrnktidJufvTpZF4F0skecsF7CDLIsyxko8Q8D2+46Ya/
-CvPf+oFn5DnYvTNQton9MW/TCCduv9twqP+1LaIFASbxqnHXIZetPNfQ8qIkDEDg
-Km2Dp+PBtHJl9mCptXODk/onXQkMbSj0U3jsMGtbHC+tXs3zDu0FRy4/mVjCRirJ
-h0tshMeXDLksM3wN33LWWaExsipqZu8zEAinCuY2RJ+zZZ3zQ2N2TJSZSzt2X/Hf
-n/O/cBZbPykJYMXfrSJucOVvryPqQM4Y3sGSe49q+4HQwQ61wXFwccuTY+Nnfy1y
-w8HNOCLA4ybba65Z5nceZvwwcw4+rqtk9teCAlEy6jyOUA0zcc9ksw2pUvOHsWUK
-G0EUiCjaS/VCvq715SCP3qxa+Mcjw0Cu0/PyuB2QyOWDFs4z3Oin3G2g/pRT2Uk9
-nA17AlxjtclHN0jTRWR20RLS1LK51KZ4UWaJXBX4hnBigC+QOEY=
-=p3RT
------END PGP SIGNATURE-----
---=-=-=--
+DQpPbiAxMi8xMS8xOSA4OjUyIFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gV2VkLCBEZWMg
+MTEsIDIwMTkgYXQgOTowMCBBTSBCZW5qYW1pbiBHYWlnbmFyZA0KPiA8YmVuamFtaW4uZ2FpZ25h
+cmRAc3QuY29tPiB3cm90ZToNCj4+IFR5cGljYWwgcHdtIG5vZGVzIHNob3VsZCBiZSBuYW1lZCBw
+d21AeHh4Lg0KPj4gVGhlIHBhdHRlcm4gc2hvdWxkbid0IG1hdGNoIG5vZGVzIG5hbWVkIHB3bS14
+eHggdG8gYXZvaWQNCj4+IGNvbmZsaWN0cyB3aXRoIHBpbm11eCBvciBwd20tZmFuIG5vZGVzLg0K
+PiBJdCBvbmx5IG1hdGNoZXMgcHdtLSQoYS1oZXgtbnVtYmVyKSwgbm90IGFueSBzdHJpbmcsIHNv
+IHRoYXQgc2hvdWxkbid0DQo+IGJlIGEgcHJvYmxlbS4gVGhpcyBpcyBuZWVkZWQgZm9yIHRoaW5n
+cyBsaWtlIEdQSU8gYmFzZWQgZGV2aWNlcyAobm90DQo+IGp1c3QgUFdNcykgd2hpY2ggZG9uJ3Qg
+aGF2ZSBhbnkgYWRkcmVzcy4NCj4NCj4gUGlubXV4IG5vZGVzIGFyZSBnb2luZyB0byBuZWVkIHRv
+IGFkb3B0IHNvbWUgc29ydCBvZiBzdGFuZGFyZCBwYXR0ZXJuDQo+IHdlIGNhbiBtYXRjaCBvbi4N
+CkkgaGF2ZSBwdXNoIGEgcGF0Y2ggdG8gc3RvcCB1c2luZyAnQCcgYW5kICdfJyBpbiBwaW5tdXgg
+Z3JvdXBzIG5hbWVzOg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzEx
+NjI1OTEvDQpJdCByZW1vdmUgdGhlIHdhcm5pbmdzIHdoZW4gY29tcGlsaW5nIHRoZSBkZXZpY2V0
+cmUgd2l0aCBXPTEyIGJ1dCBwd20ueWFtbA0KY29tcGxhaW4gYmVjYXVzZSBwd20gcGlubXV4IGlz
+IG5hbWVkIHB3bS0xLg0KDQpIb3cgY2FuIEkgc29sdmUgdGhlc2UgaXNzdWVzIGF0IHRoZSBzYW1l
+IHRpbWUgPw0KDQpCZW5qYW1pbg0KDQo+DQo+PiBTaWduZWQtb2ZmLWJ5OiBCZW5qYW1pbiBHYWln
+bmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAc3QuY29tPg0KPj4gLS0tDQo+PiAgIERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vcHdtLnlhbWwgfCAyICstDQo+PiAgIDEgZmlsZSBj
+aGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPj4NCj4+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL3B3bS55YW1sIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9wd20ueWFtbA0KPj4gaW5kZXggZmE0Zjlk
+ZTkyMDkwLi4yOWI4Njg4NmMyODIgMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcHdtL3B3bS55YW1sDQo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcHdtL3B3bS55YW1sDQo+PiBAQCAtMTEsNyArMTEsNyBAQCBtYWludGFp
+bmVyczoNCj4+DQo+PiAgIHByb3BlcnRpZXM6DQo+PiAgICAgJG5vZGVuYW1lOg0KPj4gLSAgICBw
+YXR0ZXJuOiAiXnB3bShALip8LVswLTlhLWZdKSokIg0KPj4gKyAgICBwYXR0ZXJuOiAiXnB3bShA
+LipbMC05YS1mXSkqJCINCj4+DQo+PiAgICAgIiNwd20tY2VsbHMiOg0KPj4gICAgICAgZGVzY3Jp
+cHRpb246DQo+PiAtLQ0KPj4gMi4xNS4wDQo+Pg==
