@@ -2,157 +2,400 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC75AC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 15:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F1BC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 15:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBF42067C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 15:20:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="cBeRc2H3"
+	by mail.kernel.org (Postfix) with ESMTP id 54B81206A5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 15:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfLLPUh (ORCPT
+        id S1729197AbfLLPYc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:20:37 -0500
-Received: from mail-bn8nam11on2072.outbound.protection.outlook.com ([40.107.236.72]:41952
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728690AbfLLPUg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:20:36 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bZ/+gti7pJhmiaVqI6Eq0LPqsQGO4w7jZ2TDjutZ0MKusVzkQhHfoZXXcG/hn+Qd3ZtOcLPhs8p7P91Ervn2ZkmNDLrObj4GDugZTzQDLLNSgunk75LYw45Kp68WK0ym35jVuhvGwGTxpV9nEWhxTuoQjM0nskLDqufn/x0y4X4zfy9VV+DiiQe/vwL8Z3MXMTzQk8PeSed4uLxBWGGfm+OaKXVTE3sukxsdGKO1lxvOhUnXiipxSdHwEHqAvPrRRkNP/WoC3JQ7rMTtmIUvcgFttzlM5L7mWrveOF6dQfOsJUWBpsbrOwP2ghaxO8uWAoys+t+Lf+3fTbq3ID8xlg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G7ZYh05nnimXrzwEyippHh0SjTjSjicYw/pFpoJXIr4=;
- b=Q11sWkKBAkFTFhubm+Mn0j0VsJdW1yLZ+C8eRz21xaxE3FcQIPJu9tq+I4ZjJArYhkzp9eqHZ56/wsWxGsM7ZjBnyErBs0MH/CP0ylNvoiqlLQOh4asK6boswft/vCmcMYNP348JqCCvmd8pfi8lf2bbYsPyfS2pGlGasdJkgvKPMLovK0N5t4xcE0mRXYCFBzvM41T16sNYd0biAbaQRoPBCBSuuCPANrrlpSMV3G/Vo2zartI7KWOSkxWSuESSeiMDXxKRpqKFPxsIH7WcqmLyBGbNjUj1+8R8tz28twv9kezSoOv2AKUCFHbNTQsvAO4Xbqp3q2C9CF08AC76oA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=lists.infradead.org
- smtp.mailfrom=xilinx.com; dmarc=bestguesspass action=none
- header.from=xilinx.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G7ZYh05nnimXrzwEyippHh0SjTjSjicYw/pFpoJXIr4=;
- b=cBeRc2H3femmyeyUicKphRIbiUxsmrJ9Sm4K1iiUdvQ6aMyJiSUSMw53wDcvWMHN+FgEBk6VlTL20rOb/BRiwW9SBurYa4JgK2Eq1rfcdXSjuAs2RZWSucoeHmg8rx9RJ3U+D2RMMe1IYYtNt2gepqY0EdBDkgTYDX/p7tIz/T8=
-Received: from CY1PR07CA0022.namprd07.prod.outlook.com
- (2a01:111:e400:c60a::32) by BYAPR02MB5416.namprd02.prod.outlook.com
- (2603:10b6:a03:a4::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.18; Thu, 12 Dec
- 2019 15:20:32 +0000
-Received: from CY1NAM02FT014.eop-nam02.prod.protection.outlook.com
- (2a01:111:e400:c60a:cafe::f4) by CY1PR07CA0022.outlook.office365.com
- (2a01:111:e400:c60a::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.17 via Frontend
- Transport; Thu, 12 Dec 2019 15:20:32 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; lists.infradead.org; dkim=none (message not signed)
- header.d=none;lists.infradead.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT014.mail.protection.outlook.com (10.152.75.142) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2538.14
- via Frontend Transport; Thu, 12 Dec 2019 15:20:31 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1ifQGV-0000st-78; Thu, 12 Dec 2019 07:20:31 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1ifQGQ-00020b-5j; Thu, 12 Dec 2019 07:20:26 -0800
-Received: from [172.30.17.107]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1ifQGJ-0001tX-Vj; Thu, 12 Dec 2019 07:20:20 -0800
-Subject: Re: [PATCH v3 0/6] clk: zynqmp: Extend and fix zynqmp clock driver
-To:     Rajan Vaja <rajan.vaja@xilinx.com>, mturquette@baylibre.com,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        michal.simek@xilinx.com, jolly.shah@xilinx.com,
-        m.tretter@pengutronix.de, gustavo@embeddedor.com,
-        tejas.patel@xilinx.com, nava.manne@xilinx.com, mdf@kernel.org
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <1574415814-19797-1-git-send-email-rajan.vaja@xilinx.com>
- <1575527759-26452-1-git-send-email-rajan.vaja@xilinx.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <19c5f918-7e00-75e4-10d1-53f0a30748b2@xilinx.com>
-Date:   Thu, 12 Dec 2019 16:20:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 12 Dec 2019 10:24:32 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37245 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728939AbfLLPYc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 10:24:32 -0500
+Received: by mail-ot1-f65.google.com with SMTP id k14so2361923otn.4;
+        Thu, 12 Dec 2019 07:24:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5eiYdgaPsuaNjKat9eSh0SH2mSzf4JO+utEpUCnyTPo=;
+        b=WExrg24pnmBa4YtvJ4DuZRuuHLJumkSo4Q4X8Nk5xl1XVVxeNShquezq+0ylR2fRqN
+         TQ5iDbXnwskX0+HlLjlz1rOPz8+rYJud6TDpGcKT8osvXwT5Ghyu7tVm2G7fQiALidg3
+         iwfe7sd0hCNaHK2jgcjvl4LvK/mmLDSK2Ze60oWPTryh/UgsHzWDtNbDvyEIdAupSkyh
+         vBHLWhgI1c/NjRSs+9QkpVy6SSQDV+bGroOcsiSUpj3PtS2W5mRe+7XtNCEARAT44cnK
+         JXcRPSglmsPwN8PeNYFFTTlAmxJLXnHLBgNwFS7lhMkRcCedH9hw4qQtZFrH6YeAPs4p
+         v58w==
+X-Gm-Message-State: APjAAAVxpH4sasry5qBe5BzxKPoslnUZ/MoZ+kvB7aebZYCRCA2QJmmY
+        1jTOetVQoXZZmkQ3TvqEDCta1DBBBnM3v2c3Qr8=
+X-Google-Smtp-Source: APXvYqx6G6JtyfrS3/BoIs3YPBAZEJjC6Ig0g5RdBo+a7S4dxiDcydAEHMgy/uFa2xd0GFBBLcu73j0JFKA2CIyvPnk=
+X-Received: by 2002:a05:6830:91:: with SMTP id a17mr8257869oto.107.1576164270611;
+ Thu, 12 Dec 2019 07:24:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1575527759-26452-1-git-send-email-rajan.vaja@xilinx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(396003)(346002)(189003)(199004)(44832011)(478600001)(5660300002)(356004)(6666004)(316002)(31696002)(2906002)(186003)(7416002)(2616005)(70586007)(70206006)(26005)(81156014)(8676002)(9786002)(31686004)(4326008)(8936002)(81166006)(336012)(426003)(36756003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5416;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 28beec8f-f34d-43d1-aa85-08d77f16d403
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5416:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB54167FF2CFFAB545DF502865C6550@BYAPR02MB5416.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-Forefront-PRVS: 0249EFCB0B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: B0a3WD9sCbd39HX/IL+atXIfZ0uxDGmY2b7xlYgKaHbfW1PRsu+HK40WXC0wFlZUap+MEwFZV5DoOWwHAWMUNr2fpMjRTthENgEy3mddPXAiYqPHWknvT0xrc/PhxRxT2N9Oc82vNeQ121Nxr1wO2nsVtktOvvExQjHRREJVIWELpcWgTgKyMk3OYLmmSFfYf+pggu8Xgh+LazAubl40zAidEJS/h2BfyKftuRwBFvlQ1i8X/vfOGDcIRQdc4vmW34ypNpS5hAYeKJm27+nKIsBvW3SdkJNXD5QdXjkB+35HT7QQA5GwW6QDJKX8VJpR7flfSVR6yVRd4DFiVA0Ks0lpj17BDVSDXWrHi9InWS6VXpb7KHm3RrRdipcC7Hsr+XQXQoClagQVciUxxqMc/tgqqkK31VbdKUjR0czM/jvruQ/bLnbLmqouYDo/alWv4whBFDqG740H6w12TJgiJDw0PSxoidetyMNQVE5gI07FIeuodJbI3pGjJSG1c218
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2019 15:20:31.7921
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28beec8f-f34d-43d1-aa85-08d77f16d403
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5416
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-6-geert+renesas@glider.be> <CACRpkdaW7nmpE99FAvBDBTmkTZOTQ5WdM=JbMzBTLk7cbLRXPw@mail.gmail.com>
+In-Reply-To: <CACRpkdaW7nmpE99FAvBDBTmkTZOTQ5WdM=JbMzBTLk7cbLRXPw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 12 Dec 2019 16:24:19 +0100
+Message-ID: <CAMuHMdVbk5S__8OK-zNXmiW66=WVA8Jzyc=hUvf_hJSU=u9TFg@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 05. 12. 19 7:35, Rajan Vaja wrote:
-> ZynqMP clock driver can be used for Versal platform also. Add support
-> for Versal platform in ZynqMP clock driver.
-> 
-> Also this patch series fixes divider calculation and adds support for get
-> maximum divider, clock with CLK_DIVIDER_POWER_OF_TWO flag and warn user if
-> clock users are more than allowed.
-> 
-> Rajan Vaja (5):
->   dt-bindings: clock: Add bindings for versal clock driver
->   clk: zynqmp: Extend driver for versal
->   clk: zynqmp: Warn user if clock user are more than allowed
->   clk: zynqmp: Add support for get max divider
->   clk: zynqmp: Fix divider calculation
-> 
-> Tejas Patel (1):
->   clk: zynqmp: Add support for clock with CLK_DIVIDER_POWER_OF_TWO flag
-> 
->  .../devicetree/bindings/clock/xlnx,versal-clk.yaml |  64 +++++++++++
->  drivers/clk/zynqmp/clkc.c                          |   3 +-
->  drivers/clk/zynqmp/divider.c                       | 118 +++++++++++++++++++-
->  drivers/clk/zynqmp/pll.c                           |   6 +-
->  drivers/firmware/xilinx/zynqmp.c                   |   2 +
->  include/dt-bindings/clock/xlnx-versal-clk.h        | 123 +++++++++++++++++++++
->  include/linux/firmware/xlnx-zynqmp.h               |   2 +
->  7 files changed, 310 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
->  create mode 100644 include/dt-bindings/clock/xlnx-versal-clk.h
-> 
+Hi Linus,
 
-That firmware changes looks good. That's why feel free to add my
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-to that patches.
-If you want me to take it via my tree please let me know.
+On Thu, Dec 12, 2019 at 3:34 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> > GPIO controllers are exported to userspace using /dev/gpiochip*
+> > character devices.  Access control to these devices is provided by
+> > standard UNIX file system permissions, on an all-or-nothing basis:
+> > either a GPIO controller is accessible for a user, or it is not.
+> > Currently no mechanism exists to control access to individual GPIOs.
+> >
+> > Hence add a GPIO driver to aggregate existing GPIOs, and expose them as
+> > a new gpiochip.
+> >
+> > This supports the following use cases:
+> >   1. Aggregating GPIOs using Sysfs
+> >      This is useful for implementing access control, and assigning a set
+> >      of GPIOs to a specific user or virtual machine.
+> >
+> >   2. GPIO Repeater in Device Tree
+> >      This supports modelling e.g. GPIO inverters in DT.
+> >
+> >   3. Generic GPIO Driver
+> >      This provides userspace access to a simple GPIO-operated device
+> >      described in DT, cfr. e.g. spidev for SPI-operated devices.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Overall I like how this is developing!
+>
+> > +config GPIO_AGGREGATOR
+> > +       tristate "GPIO Aggregator/Repeater"
+> > +       help
+> > +         Say yes here to enable the GPIO Aggregator and repeater, which
+> > +         provides a way to aggregate and/or repeat existing GPIOs into a new
+> > +         GPIO device.
+>
+> Should it say a "new virtual GPIO chip"?
 
-Thanks,
-Michal
+OK.
+
+> > +         This can serve the following purposes:
+> > +           1. Assign a collection of GPIOs to a user, or export them to a
+> > +              virtual machine,
+>
+> This is ambiguous. What is a "user"? A process calling from
+> userspace? A device tree node?
+
+A user is an entity with a UID, typically listed in /etc/passwd.
+This is similar to letting some, not all, people on the machine access
+the CD-ROM drive.
+
+> I would write "assign a collection of GPIO lines from any lines on
+> existing physical GPIO chips to form a new virtual GPIO chip"
+>
+> That should be to the point, right?
+
+Yes, that's WHAT it does. The WHY is the granular access control.
+
+> > +           2. Support GPIOs that are connected to a physical inverter,
+>
+> s/to/through/g
+
+OK.
+
+> > +           3. Provide a generic driver for a GPIO-operated device, to be
+> > +               controlled from userspace using the GPIO chardev interface.
+>
+> I don't understand this, it needs to be elaborated. What is meant
+> by a "GPIO-operated device" in this context? Example?
+
+E.g. a motor. Or a door opener.
+
+        door-opener {
+                compatible = "mydoor,opener";
+
+                gpios = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+        };
+
+You don't need a full-featured kernel driver for that, so just bind the
+gpio-aggregator to the door-opener, and control it through libgpiod.
+
+> I consistently use the term "GPIO line" as opposed to "GPIO"
+> or "GPIO number" etc that are abigous, so please rephrase using
+> "GPIO lines" rather than just "GPIOs" above.
+
+OK.
+
+> > +#include "gpiolib.h"
+>
+> Whenever this is included in a driver I want it to come with a comment
+> explicitly stating exactly why and which internal symbols the driver
+> needs to access. Ideally all drivers should just need <linux/gpio/driver.h>...
+
+"gpiolib.h" is needed to access gpio_desc.gdev->chip in
+gpio_fwd_set_config().  And for gpio_chip_hwgpio() (see below).
+
+But indeed, I should add #include <linux/gpio/consumer.h>, for e.g. the
+various gpiod_[gs]et_*() functions.
+
+> > +static int aggr_add_gpio(struct gpio_aggregator *aggr, const char *label,
+> > +                        int hwnum, unsigned int *n)
+>
+> u16 hwnum for the hardware number but if it is always -1/U16_MAX
+> then why pass the parameter at all.
+>
+> Is "label" the right name of this parameter if that is going to actually
+> be line_name then use that.
+
+It's not always -1.
+This function can be called either with a gpiochip label/name and an
+offset, or a line-name and -1.
+
+> > +{
+> > +       struct gpiod_lookup_table *lookups;
+> > +
+> > +       lookups = krealloc(aggr->lookups, struct_size(lookups, table, *n + 2),
+> > +                          GFP_KERNEL);
+> > +       if (!lookups)
+> > +               return -ENOMEM;
+> > +
+> > +       lookups->table[*n].chip_label = label;
+>
+> This is pending the discussion on whether to just use "key" for this
+> name.
+
+Which would require touching all users (board files and mfd drivers).
+
+> > +       lookups->table[*n].chip_hwnum = hwnum;
+>
+> If this is always going to be U16_MAX (-1 in the current code)
+> then it can just be assigned as that here instead of passed as
+> parameter.
+
+So it's not, see above.
+
+> > +static int aggr_parse(struct gpio_aggregator *aggr)
+> > +{
+> > +       char *name, *offsets, *first, *last, *next;
+> > +       unsigned int a, b, i, n = 0;
+> > +       char *args = aggr->args;
+> > +       int error;
+> > +
+> > +       for (name = get_arg(&args), offsets = get_arg(&args); name;
+> > +            offsets = get_arg(&args)) {
+> > +               if (IS_ERR(name)) {
+> > +                       pr_err("Cannot get GPIO specifier: %ld\n",
+> > +                              PTR_ERR(name));
+> > +                       return PTR_ERR(name);
+> > +               }
+> > +
+> > +               if (!isrange(offsets)) {
+> > +                       /* Named GPIO line */
+> > +                       error = aggr_add_gpio(aggr, name, -1, &n);
+>
+> So the third argument woule be U16_MAX here. Or not pass
+> a parameter at all.
+>
+> But honestly, when I look at this I don't understand why you
+> have to avoid so hard to use offsets for the GPIO lines on
+> your aggregator?
+>
+> Just put a u16 ngpios in your
+> struct gpio_aggregator and count it up every time you
+> add some new offsets here and you have
+> offset numbers for all your GPIO lines on the aggregator
+> and you can just drop the patch for lookup up lines by line
+> names.
+>
+> Is there something wrong with my reasoning here?
+
+Yes, I think there is.
+The offsets are not offsets on the aggregated gpiochip, but on the
+original target gpiochip.
+
+> At the pointe later when the lines are counted from the
+> allocated lookups using gpiod_count() that will just figure
+> out this number anyways, so it is not like we don't know
+> it at the end of the day.
+>
+> So it seems the patch to gpiolib is just to use machine
+> descriptor tables as a substitute for a simple counter
+> variable in this local struct to me.
+
+Nope, it's used for looking up the target GPIO lines.
+
+> > +static void __exit gpio_aggregator_remove_all(void)
+> > +{
+> > +       mutex_lock(&gpio_aggregator_lock);
+> > +       idr_for_each(&gpio_aggregator_idr, gpio_aggregator_idr_remove, NULL);
+> > +       idr_destroy(&gpio_aggregator_idr);
+> > +       mutex_unlock(&gpio_aggregator_lock);
+> > +}
+> > +
+> > +
+> > +       /*
+> > +        *  Common GPIO Forwarder
+> > +        */
+> > +
+>
+> Nitpick: lots and weird spacing here.
+
+OK.
+
+> > +struct gpiochip_fwd {
+> > +       struct gpio_chip chip;
+> > +       struct gpio_desc **descs;
+> > +       union {
+> > +               struct mutex mlock;     /* protects tmp[] if can_sleep */
+> > +               spinlock_t slock;       /* protects tmp[] if !can_sleep */
+> > +       };
+>
+> That was a very elegant use of union!
+>
+> > +static int gpio_fwd_get_multiple(struct gpio_chip *chip, unsigned long *mask,
+> > +                                unsigned long *bits)
+> > +static void gpio_fwd_set_multiple(struct gpio_chip *chip, unsigned long *mask,
+> > +                                 unsigned long *bits)
+>
+> I guess these can both be optimized to use get/set_multiple on
+> the target chip if the offsets are consecutive?
+>
+> However that is going to be tricky so I'm not saying you should
+> implement that. So for now, let's say just add a TODO: comment
+> about it.
+
+Doesn't gpiod_[gs]et_array_value() already call .[gs]et_multiple()?
+
+> > +static int gpio_fwd_init_valid_mask(struct gpio_chip *chip,
+> > +                                   unsigned long *valid_mask,
+> > +                                   unsigned int ngpios)
+> > +{
+> > +       struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
+> > +       unsigned int i;
+> > +
+> > +       for (i = 0; i < ngpios; i++) {
+> > +               if (!gpiochip_line_is_valid(fwd->descs[i]->gdev->chip,
+> > +                                           gpio_chip_hwgpio(fwd->descs[i])))
+> > +                       clear_bit(i, valid_mask);
+> > +       }
+>
+> This is what uses "gpiolib.h" is it not?
+>
+> devm_gpiod_get_index() will not succeed if the line
+> is not valid so I think this can be just dropped, since
+> what you do before this is exactly devm_gpiod_get_index()
+> on each line, then you call gpiochip_fwd_create()
+> with the result.
+>
+> So I think you can just drop this entire function.
+> This will not happen.
+
+OK, if all lines are valid, the mask handling is indeed not needed.
+
+> If it does happen, add a comment above this loop
+> explaining which circumstances would make lines on
+> the forwarder invalid.
+
+OK, so cannot happen.
+
+> > +       for (i = 0; i < ngpios; i++) {
+> > +               dev_dbg(dev, "gpio %u => gpio-%d (%s)\n", i,
+> > +                       desc_to_gpio(descs[i]), descs[i]->label ? : "?");
+> > +
+> > +               if (gpiod_cansleep(descs[i]))
+> > +                       chip->can_sleep = true;
+> > +               if (descs[i]->gdev->chip->set_config)
+> > +                       chip->set_config = gpio_fwd_set_config;
+> > +               if (descs[i]->gdev->chip->init_valid_mask)
+> > +                       chip->init_valid_mask = gpio_fwd_init_valid_mask;
+> > +       }
+>
+> I do not think you should need to inspect the init_valid_mask()
+> as explained above.
+
+OK.
+
+> Add a comment above the loop that if any of the GPIO lines
+> are sleeping then the entire forwarder will be sleeping
+> and if any of the chips support .set_config() we will support
+> setting configs.
+
+OK.
+
+> However the way that the .gpio_fwd_set_config() is coded
+> it looks like you can just unconditionally assign it and
+> only check the cansleep condition in this loop.
+
+I wanted to avoid the overhead of calling into gpio_fwd_set_config() if
+none of the targets gpiochips support .set_config(), see
+gpiod_set_transitory().
+
+> > +}
+> > +
+> > +
+> > +       /*
+> > +        *  Common GPIO Aggregator/Repeater platform device
+> > +        */
+> > +
+>
+> Nitpick: weird and excess spacing again.
+
+Yeah, this dates back from when the aggregator, repeater, and
+forwarder were all separate files and modules.
+
+> > +       for (i = 0; i < n; i++) {
+> > +               descs[i] = devm_gpiod_get_index(dev, NULL, i, GPIOD_ASIS);
+> > +               if (IS_ERR(descs[i]))
+> > +                       return PTR_ERR(descs[i]);
+> > +       }
+>
+> If this succeeds none of the obtained gpio_desc:s can be
+> invalid.
+
+OK.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
