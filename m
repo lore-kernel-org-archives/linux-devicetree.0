@@ -2,180 +2,213 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EB1C2D0C5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 00:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5328AC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 00:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD7D208C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 00:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1784820637
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 00:54:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cyG2KgzT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfLLAuF (ORCPT
+        id S1727456AbfLLAyS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 19:50:05 -0500
-Received: from mga04.intel.com ([192.55.52.120]:30335 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbfLLAuF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 19:50:05 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 16:50:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,303,1571727600"; 
-   d="scan'208";a="388124032"
-Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.143]) ([10.7.153.143])
-  by orsmga005.jf.intel.com with ESMTP; 11 Dec 2019 16:50:04 -0800
-Subject: Re: [PATCH v11 06/14] peci: Add Aspeed PECI adapter driver
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        Wed, 11 Dec 2019 19:54:18 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40268 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbfLLAyS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 19:54:18 -0500
+Received: by mail-lf1-f65.google.com with SMTP id i23so301601lfo.7;
+        Wed, 11 Dec 2019 16:54:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=G9Qg/GyPOd9K6cMtoRafpLeoPZbmboxVDp4qkKep044=;
+        b=cyG2KgzTYpa2RLZLCT1xK9/x5Wm13gaf3Z/K95ojZPT7sh5dmhhqpPvH41iT5gYXOy
+         UlSOu6SWxf1bE/lQrqpspUAwGrYs/FqOTVi7spe60wfVKMfSqQi4i5FnuDYu8MxOYN6Y
+         CHVThnBBlXCAFh0Fl02uoqIM6C5K5qS/EsUMsDEIDRy6vzmD3Q+yUY8A340VfO3GKOoB
+         23horKorV2al/UgFbzV6a1lfyQ6J61d7cWtI1oGS0iiBIg797TBYHtmqU0kOS2HaTrvT
+         z+lZhI1CpozHeRRdEwLAn4rZGj3xvpV2XFN0KZRbFfPoFi82ZGzd2odm4C71H+bV5Tpe
+         yrCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=G9Qg/GyPOd9K6cMtoRafpLeoPZbmboxVDp4qkKep044=;
+        b=IUeGwPIP2Hwof4qLONtua9Hb9cowHQ89nBN0qgH3OssbRSm9ngM9mxoVjfTlPKGI+c
+         wVVglz27AbggYIuyFUZwBrdUYgnk7+RVtfreq4Pg+M2XUfJJPJ4vye80W1eOY5LapKl/
+         EflABHct6rsf9tt5lq8tGFRE5fTgYZDggXf8SzIZ0lJmveG+jq41rfE5HQqRvaEwI5+A
+         VLaz3nhyj0x0L3A26Wrsq1iEV/wEH9FcU93AGKsb2cEQTYg8BwEXelBqiKKrjcsf8Q5V
+         zpeTOg3+emiySpTa7tiOWp2aNJigJ1+NDoCtHyuD0BL9sffGbmRsKGHF5UYdhbMs5P1W
+         Pxtw==
+X-Gm-Message-State: APjAAAUqS9mBPNuBaay/0qSWafk6TkmHUR07ah7+55LC/fEYewsNeG0U
+        6QWS97acmvetcw/VFwWP4+E=
+X-Google-Smtp-Source: APXvYqzEMmSTnj9o5/mEH8I77pXpxWljgb2sZufJlSi5xWVeo5B4nrSzy0u0LnC2dkGHFCp8w2tEGg==
+X-Received: by 2002:ac2:420e:: with SMTP id y14mr4083282lfh.145.1576112055177;
+        Wed, 11 Dec 2019 16:54:15 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id l8sm1974300ljj.96.2019.12.11.16.54.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 16:54:14 -0800 (PST)
+Subject: Re: [PATCH v2 2/9] input: elants: support old touch report format
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
         Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>,
-        Tomohiro Kusumi <kusumi.tomohiro@gmail.com>,
-        "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>,
-        Frederic Barrat <fbarrat@linux.vnet.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        David Kershner <david.kershner@unisys.com>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Sagar Dharia <sdharia@codeaurora.org>,
-        Johan Hovold <johan@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        openbmc@lists.ozlabs.org, Robin Murphy <robin.murphy@arm.com>,
-        Ryan Chen <ryan_chen@aspeedtech.com>
-References: <20191211194624.2872-1-jae.hyun.yoo@linux.intel.com>
- <20191211194624.2872-7-jae.hyun.yoo@linux.intel.com>
- <20191211202818.GD32742@smile.fi.intel.com>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <e05cdec0-1120-7e2d-bac0-e4a1ba1ceb3d@linux.intel.com>
-Date:   Wed, 11 Dec 2019 16:50:04 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Rob Herring <robh-dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <2b5e15ea600c33dfab4aa50e360ec553f1af7db0.1576079249.git.mirq-linux@rere.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f53b507c-76dd-8733-9698-952aa7a7301f@gmail.com>
+Date:   Thu, 12 Dec 2019 03:54:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20191211202818.GD32742@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <2b5e15ea600c33dfab4aa50e360ec553f1af7db0.1576079249.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
+11.12.2019 19:03, Michał Mirosław пишет:
+> Support ELAN touchpad sensor with older firmware as found on eg. Asus
+> Transformer Pads.
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
+>  drivers/input/touchscreen/elants_i2c.c | 36 ++++++++++++++++++--------
+>  1 file changed, 25 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+> index 887888c53996..eadd26d5a06f 100644
+> --- a/drivers/input/touchscreen/elants_i2c.c
+> +++ b/drivers/input/touchscreen/elants_i2c.c
+> @@ -65,6 +65,7 @@
+>  #define CMD_HEADER_REK		0x66
+>  
+>  /* FW position data */
+> +#define PACKET_SIZE_OLD		40
+>  #define PACKET_SIZE		55
+>  #define MAX_CONTACT_NUM		10
+>  #define FW_POS_HEADER		0
+> @@ -792,7 +793,8 @@ static int elants_i2c_fw_update(struct elants_data *ts)
+>   * Event reporting.
+>   */
+>  
+> -static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
+> +static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf,
+> +				size_t report_len)
+>  {
+>  	struct input_dev *input = ts->input;
+>  	unsigned int n_fingers;
+> @@ -804,7 +806,8 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
+>  			buf[FW_POS_STATE];
+>  
+>  	dev_dbg(&ts->client->dev,
+> -		"n_fingers: %u, state: %04x\n",  n_fingers, finger_state);
+> +		"n_fingers: %u, state: %04x, report_len: %zu\n",
+> +		n_fingers, finger_state, report_len);
+>  
+>  	for (i = 0; i < MAX_CONTACT_NUM && n_fingers; i++) {
+>  		if (finger_state & 1) {
+> @@ -814,8 +817,16 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
+>  			pos = &buf[FW_POS_XY + i * 3];
+>  			x = (((u16)pos[0] & 0xf0) << 4) | pos[1];
+>  			y = (((u16)pos[0] & 0x0f) << 8) | pos[2];
+> -			p = buf[FW_POS_PRESSURE + i];
+> -			w = buf[FW_POS_WIDTH + i];
+> +			if (report_len == PACKET_SIZE_OLD) {
+> +				w = buf[FW_POS_WIDTH + i / 2];
+> +				w >>= 4 * (~i & 1);	// little-endian-nibbles
+> +				w |= w << 4;
+> +				w |= !w;
+> +				p = w;
 
-On 12/11/2019 12:28 PM, Andy Shevchenko wrote:
-> On Wed, Dec 11, 2019 at 11:46:16AM -0800, Jae Hyun Yoo wrote:
->> This commit adds Aspeed PECI adapter driver for Aspeed
->> AST24xx/25xx/26xx SoCs.
-> 
-> ...
-> 
->> +#define   ASPEED_PECI_CMD_IDLE_MASK		(ASPEED_PECI_CMD_STS_MASK | \
->> +						 ASPEED_PECI_CMD_PIN_MON)
-> 
-> Better looking when the value completely occupies second line without touching
-> the first.
+Did you copy this from the downstream driver as-is? I'm looking at the
+Nexus 7 driver and it does the following for older format:
 
-Yes. Will change it.
+u8 size_idx[] = { 35, 35, 36, 36, 37, 37, 38, 38, 39, 39 };
+unsigned int s;
 
-> ...
-> 
->> +static int aspeed_peci_check_idle(struct aspeed_peci *priv)
->> +{
->> +	ulong timeout = jiffies + usecs_to_jiffies(ASPEED_PECI_IDLE_CHECK_TIMEOUT_USEC);
->> +	u32 cmd_sts;
-> 
-> Like in the previous patch this one has hard to read timeout loops with inefficient code.
-> 
->> +	for (;;) {
->> +		cmd_sts = readl(priv->base + ASPEED_PECI_CMD);
->> +		if (!(cmd_sts & ASPEED_PECI_CMD_IDLE_MASK))
->> +			break;
-> 
->> +		if (time_after(jiffies, timeout)) {
-> 
-> This is actually main exit condition (vs. infinite loop).
-> 
->> +			cmd_sts = readl(priv->base + ASPEED_PECI_CMD);
-> 
-> This make no sense. If you would like to have one more iteration, just spell it
-> explicitly.
-> 
->> +			break;
->> +		}
-> 
->> +		usleep_range((ASPEED_PECI_IDLE_CHECK_INTERVAL_USEC >> 2) + 1,
->> +			     ASPEED_PECI_IDLE_CHECK_INTERVAL_USEC);
->> +	}
->> +
-> 
->> +	return !(cmd_sts & ASPEED_PECI_CMD_IDLE_MASK) ? 0 : -ETIMEDOUT;
-> 
-> Ditto.
-> 
->> +}
-> 
-> Now look at the other variant:
-> 
-> 	do {
-> 		...do something...
-> 		if (success)
-> 			return 0;
-> 		usleep(...);
-> 	} while (time_before(...));
-> 
-> 	return -ETIMEDOUT;
-> 
-> * Easy
-> * less LOCs
-> * guaranteed always to be at least one iteration
-> * has explicitly spelled exit condition
-> 
-> BUT!
-> 
-> In this very case you may do even better if you read iopoll.h, i.e
-> readl_poll_timeout() has this functionality embedded in the macro.
-> 
+if (i & 1)
+	s = buf[size_idx[i]];
+else
+	s = buf[size_idx[i]] / 16;
 
-I see. I'll simplify this function like below:
+w = s & 0xf;
+p = s * 16;
 
-#include <linux/iopoll.h>
-
-static inline int aspeed_peci_check_idle(struct aspeed_peci *priv)
-{
-	u32 cmd_sts;
-
-	return readl_poll_timeout(priv->base + ASPEED_PECI_CMD,
-				  cmd_sts,
-				  !(cmd_sts & ASPEED_PECI_CMD_IDLE_MASK),
-				  ASPEED_PECI_IDLE_CHECK_INTERVAL_USEC,
-				  ASPEED_PECI_IDLE_CHECK_TIMEOUT_USEC);
-}
-
-Thanks a lot for your review!
-
--Jae
+> +			} else {
+> +				p = buf[FW_POS_PRESSURE + i];
+> +				w = buf[FW_POS_WIDTH + i];
+> +			}
+>  
+>  			dev_dbg(&ts->client->dev, "i=%d x=%d y=%d p=%d w=%d\n",
+>  				i, x, y, p, w);
+> @@ -848,7 +859,8 @@ static u8 elants_i2c_calculate_checksum(u8 *buf)
+>  	return checksum;
+>  }
+>  
+> -static void elants_i2c_event(struct elants_data *ts, u8 *buf)
+> +static void elants_i2c_event(struct elants_data *ts, u8 *buf,
+> +			     size_t report_len)
+>  {
+>  	u8 checksum = elants_i2c_calculate_checksum(buf);
+>  
+> @@ -862,7 +874,7 @@ static void elants_i2c_event(struct elants_data *ts, u8 *buf)
+>  			 "%s: unknown packet type: %02x\n",
+>  			 __func__, buf[FW_POS_HEADER]);
+>  	else
+> -		elants_i2c_mt_event(ts, buf);
+> +		elants_i2c_mt_event(ts, buf, report_len);
+>  }
+>  
+>  static irqreturn_t elants_i2c_irq(int irq, void *_dev)
+> @@ -920,7 +932,8 @@ static irqreturn_t elants_i2c_irq(int irq, void *_dev)
+>  			break;
+>  
+>  		case QUEUE_HEADER_SINGLE:
+> -			elants_i2c_event(ts, &ts->buf[HEADER_SIZE]);
+> +			elants_i2c_event(ts, &ts->buf[HEADER_SIZE],
+> +					 ts->buf[FW_HDR_LENGTH]);
+>  			break;
+>  
+>  		case QUEUE_HEADER_NORMAL:
+> @@ -933,17 +946,18 @@ static irqreturn_t elants_i2c_irq(int irq, void *_dev)
+>  			}
+>  
+>  			report_len = ts->buf[FW_HDR_LENGTH] / report_count;
+> -			if (report_len != PACKET_SIZE) {
+> +			if (report_len != PACKET_SIZE &&
+> +			    report_len != PACKET_SIZE_OLD) {
+>  				dev_err(&client->dev,
+> -					"mismatching report length: %*ph\n",
+> +					"unsupported report length: %*ph\n",
+>  					HEADER_SIZE, ts->buf);
+>  				break;
+>  			}
+>  
+>  			for (i = 0; i < report_count; i++) {
+>  				u8 *buf = ts->buf + HEADER_SIZE +
+> -							i * PACKET_SIZE;
+> -				elants_i2c_event(ts, buf);
+> +					  i * report_len;
+> +				elants_i2c_event(ts, buf, report_len);
+>  			}
+>  			break;
+>  
+> 
