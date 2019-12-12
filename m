@@ -2,84 +2,102 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7449C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 17:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08ADC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 17:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8457922527
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 17:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D57214AF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 17:47:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NgtTHc3R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbfLLRl1 (ORCPT
+        id S1729791AbfLLRr2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 12:41:27 -0500
-Received: from muru.com ([72.249.23.125]:46572 "EHLO muru.com"
+        Thu, 12 Dec 2019 12:47:28 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:16850 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730023AbfLLRl1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Dec 2019 12:41:27 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 9399680C0;
-        Thu, 12 Dec 2019 17:42:05 +0000 (UTC)
-Date:   Thu, 12 Dec 2019 09:41:23 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch v3 0/3] ARM: dts: am43x-vpfe/ov2659.patch
-Message-ID: <20191212174123.GF35479@atomide.com>
-References: <20191211140720.10539-1-bparrot@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211140720.10539-1-bparrot@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        id S1729771AbfLLRr2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Dec 2019 12:47:28 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47Yh8C4sqGzB09bG;
+        Thu, 12 Dec 2019 18:47:23 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=NgtTHc3R; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id dsa5BH8wBHuE; Thu, 12 Dec 2019 18:47:23 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47Yh8C3rMkzB09bF;
+        Thu, 12 Dec 2019 18:47:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1576172843; bh=yNBKHgBeVhxuEL0twelYE6v4UaF/ILC0FPOkeX1TzhI=;
+        h=From:Subject:To:Cc:Date:From;
+        b=NgtTHc3RoPnk0WOUnDHCn1qWnYvwBy/PaSWrc/aFMok2oo8B+TruqZ2Xv7knjF0yf
+         T83Kl0sTcwMq+qOxRbc/QxTKdn8WUkTWU14m1pha5dl+4z0Gzcvr/664ddk/qCl1OF
+         9Uud/OFNogCZcmsXZZvFgp7HBwlTCt1MzBo8nqWk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 39F3D8B87A;
+        Thu, 12 Dec 2019 18:47:25 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 5kIYfMYKMeKa; Thu, 12 Dec 2019 18:47:25 +0100 (CET)
+Received: from po16098vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.112])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 14D2D8B872;
+        Thu, 12 Dec 2019 18:47:25 +0100 (CET)
+Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id DB5E063743; Thu, 12 Dec 2019 17:47:24 +0000 (UTC)
+Message-Id: <091a277fd0b3356dca1e29858c1c96983fc9cb25.1576172743.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] spi: fsl: use platform_get_irq() instead of
+ of_irq_to_resource()
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Date:   Thu, 12 Dec 2019 17:47:24 +0000 (UTC)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Benoit Parrot <bparrot@ti.com> [191211 06:04]:
-> This patch series adds the missing camera endpoint (ov2659) as well as
-> the required source clocks nodes for the sensor.
-> 
-> On the am437x-sk-evm the camera sensor is sourced from clkout1 but that
-> clock nodes/tree was removed as it was unsed at the time, we are
-> re-adding the needed clock nodes here.
+Unlike irq_of_parse_and_map() which has a dummy definition on SPARC,
+of_irq_to_resource() hasn't.
 
-Tero, it seems I can already pick this series?
+But as platform_get_irq() can be used instead and is generic, use it.
 
-Or ou want to queue the changes to am43xx-clocks.dtsi along with all
-your other clock patches?
+Reported-by: kbuild test robot <lkp@intel.com>
+Suggested-by: Mark Brown <broonie@kernel.org>
+Fixes: 	3194d2533eff ("spi: fsl: don't map irq during probe")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ drivers/spi/spi-fsl-spi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Regards,
-
-Tony
-
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index 2d85c81983b1..c76128cadf0c 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -765,9 +765,9 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
+ 	if (ret)
+ 		goto err;
  
-> Changes since v2:
-> - Fixed/added Tony's ack
-> 
-> Changes since v1:
-> - Fix clock name to make it generic
-> - Add non-standard clock node naming to commit message as per Tony's
->   comment
-> - Rename all clock nodes to use '-' instead of '_'
-> 
-> Benoit Parrot (2):
->   ARM: dts: am437x-sk-evm: Add VPFE and OV2659 entries
->   ARM: dts: am43x-epos-evm: Add VPFE and OV2659 entries
-> 
-> Tero Kristo (1):
->   ARM: dts: am43xx: add support for clkout1 clock
-> 
->  arch/arm/boot/dts/am437x-sk-evm.dts  | 27 +++++++++++++-
->  arch/arm/boot/dts/am43x-epos-evm.dts | 23 +++++++++++-
->  arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
->  3 files changed, 102 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+-	irq = of_irq_to_resource(np, 0, NULL);
+-	if (irq <= 0) {
+-		ret = -EINVAL;
++	irq = platform_get_irq(ofdev, 0);
++	if (irq < 0) {
++		ret = irq;
+ 		goto err;
+ 	}
+ 
+-- 
+2.13.3
+
