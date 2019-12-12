@@ -2,102 +2,149 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CFBC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 20:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D95E2C00454
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 21:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F122173E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 20:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1F1214AF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 21:22:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iVNKJCwr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bM7p1YBo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730954AbfLLU60 (ORCPT
+        id S1731049AbfLLVW4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 15:58:26 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37801 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730880AbfLLU60 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 15:58:26 -0500
-Received: by mail-pl1-f196.google.com with SMTP id c23so66785plz.4
-        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 12:58:26 -0800 (PST)
+        Thu, 12 Dec 2019 16:22:56 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41862 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731032AbfLLVWz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 16:22:55 -0500
+Received: by mail-io1-f67.google.com with SMTP id c16so160486ioo.8
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 13:22:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FGjQzF0iKScXXFdM9JyIEL8mVJUWt3ih5NTxXqTlgWE=;
-        b=iVNKJCwr+xuHXTJtsLemsYjlS79bMKUifmCLbob6M3lvrmBC0K910BTYSyXsTSHW/B
-         DO1gmpZMZFYVmXapGtfEwWetW2lkuTUkqPYXnr47RhMrCgYuv2VRuBZj6R/J+CW8EhPv
-         /PZcnOW5zZoa4aCVtCzIj3X9nhks2xL8EmKyI=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rmJb/JSmwLP599MA6+95ChQfw+WGEE+74ZZ6eN1os3M=;
+        b=bM7p1YBoVme4Z7buLu8zoz5ghlclJvqlRjXqPKOx0Df4yKB0aCJle4s2SoFuf/3+Sj
+         8ytbwFqRzQ+NRXKB4Yg0bn1vbK3fwEppKagnBuiy+N+NMF/WZint3qELtXP1OkHSPOTN
+         3yTUUVbtCw961MVV0qjMF05UNyZUBF9DP6L5A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FGjQzF0iKScXXFdM9JyIEL8mVJUWt3ih5NTxXqTlgWE=;
-        b=N7eruVcqGmRmhV1AfS5M2YqEV33xTpE827uZw0pd3QMPFE/OBZ7pgbuPN/ajlJLfZy
-         mPwDiZbA6SYfUe1AM3a1cgwxoiR2bAi0tgymRqvK6ee60E8SzRoCmw+e1UaibjeOXNLG
-         7zukFwmPCzSdyM+MdVXnGaJSGls52FBRWAlodfo4cbT4REWP+1Sh6DymbSOW7seRQiDQ
-         oPF6WfYRRfJ7FAS8AO8hElC1PMEEzsVpMMXBK7A43Aet90SMxkb+gagq3JJ5cXVgLI6O
-         7S26YmgUK0ft7OahRPN2Lpy+vxjbvKMVfLWT9TiLdpiy8atv00Sr5wAPPsRPGNWaCT5P
-         SyHQ==
-X-Gm-Message-State: APjAAAXRH7iQY3uq33ZNql077dipaBoC8iKBeBv0hrfjM5GrKpk+tOom
-        EVSmUg2lxByOs/FHqlod9Phnyg==
-X-Google-Smtp-Source: APXvYqw8d7KvyNToM0AiNFq3Pm1ocL+6ODQlQfYD5UvuACYtqwlHLA2yWKnFX3iNF+jHnoJEdX24qw==
-X-Received: by 2002:a17:902:9a91:: with SMTP id w17mr11383362plp.96.1576184305763;
-        Thu, 12 Dec 2019 12:58:25 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id k9sm6929652pje.26.2019.12.12.12.58.24
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rmJb/JSmwLP599MA6+95ChQfw+WGEE+74ZZ6eN1os3M=;
+        b=MRLvG917J/9/GspWNTvjfp0GYs59T35sb4GP6bbIGZgLBV1B3ds0PQqBy7iEAPRE97
+         AOYRZmyRr/YVlPuIbBDwVWUnabIyPyL8KZwNQPKTlq2gGLyPsGSXjWSn+4+QGrMhjiQ+
+         ajs10wWqBGmGHbkm9K1KwAuza/iv9mnrt80J8M63QBdUaipQAHAgDK7Um/oNmolBoEPL
+         Iii3vF5l5GHnv+yf2QtRxLtmtcj67GZxrwP1Lec7pWJvQB2igK+G2f8dbwma8BZYplpx
+         2Nz8KThN2CsTevrNGjvBEHd5H4hfV/xQiwXvs3AkqvPXGGSD1sw6FkWB8jUdqQR4x4v9
+         rpJA==
+X-Gm-Message-State: APjAAAV16Fo+R3gJ65PsOa5Nwo7DFBe1Tn5lMzDi/XdthHd2rXHea+OR
+        T24Xe2fGid5B0DGHJ4kzXToV1ByHdNE=
+X-Google-Smtp-Source: APXvYqx7eDp7xT5UX1xkO0Zj27LpIwo3MoVHtX0G2J3n1QKDA+8EGcexry4VG8CbnRpchuPj5zYcHQ==
+X-Received: by 2002:a02:ba91:: with SMTP id g17mr5852949jao.106.1576185774630;
+        Thu, 12 Dec 2019 13:22:54 -0800 (PST)
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com. [209.85.166.44])
+        by smtp.gmail.com with ESMTPSA id y75sm2047072ill.87.2019.12.12.13.22.53
+        for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 12:58:25 -0800 (PST)
-Date:   Thu, 12 Dec 2019 12:58:23 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Doug Anderson <dianders@chromium.org>
+        Thu, 12 Dec 2019 13:22:53 -0800 (PST)
+Received: by mail-io1-f44.google.com with SMTP id b10so142533iof.11
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 13:22:53 -0800 (PST)
+X-Received: by 2002:a05:6638:6a6:: with SMTP id d6mr9964231jad.132.1576185772710;
+ Thu, 12 Dec 2019 13:22:52 -0800 (PST)
+MIME-Version: 1.0
+References: <1574940787-1004-1-git-send-email-sanm@codeaurora.org>
+ <1574940787-1004-2-git-send-email-sanm@codeaurora.org> <CAD=FV=Uy6ryrbpzFg1sesJkWrgh05tLgvtozx0afJPF_u4-ESA@mail.gmail.com>
+ <0101016ef9fb5396-c1cefc2e-82fa-4828-94c0-c739cd4cd16f-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016ef9fb5396-c1cefc2e-82fa-4828-94c0-c739cd4cd16f-000000@us-west-2.amazonses.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 12 Dec 2019 13:22:40 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=VkV1mnLwxg4cuzLXwXFLt1-NEhi=qc=4sd6sptLcKdRg@mail.gmail.com>
+Message-ID: <CAD=FV=VkV1mnLwxg4cuzLXwXFLt1-NEhi=qc=4sd6sptLcKdRg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] usb: dwc3: Add support for SC7180 SOC
+To:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rajeshwari <rkambl@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Fix order of nodes
-Message-ID: <20191212205823.GT228856@google.com>
-References: <20191212115443.1.I55198466344789267ed1eb5ec555fd890c9fc6e1@changeid>
- <CAD=FV=XD2GKPc5qeMakvW8Ej9-y7n0Hi2qAie-gUM=DJOSv6sw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=XD2GKPc5qeMakvW8Ej9-y7n0Hi2qAie-gUM=DJOSv6sw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        linux-usb@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 12:45:46PM -0800, Doug Anderson wrote:
+Hi,
+
+On Thu, Dec 12, 2019 at 4:00 AM Sandeep Maheswaram (Temp)
+<sanm@codeaurora.org> wrote:
+>
 > Hi,
-> 
-> On Thu, Dec 12, 2019 at 11:55 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > +               pdc: interrupt-controller@b220000 {
-> > +                       compatible = "qcom,sc7180-pdc", "qcom,pdc";
-> > +                       reg = <0 0xb220000 0 0x30000>;
-> 
-> nit: when applying, maybe Bjorn / Andy could change 0xb220000 to
-> 0x0b220000 to match the convention elsewhere in this file.  That's not
-> a new problem introduced in your patch, but it seems like it could be
-> part of the same patch and it feels like a waste to re-send just for
-> that.  ;-)
+>
+> On 12/12/2019 1:13 AM, Doug Anderson wrote:
+> > Hi,
+> >
+> > On Thu, Nov 28, 2019 at 3:35 AM Sandeep Maheswaram <sanm@codeaurora.org> wrote:
+> >> Add compatible for SC7180 SOC in USB DWC3 driver
+> >>
+> >> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> >> ---
+> >>   drivers/usb/dwc3/dwc3-qcom.c | 3 ++-
+> >>   1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> >> index 261af9e..1df2372 100644
+> >> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> >> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> >> @@ -1,5 +1,5 @@
+> >>   // SPDX-License-Identifier: GPL-2.0
+> >> -/* Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> >> +/* Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+> >>    *
+> >>    * Inspired by dwc3-of-simple.c
+> >>    */
+> >> @@ -753,6 +753,7 @@ static const struct of_device_id dwc3_qcom_of_match[] = {
+> >>          { .compatible = "qcom,dwc3" },
+> >>          { .compatible = "qcom,msm8996-dwc3" },
+> >>          { .compatible = "qcom,msm8998-dwc3" },
+> >> +       { .compatible = "qcom,sc7180-dwc3" },
+> >>          { .compatible = "qcom,sdm845-dwc3" },
+> > It is, of course, up to Felipe.  ...but in my opinion this is the
+> > wrong change and instead we should be deleting the SoC-specific
+> > strings (msm8996, msm8998, sdm845) from this file because they don't
+> > buy us anything.  To explain how it works:
+> >
+> > 1. Device tree should have both the "SoC-specific" and generic
+> > "qcom,dwc3" strings.  Only the "qcom,dwc3" will actually be used but
+> > the SoC-specific string is there so if we find a case later where we
+> > need to handle a SoC-specific quirk then it'll already be there.
+> >
+> > 2. Bindings should have both the "SoC-specific" and generic
+> > "qcom,dwc3" strings.  The binding is describing what's in the device
+> > tree.
+> >
+> > 3. Until we have a SoC-specific quirk to handle, we _don't_ need to
+> > add the SoC-specific string to the driver itself.
+> >
+> >
+> > -Doug
+> >
+> Can i remove this patch { .compatible = "qcom,sc7180-dwc3" }, in the
+> next version of this series ?
 
-haha, I also stumbled across this and doubted whether to change it in this
-patch ;-)
+Yeah, drop patch #1 from your series.  I've helped you out and posted:
 
-Sure, I can send a v2 that includes it.
+https://lore.kernel.org/r/20191212132122.1.I85a23bdcff04dbce48cc46ddb8f1ffe7a51015eb@changeid
 
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-Thanks!
+-Doug
