@@ -2,114 +2,256 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A231C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 13:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 226D3C00454
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 13:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C21D2173E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 13:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED19A21655
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 13:08:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S0PeetXC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQj4QWR7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729297AbfLLNH7 (ORCPT
+        id S1729315AbfLLNIH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:07:59 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43280 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729226AbfLLNH7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 08:07:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ORI9YzHhjLGPyL+QwYOIMHaGuxuP1MjIHAOeHK8vqaA=; b=S0PeetXCRwOI5pLW6hTeqrqQ5
-        E1uU6CBXvw4L4mPJ187UgHLfD6MzG68+Xw3/1ACuIPlrfxM9ReOyjowx7/EDtEkgTH3M6ZFsVVf6w
-        zpvO3nABtwiJ4rV37PlEkkStmRWVcJENFMu03YSgn1lXaoOvWtWHPs6aFK52UnPUBaNYM569wKXhW
-        dG+1K5KNb3PHYV9bvxStOtyZnUIlBeQSjyv803p5sxXhkRZO5hWJ/LA5rlB0H2vCv4aGgPuzbGv5K
-        3qnvaUrpHT6HXHpzwQnf+bZk+FbRhHHxUQ5b7Yfw5O2tTSHa0SqM8kniEs4mMaqWKorlTtrZquxcl
-        IVbTi9kbw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifOCD-0001II-Cl; Thu, 12 Dec 2019 13:07:57 +0000
-Date:   Thu, 12 Dec 2019 05:07:57 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Haren Myneni <haren@linux.ibm.com>
-Cc:     mpe@ellerman.id.au, devicetree@vger.kernel.org, mikey@neuling.org,
-        herbert@gondor.apana.org.au, npiggin@gmail.com, hch@infradead.org,
-        sukadev@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH V2 08/13] powerpc/vas: Update CSB and notify process for
- fault CRBs
-Message-ID: <20191212130757.GF3381@infradead.org>
-References: <1575861522.16318.9.camel@hbabu-laptop>
- <1575862417.16318.25.camel@hbabu-laptop>
+        Thu, 12 Dec 2019 08:08:07 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:36094 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729226AbfLLNIH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 08:08:07 -0500
+Received: by mail-pj1-f67.google.com with SMTP id n96so1027096pjc.3;
+        Thu, 12 Dec 2019 05:08:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=m70cX1ccVQcNfsKFfTZkLfHn+4sYxmeVX2PubKBQQYk=;
+        b=eQj4QWR7HnvXJxzOEyWU2YU3ey9CVqVCmQ1zWc/J+X23rHezy3cYLlcid7D/47kcXT
+         cw1Xl3gf7c1eV3Z+f7pi2g4lyW5Lat/1iyVte3e1KhzsaaUd1CCjrKHRlxmH24+wUngu
+         DkppcS3jHLfnkbe0wzUq9i5Xkq2QDY9tgfFPOQYgX5M5XqYQFKFEM6hS4LwqJpId/UCn
+         7AQZZ845vOQuqAIJbLuBNS/YQ36zyYhlHwo892o3iXyXae+6tVYrQYk/14/vmx0k6SyL
+         2O5wXC5gqEJvGylY96c8yZauKRduqgoa0Ih6eoVYXYqqWcxCvaQTF9gc/Jnj5N6EhPMw
+         TbVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=m70cX1ccVQcNfsKFfTZkLfHn+4sYxmeVX2PubKBQQYk=;
+        b=G+YSc636zuDgwk+4va9EqoswPb/uzPUciZu199asbnu3x4uiLoExX8H4Wy2hSMZJAh
+         WcC5Puo1ctlWwIk0wrpSC4lX4ZakYS2bKD/gJ4Kiv+2wc8f3klueaBjos/edWWn8LrwK
+         edM2lbXpR8piceivKo8251JNt3wno86Xj5on4iAsKTsw372DiV2MPBR4CGyEJ3bl7VbH
+         XklLW07k6j1lVa5DF4X8/ze1S0OTRrnVs9Pz3rN4VESo/WP+4TQVGqHWBw0zXjU/w2X7
+         FI4JvP80jZCxrlYypaRTWdJq743onini6gQgifq/hDKQIaBjeXypBvHGMXlzFjVTWbgY
+         guQQ==
+X-Gm-Message-State: APjAAAX+awHhFO+Yufeh6pqqzhbgNdpy/wOy31gkuW1IYbrBZRfYv6Kn
+        3kGlLqpPxijgwljcB779FoY=
+X-Google-Smtp-Source: APXvYqwf7VM4nbjuXimflPq6vJbRg+SwKMix0ZmX48Mq7CN4j8H3LLurUPCFFa8AMR0/wpiOvODwjQ==
+X-Received: by 2002:a17:902:b598:: with SMTP id a24mr9064883pls.247.1576156086662;
+        Thu, 12 Dec 2019 05:08:06 -0800 (PST)
+Received: from cnn ([2402:3a80:457:6a63:7070:9118:7874:2897])
+        by smtp.gmail.com with ESMTPSA id v8sm6627508pff.151.2019.12.12.05.08.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Dec 2019 05:08:06 -0800 (PST)
+Date:   Thu, 12 Dec 2019 18:37:58 +0530
+From:   Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
+To:     andrew@aj.id.au, joel@jms.id.au
+Cc:     sdasari@fb.com, vijaykhemka@fb.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        manikandan.e@hcl.com
+Subject: [PATCH v4 2/2] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
+Message-ID: <20191212130758.GA7388@cnn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575862417.16318.25.camel@hbabu-laptop>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Dec 08, 2019 at 07:33:37PM -0800, Haren Myneni wrote:
-> +static void notify_process(pid_t pid, u64 fault_addr)
-> +{
-> +	int rc;
-> +	struct kernel_siginfo info;
-> +
-> +	memset(&info, 0, sizeof(info));
-> +
-> +	info.si_signo = SIGSEGV;
-> +	info.si_errno = EFAULT;
-> +	info.si_code = SEGV_MAPERR;
-> +	info.si_addr = (void *)fault_addr;
-> +	/*
-> +	 * process will be polling on csb.flags after request is sent to
-> +	 * NX. So generally CSB update should not fail except when an
-> +	 * application does not follow the process properly. So an error
-> +	 * message will be displayed and leave it to user space whether
-> +	 * to ignore or handle this signal.
-> +	 */
-> +	rcu_read_lock();
-> +	rc = kill_pid_info(SIGSEGV, &info, find_vpid(pid));
-> +	rcu_read_unlock();
-> +
-> +	pr_devel("%s(): pid %d kill_proc_info() rc %d\n", __func__, pid, rc);
-> +}
+The Yosemite V2 is a facebook multi-node server
+platform that host four OCP server. The BMC
+in the Yosemite V2 platform based on AST2500 SoC.
 
-I think you want to pass in the struct pid * here instead of looking
-up again, given that..
+This patch adds linux device tree entry related to
+Yosemite V2 specific devices connected to BMC SoC.
 
-> +	if (tsk) {
-> +		if (tsk->flags & PF_EXITING)
-> +			task_exit = 1;
-> +		put_task_struct(tsk);
-> +		pid = vas_window_pid(window);
+--- Reviews summary
+--- v4[2/2] - Spell and contributor name correction.
+---         - License identifier changed to GPL-2.0-or-later.
+---         - aspeed-gpio.h removed.
+---         - FAN2 tacho channel changed.
+---      v4 - Bootargs removed.
+---      v3 - Uart1 Debug removed .
+---      v2 - LPC and VUART removed .
+---      v1 - Initial draft.
 
-We already have the struct pid in the window structure here.
+Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
+Acked-by   : Andrew Jeffery <andrew@aj.id.au>
+Reviewed-by: Vijay Khemka <vkhemka@fb.com>
+---
+ .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 148 +++++++++++++++++++++
+ 1 file changed, 148 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
 
-> +	} else {
-> +		pid = window->tgid;
-> +
-> +		rcu_read_lock();
-> +		tsk = find_task_by_vpid(pid);
-> +		if (!tsk) {
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+new file mode 100644
+index 0000000..ffd7f4c
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+@@ -0,0 +1,148 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// Copyright (c) 2018 Facebook Inc.
++
++/dts-v1/;
++
++#include "aspeed-g5.dtsi"
++/ {
++	model = "Facebook Yosemitev2 BMC";
++	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
++	aliases {
++		serial4 = &uart5;
++	};
++	chosen {
++		stdout-path = &uart5;
++	};
++
++	memory@80000000 {
++		reg = <0x80000000 0x20000000>;
++	};
++
++	iio-hwmon {
++		// VOLATAGE SENSOR
++		compatible = "iio-hwmon";
++		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
++		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
++		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
++		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
++	};
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++#include "openbmc-flash-layout.dtsi"
++	};
++};
++
++&spi1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spi1_default>;
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		label = "pnor";
++	};
++};
++
++&uart5 {
++	// BMC Console
++	status = "okay";
++};
++
++&mac0 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++	use-ncsi;
++};
++
++&adc {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_adc0_default
++			&pinctrl_adc1_default
++			&pinctrl_adc2_default
++			&pinctrl_adc3_default
++			&pinctrl_adc4_default
++			&pinctrl_adc5_default
++			&pinctrl_adc6_default
++			&pinctrl_adc7_default
++			&pinctrl_adc8_default
++			&pinctrl_adc9_default
++			&pinctrl_adc10_default
++			&pinctrl_adc11_default
++			&pinctrl_adc12_default
++			&pinctrl_adc13_default
++			&pinctrl_adc14_default
++			&pinctrl_adc15_default>;
++};
++
++&i2c8 {
++	//FRU EEPROM
++	status = "okay";
++	eeprom@51 {
++		compatible = "atmel,24c64";
++		reg = <0x51>;
++		pagesize = <32>;
++	};
++};
++
++&i2c9 {
++	//INLET & OUTLET TEMP
++	status = "okay";
++	tmp421@4e {
++		compatible = "ti,tmp421";
++		reg = <0x4e>;
++	};
++	tmp421@4f {
++		compatible = "ti,tmp421";
++		reg = <0x4f>;
++	};
++};
++
++&i2c10 {
++	//HSC
++	status = "okay";
++	adm1278@40 {
++		compatible = "adi,adm1278";
++		reg = <0x40>;
++	};
++};
++
++&i2c11 {
++	//MEZZ_TEMP_SENSOR
++	status = "okay";
++	tmp421@1f {
++		compatible = "ti,tmp421";
++		reg = <0x1f>;
++	};
++};
++
++&i2c12 {
++	//MEZZ_FRU
++	status = "okay";
++	eeprom@51 {
++		compatible = "atmel,24c64";
++		reg = <0x51>;
++		pagesize = <32>;
++	};
++};
++
++&pwm_tacho {
++	//FSC
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
++	fan@0 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
++	};
++	fan@1 {
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
++	};
++};
+-- 
+2.7.4
 
-.. and could have easily stored on here.  Or at least only do the
-look up once, given that already looks it up.
-
-> +	/* Do not notify if the task is exiting. */
-> +	if (!task_exit) {
-> +		pr_err("Invalid CSB address 0x%p signalling pid(%d)\n",
-> +				csb_addr, pid);
-> +		notify_process(pid, (u64)csb_addr);
-> +	}
-
-I suspect inlining notify_process and just existing early for the
-task_exit case also makes the code a bit easier to follow.
