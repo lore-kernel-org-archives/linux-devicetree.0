@@ -2,116 +2,109 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7DAC00454
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6103FC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA28E2464B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3854B2253D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="lGc6HuLS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l++elnCn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730709AbfLLTgl (ORCPT
+        id S1730705AbfLLTgX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:36:41 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37420 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730762AbfLLTgk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 14:36:40 -0500
-Received: by mail-lf1-f68.google.com with SMTP id b15so148002lfc.4
-        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 11:36:39 -0800 (PST)
+        Thu, 12 Dec 2019 14:36:23 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42815 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730702AbfLLTgW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 14:36:22 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 4so1364638pfz.9
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 11:36:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lIK7T8B7Eyyku8RF0XNgNwtCGhRp7hkIh7+TFMDTOOM=;
-        b=lGc6HuLSAiMqXLMDP/tAyif2jwHyEA6NsPow0XZ3qXGTakl08BokK7tnFnkRXIYVT4
-         CB+WqxsNtTwVLVA1yChKPip/IMbsON8pgRvKA5uMK+GL+s/ReQwFrXSJS/aIcDc25jPO
-         NQcVSSANR21HgM77FanVSlyChehzNv5KcWsgAWxYP5IhhkHTQeF9lT++50iw3iNU38Xg
-         RRKHqENHjODrPdGnUvQaeOiDEDZTZIwjPe4DKFeUY6nYFetlY/d5Jhv8aGTFSl+Koqdl
-         rWlDmGR8MgXaYe9WGKZz1ZmW3CfvmOOyGOrSXr7JcvlfFjAS02V+iLjeGWMdmUp+I8Lf
-         r55g==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nxvIIL/M4xNHXhfiPPzelu8fzsGIsbwuQDaIfVtVXFc=;
+        b=l++elnCnFpjdWyOmeDMISmI3G2om45f3yRFU/HXxxRki9QynkfxcIBVk1v1NcC//I4
+         TAvusqtp0YcKAoAYjOrjuxWpqmDfbs16PmlvjjQwIW+/MhqscEwk/2TpoSFGGIIPi8lz
+         OwPTnq7eUPT+NQLs2eSPR/rbsA4E1S403wwG0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=lIK7T8B7Eyyku8RF0XNgNwtCGhRp7hkIh7+TFMDTOOM=;
-        b=c5+PTLilA90rTz/bqviPUgsNZQuDc+OeJljr9UtXFHRW+B6EyvFvnJYLX1A40HICM2
-         JfUkGlH6VyxPb6fasjLZFGFMhFsoyFWwXLjNlARDJrZFEhLME1fvGydoxsMD3zCQaJ6s
-         iL9YiUsF4KpEtUC5zKmaiF4bql5yrRD8htSPOs2FsKlW6PfMjGaI4YCRgDG7IP+CRHKW
-         RFsYdYnf45tpdT4qBq+3+mRkSDdx3KreZuy9lgHjTDCIgrkSDfCBvHI2uCEKZn8WJ2VN
-         lj0EMWHU/o4P7KC4WVefYT3whzvS4xYpidKQEwLKlhyboeApoizJbGlAxvCT1rztj+y4
-         S8Dw==
-X-Gm-Message-State: APjAAAUw3JT4Oi15hbL2sK6slE6JpMmYxBby0juCoA79s8icjLWnKExS
-        5tjFOv5O+ENYDDw6EDyiztZMiQ==
-X-Google-Smtp-Source: APXvYqxdpKEqSDXHq2d0D9envgFK5PeLwzFOc+DNwPACrZIGrON9Q2farga3fEcJ/DDnTT7CDyNnRA==
-X-Received: by 2002:ac2:53a8:: with SMTP id j8mr6952034lfh.28.1576179398495;
-        Thu, 12 Dec 2019 11:36:38 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:818:b9d7:c53b:d021:132e:26de])
-        by smtp.gmail.com with ESMTPSA id y23sm3518960ljk.6.2019.12.12.11.36.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Dec 2019 11:36:37 -0800 (PST)
-Subject: Re: [PATCH v2 1/6] spi: Add SPIBSC driver
-To:     Chris Brandt <chris.brandt@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        Mason Yang <masonccyang@mxic.com.tw>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <20191206134202.18784-2-chris.brandt@renesas.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <37c13497-d20f-583f-72d7-1e3c8a241990@cogentembedded.com>
-Date:   Thu, 12 Dec 2019 22:36:36 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nxvIIL/M4xNHXhfiPPzelu8fzsGIsbwuQDaIfVtVXFc=;
+        b=nHAspoGDjmYQznKcD9n41rJOV67gWhEV2wMie7QM38LXneX1WvDnNP4PDjWmJkJPgO
+         GZ4NsU+nEAPG5nGztFHGgnikx4Sb4Rjrdu/KBGS1DfUcAHu+RwNg1JBH1Oqcv1cS9PVL
+         gXtSLkYqTDCAVJ7/yJplLpB42wV2G0Gkv5VeDHZM5vrIOgPuiBWYBZxdhnVgA9opck3L
+         UezuDAzf1hFW7KEmQuWeIg6XP6EcFBRkP3Nf1B6RiNvEzxHJIqgc+sIZs3JcpZSV6nVg
+         qafm9qWKgGIdmKTHqhghRnhrlWEIlQ06ImJQoiPtQhERVbzz3yRtnIdyXGhjPNjBQE43
+         XhAw==
+X-Gm-Message-State: APjAAAV4rFAIxy+SKssM3BuODxdEXUlnrmi0NtvP1CVLwqg8zcJhCcEC
+        hAKE6hcPqkL9YgxU512TPaWDQw==
+X-Google-Smtp-Source: APXvYqwRLZFrp8ZGCKn5bYAs/X8CMfTRPrFWB7+1WR9Jf7FXzw6D14fesD//auj8r9OqxTRluOF+yQ==
+X-Received: by 2002:a63:1a19:: with SMTP id a25mr3467111pga.447.1576179381825;
+        Thu, 12 Dec 2019 11:36:21 -0800 (PST)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id m34sm7568302pgb.26.2019.12.12.11.36.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 11:36:21 -0800 (PST)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
+        mka@chromium.org, Sandeep Maheswaram <sanm@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH 5/7] arm64: dts: qcom: sc7180: Avoid "memory" for cmd-db reserved-memory node
+Date:   Thu, 12 Dec 2019 11:35:41 -0800
+Message-Id: <20191212113540.5.I4e41d4d872368e2e056db2ec8442ec18d3f7ef08@changeid>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+In-Reply-To: <20191212193544.80640-1-dianders@chromium.org>
+References: <20191212193544.80640-1-dianders@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20191206134202.18784-2-chris.brandt@renesas.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/06/2019 04:41 PM, Chris Brandt wrote:
+By using "memory" we trigger we trigger the "schemas/memory.yaml"
+rules when we run "dtbs_check" which then complains that we don't have
+a "device_type" of "memory".
 
-> Add a driver for the SPIBSC controller in Renesas SoC devices.
-> 
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Looking at the "reserved-memory.txt" bindings, subnodes shouldn't just
+be the word "memory".  Presumably using just "cmd-db" should be OK for
+a node name.
 
-   Hm... I've just tested JFFS2 with this driver and got the same result as with
-my own drivers:
+Fixes: e0abc5eb526e ("arm64: dts: qcom: sc7180: Add cmd_db reserved area")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-root@192.168.2.11:~# mount -t jffs2 /dev/mtdblock11 /mnt/jffs2/                 
-root@192.168.2.11:~# cd /mnt/jffs2/                                             
-root@192.168.2.11:/mnt/jffs2# ls -l                                             
-total 34                                                                        
--rwxr-xr-x 1 root root 18678 Jan 22  2000 evtest                                
--rw-r--r-- 1 root root 15169 Jan 22  2000 evtest.c                              
-root@192.168.2.11:/mnt/jffs2# rm evtest                                         
-root@192.168.2.11:/mnt/jffs2# ls -l                                             
-total 15                                                                        
--rw-r--r-- 1 root root 15169 Jan 22  2000 evtest.c                              
-root@192.168.2.11:/mnt/jffs2# cd                                                
-root@192.168.2.11:~# umount /mnt/jffs2/                                         
-root@192.168.2.11:~# mount -t jffs2 /dev/mtdblock11 /mnt/jffs2/                 
-root@192.168.2.11:~# ls -l /mnt/jffs2/                                          
-total 34                                                                        
--rwxr-xr-x 1 root root 18678 Jan 22  2000 evtest                                
--rw-r--r-- 1 root root 15169 Jan 22  2000 evtest.c                              
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-   As you can see, the deleted file is back after unmount/re-mount...
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index d114feade8e7..9766867abc88 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -61,7 +61,7 @@ reserved_memory: reserved-memory {
+ 		#size-cells = <2>;
+ 		ranges;
+ 
+-		aop_cmd_db_mem: memory@80820000 {
++		aop_cmd_db_mem: cmd-db@80820000 {
+ 			reg = <0x0 0x80820000 0x0 0x20000>;
+ 			compatible = "qcom,cmd-db";
+ 			no-map;
+-- 
+2.24.1.735.g03f4e72817-goog
 
-MBR, Sergei
