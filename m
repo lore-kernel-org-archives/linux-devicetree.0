@@ -2,118 +2,124 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFD3C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 14:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3F6C00454
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 14:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E04A21655
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 14:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1708227BF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 14:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729788AbfLLOoE (ORCPT
+        id S1729800AbfLLOsv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:44:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:49196 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729526AbfLLOoE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:44:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B0E530E;
-        Thu, 12 Dec 2019 06:44:03 -0800 (PST)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D90EA3F718;
-        Thu, 12 Dec 2019 06:44:00 -0800 (PST)
-Date:   Thu, 12 Dec 2019 14:43:55 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Neal Liu <neal.liu@mediatek.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Lars Persson <lists@bofh.nu>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Crystal Guo =?utf-8?B?KOmDreaZtik=?= <Crystal.Guo@mediatek.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
-Message-ID: <20191212144355.GA13263@bogus>
-References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
- <1574864578-467-4-git-send-email-neal.liu@mediatek.com>
- <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
- <1575027046.24848.4.camel@mtkswgap22>
- <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
+        Thu, 12 Dec 2019 09:48:51 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38885 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729603AbfLLOsu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 09:48:50 -0500
+Received: by mail-ot1-f67.google.com with SMTP id h20so2245082otn.5;
+        Thu, 12 Dec 2019 06:48:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=voZVPNoSy4a8bMYdTcCablMq5CNO8vg9KUaW07IxqF0=;
+        b=YwRTukMxntgOWx6/kVL9ZGvZBDrJZgnJlyHI9ZMaj0YrrVlNMLNKzkqSr4ISF4aq5i
+         caxcomtk8t49UXVHqq9wbTGu5fEKfLWkK7HyeRjWP0uukat6YZEFHdHDe4cRnM/8mywo
+         +wWE94qEVnqDYpAl1zAzCvVx/X0LQ2wTnbbj67NXQbSeycN4HFyxIBTR9TVnMRHgPgDa
+         /o33OAATNQxxxubkDh3lhqtUiU7v6XX+vgg3R3YmQJL4joxLNZzjfjjIVFwYi1O+YirW
+         6eahBY2Cu0WzTmxDBtWP1VMT7E5ukt5MnViWU+XhBf1COeUoZq5bnbaWdFYqUiI07UrC
+         zJdQ==
+X-Gm-Message-State: APjAAAVfXY0/4BbjFJHdS+J2hENLrfOka9xNEORAjF0ZGAHgHCw9z9sE
+        4TkxubRUpi3/o15DGyUHpGL7SvHQxdaewopCVLo=
+X-Google-Smtp-Source: APXvYqzkSI69hH3nkOuTuzoZ5DVB2dOkFajJLW18qhY+01LkXcbQ2mLFjldvRytBCaRPVXRqDE7Vp+g1Jzj78r5O+Hc=
+X-Received: by 2002:a9d:dc1:: with SMTP id 59mr8660446ots.250.1576162129675;
+ Thu, 12 Dec 2019 06:48:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-7-geert+renesas@glider.be> <CACRpkdb1XZAeSThxWmJtnm80T4aPufXV2UvJdVdgnw-TJe3trg@mail.gmail.com>
+In-Reply-To: <CACRpkdb1XZAeSThxWmJtnm80T4aPufXV2UvJdVdgnw-TJe3trg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 12 Dec 2019 15:48:38 +0100
+Message-ID: <CAMuHMdV+Ww5Y9G7+bS-SyHtm4dC89V37yuaYvrS3kYW=PRTkFA@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] docs: gpio: Add GPIO Aggregator/Repeater documentation
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 04:12:09PM +0000, Ard Biesheuvel wrote:
-> (adding some more arm64 folks)
-> 
-> On Fri, 29 Nov 2019 at 11:30, Neal Liu <neal.liu@mediatek.com> wrote:
-> >
-> > On Fri, 2019-11-29 at 18:02 +0800, Lars Persson wrote:
-> > > Hi Neal,
-> > >
-> > > On Wed, Nov 27, 2019 at 3:23 PM Neal Liu <neal.liu@mediatek.com> wrote:
-> > > >
-> > > > For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
-> > > > entropy sources is not accessible from normal world (linux) and
-> > > > rather accessible from secure world (ATF/TEE) only. This driver aims
-> > > > to provide a generic interface to ATF rng service.
-> > > >
-> > >
-> > > I am working on several SoCs that also will need this kind of driver
-> > > to get entropy from Arm trusted firmware.
-> > > If you intend to make this a generic interface, please clean up the
-> > > references to MediaTek and give it a more generic name. For example
-> > > "Arm Trusted Firmware random number driver".
-> > >
-> > > It will also be helpful if the SMC call number is configurable.
-> > >
-> > > - Lars
-> >
-> > Yes, I'm trying to make this to a generic interface. I'll try to make
-> > HW/platform related dependency to be configurable and let it more
-> > generic.
-> > Thanks for your suggestion.
-> >
-> 
-> I don't think it makes sense for each arm64 platform to expose an
-> entropy source via SMC calls in a slightly different way, and model it
-> as a h/w driver. Instead, we should try to standardize this, and
-> perhaps expose it via the architectural helpers that already exist
-> (get_random_seed_long() and friends), so they get plugged into the
-> kernel random pool driver directly.
-> 
-> Note that in addition to drivers based on vendor SMC calls, we already
-> have a RNG h/w driver based on OP-TEE as well, where the driver
-> attaches to a standardized trusted OS interface identified by a UUID,
-> and which also gets invoked via SMC calls into secure firmware.
+Hi Linus,
 
-Yes, I agree. I had raised the issue internally and forgot to follow up.
-I raised this few months back after I read a blog[1]
+On Thu, Dec 12, 2019 at 3:42 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> > +The GPIO Aggregator allows access control for individual GPIOs, by aggregating
+> > +them into a new gpio_chip, which can be assigned to a group or user using
+> > +standard UNIX file ownership and permissions.  Furthermore, this simplifies and
+> > +hardens exporting GPIOs to a virtual machine, as the VM can just grab the full
+> > +GPIO controller, and no longer needs to care about which GPIOs to grab and
+> > +which not, reducing the attack surface.
+> > +
+> > +Aggregated GPIO controllers are instantiated and destroyed by writing to
+> > +write-only attribute files in sysfs.
+>
+> I suppose virtual machines will have a lengthy config file where
+> they specify which GPIO lines to pick and use for their GPIO
+> aggregator, and that will all be fine, the VM starts and the aggregator
+> is there and we can start executing.
+>
+> I would perhaps point out a weakness as with all sysfs and with the current
+> gpio sysfs: if a process creates an aggregator device, and then that
+> process crashes, what happens when you try to restart the process and
+> run e.g. your VM again?
+>
+> Time for a hard reboot? Or should we add some design guidelines for
+> these machines so that they can cleanly tear down aggregators
+> previously created by the crashed VM?
+
+No, the VM does not create the aggregator.
+
+The idea is for the user to create one or more aggregators, set up
+permissions on /dev/gpiochipX, and launch the VM, passing the aggregated
+/dev/gpiochipX as parameters.
+If the VM crashes, just launch it again.
+
+Destroying the aggregators is a manual and independent process, after
+the VM has exited.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 
 --
-Regards,
-Sudeep
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-[1] https://community.arm.com/developer/ip-products/processors/f/cortex-a-forum/43679/arm-really-should-standardize-an-smc-interface-for-hardware-random-number-generators
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
