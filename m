@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73364C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 21:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C57C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 22:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A74214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 21:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D335214D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 22:00:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pl/pUQBm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lneRNQyx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731260AbfLLV7y (ORCPT
+        id S1731190AbfLLWAX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 16:59:54 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:42624 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731255AbfLLV7y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 16:59:54 -0500
-Received: by mail-pj1-f67.google.com with SMTP id o11so112485pjp.9
-        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 13:59:54 -0800 (PST)
+        Thu, 12 Dec 2019 17:00:23 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46628 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730896AbfLLWAW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 17:00:22 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z124so250082pgb.13
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 14:00:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=message-id:mime-version:content-transfer-encoding:in-reply-to
          :references:from:cc:to:subject:user-agent:date;
-        bh=CmXfpguq27944eP1eRHL/S89lr4HkiikW6X9wQMZTak=;
-        b=Pl/pUQBmMNlT60swExa6Lc0oNeW8xywtmM0c5iE+6MjRqMLAh/sicSUDhIRtJUFEJF
-         LkeK0S+MTgT2BjI+j/Bjr/9clApktvsRn9HX1KIaIChXS/MIG/vKXkv5PgabEjK1dGGE
-         PKdVuMVX4sx3mWJ46X6FmpnNqriJ5y4UJ1Ir8=
+        bh=m5RN7Ruq6b2oNIbW1OTVbblEFx0jLwFpTd4HTw5wVkQ=;
+        b=lneRNQyxzco6VraFwiZvfvv0ix1xxj0F27IGpoVPrKlMBCxe/LgOg3peL5pluU74Qj
+         S0F34wXbAn9QLYC/itEq43IXWcwWGqQNAYo6Tkjpm+Va8IZnD1aSHUgTAVaSl48PjFRc
+         XvyPyCdILOnFtRcu7hpg1zu/YWYv0QI7oE1VY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:mime-version
          :content-transfer-encoding:in-reply-to:references:from:cc:to:subject
          :user-agent:date;
-        bh=CmXfpguq27944eP1eRHL/S89lr4HkiikW6X9wQMZTak=;
-        b=RuQEv6U4y11LC2Q0lZxqqaLfjrEOzq5xf3hSeRLDXyNjvfnb4LCcR79136VF8NV/ts
-         nXR/Nojqe09FGqcINFYtLr02I3RP7tm2hgtDbqdoNtKW0vXeIZVYISFD7MljLSraJ+Ho
-         u+kkQ8cjxLwaQYy+fDIoRcc0bZY5Ots/vC2xVOgYi2J7GxtKWCo+yoa/mUoYNNV3DKNb
-         wWJHvklwBqMLsbQ7qornKEUruVPRji5ffqWr9lfvPXvfgji903GW5m3NYqpxK0KwdkYd
-         CNely4dqEe9wLddpuE0kq0NeyjATmy2fgnLIrCHOo7kobveoxNPDJ0C4S0m7c54nISEO
-         NyBA==
-X-Gm-Message-State: APjAAAVCmHvB2x1dgBnSwCDG044rkXPMp69enNXhImOi4Vgf9YnK3Tn/
-        gLmAZg2Q+USVIqAcsT3F06qCZg==
-X-Google-Smtp-Source: APXvYqyYdeFIttKHtScn51FUQtkOnmir8OiEGe0EwjEvNpgQw9TAoxHuXImKHk2nhWN4iUrT/Ec2Fg==
-X-Received: by 2002:a17:902:9a94:: with SMTP id w20mr11523626plp.54.1576187993538;
-        Thu, 12 Dec 2019 13:59:53 -0800 (PST)
+        bh=m5RN7Ruq6b2oNIbW1OTVbblEFx0jLwFpTd4HTw5wVkQ=;
+        b=okM7LTHnd4H6C3Xu7+J8HtLMZ9ZJmYfPduahp9+gUmLU1CVgovUFQCv24HHIN93OJg
+         4+cyZ/kHDc4bld1ZzoChI4d7/cQ/8lfq7+lXiim37Lnvsm2cV8BSs6KYPHHsriUhbTeb
+         Du7iPvsJKiH9L+x+yIrRTZX3QPZ4tGtZJs8IrIotTuUMH1qnkJKSFnTECM7SeFO+R3qc
+         j1H/n4Zb12b6adu/o//8FwdYMS6ERCNVA+K9EvqiGch8YLediE1Fg7t5WEB2WVcw1RQp
+         z5EfV37+TDsXX56Fvo/0AulO1dVvJ+qr9SI2ufiBd1CS6F9x9XPnpvB/TOtUjPujGoOk
+         eHDA==
+X-Gm-Message-State: APjAAAXNa/3T0M8nTdDZUVnW46U+h0Xzz5tNLEPo4i9FDkFGrLezauPj
+        CF3/ULMrEZfwkTGG8V8NkGwBMw==
+X-Google-Smtp-Source: APXvYqxKdxvqy0acTBm4XIVBtjHKPFwJWztj4zqFxxtbPgd4PxaZjT4MbgmTjW0W6DUqKyuKf4jamQ==
+X-Received: by 2002:a63:1a22:: with SMTP id a34mr12401788pga.403.1576188022050;
+        Thu, 12 Dec 2019 14:00:22 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b73sm8519686pfb.72.2019.12.12.13.59.52
+        by smtp.gmail.com with ESMTPSA id 199sm8862298pfv.81.2019.12.12.14.00.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 13:59:53 -0800 (PST)
-Message-ID: <5df2b859.1c69fb81.3a87e.5ace@mx.google.com>
+        Thu, 12 Dec 2019 14:00:21 -0800 (PST)
+Message-ID: <5df2b875.1c69fb81.41383.651a@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191212113540.6.Iec10b23bb000186b36b8bacfb6789d8233de04a7@changeid>
-References: <20191212193544.80640-1-dianders@chromium.org> <20191212113540.6.Iec10b23bb000186b36b8bacfb6789d8233de04a7@changeid>
+In-Reply-To: <20191212113540.5.I4e41d4d872368e2e056db2ec8442ec18d3f7ef08@changeid>
+References: <20191212193544.80640-1-dianders@chromium.org> <20191212113540.5.I4e41d4d872368e2e056db2ec8442ec18d3f7ef08@changeid>
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
         Rajendra Nayak <rnayak@codeaurora.org>, mka@chromium.org,
@@ -72,35 +72,26 @@ Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 6/7] arm64: dts: qcom: sc7180: Avoid "phy" for USB QMP PHY wrapper
+Subject: Re: [PATCH 5/7] arm64: dts: qcom: sc7180: Avoid "memory" for cmd-db reserved-memory node
 User-Agent: alot/0.8.1
-Date:   Thu, 12 Dec 2019 13:59:52 -0800
+Date:   Thu, 12 Dec 2019 14:00:20 -0800
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Douglas Anderson (2019-12-12 11:35:42)
-> The bindings for the QMP PHY are truly strange.  I believe (?) that
-> they may have originated because with PCIe each lane is treated as a
-> different PHY and the same PHY driver is used for a whole bunch of
-> things (incluidng PCIe).
+Quoting Douglas Anderson (2019-12-12 11:35:41)
+> By using "memory" we trigger we trigger the "schemas/memory.yaml"
+> rules when we run "dtbs_check" which then complains that we don't have
+> a "device_type" of "memory".
 >=20
-> In any case, now that we have "make dtbs_check", we find that having
-> the outer node named "phy" triggers the
-> "schemas/phy/phy-provider.yaml" schema, yelling about:
+> Looking at the "reserved-memory.txt" bindings, subnodes shouldn't just
+> be the word "memory".  Presumably using just "cmd-db" should be OK for
+> a node name.
 >=20
->   phy@88e9000: '#phy-cells' is a required property
->=20
-> Let's call the outer node the "phy-wrapper" and the inner node the
-> "phy" to make dtbs_check happy.
->=20
-> Fixes: 0b766e7fe5a2 ("arm64: dts: qcom: sc7180: Add USB related nodes")
+> Fixes: e0abc5eb526e ("arm64: dts: qcom: sc7180: Add cmd_db reserved area")
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
 
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-
-Would be good to add phy-wrapper to possible node names in the DT spec
-too.
 
