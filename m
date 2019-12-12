@@ -2,123 +2,125 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA187C2D0C7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 02:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C40C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 02:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92FB62073D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 02:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59942054F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 02:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XM2eXN50"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="L5q47asl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbfLLCmP (ORCPT
+        id S1727845AbfLLCtE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 21:42:15 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:34495 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727756AbfLLCmO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 21:42:14 -0500
-X-UUID: dbebac3d474c4adf8342a6dc070e59d7-20191212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=VDJkFfjQ2A7EK11jJQUQ+/nDT660s5v+Di1gVGNcQ80=;
-        b=XM2eXN50fH9j2JUNXqxJH0wn5y6GFhzQqRoDcacXkOkr0RimKdKu+gXqxGf/rnWfO3xEY50jcJjcNx57n+CAyzOcxYvViPuYy9dwsnVnV/e4C4ojKPtiXgwn3DowQBUQAeq9kOTv5ODIYxnJQl+c3ZFtA6ygftPYMpAK5h37kTg=;
-X-UUID: dbebac3d474c4adf8342a6dc070e59d7-20191212
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 460475510; Thu, 12 Dec 2019 10:42:11 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 12 Dec 2019 10:42:40 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Dec 2019 10:42:05 +0800
-From:   Biao Huang <biao.huang@mediatek.com>
-To:     <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Biao Huang <biao.huang@mediatek.com>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>
-Subject: [PATCH 2/2] net-next: dt-binding: dwmac-mediatek: add more description for RMII
-Date:   Thu, 12 Dec 2019 10:41:45 +0800
-Message-ID: <20191212024145.21752-3-biao.huang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20191212024145.21752-1-biao.huang@mediatek.com>
-References: <20191212024145.21752-1-biao.huang@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 11 Dec 2019 21:49:04 -0500
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:38118 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727599AbfLLCtD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Dec 2019 21:49:03 -0500
+Received: from mailhost.synopsys.com (sv2-mailhost1.synopsys.com [10.205.2.133])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 77709C0084;
+        Thu, 12 Dec 2019 02:49:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1576118942; bh=ta14JiyZFbEKwsXrq3lRZW1hLWDxxcBeGnI5Eswl/WM=;
+        h=Date:From:Subject:To:Cc:From;
+        b=L5q47asllvi0qp+gHokHfXfQagOmAk2EHA6PA2IHcBt0cC3qdTlFMUeERfBz4gS+5
+         +qOZfUuv2kcT1D5YFYHXRnPB7diXW0dpt4kAZuBCi75Q7BcYgTbrLj7cStOC3VlmLV
+         JUcDCOV/nPtjGuqJkOUcBUGDJOohigmdkcHRfEjepG4EgB81tKn8Ln1pyriqUh9yL8
+         cnwas9n/iZ3FcJbCQU8LRynbGypgT7FVwjaVK9eYl6Xec+Yd2H9LPcxthXp3j7gSvC
+         XxpHInvIFcfg+J8NqQdmvx6OMN9rZj9Kojj28vwi8pAKkc3MHuNzmBtxAbzQgmo3lJ
+         c25MVl2PkVbTg==
+Received: from te-lab16 (nanobot.internal.synopsys.com [10.10.186.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPSA id F2FBCA007C;
+        Thu, 12 Dec 2019 02:48:58 +0000 (UTC)
+Received: by te-lab16 (sSMTP sendmail emulation); Wed, 11 Dec 2019 18:48:58 -0800
+Date:   Wed, 11 Dec 2019 18:48:58 -0800
+Message-Id: <cover.1576118671.git.thinhn@synopsys.com>
+From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Subject: [RFC PATCH 00/14] usb: dwc3: Introduce DWC_usb32
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Roger Quadros <rogerq@ti.com>, zhengbin <zhengbin13@huawei.com>
+Cc:     John Youn <John.Youn@synopsys.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-TVQyNzEyIFNvQyBjYW4gcHJvdmlkZXMgUk1JSSByZWZlcmVuY2UgY2xvY2ssDQpzbyBhZGQgY29y
-cmVzcG9uZGluZyBkZXNjcmlwdGlvbiBpbiBkdC1iaW5kaW5nLg0KDQpTaWduZWQtb2ZmLWJ5OiBC
-aWFvIEh1YW5nIDxiaWFvLmh1YW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL25ldC9tZWRpYXRlay1kd21hYy50eHQgIHwgMTcgKysrKysrKysrKysrKystLS0N
-CiAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCg0KZGlm
-ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvbWVkaWF0ZWst
-ZHdtYWMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tZWRpYXRl
-ay1kd21hYy50eHQNCmluZGV4IDhhMDg2MjFhNWI1NC4uMzRmNjkyZWEwNDA2IDEwMDY0NA0KLS0t
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tZWRpYXRlay1kd21hYy50
-eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvbWVkaWF0ZWst
-ZHdtYWMudHh0DQpAQCAtMTQsNyArMTQsOSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KIAlTaG91
-bGQgYmUgIm1hY2lycSIgZm9yIHRoZSBtYWluIE1BQyBJUlENCiAtIGNsb2NrczogTXVzdCBjb250
-YWluIGEgcGhhbmRsZSBmb3IgZWFjaCBlbnRyeSBpbiBjbG9jay1uYW1lcy4NCiAtIGNsb2NrLW5h
-bWVzOiBUaGUgbmFtZSBvZiB0aGUgY2xvY2sgbGlzdGVkIGluIHRoZSBjbG9ja3MgcHJvcGVydHku
-IFRoZXNlIGFyZQ0KLQkiYXhpIiwgImFwYiIsICJtYWNfbWFpbiIsICJwdHBfcmVmIiBmb3IgTVQy
-NzEyIFNvQw0KKwkiYXhpIiwgImFwYiIsICJtYWNfbWFpbiIsICJwdHBfcmVmIiBmb3IgTVQyNzEy
-IFNvQy4NCisJInJtaWlfaW50ZXJuYWwiIGlzIG9wdGlvbmFsLCBvbmx5IGZvciBSTUlJIHdoZW4g
-dGhlIHJlZmVyZW5jZSBjbG9jayBpcw0KKwlmcm9tIE1UMjcxMiBTb0MuDQogLSBtYWMtYWRkcmVz
-czogU2VlIGV0aGVybmV0LnR4dCBpbiB0aGUgc2FtZSBkaXJlY3RvcnkNCiAtIHBoeS1tb2RlOiBT
-ZWUgZXRoZXJuZXQudHh0IGluIHRoZSBzYW1lIGRpcmVjdG9yeQ0KIC0gbWVkaWF0ZWsscGVyaWNm
-ZzogQSBwaGFuZGxlIHRvIHRoZSBzeXNjb24gbm9kZSB0aGF0IGNvbnRyb2wgZXRoZXJuZXQNCkBA
-IC0yMyw4ICsyNSwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KIE9wdGlvbmFsIHByb3BlcnRp
-ZXM6DQogLSBtZWRpYXRlayx0eC1kZWxheS1wczogVFggY2xvY2sgZGVsYXkgbWFjcm8gdmFsdWUu
-IERlZmF1bHQgaXMgMC4NCiAJSXQgc2hvdWxkIGJlIGRlZmluZWQgZm9yIFJHTUlJL01JSSBpbnRl
-cmZhY2UuDQorCUl0IHNob3VsZCBiZSBkZWZpbmVkIGZvciBSTUlJIGludGVyZmFjZSB3aGVuIHRo
-ZSByZWZlcmVuY2UgY2xvY2sgaXMgZnJvbSBNVDI3MTIgU29DLg0KIC0gbWVkaWF0ZWsscngtZGVs
-YXktcHM6IFJYIGNsb2NrIGRlbGF5IG1hY3JvIHZhbHVlLiBEZWZhdWx0IGlzIDAuDQotCUl0IHNo
-b3VsZCBiZSBkZWZpbmVkIGZvciBSR01JSS9NSUkvUk1JSSBpbnRlcmZhY2UuDQorCUl0IHNob3Vs
-ZCBiZSBkZWZpbmVkIGZvciBSR01JSS9NSUkgaW50ZXJmYWNlLg0KKwlJdCBzaG91bGQgYmUgZGVm
-aW5lZCBmb3IgUk1JSSBpbnRlcmZhY2UuDQogQm90aCBkZWxheSBwcm9wZXJ0aWVzIG5lZWQgdG8g
-YmUgYSBtdWx0aXBsZSBvZiAxNzAgZm9yIFJHTUlJIGludGVyZmFjZSwNCiBvciB3aWxsIHJvdW5k
-IGRvd24uIFJhbmdlIDB+MzEqMTcwLg0KIEJvdGggZGVsYXkgcHJvcGVydGllcyBuZWVkIHRvIGJl
-IGEgbXVsdGlwbGUgb2YgNTUwIGZvciBNSUkvUk1JSSBpbnRlcmZhY2UsDQpAQCAtMzQsMTMgKzM4
-LDIwIEBAIG9yIHdpbGwgcm91bmQgZG93bi4gUmFuZ2UgMH4zMSo1NTAuDQogCXJlZmVyZW5jZSBj
-bG9jaywgd2hpY2ggaXMgZnJvbSBleHRlcm5hbCBQSFlzLCBpcyBjb25uZWN0ZWQgdG8gUlhDIHBp
-bg0KIAlvbiBNVDI3MTIgU29DLg0KIAlPdGhlcndpc2UsIGlzIGNvbm5lY3RlZCB0byBUWEMgcGlu
-Lg0KKy0gbWVkaWF0ZWsscm1paS1jbGstZnJvbS1tYWM6IGJvb2xlYW4gcHJvcGVydHksIGlmIHBy
-ZXNlbnQgaW5kaWNhdGVzIHRoYXQNCisJTVQyNzEyIFNvQyBwcm92aWRlcyB0aGUgUk1JSSByZWZl
-cmVuY2UgY2xvY2ssIHdoaWNoIG91dHB1dHMgdG8gVFhDIHBpbiBvbmx5Lg0KIC0gbWVkaWF0ZWss
-dHhjLWludmVyc2U6IGJvb2xlYW4gcHJvcGVydHksIGlmIHByZXNlbnQgaW5kaWNhdGVzIHRoYXQN
-CiAJMS4gdHggY2xvY2sgd2lsbCBiZSBpbnZlcnNlZCBpbiBNSUkvUkdNSUkgY2FzZSwNCiAJMi4g
-dHggY2xvY2sgaW5zaWRlIE1BQyB3aWxsIGJlIGludmVyc2VkIHJlbGF0aXZlIHRvIHJlZmVyZW5j
-ZSBjbG9jaw0KIAkgICB3aGljaCBpcyBmcm9tIGV4dGVybmFsIFBIWXMgaW4gUk1JSSBjYXNlLCBh
-bmQgaXQgcmFyZWx5IGhhcHBlbi4NCisJMy4gdGhlIHJlZmVyZW5jZSBjbG9jaywgd2hpY2ggb3V0
-cHV0cyB0byBUWEMgcGluIHdpbGwgYmUgaW52ZXJzZWQgaW4gUk1JSSBjYXNlDQorCSAgIHdoZW4g
-dGhlIHJlZmVyZW5jZSBjbG9jayBpcyBmcm9tIE1UMjcxMiBTb0MuDQogLSBtZWRpYXRlayxyeGMt
-aW52ZXJzZTogYm9vbGVhbiBwcm9wZXJ0eSwgaWYgcHJlc2VudCBpbmRpY2F0ZXMgdGhhdA0KIAkx
-LiByeCBjbG9jayB3aWxsIGJlIGludmVyc2VkIGluIE1JSS9SR01JSSBjYXNlLg0KLQkyLiByZWZl
-cmVuY2UgY2xvY2sgd2lsbCBiZSBpbnZlcnNlZCB3aGVuIGFycml2ZWQgYXQgTUFDIGluIFJNSUkg
-Y2FzZS4NCisJMi4gcmVmZXJlbmNlIGNsb2NrIHdpbGwgYmUgaW52ZXJzZWQgd2hlbiBhcnJpdmVk
-IGF0IE1BQyBpbiBSTUlJIGNhc2UsIHdoZW4NCisJICAgdGhlIHJlZmVyZW5jZSBjbG9jayBpcyBm
-cm9tIGV4dGVybmFsIFBIWXMuDQorCTMuIHRoZSBpbnNpZGUgY2xvY2ssIHdoaWNoIGJlIHNlbnQg
-dG8gTUFDLCB3aWxsIGJlIGludmVyc2VkIGluIFJNSUkgY2FzZSB3aGVuDQorCSAgIHRoZSByZWZl
-cmVuY2UgY2xvY2sgaXMgZnJvbSBNVDI3MTIgU29DLg0KIC0gYXNzaWduZWQtY2xvY2tzOiBtYWNf
-bWFpbiBhbmQgcHRwX3JlZiBjbG9ja3MNCiAtIGFzc2lnbmVkLWNsb2NrLXBhcmVudHM6IHBhcmVu
-dCBjbG9ja3Mgb2YgdGhlIGFzc2lnbmVkIGNsb2Nrcw0KIA0KLS0gDQoyLjE4LjANCg==
+This patch series adds support to Synopsys DWC_usb32 controller which is
+capable of dual-lane and USB speed up to 40 Gbps. In order to support this new
+controller, we need to make a few updates the USB stack and dwc3 driver:
+
+1) dwc3 driver needs to update its IP and revision check. The current scheme
+does not support more than 2 controllers.
+
+2) Introduce Lane Speed Mantissa and lane count on the gadget side. Devices
+operating in SuperSpeed Plus can refer to gen2x1, gen1x2, or gen2x2.
+
+3) Add a new gadget opts to set the sublink speed for drivers that are
+constrained to certain lane count or lane speed mantissa.
+
+4) Add miscellaneous initialization checks for DWC_usb32.
+
+
+Any review comment is highly appreciated.
+
+Thank you,
+Thinh
+
+
+
+
+This patch series depends on the following patches
+
+usb: dwc3: Fix GTXFIFOSIZ.TXFDEP macro name
+usb: dwc3: gadget: Properly set maxpacket limit
+
+https://patchwork.kernel.org/cover/11283761/
+
+
+Thinh Nguyen (14):
+  usb: gadget: Add lane count and lsm
+  usb: gadget: Add callback to set lane and transfer rate
+  usb: composite: Properly report lsm
+  usb: dwc3: Implement new id check for DWC_usb32
+  usb: dwc3: Update IP checks to support DWC_usb32
+  usb: devicetree: dwc3: Add max lane and lsm
+  usb: dwc3: gadget: Set lane count and lsm
+  usb: dwc3: gadget: Track connected lane count and speed
+  usb: dwc3: gadget: Limit the setting of speed
+  usb: dwc3: Update HWPARAMS0.MDWIDTH for DWC_usb32
+  usb: devicetree: dwc3: Add TRB prefetch count
+  usb: dwc3: gadget: Set number of TRB prefetch
+  usb: devicetree: dwc3: Add property to disable mult TRB fetch
+  usb: dwc3: gadget: Implement disabling of mult TRB fetch
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |   9 ++
+ drivers/usb/dwc3/core.c                        |  88 ++++++++----
+ drivers/usb/dwc3/core.h                        |  65 ++++++---
+ drivers/usb/dwc3/debugfs.c                     |  14 +-
+ drivers/usb/dwc3/gadget.c                      | 181 +++++++++++++++++++------
+ drivers/usb/dwc3/host.c                        |   2 +-
+ drivers/usb/gadget/composite.c                 |  16 ++-
+ drivers/usb/gadget/legacy/mass_storage.c       |   2 +
+ drivers/usb/gadget/udc/core.c                  |  38 +++++-
+ include/linux/usb/composite.h                  |   4 +
+ include/linux/usb/gadget.h                     |  15 ++
+ 11 files changed, 344 insertions(+), 90 deletions(-)
+
+-- 
+2.11.0
 
