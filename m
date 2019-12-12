@@ -2,131 +2,124 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57C2C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 21:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F13C2D0C9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 21:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 936FB227BF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 21:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE56622B48
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 21:55:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tohT6lXB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XOcfVfvO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731067AbfLLVam (ORCPT
+        id S1731191AbfLLVzc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 16:30:42 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42114 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731076AbfLLVam (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 16:30:42 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q6so4323316wro.9
-        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 13:30:40 -0800 (PST)
+        Thu, 12 Dec 2019 16:55:32 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40590 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730784AbfLLVzc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 16:55:32 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q8so87950pfh.7
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 13:55:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Ar3WGUfhwEDSSCq+9U1VZWrSE5XYUNVdZnayKnIhqMo=;
-        b=tohT6lXBhBc2QJ3oUJgFUSmQ7INkSx6FdEKCFGb0sJVtpqkXC+tujNgxj/fj2RPgvC
-         /ojbALCKFzuioc5m2Oc5vymHLHGEc1677h4HuhZrW9jfDHZOVEJgtMRcb3dSSvjHnkvu
-         cnn2i2s9LuMyaFISELlYzr70zXQ+oHotcglIWaf7KuMdUj0mikYSoHWHeQMZE0a4gs3E
-         c8MHuf4nOcEzqckIyTI7p0PVThKQ0grDjWKV7smF3qVSELFnMMsW1jxkx9ZEbrlwcHMV
-         GeV3IATLxC5H7dJ0BUR96f3PGXYDZ6dqb0OpaIxx7YWvLonmEEpd2alYGb1eqgcvn1CG
-         As8g==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:cc:to:subject:user-agent:date;
+        bh=urg3oqpkUyFoOb/JDlCrmqkZ7jXqGD4fg9eldRMT63E=;
+        b=XOcfVfvOeLyjRRYv4YyBXqZXcq674DERW9bH+JuR+mQJt/1eouj+sPsXldunowJEUn
+         qlpu9yXRRfrpE6pfkWSuTGgw8mAJbHuDHNCDrkx2oINnIZ6BMwSP9wwG3T8SlxIXEEZi
+         7mdxLGuIfBHoCbfpCh4O4Dca0tfCbxhpKNjAk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Ar3WGUfhwEDSSCq+9U1VZWrSE5XYUNVdZnayKnIhqMo=;
-        b=MZFk52PIFsPuQuSLC3iPNhoG74YLbcafw75OOzDsOIRY2P+5mzzH0Aq3/Q6ISangq8
-         xJcj2bFqTnp3w6sCuAUkLWHtu3swH8d/WC7u8aN3M4hTLkeju1BcLKakepnXLT5yYGzT
-         MifTYTcwDPTTjqJRAXHe82IGNHqbiWG0EWoEyz12yLyvIAm1vjPuuY48le7ruq7rkqYK
-         cIAg/HFCFAuM1e+S9bps58ewGxMYPer8bKtra5vrUxrlYyUJgmDIHnoP838MORJIF7KT
-         CjAqC0OnKC+jVCAAPv8wRBXiaBKLpBwKJE+fv8ZnEW3GVFsnnAwJ/SIKzH/qa+d4eQKX
-         w0Iw==
-X-Gm-Message-State: APjAAAX4XJRGEbOVC9AyhSDfTuehjFEXSYxyxEeyf39VMaeR+yR1s9x4
-        m3k2dMt+DHpZk2z+xcFphklQKw==
-X-Google-Smtp-Source: APXvYqxdK6wPYL6bpRlBDpDABeuKHmVhx787FfsFi1e5hzInLniJKOGj9A9UNuqksGO6GoeLEepgOA==
-X-Received: by 2002:adf:e3c1:: with SMTP id k1mr8247798wrm.151.1576186240242;
-        Thu, 12 Dec 2019 13:30:40 -0800 (PST)
-Received: from ?IPv6:2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca? ([2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca])
-        by smtp.gmail.com with ESMTPSA id n8sm7605285wrx.42.2019.12.12.13.30.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 13:30:39 -0800 (PST)
-Subject: Re: [PATCH 3/3] media: platform: meson-ao-cec-g12a: add wakeup
- support
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org,
-        hverkuil-cisco@xs4all.nl, khilman@baylibre.com,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-media <linux-media@vger.kernel.org>
-References: <20191212145925.32123-1-glaroque@baylibre.com>
- <20191212145925.32123-4-glaroque@baylibre.com>
- <CAFBinCDjfzQX=ZG=cgTYo=icGNU-t4Kqnu0Bu5qRLsRk_s6S_Q@mail.gmail.com>
-From:   guillaume La Roque <glaroque@baylibre.com>
-Message-ID: <b923c0f0-3627-121a-fa4f-49bd0c40825b@baylibre.com>
-Date:   Thu, 12 Dec 2019 22:30:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:cc:to:subject
+         :user-agent:date;
+        bh=urg3oqpkUyFoOb/JDlCrmqkZ7jXqGD4fg9eldRMT63E=;
+        b=GzE1Azp9xPlGHPgwswCVEcPPCNDBXtsEHU9myQ8ElQjFfwV6DpzmGiKu0zjkkS+gBl
+         bAncOJe5yfvBEv3NhjKzBTD2dj7pGQJPgmOUH4Quc36xV5s5oRhy03uBxaCRwjF5NwCl
+         UrO0QxC6caoItmPIeVNxC/zs8m+9oCD72RJLY+pkBgWeh6YRcogHsCjyyVRRF9KV6xhT
+         /j85PuK/szjDCeVuwr7MMFuBoXAMomHoQFLQYlYsvu2U2BBbSn4iv8cgwCDZtJDs4ae3
+         GpfdX3UHCZ7Lax2eV9OzzqDV2xTr53l/qRR1AOKMVjwyHiGqaqg4em36Qp8wp/ilWi50
+         NJvQ==
+X-Gm-Message-State: APjAAAXgNubkwuqZi/Df8kWxgYIJXs+C2tBxdDapq85YHeLn2e+yh82B
+        VnKLyaIUtA3Lm926irnxVg+zKg==
+X-Google-Smtp-Source: APXvYqxsU3Zn83nmi5BMPuXs1io7SR/MxzioX+tPsoqMwseMYXhYSyyUPQtfuvaRWLq5j4dET5VfoQ==
+X-Received: by 2002:a63:d543:: with SMTP id v3mr12769373pgi.285.1576187731374;
+        Thu, 12 Dec 2019 13:55:31 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id o8sm6775711pjo.7.2019.12.12.13.55.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 13:55:30 -0800 (PST)
+Message-ID: <5df2b752.1c69fb81.77c46.0f9a@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCDjfzQX=ZG=cgTYo=icGNU-t4Kqnu0Bu5qRLsRk_s6S_Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191212113540.7.Ia9bd3fca24ad34a5faaf1c3e58095c74b38abca1@changeid>
+References: <20191212193544.80640-1-dianders@chromium.org> <20191212113540.7.Ia9bd3fca24ad34a5faaf1c3e58095c74b38abca1@changeid>
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>, mka@chromium.org,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 7/7] arm64: dts: qcom: sc7180: Use 'ranges' in arm,armv7-timer-mem node
+User-Agent: alot/0.8.1
+Date:   Thu, 12 Dec 2019 13:55:29 -0800
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Martin,
+Quoting Douglas Anderson (2019-12-12 11:35:43)
+> Running `make dtbs_check` yells:
+>=20
+>   arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml: timer@17c20000: #size-cell=
+s:0:0: 1 was expected
+>=20
+> It appears that someone was trying to assert the fact that sub-nodes
+> describing frames would never have a size that's more than 32-bits
+> big.  That's certainly true in the case of sc7180.
+>=20
+> I guess this is a hint that it's time to do the thing that nobody
+> seems to do but that "writing-bindings.txt" says we should all do.
+> Specifically it says: "DO use non-empty 'ranges' to limit the size of
+> child buses/devices".  That means we should probably limit the
 
+It got cut off here. I'm waiting to find out what it is!!
 
-thanks for review
+>=20
+> I believe that this patch is the way to do it and there should be no
+> bad side effects here.  I believe that since we're far enough down
+> (not trying to describe an actual device, just some sub-pieces) that
+> this won't cause us to run into the problems that caused us to
+> increase the soc-level #address-cells and #size-cells to 2 in sdm845
+> in commit bede7d2dc8f3 ("arm64: dts: qcom: sdm845: Increase address
+> and size cells for soc").
+>=20
+> I can at least confirm that "arch_mem_timer" seems to keep getting
+> interrupts in "/proc/interrupts" after this change.
+>=20
+> Fixes: 90db71e48070 ("arm64: dts: sc7180: Add minimal dts/dtsi files for =
+SC7180 soc")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 
-On 12/12/19 8:57 PM, Martin Blumenstingl wrote:
-> Hi Guillaume,
->
-> (I don't know the specifics of this hardware but I have two general
-> comments below)
->
-> On Thu, Dec 12, 2019 at 4:00 PM Guillaume La Roque
-> <glaroque@baylibre.com> wrote:
->> +#define CECB_FUNC_CFG_REG              0xA0
->> +#define CECB_FUNC_CFG_MASK             GENMASK(6, 0)
->> +#define CECB_FUNC_CFG_CEC_ON           0x01
->> +#define CECB_FUNC_CFG_OTP_ON           0x02
->> +#define CECB_FUNC_CFG_AUTO_STANDBY     0x04
->> +#define CECB_FUNC_CFG_AUTO_POWER_ON    0x08
->> +#define CECB_FUNC_CFG_ALL              0x2f
->> +#define CECB_FUNC_CFG_NONE             0x0
->> +
->> +#define CECB_LOG_ADDR_REG      0xA4
->> +#define CECB_LOG_ADDR_MASK     GENMASK(22, 16)
-> do these registers have some RTI_* prefix in the datasheet?
-> that would make it easier to spot that these registers belong to AO /
-> RTI (while all other registers belong to the CEC controller)
+This pattern exists in most of the qcom dts files. Can you fix all the
+arm,armv7-timer-mem nodes. Maybe the binding has the same problem too in
+the example.
 
-as i say register info come from amlogic BSP.
-
-nothing in datasheet unfortunately. in amlogic code , this register are called AO_DEBUG_REG0 and AO_DEBUG_REG1 in amlogic BSP...
-
->
-> [...]
->> +       if (ao_cec->regmap_ao_sysctrl)
->> +               ret |= regmap_update_bits(ao_cec->regmap_ao_sysctrl,
->> +                                        CECB_LOG_ADDR_REG,
->> +                                         CECB_FUNC_CFG_MASK,
-> why do we need to mask CECB_FUNC_CFG_MASK (from register 0xa0) in the
-> CECB_LOG_ADDR_REG register (0xa4)?
-good point, it's an error i will fix
->
->> +                                         logical_addr << CECB_LOG_ADDR_SHIFT);
-> FIELD_PREP(CECB_FUNC_CFG_MASK, logical_addr) would make it consistent
-> with the rest of the driver
-> then you can also drop the #define CECB_LOG_ADDR_SHIFT
-i will
->
-> Martin
+>=20
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 36 ++++++++++++++--------------
+>  1 file changed, 18 insertions(+), 18 deletions(-)
+>=20
