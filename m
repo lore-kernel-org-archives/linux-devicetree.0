@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6103FC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89E7C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3854B2253D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF1CA22B48
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l++elnCn"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XfhnylYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730705AbfLLTgX (ORCPT
+        id S1730765AbfLLTgv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:36:23 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42815 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730702AbfLLTgW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 14:36:22 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 4so1364638pfz.9
-        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 11:36:22 -0800 (PST)
+        Thu, 12 Dec 2019 14:36:51 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:33240 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730677AbfLLTgT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 14:36:19 -0500
+Received: by mail-pj1-f68.google.com with SMTP id r67so1511063pjb.0
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 11:36:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nxvIIL/M4xNHXhfiPPzelu8fzsGIsbwuQDaIfVtVXFc=;
-        b=l++elnCnFpjdWyOmeDMISmI3G2om45f3yRFU/HXxxRki9QynkfxcIBVk1v1NcC//I4
-         TAvusqtp0YcKAoAYjOrjuxWpqmDfbs16PmlvjjQwIW+/MhqscEwk/2TpoSFGGIIPi8lz
-         OwPTnq7eUPT+NQLs2eSPR/rbsA4E1S403wwG0=
+        bh=9lBMtFL9Z5icRxLop3LLb6oDnFoI6ElCPHqhjraXO9E=;
+        b=XfhnylYKjhMJsSQEUHNlA8miXb6TZ1WBwAaGjKiKWZvaRUM4r6KA8hEfJkaeiLnQS0
+         kEWTAu0XumkznVLHHipEC9ziIFbbnebvMJWz52tTcrUNvtiMc2XtqfZ1M7Dj/i1j4J7C
+         VTPMI+Dp1WOL1lT+2QBBW6B4gvZOGsBMqGflQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nxvIIL/M4xNHXhfiPPzelu8fzsGIsbwuQDaIfVtVXFc=;
-        b=nHAspoGDjmYQznKcD9n41rJOV67gWhEV2wMie7QM38LXneX1WvDnNP4PDjWmJkJPgO
-         GZ4NsU+nEAPG5nGztFHGgnikx4Sb4Rjrdu/KBGS1DfUcAHu+RwNg1JBH1Oqcv1cS9PVL
-         gXtSLkYqTDCAVJ7/yJplLpB42wV2G0Gkv5VeDHZM5vrIOgPuiBWYBZxdhnVgA9opck3L
-         UezuDAzf1hFW7KEmQuWeIg6XP6EcFBRkP3Nf1B6RiNvEzxHJIqgc+sIZs3JcpZSV6nVg
-         qafm9qWKgGIdmKTHqhghRnhrlWEIlQ06ImJQoiPtQhERVbzz3yRtnIdyXGhjPNjBQE43
-         XhAw==
-X-Gm-Message-State: APjAAAV4rFAIxy+SKssM3BuODxdEXUlnrmi0NtvP1CVLwqg8zcJhCcEC
-        hAKE6hcPqkL9YgxU512TPaWDQw==
-X-Google-Smtp-Source: APXvYqwRLZFrp8ZGCKn5bYAs/X8CMfTRPrFWB7+1WR9Jf7FXzw6D14fesD//auj8r9OqxTRluOF+yQ==
-X-Received: by 2002:a63:1a19:: with SMTP id a25mr3467111pga.447.1576179381825;
-        Thu, 12 Dec 2019 11:36:21 -0800 (PST)
+        bh=9lBMtFL9Z5icRxLop3LLb6oDnFoI6ElCPHqhjraXO9E=;
+        b=L0iSb335F/06I2r2UnDHatmVMOgsIAyw83A0ULzcBLLAnyrPSelaIjXQ8QOb1RxouX
+         ynhYPNpKjNI93Iljr4YPW7XR470Kbg1XbQpF1M4dmIrJ1W7+RRNleeQTYMMIFsaLbot5
+         rEE8MPjDfs+dsbU5Rmpyamo5+5QZtJMZtEK7UmXfdVpL9n2PU/nDgNioJZEqpcrv5PJA
+         q1ePazbULlUUm2m6TsTeSQvLiNU5c7wzdzbq1qG9iphOKh0zZ2z1lyKv8A+Vv+p+R+Gi
+         QFj+q8jgQPtx6Z/FxUtM7LWZ6dZvZFif1haDtcn15OSZgp2sq2srTs5pgGUMVkPQFN2X
+         220w==
+X-Gm-Message-State: APjAAAVciN93PX+yWCdFYSfVBWXg2rqtVfFC32SKlpOefFpHjzIhPpys
+        CZYOoWWEAVAppMUwIqc7LYoX3g==
+X-Google-Smtp-Source: APXvYqwH2Orm4MWO7tGMP8Tttd7dqIu91Ux9k7g1LMyOoTM4ZVPVjW6/er8/IXzFvv3m0iWdBdMkvQ==
+X-Received: by 2002:a17:90a:bd8f:: with SMTP id z15mr11691370pjr.54.1576179378761;
+        Thu, 12 Dec 2019 11:36:18 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id m34sm7568302pgb.26.2019.12.12.11.36.21
+        by smtp.gmail.com with ESMTPSA id m34sm7568302pgb.26.2019.12.12.11.36.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 11:36:21 -0800 (PST)
+        Thu, 12 Dec 2019 11:36:18 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
@@ -61,12 +61,13 @@ Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
         Amit Kucheria <amit.kucheria@linaro.org>,
         Maulik Shah <mkshah@codeaurora.org>,
         Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 5/7] arm64: dts: qcom: sc7180: Avoid "memory" for cmd-db reserved-memory node
-Date:   Thu, 12 Dec 2019 11:35:41 -0800
-Message-Id: <20191212113540.5.I4e41d4d872368e2e056db2ec8442ec18d3f7ef08@changeid>
+Subject: [PATCH 2/7] arm64: dts: qcom: sc7180: Rename gic-its node to msi-controller
+Date:   Thu, 12 Dec 2019 11:35:38 -0800
+Message-Id: <20191212113540.2.Ibad7d3b0bea02957e89047942c61cc6c0aa61715@changeid>
 X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 In-Reply-To: <20191212193544.80640-1-dianders@chromium.org>
 References: <20191212193544.80640-1-dianders@chromium.org>
@@ -77,15 +78,15 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-By using "memory" we trigger we trigger the "schemas/memory.yaml"
-rules when we run "dtbs_check" which then complains that we don't have
-a "device_type" of "memory".
+Running `make dtbs_check` yells:
 
-Looking at the "reserved-memory.txt" bindings, subnodes shouldn't just
-be the word "memory".  Presumably using just "cmd-db" should be OK for
-a node name.
+  arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml: interrupt-controller@17a00000: gic-its@17a40000: False schema
 
-Fixes: e0abc5eb526e ("arm64: dts: qcom: sc7180: Add cmd_db reserved area")
+From "arm,gic-v3.yaml" we can grok that this is explained by the
+comment "msi-controller is preferred".  Switch to the preferred name
+so that dtbs_check stops yelling.
+
+Fixes: 90db71e48070 ("arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc")
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
@@ -93,18 +94,18 @@ Signed-off-by: Douglas Anderson <dianders@chromium.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index d114feade8e7..9766867abc88 100644
+index 01bbb58ae516..1b2bb0b9c9e8 100644
 --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -61,7 +61,7 @@ reserved_memory: reserved-memory {
- 		#size-cells = <2>;
- 		ranges;
+@@ -1189,7 +1189,7 @@ intc: interrupt-controller@17a00000 {
+ 			      <0 0x17a60000 0 0x100000>;    /* GICR * 8 */
+ 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
  
--		aop_cmd_db_mem: memory@80820000 {
-+		aop_cmd_db_mem: cmd-db@80820000 {
- 			reg = <0x0 0x80820000 0x0 0x20000>;
- 			compatible = "qcom,cmd-db";
- 			no-map;
+-			gic-its@17a40000 {
++			msi-controller@17a40000 {
+ 				compatible = "arm,gic-v3-its";
+ 				msi-controller;
+ 				#msi-cells = <1>;
 -- 
 2.24.1.735.g03f4e72817-goog
 
