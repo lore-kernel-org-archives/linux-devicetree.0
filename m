@@ -2,131 +2,172 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2898EC2D0CA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 12:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C4FC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 12:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F26F021655
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 12:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 367AB214D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 12:02:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="an4XUNJ5";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="SdvvdUMR"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="nzEPxu/X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbfLLMA3 (ORCPT
+        id S1729065AbfLLMCO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 07:00:29 -0500
-Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:43918
-        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726492AbfLLMA3 (ORCPT
+        Thu, 12 Dec 2019 07:02:14 -0500
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:57371 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729043AbfLLMCO (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:00:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576152027;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=bc7cWrfmPZqMkXkLHGRYUdWBqPWEuLfh+HlDxrAfJfY=;
-        b=an4XUNJ52zAFsHEXeEZs2nI1NPw8/QBYO/2YhB90E7OpJZZWX8lFKgCnCHtBAy0e
-        efFoE2GzHuvVR5b7DmgymX5PD0Wt2lDPWpkxmH1FxSyRel8ZcTrodWFRph/tqxNcaOn
-        rPKmujqTN3gsdT+ieOUsbgQtuTKE5xuUy4mpHuU4=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576152027;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=bc7cWrfmPZqMkXkLHGRYUdWBqPWEuLfh+HlDxrAfJfY=;
-        b=SdvvdUMRSppg30RkkUPcDBUuVCAa/rLQsyG7t0thTFLiWZGbbVIuXFXyfkdCXrwl
-        KFpckQdT4rfeV2Jrwc3jT8IC1jSmopwJ8+buonU8a3SN5P/FDxgaAIX6hTaDjkMMoP6
-        8aMDW+buSLH9vja5ECj+Kjk8V4fKN0ISa9zs8kQU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 50F68C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
-Subject: Re: [PATCH v2 1/3] usb: dwc3: Add support for SC7180 SOC
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-usb@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-References: <1574940787-1004-1-git-send-email-sanm@codeaurora.org>
- <1574940787-1004-2-git-send-email-sanm@codeaurora.org>
- <CAD=FV=Uy6ryrbpzFg1sesJkWrgh05tLgvtozx0afJPF_u4-ESA@mail.gmail.com>
-From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Message-ID: <0101016ef9fb521b-1d7e4d62-c20c-4958-bfea-70664315040e-000000@us-west-2.amazonses.com>
-Date:   Thu, 12 Dec 2019 12:00:27 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 12 Dec 2019 07:02:14 -0500
+Received: from [IPv6:2001:983:e9a7:1:1c4a:480a:7ba1:9c65]
+ ([IPv6:2001:983:e9a7:1:1c4a:480a:7ba1:9c65])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id fNAYiZIm6GyJwfNAZiy0h9; Thu, 12 Dec 2019 13:02:12 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1576152132; bh=grA3mrY/IXTuR/bHnsfsFfTSA8BCPNcViLc0fRgFSEg=;
+        h=Subject:From:To:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=nzEPxu/XiAq6xqJTEPtu2DMyFeL+3oKzznjfS8x4FT/5JQvyJe0A1cdg52/aYtQje
+         Q28MS1eZ97eJ2uG0m5TG7zFtGiD5VwDcEzvhRbV19ST4l0c8kRotbI94BHivZy8UBY
+         Y7yWuKKaX0PsLD4qBdn5bfYJNC4WJXSXFOsSios8DGvU7P8nfX/fgwQMyEPT0fSg1P
+         PvsgHSBA/JZe4yikXFhnQ+cJPgCsD6PcsqpH3kJ74VOTxg7d1gcbH4qUudjqoKmSaV
+         4jCvItG9+5UaRbH0H38fvOK6XOqSvcheujlc2B51AZBo6LD0NVxVagx2ujgm0i+6ls
+         CONsICQSvGD0Q==
+Subject: Re: [PATCH v11 00/11] Rockchip ISP Driver
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        jeffy.chen@rock-chips.com, zyc@rock-chips.com, tfiga@chromium.org,
+        robh+dt@kernel.org, laurent.pinchart@ideasonboard.com,
+        sakari.ailus@linux.intel.com, kernel@collabora.com,
+        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
+        zhengsq@rock-chips.com
+References: <20191114051242.14651-1-helen.koike@collabora.com>
+ <996a9b6a-0e45-d627-9263-539c22e5f1c0@xs4all.nl>
+ <7fd4bf99fd6316da8acaf0a27b6845bedbf4b25f.camel@collabora.com>
+ <eafffc6f-061e-65ab-079b-b2bd613d61cb@xs4all.nl>
+Message-ID: <20f99f0e-dfec-f6c0-eeb3-7561018f32e9@xs4all.nl>
+Date:   Thu, 12 Dec 2019 13:02:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=Uy6ryrbpzFg1sesJkWrgh05tLgvtozx0afJPF_u4-ESA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <eafffc6f-061e-65ab-079b-b2bd613d61cb@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-SES-Outgoing: 2019.12.12-54.240.27.186
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfMDfu7petJydGdzuJyylr5ZiNog40vMypqvfQw7ZVz48j+cgXHx/cTeFqN1/hiF8DSXEOpCJ20WY7E5a94cB1D2PZi7ML8XhkxMVMy0iR4SJQ4vKxJKi
+ ftB/XN39JhQEUYBc8BqlxhyoQuxxXMDZIwBgwdBCeW1iR27+uOELF8KpcwgxwC3YpRMZCXHyBUlXOlsmilsvxlZ+tUPadvpHrZMXa0fbpTJN1NQ3Gfhb4C8g
+ Ey9971QU/1aNWS6qs55K9REyFymqQcD+MCjep1VvsImgMFileSAM1UvR1WvQ0UQSwCKiuv/5JpKWQyObfLI9YHJqOnlCMVkwado7cwy3VaqW7/tZ/kWL+bN4
+ vD42oWtQwV4mxkcNc1FkEdzle+uDb0YzHHrsz0otltr7IWNTGAI1Hst8Gozocr63Czju4gGbtp7oIDByGPBe83x2ZgI09gn/gc28vBtdfs/oaoBnHS6cnaEC
+ E7+SsuD1fZi95WxWXfUtazbaT6MH5cDsJU9m3cEylYYAQqSlrUF5zYkDcsdo4TCXAM84dpoB344aucpHrv7M9QvnpsLqzVUZISK7wYM1Lo9Hb8MDDXlmwL4r
+ xIi7vcXizDuJhzNTp5BfrFPDWCXJs8SR1jKhutFfQ2+XMd1OCUg9k17FyR+3gLw1z+uCGGqbDD9pyEWcqul0IBR0PWOrbFOLrI01v1XO+DyZ9ZoXMrCZM3/D
+ kT+0Y0OCCd5k4pu6X7fCGA81kV5oK8daXF0zIbPFhTfhBc/37ACc7L2orLrRPLcVsdB+ZOHB9LiaHg0OCH78xdxF8K2JtKLfQaIQqCP5SQxxPi8Nh8TIZCrm
+ 2GA9v6FZ5YAaldkVTokUB1wwSMdC+8vMdIYnb18vTMQmRcwMomQoHjPl+lZXwGI7bj0CGM1R/OUDogkUdk3xRQJIAaTy+HUtshdELy+I7KHCWAxUjSv5gf3f
+ tanncCiL1byhYkycQwgkjxEWtnc=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Helen, Ezequiel,
 
-On 12/12/2019 1:13 AM, Doug Anderson wrote:
-> Hi,
->
-> On Thu, Nov 28, 2019 at 3:35 AM Sandeep Maheswaram <sanm@codeaurora.org> wrote:
->> Add compatible for SC7180 SOC in USB DWC3 driver
->>
->> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
->> ---
->>   drivers/usb/dwc3/dwc3-qcom.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
->> index 261af9e..1df2372 100644
->> --- a/drivers/usb/dwc3/dwc3-qcom.c
->> +++ b/drivers/usb/dwc3/dwc3-qcom.c
->> @@ -1,5 +1,5 @@
->>   // SPDX-License-Identifier: GPL-2.0
->> -/* Copyright (c) 2018, The Linux Foundation. All rights reserved.
->> +/* Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
->>    *
->>    * Inspired by dwc3-of-simple.c
->>    */
->> @@ -753,6 +753,7 @@ static const struct of_device_id dwc3_qcom_of_match[] = {
->>          { .compatible = "qcom,dwc3" },
->>          { .compatible = "qcom,msm8996-dwc3" },
->>          { .compatible = "qcom,msm8998-dwc3" },
->> +       { .compatible = "qcom,sc7180-dwc3" },
->>          { .compatible = "qcom,sdm845-dwc3" },
-> It is, of course, up to Felipe.  ...but in my opinion this is the
-> wrong change and instead we should be deleting the SoC-specific
-> strings (msm8996, msm8998, sdm845) from this file because they don't
-> buy us anything.  To explain how it works:
->
-> 1. Device tree should have both the "SoC-specific" and generic
-> "qcom,dwc3" strings.  Only the "qcom,dwc3" will actually be used but
-> the SoC-specific string is there so if we find a case later where we
-> need to handle a SoC-specific quirk then it'll already be there.
->
-> 2. Bindings should have both the "SoC-specific" and generic
-> "qcom,dwc3" strings.  The binding is describing what's in the device
-> tree.
->
-> 3. Until we have a SoC-specific quirk to handle, we _don't_ need to
-> add the SoC-specific string to the driver itself.
->
->
-> -Doug
->
-Can i remove this patch { .compatible = "qcom,sc7180-dwc3" }, in the 
-next version of this series ?
+The merge window is open, so you want to get this in, then please post a v12
+with the few remaining items addressed so that I can merge it.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Regards,
+
+	Hans
+
+On 11/19/19 9:30 AM, Hans Verkuil wrote:
+> On 11/18/19 7:52 PM, Ezequiel Garcia wrote:
+>> Hi Hans,
+>>
+>> Thanks for taking care of this.
+>>
+>> On Thu, 2019-11-14 at 09:42 +0100, Hans Verkuil wrote:
+>>> On 11/14/19 6:12 AM, Helen Koike wrote:
+>>>> Hello,
+>>>>
+>>>> This series adds the Rockchip Image Signal Processing Unit v1 driver to
+>>>> staging.
+>>>>
+>>>> The main reason to be in staging is that people are already using it from the
+>>>> mailing list (including libcamera), and having it in mainline makes the workflow
+>>>> easier. Also, it is easier for other people to contribute back (with code
+>>>> or testing the driver).
+>>>>
+>>>> We plan to actively work on this driver to get it our of staging.
+>>>>
+>>>> This patchset is also available at:
+>>>> https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v11
+>>>>
+>>>> Libcamera patched to work with this version:
+>>>> https://gitlab.collabora.com/koike/libcamera
+>>>> (also sent to the mailing list)
+>>>>
+>>>> The major difference in v11 are:
+>>>> - Fixed compiling warnings found with W=1
+>>>> - Fixed checkpatch errors
+>>>> - Add clock-names values in dt-bindings
+>>>
+>>> Looking at checkpatch I see a few remaining issues that I believe should be
+>>> fixed before merging this:
+>>>
+>>> CHECK: spinlock_t definition without comment
+>>> #575: FILE: drivers/staging/media/rkisp1/isp_stats.h:43:
+>>> +       spinlock_t irq_lock;
+>>>
+>>> CHECK: struct mutex definition without comment
+>>> #581: FILE: drivers/staging/media/rkisp1/isp_stats.h:49:
+>>> +       struct mutex wq_lock;
+>>>
+>>> CHECK: spinlock_t definition without comment
+>>> #1648: FILE: drivers/staging/media/rkisp1/isp_params.h:25:
+>>> +       spinlock_t config_lock;
+>>>
+>>> CHECK: spinlock_t definition without comment
+>>> #2058: FILE: drivers/staging/media/rkisp1/capture.h:145:
+>>> +       spinlock_t vbq_lock;
+>>>
+>>
+>> I'd rather merge this as-is, adding a TODO entry stating
+>> we need to revisit locking specifically, because I'd like
+>> to take a close look at these spinlocks/mutex,
+>> instead of just addding comments for then.
+> 
+> Fair enough! Just as long as it is mentioned somewhere.
+> 
+>>
+>>> Once this is done together with the Jacob Chen email clarification
+>>> it is ready to be merged for v5.6.
+>>>
+>>
+>> I'll find out more about this.
+> 
+> Thanks!
+> 
+> Remember that we are in the code freeze until v5.5-rc1 is released,
+> so you have time to make more adjustments if you want to.
+> 
+> Regards,
+> 
+> 	Hans
+> 
+>>
+>>> It passes all the sparse/smatch tests, so that's very good.
+>>>
+>>
+>> Great!
+>>
+>> Thanks,
+>> Ezequiel
+>>
+> 
 
