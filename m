@@ -2,192 +2,173 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E56C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 14:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBD9C00454
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 14:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9EF2206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 14:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C23BD21655
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 14:29:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkfdIhga"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Ms1msf5B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729614AbfLLOVL (ORCPT
+        id S1729742AbfLLO3M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:21:11 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38443 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729597AbfLLOVL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 09:21:11 -0500
-Received: by mail-lf1-f65.google.com with SMTP id r14so1843685lfm.5;
-        Thu, 12 Dec 2019 06:21:09 -0800 (PST)
+        Thu, 12 Dec 2019 09:29:12 -0500
+Received: from mail-eopbgr1410123.outbound.protection.outlook.com ([40.107.141.123]:38456
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729611AbfLLO3L (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Dec 2019 09:29:11 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JeZNpqDSqmTaiA81eZw42cp0b322Yq57egrc+DZTzBx0EWgqG5yLP7BBHG4lNZvHWXvl05OFzi18c+LG1JmO9h0Y8g1yS9vaKJ3HK0aGvYkuGS1MVG29Wo01JvVCyYkdsZTieFssadiZbfUSAZjcGq2YTg6jaz6AItddTYNNfQgKwEi6aZMz8yE1k/PdmKREem4U7jf8tVauHdtdbSTg2zxS9uKZJY7le1RXXvzx3VoLHHv9QVmXkk8riOyrrh60zdTUIzK0JUz21ey4mfRrpD4j0UkBN6WLutlP6i+wxbAbO+iPd4QJ9b9Ue9ib1wbJrby8gO46BvMZFi5cm4PFLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JeZ1a9Im1WbyCPr12Zc4qBhCePGHp8K/LJ7yKzheCGQ=;
+ b=as0o7DKWT4A253ldAEnhIoe+30HoHghCad0Q8uKSDV3yTV+zSYipanFZ9TASnW3b5C/OPyVbdCv0kgobL4AncCjxPsarXv6tEWwnCd9Ob1LpKoNILWl/N5oV/x2w+siFQDsGTFQUCiCvp9rm5fVv4E5La7V4nE8nQxu6Pq6S6skJFkmy2tgxsxrTLJdOhJLdeblTxVaD1t6uyNyaOyG5QpPLuprx98/KAOAOHJ8sRjxr5elRGmWXgbrQ368WT2dGiyFt/KgNVDNCl3f9r9h97re2P6NcpjZuFBmmavW56fqjsKUZs1b+cGEDSjjDXIeU/vUokIdDjhmSVHXfudNDQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fPdLaS98BnYYlPHOQgsT45YcBODksgKJiMhSSAO42YU=;
-        b=WkfdIhgaOrZVv1nYC0iXgxp5ezUR5OQ3mxZR7Fwbs6d5ZFPYFuz8WvGLUzQ2c361ux
-         urnTQxJdNnbxo0yH4kDjQhXJZ/DJatc19XGER1IpewAOj9S4S/+bMeroJd90HD6jRQIM
-         QCAQKFmsGUyeAgte6WmR+3o4Icnw0kAUhu02NNZyTeezcWTn8FrfxXDqlCkP6nDVKFPW
-         CddQbcmGhOPhcVWHrHXdRaG9voqrRrcv3HYEYOVBU9yPqWaqYpbGTbo8uac7An1Jf2NW
-         CEZNStjj1Hs2r/KEYlmB7JPfcDQjz4+7ywmoks6sBnvbPipkDBgyboTGtZ2yfVBnJBRg
-         xvKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fPdLaS98BnYYlPHOQgsT45YcBODksgKJiMhSSAO42YU=;
-        b=SdONGcXyXwq9/ANnVD+BoupbqAh6rXH51acbBUD5DeQxzqpTBZA7E6udLvyjsqAGaO
-         9tRiax3y98mNXDfsbfypFmerA3h2ee6xHdUhNfEoX6EKs7VZvx2Od2CbhwWT6hKcgCYW
-         UILdi8Wv9cc4XLOe+wTlXrSRf+u4FcX4PpdD9EI25u+MFB64rgcAyUOs/Dlpx9C8Fj5C
-         ZDv49U387Z8srKB0JFpPJUa0pIu+6bhhqDOICSa45ScxqbTyHKYgnioLmKo5rnZUOxo7
-         o1lbA2QEF6VDX9wmyPlSTqNxUJ7SPERQJv1mp7LWCKEBGWuTyyteyRCg0dJ+YsvbQBBj
-         RL7Q==
-X-Gm-Message-State: APjAAAU0S9Uh132ZcB37PeGUX247Q6qoAE7fZanoinM+CLHvS4EPKUPv
-        Fr53+Vf7OGGNiVnp8BeeG6GIS5bA
-X-Google-Smtp-Source: APXvYqzro6ophjFLphSmLxxdELI4uFq9CWKBObdnwB3lXmXHDJ/sGDzFMSVKBDvjoHPNNCzZreC32w==
-X-Received: by 2002:a19:c210:: with SMTP id l16mr6126565lfc.35.1576160468283;
-        Thu, 12 Dec 2019 06:21:08 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id t9sm2942671lfl.51.2019.12.12.06.21.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 06:21:07 -0800 (PST)
-Subject: Re: [PATCH] dt-bindings: memory-controllers: tegra: Fix type
- references
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org
-References: <20191211163210.9778-1-robh@kernel.org>
- <099dcb4e-265c-7789-1b10-d8aa6f1d6922@gmail.com>
- <CAL_JsqL9d1kSxtHf-DKutnfmNK3Bsy1sFAqov1ugcgX30JJ0Rw@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <cd2430c2-863a-248a-7590-6d36b4040506@gmail.com>
-Date:   Thu, 12 Dec 2019 17:21:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <CAL_JsqL9d1kSxtHf-DKutnfmNK3Bsy1sFAqov1ugcgX30JJ0Rw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JeZ1a9Im1WbyCPr12Zc4qBhCePGHp8K/LJ7yKzheCGQ=;
+ b=Ms1msf5Bj/eXFdDKjJmU9nsbuTZLISHgzF1GEW/P3Rb0LR+bsPAEWI5WGPOGZhCxdEdAcM05d8inbe0gc+kY4fGC6A1oN0+1x88ovJj691HsJ4dJqYwha85BKl2gem1WdjmuXWMvIiyLVqaZtkNHoynzIbt5jVB6C3MYN0Gx08w=
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
+ TY1PR01MB1705.jpnprd01.prod.outlook.com (52.133.164.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.16; Thu, 12 Dec 2019 14:29:07 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2516.018; Thu, 12 Dec 2019
+ 14:29:07 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: RE: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
+Thread-Topic: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
+Thread-Index: AQHVrDsFo/XrCnZmIE+HK5Vec6rH7qevIW6AgAK0x/CAA35sAIABOkow
+Date:   Thu, 12 Dec 2019 14:29:07 +0000
+Message-ID: <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20191206134202.18784-1-chris.brandt@renesas.com>
+ <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com>
+ <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
+In-Reply-To: <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctYmVkMTA4NWQtMWNlYi0xMWVhLWFhNTUtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XGJlZDEwODVlLTFjZWItMTFlYS1hYTU1LTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iMzYzNCIgdD0iMTMyMjA2MzQ1NDQzNjkwMjQ3IiBoPSJVMlJzTFducWJCbVBPVmhma3Q0WW5YZE1XYlE9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [75.60.247.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c199541c-7640-4802-3e48-08d77f0fa5a6
+x-ms-traffictypediagnostic: TY1PR01MB1705:
+x-microsoft-antispam-prvs: <TY1PR01MB1705C79BB4B99781BDCB1B998A550@TY1PR01MB1705.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0249EFCB0B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(396003)(346002)(39860400002)(366004)(376002)(199004)(189003)(52536014)(7416002)(9686003)(2906002)(4326008)(5660300002)(54906003)(71200400001)(81156014)(81166006)(8676002)(8936002)(26005)(33656002)(186003)(55016002)(86362001)(110136005)(316002)(66946007)(66446008)(66476007)(66556008)(64756008)(76116006)(478600001)(966005)(6506007)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1705;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jln7POp5IvUxj3QxR0F/3Y+ZxhpJX/OFWYCiFVtLrfKw4nevzAxMhi2OqBITb3uXO1A9I8gL1mxdruIBtOP5TdPHFE4SQt0BUuI98mFXeipdYbzHhPDYUc3EYZ08MadDDQAWOuuhqdTK3Vi0ouw4lvFGt1NmYJYw2XBfTbylhXmJOL5cfsiLiw47fXwVBJeu1ZElOrbup3J9F2hgmv1so47DVRM+3M9UP01ppE/iqNCvTiEzM3OP+4H4zr5LuZ5yReF6wl0xdBkazRkWRoIaBewAjt6TgbYf310fbxhdAsa61ePLFKVjK0H4AcUl0AClOX1xGy2/c24d+WX8vEJB0Y0Rg/n8zD7n34+0jiguQoEa8MwpHFtyhGjeRctzWHl1uoQ7CxhyVxETPHHPUz/9ONPTcimR/5UyczVp1OKtsf2dcFyo9wttJX4mxey5LBCF
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c199541c-7640-4802-3e48-08d77f0fa5a6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 14:29:07.5437
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 42ZNXvaNlSPdW+qDnoeBE9J6KXQHacLLUnHjjihnzUntJS2eSXMv+JXTzs/ehiJu1aT253RCV3l5Lxx9TerCcmw8UFTaEfXgEmEe6LBPq7Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1705
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-12.12.2019 17:05, Rob Herring пишет:
-> On Thu, Dec 12, 2019 at 7:36 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> 11.12.2019 19:32, Rob Herring пишет:
->>> Json-schema requires a $ref to be under an 'allOf' if there are
->>> additional constraints otherwise the additional constraints are
->>> ignored. (Note that this behavior will be changed in draft8.)
->>>
->>> Fixes: 641262f5e1ed ("dt-bindings: memory: Add binding for NVIDIA Tegra30 External Memory Controller")
->>> Fixes: 785685b7a106 ("dt-bindings: memory: Add binding for NVIDIA Tegra30 Memory Controller")
->>> Fixes: 8da65c377b21 ("dt-bindings: memory: tegra30: Convert to Tegra124 YAML")
->>> Cc: Dmitry Osipenko <digetx@gmail.com>
->>> Cc: Thierry Reding <treding@nvidia.com>
->>> Cc: Jonathan Hunter <jonathanh@nvidia.com>
->>> Cc: linux-tegra@vger.kernel.org
->>> Signed-off-by: Rob Herring <robh@kernel.org>
->>> ---
->>> I'll take this via the DT tree for rc2.
->>>
->>>  .../bindings/memory-controllers/nvidia,tegra124-mc.yaml  | 3 ++-
->>>  .../bindings/memory-controllers/nvidia,tegra30-emc.yaml  | 9 ++++++---
->>>  .../bindings/memory-controllers/nvidia,tegra30-mc.yaml   | 3 ++-
->>>  3 files changed, 10 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
->>> index 30d9fb193d7f..22a94b6fdbde 100644
->>> --- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
->>> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
->>> @@ -60,7 +60,8 @@ patternProperties:
->>>              maximum: 1066000000
->>>
->>>            nvidia,emem-configuration:
->>> -            $ref: /schemas/types.yaml#/definitions/uint32-array
->>> +            allOf:
->>> +              - $ref: /schemas/types.yaml#/definitions/uint32-array
->>>              description: |
->>>                Values to be written to the EMEM register block. See section
->>>                "15.6.1 MC Registers" in the TRM.
->>> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
->>> index 7fe0ca14e324..e4135bac6957 100644
->>> --- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
->>> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
->>> @@ -56,7 +56,8 @@ patternProperties:
->>>              maximum: 900000000
->>>
->>>            nvidia,emc-auto-cal-interval:
->>> -            $ref: /schemas/types.yaml#/definitions/uint32
->>> +            allOf:
->>> +              - $ref: /schemas/types.yaml#/definitions/uint32
->>>              description:
->>>                Pad calibration interval in microseconds.
->>>              minimum: 0
->>> @@ -78,7 +79,8 @@ patternProperties:
->>>                Mode Register 0.
->>>
->>>            nvidia,emc-zcal-cnt-long:
->>> -            $ref: /schemas/types.yaml#/definitions/uint32
->>> +            allOf:
->>> +              - $ref: /schemas/types.yaml#/definitions/uint32
->>>              description:
->>>                Number of EMC clocks to wait before issuing any commands after
->>>                sending ZCAL_MRW_CMD.
->>> @@ -96,7 +98,8 @@ patternProperties:
->>>                FBIO "read" FIFO periodic resetting enabled.
->>>
->>>            nvidia,emc-configuration:
->>> -            $ref: /schemas/types.yaml#/definitions/uint32-array
->>> +            allOf:
->>> +              - $ref: /schemas/types.yaml#/definitions/uint32-array
->>>              description:
->>>                EMC timing characterization data. These are the registers
->>>                (see section "18.13.2 EMC Registers" in the TRM) whose values
->>> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
->>> index 84fd57bcf0dc..4b9196c83291 100644
->>> --- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
->>> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
->>> @@ -77,7 +77,8 @@ patternProperties:
->>>              maximum: 900000000
->>>
->>>            nvidia,emem-configuration:
->>> -            $ref: /schemas/types.yaml#/definitions/uint32-array
->>> +            allOf:
->>> +              - $ref: /schemas/types.yaml#/definitions/uint32-array
->>>              description: |
->>>                Values to be written to the EMEM register block. See section
->>>                "18.13.1 MC Registers" in the TRM.
->>>
->>
->> But the "nvidia,emem-configuration" doesn't have any extra constraints.
->> Or you just added the "allOf" for consistency to avoid possible future
->> copy-paste bugs?
-> 
-> It does have constraints. It has the 'items' list.
-
-Right, I missed that array-size is also a constraint.
-
-> Note that fixing it introduces an error which I'm in the process of
-> fixing in the schema tool.
-
-Okay!
-
->> Otherwise LGTM, thanks!
->>
->> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> 
-> Thanks.
-> 
-> Rob
-> 
-
+T24gV2VkLCBEZWMgMTEsIDIwMTksIFNlcmdlaSBTaHR5bHlvdiB3cm90ZToNCj4gPiBTaW5jZSBR
+U1BJLCBIeXBlckZsYXNoIGFuZCBPY3RhRmxhc2ggYXJlIGFsbCAnc2VyaWFsJyBGbGFzaA0KPiA+
+IHRlY2hub2xvZ2llcywgSSB3b3VsZCBiZSBmaW5kIHdpdGggYSBkcml2ZXIgbmFtZSBvZiAiU0JT
+QyIgKCJTZXJpYWwNCj4gPiBCdXMgU3BhY2UNCj4gPiBDb250cm9sbGVyIikgd2hpY2ggYXQgbGVh
+c3QgbG9va3MgY2xvc2VyIHRvIHdoYXQgaXMgaW4gYWxsIHRoZQ0KPiA+IGhhcmR3YXJlIG1hbnVh
+bHMuDQo+IA0KPiAgICBIb3cgYWJvdXQgIlNlcmlhbCBGbGFzaCBDb250cm9sbGVyIiBpbnN0ZWFk
+Pw0KDQpJIHdvdWxkIGxpa2UgdGhhdCBiZXR0ZXIgdGhhbiAiUlBDIi4gQXQgbGVhc3QgaXQgZGVz
+Y3JpYmVzIHdoYXQgaXQgaXMuDQpSUEMgc2VlbXMgbGlrZSBhIHN0dXBpZCBuYW1lIHRvIG1lIChi
+dXQgbWF5YmUgdGhhdCdzIGp1c3QgYmVjYXVzZSBJIGtub3cNCmhvdyB0aGF0IG5hbWUgd2FzIGNo
+b3Nlbi4uLikNCmh0dHBzOi8vd3d3LmN5cHJlc3MuY29tL25ld3MvY3lwcmVzcy1zaW1wbGlmaWVz
+LWVtYmVkZGVkLXN5c3RlbS1kZXNpZ24tbmV3LWxvdy1waW4tY291bnQtaHlwZXJyYW0tbWVtb3J5
+DQogIlRoZSBIeXBlclJBTSBhbmQgSHlwZXJGbGFzaCBzb2x1dGlvbiByZWR1Y2VzIHBpbiBjb3Vu
+dCBieSBhdCBsZWFzdCAyOCBwaW5zLCAuLi4iDQoNCg0KQXMgYSBzaWRlIG5vdGUsIHRoZXJlIGlz
+IGFub3RoZXIgSFcgYmxvY2sgaW4gUmVuZXNhcyB0aGF0IGRvZXMgdGhlIHNhbWUgDQp0aGluZyBh
+cyB0aGUgU1BJLUJTQyB0aGF0IHRoZXkgdXNlIGluIHRoZSBNQ1UgZGV2aWNlcy4gVGhhdCBvbmUg
+dGhleSANCmp1c3QgbmFtZWQgIlFTUEkiLg0KDQo+ID4+PiBUaGlzIGRyaXZlciBoYXMgYmVlbiB0
+ZXN0ZWQgb24gYW4gUlovQTFIIFJTSyBhbmQgUlovQTJNIEVWQi4NCj4gPj4NCj4gPj4gICAgSW4g
+dGhlIFNQSSBtb2RlIG9ubHksIEkgYXNzdW1lPw0KPiA+DQo+ID4gWWVzLiBBdCB0aGUgbW9tZW50
+LCB0aGVyZSBhcmUgb25seSByZXF1ZXN0cyBmcm9tIHVzZXJzIGZvciBRU1BJIGZsYXNoDQo+ID4g
+YWNjZXNzIChSWi9BIGFuZCBSWi9HIHVzZXJzKS4NCj4gDQo+ICAgIEkga2VlcCBiZWluZyB0b2xk
+IGJ5IHRoZSBtYW5hZ2VtZW50IHRoYXQgd2UgbmVlZCBIeXBlckZsYXNoIHRvby4gOi0pIEluDQo+
+IG91ciBCU1AgZGV2ZWxvcG1lbnQsIG91ciBlbmdpbmVlcnMgd2VudCAic2FtZSBoYXJkd2FyZSwg
+MiBkcml2ZXJzIg0KPiB3YXkgKHdpdGggZGlmZmVyZW50ICJjb21wYXRpYmxlcyIgcGVyIGRyaXZl
+cikuLi4NCg0KTXkgcGxhbiB3YXMgc2FtZSBIVywgc2FtZSAiY29tcGF0aWJsZXMiLCBzYW1lIGRy
+aXZlci4uLmJ1dCB0aGUgZHJpdmVyIA0Kd291bGQgZWl0aGVyIHJlZ2lzdGVyIGEgU1BJIGNvbnRy
+b2xsZXIgb3IgYSBIeXBlcmZsYXNoIGNvbnRyb2xsZXIuDQoNCk5vdGUgdGhhdCB0aGUgTU1DL1NE
+SEkgaXMgdGhlIHNhbWUgSFcgYnV0IGNhbiBhY3QgbGlrZSAyIGRpZmZlcmVudCBwZXJpcGhlcmFs
+cy4NCldlIGFsc28gaGF2ZSBVU0IgdGhhdCBjYW4gYmUgZWl0aGVyIGhvc3Qgb3IgcGVyaXBoZXJh
+bC4NCg0KDQo+ID4+PiBUaGUgdGVzdGluZyBtb3N0bHkgY29uc2lzdGVkIG9mIGZvcm1hdHRpbmcg
+YW4gYXJlYSBhcyBKRkZTMiBhbmQNCj4gPj4+IGRvaW5nIGNvcHlpbmcgb2YgZmlsZXMgYW5kIHN1
+Y2guDQo+ID4+DQo+ID4+ICAgIERpZCB0aGUgc2FtZSAob3IgYXQgbGVhc3QgdHJpZWQgdG8gOi0p
+IGFuZCBJIG11c3QgYWRtaXQgdGhhdA0KPiA+PiB3cml0aW5nIGRvZXNuJ3Qgd29yayB3aXRoIGFu
+eSBvZiB0aGUgZnJvbnQgZW5kcy4uLiBJIHN0aWxsIG5lZWQgdG8gZ2V0DQo+IHRoaXMgZml4ZWQu
+DQo+IA0KPiAgICBUaGUgbGFzdCB3b3JkIGZyb20gb3VyIEJTUCBwZW9wbGUgd2FzIHRoYXQgSkZG
+UzIgZG9lc24ndCB3b3JrIHdpdGggdGhlDQo+IEh5cGVyRkxhc2ggZGVkaWNhdGVkIEJTUCBkcml2
+ZXIuLi4gOi0vDQoNCklzIHRoYXQgd2h5IHRoaXMgIlJQQyIgcGF0Y2ggc2VyaWVzIGlzIHRha2lu
+ZyBzbyBsb25nPw0KSXQncyBhIGZhaXJseSBzaW1wbGUgcGllY2Ugb2YgaGFyZHdhcmUuDQoNCldo
+ZW4gSSBmaXJzdCBzYXcgdGhlIHNlcmllcyBvbiB0aGUgbWFpbGluZyBsaXN0LCBteSBwbGFuIHdh
+cyB0byBqdXN0IHdhaXQNCmFuZCB0aGVuIGFkZCBSWi9BMSBhbmQgUlovQTIgc3VwcG9ydC4gQnV0
+Li4uLml0IGxvb2tzIGxpa2UgaXQgYWxsIGRpZWQuDQoNClNvLCBJIHRob3VnaHQgSSB3b3VsZCBh
+dCBsZWFzdCBwdXQgaW4gbXkgb3duIGRyaXZlciBmb3IgU1BJIGZsYXNoIG5vdywgDQphbmQgdGhl
+biBnbyBiYWNrIGFuZCBhZGQgSHlwZXJGbGFzaC9PY3RhRmxhc2ggb25jZSBJIGdldCB0aGUgY2hp
+cHMgDQpzd2FwcGVkIG91dCBvbiBvbmUgb2YgbXkgUlovQTIgYm9hcmRzLg0KDQoNCj4gPiBIb3dl
+dmVyLCB0aGUgZHJpdmVyIEkgcG9zdGVkIGlzIHByZXR0eSBzaW1wbGUgYW5kIHdvcmtzLiBEb2Vz
+IHRoZQ0KPiA+IEh5cGVyRmxhc2ggTVREDQo+IA0KPiAgICBUaGVyZSdzIG5vIEhGIGxpYnJhcnks
+IG9ubHkgZnJvbnQgZW5kIGRyaXZlci4NCj4gICAgVGhlIHJlYWwgbGlicmFyeSBjb3ZlcnMgYm90
+aCBTUEkgYW5kIEhGLiBUaGUgb25seSBkaWZmZXJlbmNlIGJldHdlZW4gdGhlDQo+IHR3byBpcyB0
+aGUgaC93IHNldHVwIChtaW5vciBkaWZmZXJlbmNlKS4NCg0KQnV0IGlzIHRoaXMgImxpYnJhcnki
+IHNvbWV0aGluZyBzcGVjaWZpYyB0byBSZW5lc2FzIGRldmljZXM/DQpUaGF0J3Mgd2hhdCBJJ20g
+dHJ5aW5nIHRvIHVuZGVyc3RhbmQuDQoNCk15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCBIeXBlckZs
+YXNoIHVzZXMgc3RhbmRhcmQgQ0ZJIGNvbW1hbmRzLCBzbyBhbGwgDQp3ZSBuZWVkIHRvIGRvIGlz
+IHJlZ2lzdGVyIGEgQ0ZJIGRldmljZSBpbiB0aGUgZHJpdmVyLCBqdXN0IGxpa2Ugd2UgDQpyZWdp
+c3RlciBhIHNlcmlhbCBmbGFzaCBkZXZpY2UuDQoNCihJIGd1ZXNzIEkgY291bGQgZ28gbG9vayBh
+dCB0aGUgc2FtcGxlIGNvZGUgZm9yIG91ciBSVE9TIHBhY2thZ2UgYW5kIGZpbmQgb3V0KQ0KDQoN
+Cj4gPiBsaWJyYXJ5IHRoYXQgeW91IGFyZSBwcm9wb3NpbmcgaGF2ZSBhIHZlcnkgZGlmZmVyZW50
+IEFQSSB0aGFuIGp1c3QNCj4gPiAnc2VuZCBieXRlcycgYW5kICdyZWNlaXZlIGJ5dGVzJz8NCj4g
+DQo+ICAgIFRoZXJlJ3MgInByZXBhcmUiIGFuZCAidHJhbnNmZXIiIEFQSXMgYW5kIGFsc28gImRp
+cmVjdCBtYXAgcmVhZCIgQVBJLg0KDQpJIHdvbmRlciB3aGF0IGlzIHRoZSB2YWx1ZSBvZiB0aGUg
+ImRpcmVjdCBtYXAgcmVhZCIgKG90aGVyIHRoYW4gWElQIGluIA0KUlovQSBzeXN0ZW1zKS4gSWYg
+eW91IHJlYWxseSB3YW50IHRvIGRpcmVjdGx5IGFjY2VzcyB0aGUgZmxhc2ggKG5vIA0KYnVmZmVy
+aW5nIHRob3VnaCB0aGUgTVREIGxheWVyKSwgeW91IG5lZWQgdG8gcmVnaXN0ZXIgYXMgYSBtdGQt
+cm9tIGRldmljZSwgDQphbmQgdGhlbiB5b3UgZG9uJ3QgcmVhbGx5IG5lZWQgYW4gQVBJIGF0IGFs
+bC4NCg0KDQpDaHJpcw0KDQo=
