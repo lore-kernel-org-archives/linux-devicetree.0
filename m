@@ -2,124 +2,116 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC02C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7DAC00454
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D0C2077B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA28E2464B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QoBqMUOx"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="lGc6HuLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730711AbfLLTgi (ORCPT
+        id S1730709AbfLLTgl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:36:38 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33811 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730701AbfLLTgX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 14:36:23 -0500
-Received: by mail-pf1-f193.google.com with SMTP id l127so1380611pfl.1
-        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 11:36:23 -0800 (PST)
+        Thu, 12 Dec 2019 14:36:41 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37420 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730762AbfLLTgk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 14:36:40 -0500
+Received: by mail-lf1-f68.google.com with SMTP id b15so148002lfc.4
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 11:36:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FfAfV2+dsySPHR+abNSiNfNBu7y5s9v7tjVQ+45n3gY=;
-        b=QoBqMUOxLY4ED/l7B+oCFOBf+NC2F4Nt+Vsusi9OX/0Z5cklqBhkosiOz0t1NTT6gp
-         KJj3yjG9QKCiHlK2WPEr1Nk2FhX+5887LtVji2BSaE+TfAkIkAN7H5i0vwt65vTJKbFP
-         zHq8Ldkeecd1AoWRNu0rfpYuxV0v6Ozefm0ig=
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lIK7T8B7Eyyku8RF0XNgNwtCGhRp7hkIh7+TFMDTOOM=;
+        b=lGc6HuLSAiMqXLMDP/tAyif2jwHyEA6NsPow0XZ3qXGTakl08BokK7tnFnkRXIYVT4
+         CB+WqxsNtTwVLVA1yChKPip/IMbsON8pgRvKA5uMK+GL+s/ReQwFrXSJS/aIcDc25jPO
+         NQcVSSANR21HgM77FanVSlyChehzNv5KcWsgAWxYP5IhhkHTQeF9lT++50iw3iNU38Xg
+         RRKHqENHjODrPdGnUvQaeOiDEDZTZIwjPe4DKFeUY6nYFetlY/d5Jhv8aGTFSl+Koqdl
+         rWlDmGR8MgXaYe9WGKZz1ZmW3CfvmOOyGOrSXr7JcvlfFjAS02V+iLjeGWMdmUp+I8Lf
+         r55g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FfAfV2+dsySPHR+abNSiNfNBu7y5s9v7tjVQ+45n3gY=;
-        b=KiYyad/Fc5sRgRvLl57Imyue1tZDM4Lf/39AwdKSttDJP03LBbZTNpGkof1HMdzEk0
-         5tmWsaecF6ZJKVz9IovDGweHCIMuxqL88A8EJNI1JLXqH+arJas2ujy2HFXrphkSpTuv
-         YO8v+SX1M4LQmfHnIOA/Tur4y3ll00YKcjCycbatfolr791q6qhQJdBPf2eedUvYBkH6
-         sTG96ZcwRlxCeHDziUKLCadXq5+e5VSScRAH2Bo4N2Icp4gNqD24HKBIepRteMjth5nS
-         9ZHTCxPgSfob8q95PBHJOOPzf6vALYPr8HQtnKwTAYYcuvsFWyhvGBgXcL4U6Mm+bAOU
-         aZyQ==
-X-Gm-Message-State: APjAAAXrcntjc2BOsCMyHDnWwQKELYNXBzu0tUiHPh6YBdjhYampFCf2
-        Rn4FF+GkdEYXBb4IVe5OGN6Zsg==
-X-Google-Smtp-Source: APXvYqzCyM5fNIUXeHJH6Zo7kmXsKO386Rs5A2F6EB4wmrvUefzkPU4jf92aWkOKvZhLIhe1VWl6Lw==
-X-Received: by 2002:a62:3784:: with SMTP id e126mr11735660pfa.228.1576179382933;
-        Thu, 12 Dec 2019 11:36:22 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id m34sm7568302pgb.26.2019.12.12.11.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 11:36:22 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
-        mka@chromium.org, Sandeep Maheswaram <sanm@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 6/7] arm64: dts: qcom: sc7180: Avoid "phy" for USB QMP PHY wrapper
-Date:   Thu, 12 Dec 2019 11:35:42 -0800
-Message-Id: <20191212113540.6.Iec10b23bb000186b36b8bacfb6789d8233de04a7@changeid>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-In-Reply-To: <20191212193544.80640-1-dianders@chromium.org>
-References: <20191212193544.80640-1-dianders@chromium.org>
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=lIK7T8B7Eyyku8RF0XNgNwtCGhRp7hkIh7+TFMDTOOM=;
+        b=c5+PTLilA90rTz/bqviPUgsNZQuDc+OeJljr9UtXFHRW+B6EyvFvnJYLX1A40HICM2
+         JfUkGlH6VyxPb6fasjLZFGFMhFsoyFWwXLjNlARDJrZFEhLME1fvGydoxsMD3zCQaJ6s
+         iL9YiUsF4KpEtUC5zKmaiF4bql5yrRD8htSPOs2FsKlW6PfMjGaI4YCRgDG7IP+CRHKW
+         RFsYdYnf45tpdT4qBq+3+mRkSDdx3KreZuy9lgHjTDCIgrkSDfCBvHI2uCEKZn8WJ2VN
+         lj0EMWHU/o4P7KC4WVefYT3whzvS4xYpidKQEwLKlhyboeApoizJbGlAxvCT1rztj+y4
+         S8Dw==
+X-Gm-Message-State: APjAAAUw3JT4Oi15hbL2sK6slE6JpMmYxBby0juCoA79s8icjLWnKExS
+        5tjFOv5O+ENYDDw6EDyiztZMiQ==
+X-Google-Smtp-Source: APXvYqxdpKEqSDXHq2d0D9envgFK5PeLwzFOc+DNwPACrZIGrON9Q2farga3fEcJ/DDnTT7CDyNnRA==
+X-Received: by 2002:ac2:53a8:: with SMTP id j8mr6952034lfh.28.1576179398495;
+        Thu, 12 Dec 2019 11:36:38 -0800 (PST)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:818:b9d7:c53b:d021:132e:26de])
+        by smtp.gmail.com with ESMTPSA id y23sm3518960ljk.6.2019.12.12.11.36.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Dec 2019 11:36:37 -0800 (PST)
+Subject: Re: [PATCH v2 1/6] spi: Add SPIBSC driver
+To:     Chris Brandt <chris.brandt@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        Mason Yang <masonccyang@mxic.com.tw>
+References: <20191206134202.18784-1-chris.brandt@renesas.com>
+ <20191206134202.18784-2-chris.brandt@renesas.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <37c13497-d20f-583f-72d7-1e3c8a241990@cogentembedded.com>
+Date:   Thu, 12 Dec 2019 22:36:36 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191206134202.18784-2-chris.brandt@renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The bindings for the QMP PHY are truly strange.  I believe (?) that
-they may have originated because with PCIe each lane is treated as a
-different PHY and the same PHY driver is used for a whole bunch of
-things (incluidng PCIe).
+On 12/06/2019 04:41 PM, Chris Brandt wrote:
 
-In any case, now that we have "make dtbs_check", we find that having
-the outer node named "phy" triggers the
-"schemas/phy/phy-provider.yaml" schema, yelling about:
+> Add a driver for the SPIBSC controller in Renesas SoC devices.
+> 
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-  phy@88e9000: '#phy-cells' is a required property
+   Hm... I've just tested JFFS2 with this driver and got the same result as with
+my own drivers:
 
-Let's call the outer node the "phy-wrapper" and the inner node the
-"phy" to make dtbs_check happy.
+root@192.168.2.11:~# mount -t jffs2 /dev/mtdblock11 /mnt/jffs2/                 
+root@192.168.2.11:~# cd /mnt/jffs2/                                             
+root@192.168.2.11:/mnt/jffs2# ls -l                                             
+total 34                                                                        
+-rwxr-xr-x 1 root root 18678 Jan 22  2000 evtest                                
+-rw-r--r-- 1 root root 15169 Jan 22  2000 evtest.c                              
+root@192.168.2.11:/mnt/jffs2# rm evtest                                         
+root@192.168.2.11:/mnt/jffs2# ls -l                                             
+total 15                                                                        
+-rw-r--r-- 1 root root 15169 Jan 22  2000 evtest.c                              
+root@192.168.2.11:/mnt/jffs2# cd                                                
+root@192.168.2.11:~# umount /mnt/jffs2/                                         
+root@192.168.2.11:~# mount -t jffs2 /dev/mtdblock11 /mnt/jffs2/                 
+root@192.168.2.11:~# ls -l /mnt/jffs2/                                          
+total 34                                                                        
+-rwxr-xr-x 1 root root 18678 Jan 22  2000 evtest                                
+-rw-r--r-- 1 root root 15169 Jan 22  2000 evtest.c                              
 
-Fixes: 0b766e7fe5a2 ("arm64: dts: qcom: sc7180: Add USB related nodes")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+   As you can see, the deleted file is back after unmount/re-mount...
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 9766867abc88..c671f0719d42 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -992,7 +992,7 @@ usb_1_hsphy: phy@88e3000 {
- 			nvmem-cells = <&qusb2p_hstx_trim>;
- 		};
- 
--		usb_1_qmpphy: phy@88e9000 {
-+		usb_1_qmpphy: phy-wrapper@88e9000 {
- 			compatible = "qcom,sc7180-qmp-usb3-phy";
- 			reg = <0 0x088e9000 0 0x18c>,
- 			      <0 0x088e8000 0 0x38>;
-@@ -1013,7 +1013,7 @@ usb_1_qmpphy: phy@88e9000 {
- 				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
- 			reset-names = "phy", "common";
- 
--			usb_1_ssphy: lanes@88e9200 {
-+			usb_1_ssphy: phy@88e9200 {
- 				reg = <0 0x088e9200 0 0x128>,
- 				      <0 0x088e9400 0 0x200>,
- 				      <0 0x088e9c00 0 0x218>,
--- 
-2.24.1.735.g03f4e72817-goog
-
+MBR, Sergei
