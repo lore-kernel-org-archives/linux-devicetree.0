@@ -2,109 +2,218 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C777DC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC45C00454
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB222073B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576167022;
-	bh=UlKAh17aJAqMckv7yl8SJYoJdjl6lSz9fkqa/MlVAvQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RPLfhyBi+hIYWKFvr8QlviYLUif43xJnlH77J20oifKZi/8JXU4ArdFbZNFnrF1e6
-	 IN8oK/xmnmyFfhU6lTUVFGaRXdZVB1wjjV/2RiRG/Gn7WQL7LYSQXDZr2KCSIHR3K+
-	 8Os/g83A2FIZty/crcIJ4NxtXw8JX/p5IS0z9Y/s=
+	by mail.kernel.org (Postfix) with ESMTP id 72CA52073B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:11:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729819AbfLLQKW (ORCPT
+        id S1729870AbfLLQLX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:10:22 -0500
-Received: from foss.arm.com ([217.140.110.172]:52050 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729731AbfLLQKW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:10:22 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5435030E;
-        Thu, 12 Dec 2019 08:10:21 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7FCC3F6CF;
-        Thu, 12 Dec 2019 08:10:20 -0800 (PST)
-Date:   Thu, 12 Dec 2019 16:10:19 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20191212161019.GF4310@sirena.org.uk>
-References: <20191129172537.31410-1-m.felsch@pengutronix.de>
- <20191129172537.31410-4-m.felsch@pengutronix.de>
- <20191204134631.GT1998@sirena.org.uk>
- <20191210094144.mxximpuouchy3fqu@pengutronix.de>
- <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+        Thu, 12 Dec 2019 11:11:23 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:39027 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729675AbfLLQLW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Dec 2019 11:11:22 -0500
+Received: from [109.168.11.45] (port=43476 helo=[192.168.101.73])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1ifR3e-007CSs-Hw; Thu, 12 Dec 2019 17:11:18 +0100
+Subject: Re: [PATCH 07/10] i2c: Add driver for AD242x bus controller
+To:     Daniel Mack <daniel@zonque.org>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
+        pascal.huerst@gmail.com
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-9-daniel@zonque.org>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <64adf5d7-754a-f1da-aa9b-11579c5a2780@lucaceresoli.net>
+Date:   Thu, 12 Dec 2019 17:11:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="SxgehGEc6vB0cZwN"
-Content-Disposition: inline
-In-Reply-To: <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
-X-Cookie: We have DIFFERENT amounts of HAIR --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191209183511.3576038-9-daniel@zonque.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Daniel,
 
---SxgehGEc6vB0cZwN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 09/12/19 19:35, Daniel Mack wrote:
+> This device must be instantiated as a sub-device of the AD242x MFD
+> device.
+> 
+> In order to access remote I2C peripherals, the master node is configured
+> to the slave node number and the remote I2C client address on the remote
+> side, and then the payload is sent to the BUS client of the master node,
+> which transparently proxies the traffic through.
 
-On Wed, Dec 11, 2019 at 06:09:18PM +0100, Marco Felsch wrote:
+This remote I2C feature in these chips is interesting. It looks somewhat
+similar to remote I2C in the video serdes chip by TI and Maxim, but it's
+different from both of them. So now we have 3 vendors implementing the
+same feature in 3 different ways.
 
-> so one argument more for my solution. Also we don't configure the "pad"
-> to be a vsel/ena-pin. The hw-pad can only be a gpio or has an alternate
-> function (WDKICK for GPIO0, Seq. SYS_EN for GPIO2, Seq. PWR_EN for GPIO4).
-> Instead we tell the regulator to use _this_ GPIO e.g. for voltage
-> selection so we go the other way around. My last argument why pinctrl
-> isn't the correct place is that the GPIO1 can be used for
-> regulator-0:vsel-in and for regulator-1:enable-in. So this pad would
-> have different states which is invalid IMHO.
+Cool.
 
-Note that there's two bits to my concern - one is if we should be using
-gpiolib or pinctrl, the other is what's driving the input (whichever API
-it's configured through) which didn't seem to be mentioned.
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
+> ---
+>  drivers/i2c/busses/Kconfig      |  10 ++
+>  drivers/i2c/busses/Makefile     |   1 +
+>  drivers/i2c/busses/i2c-ad242x.c | 178 ++++++++++++++++++++++++++++++++
+>  3 files changed, 189 insertions(+)
+>  create mode 100644 drivers/i2c/busses/i2c-ad242x.c
+> 
+> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> index 6a0aa76859f3..b9cf049bedb0 100644
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -365,6 +365,16 @@ config I2C_POWERMAC
+>  
+>  comment "I2C system bus drivers (mostly embedded / system-on-chip)"
+>  
+> +config I2C_AD242X
+> +	tristate "Analog Devices AD242x"
+> +	depends on MFD_AD242X
+> +	help
+> +	  If you say yes to this option, support will be included for the
+> +	  I2C bus controller function of AD242x slave nodes.
+> +
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called i2c-ad242x.
+> +
+>  config I2C_ALTERA
+>  	tristate "Altera Soft IP I2C"
+>  	depends on (ARCH_SOCFPGA || NIOS2) && OF
+> diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+> index 3ab8aebc39c9..57c31ea8a477 100644
+> --- a/drivers/i2c/busses/Makefile
+> +++ b/drivers/i2c/busses/Makefile
+> @@ -32,6 +32,7 @@ obj-$(CONFIG_I2C_HYDRA)		+= i2c-hydra.o
+>  obj-$(CONFIG_I2C_POWERMAC)	+= i2c-powermac.o
+>  
+>  # Embedded system I2C/SMBus host controller drivers
+> +obj-$(CONFIG_I2C_AD242X)	+= i2c-ad242x.o
+>  obj-$(CONFIG_I2C_ALTERA)	+= i2c-altera.o
+>  obj-$(CONFIG_I2C_AMD_MP2)	+= i2c-amd-mp2-pci.o i2c-amd-mp2-plat.o
+>  obj-$(CONFIG_I2C_ASPEED)	+= i2c-aspeed.o
+> diff --git a/drivers/i2c/busses/i2c-ad242x.c b/drivers/i2c/busses/i2c-ad242x.c
+> new file mode 100644
+> index 000000000000..b94056653898
+> --- /dev/null
+> +++ b/drivers/i2c/busses/i2c-ad242x.c
+> @@ -0,0 +1,178 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +#include <linux/err.h>
+> +#include <linux/errno.h>
+> +#include <linux/i2c.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mfd/ad242x.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +struct ad242x_i2c {
+> +	struct device		*dev;
+> +	struct ad242x_node	*node;
+> +	struct i2c_adapter	adap;
+> +	u32			node_index;
+> +};
+> +
+> +static int ad242x_set_addr(struct ad242x_node *mnode,
+> +			   struct ad242x_i2c_bus *bus,
+> +			   uint8_t node_id, uint8_t addr)
+> +{
+> +	int ret;
+> +	uint8_t buf[2] = { AD242X_CHIP, addr };
+> +
+> +	ret = regmap_update_bits(mnode->regmap, AD242X_NODEADR,
+> +				 AD242X_NODEADR_PERI | AD242X_NODEADR_MASK,
+> +				 node_id);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/*
+> +	 * We can't use the slave's regmap here as it holds the same
+> +	 * lock we also need to guard this context.
+> +	 */
+> +	ret = i2c_transfer_buffer_flags(bus->client,
+> +					buf, sizeof(buf), 0);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return regmap_update_bits(mnode->regmap, AD242X_NODEADR,
+> +				  AD242X_NODEADR_PERI, AD242X_NODEADR_PERI);
+> +}
+> +
+> +static int ad242x_i2c_xfer(struct i2c_adapter *adap,
+> +			   struct i2c_msg msgs[], int num)
+> +{
+> +	struct ad242x_i2c *i2c = adap->algo_data;
+> +	struct ad242x_i2c_bus *bus = ad242x_master_get_bus(i2c->node->master);
+> +	struct ad242x_node *mnode = ad242x_master_get_node(i2c->node->master);
+> +	int ret, i, current_addr = -1;
+> +
+> +	mutex_lock(&bus->mutex);
+> +
+> +	for (i = 0; i < num; i++) {
+> +		struct i2c_msg *msg = msgs + i;
+> +
+> +		if (msg->addr != current_addr) {
+> +			ret = ad242x_set_addr(mnode, bus,
+> +					      i2c->node->id, msg->addr);
+> +			if (ret < 0) {
+> +				dev_err(i2c->node->dev,
+> +					"Cannot set address: %d\n", ret);
+> +				break;
+> +			}
+> +
+> +			current_addr = msg->addr;
+> +		}
+> +
+> +		ret = i2c_transfer_buffer_flags(bus->client,
+> +						msg->buf, msg->len, msg->flags);
+> +		if (ret < 0)
+> +			break;
+> +	}
+> +
+> +	mutex_unlock(&bus->mutex);
+> +
+> +	return ret < 0 ? ret : num;
+> +}
 
---SxgehGEc6vB0cZwN
-Content-Type: application/pgp-signature; name="signature.asc"
+Your implementation here looks quite clean and simple, and simple is
+good, but I think there's a problem in this function. A "normal"
+master_xfer function issues a repeated start between one msg and the
+next one, at least in the typical case where all msgs have the same
+slave address. Your implementation breaks repeated start. At first sight
+we might need more complex code here to coalesce all consecutive msgs
+with the same address into a single i2c_transfer() call.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3yZmoACgkQJNaLcl1U
-h9Ax8Af+NzakOK4jJKQRyY0wT3cczNnHphTUSbJ1zrH7fM+0K/2I8E6301iWfElB
-un6MYIjc8w5BMwLzMZ+Vjd6ZTheXHXnKeJPNNv69Fh4tUOS2vUQ2qRCtKvkLKF5q
-g5xwlTsMi3sBeFJljAoDfttiTvqj5XT1BERgNNPp8MSzQ2FWvKj+rDn+kvNq//Os
-Qf425pla6Go2FYVUSuauWZCQxWkqW7uDzCeDxpNurGvHhTCYNHQf8hAtkyGoGm6V
-UfGnSkypXK7vDrS25gYNIuyDN1RAjGhQIhBHuU3QLzLFNa1ozZ7xtNxnl3pcFvk9
-fzbFegJweraLhfQ7SYhcpiTJUZKQfA==
-=pK4s
------END PGP SIGNATURE-----
-
---SxgehGEc6vB0cZwN--
+-- 
+Luca
