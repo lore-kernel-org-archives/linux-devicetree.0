@@ -2,118 +2,112 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6717DC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E04DEC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF3221556
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:24:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OPExE5jz"
+	by mail.kernel.org (Postfix) with ESMTP id B3FDE22527
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:28:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576178919;
+	bh=mw6yUbytXpLJnaF1QjwaHchkWwnhvbA8I3y52Tw2Tkk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0pUNLZsO2iAXRFeY3rzYovhuBCrBnZIA0eJX9tyvoEO7jaI5bNdUcsHwe5xJTN/3A
+	 Ve5fDA/9ouY4SnbFZHedAN8IoG049P0scdN2oeNq8QnqkpNr4SbwENf/dTRCvvHct6
+	 xKTXrqR3xyq36mJAVS9W9bEZtfJY5Q12Fxi9pj8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730667AbfLLTYY (ORCPT
+        id S1730338AbfLLT2j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:24:24 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36310 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730565AbfLLTYY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 14:24:24 -0500
-Received: by mail-pl1-f194.google.com with SMTP id d15so1066311pll.3;
-        Thu, 12 Dec 2019 11:24:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Sy3kpI5FGxODnxp+NhgOIrQABn0e6kkUyw8Gg1M4Dik=;
-        b=OPExE5jzxdtGGQZz+7B/cs5g4wOwsMkG847ZPlrYmrJJHD1E9uR+HE2c3GSbxdaIY9
-         wnlUF0t+l/3RIQpAxFQA3yRwIffKOZ54y3bps3Vw7/90mA3k05/FIRGKa2BdkP6FFD/q
-         O2hnLj2xxpSUTZ3TMuZDxgKU24rJzUYWk3cxruX3YSYVIwGqzIgPq4DTMeNTOGS9IMU1
-         zsaRkclgzvrY1ftKj4tfQyWDIZIsgxecZskhwgm1cHo58o1S7xksKd6UQ1vdfJDu5+hn
-         aFHN6Na8mbeQOtDQgosWtnWct/F2sp5Vq9hUQLC8/y3MeNsUEw7OpZ81p7sQa00wntla
-         iEJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Sy3kpI5FGxODnxp+NhgOIrQABn0e6kkUyw8Gg1M4Dik=;
-        b=aEQZV30pglzldZMrIRO2q4zv28GgAn5TO7Ogm4d3N6hWnWwuOjCYRTVuSN/YVve67x
-         TshnUNy+db/YhJzGi7CBA7hB4/Io31xdT+okcr6cg5TV/cKTwEAeUOiYxYKkBgHKwv3H
-         i9i3GZ6boC1IVfct/2tf0t1wyE5Q7j7/ZxH/9JGztxZLH1qTg7wryRhcEUBcpnXwg+6o
-         UA6dkpDBgTfMsdI7vV29q2HUR5087UNPYpfjiQJ2xbxY7AxB+rDlIh+FCGJvAu8OlfQC
-         uh+BLJZl2kLDHMwcmHe7jEtFBn6gi6JwrEUf74msPwsO4Oj1oMEp3g+Kcadv1nr4p/cj
-         0fiA==
-X-Gm-Message-State: APjAAAUixsUfyfrT6hMagpvCIV0bfUkxZdgEqFUrqPxnu4153EtKEzGZ
-        CH96LW6qdrDgMqH8RQD16xQ=
-X-Google-Smtp-Source: APXvYqyrk6UNlRkrpi/iiAiNNgfx0iFcIOLLT5vCbcx0FrLX9dpJQPGjK4bP+tdHZ0M9dExuBes/hw==
-X-Received: by 2002:a17:90a:3586:: with SMTP id r6mr11625141pjb.36.1576178663486;
-        Thu, 12 Dec 2019 11:24:23 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id j21sm8088024pfe.175.2019.12.12.11.24.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 11:24:23 -0800 (PST)
-Date:   Thu, 12 Dec 2019 11:24:20 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Scott Liu <scott.liu@emc.com.tw>,
-        James Chen <james.chen@emc.com.tw>,
-        linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh-dt@kernel.org>
-Subject: Re: [PATCH v2 0/9] input: elants: Support Asus TF300T touchscreen
-Message-ID: <20191212192420.GD101194@dtor-ws>
-References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+        Thu, 12 Dec 2019 14:28:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730168AbfLLT2j (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Dec 2019 14:28:39 -0500
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71F5A22527;
+        Thu, 12 Dec 2019 19:28:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576178918;
+        bh=mw6yUbytXpLJnaF1QjwaHchkWwnhvbA8I3y52Tw2Tkk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LJ4yl5RDalD1iX2sPYWVNYhW1QG8yMGa4rOVnu/yoyZxHiQMmRhBr4LxVCdtCLmla
+         A3GDqIHIq+4MZ9HBRYnVDc87v/oZwJ//PGE/JhPR1cK30cQvEB0ncvz8Fp5BEGGuCn
+         WrPdijRMUurAw65q8RPOEbNPV8srq7NkNTCyvGMo=
+Received: by mail-qk1-f179.google.com with SMTP id w127so2552608qkb.11;
+        Thu, 12 Dec 2019 11:28:38 -0800 (PST)
+X-Gm-Message-State: APjAAAWJ5giif7u8JXkPn5kPUdJF2Kch80gTM4HWUhGPvp1efspLsfN8
+        yjt7hBmf0S+y+FLslQ40T8LLyvXOy6NyJ/avoQ==
+X-Google-Smtp-Source: APXvYqztoQqhxovDfRnj0RgJBBwkCgrjSBwCGMpdQbdU+PvguSAyZhuMfnJ7zw6RsYWS9Nj1XfxvYqrg1mFnHjsx5vs=
+X-Received: by 2002:a37:85c4:: with SMTP id h187mr10000154qkd.223.1576178917566;
+ Thu, 12 Dec 2019 11:28:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191211232345.24810-1-robh@kernel.org> <CAL_JsqKfV-4mx_uidUupQJT4qfq+y+qx1=S=Du-Qsaweh4CPUQ@mail.gmail.com>
+ <20191212130539.loxpr2hbfcodh4gz@linutronix.de>
+In-Reply-To: <20191212130539.loxpr2hbfcodh4gz@linutronix.de>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 12 Dec 2019 13:28:26 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJgi+Rd1jiBiTcbuoiZUnpahdNfbAQNkbPH4LEM1Cs09A@mail.gmail.com>
+Message-ID: <CAL_JsqJgi+Rd1jiBiTcbuoiZUnpahdNfbAQNkbPH4LEM1Cs09A@mail.gmail.com>
+Subject: Re: [PATCH] of: Rework and simplify phandle cache to use a fixed size
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 05:03:18PM +0100, Michał Mirosław wrote:
-> This series cleans up the driver a bit and implements changes needed to
-> support EKTF3624-based touchscreen used in eg. Asus TF300T tablet. 
+On Thu, Dec 12, 2019 at 7:05 AM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>
+> On 2019-12-11 17:48:54 [-0600], Rob Herring wrote:
+> > > -       if (phandle_cache) {
+> > > -               if (phandle_cache[masked_handle] &&
+> > > -                   handle == phandle_cache[masked_handle]->phandle)
+> > > -                       np = phandle_cache[masked_handle];
+> > > -               if (np && of_node_check_flag(np, OF_DETACHED)) {
+> > > -                       WARN_ON(1); /* did not uncache np on node removal */
+> > > -                       of_node_put(np);
+> > > -                       phandle_cache[masked_handle] = NULL;
+> > > -                       np = NULL;
+> > > -               }
+> > > +       if (phandle_cache[handle_hash] &&
+> > > +           handle == phandle_cache[handle_hash]->phandle)
+> > > +               np = phandle_cache[handle_hash];
+> > > +       if (np && of_node_check_flag(np, OF_DETACHED)) {
+> > > +               WARN_ON(1); /* did not uncache np on node removal */
+> >
+> > BTW, I don't think this check is even valid. If we failed to detach
+> > and remove the node from the cache, then we could be accessing np
+> > after freeing it.
+>
+> this is kmalloc()ed memory which is always valid. If the memory is
+> already re-used then
+>         handle == phandle_cache[handle_hash]->phandle
+>
+> will fail (the check, not the memory access itself).
 
-Johnny, could you please take a look at this patch series?
+There's a 1 in 2^32 chance it won't.
 
-Thanks!
+> If the check
+> remains valid then you can hope for the OF_DETACHED flag to trigger the
+> warning.
 
-> 
-> ---
-> v2: extended with Dmitry's patches (replaced v1 patches 3 and 4)
-> 
-> Dmitry Osipenko (3):
->   input: elants: support 0x66 reply opcode for reporting touches
->   dt-bindings: input: elants-i2c: Document common touchscreen properties
->   dt-bindings: input: elants-i2c: Document eKTF3624
-> 
-> Michał Mirosław (6):
->   input: elants: document some registers and values
->   input: elants: support old touch report format
->   input: elants: remove unused axes
->   input: elants: override touchscreen info with DT properties
->   input: elants: refactor elants_i2c_execute_command()
->   input: elants: read touchscreen size for EKTF3624
-> 
->  .../devicetree/bindings/input/elants_i2c.txt  |   6 +-
->  drivers/input/touchscreen/elants_i2c.c        | 358 ++++++++++++------
->  2 files changed, 239 insertions(+), 125 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
+Keyword is hope.
 
--- 
-Dmitry
+To look at it another way. Do we need this check? It is in the "fast
+path". There's a single location where we set OF_DETACHED and the
+cache entry is removed at the same time. Also, if we do free the
+node's memory, it also checks for OF_DETACHED. Previously, a free
+wouldn't happen because we incremented the ref count on nodes in the
+cache.
+
+Rob
