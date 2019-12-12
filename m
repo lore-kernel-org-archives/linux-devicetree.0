@@ -2,57 +2,57 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8873AC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 12:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA70C00454
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 12:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E79522527
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 12:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D9722527
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 12:51:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FEP+6UEG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EXWxqrNt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfLLMvl (ORCPT
+        id S1729272AbfLLMvl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Thu, 12 Dec 2019 07:51:41 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:41510 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729207AbfLLMvk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 07:51:40 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBCCpb4T101330;
-        Thu, 12 Dec 2019 06:51:37 -0600
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49186 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729252AbfLLMvl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 07:51:41 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBCCpdoa109099;
+        Thu, 12 Dec 2019 06:51:39 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576155097;
-        bh=1Zg+C9+mOLS4pU15/CRjCfOGBrSNNhZJr+fi9fi9PEc=;
+        s=ti-com-17Q1; t=1576155099;
+        bh=TEr6SScWfvJ0lJeE6Waov2g8ftJ41ES/0yvum08aSVs=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=FEP+6UEGwPYoZTCypmeMrbK24la76LvHpq1hk2yqtXQ8VPt8W16DGBsTM11rrJ7tK
-         7KwKD7F/SRotWMdKGOSZltCo/sXA/E7bW7XnAlv4dMWqBSZ/gYIhmMB1ei/2djZvj6
-         FL07v5STE0f5gY3W3Nbb1a7g0qfdvjmJnHpcnsVs=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCCpbJ3017598;
-        Thu, 12 Dec 2019 06:51:37 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+        b=EXWxqrNt40U3Tu9Fw8Q7ee8LR76D69WKe04YQu2DHZMpXHbN1MvKzHvzK8vIN3Nwl
+         6IJrCUdJxt1NbBO0gWyN29C9dWoTQfUZeHhnI75vRyV4w3I0Y3Kgzlj/t7HUi4NFaI
+         1t3LR284ji750+SQTzWKumX2RvbkiCdOmiZMJq7U=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBCCpdno078400
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 12 Dec 2019 06:51:39 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Dec 2019 06:51:36 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 06:51:38 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Dec 2019 06:51:36 -0600
+ Frontend Transport; Thu, 12 Dec 2019 06:51:38 -0600
 Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCCpWNd045158;
-        Thu, 12 Dec 2019 06:51:34 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCCpWNf045158;
+        Thu, 12 Dec 2019 06:51:37 -0600
 From:   Tero Kristo <t-kristo@ti.com>
 To:     <linux-omap@vger.kernel.org>, <tony@atomide.com>
 CC:     <devicetree@vger.kernel.org>, <bcousson@baylibre.com>
-Subject: [PATCH 1/6] ARM: dts: dra7: convert IOMMUs to use ti-sysc
-Date:   Thu, 12 Dec 2019 14:51:18 +0200
-Message-ID: <20191212125123.3465-2-t-kristo@ti.com>
+Subject: [PATCH 3/6] ARM: dts: omap4: convert IOMMUs to use ti-sysc
+Date:   Thu, 12 Dec 2019 14:51:20 +0200
+Message-ID: <20191212125123.3465-4-t-kristo@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191212125123.3465-1-t-kristo@ti.com>
 References: <20191212125123.3465-1-t-kristo@ti.com>
@@ -64,141 +64,78 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert dra7 IOMMUs to use ti-sysc instead of legacy omap-hwmod based
+Convert omap4 IOMMUs to use ti-sysc instead of legacy omap-hwmod based
 implementation. Enable the IOMMUs also while doing this.
 
 Signed-off-by: Tero Kristo <t-kristo@ti.com>
 ---
- arch/arm/boot/dts/dra7.dtsi | 140 +++++++++++++++++++++++++++---------
- 1 file changed, 108 insertions(+), 32 deletions(-)
+ arch/arm/boot/dts/omap4-l4.dtsi | 11 ++++++---
+ arch/arm/boot/dts/omap4.dtsi    | 43 +++++++++++++++++++++------------
+ 2 files changed, 36 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 73e5011f531a..e7c9b81d929a 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -377,44 +377,120 @@
- 			ti,hwmods = "dmm";
- 		};
+diff --git a/arch/arm/boot/dts/omap4-l4.dtsi b/arch/arm/boot/dts/omap4-l4.dtsi
+index 83f803be8ee2..8a76b6b86a97 100644
+--- a/arch/arm/boot/dts/omap4-l4.dtsi
++++ b/arch/arm/boot/dts/omap4-l4.dtsi
+@@ -321,7 +321,6 @@
  
--		mmu0_dsp1: mmu@40d01000 {
--			compatible = "ti,dra7-dsp-iommu";
--			reg = <0x40d01000 0x100>;
--			interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
--			ti,hwmods = "mmu0_dsp1";
--			#iommu-cells = <0>;
--			ti,syscon-mmuconfig = <&dsp1_system 0x0>;
--			status = "disabled";
-+		target-module@40d01000 {
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			reg = <0x40d01000 0x4>,
-+			      <0x40d01010 0x4>,
-+			      <0x40d01014 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			clocks = <&dsp1_clkctrl DRA7_DSP1_MMU0_DSP1_CLKCTRL 0>;
-+			clock-names = "fck";
-+			resets = <&prm_dsp1 1>;
+ 		target-module@66000 {			/* 0x4a066000, ap 25 26.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "mmu_dsp";
+ 			reg = <0x66000 0x4>,
+ 			      <0x66010 0x4>,
+ 			      <0x66014 0x4>;
+@@ -335,12 +334,18 @@
+ 			/* Domains (V, P, C): iva, tesla_pwrdm, tesla_clkdm */
+ 			clocks = <&tesla_clkctrl OMAP4_DSP_CLKCTRL 0>;
+ 			clock-names = "fck";
++			resets = <&prm_tesla 1>;
 +			reset-names = "rstctrl";
-+			ranges = <0x0 0x40d01000 0x1000>;
-+			#size-cells = <1>;
-+			#address-cells = <1>;
-+
-+			mmu0_dsp1: mmu@0 {
-+				compatible = "ti,dra7-dsp-iommu";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0x66000 0x1000>;
+ 
+-			/* mmu_dsp cannot be moved before reset driver */
+-			status = "disabled";
++			mmu_dsp: mmu@0 {
++				compatible = "ti,omap4-iommu";
 +				reg = <0x0 0x100>;
-+				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
 +				#iommu-cells = <0>;
-+				ti,syscon-mmuconfig = <&dsp1_system 0x0>;
 +			};
  		};
+ 	};
  
--		mmu1_dsp1: mmu@40d02000 {
--			compatible = "ti,dra7-dsp-iommu";
--			reg = <0x40d02000 0x100>;
--			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
--			ti,hwmods = "mmu1_dsp1";
--			#iommu-cells = <0>;
--			ti,syscon-mmuconfig = <&dsp1_system 0x1>;
--			status = "disabled";
-+		target-module@40d02000 {
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			reg = <0x40d02000 0x4>,
-+			      <0x40d02010 0x4>,
-+			      <0x40d02014 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			clocks = <&dsp1_clkctrl DRA7_DSP1_MMU0_DSP1_CLKCTRL 0>;
-+			clock-names = "fck";
-+			resets = <&prm_dsp1 1>;
-+			reset-names = "rstctrl";
-+			ranges = <0x0 0x40d02000 0x1000>;
-+			#size-cells = <1>;
-+			#address-cells = <1>;
-+
-+			mmu1_dsp1: mmu@0 {
-+				compatible = "ti,dra7-dsp-iommu";
-+				reg = <0x0 0x100>;
-+				interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
-+				#iommu-cells = <0>;
-+				ti,syscon-mmuconfig = <&dsp1_system 0x1>;
-+			};
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 2de8a6b53de9..af901fc6e909 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -173,14 +173,6 @@
+ 			#gpio-cells = <2>;
  		};
  
--		mmu_ipu1: mmu@58882000 {
--			compatible = "ti,dra7-iommu";
--			reg = <0x58882000 0x100>;
--			interrupts = <GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH>;
--			ti,hwmods = "mmu_ipu1";
+-		mmu_dsp: mmu@4a066000 {
+-			compatible = "ti,omap4-iommu";
+-			reg = <0x4a066000 0x100>;
+-			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+-			ti,hwmods = "mmu_dsp";
 -			#iommu-cells = <0>;
--			ti,iommu-bus-err-back;
--			status = "disabled";
-+		target-module@58882000 {
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			reg = <0x58882000 0x4>,
-+			      <0x58882010 0x4>,
-+			      <0x58882014 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			clocks = <&ipu1_clkctrl DRA7_IPU1_MMU_IPU1_CLKCTRL 0>;
-+			clock-names = "fck";
-+			resets = <&prm_ipu 2>;
-+			reset-names = "rstctrl";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x58882000 0x100>;
-+
-+			mmu_ipu1: mmu@0 {
-+				compatible = "ti,dra7-iommu";
-+				reg = <0x0 0x100>;
-+				interrupts = <GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH>;
-+				#iommu-cells = <0>;
-+				ti,iommu-bus-err-back;
-+			};
+-		};
+-
+ 		target-module@52000000 {
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
+ 			ti,hwmods = "iss";
+@@ -206,14 +198,35 @@
+ 			/* No child device binding, driver in staging */
  		};
  
--		mmu_ipu2: mmu@55082000 {
--			compatible = "ti,dra7-iommu";
+-		mmu_ipu: mmu@55082000 {
+-			compatible = "ti,omap4-iommu";
 -			reg = <0x55082000 0x100>;
--			interrupts = <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>;
--			ti,hwmods = "mmu_ipu2";
+-			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+-			ti,hwmods = "mmu_ipu";
 -			#iommu-cells = <0>;
 -			ti,iommu-bus-err-back;
--			status = "disabled";
 +		target-module@55082000 {
 +			compatible = "ti,sysc-omap2", "ti,sysc";
 +			reg = <0x55082000 0x4>,
@@ -211,24 +148,26 @@ index 73e5011f531a..e7c9b81d929a 100644
 +			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
 +					 SYSC_OMAP2_SOFTRESET |
 +					 SYSC_OMAP2_AUTOIDLE)>;
-+			clocks = <&ipu2_clkctrl DRA7_IPU2_MMU_IPU2_CLKCTRL 0>;
++			clocks = <&ducati_clkctrl OMAP4_IPU_CLKCTRL 0>;
 +			clock-names = "fck";
 +			resets = <&prm_core 2>;
 +			reset-names = "rstctrl";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
 +			ranges = <0x0 0x55082000 0x100>;
++			#size-cells = <1>;
++			#address-cells = <1>;
 +
-+			mmu_ipu2: mmu@0 {
-+				compatible = "ti,dra7-iommu";
++			mmu_ipu: mmu@0 {
++				compatible = "ti,omap4-iommu";
 +				reg = <0x0 0x100>;
-+				interrupts = <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
 +				#iommu-cells = <0>;
 +				ti,iommu-bus-err-back;
 +			};
  		};
- 
- 		abb_mpu: regulator-abb-mpu {
++
+ 		target-module@4012c000 {
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
+ 			ti,hwmods = "slimbus1";
 -- 
 2.17.1
 
