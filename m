@@ -2,61 +2,398 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27B7C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 10:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B63C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 11:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0EF322B48
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 10:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA322077B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 11:00:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="0pngTayz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbfLLK7n (ORCPT
+        id S1728777AbfLLLAe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:59:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:42514 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728777AbfLLK7n (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:59:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B83F5328;
-        Thu, 12 Dec 2019 02:59:42 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 676103F718;
-        Thu, 12 Dec 2019 02:59:41 -0800 (PST)
-Subject: Re: [PATCH v6 03/15] coresight: cti: Add sysfs access to program
- function regs
-To:     Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        devicetree@vger.kernel.org
-Cc:     mathieu.poirier@linaro.org, robh+dt@kernel.org,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, agross@kernel.org
-References: <20191211230748.5037-1-mike.leach@linaro.org>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <faff0b65-0fb3-7ec8-f78b-5fe8d9036979@arm.com>
-Date:   Thu, 12 Dec 2019 10:59:40 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 12 Dec 2019 06:00:34 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:36572 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728339AbfLLLAd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 06:00:33 -0500
+Received: by mail-ua1-f66.google.com with SMTP id k33so693645uag.3
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 03:00:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E/BDoN8LZUDxXyY/LOw9blBuAN4iCi1dNk0E5OnY49A=;
+        b=0pngTayzWJ20KkIBh4tlHJX+QdVx/rkEkOMTPMMkhuqR7vgQNhYEqZ1NPP0dRkr4P+
+         bDnwbbiSS91uoE+EW/6uHJpeB3oEPywSxie4sceXAxr79+DkZTxNo79cogGtfTDCoF65
+         p5BhjUqxj68aDMfQvYOga54io5dJ8DtIxyc0AXJdszgIgn6likYDlp9hzDxMYedA/fy+
+         JBF4uNj6AUsW3L1kiUdruc+lmWz9604Fy2MXvU1GId/o3xOwR6ef6ZfdCjo5RB48Oz/o
+         AOgBtNJQuPYxR0xLGQoHZCvQ6I7teRQogxfgoExeNTKipB0JRJumEMP2I0J9Jty2rVo0
+         BoKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E/BDoN8LZUDxXyY/LOw9blBuAN4iCi1dNk0E5OnY49A=;
+        b=FgLqGNRdcySRUEJvXPKPXVaOqRSpoKrGToUY9wQUQKM64qcaiVrYEvduggV9IJimsZ
+         KoigrL1o2v6GnwMXrcLkOOsldvA2OzLTFGCSzh07BNdMlyV6rX73Lk83VRzx65M46nJ3
+         ExC6/iiCc1BmG/RxCsCJ+2+iaY27UiYs17yZbcNfEH3Aau1RpRKXKww2KLVrNTX7C3Pr
+         uJN0xL83VHIAcOM0ANM4TkPqqi4DRv6RuvTQr3R5enn79miQvoCC7J/yovqyFDGmSiVV
+         h6lAs6pPFFEnf5lRAfvSQpqkxyOiYzVne0mQFRXfWS2drDTaM9FhLCkXfTR6VaK8KLmF
+         wvbA==
+X-Gm-Message-State: APjAAAXkcyTm2ApXLztEEK+yACofPO8KzgVfNSxy6/1JkukUfSqMKwVQ
+        0YYviMlp9E5Ko2S2bIIoskMQ9qnxXWlOBfROHkh6Zg==
+X-Google-Smtp-Source: APXvYqwnaZfxUPkSEezGB5U9Be0aoIHy6gUvMu2tLslGzbrnWfKh9WtnN3GznE6iiy3DrBY9cJowKpnsSo9OqxIiHTM=
+X-Received: by 2002:ab0:7352:: with SMTP id k18mr7377553uap.77.1576148432270;
+ Thu, 12 Dec 2019 03:00:32 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191211230748.5037-1-mike.leach@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1574934847-30372-1-git-send-email-rkambl@codeaurora.org> <1574934847-30372-2-git-send-email-rkambl@codeaurora.org>
+In-Reply-To: <1574934847-30372-2-git-send-email-rkambl@codeaurora.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 12 Dec 2019 16:30:20 +0530
+Message-ID: <CAHLCerOVH1xLjMmDNFVx=YYYTA3MipaOhHZ-AYtxEnDFgRbSJg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: sc7180: Add device node support
+ for TSENS in SC7180
+To:     Rajeshwari <rkambl@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        sivaa@codeaurora.org, sanm@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/12/2019 23:07, Mike Leach wrote:
-> Adds in sysfs programming support for the CTI function register sets.
-> Allows direct manipulation of channel / trigger association registers.
-> 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Hi Rajeshwari,
 
+On Thu, Nov 28, 2019 at 3:25 PM Rajeshwari <rkambl@codeaurora.org> wrote:
+>
+> Add TSENS node and user thermal zone for TSENS sensors in SC7180.
+>
+> Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 527 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 527 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 666e9b9..6656ffc 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -911,6 +911,26 @@
+>                         status = "disabled";
+>                 };
+>
+> +               tsens0: thermal-sensor@c263000 {
+> +                       compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
+> +                       reg = <0 0x0c263000 0 0x1ff>, /* TM */
+> +                               <0 0x0c222000 0 0x1ff>; /* SROT */
+> +                       #qcom,sensors = <15>;
+> +                       interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-names = "uplow";
+> +                       #thermal-sensor-cells = <1>;
+> +               };
+> +
+> +               tsens1: thermal-sensor@c265000 {
+> +                       compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
+> +                       reg = <0 0x0c265000 0 0x1ff>, /* TM */
+> +                               <0 0x0c223000 0 0x1ff>; /* SROT */
+> +                       #qcom,sensors = <10>;
+> +                       interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-names = "uplow";
+> +                       #thermal-sensor-cells = <1>;
+> +               };
+> +
+>                 spmi_bus: spmi@c440000 {
+>                         compatible = "qcom,spmi-pmic-arb";
+>                         reg = <0 0x0c440000 0 0x1100>,
+> @@ -1121,6 +1141,513 @@
+>                 };
+>         };
+>
+> +       thermal-zones {
+> +               cpu0-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 1>;
+> +
+> +                       trips {
+> +                               cpu0_alert0: trip-point0 {
+> +                                       temperature = <90000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu0_alert1: trip-point1 {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu0_crit: cpu_crit {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
 
-Thanks for the changes. This looks really nice
+Where are the cooling maps for all the cpu thermal zones? A passive
+trip point w/o a cooling map is not of much use. If you are waiting
+for cpufreq support to land before adding them, then remove the
+passive trip points for now and add them along with the cooling maps
+when you have cooling devices.
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> +                       };
+> +               };
+> +
+> +               cpu1-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 2>;
+> +
+> +                       trips {
+> +                               cpu1_alert0: trip-point0 {
+> +                                       temperature = <90000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu1_alert1: trip-point1 {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu1_crit: cpu_crit {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu2-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 3>;
+> +
+> +                       trips {
+> +                               cpu2_alert0: trip-point0 {
+> +                                       temperature = <90000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu2_alert1: trip-point1 {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu2_crit: cpu_crit {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu3-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 4>;
+> +
+> +                       trips {
+> +                               cpu3_alert0: trip-point0 {
+> +                                       temperature = <90000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu3_alert1: trip-point1 {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu3_crit: cpu_crit {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu4-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 5>;
+> +
+> +                       trips {
+> +                               cpu4_alert0: trip-point0 {
+> +                                       temperature = <90000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu4_alert1: trip-point1 {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu4_crit: cpu_crit {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu5-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 6>;
+> +
+> +                       trips {
+> +                               cpu5_alert0: trip-point0 {
+> +                                       temperature = <90000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu5_alert1: trip-point1 {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu5_crit: cpu_crit {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu6-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 9>;
+> +
+> +                       trips {
+> +                               cpu6_alert0: trip-point0 {
+> +                                       temperature = <90000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu6_alert1: trip-point1 {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu6_crit: cpu_crit {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu7-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 10>;
+> +
+> +                       trips {
+> +                               cpu7_alert0: trip-point0 {
+> +                                       temperature = <90000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu7_alert1: trip-point1 {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu7_crit: cpu_crit {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu8-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 11>;
+> +
+> +                       trips {
+> +                               cpu8_alert0: trip-point0 {
+> +                                       temperature = <90000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu8_alert1: trip-point1 {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu8_crit: cpu_crit {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu9-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 12>;
+> +
+> +                       trips {
+> +                               cpu9_alert0: trip-point0 {
+> +                                       temperature = <90000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu9_alert1: trip-point1 {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu9_crit: cpu_crit {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
