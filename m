@@ -2,107 +2,188 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7D6C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 09:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4A1C2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 09:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45822214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 09:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0148F2173E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 09:57:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="siHC5Sv0"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yd5bVEFt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728382AbfLLJr5 (ORCPT
+        id S1728329AbfLLJ5i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:47:57 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:7967 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726382AbfLLJr5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 04:47:57 -0500
-X-UUID: 6e79bea5163d41eeb21e4f5f05621e07-20191212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=jjUFyhr70q5Qwl+cMOFBMZpPatFW/kw0aENfH71RXPE=;
-        b=siHC5Sv0bod7DC+uDh1agxAwNc0q3H+wb4uE/xWH/GaNfvZ1ubRB4K18lY+N771dFzHAX7D+5JpH9d7HLI2FBrWocJ9n832TbQZCpDb/eTNCTeTCUlWZQphEiGO5i3i/rZXp8ZxNRT7QNzM4qiSIvhnbe1FrMg6LlAC6/GEc3Ww=;
-X-UUID: 6e79bea5163d41eeb21e4f5f05621e07-20191212
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1503291767; Thu, 12 Dec 2019 17:47:50 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 12 Dec 2019 17:47:29 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Dec 2019 17:47:46 +0800
-Message-ID: <1576144069.16442.3.camel@mtksdaap41>
-Subject: Re: [PATCH v17 0/6] support gce on mt8183 platform
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>
-CC:     Nicolas Boichat <drinkcat@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>,
-        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
-Date:   Thu, 12 Dec 2019 17:47:49 +0800
-In-Reply-To: <cb5cd58e-dc62-ae30-9ddd-7c2b95fde3e3@gmail.com>
-References: <20191121015410.18852-1-bibby.hsieh@mediatek.com>
-         <CANMq1KCTJQL+GFqo8HYM8cEpzXJmebJ=9ju4CzHLwyuQfbZEAA@mail.gmail.com>
-         <cb5cd58e-dc62-ae30-9ddd-7c2b95fde3e3@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 12 Dec 2019 04:57:38 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39214 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728410AbfLLJ5f (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 04:57:35 -0500
+Received: by mail-wm1-f66.google.com with SMTP id d5so1764383wmb.4
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 01:57:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=gx1Mdi7/CFmOT7RiIEVg3kQRBdQoHiJa4CnAd9qCJmg=;
+        b=yd5bVEFtgIODavE5Wy5kl2EwUKPgntf/ynutV1/iuGWUD7bN9CmysWNJgtp9Bs3vVf
+         bLKRuIOtbxscxmKQ5AoUrdctD3vjekNCRBG20Z+21i36dxmQjJB/kqpJqM4j1IXiVrHV
+         zdgK0zjx2IJXCdHzkWC4Srs79kGXf7TVq6kSzAU1yPNnVlB/hdCu/RuOOAYwqI0jFs9J
+         uyHCMuKtD3XZ6Ymbz+aL/YawKQkgEXAmQybExIjwVLXb0+TmAuwCLWKsOCNi/1ON8PGZ
+         cQP6rBl5ZNcF8PU0F29ZGw+9Ze1ZBnASA1cVQ4X37+jSlUKGtkv9rT0Lv/9/tf9PjGuv
+         j0RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=gx1Mdi7/CFmOT7RiIEVg3kQRBdQoHiJa4CnAd9qCJmg=;
+        b=SpnOxVBkk4Kls/es3OhnG/G6n+qmCFFdx80akDcycd/nxSyIHajpD72ef0/kHAGWZ4
+         wL0gsLHKPufdXEk5vFttKUqtYkKwX4HgWqC3Co7qxqovkgH1CUIn7zGnx5sXwPrImILh
+         l9ju3f4irIHmnAtYzCyJ9VQvmvvo9Rn6ssNKACcMwDTqFtB7Jibvbxl/Iukt9T2FwJ0I
+         8/BHotLALeMGAoNcRjRWSgAwcknrFmwJioU+yVeYkKjliLMkLxgDINm0qyLSh5uLPf+v
+         2NZlksrJZiDRUsBJtgqiPUhDCC2PJUr6sZiQ5PdJr2ZkBmO+aV8oOYxgftu87j0LPMdj
+         Ihqw==
+X-Gm-Message-State: APjAAAUuYNkf7VzJ8Ebxa+5Bee+cA9LgtJYkBAMd/iNmAkk83zGExk2y
+        1RsqdxhsfQ98+NsnzCxPJxDoYw==
+X-Google-Smtp-Source: APXvYqwk4QDlI0ODXXgdLTi/EXbqG6DwiTR8OW5NiylFbyhT0VLdogLil3eQ5czc90Dbh6YAj+YurA==
+X-Received: by 2002:a1c:541b:: with SMTP id i27mr5740102wmb.137.1576144653403;
+        Thu, 12 Dec 2019 01:57:33 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id k19sm5248320wmi.42.2019.12.12.01.57.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 01:57:32 -0800 (PST)
+References: <20191206074052.15557-1-jian.hu@amlogic.com> <20191206074052.15557-2-jian.hu@amlogic.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Jian Hu <jian.hu@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        "Rob Herring" <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/6] dt-bindings: clock: meson: add A1 PLL clock controller bindings
+In-reply-to: <20191206074052.15557-2-jian.hu@amlogic.com>
+Date:   Thu, 12 Dec 2019 10:57:31 +0100
+Message-ID: <1jblsdlvck.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTEyLTEyIGF0IDA4OjQ5ICswMTAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
-Og0KPiANCj4gT24gMTEvMTIvMjAxOSAyMzowOSwgTmljb2xhcyBCb2ljaGF0IHdyb3RlOg0KPiA+
-IEhpIE1hdHRoaWFzLA0KPiA+IA0KPiA+IFF1aWNrIHF1ZXN0aW9uLCBhbnkgcmVhc29uIHlvdSBw
-aWNrZWQgb25seSBwYXRjaGVzIDIrMys2IGZyb20gdGhpcw0KPiA+IHNlcmllcywgYW5kIG5vdCB0
-aGUgMyBvdGhlcnM/DQo+ID4gDQo+IA0KPiBUaGUgcXVpY2sgYW5zd2VyLCB0aW1lIDopDQo+IFRo
-ZSBsb25nZXIgb25lOg0KPiAxLzYgd2VudCBhbHJlYWR5IGluIHRocm91Z2ggZml4ZXMgZm9yIHY1
-LjQNCj4gNC82IGl0IHRvdWNoZXMgbWFpbGJveCBjb2RlLCBzbyB3ZSB3aWxsIG5lZWQgYSBhY2tl
-ZC1ieSBmcm9tIEphc3NpDQoNCkhpLCBKYXNzaSwNCg0KU29ycnkgZm9yIHRoZSBtYWlsaW5nIGxv
-c2luZy4NCkNvdWxkIHlvdSBoZWxwIG1lIHRvIHJldmlldyBbUEFUQ0ggNC82IHNvYzogbWVkaWF0
-ZWs6IGNtZHE6IGFkZCBwb2xsaW5nDQpmdW5jdGlvbl0gaWYgeW91IGFyZSBmcmVlPw0KDQpCaWJi
-eQ0KDQo+IDUvNiB0aW1lLCBJIHdhbnQgdG8gaGF2ZSBhIGJldHRlciBsb29rIG9udG8gdGhpcyB0
-byBzZWUgaWYgdGhhdCBtYWtlcyBzZW5zZSAoSQ0KPiBzbGlnaHRseSByZW1lbWJlciBzb21lIG9s
-ZCBjb21tZW50IEkgaGFkIG9uIHRoaXMpDQo+IA0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KPiAN
-Cj4gPiBUaGFua3MuDQo+ID4gDQo+ID4gT24gV2VkLCBOb3YgMjAsIDIwMTkgYXQgNTo1NCBQTSBC
-aWJieSBIc2llaCA8YmliYnkuaHNpZWhAbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPj4NCj4gPj4g
-Q2hhbmdlcyBzaW5jZSB2MTY6DQo+ID4+ICAtIG5hbWluZyB0aGUgcG9sbCBtYXNrIGVuYWJsZSBi
-aXQNCj4gPj4gIC0gYWRkIGEgcGF0Y2ggdG8gZml1cCB0aGUgaW5wdXQgb3JkZXIgb2Ygd3JpdGUg
-YXBpDQo+ID4+DQo+ID4+IENoYW5nZXMgc2luY2UgdjE1Og0KPiA+PiAgLSByZWJhc2Ugb250byA1
-LjQtcmMxDQo+ID4+ICAtIHJvbGxiYWNrIHRoZSB2MTQgY2hhbmdlDQo+ID4+ICAtIGFkZCBhIHBh
-dGNoIHRvIGZpeHVwIHRoZSBjb21iaW5hdGlvbiBvZiByZXR1cm4gdmFsdWUNCj4gPj4NCj4gPj4g
-Q2hhbmdlcyBzaW5jZSB2MTQ6DQo+ID4+ICAtIGNoYW5nZSBpbnB1dCBhcmd1bWVudCBhcyBwb2lu
-dGVyIGluIGFwcGVuZF9jb21tZW5kKCkNCj4gPj4NCj4gPj4gQ2hhbmdlcyBzaW5jZSB2MTM6DQo+
-ID4+ICAtIHNlcGFyYXRlIHBvbGwgZnVuY3Rpb24gYXMgcG9sbCB3LyAmIHcvbyBtYXNrIGZ1bmN0
-aW9uDQo+ID4+ICAtIGRpcmVjdGx5IHBhc3MgaW5zdCBpbnRvIGFwcGVuZF9jb21tYW5kIGZ1bmN0
-aW9uIGluc3RlYWQNCj4gPj4gICAgb2YgcmV0dXJucyBhIHBvaW50ZXINCj4gPj4gIC0gZml4dXAg
-Y29kaW5nIHN0eWxlDQo+ID4+ICAtIHJlYmFzZSBvbnRvIDUuMy1yYzENCj4gPj4NCj4gPj4gWy4u
-LiBzbmlwIC4uLl0NCj4gPj4NCj4gPj4gQmliYnkgSHNpZWggKDYpOg0KPiA+PiAgIHNvYzogbWVk
-aWF0ZWs6IGNtZHE6IGZpeHVwIHdyb25nIGlucHV0IG9yZGVyIG9mIHdyaXRlIGFwaQ0KPiA+PiAg
-IHNvYzogbWVkaWF0ZWs6IGNtZHE6IHJlbW92ZSBPUiBvcGVydGFpb24gZnJvbSBlcnIgcmV0dXJu
-DQo+ID4+ICAgc29jOiBtZWRpYXRlazogY21kcTogZGVmaW5lIHRoZSBpbnN0cnVjdGlvbiBzdHJ1
-Y3QNCj4gPj4gICBzb2M6IG1lZGlhdGVrOiBjbWRxOiBhZGQgcG9sbGluZyBmdW5jdGlvbg0KPiA+
-PiAgIHNvYzogbWVkaWF0ZWs6IGNtZHE6IGFkZCBjbWRxX2Rldl9nZXRfY2xpZW50X3JlZyBmdW5j
-dGlvbg0KPiA+PiAgIGFybTY0OiBkdHM6IGFkZCBnY2Ugbm9kZSBmb3IgbXQ4MTgzDQo+ID4+DQo+
-ID4+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE4My5kdHNpIHwgIDEwICsrDQo+
-ID4+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyAgIHwgMTQ3ICsrKysr
-KysrKysrKysrKysrKystLS0tDQo+ID4+ICBpbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEt
-bWFpbGJveC5oIHwgIDExICsrDQo+ID4+ICBpbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGst
-Y21kcS5oICAgIHwgIDUzICsrKysrKysrDQo+ID4+ICA0IGZpbGVzIGNoYW5nZWQsIDE5NSBpbnNl
-cnRpb25zKCspLCAyNiBkZWxldGlvbnMoLSkNCj4gPj4NCj4gPj4gLS0NCj4gPj4gMi4xOC4wDQoN
-Cg==
+
+On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
+
+> Add the documentation to support Amlogic A1 PLL clock driver,
+> and add A1 PLL clock controller bindings.
+>
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> ---
+>  .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 59 +++++++++++++++++++
+>  include/dt-bindings/clock/a1-pll-clkc.h       | 16 +++++
+>  2 files changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>  create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+>
+> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+> new file mode 100644
+> index 000000000000..7feeef5abf1b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+> @@ -0,0 +1,59 @@
+> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+
+Rob commented on the above in v1 and it remains unaddressed
+
+> +/*
+> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+> + */
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/clock/amlogic,a1-pll-clkc.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
+> +
+> +maintainers:
+> +  - Neil Armstrong <narmstrong@baylibre.com>
+> +  - Jerome Brunet <jbrunet@baylibre.com>
+> +  - Jian Hu <jian.hu@jian.hu.com>
+> +
+> +properties:
+> +  compatible:
+> +    - enum:
+> +        - amlogic,a1-pll-clkc
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +clocks:
+> +  minItems: 2
+> +  maxItems: 2
+> +  items:
+> +   - description: Input xtal_fixpll
+> +   - description: Input xtal_hifipll
+> +
+> +clock-names:
+> +  minItems: 2
+> +  maxItems: 2
+> +  items:
+> +     - const: xtal_fixpll
+> +     - const: xtal_hifipll
+> +
+> +required:
+> +  - compatible
+> +  - "#clock-cells"
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    clkc_pll: pll-clock-controller@7c80 {
+> +                compatible = "amlogic,a1-pll-clkc";
+> +                reg = <0 0x7c80 0 0x18c>;
+> +                #clock-cells = <1>;
+> +                clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
+> +                         <&clkc_periphs CLKID_XTAL_HIFIPLL>;
+> +                clock-names = "xtal_fixpll", "xtal_hifipll";
+> +    };
+> diff --git a/include/dt-bindings/clock/a1-pll-clkc.h b/include/dt-bindings/clock/a1-pll-clkc.h
+> new file mode 100644
+> index 000000000000..58eae237e503
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/a1-pll-clkc.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+> +/*
+> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+> + */
+> +
+> +#ifndef __A1_PLL_CLKC_H
+> +#define __A1_PLL_CLKC_H
+> +
+> +#define CLKID_FIXED_PLL				1
+> +#define CLKID_FCLK_DIV2				6
+> +#define CLKID_FCLK_DIV3				7
+> +#define CLKID_FCLK_DIV5				8
+> +#define CLKID_FCLK_DIV7				9
+> +#define CLKID_HIFI_PLL				10
+> +
+> +#endif /* __A1_PLL_CLKC_H */
 
