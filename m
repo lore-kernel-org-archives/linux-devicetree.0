@@ -2,172 +2,104 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C4FC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 12:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601BDC2D0C9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 12:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 367AB214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 12:02:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="nzEPxu/X"
+	by mail.kernel.org (Postfix) with ESMTP id 3D32F21655
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 12:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbfLLMCO (ORCPT
+        id S1729175AbfLLMUG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 07:02:14 -0500
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:57371 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729043AbfLLMCO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:02:14 -0500
-Received: from [IPv6:2001:983:e9a7:1:1c4a:480a:7ba1:9c65]
- ([IPv6:2001:983:e9a7:1:1c4a:480a:7ba1:9c65])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id fNAYiZIm6GyJwfNAZiy0h9; Thu, 12 Dec 2019 13:02:12 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1576152132; bh=grA3mrY/IXTuR/bHnsfsFfTSA8BCPNcViLc0fRgFSEg=;
-        h=Subject:From:To:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=nzEPxu/XiAq6xqJTEPtu2DMyFeL+3oKzznjfS8x4FT/5JQvyJe0A1cdg52/aYtQje
-         Q28MS1eZ97eJ2uG0m5TG7zFtGiD5VwDcEzvhRbV19ST4l0c8kRotbI94BHivZy8UBY
-         Y7yWuKKaX0PsLD4qBdn5bfYJNC4WJXSXFOsSios8DGvU7P8nfX/fgwQMyEPT0fSg1P
-         PvsgHSBA/JZe4yikXFhnQ+cJPgCsD6PcsqpH3kJ74VOTxg7d1gcbH4qUudjqoKmSaV
-         4jCvItG9+5UaRbH0H38fvOK6XOqSvcheujlc2B51AZBo6LD0NVxVagx2ujgm0i+6ls
-         CONsICQSvGD0Q==
-Subject: Re: [PATCH v11 00/11] Rockchip ISP Driver
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        linux-rockchip@lists.infradead.org
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        jeffy.chen@rock-chips.com, zyc@rock-chips.com, tfiga@chromium.org,
-        robh+dt@kernel.org, laurent.pinchart@ideasonboard.com,
-        sakari.ailus@linux.intel.com, kernel@collabora.com,
-        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
-        zhengsq@rock-chips.com
-References: <20191114051242.14651-1-helen.koike@collabora.com>
- <996a9b6a-0e45-d627-9263-539c22e5f1c0@xs4all.nl>
- <7fd4bf99fd6316da8acaf0a27b6845bedbf4b25f.camel@collabora.com>
- <eafffc6f-061e-65ab-079b-b2bd613d61cb@xs4all.nl>
-Message-ID: <20f99f0e-dfec-f6c0-eeb3-7561018f32e9@xs4all.nl>
-Date:   Thu, 12 Dec 2019 13:02:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 12 Dec 2019 07:20:06 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:53857 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729159AbfLLMUG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 07:20:06 -0500
+Received: from droid12-sz.software.amlogic (10.28.8.22) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Thu, 12 Dec 2019
+ 20:20:36 +0800
+From:   Xingyu Chen <xingyu.chen@amlogic.com>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        <linux-watchdog@vger.kernel.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v5 0/4] add meson secure watchdog driver
+Date:   Thu, 12 Dec 2019 20:19:43 +0800
+Message-ID: <1576153187-28378-1-git-send-email-xingyu.chen@amlogic.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <eafffc6f-061e-65ab-079b-b2bd613d61cb@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMDfu7petJydGdzuJyylr5ZiNog40vMypqvfQw7ZVz48j+cgXHx/cTeFqN1/hiF8DSXEOpCJ20WY7E5a94cB1D2PZi7ML8XhkxMVMy0iR4SJQ4vKxJKi
- ftB/XN39JhQEUYBc8BqlxhyoQuxxXMDZIwBgwdBCeW1iR27+uOELF8KpcwgxwC3YpRMZCXHyBUlXOlsmilsvxlZ+tUPadvpHrZMXa0fbpTJN1NQ3Gfhb4C8g
- Ey9971QU/1aNWS6qs55K9REyFymqQcD+MCjep1VvsImgMFileSAM1UvR1WvQ0UQSwCKiuv/5JpKWQyObfLI9YHJqOnlCMVkwado7cwy3VaqW7/tZ/kWL+bN4
- vD42oWtQwV4mxkcNc1FkEdzle+uDb0YzHHrsz0otltr7IWNTGAI1Hst8Gozocr63Czju4gGbtp7oIDByGPBe83x2ZgI09gn/gc28vBtdfs/oaoBnHS6cnaEC
- E7+SsuD1fZi95WxWXfUtazbaT6MH5cDsJU9m3cEylYYAQqSlrUF5zYkDcsdo4TCXAM84dpoB344aucpHrv7M9QvnpsLqzVUZISK7wYM1Lo9Hb8MDDXlmwL4r
- xIi7vcXizDuJhzNTp5BfrFPDWCXJs8SR1jKhutFfQ2+XMd1OCUg9k17FyR+3gLw1z+uCGGqbDD9pyEWcqul0IBR0PWOrbFOLrI01v1XO+DyZ9ZoXMrCZM3/D
- kT+0Y0OCCd5k4pu6X7fCGA81kV5oK8daXF0zIbPFhTfhBc/37ACc7L2orLrRPLcVsdB+ZOHB9LiaHg0OCH78xdxF8K2JtKLfQaIQqCP5SQxxPi8Nh8TIZCrm
- 2GA9v6FZ5YAaldkVTokUB1wwSMdC+8vMdIYnb18vTMQmRcwMomQoHjPl+lZXwGI7bj0CGM1R/OUDogkUdk3xRQJIAaTy+HUtshdELy+I7KHCWAxUjSv5gf3f
- tanncCiL1byhYkycQwgkjxEWtnc=
+Content-Type: text/plain
+X-Originating-IP: [10.28.8.22]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Helen, Ezequiel,
+The watchdog controller on the Meson-A/C series SoCs is moved to secure world,
+We have to call SMC instruction to trap the ATF for watchdog operation. These
+operations are different from previous SoCs, so we introduce a new watchdog
+driver to support this kind of SoCs.
 
-The merge window is open, so you want to get this in, then please post a v12
-with the few remaining items addressed so that I can merge it.
+Changes since v4 at [3]:
+- add watchdog node in dts, and introduce a new optional property "timeout-sec"
+- add dt-binding for meson secure watchdog
+- instantiate wdt device through dts node instead of platform_device_register_simple()
 
-Regards,
+Changes since v3 at [2]:
+- add SM_A1_ prefix for WATCHDOG_OPS
+- remove phandle to secure-monitor node
+- remove watchdog node from dts, and register wdt device by platform_device_register_simple()
+- remove dt-binding for meson secure watchdog
+- use the msec as unit of timeout parameter which is passed to fw side
 
-	Hans
+Changes since v2 at [1]:
+- remove useless dependency in Kconfig
+- return zero when getting left time value fails
 
-On 11/19/19 9:30 AM, Hans Verkuil wrote:
-> On 11/18/19 7:52 PM, Ezequiel Garcia wrote:
->> Hi Hans,
->>
->> Thanks for taking care of this.
->>
->> On Thu, 2019-11-14 at 09:42 +0100, Hans Verkuil wrote:
->>> On 11/14/19 6:12 AM, Helen Koike wrote:
->>>> Hello,
->>>>
->>>> This series adds the Rockchip Image Signal Processing Unit v1 driver to
->>>> staging.
->>>>
->>>> The main reason to be in staging is that people are already using it from the
->>>> mailing list (including libcamera), and having it in mainline makes the workflow
->>>> easier. Also, it is easier for other people to contribute back (with code
->>>> or testing the driver).
->>>>
->>>> We plan to actively work on this driver to get it our of staging.
->>>>
->>>> This patchset is also available at:
->>>> https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v11
->>>>
->>>> Libcamera patched to work with this version:
->>>> https://gitlab.collabora.com/koike/libcamera
->>>> (also sent to the mailing list)
->>>>
->>>> The major difference in v11 are:
->>>> - Fixed compiling warnings found with W=1
->>>> - Fixed checkpatch errors
->>>> - Add clock-names values in dt-bindings
->>>
->>> Looking at checkpatch I see a few remaining issues that I believe should be
->>> fixed before merging this:
->>>
->>> CHECK: spinlock_t definition without comment
->>> #575: FILE: drivers/staging/media/rkisp1/isp_stats.h:43:
->>> +       spinlock_t irq_lock;
->>>
->>> CHECK: struct mutex definition without comment
->>> #581: FILE: drivers/staging/media/rkisp1/isp_stats.h:49:
->>> +       struct mutex wq_lock;
->>>
->>> CHECK: spinlock_t definition without comment
->>> #1648: FILE: drivers/staging/media/rkisp1/isp_params.h:25:
->>> +       spinlock_t config_lock;
->>>
->>> CHECK: spinlock_t definition without comment
->>> #2058: FILE: drivers/staging/media/rkisp1/capture.h:145:
->>> +       spinlock_t vbq_lock;
->>>
->>
->> I'd rather merge this as-is, adding a TODO entry stating
->> we need to revisit locking specifically, because I'd like
->> to take a close look at these spinlocks/mutex,
->> instead of just addding comments for then.
-> 
-> Fair enough! Just as long as it is mentioned somewhere.
-> 
->>
->>> Once this is done together with the Jacob Chen email clarification
->>> it is ready to be merged for v5.6.
->>>
->>
->> I'll find out more about this.
-> 
-> Thanks!
-> 
-> Remember that we are in the code freeze until v5.5-rc1 is released,
-> so you have time to make more adjustments if you want to.
-> 
-> Regards,
-> 
-> 	Hans
-> 
->>
->>> It passes all the sparse/smatch tests, so that's very good.
->>>
->>
->> Great!
->>
->> Thanks,
->> Ezequiel
->>
-> 
+Changes since v1 at [0]:
+- add a new dependency in Kconfig
+- simplify/add the return operation
+- remove useless ping operation when setting the timeout
+- fix some return values
+- fix the license statement
+
+[0]:https://lore.kernel.org/linux-amlogic/1570874721-36077-1-git-send-email-xingyu.chen@amlogic.com
+[1]:https://lore.kernel.org/linux-amlogic/1571387622-35132-1-git-send-email-xingyu.chen@amlogic.com
+[2]:https://lore.kernel.org/linux-amlogic/1571983984-11771-1-git-send-email-xingyu.chen@amlogic.com
+[3]:https://lore.kernel.org/linux-amlogic/1574685218-31164-1-git-send-email-xingyu.chen@amlogic.com
+
+Xingyu Chen (4):
+  firmware: meson_sm: add new SMC ID support for accessing secure
+    watchdog
+  dt-bindings: watchdog: add new binding for meson secure watchdog
+  watchdog: add meson secure watchdog driver
+  arm64: dts: a1: add secure watchdog controller
+
+ .../bindings/watchdog/amlogic,meson-sec-wdt.yaml   |  35 ++++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |   6 +
+ drivers/firmware/meson/meson_sm.c                  |   1 +
+ drivers/watchdog/Kconfig                           |  16 ++
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/meson_sec_wdt.c                   | 188 +++++++++++++++++++++
+ include/linux/firmware/meson/meson_sm.h            |   1 +
+ 7 files changed, 248 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
+ create mode 100644 drivers/watchdog/meson_sec_wdt.c
+
+-- 
+2.7.4
 
