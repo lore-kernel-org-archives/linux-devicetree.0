@@ -2,96 +2,75 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C57C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 22:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C78F5C2D0C9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 22:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D335214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 22:00:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lneRNQyx"
+	by mail.kernel.org (Postfix) with ESMTP id 90E5F22527
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 22:12:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576188739;
+	bh=6tzUmLVOrqYtdK95F4p2gKe3ZPBjx/6Kq6qIMxho1cM=;
+	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
+	b=fQNaJz9L10OSZI2NV0/Raw8f+aO5Z2Fw+sJ29646R1T0BhP1O8NVN0w0sIJenq2Ty
+	 0ZNYADDH5GN/eDN2yaNQB17I6OIU+c7mecUXEb+ZEbfOHQqMT9xC7g9ErYMBCEA3Se
+	 JfHmTLb7Ig6lmVzj4YfaTCAD/k6vxzZaTv0w2uvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbfLLWAX (ORCPT
+        id S1731301AbfLLWMQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 17:00:23 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46628 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730896AbfLLWAW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 17:00:22 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z124so250082pgb.13
-        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 14:00:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:cc:to:subject:user-agent:date;
-        bh=m5RN7Ruq6b2oNIbW1OTVbblEFx0jLwFpTd4HTw5wVkQ=;
-        b=lneRNQyxzco6VraFwiZvfvv0ix1xxj0F27IGpoVPrKlMBCxe/LgOg3peL5pluU74Qj
-         S0F34wXbAn9QLYC/itEq43IXWcwWGqQNAYo6Tkjpm+Va8IZnD1aSHUgTAVaSl48PjFRc
-         XvyPyCdILOnFtRcu7hpg1zu/YWYv0QI7oE1VY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:cc:to:subject
-         :user-agent:date;
-        bh=m5RN7Ruq6b2oNIbW1OTVbblEFx0jLwFpTd4HTw5wVkQ=;
-        b=okM7LTHnd4H6C3Xu7+J8HtLMZ9ZJmYfPduahp9+gUmLU1CVgovUFQCv24HHIN93OJg
-         4+cyZ/kHDc4bld1ZzoChI4d7/cQ/8lfq7+lXiim37Lnvsm2cV8BSs6KYPHHsriUhbTeb
-         Du7iPvsJKiH9L+x+yIrRTZX3QPZ4tGtZJs8IrIotTuUMH1qnkJKSFnTECM7SeFO+R3qc
-         j1H/n4Zb12b6adu/o//8FwdYMS6ERCNVA+K9EvqiGch8YLediE1Fg7t5WEB2WVcw1RQp
-         z5EfV37+TDsXX56Fvo/0AulO1dVvJ+qr9SI2ufiBd1CS6F9x9XPnpvB/TOtUjPujGoOk
-         eHDA==
-X-Gm-Message-State: APjAAAXNa/3T0M8nTdDZUVnW46U+h0Xzz5tNLEPo4i9FDkFGrLezauPj
-        CF3/ULMrEZfwkTGG8V8NkGwBMw==
-X-Google-Smtp-Source: APXvYqxKdxvqy0acTBm4XIVBtjHKPFwJWztj4zqFxxtbPgd4PxaZjT4MbgmTjW0W6DUqKyuKf4jamQ==
-X-Received: by 2002:a63:1a22:: with SMTP id a34mr12401788pga.403.1576188022050;
-        Thu, 12 Dec 2019 14:00:22 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id 199sm8862298pfv.81.2019.12.12.14.00.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 14:00:21 -0800 (PST)
-Message-ID: <5df2b875.1c69fb81.41383.651a@mx.google.com>
+        Thu, 12 Dec 2019 17:12:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730811AbfLLWMQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Dec 2019 17:12:16 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AD0320663;
+        Thu, 12 Dec 2019 22:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576188736;
+        bh=6tzUmLVOrqYtdK95F4p2gKe3ZPBjx/6Kq6qIMxho1cM=;
+        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
+        b=q16ZlAUs9b8Je3i4oj212HJfCW8uS3cnkrYM1vq0vD+dFo800h9sTDQSjawamteKA
+         GmdcEeVYf0CoG8nyZ+PXZchXoaslRrqEpX7aTsQYs8sddk7PU0m5YOKGlurKTAEIjq
+         NmgApUCLeieY5EeohjR23wpOslPmVLml+M+avyy4=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191212113540.5.I4e41d4d872368e2e056db2ec8442ec18d3f7ef08@changeid>
-References: <20191212193544.80640-1-dianders@chromium.org> <20191212113540.5.I4e41d4d872368e2e056db2ec8442ec18d3f7ef08@changeid>
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>, mka@chromium.org,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 5/7] arm64: dts: qcom: sc7180: Avoid "memory" for cmd-db reserved-memory node
+In-Reply-To: <20191209093558.50940-1-maxime@cerno.tech>
+References: <20191209093558.50940-1-maxime@cerno.tech>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org,
+        Maxime Ripard <maxime@cerno.tech>
+To:     Frank Rowand <frowand.list@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: clocks: Convert Allwinner DE2 clocks to a schema
 User-Agent: alot/0.8.1
-Date:   Thu, 12 Dec 2019 14:00:20 -0800
+Date:   Thu, 12 Dec 2019 14:12:15 -0800
+Message-Id: <20191212221216.1AD0320663@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Douglas Anderson (2019-12-12 11:35:41)
-> By using "memory" we trigger we trigger the "schemas/memory.yaml"
-> rules when we run "dtbs_check" which then complains that we don't have
-> a "device_type" of "memory".
+Quoting Maxime Ripard (2019-12-09 01:35:56)
+> The newer Allwinner SoCs have a DE2 clocks controller that is supported in
+> Linux, with a matching Device Tree binding.
 >=20
-> Looking at the "reserved-memory.txt" bindings, subnodes shouldn't just
-> be the word "memory".  Presumably using just "cmd-db" should be OK for
-> a node name.
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for that controller over to a YAML schemas.
 >=20
-> Fixes: e0abc5eb526e ("arm64: dts: qcom: sc7180: Add cmd_db reserved area")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 > ---
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 
