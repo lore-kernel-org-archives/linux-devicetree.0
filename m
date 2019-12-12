@@ -2,160 +2,122 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E176AC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 20:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C029CC00454
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 20:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A620221556
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 20:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903FF2465B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 20:19:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="osM2qIGr"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="LNIMUn+I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730719AbfLLUKH (ORCPT
+        id S1730815AbfLLUTY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 15:10:07 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42066 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730703AbfLLUKH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 15:10:07 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 66so3272316otd.9;
-        Thu, 12 Dec 2019 12:10:06 -0800 (PST)
+        Thu, 12 Dec 2019 15:19:24 -0500
+Received: from mail-eopbgr1410114.outbound.protection.outlook.com ([40.107.141.114]:17999
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730707AbfLLUTY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Dec 2019 15:19:24 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XcTgT90weiKCAUqZXeUkOWsX3Q80Yhqt+oy+W0RQQmuPvPBUFLpECkNw9Crv8g76fC52ritax5MnUQ4Pc7emgAM+FEa7gSRIznnYsr5DDht6mQ2X3DH96Iv2imUorlIKzI9zy68PcJ64FQQxcU3owW9y8Cp6r6ggNfknrR7A8DlN5ItonVOGKWiaiNHCzja3EghmhfkFmAgWXSWP4PD3ST60oGow2ynuPuZmsN4hCC67gqcMMV1Z/ycMdKOrQ2eBrvNy+9UTCSwZWK8p6WsOj57/vL/BtM7Y9NLjdocEo5WXua5HxgJ4jRJFTY4dbQwOD2SHzXTeyb+vasnmpg3kdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GA2Th6z1BCb+G/Fw7zh6V69GKhrhS9UW8QS5R6DAZXk=;
+ b=m6uYO9TViL1gHinGYcuePmqp1qCLtqJMFsoN3jw/G1aWvFWPHE+9zGo4Xhqkk3dHeCz5Y3bYSKtzewLzE+yk7gMilPVtLRRZsmZb2QLK0BhvqkP+sftk5SKODaySHQLrGouZ143Z9CcAyK57nfxKdLaJ0ycJo9dnsP3YYVUw7WeISNnnQ8aByCvryo/YItT2zwjv4nq1ncy3Hk4rAAB/05C33VbWoP/jhrZe6VLFucYuYUzoaVcupBqDzysTfGL5jJisr/83jq4bxyKysgXgsbV9eZFr8W+EwEeW8A6TOI5AH3/dMxXoXAekZt9b4C//LRYiSb8W+2xTuNYbWibNAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7qXkeZV74bje26NgCl5xWXQcNmUybdFUwUsZ8xV5JBg=;
-        b=osM2qIGr3hGnVVczgOggDP8yZ4BLwi4bJkQh+zYOWI36YpgtY/j+xU9LCtmyq32DBd
-         Mjj+23mFP8L9FoYlLmufBfmOpUomC9vzeHZhOTYaVZMVXfgww5OMb9Zy9INqH79IKoad
-         /gGQVB82TujuEl87tkDn/MLsgvd5yiqExg2DcudusJa9+yXkl5Ctv0VpGy612OPSnW1Q
-         QZyUEdPErjULdppAUQ81I9t97g81kQ4pUJP/wJrdnPGjO+hHvbRFUZiIIt6DQA2dWGeT
-         ege3a93qQKLb/1GCRI1m1kxyBKmDUdrKmQk4Goby+4PYPaU3QJnYMqFySOBG8zcHiV72
-         v2Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7qXkeZV74bje26NgCl5xWXQcNmUybdFUwUsZ8xV5JBg=;
-        b=R9rrhpWWKgmtnHSV/+GH/Qlx+glMdYgkrBulTxmPYmLTkykNrycuB5ZUQAmqUusDf4
-         CqkXyyYfKIZ3Sq7qt5JMirS31MBIDwYA/OwjcCvg/c8AWXcaOlaRfYduDge/TFp+AWOC
-         i4/aHFQ2sxtEM565Qz8vFGUgSvO285F3sw0/5KcbzKwsKh1ae/QyJyLyXnGKZXLPjdo/
-         1kMpWA/cwzQ2PEQ2Y0mZiyWBMAKsHVJfGYU4yqzgqfYL5SRYqrrK4MGVhMepKYFvJTJX
-         MNhHWu1CS6jsMaGl0x5VkN+5ncM4my2KjWjo/TdLTBSae0vrwNoUxjZu5fSnyxBA9huL
-         AmFA==
-X-Gm-Message-State: APjAAAXB2iwW5t3vzMKAF6xO+oCAGzStIhQs2v4I1gsm4ARO5Wl1r7He
-        9VsZrN7HSK5E4IGVsC/Qhbd0Wr6SCvWAjv4qrHc=
-X-Google-Smtp-Source: APXvYqyyXC4xCET3bH9d4JwztvKF8qJ5uMa+OdBlTIJYxnxVioR5wZQgPot30XdCsn1UDNUkV//KHNktBacycDlqK1U=
-X-Received: by 2002:a05:6830:2087:: with SMTP id y7mr9659452otq.96.1576181405915;
- Thu, 12 Dec 2019 12:10:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20191101143126.2549-1-linux.amoon@gmail.com> <7hfthtrvvv.fsf@baylibre.com>
- <c89791de-0a46-3ce2-b3e2-3640c364cd0f@baylibre.com> <CANAwSgQx3LjQe60TGgKyk6B5BD5y1caS2tA+O+GFES7=qCFeKg@mail.gmail.com>
- <7hfthsqcap.fsf@baylibre.com> <CAFBinCBfgxXhPKpBLdoq9AimrpaneYFgzgJoDyC-2xhbHmihpA@mail.gmail.com>
- <7hpngvontu.fsf@baylibre.com> <4e1339b4-c751-3edc-3a2e-36931ad1c503@baylibre.com>
-In-Reply-To: <4e1339b4-c751-3edc-3a2e-36931ad1c503@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 12 Dec 2019 21:09:55 +0100
-Message-ID: <CAFBinCCgKcwXSLxS_CRvz9JZvQo8PcUGm=egBbabVZSrkSc30Q@mail.gmail.com>
-Subject: Re: [RFC-next 0/1] Odroid C2: Enable DVFS for cpu
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Anand Moon <linux.amoon@gmail.com>,
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GA2Th6z1BCb+G/Fw7zh6V69GKhrhS9UW8QS5R6DAZXk=;
+ b=LNIMUn+IzaY1ycsVAJrQZ2LYsHBoJicHoY0CilmOxmExMDlucvUL2DYusfhF0szpx6y3koohFnlLN0KvJ7XZh+xuF8l6kMGuuYJkqnmxMIbIiTH+xExSrpqKiU73noc+zhRdjQooP9G93u1llNhhJEmDDQNNbh6Yo0rqE5NktpU=
+Received: from TYXPR01MB1568.jpnprd01.prod.outlook.com (52.133.166.145) by
+ TYXPR01MB1536.jpnprd01.prod.outlook.com (52.133.166.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.16; Thu, 12 Dec 2019 20:19:20 +0000
+Received: from TYXPR01MB1568.jpnprd01.prod.outlook.com
+ ([fe80::70bc:2573:de4f:dcc9]) by TYXPR01MB1568.jpnprd01.prod.outlook.com
+ ([fe80::70bc:2573:de4f:dcc9%5]) with mapi id 15.20.2538.016; Thu, 12 Dec 2019
+ 20:19:19 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: RE: [PATCH v2 1/6] spi: Add SPIBSC driver
+Thread-Topic: [PATCH v2 1/6] spi: Add SPIBSC driver
+Thread-Index: AQHVrDsMpgzelIsB7UCp/Sk4dX5yJ6e27ngAgAAFoLA=
+Date:   Thu, 12 Dec 2019 20:19:19 +0000
+Message-ID: <TYXPR01MB1568ED4D40CEC399E64F6A2B8A550@TYXPR01MB1568.jpnprd01.prod.outlook.com>
+References: <20191206134202.18784-1-chris.brandt@renesas.com>
+ <20191206134202.18784-2-chris.brandt@renesas.com>
+ <37c13497-d20f-583f-72d7-1e3c8a241990@cogentembedded.com>
+In-Reply-To: <37c13497-d20f-583f-72d7-1e3c8a241990@cogentembedded.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctYTQ3YTQzYjItMWQxYy0xMWVhLWFhNTUtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XGE0N2E0M2IzLTFkMWMtMTFlYS1hYTU1LTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iNzg3IiB0PSIxMzIyMDY1NTU0NTUzMjM4MDgiIGg9IkhFUUl0K0p6RTVYVnBFY2pxd3pBa1BaU1FYWT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [24.206.39.126]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3c5475e1-ae96-4006-224d-08d77f4091dd
+x-ms-traffictypediagnostic: TYXPR01MB1536:
+x-microsoft-antispam-prvs: <TYXPR01MB15364378963A1F701615C6028A550@TYXPR01MB1536.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0249EFCB0B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(396003)(136003)(366004)(39860400002)(189003)(199004)(71200400001)(966005)(478600001)(76116006)(66446008)(66476007)(64756008)(66946007)(66556008)(7416002)(316002)(7696005)(5660300002)(86362001)(55016002)(186003)(26005)(2906002)(6506007)(52536014)(4326008)(8936002)(9686003)(81156014)(8676002)(110136005)(33656002)(54906003)(4744005)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:TYXPR01MB1536;H:TYXPR01MB1568.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ipThPMfiqVGYotfqKKGzqPK8SAfPtkUlHGrN3ljNFR0dHYvzrv0UZwmKV563tsfhmv/2lArUbhw82qEnM1j4g7M1TSf6whECSCn7i9On+3983Mlio3HVcVXTIwPXap7tYz+Yrnyh4M9a/2888kYDQDagFVGxDcs3LNdsD9qDXtjRN6TE88JsyIEvc5UZ/ihSlWmmDNVySjpz4n87iA63dycPHScyLBGZnqRJxnDGcGneezcqSshuREMA3x4+0Onsrr6s11q6dPBjnRaua8G8KoFUXXSSk+FZIyXLRjwtBxRBUfBXVrnMwVeGO3SvrqL2H2J1shtbnb8FNH4v/KVJKTX2IdtEFuhy/ettteKvCJtqsHKxPPFuQv/xq+crgXuOyFa2vW68OC1Z/1zqTnTz3bqA6Ob9NvWESg/eosmBTywqIEoDDSWGcZbOI/SqQDec
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c5475e1-ae96-4006-224d-08d77f4091dd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 20:19:19.6176
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: obYjj+tjL6SqFD657gs8D9Uxt22sAt0nFIJndTCKMdNVH3UXmcTbcpZ5aJpNk4/39IW+4p9RQUKZb1ZOvlJcDKsFDiMQZmlZtWHQw/fBlpg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1536
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Neil,
-
-On Wed, Dec 11, 2019 at 9:49 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 10/12/2019 22:47, Kevin Hilman wrote:
-> > Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
-> >
-> >> On Tue, Dec 10, 2019 at 7:13 PM Kevin Hilman <khilman@baylibre.com> wrote:
-> >>>
-> >>> Anand Moon <linux.amoon@gmail.com> writes:
-> >>>
-> >>>> Hi Neil / Kevin,
-> >>>>
-> >>>> On Tue, 10 Dec 2019 at 14:13, Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >>>>>
-> >>>>> On 09/12/2019 23:12, Kevin Hilman wrote:
-> >>>>>> Anand Moon <linux.amoon@gmail.com> writes:
-> >>>>>>
-> >>>>>>> Some how this patch got lost, so resend this again.
-> >>>>>>>
-> >>>>>>> [0] https://patchwork.kernel.org/patch/11136545/
-> >>>>>>>
-> >>>>>>> This patch enable DVFS on GXBB Odroid C2.
-> >>>>>>>
-> >>>>>>> DVFS has been tested by running the arm64 cpuburn
-> >>>>>>> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
-> >>>>>>> PM-QA testing
-> >>>>>>> [2] https://git.linaro.org/power/pm-qa.git [cpufreq testcase]
-> >>>>>>>
-> >>>>>>> Tested on latest U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
-> >>>>>>
-> >>>>>> Have you tested with the Harkernel u-boot?
-> >>>>>>
-> >>>>>> Last I remember, enabling CPUfreq will cause system hangs with the
-> >>>>>> Hardkernel u-boot because of improperly enabled frequencies, so I'm not
-> >>>>>> terribly inclined to merge this patch.
-> >>>>
-> >>>> HK u-boot have many issue with loading the kernel, with load address
-> >>>> *it's really hard to build the kernel for HK u-boot*,
-> >>>> to get the configuration correctly.
-> >>>>
-> >>>> Well I have tested with mainline u-boot with latest ATF .
-> >>>> I would prefer mainline u-boot for all the Amlogic SBC, since
-> >>>> they sync with latest driver changes.
-> >>>
-> >>> Yes, we would all prefer mainline u-boot, but the mainline kernel needs
-> >>> to support the vendor u-boot that is shipping with the boards.  So
-> >>> until Hardkernel (and other vendors) switch to mainline u-boot we do not
-> >>> want to have upstream kernel defaults that will not boot with the vendor
-> >>> u-boot.
-> >>>
-> >>> We can always support these features, but they just cannot be enabled
-> >>> by default.
-> >> (I don't have an Odroid-C2 but I'm curious)
-> >> should Anand submit a patch to mainline u-boot instead?
-> >
-> > It would be in addition to $SUBJECT patch, not instead, I think.
-> >
-> >> the &scpi_clocks node could be enabled at runtime by mainline u-boot
-> >
-> > That would work, but I don't know about u-boot maintainers opinions on
-> > this kind of thing, so let's see what Neil thinks.
->
-> U-Boot doesn't anything to do with SCPI, SCPI discusses directly with the SCP
-> processor, and the CPU clock is set to 1,56GHz by the BL2 boot stage before
-> U-boot starts.
->
-> The only viable solution I see now is to find if we could add a DT OPP table
-> only for Odroid-C2 dts to bypass the SCPI OPP table.
-my understanding is that mainline u-boot (with whatever SCP firmware
-it uses) provides the *correct* OPP table
-in this case it would be "safe" to have SCPI enabled with mainline u-boot
-@Anand: please correct me if I misunderstood you
-
-my idea to "enable SCPI with mainline u-boot" is to have u-boot update
-the "status" property of the scpi_clocks node.
-u-boot does something similar with the mac-address property of the
-Ethernet controller for example.
-as result of this users of mainline u-boot would have working CPU
-DVFS, while users of the old vendor u-boot would run at fixed 1.54GHz.
-
-
-Martin
+T24gVGh1LCBEZWMgMTIsIDIwMTksIFNlcmdlaSBTaHR5bHlvdiB3cm90ZToNCj4gICAgQXMgeW91
+IGNhbiBzZWUsIHRoZSBkZWxldGVkIGZpbGUgaXMgYmFjayBhZnRlciB1bm1vdW50L3JlLW1vdW50
+Li4uDQoNCkRpZCB5b3UgZG8gYSAnc3luYycgYmVmb3JlIHlvdSB1bm1vdW50ZWQ/DQoNCg0KV2l0
+aCB0aGUgUlovQTJNIEVWQjoNCg0KV2VsY29tZSB0byBCdWlsZHJvb3QNCmJ1aWxkcm9vdCBsb2dp
+bjogcm9vdA0KJCBtb3VudCAvZGV2L210ZGJsb2NrMyAtdCBqZmZzMiAvbW50DQokIGxzIC1sIC9t
+bnQNCnRvdGFsIDY4OA0KLXJ3c3IteHIteCAgICAxIHJvb3QgICAgIHJvb3QgICAgICAgIDcwMzQ0
+OCBPY3QgMzEgMDk6MDggYnVzeWJveA0KLXJ3LXItLXItLSAgICAxIHJvb3QgICAgIHJvb3QgICAg
+ICAgICAgICAgNiBPY3QgMzEgMDk6MDcgaGVsbG8udHh0DQokIHJtIGhlbGxvLnR4dA0KJCBzeW5j
+DQokIHVtb3VudCAvbW50DQokDQokDQokIG1vdW50IC9kZXYvbXRkYmxvY2szIC10IGpmZnMyIC9t
+bnQNCiQgbHMgLWwgL21udA0KdG90YWwgNjg3DQotcndzci14ci14ICAgIDEgcm9vdCAgICAgcm9v
+dCAgICAgICAgNzAzNDQ4IE9jdCAzMSAwOTowOCBidXN5Ym94DQoNCg0KTm90ZSB0aGF0IEkgYWxz
+byBuZWVkZWQgdGhpcyBwYXRjaCBpbiBteSB0cmVlLg0KaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJz
+Lm9yZy9wYXRjaC8xMjAyMzE0Lw0KDQoNCkNocmlzDQo=
