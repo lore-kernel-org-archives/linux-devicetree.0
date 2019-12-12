@@ -2,354 +2,278 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB1EC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D165C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D30252077B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D64BF21655
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FJ2MXVgM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uGqq6vlv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfLLDyG (ORCPT
+        id S1726823AbfLLD56 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 22:54:06 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11444 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfLLDyG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 22:54:06 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df1b9c50000>; Wed, 11 Dec 2019 19:53:41 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 11 Dec 2019 19:54:03 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 11 Dec 2019 19:54:03 -0800
-Received: from [10.2.169.141] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Dec
- 2019 03:54:01 +0000
-Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
-        <sboyd@kernel.org>, <pdeschrijver@nvidia.com>
-CC:     <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <allison@lohutok.net>, <pgaikwad@nvidia.com>,
-        <mturquette@baylibre.com>, <horms+renesas@verge.net.au>,
-        <Jisheng.Zhang@synaptics.com>, <krzk@kernel.org>, <arnd@arndb.de>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>, <vidyas@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
-References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-4-git-send-email-skomatineni@nvidia.com>
- <7cf4ff77-2f33-4ee5-0e09-5aa6aef3e8be@gmail.com>
- <ad3a6743-4b36-fa25-9cc7-72803038ecc5@gmail.com>
- <dc7a057a-0bed-0e6f-0987-edcfec47f867@gmail.com>
- <288a1701-def6-d628-26bc-a305f817bdb1@gmail.com>
- <78644d45-2ae3-121f-99fc-0a46f205907d@nvidia.com>
- <b35916e1-c6ee-52ca-9111-5ae109437b6e@nvidia.com>
- <ccb715cc-c927-ea91-a26e-24d6eeeeef1a@gmail.com>
- <ee1d39d4-9a57-da9b-fce6-8130dac1d2fd@nvidia.com>
- <49da77dc-b346-68eb-9ef8-42cfb3221489@nvidia.com>
- <3f1c9325-3017-62be-1e3b-82fd28540fdf@nvidia.com>
- <6fcbff3d-8695-7cd0-60de-6eb523b6964c@gmail.com>
- <8eb792ad-cded-05cc-93fc-763be7ee66aa@nvidia.com>
- <bb966cf2-50f6-6729-7644-54d71d55bbcb@nvidia.com>
- <02109d70-2747-c246-5401-69a2d5c84771@gmail.com>
- <01bf40ae-393d-3cb1-9ba2-acdd10385cb8@nvidia.com>
-Message-ID: <56b7d160-6156-59e5-66ec-712d64e1927a@nvidia.com>
-Date:   Wed, 11 Dec 2019 19:54:01 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 11 Dec 2019 22:57:58 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41401 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbfLLD55 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 22:57:57 -0500
+Received: by mail-pf1-f196.google.com with SMTP id s18so25459pfd.8;
+        Wed, 11 Dec 2019 19:57:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zAqBwSAEjVBVcJbtUn42ZmrLmkYi+ObYmXAQBM0wBg0=;
+        b=uGqq6vlv/rR/Wp6JstxQ+BoqUe04G6Bt7ojtGSbn0kgrvsnoHm+dQTtbnXootKC3SB
+         RVdE3rk2KhqgL017zeBkcCHKgmD33sxrR5hYyQ0N6ZvL/oxE6b3i9TFMipW9YJ/AWmDS
+         qveIMN2jw45LtiDM9Iench75GXDFU0ji3378BHzbBze7bcWpaEQ9/luz6dSZO+L5SBI9
+         UD4ykB7dFRnW3srU/RcUABbLEwwJNiA9aNkomWttJYnWR0ok7wrp8oj//xxvMsmYHoZH
+         yF9cpfrXmVFMVAZVNydm1kDWgnKBxjPd7wea+JT2Cob06NAJEt2nZFjEu3SxPNUttM9H
+         +PCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=zAqBwSAEjVBVcJbtUn42ZmrLmkYi+ObYmXAQBM0wBg0=;
+        b=XjH/7x6Kjx4H91nDWtjFNWOsLuOtddp49YTvGMcq8I18qcGhLCv1ew+6P7IOYdBonp
+         i+P4Ohti5IVWJXukzwpaW9nRzFFy7jytYErlqfZIWpo8MzYVxGYxh0ujPcWMawwQ9h13
+         Ijm+zdvOjSDajKxiEJuxsf2cyUIrT3GHcrvn0YqKC2/wCOnv7ewn8bO6kX8b3xjJXPB5
+         mVHwU2rBjJZH3XVeK7hjMJH5ZI6kI1jezlTx4AIqpzFrobRBYbyStY/si7jDXH/oqLb/
+         oPo0Vt4RtbzsSDaB2XWoKdjzLkPDfOm4gj3q/XaQ4OpUMVP9w26bz8jGpV2Nz2/JxstD
+         lXQQ==
+X-Gm-Message-State: APjAAAX1keSZ6kXnYiYgdFcgcuBJ+YUFTA6xc2rEL/u0/PPsadQtPVcb
+        oHGF9UzCveEftiSi+glrt4s=
+X-Google-Smtp-Source: APXvYqzBkRh3cwSyPQsZa5nDsKSRf+bLljilwo6YWX2fCXsu5TpTQhyEMggR3clwFExZgUd6zL095g==
+X-Received: by 2002:a62:1bd0:: with SMTP id b199mr7738199pfb.172.1576123076758;
+        Wed, 11 Dec 2019 19:57:56 -0800 (PST)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id a19sm4716127pfn.50.2019.12.11.19.57.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 19:57:56 -0800 (PST)
+Subject: Re: [PATCH net-next 4/6] net: dsa: mt7530: Add the support of MT7531
+ switch
+To:     Landen Chao <landen.chao@mediatek.com>, andrew@lunn.ch,
+        vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        davem@davemloft.net, sean.wang@mediatek.com, opensource@vdorst.com,
+        frank-w@public-files.de
+References: <cover.1575914275.git.landen.chao@mediatek.com>
+ <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
+Message-ID: <0eb12ad8-0484-feb5-d912-40e052315739@gmail.com>
+Date:   Wed, 11 Dec 2019 19:57:54 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <01bf40ae-393d-3cb1-9ba2-acdd10385cb8@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576122821; bh=EAfd8OVfC8impgQKa6Ho3QK7N9AXhjYp3gaYSI1A+KU=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=FJ2MXVgM3xNwxi1MKdgjhWCFSiSDkqzq3zX4pJvpDVef34AERpY8MYRHe+wSOIQU2
-         ZEEhNTVcczny7/3Jspw2yPoAahDBxrrSpxC9Sh6lodoxQ2u73l9lIk2+lX99D0nu1A
-         7wR/GxwbIzwwitqPsK8u7Na0+RhHJejc2JyoI1WChiQu3r8dfCA59CkMY2wARs+78a
-         zNs7EXxgI9tzayNJxuEU22nAV2neVBNauXYSprmAgJMhQWV3gqnN7oEJpfL598YJid
-         Zxxc2uSVLA7uPheFH/BMPspL0QxWfTeK9Rc9L2BjATzP0A9un0qZtvD25puvHIFADr
-         il/Fn/vP1vJIQ==
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-On 12/11/19 7:45 PM, Sowjanya Komatineni wrote:
->
-> On 12/11/19 5:39 PM, Dmitry Osipenko wrote:
->> 11.12.2019 21:50, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> On 12/10/19 5:06 PM, Sowjanya Komatineni wrote:
->>>> On 12/10/19 9:41 AM, Dmitry Osipenko wrote:
->>>>> 10.12.2019 19:53, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>> On 12/9/19 3:03 PM, Sowjanya Komatineni wrote:
->>>>>>> On 12/9/19 12:46 PM, Sowjanya Komatineni wrote:
->>>>>>>> On 12/9/19 12:12 PM, Dmitry Osipenko wrote:
->>>>>>>>> 08.12.2019 00:36, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>>>> On 12/7/19 11:59 AM, Sowjanya Komatineni wrote:
->>>>>>>>>>> On 12/7/19 8:00 AM, Dmitry Osipenko wrote:
->>>>>>>>>>>> 07.12.2019 18:53, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>>>>>>> 07.12.2019 18:47, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>>>>>>>> 07.12.2019 17:28, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=
-=D1=82:
->>>>>>>>>>>>>>> 06.12.2019 05:48, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=
-=B5=D1=82:
->>>>>>>>>>>>>>>> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2,
->>>>>>>>>>>>>>>> clk_out_3
->>>>>>>>>>>>>>>> with
->>>>>>>>>>>>>>>> mux and gate for each of these clocks.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> Currently these PMC clocks are registered by Tegra clock
->>>>>>>>>>>>>>>> driver
->>>>>>>>>>>>>>>> using
->>>>>>>>>>>>>>>> clk_register_mux and clk_register_gate by passing PMC base
->>>>>>>>>>>>>>>> address
->>>>>>>>>>>>>>>> and register offsets and PMC programming for these clocks
->>>>>>>>>>>>>>>> happens
->>>>>>>>>>>>>>>> through direct PMC access by the clock driver.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> With this, when PMC is in secure mode any direct PMC=20
->>>>>>>>>>>>>>>> access
->>>>>>>>>>>>>>>> from the
->>>>>>>>>>>>>>>> non-secure world does not go through and these clocks will
->>>>>>>>>>>>>>>> not be
->>>>>>>>>>>>>>>> functional.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> This patch adds these clocks registration with PMC as a=20
->>>>>>>>>>>>>>>> clock
->>>>>>>>>>>>>>>> provider
->>>>>>>>>>>>>>>> for these clocks. clk_ops callback implementations for=20
->>>>>>>>>>>>>>>> these
->>>>>>>>>>>>>>>> clocks
->>>>>>>>>>>>>>>> uses tegra_pmc_readl and tegra_pmc_writel which=20
->>>>>>>>>>>>>>>> supports PMC
->>>>>>>>>>>>>>>> programming
->>>>>>>>>>>>>>>> in secure mode and non-secure mode.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> Signed-off-by: Sowjanya Komatineni=20
->>>>>>>>>>>>>>>> <skomatineni@nvidia.com>
->>>>>>>>>>>>>>>> ---
->>>>>>>>>>>>>> [snip]
->>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +static const struct clk_ops pmc_clk_gate_ops =3D {
->>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .is_enabled =3D pmc_clk_is_enabled,
->>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .enable =3D pmc_clk_enable,
->>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .disable =3D pmc_clk_disable,
->>>>>>>>>>>>>>>> +};
->>>>>>>>>>>>>>> What's the benefit of separating GATE from the MUX?
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> I think it could be a single clock.
->>>>>>>>>>>>>> According to TRM:
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> 1. GATE and MUX are separate entities.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> 2. GATE is the parent of MUX (see PMC's CLK_OUT paths=20
->>>>>>>>>>>>>> diagram
->>>>>>>>>>>>>> in TRM).
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> 3. PMC doesn't gate EXTPERIPH clock but could "force-enable"
->>>>>>>>>>>>>> it,
->>>>>>>>>>>>>> correct?
->>>>>>>>>> Was following existing clk-tegra-pmc as I am not sure of=20
->>>>>>>>>> reason for
->>>>>>>>>> having these clocks registered as separate mux and gate clocks.
->>>>>>>>>>
->>>>>>>>>> Yes, PMC clocks can be registered as single clock and can use
->>>>>>>>>> clk_ops
->>>>>>>>>> for set/get parent and enable/disable.
->>>>>>>>>>
->>>>>>>>>> enable/disable of PMC clocks is for force-enable to force the
->>>>>>>>>> clock to
->>>>>>>>>> run regardless of ACCEPT_REQ or INVERT_REQ.
->>>>>>>>>>
->>>>>>>>>>>>> 4. clk_m_div2/4 are internal PMC OSC dividers and thus these
->>>>>>>>>>>>> clocks
->>>>>>>>>>>>> should belong to PMC.
->>>>>>>>>>>> Also, it should be "osc" and not "clk_m".
->>>>>>>>>>> I followed the same parents as it were in existing=20
->>>>>>>>>>> clk-tegra-pmc
->>>>>>>>>>> driver.
->>>>>>>>>>>
->>>>>>>>>>> Yeah they are wrong and they should be from osc and not clk_m.
->>>>>>>>>>>
->>>>>>>>>>> Will fix in next version.
->>>>>>>>>>>
->>>>>>> Reg clk_m_div2/3, they are dividers at OSC pad and not really=20
->>>>>>> internal
->>>>>>> to PMC block.
->>>>>>>
->>>>>>> current clock driver creates clk_m_div clocks which should=20
->>>>>>> actually be
->>>>>>> osc_div2/osc_div4 clocks with osc as parent.
->>>>>>>
->>>>>>> There are no clk_m_div2 and clk_m_div4 from clk_m
->>>>>>>
->>>>>>> Will fix this in next version.
->>>>>>>
->>>>>>>>> Could you please describe the full EXTPERIPH clock topology and
->>>>>>>>> how the
->>>>>>>>> pinmux configuration is related to it all?
->>>>>>>>>
->>>>>>>>> What is internal to the Tegra chip and what are the external
->>>>>>>>> outputs?
->>>>>>>>>
->>>>>>>>> Is it possible to bypass PMC on T30+ for the EXTPERIPH clocks?
->>>>>>>> PMC CLK1/2/3 possible sources are OSC_DIV1, OSC_DIV2, OSC_DIV4,
->>>>>>>> EXTPERIPH from CAR.
->>>>>>>>
->>>>>>>> OSC_DIV1/2/4 are with internal dividers at the OSC Pads
->>>>>>>>
->>>>>>>> EXTPERIPH is from CAR and it has reset and enable controls=20
->>>>>>>> along with
->>>>>>>> clock source selections to choose one of the PLLA_OUT0, CLK_S,
->>>>>>>> PLLP_OUT0, CLK_M, PLLE_OUT0
->>>>>>>>
->>>>>>>> So, PMC CLK1/2/4 possible parents are OSC_DIV1, OSC_DIV2,=20
->>>>>>>> OSC_DIV4,
->>>>>>>> EXTERN.
->>>>>>>>
->>>>>>>>
->>>>>>>> CLK1/2/3 also has Pinmux to route EXTPERIPH output on to these=20
->>>>>>>> pins.
->>>>>>>>
->>>>>>>>
->>>>>>>> When EXTERN output clock is selected for these PMC clocks thru
->>>>>>>> CLKx_SRC_SEL, output clock is from driver by EXTPERIPH from CAR=20
->>>>>>>> via
->>>>>>>> Pinmux logic or driven as per CLKx_SRC_SEL bypassing pinmux=20
->>>>>>>> based on
->>>>>>>> CLKx_ACCEPT_REQ bit.
->>>>>>>>
->>>>>>>>
->>>>>>>> PMC Clock control register has bit CLKx_ACCEPT_REQ
->>>>>>>> When CLKx_ACCEPT_REQ =3D 0, output clock driver is from by EXTPERI=
-PH
->>>>>>>> through the pinmux
->>>>>>>> When CLKx_ACCEPT_REQ =3D 1, output clock is based on CLKx_SRC_SEL=
-=20
->>>>>>>> bits
->>>>>>>> (OSC_DIV1/2/4 and EXTPERIPH clock bypassing the pinmux)
->>>>>>>>
->>>>>>>> FORCE_EN bit in PMC CLock control register forces the clock to run
->>>>>>>> regardless of this.
->>>>>> PMC clock gate is based on the state of CLKx_ACCEPT_REQ and FORCE_EN
->>>>>> like explained above.
->>>>>>
->>>>>> CLKx_ACCEPT_REQ is 0 default and FORCE_EN acts as gate to
->>>>>> enable/disable
->>>>>> EXTPERIPH clock output to PMC CLK_OUT_1/2/3.
->>>>> [and to enable OSC as well]
->>>>>
->>>>>> So I believe we need to register as MUX and Gate rather than as a
->>>>>> single
->>>>>> clock. Please confirm.
->>>>> 1. The force-enabling is applied to both OSC and EXTERN sources of
->>>>> PMC_CLK_OUT_x by PMC at once.
->>>>>
->>>>> 2. Both of PMC's force-enabling and OSC/EXTERN selection is internal
->>>>> to PMC.
->>>>>
->>>>> Should be better to define it as a single "pmc_clk_out_x". I don't=20
->>>>> see
->>>>> any good reasons for differentiating PMC's Gate from the MUX, it's a
->>>>> single hardware unit from a point of view of the rest of the system.
->>>>>
->>>>> Peter, do you have any objections?
->>>> We added fallback option for audio mclk and also added check for
->>>> assigned-clock-parents dt property in audio driver and if its not then
->>>> we do parent init configuration in audio driver.
->>>>
->>>> Current clock driver creates 2 separate clocks clk_out_1_mux and
->>>> clk_out_1 for each pmc clock in clock driver and uses extern1 as
->>>> parent to clk_out_1_mux and clk_out_1_mux is parent to clk_out_1.
->>>>
->>>> With change of registering each pmc clock as a single clock, when we
->>>> do parent init assignment in audio driver when
->>>> assigned-clock-properties are not used in DT (as we removed parent
->>>> inits for extern and clk_outs from clock driver), we should still try
->>>> to get clock based on clk_out_1_mux as parent assignment of extern1 is
->>>> for clk_out_1_mux as per existing clock tree.
->>>>
->>>> clk_out_1_mux clock retrieve will fail with this change of single
->>>> clock when any new platform device tree doesn't specify
->>>> assigned-clock-parents properties and tegra_asoc_utils_init fails.
->> You made the PMC/CaR changes before the audio changes, the clk_out_1_mux
->> won't exist for the audio driver patches.
->>
->> If you care about bisect-ability of the patches, then the clock and
->> audio changes need to be done in a single patch. But I don't think that
->> it's worthwhile.
->>
->>>> With single clock, extern1 is the parent for clk_out_1 and with
->>>> separate clocks for mux and gate, extern1 is the parent for
->>>> clk_out_1_mux.
->>> If we move to single clock now, it need one more additional fallback
->>> implementation in audio driver during parent configuration as
->>> clk_out_1_mux will not be there with single clock change and=20
->>> old/current
->>> kernel has it as it uses separate clocks for pmc mux and gate.
->> Why additional fallback? Additional to what?
->>
->>> Also, with single clock for both PMC mux and gate now, new DT should=20
->>> use
->>> extern1 as parent to CLK_OUT_1 as CLK_OUT_1_MUX will not be there old
->>> PMC dt-bindings has separate clocks for MUX (CLK_OUT_1_MUX) and gate
->>> (CLK_OUT_1)
->>>
->>> DT bindings will not be compatible b/w old and new changes if we=20
->>> move to
->>> Single PMC clock now.
->> Sorry, I don't understand what you're meaning by the "new changes".
->>
->>> Should we go with same separate clocks to have it compatible to avoid
->>> all this?
->>>
-> The reason we added mclk fallback and also for doing parent=20
-> configuration based on presence of assigned-clock-parents property is=20
-> to have old dt compatible with new kernel and also to have new dt=20
-> compatible with old kernel.
->
-> So the point I was mentioning is to have new DT to work with old=20
-> kernel, setting extern1 as parent to clk_out_1 (with single pmc clock)=20
-> through assigned-clock-parents in DT will fail as old kernel has mux=20
-> and gate as separate clocks and parent configuration is for mux clock=20
-> (clk_out_1_mux)
->
-Sorry never mind, with old kernel clock driver does all parent=20
-configuration so should be ok. So no additional fallbacks are needed=20
-except to the one we already added.
 
-OK, So its just that changes are slightly more to switch to single clock=20
-compared to using separate clocks as gate clk_ops (which are needed=20
-anyway for blink control) of clock enable and disable can't be used for=20
-clk_out_1 enable/disable and need additional clk_enable and disable=20
-callbacks.
+On 12/10/2019 12:14 AM, Landen Chao wrote:
+> Add new support for MT7531:
+> 
+> MT7531 is the next generation of MT7530. It is also a 7-ports switch with
+> 5 giga embedded phys, 2 cpu ports, and the same MAC logic of MT7530. Cpu
+> port 6 only supports HSGMII interface. Cpu port 5 supports either RGMII
+> or HSGMII in different HW sku. Due to HSGMII interface support, pll, and
+> pad setting are different from MT7530. This patch adds different initial
+> setting of MT7531.
+> 
+> Signed-off-by: Landen Chao <landen.chao@mediatek.com>
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> ---
 
-Will make changes to use single clock..
+[snip]
 
+> +	/* Enable PHY power, since phy_device has not yet been created
+> +	 * provided for phy_[read,write]_mmd_indirect is called, we provide
+> +	 * our own mt7531_ind_mmd_phy_[read,write] to complete this
+> +	 * function.
+> +	 */
+> +	val = mt7531_ind_mmd_phy_read(priv, 0, PHY_DEV1F,
+> +				      MT7531_PHY_DEV1F_REG_403);
+> +	val |= MT7531_PHY_EN_BYPASS_MODE;
+> +	val &= ~MT7531_PHY_POWER_OFF;
+> +	mt7531_ind_mmd_phy_write(priv, 0, PHY_DEV1F,
+> +				 MT7531_PHY_DEV1F_REG_403, val);
+
+You are doing this for port 0 only, is that because this broadcasts to
+all internal PHYs as well, or is it enough to somehow do it just for
+port 0? It sounds like you might want to make this operation a bit more
+scoped, if you have an external PHY that also responds to broadcast MDIO
+writes this could possibly cause some unattended effects, no?
+
+[snip]
+
+> +static int mt7531_rgmii_setup(struct mt7530_priv *priv, u32 port)
+> +{
+> +	u32 val;
+> +
+> +	if (port != 5) {
+> +		dev_err(priv->dev, "RGMII mode is not available for port %d\n",
+> +			port);
+> +		return -EINVAL;
+> +	}
+> +
+> +	val = mt7530_read(priv, MT7531_CLKGEN_CTRL);
+> +	val |= GP_CLK_EN;
+> +	val &= ~GP_MODE_MASK;
+> +	val |= GP_MODE(MT7531_GP_MODE_RGMII);
+> +	val |= TXCLK_NO_REVERSE;
+> +	val |= RXCLK_NO_DELAY;
+
+You actually need to look at the port's phy_interface_t value to
+determine whether the delays should be set/clear in either RX or TX
+directions.
+
+[snip]
+
+> -	if (phylink_autoneg_inband(mode)) {
+> +	if (phylink_autoneg_inband(mode) &&
+> +	    state->interface != PHY_INTERFACE_MODE_SGMII) {
+
+So you don't support in-band auto-negotiation for 1000BaseX either?
+
+[snip]
+
+> @@ -1590,9 +2197,20 @@ static void mt753x_phylink_validate(struct dsa_switch *ds, int port,
+>  	phylink_set_port_modes(mask);
+>  	phylink_set(mask, Autoneg);
+>  
+> -	if (state->interface == PHY_INTERFACE_MODE_TRGMII) {
+> +	switch (state->interface) {
+> +	case PHY_INTERFACE_MODE_TRGMII:
+>  		phylink_set(mask, 1000baseT_Full);
+> -	} else {
+> +		break;
+> +	case PHY_INTERFACE_MODE_1000BASEX:
+> +	case PHY_INTERFACE_MODE_2500BASEX:
+> +		phylink_set(mask, 1000baseX_Full);
+> +		phylink_set(mask, 2500baseX_Full);
+
+Did you intend this to be:
+
+	case PHY_INTERFACE_MODE_2500BASEX:
+		phylink_set(mask, 2500baseX_Full);
+		/* fall through */
+	case PHY_INTERFACE_MODE_1000BASEX:
+		phylink_set(mask, 1000baseX_Full);
+		break;
+
+?
+[snip]
+
+> +/* Register for PHY Indirect Access Control */
+> +#define MT7531_PHY_IAC			0x701C
+> +#define  PHY_ACS_ST			BIT(31)
+> +#define  MDIO_REG_ADDR_MASK		(0x1f << 25)
+> +#define  MDIO_PHY_ADDR_MASK		(0x1f << 20)
+> +#define  MDIO_CMD_MASK			(0x3 << 18)
+> +#define  MDIO_ST_MASK			(0x3 << 16)
+> +#define  MDIO_RW_DATA_MASK		(0xffff)
+> +#define  MDIO_REG_ADDR(x)		(((x) & 0x1f) << 25)
+> +#define  MDIO_DEV_ADDR(x)		(((x) & 0x1f) << 25)
+> +#define  MDIO_PHY_ADDR(x)		(((x) & 0x1f) << 20)
+> +#define  MDIO_CMD(x)			(((x) & 0x3) << 18)
+> +#define  MDIO_ST(x)			(((x) & 0x3) << 16)
+
+I would suggest names that are more scoped because these could easily
+collide with existing of future definitions from include/linux/mdio.h.
+
+> +
+> +enum mt7531_phy_iac_cmd {
+> +	MT7531_MDIO_ADDR = 0,
+> +	MT7531_MDIO_WRITE = 1,
+> +	MT7531_MDIO_READ = 2,
+> +	MT7531_MDIO_READ_CL45 = 3,
+> +};
+> +
+> +/* MDIO_ST: MDIO start field */
+> +enum mt7531_mdio_st {
+> +	MT7531_MDIO_ST_CL45 = 0,
+> +	MT7531_MDIO_ST_CL22 = 1,
+> +};
+> +
+> +#define  MDIO_CL22_READ			(MDIO_ST(MT7531_MDIO_ST_CL22) | \
+> +					 MDIO_CMD(MT7531_MDIO_READ))
+> +#define  MDIO_CL22_WRITE		(MDIO_ST(MT7531_MDIO_ST_CL22) | \
+> +					 MDIO_CMD(MT7531_MDIO_WRITE))
+> +#define  MDIO_CL45_ADDR			(MDIO_ST(MT7531_MDIO_ST_CL45) | \
+> +					 MDIO_CMD(MT7531_MDIO_ADDR))
+> +#define  MDIO_CL45_READ			(MDIO_ST(MT7531_MDIO_ST_CL45) | \
+> +					 MDIO_CMD(MT7531_MDIO_READ))
+> +#define  MDIO_CL45_WRITE		(MDIO_ST(MT7531_MDIO_ST_CL45) | \
+> +					 MDIO_CMD(MT7531_MDIO_WRITE))
+
+Likewise.
+-- 
+Florian
