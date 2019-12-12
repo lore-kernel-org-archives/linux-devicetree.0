@@ -2,173 +2,231 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBD9C00454
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 14:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6E4C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 14:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C23BD21655
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 14:29:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Ms1msf5B"
+	by mail.kernel.org (Postfix) with ESMTP id C6A2C2067C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 14:30:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576161044;
+	bh=7cvjOI8mAgaor2T+Guv9aKerg629/9PwKUUrQzRsQUs=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=FIB1nMPWgqwoWjtZSO0f1fOSfcLdn506PoMwb3O7dLi6ngYi/TPT7CJu8yjCKR9+c
+	 mmehJaBkeMwQaObwEBfebKDdzPXccXg8RwIi7X74lQiR8euh96RZya0Tzp3EdtmPcH
+	 1TapoSOmTjeJNa4YnDStq+Rw3+43TYQXOJH8dDRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbfLLO3M (ORCPT
+        id S1729712AbfLLOao (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:29:12 -0500
-Received: from mail-eopbgr1410123.outbound.protection.outlook.com ([40.107.141.123]:38456
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729611AbfLLO3L (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:29:11 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JeZNpqDSqmTaiA81eZw42cp0b322Yq57egrc+DZTzBx0EWgqG5yLP7BBHG4lNZvHWXvl05OFzi18c+LG1JmO9h0Y8g1yS9vaKJ3HK0aGvYkuGS1MVG29Wo01JvVCyYkdsZTieFssadiZbfUSAZjcGq2YTg6jaz6AItddTYNNfQgKwEi6aZMz8yE1k/PdmKREem4U7jf8tVauHdtdbSTg2zxS9uKZJY7le1RXXvzx3VoLHHv9QVmXkk8riOyrrh60zdTUIzK0JUz21ey4mfRrpD4j0UkBN6WLutlP6i+wxbAbO+iPd4QJ9b9Ue9ib1wbJrby8gO46BvMZFi5cm4PFLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JeZ1a9Im1WbyCPr12Zc4qBhCePGHp8K/LJ7yKzheCGQ=;
- b=as0o7DKWT4A253ldAEnhIoe+30HoHghCad0Q8uKSDV3yTV+zSYipanFZ9TASnW3b5C/OPyVbdCv0kgobL4AncCjxPsarXv6tEWwnCd9Ob1LpKoNILWl/N5oV/x2w+siFQDsGTFQUCiCvp9rm5fVv4E5La7V4nE8nQxu6Pq6S6skJFkmy2tgxsxrTLJdOhJLdeblTxVaD1t6uyNyaOyG5QpPLuprx98/KAOAOHJ8sRjxr5elRGmWXgbrQ368WT2dGiyFt/KgNVDNCl3f9r9h97re2P6NcpjZuFBmmavW56fqjsKUZs1b+cGEDSjjDXIeU/vUokIdDjhmSVHXfudNDQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JeZ1a9Im1WbyCPr12Zc4qBhCePGHp8K/LJ7yKzheCGQ=;
- b=Ms1msf5Bj/eXFdDKjJmU9nsbuTZLISHgzF1GEW/P3Rb0LR+bsPAEWI5WGPOGZhCxdEdAcM05d8inbe0gc+kY4fGC6A1oN0+1x88ovJj691HsJ4dJqYwha85BKl2gem1WdjmuXWMvIiyLVqaZtkNHoynzIbt5jVB6C3MYN0Gx08w=
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
- TY1PR01MB1705.jpnprd01.prod.outlook.com (52.133.164.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.16; Thu, 12 Dec 2019 14:29:07 +0000
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2516.018; Thu, 12 Dec 2019
- 14:29:07 +0000
-From:   Chris Brandt <Chris.Brandt@renesas.com>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: RE: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
-Thread-Topic: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
-Thread-Index: AQHVrDsFo/XrCnZmIE+HK5Vec6rH7qevIW6AgAK0x/CAA35sAIABOkow
-Date:   Thu, 12 Dec 2019 14:29:07 +0000
-Message-ID: <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com>
- <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
-In-Reply-To: <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctYmVkMTA4NWQtMWNlYi0xMWVhLWFhNTUtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XGJlZDEwODVlLTFjZWItMTFlYS1hYTU1LTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iMzYzNCIgdD0iMTMyMjA2MzQ1NDQzNjkwMjQ3IiBoPSJVMlJzTFducWJCbVBPVmhma3Q0WW5YZE1XYlE9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Brandt@renesas.com; 
-x-originating-ip: [75.60.247.61]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c199541c-7640-4802-3e48-08d77f0fa5a6
-x-ms-traffictypediagnostic: TY1PR01MB1705:
-x-microsoft-antispam-prvs: <TY1PR01MB1705C79BB4B99781BDCB1B998A550@TY1PR01MB1705.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0249EFCB0B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(396003)(346002)(39860400002)(366004)(376002)(199004)(189003)(52536014)(7416002)(9686003)(2906002)(4326008)(5660300002)(54906003)(71200400001)(81156014)(81166006)(8676002)(8936002)(26005)(33656002)(186003)(55016002)(86362001)(110136005)(316002)(66946007)(66446008)(66476007)(66556008)(64756008)(76116006)(478600001)(966005)(6506007)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1705;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jln7POp5IvUxj3QxR0F/3Y+ZxhpJX/OFWYCiFVtLrfKw4nevzAxMhi2OqBITb3uXO1A9I8gL1mxdruIBtOP5TdPHFE4SQt0BUuI98mFXeipdYbzHhPDYUc3EYZ08MadDDQAWOuuhqdTK3Vi0ouw4lvFGt1NmYJYw2XBfTbylhXmJOL5cfsiLiw47fXwVBJeu1ZElOrbup3J9F2hgmv1so47DVRM+3M9UP01ppE/iqNCvTiEzM3OP+4H4zr5LuZ5yReF6wl0xdBkazRkWRoIaBewAjt6TgbYf310fbxhdAsa61ePLFKVjK0H4AcUl0AClOX1xGy2/c24d+WX8vEJB0Y0Rg/n8zD7n34+0jiguQoEa8MwpHFtyhGjeRctzWHl1uoQ7CxhyVxETPHHPUz/9ONPTcimR/5UyczVp1OKtsf2dcFyo9wttJX4mxey5LBCF
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 12 Dec 2019 09:30:44 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:41234 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729612AbfLLOao (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Dec 2019 09:30:44 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ifPUF-0002s6-2y; Thu, 12 Dec 2019 15:30:39 +0100
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c199541c-7640-4802-3e48-08d77f0fa5a6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 14:29:07.5437
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 42ZNXvaNlSPdW+qDnoeBE9J6KXQHacLLUnHjjihnzUntJS2eSXMv+JXTzs/ehiJu1aT253RCV3l5Lxx9TerCcmw8UFTaEfXgEmEe6LBPq7Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1705
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 12 Dec 2019 14:30:38 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Neal Liu <neal.liu@mediatek.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>, Matt Mackall <mpm@selenic.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        =?UTF-8?Q?Crystal_Guo_=28=E9=83=AD=E6=99=B6=29?= 
+        <crystal.guo@mediatek.com>, Will Deacon <will@kernel.org>,
+        Lars Persson <lists@bofh.nu>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <CAKv+Gu9YhkzpKbrxa=xDOkS6=kZSMaidor_4DqGY6f1M0tO7kQ@mail.gmail.com>
+References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
+ <1574864578-467-4-git-send-email-neal.liu@mediatek.com>
+ <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
+ <1575027046.24848.4.camel@mtkswgap22>
+ <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
+ <20191202191146.79e6368c@why>
+ <299029b0-0689-c2c4-4656-36ced31ed513@gmail.com>
+ <b7043e932211911a81383274e0cc983d@www.loen.fr>
+ <1576127609.27185.8.camel@mtkswgap22>
+ <a5982b8ed10440eef14c04df6e6060b6@www.loen.fr>
+ <CAKv+Gu9YhkzpKbrxa=xDOkS6=kZSMaidor_4DqGY6f1M0tO7kQ@mail.gmail.com>
+Message-ID: <9de12c45b4b022cfb01d89ca56429d53@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: ard.biesheuvel@linaro.org, neal.liu@mediatek.com, f.fainelli@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, wsd_upstream@mediatek.com, catalin.marinas@arm.com, sean.wang@kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-crypto@vger.kernel.org, mpm@selenic.com, matthias.bgg@gmail.com, crystal.guo@mediatek.com, will@kernel.org, lists@bofh.nu, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gV2VkLCBEZWMgMTEsIDIwMTksIFNlcmdlaSBTaHR5bHlvdiB3cm90ZToNCj4gPiBTaW5jZSBR
-U1BJLCBIeXBlckZsYXNoIGFuZCBPY3RhRmxhc2ggYXJlIGFsbCAnc2VyaWFsJyBGbGFzaA0KPiA+
-IHRlY2hub2xvZ2llcywgSSB3b3VsZCBiZSBmaW5kIHdpdGggYSBkcml2ZXIgbmFtZSBvZiAiU0JT
-QyIgKCJTZXJpYWwNCj4gPiBCdXMgU3BhY2UNCj4gPiBDb250cm9sbGVyIikgd2hpY2ggYXQgbGVh
-c3QgbG9va3MgY2xvc2VyIHRvIHdoYXQgaXMgaW4gYWxsIHRoZQ0KPiA+IGhhcmR3YXJlIG1hbnVh
-bHMuDQo+IA0KPiAgICBIb3cgYWJvdXQgIlNlcmlhbCBGbGFzaCBDb250cm9sbGVyIiBpbnN0ZWFk
-Pw0KDQpJIHdvdWxkIGxpa2UgdGhhdCBiZXR0ZXIgdGhhbiAiUlBDIi4gQXQgbGVhc3QgaXQgZGVz
-Y3JpYmVzIHdoYXQgaXQgaXMuDQpSUEMgc2VlbXMgbGlrZSBhIHN0dXBpZCBuYW1lIHRvIG1lIChi
-dXQgbWF5YmUgdGhhdCdzIGp1c3QgYmVjYXVzZSBJIGtub3cNCmhvdyB0aGF0IG5hbWUgd2FzIGNo
-b3Nlbi4uLikNCmh0dHBzOi8vd3d3LmN5cHJlc3MuY29tL25ld3MvY3lwcmVzcy1zaW1wbGlmaWVz
-LWVtYmVkZGVkLXN5c3RlbS1kZXNpZ24tbmV3LWxvdy1waW4tY291bnQtaHlwZXJyYW0tbWVtb3J5
-DQogIlRoZSBIeXBlclJBTSBhbmQgSHlwZXJGbGFzaCBzb2x1dGlvbiByZWR1Y2VzIHBpbiBjb3Vu
-dCBieSBhdCBsZWFzdCAyOCBwaW5zLCAuLi4iDQoNCg0KQXMgYSBzaWRlIG5vdGUsIHRoZXJlIGlz
-IGFub3RoZXIgSFcgYmxvY2sgaW4gUmVuZXNhcyB0aGF0IGRvZXMgdGhlIHNhbWUgDQp0aGluZyBh
-cyB0aGUgU1BJLUJTQyB0aGF0IHRoZXkgdXNlIGluIHRoZSBNQ1UgZGV2aWNlcy4gVGhhdCBvbmUg
-dGhleSANCmp1c3QgbmFtZWQgIlFTUEkiLg0KDQo+ID4+PiBUaGlzIGRyaXZlciBoYXMgYmVlbiB0
-ZXN0ZWQgb24gYW4gUlovQTFIIFJTSyBhbmQgUlovQTJNIEVWQi4NCj4gPj4NCj4gPj4gICAgSW4g
-dGhlIFNQSSBtb2RlIG9ubHksIEkgYXNzdW1lPw0KPiA+DQo+ID4gWWVzLiBBdCB0aGUgbW9tZW50
-LCB0aGVyZSBhcmUgb25seSByZXF1ZXN0cyBmcm9tIHVzZXJzIGZvciBRU1BJIGZsYXNoDQo+ID4g
-YWNjZXNzIChSWi9BIGFuZCBSWi9HIHVzZXJzKS4NCj4gDQo+ICAgIEkga2VlcCBiZWluZyB0b2xk
-IGJ5IHRoZSBtYW5hZ2VtZW50IHRoYXQgd2UgbmVlZCBIeXBlckZsYXNoIHRvby4gOi0pIEluDQo+
-IG91ciBCU1AgZGV2ZWxvcG1lbnQsIG91ciBlbmdpbmVlcnMgd2VudCAic2FtZSBoYXJkd2FyZSwg
-MiBkcml2ZXJzIg0KPiB3YXkgKHdpdGggZGlmZmVyZW50ICJjb21wYXRpYmxlcyIgcGVyIGRyaXZl
-cikuLi4NCg0KTXkgcGxhbiB3YXMgc2FtZSBIVywgc2FtZSAiY29tcGF0aWJsZXMiLCBzYW1lIGRy
-aXZlci4uLmJ1dCB0aGUgZHJpdmVyIA0Kd291bGQgZWl0aGVyIHJlZ2lzdGVyIGEgU1BJIGNvbnRy
-b2xsZXIgb3IgYSBIeXBlcmZsYXNoIGNvbnRyb2xsZXIuDQoNCk5vdGUgdGhhdCB0aGUgTU1DL1NE
-SEkgaXMgdGhlIHNhbWUgSFcgYnV0IGNhbiBhY3QgbGlrZSAyIGRpZmZlcmVudCBwZXJpcGhlcmFs
-cy4NCldlIGFsc28gaGF2ZSBVU0IgdGhhdCBjYW4gYmUgZWl0aGVyIGhvc3Qgb3IgcGVyaXBoZXJh
-bC4NCg0KDQo+ID4+PiBUaGUgdGVzdGluZyBtb3N0bHkgY29uc2lzdGVkIG9mIGZvcm1hdHRpbmcg
-YW4gYXJlYSBhcyBKRkZTMiBhbmQNCj4gPj4+IGRvaW5nIGNvcHlpbmcgb2YgZmlsZXMgYW5kIHN1
-Y2guDQo+ID4+DQo+ID4+ICAgIERpZCB0aGUgc2FtZSAob3IgYXQgbGVhc3QgdHJpZWQgdG8gOi0p
-IGFuZCBJIG11c3QgYWRtaXQgdGhhdA0KPiA+PiB3cml0aW5nIGRvZXNuJ3Qgd29yayB3aXRoIGFu
-eSBvZiB0aGUgZnJvbnQgZW5kcy4uLiBJIHN0aWxsIG5lZWQgdG8gZ2V0DQo+IHRoaXMgZml4ZWQu
-DQo+IA0KPiAgICBUaGUgbGFzdCB3b3JkIGZyb20gb3VyIEJTUCBwZW9wbGUgd2FzIHRoYXQgSkZG
-UzIgZG9lc24ndCB3b3JrIHdpdGggdGhlDQo+IEh5cGVyRkxhc2ggZGVkaWNhdGVkIEJTUCBkcml2
-ZXIuLi4gOi0vDQoNCklzIHRoYXQgd2h5IHRoaXMgIlJQQyIgcGF0Y2ggc2VyaWVzIGlzIHRha2lu
-ZyBzbyBsb25nPw0KSXQncyBhIGZhaXJseSBzaW1wbGUgcGllY2Ugb2YgaGFyZHdhcmUuDQoNCldo
-ZW4gSSBmaXJzdCBzYXcgdGhlIHNlcmllcyBvbiB0aGUgbWFpbGluZyBsaXN0LCBteSBwbGFuIHdh
-cyB0byBqdXN0IHdhaXQNCmFuZCB0aGVuIGFkZCBSWi9BMSBhbmQgUlovQTIgc3VwcG9ydC4gQnV0
-Li4uLml0IGxvb2tzIGxpa2UgaXQgYWxsIGRpZWQuDQoNClNvLCBJIHRob3VnaHQgSSB3b3VsZCBh
-dCBsZWFzdCBwdXQgaW4gbXkgb3duIGRyaXZlciBmb3IgU1BJIGZsYXNoIG5vdywgDQphbmQgdGhl
-biBnbyBiYWNrIGFuZCBhZGQgSHlwZXJGbGFzaC9PY3RhRmxhc2ggb25jZSBJIGdldCB0aGUgY2hp
-cHMgDQpzd2FwcGVkIG91dCBvbiBvbmUgb2YgbXkgUlovQTIgYm9hcmRzLg0KDQoNCj4gPiBIb3dl
-dmVyLCB0aGUgZHJpdmVyIEkgcG9zdGVkIGlzIHByZXR0eSBzaW1wbGUgYW5kIHdvcmtzLiBEb2Vz
-IHRoZQ0KPiA+IEh5cGVyRmxhc2ggTVREDQo+IA0KPiAgICBUaGVyZSdzIG5vIEhGIGxpYnJhcnks
-IG9ubHkgZnJvbnQgZW5kIGRyaXZlci4NCj4gICAgVGhlIHJlYWwgbGlicmFyeSBjb3ZlcnMgYm90
-aCBTUEkgYW5kIEhGLiBUaGUgb25seSBkaWZmZXJlbmNlIGJldHdlZW4gdGhlDQo+IHR3byBpcyB0
-aGUgaC93IHNldHVwIChtaW5vciBkaWZmZXJlbmNlKS4NCg0KQnV0IGlzIHRoaXMgImxpYnJhcnki
-IHNvbWV0aGluZyBzcGVjaWZpYyB0byBSZW5lc2FzIGRldmljZXM/DQpUaGF0J3Mgd2hhdCBJJ20g
-dHJ5aW5nIHRvIHVuZGVyc3RhbmQuDQoNCk15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCBIeXBlckZs
-YXNoIHVzZXMgc3RhbmRhcmQgQ0ZJIGNvbW1hbmRzLCBzbyBhbGwgDQp3ZSBuZWVkIHRvIGRvIGlz
-IHJlZ2lzdGVyIGEgQ0ZJIGRldmljZSBpbiB0aGUgZHJpdmVyLCBqdXN0IGxpa2Ugd2UgDQpyZWdp
-c3RlciBhIHNlcmlhbCBmbGFzaCBkZXZpY2UuDQoNCihJIGd1ZXNzIEkgY291bGQgZ28gbG9vayBh
-dCB0aGUgc2FtcGxlIGNvZGUgZm9yIG91ciBSVE9TIHBhY2thZ2UgYW5kIGZpbmQgb3V0KQ0KDQoN
-Cj4gPiBsaWJyYXJ5IHRoYXQgeW91IGFyZSBwcm9wb3NpbmcgaGF2ZSBhIHZlcnkgZGlmZmVyZW50
-IEFQSSB0aGFuIGp1c3QNCj4gPiAnc2VuZCBieXRlcycgYW5kICdyZWNlaXZlIGJ5dGVzJz8NCj4g
-DQo+ICAgIFRoZXJlJ3MgInByZXBhcmUiIGFuZCAidHJhbnNmZXIiIEFQSXMgYW5kIGFsc28gImRp
-cmVjdCBtYXAgcmVhZCIgQVBJLg0KDQpJIHdvbmRlciB3aGF0IGlzIHRoZSB2YWx1ZSBvZiB0aGUg
-ImRpcmVjdCBtYXAgcmVhZCIgKG90aGVyIHRoYW4gWElQIGluIA0KUlovQSBzeXN0ZW1zKS4gSWYg
-eW91IHJlYWxseSB3YW50IHRvIGRpcmVjdGx5IGFjY2VzcyB0aGUgZmxhc2ggKG5vIA0KYnVmZmVy
-aW5nIHRob3VnaCB0aGUgTVREIGxheWVyKSwgeW91IG5lZWQgdG8gcmVnaXN0ZXIgYXMgYSBtdGQt
-cm9tIGRldmljZSwgDQphbmQgdGhlbiB5b3UgZG9uJ3QgcmVhbGx5IG5lZWQgYW4gQVBJIGF0IGFs
-bC4NCg0KDQpDaHJpcw0KDQo=
+On 2019-12-12 14:03, Ard Biesheuvel wrote:
+> On Thu, 12 Dec 2019 at 12:45, Marc Zyngier <maz@kernel.org> wrote:
+>>
+>> On 2019-12-12 05:13, Neal Liu wrote:
+>> > On Tue, 2019-12-03 at 11:17 +0000, Marc Zyngier wrote:
+>> >> On 2019-12-03 04:16, Florian Fainelli wrote:
+>> >> > On 12/2/2019 11:11 AM, Marc Zyngier wrote:
+>> >> >> On Mon, 2 Dec 2019 16:12:09 +0000
+>> >> >> Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+>> >> >>
+>> >> >>> (adding some more arm64 folks)
+>> >> >>>
+>> >> >>> On Fri, 29 Nov 2019 at 11:30, Neal Liu 
+>> <neal.liu@mediatek.com>
+>> >> >>> wrote:
+>> >> >>>>
+>> >> >>>> On Fri, 2019-11-29 at 18:02 +0800, Lars Persson wrote:
+>> >> >>>>> Hi Neal,
+>> >> >>>>>
+>> >> >>>>> On Wed, Nov 27, 2019 at 3:23 PM Neal Liu
+>> >> <neal.liu@mediatek.com>
+>> >> >>>>> wrote:
+>> >> >>>>>>
+>> >> >>>>>> For MediaTek SoCs on ARMv8 with TrustZone enabled,
+>> >> peripherals
+>> >> >>>>>> like
+>> >> >>>>>> entropy sources is not accessible from normal world 
+>> (linux)
+>> >> and
+>> >> >>>>>> rather accessible from secure world (ATF/TEE) only. This
+>> >> driver
+>> >> >>>>>> aims
+>> >> >>>>>> to provide a generic interface to ATF rng service.
+>> >> >>>>>>
+>> >> >>>>>
+>> >> >>>>> I am working on several SoCs that also will need this kind 
+>> of
+>> >> >>>>> driver
+>> >> >>>>> to get entropy from Arm trusted firmware.
+>> >> >>>>> If you intend to make this a generic interface, please 
+>> clean
+>> >> up
+>> >> >>>>> the
+>> >> >>>>> references to MediaTek and give it a more generic name. For
+>> >> >>>>> example
+>> >> >>>>> "Arm Trusted Firmware random number driver".
+>> >> >>>>>
+>> >> >>>>> It will also be helpful if the SMC call number is
+>> >> configurable.
+>> >> >>>>>
+>> >> >>>>> - Lars
+>> >> >>>>
+>> >> >>>> Yes, I'm trying to make this to a generic interface. I'll 
+>> try
+>> >> to
+>> >> >>>> make
+>> >> >>>> HW/platform related dependency to be configurable and let it
+>> >> more
+>> >> >>>> generic.
+>> >> >>>> Thanks for your suggestion.
+>> >> >>>>
+>> >> >>>
+>> >> >>> I don't think it makes sense for each arm64 platform to 
+>> expose
+>> >> an
+>> >> >>> entropy source via SMC calls in a slightly different way, and
+>> >> model
+>> >> >>> it
+>> >> >>> as a h/w driver. Instead, we should try to standardize this, 
+>> and
+>> >> >>> perhaps expose it via the architectural helpers that already
+>> >> exist
+>> >> >>> (get_random_seed_long() and friends), so they get plugged 
+>> into
+>> >> the
+>> >> >>> kernel random pool driver directly.
+>> >> >>
+>> >> >> Absolutely. I'd love to see a standard, ARM-specified,
+>> >> virtualizable
+>> >> >> RNG that is abstracted from the HW.
+>> >> >
+>> >> > Do you think we could use virtio-rng on top of a modified
+>> >> virtio-mmio
+>> >> > which instead of being backed by a hardware mailbox, could use
+>> >> > hvc/smc
+>> >> > calls to signal writes to shared memory and get notifications 
+>> via
+>> >> an
+>> >> > interrupt? This would also open up the doors to other virtio 
+>> uses
+>> >> > cases
+>> >> > beyond just RNG (e.g.: console, block devices?). If this is
+>> >> > completely
+>> >> > stupid, then please disregard this comment.
+>> >>
+>> >> The problem with a virtio device is that it is a ... device. What 
+>> we
+>> >> want
+>> >> is to be able to have access to an entropy source extremely early 
+>> in
+>> >> the
+>> >> kernel life, and devices tend to be available pretty late in the
+>> >> game.
+>> >> This means we cannot plug them in the architectural helpers that 
+>> Ard
+>> >> mentions above.
+>> >>
+>> >> What you're suggesting looks more like a new kind of virtio
+>> >> transport,
+>> >> which is interesting, in a remarkably twisted way... ;-)
+>> >>
+>> >> Thanks,
+>> >>
+>> >>          M.
+>> >
+>> > In conclusion, is it helpful that hw_random has a generic 
+>> interface
+>> > to
+>> > add device randomness by talking to hwrng which is implemented in 
+>> the
+>> > firmware or the hypervisor?
+>> > For most chip vendors, I think the answer is yes. We already 
+>> prepared
+>> > a
+>> > new patchset and need you agree with this idea.
+>>
+>> As long as it is a *unified* interface, I'm all for that.
+>>
+>
+>
+> Yeah, but I'm not sure it makes sense to model it as a device like
+> this. It would be nice if we could tie this into the ARM SMCCC
+> discovery, and use the SMC calls to back arch_get_random_seed_long()
+
+Probably I wasn't clear enough, but that's really what I meant by
+a unified interface (implemented by the firmware or the hypervisor).
+
+> [provided we fix the braindead way in which that is being used today
+> in the interrupt code]
+
+Ah, I said I'd look into it. Thanks for the reminder...
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
