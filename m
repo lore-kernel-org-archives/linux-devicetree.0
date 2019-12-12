@@ -2,138 +2,106 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B4AC2D0C5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1D1C04E30
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D9821655
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:38:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="krUCc7g3"
+	by mail.kernel.org (Postfix) with ESMTP id 6C3E52173E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfLLDiZ (ORCPT
+        id S1727580AbfLLDkA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 22:38:25 -0500
-Received: from mail-eopbgr70074.outbound.protection.outlook.com ([40.107.7.74]:46000
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        Wed, 11 Dec 2019 22:40:00 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58492 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726808AbfLLDiZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 22:38:25 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TsbV6CqJ5Xz8kmDgPlmTuJ9ThsghR5dhU09wEgXOPNOZ0EtM91Qvhp/cG7DB16b0unOj+2mnBv8QbTUGn0fNOU21ABrjgD5LDKx63vgl9YdqTWhpA6eW9yQQ+TOi2CJ2Wl/NnGLiyVc3TN1K83mEBlXo6vUWdqmPNoAvwKZY+5wkhWbqCBedoIac60f4nes2hVAUZ4EfSbqotQHce7Ht4LvFCIpoDjCz8IcTJ6YNH7LNofMSqsW+rc2jXYPQN1qiKMZvBhz+ytgJO6w1Pu7jlf2idzwONlIgcjXJbZTzBDSPwFJ9jibwZfag9oL4gHD4T53cnna2fjU54d3BzjQI7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RKrX6ryfsoHTWteG4YWcHdXIXAEYymq1bqNyglJ7oXo=;
- b=EuJvxwfE7aQUDE0qZV+chzTOM19FDYveKeCL1b9ElXlwGJH8Crvb7ckX7Q1PRcZO2onZaBOu2gL6pPXw1WQfoL4KTfOTDvOgjutWZI0HhFEg4fbLcj15dFI/BYZuyFt37tQ+VvN2uWMuL5P7XmEPGxg6w7OJYlywVg9QBPgqyyI5GLkoDOoBTdZ/6vmjm3puYJ6+NO7QL3E8OqnPg0Yvyf5sJHxDX304yjjkac6XkTYZXKsPmNofQmX3Bd36kCfYgUg1tUWe6u8+cK3G9WCtcogLazfIbBKY2F1vT8ukowzW92QTrqrLz+L4ikS9t+VYHF+78ZlLckaE+EujYINwkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RKrX6ryfsoHTWteG4YWcHdXIXAEYymq1bqNyglJ7oXo=;
- b=krUCc7g32i8hZ/9TCTC+5EBdixek/92lSRvBQNRltFJAu3kIgCpjeeHJL35Kwx6UYNDaaEBEdRQIRY0tM1PI7U/de3+uHT5sOC+GjaU2bz6MN6iwfO1Hh3fyEg3IGZQBoUQ4wmQfsahKwb5mBekJpOC8seRYCq1ibETDwf2WsUM=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
- VI1PR04MB3181.eurprd04.prod.outlook.com (10.170.229.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.16; Thu, 12 Dec 2019 03:38:19 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::c947:5ae7:2a68:a4f2]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::c947:5ae7:2a68:a4f2%3]) with mapi id 15.20.2538.017; Thu, 12 Dec 2019
- 03:38:19 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Robin Gong <yibin.gong@nxp.com>
-CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, Peng Ma <peng.ma@nxp.com>
-Subject: [v5 3/3] dt-bindings: dma: fsl-edma: add new fsl,fsl,ls1028a-edma
-Thread-Topic: [v5 3/3] dt-bindings: dma: fsl-edma: add new
- fsl,fsl,ls1028a-edma
-Thread-Index: AQHVsJ2Y3HluABJs6U+dHTTAWS2VzA==
-Date:   Thu, 12 Dec 2019 03:38:19 +0000
-Message-ID: <20191212033714.4090-3-peng.ma@nxp.com>
-References: <20191212033714.4090-1-peng.ma@nxp.com>
-In-Reply-To: <20191212033714.4090-1-peng.ma@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK2PR04CA0049.apcprd04.prod.outlook.com
- (2603:1096:202:14::17) To VI1PR04MB4431.eurprd04.prod.outlook.com
- (2603:10a6:803:6f::13)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 268bf6c8-a945-4f3c-80ce-08d77eb4baf9
-x-ms-traffictypediagnostic: VI1PR04MB3181:|VI1PR04MB3181:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB3181B07DF42EBBD15073185AED550@VI1PR04MB3181.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0249EFCB0B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(346002)(376002)(39860400002)(396003)(199004)(189003)(1076003)(6512007)(5660300002)(478600001)(6486002)(26005)(71200400001)(6506007)(2906002)(316002)(52116002)(4326008)(186003)(66476007)(110136005)(66946007)(64756008)(66446008)(6636002)(54906003)(8936002)(8676002)(81166006)(81156014)(86362001)(2616005)(44832011)(36756003)(66556008)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3181;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NApVTTCYqkocNgogXz/mPLE4VRbd5fIc715b90n5GfBbHWffJUMtrwdjJHGBVbfa0Vq1SCbYXutB8o0qfXaf9Ef6hUNu1feHJR1+10tbI7uAMngcCW6mXWcQHCTLsYmSuM7yeth2thFMcEuUaUGXKJINn8Z2KVz4zYiBE4caqDbWrk84UWtwh/zCOZkMYPyPKza/x+YM/IOIdgIGjLvXMKmtdfK+JYSa6hF9Okv79PMUD8ofCl0/uCwleYsqPKQ5pKg0DhHNL1MiBv3iZsmS+AFEgmnG7v30ehaAEMoks1DADypKW5YXyAOJjHLZnVYPQlJdh23Az7i9/fUelPzshbX7HfPt/EzBBDTLy5/R+fZalopQGB15hyg75sL0gWCr74MOJt6xR26S0vQvAVHujTQQ5qPkHYAYCWE38jq2NyYssIKSwB4F+O+mj6ctrT72GbZ812nIo8iHftCwbUfBEXMHCSWEreTYgwuQDCGyRFVa8yMMfElD3//5hXWnAn2C
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1726771AbfLLDj7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Dec 2019 22:39:59 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 665FAAD7B;
+        Thu, 12 Dec 2019 03:39:57 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [RFC 03/25] arm64: dts: realtek: rtd1295: Add Xnano X5
+Date:   Thu, 12 Dec 2019 04:39:30 +0100
+Message-Id: <20191212033952.5967-4-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191212033952.5967-1-afaerber@suse.de>
+References: <20191212033952.5967-1-afaerber@suse.de>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 268bf6c8-a945-4f3c-80ce-08d77eb4baf9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 03:38:19.7261
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vFbyO9MlOWMSuAQmaxYNqlxCeLGUmVOllqSNuQsV6jml5UAUX7Sxc9YTBIkgBYZm
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3181
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QORIQ LS1028A soc used fsl,vf610-edma, but it has a little bit different
-from others, so add new compatible to distinguish them.
+The Xnano X5 is an OTT TV Box.
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
-Changed for v5:
-	- add new patch=20
+ arch/arm64/boot/dts/realtek/Makefile             |  1 +
+ arch/arm64/boot/dts/realtek/rtd1295-xnano-x5.dts | 30 ++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1295-xnano-x5.dts
 
- Documentation/devicetree/bindings/dma/fsl-edma.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/dma/fsl-edma.txt b/Documenta=
-tion/devicetree/bindings/dma/fsl-edma.txt
-index 29dd3ccb1235..e77b08ebcd06 100644
---- a/Documentation/devicetree/bindings/dma/fsl-edma.txt
-+++ b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-@@ -10,6 +10,7 @@ Required properties:
- - compatible :
- 	- "fsl,vf610-edma" for eDMA used similar to that on Vybrid vf610 SoC
- 	- "fsl,imx7ulp-edma" for eDMA2 used similar to that on i.mx7ulp
-+	- "fsl,fsl,ls1028a-edma" for eDMA used similar to that on Vybrid vf610 So=
-C
- - reg : Specifies base physical address(s) and size of the eDMA registers.
- 	The 1st region is eDMA control register's address and size.
- 	The 2nd and the 3rd regions are programmable channel multiplexing
---=20
-2.17.1
+diff --git a/arch/arm64/boot/dts/realtek/Makefile b/arch/arm64/boot/dts/realtek/Makefile
+index 54bd02d11c02..ef8d8fcbaa05 100644
+--- a/arch/arm64/boot/dts/realtek/Makefile
++++ b/arch/arm64/boot/dts/realtek/Makefile
+@@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_REALTEK) += rtd1293-ds418j.dtb
+ 
+ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-mele-v9.dtb
+ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-probox2-ava.dtb
++dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-xnano-x5.dtb
+ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
+ 
+ dtb-$(CONFIG_ARCH_REALTEK) += rtd1296-ds418.dtb
+diff --git a/arch/arm64/boot/dts/realtek/rtd1295-xnano-x5.dts b/arch/arm64/boot/dts/realtek/rtd1295-xnano-x5.dts
+new file mode 100644
+index 000000000000..d7878ff942e6
+--- /dev/null
++++ b/arch/arm64/boot/dts/realtek/rtd1295-xnano-x5.dts
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
++/*
++ * Copyright (c) 2017-2019 Andreas Färber
++ */
++
++/dts-v1/;
++
++#include "rtd1295.dtsi"
++
++/ {
++	compatible = "xnano,x5", "realtek,rtd1295";
++	model = "Xnano X5";
++
++	memory@1f000 {
++		device_type = "memory";
++		reg = <0x1f000 0x3ffe1000>; /* boot ROM to 1 GiB or 2 GiB */
++	};
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
+-- 
+2.16.4
 
