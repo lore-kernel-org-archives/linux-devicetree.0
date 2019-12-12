@@ -2,87 +2,152 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EA4C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 15:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD71C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 15:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6B1F205C9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 15:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6991F2067C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 15:18:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="J1JOc8eV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbfLLPRw (ORCPT
+        id S1728818AbfLLPSF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:17:52 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33993 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728929AbfLLPRw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 10:17:52 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1ifQDn-000761-RH; Thu, 12 Dec 2019 16:17:43 +0100
-Message-ID: <ccc48df65e340c52218fd45549c26174a10f410c.camel@pengutronix.de>
-Subject: Re: [PATCH v2 2/2] reset: simple: Add AST2600 compatibility string
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Brad Bishop <bradleyb@fuzziesquirrel.com>
-Cc:     Joel Stanley <joel@jms.id.au>, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-Date:   Thu, 12 Dec 2019 16:17:42 +0100
-In-Reply-To: <EFF7E049-08C0-40A0-946A-18822C7AEEE3@fuzziesquirrel.com>
-References: <20191129000827.650566-1-joel@jms.id.au>
-         <20191129000827.650566-3-joel@jms.id.au>
-         <2498da189d5e21ae70fb6884df6fc16ecfee2087.camel@pengutronix.de>
-         <EFF7E049-08C0-40A0-946A-18822C7AEEE3@fuzziesquirrel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 12 Dec 2019 10:18:05 -0500
+Received: from mail-mw2nam12on2044.outbound.protection.outlook.com ([40.107.244.44]:31136
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728929AbfLLPSE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Dec 2019 10:18:04 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IzifY30QWT4bXWhBpubSlyun0h4ug2w16ysWyOc3O79SqJz8Fe3oPYqSqQTIcPhcWRMNRXqaifI8wQ0K6Q+9yP0dZ2eMhzhHt25RgRUlTahL1rkM78+dO0WS9yApuBdGkDV91vZrFVrvqV29YRQfYTqb0WSr7H2vgb3bt6kshq5IoNauzTVnIb//exrgrp4+/sL0RYSAazRRzWWInC49yPrdnFt6wHKJ/dx/tjmI+nT3D/YAqn7UvDMak1/q3kwE8MRRL3wm32W7SV9MvqadIy9vdRe54zQ2nMU/urmKLAW0aqXv8R4MFIBrnF/A6vl+JzMIIrsqLP46/XiovnCr1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D6odelPyzSzwCtv2oCBxXwZ7H+im3mZLvKZSI7BzWrE=;
+ b=Ai4l/o+c/7jX7itDMYJNbLZLRywgQ7par+mTGRaI2NI8QpVYJnFByQJgybIWP8ollaMw5gflvMZ7S8ok/8E49n+ApiM5blkFrXKjRO/b8ouAuU6nyJ1Pz3x428EK530N3zMhGDgiJbkqNTwd35+AY4McSjz2JWEKNEfMB++MuKckJPxEFo3bDqrWVRlwmYh5PZ26jhBwSEbcAc0WGBKWO4VzBVonxPeFTEqlr9q5Upm5+FhJuNB6n7KBuwwXeG+eIRtZ5u1f/vJYGv7tmvFz57aQy6ozVEKU1TFLmrOcG1uYTDz+f8gmgW/wooBL999VXtYDLLF43QsrOOvDjtOBMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D6odelPyzSzwCtv2oCBxXwZ7H+im3mZLvKZSI7BzWrE=;
+ b=J1JOc8eVvR/4F/nbGB2UWLpMXF1ybLFPUo1YLNcfxP7sXcQ3ts8a7sqPa187ZAo0QDfZF8Z1+1zMgJbDLWPx6B3/zXIuAP5FmHDDzM9tg2uD4INnT3XwFunHW1X+F1w3S2TeeEgiyOoUPO9XsRpRyzLjE2Df+A3JVqiCnVLHHXg=
+Received: from MWHPR02CA0017.namprd02.prod.outlook.com (2603:10b6:300:4b::27)
+ by DM5PR0201MB3430.namprd02.prod.outlook.com (2603:10b6:4:7b::34) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.17; Thu, 12 Dec
+ 2019 15:18:01 +0000
+Received: from CY1NAM02FT020.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::208) by MWHPR02CA0017.outlook.office365.com
+ (2603:10b6:300:4b::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.14 via Frontend
+ Transport; Thu, 12 Dec 2019 15:18:01 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT020.mail.protection.outlook.com (10.152.75.191) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2538.14
+ via Frontend Transport; Thu, 12 Dec 2019 15:18:00 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1ifQE4-0000p2-7i; Thu, 12 Dec 2019 07:18:00 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1ifQDz-0001CR-6c; Thu, 12 Dec 2019 07:17:55 -0800
+Received: from [172.30.17.107]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1ifQDs-0000xF-FY; Thu, 12 Dec 2019 07:17:48 -0800
+Subject: Re: [PATCH 3/3] arm64: dts: xilinx: Add the power nodes for zynqmp
+To:     Rajan Vaja <rajan.vaja@xilinx.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, michal.simek@xilinx.com,
+        harini.katakam@xilinx.com, jan.kiszka@siemens.com,
+        ulf.hansson@linaro.org, xuwei5@hisilicon.com, mripard@kernel.org,
+        heiko@sntech.de
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1573119856-13548-1-git-send-email-rajan.vaja@xilinx.com>
+ <1573119856-13548-4-git-send-email-rajan.vaja@xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <4e0c5cdd-2dd6-e6a1-3541-fcaf37468e35@xilinx.com>
+Date:   Thu, 12 Dec 2019 16:17:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <1573119856-13548-4-git-send-email-rajan.vaja@xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(396003)(376002)(136003)(189003)(199004)(31696002)(2616005)(4744005)(31686004)(44832011)(478600001)(26005)(4326008)(426003)(186003)(9786002)(2906002)(8676002)(36756003)(356004)(336012)(8936002)(81166006)(70206006)(70586007)(5660300002)(81156014)(316002)(7416002)(6666004)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR0201MB3430;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6a711865-abc6-4f47-ab57-08d77f167a09
+X-MS-TrafficTypeDiagnostic: DM5PR0201MB3430:
+X-Microsoft-Antispam-PRVS: <DM5PR0201MB3430869874A29E4F88310538C6550@DM5PR0201MB3430.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0249EFCB0B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2nw3s05WoEi/vwbIGt4YsBgpIilrQfDQQ0agcGJdglqmqmO0PeMJ+uI2hfaViUrj62W9zjg0FUHBCoWzR8j6AqhlWUwggW8zpvVBvBpF3CIsht7YXayENI4+6ubyNVG88crW1HA8ddcQA7vemfGa4AYQ4Kjzrc1cmUpb1GBsgatEpFAyWu9GXJmQoJnBU3Jz8MlLMQK8Bzpe4f66SD51XCjEW/J4sMyT8ZlWcoXqwFljzOcQJH5+BgaNLRp80dSl4s+ZdkViLydg8UoIzwLWFvywte2jI3z5weQyNMwJdI1Squ6nb2Ytm/XLZ9XgBYv8yJW5NUqGoZVH5WFkpo++RWzum/GjKsj2uAD1rB0gcfLLKQicH25MzO9q6FKtDEyer8i1gp3QsmBjzF4RhC8a9wbKN3SLj6P8JV2kgzoUqr99m10FWpwwrXlsJOc6TaRqai723M9j+Ohu3ZeBw1IOF6vppcery/gVwVpKF8YS2+W0DcY1Zah9cDwiXawBguoo
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2019 15:18:00.8365
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a711865-abc6-4f47-ab57-08d77f167a09
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR0201MB3430
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Brad,
-
-On Thu, 2019-12-12 at 09:51 -0500, Brad Bishop wrote:
-> Hi Philipp.  Thanks for your time.
+On 07. 11. 19 10:44, Rajan Vaja wrote:
+> Add power domain nodes for zynqmp.
 > 
-> > On Dec 2, 2019, at 7:53 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > 
-> > On Fri, 2019-11-29 at 10:38 +1030, Joel Stanley wrote:
-> > > From: Brad Bishop <bradleyb@fuzziesquirrel.com>
-> > > 
-> > > The AST2600 SoC contains the same LPC register set as the AST2500.
-> > 
-> > If the LPC register set is exactly the same, shouldn't AST2600 reuse the
-> > AST2500 compatible, i.e.:
-> > 	compatible = "aspeed,ast2600-lpc-reset", "aspeed,ast2500-lpc-reset";
-> > ?
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> ---
+>  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 48 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
 > 
-> I’m not sure.  I let what was already there be my guide - the ast2500
-> LPC registers are the same as the ast2400 as well and those got their
-> own compatibles.  Is there a guideline written down somewhere that
-> backs your thinking up?
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> index 59a547b..f915bc0 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> @@ -12,6 +12,8 @@
+>   * the License, or (at your option) any later version.
+>   */
+>  
+> +#include <dt-bindings/power/xlnx-zynqmp-power.h>
+> +
+>  / {
+>  	compatible = "xlnx,zynqmp";
+>  	#address-cells = <2>;
+> @@ -127,7 +129,14 @@
+>  	firmware {
+>  		zynqmp_firmware: zynqmp-firmware {
+>  			compatible = "xlnx,zynqmp-firmware";
+> +			#power-domain-cells = <0x1>;
 
-I read section 2.3.1 "compatible" of the DeviceTree Specification [1] as
-supporting that view. If all three LPC reset controllers are in fact
-identical, I would argue that both ast2500 and ast2600 are compatible to
-ast2400 and should be specified as:
-	compatible = "aspeed,ast2500-lpc-reset", "aspeed,ast2400-lpc-reset";
-and:
-	compatible = "aspeed,ast2600-lpc-reset", "aspeed,ast2400-lpc-reset";
-respectively.
+Applied but here with just 1 instead of 0x1
 
-[1] https://github.com/devicetree-org/devicetree-specification/releases/download/v0.2/devicetree-specification-v0.2.pdf
-
-regards
-Philipp
-
+Thanks,
+Michal
