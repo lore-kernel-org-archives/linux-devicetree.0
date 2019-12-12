@@ -2,176 +2,167 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4B2C2D0CA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 09:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09174C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 09:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818E022527
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 09:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5864214D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 09:43:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u5SBg2z8"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rVmo3/Ey"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbfLLJl6 (ORCPT
+        id S1728401AbfLLJn1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:41:58 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42054 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728501AbfLLJlz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 04:41:55 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 4so456832pfz.9;
-        Thu, 12 Dec 2019 01:41:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nqldGoReHAqAk+cCLWay8D5xD350FZnLqhYpYXAhHH8=;
-        b=u5SBg2z8I1z6zoptoyt6jacu8N12W2nd3dbifd6S7GkMnSTSjCEiQvh5vJsnRQ+g7j
-         fINT2UX1NBiHZM3W2BpO2Zvn7GNYZ3cg2qu0gvCgVMWef0rVn1i9W5k0WCsKWeDTYLMA
-         DMJldK8o52HZEw1ko+313+V2B7LLOWP7+4GzRkWyWz4TG0ttF+/Sn8JAHsuiI7aDX9G5
-         XWj7mG/x5lEDCxcHkxRO8JgXgd7z/P081ojMzNkG0K6eWElzwJn2iNM3oCN9oZ5qxJNe
-         bzSc3S+5IC6aUsRXtipHOSCDkILXmncLffLi/z7Ru9qHy7yDR54fOsLiFuOSialwOMCz
-         B3fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nqldGoReHAqAk+cCLWay8D5xD350FZnLqhYpYXAhHH8=;
-        b=oxH7v3aQCLe2tyzLPTz9+7sRH4QLBY1jlcZleU3IahjQs7vgFPa7zJl3Fv6NBTEzmN
-         o25gv3SHCLGNBsQDEYT4WSdOReCWFeXErCQRrxZzalRkveTlHbMvxnIi6+EYMtYX396/
-         nXEMkUYkONdYwDMiwurLISPgUCA5ztdzg/a4WxCBcS+QYUCR/7wxt2Dgru7KylgwaZku
-         38SD6nOCFDeybmPLPf1Upnoor43HSYnxIRYUEjCqlz5fz/EBkNPOgTM0K0c/7z1JiBeJ
-         uklC5FFUh/uCG34OxJ6Tj4zuulhXqmX8zz0REVy8iF4t0Co/G5wqfHEHdOqChFLOWenC
-         yKdw==
-X-Gm-Message-State: APjAAAXX3AX0+baRfKSdYads9R5JF5t6j8Bl/45q5fQC9keI2NtNwsSp
-        hGbUvxzuyrMCvT7+qo6PXwjgCPHmCcjlQmjS06I=
-X-Google-Smtp-Source: APXvYqyaJri9LBw5453s33quy2tAl+OdZHJ+fpc3dBR/CqpUX9/bqt4NhAXnxiT/xG0qm1LXP2+Uj/cdyawHqOhL8rU=
-X-Received: by 2002:a63:e14a:: with SMTP id h10mr9241444pgk.74.1576143714981;
- Thu, 12 Dec 2019 01:41:54 -0800 (PST)
-MIME-Version: 1.0
-References: <20191211010308.1525-1-dan@dlrobertson.com> <20191211010308.1525-3-dan@dlrobertson.com>
- <CAHp75VdAJwMkPZQLLQrOk4HABjG-parEOmH8S-6kU+zyYnnfww@mail.gmail.com> <20191212001735.GA4667@nessie>
-In-Reply-To: <20191212001735.GA4667@nessie>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 12 Dec 2019 11:41:45 +0200
-Message-ID: <CAHp75VezHcGwwWZ8tSf6FKoYQ_c4=WhYE2ag6OtcAJ2Z9M3ZOA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] iio: (bma400) add driver for the BMA400
-To:     Dan Robertson <dan@dlrobertson.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
+        Thu, 12 Dec 2019 04:43:27 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13260 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728374AbfLLJn1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Dec 2019 04:43:27 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBC9bXog013369;
+        Thu, 12 Dec 2019 10:43:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=W7ta/D/nEVXWd0swsme5vM2t6D5+rqjLo8hFeAJNVHk=;
+ b=rVmo3/EyUG85blnhiM7tQSAV0dAr0Fjzn1vGZx5fUdsQC5GoLV2gCUln9bv0km9RvQix
+ QWPstxdaGvO9YjYG/219WQ/r1mb0otvJ+tXz/KLHXF26HFQEfInGOpsAj/DWZB+k0QJB
+ Se3enbBVWQfMKbbvVhs4eB88XJMK0BL0IOcGWtgfWWvxA6gNziBTECpGfwck4+fQjYa0
+ D0nVGyYuywdDuc/96zKZFKcVLdWb98BEjxMJ6lSexJ7VIzG6vU3OOxbZxvp7M7Iy0cFS
+ 95vW7nPBuKvyL1E+UMrnBfN5pRjm7Qh5+Q5lQoUo/NuIAQCLoHSETofACQKe3IEynj34 6w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wrbrfpma4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Dec 2019 10:43:15 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1DD6910002A;
+        Thu, 12 Dec 2019 10:43:14 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EE8442B8FFA;
+        Thu, 12 Dec 2019 10:43:13 +0100 (CET)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Dec
+ 2019 10:43:13 +0100
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1473.003; Thu, 12 Dec 2019 10:43:13 +0100
+From:   Fabien DESSENNE <fabien.dessenne@st.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>
+CC:     "od@zcrc.me" <od@zcrc.me>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/5] remoteproc: Add device-managed variants of
+ rproc_alloc/rproc_add
+Thread-Topic: [PATCH v4 2/5] remoteproc: Add device-managed variants of
+ rproc_alloc/rproc_add
+Thread-Index: AQHVr3iIZbYIxXYBCk6/jTgSiJoOx6e2MW2A
+Date:   Thu, 12 Dec 2019 09:43:13 +0000
+Message-ID: <6fff431f-dd3f-a67e-e40b-8cee4060c37a@st.com>
+References: <20191210164014.50739-1-paul@crapouillou.net>
+ <20191210164014.50739-2-paul@crapouillou.net>
+In-Reply-To: <20191210164014.50739-2-paul@crapouillou.net>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.48]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E47CC4E35B31C94CA71149C4F5BFCD46@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-12_02:2019-12-12,2019-12-12 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 2:33 AM Dan Robertson <dan@dlrobertson.com> wrote:
-> On Wed, Dec 11, 2019 at 03:21:56PM +0200, Andy Shevchenko wrote:
-> > On Wed, Dec 11, 2019 at 3:20 AM Dan Robertson <dan@dlrobertson.com> wrote:
-
-> > > +#define BMA400_LP_OSR_SHIFT         0x05
-> > > +#define BMA400_NP_OSR_SHIFT         0x04
-> > > +#define BMA400_SCALE_SHIFT          0x06
-> >
-> > I'm not sure why this is being defined as hex number instead of plain decimal...
->
-> Sounds good.
->
-> > > +#define BMA400_TWO_BITS_MASK        GENMASK(1, 0)
-> > > +#define BMA400_LP_OSR_MASK          GENMASK(6, BMA400_LP_OSR_SHIFT)
-> > > +#define BMA400_NP_OSR_MASK          GENMASK(5, BMA400_NP_OSR_SHIFT)
-> > > +#define BMA400_ACC_ODR_MASK         GENMASK(3, 0)
-> > > +#define BMA400_ACC_SCALE_MASK       GENMASK(7, BMA400_SCALE_SHIFT)
-> >
-> > And here simple better to put same numbers. It will help to read.
->
-> Do you mean for the shift or for the mask?
-
-SHIFTs -> plain decimals
-
-> > > +EXPORT_SYMBOL(bma400_regmap_config);
-> >
-> > I'm not sure I got the idea why this one is being exported.
->
-> It needs to be exported so that it can be used in the bma400_i2c module and the
-> future bma400_spi module. In theory, if we _really_ do not want to export this,
-> then we can define separate regmap configs in each of the bma400_i2c and
-> (future) bma400_spi modules, but then we would have to export the is_volitile_reg
-> and is_writable_reg functions. As a result, I do not see any benefits to that
-> method over exporting the config, but I could be convinced otherwise.
-
-I think there might be better way to do this.
-But I leave it to you and maintainer to agree on (I will be fine with
-any solution you will come to).
-
-> > > +               if (uhz || hz % BMA400_ACC_ODR_MIN_WHOLE_HZ)
-> > > +                       return -EINVAL;
-> > > +
-> > > +               val = hz / BMA400_ACC_ODR_MIN_WHOLE_HZ;
-> > > +               idx = __ffs(val);
-> > > +
-> >
-> > > +               if (val ^ BIT(idx))
-> >
-> > Seems like funny way of checking is_power_of_2(). But it's up to maintainers.
-> > And your variant may even be better here (in code generation perspective)...
-> >
-> > However, the whole idea here is, IIUC, to have something like
-> >
-> >   hz = 2^idx * BMA400_ACC_ODR_MIN_WHOLE_HZ
-> >
-> > I think you may do it without divisions, i.e. call __ffs() first and then do
-> >    idx = __ffs(...);
-> >    val = hz >> idx;
-> >    if (val != BMA400_ACC_ODR_MIN_WHOLE_HZ)
-> >     return -EINVAL;
-> >
-> > or something like above.
->
-> It would be more obvious what is being done here with is_power_of_two. I'll
-> revisit this function with your suggestions. If I can make it simpler, I'll
-> go this route.
-
-The main point here to get rid of divisions. Is it achievable?
-
-> > > +                       return -EINVAL;
-> >
-> > ...
-
-> > > +       ret = regmap_read(data->regmap, BMA400_ACC_CONFIG0_REG, &val);
-> > > +       if (ret < 0)
-> >
-> > I'm wondering if in all of these regmap_read()...
-> >
-> > > +               return ret;
-> >
-> > > +       ret = regmap_write(data->regmap, BMA400_ACC_CONFIG0_REG,
-> > > +                          mode | (val & ~BMA400_TWO_BITS_MASK));
-> > > +       if (ret < 0) {
-> >
-> > ...and regmap_write() calls you ever can get a positive returned code.
->
-> From the regmap_read/regmap_write docs:
->
-> > * A value of zero will be returned on success, a negative errno will
-> > * be returned in error cases.
->
-> So I assume ret <= 0
-
-There is no positive codes mentioned at all. And you assume right.
-But why we care about positive codes if they never can be returned?
-
--- 
-With Best Regards,
-Andy Shevchenko
+SGkgUGF1bCwNCg0KDQpHb29kIGluaXRpYXRpdmUhIFNlZSBtZSByZW1hcmtzIGJlbG93Lg0KDQoN
+Ck9uIDEwLzEyLzIwMTkgNTo0MCBQTSwgUGF1bCBDZXJjdWVpbCB3cm90ZToNCj4gQWRkIEFQSSBm
+dW5jdGlvbnMgZGV2bV9ycHJvY19hbGxvYygpIGFuZCBkZXZtX3Jwcm9jX2FkZCgpLCB3aGljaCBi
+ZWhhdmUNCj4gbGlrZSBycHJvY19hbGxvYygpIGFuZCBycHJvY19hZGQoKSByZXNwZWN0aXZlbHks
+IGJ1dCByZWdpc3RlciB0aGVpcg0KPiByZXNwZWN0aXZlIGNsZWFudXAgZnVuY3Rpb24gdG8gYmUg
+Y2FsbGVkIG9uIGRyaXZlciBkZXRhY2guDQo+DQo+IFNpZ25lZC1vZmYtYnk6IFBhdWwgQ2VyY3Vl
+aWwgPHBhdWxAY3JhcG91aWxsb3UubmV0Pg0KPiAtLS0NCj4NCj4gTm90ZXM6DQo+ICAgICAgdjM6
+IE5ldyBwYXRjaA0KPiAgICAgIHY0OiBObyBjaGFuZ2UNCj4NCj4gICBkcml2ZXJzL3JlbW90ZXBy
+b2MvcmVtb3RlcHJvY19jb3JlLmMgfCA2NyArKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+
+ICAgaW5jbHVkZS9saW51eC9yZW1vdGVwcm9jLmggICAgICAgICAgIHwgIDUgKysrDQo+ICAgMiBm
+aWxlcyBjaGFuZ2VkLCA3MiBpbnNlcnRpb25zKCspDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L3JlbW90ZXByb2MvcmVtb3RlcHJvY19jb3JlLmMgYi9kcml2ZXJzL3JlbW90ZXByb2MvcmVtb3Rl
+cHJvY19jb3JlLmMNCj4gaW5kZXggMzA3ZGY5ODM0N2JhLi4wYTlmYzdmZGQxYzMgMTAwNjQ0DQo+
+IC0tLSBhL2RyaXZlcnMvcmVtb3RlcHJvYy9yZW1vdGVwcm9jX2NvcmUuYw0KPiArKysgYi9kcml2
+ZXJzL3JlbW90ZXByb2MvcmVtb3RlcHJvY19jb3JlLmMNCg0KDQpNYXliZSB0aGVzZSBkZXZtIGZ1
+bmN0aW9uIHNoYWxsIGJlIGRlZmluZWQgaW4gYSBuZXcgcmVtb3RlcHJvYy9kZXZyZXMuYyANCmZp
+bGUuIEFsdGhvdWdoIGl0IHNlZW1zIHRvIGJlIGEgY29tbW9uIHVzYWdlIEkgZG9uJ3Qga25vdyBp
+ZiB0aGVyZSBpcyBhIA0KcnVsZSBmb3IgdGhhdC4NCg0KDQo+IEBAIC0xOTMyLDYgKzE5MzIsMzMg
+QEAgaW50IHJwcm9jX2FkZChzdHJ1Y3QgcnByb2MgKnJwcm9jKQ0KPiAgIH0NCj4gICBFWFBPUlRf
+U1lNQk9MKHJwcm9jX2FkZCk7DQo+ICAgDQo+ICtzdGF0aWMgdm9pZCBkZXZtX3Jwcm9jX3JlbW92
+ZSh2b2lkICpycHJvYykNCj4gK3sNCj4gKwlycHJvY19kZWwocnByb2MpOw0KPiArfQ0KPiArDQo+
+ICsvKioNCj4gKyAqIGRldm1fcnByb2NfYWRkKCkgLSByZXNvdXJjZSBtYW5hZ2VkIHJwcm9jX2Fk
+ZCgpDQo+ICsgKiBAZGV2OiB0aGUgdW5kZXJseWluZyBkZXZpY2UNCj4gKyAqIEBycHJvYzogdGhl
+IHJlbW90ZSBwcm9jZXNzb3IgaGFuZGxlIHRvIHJlZ2lzdGVyDQo+ICsgKg0KPiArICogVGhpcyBm
+dW5jdGlvbiBwZXJmb3JtcyBsaWtlIHJwcm9jX2FkZCgpIGJ1dCB0aGUgcmVnaXN0ZXJlZCBycHJv
+YyBkZXZpY2Ugd2lsbA0KPiArICogYXV0b21hdGljYWxseSBiZSByZW1vdmVkIG9uIGRyaXZlciBk
+ZXRhY2guDQo+ICsgKg0KPiArICogUmV0dXJucyAwIG9uIHN1Y2Nlc3MgYW5kIGFuIGFwcHJvcHJp
+YXRlIGVycm9yIGNvZGUgb3RoZXJ3aXNlLg0KPiArICovDQo+ICtpbnQgZGV2bV9ycHJvY19hZGQo
+c3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgcnByb2MgKnJwcm9jKQ0KPiArew0KPiArCWludCBl
+cnI7DQo+ICsNCj4gKwllcnIgPSBycHJvY19hZGQocnByb2MpOw0KPiArCWlmIChlcnIpDQo+ICsJ
+CXJldHVybiBlcnI7DQo+ICsNCj4gKwlyZXR1cm4gZGV2bV9hZGRfYWN0aW9uX29yX3Jlc2V0KGRl
+diwgZGV2bV9ycHJvY19yZW1vdmUsIHJwcm9jKTsNCj4gK30NCj4gK0VYUE9SVF9TWU1CT0woZGV2
+bV9ycHJvY19hZGQpOw0KPiArDQo+ICAgLyoqDQo+ICAgICogcnByb2NfdHlwZV9yZWxlYXNlKCkg
+LSByZWxlYXNlIGEgcmVtb3RlIHByb2Nlc3NvciBpbnN0YW5jZQ0KPiAgICAqIEBkZXY6IHRoZSBy
+cHJvYydzIGRldmljZQ0KPiBAQCAtMjE0OSw2ICsyMTc2LDQ2IEBAIGludCBycHJvY19kZWwoc3Ry
+dWN0IHJwcm9jICpycHJvYykNCj4gICB9DQo+ICAgRVhQT1JUX1NZTUJPTChycHJvY19kZWwpOw0K
+PiAgIA0KPiArc3RhdGljIHZvaWQgZGV2bV9ycHJvY19mcmVlKHN0cnVjdCBkZXZpY2UgKmRldiwg
+dm9pZCAqcmVzKQ0KPiArew0KPiArCXJwcm9jX2ZyZWUoKihzdHJ1Y3QgcnByb2MgKiopcmVzKTsN
+Cj4gK30NCj4gKw0KPiArLyoqDQo+ICsgKiBkZXZtX3Jwcm9jX2FsbG9jKCkgLSByZXNvdXJjZSBt
+YW5hZ2VkIHJwcm9jX2FsbG9jKCkNCj4gKyAqIEBkZXY6IHRoZSB1bmRlcmx5aW5nIGRldmljZQ0K
+PiArICogQG5hbWU6IG5hbWUgb2YgdGhpcyByZW1vdGUgcHJvY2Vzc29yDQo+ICsgKiBAb3BzOiBw
+bGF0Zm9ybS1zcGVjaWZpYyBoYW5kbGVycyAobWFpbmx5IHN0YXJ0L3N0b3ApDQo+ICsgKiBAZmly
+bXdhcmU6IG5hbWUgb2YgZmlybXdhcmUgZmlsZSB0byBsb2FkLCBjYW4gYmUgTlVMTA0KPiArICog
+QGxlbjogbGVuZ3RoIG9mIHByaXZhdGUgZGF0YSBuZWVkZWQgYnkgdGhlIHJwcm9jIGRyaXZlciAo
+aW4gYnl0ZXMpDQo+ICsgKg0KPiArICogVGhpcyBmdW5jdGlvbiBwZXJmb3JtcyBsaWtlIHJwcm9j
+X2FsbG9jKCkgYnV0IHRoZSBhY3VpcmVkIHJwcm9jIGRldmljZSB3aWxsDQoNCg0KdHlwbzogcy9h
+Y3VpcmVkL2FjcXVpcmVkDQoNCg0KPiArICogYXV0b21hdGljYWxseSBiZSByZWxlYXNlZCBvbiBk
+cml2ZXIgZGV0YWNoLg0KPiArICoNCj4gKyAqIE9uIHN1Y2Nlc3MgdGhlIG5ldyBycHJvYyBpcyBy
+ZXR1cm5lZCwgYW5kIG9uIGZhaWx1cmUsIE5VTEwuDQo+ICsgKi8NCj4gK3N0cnVjdCBycHJvYyAq
+ZGV2bV9ycHJvY19hbGxvYyhzdHJ1Y3QgZGV2aWNlICpkZXYsIGNvbnN0IGNoYXIgKm5hbWUsDQo+
+ICsJCQkgICAgICAgY29uc3Qgc3RydWN0IHJwcm9jX29wcyAqb3BzLA0KPiArCQkJICAgICAgIGNv
+bnN0IGNoYXIgKmZpcm13YXJlLCBpbnQgbGVuKQ0KPiArew0KPiArCXN0cnVjdCBycHJvYyAqKnB0
+ciwgKnJwcm9jOw0KPiArDQo+ICsJcHRyID0gZGV2cmVzX2FsbG9jKGRldm1fcnByb2NfZnJlZSwg
+c2l6ZW9mKCpwdHIpLCBHRlBfS0VSTkVMKTsNCj4gKwlpZiAoIXB0cikNCj4gKwkJcmV0dXJuIEVS
+Ul9QVFIoLUVOT01FTSk7DQo+ICsNCj4gKwlycHJvYyA9IHJwcm9jX2FsbG9jKGRldiwgbmFtZSwg
+b3BzLCBmaXJtd2FyZSwgbGVuKTsNCj4gKwlpZiAocnByb2MpIHsNCj4gKwkJKnB0ciA9IHJwcm9j
+Ow0KPiArCQlkZXZyZXNfYWRkKGRldiwgcHRyKTsNCj4gKwl9IGVsc2Ugew0KPiArCQlkZXZyZXNf
+ZnJlZShwdHIpOw0KPiArCX0NCj4gKw0KPiArCXJldHVybiBycHJvYzsNCg0KDQpDYW4ndCB5b3Ug
+dXNlIGRldm1fYWRkX2FjdGlvbl9vcl9yZXNldCgpIGhlcmUgdG9vPw0KDQoNCj4gK30NCj4gK0VY
+UE9SVF9TWU1CT0woZGV2bV9ycHJvY19hbGxvYyk7DQo+ICsNCj4gICAvKioNCj4gICAgKiBycHJv
+Y19hZGRfc3ViZGV2KCkgLSBhZGQgYSBzdWJkZXZpY2UgdG8gYSByZW1vdGVwcm9jDQo+ICAgICog
+QHJwcm9jOiBycHJvYyBoYW5kbGUgdG8gYWRkIHRoZSBzdWJkZXZpY2UgdG8NCj4gZGlmZiAtLWdp
+dCBhL2luY2x1ZGUvbGludXgvcmVtb3RlcHJvYy5oIGIvaW5jbHVkZS9saW51eC9yZW1vdGVwcm9j
+LmgNCj4gaW5kZXggMTZhZDY2NjgzYWQwLi41ZjIwMWYwYzg2YzMgMTAwNjQ0DQo+IC0tLSBhL2lu
+Y2x1ZGUvbGludXgvcmVtb3RlcHJvYy5oDQo+ICsrKyBiL2luY2x1ZGUvbGludXgvcmVtb3RlcHJv
+Yy5oDQo+IEBAIC01OTUsNiArNTk1LDExIEBAIGludCBycHJvY19hZGQoc3RydWN0IHJwcm9jICpy
+cHJvYyk7DQo+ICAgaW50IHJwcm9jX2RlbChzdHJ1Y3QgcnByb2MgKnJwcm9jKTsNCj4gICB2b2lk
+IHJwcm9jX2ZyZWUoc3RydWN0IHJwcm9jICpycHJvYyk7DQo+ICAgDQo+ICtzdHJ1Y3QgcnByb2Mg
+KmRldm1fcnByb2NfYWxsb2Moc3RydWN0IGRldmljZSAqZGV2LCBjb25zdCBjaGFyICpuYW1lLA0K
+PiArCQkJICAgICAgIGNvbnN0IHN0cnVjdCBycHJvY19vcHMgKm9wcywNCj4gKwkJCSAgICAgICBj
+b25zdCBjaGFyICpmaXJtd2FyZSwgaW50IGxlbik7DQo+ICtpbnQgZGV2bV9ycHJvY19hZGQoc3Ry
+dWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgcnByb2MgKnJwcm9jKTsNCj4gKw0KPiAgIHZvaWQgcnBy
+b2NfYWRkX2NhcnZlb3V0KHN0cnVjdCBycHJvYyAqcnByb2MsIHN0cnVjdCBycHJvY19tZW1fZW50
+cnkgKm1lbSk7DQo+ICAgDQo+ICAgc3RydWN0IHJwcm9jX21lbV9lbnRyeSAqDQoNCg0KQlINCg0K
+RmFiaWVuDQo=
