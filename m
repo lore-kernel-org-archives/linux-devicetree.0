@@ -2,141 +2,172 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEAFC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 05:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E799CC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 05:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6AD2214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 05:13:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YCgcz9bc"
+	by mail.kernel.org (Postfix) with ESMTP id B177D2073D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 05:40:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbfLLFNi (ORCPT
+        id S1726880AbfLLFki (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 00:13:38 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:57462 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726680AbfLLFNi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 00:13:38 -0500
-X-UUID: a90999917e1047b48b74d47f96834312-20191212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=RH3N4/Myeg9e4TIYQEyUEpEdg2os6y04iBsq0O3Go64=;
-        b=YCgcz9bc+PAVRpWHAXIyZ1NulimYwwu15Mo4Okf9w/0MVb64NiMvUGi1XmvxDZe+j7RaUXdGzUity7h2DR8Px9kzYRlPKlAHFvKFI0OqSMnhjLJc8qdgcqS2SYkz00usA/KiJCNr231jgft3wsHcS25VQhGUU3w2bcThmL3cR9o=;
-X-UUID: a90999917e1047b48b74d47f96834312-20191212
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 868332676; Thu, 12 Dec 2019 13:13:31 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 12 Dec 2019 13:13:14 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Dec 2019 13:12:53 +0800
-Message-ID: <1576127609.27185.8.camel@mtkswgap22>
-Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Florian Fainelli <f.fainelli@gmail.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-crypto@vger.kernel.org>, Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
-        <crystal.guo@mediatek.com>, "Will Deacon" <will@kernel.org>,
-        Lars Persson <lists@bofh.nu>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 12 Dec 2019 13:13:29 +0800
-In-Reply-To: <b7043e932211911a81383274e0cc983d@www.loen.fr>
-References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
-         <1574864578-467-4-git-send-email-neal.liu@mediatek.com>
-         <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
-         <1575027046.24848.4.camel@mtkswgap22>
-         <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
-         <20191202191146.79e6368c@why>
-         <299029b0-0689-c2c4-4656-36ced31ed513@gmail.com>
-         <b7043e932211911a81383274e0cc983d@www.loen.fr>
+        Thu, 12 Dec 2019 00:40:38 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9346 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725980AbfLLFki (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Dec 2019 00:40:38 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBC5b3qI136872;
+        Thu, 12 Dec 2019 00:40:17 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wtfby7q1j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Dec 2019 00:40:17 -0500
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBC5bQHY137787;
+        Thu, 12 Dec 2019 00:40:16 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wtfby7q17-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Dec 2019 00:40:16 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBC5YwdO004715;
+        Thu, 12 Dec 2019 05:40:15 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03dal.us.ibm.com with ESMTP id 2wr3q7wxum-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Dec 2019 05:40:15 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBC5eEcG41419166
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 05:40:14 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E84C6A054;
+        Thu, 12 Dec 2019 05:40:14 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E11C6A04D;
+        Thu, 12 Dec 2019 05:40:13 +0000 (GMT)
+Received: from [9.70.82.143] (unknown [9.70.82.143])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Dec 2019 05:40:13 +0000 (GMT)
+Subject: [PATCH V2 00/13] powerpc/vas: Page fault handling for user space
+ NX requests
+From:   Haren Myneni <haren@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     hch@infradead.org, mikey@neuling.org, npiggin@gmail.com,
+        herbert@gondor.apana.org.au, linuxppc-dev@lists.ozlabs.org,
+        devicetree@vger.kernel.org, sukadev@linux.vnet.ibm.com
+In-Reply-To: <1575861522.16318.9.camel@hbabu-laptop>
+References: <1575861522.16318.9.camel@hbabu-laptop>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Date:   Wed, 11 Dec 2019 21:38:30 -0800
+Message-ID: <1576129110.16318.48.camel@hbabu-laptop>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.28.3 
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-12_01:2019-12-12,2019-12-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=3 spamscore=0
+ mlxlogscore=999 malwarescore=0 phishscore=0 priorityscore=1501 bulkscore=0
+ adultscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912120035
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTEyLTAzIGF0IDExOjE3ICswMDAwLCBNYXJjIFp5bmdpZXIgd3JvdGU6DQo+
-IE9uIDIwMTktMTItMDMgMDQ6MTYsIEZsb3JpYW4gRmFpbmVsbGkgd3JvdGU6DQo+ID4gT24gMTIv
-Mi8yMDE5IDExOjExIEFNLCBNYXJjIFp5bmdpZXIgd3JvdGU6DQo+ID4+IE9uIE1vbiwgMiBEZWMg
-MjAxOSAxNjoxMjowOSArMDAwMA0KPiA+PiBBcmQgQmllc2hldXZlbCA8YXJkLmJpZXNoZXV2ZWxA
-bGluYXJvLm9yZz4gd3JvdGU6DQo+ID4+DQo+ID4+PiAoYWRkaW5nIHNvbWUgbW9yZSBhcm02NCBm
-b2xrcykNCj4gPj4+DQo+ID4+PiBPbiBGcmksIDI5IE5vdiAyMDE5IGF0IDExOjMwLCBOZWFsIExp
-dSA8bmVhbC5saXVAbWVkaWF0ZWsuY29tPiANCj4gPj4+IHdyb3RlOg0KPiA+Pj4+DQo+ID4+Pj4g
-T24gRnJpLCAyMDE5LTExLTI5IGF0IDE4OjAyICswODAwLCBMYXJzIFBlcnNzb24gd3JvdGU6DQo+
-ID4+Pj4+IEhpIE5lYWwsDQo+ID4+Pj4+DQo+ID4+Pj4+IE9uIFdlZCwgTm92IDI3LCAyMDE5IGF0
-IDM6MjMgUE0gTmVhbCBMaXUgPG5lYWwubGl1QG1lZGlhdGVrLmNvbT4gDQo+ID4+Pj4+IHdyb3Rl
-Og0KPiA+Pj4+Pj4NCj4gPj4+Pj4+IEZvciBNZWRpYVRlayBTb0NzIG9uIEFSTXY4IHdpdGggVHJ1
-c3Rab25lIGVuYWJsZWQsIHBlcmlwaGVyYWxzIA0KPiA+Pj4+Pj4gbGlrZQ0KPiA+Pj4+Pj4gZW50
-cm9weSBzb3VyY2VzIGlzIG5vdCBhY2Nlc3NpYmxlIGZyb20gbm9ybWFsIHdvcmxkIChsaW51eCkg
-YW5kDQo+ID4+Pj4+PiByYXRoZXIgYWNjZXNzaWJsZSBmcm9tIHNlY3VyZSB3b3JsZCAoQVRGL1RF
-RSkgb25seS4gVGhpcyBkcml2ZXIgDQo+ID4+Pj4+PiBhaW1zDQo+ID4+Pj4+PiB0byBwcm92aWRl
-IGEgZ2VuZXJpYyBpbnRlcmZhY2UgdG8gQVRGIHJuZyBzZXJ2aWNlLg0KPiA+Pj4+Pj4NCj4gPj4+
-Pj4NCj4gPj4+Pj4gSSBhbSB3b3JraW5nIG9uIHNldmVyYWwgU29DcyB0aGF0IGFsc28gd2lsbCBu
-ZWVkIHRoaXMga2luZCBvZiANCj4gPj4+Pj4gZHJpdmVyDQo+ID4+Pj4+IHRvIGdldCBlbnRyb3B5
-IGZyb20gQXJtIHRydXN0ZWQgZmlybXdhcmUuDQo+ID4+Pj4+IElmIHlvdSBpbnRlbmQgdG8gbWFr
-ZSB0aGlzIGEgZ2VuZXJpYyBpbnRlcmZhY2UsIHBsZWFzZSBjbGVhbiB1cCANCj4gPj4+Pj4gdGhl
-DQo+ID4+Pj4+IHJlZmVyZW5jZXMgdG8gTWVkaWFUZWsgYW5kIGdpdmUgaXQgYSBtb3JlIGdlbmVy
-aWMgbmFtZS4gRm9yIA0KPiA+Pj4+PiBleGFtcGxlDQo+ID4+Pj4+ICJBcm0gVHJ1c3RlZCBGaXJt
-d2FyZSByYW5kb20gbnVtYmVyIGRyaXZlciIuDQo+ID4+Pj4+DQo+ID4+Pj4+IEl0IHdpbGwgYWxz
-byBiZSBoZWxwZnVsIGlmIHRoZSBTTUMgY2FsbCBudW1iZXIgaXMgY29uZmlndXJhYmxlLg0KPiA+
-Pj4+Pg0KPiA+Pj4+PiAtIExhcnMNCj4gPj4+Pg0KPiA+Pj4+IFllcywgSSdtIHRyeWluZyB0byBt
-YWtlIHRoaXMgdG8gYSBnZW5lcmljIGludGVyZmFjZS4gSSdsbCB0cnkgdG8gDQo+ID4+Pj4gbWFr
-ZQ0KPiA+Pj4+IEhXL3BsYXRmb3JtIHJlbGF0ZWQgZGVwZW5kZW5jeSB0byBiZSBjb25maWd1cmFi
-bGUgYW5kIGxldCBpdCBtb3JlDQo+ID4+Pj4gZ2VuZXJpYy4NCj4gPj4+PiBUaGFua3MgZm9yIHlv
-dXIgc3VnZ2VzdGlvbi4NCj4gPj4+Pg0KPiA+Pj4NCj4gPj4+IEkgZG9uJ3QgdGhpbmsgaXQgbWFr
-ZXMgc2Vuc2UgZm9yIGVhY2ggYXJtNjQgcGxhdGZvcm0gdG8gZXhwb3NlIGFuDQo+ID4+PiBlbnRy
-b3B5IHNvdXJjZSB2aWEgU01DIGNhbGxzIGluIGEgc2xpZ2h0bHkgZGlmZmVyZW50IHdheSwgYW5k
-IG1vZGVsIA0KPiA+Pj4gaXQNCj4gPj4+IGFzIGEgaC93IGRyaXZlci4gSW5zdGVhZCwgd2Ugc2hv
-dWxkIHRyeSB0byBzdGFuZGFyZGl6ZSB0aGlzLCBhbmQNCj4gPj4+IHBlcmhhcHMgZXhwb3NlIGl0
-IHZpYSB0aGUgYXJjaGl0ZWN0dXJhbCBoZWxwZXJzIHRoYXQgYWxyZWFkeSBleGlzdA0KPiA+Pj4g
-KGdldF9yYW5kb21fc2VlZF9sb25nKCkgYW5kIGZyaWVuZHMpLCBzbyB0aGV5IGdldCBwbHVnZ2Vk
-IGludG8gdGhlDQo+ID4+PiBrZXJuZWwgcmFuZG9tIHBvb2wgZHJpdmVyIGRpcmVjdGx5Lg0KPiA+
-Pg0KPiA+PiBBYnNvbHV0ZWx5LiBJJ2QgbG92ZSB0byBzZWUgYSBzdGFuZGFyZCwgQVJNLXNwZWNp
-ZmllZCwgdmlydHVhbGl6YWJsZQ0KPiA+PiBSTkcgdGhhdCBpcyBhYnN0cmFjdGVkIGZyb20gdGhl
-IEhXLg0KPiA+DQo+ID4gRG8geW91IHRoaW5rIHdlIGNvdWxkIHVzZSB2aXJ0aW8tcm5nIG9uIHRv
-cCBvZiBhIG1vZGlmaWVkIHZpcnRpby1tbWlvDQo+ID4gd2hpY2ggaW5zdGVhZCBvZiBiZWluZyBi
-YWNrZWQgYnkgYSBoYXJkd2FyZSBtYWlsYm94LCBjb3VsZCB1c2UgDQo+ID4gaHZjL3NtYw0KPiA+
-IGNhbGxzIHRvIHNpZ25hbCB3cml0ZXMgdG8gc2hhcmVkIG1lbW9yeSBhbmQgZ2V0IG5vdGlmaWNh
-dGlvbnMgdmlhIGFuDQo+ID4gaW50ZXJydXB0PyBUaGlzIHdvdWxkIGFsc28gb3BlbiB1cCB0aGUg
-ZG9vcnMgdG8gb3RoZXIgdmlydGlvIHVzZXMgDQo+ID4gY2FzZXMNCj4gPiBiZXlvbmQganVzdCBS
-TkcgKGUuZy46IGNvbnNvbGUsIGJsb2NrIGRldmljZXM/KS4gSWYgdGhpcyBpcyANCj4gPiBjb21w
-bGV0ZWx5DQo+ID4gc3R1cGlkLCB0aGVuIHBsZWFzZSBkaXNyZWdhcmQgdGhpcyBjb21tZW50Lg0K
-PiANCj4gVGhlIHByb2JsZW0gd2l0aCBhIHZpcnRpbyBkZXZpY2UgaXMgdGhhdCBpdCBpcyBhIC4u
-LiBkZXZpY2UuIFdoYXQgd2UgDQo+IHdhbnQNCj4gaXMgdG8gYmUgYWJsZSB0byBoYXZlIGFjY2Vz
-cyB0byBhbiBlbnRyb3B5IHNvdXJjZSBleHRyZW1lbHkgZWFybHkgaW4gDQo+IHRoZQ0KPiBrZXJu
-ZWwgbGlmZSwgYW5kIGRldmljZXMgdGVuZCB0byBiZSBhdmFpbGFibGUgcHJldHR5IGxhdGUgaW4g
-dGhlIGdhbWUuDQo+IFRoaXMgbWVhbnMgd2UgY2Fubm90IHBsdWcgdGhlbSBpbiB0aGUgYXJjaGl0
-ZWN0dXJhbCBoZWxwZXJzIHRoYXQgQXJkDQo+IG1lbnRpb25zIGFib3ZlLg0KPiANCj4gV2hhdCB5
-b3UncmUgc3VnZ2VzdGluZyBsb29rcyBtb3JlIGxpa2UgYSBuZXcga2luZCBvZiB2aXJ0aW8gdHJh
-bnNwb3J0LA0KPiB3aGljaCBpcyBpbnRlcmVzdGluZywgaW4gYSByZW1hcmthYmx5IHR3aXN0ZWQg
-d2F5Li4uIDstKQ0KPiANCj4gVGhhbmtzLA0KPiANCj4gICAgICAgICAgTS4NCg0KSW4gY29uY2x1
-c2lvbiwgaXMgaXQgaGVscGZ1bCB0aGF0IGh3X3JhbmRvbSBoYXMgYSBnZW5lcmljIGludGVyZmFj
-ZSB0bw0KYWRkIGRldmljZSByYW5kb21uZXNzIGJ5IHRhbGtpbmcgdG8gaHdybmcgd2hpY2ggaXMg
-aW1wbGVtZW50ZWQgaW4gdGhlDQpmaXJtd2FyZSBvciB0aGUgaHlwZXJ2aXNvcj8NCkZvciBtb3N0
-IGNoaXAgdmVuZG9ycywgSSB0aGluayB0aGUgYW5zd2VyIGlzIHllcy4gV2UgYWxyZWFkeSBwcmVw
-YXJlZCBhDQpuZXcgcGF0Y2hzZXQgYW5kIG5lZWQgeW91IGFncmVlIHdpdGggdGhpcyBpZGVhLg0K
-DQpUaGFua3MNCg0KLU5lYWwNCg0K
+[PATCH V2 00/13] powerpc/vas: Page fault handling for user space NX requests
+
+On power9, Virtual Accelerator Switchboard (VAS) allows user space or
+kernel to communicate with Nest Accelerator (NX) directly using COPY/PASTE
+instructions. NX provides verious functionalities such as compression,
+encryption and etc. But only compression (842 and GZIP formats) is
+supported in Linux kernel on power9.
+
+842 compression driver (drivers/crypto/nx/nx-842-powernv.c)
+is already included in Linux. Only GZIP support will be available from
+user space.
+
+Applications can issue GZIP compression / decompression requests to NX with
+COPY/PASTE instructions. When NX is processing these requests, can hit
+fault on the request buffer (not in memory). It issues an interrupt and
+pastes fault CRB in fault FIFO. Expects kernel to handle this fault and
+return credits for both send and fault windows after processing.
+
+This patch series adds IRQ and fault window setup, and NX fault handling:
+- Read IRQ# from "interrupts" property and configure IRQ per VAS instance.
+- Set port# for each window to generate an interrupt when noticed fault.
+- Set fault window and FIFO on which NX paste fault CRB.
+- Setup IRQ thread fault handler per VAS instance.
+- When receiving an interrupt, Read CRBs from fault FIFO and update
+  coprocessor_status_block (CSB) in the corresponding CRB with translation
+  failure (CSB_CC_TRANSLATION). After issuing NX requests, process polls
+  on CSB address. When it sees translation error, can touch the request
+  buffer to bring the page in to memory and reissue NX request.
+- If copy_to_user fails on user space CSB address, OS sends SEGV signal.
+
+Tested these patches with NX-GZIP support and will be posting this series
+soon.
+
+Patch 2: Define nx_fault_stamp on which NX writes fault status for the fault
+         CRB
+Patch 3: Read interrupts and port properties per VAS instance
+Patch 4: Setup fault window per each VAS instance. This window is used for
+         NX to paste fault CRB in FIFO.
+Patches 5 & 6: Setup threaded IRQ per VAS and register NX with fault window
+	 ID and port number for each send window so that NX paste fault CRB
+	 in this window.
+Patch 7: Reference to pid and mm so that pid is not used until window closed.
+	 Needed for multi thread application where child can open a window
+	 and can be used by parent later.
+Patches 8 and 9: Process CRBs from fault FIFO and notify tasks by
+         updating CSB or through signals.
+Patches 10 and 11: Return credits for send and fault windows after handling
+        faults.
+Patch 13:Fix closing send window after all credits are returned. This issue
+         happens only for user space requests. No page faults on kernel
+         request buffer.
+
+Changelog:
+V2:
+  - Use threaded IRQ instead of own kernel thread handler
+  - Use pswid insted of user space CSB address to find valid CRB
+  - Removed unused macros and other changes as suggested by Christoph Hellwig
+
+Haren Myneni (13):
+  powerpc/vas: Describe vas-port and interrupts properties
+  powerpc/vas: Define nx_fault_stamp in coprocessor_request_block
+  powerpc/vas: Read interrupts and vas-port device tree properties
+  powerpc/vas: Setup fault window per VAS instance
+  powerpc/vas: Setup thread IRQ handler per VAS instance
+  powerpc/vas: Register NX with fault window ID and IRQ port value
+  powerpc/vas: Take reference to PID and mm for user space windows
+  powerpc/vas: Update CSB and notify process for fault CRBs
+  powerpc/vas: Print CRB and FIFO values
+  powerpc/vas: Do not use default credits for receive window
+  powerpc/VAS: Return credits after handling fault
+  powerpc/vas: Display process stuck message
+  powerpc/vas: Free send window in VAS instance after credits returned
+
+ .../devicetree/bindings/powerpc/ibm,vas.txt        |   5 +
+ arch/powerpc/include/asm/icswx.h                   |  18 +-
+ arch/powerpc/platforms/powernv/Makefile            |   2 +-
+ arch/powerpc/platforms/powernv/vas-debug.c         |   2 +-
+ arch/powerpc/platforms/powernv/vas-fault.c         | 337 +++++++++++++++++++++
+ arch/powerpc/platforms/powernv/vas-window.c        | 173 ++++++++++-
+ arch/powerpc/platforms/powernv/vas.c               |  77 ++++-
+ arch/powerpc/platforms/powernv/vas.h               |  38 ++-
+ 8 files changed, 627 insertions(+), 25 deletions(-)
+ create mode 100644 arch/powerpc/platforms/powernv/vas-fault.c
+
+-- 
+1.8.3.1
+
+
 
