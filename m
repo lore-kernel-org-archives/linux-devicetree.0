@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F13C2D0C9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 21:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA049C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 21:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE56622B48
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 21:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A846822527
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 21:55:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XOcfVfvO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NMEr0qma"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731191AbfLLVzc (ORCPT
+        id S1730850AbfLLVzs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 16:55:32 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40590 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730784AbfLLVzc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 16:55:32 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q8so87950pfh.7
-        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 13:55:31 -0800 (PST)
+        Thu, 12 Dec 2019 16:55:48 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41257 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730863AbfLLVzr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 16:55:47 -0500
+Received: by mail-pl1-f193.google.com with SMTP id bd4so140161plb.8
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 13:55:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=message-id:mime-version:content-transfer-encoding:in-reply-to
          :references:from:cc:to:subject:user-agent:date;
-        bh=urg3oqpkUyFoOb/JDlCrmqkZ7jXqGD4fg9eldRMT63E=;
-        b=XOcfVfvOeLyjRRYv4YyBXqZXcq674DERW9bH+JuR+mQJt/1eouj+sPsXldunowJEUn
-         qlpu9yXRRfrpE6pfkWSuTGgw8mAJbHuDHNCDrkx2oINnIZ6BMwSP9wwG3T8SlxIXEEZi
-         7mdxLGuIfBHoCbfpCh4O4Dca0tfCbxhpKNjAk=
+        bh=Dpa7Bv2IFyLwYORRNirY3eVQ4KxGmvpe/YaQEvngR3w=;
+        b=NMEr0qma6c/6kVTLxju2qMg0xWHG8kkbt08ftFtiUBQ1qm/oW0ja/FQ91zWLdNf+Ps
+         PiO4S9vz9++ABVV8EAuFkP3WCsSfgsvRC5sbwMKTbqjkYOrs08jqULby2ogzFhIX8VPZ
+         onPDTc8CC5VbfdCdgFa2OSinGzrxMa3u138WY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:mime-version
          :content-transfer-encoding:in-reply-to:references:from:cc:to:subject
          :user-agent:date;
-        bh=urg3oqpkUyFoOb/JDlCrmqkZ7jXqGD4fg9eldRMT63E=;
-        b=GzE1Azp9xPlGHPgwswCVEcPPCNDBXtsEHU9myQ8ElQjFfwV6DpzmGiKu0zjkkS+gBl
-         bAncOJe5yfvBEv3NhjKzBTD2dj7pGQJPgmOUH4Quc36xV5s5oRhy03uBxaCRwjF5NwCl
-         UrO0QxC6caoItmPIeVNxC/zs8m+9oCD72RJLY+pkBgWeh6YRcogHsCjyyVRRF9KV6xhT
-         /j85PuK/szjDCeVuwr7MMFuBoXAMomHoQFLQYlYsvu2U2BBbSn4iv8cgwCDZtJDs4ae3
-         GpfdX3UHCZ7Lax2eV9OzzqDV2xTr53l/qRR1AOKMVjwyHiGqaqg4em36Qp8wp/ilWi50
-         NJvQ==
-X-Gm-Message-State: APjAAAXgNubkwuqZi/Df8kWxgYIJXs+C2tBxdDapq85YHeLn2e+yh82B
-        VnKLyaIUtA3Lm926irnxVg+zKg==
-X-Google-Smtp-Source: APXvYqxsU3Zn83nmi5BMPuXs1io7SR/MxzioX+tPsoqMwseMYXhYSyyUPQtfuvaRWLq5j4dET5VfoQ==
-X-Received: by 2002:a63:d543:: with SMTP id v3mr12769373pgi.285.1576187731374;
-        Thu, 12 Dec 2019 13:55:31 -0800 (PST)
+        bh=Dpa7Bv2IFyLwYORRNirY3eVQ4KxGmvpe/YaQEvngR3w=;
+        b=GaeE5QQq28aUWl0IIloUhhXcdBSTDAVhyK28DUezbB7byFnygIatmwXnR3m7YBbN10
+         hSmJDGpfyVAIDidCd8tyhx/H4hPXt9D7DggDEW9xuIjdIk6DjXF82QyIEyBZP/A+wpEJ
+         LPu9J2OWAJ08Wy8WIAZEzkYCobF5aCw+3sE1H023NmBNyLLwMfWE+IR5baA022F50p1B
+         a28j4+7swF1TJ5UPxCZVAnvvmU5v6tLR1P4AaC2pKHB5GQUqzn17nhOo+sIgYaGmLHjk
+         30kOx2lttUpLKVurQ+WZNzt4eadZVo77l1KcqW2qPzKVi1oDg3yUufNOo1LUbftrGJlw
+         RBgw==
+X-Gm-Message-State: APjAAAXLUXEnSf8epVjSKiOax9DH/Zo5vnLIqKqbj1M6CZWihRe0EGQt
+        lSO16JmUcLWWsrUWjcpqKGJGzA==
+X-Google-Smtp-Source: APXvYqxzsGkM8OxtlGB9CXM/LGWGBaSOenCmnex7GiKghYIbAk0mu3wAHZ3/IOmexH3En06G+pQH9Q==
+X-Received: by 2002:a17:902:6a82:: with SMTP id n2mr12377139plk.5.1576187747069;
+        Thu, 12 Dec 2019 13:55:47 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id o8sm6775711pjo.7.2019.12.12.13.55.30
+        by smtp.gmail.com with ESMTPSA id j10sm6591737pjb.14.2019.12.12.13.55.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 13:55:30 -0800 (PST)
-Message-ID: <5df2b752.1c69fb81.77c46.0f9a@mx.google.com>
+        Thu, 12 Dec 2019 13:55:46 -0800 (PST)
+Message-ID: <5df2b762.1c69fb81.e0c63.0f3b@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191212113540.7.Ia9bd3fca24ad34a5faaf1c3e58095c74b38abca1@changeid>
-References: <20191212193544.80640-1-dianders@chromium.org> <20191212113540.7.Ia9bd3fca24ad34a5faaf1c3e58095c74b38abca1@changeid>
+In-Reply-To: <20191212113540.1.I158061c65974bf0f653ceb79b442b76a1fd64868@changeid>
+References: <20191212193544.80640-1-dianders@chromium.org> <20191212113540.1.I158061c65974bf0f653ceb79b442b76a1fd64868@changeid>
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
         Rajendra Nayak <rnayak@codeaurora.org>, mka@chromium.org,
@@ -73,53 +73,29 @@ Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 7/7] arm64: dts: qcom: sc7180: Use 'ranges' in arm,armv7-timer-mem node
+Subject: Re: [PATCH 1/7] arm64: dts: qcom: sc7180: Add SoC name to compatible
 User-Agent: alot/0.8.1
-Date:   Thu, 12 Dec 2019 13:55:29 -0800
+Date:   Thu, 12 Dec 2019 13:55:45 -0800
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Douglas Anderson (2019-12-12 11:35:43)
-> Running `make dtbs_check` yells:
+Quoting Douglas Anderson (2019-12-12 11:35:37)
+> Running `make dtbs_check` yells because qcom.yaml says that we should
+> have:
 >=20
->   arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml: timer@17c20000: #size-cell=
-s:0:0: 1 was expected
+> - items:
+>     - enum:
+>         - qcom,sc7180-idp
+>     - const: qcom,sc7180
 >=20
-> It appears that someone was trying to assert the fact that sub-nodes
-> describing frames would never have a size that's more than 32-bits
-> big.  That's certainly true in the case of sc7180.
->=20
-> I guess this is a hint that it's time to do the thing that nobody
-> seems to do but that "writing-bindings.txt" says we should all do.
-> Specifically it says: "DO use non-empty 'ranges' to limit the size of
-> child buses/devices".  That means we should probably limit the
-
-It got cut off here. I'm waiting to find out what it is!!
-
->=20
-> I believe that this patch is the way to do it and there should be no
-> bad side effects here.  I believe that since we're far enough down
-> (not trying to describe an actual device, just some sub-pieces) that
-> this won't cause us to run into the problems that caused us to
-> increase the soc-level #address-cells and #size-cells to 2 in sdm845
-> in commit bede7d2dc8f3 ("arm64: dts: qcom: sdm845: Increase address
-> and size cells for soc").
->=20
-> I can at least confirm that "arch_mem_timer" seems to keep getting
-> interrupts in "/proc/interrupts" after this change.
+> ...but we're missing "qcom,sc7180".  Add it.
 >=20
 > Fixes: 90db71e48070 ("arm64: dts: sc7180: Add minimal dts/dtsi files for =
 SC7180 soc")
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
 
-This pattern exists in most of the qcom dts files. Can you fix all the
-arm,armv7-timer-mem nodes. Maybe the binding has the same problem too in
-the example.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
->=20
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 36 ++++++++++++++--------------
->  1 file changed, 18 insertions(+), 18 deletions(-)
->=20
