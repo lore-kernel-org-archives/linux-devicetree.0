@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBB0C04E30
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40661C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED7E22B48
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20DF4214D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:41:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbfLLDlg (ORCPT
+        id S1727384AbfLLDj6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 22:41:36 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58556 "EHLO mx1.suse.de"
+        Wed, 11 Dec 2019 22:39:58 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58454 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727524AbfLLDkA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 22:40:00 -0500
+        id S1726759AbfLLDj6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Dec 2019 22:39:58 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9C4C9AE47;
-        Thu, 12 Dec 2019 03:39:58 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id AC443ADE1;
+        Thu, 12 Dec 2019 03:39:56 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org
 Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        zypeng@titanmec.com, Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [RFC 05/25] dt-bindings: vendor-prefixes: Add Titan Micro Electronics
-Date:   Thu, 12 Dec 2019 04:39:32 +0100
-Message-Id: <20191212033952.5967-6-afaerber@suse.de>
+Subject: [RFC 02/25] dt-bindings: arm: realtek: Add Xnano X5
+Date:   Thu, 12 Dec 2019 04:39:29 +0100
+Message-Id: <20191212033952.5967-3-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191212033952.5967-1-afaerber@suse.de>
 References: <20191212033952.5967-1-afaerber@suse.de>
@@ -45,27 +45,25 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Assign vendor prefix "titanmec", matching their domain name.
+Define a compatible string for Xnano X5 OTT TV Box.
 
-Cc: zypeng@titanmec.com
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/arm/realtek.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 84a76efad2a8..31d0c4772b96 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -951,6 +951,8 @@ patternProperties:
-     description: Texas Instruments
-   "^tianma,.*":
-     description: Tianma Micro-electronics Co., Ltd.
-+  "^titanmec,.*":
-+    description: Shenzhen Titan Micro Electronics Co., Ltd.
-   "^tlm,.*":
-     description: Trusted Logic Mobility
-   "^tmt,.*":
+diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
+index db43dc3ab7ac..e11616883736 100644
+--- a/Documentation/devicetree/bindings/arm/realtek.yaml
++++ b/Documentation/devicetree/bindings/arm/realtek.yaml
+@@ -32,6 +32,7 @@ properties:
+           - enum:
+               - mele,v9 # MeLE V9
+               - probox2,ava # ProBox2 AVA
++              - xnano,x5 # Xnano X5
+               - zidoo,x9s # Zidoo X9S
+           - const: realtek,rtd1295
+ 
 -- 
 2.16.4
 
