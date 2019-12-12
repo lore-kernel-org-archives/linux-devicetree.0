@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77431C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768EDC00454
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A94322527
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DFAD2173E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:04:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbfLLQEU (ORCPT
+        id S1729784AbfLLQEV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:04:20 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39727 "EHLO
+        Thu, 12 Dec 2019 11:04:21 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59751 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729599AbfLLQEU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 11:04:20 -0500
+        with ESMTP id S1729550AbfLLQEV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 11:04:21 -0500
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1ifQwr-0003cY-KD; Thu, 12 Dec 2019 17:04:17 +0100
+        id 1ifQwr-0003cX-KD; Thu, 12 Dec 2019 17:04:17 +0100
 Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1ifQwr-0004LE-37; Thu, 12 Dec 2019 17:04:17 +0100
+        id 1ifQwr-0004LB-2j; Thu, 12 Dec 2019 17:04:17 +0100
 From:   Marco Felsch <m.felsch@pengutronix.de>
 To:     support.opensource@diasemi.com, lee.jones@linaro.org,
         robh+dt@kernel.org, linus.walleij@linaro.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org, kernel@pengutronix.de
-Subject: [RESEND PATCH v3 2/3] mfd: da9062: add support for the DA9062 GPIOs in the core
-Date:   Thu, 12 Dec 2019 17:04:12 +0100
-Message-Id: <20191212160413.15232-3-m.felsch@pengutronix.de>
+Subject: [RESEND PATCH v3 1/3] dt-bindings: mfd: da9062: add gpio bindings
+Date:   Thu, 12 Dec 2019 17:04:11 +0100
+Message-Id: <20191212160413.15232-2-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191212160413.15232-1-m.felsch@pengutronix.de>
 References: <20191212160413.15232-1-m.felsch@pengutronix.de>
@@ -49,51 +49,48 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently the da9062 GPIO's aren't available. The patch adds the support
-to make these available by adding a gpio device with the corresponding
-irq resources. Furthermore the patch fixes a minor style issue for the
-onkey device.
+Add gpio device documentation to make the da9062 gpios available for
+users.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/mfd/da9062-core.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+Changelog:
 
-diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
-index e69626867c26..5290bdc0ddcd 100644
---- a/drivers/mfd/da9062-core.c
-+++ b/drivers/mfd/da9062-core.c
-@@ -233,6 +233,14 @@ static struct resource da9062_onkey_resources[] = {
- 	DEFINE_RES_NAMED(DA9062_IRQ_ONKEY, 1, "ONKEY", IORESOURCE_IRQ),
- };
+v2:
+- remove sub-node documentation
+- squash gpio properties into mfd documentation
+---
+ Documentation/devicetree/bindings/mfd/da9062.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Documentation/devicetree/bindings/mfd/da9062.txt
+index edca653a5777..089a28bc77a4 100644
+--- a/Documentation/devicetree/bindings/mfd/da9062.txt
++++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+@@ -13,6 +13,7 @@ da9062-rtc              :               : Real-Time Clock
+ da9062-onkey            :               : On Key
+ da9062-watchdog         :               : Watchdog Timer
+ da9062-thermal          :               : Thermal
++da9062-gpio             :               : GPIOs
  
-+static struct resource da9062_gpio_resources[] = {
-+	DEFINE_RES_NAMED(DA9062_IRQ_GPI0, 1, "GPI0", IORESOURCE_IRQ),
-+	DEFINE_RES_NAMED(DA9062_IRQ_GPI1, 1, "GPI1", IORESOURCE_IRQ),
-+	DEFINE_RES_NAMED(DA9062_IRQ_GPI2, 1, "GPI2", IORESOURCE_IRQ),
-+	DEFINE_RES_NAMED(DA9062_IRQ_GPI3, 1, "GPI3", IORESOURCE_IRQ),
-+	DEFINE_RES_NAMED(DA9062_IRQ_GPI4, 1, "GPI4", IORESOURCE_IRQ),
-+};
+ The DA9061 PMIC consists of:
+ 
+@@ -38,6 +39,15 @@ Required properties:
+ See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
+ further information on IRQ bindings.
+ 
++Optional properties:
 +
- static const struct mfd_cell da9062_devs[] = {
- 	{
- 		.name		= "da9062-core",
-@@ -266,7 +274,13 @@ static const struct mfd_cell da9062_devs[] = {
- 		.name		= "da9062-onkey",
- 		.num_resources	= ARRAY_SIZE(da9062_onkey_resources),
- 		.resources	= da9062_onkey_resources,
--		.of_compatible = "dlg,da9062-onkey",
-+		.of_compatible	= "dlg,da9062-onkey",
-+	},
-+	{
-+		.name		= "da9062-gpio",
-+		.num_resources	= ARRAY_SIZE(da9062_gpio_resources),
-+		.resources	= da9062_gpio_resources,
-+		.of_compatible	= "dlg,da9062-gpio",
- 	},
- };
++- gpio-controller : Marks the device as a gpio controller.
++- #gpio-cells     : Should be two. The first cell is the pin number and the
++                    second cell is used to specify the gpio polarity.
++
++See Documentation/devicetree/bindings/gpio/gpio.txt for further information on
++GPIO bindings.
++
+ Sub-nodes:
  
+ - regulators : This node defines the settings for the LDOs and BUCKs.
 -- 
 2.20.1
 
