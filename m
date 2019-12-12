@@ -2,194 +2,169 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5116C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 07:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EB9C2D0C9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 07:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC6824656
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 07:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE2922173E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 07:39:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KxXYrdcB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QTHWe33G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfLLHfu (ORCPT
+        id S1728139AbfLLHjW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 02:35:50 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46884 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728099AbfLLHfu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 02:35:50 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z7so1504385wrl.13
-        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 23:35:48 -0800 (PST)
+        Thu, 12 Dec 2019 02:39:22 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46338 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728130AbfLLHjW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 02:39:22 -0500
+Received: by mail-pg1-f196.google.com with SMTP id z124so683523pgb.13
+        for <devicetree@vger.kernel.org>; Wed, 11 Dec 2019 23:39:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A+YZjm2Ye3pC2B1PdeSakvD5oUwYpRwIr8NfLtIK9OQ=;
-        b=KxXYrdcBAzTVBh7CxZp6tWfURJTbsWvieNcjFsCiN3LDwCJfYNbtpfsvs5IbA0P5r0
-         ANWFo/KIRIb+jAbvh/gbg+g6CKFKpqs9DllHbnVP9v5yXJH2DpHmb4c9SuZJGj8PUeOP
-         880I+EvnUh4qhwY4P4d+rGkyOxXWe03CLPxImZuBkHrWK2xSrcdQPuyeQxOYpK03MdK1
-         +ZzmbKlSVnhXBVxcohT4cSjn02DRUGs8bQLzzAefFXFGNHRVknnV1iXwBNxI8bg2lcLX
-         7KFF4bXDjormm1TZAK9yIaQ/yO29mRjF/Lhbr3AcxZnGuLHpen7TZk7BhlgjLofI0+ga
-         w13A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Qo4K50LzAN2stnSI10i/xMxtvvEyKR1cSWIWv7pZkAY=;
+        b=QTHWe33GqVF+OXqosfCsmbjOnSeJdTu2Ok3v6PGMePJB7YQAsSH2vM9oXU47Iacc1K
+         VZ40OB8Jw7epK4xlR0cKDWXRT0MD9vBIZKU0ozV7lJqKRLWkpGu4x5biCxa24CJLzMmm
+         Af7H8zLmJguvauWsRE29SjWjC5xmgY0NvyLTypZP3UJ1/9kE6vA/tbijX1IuYbahDU9J
+         xLBhl1dQKQbMhG8lIuM1si7Kps/Ur5BXRPI9FyLQDkAymILFAXY8QqmTIY+U3sCCLRa4
+         rctivrQJNKlfawkqEDrFRlwXUfcMVLkbnX5GDlhYhfRbdN+Uk7EHa/G7Te1q80lDa28D
+         /Mjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A+YZjm2Ye3pC2B1PdeSakvD5oUwYpRwIr8NfLtIK9OQ=;
-        b=OtHPfUDMD3HdseDhagGmiiEtgmKMxMr2UIBTzwcGhdbXXnRGCJbwtI/1iwrBgsy9G9
-         Ya2MnWOIXDQcH5Sns2xNijDUQDA5/NHhc6o6e3Q3u9ulWJwhTBpvMRP2B2mzF7M2kZSu
-         1XRmbLx4gfa7iTVUW5300QSTU+zT/I9XE1cPjkM5UmZHWPLVu47oRmxuFRa6nAnlQXqt
-         Ha61Mn/Kb4BJeXiuXe13Kd+ZruHbu0e25AgTnUl2KGGf73YSvCAy8Z54GAyFCMw8WQ7x
-         /YOJL6BcDsbnx9MwZ7m3QONgHrtkrdIm90balNMo2oxEPzyA7/I0h2xrHN+AD4xwt/TX
-         cpFg==
-X-Gm-Message-State: APjAAAVzDIbFvExUdJJxW82Ae8ZqbCIbnYRhc4rsvdp9HUlr1RzFQRkB
-        u9KkPq4uQaY5njlIlJiJJ8PoKw==
-X-Google-Smtp-Source: APXvYqwD1LPGGvRRbdrhL+bZMaR2zHPn54yzIr3uDJnubGHYpMAkNtsHA1kpeHWxgWtn2OREd91XEw==
-X-Received: by 2002:a5d:558d:: with SMTP id i13mr4581208wrv.364.1576136147874;
-        Wed, 11 Dec 2019 23:35:47 -0800 (PST)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id v14sm5078571wrm.28.2019.12.11.23.35.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Dec 2019 23:35:47 -0800 (PST)
-Subject: Re: [PATCH RFC v6 5/9] interconnect: imx: Add platform driver for
- imx8mm
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Silvano di Ninno <silvano.dininno@nxp.com>,
-        linux-pm@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <cover.1573761527.git.leonard.crestez@nxp.com>
- <60d36b71294d162d25c9f889177cab30e41d5ae7.1573761527.git.leonard.crestez@nxp.com>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <537baef4-d3bf-8de9-d168-21af0062b30a@linaro.org>
-Date:   Thu, 12 Dec 2019 09:35:44 +0200
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Qo4K50LzAN2stnSI10i/xMxtvvEyKR1cSWIWv7pZkAY=;
+        b=OYFJMK7j2K+pAEs7WlDjTPCtSn24/hHjYKiZttozfjiC/bWxW7yCKsftJTRb7EueC7
+         Gsi6GTuHLJWy9O9n7L+h5LdL2htu8DPNdGSGPKjwQw6Rc+OaLNTK5qFhJlSEPaaEUTjd
+         0HQG/3lcij3j7VE30eZ0E3vKtpvwj54Max13TXw/LWLAZmNQ0+wXnoy2JOVFC6zf7Xdl
+         Xj4+5nPeXjg0iOPcROciXwpyFWXqVKqjdfgBhKTQAijjZJ944TBWWcA0/v4bh0T8EMjt
+         AlFl8N+zdchd2BQ69cg8T+cF6O2mYulQZt1UmESec3iMIFeC54e7RsBcCMdwWnOAIFlI
+         6bAg==
+X-Gm-Message-State: APjAAAVcHc5DpTY6NIBJK7OSZJU4J5CZ8M1v8M1DnzaR/BI8vyhPqTjA
+        /PPHI5eF2D9clyNH0G2dQfcTfg==
+X-Google-Smtp-Source: APXvYqyWrtLsL3y0QsBXtvnDvJ4rPvhnI90XbGOmcWEW32DAzZHdT8obP0vpz4JmOvrIUfBy6uGEPQ==
+X-Received: by 2002:a63:1f16:: with SMTP id f22mr8587016pgf.2.1576136361275;
+        Wed, 11 Dec 2019 23:39:21 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g17sm5962032pfb.180.2019.12.11.23.39.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 23:39:20 -0800 (PST)
+Date:   Wed, 11 Dec 2019 23:39:18 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     robh+dt@kernel.org, ulf.hansson@linaro.org, rnayak@codeaurora.org,
+        agross@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org
+Subject: Re: [PATCH 6/6] arm64: dts: sm8150: Add rpmh power-domain node
+Message-ID: <20191212073918.GO3143381@builder>
+References: <20191118173944.27043-1-sibis@codeaurora.org>
+ <0101016e7f99eab9-35efa01f-8ed3-4a77-87e1-09c381173121-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-In-Reply-To: <60d36b71294d162d25c9f889177cab30e41d5ae7.1573761527.git.leonard.crestez@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0101016e7f99eab9-35efa01f-8ed3-4a77-87e1-09c381173121-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Leonard,
+On Mon 18 Nov 09:40 PST 2019, Sibi Sankar wrote:
 
-On 11/14/19 22:09, Leonard Crestez wrote:
-> Add a platform driver for the i.MX8MM SoC describing bus topology.
+> Add the DT node for the rpmhpd power controller.
 > 
-> Bandwidth adjustments is currently only supported on the DDRC and main
-> NOC. Scaling for the vpu/gpu/display NICs could be added in the future.
-> 
-> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+
+Series applied, please send separate patch for the yaml migration.
+
+Regards,
+Bjorn
+
 > ---
->  drivers/interconnect/imx/Kconfig          |   4 +
->  drivers/interconnect/imx/Makefile         |   1 +
->  drivers/interconnect/imx/imx8mm.c         | 105 ++++++++++++++++++++++
->  include/dt-bindings/interconnect/imx8mm.h |  49 ++++++++++
->  4 files changed, 159 insertions(+)
->  create mode 100644 drivers/interconnect/imx/imx8mm.c
->  create mode 100644 include/dt-bindings/interconnect/imx8mm.h
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi | 55 ++++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
 > 
-> diff --git a/drivers/interconnect/imx/Kconfig b/drivers/interconnect/imx/Kconfig
-> index 7d81d3c83a61..15671fe7f600 100644
-> --- a/drivers/interconnect/imx/Kconfig
-> +++ b/drivers/interconnect/imx/Kconfig
-> @@ -1,5 +1,9 @@
->  config INTERCONNECT_IMX
->  	bool "i.MX interconnect drivers"
->  	depends on ARCH_MXC || COMPILE_TEST
->  	help
->  	  Generic interconnect driver for i.MX SOCs
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> index 8f23fcadecb89..0ac257637c2af 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> @@ -5,6 +5,7 @@
+>   */
+>  
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/power/qcom-rpmpd.h>
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  
+> @@ -469,6 +470,60 @@
+>  				clock-names = "xo";
+>  				clocks = <&xo_board>;
+>  			};
 > +
-> +config INTERCONNECT_IMX8MM
-> +	def_bool y
-
-Can this be a module?
-
-> +	depends on INTERCONNECT_IMX
-> diff --git a/drivers/interconnect/imx/Makefile b/drivers/interconnect/imx/Makefile
-> index bb92fd9fe4a5..5f658c1608a6 100644
-> --- a/drivers/interconnect/imx/Makefile
-> +++ b/drivers/interconnect/imx/Makefile
-> @@ -1 +1,2 @@
->  obj-$(CONFIG_INTERCONNECT_IMX) += imx.o
-> +obj-$(CONFIG_INTERCONNECT_IMX8MM) += imx8mm.o
-> diff --git a/drivers/interconnect/imx/imx8mm.c b/drivers/interconnect/imx/imx8mm.c
-> new file mode 100644
-> index 000000000000..acc002153729
-> --- /dev/null
-
-Thanks,
-Georgi
+> +			rpmhpd: power-controller {
+> +				compatible = "qcom,sm8150-rpmhpd";
+> +				#power-domain-cells = <1>;
+> +				operating-points-v2 = <&rpmhpd_opp_table>;
+> +
+> +				rpmhpd_opp_table: opp-table {
+> +					compatible = "operating-points-v2";
+> +
+> +					rpmhpd_opp_ret: opp1 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
+> +					};
+> +
+> +					rpmhpd_opp_min_svs: opp2 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
+> +					};
+> +
+> +					rpmhpd_opp_low_svs: opp3 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+> +					};
+> +
+> +					rpmhpd_opp_svs: opp4 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
+> +					};
+> +
+> +					rpmhpd_opp_svs_l1: opp5 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
+> +					};
+> +
+> +					rpmhpd_opp_svs_l2: opp6 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
+> +					};
+> +
+> +					rpmhpd_opp_nom: opp7 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
+> +					};
+> +
+> +					rpmhpd_opp_nom_l1: opp8 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
+> +					};
+> +
+> +					rpmhpd_opp_nom_l2: opp9 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
+> +					};
+> +
+> +					rpmhpd_opp_turbo: opp10 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
+> +					};
+> +
+> +					rpmhpd_opp_turbo_l1: opp11 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
+> +					};
+> +				};
+> +			};
+>  		};
+>  	};
+>  
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
