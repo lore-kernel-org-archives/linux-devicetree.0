@@ -2,188 +2,127 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4A1C2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 09:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E94AAC2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 10:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0148F2173E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 09:57:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yd5bVEFt"
+	by mail.kernel.org (Postfix) with ESMTP id CA483206DA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 10:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbfLLJ5i (ORCPT
+        id S1728253AbfLLKBL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:57:38 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39214 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728410AbfLLJ5f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 04:57:35 -0500
-Received: by mail-wm1-f66.google.com with SMTP id d5so1764383wmb.4
-        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 01:57:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=gx1Mdi7/CFmOT7RiIEVg3kQRBdQoHiJa4CnAd9qCJmg=;
-        b=yd5bVEFtgIODavE5Wy5kl2EwUKPgntf/ynutV1/iuGWUD7bN9CmysWNJgtp9Bs3vVf
-         bLKRuIOtbxscxmKQ5AoUrdctD3vjekNCRBG20Z+21i36dxmQjJB/kqpJqM4j1IXiVrHV
-         zdgK0zjx2IJXCdHzkWC4Srs79kGXf7TVq6kSzAU1yPNnVlB/hdCu/RuOOAYwqI0jFs9J
-         uyHCMuKtD3XZ6Ymbz+aL/YawKQkgEXAmQybExIjwVLXb0+TmAuwCLWKsOCNi/1ON8PGZ
-         cQP6rBl5ZNcF8PU0F29ZGw+9Ze1ZBnASA1cVQ4X37+jSlUKGtkv9rT0Lv/9/tf9PjGuv
-         j0RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=gx1Mdi7/CFmOT7RiIEVg3kQRBdQoHiJa4CnAd9qCJmg=;
-        b=SpnOxVBkk4Kls/es3OhnG/G6n+qmCFFdx80akDcycd/nxSyIHajpD72ef0/kHAGWZ4
-         wL0gsLHKPufdXEk5vFttKUqtYkKwX4HgWqC3Co7qxqovkgH1CUIn7zGnx5sXwPrImILh
-         l9ju3f4irIHmnAtYzCyJ9VQvmvvo9Rn6ssNKACcMwDTqFtB7Jibvbxl/Iukt9T2FwJ0I
-         8/BHotLALeMGAoNcRjRWSgAwcknrFmwJioU+yVeYkKjliLMkLxgDINm0qyLSh5uLPf+v
-         2NZlksrJZiDRUsBJtgqiPUhDCC2PJUr6sZiQ5PdJr2ZkBmO+aV8oOYxgftu87j0LPMdj
-         Ihqw==
-X-Gm-Message-State: APjAAAUuYNkf7VzJ8Ebxa+5Bee+cA9LgtJYkBAMd/iNmAkk83zGExk2y
-        1RsqdxhsfQ98+NsnzCxPJxDoYw==
-X-Google-Smtp-Source: APXvYqwk4QDlI0ODXXgdLTi/EXbqG6DwiTR8OW5NiylFbyhT0VLdogLil3eQ5czc90Dbh6YAj+YurA==
-X-Received: by 2002:a1c:541b:: with SMTP id i27mr5740102wmb.137.1576144653403;
-        Thu, 12 Dec 2019 01:57:33 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id k19sm5248320wmi.42.2019.12.12.01.57.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 01:57:32 -0800 (PST)
-References: <20191206074052.15557-1-jian.hu@amlogic.com> <20191206074052.15557-2-jian.hu@amlogic.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Jian Hu <jian.hu@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        "Rob Herring" <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 1/6] dt-bindings: clock: meson: add A1 PLL clock controller bindings
-In-reply-to: <20191206074052.15557-2-jian.hu@amlogic.com>
-Date:   Thu, 12 Dec 2019 10:57:31 +0100
-Message-ID: <1jblsdlvck.fsf@starbuckisacylon.baylibre.com>
+        Thu, 12 Dec 2019 05:01:11 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51563 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbfLLKBL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 05:01:11 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1ifLHN-0006Jy-UX; Thu, 12 Dec 2019 11:01:05 +0100
+Message-ID: <9fd20d18a8773cd8886d9cb0424791b2f79b3e25.camel@pengutronix.de>
+Subject: Re: [PATCH 2/2] reset: Add Broadcom STB RESCAL reset controller
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Jim Quinlan <jim2101024@gmail.com>,
+        Jim Quinlan <im2101024@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 12 Dec 2019 11:01:04 +0100
+In-Reply-To: <469c7b73-b028-1691-d5f0-0ceb3007da1c@gmail.com>
+References: <20191210195903.24127-1-f.fainelli@gmail.com>
+         <20191210195903.24127-3-f.fainelli@gmail.com>
+         <89d2d00058e34e7571fc0f50ce487cf54414cd49.camel@pengutronix.de>
+         <469c7b73-b028-1691-d5f0-0ceb3007da1c@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, 2019-12-11 at 10:12 -0800, Florian Fainelli wrote:
+> 
+> On 12/11/2019 1:48 AM, Philipp Zabel wrote:
+> > > +#define BRCM_RESCAL_START	0
+> > > +#define	BRCM_RESCAL_START_BIT	BIT(0)
+> > > +#define BRCM_RESCAL_CTRL	4
+> > > +#define BRCM_RESCAL_STATUS	8
+> > > +#define BRCM_RESCAL_STATUS_BIT	BIT(0)
+> > 
+> > Is there any reason the start bit is indented but the status bit is not?
+> 
+> This is a convention we have tried to adopt to denote the definition
+> from a register word address/offset versus the definition for bits
+> within that register word.
 
-On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
+That's fine, consider indenting BRCM_RESCAL_STATUS_BIT as well, then.
 
-> Add the documentation to support Amlogic A1 PLL clock driver,
-> and add A1 PLL clock controller bindings.
->
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-> ---
->  .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 59 +++++++++++++++++++
->  include/dt-bindings/clock/a1-pll-clkc.h       | 16 +++++
->  2 files changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
->  create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
->
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-> new file mode 100644
-> index 000000000000..7feeef5abf1b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-> @@ -0,0 +1,59 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+[...]
+> > > +	reg = readl(base + BRCM_RESCAL_START);
+> > > +	writel(reg | BRCM_RESCAL_START_BIT, base + BRCM_RESCAL_START);
+> > > +	reg = readl(base + BRCM_RESCAL_START);
+> > > +	if (!(reg & BRCM_RESCAL_START_BIT)) {
+> > > +		dev_err(data->dev, "failed to start sata/pcie rescal\n");
 
-Rob commented on the above in v1 and it remains unaddressed
+Is this something that can actually happen?
 
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + */
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/clock/amlogic,a1-pll-clkc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
-> +
-> +maintainers:
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +  - Jerome Brunet <jbrunet@baylibre.com>
-> +  - Jian Hu <jian.hu@jian.hu.com>
-> +
-> +properties:
-> +  compatible:
-> +    - enum:
-> +        - amlogic,a1-pll-clkc
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +clocks:
-> +  minItems: 2
-> +  maxItems: 2
-> +  items:
-> +   - description: Input xtal_fixpll
-> +   - description: Input xtal_hifipll
-> +
-> +clock-names:
-> +  minItems: 2
-> +  maxItems: 2
-> +  items:
-> +     - const: xtal_fixpll
-> +     - const: xtal_hifipll
-> +
-> +required:
-> +  - compatible
-> +  - "#clock-cells"
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    clkc_pll: pll-clock-controller@7c80 {
-> +                compatible = "amlogic,a1-pll-clkc";
-> +                reg = <0 0x7c80 0 0x18c>;
-> +                #clock-cells = <1>;
-> +                clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
-> +                         <&clkc_periphs CLKID_XTAL_HIFIPLL>;
-> +                clock-names = "xtal_fixpll", "xtal_hifipll";
-> +    };
-> diff --git a/include/dt-bindings/clock/a1-pll-clkc.h b/include/dt-bindings/clock/a1-pll-clkc.h
-> new file mode 100644
-> index 000000000000..58eae237e503
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/a1-pll-clkc.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + */
-> +
-> +#ifndef __A1_PLL_CLKC_H
-> +#define __A1_PLL_CLKC_H
-> +
-> +#define CLKID_FIXED_PLL				1
-> +#define CLKID_FCLK_DIV2				6
-> +#define CLKID_FCLK_DIV3				7
-> +#define CLKID_FCLK_DIV5				8
-> +#define CLKID_FCLK_DIV7				9
-> +#define CLKID_HIFI_PLL				10
-> +
-> +#endif /* __A1_PLL_CLKC_H */
+[...]
+> > > +	reg = readl(base + BRCM_RESCAL_START);
+> > > +	writel(reg ^ BRCM_RESCAL_START_BIT, base + BRCM_RESCAL_START);
+> > 
+> > Please use &= ~BRCM_RESCAL_START_BIT instead.
+> 
+> I think the idea was to avoid unconditionally clearing it, but based on
+> the documentation, I don't see this being harmful, Jim?
+
+Unless the bit is self-clearing, I can't see how this XOR could ever set
+the bit instead of clearing it.
+And even if it would, I don't understand how that can be indented.
+Wouldn't that restart the reset/calibration sequence?
+
+> > > +	reg = readl(base + BRCM_RESCAL_START);
+> > > +	dev_dbg(data->dev, "sata/pcie rescal success\n");
+> > > +
+> > > +	return 0;
+> > > +}
+> > 
+> > This whole function looks a lot like it doesn't just deassert a reset
+> > line, but actually issues a complete reset procedure of some kind. Do
+> > you have some insight on what actually happens in the hardware when the
+> > start bit is triggered? I suspect this should be implemented with the
+> > .reset operation.
+> 
+> This hardware block is controlling the reset and calibration process of
+> the SATA/PCIe combo PHY analog front end, but is not technically part of
+> the PCIe or SATA PHY proper, it stands on its own, both functionally and
+> from a register space perspective. The motivation for modelling this as
+> a reset controller is that it does a reset (and a calibration) and this
+> is a shared reset line among 2/3 instances of another block. If you
+> think we should model this differently, please let us know.
+
+Thank you for the explanation. I agree the "reset and calibration
+sequence" property is close enough to a pure reset sequence to warrant
+describing this as as reset controller.
+The correct way would be to use the .reset callback though, if you can
+have the drivers use reset_control_reset().
+
+regards
+Philipp
 
