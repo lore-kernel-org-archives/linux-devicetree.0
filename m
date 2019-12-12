@@ -2,192 +2,175 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5726CC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 00:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565E5C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 00:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37566222C4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 00:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2408E214AF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 00:34:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMzZaQbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfLLAdO (ORCPT
+        id S1727185AbfLLAek (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 19:33:14 -0500
-Received: from sender4-op-o11.zoho.com ([136.143.188.11]:17124 "EHLO
-        sender4-op-o11.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbfLLAdO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 19:33:14 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1576110779; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=X03i3V/8EUcM4luIhZRpY/0odgc75H4FDcR6CcpcWIyBuQ4f6rr08GUvv0bfI/UA9GvqiJinK18u9ID0gk0yJ20jws6uLu1DVLoOTYHCkyHxyfaYACg2rtZZO+CV8tCuLXoPbz3u9NyTc7eyz9AWjLLwMTzxORygeif2v1g9ens=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1576110779; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=52I5t2+RJ1d8gIfMJ4FqE43LzPcw+pznymfSad4xjbk=; 
-        b=UTy/00hBxJFLgKpMC2jspMD9+G+mxdNxljNzSH6woTSn5TO4M3YQUoLxQYmRijQ1AsBgol8hrvScE94rdtCuH+0XG4+6j6loVv49ts4KeL5JmUnt7csCXGjVhNrm1d6ERSjJVyb2vwAV4sU5v2M+gBliWzROWzEvmyyGDRVcn9A=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=dlrobertson.com;
-        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
-        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
-Received: from nessie (pool-173-73-58-202.washdc.fios.verizon.net [173.73.58.202]) by mx.zohomail.com
-        with SMTPS id 1576110778099739.3714501720381; Wed, 11 Dec 2019 16:32:58 -0800 (PST)
-Date:   Thu, 12 Dec 2019 00:17:35 +0000
-From:   Dan Robertson <dan@dlrobertson.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 11 Dec 2019 19:34:40 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41939 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbfLLAek (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 19:34:40 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h23so208817ljc.8;
+        Wed, 11 Dec 2019 16:34:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lfmanDWtZG3y3lJcI6oG7JnQAfGL9a+2cuiNfOFKa/U=;
+        b=fMzZaQbCHQtOYueUIJe4RpN4ud9nulBhYYNsRlejm9BHPdtBBYb8brKQsPjZYQ4gXz
+         BRqwkLmdE5B7R8BnxhNA2xA4A1BSgfBGXiPAsI4yDsqdThulQvE1Xt2tIsScQuzNP9Zo
+         L4pBbg68FkyycdSq/XHyNWwxh4cej1dCJzl/txXhpSLV8hoI5zBgfyN+0qp8p54jiDrK
+         7zd3b/Vaa/RMD0Yr0p5iy/zV/BQ+gKYUY5IA1TC7R3OBu5FILh/50ydgo6jV525E4GFk
+         2DzUVyD2PTlMbw1Bj7rQ9k3hXYgMNY7POP2BhvRvzBjkwCh5Rt5okimkUoeC4oukCOl7
+         GZuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lfmanDWtZG3y3lJcI6oG7JnQAfGL9a+2cuiNfOFKa/U=;
+        b=p9eZsjL3+jrlNpYbyiDM9pKts/cDdue1v7KMvtaEcDsjCYgnzz8PhcBGvobBcQsZRE
+         XmsCmHOofpk9l4h+KQyX2nwv07XA2Sw2VMu8sTzCNcihPe2dQLhLAfBxRKPKeMmT8HPk
+         tDiid3nMbVlDeon9WjlyvV4beNhANeiii5ar3/b+BmFQ8+Lc84Cc0F+VKvtgh08DtzfZ
+         LH+F2ElgAOUwtgq2xGmDm8/Z8tt/UUXUXozq+yw8gtbtd7gnUdaGydV1WFUugdDzantH
+         yAb4HBSK0SEw0EKnWj5f+Mid54LQ1ib5AHfXmciJw2qr74drMdFOtp8z6aIuX4zM//gt
+         5VDw==
+X-Gm-Message-State: APjAAAWxJGn2vAYLYJ0AROzBG+cYCZsbnQGWn4U+j1VDzprEgCsDNhrW
+        D7I0FQ9Yw6SqUm2Y2ttiMJA=
+X-Google-Smtp-Source: APXvYqxUH+e7IDh7nFPQWY2Ftj5nPQ0qbSz4e9jk5LEJUrFPBZ0hJxpZfg34qYZBeaPXXSmtGWinqw==
+X-Received: by 2002:a2e:6c06:: with SMTP id h6mr3889022ljc.246.1576110877803;
+        Wed, 11 Dec 2019 16:34:37 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id y8sm1985797lji.56.2019.12.11.16.34.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 16:34:36 -0800 (PST)
+Subject: Re: [PATCH v2 1/9] input: elants: document some registers and values
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v6 2/2] iio: (bma400) add driver for the BMA400
-Message-ID: <20191212001735.GA4667@nessie>
-References: <20191211010308.1525-1-dan@dlrobertson.com>
- <20191211010308.1525-3-dan@dlrobertson.com>
- <CAHp75VdAJwMkPZQLLQrOk4HABjG-parEOmH8S-6kU+zyYnnfww@mail.gmail.com>
+        Rob Herring <robh-dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <82f3e18f260a3f372944401d12f8f92bd64bc9d2.1576079249.git.mirq-linux@rere.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4496f2db-0d14-2a55-ba6b-1e67da1fb04d@gmail.com>
+Date:   Thu, 12 Dec 2019 03:34:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdAJwMkPZQLLQrOk4HABjG-parEOmH8S-6kU+zyYnnfww@mail.gmail.com>
-X-ZohoMailClient: External
+In-Reply-To: <82f3e18f260a3f372944401d12f8f92bd64bc9d2.1576079249.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 03:21:56PM +0200, Andy Shevchenko wrote:
-> On Wed, Dec 11, 2019 at 3:20 AM Dan Robertson <dan@dlrobertson.com> wrote:
-> >
-> > Add a IIO driver for the Bosch BMA400 3-axes ultra-low power accelerometer.
-> > The driver supports reading from the acceleration and temperature
-> > registers. The driver also supports reading and configuring the output data
-> > rate, oversampling ratio, and scale.
+11.12.2019 19:03, Michał Mirosław пишет:
+> Add information found in downstream kernels, to make the code less
+> magic.
 > 
-> > +#define BMA400_LP_OSR_SHIFT         0x05
-> > +#define BMA400_NP_OSR_SHIFT         0x04
-> > +#define BMA400_SCALE_SHIFT          0x06
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
+>  drivers/input/touchscreen/elants_i2c.c | 29 +++++++++++++++++++++-----
+>  1 file changed, 24 insertions(+), 5 deletions(-)
 > 
-> I'm not sure why this is being defined as hex number instead of plain decimal...
+> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+> index d4ad24ea54c8..887888c53996 100644
+> --- a/drivers/input/touchscreen/elants_i2c.c
+> +++ b/drivers/input/touchscreen/elants_i2c.c
+> @@ -77,7 +77,11 @@
+>  
+>  #define HEADER_REPORT_10_FINGER	0x62
+>  
+> -/* Header (4 bytes) plus 3 fill 10-finger packets */
+> +/* Power state */
+> +#define PWR_STATE_DEEP_SLEEP	0
+> +#define PWR_STATE_NORMAL	1
+> +
+> +/* Header (4 bytes) plus 3 full 10-finger packets */
+>  #define MAX_PACKET_SIZE		169
+>  
+>  #define BOOT_TIME_DELAY_MS	50
+> @@ -87,10 +91,21 @@
+>  #define E_ELAN_INFO_BC_VER	0x10
+>  #define E_ELAN_INFO_TEST_VER	0xE0
+>  #define E_ELAN_INFO_FW_ID	0xF0
+> +#define E_POWER_MODE		0x40
+> +#define E_POWER_STATE		0x50
+> +#define E_INFO_X_RES		0x60
+> +#define E_INFO_Y_RES		0x63
+>  #define E_INFO_OSR		0xD6
+>  #define E_INFO_PHY_SCAN		0xD7
+>  #define E_INFO_PHY_DRIVER	0xD8
 
-Sounds good.
+> +/* FW write command, 0x54 0x?? 0x0, 0x01 */
+> +#define E_POWER_MODE_BATTERY	0x40
+> +#define E_POWER_MODE_AC		0x41
 
-> > +#define BMA400_TWO_BITS_MASK        GENMASK(1, 0)
-> > +#define BMA400_LP_OSR_MASK          GENMASK(6, BMA400_LP_OSR_SHIFT)
-> > +#define BMA400_NP_OSR_MASK          GENMASK(5, BMA400_NP_OSR_SHIFT)
-> > +#define BMA400_ACC_ODR_MASK         GENMASK(3, 0)
-> > +#define BMA400_ACC_SCALE_MASK       GENMASK(7, BMA400_SCALE_SHIFT)
-> 
-> And here simple better to put same numbers. It will help to read.
+These commands are not utilized yet, but perhaps it's okay to add the
+definitions if you're going to add support for power source switching.
 
-Do you mean for the shift or for the mask?
+> +#define E_POWER_MODE_USB	0x42
+> +#define E_POWER_STATE_SLEEP	0x50
+> +#define E_POWER_STATE_RESUME	0x58
+> +
+>  #define MAX_RETRIES		3
+>  #define MAX_FW_UPDATE_RETRIES	30
+>  
+> @@ -231,8 +246,8 @@ static int elants_i2c_calibrate(struct elants_data *ts)
+>  {
+>  	struct i2c_client *client = ts->client;
+>  	int ret, error;
+> -	static const u8 w_flashkey[] = { 0x54, 0xC0, 0xE1, 0x5A };
+> -	static const u8 rek[] = { 0x54, 0x29, 0x00, 0x01 };
+> +	static const u8 w_flashkey[] = { CMD_HEADER_WRITE, 0xC0, 0xE1, 0x5A };
+> +	static const u8 rek[] = { CMD_HEADER_WRITE, 0x29, 0x00, 0x01 };
+>  	static const u8 rek_resp[] = { CMD_HEADER_REK, 0x66, 0x66, 0x66 };
+>  
+>  	disable_irq(client->irq);
+> @@ -1295,7 +1310,9 @@ static int __maybe_unused elants_i2c_suspend(struct device *dev)
+>  {
+>  	struct i2c_client *client = to_i2c_client(dev);
+>  	struct elants_data *ts = i2c_get_clientdata(client);
+> -	const u8 set_sleep_cmd[] = { 0x54, 0x50, 0x00, 0x01 };
+> +	const u8 set_sleep_cmd[] = {
+> +		CMD_HEADER_WRITE, E_POWER_STATE_SLEEP, 0x00, 0x01
+> +	};
+>  	int retry_cnt;
+>  	int error;
+>  
+> @@ -1332,7 +1349,9 @@ static int __maybe_unused elants_i2c_resume(struct device *dev)
+>  {
+>  	struct i2c_client *client = to_i2c_client(dev);
+>  	struct elants_data *ts = i2c_get_clientdata(client);
+> -	const u8 set_active_cmd[] = { 0x54, 0x58, 0x00, 0x01 };
+> +	const u8 set_active_cmd[] = {
+> +		CMD_HEADER_WRITE, E_POWER_STATE_RESUME, 0x00, 0x01
+> +	};
+>  	int retry_cnt;
+>  	int error;
+>  
+> 
 
-> > +const struct regmap_config bma400_regmap_config = {
-> > +       .reg_bits = 8,
-> > +       .val_bits = 8,
-> > +       .max_register = BMA400_CMD_REG,
-> > +       .cache_type = REGCACHE_RBTREE,
-> > +       .writeable_reg = bma400_is_writable_reg,
-> > +       .volatile_reg = bma400_is_volatile_reg,
-> > +};
-> > +EXPORT_SYMBOL(bma400_regmap_config);
-> 
-> I'm not sure I got the idea why this one is being exported.
-
-It needs to be exported so that it can be used in the bma400_i2c module and the
-future bma400_spi module. In theory, if we _really_ do not want to export this,
-then we can define separate regmap configs in each of the bma400_i2c and
-(future) bma400_spi modules, but then we would have to export the is_volitile_reg
-and is_writable_reg functions. As a result, I do not see any benefits to that
-method over exporting the config, but I could be convinced otherwise.
-
-> > +               if (odr < BMA400_ACC_ODR_MIN_RAW ||
-> > +                   odr > BMA400_ACC_ODR_MAX_RAW) {
-> 
-> One line?
-
-It is too long if I simplify to one line.
-
-> > +               if (uhz || hz % BMA400_ACC_ODR_MIN_WHOLE_HZ)
-> > +                       return -EINVAL;
-> > +
-> > +               val = hz / BMA400_ACC_ODR_MIN_WHOLE_HZ;
-> > +               idx = __ffs(val);
-> > +
-> 
-> > +               if (val ^ BIT(idx))
-> 
-> Seems like funny way of checking is_power_of_2(). But it's up to maintainers.
-> And your variant may even be better here (in code generation perspective)...
-> 
-> However, the whole idea here is, IIUC, to have something like
-> 
->   hz = 2^idx * BMA400_ACC_ODR_MIN_WHOLE_HZ
-> 
-> I think you may do it without divisions, i.e. call __ffs() first and then do
->    idx = __ffs(...);
->    val = hz >> idx;
->    if (val != BMA400_ACC_ODR_MIN_WHOLE_HZ)
->     return -EINVAL;
-> 
-> or something like above.
-
-It would be more obvious what is being done here with is_power_of_two. I'll
-revisit this function with your suggestions. If I can make it simpler, I'll
-go this route.
-
-> 
-> > +                       return -EINVAL;
-> 
-> ...
-> 
-> > +       odr = (~BMA400_ACC_ODR_MASK & val) | idx;
-> 
-> I'm wondering why Yoda style is being used here.
-
-I guess I think like Yoda :) I can update this. I typically do prefer
-new_mask | old_mask, but I do not feel too strongly about it.
-
-> > +static void bma400_accel_scale_from_raw(int raw, unsigned int *val)
-> > +{
-> > +       *val = BMA400_SCALE_MIN * (1 << raw);
-> 
-> Isn't it the same as
->     *val = BMA400_SCALE_MIN << raw;
-> ?
-
-Yes. Good catch. Not sure what I was thinking :)
-
-> 
-> > +               return -EINVAL;
-> 
-> ...
-> 
-> > +       ret = regmap_read(data->regmap, BMA400_ACC_CONFIG0_REG, &val);
-> > +       if (ret < 0)
-> 
-> I'm wondering if in all of these regmap_read()...
-> 
-> > +               return ret;
-> 
-> > +       ret = regmap_write(data->regmap, BMA400_ACC_CONFIG0_REG,
-> > +                          mode | (val & ~BMA400_TWO_BITS_MASK));
-> > +       if (ret < 0) {
-> 
-> ...and regmap_write() calls you ever can get a positive returned code.
-
-From the regmap_read/regmap_write docs:
-
-> * A value of zero will be returned on success, a negative errno will
-> * be returned in error cases.
-
-So I assume ret <= 0
-
-Cheers,
-
- - Dan
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
 
