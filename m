@@ -2,112 +2,98 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C098C2D0CB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD134C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0035E2253D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A35472173E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 19:37:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ha7vPRYe"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MThukkqG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730677AbfLLTgv (ORCPT
+        id S1730657AbfLLThb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:36:51 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:33237 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730668AbfLLTgS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 14:36:18 -0500
-Received: by mail-pj1-f66.google.com with SMTP id r67so1511032pjb.0
-        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 11:36:18 -0800 (PST)
+        Thu, 12 Dec 2019 14:37:31 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37271 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730512AbfLLTha (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 14:37:30 -0500
+Received: by mail-lj1-f194.google.com with SMTP id u17so3606201lja.4
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 11:37:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ImwQrt4+ASNt2Q7OYNBZqW7Xb6BRtjl1Ax5bFWps8lo=;
-        b=Ha7vPRYeArv0gldLsw7B4rPz3IGOCgRfcuSYkydMMFSVm/kTtSg7XorAMBS+159yLe
-         WKSkV7MosS+nd56fZ/Ls5AssGx/0zdnA9bzJCjll0b1btVLhxmeA4X7/xLKY7hq0cREt
-         Ajf2ZlquR+0X2LBG6E9cZuxGZ7byzhfPuU08o=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dvGJ0797Qz8DUFLYM8Rit14ij9aZ1vENIS91EYjNpec=;
+        b=MThukkqGbJH0JqQq7NvRMwiKjEvckHmmxf4wk/k+CyqysQALPXBquylwgn1+SkKOux
+         hYds4XHtiXiqnLjBZTCZHVaMufoABT/oCOU20kwUAus7U+22gMzRkYcbyaBccoa7KyYv
+         12+iTzwdpt/manm3sKQDH7pyNVNLBK7zrgfczpEB0qxEGoyOp2RO1/x10LHuQJ2M7UF8
+         xwcczLh07pEx03HMT6hiKGSuIJDAsez0N1uPaJIkQaw89JkglxUV7L09rhWo2MmtWhMp
+         GIqxgm0dT3TxGD4WfuTEc14eHGp2Q5ogVIoDDyp9Pxly8HOvzkn+Q7nAi1hlWOskTmam
+         XFGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ImwQrt4+ASNt2Q7OYNBZqW7Xb6BRtjl1Ax5bFWps8lo=;
-        b=qavfsW32ZNf+ut0I6DIdE8Vx5n+cQHVn8sYlQ0mKOfZVJIikZLV5FTZQTvcBw4CxfV
-         suLRD7QTG7c8zqGNHwXDZ/NFwSEIPeI7+bKKE8Ap9s9hP3p5bE/3DS3/SI0VH4MARpra
-         YGQVfJa9hW73Y4ipuP6WVSO9cgXZDYmU3eFT24OgrfsxIjkNlail4nQg5n2vXAmk7P2/
-         NhaWVlpCAn03VfZyeqRmANz0ot0vTEtDh/yhVBT2KmBI3ZcjXnmPEKBg0R+8QS4yT9ou
-         OrJTXqx6TvrOnxIqs12y9cDKBoG++TXWYA+7mGIJUYtcAQfpYauHiwhXja1xf4aZV5iE
-         Ek4g==
-X-Gm-Message-State: APjAAAUcENXZdM9JgOehHEukyQVE68nYvUen30NhowMFBxrUNsOlD5Gj
-        Q1uV5XSA72tTkRRD0ztQrKUBmg==
-X-Google-Smtp-Source: APXvYqzCdTRZCR79zSJLn5TFO0zIzut61GTDaUp63R7VMg2CJ5BqDpFu9fCu4/15kGZ6WwefQqKNRA==
-X-Received: by 2002:a17:90a:ba04:: with SMTP id s4mr11613215pjr.92.1576179377766;
-        Thu, 12 Dec 2019 11:36:17 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id m34sm7568302pgb.26.2019.12.12.11.36.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 11:36:17 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
-        mka@chromium.org, Sandeep Maheswaram <sanm@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 1/7] arm64: dts: qcom: sc7180: Add SoC name to compatible
-Date:   Thu, 12 Dec 2019 11:35:37 -0800
-Message-Id: <20191212113540.1.I158061c65974bf0f653ceb79b442b76a1fd64868@changeid>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-In-Reply-To: <20191212193544.80640-1-dianders@chromium.org>
-References: <20191212193544.80640-1-dianders@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dvGJ0797Qz8DUFLYM8Rit14ij9aZ1vENIS91EYjNpec=;
+        b=FVzDSW/qcxCZ+uaPsafp+c9wMI1TRDqVQtoLCKX2fWjCgfRdDYsiK741p9fpFoLbYC
+         QxjZyxGpv+kmXBdXmlMHydny/bolxnqYzEm43DwBaZ1XaYF9+LoztVT8+GA0iTIA28L0
+         bmXp2IdjqLp79CNNqjmtmUiolPX9G/T67vOwg/+oB8fowPjS2tZFclsGqdRV9hDBDIYg
+         xNX9RZHwOQoisad/QBR/rnAgAhLjBfCmAZ5QGXGTdhkPhWr7OA26qzvJYBvR8JCJnAtT
+         i3RH6DEz2UiIVmK8ZzNdmgZJ7yu1EsymXHBq7Sq6ftWYNfwGSrVTdxBukAbUf4zXGGP+
+         I7UQ==
+X-Gm-Message-State: APjAAAWqmjG+AeTB/88Bc8zxCFVk6PhPScxrEf+hbUWIVzdLZn8p3C9o
+        flfQpdiINHu5pqpFZuuANh0mofJxf6MkYKKRCC0Crg==
+X-Google-Smtp-Source: APXvYqz4Z1nagdLRuefbsVS4snEWX7fyZkbq/3ND7xotrEE30d//QZNUnTbwcm2mnmu/6tLOV8m1Zcho9bqz56n4Swo=
+X-Received: by 2002:a2e:9e03:: with SMTP id e3mr7189882ljk.186.1576179448269;
+ Thu, 12 Dec 2019 11:37:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1563568344-1274-1-git-send-email-daidavid1@codeaurora.org>
+ <1563568344-1274-3-git-send-email-daidavid1@codeaurora.org>
+ <20190721191305.GI7234@tuxbook-pro> <0ecba781-ad08-0f09-f4a8-83473569a4c5@codeaurora.org>
+In-Reply-To: <0ecba781-ad08-0f09-f4a8-83473569a4c5@codeaurora.org>
+From:   Evan Green <evgreen@google.com>
+Date:   Thu, 12 Dec 2019 11:36:52 -0800
+Message-ID: <CAE=gft57S_2yKQdP6x=R9nVUaHWvreS-ENKkKrKmOzhJYLpzEQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Redefine interconnect provider DT nodes
+To:     David Dai <daidavid1@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Sean Sweeney <seansw@qti.qualcomm.com>,
+        Alex Elder <elder@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Running `make dtbs_check` yells because qcom.yaml says that we should
-have:
+On Tue, Jul 23, 2019 at 11:24 AM David Dai <daidavid1@codeaurora.org> wrote:
+>
+> Thanks for looking over this, Bjorn.
+>
+> On 7/21/2019 12:13 PM, Bjorn Andersson wrote:
+> > On Fri 19 Jul 13:32 PDT 2019, David Dai wrote:
+> >
+> >> Add the DT nodes for each of the Network-On-Chip interconnect
+> >> buses found on SDM845 based platform and redefine the rsc_hlos
+> >> child node as a bcm-voter device to better represent the hardware.
+> >>
+> >> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> >> ---
+> >>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 61 ++++++++++++++++++++++++++++++++++--
+> >>   1 file changed, 58 insertions(+), 3 deletions(-)
+> >>
 
-- items:
-    - enum:
-        - qcom,sc7180-idp
-    - const: qcom,sc7180
-
-...but we're missing "qcom,sc7180".  Add it.
-
-Fixes: 90db71e48070 ("arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index f582c9dcc9aa..388f50ad4fde 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -14,7 +14,7 @@
- 
- / {
- 	model = "Qualcomm Technologies, Inc. SC7180 IDP";
--	compatible = "qcom,sc7180-idp";
-+	compatible = "qcom,sc7180-idp", "qcom,sc7180";
- 
- 	aliases {
- 		hsuart0 = &uart3;
--- 
-2.24.1.735.g03f4e72817-goog
-
+What happened to this series? Is it abandoned?
+-Evan
