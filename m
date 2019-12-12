@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BECC2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBB0C04E30
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4A6922B48
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED7E22B48
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 03:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfLLDkC (ORCPT
+        id S1727884AbfLLDlg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 22:40:02 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58596 "EHLO mx1.suse.de"
+        Wed, 11 Dec 2019 22:41:36 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58556 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726759AbfLLDkB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 22:40:01 -0500
+        id S1727524AbfLLDkA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Dec 2019 22:40:00 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0861BAE57;
-        Thu, 12 Dec 2019 03:39:59 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 9C4C9AE47;
+        Thu, 12 Dec 2019 03:39:58 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org
 Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
@@ -31,9 +31,9 @@ Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         zypeng@titanmec.com, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [RFC 06/25] dt-bindings: leds: Add Titan Micro Electronics TM1628
-Date:   Thu, 12 Dec 2019 04:39:33 +0100
-Message-Id: <20191212033952.5967-7-afaerber@suse.de>
+Subject: [RFC 05/25] dt-bindings: vendor-prefixes: Add Titan Micro Electronics
+Date:   Thu, 12 Dec 2019 04:39:32 +0100
+Message-Id: <20191212033952.5967-6-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191212033952.5967-1-afaerber@suse.de>
 References: <20191212033952.5967-1-afaerber@suse.de>
@@ -45,104 +45,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a YAML schema binding for TM1628 LED controller.
+Assign vendor prefix "titanmec", matching their domain name.
 
 Cc: zypeng@titanmec.com
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- @Rob: How could we express constraints on two-cell reg value ranges here?
-       Should we also model constraints on reg range by #grids property?
- 
- .../devicetree/bindings/leds/titanmec,tm1628.yaml  | 80 ++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml b/Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml
-new file mode 100644
-index 000000000000..024875656e79
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/titanmec,tm1628.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Titan Micro Electronics TM1628 LED controller
-+
-+maintainers:
-+  - Andreas Färber <afaerber@suse.de>
-+
-+properties:
-+  compatible:
-+    enum:
-+    - titanmec,tm1628
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#grids":
-+    description: |
-+      Number of GRID output lines to use.
-+      This limits the number of available SEG output lines.
-+    minimum: 4
-+    maximum: 7
-+
-+  "#address-cells":
-+    const: 2
-+
-+  "#size-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+
-+patternProperties:
-+  "^.*@[1-7],([1-9]|1[02-4])$":
-+    type: object
-+    description: |
-+      Properties for a single LED.
-+
-+    properties:
-+      reg:
-+        description: |
-+          1-based grid number, followed by 1-based segment number.
-+        maxItems: 1
-+
-+      linux,default-trigger: true
-+
-+    required:
-+      - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/leds/common.h>
-+
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        led-controller@0 {
-+            compatible = "titanmec,tm1628";
-+            reg = <0>;
-+            spi-3-wire;
-+            spi-lsb-first;
-+            spi-max-frequency = <500000>;
-+            #grids = <7>;
-+            #address-cells = <2>;
-+            #size-cells = <0>;
-+
-+            colon@5,4 {
-+                reg = <5 4>;
-+                color = <LED_COLOR_ID_WHITE>;
-+                function = LED_FUNCTION_INDICATOR;
-+                linux,default-trigger = "heartbeat";
-+            };
-+        };
-+    };
-+...
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 84a76efad2a8..31d0c4772b96 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -951,6 +951,8 @@ patternProperties:
+     description: Texas Instruments
+   "^tianma,.*":
+     description: Tianma Micro-electronics Co., Ltd.
++  "^titanmec,.*":
++    description: Shenzhen Titan Micro Electronics Co., Ltd.
+   "^tlm,.*":
+     description: Trusted Logic Mobility
+   "^tmt,.*":
 -- 
 2.16.4
 
