@@ -2,102 +2,111 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F897C2D0C9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 15:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B4EC2D0C9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 15:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E197024658
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 15:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576164541;
-	bh=9/90AtUE2odEzoKIalV0qBNfNFz/2SaUIaAvjwThc5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N2BXTdtHv2yCNFrjpuTU+X8SyyjYhM+MC1pc1isJoM0x9pUZIPzwpyXFS7a5heaKa
-	 EX869+Aou5nhufKB7oeH9upy7li/NA5th+pp3VSvHUCMRGrOJdW3iONh1r3HYLRuYz
-	 KLtI9XkvayPngtGyGOHJ4c6e/w4Iv3WIJs6jIOUE=
+	by mail.kernel.org (Postfix) with ESMTP id 0D7A3227BF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 15:48:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tWDQHCzj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbfLLP3A (ORCPT
+        id S1729467AbfLLPsQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:29:00 -0500
-Received: from foss.arm.com ([217.140.110.172]:50756 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728992AbfLLP3A (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:29:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EB6A30E;
-        Thu, 12 Dec 2019 07:28:59 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7FE313F6CF;
-        Thu, 12 Dec 2019 07:28:58 -0800 (PST)
-Date:   Thu, 12 Dec 2019 15:28:55 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Chris Brandt <Chris.Brandt@renesas.com>
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Thu, 12 Dec 2019 10:48:16 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37446 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729013AbfLLPsQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 10:48:16 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f129so3059840wmf.2
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 07:48:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=n8vF9XNoq8z6lGj5X7N3vW0Qdo3VLesTtOSH5vM0z9g=;
+        b=tWDQHCzjEidxQRC+S3IK6O7tlY/wx1abfeFkrfPopDd3QnLtcJm/2dSOfbn4oBuHob
+         r5oqnlemPeEejKOCEADPAyAr0Cn6ISp7836+r+o8bI0ZppfhowGu586AmRKCjlF4XovA
+         Gan7Xv/WYJBpQPmip9CyMywfOCnw5YFEkNw+lfBkNsZ97VqUaLcFuP++4ZBfVBdkqyAu
+         iS+Zh6cT5jmUAdSFEM6h/dQgBqqVy8JV17rG7osun1xfooVf1WiWuhgYi2xxuuO7fAvt
+         SfVBVpVTBZeLFibk13ApL2uYWHGl00qSzJXR1iTJMR2XPTEkA6tAW2o+iWHF2t/b+41M
+         +f7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=n8vF9XNoq8z6lGj5X7N3vW0Qdo3VLesTtOSH5vM0z9g=;
+        b=N/GSkE96sWnRvgqYbJtlfc6RxTUHxu7972Q9UWmM4XoBulz/Gvn3Uot5dm3PouvMGw
+         lB2/i3FPjhkazN+29NrXpg2lYBU24VAQFVnni8vC0IzCBiX70Bf7A88N/E3tX9Xsgyj/
+         wef1SPn0RhI2jhRBL8JVGpHlf6ZAsMpsujRG6iBM4xFuArBsfbqLEcOJGP82lWiq0m0h
+         iYz6lX44Ln8d2ZQLABGh37EokYmmzFksj4WQxsH9usNkaU1X0L2XyXkYBHzp5onC12Bk
+         mKVuhO/tu739n+lj6Phz/wHmwGKQRxiy/g1byIk1gNhOlYf6VcuyMyYeobEnVH+wFE+N
+         4ZEQ==
+X-Gm-Message-State: APjAAAWBqcEWLrabc5dpWkNeNvoMvI6O0CG0hc/7gP4SpKjHRixHSbv0
+        KyRrlPtew5kN5AeSuukAW+8uNQ==
+X-Google-Smtp-Source: APXvYqxOLMy2RQ678Cljt3+lFrWx65iFon1zUH2zHDgdT62aQXQwwk5Wxg4qyHDQTsa3N8dQjdgobg==
+X-Received: by 2002:a1c:6a05:: with SMTP id f5mr7206712wmc.2.1576165693930;
+        Thu, 12 Dec 2019 07:48:13 -0800 (PST)
+Received: from dell ([95.149.164.71])
+        by smtp.gmail.com with ESMTPSA id p26sm6519960wmc.24.2019.12.12.07.48.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 07:48:13 -0800 (PST)
+Date:   Thu, 12 Dec 2019 15:48:04 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Marco Felsch <m.felsch@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: Re: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
-Message-ID: <20191212152855.GD4310@sirena.org.uk>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com>
- <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
- <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+        Support Opensource <support.opensource@diasemi.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 0/3] Add DA9062 GPIO support
+Message-ID: <20191212154804.GB3468@dell>
+References: <20191129165817.20426-1-m.felsch@pengutronix.de>
+ <20191210095115.kxvm7elfkiw2kdem@pengutronix.de>
+ <CACRpkda0BCBj1LeFkWsjBPHi_4d-F+eu0tDLm9VrFbn1RyWkWA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fOHHtNG4YXGJ0yqR"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-X-Cookie: We have DIFFERENT amounts of HAIR --
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkda0BCBj1LeFkWsjBPHi_4d-F+eu0tDLm9VrFbn1RyWkWA@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, 12 Dec 2019, Linus Walleij wrote:
 
---fOHHtNG4YXGJ0yqR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Tue, Dec 10, 2019 at 10:51 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> 
+> > gentle ping.
+> (...)
+> > > Marco Felsch (3):
+> > >   dt-bindings: mfd: da9062: add gpio bindings
+> > >   mfd: da9062: add support for the DA9062 GPIOs in the core
+> > >   pinctrl: da9062: add driver support
+> 
+> I can merge this to the pinctrl subsystem but then I need
+> Lee's ACK on patches 1 & 2 as they are to the MFD subsystem
+> and I think he will want me to create an immutable branch too?
+> 
+> As Lee is not even on the To: line I think it is unlikely to happen,
+> so maybe repost, stating your request for his ACK?
 
-On Thu, Dec 12, 2019 at 02:29:07PM +0000, Chris Brandt wrote:
-> On Wed, Dec 11, 2019, Sergei Shtylyov wrote:
+Or any other line I guess?  Seeing as these aren't in my inbox.
 
-> >    The last word from our BSP people was that JFFS2 doesn't work with the
-> > HyperFLash dedicated BSP driver... :-/
+Yes, please submit a RESEND with me as a recipient.
 
-> Is that why this "RPC" patch series is taking so long?
-> It's a fairly simple piece of hardware.
-
-The submitter appeared to be having difficulty with feedback from the
-reviewers with knowledge of the hardware, then it looks like the last
-version of the patch set didn't get any comments from any of those
-reviewers.
-
---fOHHtNG4YXGJ0yqR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3yXLYACgkQJNaLcl1U
-h9CWRAf/d0MNGnB7aK0YH7cmyHB95BuE2Ljgqzl+79JflqVMfGbDEZLG4CqVSalS
-A7r5jUX6nfU3oI5DMuycdYsT6DnEcSeMXikHBTtb3qSt2Why1C7moQ+7yql8l3cN
-icVqnMMLqMLcbEOjsMfZ4Kb3QwlgKbnZjXbpJtTlELz/i2Re3KPhCC2UX3laoYKI
-KGtscAJnfFsf1G6bj3AtVQJk1o7daNFUAE2GTKAGRVKHjMQZW3WbatGNEPdQA6n2
-GoIDVNFOFavSQ174YjzMpQ/5c1Am8h5yTioFtSAQyOcWHFbk8DbX0Pra9xsaD8pc
-rfX4J9WWH3E5nLIRy9z1JZabk85x4w==
-=D3b3
------END PGP SIGNATURE-----
-
---fOHHtNG4YXGJ0yqR--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
