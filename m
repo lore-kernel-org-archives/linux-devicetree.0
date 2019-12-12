@@ -2,77 +2,78 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED44FC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F026C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B7124658
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C9772173E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:04:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbfLLQCY (ORCPT
+        id S1729693AbfLLQEU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:02:24 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44720 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729247AbfLLQCY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 11:02:24 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sjoerd)
-        with ESMTPSA id 588E328B82D
-Received: by beast.luon.net (Postfix, from userid 1000)
-        id 618673E1F0D; Thu, 12 Dec 2019 17:02:20 +0100 (CET)
-From:   Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH] ARM: dts: imx6qdl: Enable egalax touch screen
-Date:   Thu, 12 Dec 2019 17:02:20 +0100
-Message-Id: <20191212160220.2265521-1-sjoerd.simons@collabora.co.uk>
-X-Mailer: git-send-email 2.24.0
+        Thu, 12 Dec 2019 11:04:20 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38265 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729540AbfLLQEU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 11:04:20 -0500
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ifQwr-0003cW-KD; Thu, 12 Dec 2019 17:04:17 +0100
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ifQwr-0004L9-24; Thu, 12 Dec 2019 17:04:17 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     support.opensource@diasemi.com, lee.jones@linaro.org,
+        robh+dt@kernel.org, linus.walleij@linaro.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, kernel@pengutronix.de
+Subject: [RESEND PATCH v3 0/3] Add DA9062 GPIO support
+Date:   Thu, 12 Dec 2019 17:04:10 +0100
+Message-Id: <20191212160413.15232-1-m.felsch@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sabrelite boards can have an lvds screen attached with a built-in i2c touch
-screen. Enable this in the dtsi.
+Hi,
 
-Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
----
+this update address all comments made on [1], for further details see
+the patch based changelog.
 
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+I resend this v3 since I forgot to add the MFD maintainers on the To:.
+Please can you review the MFD part?
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-index 8468216dae9b..382b127b2251 100644
---- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-@@ -416,6 +416,14 @@ &i2c3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c3>;
- 	status = "okay";
-+
-+	touchscreen@4 {
-+		compatible = "eeti,egalax_ts";
-+		reg = <0x04>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
-+		wakeup-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
-+	};
- };
- 
- &iomuxc {
+Regards,
+  Marco
+
+[1] https://patchwork.ozlabs.org/cover/1201549/
+
+Marco Felsch (3):
+  dt-bindings: mfd: da9062: add gpio bindings
+  mfd: da9062: add support for the DA9062 GPIOs in the core
+  pinctrl: da9062: add driver support
+
+ .../devicetree/bindings/mfd/da9062.txt        |  10 +
+ MAINTAINERS                                   |   1 +
+ drivers/mfd/da9062-core.c                     |  16 +-
+ drivers/pinctrl/Kconfig                       |  12 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-da9062.c              | 297 ++++++++++++++++++
+ 6 files changed, 336 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pinctrl/pinctrl-da9062.c
+
 -- 
-2.24.0
+2.20.1
 
