@@ -2,280 +2,107 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECCFC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 01:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BACC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 01:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ABBC214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 01:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE50E21655
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 01:13:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Imlmo23G";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iJi33v66"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mOf6cG7l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfLLBIW (ORCPT
+        id S1727327AbfLLBNq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:08:22 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:51667 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726791AbfLLBIW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:08:22 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9168D22396;
-        Wed, 11 Dec 2019 20:08:21 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Wed, 11 Dec 2019 20:08:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=22RmgyxfJBeRaOGSVLQVBw8m1e4rYRQ
-        3qBL8OQyhN/Y=; b=Imlmo23GJ4QKdJUpt5POxJxEZpbC7ctOVu7pyNq2j/KsAzP
-        zZrU1zj8p43psHP0Gbye7hKCnxDVNOhMF27UkYYI/92V5lZZ7vTwZPMg16jRez1h
-        FOHZIHzMjaKN/LV5QKNISXQAptOxja0WwfnAIyYZNM47nRDEtnt3prAW95FQ04lq
-        zaEQSJvcGlZ7plP8tYrmbw8wbd5kFeLOnH3jrc22GnBut5c2kvyVPGZLyINFclO8
-        sH0/YatoOr8+nMGyYGgrCe/cbMjaRHWtikPY3oVq55fyAzpU1j+dpEeroZgGXT3q
-        z/S9vmOIBZj55RaylPOmg7otZTvDm74JrIHcU9A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=22Rmgy
-        xfJBeRaOGSVLQVBw8m1e4rYRQ3qBL8OQyhN/Y=; b=iJi33v66ZxMXJSINKmsIje
-        i15D2JBbp7LqZbs6GzH5B21XuH4tnx6hWkeFHjk+Hna88R/ZxH7CczzV6s0QWy28
-        El1nJh9TQSIXG17cBmrIz2UezZoIGIopAMJsBkudjXoqEpKg0HdJiMDqgrWhjjKy
-        biUIGl22KQI27E3AvwkIykU1YtztFmxbasx6XNPsRXsJaYeScwxVmquNCASYdUx/
-        l2u28/D9/rL1/UYZRCPj5n4zDXhKd7AYU5RG4lMF0q+VGDHlSpdILS4E9ZjJ0OVP
-        7FDzycKrwQYbJHdJVK9lDOqhUX3Ud7PrgURwFNV6mVs7JdsKtIvU/Tkj1pEcpWVg
-        ==
-X-ME-Sender: <xms:BJPxXRu9Q43kARsWuqi9hPpfRnqs0NAe9O-1iraS9_Td-uCXSUnUSg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeliedgvdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuffhomh
-    grihhnpehoiihlrggsshdrohhrghenucfrrghrrghmpehmrghilhhfrhhomheprghnughr
-    vgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:BJPxXc3sE6S4-KnHKsaJfEmfm9cy3_7h_SywkMa7HBmp7UiyIhvRag>
-    <xmx:BJPxXeACy88E_qLznCMjv-WUPyuZTxmzG_P0IHghE4IdODxFLWBKYw>
-    <xmx:BJPxXbUkRlBYL9dpfySX1av0iQDMxTufh5HlSR3AjUJOxmEyU-ZbbA>
-    <xmx:BZPxXS5vw9LN0T0uSZEZixaXr2S6QM5crlBzqRYudQn-waBXInKcuQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 6CCE0E00A2; Wed, 11 Dec 2019 20:08:20 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-679-g1f7ccac-fmstable-20191210v1
-Mime-Version: 1.0
-Message-Id: <78c346a0-217c-4216-b16a-498f80e7303a@www.fastmail.com>
-In-Reply-To: <20191211202620.GA31628@cnn>
-References: <20191211202620.GA31628@cnn>
-Date:   Thu, 12 Dec 2019 11:39:59 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     manikandan-e <manikandan.hcl.ers.epl@gmail.com>,
-        "Joel Stanley" <joel@jms.id.au>, vkhemka@fb.com
-Cc:     "Sai Dasari" <sdasari@fb.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        manikandan.e@hcl.com
-Subject: Re: [PATCH v4 2/2] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Content-Type: text/plain
+        Wed, 11 Dec 2019 20:13:46 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:43875 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726791AbfLLBNp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Dec 2019 20:13:45 -0500
+X-UUID: bca38d7082df45099191f9447f744823-20191212
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=B4MILXq3ZMERWeqsdACp65BTdrLNU+AFrjMI+Ui8c0s=;
+        b=mOf6cG7lzAyHQaWJzLGQ1IwDcHX1n70k9sM+f/NzOge0xvRurzaA9nhOr+Q3LWMBQZV6cBqcyeGFUqpZAaxYRCIZ+e22jFTDCnOGhUn2hotuR3c6i3j+mwVgoqFTo2XaVR2WSk689d3oDghkpwNoo1/ZKSS9qZffPaOGTJ4GD1o=;
+X-UUID: bca38d7082df45099191f9447f744823-20191212
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <dennis-yc.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1427452136; Thu, 12 Dec 2019 09:13:42 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 12 Dec 2019 09:13:18 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Dec 2019 09:13:37 +0800
+Message-ID: <1576113221.17653.6.camel@mtkswgap22>
+Subject: Re: [PATCH v2 04/14] mailbox: mediatek: cmdq: clear task in channel
+ before shutdown
+From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 12 Dec 2019 09:13:41 +0800
+In-Reply-To: <1575946181.16676.4.camel@mtksdaap41>
+References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574819937-6246-6-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1575946181.16676.4.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+SGkgQ0ssDQoNCk9uIFR1ZSwgMjAxOS0xMi0xMCBhdCAxMDo0OSArMDgwMCwgQ0sgSHUgd3JvdGU6
+DQo+IEhpLCBEZW5uaXM6DQo+IA0KPiBPbiBXZWQsIDIwMTktMTEtMjcgYXQgMDk6NTggKzA4MDAs
+IERlbm5pcyBZQyBIc2llaCB3cm90ZToNCj4gPiBEbyBzdWNjZXNzIGNhbGxiYWNrIGluIGNoYW5u
+ZWwgd2hlbiBzaHV0ZG93bi4gRm9yIHRob3NlIHRhc2sgbm90IGZpbmlzaCwNCj4gPiBjYWxsYmFj
+ayB3aXRoIGVycm9yIGNvZGUgdGh1cyBjbGllbnQgaGFzIGNoYW5jZSB0byBjbGVhbnVwIG9yIHJl
+c2V0Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IERlbm5pcyBZQyBIc2llaCA8ZGVubmlzLXlj
+LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9tYWlsYm94L210ay1j
+bWRxLW1haWxib3guYyB8IDI2ICsrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmls
+ZSBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMgYi9kcml2ZXJzL21haWxib3gvbXRrLWNtZHEt
+bWFpbGJveC5jDQo+ID4gaW5kZXggZmQ1MTliNmY1MThiLi5jMTJhNzY4ZDExNzUgMTAwNjQ0DQo+
+ID4gLS0tIGEvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1haWxib3guYw0KPiA+ICsrKyBiL2Ry
+aXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMNCj4gPiBAQCAtNDUwLDYgKzQ1MCwzMiBA
+QCBzdGF0aWMgaW50IGNtZHFfbWJveF9zdGFydHVwKHN0cnVjdCBtYm94X2NoYW4gKmNoYW4pDQo+
+ID4gIA0KPiA+ICBzdGF0aWMgdm9pZCBjbWRxX21ib3hfc2h1dGRvd24oc3RydWN0IG1ib3hfY2hh
+biAqY2hhbikNCj4gPiAgew0KPiA+ICsJc3RydWN0IGNtZHFfdGhyZWFkICp0aHJlYWQgPSAoc3Ry
+dWN0IGNtZHFfdGhyZWFkICopY2hhbi0+Y29uX3ByaXY7DQo+ID4gKwlzdHJ1Y3QgY21kcSAqY21k
+cSA9IGRldl9nZXRfZHJ2ZGF0YShjaGFuLT5tYm94LT5kZXYpOw0KPiA+ICsJc3RydWN0IGNtZHFf
+dGFzayAqdGFzaywgKnRtcDsNCj4gPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gKw0KPiA+
+ICsJc3Bpbl9sb2NrX2lycXNhdmUoJnRocmVhZC0+Y2hhbi0+bG9jaywgZmxhZ3MpOw0KPiA+ICsJ
+aWYgKGxpc3RfZW1wdHkoJnRocmVhZC0+dGFza19idXN5X2xpc3QpKQ0KPiA+ICsJCWdvdG8gZG9u
+ZTsNCj4gPiArDQo+ID4gKwlXQVJOX09OKGNtZHFfdGhyZWFkX3N1c3BlbmQoY21kcSwgdGhyZWFk
+KSA8IDApOw0KPiA+ICsNCj4gPiArCS8qIG1ha2Ugc3VyZSBleGVjdXRlZCB0YXNrcyBoYXZlIHN1
+Y2Nlc3MgY2FsbGJhY2sgKi8NCj4gPiArCWNtZHFfdGhyZWFkX2lycV9oYW5kbGVyKGNtZHEsIHRo
+cmVhZCk7DQo+ID4gKwlpZiAobGlzdF9lbXB0eSgmdGhyZWFkLT50YXNrX2J1c3lfbGlzdCkpDQo+
+ID4gKwkJZ290byBkb25lOw0KPiA+ICsNCj4gPiArCWxpc3RfZm9yX2VhY2hfZW50cnlfc2FmZSh0
+YXNrLCB0bXAsICZ0aHJlYWQtPnRhc2tfYnVzeV9saXN0LA0KPiA+ICsJCQkJIGxpc3RfZW50cnkp
+IHsNCj4gPiArCQljbWRxX3Rhc2tfZXhlY19kb25lKHRhc2ssIC1FQ09OTkFCT1JURUQpOw0KPiA+
+ICsJCWtmcmVlKHRhc2spOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWNtZHFfdGhyZWFkX2Rpc2Fi
+bGUoY21kcSwgdGhyZWFkKTsNCj4gPiArCWNsa19kaXNhYmxlKGNtZHEtPmNsb2NrKTsNCj4gPiAr
+ZG9uZToNCj4gDQo+IGNtZHFfdGhyZWFkX3Jlc3VtZSh0aHJlYWQpOw0KPiANCj4gUmVnYXJkcywN
+Cj4gQ0sNCj4gDQoNCkNhbGwgcmVzdW1lIGhlcmUgd2lsbCBjYXVzZSB2aW9sYXRpb24uIFRoZSB0
+aHJlYWQtPnRhc2tfYnVzeV9saXN0IGVtcHR5DQptZWFucyBubyB0YXNrIHdvcmsgaW4gZ2NlIGFu
+ZCB0aHJlYWQgc3RhdGUgc2hvdWxkIGFscmVhZHkgZGlzYWJsZQ0Kd2l0aG91dCBjbG9jaywgd2hp
+Y2ggaXMgd2hhdCB3ZSB3YW50IHNpbmNlIGNsaWVudCB0cnkgdG8gc2h1dCBkb3duIHRoaXMNCm1i
+b3ggY2hhbm5lbC4gU28gSSB0aGluayB3ZSBkb24ndCBuZWVkIHJlc3VtZSBoZXJlLg0KDQoNClJl
+Z2FyZHMsDQpEZW5uaXMNCg0KPiA+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmdGhyZWFkLT5j
+aGFuLT5sb2NrLCBmbGFncyk7DQo+ID4gIH0NCj4gPiAgDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgbWJveF9jaGFuX29wcyBjbWRxX21ib3hfY2hhbl9vcHMgPSB7DQo+IA0KPiANCg0K
 
-
-On Thu, 12 Dec 2019, at 06:56, Manikandan Elumalai wrote:
-> The Yosemite V2 is a facebook multi-node server
-> platform that host four OCP server. The BMC
-> in the Yosemite V2 platform based on AST2500 SoC.
-> 
-> This patch adds linux device tree entry related to
-> Yosemite V2 specific devices connected to BMC SoC.
-> 
-> --- Reviews summary
-> --- v4[2/2] - Spell and contributor name correction.
-> ---         - License identifier changed to GPL-2.0-or-later.
-> ---         - aspeed-gpio.h removed.
-> ---         - FAN2 tacho channel changed.
-> ---      v4 - Bootargs removed.
-> ---         - Reviewed-by: Vijay Khemka <vkhemka@fb.com>
-> ---      v3 - Uart1 Debug removed .
-> ---         - Acked-by:Andrew Jeffery <andrew@aj.id.au>
-
-You need to put the Reviewed-by / Acked-by tags down below your Signed-off-by. That
-way we know that the patch is still ready to go (and they appear in patchwork - you can
-(currently) see that they're missing[1]).
-
-[1] https://patchwork.ozlabs.org/project/linux-aspeed/list/?series=147912&state=%2A&archive=both
-
-Andrew
-
-> ---      v2 - LPC and VUART removed .
-> ---      v1 - Initial draft.
-> 
-> Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> ---
->  .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 148 +++++++++++++++++++++
->  1 file changed, 148 insertions(+)
->  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> 
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts 
-> b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> new file mode 100644
-> index 0000000..ffd7f4c
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> @@ -0,0 +1,148 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +// Copyright (c) 2018 Facebook Inc.
-> +
-> +/dts-v1/;
-> +
-> +#include "aspeed-g5.dtsi"
-> +/ {
-> +	model = "Facebook Yosemitev2 BMC";
-> +	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-> +	aliases {
-> +		serial4 = &uart5;
-> +	};
-> +	chosen {
-> +		stdout-path = &uart5;
-> +	};
-> +
-> +	memory@80000000 {
-> +		reg = <0x80000000 0x20000000>;
-> +	};
-> +
-> +	iio-hwmon {
-> +		// VOLATAGE SENSOR
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-> +		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-> +		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-> +		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-> +	};
-> +};
-> +
-> +&fmc {
-> +	status = "okay";
-> +	flash@0 {
-> +		status = "okay";
-> +		m25p,fast-read;
-> +#include "openbmc-flash-layout.dtsi"
-> +	};
-> +};
-> +
-> +&spi1 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_spi1_default>;
-> +	flash@0 {
-> +		status = "okay";
-> +		m25p,fast-read;
-> +		label = "pnor";
-> +	};
-> +};
-> +
-> +&uart5 {
-> +	// BMC Console
-> +	status = "okay";
-> +};
-> +
-> +&mac0 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_rmii1_default>;
-> +	use-ncsi;
-> +};
-> +
-> +&adc {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_adc0_default
-> +			&pinctrl_adc1_default
-> +			&pinctrl_adc2_default
-> +			&pinctrl_adc3_default
-> +			&pinctrl_adc4_default
-> +			&pinctrl_adc5_default
-> +			&pinctrl_adc6_default
-> +			&pinctrl_adc7_default
-> +			&pinctrl_adc8_default
-> +			&pinctrl_adc9_default
-> +			&pinctrl_adc10_default
-> +			&pinctrl_adc11_default
-> +			&pinctrl_adc12_default
-> +			&pinctrl_adc13_default
-> +			&pinctrl_adc14_default
-> +			&pinctrl_adc15_default>;
-> +};
-> +
-> +&i2c8 {
-> +	//FRU EEPROM
-> +	status = "okay";
-> +	eeprom@51 {
-> +		compatible = "atmel,24c64";
-> +		reg = <0x51>;
-> +		pagesize = <32>;
-> +	};
-> +};
-> +
-> +&i2c9 {
-> +	//INLET & OUTLET TEMP
-> +	status = "okay";
-> +	tmp421@4e {
-> +		compatible = "ti,tmp421";
-> +		reg = <0x4e>;
-> +	};
-> +	tmp421@4f {
-> +		compatible = "ti,tmp421";
-> +		reg = <0x4f>;
-> +	};
-> +};
-> +
-> +&i2c10 {
-> +	//HSC
-> +	status = "okay";
-> +	adm1278@40 {
-> +		compatible = "adi,adm1278";
-> +		reg = <0x40>;
-> +	};
-> +};
-> +
-> +&i2c11 {
-> +	//MEZZ_TEMP_SENSOR
-> +	status = "okay";
-> +	tmp421@1f {
-> +		compatible = "ti,tmp421";
-> +		reg = <0x1f>;
-> +	};
-> +};
-> +
-> +&i2c12 {
-> +	//MEZZ_FRU
-> +	status = "okay";
-> +	eeprom@51 {
-> +		compatible = "atmel,24c64";
-> +		reg = <0x51>;
-> +		pagesize = <32>;
-> +	};
-> +};
-> +
-> +&pwm_tacho {
-> +	//FSC
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-> +	fan@0 {
-> +		reg = <0x00>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-> +	};
-> +	fan@1 {
-> +		reg = <0x01>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
->
