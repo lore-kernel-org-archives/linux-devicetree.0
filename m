@@ -2,117 +2,141 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90343C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 08:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0E0C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 08:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6740B214AF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 08:17:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="l+U2Sw+3"
+	by mail.kernel.org (Postfix) with ESMTP id F41C52173E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 08:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576138683;
+	bh=aRxgfzcMY/rhrsdoJUu0f5LB6X36Bq9gSAWQu+fdFCA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=nrt/4akMNYzy9WBl38l6W/VqWeWLp80ObXn6T/IOZqh2bh8SB1SmCgjaH/rMLTNic
+	 Ka1PLiZxb+M0yT5oCmGYDun1ng+JbJS9x3pa04lI6p29bxn5Rxm9qc6xeCNOC+tM+E
+	 aXuQJJsQ1ShlRGF3eNprViPWTKEYM6CK38eJvaFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbfLLIRA (ORCPT
+        id S1726820AbfLLISC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 03:17:00 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:63288 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726382AbfLLIRA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Dec 2019 03:17:00 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBC8DAAo003441;
-        Thu, 12 Dec 2019 09:16:49 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=KsOBRBxWPhArWs9FKdG6YL4u5JqiyaVQsva4ZRyLfUM=;
- b=l+U2Sw+3S5Qt8f6sZFDqdyII+hJpuDX71t7BGx1q2JiXki9K5UtQWlpu6h75hNa/+OdO
- 3nfKh7vB7tbzKpFhMfKFbC95L1IWb6OnOCRlzrUgC5x+2fYuQu7vwgS3xK1r+a6cpxPD
- XnnLku/CZqnWnpjgwdHBepA7sVKInP1xAvLfbHVygG1Cvy3LbWx1EuyVaH5ZLNSw2b/e
- TW6m6xp/kjxXqq/Z6rPgKvUJ/wsHCqGSUmQVgul6SrKs7obanfHU/abC8GSHXyC/ZMJt
- ZIeiwvw9TsxjRgzhz4xEh/UGTCCP/14G3xPP8h4V9Opy5DnPufSDRHT4wndvo0yDxhpR kg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wt5wv3dpf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Dec 2019 09:16:49 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A1A75100048;
-        Thu, 12 Dec 2019 09:16:48 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 749142A96FD;
-        Thu, 12 Dec 2019 09:16:48 +0100 (CET)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 12 Dec
- 2019 09:16:48 +0100
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Thu, 12 Dec 2019 09:16:47 +0100
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: pwm: fix nodename pattern
-Thread-Topic: [PATCH] dt-bindings: pwm: fix nodename pattern
-Thread-Index: AQHVsDO3MV8l3Qp4hkSb3+FMjTJqHqe1R/UAgADP3oA=
-Date:   Thu, 12 Dec 2019 08:16:47 +0000
-Message-ID: <60921a82-9241-9c6e-0a17-0bd93dc52978@st.com>
-References: <20191211150021.20125-1-benjamin.gaignard@st.com>
- <CAL_JsqJKWoX_kY2kSieOA-wXO5xKtDbhXPMCjg-d4FHHEvOmHg@mail.gmail.com>
-In-Reply-To: <CAL_JsqJKWoX_kY2kSieOA-wXO5xKtDbhXPMCjg-d4FHHEvOmHg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F6BB0E9CA0FA9F408718F9859B2DA2E8@st.com>
-Content-Transfer-Encoding: base64
+        Thu, 12 Dec 2019 03:18:02 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37295 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbfLLISC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 03:18:02 -0500
+Received: by mail-lf1-f67.google.com with SMTP id b15so993146lfc.4;
+        Thu, 12 Dec 2019 00:18:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=5EnIFiXZh/Iu4A4WLSxDoAN6XfjbowqqgnmFCQOC6Ks=;
+        b=XADuIgBefyNRbvFGsOescfiGExAAP4UfpYuRWj6ER4zWPnqhC6qjHoC57D2BRkeunJ
+         xn8f6etkRlursLTze5hp9naXJ9T+u4DGnDj8JDma+Xng0jwgYf1B4Wcu7li1VdqkktOG
+         Hv9hdXELek2WELKbRTRWaaFO3MfUE/Xrw/CWXkfc8nfyyzz/e01ezV1HuE81JD9GqqT6
+         Z+vKkeX9G1gv8wa2OXmyiOCEpbmxHHXx3xU6H48G10iKQqgJalL4OFg/OrPvSPlqrVjb
+         i2h+bq0MGFKl0hiUkAnhEnAIQfGNjjXEJs3qFAIsKDD2b5+3HdqEirrHK4yXXnxZ2e16
+         9QDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=5EnIFiXZh/Iu4A4WLSxDoAN6XfjbowqqgnmFCQOC6Ks=;
+        b=FDFy309spGnQWpKRu4fsBScujmrrvPF8HVPiIJ78X7ylTqcvyMSF2h0r2H8hEnIj1B
+         cCK5AEBsIfRQCxrDAYCcG/HWRGUx+LK7pUUwV06AO4AYk9UL+uPiWT9YX+hOUwpN7hjA
+         fZ43fp49r3/csr63ntaGAcpEnbTccJtZT4KRE5LhXCtQL2hlwmZKbwMZegV1HZx97s3d
+         clmb/VL0XXfQPtCGsLjtrr1SHoIDCuh0y8z82E/QulE+iY8TEQv07adxYf933S8CaVz0
+         hEwQuwdWYH/C7AjHoTpXReYvbNPdIxpB6vf3awsoIUs0WQQrP+WT7tFV+8Z1joh08pRt
+         G29g==
+X-Gm-Message-State: APjAAAVz9pobRFXRdnc4Xi+V0e2X4kCWfuoq6roPUNTK7VVQW0wf1qQ5
+        WCR+e4HTOxKTFT4YT6s0Em8=
+X-Google-Smtp-Source: APXvYqwn/IITTaBb6NFu2GrVumFrSApCYyDJDP7vgctcMwCNwDWCPXvziZmsoL5KYgOuskWZoJ6qww==
+X-Received: by 2002:a19:f514:: with SMTP id j20mr4529061lfb.31.1576138680073;
+        Thu, 12 Dec 2019 00:18:00 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id d25sm2550188ljj.51.2019.12.12.00.17.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 00:17:59 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     John Youn <John.Youn@synopsys.com>
+Subject: Re: [RFC PATCH 11/14] usb: devicetree: dwc3: Add TRB prefetch count
+In-Reply-To: <7098386bb19ebfee02027555d86fc47822b617d4.1576118671.git.thinhn@synopsys.com>
+References: <cover.1576118671.git.thinhn@synopsys.com> <7098386bb19ebfee02027555d86fc47822b617d4.1576118671.git.thinhn@synopsys.com>
+Date:   Thu, 12 Dec 2019 10:18:44 +0200
+Message-ID: <87pnguvtwb.fsf@kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-12_01:2019-12-12,2019-12-12 signatures=0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQpPbiAxMi8xMS8xOSA4OjUyIFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gV2VkLCBEZWMg
-MTEsIDIwMTkgYXQgOTowMCBBTSBCZW5qYW1pbiBHYWlnbmFyZA0KPiA8YmVuamFtaW4uZ2FpZ25h
-cmRAc3QuY29tPiB3cm90ZToNCj4+IFR5cGljYWwgcHdtIG5vZGVzIHNob3VsZCBiZSBuYW1lZCBw
-d21AeHh4Lg0KPj4gVGhlIHBhdHRlcm4gc2hvdWxkbid0IG1hdGNoIG5vZGVzIG5hbWVkIHB3bS14
-eHggdG8gYXZvaWQNCj4+IGNvbmZsaWN0cyB3aXRoIHBpbm11eCBvciBwd20tZmFuIG5vZGVzLg0K
-PiBJdCBvbmx5IG1hdGNoZXMgcHdtLSQoYS1oZXgtbnVtYmVyKSwgbm90IGFueSBzdHJpbmcsIHNv
-IHRoYXQgc2hvdWxkbid0DQo+IGJlIGEgcHJvYmxlbS4gVGhpcyBpcyBuZWVkZWQgZm9yIHRoaW5n
-cyBsaWtlIEdQSU8gYmFzZWQgZGV2aWNlcyAobm90DQo+IGp1c3QgUFdNcykgd2hpY2ggZG9uJ3Qg
-aGF2ZSBhbnkgYWRkcmVzcy4NCj4NCj4gUGlubXV4IG5vZGVzIGFyZSBnb2luZyB0byBuZWVkIHRv
-IGFkb3B0IHNvbWUgc29ydCBvZiBzdGFuZGFyZCBwYXR0ZXJuDQo+IHdlIGNhbiBtYXRjaCBvbi4N
-CkkgaGF2ZSBwdXNoIGEgcGF0Y2ggdG8gc3RvcCB1c2luZyAnQCcgYW5kICdfJyBpbiBwaW5tdXgg
-Z3JvdXBzIG5hbWVzOg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzEx
-NjI1OTEvDQpJdCByZW1vdmUgdGhlIHdhcm5pbmdzIHdoZW4gY29tcGlsaW5nIHRoZSBkZXZpY2V0
-cmUgd2l0aCBXPTEyIGJ1dCBwd20ueWFtbA0KY29tcGxhaW4gYmVjYXVzZSBwd20gcGlubXV4IGlz
-IG5hbWVkIHB3bS0xLg0KDQpIb3cgY2FuIEkgc29sdmUgdGhlc2UgaXNzdWVzIGF0IHRoZSBzYW1l
-IHRpbWUgPw0KDQpCZW5qYW1pbg0KDQo+DQo+PiBTaWduZWQtb2ZmLWJ5OiBCZW5qYW1pbiBHYWln
-bmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAc3QuY29tPg0KPj4gLS0tDQo+PiAgIERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vcHdtLnlhbWwgfCAyICstDQo+PiAgIDEgZmlsZSBj
-aGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPj4NCj4+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL3B3bS55YW1sIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9wd20ueWFtbA0KPj4gaW5kZXggZmE0Zjlk
-ZTkyMDkwLi4yOWI4Njg4NmMyODIgMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcHdtL3B3bS55YW1sDQo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcHdtL3B3bS55YW1sDQo+PiBAQCAtMTEsNyArMTEsNyBAQCBtYWludGFp
-bmVyczoNCj4+DQo+PiAgIHByb3BlcnRpZXM6DQo+PiAgICAgJG5vZGVuYW1lOg0KPj4gLSAgICBw
-YXR0ZXJuOiAiXnB3bShALip8LVswLTlhLWZdKSokIg0KPj4gKyAgICBwYXR0ZXJuOiAiXnB3bShA
-LipbMC05YS1mXSkqJCINCj4+DQo+PiAgICAgIiNwd20tY2VsbHMiOg0KPj4gICAgICAgZGVzY3Jp
-cHRpb246DQo+PiAtLQ0KPj4gMi4xNS4wDQo+Pg==
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi,
+
+Thinh Nguyen <Thinh.Nguyen@synopsys.com> writes:
+> DWC_usb32 has an enhancement that allows the controller to cache
+> multiple TRBs for non-control endpoints. Introduce a new property to
+> DWC3 to set the maximum number of TRBs to cache in advance. The property
+> can be set from 1 to DWC_USB32_CACHE_TRBS_PER_TRANSFER (CoreConsultant
+> value). By default, the number of cache TRB is
+> DWC_USB32_CACHE_TRBS_PER_TRANSFER.
+>
+> Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentati=
+on/devicetree/bindings/usb/dwc3.txt
+> index 7da1c4e7d380..ff35fa6de2eb 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -105,6 +105,9 @@ Optional properties:
+>  			this and tx-thr-num-pkt-prd to a valid, non-zero value
+>  			1-16 (DWC_usb31 programming guide section 1.2.3) to
+>  			enable periodic ESS TX threshold.
+> + - snps,num-trb-prefetch: max value to do TRBs cache for DWC_usb32. The =
+value
+> +			can be from 1 to DWC_USB32_CACHE_TRBS_PER_TRANSFER.
+> +			Default value is DWC_USB32_CACHE_TRBS_PER_TRANSFER.
+
+how about we just leave it at the maximum and in case someone notices
+problems, then we consider adding more DT bindings?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl3x9+QACgkQzL64meEa
+mQb2gxAAmAz+yGkB9zy8zX5+7CfRGLlsPvQVP3uveDLKxXgzzXAny/X0zGktLL3C
+UhH8Hn+PP6KINULq65Fnz4YojB3ZB/mY2ZbMhkDLxNbxjqlUlpjc3Q3MtpT3xgKu
+GIhxT6R5s4oa3kRXWhGpjdhJevRQwJN3l05Pxe40gaaeAHJKwGxQWuhiol48Qc3A
+9Yhm9dJEiyi9t1LTDDnnOVuUUsroo2qRfpozS1VcsGrmy81elzkN3S5hUnFM8lox
+QTr/zmt62tnAqKcMeo+OeyO/Ugu/0Tptn1xkG87E8hDFHd/2rj0tQjddi4yE/PGJ
+uvFKNxWKMXSEuuQrzjl8GDSF48xCw01A/uU7KCGWmVifvc8Gm2ZaZXaAabw4OBG2
+sboZKVlkwputTsSXyBzbe7ZPe2WrJ04LWpcZuI9s8HP/7KHp8hCKlCJxzwIzNXrh
+P1h3idpSz40isXZJwlL/5rwu/hkS24MKUym0P52gwMlPOPG5OYq9ide9r1bykf1l
+5pEz3aZB1+G4+WhyAQJ9Jm1CzaggWdaNLs1xL9KKi3zvOaz3jb6HGAJCyPZZ1hNZ
+JU6FqVrAoTQQkyuNxsEKTBN3g9nhXkAleGFadymXf6YMDPS2xnyKArd32ajlJSHi
+kOyTEJ9ZPkIETsNCRZo2N6BQqpq03+4chNlTcRJeiIMZYVrBidA=
+=CKsw
+-----END PGP SIGNATURE-----
+--=-=-=--
