@@ -2,504 +2,459 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DF8C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 10:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4ADCC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 10:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9924214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 10:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A82272173E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 10:56:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="F3or+EKc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U+Kx7jD0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbfLLKiT (ORCPT
+        id S1728783AbfLLK4c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:38:19 -0500
-Received: from mail-eopbgr70130.outbound.protection.outlook.com ([40.107.7.130]:52483
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728776AbfLLKiS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:38:18 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VCJvj/L9g8F8wGzJ/5COZb44O7tj9U7l2sFHhTbW49Iu1YZTKDhi35AfJ2UD+mT/g3t/7ksbD/KQdnKdQLTGZQPOK2iSjJJo/KGmOOtb1sfXSi0R7O54n44rJn0ACRuiJaJGXpA7zz65X20fi/AF9/srZIES4CygHNoXXwAEpNKHBPB2EOW8vVs+3YAfwW3v89K5SOJjMwmVe4IVJyjRKbIxcHVMKEGHfvKHZsB6h1htvwBBKGUuApD6Ox0vBP9RsVKFkr3dozNd8eT1YSmIgyCz8te8eOw0Kt3JcsGdQ4b3AV7RQ2a6hpMF7U/GPUJ2wU9lGMKggNBwzOUatq9YhQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/qAXnOv4A9mgT65gULgQBLvarBUJBsVW5I53NfIOXG4=;
- b=kMw5iTAi46LGj8r20Qh2f1o0vTG6k6EQDclfFQ8YYN7TlskTiEqMHyKO1Jm3iQ8ojIiDNQg+XORyNgutkdBrX8s2DgF9GzLsnkmNehAZbkkjlZW93EUj6IZl/lmzD1UK3aLPxu+gtuSdvo+3PH1udSqpff7h4vicZcPrbyveEe8XZIoWIm9dKdmzE35sW1s59F6wiF9wjtCVtsX1ZY7p/GrS470lCYXcr3hpePV6wel8nHrMqAqlMFSIGFbk/R639A7iMdl7g+9FyhqFxvT+O7OIoUoHl0owEn/Nks3UcIaEoDBcovh0EtQhRqOZLOhGQ/Uzu+1ubYv2a6qti+depQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/qAXnOv4A9mgT65gULgQBLvarBUJBsVW5I53NfIOXG4=;
- b=F3or+EKcQHmC++syilc022yPh9tdqcqU6YYLCQyqBnpRzZuczZZjblFlz3W1f0j80o0N2CUx9TxGr1jE6xaUsDoWEGFG50AQAW+gPS8YqYAN8Nu9urY8jsZ0Ihxf6nHdFsQ2P2XOwXQ/PFy31zhk6Q7pQ9uxj5eH3XB/S976E10=
-Received: from DB6PR0502MB3015.eurprd05.prod.outlook.com (10.172.247.138) by
- DB6PR0502MB2966.eurprd05.prod.outlook.com (10.172.246.140) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.16; Thu, 12 Dec 2019 10:38:11 +0000
-Received: from DB6PR0502MB3015.eurprd05.prod.outlook.com
- ([fe80::c459:8ad5:c5c4:d603]) by DB6PR0502MB3015.eurprd05.prod.outlook.com
- ([fe80::c459:8ad5:c5c4:d603%6]) with mapi id 15.20.2538.016; Thu, 12 Dec 2019
- 10:38:10 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     Philippe Schenker <philippe.schenker@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Thu, 12 Dec 2019 05:56:32 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45014 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728410AbfLLK4b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 05:56:31 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBCAu4Ax085682;
+        Thu, 12 Dec 2019 04:56:04 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576148164;
+        bh=vmCxdW4b95BZ+rLn7HeJGCkog+ZF1+kwJcp1P0p/4ZY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=U+Kx7jD0nOaMx98dLfInxXZpbHcSDWLhX6JNui9/CYVDaUwT4cC5CbBCCk9qUfMb/
+         hHQwzukbNsTmJrY5sXEk5taHgwEstLyuMzwS2oc9kURV3jL6W8psowAD4wcnJ2NvVy
+         5sqE9LmegljZ1TNfkxOCKQKDqYuBrsFSeBmVOurU=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBCAu3vw006640
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 12 Dec 2019 04:56:04 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
+ Dec 2019 04:56:03 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 12 Dec 2019 04:56:03 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCAtxkV126832;
+        Thu, 12 Dec 2019 04:55:59 -0600
+Subject: Re: [PATCH v7 00/12] dmaengine/soc: Add Texas Instruments UDMA
+ support
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <marc.zyngier@arm.com>, <mbrugger@suse.com>, <okaya@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH v3] ARM: dts: colibri-imx6ull: correct wrong pinmuxing and add
- comments
-Thread-Topic: [PATCH v3] ARM: dts: colibri-imx6ull: correct wrong pinmuxing
- and add comments
-Thread-Index: AQHVsNg/enX90yHw7UyzBN9BhKQE1A==
-Date:   Thu, 12 Dec 2019 10:38:10 +0000
-Message-ID: <20191212103745.44672-1-philippe.schenker@toradex.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: GVAP278CA0003.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:710:20::13) To DB6PR0502MB3015.eurprd05.prod.outlook.com
- (2603:10a6:4:99::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.24.0
-x-originating-ip: [31.10.206.124]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 738c2ab9-d339-4220-fad4-08d77eef623b
-x-ms-traffictypediagnostic: DB6PR0502MB2966:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0502MB296671F28ABB588F4F907651F4550@DB6PR0502MB2966.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0249EFCB0B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(39850400004)(346002)(396003)(376002)(366004)(189003)(199004)(4326008)(81166006)(6512007)(8936002)(5660300002)(71200400001)(30864003)(6486002)(81156014)(7416002)(26005)(52116002)(1076003)(186003)(110136005)(54906003)(6506007)(86362001)(66946007)(64756008)(2616005)(66556008)(66446008)(8676002)(36756003)(44832011)(2906002)(478600001)(316002)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:DB6PR0502MB2966;H:DB6PR0502MB3015.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MMA7/nieavP9tq+Fn42e+EDOUAelIg1E6C9Mc4uPDuZBHwSka3T5Q5W8+k2zUmdLU4ZGDqULeh0Cm1BecPqbspmXnbJvG1KFOrfxPdYAYzTR/lo1bfsHkB4+cT+7nCBgqxzg+u/ijV50poAsUVVmDRqi31Iv0/kzt1s2RnAWidZxsyayxMSutz1dsnMvcL16VuSdu2Y201tr388tMMvRgLPLHsrvPk/ScBY90VSMmf/MCLbyIjB3hcs4k1H6WF6bPUQ1LQLiHr77nWX7SRJVB4KoaVDgSXhXvJze2HkE4Eui1o920LHCcUFBPDvVQJ7I9/tco2TgGjY1vWwlwvUE2CtWvY0tcJQnuiZDkadcN5pxtV0UfoBhPHghgOMzezMpYOMX3I51yGd5ZlfIWj8hoPx9Hn+npN9dLaXJwC08hs/Biqha3uvQF+1+nFTCekig
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <tony@atomide.com>, <j-keerthy@ti.com>, <vigneshr@ti.com>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+ <d2ba8ff9-56bd-538b-5f01-41a3b6f756c9@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <a89d971b-9de8-aaa0-0b13-b28ed561a9ce@ti.com>
+Date:   Thu, 12 Dec 2019 12:55:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 738c2ab9-d339-4220-fad4-08d77eef623b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 10:38:10.9084
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vmHsQmGhBTha+1iGbncqXit6fudUL7RxgyIQr1LUAV/j2e81upugB2F6h1IBG7jFPdwCev0xPfAQ5YQLLH6T78hxFpl8AeBHiRSjL5UrHjQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0502MB2966
+In-Reply-To: <d2ba8ff9-56bd-538b-5f01-41a3b6f756c9@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some pinmuxings are obviously wrong, originating from a copy/paste
-error. This patch corrects that with the following strategy:
+On 12/12/2019 10:46, Peter Ujfalusi wrote:
+> 
+> 
+> On 09/12/2019 11.43, Peter Ujfalusi wrote:
+>> Hi,
+>>
+>> Vinod, Nishanth, Tero, Santosh: the ti_sci patch in this series was sent
+>> upstream over a month ago:
+>> https://lore.kernel.org/lkml/20191025084715.25098-1-peter.ujfalusi@ti.com/
+>>
+>> I'm still waiting on it's fate (Tero has given his r-b).
+>> The ti_sci patch did not made it to 5.5-rc1, but I included it in the series and
+>> let the maintainers decide if it can go via DMAengine for 5.6 or to later
+>> releases (5.6 probably for the ti_sci and 5.7 for the UDMA driver patch).
+>>
+>> Changes since v6:
+>> (https://patchwork.kernel.org/project/linux-dmaengine/list/?series=209455&state=*)
+>>
+>> - UDMAP DMAengine driver:
+>>   - Squashed the split patches
+>>   - Squashed the early TX completion handling update
+>>     (https://patchwork.kernel.org/project/linux-dmaengine/list/?series=210713&state=*)
+>>   - Hard reset fix for RX channels to avoid channel lockdown
+>>   - Correct completed descriptor's residue value
+> 
+> I got build failure with allmodconfig:
+> 
+> ERROR: "devm_ti_sci_get_of_resource" [drivers/soc/ti/k3-ringacc.ko]
+> undefined!
+> ERROR: "of_msi_get_domain" [drivers/soc/ti/k3-ringacc.ko] undefined!
+> ERROR: "devm_ti_sci_get_of_resource" [drivers/dma/ti/k3-udma.ko] undefined!
+> ERROR: "of_msi_get_domain" [drivers/dma/ti/k3-udma.ko] undefined!
+> 
+> They are because both devm_ti_sci_get_of_resource and of_msi_get_domain
+> is missing EXPORT_SYMBOL_GPL(), so they can not be used from modules.
+> 
+> There were patches in the past to add it for of_msi_get_domain:
+> https://lore.kernel.org/patchwork/patch/668123/
+> https://lore.kernel.org/patchwork/patch/716046/
+> 
+> I can not find a reason why these are not merged.
+> Matthias's patch looks to be the earlier one, is it OK if I resend it
+> within v8?
 
-- Set all reserved bits to zero
-- Leave drive strength and slew rate as is
-- Add sensible pull and hysteresis depending on the function of the pin
-- Not used pins are muxed to their reset-value defined by the SoC
+You can just send those two patches separately, I can apply them first 
+before this series. No need to resend this series.
 
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+-Tero
 
----
+> 
+>> Changes since v5:
+>> (https://patchwork.kernel.org/project/linux-dmaengine/list/?series=201051&state=*)
+>> - Based on 5.4
+>>
+>> - cppi5 header
+>>   - clear the bits before setting new value with '|='
+>>
+>> - UDMAP DT bindings:
+>>   - valid compatibles as single enum list
+>>
+>> - UDMAP DMAengine driver:
+>>   - Fix udma_is_chan_running()
+>>   - Use flags for acc32, burst support instead of a bool in udma_match_data
+>>     struct
+>>   - TDTYPE handling (teardown completion handling for j721e) is moved to separate
+>>     patch as the tisci core patch has not moved for over a month.
+>>     Both ti_sci and the iterative patch to udma is included in the series.
+>>
+>> Changes since v4
+>> (https://patchwork.kernel.org/project/linux-dmaengine/list/?series=196619&state=*)
+>> - Based on 5.4-rc7
+>>
+>> - ringacc DT bindings:
+>>   - clarify the meaning of ti,sci-dev-id
+>>
+>> - ringacc driver:
+>>   - Remove 'default y' from Kconfig
+>>   - Fix struct comments
+>>   - Move try_module_get() earlier in k3_ringacc_request_ring()
+>>
+>> - PSI-L thread database:
+>>   - Add kernel style struct/enum documentation
+>>   - Add missing thread description for sa2ul second interface
+>>   - Change EXPORT_SYMBOL to EXPORT_SYMBOL_GPL
+>>
+>> - UDMAP DT bindings:
+>>   - move to dual license
+>>   - change compatible from const to enum
+>>   - items dropped for ti,sci-rm-ranges-*
+>>   - description text moved from literal block when it is sensible
+>>   - example fixed to compile cleanly
+>>    - added parent to provide correct address-cells
+>>    - navss is moved to simple-mfd from simple-bus
+>>
+>> - UDMAP DMAengine driver:
+>>   - move fd_ring/r_ring under rflow
+>>   - get rid of unused iomem for rflows
+>>   - Remove 'default y' from Kconfig
+>>   - Use defines for rflow src/dst tag selection
+>>   - Merge the udma_ring_callback() and udma_tr_event_callback() to their
+>>     corresponding interrupt handler
+>>   - Create new defines for tx/rx channel's tisci valid parameter flags
+>>   - Remove re-initialization to 0 of tisci request struct members
+>>   - Make sure that vchan tasklets are also stopped when removing the module
+>>   - Additional checkpatch --strict fixes when it made sense
+>>    - make W=1 was clean
+>>
+>> - UDMAP glue layer:
+>>   - Remove 'default y' from Kconfig
+>>   - commit message update for features needing the glue layer
+>>
+>> Changes since v3
+>> (https://patchwork.kernel.org/project/linux-dmaengine/list/?series=180679&state=*):
+>> - Based on 5.4-rc5
+>> - Fixed typos pointed out by Tero
+>> - Added reviewed-by tags from Tero
+>>
+>> - ring accelerator driver
+>>   - TODO_GS is removed from the header
+>>   - pm_runtime removed as NAVSS and it's components are always on
+>>   - Check validity of Message mode setup (element size > 8 bytes must use proxy)
+>>
+>> - cppi5 header
+>>   - add commit message
+>>
+>> - UDMAP DT bindings
+>>   - Drop the psil-config node use on the remote PSI-L side and use only one cell
+>>     which is the remote threadID:
+>>
+>>       dmas = <&main_udmap 0xc400>, <&main_udmap 0x4400>;
+>>       dma-names = "tx", "rx";
+>>
+>>   - The PSI-L thread configuration description is moved to kernel as a new module:
+>>     k3-psil/k3-psil-am654/k3-psil-j721e
+>>   - ti,psil-base has been removed and moved to kernel
+>>   - removed the no longer needed dt-bindings/dma/k3-udma.h
+>>   - Convert the document to schema (yaml)
+>>
+>> - NEW PSI-L endpoint configuration database
+>>   - a simple database holding the remote end's configuration needed for UDMAP
+>>     configuration. All previous parameters from DT has been moved here and merged
+>>     with the linux only tr mode channel flag.
+>>   - Client drivers can update the remote endpoint configuration as it can be
+>>     different based on system configuration and the endpoint itself is under the
+>>     control of the peripheral driver.
+>>   - database for am654 and j721e
+>>
+>> - UDMAP DMAengine driver
+>>   - pm_runtime removed as NAVSS and it's components are always on
+>>   - rchan_oes_offset added to MSI dommain allocation
+>>   - Use the new PSI-L endpoint database for UDMAP configuration
+>>   - Support for waiting for PDMA teardown completion on j721e instead of
+>>     returning right away. depends on:
+>>     https://lkml.org/lkml/2019/10/25/189
+>>     Not included in this series, but it is in the branch I have prepared.
+>>   - psil-base is moved from DT to be part of udma_match_data
+>>   - tr_thread maps is removed and using the PSI-L endpoint configuration for it
+>>
+>> - UDMAP glue layer
+>>   - pm_runtime removed as NAVSS and it's components are always on
+>>   - Use the new PSI-L endpoint database for UDMAP configuration
+>>
+>> Changes since v2
+>> (https://patchwork.kernel.org/project/linux-dmaengine/list/?series=152609&state=*)
+>> - Based on 5.4-rc1
+>> - Support for Flow only data transfer for the glue layer
+>>
+>> - cppi5 header
+>>   - comments converted to kernel-doc style
+>>   - Remove the excessive WARN_ONs and rely on the user for sanity
+>>   - new macro for checking TearDown Completion Message
+>>
+>> - ring accelerator driver
+>>   - fixed up th commit message (SoB, TI-SCI)
+>>   - fixed ring reset
+>>   - CONFIG_TI_K3_RINGACC_DEBUG is removed along with the dbg_write/read functions
+>>     and use dev_dbg()
+>>   - k3_ringacc_ring_dump() is moved to static
+>>   - step numbering removed from k3_ringacc_ring_reset_dma()
+>>   - Add clarification comment for shared ring usage in k3_ringacc_ring_cfg()
+>>   - Magic shift values in k3_ringacc_ring_cfg_proxy() got defined
+>>   - K3_RINGACC_RING_MODE_QM is removed as it is not supported
+>>
+>> - UDMAP DT bindings
+>>   - Fix property prefixing: s/pdma,/ti,pdma-
+>>   - Add ti,notdpkt property to suppress teardown completion message on tchan
+>>   - example updated accordingly
+>>
+>> - UDMAP DMAengine driver
+>>   - Change __raw_readl/writel to readl/writel
+>>   - Split up the udma_tisci_channel_config() into m2m, tx and rx tisci
+>>     configuration functions for clarity
+>>   - DT bindings change: s/pdma,/ti,pdma-
+>>   - Cleanup of udma_tx_status():
+>>    - residue calculation fix for m2m
+>>    - no need to read packet counter as it is not used
+>>    - peer byte counter only available in PDMAs
+>>    - Proper locking to avoid race with interrupt handler (polled m2m fix)
+>>   - Support for ti,notdpkt
+>>   - RFLOW management rework to support data movement without channel:
+>>    - the channel is not controlled by Linux but other core and we only have
+>>      rflows and rings to do the DMA transfers.
+>>      This mode is only supported by the Glue layer for now.
+>>
+>> - UDMAP glue layer
+>>   - Debug print improvements
+>>   - Support for rflow/ring only data movement
+>>
+>> Changes since v1
+>> (https://patchwork.kernel.org/project/linux-dmaengine/list/?series=114105&state=*)
+>> - Added support for j721e
+>> - Based on 5.3-rc2
+>> - dropped ti_sci API patch for RM management as it is already upstream
+>> - dropped dmadev_get_slave_channel() patch, using __dma_request_channel()
+>> - Added Rob's Reviewed-by to ringacc DT binding document patch
+>> - DT bindings changes:
+>>   - linux,udma-mode is gone, I have a simple lookup table in the driver to flag
+>>     TR channels.
+>>   - Support for j721e
+>> - Fix bug in of_node_put() handling in xlate function
+>>
+>> Changes since RFC (https://patchwork.kernel.org/cover/10612465/):
+>> - Based on linux-next (20190506) which now have the ti_sci interrupt support
+>> - The series can be applied and the UDMA via DMAengine API will be functional
+>> - Included in the series: ti_sci Resource management API, cppi5 header and
+>>    driver for the ring accelerator.
+>> - The DMAengine core patches have been updated as per the review comments for
+>>    earlier submittion.
+>> - The DMAengine driver patch is artificially split up to 6 smaller patches
+>>
+>> The k3-udma driver implements the Data Movement Architecture described in
+>> AM65x TRM (http://www.ti.com/lit/pdf/spruid7) and
+>> j721e TRM (http://www.ti.com/lit/pdf/spruil1)
+>>
+>> This DMA architecture is a big departure from 'traditional' architecture where
+>> we had either EDMA or sDMA as system DMA.
+>>
+>> Packet DMAs were used as dedicated DMAs to service only networking (Kesytone2)
+>> or USB (am335x) while other peripherals were serviced by EDMA.
+>>
+>> In AM65x/j721e the UDMA (Unified DMA) is used for all data movment within the
+>> SoC, tasked to service all peripherals (UART, McSPI, McASP, networking, etc).
+>>
+>> The NAVSS/UDMA is built around CPPI5 (Communications Port Programming Interface)
+>> and it supports Packet mode (similar to CPPI4.1 in Keystone2 for networking) and
+>> TR mode (similar to EDMA descriptor).
+>> The data movement is done within a PSI-L fabric, peripherals (including the
+>> UDMA-P) are not addressed by their I/O register as with traditional DMAs but
+>> with their PSI-L thread ID.
+>>
+>> In AM65x/j721e we have two main type of peripherals:
+>> Legacy: McASP, McSPI, UART, etc.
+>>   to provide connectivity they are serviced by PDMA (Peripheral DMA)
+>>   PDMA threads are locked to service a given peripheral, for example PSI-L thread
+>>   0x4400/0xc400 is to service McASP0 rx/tx.
+>>   The PDMa configuration can be done via the UDMA Real Time Peer registers.
+>> Native: Networking, security accelerator
+>>   these peripherals have native support for PSI-L.
+>>
+>> To be able to use the DMA the following generic steps need to be taken:
+>> - configure a DMA channel (tchan for TX, rchan for RX)
+>>   - channel mode: Packet or TR mode
+>>   - for memcpy a tchan and rchan pair is used.
+>>   - for packet mode RX we also need to configure a receive flow to configure the
+>>     packet receiption
+>> - the source and destination threads must be paired
+>> - at minimum one pair of rings need to be configured:
+>>   - tx: transfer ring and transfer completion ring
+>>   - rx: free descriptor ring and receive ring
+>> - two interrupts: UDMA-P channel interrupt and ring interrupt for tc_ring/r_ring
+>>   - If the channel is in packet mode or configured to memcpy then we only need
+>>     one interrupt from the ring, events from UDMAP is not used.
+>>
+>> When the channel setup is completed we only interract with the rings:
+>> - TX: push a descriptor to t_ring and wait for it to be pushed to the tc_ring by
+>>    the UDMA-P
+>> - RX: push a descriptor to the fd_ring and waith for UDMA-P to push it back to
+>>    the r_ring.
+>>
+>> Since we have FIFOs in the DMA fabric (UDMA-P, PSI-L and PDMA) which was not the
+>> case in previous DMAs we need to report the amount of data held in these FIFOs
+>> to clients (delay calculation for ALSA, UART FIFO flush support).
+>>
+>> Metadata support:
+>> DMAengine user driver was posted upstream based/tested on the v1 of the UDMA
+>> series: https://lkml.org/lkml/2019/6/28/20
+>> SA2UL is using the metadata DMAengine API.
+>>
+>> Note on the last patch:
+>> In Keystone2 the networking had dedicated DMA (packet DMA) which is not the case
+>> anymore and the DMAengine API currently missing support for the features we
+>> would need to support networking, things like
+>> - support for receive descriptor 'classification'
+>>   - we need to support several receive queues for a channel.
+>>   - the queues are used for packet priority handling for example, but they can be
+>>     used to have pools of descriptors for different sizes.
+>> - out of order completion of descriptors on a channel
+>>   - when we have several queues to handle different priority packets the
+>>     descriptors will be completed 'out-of-order'
+>> - NAPI type of operation (polling instead of interrupt driven transfer)
+>>   - without this we can not sustain gigabit speeds and we need to support NAPI
+>>   - not to limit this to networking, but other high performance operations
+>>
+>> It is my intention to work on these to be able to remove the 'glue' layer and
+>> switch to DMAengine API - or have an API aside of DMAengine to have generic way
+>> to support networking, but given how controversial and not trivial these changes
+>> are we need something to support networking.
+>>
+>> The series (+DT patches to enabled DMA on AM65x and j721e) on top of 5.5-rc1 is
+>> available:
+>> https://github.com/omap-audio/linux-audio.git peter/udma/series_v7-5.5-rc1
+>>
+>> Regards,
+>> Peter
+>> ---
+>> Grygorii Strashko (3):
+>>    bindings: soc: ti: add documentation for k3 ringacc
+>>    soc: ti: k3: add navss ringacc driver
+>>    dmaengine: ti: k3-udma: Add glue layer for non DMAengine users
+>>
+>> Peter Ujfalusi (9):
+>>    dmaengine: doc: Add sections for per descriptor metadata support
+>>    dmaengine: Add metadata_ops for dma_async_tx_descriptor
+>>    dmaengine: Add support for reporting DMA cached data amount
+>>    dmaengine: ti: Add cppi5 header for K3 NAVSS/UDMA
+>>    dmaengine: ti: k3 PSI-L remote endpoint configuration
+>>    dt-bindings: dma: ti: Add document for K3 UDMA
+>>    dmaengine: ti: New driver for K3 UDMA
+>>    firmware: ti_sci: rm: Add support for tx_tdtype parameter for tx
+>>      channel
+>>    dmaengine: ti: k3-udma: Wait for peer teardown completion if supported
+>>
+>>   .../devicetree/bindings/dma/ti/k3-udma.yaml   |  185 +
+>>   .../devicetree/bindings/soc/ti/k3-ringacc.txt |   59 +
+>>   Documentation/driver-api/dmaengine/client.rst |   75 +
+>>   .../driver-api/dmaengine/provider.rst         |   46 +
+>>   drivers/dma/dmaengine.c                       |   73 +
+>>   drivers/dma/dmaengine.h                       |    8 +
+>>   drivers/dma/ti/Kconfig                        |   24 +
+>>   drivers/dma/ti/Makefile                       |    3 +
+>>   drivers/dma/ti/k3-psil-am654.c                |  175 +
+>>   drivers/dma/ti/k3-psil-j721e.c                |  222 ++
+>>   drivers/dma/ti/k3-psil-priv.h                 |   39 +
+>>   drivers/dma/ti/k3-psil.c                      |   97 +
+>>   drivers/dma/ti/k3-udma-glue.c                 | 1198 ++++++
+>>   drivers/dma/ti/k3-udma-private.c              |  133 +
+>>   drivers/dma/ti/k3-udma.c                      | 3452 +++++++++++++++++
+>>   drivers/dma/ti/k3-udma.h                      |  151 +
+>>   drivers/firmware/ti_sci.c                     |    1 +
+>>   drivers/firmware/ti_sci.h                     |    7 +
+>>   drivers/soc/ti/Kconfig                        |   11 +
+>>   drivers/soc/ti/Makefile                       |    1 +
+>>   drivers/soc/ti/k3-ringacc.c                   | 1180 ++++++
+>>   include/linux/dma/k3-psil.h                   |   71 +
+>>   include/linux/dma/k3-udma-glue.h              |  134 +
+>>   include/linux/dma/ti-cppi5.h                  | 1061 +++++
+>>   include/linux/dmaengine.h                     |  110 +
+>>   include/linux/soc/ti/k3-ringacc.h             |  244 ++
+>>   include/linux/soc/ti/ti_sci_protocol.h        |    2 +
+>>   27 files changed, 8762 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+>>   create mode 100644 drivers/dma/ti/k3-psil-am654.c
+>>   create mode 100644 drivers/dma/ti/k3-psil-j721e.c
+>>   create mode 100644 drivers/dma/ti/k3-psil-priv.h
+>>   create mode 100644 drivers/dma/ti/k3-psil.c
+>>   create mode 100644 drivers/dma/ti/k3-udma-glue.c
+>>   create mode 100644 drivers/dma/ti/k3-udma-private.c
+>>   create mode 100644 drivers/dma/ti/k3-udma.c
+>>   create mode 100644 drivers/dma/ti/k3-udma.h
+>>   create mode 100644 drivers/soc/ti/k3-ringacc.c
+>>   create mode 100644 include/linux/dma/k3-psil.h
+>>   create mode 100644 include/linux/dma/k3-udma-glue.h
+>>   create mode 100644 include/linux/dma/ti-cppi5.h
+>>   create mode 100644 include/linux/soc/ti/k3-ringacc.h
+>>
+> 
+> - Péter
+> 
+> 
 
-Changes in v3:
-- Fixed breakage. Sorry Shawn! Should've checked after rebasing...
-
-Changes in v2:
-- Rebased against Shawn Guos imx/dt branch, sorry it didn't work the
-  first time!
-
- arch/arm/boot/dts/imx6ull-colibri.dtsi | 188 ++++++++++++-------------
- 1 file changed, 94 insertions(+), 94 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx=
-6ull-colibri.dtsi
-index 6d850d997e1e..9145c536d71a 100644
---- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-@@ -220,7 +220,7 @@ &wdog1 {
- &iomuxc {
- 	pinctrl_can_int: canint-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_ENET1_TX_DATA1__GPIO2_IO04	0X14 /* SODIMM 73 */
-+			MX6UL_PAD_ENET1_TX_DATA1__GPIO2_IO04	0x13010	/* SODIMM 73 */
- 		>;
- 	};
-=20
-@@ -256,15 +256,15 @@ MX6UL_PAD_ENET2_TX_EN__GPIO2_IO13	0x0
-=20
- 	pinctrl_ecspi1_cs: ecspi1-cs-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_LCD_DATA21__GPIO3_IO26	0x000a0
-+			MX6UL_PAD_LCD_DATA21__GPIO3_IO26	0x70a0	/* SODIMM 86 */
- 		>;
- 	};
-=20
- 	pinctrl_ecspi1: ecspi1-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_LCD_DATA20__ECSPI1_SCLK	0x000a0
--			MX6UL_PAD_LCD_DATA22__ECSPI1_MOSI	0x000a0
--			MX6UL_PAD_LCD_DATA23__ECSPI1_MISO	0x100a0
-+			MX6UL_PAD_LCD_DATA20__ECSPI1_SCLK	0x000a0	/* SODIMM 88 */
-+			MX6UL_PAD_LCD_DATA22__ECSPI1_MOSI	0x000a0 /* SODIMM 92 */
-+			MX6UL_PAD_LCD_DATA23__ECSPI1_MISO	0x100a0 /* SODIMM 90 */
- 		>;
- 	};
-=20
-@@ -284,68 +284,68 @@ MX6UL_PAD_ENET1_RX_EN__FLEXCAN2_TX	0x1b020
-=20
- 	pinctrl_gpio_bl_on: gpio-bl-on-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_JTAG_TMS__GPIO1_IO11		0x000a0
-+			MX6UL_PAD_JTAG_TMS__GPIO1_IO11		0x30a0	/* SODIMM 71 */
- 		>;
- 	};
-=20
- 	pinctrl_gpio1: gpio1-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_UART3_RX_DATA__GPIO1_IO25	0X14 /* SODIMM 77 */
--			MX6UL_PAD_JTAG_TCK__GPIO1_IO14		0x14 /* SODIMM 99 */
--			MX6UL_PAD_NAND_CE1_B__GPIO4_IO14	0x14 /* SODIMM 133 */
--			MX6UL_PAD_UART3_TX_DATA__GPIO1_IO24	0x14 /* SODIMM 135 */
--			MX6UL_PAD_UART3_CTS_B__GPIO1_IO26	0x14 /* SODIMM 100 */
--			MX6UL_PAD_JTAG_TRST_B__GPIO1_IO15	0x14 /* SODIMM 102 */
--			MX6UL_PAD_ENET1_RX_ER__GPIO2_IO07	0x14 /* SODIMM 104 */
--			MX6UL_PAD_UART3_RTS_B__GPIO1_IO27	0x14 /* SODIMM 186 */
-+			MX6UL_PAD_UART3_RX_DATA__GPIO1_IO25	0x10b0 /* SODIMM 77 */
-+			MX6UL_PAD_JTAG_TCK__GPIO1_IO14		0x70a0 /* SODIMM 99 */
-+			MX6UL_PAD_NAND_CE1_B__GPIO4_IO14	0x10b0 /* SODIMM 133 */
-+			MX6UL_PAD_UART3_TX_DATA__GPIO1_IO24	0x10b0 /* SODIMM 135 */
-+			MX6UL_PAD_UART3_CTS_B__GPIO1_IO26	0x10b0 /* SODIMM 100 */
-+			MX6UL_PAD_JTAG_TRST_B__GPIO1_IO15	0x70a0 /* SODIMM 102 */
-+			MX6UL_PAD_ENET1_RX_ER__GPIO2_IO07	0x10b0 /* SODIMM 104 */
-+			MX6UL_PAD_UART3_RTS_B__GPIO1_IO27	0x10b0 /* SODIMM 186 */
- 		>;
- 	};
-=20
- 	pinctrl_gpio2: gpio2-grp { /* Camera */
- 		fsl,pins =3D <
--			MX6UL_PAD_CSI_DATA04__GPIO4_IO25	0x74 /* SODIMM 69 */
--			MX6UL_PAD_CSI_MCLK__GPIO4_IO17		0x14 /* SODIMM 75 */
--			MX6UL_PAD_CSI_DATA06__GPIO4_IO27	0x14 /* SODIMM 85 */
--			MX6UL_PAD_CSI_PIXCLK__GPIO4_IO18	0x14 /* SODIMM 96 */
--			MX6UL_PAD_CSI_DATA05__GPIO4_IO26	0x14 /* SODIMM 98 */
-+			MX6UL_PAD_CSI_DATA04__GPIO4_IO25	0x10b0 /* SODIMM 69 */
-+			MX6UL_PAD_CSI_MCLK__GPIO4_IO17		0x10b0 /* SODIMM 75 */
-+			MX6UL_PAD_CSI_DATA06__GPIO4_IO27	0x10b0 /* SODIMM 85 */
-+			MX6UL_PAD_CSI_PIXCLK__GPIO4_IO18	0x10b0 /* SODIMM 96 */
-+			MX6UL_PAD_CSI_DATA05__GPIO4_IO26	0x10b0 /* SODIMM 98 */
- 		>;
- 	};
-=20
- 	pinctrl_gpio3: gpio3-grp { /* CAN2 */
- 		fsl,pins =3D <
--			MX6UL_PAD_ENET1_RX_EN__GPIO2_IO02	0x14 /* SODIMM 178 */
--			MX6UL_PAD_ENET1_TX_DATA0__GPIO2_IO03	0x14 /* SODIMM 188 */
-+			MX6UL_PAD_ENET1_RX_EN__GPIO2_IO02	0x10b0 /* SODIMM 178 */
-+			MX6UL_PAD_ENET1_TX_DATA0__GPIO2_IO03	0x10b0 /* SODIMM 188 */
- 		>;
- 	};
-=20
- 	pinctrl_gpio4: gpio4-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_CSI_DATA07__GPIO4_IO28	0x74 /* SODIMM 65 */
-+			MX6UL_PAD_CSI_DATA07__GPIO4_IO28	0x10b0 /* SODIMM 65 */
- 		>;
- 	};
-=20
- 	pinctrl_gpio5: gpio5-grp { /* ATMEL MXT TOUCH */
- 		fsl,pins =3D <
--			MX6UL_PAD_JTAG_MOD__GPIO1_IO10		0x74 /* SODIMM 106 */
-+			MX6UL_PAD_JTAG_MOD__GPIO1_IO10		0xb0a0 /* SODIMM 106 */
- 		>;
- 	};
-=20
- 	pinctrl_gpio6: gpio6-grp { /* Wifi pins */
- 		fsl,pins =3D <
--			MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0x14 /* SODIMM 89 */
--			MX6UL_PAD_CSI_DATA02__GPIO4_IO23	0x14 /* SODIMM 79 */
--			MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x14 /* SODIMM 81 */
--			MX6UL_PAD_CSI_DATA03__GPIO4_IO24	0x14 /* SODIMM 97 */
--			MX6UL_PAD_CSI_DATA00__GPIO4_IO21	0x14 /* SODIMM 101 */
--			MX6UL_PAD_CSI_DATA01__GPIO4_IO22	0x14 /* SODIMM 103 */
--			MX6UL_PAD_CSI_HSYNC__GPIO4_IO20		0x14 /* SODIMM 94 */
-+			MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0x10b0 /* SODIMM 89 */
-+			MX6UL_PAD_CSI_DATA02__GPIO4_IO23	0x10b0 /* SODIMM 79 */
-+			MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x10b0 /* SODIMM 81 */
-+			MX6UL_PAD_CSI_DATA03__GPIO4_IO24	0x10b0 /* SODIMM 97 */
-+			MX6UL_PAD_CSI_DATA00__GPIO4_IO21	0x10b0 /* SODIMM 101 */
-+			MX6UL_PAD_CSI_DATA01__GPIO4_IO22	0x10b0 /* SODIMM 103 */
-+			MX6UL_PAD_CSI_HSYNC__GPIO4_IO20		0x10b0 /* SODIMM 94 */
- 		>;
- 	};
-=20
- 	pinctrl_gpio7: gpio7-grp { /* CAN1 */
- 		fsl,pins =3D <
--			MX6UL_PAD_ENET1_RX_DATA0__GPIO2_IO00	0x74 /* SODIMM 55 */
--			MX6UL_PAD_ENET1_RX_DATA1__GPIO2_IO01	0x74 /* SODIMM 63 */
-+			MX6UL_PAD_ENET1_RX_DATA0__GPIO2_IO00	0xb0b0/* SODIMM 55 */
-+			MX6UL_PAD_ENET1_RX_DATA1__GPIO2_IO01	0xb0b0 /* SODIMM 63 */
- 		>;
- 	};
-=20
-@@ -370,15 +370,15 @@ MX6UL_PAD_NAND_READY_B__RAWNAND_READY_B	0x100a9
-=20
- 	pinctrl_i2c1: i2c1-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_UART4_TX_DATA__I2C1_SCL 0x4001b8b0
--			MX6UL_PAD_UART4_RX_DATA__I2C1_SDA 0x4001b8b0
-+			MX6UL_PAD_UART4_TX_DATA__I2C1_SCL 0x4001b8b0	/* SODIMM 196 */
-+			MX6UL_PAD_UART4_RX_DATA__I2C1_SDA 0x4001b8b0	/* SODIMM 194 */
- 		>;
- 	};
-=20
- 	pinctrl_i2c1_gpio: i2c1-gpio-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_UART4_TX_DATA__GPIO1_IO28 0x4001b8b0
--			MX6UL_PAD_UART4_RX_DATA__GPIO1_IO29 0x4001b8b0
-+			MX6UL_PAD_UART4_TX_DATA__GPIO1_IO28 0x4001b8b0	/* SODIMM 196 */
-+			MX6UL_PAD_UART4_RX_DATA__GPIO1_IO29 0x4001b8b0	/* SODIMM 194 */
- 		>;
- 	};
-=20
-@@ -398,107 +398,107 @@ MX6UL_PAD_UART5_RX_DATA__GPIO1_IO31 0x4001b8b0
-=20
- 	pinctrl_lcdif_dat: lcdif-dat-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_LCD_DATA00__LCDIF_DATA00  0x00079
--			MX6UL_PAD_LCD_DATA01__LCDIF_DATA01  0x00079
--			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02  0x00079
--			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03  0x00079
--			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04  0x00079
--			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05  0x00079
--			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06  0x00079
--			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07  0x00079
--			MX6UL_PAD_LCD_DATA08__LCDIF_DATA08  0x00079
--			MX6UL_PAD_LCD_DATA09__LCDIF_DATA09  0x00079
--			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10  0x00079
--			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11  0x00079
--			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12  0x00079
--			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13  0x00079
--			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14  0x00079
--			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15  0x00079
--			MX6UL_PAD_LCD_DATA16__LCDIF_DATA16  0x00079
--			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17  0x00079
-+			MX6UL_PAD_LCD_DATA00__LCDIF_DATA00 0x00079	/* SODIMM 76 */
-+			MX6UL_PAD_LCD_DATA01__LCDIF_DATA01 0x00079	/* SODIMM 70 */
-+			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02 0x00079	/* SODIMM 60 */
-+			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03 0x00079	/* SODIMM 58 */
-+			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04 0x00079	/* SODIMM 78 */
-+			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05 0x00079	/* SODIMM 72 */
-+			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06 0x00079	/* SODIMM 80 */
-+			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07 0x00079	/* SODIMM 46 */
-+			MX6UL_PAD_LCD_DATA08__LCDIF_DATA08 0x00079	/* SODIMM 62 */
-+			MX6UL_PAD_LCD_DATA09__LCDIF_DATA09 0x00079	/* SODIMM 48 */
-+			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10 0x00079	/* SODIMM 74 */
-+			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11 0x00079	/* SODIMM 50 */
-+			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12 0x00079	/* SODIMM 52 */
-+			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13 0x00079	/* SODIMM 54 */
-+			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14 0x00079	/* SODIMM 66 */
-+			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15 0x00079	/* SODIMM 64 */
-+			MX6UL_PAD_LCD_DATA16__LCDIF_DATA16 0x00079	/* SODIMM 57 */
-+			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17 0x00079	/* SODIMM 61 */
- 		>;
- 	};
-=20
- 	pinctrl_lcdif_ctrl: lcdif-ctrl-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_LCD_CLK__LCDIF_CLK	    0x00079
--			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE  0x00079
--			MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC    0x00079
--			MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC    0x00079
-+			MX6UL_PAD_LCD_CLK__LCDIF_CLK	    0x00079	/* SODIMM 56 */
-+			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE  0x00079	/* SODIMM 44 */
-+			MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC    0x00079	/* SODIMM 68 */
-+			MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC    0x00079	/* SODIMM 82 */
- 		>;
- 	};
-=20
- 	pinctrl_pwm4: pwm4-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_NAND_WP_B__PWM4_OUT	0x00079
-+			MX6UL_PAD_NAND_WP_B__PWM4_OUT	0x00079		/* SODIMM 59 */
- 		>;
- 	};
-=20
- 	pinctrl_pwm5: pwm5-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_NAND_DQS__PWM5_OUT	0x00079
-+			MX6UL_PAD_NAND_DQS__PWM5_OUT	0x00079		/* SODIMM 28 */
- 		>;
- 	};
-=20
- 	pinctrl_pwm6: pwm6-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_ENET1_TX_EN__PWM6_OUT	0x00079
-+			MX6UL_PAD_ENET1_TX_EN__PWM6_OUT	0x00079		/* SODIMM 30 */
- 		>;
- 	};
-=20
- 	pinctrl_pwm7: pwm7-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_ENET1_TX_CLK__PWM7_OUT	0x00079
-+			MX6UL_PAD_ENET1_TX_CLK__PWM7_OUT	0x00079	/* SODIMM 67 */
- 		>;
- 	};
-=20
- 	pinctrl_uart1: uart1-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_UART1_TX_DATA__UART1_DTE_RX	0x1b0b1
--			MX6UL_PAD_UART1_RX_DATA__UART1_DTE_TX	0x1b0b1
--			MX6UL_PAD_UART1_RTS_B__UART1_DTE_CTS	0x1b0b1
--			MX6UL_PAD_UART1_CTS_B__UART1_DTE_RTS	0x1b0b1
-+			MX6UL_PAD_UART1_TX_DATA__UART1_DTE_RX	0x1b0b1	/* SODIMM 33 */
-+			MX6UL_PAD_UART1_RX_DATA__UART1_DTE_TX	0x1b0b1	/* SODIMM 35 */
-+			MX6UL_PAD_UART1_RTS_B__UART1_DTE_CTS	0x1b0b1	/* SODIMM 27 */
-+			MX6UL_PAD_UART1_CTS_B__UART1_DTE_RTS	0x1b0b1	/* SODIMM 25 */
- 		>;
- 	};
-=20
- 	pinctrl_uart1_ctrl1: uart1-ctrl1-grp { /* Additional DTR, DCD */
- 		fsl,pins =3D <
--			MX6UL_PAD_JTAG_TDI__GPIO1_IO13		0x1b0b1 /* DCD */
--			MX6UL_PAD_LCD_DATA18__GPIO3_IO23	0x1b0b1 /* DSR */
--			MX6UL_PAD_JTAG_TDO__GPIO1_IO12		0x1b0b1 /* DTR */
--			MX6UL_PAD_LCD_DATA19__GPIO3_IO24        0x1b0b1 /* RI */
-+			MX6UL_PAD_JTAG_TDI__GPIO1_IO13		0x70a0 /* SODIMM 31 */
-+			MX6UL_PAD_LCD_DATA18__GPIO3_IO23	0x10b0 /* SODIMM 29 */
-+			MX6UL_PAD_JTAG_TDO__GPIO1_IO12		0x90b1 /* SODIMM 23 */
-+			MX6UL_PAD_LCD_DATA19__GPIO3_IO24        0x10b0 /* SODIMM 37 */
- 		>;
- 	};
-=20
- 	pinctrl_uart2: uart2-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_UART2_TX_DATA__UART2_DTE_RX	0x1b0b1
--			MX6UL_PAD_UART2_RX_DATA__UART2_DTE_TX	0x1b0b1
--			MX6UL_PAD_UART2_CTS_B__UART2_DTE_RTS	0x1b0b1
--			MX6UL_PAD_UART2_RTS_B__UART2_DTE_CTS	0x1b0b1
-+			MX6UL_PAD_UART2_TX_DATA__UART2_DTE_RX	0x1b0b1 /* SODIMM 36 */
-+			MX6UL_PAD_UART2_RX_DATA__UART2_DTE_TX	0x1b0b1 /* SODIMM 38 */
-+			MX6UL_PAD_UART2_CTS_B__UART2_DTE_RTS	0x1b0b1 /* SODIMM 32 */
-+			MX6UL_PAD_UART2_RTS_B__UART2_DTE_CTS	0x1b0b1 /* SODIMM 34 */
- 		>;
- 	};
- 	pinctrl_uart5: uart5-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_GPIO1_IO04__UART5_DTE_RX	0x1b0b1
--			MX6UL_PAD_GPIO1_IO05__UART5_DTE_TX	0x1b0b1
-+			MX6UL_PAD_GPIO1_IO04__UART5_DTE_RX	0x1b0b1 /* SODIMM 19 */
-+			MX6UL_PAD_GPIO1_IO05__UART5_DTE_TX	0x1b0b1 /* SODIMM 21 */
- 		>;
- 	};
-=20
- 	pinctrl_usbh_reg: gpio-usbh-reg {
- 		fsl,pins =3D <
--			MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0x1b0b1 /* SODIMM 129 USBH PEN */
-+			MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0x10b0 /* SODIMM 129 */
- 		>;
- 	};
-=20
- 	pinctrl_usdhc1: usdhc1-grp {
- 		fsl,pins =3D <
--			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x17059
--			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x10059
--			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
--			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
--			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
--			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x17059 /* SODIMM 47 */
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x10059 /* SODIMM 190 */
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059 /* SODIMM 192 */
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059 /* SODIMM 49 */
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059 /* SODIMM 51 */
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059 /* SODIMM 53 */
- 		>;
- 	};
-=20
-@@ -533,7 +533,7 @@ MX6UL_PAD_CSI_DATA03__USDHC2_DATA3	0x17059
- 			MX6UL_PAD_CSI_HSYNC__USDHC2_CMD		0x17059
- 			MX6UL_PAD_CSI_VSYNC__USDHC2_CLK		0x17059
-=20
--			MX6UL_PAD_GPIO1_IO03__OSC32K_32K_OUT	0x14
-+			MX6UL_PAD_GPIO1_IO03__OSC32K_32K_OUT	0x10
- 		>;
- 	};
-=20
-@@ -547,23 +547,23 @@ MX6UL_PAD_LCD_RESET__WDOG1_WDOG_ANY    0x30b0
- &iomuxc_snvs {
- 	pinctrl_snvs_gpio1: snvs-gpio1-grp {
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x14 /* SODIMM 93 */
--			MX6ULL_PAD_SNVS_TAMPER3__GPIO5_IO03	0x14 /* SODIMM 95 */
--			MX6ULL_PAD_BOOT_MODE0__GPIO5_IO10	0x74 /* SODIMM 105 */
--			MX6ULL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x14 /* SODIMM 131 USBH OC */
--			MX6ULL_PAD_SNVS_TAMPER8__GPIO5_IO08	0x74 /* SODIMM 138 */
-+			MX6ULL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x110a0	/* SODIMM 93 */
-+			MX6ULL_PAD_SNVS_TAMPER3__GPIO5_IO03	0x110a0	/* SODIMM 95 */
-+			MX6ULL_PAD_BOOT_MODE0__GPIO5_IO10	0x1b0a0	/* SODIMM 105 */
-+			MX6ULL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x0b0a0	/* SODIMM 131 */
-+			MX6ULL_PAD_SNVS_TAMPER8__GPIO5_IO08	0x110a0	/* SODIMM 138 */
- 		>;
- 	};
-=20
- 	pinctrl_snvs_gpio2: snvs-gpio2-grp { /* ATMEL MXT TOUCH */
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x74 /* SODIMM 107 */
-+			MX6ULL_PAD_SNVS_TAMPER4__GPIO5_IO04	0xb0a0	/* SODIMM 107 */
- 		>;
- 	};
-=20
- 	pinctrl_snvs_gpio3: snvs-gpio3-grp { /* Wifi pins */
- 		fsl,pins =3D <
--			MX6ULL_PAD_BOOT_MODE1__GPIO5_IO11	0x14 /* SODIMM 127 */
-+			MX6ULL_PAD_BOOT_MODE1__GPIO5_IO11	0x130a0	/* SODIMM 127 */
- 		>;
- 	};
-=20
-@@ -587,13 +587,13 @@ MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x130b0
-=20
- 	pinctrl_snvs_gpiokeys: snvs-gpiokeys-grp {
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER1__GPIO5_IO01	0x130b0
-+			MX6ULL_PAD_SNVS_TAMPER1__GPIO5_IO01	0x130a0	/* SODIMM 45 */
- 		>;
- 	};
-=20
- 	pinctrl_snvs_usdhc1_cd: snvs-usdhc1-cd-grp {
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x1b0b0 /* CD */
-+			MX6ULL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x1b0a0 /* SODIMM 43 */
- 		>;
- 	};
-=20
-@@ -605,7 +605,7 @@ MX6ULL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x0
-=20
- 	pinctrl_snvs_wifi_pdn: snvs-wifi-pdn-grp {
- 		fsl,pins =3D <
--			MX6ULL_PAD_BOOT_MODE1__GPIO5_IO11	0x14
-+			MX6ULL_PAD_BOOT_MODE1__GPIO5_IO11	0x130a0
- 		>;
- 	};
- };
---=20
-2.24.0
-
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
