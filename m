@@ -2,99 +2,165 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B41C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 13:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6076AC00454
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 13:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 867B72173E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 13:25:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="L5e/4sTM"
+	by mail.kernel.org (Postfix) with ESMTP id 412E322527
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 13:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbfLLNZi (ORCPT
+        id S1729400AbfLLNdh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:25:38 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:50082 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbfLLNZh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:25:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=bxnXIodnVA+EXBQ9CzKw2+L2s06f/eW1ZteOUMDWsiU=; b=L5e/4sTMJEgfoy08MJh5WXYJ6i
-        vtxgJMqAJUi8fKfN/Q5KP8FQnuW4FE9UBwBZ/KRoW0xWFvLE685wFxZz9EFJekPOrDAqg783JqQJ3
-        XPskH3kEU7fR0/Ph78F3bj9HvZWOr4H99XHMwhfMNb8afPT2T5Xye6Z5mz+fbKas7xlU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ifOT2-0002nd-BQ; Thu, 12 Dec 2019 14:25:20 +0100
-Date:   Thu, 12 Dec 2019 14:25:20 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Biao Huang <biao.huang@mediatek.com>
-Cc:     davem@davemloft.net, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, yt.shen@mediatek.com
-Subject: Re: [PATCH 1/2] net-next: stmmac: mediatek: add more suuport for RMII
-Message-ID: <20191212132520.GB9959@lunn.ch>
-References: <20191212024145.21752-1-biao.huang@mediatek.com>
- <20191212024145.21752-2-biao.huang@mediatek.com>
+        Thu, 12 Dec 2019 08:33:37 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40342 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729302AbfLLNdh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 08:33:37 -0500
+Received: by mail-oi1-f195.google.com with SMTP id 6so410540oix.7;
+        Thu, 12 Dec 2019 05:33:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B1c5GbpC2qZV4XZL32ReXMmOl4Gf9Xdye7e43MFMR8g=;
+        b=ir+J4KCiAPAkjvp0ky7CL/fRvOfMW0Zm7o6v1rXeaVUwDUxF+C9TNjXpn/BysOxlk7
+         jJoVe5vx7/SBDPPYb7u1VhtIifglsrR+YblRpsrivUjYZYP9lccjXlwbyfruFgZBi8qa
+         FG80TRt7j8ounLnQC3UpkFKEVH/R6a6/IJHuA+ChO6JBMQ5umQTxLXd46SyztwKTsBUj
+         +kXOZseOs9sI5AUoKcO2Vr3PN/+LrB6oxo5jqQKIwFy3+s96Uop2ypSNkqKzDZ5/i3KZ
+         6oaJR4CsJthXtHp5SJYfNYltMOJyuTE6WmZQV9n85PdWWAtrg0fWq9yUp/ixquWJprKb
+         WHPA==
+X-Gm-Message-State: APjAAAVhFittvr2zZoo96SeXv2x9q8StI17TKbAhNdj1Uu3I2nzUKQ7u
+        HaYg40oYzoh4JCwP1mVESs5PZCWVAVuwNI6D3Tk=
+X-Google-Smtp-Source: APXvYqyZrB81syD0Ce6WwALcSofZswA84PMJGyV785ydrh5qmd3i1ZIC8I8AuxCcmSbHRH3rYOaGved6PnxX/cMztls=
+X-Received: by 2002:aca:4e87:: with SMTP id c129mr4645921oib.153.1576157615510;
+ Thu, 12 Dec 2019 05:33:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212024145.21752-2-biao.huang@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-3-geert+renesas@glider.be> <CACRpkdYyY0eGipdK6ixZxLtdJ5px=U2mOa79VZb00NEEAEL=6g@mail.gmail.com>
+In-Reply-To: <CACRpkdYyY0eGipdK6ixZxLtdJ5px=U2mOa79VZb00NEEAEL=6g@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 12 Dec 2019 14:33:24 +0100
+Message-ID: <CAMuHMdVL2w=DzOHTh-Tq6NZLTNUKxUneMi3wX71Z83mdsy3LTA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] gpiolib: Add support for gpiochipN-based table lookup
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 10:41:44AM +0800, Biao Huang wrote:
-> MT2712 SoC can provide the rmii reference clock, and the clock
-> will output from TXC pin only, which means ref_clk pin of external
-> PHY should connect to TXC pin in this case.
-> Add corresponding clock and timing settings.
+Hi Linus,
 
-Hi Biao
+On Thu, Dec 12, 2019 at 2:20 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> > Currently GPIO controllers can only be referred to by label in GPIO
+> > lookup tables.
+> >
+> > Add support for looking them up by "gpiochipN" name, with "N" either the
+> > corresponding GPIO device's ID number, or the GPIO controller's first
+> > GPIO number.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> What the commit message is missing is a rationale, why is this needed?
 
-Subject line has a typo.
+Right. To be added: so they can be looked up in the GPIO lookup table
+using either the chip's label, or the "gpiochipN" name.
 
-> @@ -278,6 +296,7 @@ static int mediatek_dwmac_config_dt(struct mediatek_dwmac_plat_data *plat)
->  	mac_delay->tx_inv = of_property_read_bool(plat->np, "mediatek,txc-inverse");
->  	mac_delay->rx_inv = of_property_read_bool(plat->np, "mediatek,rxc-inverse");
->  	plat->rmii_rxc = of_property_read_bool(plat->np, "mediatek,rmii-rxc");
-> +	plat->rmii_clk_from_mac = of_property_read_bool(plat->np, "mediatek,rmii-clk-from-mac");
->  
->  	return 0;
->  }
-> @@ -287,6 +306,16 @@ static int mediatek_dwmac_clk_init(struct mediatek_dwmac_plat_data *plat)
->  	const struct mediatek_dwmac_variant *variant = plat->variant;
->  	int i, num = variant->num_clks;
->  
-> +	plat->mac_rmii_clk = NULL;
-> +	if (plat->phy_mode == PHY_INTERFACE_MODE_RMII &&
-> +	    plat->rmii_clk_from_mac) {
-> +		plat->mac_rmii_clk = devm_clk_get(plat->dev, "rmii_internal");
-> +		if (IS_ERR(plat->mac_rmii_clk)) {
-> +			dev_err(plat->dev, "Failed to get reference clk from MAC\n");
-> +			return PTR_ERR(plat->mac_rmii_clk);
-> +		}
-> +	}
+> > If this is rejected, the GPIO Aggregator documentation must be updated.
+> >
+> > The second variant is currently used by the legacy sysfs interface only,
+> > so perhaps the chip->base check should be dropped?
+>
+> Anything improving the sysfs is actively discouraged by me.
+> If it is just about staying compatible it is another thing.
 
-Please don't use a binary property. This is a clock, so describe it in
-DT as a clock. Add it to the existing list of clocks.
+OK, so N must be the corresponding GPIO device's ID number.
 
-   Andrew
+> > +static int gpiochip_match_id(struct gpio_chip *chip, void *data)
+> > +{
+> > +       int id = (uintptr_t)data;
+> > +
+> > +       return id == chip->base || id == chip->gpiodev->id;
+> > +}
+> >  static struct gpio_chip *find_chip_by_name(const char *name)
+> >  {
+> > -       return gpiochip_find((void *)name, gpiochip_match_name);
+> > +       struct gpio_chip *chip;
+> > +       int id;
+> > +
+> > +       chip = gpiochip_find((void *)name, gpiochip_match_name);
+> > +       if (chip)
+> > +               return chip;
+> > +
+> > +       if (!str_has_prefix(name, GPIOCHIP_NAME))
+> > +               return NULL;
+> > +
+> > +       if (kstrtoint(name + strlen(GPIOCHIP_NAME), 10, &id))
+> > +               return NULL;
+> > +
+> > +       return gpiochip_find((void *)(uintptr_t)id, gpiochip_match_id);
+>
+> Isn't it easier to just  augment the existing match function to
+> check like this:
+>
+> static int gpiochip_match_name(struct gpio_chip *chip, void *data)
+> {
+>         const char *name = data;
+>
+>         if (!strcmp(chip->label, name))
+>                return 0;
+
+return true;
+
+>         return !strcmp(dev_name(&chip->gpiodev->dev), name);
+> }
+
+Oh, didn't think of using dev_name() on the gpiodev.
+Yes, with the chip->base check removed, the code can be simplified.
+
+Or just
+
+        return !strcmp(chip->label, name) ||
+               !strcmp(dev_name(&chip->gpiodev->dev), name);
+
+> We should I guess also add some kerneldoc to say we first
+> match on the label and second on dev_name().
+
+OK.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
