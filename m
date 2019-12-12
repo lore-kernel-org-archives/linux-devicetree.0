@@ -2,140 +2,170 @@ Return-Path: <SRS0=GOr1=2C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D792AC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F66C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A702A22B48
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F40B214AF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Dec 2019 16:56:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="K0QjDQVk"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="jCiBa2OQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729999AbfLLQxa (ORCPT
+        id S1729970AbfLLQ4a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:53:30 -0500
-Received: from mail-eopbgr1400090.outbound.protection.outlook.com ([40.107.140.90]:62658
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729961AbfLLQx3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:53:29 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HqQcOKoBlQ978WfXRWVOUoT79e+jLKyUZcEriyzCPOPUb8Zxy9tpZHWxZI5A1xQe3hd/3DKFsy8HTckow5fg8hX+p5RYsZO2dWLXbAPv1BgwRj2PJKOWlkaz4pLUtq2/n9LC8K9GS7OLnlIsEsx4UsoqHWUzDAJgZNUITXlyc7gmRsN6Mf6dKZVpdnIsDDIIMlD0s7EAOn0kaf1TR42cqwOr2XVyYmjAbQu1yJHi7E+4T02MdeAhMc6GJIjbCga52j+r3Megxt3WWuJpIOcy0Y0V+dZtfppzy/bg8kZbo3Rs27jCClETQdBpVha+9tnzWlfWZZxlZnqGON/vHJKlHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rJLsEKd/1IkcNiBgjzgXJv35XqbqMMWweyk01Xb4h40=;
- b=exz19m400myr3bIJu9nYh9uMbEIM/4sCmQyCtn6j2UEFcIek7DdSHVCvVhkSTuZiNsV7lFTrb+LYvO5eyD83BN5JNaz5y5UlFPNOLt66/I8Add5APsijXv1A705gl8UC/LyaCBZIjtxNLp9g+wSSL7QY5GpLoA3MSwmzj2hn+0SwC5d+yHw4sAH+B7DEUmHs6yI3ouSxJek3mZms4WdefPDRwD3QLG6O8kd0aS3oL2Jarf+zFaES5kEc9cv5wo1KICUXJu8h+DfeNyOT6VvUGKBdwe1jXp39nIi6+remGu1cSprIcTbJO3VrPHF7SsceV1As3iwhvCEHpPc9pOfbdg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Thu, 12 Dec 2019 11:56:30 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:34709 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729944AbfLLQ43 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 11:56:29 -0500
+Received: by mail-vs1-f65.google.com with SMTP id g15so2082406vsf.1
+        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 08:56:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rJLsEKd/1IkcNiBgjzgXJv35XqbqMMWweyk01Xb4h40=;
- b=K0QjDQVkDZRnhvEro69DzoBai7LM/7DQc0yjtevNJWBB+LFYrKJFdzUC38FLuLswInluqDQIv8gZk5xQ6dlIWWI5y8NkvwyY1gaRdYnG+9zldzgsbDKF6TlND76lA36GGCWXQzGnVCQ94iYkT1XZOimH9FuZv2/2eQXn3Whkzl0=
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
- TY1PR01MB1820.jpnprd01.prod.outlook.com (52.133.164.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.18; Thu, 12 Dec 2019 16:53:26 +0000
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2516.018; Thu, 12 Dec 2019
- 16:53:26 +0000
-From:   Chris Brandt <Chris.Brandt@renesas.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XX6BrAItU8v/kOi+ACqiURlUB/V6CjbYP6V9AUxPwzI=;
+        b=jCiBa2OQ+6F9W8XOpKq9C6kUmGb4UM8B9RlqTrbXA3PeSUm+DIu6VfUjnTpgzpchOR
+         PwikFEUGPBfOY1BcRheFDz5q4T4x6OWa0rY73lhN5CpwCXSnCwkaEtDFIu7kqxBkx4dd
+         zI00qay8Uzzb+oB0G+3pQiUNTEYQA+iqF/Gkg6nGIZf4PpZk7AI71ToiDhp9Vy0D3Weq
+         QXDPdN03N2nlsGyprJ8jQ+JcTOL+KZrHh1Z8+G9Vo3riav3MA1HpPKkErPNAmHR+ehom
+         4AzJdzdGhWjY3wJdG5tgqRUKNC5HKEAsxoFTXuflvzFPUW14s6VOAU6JqebdZqv8Syjh
+         QZug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XX6BrAItU8v/kOi+ACqiURlUB/V6CjbYP6V9AUxPwzI=;
+        b=CC/EiGIPmRDb37ro6/FWqrJ06yFma6a+yZeXo464NAqFjilWXUTLI+8OOv6sn4dzl/
+         cniBWfRl7Im/vJF2e021Wov1uGOIU89YceoiXSnaI+wmmwTSPxlXx84CtCoW0x7LiBZi
+         8xtWRa1/LTOz3zYHPA1HNmV4Zzw0nGFq11rLy0gIpCmSplFmjOahUGNP0Hs8d7YMZ7vY
+         oFOvcpPB2MLjZkF6KCfHK3gPhEFhTchO/Cus+UheUv6+E+EoiXCDpkjayIx8jKzrG5lo
+         LWsrYqI2nnGgeBNF59da6n7m8fuziiu4exfgrwux48ClIUgp6VnqnEcajLQRGpMCJVMd
+         hKsg==
+X-Gm-Message-State: APjAAAXxhwOZv1VVAsz8mBtPmqND0mVnoEmd5YJ/CLztu0oIGRr3m3ze
+        zGC0CEsE8Sv2PkFhDhkPzpcNqVTMhWNSHqHyecGmCg==
+X-Google-Smtp-Source: APXvYqwIYF4ycBEfeDnSEX4wtrfkl41k78h32ELjJrH1aPf8wZcDdfzkkmemsHW2HsfV69FZusYgypSl7d8cc9rLT2M=
+X-Received: by 2002:a67:fb41:: with SMTP id e1mr7425084vsr.159.1576169788119;
+ Thu, 12 Dec 2019 08:56:28 -0800 (PST)
+MIME-Version: 1.0
+References: <1574934847-30372-1-git-send-email-rkambl@codeaurora.org>
+ <1574934847-30372-2-git-send-email-rkambl@codeaurora.org> <CAHLCerOVH1xLjMmDNFVx=YYYTA3MipaOhHZ-AYtxEnDFgRbSJg@mail.gmail.com>
+ <CAD=FV=UDGcnLLkBiTBr5GgrzNH20qf9pDQW8wdoqsbO4832M4Q@mail.gmail.com>
+In-Reply-To: <CAD=FV=UDGcnLLkBiTBr5GgrzNH20qf9pDQW8wdoqsbO4832M4Q@mail.gmail.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 12 Dec 2019 22:26:17 +0530
+Message-ID: <CAHLCerPKC2dK0Baom9MguvUfD0L--EeuLYnLnQENis92uzKbgg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: sc7180: Add device node support
+ for TSENS in SC7180
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Rajeshwari <rkambl@codeaurora.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: RE: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
-Thread-Topic: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
-Thread-Index: AQHVrDsFo/XrCnZmIE+HK5Vec6rH7qevIW6AgAK0x/CAA35sAIABOkowgAAaWYCAABMxUA==
-Date:   Thu, 12 Dec 2019 16:53:26 +0000
-Message-ID: <TY1PR01MB15627D5522BE325B7BE74E328A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com>
- <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
- <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <20191212152855.GD4310@sirena.org.uk>
-In-Reply-To: <20191212152855.GD4310@sirena.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctZTg2Mzg1ZTktMWNmZi0xMWVhLWFhNTUtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XGU4NjM4NWVhLTFjZmYtMTFlYS1hYTU1LTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iMTI3NCIgdD0iMTMyMjA2NDMyMDQwNDgzMjU4IiBoPSJkemQvQUh3b1lrd0xZYnBaWGsxSTRXc1JRN289IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Brandt@renesas.com; 
-x-originating-ip: [24.206.39.126]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 48d0998f-5b86-471d-cd4a-08d77f23cebd
-x-ms-traffictypediagnostic: TY1PR01MB1820:
-x-microsoft-antispam-prvs: <TY1PR01MB18200327521769E2E60CE4B58A550@TY1PR01MB1820.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0249EFCB0B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(346002)(136003)(366004)(396003)(189003)(199004)(71200400001)(6506007)(4326008)(6916009)(26005)(8676002)(186003)(7416002)(81156014)(81166006)(2906002)(478600001)(66446008)(76116006)(66946007)(33656002)(54906003)(316002)(66556008)(64756008)(8936002)(5660300002)(55016002)(66476007)(9686003)(7696005)(52536014)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1820;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: orRGZ2pk1Bljw+33wI14MAejRql9dzJinOaqUxSezhg+8LR7JMFTanccxnZPZfD4cVm7ZCW+s2BiWPX8HmS/Su/pU4hb6Ck4yct1Bc3oAQxBFtYKdhUcdjHGwGlQ0lcO0N5h57Q3qlWqfI0lBrPlTwK++VehCg+jYRzhuQDchP+zlL6s5VYXpusnAaLGzbo3ixGZURTF84raiR+ex89BisY7yR93vxtz8T0sKAa4L1ipE0wvSnt+vADIdNVdn+YUgQVQpFPRrvjD9/3Rb8QGRvv+wXQGYpDeFXeXsWRmT8qg08fNW36Y9jENCq+25p19Q+Wf4AvjFp5qav0twTajSSTUnfwmxDDuWC9b5Y2ZGn6COwNsF8rsaYg5/oQA8Z6TSBmiYaoSidQOUwOR7PFsee4wuXTkzl4YLmY8rOXnslVUjKC5ES0YI4WaTE/fPbN2
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48d0998f-5b86-471d-cd4a-08d77f23cebd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 16:53:26.3513
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FmK+ASEFvGBVhpkz+QUZvk7H8i76+JwY2A0HIqF4D3/HfcH11YOLiYHFPABIgtFQ9v3jQPjycntQrWJcxo7wbDsBXhvg5kssvQp1IW65rxc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1820
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        sivaa@codeaurora.org, sanm@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 12, 2019 1, Mark Brown wrote:
-> > Is that why this "RPC" patch series is taking so long?
-> > It's a fairly simple piece of hardware.
->=20
-> The submitter appeared to be having difficulty with feedback from the
-> reviewers with knowledge of the hardware, then it looks like the last
-> version of the patch set didn't get any comments from any of those
-> reviewers.
+On Thu, Dec 12, 2019 at 9:39 PM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Thu, Dec 12, 2019 at 3:00 AM Amit Kucheria
+> <amit.kucheria@verdurent.com> wrote:
+> >
+> > Hi Rajeshwari,
+> >
+> > On Thu, Nov 28, 2019 at 3:25 PM Rajeshwari <rkambl@codeaurora.org> wrote:
+> > >
+> > > Add TSENS node and user thermal zone for TSENS sensors in SC7180.
+> > >
+> > > Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 527 +++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 527 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > index 666e9b9..6656ffc 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > @@ -911,6 +911,26 @@
+> > >                         status = "disabled";
+> > >                 };
+> > >
+> > > +               tsens0: thermal-sensor@c263000 {
+> > > +                       compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
+> > > +                       reg = <0 0x0c263000 0 0x1ff>, /* TM */
+> > > +                               <0 0x0c222000 0 0x1ff>; /* SROT */
+> > > +                       #qcom,sensors = <15>;
+> > > +                       interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
+> > > +                       interrupt-names = "uplow";
+> > > +                       #thermal-sensor-cells = <1>;
+> > > +               };
+> > > +
+> > > +               tsens1: thermal-sensor@c265000 {
+> > > +                       compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
+> > > +                       reg = <0 0x0c265000 0 0x1ff>, /* TM */
+> > > +                               <0 0x0c223000 0 0x1ff>; /* SROT */
+> > > +                       #qcom,sensors = <10>;
+> > > +                       interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
+> > > +                       interrupt-names = "uplow";
+> > > +                       #thermal-sensor-cells = <1>;
+> > > +               };
+> > > +
+> > >                 spmi_bus: spmi@c440000 {
+> > >                         compatible = "qcom,spmi-pmic-arb";
+> > >                         reg = <0 0x0c440000 0 0x1100>,
+> > > @@ -1121,6 +1141,513 @@
+> > >                 };
+> > >         };
+> > >
+> > > +       thermal-zones {
+> > > +               cpu0-thermal {
+> > > +                       polling-delay-passive = <250>;
+> > > +                       polling-delay = <1000>;
+> > > +
+> > > +                       thermal-sensors = <&tsens0 1>;
+> > > +
+> > > +                       trips {
+> > > +                               cpu0_alert0: trip-point0 {
+> > > +                                       temperature = <90000>;
+> > > +                                       hysteresis = <2000>;
+> > > +                                       type = "passive";
+> > > +                               };
+> > > +
+> > > +                               cpu0_alert1: trip-point1 {
+> > > +                                       temperature = <95000>;
+> > > +                                       hysteresis = <2000>;
+> > > +                                       type = "passive";
+> > > +                               };
+> > > +
+> > > +                               cpu0_crit: cpu_crit {
+> > > +                                       temperature = <110000>;
+> > > +                                       hysteresis = <1000>;
+> > > +                                       type = "critical";
+> > > +                               };
+> >
+> > Where are the cooling maps for all the cpu thermal zones? A passive
+> > trip point w/o a cooling map is not of much use. If you are waiting
+> > for cpufreq support to land before adding them, then remove the
+> > passive trip points for now and add them along with the cooling maps
+> > when you have cooling devices.
+>
+> I will note that cpufreq support has landed in the qcom tree::
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=86899d8235ea0d3d7c293404fb43a6fabff866e6
+>
+> ...so I guess the right thing is to send a patch adding the cooling
+> maps for the cpu thermal zones?
 
-I went and looked at the driver and it was more complicated than what I=20
-did so I wasn't sure if there was some more advanced functionality or
-something that was trying to be achieved.
-
-I admit, V1 of this hardware (in the RZ/A1) was easier than V2 (RZ/A2 & R-C=
-ar),
-so I had to re-write our BSP driver when it came time to support RZ/A2.
-Basically, when they added HyperFlash support...it 'changed' how SPI
-support was working.=20
-
-I agree with Sergei that it is always better to have a common driver for
-common HW across different SoCs. However, it's not clear yet why there
-needs to be increased complexity.
-
-There were some good suggestions from the V2 series that I think complete
-this driver. But I have not sent out a V3 until I can better understand
-this 'competing' solution.
-
-Chris
+Great, then the cooling maps should be added to this patch itself.
