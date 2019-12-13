@@ -2,79 +2,91 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C56C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AC6C2D0C9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAFE02077B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD9E720706
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576275539;
-	bh=SiOkwFwElyGHnHvBcMZ/ANt/N/f5alpmyUQarKA91OQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=X/P5vCbOv1Fd+RQTkW//5HDxFj2i9AlplroUl8Hbi1qLug05Y5lk9v2gZJplL8qav
-	 2Adb/bwiWv2DLjkkMVSR886y/hYRwuWrYXNM2xrPfrLIrMlGwP5trlscX1m5oFgUog
-	 zRrDm1n5q+BZcB5pYJhoL005Yuwwh3ZeKmMb85pw=
+	s=default; t=1576275803;
+	bh=/fWrbCaX7213GutJNHW8jgAcMWLVUpScB9pkaVFwqjU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yCl6mWbq5tH0ViMAVnaDwyajTOX2oDT/JODFhJEFyZFlKjkzb3yhtTFlbfHEi5Meh
+	 HkUK2/+Hn1lxqV/fR183nOn8uzHXqKwEdErV16LpaBVHeF6BmcZQvFIFBibkPoZkxH
+	 fBMM4LoSciMPuS0KXjMi8xi6CLyu6OFI/FTOHS+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfLMWS7 (ORCPT
+        id S1726528AbfLMWXT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:18:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38812 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfLMWS7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Dec 2019 17:18:59 -0500
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E42F2073D;
-        Fri, 13 Dec 2019 22:18:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576275538;
-        bh=SiOkwFwElyGHnHvBcMZ/ANt/N/f5alpmyUQarKA91OQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dKotVCWpFC6K6Ukvxk2yN/MboQoSH40mlCGZfL+AQgIb9KW5IC3bVZLIXGt4T+oh3
-         ecyuHY/dIPlhQ/f9GEOZUCm+SKFkf9yrJYR6i5cpMtUoCVUuDENNciEplbAIwU00g/
-         aAyok9YNGrZfd4kcO3+DgjorWklnpmoXVBoTo6ag=
-Received: by mail-pl1-f171.google.com with SMTP id g6so1806836plp.7;
-        Fri, 13 Dec 2019 14:18:58 -0800 (PST)
-X-Gm-Message-State: APjAAAWIv0376eZ+df35DdHdXBY70yV1BEFlNunjs+vXg9CQtJkX3WM6
-        8HA/4/wf49lj4gOKrdRRrzXPhvqSZVrLtM1SSQ==
-X-Google-Smtp-Source: APXvYqyr51fniozMNKvMYlVmGS7rD5sWQN+BGHgVnRNmkNSL4e1Cz7vTZuUAWsBrt3ktL39fHBvUqLtIefHakH18m8s=
-X-Received: by 2002:a0c:f68f:: with SMTP id p15mr13414497qvn.79.1576248718360;
- Fri, 13 Dec 2019 06:51:58 -0800 (PST)
+        Fri, 13 Dec 2019 17:23:19 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43316 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfLMWXT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 17:23:19 -0500
+Received: by mail-ot1-f66.google.com with SMTP id p8so840832oth.10;
+        Fri, 13 Dec 2019 14:23:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WFqftU66d4lywk7YGZ8vQ6KoD9czO0JD1+b7jkC8Eqg=;
+        b=rzCSMo2MX00Wdvp9juhU6Koug51XE5NcOQM+yKyLCFNeeRt1zKoDWFYk1WZXipJuEs
+         g3yvqd3hS/w6xLtCZDuEEK7uDLR/FTPM8UYSfvtEc/yUaobhG/iE/XqwL4zpHHdDPviC
+         JgVkUN4fUgnrMGS0RHnFR3M6N/EHwq/PA4jJBH/CgUtHfcfzUmG65NSKd4iaHrLd8bMs
+         KuTZWnevcVkpGNiEqg+iMG25m0IqZu/7zScGzNxlyhb0CwflVvL+PP144jwMPY3esGfz
+         jGSDkB29KiZitYYEzZo2scr7s6y8qG2AJkHrA4A7Wj22UJzCjlazST/ER+Jtx6x+CHAa
+         Ph2g==
+X-Gm-Message-State: APjAAAX5Y6RepbzGnHPj7EzA3GChjhWoON4x344XQRgHAEtYzM3AIzQL
+        XKiTr08Wm282ZSSHUil0sg==
+X-Google-Smtp-Source: APXvYqy7Ii9i/4Qz6GD0XbnXcIegXItw0XTqvH2+WBespuMeepCyhsU1dWL9fRUGXYM3UeXhG6HziQ==
+X-Received: by 2002:a9d:6a8f:: with SMTP id l15mr16702538otq.59.1576275798548;
+        Fri, 13 Dec 2019 14:23:18 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k5sm3780843otp.33.2019.12.13.14.23.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 14:23:17 -0800 (PST)
+Date:   Fri, 13 Dec 2019 16:23:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     support.opensource@diasemi.com, lee.jones@linaro.org,
+        robh+dt@kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, joel@jms.id.au, andrew@aj.id.au,
+        lgirdwood@gmail.com, broonie@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Subject: Re: [PATCH v3 5/6] dt-bindings: mfd: da9062: add regulator gpio
+ enable/disable documentation
+Message-ID: <20191213222317.GA32740@bogus>
+References: <20191129172537.31410-1-m.felsch@pengutronix.de>
+ <20191129172537.31410-6-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-References: <20191213081230.23494-1-bibby.hsieh@mediatek.com> <20191213081230.23494-2-bibby.hsieh@mediatek.com>
-In-Reply-To: <20191213081230.23494-2-bibby.hsieh@mediatek.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 13 Dec 2019 08:51:45 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+sZQo+k0b_MhPz8oST8GcLaCcho3R+kNLLL2zFUit81w@mail.gmail.com>
-Message-ID: <CAL_Jsq+sZQo+k0b_MhPz8oST8GcLaCcho3R+kNLLL2zFUit81w@mail.gmail.com>
-Subject: Re: [PATCH v8 1/4] dt-binding: eeprom: at24: add vcc-supply property
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191129172537.31410-6-m.felsch@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 2:24 AM Bibby Hsieh <bibby.hsieh@mediatek.com> wrote:
->
-> In some platforms, they disable the power-supply of eeprom due
-> to power consumption reduction. This patch add vcc-supply property.
->
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+On Fri, 29 Nov 2019 18:25:36 +0100, Marco Felsch wrote:
+> At the gpio-based regulator enable/disable documentation. This property
+> can be applied to each subnode within the 'regulators' node so each
+> regulator can be configured differently.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 > ---
->  Documentation/devicetree/bindings/eeprom/at24.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
+> Changelog:
+> v3:
+> - adapt binding description
+> 
+>  Documentation/devicetree/bindings/mfd/da9062.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
