@@ -2,88 +2,87 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812E6C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 08:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EECC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4F1206C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 08:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3FEF206C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:01:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vxcn/yQJ"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qNkL/3cx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbfLMI7X (ORCPT
+        id S1725770AbfLMJB3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:59:23 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46428 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfLMI7X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 03:59:23 -0500
-Received: by mail-lj1-f194.google.com with SMTP id z17so1738667ljk.13
-        for <devicetree@vger.kernel.org>; Fri, 13 Dec 2019 00:59:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=neDwLTAD9jZBzNHCTpQNXqb55Q19dpVUnqxtm4qngC4=;
-        b=vxcn/yQJtKa3gJABcbwws+zsCvWydlc4hiIlN9oHnNaSKTpm0zNd3gpSZO5lShK4Lz
-         7ySxoBZZGyT5IiZTF3DrIFpn/9WuEgc0UolRO7BMf9GXSrO5NI07h63FPaW4jxPCtWOB
-         I6SnDaSDk7AnavpFEBYYFZBUwEDPcQKoDKB3wp/iAv/UC2ql2i548auPCoNPhWAInw0I
-         +tyTHKlU29ssg/GMIwqe/VMfmRUjcRPrtFbovPdBY4g84ap+mKqX6vsx2uC9nZQs0pP/
-         MqyAg7GtGxi9QH3iQGXuAmmorV5vGfdgh/zqtwbWfmk9c2rI8MKy4OSuTlOREaAvuZdb
-         2qoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=neDwLTAD9jZBzNHCTpQNXqb55Q19dpVUnqxtm4qngC4=;
-        b=iS3C8PxD86vz7RHjt3bQV4WqUPiOhAqgmEwHRG7sDKCiM4VPzpCPxBJWR7MbjhBBmi
-         zauRawN9jOG0jlTFGfJT6GH7miXxycKJY3lGpRHAkT32jzrcPycv5iP7DntyDDy2bREe
-         t7sbzkqfmsLFRb7U0RAB9W/OIFW01ohjv0WIodjJrCnwAuz24nQtvbPwfWhvecGUgFXs
-         KYb6TgfA+nLGK29/V/OVpPQRgv4XHfYJ6p8nGcNIqsIszH2U99v8SqptaoxoRb3pJhis
-         nWh3FNp9xLK050TKTY4JCj8SGekIg13Ry0ndXV6xflJ1i56M1zpDV6T4VRUdmWx+rvmJ
-         RX5w==
-X-Gm-Message-State: APjAAAXYd5yk9IBxKDJTsxBP7bZcmhLYrt1Ng5OW1AQbPMI9U1eL9cQh
-        IvqAWLWhcG+1I034F7HUAXfrX+zxDVEV6ALOWhqEkQ==
-X-Google-Smtp-Source: APXvYqwZVnxTaJNmp0/febncjlgk6iuHq5jonrer+d7mi78Ma4GA9yOu/5k0S1c8VDfcEAJynShMKVgq8xK7fsF7R/k=
-X-Received: by 2002:a2e:9587:: with SMTP id w7mr8447089ljh.42.1576227561359;
- Fri, 13 Dec 2019 00:59:21 -0800 (PST)
+        Fri, 13 Dec 2019 04:01:29 -0500
+Received: from mailgw02.mediatek.com ([216.200.240.185]:35964 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMJB3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 04:01:29 -0500
+X-UUID: 041adb71b4494861be8800baf2777a63-20191213
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=y8nDm9m2qOtB71NuflHB6u7i5dLokDsUDk4uCftOpH4=;
+        b=qNkL/3cx2h05DCIpLKwrTsJ4U6Wncyi6FSV2QwAqfM0UWgpcKE2Uqg/pzCaKEy2zZ5ekFKdlFFh2VOf7XF2Gbgcz96hOWepaaFtIBntFOuFi54CLhkJyczSIpgNlnv9Vw8PU2jV02jI4S69/8ueXY2q5HfIoj7wfXGA71ibKphg=;
+X-UUID: 041adb71b4494861be8800baf2777a63-20191213
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 835677363; Fri, 13 Dec 2019 01:01:25 -0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 13 Dec 2019 16:12:22 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 13 Dec 2019 16:11:59 +0800
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        <linux-i2c@vger.kernel.org>
+CC:     <tfiga@chromium.org>, <drinkcat@chromium.org>,
+        <srv_heupstream@mediatek.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v8 0/4] add power control in i2c and at24
+Date:   Fri, 13 Dec 2019 16:12:26 +0800
+Message-ID: <20191213081230.23494-1-bibby.hsieh@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <20191204101042.4275-1-cleger@kalray.eu>
-In-Reply-To: <20191204101042.4275-1-cleger@kalray.eu>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 13 Dec 2019 09:59:10 +0100
-Message-ID: <CACRpkdbHGitYzwVEVYLUmaE+Qn0ix1O1bOSjoTJomf+h9b4+rg@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Add pinctrl support for dwapb gpio driver
-To:     Clement Leger <cleger@kalray.eu>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 11:10 AM Clement Leger <cleger@kalray.eu> wrote:
+QWx0aG91Z2ggaW4gdGhlIG1vc3QgcGxhdGZvcm1zLCB0aGUgcG93ZXIgb2YgZWVwcm9tIGFuZCBp
+MmMNCmFyZSBhbHdheSBvbiwgc29tZSBwbGF0Zm9ybXMgZGlzYWJsZSB0aGUgZWVwcm9tIGFuZCBp
+MmMgcG93ZXINCmluIG9yZGVyIHRvIG1lZXQgbG93IHBvd2VyIHJlcXVlc3QuDQpUaGlzIHBhdGNo
+IGFkZCB0aGUgcG1fcnVudGltZSBvcHMgdG8gY29udHJvbCBwb3dlciB0byBzdXBwb3J0DQphbGwg
+cGxhdGZvcm1zLg0KDQpDaGFuZ2VzIHNpbmNlIHY3Og0KIC0gYWRkIGJpbmRpbmcgZGVzY3JpYmUg
+c3VwcGx5IHByb3BlcnR5IGluIGkyYyBhbmQgYXQyNC4NCiAtIG1vdmUgaTJjIGJ1cyBzdXBwbHkg
+Y29udHJvbCBpbiBpMmMtY29yZS4NCiAtIHJlYmFzZSBvbnRvIHY1LjUtcmMxDQoNCkNoYW5nZXMg
+c2luY2UgdjY6DQogLSBhZGQgYmFjayBlcnJvciBjaGVjayBmb3IgZGV2bV9yZWd1bGF0b3JfYnVs
+a19nZXQoKQ0KDQpDaGFuZ2VzIHNpbmNlIHY1Og0KIC0gcmVtb3ZlIGhhc19zdXBwbGllcw0KDQpD
+aGFuZ2VzIHNpbmNlIHY0Og0KIC0gYWRkIHN5c3RlbSBzbGVlcCBQTSBvcHMNCiAtIG1vdmUgcmVn
+dWxhdG9yX2J1bGtfZGlzYWJsZSBiZWZvcmUgc3VzcGVuZCgpDQogLSBmaXhlcyBlcnJvciBoYW5k
+bGluZw0KDQpDaGFuZ2VzIHNpbmNlIHYzOg0KIC0gcmVtb3ZlIHJlZHVuZGFudCBjYWxsaW5nIGZ1
+bmN0aW9uDQogLSBjaGFuZ2UgU0lNUExFX0RFVl9QTV9PUFMgdG8gU0VUX1JVTlRJTUVfUE1fT1BT
+DQogLSBjaGFuZ2Ugc3VwcGx5IG5hbWUNCg0KQ2hhbmdlcyBzaW5jZSB2MjoNCiAtIHJlYmFzZSBv
+bnRvIHY1LjQtcmMxDQogLSBwbV9ydW50aW1lX2Rpc2FibGUgYW5kIHJlZ3VsYXRvcl9idWxrX2Rp
+c2FibGUgYXQNCiAgIGVyciByZXR1cm4gaW4gcHJvYmUgZnVuY3Rpb24NCg0KQ2hhbmdlcyBzaW5j
+ZSB2MToNCiAtIHJlbW92ZSByZWR1bmRhbnQgY29kZQ0KIC0gZml4dXAgY29kaW5nIHN0eWxlDQoN
+CkJpYmJ5IEhzaWVoICg0KToNCiAgZHQtYmluZGluZzogZWVwcm9tOiBhdDI0OiBhZGQgdmNjLXN1
+cHBseSBwcm9wZXJ0eQ0KICBkdC1iaW5kaW5nOiBpMmM6IGFkZCBidXMtc3VwcGx5IHByb3BlcnR5
+DQogIG1pc2M6IGVlcHJvbTogYXQyNDogc3VwcG9ydCBwbV9ydW50aW1lIGNvbnRyb2wNCiAgaTJj
+OiBjb3JlOiBzdXBwb3J0IGJ1cyByZWd1bGF0b3IgY29udHJvbGxpbmcgaW4gYWRhcHRlcg0KDQog
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZWVwcm9tL2F0MjQueWFtbCAgICAgIHwgIDQgKysNCiBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy50eHQgfCAgMyArDQogZHJp
+dmVycy9pMmMvaTJjLWNvcmUtYmFzZS5jICAgICAgICAgICAgICAgICAgIHwgNjYgKysrKysrKysr
+KysrKysrKysrKw0KIGRyaXZlcnMvbWlzYy9lZXByb20vYXQyNC5jICAgICAgICAgICAgICAgICAg
+ICB8IDQwICsrKysrKysrKysrDQogaW5jbHVkZS9saW51eC9pMmMuaCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgIDMgKw0KIDUgZmlsZXMgY2hhbmdlZCwgMTE2IGluc2VydGlvbnMoKykNCg0K
+LS0gDQoyLjE4LjANCg==
 
-> Synopsys DWAPB IP includes support for pin control. This control is basic
-> and allows to switch between a hardware and a software function.
-> Software function is when driving GPIOs from IP and hardware is controlled
-> by external signals.
-> This serie export necessary interface to be able to move the driver to
-> pinctrl folder and then implement the pinctrl support which is based on the
-> digicolor driver. The idea is to avoid hardcoding pins in driver since
-> this IP is a generic one available on multiple SoC.
-
-The overall approach is correct, just tidy up the patch series the
-way indicated by Andy and we can probably proceed efficiently with
-this. I will review the patch adding the pinctrl interfaces separately.
-
-Yours,
-Linus Walleij
