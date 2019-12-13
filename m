@@ -2,112 +2,96 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6985EC34002
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF434C35243
 	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5672471E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DcuNIe9K"
+	by mail.kernel.org (Postfix) with ESMTP id 1BDC3246C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfLMMFB (ORCPT
+        id S1726841AbfLMMGr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 07:05:01 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50388 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfLMMFB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 07:05:01 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBDC4XVd009037;
-        Fri, 13 Dec 2019 06:04:33 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576238673;
-        bh=oPWnTo7OHhVIsfM/IZdLvhaVisqBeA+2xiIqL/W9IoI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=DcuNIe9KJZystd8ax+1WcBI2y8J/pVzn0KCq8WMRoP7DcIETCdVcfyWa4vP8XnFqz
-         WhHmLkXN2Cd4nw2pLwTNW7lmNJUIB8zIoXNxnutR/bLbAbhW/Li6dY2vUSTjpRxou3
-         mfFi74mrrrCjYK/xZ3J6FusBdfPNRQ+RVanVpfQg=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBDC4XDq019047
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Dec 2019 06:04:33 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Dec 2019 06:04:33 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Dec 2019 06:04:33 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBDC4VWg057195;
-        Fri, 13 Dec 2019 06:04:31 -0600
-Subject: Re: [PATCH 1/4] ARM: dts: am437x-gp-evm: add HDMI support
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <dri-devel@lists.freedesktop.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-References: <20191125131100.9839-1-tomi.valkeinen@ti.com>
- <20191212172104.GY35479@atomide.com> <20191212173110.GA35479@atomide.com>
- <d09526b2-8435-bef2-0489-0c3c8173d451@ti.com>
- <20191213104204.GB4860@pendragon.ideasonboard.com>
- <2f5cfca4-d36d-da2d-59ba-b76669daeded@ti.com>
- <20191213114207.GC4860@pendragon.ideasonboard.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <36d8dde1-1a76-5a5f-2a41-8bc52dfcf2fa@ti.com>
-Date:   Fri, 13 Dec 2019 14:04:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191213114207.GC4860@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 13 Dec 2019 07:06:47 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:39706 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726717AbfLMMGr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Dec 2019 07:06:47 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 06875200804;
+        Fri, 13 Dec 2019 13:06:43 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E9D5A200761;
+        Fri, 13 Dec 2019 13:06:42 +0100 (CET)
+Received: from fsr-ub1664-134.ea.freescale.net (fsr-ub1664-134.ea.freescale.net [10.171.74.111])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 234F6203B1;
+        Fri, 13 Dec 2019 13:06:42 +0100 (CET)
+From:   Mirela Rabulea <mirela.rabulea@nxp.com>
+To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl, shawnguo@kernel.org,
+        robh+dt@kernel.org
+Cc:     paul.kocialkowski@bootlin.com, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        s.hauer@pengutronix.de, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
+        niklas.soderlund+renesas@ragnatech.se,
+        dafna.hirschfeld@collabora.com,
+        Mirela Rabulea <mirela.rabulea@nxp.com>
+Subject: [PATCH v3 0/6] Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
+Date:   Fri, 13 Dec 2019 14:06:15 +0200
+Message-Id: <1576238781-5911-1-git-send-email-mirela.rabulea@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 13/12/2019 13:42, Laurent Pinchart wrote:
-> Hi Tomi,
-> 
-> On Fri, Dec 13, 2019 at 12:56:31PM +0200, Tomi Valkeinen wrote:
->> On 13/12/2019 12:42, Laurent Pinchart wrote:
->>
->>>> I think the correct way would be to have DRM framework understand that we have two displays, which
->>>> are mutually exclusive, and the display pipeline drivers would have the means to switch the gpio.
->>>> And that the display setup could be communicated properly to the userspace, and the userspace would
->>>> understand it. I don't think any of those exists.
->>>
->>> Isn't this what possible_clones in drm_encoder is for ? It notifies
->>> userspace of mutual exclusions between encoders.
->>
->> Hmm, how would that work here? Isn't encoder cloning about having two encoders, which take the input
->> from the same video source, and then outputting to two displays?
-> 
-> That's the idea. If you have one encoder for HDMI and one for the panel,
-> you can mark them as non-clonable, and then only one of the two can be
-> active at a time.
+Changes in v3:
+Add a 6th patch to update the MAINTAINERS file with an entry for this driver.
 
-We have a single DPI output from the SoC. That goes to the panel, or to SiI9022 bridge, depending on 
-the GPIO switch.
+This patch set adds the V4L2 driver for i.MX8QXP/QM JPEG encoder/decoder
+and it's dependencies.
+The driver was tested on i.MX8QXP, using a unit test application and
+the v4l2-compliance tool, including the  streaming tests for encoder.
 
-So... In the DT file, we would have multiple endpoints in the same output port in DSS, one going to 
-the panel, one to the SiI9022? omapdrm could then create two encoders, one abstracting the DPI 
-output and the connection to the panel, one abstracting the DPI output and SiI9022?
+Mirela Rabulea (6):
+  media: v4l: Add packed YUV444 24bpp pixel format
+  firmware: imx: scu-pd: Add power domains for imx-jpeg
+  media: dt-bindings: Add bindings for i.MX8QXP/QM JPEG driver
+  media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
+  arm64: dts: imx8qxp: Add jpeg encoder/decoder nodes
+  Add maintainer for IMX jpeg v4l2 driver
 
-And then someone would need to handle the GPIO, and set it based on the output used. These kind of 
-gpios are always difficult, as they don't belong anywhere =).
-
-  Tomi
+ .../devicetree/bindings/media/imx8-jpeg.yaml       |   83 +
+ Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst |   37 +-
+ MAINTAINERS                                        |    8 +
+ arch/arm64/boot/dts/freescale/imx8qxp-mek.dts      |    8 +
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   37 +
+ drivers/firmware/imx/scu-pd.c                      |    6 +
+ drivers/media/platform/Kconfig                     |    2 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/imx-jpeg/Kconfig            |   10 +
+ drivers/media/platform/imx-jpeg/Makefile           |    3 +
+ drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c      |  168 ++
+ drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h      |  140 ++
+ drivers/media/platform/imx-jpeg/mxc-jpeg.c         | 2293 ++++++++++++++++++++
+ drivers/media/platform/imx-jpeg/mxc-jpeg.h         |  188 ++
+ drivers/media/v4l2-core/v4l2-ioctl.c               |    1 +
+ include/uapi/linux/videodev2.h                     |    1 +
+ 16 files changed, 2985 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/imx8-jpeg.yaml
+ create mode 100644 drivers/media/platform/imx-jpeg/Kconfig
+ create mode 100644 drivers/media/platform/imx-jpeg/Makefile
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.c
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.h
 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.7.4
+
