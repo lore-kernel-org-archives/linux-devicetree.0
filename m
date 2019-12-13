@@ -2,134 +2,91 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFABC2D0C9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 08:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7504C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 08:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3DE32465A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 08:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E61A214D8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 08:49:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JXoAHKm2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sK4ZgQ3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbfLMIsw (ORCPT
+        id S1726004AbfLMIto (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:48:52 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43601 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfLMIsw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 03:48:52 -0500
-Received: by mail-pl1-f196.google.com with SMTP id p27so948253pli.10;
-        Fri, 13 Dec 2019 00:48:51 -0800 (PST)
+        Fri, 13 Dec 2019 03:49:44 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40574 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbfLMItn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 03:49:43 -0500
+Received: by mail-lj1-f194.google.com with SMTP id s22so1739308ljs.7
+        for <devicetree@vger.kernel.org>; Fri, 13 Dec 2019 00:49:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yrmwheM1+hl4xPG9UeGTOMJP5qq8jouvYWPI+cmTnHk=;
-        b=JXoAHKm2bI0UF8C3jLaI9pvYELwmQXbNwNN2AtjdVI+1nSAgHqrbt+7mijVaetV20Y
-         6zQovqYzG18kdJuyfxMhQWB1JJynIx4K47ONJ0I+sOBz1A+DfTildAzUkIwkxZfuMhlH
-         pAi6iJ6fk1NmUlCYsXZkHO0txpiD0UyWmrcLxJwuldyvXjhUBo5+tHJhSwPMVOi4WSz4
-         +nDGpU7GVMaqCj3zyBPOKqfd0KEGupjIUghCCe4QBguZZ9d1cJgAICDyf6YwfSFtAMPP
-         GrJU+GqqFIFP7fZNANPqfUubQdzy/Oiw63YKt5jyDH8yWauSZgX8kp4feWIVhDLry4tI
-         zZLg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E1JOZKU3xEudJiyZSdDJXezSL1VMnF9zJ7hQY77MyhE=;
+        b=sK4ZgQ3I1MDMt1BJme+WWnKfSQHo54j1ZoLoWor4/ASvWr1mjNT7v7g0/BhdIeVyph
+         Xm0WWDGOKCsOnB+Vb7zo5dqwk2cFqH5L5CMH9KG2WudlbpEhRAEFJM4l5AmOQFIwhq4e
+         Z0PaSE44DFQmm1KxgwogrNgfaWXfE93iwQBGxWpqK7+/41s1D/oQ5Kw1ddlzVoq19xJs
+         CW2LGsZI5i0XOQuL13yhuYRQj34gZrDOJmPs6ba4/LL6UTo+OeLdCBYkHdzy5xT9vmko
+         MH9bMeGD8aZ/tVNSxW/yeEfjEo1kl2FDBmp5lHja+RYQz11gS1d/CkRiBmco5JvpKfCm
+         J+cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yrmwheM1+hl4xPG9UeGTOMJP5qq8jouvYWPI+cmTnHk=;
-        b=dlTYgF4bx4/807/E80f+hVqDiLTfk11MNK0K7CNKozfs4+DuV3mFMs4cC2LXuhZVcY
-         U9pHxd1mPSvBMJbqtqmNbS2nMFlimuC2hqVutJmNarC8cm436V+L6PdOz6Qy0bj15Jue
-         a5QV15+exJ0w9H3giSSYoVAQa7uA+7o0IErbPBlNYizvta5XSHZ9AnaAItr9mFoBd5et
-         SUkJLRL/TMPlfuygZpnc4Sx6NIgn/TwTOrhqygDcAF838URIYK/mDtqwGTHN+bDAelPq
-         ZkfWXAqhW/oGjxKQJ3lLefrbuTbcrvloVpYD0whwqECuxVDA0Y5myWXUodWZae0Wf14R
-         KB6A==
-X-Gm-Message-State: APjAAAWcdlpvweZRJ31/Ywdgvk7LUbahb9HWycdfFJvtMqxlQpopf2Ud
-        /8IcEu2Ibwxz5+dL81E+ZwI=
-X-Google-Smtp-Source: APXvYqzicnEwVE9B41IwGGyGmDGn6PjfwuHMeFWgsbEx+ksTLkPbjB2d4SolnSLbApVjeqKZ3461Mg==
-X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr15379073pjd.131.1576226931296;
-        Fri, 13 Dec 2019 00:48:51 -0800 (PST)
-Received: from prasmi.domain.name ([103.219.60.167])
-        by smtp.gmail.com with ESMTPSA id 68sm9985632pge.14.2019.12.13.00.48.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 00:48:50 -0800 (PST)
-From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E1JOZKU3xEudJiyZSdDJXezSL1VMnF9zJ7hQY77MyhE=;
+        b=maZJ1G23bTOKfmX1Uwh0uXQS5r+Dc24xyjgUn1ijV7uaYjfUUsQR093XfJHxJs9nWs
+         NAVR6p8M77m6PLvXvaia00awYv5SVLWxH0JoRcH4GSdHXEryw6dXE96gVBNT8qWh2zzk
+         nQsnKaHzjcesusNpP+2ib1ljVzL21cXJkpzvRVFNTNdQnxh+z0Or4qJ3AVBIa9VgJvQZ
+         IzgvJ318aGwIql+Kcvu0/tyJFKkJB1D3MSLsW4JOaxAek33K40msPjCXZaCE7PVB464w
+         QnWWF/+IL2dhGohq1+mLBV+bWDsbm99KmlSKUD/m2TqOaNzFL57PP7L97f3P0I+F3Rix
+         UqfA==
+X-Gm-Message-State: APjAAAXwNx9NNvLreKlN7yfSDtWdfdTZ4yGZC7eO+/0BSb96e1Q+RLES
+        hkA/1a740fgDQeT/tWAdXtY0mm3KrLJhXKQc3w9/DA==
+X-Google-Smtp-Source: APXvYqw8R3tVL7YcPB1QUWAfPaywn/OZ8gj8e1LzTXq3Fsdndmc67+vCT3PwvhB0ehsJ2ot7As+6b33BkV5z0TC0TKk=
+X-Received: by 2002:a2e:844e:: with SMTP id u14mr8785712ljh.183.1576226981672;
+ Fri, 13 Dec 2019 00:49:41 -0800 (PST)
+MIME-Version: 1.0
+References: <20191203141243.251058-1-paul.kocialkowski@bootlin.com> <20191203141243.251058-3-paul.kocialkowski@bootlin.com>
+In-Reply-To: <20191203141243.251058-3-paul.kocialkowski@bootlin.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 13 Dec 2019 09:49:30 +0100
+Message-ID: <CACRpkda-hDbC4bVihPO8RUogkFkPfsxVS13d_JJoFZLaPLQYcg@mail.gmail.com>
+Subject: Re: [PATCH v5 2/4] dt-bindings: mfd: Document the Xylon LogiCVC
+ multi-function device
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [v2 6/6] misc: pci_endpoint_test: add device-id for RZ/G2E pcie controller
-Date:   Fri, 13 Dec 2019 08:47:48 +0000
-Message-Id: <20191213084748.11210-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, Dec 3, 2019 at 3:13 PM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
 
-Add RZ/G2E in pci_device_id table so that pci-epf-test can be used
-for testing PCIe EP in RZ/G2E.
+> The LogiCVC is a display engine which also exposes GPIO functionality.
+> For this reason, it is described as a multi-function device that is expected
+> to provide register access to its children nodes for gpio and display.
+>
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/misc/pci_endpoint_test.c | 3 +++
- 1 file changed, 3 insertions(+)
+Patch applied to the GPIO tree unless Lee has objections.
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 6e208a0..3e879c7 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -66,6 +66,8 @@
- 
- #define PCI_DEVICE_ID_TI_AM654			0xb00c
- 
-+#define PCI_DEVICE_ID_RENESAS_RZG2E		0x002d
-+
- #define is_am654_pci_dev(pdev)		\
- 		((pdev)->device == PCI_DEVICE_ID_TI_AM654)
- 
-@@ -797,6 +799,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
- 	  .driver_data = (kernel_ulong_t)&am654_data
- 	},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_RZG2E) },
- 	{ }
- };
- MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
--- 
-2.7.4
-
+Yours,
+Linus Walleij
