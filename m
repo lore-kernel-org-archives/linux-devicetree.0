@@ -2,147 +2,171 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E4AC2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2018FC2D0C9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B31EE2465A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:28:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="S2CBRI9I"
+	by mail.kernel.org (Postfix) with ESMTP id 0101B2077B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbfLMJ2O (ORCPT
+        id S1726090AbfLMJfE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:28:14 -0500
-Received: from mailgw01.mediatek.com ([216.200.240.184]:39410 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfLMJ2N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 04:28:13 -0500
-X-UUID: b091016788a9488ea279a735d3e135bb-20191213
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=f1qK2+7LZodsQlO7o2fhFIATRwJd4H3mQKGMDaRrhWg=;
-        b=S2CBRI9IIeLbtgqzvQhYB6IxXK+S2jUQNv6LzqYBSJ9q/hCJ2g8mM//wmqh39b48Dz4ghWXDBi2MAh/nbJH0ujUwgYusT5fTB1q2wD6/TIB3EPG2JRb6A5j3bo8/Q/mMJkGDNzEeaGzD8fWZ0fpJPlTdNzn4xo3vsPA68fFDBuE=;
-X-UUID: b091016788a9488ea279a735d3e135bb-20191213
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 772190440; Fri, 13 Dec 2019 01:28:10 -0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 13 Dec 2019 17:07:59 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 13 Dec 2019 17:07:35 +0800
-Message-ID: <1576228087.2242.0.camel@mtksdaap41>
-Subject: Re: [PATCH v8 3/4] misc: eeprom: at24: support pm_runtime control
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     linux-i2c <linux-i2c@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>
-Date:   Fri, 13 Dec 2019 17:08:07 +0800
-In-Reply-To: <CAMpxmJWh3YMkn_1B=nJLmRRXn9uD2kU4grf8c+sMbWtKFZOv=w@mail.gmail.com>
-References: <20191213081230.23494-1-bibby.hsieh@mediatek.com>
-         <20191213081230.23494-4-bibby.hsieh@mediatek.com>
-         <CAMpxmJWh3YMkn_1B=nJLmRRXn9uD2kU4grf8c+sMbWtKFZOv=w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 13 Dec 2019 04:35:04 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:33034 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbfLMJfE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 04:35:04 -0500
+Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 13 Dec
+ 2019 17:35:20 +0800
+Subject: Re: [PATCH v4 1/6] dt-bindings: clock: meson: add A1 PLL clock
+ controller bindings
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20191206074052.15557-1-jian.hu@amlogic.com>
+ <20191206074052.15557-2-jian.hu@amlogic.com>
+ <1jblsdlvck.fsf@starbuckisacylon.baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <db7f731b-32c3-b4a6-1cab-2c34082b2c22@amlogic.com>
+Date:   Fri, 13 Dec 2019 17:35:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1jblsdlvck.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.99]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTEyLTEzIGF0IDEwOjAyICswMTAwLCBCYXJ0b3N6IEdvbGFzemV3c2tpIHdy
-b3RlOg0KPiBwdC4sIDEzIGdydSAyMDE5IG8gMDk6NDcgQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVo
-QG1lZGlhdGVrLmNvbT4gbmFwaXNhxYIoYSk6DQo+ID4NCj4gPiBBbHRob3VnaCBpbiB0aGUgbW9z
-dCBwbGF0Zm9ybXMsIHRoZSBwb3dlciBvZiBlZXByb20gYXJlIGFsd2F5DQo+ID4gb24sIHNvbWUg
-cGxhdGZvcm1zIGRpc2FibGUgdGhlIGVlcHJvbSBwb3dlciBpbiBvcmRlciB0byBtZWV0DQo+ID4g
-bG93IHBvd2VyIHJlcXVlc3QuIFRoaXMgcGF0Y2ggYWRkIHRoZSBwbV9ydW50aW1lIG9wcyB0byBj
-b250cm9sDQo+ID4gcG93ZXIgdG8gc3VwcG9ydCBhbGwgcGxhdGZvcm1zLg0KPiA+DQo+ID4gU2ln
-bmVkLW9mZi1ieTogQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gPiAt
-LS0NCj4gPiAgZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0LmMgfCA0MCArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNDAgaW5zZXJ0aW9u
-cygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWlzYy9lZXByb20vYXQyNC5jIGIv
-ZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0LmMNCj4gPiBpbmRleCAwNjgxZDVmZGQ1MzguLjA2YWUy
-Y2MzMmY3OSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL21pc2MvZWVwcm9tL2F0MjQuYw0KPiA+
-ICsrKyBiL2RyaXZlcnMvbWlzYy9lZXByb20vYXQyNC5jDQo+ID4gQEAgLTIyLDYgKzIyLDcgQEAN
-Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L252bWVtLXByb3ZpZGVyLmg+DQo+ID4gICNpbmNsdWRlIDxs
-aW51eC9yZWdtYXAuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4NCj4gPiAr
-I2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPg0KPiA+ICAjaW5jbHVkZSA8bGlu
-dXgvZ3Bpby9jb25zdW1lci5oPg0KPiA+DQo+ID4gIC8qIEFkZHJlc3MgcG9pbnRlciBpcyAxNiBi
-aXQuICovDQo+ID4gQEAgLTkxLDYgKzkyLDcgQEAgc3RydWN0IGF0MjRfZGF0YSB7DQo+ID4NCj4g
-PiAgICAgICAgIHN0cnVjdCBncGlvX2Rlc2MgKndwX2dwaW87DQo+ID4NCj4gPiArICAgICAgIHN0
-cnVjdCByZWd1bGF0b3IgKnZjY19yZWc7DQo+ID4gICAgICAgICAvKg0KPiA+ICAgICAgICAgICog
-U29tZSBjaGlwcyB0aWUgdXAgbXVsdGlwbGUgSTJDIGFkZHJlc3NlczsgZHVtbXkgZGV2aWNlcyBy
-ZXNlcnZlDQo+ID4gICAgICAgICAgKiB0aGVtIGZvciB1cywgYW5kIHdlJ2xsIHVzZSB0aGVtIHdp
-dGggU01CdXMgY2FsbHMuDQo+ID4gQEAgLTY2Miw2ICs2NjQsMTIgQEAgc3RhdGljIGludCBhdDI0
-X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpDQo+ID4gICAgICAgICBhdDI0LT5jbGll
-bnRbMF0uY2xpZW50ID0gY2xpZW50Ow0KPiA+ICAgICAgICAgYXQyNC0+Y2xpZW50WzBdLnJlZ21h
-cCA9IHJlZ21hcDsNCj4gPg0KPiA+ICsgICAgICAgYXQyNC0+dmNjX3JlZyA9IGRldm1fcmVndWxh
-dG9yX2dldChkZXYsICJ2Y2MiKTsNCj4gPiArICAgICAgIGlmIChJU19FUlIoYXQyNC0+dmNjX3Jl
-ZykpIHsNCj4gPiArICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJmYWlsZWQgdG8gZ2V0IGF0
-MjQgVkNDIHJlZ3VsYXRvclxuIik7DQo+IA0KPiBUaGUgcmVndWxhdG9yIGNvcmUgaXMgcXVpdGUg
-dmVyYm9zZSBpbiBpdHMgZXJyb3IgbWVzc2FnZXMgd2hlbiBjYWxsaW5nDQo+IHJlZ3VsYXRvcl9n
-ZXQoKSAtIHlvdSBkb24ndCBuZWVkIHRvIGFkZCB5b3VycyBoZXJlLiBKdXN0IHJldHVybiB0aGUN
-Cj4gZXJyb3IgY29kZS4NCg0KT2ssIHdpbGwgcmVtb3ZlIGl0Lg0KDQo+IA0KPiA+ICsgICAgICAg
-ICAgICAgICByZXR1cm4gUFRSX0VSUihhdDI0LT52Y2NfcmVnKTsNCj4gPiArICAgICAgIH0NCj4g
-PiArDQo+ID4gICAgICAgICBhdDI0LT53cF9ncGlvID0gZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwo
-ZGV2LCAid3AiLCBHUElPRF9PVVRfSElHSCk7DQo+ID4gICAgICAgICBpZiAoSVNfRVJSKGF0MjQt
-PndwX2dwaW8pKQ0KPiA+ICAgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihhdDI0LT53cF9n
-cGlvKTsNCj4gPiBAQCAtNzAxLDYgKzcwOSwxMiBAQCBzdGF0aWMgaW50IGF0MjRfcHJvYmUoc3Ry
-dWN0IGkyY19jbGllbnQgKmNsaWVudCkNCj4gPg0KPiA+ICAgICAgICAgaTJjX3NldF9jbGllbnRk
-YXRhKGNsaWVudCwgYXQyNCk7DQo+ID4NCj4gPiArICAgICAgIGVyciA9IHJlZ3VsYXRvcl9lbmFi
-bGUoYXQyNC0+dmNjX3JlZyk7DQo+ID4gKyAgICAgICBpZiAoZXJyKSB7DQo+ID4gKyAgICAgICAg
-ICAgICAgIGRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSBhdDI0IHZjYyByZWd1bGF0b3Jc
-biIpOw0KPiANCj4gRHJvcCB0aGUgYXQyNCBuYW1lIC0gZGV2X2VycigpIHdpbGwgcHJpbnQgdGhl
-IGRldmljZSBuYW1lIGZvciB5b3UuDQo+IA0KT2suDQo+ID4gKyAgICAgICAgICAgICAgIHJldHVy
-biBlcnI7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICAgICAgICAgLyogZW5hYmxlIHJ1bnRp
-bWUgcG0gKi8NCj4gPiAgICAgICAgIHBtX3J1bnRpbWVfc2V0X2FjdGl2ZShkZXYpOw0KPiA+ICAg
-ICAgICAgcG1fcnVudGltZV9lbmFibGUoZGV2KTsNCj4gPiBAQCAtNzEzLDYgKzcyNyw3IEBAIHN0
-YXRpYyBpbnQgYXQyNF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50KQ0KPiA+ICAgICAg
-ICAgcG1fcnVudGltZV9pZGxlKGRldik7DQo+ID4gICAgICAgICBpZiAoZXJyKSB7DQo+ID4gICAg
-ICAgICAgICAgICAgIHBtX3J1bnRpbWVfZGlzYWJsZShkZXYpOw0KPiA+ICsgICAgICAgICAgICAg
-ICByZWd1bGF0b3JfZGlzYWJsZShhdDI0LT52Y2NfcmVnKTsNCj4gPiAgICAgICAgICAgICAgICAg
-cmV0dXJuIC1FTk9ERVY7DQo+ID4gICAgICAgICB9DQo+ID4NCj4gPiBAQCAtNzI5LDE0ICs3NDQs
-MzkgQEAgc3RhdGljIGludCBhdDI0X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpDQo+
-ID4gIHN0YXRpYyBpbnQgYXQyNF9yZW1vdmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkNCj4g
-PiAgew0KPiA+ICAgICAgICAgcG1fcnVudGltZV9kaXNhYmxlKCZjbGllbnQtPmRldik7DQo+ID4g
-KyAgICAgICBpZiAocG1fcnVudGltZV9zdGF0dXNfc3VzcGVuZGVkKCZjbGllbnQtPmRldikpDQo+
-ID4gKyAgICAgICAgICAgICAgIHJlZ3VsYXRvcl9kaXNhYmxlKGF0MjQtPnZjY19yZWcpOw0KPiAN
-Cj4gV2h5IGRpZG4ndCB5b3UgZml4IHRoZSBpbnZlcnRlZCBsb2dpYyBoZXJlIGFzIEkgcG9pbnRl
-ZCBvdXQgYmFjayBpbiB2Ng0KPiBvZiB0aGlzIHNlcmllcz8NCj4gDQpTb3JyeSBmb3IgbWlzc2lu
-ZyBpdCBhZ2Fpbi4uLg0KSSB3aWxsIGFkZCBpbnZlcnQgbmV4dCB2ZXJzaW9uLg0KDQpCaWJieQ0K
-PiBCYXJ0DQo+IA0KPiA+ICAgICAgICAgcG1fcnVudGltZV9zZXRfc3VzcGVuZGVkKCZjbGllbnQt
-PmRldik7DQo+ID4NCj4gPiAgICAgICAgIHJldHVybiAwOw0KPiA+ICB9DQo+ID4NCj4gPiArc3Rh
-dGljIGludCBfX21heWJlX3VudXNlZCBhdDI0X3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0K
-PiA+ICt7DQo+ID4gKyAgICAgICBzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0gdG9faTJjX2Ns
-aWVudChkZXYpOw0KPiA+ICsgICAgICAgc3RydWN0IGF0MjRfZGF0YSAqYXQyNCA9IGkyY19nZXRf
-Y2xpZW50ZGF0YShjbGllbnQpOw0KPiA+ICsNCj4gPiArICAgICAgIHJldHVybiByZWd1bGF0b3Jf
-ZGlzYWJsZShhdDI0LT52Y2NfcmVnKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBf
-X21heWJlX3VudXNlZCBhdDI0X3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gK3sNCj4g
-PiArICAgICAgIHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQgPSB0b19pMmNfY2xpZW50KGRldik7
-DQo+ID4gKyAgICAgICBzdHJ1Y3QgYXQyNF9kYXRhICphdDI0ID0gaTJjX2dldF9jbGllbnRkYXRh
-KGNsaWVudCk7DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIHJlZ3VsYXRvcl9lbmFibGUoYXQy
-NC0+dmNjX3JlZyk7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZGV2
-X3BtX29wcyBhdDI0X3BtX29wcyA9IHsNCj4gPiArICAgICAgIFNFVF9TWVNURU1fU0xFRVBfUE1f
-T1BTKHBtX3J1bnRpbWVfZm9yY2Vfc3VzcGVuZCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHBtX3J1bnRpbWVfZm9yY2VfcmVzdW1lKQ0KPiA+ICsgICAgICAgU0VUX1JVTlRJ
-TUVfUE1fT1BTKGF0MjRfc3VzcGVuZCwgYXQyNF9yZXN1bWUsIE5VTEwpDQo+ID4gK307DQo+ID4g
-Kw0KPiA+ICBzdGF0aWMgc3RydWN0IGkyY19kcml2ZXIgYXQyNF9kcml2ZXIgPSB7DQo+ID4gICAg
-ICAgICAuZHJpdmVyID0gew0KPiA+ICAgICAgICAgICAgICAgICAubmFtZSA9ICJhdDI0IiwNCj4g
-PiArICAgICAgICAgICAgICAgLnBtID0gJmF0MjRfcG1fb3BzLA0KPiA+ICAgICAgICAgICAgICAg
-ICAub2ZfbWF0Y2hfdGFibGUgPSBhdDI0X29mX21hdGNoLA0KPiA+ICAgICAgICAgICAgICAgICAu
-YWNwaV9tYXRjaF90YWJsZSA9IEFDUElfUFRSKGF0MjRfYWNwaV9pZHMpLA0KPiA+ICAgICAgICAg
-fSwNCj4gPiAtLQ0KPiA+IDIuMTguMA0KDQo=
 
+
+On 2019/12/12 17:57, Jerome Brunet wrote:
+> 
+> On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
+> 
+>> Add the documentation to support Amlogic A1 PLL clock driver,
+>> and add A1 PLL clock controller bindings.
+>>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> ---
+>>   .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 59 +++++++++++++++++++
+>>   include/dt-bindings/clock/a1-pll-clkc.h       | 16 +++++
+>>   2 files changed, 75 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>>   create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>> new file mode 100644
+>> index 000000000000..7feeef5abf1b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>> @@ -0,0 +1,59 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+> 
+> Rob commented on the above in v1 and it remains unaddressedOK, I will fix it in the next version.
+> 
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/clock/amlogic,a1-pll-clkc.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Neil Armstrong <narmstrong@baylibre.com>
+>> +  - Jerome Brunet <jbrunet@baylibre.com>
+>> +  - Jian Hu <jian.hu@jian.hu.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    - enum:
+>> +        - amlogic,a1-pll-clkc
+>> +  "#clock-cells":
+>> +    const: 1
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +clocks:
+>> +  minItems: 2
+>> +  maxItems: 2
+>> +  items:
+>> +   - description: Input xtal_fixpll
+>> +   - description: Input xtal_hifipll
+>> +
+>> +clock-names:
+>> +  minItems: 2
+>> +  maxItems: 2
+>> +  items:
+>> +     - const: xtal_fixpll
+>> +     - const: xtal_hifipll
+>> +
+>> +required:
+>> +  - compatible
+>> +  - "#clock-cells"
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    clkc_pll: pll-clock-controller@7c80 {
+>> +                compatible = "amlogic,a1-pll-clkc";
+>> +                reg = <0 0x7c80 0 0x18c>;
+>> +                #clock-cells = <1>;
+>> +                clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
+>> +                         <&clkc_periphs CLKID_XTAL_HIFIPLL>;
+>> +                clock-names = "xtal_fixpll", "xtal_hifipll";
+>> +    };
+>> diff --git a/include/dt-bindings/clock/a1-pll-clkc.h b/include/dt-bindings/clock/a1-pll-clkc.h
+>> new file mode 100644
+>> index 000000000000..58eae237e503
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/a1-pll-clkc.h
+>> @@ -0,0 +1,16 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+>> +
+>> +#ifndef __A1_PLL_CLKC_H
+>> +#define __A1_PLL_CLKC_H
+>> +
+>> +#define CLKID_FIXED_PLL				1
+>> +#define CLKID_FCLK_DIV2				6
+>> +#define CLKID_FCLK_DIV3				7
+>> +#define CLKID_FCLK_DIV5				8
+>> +#define CLKID_FCLK_DIV7				9
+>> +#define CLKID_HIFI_PLL				10
+>> +
+>> +#endif /* __A1_PLL_CLKC_H */
+> 
+> .
+> 
