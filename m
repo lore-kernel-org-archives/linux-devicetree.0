@@ -2,100 +2,124 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B677C2D0C9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 02:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093B0C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 03:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F0F22527
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 02:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C95822077B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 03:07:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OuRypg7W"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Aa6U+JD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731517AbfLMC22 (ORCPT
+        id S1731896AbfLMDHO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 21:28:28 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36783 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731330AbfLMC22 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 21:28:28 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x184so628881pfb.3;
-        Thu, 12 Dec 2019 18:28:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kcY4vW7yllqEshMKzrDhyN2EOIzeLlx+C0/DdxIqz2w=;
-        b=OuRypg7WPbgsbzXqMNFwelCuj1bgzo/QYm9qvCyeHDeSG+f2clYfeKpY+H4Ng0F9ku
-         DVKXQ9WarAqA8E5RjIbWlCdPuRqvJ1TRi8ecCQ86R0hUr32kyJI236y5DEPQKmJhfOA8
-         NY1Fv44SmqlJbQcQPG5aF3rr3iGunPN9ljFYq9oXNd8RR8QpEMcFi3YoOrd2pg15M2R+
-         61v8gcdZ48p7e2O5olllSIFvWrA0EncrFIf0XWCdL98RbnCNNIJZ/hPCqYpg0elTNT1e
-         36EcEnW6NpP+8Iq9NaeBvFE7LfyAkaM8Wjmm692FA6YwbVdFYYbqSXfo/6j5GskFsAVb
-         EOag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kcY4vW7yllqEshMKzrDhyN2EOIzeLlx+C0/DdxIqz2w=;
-        b=r7h93iyYJ2CrLJefIA2eliiL7udZJeVGIhrfdIMDMkkokRbzamEMV1rCS81OnsHV7x
-         OQwALzuTtd2YdSKdF5cyWCwqy0mRGnRGE8ioFBr8Akuo3YyLsOlk1rmOMJrnUe0LjCZp
-         2+UWVfZTQ0Is9UsfcY+JFmTT84Ova7oWCpEt5U/jZ3V3CzWhD4wQSinGtIipvwTACgAE
-         tTji+mtH7ZMPQQFBeo1qcyroOOBrQlZCVPnuerDWCGnk0yx7Fbo5n9J7J8unWSKLMhEy
-         rxH896bam7qJ6uX5sYPn2bq578oLwS7AJLUVO9UvRMZR1FNvoMm++G9nRN05EpgGq6Gt
-         VJsg==
-X-Gm-Message-State: APjAAAUFrcJDbQSWPwNzV/WuWA0ZFwBzuROMaETHgez/85/kgsXtrDm3
-        Kxr/WIrAWyyrCxAwn08stTU=
-X-Google-Smtp-Source: APXvYqzL2g49YHLkzIDoFitpt9kzMoNUgeHsq4W26sk3QJBKz8DCP6Bguzk0Xv1mN9qlWR9Gaq/sdA==
-X-Received: by 2002:a63:496:: with SMTP id 144mr14700508pge.207.1576204107508;
-        Thu, 12 Dec 2019 18:28:27 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e10sm9014809pfm.3.2019.12.12.18.28.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 18:28:26 -0800 (PST)
-Subject: Re: [ v2] hwmon: (pmbus) Add Wistron power supply pmbus driver
-To:     Eddie James <eajames@linux.ibm.com>, Ben Pai <Ben_Pai@wistron.com>
-Cc:     robh+dt@kernel.org, jdelvare@suse.com,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, corbet@lwn.net, wangat@tw.ibm.com,
-        Andy_YF_Wang@wistron.com, Claire_Ku@wistron.com
-References: <20191208134438.12925-1-Ben_Pai@wistron.com>
- <97651ec9-e467-dbd9-dcb8-b3efe1387fef@linux.ibm.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <c5d72bfe-0ebc-5d9a-ebad-092ff802cc5c@roeck-us.net>
-Date:   Thu, 12 Dec 2019 18:28:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 12 Dec 2019 22:07:14 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:38974 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731465AbfLMDHO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 22:07:14 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBD374jn002520;
+        Thu, 12 Dec 2019 21:07:04 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576206424;
+        bh=P2vJoPklK2vOl7x3hsP0IoRW0iDntiu2jXuS39HL8uQ=;
+        h=From:To:CC:Subject:Date;
+        b=Aa6U+JD3qArPqIlL3fVzaJFe8PXoAJVeAJy1TYicx+h9LvJc+8AuhdIvaVXMZvHnH
+         uki2SmHmSl0JqeCB3ZZDyErcWrJBcotJ5RQ6OjzxM/UKeT6wi8bMt9lXwiZnCGSvL7
+         LY69J1VhtMkYMuDN21paO4Xmosi5TEFE+QiQnGbU=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBD374S2018385
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 12 Dec 2019 21:07:04 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
+ Dec 2019 21:07:04 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 12 Dec 2019 21:07:04 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBD374lv058827;
+        Thu, 12 Dec 2019 21:07:04 -0600
+From:   Dave Gerlach <d-gerlach@ti.com>
+To:     Tony Lindgren <tony@atomide.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>
+Subject: [PATCH 0/5] ARM: OMAP2+: Introduce cpuidle for am335x/am437x
+Date:   Thu, 12 Dec 2019 21:07:50 -0600
+Message-ID: <20191213030755.16096-1-d-gerlach@ti.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <97651ec9-e467-dbd9-dcb8-b3efe1387fef@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/12/19 3:54 PM, Eddie James wrote:
-> 
-> On 12/8/19 7:44 AM, Ben Pai wrote:
->> Add the driver to monitor Wisreon power supplies with hwmon over pmbus.
-> 
-> 
-> Hi Ben.
-> 
-> 
-> This driver looks very similar to the IBM CFFPS driver. If you think they are similar enough, you may want to simply add a new version to that driver that supports your PSU.
-> 
+Hi,
+This series adds support for cpuidle on am335x and am437x using the
+cpuidle_arm driver. When testing on am335x-evm and am437x-gp-evm the
+follow power consumption reductions are seen on v5.5-rc1 baseline:
 
-It would be nice to have datasheets for those power supplies.
 
-Eddie - is it possible that the IBM power supply supports the WRITE_PROTECT
-command and has a write protect bit set ? If yes, I just submitted a patch
-for the PMBus core to address the situation; see
-https://patchwork.kernel.org/patch/11289717/
+Idling at command line, CPUFreq userspace governor to 300MHz:
+  am335x-evm:
+    VDD_MPU: 48 mW -> 5 mW
 
-Thanks,
-Guenter
+  am437x-gp-evm:
+    VDD_MPU: 32 mW -> 3 mW
+
+
+Idling at command line, CPUFreq userspace governor to 1GHz:
+  am335x-evm:
+    VDD_MPU: 313 mW -> 18 mW
+
+  am437x-gp-evm:
+    VDD_MPU: 208 mW -> 10 mW
+
+A forthcoming series will add idle states to the device tree for each
+am335x and am437x to add C1 state for MPU Gate which gates the clock to
+the main CPU.  am335x makes use of the wkup_m3_ipc driver for this to
+use the same wkup_m3 to gate the cpu clock that is used for suspend, so
+the same firmware found here is required [1] to be placed in
+/lib/firmware.
+
+First patch adds dt-binding for enable-method for each SoC which is needed
+for cpuidle-arm driver to probe, second patch adds platform code for cpuidle,
+third patch modifies both platform code and pm33xx soc driver to add needed
+flags and callback for idling, fourth patch actually enables cpuidle in the
+soc pm33xx driver, and then that last patch enables the needed CONFIG options
+in omap2plus_defconfig.
+
+Regards,
+Dave
+
+[1] https://git.ti.com/cgit/processor-firmware/ti-amx3-cm3-pm-firmware/tree/bin/am335x-pm-firmware.elf?h=ti-v4.1.y
+
+Dave Gerlach (5):
+  dt-bindings: arm: cpu: Add TI AM335x and AM437x enable method
+  ARM: OMAP2+: pm33xx-core: Add cpuidle_ops for am335x/am437x
+  ARM: OMAP2+: pm33xx-core: Extend platform_data ops for cpuidle
+  soc: ti: pm33xx: Add base cpuidle support
+  ARM: omap2plus_defconfig: Add CONFIG_ARM_CPUIDLE
+
+ .../devicetree/bindings/arm/cpus.yaml         |   2 +
+ arch/arm/configs/omap2plus_defconfig          |   2 +
+ arch/arm/mach-omap2/pm33xx-core.c             | 137 +++++++++++++++++-
+ drivers/soc/ti/pm33xx.c                       |  21 ++-
+ include/linux/platform_data/pm33xx.h          |   6 +-
+ 5 files changed, 160 insertions(+), 8 deletions(-)
+
+-- 
+2.20.1
+
