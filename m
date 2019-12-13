@@ -2,149 +2,128 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80823C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F85FC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5767A22527
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51ADB214D8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:24:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BEkQwPG/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FQZd9y93"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfLMJFn (ORCPT
+        id S1725799AbfLMJYV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:05:43 -0500
-Received: from m228-5.mailgun.net ([159.135.228.5]:24071 "EHLO
-        m228-5.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfLMJFj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 04:05:39 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576227938; h=Message-ID: Subject: Cc: To: From: Date:
- Content-Transfer-Encoding: Content-Type: MIME-Version: Sender;
- bh=oiZ6N7do6DpLWyW7ai3fK8w8lB8Z4mhLsKqRpsecyYA=; b=BEkQwPG/ipLYEf8Nq8qBlXXEjU9qWltzngcaNgDuX4RMhPFPsQtSpv/jNCx/28YdHAq3pWjU
- 4OVAL/CYC0EXMYhRl/WbG+QhwZttfZHw7picH2ajdlt2cyNXyqPLdBW5hKTTh7ZVUbsThEt9
- a7nWM0JulI5Yu/UicSsOw4GiBnw=
-X-Mailgun-Sending-Ip: 159.135.228.5
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df35462.7f8b5ffcff48-smtp-out-n01;
- Fri, 13 Dec 2019 09:05:38 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 34568C447A6; Fri, 13 Dec 2019 09:05:36 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7D24FC43383;
-        Fri, 13 Dec 2019 09:05:35 +0000 (UTC)
+        Fri, 13 Dec 2019 04:24:21 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46684 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfLMJYV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 04:24:21 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBD9O5OB120533;
+        Fri, 13 Dec 2019 03:24:05 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576229045;
+        bh=11ocqYIH8oHlulnnmzbnn8ms1756271GCd5ksM38j64=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FQZd9y93cFlQDmcVTGtaY5Qk03gH4KvQBEfjq1PEmOXOFsZuZAyVS3BP5RMu2/qHK
+         GwlAO1cmNP9LuGjl4/uIW+PyZn7n5hzB0Wvd45wvO6pTkljjBR5sdcOESxNFGjOC8C
+         wI7atAwHntlnBXlBaz4B5XQAzV0OLTe2mKZsLXe4=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBD9O5jh051527
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Dec 2019 03:24:05 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
+ Dec 2019 03:24:05 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 13 Dec 2019 03:24:05 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBD9O3Bh067719;
+        Fri, 13 Dec 2019 03:24:03 -0600
+Subject: Re: [PATCH 1/4] ARM: dts: am437x-gp-evm: add HDMI support
+To:     Tony Lindgren <tony@atomide.com>
+CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+References: <20191125131100.9839-1-tomi.valkeinen@ti.com>
+ <20191212172104.GY35479@atomide.com> <20191212173110.GA35479@atomide.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <d09526b2-8435-bef2-0489-0c3c8173d451@ti.com>
+Date:   Fri, 13 Dec 2019 11:24:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20191212173110.GA35479@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 13 Dec 2019 14:35:35 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>, tsoni@codeaurora.org,
-        psodagud@codeaurora.org
-Subject: Re: [PATCH 2/2] drivers: edac: Add EDAC support for Kryo CPU caches
-Message-ID: <af73f8f15cfeb40746819e87b5a78b60@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Evan,
+On 12/12/2019 19:31, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [191212 17:21]:
+>> Hi,
+>>
+>> * Tomi Valkeinen <tomi.valkeinen@ti.com> [191125 05:11]:
+>>> Add HDMI support for AM437x GP EVM. The HDMI uses SiI9022 HDMI encoder,
+>>> and is mutually exclusive with the LCD. The choice between LCD and HDMI
+>>> is made by booting either with am437x-gp-evm.dtb or
+>>> am437x-gp-evm-hdmi.dtb.
+>>
+>> So Linux kernel needs a new board device tree file to toggle a GPIO line
+>> to switch between LCD mode and HDMI?
+>>
+>> That does not sound very user friendly for something that's supposed
+>> to be hot pluggabe :)
 
-Thanks for the review comments.
+True. We've had this for a long time in the TI kernel. I don't know how to implement this better, 
+except perhaps with DT overlays, but that's essentially the same method.
 
-On 2019-12-12 01:02, Evan Green wrote:
-> 
-> No name?
-> 
+>>> +/* Override SelLCDorHDMI from am437x-gp-evm.dts to select HDMI */
+>>> +&gpio5 {
+>>> +	p8 {
+>>> +		output-low;
+>>> +	};
+>>> +};
+>>
+>> How about just leave the gpio unconfigured and document that a userspace
+>> tool or /sys/kernel/debug/gpio is needed to toggle between the modes?
 
-Will add them in next spin.
+That sounds much worse than two dts files. How does X or weston know about the gpio?
 
-> 
-> A comment is warranted to indicate that err_type is indexed by the
-> enum, as this would be easy to mess up in later changes.
-> 
+And the "external" gpio wouldn't work well with DRM. We need to add all the displays at probe time, 
+so we'd have LCD and HDMI. The gpio makes one of those operable, but only the external parts. The 
+display controller has just one output, and we'd have a conflict there too as both displays would be 
+connected to that single output. And as the display controller driver doesn't know about the gpio, 
+it would fail "randomly" for one of the displays if the other one is already enabled by the userspace.
 
-Will use array index as suggested by Stephen.
+I think the correct way would be to have DRM framework understand that we have two displays, which 
+are mutually exclusive, and the display pipeline drivers would have the means to switch the gpio. 
+And that the display setup could be communicated properly to the userspace, and the userspace would 
+understand it. I don't think any of those exists.
 
->> +static const char *get_error_msg(u64 errxstatus)
->> +{
->> +       const struct error_record *rec;
->> +       u32 errxstatus_serr;
->> +
->> +       errxstatus_serr = FIELD_GET(KRYO_ERRXSTATUS_SERR, errxstatus);
->> +
->> +       for (rec = serror_record; rec->error_code; rec++) {
-> 
-> It looks like you expect the table to be zero terminated, but it's
-> not. Add the missing zero entry.
-> 
+So, the only good solution I have figured out is to just say that we have a single display at 
+runtime, defined by the dt file.
 
-Will add it.
+On some boards (k2g-evm, if I recall right) we have similar HW setup, but with a physical switch. We 
+use the same method there, with two dts files. Again, if I recall right, the switch setting can be 
+seen by the SW, so if there's a better solution to the AM4 case, probably similar could be used with 
+k2g-evm, where the drivers would react to the user changing the switch.
 
->> +
->> +static inline void kryo_clear_error(u64 errxstatus)
->> +{
->> +       write_sysreg_s(errxstatus, SYS_ERXSTATUS_EL1);
->> +       isb();
-> 
-> Is the isb() necessary? If so, why not a dsb as well?
-> 
-
-We usually use isb() with cache and system control registers.
-I do not see anything about isb or dsb mentioned in the TRM
-for error record registers so it's probably OK to remove this.
-James can help us here.
-
->> +
->> +static void kryo_check_l1_l2_ecc(void *info)
->> +{
->> +       struct edac_device_ctl_info *edev_ctl = info;
->> +       u64 errxstatus;
->> +       u64 errxmisc;
->> +       int cpu;
->> +
->> +       cpu = smp_processor_id();
->> +       /* We know record 0 is L1 and L2 */
->> +       write_sysreg_s(0, SYS_ERRSELR_EL1);
->> +       isb();
-> 
-> Another isb I'm not sure about. Is this meant to provide a barrier
-> between ERRSELR and ERXSTATUS? Wouldn't that be dsb, not isb?
-> 
-
-Same as above.
-
-I will repost with your comments addressed once I get more feedbacks 
-from EDAC maintainers.
-
-Thanks,
-Sai
+  Tomi
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
