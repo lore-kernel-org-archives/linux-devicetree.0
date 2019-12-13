@@ -6,35 +6,44 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE72C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FA7C2D0CA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE2A206B7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75A7E2077B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:08:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfLMKEs (ORCPT
+        id S1725945AbfLMKIg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:04:48 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:60956 "EHLO gloria.sntech.de"
+        Fri, 13 Dec 2019 05:08:36 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:32806 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbfLMKEs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:04:48 -0500
+        id S1725747AbfLMKIf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Dec 2019 05:08:35 -0500
 Received: from wf0651.dip.tu-dresden.de ([141.76.182.139] helo=phil.localnet)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1ifhoC-0000yW-Aw; Fri, 13 Dec 2019 11:04:28 +0100
+        id 1ifhrt-000106-VL; Fri, 13 Dec 2019 11:08:17 +0100
 From:   Heiko Stuebner <heiko@sntech.de>
-To:     Jack Chen <redchenjs@foxmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jack Chen <redchenjs@live.com>
-Subject: Re: [PATCH] ARM: dts: rockchip: Add missing cpu operating points for rk3288-tinker
-Date:   Fri, 13 Dec 2019 11:04:27 +0100
-Message-ID: <47785260.740ClddZN9@phil>
-In-Reply-To: <20191202153540.26143-1-redchenjs@foxmail.com>
-References: <20191202153540.26143-1-redchenjs@foxmail.com>
+To:     "Matwey V. Kornilov" <matwey@sai.msu.ru>
+Cc:     tom@radxa.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Akash Gajjar <akash@openedev.com>,
+        Pragnesh Patel <Pragnesh_Patel@mentor.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Rockchip SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC support" 
+        <linux-rockchip@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        matwey.kornilov@gmail.com
+Subject: Re: [PATCH] arm64: dts: rockchip: Add regulators for PCIe for Radxa Rock Pi 4 board
+Date:   Fri, 13 Dec 2019 11:08:17 +0100
+Message-ID: <2621713.C5CYpBeeQa@phil>
+In-Reply-To: <20191120161302.5157-1-matwey@sai.msu.ru>
+References: <CAFjve-AT6c-yweF0mOPea-caG3n43nZzVPcwef-qp+n35JN9ig@mail.gmail.com> <20191120161302.5157-1-matwey@sai.msu.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -43,17 +52,10 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Montag, 2. Dezember 2019, 16:35:40 CET schrieb Jack Chen:
-> From: Jack Chen <redchenjs@live.com>
+Am Mittwoch, 20. November 2019, 17:12:54 CET schrieb Matwey V. Kornilov:
+> Add 0.9V and 1.8V voltage regulators for Radxa Rock Pi 4 board PCIe.
 > 
-> The Tinker Board / S devices use a special chip variant called rk3288-c
-> and use different operating points with a higher max frequency.
-> 
-> So add the missing operating points for Tinker Board / S devices, also
-> increase the vdd_cpu regulator-max-microvolt to 1400000 uV so that the
-> cpu can operate at 1.8 GHz.
-> 
-> Signed-off-by: Jack Chen <redchenjs@live.com>
+> Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
 
 applied for 5.6
 
