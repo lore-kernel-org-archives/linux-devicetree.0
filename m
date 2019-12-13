@@ -2,68 +2,66 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F8CC2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 04:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE4BC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 04:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7095922527
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 04:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7954622527
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 04:58:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X2PRwyMy"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EnpHVPWp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731900AbfLME5k (ORCPT
+        id S1731940AbfLME6o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 23:57:40 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45604 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731496AbfLME5k (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 23:57:40 -0500
-Received: by mail-pl1-f196.google.com with SMTP id bc8so710256plb.12
-        for <devicetree@vger.kernel.org>; Thu, 12 Dec 2019 20:57:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cvwe20yUJDJuFJ66zvHMDZeiCBexsoGR7m8CsDCyCu4=;
-        b=X2PRwyMyCuxiKRaie0hFrkxzqLEOPlOz+26PPrWgf6Uclbta2wGm5N7QPTP9IHfAZm
-         qx41XdHXGk0wGNodDYVtSfyomKAInudAl44gz5Cnjh7ZJo3RVGyljrrldIcrM0UG/Ql6
-         gSkNnNEOqi7MXs8lWa00tcK16Z1ieFZsGUj4c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cvwe20yUJDJuFJ66zvHMDZeiCBexsoGR7m8CsDCyCu4=;
-        b=ogTzeKLmjlgYJ3ieatQ9wEEFo3WfKLAw+Uib7WXFoQGlOTrRG1/8A/ma9U3N7rSiJ+
-         lGoPEUfThS2boYYWGhdebxexilrAZPB3pIBy/FWXv9dx7xOhnIKR62O1oaUYQmGsI58M
-         /1jzFTQc9Jh0x3VZkQL6Rdbj55vuqciK5xd0JKdZLajXdt3lZ6JiSFlG9g9b5E32r1aN
-         ePi2/kd/fCp9JVWw5lfBfLpsDDhPryOEU2dbf8y0WWkhWSn4R5x6LjQLSrME4n/p15LH
-         xS3bls/54/rUwWPf1nYUfivaI0AxzxkSPYNNMmKf4c9fqutRgCoNKGVlaLbma72ug/hM
-         VU6g==
-X-Gm-Message-State: APjAAAV2iFixsI7xvOoLGATuT08srhXVqGfnX9G/MCQVgGDgHk2CM5Fa
-        1hP1FkMvPFejewYOzKztrEmkrg==
-X-Google-Smtp-Source: APXvYqwnWUp0o8KtiSrYFm8++pXYoHNI+Rddu1ElryZsNalMMsCCoQR6YhWaVxkyQC5g//D6B5tL2A==
-X-Received: by 2002:a17:90a:8a12:: with SMTP id w18mr14128302pjn.68.1576213059923;
-        Thu, 12 Dec 2019 20:57:39 -0800 (PST)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id o16sm8539538pgl.58.2019.12.12.20.57.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 20:57:39 -0800 (PST)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Thu, 12 Dec 2019 23:58:44 -0500
+Received: from m228-4.mailgun.net ([159.135.228.4]:60175 "EHLO
+        m228-4.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731357AbfLME6n (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 23:58:43 -0500
+X-Greylist: delayed 304 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Dec 2019 23:58:42 EST
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576213122; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=No4NrS8RZKo/+qzd4kS2FzUPDmPkdbcL6unu08f9QF0=; b=EnpHVPWp/+1ELPSAHp5OwCJQ0bRdc909yMWuljHpq4MVh0Jw8RbELwZ35NtSBUyeMhxUSEWf
+ zfKEvFhHgZF2M0zdu0AfA8b44o0ucbaqAoNXPnYhM6hJs+1W7JLWovciuGCVBZX4kVaHwo5U
+ ju5onzhkyv9GJ6VkXAfT6pKF0AA=
+X-Mailgun-Sending-Ip: 159.135.228.4
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df31950.7f659ef9dd50-smtp-out-n02;
+ Fri, 13 Dec 2019 04:53:36 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C9FE4C433CB; Fri, 13 Dec 2019 04:53:36 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 88E18C43383;
+        Fri, 13 Dec 2019 04:53:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 88E18C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Daniel Kurtz <djkurtz@chromium.org>
-Subject: [PATCH] arm64: dts: mt8173: add Mediatek JPEG Codec
-Date:   Fri, 13 Dec 2019 12:57:20 +0800
-Message-Id: <20191213045720.172738-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH 1/3] dt-bindings: watchdog: Convert QCOM watchdog timer bindings to YAML
+Date:   Fri, 13 Dec 2019 10:23:18 +0530
+Message-Id: <0b095b65496073a2ddf9de120f7809619b42cd1c.1576211720.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1576211720.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1576211720.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -71,38 +69,110 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add JPEG codec node in mt8173.
+Convert QCOM watchdog timer bindings to DT schema format using
+json-schema.
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .../devicetree/bindings/watchdog/qcom-wdt.txt | 28 -----------
+ .../bindings/watchdog/qcom-wdt.yaml           | 47 +++++++++++++++++++
+ 2 files changed, 47 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 15f1842f6df3..82df8940d515 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -1401,6 +1401,20 @@ vcodec_enc: vcodec@18002000 {
- 						 <&topckgen CLK_TOP_UNIVPLL1_D2>;
- 		};
- 
-+		jpegdec: jpegdec@18004000 {
-+			compatible = "mediatek,mt8173-jpgdec";
-+			reg = <0 0x18004000 0 0x1000>;
-+			interrupts = <GIC_SPI 203 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&vencsys CLK_VENC_CKE0>,
-+				 <&vencsys CLK_VENC_CKE3>;
-+			clock-names = "jpgdec-smi",
-+				      "jpgdec";
-+			power-domains = <&scpsys MT8173_POWER_DOMAIN_VENC>;
-+			mediatek,larb = <&larb3>;
-+			iommus = <&iommu M4U_PORT_JPGDEC_WDMA>,
-+				 <&iommu M4U_PORT_JPGDEC_BSDMA>;
-+		};
+diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+deleted file mode 100644
+index 41aeaa2ff0f8..000000000000
+--- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-Qualcomm Krait Processor Sub-system (KPSS) Watchdog
+----------------------------------------------------
+-
+-Required properties :
+-- compatible : shall contain only one of the following:
+-
+-			"qcom,kpss-wdt-msm8960"
+-			"qcom,kpss-wdt-apq8064"
+-			"qcom,kpss-wdt-ipq8064"
+-			"qcom,kpss-wdt-ipq4019"
+-			"qcom,kpss-timer"
+-			"qcom,scss-timer"
+-			"qcom,kpss-wdt"
+-
+-- reg : shall contain base register location and length
+-- clocks : shall contain the input clock
+-
+-Optional properties :
+-- timeout-sec : shall contain the default watchdog timeout in seconds,
+-                if unset, the default timeout is 30 seconds
+-
+-Example:
+-	watchdog@208a038 {
+-		compatible = "qcom,kpss-wdt-ipq8064";
+-		reg = <0x0208a038 0x40>;
+-		clocks = <&sleep_clk>;
+-		timeout-sec = <10>;
+-	};
+diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+new file mode 100644
+index 000000000000..4a42f4261322
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/watchdog/qcom-wdt.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
- 		vencltsys: clock-controller@19000000 {
- 			compatible = "mediatek,mt8173-vencltsys", "syscon";
- 			reg = <0 0x19000000 0 0x1000>;
--- 
-2.24.1.735.g03f4e72817-goog
++title: Qualcomm Krait Processor Sub-system (KPSS) Watchdog timer
++
++maintainers:
++  - Andy Gross <agross@kernel.org>
++
++properties:
++  compatible:
++    oneOf:
++      - const: qcom,kpss-timer
++      - const: qcom,kpss-wdt
++      - const: qcom,kpss-wdt-apq8064
++      - const: qcom,kpss-wdt-ipq4019
++      - const: qcom,kpss-wdt-ipq8064
++      - const: qcom,kpss-wdt-msm8960
++      - const: qcom,scss-timer
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  timeout-sec:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Contains the watchdog timeout in seconds. If unset, the
++      default timeout is 30 seconds.
++
++required:
++  - compatible
++  - reg
++  - clocks
++
++examples:
++  - |
++    watchdog@208a038 {
++      compatible = "qcom,kpss-wdt-ipq8064";
++      reg = <0x0208a038 0x40>;
++      clocks = <&sleep_clk>;
++      timeout-sec = <10>;
++    };
+---
 
+I have added Andy as the maintainer here since the get_maintainer script
+showed him. If he is not happy, then I can change it to Bjorn probably and
+again if he is not happy ;-) then I will add myself or whoever they suggest.
+
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
