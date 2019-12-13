@@ -2,101 +2,88 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A037C34003
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D08BC3496E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4402324793
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB052471D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbfLMOsv (ORCPT
+        id S1727830AbfLMO5h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:48:51 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43632 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727690AbfLMOsv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 09:48:51 -0500
-Received: by mail-oi1-f194.google.com with SMTP id x14so1095036oic.10;
-        Fri, 13 Dec 2019 06:48:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DBQ9/WA8dJ3yj6YsudcTec03HFt1nH6b3ZMKGQoshZA=;
-        b=Lho4W3VYXrMqPX8203M09YviMSW/usQi76JfLp+7or7fv/6I8htgLnkZos68vOkGR0
-         QpfDOT5xG1XFEXFybZQDyDQibLEqOBvbJPDWu7Uww0HnqZPwvTv/O4v+dEmifTbRebap
-         vuD855UKpQeBACovct6zBo8lFk81j/q2/MViLi/h1AlXUYAzln35rRYHjB0PVPtUR6af
-         twZ4UFcmmd1E1kZzT+qwXJjd3Vs7BP1Lbp+SYGCm/ggHNErdI04J6+luid2VRjbivx58
-         NKbg2yhF9umR89yBEQYFg98aC3kEkwkRPd4SsJ9UnxFV/KsOUSmaDIA7+cXKzbTTlyDX
-         89fA==
-X-Gm-Message-State: APjAAAWuGw839W9xqixnTjiWh5GC/C5yPIqSGxBVWNVeh/ovxIVK7ahY
-        3ib+yxpadgAnL+Uwnpa/sgEskNS/4V2oQGT1W3I=
-X-Google-Smtp-Source: APXvYqxMUciMS4Fl8EikJlRe3Ox04DBMI5w6FiyUlCP13ScCYG4vGuP13u/7YMjuXx6vrNDeeFn1L3GecFnfUuqqwjg=
-X-Received: by 2002:aca:4a41:: with SMTP id x62mr6794805oia.148.1576248530226;
- Fri, 13 Dec 2019 06:48:50 -0800 (PST)
+        Fri, 13 Dec 2019 09:57:37 -0500
+Received: from muru.com ([72.249.23.125]:47058 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727497AbfLMO5h (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Dec 2019 09:57:37 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 935CC80BF;
+        Fri, 13 Dec 2019 14:58:14 +0000 (UTC)
+Date:   Fri, 13 Dec 2019 06:57:32 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        dri-devel@lists.freedesktop.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/4] ARM: dts: am437x-gp-evm: add HDMI support
+Message-ID: <20191213145732.GH35479@atomide.com>
+References: <20191125131100.9839-1-tomi.valkeinen@ti.com>
+ <20191212172104.GY35479@atomide.com>
+ <20191212173110.GA35479@atomide.com>
+ <d09526b2-8435-bef2-0489-0c3c8173d451@ti.com>
+ <20191213104204.GB4860@pendragon.ideasonboard.com>
+ <2f5cfca4-d36d-da2d-59ba-b76669daeded@ti.com>
+ <20191213114207.GC4860@pendragon.ideasonboard.com>
+ <36d8dde1-1a76-5a5f-2a41-8bc52dfcf2fa@ti.com>
+ <20191213122845.GD4860@pendragon.ideasonboard.com>
+ <3900f4b3-4604-cb64-ebdd-ae168ef1d2fb@ti.com>
 MIME-Version: 1.0
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <20191206134202.18784-2-chris.brandt@renesas.com> <37c13497-d20f-583f-72d7-1e3c8a241990@cogentembedded.com>
- <TYXPR01MB1568ED4D40CEC399E64F6A2B8A550@TYXPR01MB1568.jpnprd01.prod.outlook.com>
- <CAMuHMdWCgOsj_ZWF-+f-5XjZU9RSCm6Ww3gBmYQeSGz0B77_ig@mail.gmail.com> <TY1PR01MB15625260CB3CE48A3FBA11058A540@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY1PR01MB15625260CB3CE48A3FBA11058A540@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 13 Dec 2019 15:48:39 +0100
-Message-ID: <CAMuHMdUoFKm9Eox=xY1tnxeqG89X=EeRh0N+Aynjg6gBxBgm6A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] spi: Add SPIBSC driver
-To:     Chris Brandt <Chris.Brandt@renesas.com>
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3900f4b3-4604-cb64-ebdd-ae168ef1d2fb@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Chris,
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [191213 12:34]:
+> On 13/12/2019 14:28, Laurent Pinchart wrote:
+> 
+> > > So... In the DT file, we would have multiple endpoints in the same output port in DSS, one going to
+> > > the panel, one to the SiI9022? omapdrm could then create two encoders, one abstracting the DPI
+> > > output and the connection to the panel, one abstracting the DPI output and SiI9022?
+> > 
+> > That's the idea, yes.
+> > 
+> > > And then someone would need to handle the GPIO, and set it based on the output used. These kind of
+> > > gpios are always difficult, as they don't belong anywhere =).
+> > 
+> > https://lore.kernel.org/lkml/20191211061911.238393-5-hsinyi@chromium.org/
+> > 
+> > Still, the infrastructure in omapdrm would need quite a bit of work.
+> > We're just about to get a helper layer for linear pipelines merged, and
+> > we already need to go one step further :-)
+> 
+> Alright, sounds like this will be doable in the future. So let's drop this
+> and the epos HDMI patches for now.
 
-On Fri, Dec 13, 2019 at 3:45 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Fri, Dec 13, 2019, Geert Uytterhoeven wrote:
-> > On Thu, Dec 12, 2019 at 9:19 PM Chris Brandt <Chris.Brandt@renesas.com>
-> > wrote:
-> > > On Thu, Dec 12, 2019, Sergei Shtylyov wrote:
-> > > >    As you can see, the deleted file is back after unmount/re-mount...
-> > >
-> > > Did you do a 'sync' before you unmounted?
-> >
-> > Does it fail without? If yes, that must be a jffs2 bug.
->
-> It does not fail for me with or without the sync.
+Oh OK. Sounds like no other solution is usable right now short of
+separate dts files like you've done.
 
-Good.
+> This does sound like quite a bit of work, as you say, so I have no idea when
+> we can get there (on the omapdrm side). In the minimum we should first get
+> the big omapdrm rework done, in order to avoid nasty conflicts.
+> 
+> Thanks for educating me =).
 
-> I just I was remembering that you need to call sync before you call reboot
-> or shutdown because those do not sync first. That's what I remember anyway.
+Sounds a nice plan though :)
 
-Yeah, "embedded" reboot commands may reboot immediately, without shutting
-down the system cleanly.  Same for "reboot -f" on Debian.
+Thanks,
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Tony
