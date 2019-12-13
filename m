@@ -2,100 +2,116 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2225FC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 03:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8153C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 04:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED10D2467B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 03:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA7B922527
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 04:06:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="t5ReM5fc"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EUsDVSAs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731529AbfLMDkh (ORCPT
+        id S1731688AbfLMEGh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 22:40:37 -0500
-Received: from m228-5.mailgun.net ([159.135.228.5]:17225 "EHLO
+        Thu, 12 Dec 2019 23:06:37 -0500
+Received: from m228-5.mailgun.net ([159.135.228.5]:26749 "EHLO
         m228-5.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727925AbfLMDkh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 22:40:37 -0500
-X-Greylist: delayed 303 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Dec 2019 22:38:25 EST
+        with ESMTP id S1727778AbfLMEGh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 23:06:37 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576208437; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=yW+1ND7ANM8ah4AyDYZWbcub633HYWOPfgaR0fg0IeY=;
- b=t5ReM5fca6JVbLkKge6XG+paWi7K4kN2hSSCLXoUnDUxa9VhqFE7TBnpI5o81rehWhEBVUUn
- NlMhKGoDvJa8wt9eQWdWdfzVYsb901KupKl5/QXQg/XYmyJAAIibbvKxXfADyZbuRwiLiFJP
- b+P6KESGvSCz8AbYjtJMGcZVGNo=
+ s=smtp; t=1576209996; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=t3WuJRdbhQpYuvgidbSiHcxucdQ22ZxkAD1DdKzZCFQ=; b=EUsDVSAsZJDpmWYySTAcYp4AE6lPdeSe4r2d/uUexVFBBb4KbCyTttVGwo+VYcrq5tNNTksZ
+ WNktCbTAKQA8aXKvBGxkwBywIPbA4cd4rX2pQzI18DcO3IgbfGTlKzsDI8CaQ5QsujTadYV4
+ xC4uquwlfWxOuD8joxUQKUbJn90=
 X-Mailgun-Sending-Ip: 159.135.228.5
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df30702.7fc7ab7a9180-smtp-out-n01;
- Fri, 13 Dec 2019 03:35:30 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5df30e4b.7f9bd3706ed8-smtp-out-n03;
+ Fri, 13 Dec 2019 04:06:35 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id ECB08C4479C; Fri, 13 Dec 2019 03:35:28 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id 02BB4C447A1; Fri, 13 Dec 2019 04:06:34 +0000 (UTC)
+Received: from [10.131.117.127] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: rjliao)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 67C04C43383;
-        Fri, 13 Dec 2019 03:35:28 +0000 (UTC)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F548C43383;
+        Fri, 13 Dec 2019 04:06:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F548C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 0/7] arm64: dts: sc7180: Make dtbs_check mostly happy
+To:     Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
+        swboyd@chromium.org, mka@chromium.org,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <20191212193544.80640-1-dianders@chromium.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <5bccad6f-748e-1024-acd0-04af0a4cb731@codeaurora.org>
+Date:   Fri, 13 Dec 2019 09:36:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 13 Dec 2019 11:35:28 +0800
-From:   rjliao@codeaurora.org
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        linux-bluetooth-owner@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] dt-bindings: net: bluetooth: Add device tree
- bindings for QCA6390
-In-Reply-To: <24B540FF-C627-4DF9-9077-247A4A6A3605@holtmann.org>
-References: <0101016ef8b923bc-5760b40c-1968-4992-9186-8e3965207236-000000@us-west-2.amazonses.com>
- <24B540FF-C627-4DF9-9077-247A4A6A3605@holtmann.org>
-Message-ID: <ab0557bcacdae61027b775f440145b05@codeaurora.org>
-X-Sender: rjliao@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <20191212193544.80640-1-dianders@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-在 2019-12-12 18:33，Marcel Holtmann 写道：
-> Hi Rocky,
+
+On 12/13/2019 1:05 AM, Douglas Anderson wrote:
+> This gets rid of all of the dtbs_check that showed up atop the current
+> qcom maintainer tree for sc7180-idp, except the errors in the
+> 'thermal-sensor' nodes.  I believe those are known / being dealt with
+> separately [1] [2].
 > 
->> Add compatible string for the Qualcomm QCA6390 Bluetooth controller
->> 
->> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
->> ---
->> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 1 +
->> 1 file changed, 1 insertion(+)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt 
->> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> index 68b67d9db63a..87b7f9d22414 100644
->> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> @@ -10,6 +10,7 @@ device the slave device is attached to.
->> Required properties:
->>  - compatible: should contain one of the following:
->>    * "qcom,qca6174-bt"
->> +   * "qcom,qca6390-bt"
->>    * "qcom,wcn3990-bt"
->>    * "qcom,wcn3998-bt"
+> I don't expect this series to have any functional changes, it just
+> makes the device tree cleaner.  I was able to boot after applying
+> these patches atop a working tree.
 > 
-> now I am confused. Is this a DT platform or ACPI or both?
+> I have tried to sort the changes here, first including the "obviously
+> correct" changes and later changes I am less certain about.  There are
+> no known dependencies between the changes.
+
+Thanks Doug for these cleanups, for the series
+
+Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+
 > 
-We need to support both, should I update ACPI part in this doc as well?
-> Regards
+> [1] https://lore.kernel.org/r/CAD=FV=UXC3UT78vGBr9rRuRxz=8iwH4tOkFx6NC-pSs+Z5+7Xw@mail.gmail.com
+> [2] https://lore.kernel.org/r/CAD=FV=UtHebABCpJo1QUc6C2v2iZq2rFL+pTMx=EHBL+7d=jTQ@mail.gmail.com
 > 
-> Marcel
+> 
+> Douglas Anderson (7):
+>    arm64: dts: qcom: sc7180: Add SoC name to compatible
+>    arm64: dts: qcom: sc7180: Rename gic-its node to msi-controller
+>    arm64: dts: qcom: sc7180: Add "#clock-cells" property to usb_1_ssphy
+>    arm64: dts: qcom: pm6150: Remove macro from unit name of adc-chan
+>    arm64: dts: qcom: sc7180: Avoid "memory" for cmd-db reserved-memory
+>      node
+>    arm64: dts: qcom: sc7180: Avoid "phy" for USB QMP PHY wrapper
+>    arm64: dts: qcom: sc7180: Use 'ranges' in arm,armv7-timer-mem node
+> 
+>   arch/arm64/boot/dts/qcom/pm6150.dtsi    |  2 +-
+>   arch/arm64/boot/dts/qcom/sc7180-idp.dts |  2 +-
+>   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 45 +++++++++++++------------
+>   3 files changed, 25 insertions(+), 24 deletions(-)
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
