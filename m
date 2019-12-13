@@ -2,210 +2,79 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF119C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C56C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9138F2073D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAFE02077B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576275478;
-	bh=tlc6zX/LTEyF5wczNgFfQrREIesmdwXR+IfQ/HzAsqI=;
+	s=default; t=1576275539;
+	bh=SiOkwFwElyGHnHvBcMZ/ANt/N/f5alpmyUQarKA91OQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JFHvCuaX9wg+KXxRaawCwYaeY5lJnnlOF5OaFptKWff3YNYYzOUChaaYTqpdyGn0P
-	 E5199sNec170vCA+EOMxeA9P5rTAr9/Io6NAfkSeX5Bu/6C8/founw8Y598EY08WlF
-	 BXPvmNuEZFMv+/b3qhedHwjO3WmdBIEGlvO1bJFA=
+	b=X/P5vCbOv1Fd+RQTkW//5HDxFj2i9AlplroUl8Hbi1qLug05Y5lk9v2gZJplL8qav
+	 2Adb/bwiWv2DLjkkMVSR886y/hYRwuWrYXNM2xrPfrLIrMlGwP5trlscX1m5oFgUog
+	 zRrDm1n5q+BZcB5pYJhoL005Yuwwh3ZeKmMb85pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfLMWR6 (ORCPT
+        id S1726404AbfLMWS7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:17:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38638 "EHLO mail.kernel.org"
+        Fri, 13 Dec 2019 17:18:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfLMWR6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Dec 2019 17:17:58 -0500
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        id S1725948AbfLMWS7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Dec 2019 17:18:59 -0500
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F9192073D;
-        Fri, 13 Dec 2019 22:17:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E42F2073D;
+        Fri, 13 Dec 2019 22:18:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576275477;
-        bh=tlc6zX/LTEyF5wczNgFfQrREIesmdwXR+IfQ/HzAsqI=;
+        s=default; t=1576275538;
+        bh=SiOkwFwElyGHnHvBcMZ/ANt/N/f5alpmyUQarKA91OQ=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BkxSAcqVhR0pEES5vqzaja2g/RZ4Zz1iwoK5Yo4PncyYac7iZxStJ+xuU3nPxDrh6
-         0YmTwFqmA3/uqTdAVhcCtFaEYOoHGCVhgQnhIQIGiCKp7TOkX/sEQSHtgccpwHM3NJ
-         mWxS5sjFZZ9cUhKehXAcDrTfxjqDjsOZE9wb9aMo=
-Received: by mail-qk1-f174.google.com with SMTP id z76so538668qka.2;
-        Fri, 13 Dec 2019 14:17:57 -0800 (PST)
-X-Gm-Message-State: APjAAAWvc023vKK6GfR8jcmsz3cunA4YJ50GWLodEn8WB2xoJIH/Rry1
-        EmLmuGZmagLy3/uG1oaQ5Slntji76Rw5eYcLBQ==
-X-Google-Smtp-Source: APXvYqyLVGyr/ou6/zCUSR6nbqEvM4qZSGd5lkUZviadNs7lGm/zXP4dZkMOJJThzBpo59gYWshwpV/gf0X0NWtCe7c=
-X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr1536497qkl.119.1576245251094;
- Fri, 13 Dec 2019 05:54:11 -0800 (PST)
+        b=dKotVCWpFC6K6Ukvxk2yN/MboQoSH40mlCGZfL+AQgIb9KW5IC3bVZLIXGt4T+oh3
+         ecyuHY/dIPlhQ/f9GEOZUCm+SKFkf9yrJYR6i5cpMtUoCVUuDENNciEplbAIwU00g/
+         aAyok9YNGrZfd4kcO3+DgjorWklnpmoXVBoTo6ag=
+Received: by mail-pl1-f171.google.com with SMTP id g6so1806836plp.7;
+        Fri, 13 Dec 2019 14:18:58 -0800 (PST)
+X-Gm-Message-State: APjAAAWIv0376eZ+df35DdHdXBY70yV1BEFlNunjs+vXg9CQtJkX3WM6
+        8HA/4/wf49lj4gOKrdRRrzXPhvqSZVrLtM1SSQ==
+X-Google-Smtp-Source: APXvYqyr51fniozMNKvMYlVmGS7rD5sWQN+BGHgVnRNmkNSL4e1Cz7vTZuUAWsBrt3ktL39fHBvUqLtIefHakH18m8s=
+X-Received: by 2002:a0c:f68f:: with SMTP id p15mr13414497qvn.79.1576248718360;
+ Fri, 13 Dec 2019 06:51:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20191211061911.238393-1-hsinyi@chromium.org> <20191211061911.238393-4-hsinyi@chromium.org>
-In-Reply-To: <20191211061911.238393-4-hsinyi@chromium.org>
+References: <20191213081230.23494-1-bibby.hsieh@mediatek.com> <20191213081230.23494-2-bibby.hsieh@mediatek.com>
+In-Reply-To: <20191213081230.23494-2-bibby.hsieh@mediatek.com>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 13 Dec 2019 07:53:59 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+jkgDj6-SH1FrnjB1CQmf33=XUwN3N_fw_aJsQm3Fq9A@mail.gmail.com>
-Message-ID: <CAL_Jsq+jkgDj6-SH1FrnjB1CQmf33=XUwN3N_fw_aJsQm3Fq9A@mail.gmail.com>
-Subject: Re: [PATCH RESEND 3/4] dt-bindings: drm/bridge: Add GPIO display mux binding
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
+Date:   Fri, 13 Dec 2019 08:51:45 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+sZQo+k0b_MhPz8oST8GcLaCcho3R+kNLLL2zFUit81w@mail.gmail.com>
+Message-ID: <CAL_Jsq+sZQo+k0b_MhPz8oST8GcLaCcho3R+kNLLL2zFUit81w@mail.gmail.com>
+Subject: Re: [PATCH v8 1/4] dt-binding: eeprom: at24: add vcc-supply property
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
         Nicolas Boichat <drinkcat@chromium.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 12:19 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+On Fri, Dec 13, 2019 at 2:24 AM Bibby Hsieh <bibby.hsieh@mediatek.com> wrote:
 >
-> From: Nicolas Boichat <drinkcat@chromium.org>
+> In some platforms, they disable the power-supply of eeprom due
+> to power consumption reduction. This patch add vcc-supply property.
 >
-> Add bindings for Generic GPIO mux driver.
->
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 > ---
-> Change from RFC to v1:
-> - txt to yaml
-> ---
->  .../bindings/display/bridge/gpio-mux.yaml     | 89 +++++++++++++++++++
->  1 file changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml b/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
-> new file mode 100644
-> index 000000000000..cef098749066
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
-> @@ -0,0 +1,89 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/gpio-mux.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic display mux (1 input, 2 outputs)
+>  Documentation/devicetree/bindings/eeprom/at24.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-What makes it generic? Doesn't the mux chip have power supply,
-possibly a reset line or not, etc.? What about a mux where the GPIO
-controls the mux?
-
-Generally, we avoid 'generic' bindings because h/w is rarely generic.
-You can have a generic driver which works on multiple devices.
-
-> +
-> +maintainers:
-> +  - Nicolas Boichat <drinkcat@chromium.org>
-> +
-> +description: |
-> +  This bindings describes a simple display (e.g. HDMI) mux, that has 1
-> +  input, and 2 outputs. The mux status is controlled by hardware, and
-> +  its status is read back using a GPIO.
-> +
-> +properties:
-> +  compatible:
-> +    const: gpio-display-mux
-> +
-> +  detect-gpios:
-> +    maxItems: 1
-> +    description: GPIO that indicates the active output
-> +
-> +  ports:
-> +    type: object
-> +
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description: |
-> +          Video port for input.
-> +
-> +      port@1:
-> +        type: object
-> +        description: |
-> +          2 video ports for output.
-> +          The reg value in the endpoints matches the GPIO status: when
-> +          GPIO is asserted, endpoint with reg value <1> is selected.
-
-You should describe 'endpoint@0' and 'endpoint@1' here too.
-
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +
-> +required:
-> +  - compatible
-> +  - detect-gpios
-> +  - ports
-> +
-> +examples:
-> +  - |
-> +    hdmi_mux: hdmi_mux {
-> +      compatible = "gpio-display-mux";
-> +      status = "okay";
-
-Don't show status in examples.
-
-> +      detect-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
-> +      pinctrl-names = "default";
-> +      pinctrl-0 = <&hdmi_mux_pins>;
-> +      ddc-i2c-bus = <&hdmiddc0>;
-
-Not documented. Is the i2c bus muxed too? If not, then this is in the
-wrong place.
-
-> +
-> +      ports {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        port@0 { /* input */
-> +          reg = <0>;
-> +
-> +          hdmi_mux_in: endpoint {
-> +            remote-endpoint = <&hdmi0_out>;
-> +          };
-> +        };
-> +
-> +        port@1 { /* output */
-> +          reg = <1>;
-> +
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          hdmi_mux_out_anx: endpoint@0 {
-> +            reg = <0>;
-> +            remote-endpoint = <&anx7688_in>;
-> +          };
-> +
-> +          hdmi_mux_out_hdmi: endpoint@1 {
-> +            reg = <1>;
-> +            remote-endpoint = <&hdmi_connector_in>;
-> +          };
-> +        };
-> +      };
-> +    };
-> --
-> 2.24.0.525.g8f36a354ae-goog
->
+Reviewed-by: Rob Herring <robh@kernel.org>
