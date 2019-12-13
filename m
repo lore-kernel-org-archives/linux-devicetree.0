@@ -2,87 +2,60 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14532C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2DEC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFFB22465B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE61424658
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:04:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbfLMKBk (ORCPT
+        id S1726895AbfLMKEV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:01:40 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46402 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfLMKBk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 05:01:40 -0500
-Received: by mail-ot1-f68.google.com with SMTP id g18so5755151otj.13;
-        Fri, 13 Dec 2019 02:01:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tF95qMF9ERW6gHpXhamcEeeL/6m7C6A3FVygCN+4SDI=;
-        b=CTaa/J9J4x/WE2Or90F5I1neXdqU8u0YTnLvCO4zqWjWQI9EGCSh28uo9SN5g4Ra0i
-         Lf9mca0bMFXJdk0KW2MpegbD6T/y2d/NF17TLS2mdadP1Juv+Dm0jrgLTe+ZljeJhv45
-         ORcjGVjs9FSv60wbWu94GgxvHyJpJMP6IBjr3jhSs+MW4+Bi2BGs830COJh5ncpbp8IS
-         C19G+QAb4z/zvuWhYvAVjNz2InmxlJxiQPvSu5WUHkbNSXOBVbx+SGMfg8G8R/PQOMPs
-         RAeWcbtGz9CK9OTRciA3gf3SNfmLShXDw8eZ/lRmO+WKtTiH36rc0YZ7ouPR9jE69GNZ
-         qtDA==
-X-Gm-Message-State: APjAAAVoxBhz3KZRFYUT01czlQtbPhtEGJouHyyCG3UoIWCSr2M6JTW0
-        Qc/sn+Qn9ryYUGoyh75n/lPWdLIoxrtM/84AKa8=
-X-Google-Smtp-Source: APXvYqzvSmx2I4nRiVrv54hjftKpN1VACtQuojp4ST7ypJsb2lH/wSFc8YGIvXq0c6SbfHWhtr62WCABJHgLouaYaEI=
-X-Received: by 2002:a9d:6c81:: with SMTP id c1mr13985832otr.39.1576231298989;
- Fri, 13 Dec 2019 02:01:38 -0800 (PST)
-MIME-Version: 1.0
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <20191206134202.18784-2-chris.brandt@renesas.com> <37c13497-d20f-583f-72d7-1e3c8a241990@cogentembedded.com>
- <TYXPR01MB1568ED4D40CEC399E64F6A2B8A550@TYXPR01MB1568.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYXPR01MB1568ED4D40CEC399E64F6A2B8A550@TYXPR01MB1568.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 13 Dec 2019 11:01:27 +0100
-Message-ID: <CAMuHMdWCgOsj_ZWF-+f-5XjZU9RSCm6Ww3gBmYQeSGz0B77_ig@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] spi: Add SPIBSC driver
-To:     Chris Brandt <Chris.Brandt@renesas.com>
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 13 Dec 2019 05:04:21 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:60914 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726921AbfLMKEV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Dec 2019 05:04:21 -0500
+Received: from wf0651.dip.tu-dresden.de ([141.76.182.139] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ifhny-0000yI-M1; Fri, 13 Dec 2019 11:04:14 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Markus Reichl <m.reichl@fivetechno.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Content-Type: text/plain; charset="UTF-8"
+        Jagan Teki <jagan@amarulasolutions.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] arm64: dts: rockchip: Remove always-on properties from regulator nodes on rk3399-roc-pc.
+Date:   Fri, 13 Dec 2019 11:04:14 +0100
+Message-ID: <6226306.W37etdpfGF@phil>
+In-Reply-To: <f985665c-86c0-1657-14f8-f77e2ce5a3f7@fivetechno.de>
+References: <f985665c-86c0-1657-14f8-f77e2ce5a3f7@fivetechno.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Chris,
+Hi Markus,
 
-On Thu, Dec 12, 2019 at 9:19 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Thu, Dec 12, 2019, Sergei Shtylyov wrote:
-> >    As you can see, the deleted file is back after unmount/re-mount...
->
-> Did you do a 'sync' before you unmounted?
+Am Dienstag, 10. Dezember 2019, 13:44:38 CET schrieb Markus Reichl:
+> Some regulators don't need the always-on property, remove it.
+> 
+> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
 
-Does it fail without? If yes, that must be a jffs2 bug.
+applied for 5.6, but please check your mail client as "git am" was quite
+unhappy about it, which I fixed up in the patch itself.
+Maybe just switch to "git send-email" instead of using Thunderbird.
 
-Gr{oetje,eeting}s,
+Heiko
 
-                        Geert
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
