@@ -2,73 +2,171 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A53A0C3B18B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A57D5C3B1A4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32A524730
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA79B246C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VurAAJkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfLMP3l (ORCPT
+        id S1727827AbfLMPcc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:29:41 -0500
-Received: from muru.com ([72.249.23.125]:47128 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726599AbfLMP3l (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Dec 2019 10:29:41 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 369A88181;
-        Fri, 13 Dec 2019 15:30:20 +0000 (UTC)
-Date:   Fri, 13 Dec 2019 07:29:38 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     Benoit Parrot <bparrot@ti.com>, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch v3 0/3] ARM: dts: am43x-vpfe/ov2659.patch
-Message-ID: <20191213152938.GK35479@atomide.com>
-References: <20191211140720.10539-1-bparrot@ti.com>
- <20191212174123.GF35479@atomide.com>
- <c4ae58dc-3c81-f493-a665-6926baa0f04c@ti.com>
+        Fri, 13 Dec 2019 10:32:32 -0500
+Received: from m228-5.mailgun.net ([159.135.228.5]:55904 "EHLO
+        m228-5.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727831AbfLMPcc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 10:32:32 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576251151; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=MudX+gsXfMKjKX5fDRX9tiJkJGSE7H9tIT9l1IWXj3c=;
+ b=VurAAJknS4Oe28Bo0bHJJNvgFKCK+l+33knvXf9jAAt4ESPAUlQvGn1yNJE1pM+BZvyEWGEV
+ LIYiqIF33pAHSftmBfYYQwhJgZFuSfoUqgik1Wi54m8TVulEjc3fW6HqB5uQGLgJiaSxXyyD
+ FbUWjID5kBn3Xks//7OdxOmsXzc=
+X-Mailgun-Sending-Ip: 159.135.228.5
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df3af0b.7f1a486b1308-smtp-out-n03;
+ Fri, 13 Dec 2019 15:32:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 11D52C63C76; Fri, 13 Dec 2019 15:32:26 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7FB51C8EB87;
+        Fri, 13 Dec 2019 15:31:44 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4ae58dc-3c81-f493-a665-6926baa0f04c@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 13 Dec 2019 21:01:44 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     robh+dt@kernel.org, ulf.hansson@linaro.org, rnayak@codeaurora.org,
+        agross@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org
+Subject: Re: [PATCH 6/6] arm64: dts: sm8150: Add rpmh power-domain node
+In-Reply-To: <20191212073918.GO3143381@builder>
+References: <20191118173944.27043-1-sibis@codeaurora.org>
+ <0101016e7f99eab9-35efa01f-8ed3-4a77-87e1-09c381173121-000000@us-west-2.amazonses.com>
+ <20191212073918.GO3143381@builder>
+Message-ID: <b3c40ad880b68de228a2209fcb853954@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [191213 07:43]:
-> On 12/12/2019 19:41, Tony Lindgren wrote:
-> > * Benoit Parrot <bparrot@ti.com> [191211 06:04]:
-> > > This patch series adds the missing camera endpoint (ov2659) as well as
-> > > the required source clocks nodes for the sensor.
-> > > 
-> > > On the am437x-sk-evm the camera sensor is sourced from clkout1 but that
-> > > clock nodes/tree was removed as it was unsed at the time, we are
-> > > re-adding the needed clock nodes here.
-> > 
-> > Tero, it seems I can already pick this series?
+On 2019-12-12 13:09, Bjorn Andersson wrote:
+> On Mon 18 Nov 09:40 PST 2019, Sibi Sankar wrote:
 > 
-> I believe it is ready if you approve the clkout1 clock patch.
-
-OK yeah looks fine.
-
-> > Or ou want to queue the changes to am43xx-clocks.dtsi along with all
-> > your other clock patches?
+>> Add the DT node for the rpmhpd power controller.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > 
-> Well, I have actually never queued any omap2+ dts patches myself, and I
-> don't think there would be too many of those coming for next merge either.
+> Series applied, please send separate patch for the yaml migration.
 
-OK will queue this series then. For the other ones from Benoit
-looks like we need an immutable clock branch before I can apply
-anything.
+Thanks Bjorn, will send it out
+asap
 
-Regards,
+> 
+> Regards,
+> Bjorn
+> 
+>> ---
+>>  arch/arm64/boot/dts/qcom/sm8150.dtsi | 55 
+>> ++++++++++++++++++++++++++++
+>>  1 file changed, 55 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi 
+>> b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+>> index 8f23fcadecb89..0ac257637c2af 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+>> @@ -5,6 +5,7 @@
+>>   */
+>> 
+>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/power/qcom-rpmpd.h>
+>>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>>  #include <dt-bindings/clock/qcom,rpmh.h>
+>> 
+>> @@ -469,6 +470,60 @@
+>>  				clock-names = "xo";
+>>  				clocks = <&xo_board>;
+>>  			};
+>> +
+>> +			rpmhpd: power-controller {
+>> +				compatible = "qcom,sm8150-rpmhpd";
+>> +				#power-domain-cells = <1>;
+>> +				operating-points-v2 = <&rpmhpd_opp_table>;
+>> +
+>> +				rpmhpd_opp_table: opp-table {
+>> +					compatible = "operating-points-v2";
+>> +
+>> +					rpmhpd_opp_ret: opp1 {
+>> +						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
+>> +					};
+>> +
+>> +					rpmhpd_opp_min_svs: opp2 {
+>> +						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
+>> +					};
+>> +
+>> +					rpmhpd_opp_low_svs: opp3 {
+>> +						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+>> +					};
+>> +
+>> +					rpmhpd_opp_svs: opp4 {
+>> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
+>> +					};
+>> +
+>> +					rpmhpd_opp_svs_l1: opp5 {
+>> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
+>> +					};
+>> +
+>> +					rpmhpd_opp_svs_l2: opp6 {
+>> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
+>> +					};
+>> +
+>> +					rpmhpd_opp_nom: opp7 {
+>> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
+>> +					};
+>> +
+>> +					rpmhpd_opp_nom_l1: opp8 {
+>> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
+>> +					};
+>> +
+>> +					rpmhpd_opp_nom_l2: opp9 {
+>> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
+>> +					};
+>> +
+>> +					rpmhpd_opp_turbo: opp10 {
+>> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
+>> +					};
+>> +
+>> +					rpmhpd_opp_turbo_l1: opp11 {
+>> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
+>> +					};
+>> +				};
+>> +			};
+>>  		};
+>>  	};
+>> 
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
 
-Tony
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
