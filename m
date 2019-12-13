@@ -8,169 +8,94 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 894BBC5072B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2078C5072D
 	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF5FA24718
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02ED124718
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6xLarDs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EFE9gbV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfLMN6u (ORCPT
+        id S1727531AbfLMN6x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:58:50 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33580 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727489AbfLMN6u (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 08:58:50 -0500
-Received: by mail-pl1-f193.google.com with SMTP id c13so1294147pls.0
-        for <devicetree@vger.kernel.org>; Fri, 13 Dec 2019 05:58:49 -0800 (PST)
+        Fri, 13 Dec 2019 08:58:53 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:46604 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727489AbfLMN6x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 08:58:53 -0500
+Received: by mail-pj1-f67.google.com with SMTP id z21so1231366pjq.13
+        for <devicetree@vger.kernel.org>; Fri, 13 Dec 2019 05:58:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=0pSL7+6Hfic6QamJwgv8SnmNlOMYhYlW3BzhIK7N/pE=;
-        b=e6xLarDs9kfv5A7ccrZSG4Janl78yrPDHvawA5PnhtHZ+7+iphzeBKwPtRXUTGxszO
-         Tu7l+HeoAnYG61sNVR5YPMjpxtAQwfh0RjeISvAvmajbctn1tUbnQ/TVEKP8+SBbdoYU
-         9sjFHPM6LhcnSetBfIQXMkxESYH4Qqf1obBcNEZtzXhhMSNzKGLkBs+3jpe1s/+EaqmT
-         Yp7c09HZDq+hRwgH9KTdhbCMDscQVApKeE7LV1mKgPVSNi59Q/YsTJuVLHP4DTAVzfr5
-         BmOn+j2lSUwxya2lructw3cKIHH4Cga/ol/E+ZXIH1eJl7ZVhZOpQyAJUF5fCDqCnyRC
-         SMkQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=vcUNQxR7kklwsKYBxB+fFt1v2oL8rvHjk/tVQSdWeAA=;
+        b=EFE9gbV0c7TC7yH0DM4JMFqPzwtx2/mShQaSXX7dLYtmDXa7RyVMKKuOXY28klniZg
+         0ayqVkD6UvEloW2Y66ddKuh0jL3EaeVfqSG5HSqcYlcqzE/toAkgR+9phdi9CXRDShsk
+         SmroiraAPwOMKlo1MrOQI6u79oH9a3xEbazN+RIwJtZFQmF0CMVgb5+yoBifE0gMmp4W
+         qUHE21rfhfUSTYcSzgo++MwF+wekwkYAe+Yhn5Wd/AMV0j64hS6BDJCOoCGWWgCWKmYi
+         uNcmONcBuQowyz7sjKWgiyPofQ5SIjc0u9eZEqL6zcwL3qtDPWL7WOABmbjbIL36mkyZ
+         xnRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0pSL7+6Hfic6QamJwgv8SnmNlOMYhYlW3BzhIK7N/pE=;
-        b=qjXfj1CxkBOd3LGx7m6IvhXhd8nqYWrI2hAJs+bTiznbJX4R7bsU9rYN9/JH15mANw
-         OzDMr/ceJgvsNdJs/DvfVuF3t4/VpFyd6avRlDvqtMBVuhomznOVP2XyVaGaTlYDiWFV
-         6sB/W+G3GBRpRmNVmgNXtScketfedCO3Idp/qCvBcv9b/MIcwdqjmuVKng2oA6SkTIYV
-         wn//R0nUm8HUuK4WHw7BTh0nEErgysupvICJWei3fVlLtklke5Is+hrYO/5BofJS9uHJ
-         3ocrYJKXhDi7cgjjvfTtFAumUEAOaCmSxYSlQBvEVLqVL+HSIKO2aJQhVFTbqqas/vsU
-         upew==
-X-Gm-Message-State: APjAAAXxEu0KLxAGgBij2/BixD34c87XzWGUZn31uX3qE99AnSj6oJLu
-        6G88m+C0dgBxEiRbV+8YhRI=
-X-Google-Smtp-Source: APXvYqzhlxxZQ4K1aCD0j18ML2PufVmV+xW9yLZRqMg/AjI1PiTcYhuuvAMy7LsRWotBHgMTxu41bA==
-X-Received: by 2002:a17:90a:b002:: with SMTP id x2mr16298438pjq.38.1576245529285;
-        Fri, 13 Dec 2019 05:58:49 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=vcUNQxR7kklwsKYBxB+fFt1v2oL8rvHjk/tVQSdWeAA=;
+        b=VNCgIbk3td21ETRM9xOTtGBMymCalQcXX3DaoMkQwycBest0ZaiSu3iJdAIkw6Lgr0
+         4njsSAy5slQ4jaIwepLWqTJAONuUPRzirw3LAMY7HlEPsuSDotDCpXl6C65uQiu3KzTm
+         iz4KfkYJmPXL4bcbNyR22I+74bRUbu1IxGmpuQoL55F6t86M1PaVgOCNbx12QNVtGi9+
+         a1uZONgpdLmI6W11hm1/d+V/ZlEMleq6keniXqQR2QX88WCDgP524NYh2EPiGVyH537N
+         wP/JAnvjKT8hGt3gj2a5awNwJkkOn7+cih6EL0wdQ9Y6bsMfF9I3AiLS+9ixlTjLTLuq
+         bl/g==
+X-Gm-Message-State: APjAAAUiv86c5xVRxp1UDTKqpNzeKBo81sSw1V3yZUAtORQy4rVzqylI
+        Yeug6dNsyFhl3n6LtDulDfU=
+X-Google-Smtp-Source: APXvYqzaLN80aPfcy7vGwykcX7yav2qHw0Y40Aml6Mu12LESmEJrpbBNSzAbx1OaeHR9FiUwxsJ16Q==
+X-Received: by 2002:a17:902:b187:: with SMTP id s7mr13765841plr.97.1576245532462;
+        Fri, 13 Dec 2019 05:58:52 -0800 (PST)
 Received: from fabio-Latitude-E5450.nxp.com ([177.221.114.206])
-        by smtp.gmail.com with ESMTPSA id y6sm10778538pgc.10.2019.12.13.05.58.45
+        by smtp.gmail.com with ESMTPSA id y6sm10778538pgc.10.2019.12.13.05.58.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 05:58:48 -0800 (PST)
+        Fri, 13 Dec 2019 05:58:51 -0800 (PST)
 From:   Fabio Estevam <festevam@gmail.com>
 To:     shawnguo@kernel.org
 Cc:     robh+dt@kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH v2 1/2] ARM: dts: imx51-babbage: Fix the DVI output description
-Date:   Fri, 13 Dec 2019 10:58:37 -0300
-Message-Id: <20191213135838.28697-1-festevam@gmail.com>
+Subject: [PATCH v2 2/2] ARM: imx_v6_v7_defconfig: Select the TFP410 driver
+Date:   Fri, 13 Dec 2019 10:58:38 -0300
+Message-Id: <20191213135838.28697-2-festevam@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191213135838.28697-1-festevam@gmail.com>
+References: <20191213135838.28697-1-festevam@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-imx51-babbage has a TFP410 chip that receives 24-bit RGB parallel
-input and convert it to DVI.
+Some boards like imx51-babbage, imx53-cx9020 and imx6q-utilite-pro
+have a TFP410 DVI bridge chip.
 
-Fix the device tree description to reflect the real hardware.
+Select its driver by default.
 
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
 ---
 Changes since v1:
-- Use "dvi-connector" compatible
+- None
 
- arch/arm/boot/dts/imx51-babbage.dts | 64 ++++++++++++++++++++++-------
- 1 file changed, 49 insertions(+), 15 deletions(-)
+ arch/arm/configs/imx_v6_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
-index ed6a3ce874b2..552196d8a60a 100644
---- a/arch/arm/boot/dts/imx51-babbage.dts
-+++ b/arch/arm/boot/dts/imx51-babbage.dts
-@@ -58,29 +58,27 @@
- 
- 	display1: disp1 {
- 		compatible = "fsl,imx-parallel-display";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 		interface-pix-fmt = "rgb24";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_ipu_disp1>;
--		display-timings {
--			native-mode = <&timing0>;
--			timing0: dvi {
--				clock-frequency = <65000000>;
--				hactive = <1024>;
--				vactive = <768>;
--				hback-porch = <220>;
--				hfront-porch = <40>;
--				vback-porch = <21>;
--				vfront-porch = <7>;
--				hsync-len = <60>;
--				vsync-len = <10>;
--			};
--		};
- 
--		port {
-+		port@0 {
-+		reg = <0>;
-+
- 			display0_in: endpoint {
- 				remote-endpoint = <&ipu_di0_disp1>;
- 			};
- 		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			parallel_display_out: endpoint {
-+				remote-endpoint = <&tfp410_in>;
-+			};
-+		};
- 	};
- 
- 	display2: disp2 {
-@@ -115,6 +113,42 @@
- 		};
- 	};
- 
-+	dvi-connector {
-+		compatible = "dvi-connector";
-+		digital;
-+
-+		port {
-+			dvi_connector_in: endpoint {
-+				remote-endpoint = <&tfp410_out>;
-+			};
-+		};
-+	};
-+
-+	dvi-encoder {
-+		compatible = "ti,tfp410";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				tfp410_in: endpoint {
-+					remote-endpoint = <&parallel_display_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				tfp410_out: endpoint {
-+					remote-endpoint = <&dvi_connector_in>;
-+				};
-+			};
-+		};
-+	};
-+
- 	gpio-keys {
- 		compatible = "gpio-keys";
- 		pinctrl-names = "default";
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index d5f31e436032..e1a219573966 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -283,6 +283,7 @@ CONFIG_DRM_MSM=y
+ CONFIG_DRM_PANEL_LVDS=y
+ CONFIG_DRM_PANEL_SIMPLE=y
+ CONFIG_DRM_PANEL_SEIKO_43WVF1G=y
++CONFIG_DRM_TI_TFP410=y
+ CONFIG_DRM_DW_HDMI_AHB_AUDIO=m
+ CONFIG_DRM_DW_HDMI_CEC=y
+ CONFIG_DRM_IMX=y
 -- 
 2.17.1
 
