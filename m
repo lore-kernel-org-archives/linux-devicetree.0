@@ -2,85 +2,252 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0739FC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 21:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04CEC2D0CC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 21:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1A021655
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 21:24:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576272262;
-	bh=W3AOarlRoMNMCAbhrI5bz1eU9Cp/AwpFySYwtlMmWCY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tGpbhV2Ul0Ia19lO1iZSFKNxiCAuK9vMuB/5DnGSliysZVKG8RBSSwQbVZymNB3nS
-	 f4Vs07soOYCue6ZWpcGsmNr58H7a+rrouMbfAiUmAYbB3rdNajbQ1X2FGnYRr8clLh
-	 Xu0rkVLX4fSln+TgHC0VO3j/WqZeAi5lDeAb5b3k=
+	by mail.kernel.org (Postfix) with ESMTP id 3B10721655
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 21:25:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="kGau77Zj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725799AbfLMVYW (ORCPT
+        id S1726752AbfLMVZM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:24:22 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38698 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMVYW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 16:24:22 -0500
-Received: by mail-oi1-f195.google.com with SMTP id b8so1931087oiy.5;
-        Fri, 13 Dec 2019 13:24:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1ydBGATu/G6BCa2T8zgoKRGxjtzBRIPiwmZUK6g3t6E=;
-        b=PhLx/Rx2brwF6UONvsvCn+pC3kq2loPfNNfYIOh0l5VLLZ1C0xxzOuhKRBCbIjKTim
-         4NK7chovqJPzsHToDaB0wpZQOnfpSjQJ8Tb1RFEknSPMvYJ9IJjlbXvr44uFKQSZxCQg
-         +w+k3J+T/cmOMU9eyyWLexeDj5FnMTlDRAMe54w0kFGv45UblBiOcIYtR54AYrkVJWdV
-         vTMFMOp2S4by0POH0vyLvW5JHKHDe7wAlMwN5cSGmXZTnQYrZONq7ALg6BqcC6x4vFHM
-         IvoKdMs9AEXGPPHHndfv9OgLT+/UZrc4rf7FktX67cJemylLdzVj11h1F5hgTldSUD6O
-         Am/A==
-X-Gm-Message-State: APjAAAUlOInfWGCkX/j7+mkgZRA6EOva99Y2wl47qXT1TABFXvIP2dAG
-        iUVy+xvqEtVxUB3plB2CyQ==
-X-Google-Smtp-Source: APXvYqwo0Jh4yTE66y4sJn/aUtkBVXHXEHpW/fP2/UJ9cY5JA7W+Bm1CecnsxiD40w3KgM5ypQ2u7A==
-X-Received: by 2002:a05:6808:56:: with SMTP id v22mr7510316oic.37.1576272261119;
-        Fri, 13 Dec 2019 13:24:21 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 47sm3835989otf.54.2019.12.13.13.24.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 13:24:20 -0800 (PST)
-Date:   Fri, 13 Dec 2019 15:24:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: usb: qcom,dwc3: Add compatible for
- SC7180
-Message-ID: <20191213212420.GA17181@bogus>
-References: <1574940787-1004-1-git-send-email-sanm@codeaurora.org>
- <1574940787-1004-4-git-send-email-sanm@codeaurora.org>
+        Fri, 13 Dec 2019 16:25:12 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:50316 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfLMVZL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 16:25:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1576272308; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Gyd/iXeMfPWamj4m2FYrweXavCCrf5f9T5ZiqQRwBNg=;
+        b=kGau77ZjLiQK028CkDrJnLm/azl1Q1JFkuUyUEp/gNp1LLNgbdmU6uN6LUdngm7QHaFsYq
+        feY035GcTKTT/LUYlZGV2nzxFHe8NM0oJBlCMDuSYRqU57RYEh1QbeY2tjEszihJC9ddpu
+        HxZxumuUw4E7Kn6+XbOzY50GKYSdnxw=
+Date:   Fri, 13 Dec 2019 22:25:01 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 1/5] clk: Ingenic: Adjust cgu code to make it
+ compatible with X1830.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Message-Id: <1576272301.3.3@crapouillou.net>
+In-Reply-To: <1576250472-124315-3-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
+        <1576250472-124315-3-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574940787-1004-4-git-send-email-sanm@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 28 Nov 2019 17:03:07 +0530, Sandeep Maheswaram wrote:
-> Add compatible for SC7180 in usb dwc3 bindings.
-> 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Hi Zhou,
 
-Acked-by: Rob Herring <robh@kernel.org>
+
+Le ven., d=C3=A9c. 13, 2019 at 23:21, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yan=
+jie)=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+> The PLL of X1830 Soc from Ingenic has been greatly changed,
+> the bypass control is placed in another register, so now two
+> registers may needed to control the PLL. To this end, the
+> original "reg" was changed to "pll_reg", and a new "bypass_reg"
+> was introduced. In addition, when calculating rate, the PLL of
+> X1830 introduced an extra 2x multiplier, so a new "rate_multiplier"
+> was introduced.
+>=20
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
+> ---
+>=20
+> Notes:
+>     v1->v2:
+>     1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
+>       array (reg[2]).
+>     2.Remove the "pll_info->version" and add a=20
+> "pll_info->rate_multiplier".
+>     3.Fix the coding style and add more detailed commit message.
+>     4.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
+>       to "=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeetec=
+h.com>" because
+>       the old mailbox is in an unstable state.
+>=20
+>  drivers/clk/ingenic/cgu.c | 32 +++++++++++++++++++++-----------
+>  drivers/clk/ingenic/cgu.h |  8 ++++++--
+>  2 files changed, 27 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+> index 6e96303..ae1ddcb 100644
+> --- a/drivers/clk/ingenic/cgu.c
+> +++ b/drivers/clk/ingenic/cgu.c
+> @@ -84,7 +84,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned=20
+> long parent_rate)
+>  	pll_info =3D &clk_info->pll;
+>=20
+>  	spin_lock_irqsave(&cgu->lock, flags);
+> -	ctl =3D readl(cgu->base + pll_info->reg);
+> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
+>  	spin_unlock_irqrestore(&cgu->lock, flags);
+>=20
+>  	m =3D (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
+> @@ -93,6 +93,11 @@ ingenic_pll_recalc_rate(struct clk_hw *hw,=20
+> unsigned long parent_rate)
+>  	n +=3D pll_info->n_offset;
+>  	od_enc =3D ctl >> pll_info->od_shift;
+>  	od_enc &=3D GENMASK(pll_info->od_bits - 1, 0);
+> +
+> +	spin_lock_irqsave(&cgu->lock, flags);
+> +	ctl =3D readl(cgu->base + pll_info->bypass_reg);
+> +	spin_unlock_irqrestore(&cgu->lock, flags);
+
+I think you should start the patchset with the current [5/5] patch;=20
+then you wouldn't have to add spinlock protection here just to see it=20
+removed later in the same patchset.
+
+Cheers,
+-Paul
+
+> +
+>  	bypass =3D !pll_info->no_bypass_bit &&
+>  		 !!(ctl & BIT(pll_info->bypass_bit));
+>=20
+> @@ -106,7 +111,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw,=20
+> unsigned long parent_rate)
+>  	BUG_ON(od =3D=3D pll_info->od_max);
+>  	od++;
+>=20
+> -	return div_u64((u64)parent_rate * m, n * od);
+> +	return div_u64((u64)parent_rate * m * pll_info->rate_multiplier, n=20
+> * od);
+>  }
+>=20
+>  static unsigned long
+> @@ -139,7 +144,7 @@ ingenic_pll_calc(const struct=20
+> ingenic_cgu_clk_info *clk_info,
+>  	if (pod)
+>  		*pod =3D od;
+>=20
+> -	return div_u64((u64)parent_rate * m, n * od);
+> +	return div_u64((u64)parent_rate * m * pll_info->rate_multiplier, n=20
+> * od);
+>  }
+>=20
+>  static inline const struct ingenic_cgu_clk_info *to_clk_info(
+> @@ -183,7 +188,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned=20
+> long req_rate,
+>  			clk_info->name, req_rate, rate);
+>=20
+>  	spin_lock_irqsave(&cgu->lock, flags);
+> -	ctl =3D readl(cgu->base + pll_info->reg);
+> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
+>=20
+>  	ctl &=3D ~(GENMASK(pll_info->m_bits - 1, 0) << pll_info->m_shift);
+>  	ctl |=3D (m - pll_info->m_offset) << pll_info->m_shift;
+> @@ -194,7 +199,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned=20
+> long req_rate,
+>  	ctl &=3D ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift);
+>  	ctl |=3D pll_info->od_encoding[od - 1] << pll_info->od_shift;
+>=20
+> -	writel(ctl, cgu->base + pll_info->reg);
+> +	writel(ctl, cgu->base + pll_info->pll_reg);
+>  	spin_unlock_irqrestore(&cgu->lock, flags);
+>=20
+>  	return 0;
+> @@ -212,16 +217,21 @@ static int ingenic_pll_enable(struct clk_hw *hw)
+>  	u32 ctl;
+>=20
+>  	spin_lock_irqsave(&cgu->lock, flags);
+> -	ctl =3D readl(cgu->base + pll_info->reg);
+> +	ctl =3D readl(cgu->base + pll_info->bypass_reg);
+>=20
+>  	ctl &=3D ~BIT(pll_info->bypass_bit);
+> +
+> +	writel(ctl, cgu->base + pll_info->bypass_reg);
+> +
+> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
+> +
+>  	ctl |=3D BIT(pll_info->enable_bit);
+>=20
+> -	writel(ctl, cgu->base + pll_info->reg);
+> +	writel(ctl, cgu->base + pll_info->pll_reg);
+>=20
+>  	/* wait for the PLL to stabilise */
+>  	for (i =3D 0; i < timeout; i++) {
+> -		ctl =3D readl(cgu->base + pll_info->reg);
+> +		ctl =3D readl(cgu->base + pll_info->pll_reg);
+>  		if (ctl & BIT(pll_info->stable_bit))
+>  			break;
+>  		mdelay(1);
+> @@ -245,11 +255,11 @@ static void ingenic_pll_disable(struct clk_hw=20
+> *hw)
+>  	u32 ctl;
+>=20
+>  	spin_lock_irqsave(&cgu->lock, flags);
+> -	ctl =3D readl(cgu->base + pll_info->reg);
+> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
+>=20
+>  	ctl &=3D ~BIT(pll_info->enable_bit);
+>=20
+> -	writel(ctl, cgu->base + pll_info->reg);
+> +	writel(ctl, cgu->base + pll_info->pll_reg);
+>  	spin_unlock_irqrestore(&cgu->lock, flags);
+>  }
+>=20
+> @@ -263,7 +273,7 @@ static int ingenic_pll_is_enabled(struct clk_hw=20
+> *hw)
+>  	u32 ctl;
+>=20
+>  	spin_lock_irqsave(&cgu->lock, flags);
+> -	ctl =3D readl(cgu->base + pll_info->reg);
+> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
+>  	spin_unlock_irqrestore(&cgu->lock, flags);
+>=20
+>  	return !!(ctl & BIT(pll_info->enable_bit));
+> diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
+> index 0dc8004..f7b6908 100644
+> --- a/drivers/clk/ingenic/cgu.h
+> +++ b/drivers/clk/ingenic/cgu.h
+> @@ -16,7 +16,9 @@
+>=20
+>  /**
+>   * struct ingenic_cgu_pll_info - information about a PLL
+> - * @reg: the offset of the PLL's control register within the CGU
+> + * @pll_reg: the offset of the PLL's control register within the CGU
+> + * @bypass_reg: the offset of the bypass control register within the=20
+> CGU
+> + * @rate_multiplier: the multiplier needed by pll rate calculation
+>   * @m_shift: the number of bits to shift the multiplier value by=20
+> (ie. the
+>   *           index of the lowest bit of the multiplier value in the=20
+> PLL's
+>   *           control register)
+> @@ -43,7 +45,9 @@
+>   * @no_bypass_bit: if set, the PLL has no bypass functionality
+>   */
+>  struct ingenic_cgu_pll_info {
+> -	unsigned reg;
+> +	unsigned pll_reg;
+> +	unsigned bypass_reg;
+> +	unsigned rate_multiplier;
+>  	const s8 *od_encoding;
+>  	u8 m_shift, m_bits, m_offset;
+>  	u8 n_shift, n_bits, n_offset;
+> --
+> 2.7.4
+>=20
+
+=
+
