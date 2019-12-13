@@ -2,166 +2,122 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01943C3B1A7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9181C76195
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA84246B1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576269506;
-	bh=2MyY3e3C9u668NDTd1DHUO0Wkkl4xB75lFFN94drrjE=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=eP686CqBLYRkBhJO2E9AGrhYnnI9QRkXViZtYGi12XcZsoyNpND2CLeXGSzjJXIeT
-	 l8CPjClNbhmPcRYHCvb8PZv/G7mw8o1xTCUmmPLFDVGm3R/ITQQCaGX11kvbfm3Kbs
-	 jtts90N/srVecMzRrtDx/EAsn116C3QJH/EpdA+k=
+	by mail.kernel.org (Postfix) with ESMTP id 1992A246C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IpwWQTBz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfLMPfe (ORCPT
+        id S1728028AbfLMPjW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:35:34 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41673 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727831AbfLMPfd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 10:35:33 -0500
-Received: by mail-oi1-f196.google.com with SMTP id i1so1225633oie.8;
-        Fri, 13 Dec 2019 07:35:33 -0800 (PST)
+        Fri, 13 Dec 2019 10:39:22 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:36378 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727904AbfLMPjV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 10:39:21 -0500
+Received: by mail-yw1-f68.google.com with SMTP id n184so6054ywc.3;
+        Fri, 13 Dec 2019 07:39:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=66dDxa4JQshR1dxJN1HCdA7FRTIVML1Rl2L0x4gBwBs=;
+        b=IpwWQTBzg9+efmz6zpdHlpW7WO6Qb2rzpNyjAvojL6elJWNgpVqmZyQ+VOA2jRdCEh
+         jGyplAdiIPO/JftjYxUO7sovgTvepNOw0lWV1MT9dznUOuusPMO+j+Z13oroUaaD5bil
+         1piYhqNdzEdfXdqhnE+7U5kCEFqfJ8zhu7wceeOYtYpgS0QKCQ+RML/u0oe6npp2nIWC
+         Cc9nOT5KsyorY2X5unKnHKTIQ8r9XxZZz4ec1HolS6nH5SjuT5MeeuFP3YXKRzxK52KC
+         2LdZ8O6EEN/aQaZn8ExiHvWWt6aJrAMgVOeJJTI1AxGZbbtQSCpn6u9Ib/Kn3pQul97X
+         ebAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=miXIJmEni/sWO257xPSeM4sPbQdvnjyyfE6aO/Df5fU=;
-        b=btTV4N4sYfeV5Hp21HpbZz0eOfLgWc5pt/9CoVwNViPDPOZefatHRN4pJQFwWmrTP9
-         ZoI5NDTg+j85KlQxhigqy045KGk8+0AeXDH4+uH5sUOqZ/coUY9pQxRMJPCMTyo/Btyo
-         PhB9ZvIvdhOp5u0nQoz9VoDpRs+1Eh4P14m3KYMMYfCQMLn1ZM36nFDqfpRrDFMKZpwD
-         aSnTyXqO33dMrS2JfoRI+JDXEK1g3FL6jqMttDHxf99b5KnxvttT6095xMMtwV4ASrhk
-         2QvPr/DUh0YTYHdCOGR19p6GOBhG2xR1DG2TRgk/JS1YaACsioyrb79r5i4ITJDB3NID
-         1cBw==
-X-Gm-Message-State: APjAAAW7htRgxpgOOrHZNzEKEp3vpWwV0/PGOokcqdjsnV2TmRhy3IGY
-        pTD2zKTTgsZ7lqp85+Z8vw==
-X-Google-Smtp-Source: APXvYqzQdO0+IZGU0PtRT3ojxNaVaPt66HS9HFU9wyKE3Z5KKQCi/6+OZuWad52eDCwt3fplOQDA5A==
-X-Received: by 2002:aca:5ad4:: with SMTP id o203mr7232580oib.73.1576251332537;
-        Fri, 13 Dec 2019 07:35:32 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p24sm3416096oth.28.2019.12.13.07.35.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=66dDxa4JQshR1dxJN1HCdA7FRTIVML1Rl2L0x4gBwBs=;
+        b=paGbHfPminizg1T70Pj3QKYWFmDEp+RQKlsesNVFmI0ad/wLdWJoqyw3ePIWcG8mq+
+         T8vwmv2qTpe57wTHAJ0Sgtlb6+kuNP/7MvthGaWk5HuQwAaJ+kbNTW/J+7DBh5LDn/w4
+         RweWhsi1/HhI7pZFiM+m+7rErHnr9UO7q5wSO8GGRQZy9G5my9yx0H4epRqvrw0/OxJz
+         E4h3lkCHlAMgLgmBwCrHSO+ax2GGU8RDfqwIof7KS+XUcOcV48txEUieTlayZbIWih4K
+         IzZNeLmcHqea3wZVEwN5ELIGdSxgQDrmOK2hWWpAiMmTv5eDnCcPrNM+EJIDp9kvF0aZ
+         Xd+Q==
+X-Gm-Message-State: APjAAAXc0cPpi8bqXwwoMbGK57GYdN/EQWAC0gejCnbz4v1W0LvvpW9F
+        SkzM6ng/EkhNeSZxT7om7A8=
+X-Google-Smtp-Source: APXvYqzO7cb72G93h6pc42x43nIgubOr0x06bTe3Kej8fCH2doIKLJGdJ8weE8MbHkaf+/uMF//KeA==
+X-Received: by 2002:a25:b007:: with SMTP id q7mr7626962ybf.193.1576251560130;
+        Fri, 13 Dec 2019 07:39:20 -0800 (PST)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id i17sm4300474ywg.66.2019.12.13.07.39.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 07:35:31 -0800 (PST)
-Date:   Fri, 13 Dec 2019 09:35:31 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: [GIT PULL] Devicetree fixes for v5.5
-Message-ID: <20191213153531.GA28973@bogus>
+        Fri, 13 Dec 2019 07:39:19 -0800 (PST)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     horia.geanta@nxp.com, Adam Ford <aford173@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+Subject: [PATCH V2 1/3] crypto: caam: Add support for i.MX8M Mini
+Date:   Fri, 13 Dec 2019 09:39:08 -0600
+Message-Id: <20191213153910.11235-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Linus,
+The i.MX8M Mini uses the same crypto engine as the i.MX8MQ, but
+the driver is restricting the check to just the i.MX8MQ.
 
-Please pull a couple of DT fixes for v5.5.
+This patch expands the check for either i.MX8MQ or i.MX8MM.
 
-Rob
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
+---
+V2:  Expand the check that forces the setting on imx8mq to also be true for imx8mm
+     Explictly state imx8mm compatiblity instead of making it generic to all imx8m*
+      this is mostly due to lack of other hardware to test
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+index d7c3c3805693..c01dda692ecc 100644
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -102,7 +102,8 @@ static inline int run_descriptor_deco0(struct device *ctrldev, u32 *desc,
+ 	     * Apparently on i.MX8MQ it doesn't matter if virt_en == 1
+ 	     * and the following steps should be performed regardless
+ 	     */
+-	    of_machine_is_compatible("fsl,imx8mq")) {
++	    of_machine_is_compatible("fsl,imx8mq") ||
++	    of_machine_is_compatible("fsl,imx8mm")) {
+ 		clrsetbits_32(&ctrl->deco_rsr, 0, DECORSR_JR0);
+ 
+ 		while (!(rd_reg32(&ctrl->deco_rsr) & DECORSR_VALID) &&
+@@ -509,6 +510,7 @@ static const struct soc_device_attribute caam_imx_soc_table[] = {
+ 	{ .soc_id = "i.MX6*",  .data = &caam_imx6_data },
+ 	{ .soc_id = "i.MX7*",  .data = &caam_imx7_data },
+ 	{ .soc_id = "i.MX8MQ", .data = &caam_imx7_data },
++	{ .soc_id = "i.MX8MM", .data = &caam_imx7_data },
+ 	{ .family = "Freescale i.MX" },
+ 	{ /* sentinel */ }
+ };
+-- 
+2.20.1
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.5
-
-for you to fetch changes up to ee9b280e17dce51c44e1d04d11eb0a4acd0ee1a9:
-
-  of/platform: Unconditionally pause/resume sync state during kernel init (2019-12-12 18:39:52 -0600)
-
-----------------------------------------------------------------
-Devicetree fixes for v5.5:
-
-- Fix for dependency tracking caused by unittest interaction
-
-- Fix some schema errors in Tegra memory controller schema
-
-- Update Maxime Ripard's email address
-
-- Review fixes to TI cpsw-switch
-
-- Add wakeup-source prop for STM32 rproc. Got dropped in the schema
-  conversion.
-
-----------------------------------------------------------------
-Arnaud Pouliquen (1):
-      dt-bindings: remoteproc: stm32: add wakeup-source property
-
-Grygorii Strashko (1):
-      dt-bindings: net: ti: cpsw-switch: update to fix comments
-
-Maxime Ripard (1):
-      dt-bindings: Change maintainer address
-
-Rob Herring (1):
-      dt-bindings: memory-controllers: tegra: Fix type references
-
-Saravana Kannan (1):
-      of/platform: Unconditionally pause/resume sync state during kernel init
-
- Documentation/devicetree/bindings/arm/sunxi.yaml   |  2 +-
- .../bindings/bus/allwinner,sun50i-a64-de2.yaml     |  2 +-
- .../bindings/bus/allwinner,sun8i-a23-rsb.yaml      |  2 +-
- .../bindings/clock/allwinner,sun4i-a10-ccu.yaml    |  2 +-
- .../crypto/allwinner,sun4i-a10-crypto.yaml         |  2 +-
- .../display/allwinner,sun6i-a31-mipi-dsi.yaml      |  2 +-
- .../bindings/display/panel/ronbo,rb070d30.yaml     |  2 +-
- .../bindings/dma/allwinner,sun4i-a10-dma.yaml      |  2 +-
- .../bindings/dma/allwinner,sun50i-a64-dma.yaml     |  2 +-
- .../bindings/dma/allwinner,sun6i-a31-dma.yaml      |  2 +-
- .../bindings/i2c/allwinner,sun6i-a31-p2wi.yaml     |  2 +-
- .../bindings/iio/adc/allwinner,sun8i-a33-ths.yaml  |  2 +-
- .../input/allwinner,sun4i-a10-lradc-keys.yaml      |  2 +-
- .../allwinner,sun4i-a10-ic.yaml                    |  2 +-
- .../allwinner,sun7i-a20-sc-nmi.yaml                |  2 +-
- .../bindings/media/allwinner,sun4i-a10-csi.yaml    |  2 +-
- .../bindings/media/allwinner,sun4i-a10-ir.yaml     |  2 +-
- .../memory-controllers/nvidia,tegra124-mc.yaml     |  3 ++-
- .../memory-controllers/nvidia,tegra30-emc.yaml     |  9 ++++++---
- .../memory-controllers/nvidia,tegra30-mc.yaml      |  3 ++-
- .../bindings/mfd/allwinner,sun4i-a10-ts.yaml       |  2 +-
- .../bindings/mmc/allwinner,sun4i-a10-mmc.yaml      |  2 +-
- .../bindings/mtd/allwinner,sun4i-a10-nand.yaml     |  2 +-
- .../bindings/net/allwinner,sun4i-a10-emac.yaml     |  2 +-
- .../bindings/net/allwinner,sun4i-a10-mdio.yaml     |  2 +-
- .../bindings/net/allwinner,sun7i-a20-gmac.yaml     |  2 +-
- .../bindings/net/allwinner,sun8i-a83t-emac.yaml    |  2 +-
- .../bindings/net/can/allwinner,sun4i-a10-can.yaml  |  2 +-
- .../devicetree/bindings/net/ti,cpsw-switch.yaml    | 22 +++++++---------------
- .../bindings/nvmem/allwinner,sun4i-a10-sid.yaml    |  2 +-
- .../phy/allwinner,sun6i-a31-mipi-dphy.yaml         |  2 +-
- .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml       |  2 +-
- .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml      |  2 +-
- .../bindings/remoteproc/st,stm32-rproc.yaml        |  2 ++
- .../bindings/rtc/allwinner,sun4i-a10-rtc.yaml      |  2 +-
- .../bindings/rtc/allwinner,sun6i-a31-rtc.yaml      |  2 +-
- .../bindings/serio/allwinner,sun4i-a10-ps2.yaml    |  2 +-
- .../bindings/sound/allwinner,sun4i-a10-codec.yaml  |  2 +-
- .../bindings/sound/allwinner,sun4i-a10-i2s.yaml    |  2 +-
- .../bindings/sound/allwinner,sun4i-a10-spdif.yaml  |  2 +-
- .../sound/allwinner,sun50i-a64-codec-analog.yaml   |  2 +-
- .../sound/allwinner,sun8i-a23-codec-analog.yaml    |  2 +-
- .../bindings/sound/allwinner,sun8i-a33-codec.yaml  |  2 +-
- .../bindings/spi/allwinner,sun4i-a10-spi.yaml      |  2 +-
- .../bindings/spi/allwinner,sun6i-a31-spi.yaml      |  2 +-
- .../bindings/timer/allwinner,sun4i-a10-timer.yaml  |  2 +-
- .../timer/allwinner,sun5i-a13-hstimer.yaml         |  2 +-
- .../bindings/usb/allwinner,sun4i-a10-musb.yaml     |  2 +-
- .../bindings/watchdog/allwinner,sun4i-a10-wdt.yaml |  2 +-
- drivers/of/platform.c                              |  6 +++---
- 50 files changed, 66 insertions(+), 67 deletions(-)
