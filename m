@@ -2,98 +2,265 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 744FCC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 07:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD34CC2D0C9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 07:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46622214D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 07:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3BD12465A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 07:49:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pXz5FsZs"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="M5Z0fhzE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xZ+B6sOQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725535AbfLMHtF (ORCPT
+        id S1725828AbfLMHto (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 02:49:05 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:34443 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725497AbfLMHtF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 02:49:05 -0500
-X-UUID: 02007113592242d1a16f3286fb5986ac-20191213
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=BtXET+1NElrPbMJwRKiAbYUNzkYHcN515L3qrDyBFRk=;
-        b=pXz5FsZsYlJz8svVObFaMi64OE1cx8Rnw1TMrx2oaYO4tfHCeHkuFuKT92R4c8anxQ9QgbTYOcWfiXROrlsyKDVLB45tJfAFVaIGaBddIJw8CDBRjjD7RmiROjnRDf9XK+2BO2JA47xzH8v7LRAmEFIeC55E+rAbNftWJhlGDGo=;
-X-UUID: 02007113592242d1a16f3286fb5986ac-20191213
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 561960265; Fri, 13 Dec 2019 15:48:57 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 13 Dec 2019 15:48:39 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 13 Dec 2019 15:48:46 +0800
-Message-ID: <1576223336.9817.3.camel@mtksdaap41>
-Subject: Re: [PATCH v2, 1/2] drm/mediatek: Fix gamma correction issue
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Fri, 13 Dec 2019 02:49:44 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:51043 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725535AbfLMHtn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Dec 2019 02:49:43 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1125822784;
+        Fri, 13 Dec 2019 02:49:43 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 13 Dec 2019 02:49:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=mJFqAJ0C3QCpWN2iUjPkDmdFvn
+        znhTzLbrbNUZFsDHk=; b=M5Z0fhzEup+SlJRpXx8Nk9814SOijbwUlJwPFXr3Fp
+        UXqpw5TDvfj53uwfP5k001Y0KKkIp3sJ3cYzvL4uM/IXYvnLSwLktwJEs56LQr5u
+        ONz83jKed3LKu4T/4s7I4BXg7MigZxMWmdCxPEZ+Nf0MDMxJLgncD+u4Oc53/3iU
+        43jlJXMsQKMt8OY0AbZ9vrAmgzwBpvrLT1UG05t48wWpJq5dq4iqiCkeIH4teVsG
+        yZnXhDz4Agl3XjSZzV/kO0lhfCFXb27UMBkO4bliuoBRhBgcxunN4EBCBmzUJQx5
+        WuFaqBkVj22GilvqhuhbKm580KicthIsSZY0/U6EJ4og==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=mJFqAJ0C3QCpWN2iU
+        jPkDmdFvnznhTzLbrbNUZFsDHk=; b=xZ+B6sOQYtZxyvToFKhUpaFvzQkiGu4k2
+        D6M/OzzLo3y3zN0FMj6bGuZj5J9eK5Ul5pUQKbQa07XVXIchfOXMGf8jq02dmhUE
+        X47btzYL4GBhsJRPzSamTYnNNnVvz8CAqAqqYLgvsQM5oShXYymZ7HW424A8+ASD
+        RYWHPvkQVbZQ05gRqaT9d6OVUcjaBgGuXB2GFuDOreCUtX9HTX+oKh6VMNTd9sDI
+        RA9qk6iDz+KRVjbkzlrJsYBxeml0XQuZ6Fx0RxjhnpBYwfbWij7ocHPyT2pNx4cE
+        uFSZI+O37mrXTdNpQ26er2HxIFBzDr4SfYRsQKkliH/jR1YefStww==
+X-ME-Sender: <xms:lkLzXZU9KDrpochxgUwvzHVDtY2_D3LFfhBduW93rjRu1WIZMAFpZg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelkedgudduvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enogevohgrshhtrghlqdfhgeduvddqtddvucdludehtddmnecujfgurhephffvufffkffo
+    ggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgi
+    himhgvsegtvghrnhhordhtvggthheqnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdr
+    ohhrghenucfkphepledtrdekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomh
+    epmhgrgihimhgvsegtvghrnhhordhtvggthhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:lkLzXQf9_gBrxN17AcTL8Ma1jJ5ZOsSrHDAgNj-2FlZd56KBp_9UfQ>
+    <xmx:lkLzXduYbHuMJZUUQmKSo__iuMRC7xP9IKO5qpN5P1WKJzsRQZp-Yw>
+    <xmx:lkLzXX8BF3j5y60ZmFiHgjESVUxrzH8OnQFfXiKt4SfeI7M1-RC9pw>
+    <xmx:l0LzXdSX-vkhze1OcB_TTFVL9e23hD77BV-zKs4PVlnD6LXN07sjXQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B783880069;
+        Fri, 13 Dec 2019 02:49:41 -0500 (EST)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 13 Dec 2019 15:48:56 +0800
-In-Reply-To: <1576222132-31586-2-git-send-email-yongqiang.niu@mediatek.com>
-References: <1576222132-31586-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1576222132-31586-2-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        axboe@kernel.dk, linux-ide@vger.kernel.org,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH] dt-bindings: ata: Convert Allwinner AHCI controller to a schema
+Date:   Fri, 13 Dec 2019 08:49:38 +0100
+Message-Id: <20191213074938.27285-1-maxime@cerno.tech>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: B2D976F46AAC6B6E1746EF1ECE6AC29281FF83D79D292527E390BA3DF3F8755E2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoNCg0KVGhlIHRpdGxlIGlzIHRvbyByb3VnaC4gQW55IGJ1ZyBvZiBnYW1t
-YSB3b3VsZCBiZSB0aGlzIHRpdGxlLiBJIHdvdWxkDQpsaWtlIHRoZSB0aXRsZSBzaG93IGV4cGxp
-Y2l0bHkgd2hhdCBpdCBkb2VzLg0KDQpPbiBGcmksIDIwMTktMTItMTMgYXQgMTU6MjggKzA4MDAs
-IFlvbmdxaWFuZyBOaXUgd3JvdGU6DQo+IGlmIHRoZXJlIGlzIG5vIGdhbW1hIGZ1bmN0aW9uIGlu
-IHRoZSBjcnRjDQo+IGRpc3BsYXkgcGF0aCwgZG9uJ3QgYWRkIGdhbW1hIHByb3BlcnR5DQo+IGZv
-ciBjcnRjDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcgTml1IDx5b25ncWlhbmcubml1
-QG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
-bV9jcnRjLmMgfCAxMCArKysrKysrKy0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25z
-KCspLCAyIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZHJtX2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2NydGMuYw0KPiBpbmRleCBjYTRmYzQ3Li45YThlMWQ0IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJz
-L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+IEBAIC03MzQsNiArNzM0LDcgQEAgaW50IG10a19k
-cm1fY3J0Y19jcmVhdGUoc3RydWN0IGRybV9kZXZpY2UgKmRybV9kZXYsDQo+ICAJaW50IHBpcGUg
-PSBwcml2LT5udW1fcGlwZXM7DQo+ICAJaW50IHJldDsNCj4gIAlpbnQgaTsNCj4gKwl1aW50IGdh
-bW1hX2x1dF9zaXplID0gMDsNCj4gIA0KPiAgCWlmICghcGF0aCkNCj4gIAkJcmV0dXJuIDA7DQo+
-IEBAIC03ODUsNiArNzg2LDkgQEAgaW50IG10a19kcm1fY3J0Y19jcmVhdGUoc3RydWN0IGRybV9k
-ZXZpY2UgKmRybV9kZXYsDQo+ICAJCX0NCj4gIA0KPiAgCQltdGtfY3J0Yy0+ZGRwX2NvbXBbaV0g
-PSBjb21wOw0KPiArDQo+ICsJCWlmIChjb21wLT5mdW5jcy0+Z2FtbWFfc2V0KQ0KPiArCQkJZ2Ft
-bWFfbHV0X3NpemUgPSBNVEtfTFVUX1NJWkU7DQo+ICAJfQ0KPiAgDQo+ICAJZm9yIChpID0gMDsg
-aSA8IG10a19jcnRjLT5kZHBfY29tcF9ucjsgaSsrKQ0KPiBAQCAtODA1LDggKzgwOSwxMCBAQCBp
-bnQgbXRrX2RybV9jcnRjX2NyZWF0ZShzdHJ1Y3QgZHJtX2RldmljZSAqZHJtX2RldiwNCj4gIAkJ
-CQlOVUxMLCBwaXBlKTsNCj4gIAlpZiAocmV0IDwgMCkNCj4gIAkJcmV0dXJuIHJldDsNCj4gLQlk
-cm1fbW9kZV9jcnRjX3NldF9nYW1tYV9zaXplKCZtdGtfY3J0Yy0+YmFzZSwgTVRLX0xVVF9TSVpF
-KTsNCj4gLQlkcm1fY3J0Y19lbmFibGVfY29sb3JfbWdtdCgmbXRrX2NydGMtPmJhc2UsIDAsIGZh
-bHNlLCBNVEtfTFVUX1NJWkUpOw0KPiArDQo+ICsJaWYgKGdhbW1hX2x1dF9zaXplKQ0KPiArCQlk
-cm1fbW9kZV9jcnRjX3NldF9nYW1tYV9zaXplKCZtdGtfY3J0Yy0+YmFzZSwgZ2FtbWFfbHV0X3Np
-emUpOw0KPiArCWRybV9jcnRjX2VuYWJsZV9jb2xvcl9tZ210KCZtdGtfY3J0Yy0+YmFzZSwgMCwg
-ZmFsc2UsIGdhbW1hX2x1dF9zaXplKTsNCg0KSWYgdGhlcmUgaXMgbm8gZ2FtbWEsIHNoYWxsIHdl
-IGVuYWJsZSBjb2xvciBtYW5hZ2VtZW50Pw0KDQpSZWdhcmRzLA0KQ0sNCg0KPiAgCXByaXYtPm51
-bV9waXBlcysrOw0KPiAgCW11dGV4X2luaXQoJm10a19jcnRjLT5od19sb2NrKTsNCj4gIA0KDQo=
+The Allwinner SoCs have a AHCI controllers that is supported in Linux, with
+a matching Device Tree binding.
+
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
+
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ .../devicetree/bindings/ata/ahci-platform.txt | 12 ----
+ .../ata/allwinner,sun4i-a10-ahci.yaml         | 47 +++++++++++++
+ .../ata/allwinner,sun8i-r40-ahci.yaml         | 67 +++++++++++++++++++
+ 3 files changed, 114 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ata/allwinner,sun4i-a10-ahci.yaml
+ create mode 100644 Documentation/devicetree/bindings/ata/allwinner,sun8i-r40-ahci.yaml
+
+diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+index 55c6fab1b373..77091a277642 100644
+--- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
++++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+@@ -9,8 +9,6 @@ PHYs.
+ 
+ Required properties:
+ - compatible        : compatible string, one of:
+-  - "allwinner,sun4i-a10-ahci"
+-  - "allwinner,sun8i-r40-ahci"
+   - "brcm,iproc-ahci"
+   - "hisilicon,hisi-ahci"
+   - "cavium,octeon-7130-ahci"
+@@ -45,8 +43,6 @@ Required properties when using sub-nodes:
+ - #address-cells    : number of cells to encode an address
+ - #size-cells       : number of cells representing the size of an address
+ 
+-For allwinner,sun8i-r40-ahci, the reset property must be present.
+-
+ Sub-nodes required properties:
+ - reg		    : the port number
+ And at least one of the following properties:
+@@ -60,14 +56,6 @@ Examples:
+ 		interrupts = <115>;
+         };
+ 
+-	ahci: sata@1c18000 {
+-		compatible = "allwinner,sun4i-a10-ahci";
+-		reg = <0x01c18000 0x1000>;
+-		interrupts = <56>;
+-		clocks = <&pll6 0>, <&ahb_gates 25>;
+-		target-supply = <&reg_ahci_5v>;
+-	};
+-
+ With sub-nodes:
+ 	sata@f7e90000 {
+ 		compatible = "marvell,berlin2q-achi", "generic-ahci";
+diff --git a/Documentation/devicetree/bindings/ata/allwinner,sun4i-a10-ahci.yaml b/Documentation/devicetree/bindings/ata/allwinner,sun4i-a10-ahci.yaml
+new file mode 100644
+index 000000000000..cb530b46beff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/allwinner,sun4i-a10-ahci.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/ata/allwinner,sun4i-a10-ahci.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A10 AHCI SATA Controller bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <mripard@kernel.org>
++
++properties:
++  compatible:
++    const: allwinner,sun4i-a10-ahci
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: AHCI Bus Clock
++      - description: AHCI Module Clock
++
++  interrupts:
++    maxItems: 1
++
++  target-supply:
++    description: Regulator for SATA target power
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    ahci: sata@1c18000 {
++        compatible = "allwinner,sun4i-a10-ahci";
++        reg = <0x01c18000 0x1000>;
++        interrupts = <56>;
++        clocks = <&pll6 0>, <&ahb_gates 25>;
++        target-supply = <&reg_ahci_5v>;
++    };
+diff --git a/Documentation/devicetree/bindings/ata/allwinner,sun8i-r40-ahci.yaml b/Documentation/devicetree/bindings/ata/allwinner,sun8i-r40-ahci.yaml
+new file mode 100644
+index 000000000000..e74d609be3cc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/allwinner,sun8i-r40-ahci.yaml
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/ata/allwinner,sun8i-r40-ahci.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner R40 AHCI SATA Controller bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <mripard@kernel.org>
++
++properties:
++  compatible:
++    const: allwinner,sun8i-r40-ahci
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: AHCI Bus Clock
++      - description: AHCI Module Clock
++
++  interrupts:
++    maxItems: 1
++
++  resets:
++    description: AHCI Reset Line
++
++  reset-names:
++    const: ahci
++
++  ahci-supply:
++    description: Regulator for the AHCI controller
++
++  phy-supply:
++    description: Regulator for the SATA PHY power
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - interrupts
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/sun8i-r40-ccu.h>
++    #include <dt-bindings/reset/sun8i-r40-ccu.h>
++
++    ahci: sata@1c18000 {
++        compatible = "allwinner,sun8i-r40-ahci";
++        reg = <0x01c18000 0x1000>;
++        interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&ccu CLK_BUS_SATA>, <&ccu CLK_SATA>;
++        resets = <&ccu RST_BUS_SATA>;
++        reset-names = "ahci";
++        ahci-supply = <&reg_dldo4>;
++        phy-supply = <&reg_eldo3>;
++    };
++
++...
+-- 
+2.23.0
 
