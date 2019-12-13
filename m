@@ -7,55 +7,56 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1171C2D0CA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 03:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BC6C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 03:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF09724658
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 03:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 562BB2465A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 03:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HEvONee7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R1XF8Afh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731987AbfLMDHZ (ORCPT
+        id S1731945AbfLMDHP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 22:07:25 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59948 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731465AbfLMDHP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 22:07:15 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBD37868123073;
-        Thu, 12 Dec 2019 21:07:08 -0600
+        Thu, 12 Dec 2019 22:07:15 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36462 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731499AbfLMDHO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 22:07:14 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBD377KD088008;
+        Thu, 12 Dec 2019 21:07:07 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576206428;
-        bh=zmYs0/zB/kVEjKiVKzUcurkphCnzgxZPOtkxkVMJYOo=;
+        s=ti-com-17Q1; t=1576206427;
+        bh=bjzkSGwjJanZ6D9U2D9DBeNvV2bdbXonjWIceJ35aww=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=HEvONee7yOwaGXI9krekeApZPE/D9yuWlQ72Au2hyMkyT7svc5A0GgoMyUYaePIT6
-         SvjWBaQYsnKgc5jSr542rblNcFurgfjKYE4V4bOrZxJjmlgW/axrqRQl2LPr3ywdxt
-         ibJIsMRh++TXR9QqpMYhzI8D/Z9487gOPNx4BQC8=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBD378qI128874
+        b=R1XF8Afh+BJQzN1qC5TplJQtyTR/9ImQsey59k1vw8hnOVh/rGR2b/uYFraNu89nF
+         /8822gYa7AKGat2yhhDVcwdEQ41A8kRg/4odTQBwnjh9uMqu8Rf7Huw9wpPzHLV+D8
+         sJz7t09neLSXg4kHeOraQO+j8T5LBgN0Nr+IlhBw=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBD376OU018495
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Dec 2019 21:07:08 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 12 Dec 2019 21:07:07 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Dec 2019 21:07:08 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 21:07:06 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Dec 2019 21:07:08 -0600
+ Frontend Transport; Thu, 12 Dec 2019 21:07:06 -0600
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBD3788l058989;
-        Thu, 12 Dec 2019 21:07:08 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBD376eC025174;
+        Thu, 12 Dec 2019 21:07:06 -0600
 From:   Dave Gerlach <d-gerlach@ti.com>
 To:     Tony Lindgren <tony@atomide.com>,
         Santosh Shilimkar <ssantosh@kernel.org>
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH 5/5] ARM: omap2plus_defconfig: Add CONFIG_ARM_CPUIDLE
-Date:   Thu, 12 Dec 2019 21:07:55 -0600
-Message-ID: <20191213030755.16096-6-d-gerlach@ti.com>
+        <devicetree@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH 1/5] dt-bindings: arm: cpu: Add TI AM335x and AM437x enable method
+Date:   Thu, 12 Dec 2019 21:07:51 -0600
+Message-ID: <20191213030755.16096-2-d-gerlach@ti.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191213030755.16096-1-d-gerlach@ti.com>
 References: <20191213030755.16096-1-d-gerlach@ti.com>
@@ -68,27 +69,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add CONFIG_ARM_CPUIDLE and supporting CONFIG_DT_IDLE_STATES as am335x
-and am437x will make use of these drivers.
+Add enable-method binding for "ti,am3352" and "ti,am4372".
 
 Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
 ---
- arch/arm/configs/omap2plus_defconfig | 2 ++
+CC: Rob Herring <robh+dt@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/cpus.yaml | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-index 8c37cc8ab6f2..84c2423cbe89 100644
---- a/arch/arm/configs/omap2plus_defconfig
-+++ b/arch/arm/configs/omap2plus_defconfig
-@@ -56,6 +56,8 @@ CONFIG_CPUFREQ_DT=m
- # CONFIG_ARM_OMAP2PLUS_CPUFREQ is not set
- CONFIG_ARM_TI_CPUFREQ=y
- CONFIG_CPU_IDLE=y
-+CONFIG_ARM_CPUIDLE=y
-+CONFIG_DT_IDLE_STATES=y
- CONFIG_KERNEL_MODE_NEON=y
- CONFIG_PM_DEBUG=y
- CONFIG_ARM_CRYPTO=y
+diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+index c23c24ff7575..428b6b55b5da 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.yaml
++++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+@@ -201,6 +201,8 @@ properties:
+               - rockchip,rk3066-smp
+               - socionext,milbeaut-m10v-smp
+               - ste,dbx500-smp
++              - ti,am3352
++              - ti,am4372
+ 
+   cpu-release-addr:
+     $ref: '/schemas/types.yaml#/definitions/uint64'
 -- 
 2.20.1
 
