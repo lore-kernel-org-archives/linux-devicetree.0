@@ -2,292 +2,90 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8975CC34373
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38608C3437E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE2AE24715
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D92124715
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="IDMTrz+r"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cjQ0OZb/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfLMNY3 (ORCPT
+        id S1727393AbfLMNaB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:24:29 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46593 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbfLMNY3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 08:24:29 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z7so6588138wrl.13
-        for <devicetree@vger.kernel.org>; Fri, 13 Dec 2019 05:24:26 -0800 (PST)
+        Fri, 13 Dec 2019 08:30:01 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40346 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727335AbfLMNaB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 08:30:01 -0500
+Received: by mail-wr1-f65.google.com with SMTP id c14so6647028wrn.7
+        for <devicetree@vger.kernel.org>; Fri, 13 Dec 2019 05:29:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=TeKkRgU0jXGjzT9DCm0fTUy/QIiQKl1xy36a8E5Fwws=;
-        b=IDMTrz+rS8XuFRKTldFBWE+ElzWuH1NR0eGoEwbDDKuN1121QIhN3WWEz1ZtXDCcnb
-         bJak3I7EerNSQXdO1bSgrWofohg3jl/87TdgLr6Hv6rcfGXROtrR/LYbPbGX6tMFtrsh
-         DTLJKETX1i9ZWI5j6wXFwVuy4CppJ8Y1Cwf44XMqrhy/E6Vjfzt7rcbBTgrcTifwV56Z
-         8q8Qyu6O4uwHecv8nlEdQq/yzO+/6xJY5DnJ2RrnPExk0NnUdCcLVcNZJ53BH535dXQY
-         QIrAqPOvcVr9D/lVLtNUVkSr3OSilRaBIbC6bRf7mDAia71xdBS3uNs/eMaUEA3qA44H
-         IoJA==
+        h=from:to:cc:subject:date:message-id;
+        bh=CcxRGFcCrtkq/Fa7c3EWJk3tVffr+ohpXoBBbiHwCUs=;
+        b=cjQ0OZb/t830fsiw1m+88Q5m3W6dN8tb2EKys48brHEsYFriumeCBYH1gzs1T6XiNa
+         KhtuxYzXEWvJPJ27bZlxSWvgp7VYtFnP2QlusXGZlXlPvJbKt2yi2FynYUxkpECpAjNm
+         TG8sHRSnfxO2OIzRCaJjOpo0Puq/OiXDeuxQOxVouZaPxq1TPv8BC4HTqVZXsDFgTMVE
+         gnT14QHP3ipUClIjCClxZu9mh6ubayg9egpQUtNgDdiDOctC5rkkQwl2TY0lewF4war9
+         O5/PVU/RtFElEAoU45X82nuswfcKwyuaX0qqBIdLUPqb3f+GeNmBT6XkHKCD5RFxZOnw
+         20Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=TeKkRgU0jXGjzT9DCm0fTUy/QIiQKl1xy36a8E5Fwws=;
-        b=kyesJS7NNi7RR42xptuPmYwGO3rL8MwG7itdiCwBTH/7Waoe68NDdRiolMjsQGzX9c
-         GLz4RCPSveqQSF26uz325lfJjhviOHv9igZAm7daPQazB48CEVi/S9eu150Vvdts38l+
-         VPmWLnbESTSdHlPQVXD0625gPWWJLItB/WAxbXl2U/uIz1HK4CgE/PRYawSAx+o9sE4C
-         o3MCTvM//gynxEjYw/FEaG7qM6RRl34SGGdZuqxZy7Sq5A0p3H8OR8iZUA1jH/50Hugg
-         4LX/rkxAulHB/ypof+BGbPiqzNqGy2+O6S2/+ji3Gl0Riw9/6zK/GnsD16m8zWNmECKJ
-         UmjQ==
-X-Gm-Message-State: APjAAAVrn+VKjqcpNpVdgUSjH4YNhWCUt0iX78mL++tMweuo2AHBoLze
-        KryLQoroHOuFGNSrp+Lf9yy6Toy5e9jSmA==
-X-Google-Smtp-Source: APXvYqwdFZ2qNVDI1LIj0hzn0dE3lZy0iGZ3yIt2DB53spn18lP29RlgKMpWV5Ijfr4VLxOnCAl/7Q==
-X-Received: by 2002:a5d:46c1:: with SMTP id g1mr12547902wrs.200.1576243465558;
-        Fri, 13 Dec 2019 05:24:25 -0800 (PST)
-Received: from [10.2.4.229] (lfbn-nic-1-505-157.w90-116.abo.wanadoo.fr. [90.116.92.157])
-        by smtp.gmail.com with ESMTPSA id f1sm10029376wro.85.2019.12.13.05.24.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Dec 2019 05:24:25 -0800 (PST)
-Subject: Re: [RFC-next 0/1] Odroid C2: Enable DVFS for cpu
-To:     Anand Moon <linux.amoon@gmail.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-References: <20191101143126.2549-1-linux.amoon@gmail.com>
- <7hfthtrvvv.fsf@baylibre.com>
- <c89791de-0a46-3ce2-b3e2-3640c364cd0f@baylibre.com>
- <CANAwSgQx3LjQe60TGgKyk6B5BD5y1caS2tA+O+GFES7=qCFeKg@mail.gmail.com>
- <7hfthsqcap.fsf@baylibre.com>
- <CAFBinCBfgxXhPKpBLdoq9AimrpaneYFgzgJoDyC-2xhbHmihpA@mail.gmail.com>
- <7hpngvontu.fsf@baylibre.com>
- <4e1339b4-c751-3edc-3a2e-36931ad1c503@baylibre.com>
- <CAFBinCCgKcwXSLxS_CRvz9JZvQo8PcUGm=egBbabVZSrkSc30Q@mail.gmail.com>
- <CANAwSgSFR3kftWLPqyoYfyxdQ5dcp2W7NgRCaFNkMj-xEDY1Kw@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <83791a71-a45c-383d-0406-b0f4e0a0c215@baylibre.com>
-Date:   Fri, 13 Dec 2019 14:24:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CANAwSgSFR3kftWLPqyoYfyxdQ5dcp2W7NgRCaFNkMj-xEDY1Kw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CcxRGFcCrtkq/Fa7c3EWJk3tVffr+ohpXoBBbiHwCUs=;
+        b=TQj2peT92RlU7nYy3KXQZnkbn8VlvKLj7ycae9irV8iTAoKzpiiVD9f4izAABlhaA+
+         u9KNzisCCkw1H+FzXtFqXDdLnrZNC2ipm4MRo+Rs5/8Ix01+hiRfduiLHkhhAm0NhQ83
+         w5XTehi5jw5U8USHpfzH6gOBUaJKSnCMsWCBuMQeWkM4FwC82w2LgJnLOdHt221ymjEQ
+         apQ6e1FFMuoa9rqD1m7pTeN51ya/EjuqFeIJlJlls8omOlziJOzifLnOIp6A/kthH7we
+         BYsKMP1NzR7byKTqOFaQKqFoA/duf74gy5bI9tY5QnVP3WV3D8gsm6DXwBC5wWBaJy1A
+         ZO4Q==
+X-Gm-Message-State: APjAAAVv7hI6Md1mC9Aym4CVwXNidwE/woTrNTvo86Mcv7g4bZPzv7um
+        u9F/jrbrdEoDlLgQiiNCD3wUuA==
+X-Google-Smtp-Source: APXvYqz43qjGSJwCgT1Fuw9onIXmdIlL82ZNT9dug1PH1gM72NKtNtBBRiNR6mykRXSa3xxRxVS7Ig==
+X-Received: by 2002:a5d:65cf:: with SMTP id e15mr13144184wrw.126.1576243798663;
+        Fri, 13 Dec 2019 05:29:58 -0800 (PST)
+Received: from localhost.localdomain ([2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca])
+        by smtp.gmail.com with ESMTPSA id n3sm10540543wmc.27.2019.12.13.05.29.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 05:29:58 -0800 (PST)
+From:   Guillaume La Roque <glaroque@baylibre.com>
+To:     narmstrong@baylibre.com, mchehab@kernel.org,
+        hverkuil-cisco@xs4all.nl, khilman@baylibre.com,
+        devicetree@vger.kernel.org
+Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] Add support of CEC wakeup on Amlogic G12 and SM1 SoCs
+Date:   Fri, 13 Dec 2019 14:29:53 +0100
+Message-Id: <20191213132956.11074-1-glaroque@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 13/12/2019 12:28, Anand Moon wrote:
-> Hi Martin
-> 
-> On Fri, 13 Dec 2019 at 01:40, Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
->>
->> Hi Neil,
->>
->> On Wed, Dec 11, 2019 at 9:49 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>>
->>> On 10/12/2019 22:47, Kevin Hilman wrote:
->>>> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
->>>>
->>>>> On Tue, Dec 10, 2019 at 7:13 PM Kevin Hilman <khilman@baylibre.com> wrote:
->>>>>>
->>>>>> Anand Moon <linux.amoon@gmail.com> writes:
->>>>>>
->>>>>>> Hi Neil / Kevin,
->>>>>>>
->>>>>>> On Tue, 10 Dec 2019 at 14:13, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>>>>>>>
->>>>>>>> On 09/12/2019 23:12, Kevin Hilman wrote:
->>>>>>>>> Anand Moon <linux.amoon@gmail.com> writes:
->>>>>>>>>
->>>>>>>>>> Some how this patch got lost, so resend this again.
->>>>>>>>>>
->>>>>>>>>> [0] https://patchwork.kernel.org/patch/11136545/
->>>>>>>>>>
->>>>>>>>>> This patch enable DVFS on GXBB Odroid C2.
->>>>>>>>>>
->>>>>>>>>> DVFS has been tested by running the arm64 cpuburn
->>>>>>>>>> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
->>>>>>>>>> PM-QA testing
->>>>>>>>>> [2] https://git.linaro.org/power/pm-qa.git [cpufreq testcase]
->>>>>>>>>>
->>>>>>>>>> Tested on latest U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
->>>>>>>>>
->>>>>>>>> Have you tested with the Harkernel u-boot?
->>>>>>>>>
->>>>>>>>> Last I remember, enabling CPUfreq will cause system hangs with the
->>>>>>>>> Hardkernel u-boot because of improperly enabled frequencies, so I'm not
->>>>>>>>> terribly inclined to merge this patch.
->>>>>>>
->>>>>>> HK u-boot have many issue with loading the kernel, with load address
->>>>>>> *it's really hard to build the kernel for HK u-boot*,
->>>>>>> to get the configuration correctly.
->>>>>>>
->>>>>>> Well I have tested with mainline u-boot with latest ATF .
->>>>>>> I would prefer mainline u-boot for all the Amlogic SBC, since
->>>>>>> they sync with latest driver changes.
->>>>>>
->>>>>> Yes, we would all prefer mainline u-boot, but the mainline kernel needs
->>>>>> to support the vendor u-boot that is shipping with the boards.  So
->>>>>> until Hardkernel (and other vendors) switch to mainline u-boot we do not
->>>>>> want to have upstream kernel defaults that will not boot with the vendor
->>>>>> u-boot.
->>>>>>
->>>>>> We can always support these features, but they just cannot be enabled
->>>>>> by default.
->>>>> (I don't have an Odroid-C2 but I'm curious)
->>>>> should Anand submit a patch to mainline u-boot instead?
->>>>
->>>> It would be in addition to $SUBJECT patch, not instead, I think.
->>>>
->>>>> the &scpi_clocks node could be enabled at runtime by mainline u-boot
->>>>
->>>> That would work, but I don't know about u-boot maintainers opinions on
->>>> this kind of thing, so let's see what Neil thinks.
->>>
->>> U-Boot doesn't anything to do with SCPI, SCPI discusses directly with the SCP
->>> processor, and the CPU clock is set to 1,56GHz by the BL2 boot stage before
->>> U-boot starts.
->>>
->>> The only viable solution I see now is to find if we could add a DT OPP table
->>> only for Odroid-C2 dts to bypass the SCPI OPP table.
->> my understanding is that mainline u-boot (with whatever SCP firmware
->> it uses) provides the *correct* OPP table
-> 
-> Right now I am not sure how this OPP table is populated.
-> But I saw the same freq table used in 3.16.x kernel after enable the clk.
-> 
->> in this case it would be "safe" to have SCPI enabled with mainline u-boot
->> @Anand: please correct me if I misunderstood you
->>
-> 
-> As per my understanding DVFS OPP frequency table for SCPI firmware set
-> for 1.536 GHz
-> somewhere in BL2 as pointed by Neil.
-> 
-> Arm Trusted firmware added new secure SCPI communication with
-> Cortex-M3 co processor.
-> [0] https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/plat/meson-gxbb.rst
-> [1] https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/amlogic/common/aml_scpi.c
-> 
-> ATF generated the *bl1.bin* which is replace the Amlogic's bl1.bin
-> while preparing
-> the new u-boot *u-boot.gxbb* image.
-> 
->> my idea to "enable SCPI with mainline u-boot" is to have u-boot update
->> the "status" property of the scpi_clocks node.
->> u-boot does something similar with the mac-address property of the
->> Ethernet controller for example.
->> as result of this users of mainline u-boot would have working CPU
->> DVFS, while users of the old vendor u-boot would run at fixed 1.54GHz.
->>
->>
->> Martin
-> 
-> Right now as per my understanding 1.536 GHz max is bit under clocked.
-> 
-> Some time ago on Odroid Forum tried to over clock the cpu to 2GHz.
+this patchset add support of CEC wakeup.
+We need to set logical address and activate some options in registers before going in suspend.
+Registers address and options values come from amlogic driver.
 
-This is the point, the Odroid-C2 is *not* stable at 2GHz,
-a large amount of board doesn't support 2GHz, this is why Amlogic
-dropped the freq > 1.536 GHz for the GXBB family.
+Changes since v1:
+- fix bad mask variable use to set logical address.
+- use FIELD_PREP instead of shift value.
 
-But HardKernel still delivers the SCPI table with > 1.536 GHz which breaks
-on most of the boards, but doesn't on 3.14 since they have a hack disabling
-higher freqs with a cmdline set in boot.ini.
+Guillaume La Roque (3):
+  media: dt-bindings: media: meson-ao-cec: Add support of ao-sysctrl
+    syscon
+  arm64: dts: meson-g12g12: add syscon phandle in cec node
+  media: platform: meson-ao-cec-g12a: add wakeup support
 
-> [3] https://forum.odroid.com/viewtopic.php?f=139&t=18738
-> So more investigation need to done in this line.
-> 
-> I also tried the same with HardKernel Image, with modifying the boot.ini
-> I could increase the max DVFS cpu frequency to 1.90 GHz,
-> This is just proof of concept.
-> 
-> odroid:~# cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies
-> 100000 250000 500000 1000000 1296000 1536000 1656000 1680000 1752000 1896000
-> 
-> I have some minimal stress testing attached are the results for HK
-> 3.16.x kernel.
-> 
-> For now we should not enable this clock.
-> Until we can possible to check for higher clock frequency to work stable
-> on all Amlogic S905X SBC.
-> 
-> I like the Neil's approach to use it's own dts OPP table for SCPI protocol.
+ .../media/amlogic,meson-gx-ao-cec.yaml        |  4 +++
+ .../boot/dts/amlogic/meson-g12-common.dtsi    |  1 +
+ drivers/media/platform/meson/ao-cec-g12a.c    | 33 +++++++++++++++++++
+ 3 files changed, 38 insertions(+)
 
-The various tests gave very little perf enhancement by going > 1,536 GHz, seriously
-it's not worth the pain.
-
-Neil
-
-> 
-> -Anand
-> 
+-- 
+2.17.1
 
