@@ -2,192 +2,116 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505AEC2D0C9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFACC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2287521655
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D827F21655
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:42:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="QHDINjIr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="asgqDt7u"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="TAyF7Whl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfLMKjB (ORCPT
+        id S1725945AbfLMKmP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:39:01 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:59759 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725928AbfLMKjB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Dec 2019 05:39:01 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C1DEE61CD;
-        Fri, 13 Dec 2019 05:38:59 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 13 Dec 2019 05:38:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=OFLMYUJQRntH92DcW9hNVdTnxB5
-        r5T3CVZUfgI5FQn4=; b=QHDINjIrZXXk5J6lmOgGbzCh2IXf4nTciC6rBLRgz3S
-        xcO6T9oDfo1sYHp67eyywjFsZ5WfvjxlGpmDdYK5DC2KAis1UXcaMtH39Qp+tcuN
-        5NS8cCQ/njpLfm9Cxu+Krc51Gh/wS44nLWYgP1kODjWFOy4+MxAwFgEwbThTR9pk
-        mAl7eclxSC6p7DGQnLFuf5oFthQwN6ReZ7kRu12NpOmkxyzPBYWRCQuqQw5j3cva
-        jmmKUjA3cQzrmHUhHga2m5BQT6/fmISIq2kiE8fBMboi+yV6X7GOP4N016Y2sEew
-        ehjnFRFDYkLE4aFm8fU8Rz1aK3yvYSLXF4maTcw0Ueg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=OFLMYU
-        JQRntH92DcW9hNVdTnxB5r5T3CVZUfgI5FQn4=; b=asgqDt7uZu8BOxSsEa2v7T
-        JowPq8yCUHb/3S8UgYd2Jc7Z/VYlcZH+4UXCrZ5646cbBVlwchr+LFC2cklJ/58f
-        XXjE+V22ypLhcIpAa9LueqzwyGka/+Ylp1SwQC9R3R7pIEUhEZa8nTLCFEryGM50
-        od7QCkHqXHS1YrRHcUlH0BZIVihD9DImQS9KJz6AIx/BrrKnVTfwdXR0ocPIPE7V
-        BKkkFIihbG18jsq6ZWk9jTv2t2rWryXQhT1zDsFMDV74FPWvJtVs4jvdQylxFvYL
-        5QSKfriPmwzRICBLm8PaNLg/Bu2/AfC1wO907I3cBpUitatuCaSveEfzWmdWTxQw
-        ==
-X-ME-Sender: <xms:Q2rzXUhVUy5YAlSnFzgpAIJZKG_2lcDSc05oMDouc_VRV-p5Zk89mg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelledgudekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
-    hnpeguvghvihgtvghtrhgvvgdrohhrghdphhhurdgtohhmnecukfhppeeltddrkeelrdei
-    kedrjeeinecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrth
-    gvtghhnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:Q2rzXYYyZ0O9FoCwc8xMG2PhFHXIQTsSc1zcS9_eW6Fvu_SFYC4L1Q>
-    <xmx:Q2rzXZ3pREFwehwkkWoV3OETw1uU9rouuYPqx_P7wJa18et7p-ABMw>
-    <xmx:Q2rzXby8JQWmjYqMaOeEleqCSHWVVYW1BDkrQVMc0NOLhptBofYI8w>
-    <xmx:Q2rzXaAOsx9D7wRCdl2gz9FaiP_phsSCYkneQd3QJHWsKDlEsA3wZw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D794780063;
-        Fri, 13 Dec 2019 05:38:58 -0500 (EST)
-Date:   Fri, 13 Dec 2019 11:38:56 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jian Hu <jian.hu@amlogic.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 1/6] dt-bindings: clock: meson: add A1 PLL clock
- controller bindings
-Message-ID: <20191213103856.qo7vlnuk4ajz3vq5@gilmour.lan>
-References: <20191206074052.15557-1-jian.hu@amlogic.com>
- <20191206074052.15557-2-jian.hu@amlogic.com>
+        Fri, 13 Dec 2019 05:42:15 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:49176 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfLMKmP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 05:42:15 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0C9329F4;
+        Fri, 13 Dec 2019 11:42:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1576233733;
+        bh=OPViJPaiwbV2JTOTiAegI/0110zI2wQylSeMT+FKqKc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TAyF7Whl+kY9pTyYAmxs4xi8h2VUSLM3YMhdxUWEQOO7hQc0M4nh6MYijxDDdm7Z/
+         O7WYfAhf8l+PVa6UOiU8R3Z+4hpPdUk+OgjJ6KSozylSIfXE0VYAY77NUYFaSbdoOz
+         lh8OYHg9PKMDczll7Yo6pI5bXdB3V2vbcRa0CA+4=
+Date:   Fri, 13 Dec 2019 12:42:04 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, dri-devel@lists.freedesktop.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/4] ARM: dts: am437x-gp-evm: add HDMI support
+Message-ID: <20191213104204.GB4860@pendragon.ideasonboard.com>
+References: <20191125131100.9839-1-tomi.valkeinen@ti.com>
+ <20191212172104.GY35479@atomide.com>
+ <20191212173110.GA35479@atomide.com>
+ <d09526b2-8435-bef2-0489-0c3c8173d451@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rosr3cxhl5siv7sy"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191206074052.15557-2-jian.hu@amlogic.com>
+In-Reply-To: <d09526b2-8435-bef2-0489-0c3c8173d451@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Tomi,
 
---rosr3cxhl5siv7sy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, Dec 13, 2019 at 11:24:02AM +0200, Tomi Valkeinen wrote:
+> On 12/12/2019 19:31, Tony Lindgren wrote:
+> > * Tony Lindgren <tony@atomide.com> [191212 17:21]:
+> >> Hi,
+> >>
+> >> * Tomi Valkeinen <tomi.valkeinen@ti.com> [191125 05:11]:
+> >>> Add HDMI support for AM437x GP EVM. The HDMI uses SiI9022 HDMI encoder,
+> >>> and is mutually exclusive with the LCD. The choice between LCD and HDMI
+> >>> is made by booting either with am437x-gp-evm.dtb or
+> >>> am437x-gp-evm-hdmi.dtb.
+> >>
+> >> So Linux kernel needs a new board device tree file to toggle a GPIO line
+> >> to switch between LCD mode and HDMI?
+> >>
+> >> That does not sound very user friendly for something that's supposed
+> >> to be hot pluggabe :)
+> 
+> True. We've had this for a long time in the TI kernel. I don't know how to implement this better, 
+> except perhaps with DT overlays, but that's essentially the same method.
+> 
+> >>> +/* Override SelLCDorHDMI from am437x-gp-evm.dts to select HDMI */
+> >>> +&gpio5 {
+> >>> +	p8 {
+> >>> +		output-low;
+> >>> +	};
+> >>> +};
+> >>
+> >> How about just leave the gpio unconfigured and document that a userspace
+> >> tool or /sys/kernel/debug/gpio is needed to toggle between the modes?
+> 
+> That sounds much worse than two dts files. How does X or weston know about the gpio?
+> 
+> And the "external" gpio wouldn't work well with DRM. We need to add all the displays at probe time, 
+> so we'd have LCD and HDMI. The gpio makes one of those operable, but only the external parts. The 
+> display controller has just one output, and we'd have a conflict there too as both displays would be 
+> connected to that single output. And as the display controller driver doesn't know about the gpio, 
+> it would fail "randomly" for one of the displays if the other one is already enabled by the userspace.
+> 
+> I think the correct way would be to have DRM framework understand that we have two displays, which 
+> are mutually exclusive, and the display pipeline drivers would have the means to switch the gpio. 
+> And that the display setup could be communicated properly to the userspace, and the userspace would 
+> understand it. I don't think any of those exists.
 
-Hi,
+Isn't this what possible_clones in drm_encoder is for ? It notifies
+userspace of mutual exclusions between encoders.
 
-On Fri, Dec 06, 2019 at 03:40:47PM +0800, Jian Hu wrote:
-> Add the documentation to support Amlogic A1 PLL clock driver,
-> and add A1 PLL clock controller bindings.
->
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-> ---
->  .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 59 +++++++++++++++++++
->  include/dt-bindings/clock/a1-pll-clkc.h       | 16 +++++
->  2 files changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
->  create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
->
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-> new file mode 100644
-> index 000000000000..7feeef5abf1b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-> @@ -0,0 +1,59 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + */
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/clock/amlogic,a1-pll-clkc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
-> +
-> +maintainers:
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +  - Jerome Brunet <jbrunet@baylibre.com>
-> +  - Jian Hu <jian.hu@jian.hu.com>
-> +
-> +properties:
-> +  compatible:
-> +    - enum:
-> +        - amlogic,a1-pll-clkc
+> So, the only good solution I have figured out is to just say that we have a single display at 
+> runtime, defined by the dt file.
+> 
+> On some boards (k2g-evm, if I recall right) we have similar HW setup, but with a physical switch. We 
+> use the same method there, with two dts files. Again, if I recall right, the switch setting can be 
+> seen by the SW, so if there's a better solution to the AM4 case, probably similar could be used with 
+> k2g-evm, where the drivers would react to the user changing the switch.
 
-I'm not sure this works, compatible shouldn't contain a list.
+-- 
+Regards,
 
-You can write this like:
-compatible:
-  const: amlogic,a1-pll-clkc
-
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +clocks:
-> +  minItems: 2
-> +  maxItems: 2
-
-This is redundant, it will be added automatically by the tools ...
-
-> +  items:
-> +   - description: Input xtal_fixpll
-> +   - description: Input xtal_hifipll
-
-... When you have a list of items :)
-
-> +
-> +clock-names:
-> +  minItems: 2
-> +  maxItems: 2
-> +  items:
-> +     - const: xtal_fixpll
-> +     - const: xtal_hifipll
-
-Same story here
-
-Maxime
-
---rosr3cxhl5siv7sy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfNqQAAKCRDj7w1vZxhR
-xd/wAQDsoznX44ibe0uCLaFPCOdrFkUP48DCrvyPmdP3KkeSoAEAqcgJwk/1XeqC
-famgLadEPF6JXGccjcYncc1mLjCARA0=
-=lykG
------END PGP SIGNATURE-----
-
---rosr3cxhl5siv7sy--
+Laurent Pinchart
