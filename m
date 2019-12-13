@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BE1C751E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FDFC751E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98EB247B7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653D3247DA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pDhmaget"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRu9Zcpt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbfLMQF4 (ORCPT
+        id S1728446AbfLMQGA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 11:05:56 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:38674 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728099AbfLMQFz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 11:05:55 -0500
-Received: by mail-yb1-f196.google.com with SMTP id f130so955350ybb.5;
-        Fri, 13 Dec 2019 08:05:55 -0800 (PST)
+        Fri, 13 Dec 2019 11:06:00 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:34351 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728134AbfLMQGA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 11:06:00 -0500
+Received: by mail-yw1-f68.google.com with SMTP id b186so57909ywc.1;
+        Fri, 13 Dec 2019 08:05:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PmiKmTwTQ0CJkoTG6PszHCX+iZK7oZLHF5W+m4h4bCQ=;
-        b=pDhmaget9UZMaNSsEBxSXNQ00A0aG9sLNvD5tQaF2lcttifPiL88bfjbYQRg82MwkP
-         L3F8of4RkLvvx7oK2+c/1Vt7y1wbPGw3G0LeSM2jX9Gp/peLvgpnrF8iWWCxA1Li9lqZ
-         oKFfkI5+IcXuro6IkIkc18HzX0fMkKr0yrSINUgSzgVQ8lJS1S1S4oMC6SwQ0pP/dbyQ
-         ToCAalYk+hgBA8B7GNOYLbDBJhGFqK79bqFU215XzYAfi/yLzhxcdzzcGUKx0Wt+N63j
-         0FXWHvmNUggzuePqnUdQGhHJ6inQDP+zTWgTKYTzciyoJVxPgkGDAaRaS7ew3/SYrQIL
-         +Xtw==
+        bh=hCFeVYA6+RMPn0stbhBhFtInrR3a9YnA+SCG0eFw6ss=;
+        b=KRu9ZcptwlfRuMpd1K0x3+VKrHELW1DD0NiRUOldvlD6I/wGFYfW+V4R07cIwqFP9P
+         qdLunf2YL5iIbPCzuknZ0mbjT4VI4DDihzrlLcMGEUfaUo8JSocxFLSY3Jtg/M2kVFeO
+         a66RfOtlN55JbmgVnTcbijLi9/SIfc0DZ5gNsJELJN0L/OGF/3qk5m3SFGApYeIdo+oO
+         MBGbnORIl+1COu3Lzv78zTgFU+BfFygtzOWv+6YW1jciCs/DKHA2oJrp47ghkpiH2LYk
+         HDs0uzc2hEVIFHcLqnmvSdmR4+PXMrNqkgfqs74IVYjhhJTskxjim8Jx8R2vtL7RZu5/
+         6j2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PmiKmTwTQ0CJkoTG6PszHCX+iZK7oZLHF5W+m4h4bCQ=;
-        b=kdXhq7CrDqvv+hkQM5wLRu49E+jMPSaOoEdDm+diDXq1WkYGgDFB6W9eCGQfgisNWL
-         vy+e0nbHyM73CGIO/pTl00jGjqn87nKY4Bw9euogFDRkR/iCnCTS3QqFvBu3ZNWTSZPr
-         tLFM+6WDv9rTo95NNXTnfGaRc+gWOMdFIxpogJhd2sVSbHLL8p+uoJ0sW1c9gH5fcpOg
-         UKHib962h78J6Ly5XsCDE3dif+wO7yl0oWJBe+jInGqdcphxc9jl5VXlpXt8UKKcrOp5
-         y2acNDoHwvujZEw47gOxqYImYHxTrBwRPczFZ9BSSdtmslslTmaWsc5QR4saSvdWCeqj
-         pglA==
-X-Gm-Message-State: APjAAAVdJc6u3y45er22+x3Gu+LC62uYn4tkEyP/ZfYVayilvYMVpUmm
-        K2ZWi9+zTxsr0qvquB+/kr4=
-X-Google-Smtp-Source: APXvYqyvMxo0m9J9o7pzqtQ4LDSJYU1J4I8OigUuQ/pFrJPc6HZMKaZZVwpP0Dg4mAOHuGg59i6WEw==
-X-Received: by 2002:a25:4258:: with SMTP id p85mr9366936yba.121.1576253154449;
-        Fri, 13 Dec 2019 08:05:54 -0800 (PST)
+        bh=hCFeVYA6+RMPn0stbhBhFtInrR3a9YnA+SCG0eFw6ss=;
+        b=ry9Of3daqUI260a2DzWQne/7vlXA0Tdfqwy72Ea3d8BQSzZYD0VROlvnCgZksnhfm1
+         Za77TGV+F/HqWUqQDIQn9warD7n44Q/oDk2DgBwfTIAdsXg2hwag0gZkPjpq9A6sKhI8
+         52uYAXb9Bfu23t0QDeya0UvDwUL90qmoqQythxbC22WHg/h9uuIj73vWacI55duPAtcB
+         Mt4Ao8WTNYDdq7gUYeEb/VLWGmsPjVaOC4I/hCtj+R+gQbhE7o+dZOgMaUQzrW+j+yKo
+         MWLBUJ2W5mZUXXuSXwHeiiPSxxyUgUO1+SNDUsQqEv7mZjcRLo9BWT3cQEw1ukDR9a+y
+         pDvw==
+X-Gm-Message-State: APjAAAVBtI85Jf6gGCE9Su8FmWP+C4du5kTaKL7Sa1bc2UeZytN8bfcI
+        ZPPxkY0NDVNIwYWM6diFVIE=
+X-Google-Smtp-Source: APXvYqz5xPZ+LNDsnzedJYC7m3a0/JGAPYzF/1XJcMZ16q7iiHdzl9cWrivtSTB+eePdtQ+NgJB9eQ==
+X-Received: by 2002:a81:145:: with SMTP id 66mr4954091ywb.292.1576253158875;
+        Fri, 13 Dec 2019 08:05:58 -0800 (PST)
 Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id v38sm3984694ywh.63.2019.12.13.08.05.52
+        by smtp.gmail.com with ESMTPSA id v38sm3984694ywh.63.2019.12.13.08.05.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 08:05:53 -0800 (PST)
+        Fri, 13 Dec 2019 08:05:58 -0800 (PST)
 From:   Adam Ford <aford173@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     peng.fan@nxp.com, ping.bai@nxp.com, Adam Ford <aford173@gmail.com>,
@@ -67,9 +67,9 @@ Cc:     peng.fan@nxp.com, ping.bai@nxp.com, Adam Ford <aford173@gmail.com>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2 2/7] soc: imx: gpcv2: Update imx8m-power.h to include iMX8M Mini
-Date:   Fri, 13 Dec 2019 10:05:37 -0600
-Message-Id: <20191213160542.15757-3-aford173@gmail.com>
+Subject: [PATCH V2 4/7] dt-bindings: imx-gpcv2: Update bindings to support i.MX8M Mini
+Date:   Fri, 13 Dec 2019 10:05:39 -0600
+Message-Id: <20191213160542.15757-5-aford173@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191213160542.15757-1-aford173@gmail.com>
 References: <20191213160542.15757-1-aford173@gmail.com>
@@ -80,40 +80,43 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In preparation for i.MX8M Mini support in the GPC driver, the
-include file used by both the device tree and the source needs to
-have the appropriate references for it.
+The with the recent additions to the driver, the GPCv2 driver can
+support the i.MX8M Mini, but it needs updated 'compatible' entry
+to use the proper table.
+
+This patch adds the i.MX8MM to the compatible list of devices.
 
 Signed-off-by: Adam Ford <aford173@gmail.com>
 ---
 V2:  No Change
 
- include/dt-bindings/power/imx8m-power.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/include/dt-bindings/power/imx8m-power.h b/include/dt-bindings/power/imx8m-power.h
-index 8a513bd9166e..0054bba744b8 100644
---- a/include/dt-bindings/power/imx8m-power.h
-+++ b/include/dt-bindings/power/imx8m-power.h
-@@ -18,4 +18,18 @@
- #define IMX8M_POWER_DOMAIN_MIPI_CSI2	9
- #define IMX8M_POWER_DOMAIN_PCIE2	10
+diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+index 7c7e972aaa42..576a79097a4c 100644
+--- a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
++++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+@@ -9,6 +9,7 @@ Required properties:
+ - compatible: Should be one of:
+ 	- "fsl,imx7d-gpc"
+ 	- "fsl,imx8mq-gpc"
++	- "fsl,imx8mm-gpc"
  
-+#define IMX8MM_POWER_DOMAIN_MIPI	0
-+#define IMX8MM_POWER_DOMAIN_PCIE	1
-+#define IMX8MM_POWER_DOMAIN_USB_OTG1	2
-+#define IMX8MM_POWER_DOMAIN_USB_OTG2	3
-+#define IMX8MM_POWER_DOMAIN_DDR1	4
-+#define IMX8MM_POWER_DOMAIN_GPU2D	5
-+#define IMX8MM_POWER_DOMAIN_GPU	6
-+#define IMX8MM_POWER_DOMAIN_VPU	7
-+#define IMX8MM_POWER_DOMAIN_GPU3D	8
-+#define IMX8MM_POWER_DOMAIN_DISP	9
-+#define IMX8MM_POWER_VPU_G1		10
-+#define IMX8MM_POWER_VPU_G2		11
-+#define IMX8MM_POWER_VPU_H1		12
-+
- #endif
+ - reg: should be register base and length as documented in the
+   datasheet
+@@ -24,8 +25,9 @@ which, in turn, is expected to contain the following:
+ Required properties:
+ 
+ - reg: Power domain index. Valid values are defined in
+-  include/dt-bindings/power/imx7-power.h for fsl,imx7d-gpc and
+-  include/dt-bindings/power/imx8m-power.h for fsl,imx8mq-gpc
++  include/dt-bindings/power/imx7-power.h for fsl,imx7d-gpc,
++  include/dt-bindings/power/imx8m-power.h for fsl,imx8mq-gpc, and
++  include/dt-bindings/power/imx8m-power.h for fsl,imx8mm-gpc
+ 
+ - #power-domain-cells: Should be 0
+ 
 -- 
 2.20.1
 
