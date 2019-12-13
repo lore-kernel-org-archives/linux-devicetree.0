@@ -2,95 +2,82 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F06C34983
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD94FC50700
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE89B2474E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4A3A24762
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fAowkLwb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="B022IG0f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfLMNaL (ORCPT
+        id S1726928AbfLMNrb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:30:11 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35300 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727490AbfLMNaC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 08:30:02 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g17so6673186wro.2
-        for <devicetree@vger.kernel.org>; Fri, 13 Dec 2019 05:30:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RihAxbyPf1sWOBRmJF5IKCF0zpUINaJgm3m7kfkEZZY=;
-        b=fAowkLwbvcaMDwhICxvEuVnjEW+/HgTUaD7s4A/Xn36fZT0rVKZ4y7m1k0IE2WY4yG
-         HpLmm5baYQ5QfDQDu1l10QecPEfxHOTfdJPIpLnZ51SFJQ4h0v/1XCERjTz+Lewf5W0S
-         RoqxDd5K94lovPJJYQIzqqsWkO4Qd8QDymklzOooZuJrb9LpQFXyXk5+KLfphgJeKNY/
-         rmGC7TI6Wv2mdHg7NC3Q0x6uxP4dOZEwaNz7COjP6srZrTQrT36UqZt2d1GSZdsWDte9
-         eJDuz/WkglAvJY9CbMC40XjUUkcqgFwuOeInr59Xp2kvFvbrbOsB5eGqYlqUMV+MDr2Z
-         HD7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=RihAxbyPf1sWOBRmJF5IKCF0zpUINaJgm3m7kfkEZZY=;
-        b=XwGsZh/3sT5GCJ+7oCYkHbWjB4ezVDj01sQYxaTNao1FUpet3O1q5FlmCXNuMPecNF
-         lIyNK4HlVdvPzMA8GfBihRVG4DoU12zBIhfPJcW1mg5QoeFz/hq3W5ceQn4PbDiK7cqT
-         bTn5SfwcXC2AYRI9mXvH0ugAoMzJ6bSMQvYvIaiegM5rclU7fulIulXxLwakPbOOZ0eC
-         5AsXwttRddafLA2TI64tdZW53Y54eAf4pVfl8oo4329/lsbvwFcSz/tCSlZ1m6hwnW4h
-         v4fbbmO1uEU4kIO+nwj/9iF6b/HAACMcCvJSRgzhNM4wtSD0JG4AsoyRvfYA1FKKDGru
-         YZlQ==
-X-Gm-Message-State: APjAAAWTVHEB/qdsBDRTbh5u2W2J94Tilh/I0+zD9xy0jXYKQsSlWs40
-        5LZuSGkjNZtYs1WIaV1UVz5v8bU6fXQ=
-X-Google-Smtp-Source: APXvYqwNnx7cmRRsx41+o7uRC5/UJmd0OtDKCdpnC8FmFH+IVjL9ZtYfSJJwPHF91ntNAr9l0PWr/w==
-X-Received: by 2002:adf:e6c6:: with SMTP id y6mr12978031wrm.284.1576243800998;
-        Fri, 13 Dec 2019 05:30:00 -0800 (PST)
-Received: from localhost.localdomain ([2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca])
-        by smtp.gmail.com with ESMTPSA id n3sm10540543wmc.27.2019.12.13.05.29.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 05:30:00 -0800 (PST)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     narmstrong@baylibre.com, mchehab@kernel.org,
-        hverkuil-cisco@xs4all.nl, khilman@baylibre.com,
-        devicetree@vger.kernel.org
-Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] arm64: dts: meson-g12g12: add syscon phandle in cec node
-Date:   Fri, 13 Dec 2019 14:29:55 +0100
-Message-Id: <20191213132956.11074-3-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191213132956.11074-1-glaroque@baylibre.com>
-References: <20191213132956.11074-1-glaroque@baylibre.com>
+        Fri, 13 Dec 2019 08:47:31 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:51698 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726524AbfLMNrb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Dec 2019 08:47:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=awCXz0GwD1LDcWzOjDMp0h+d0sdlS80mO4Nbpi4KuV0=; b=B022IG0f4HXZeMBlMNrforMruq
+        dFK7znmRa1CpiTRnP5y5JakiioHQ+FdeEMCHwk2Gj0/OgbKerI8jebCoeNmN1LuX1Yu+7UNmUTTXy
+        MGKwep3ErD6V9+pLSXg9iuy7P0DRSQDYOfxGJpzrOZ0+YYKV7JvJNzXUQvMMLC7dJSiw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iflHg-00019i-1C; Fri, 13 Dec 2019 14:47:08 +0100
+Date:   Fri, 13 Dec 2019 14:47:08 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     biao huang <biao.huang@mediatek.com>
+Cc:     davem@davemloft.net, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, yt.shen@mediatek.com
+Subject: Re: [PATCH 1/2] net-next: stmmac: mediatek: add more suuport for RMII
+Message-ID: <20191213134708.GA4286@lunn.ch>
+References: <20191212024145.21752-1-biao.huang@mediatek.com>
+ <20191212024145.21752-2-biao.huang@mediatek.com>
+ <20191212132520.GB9959@lunn.ch>
+ <1576200981.29387.13.camel@mhfsdcap03>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576200981.29387.13.camel@mhfsdcap03>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-add syscon phandle in cec node to activate wakeup support
+> The clock labeled as "rmii_internal" is needed only in RMII(when MAC provides
+> reference clock), and useless for RGMII/MII/RMII(when phy provides reference
+> clock).
+> 
+> So, add a boolean flag to indicate where the RMII reference clock is from, MAC
+> or PHY, if MAC, enable the "rmii_internal", or disable it.
+> and this clock already documented in dt-binding in PATCH 2/2.
+> 
+> For power saving, it should not be enabled in default, so can't add it to the
+> existing list of clocks directly.
+> 
+> Any advice for this special case?
 
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+O.K. Add the boolean, but also add the clock to the list of clocks in
+DT. Don't hard code the clock name in the driver.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 7fabc8d9654a..98c6a1d1d035 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -1899,6 +1899,7 @@
- 				interrupts = <GIC_SPI 203 IRQ_TYPE_EDGE_RISING>;
- 				clocks = <&clkc_AO CLKID_AO_CTS_OSCIN>;
- 				clock-names = "oscin";
-+				amlogic,ao-sysctrl = <&rti>;
- 				status = "disabled";
- 			};
- 
--- 
-2.17.1
-
+    Andrew
