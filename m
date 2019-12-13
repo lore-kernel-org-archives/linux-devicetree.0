@@ -2,95 +2,100 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BC6C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 03:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2225FC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 03:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 562BB2465A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 03:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED10D2467B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 03:40:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R1XF8Afh"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="t5ReM5fc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731945AbfLMDHP (ORCPT
+        id S1731529AbfLMDkh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Dec 2019 22:07:15 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36462 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731499AbfLMDHO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 22:07:14 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBD377KD088008;
-        Thu, 12 Dec 2019 21:07:07 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576206427;
-        bh=bjzkSGwjJanZ6D9U2D9DBeNvV2bdbXonjWIceJ35aww=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=R1XF8Afh+BJQzN1qC5TplJQtyTR/9ImQsey59k1vw8hnOVh/rGR2b/uYFraNu89nF
-         /8822gYa7AKGat2yhhDVcwdEQ41A8kRg/4odTQBwnjh9uMqu8Rf7Huw9wpPzHLV+D8
-         sJz7t09neLSXg4kHeOraQO+j8T5LBgN0Nr+IlhBw=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBD376OU018495
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Dec 2019 21:07:07 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Dec 2019 21:07:06 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Dec 2019 21:07:06 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBD376eC025174;
-        Thu, 12 Dec 2019 21:07:06 -0600
-From:   Dave Gerlach <d-gerlach@ti.com>
-To:     Tony Lindgren <tony@atomide.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH 1/5] dt-bindings: arm: cpu: Add TI AM335x and AM437x enable method
-Date:   Thu, 12 Dec 2019 21:07:51 -0600
-Message-ID: <20191213030755.16096-2-d-gerlach@ti.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191213030755.16096-1-d-gerlach@ti.com>
-References: <20191213030755.16096-1-d-gerlach@ti.com>
+        Thu, 12 Dec 2019 22:40:37 -0500
+Received: from m228-5.mailgun.net ([159.135.228.5]:17225 "EHLO
+        m228-5.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727925AbfLMDkh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Dec 2019 22:40:37 -0500
+X-Greylist: delayed 303 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Dec 2019 22:38:25 EST
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576208437; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=yW+1ND7ANM8ah4AyDYZWbcub633HYWOPfgaR0fg0IeY=;
+ b=t5ReM5fca6JVbLkKge6XG+paWi7K4kN2hSSCLXoUnDUxa9VhqFE7TBnpI5o81rehWhEBVUUn
+ NlMhKGoDvJa8wt9eQWdWdfzVYsb901KupKl5/QXQg/XYmyJAAIibbvKxXfADyZbuRwiLiFJP
+ b+P6KESGvSCz8AbYjtJMGcZVGNo=
+X-Mailgun-Sending-Ip: 159.135.228.5
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df30702.7fc7ab7a9180-smtp-out-n01;
+ Fri, 13 Dec 2019 03:35:30 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id ECB08C4479C; Fri, 13 Dec 2019 03:35:28 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: rjliao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 67C04C43383;
+        Fri, 13 Dec 2019 03:35:28 +0000 (UTC)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Date:   Fri, 13 Dec 2019 11:35:28 +0800
+From:   rjliao@codeaurora.org
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        linux-bluetooth-owner@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] dt-bindings: net: bluetooth: Add device tree
+ bindings for QCA6390
+In-Reply-To: <24B540FF-C627-4DF9-9077-247A4A6A3605@holtmann.org>
+References: <0101016ef8b923bc-5760b40c-1968-4992-9186-8e3965207236-000000@us-west-2.amazonses.com>
+ <24B540FF-C627-4DF9-9077-247A4A6A3605@holtmann.org>
+Message-ID: <ab0557bcacdae61027b775f440145b05@codeaurora.org>
+X-Sender: rjliao@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add enable-method binding for "ti,am3352" and "ti,am4372".
-
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
-CC: Rob Herring <robh+dt@kernel.org>
----
- Documentation/devicetree/bindings/arm/cpus.yaml | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-index c23c24ff7575..428b6b55b5da 100644
---- a/Documentation/devicetree/bindings/arm/cpus.yaml
-+++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-@@ -201,6 +201,8 @@ properties:
-               - rockchip,rk3066-smp
-               - socionext,milbeaut-m10v-smp
-               - ste,dbx500-smp
-+              - ti,am3352
-+              - ti,am4372
- 
-   cpu-release-addr:
-     $ref: '/schemas/types.yaml#/definitions/uint64'
--- 
-2.20.1
-
+在 2019-12-12 18:33，Marcel Holtmann 写道：
+> Hi Rocky,
+> 
+>> Add compatible string for the Qualcomm QCA6390 Bluetooth controller
+>> 
+>> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+>> ---
+>> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 1 +
+>> 1 file changed, 1 insertion(+)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt 
+>> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> index 68b67d9db63a..87b7f9d22414 100644
+>> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> @@ -10,6 +10,7 @@ device the slave device is attached to.
+>> Required properties:
+>>  - compatible: should contain one of the following:
+>>    * "qcom,qca6174-bt"
+>> +   * "qcom,qca6390-bt"
+>>    * "qcom,wcn3990-bt"
+>>    * "qcom,wcn3998-bt"
+> 
+> now I am confused. Is this a DT platform or ACPI or both?
+> 
+We need to support both, should I update ACPI part in this doc as well?
+> Regards
+> 
+> Marcel
