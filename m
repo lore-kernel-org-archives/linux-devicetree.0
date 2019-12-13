@@ -2,174 +2,151 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6450C2D0C9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 21:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B661C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A70720706
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 21:47:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576273646;
-	bh=9i6xIA5vzXgs9RJ/iQ/KgzibPZiZRpUfLqwn+O7m4ic=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jIDjr2fM2iwznhMZSOYBmuUG8ipSZKdvzwt0G9mhnlJ982CqZimSxdf560/fcE6Ze
-	 t/eKLt3lFc1CXPJ9XVt3r37d3e/Tu0zKuL3Lqbed7pU8a2s3mfmWYDBL+1T4NE9dxE
-	 /45uEA+8MZ7+vntdMSISHM6jFRtbs07GQYBnYYDc=
+	by mail.kernel.org (Postfix) with ESMTP id 4F5942073D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:11:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="VVsL5OLB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbfLMVrW (ORCPT
+        id S1726404AbfLMWLa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:47:22 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36545 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfLMVrW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 16:47:22 -0500
-Received: by mail-oi1-f194.google.com with SMTP id c16so1216319oic.3;
-        Fri, 13 Dec 2019 13:47:21 -0800 (PST)
+        Fri, 13 Dec 2019 17:11:30 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40976 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfLMWLa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 17:11:30 -0500
+Received: by mail-pf1-f193.google.com with SMTP id s18so2189064pfd.8
+        for <devicetree@vger.kernel.org>; Fri, 13 Dec 2019 14:11:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=C+QP07g8UnbrKTlv69LJ7GDz3+K6EqCsH4JenbUk3Kw=;
+        b=VVsL5OLBC828OXXGuWkPmeOqE6dl9B1vqgwII2zwTEEOps5suW7Ta8Tre5nO/z2k5S
+         KEjA30YWoBPYuMq0CR/TSXZ2C2fut9PjKHddKlOkU9HcshazJrg1NBvXowZX6gVgzA3w
+         ye8MHrRio7y68YvHSTR5QBXkxAuT7T+170DLc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w5xdh98E7mr6+86lSxAaIdccaOQtAOZWUmlaUNXldZU=;
-        b=LKV8rcMOgKk7/VE8asb2OpaD2VK/TNgns1UMYe7+6aLIrEY61UenWbxEI0Jz+vY/WC
-         Vc+pipNBGqWTkX8it/xDgqelWIWoj4jB+6aEic4GqiUV2wOjk4UgAChhexqmL4sdI896
-         Hc1TNm2O1FUNQrOuugxmkCBS4sFgL9vgnqGsny5dFfJ6mV1XDst2o7EWRaO/CgE9FqDI
-         7p5SyFQtsz+XCYD5DT7nedfRA+1EnsWOHlp4by1iFOGl+rI/gjYFdE59jxSuUKyapCj1
-         a13mEc1tZYAfALKPBX2d3rlNl3A39g7+TWl4nK8PxUzPFlQmPOar7XNyLug9klivhlc/
-         W10Q==
-X-Gm-Message-State: APjAAAV896p3/T45VD7YaENvsXcc5Sz3ekFL6RECQpKZawcfr5r2jdHC
-        YKio3vin0PZhjkqLHnIgag==
-X-Google-Smtp-Source: APXvYqzm62Y9qN5g4QrstJ8YOMO5rKtfDZ1qoaPCIsVdFH1v/4Bxp+t6KiBbsCr+3sooAIymdRKrSg==
-X-Received: by 2002:aca:4a41:: with SMTP id x62mr7648394oia.148.1576273641167;
-        Fri, 13 Dec 2019 13:47:21 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p83sm1913240oia.51.2019.12.13.13.47.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 13:47:20 -0800 (PST)
-Date:   Fri, 13 Dec 2019 15:47:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, jsanka@codeaurora.org,
-        chandanu@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [PATCH v1 1/2] dt-bindings: display: add sc7180 panel variant
-Message-ID: <20191213214719.GA11149@bogus>
-References: <1575010545-25971-1-git-send-email-harigovi@codeaurora.org>
- <1575010545-25971-2-git-send-email-harigovi@codeaurora.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=C+QP07g8UnbrKTlv69LJ7GDz3+K6EqCsH4JenbUk3Kw=;
+        b=DLEkhGD2ktsz0b7ei2Ne9F7yS05phLPojLFtixDbVeZMwJB5YfbJd0Tx45i3Iz27lH
+         QkeEhKCt30oXWHoZOYW9CC00Vhtrtpg2QKSTQ3GyfMpiuCH+QwBQQzwl+G74QHChthaG
+         zvgKBqTkrKpCs63901F5NNq05LZLB0sbICFQXuZiF5Tj2DmJUOUNZj8DAdT+JZtFXtuz
+         BKwZmpDm83qVWj5T7eE6iHfDuC3ce6Owe2a9+kp8BZY/V63kycx4+Od2hfToOYZ7S1/X
+         F+x9d6odKOD4o+VwqeVjqhWbzd6srQM2wPvW4TEI2CDxu70euSmkEaD7symh0wS3UUf+
+         pe9A==
+X-Gm-Message-State: APjAAAVUWTN0+bbqDkQswRZUx2RnXNYSPRCO13Fk6TW1vHb3kAAC6Y2h
+        diilnjK2t07Odlq04pVYyOZTyw==
+X-Google-Smtp-Source: APXvYqwIZlSLDSybVYp++8LzZ91boGCACbVxcoAb9anmR3Fz0rOVecZifUt5x7t7Risgbey7DBgAcQ==
+X-Received: by 2002:aa7:8f05:: with SMTP id x5mr1979774pfr.86.1576275089947;
+        Fri, 13 Dec 2019 14:11:29 -0800 (PST)
+Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id d38sm10991179pgd.59.2019.12.13.14.11.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Dec 2019 14:11:28 -0800 (PST)
+Subject: Re: [PATCH] ARM: dts: NSP: Use hardware I2C for BCM958625HR
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191213195102.23789-1-f.fainelli@gmail.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <667acf12-cff3-8955-8849-b99db50375bb@broadcom.com>
+Date:   Fri, 13 Dec 2019 14:11:26 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575010545-25971-2-git-send-email-harigovi@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191213195102.23789-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 12:25:44PM +0530, Harigovindan P wrote:
-> Add a compatible string to support sc7180 panel version.
+
+
+On 2019-12-13 11:51 a.m., Florian Fainelli wrote:
+> Now that the i2c-bcm-iproc driver has been fixed to permit reading more
+> than 63 bytes in a single transaction with commit fd01eecdf959 ("i2c:
+> iproc: Fix i2c master read more than 63 bytes") we no longer need to
+> bitbang i2c over GPIOs which was necessary before to allow the
+> PHYLINK/SFP subsystems to read SFP modules.
 > 
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+
+This is good to hear!
+
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  .../bindings/display/visionox,rm69299.txt          | 68 ++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100755 Documentation/devicetree/bindings/display/visionox,rm69299.txt
-
-Source files should not have execute permission.
-
-New bindings should be in DT schema format.
-
-checkpatch.pl will tell you both of these things.
-
+>   arch/arm/boot/dts/bcm958625hr.dts | 15 +++++----------
+>   1 file changed, 5 insertions(+), 10 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/visionox,rm69299.txt b/Documentation/devicetree/bindings/display/visionox,rm69299.txt
-> new file mode 100755
-> index 0000000..4622191
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/visionox,rm69299.txt
-> @@ -0,0 +1,68 @@
-> +Visionox model RM69299 DSI display driver
-> +
-> +The Visionox RM69299 is a generic display driver, currently only configured
-> +for use in the 1080p display on the Qualcomm SC7180 MTP board.
-> +
-> +Required properties:
-> +- compatible: should be "visionox,rm69299-1080p-display"
+> diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+> index a2c9de35ddfb..536fb24f38bb 100644
+> --- a/arch/arm/boot/dts/bcm958625hr.dts
+> +++ b/arch/arm/boot/dts/bcm958625hr.dts
+> @@ -55,18 +55,9 @@
+>   		priority = <200>;
+>   	};
+>   
+> -	/* Hardware I2C block cannot do more than 63 bytes per transfer,
+> -	 * which would prevent reading from a SFP's EEPROM (256 byte).
+> -	 */
+> -	i2c1: i2c {
+> -		compatible = "i2c-gpio";
+> -		sda-gpios = <&gpioa 5 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> -		scl-gpios = <&gpioa 4 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> -	};
+> -
 
-RM69299 may be generic, but 1080p sounds like a specific panel.
+So I suppose GPIO 4 and 5 from the 'gpioa' controller are tied to the 
+same SCL/SDA pins from i2c0 and they are internally muxed, right?
 
-Is there anything besides a 'display'? If not, '-display' is redundant.
+Is the mux to GPIO done automatically when pins are configured as GPIO, 
+and therefore you don't require any additional changes to pinmux to make 
+this work, after changing it back to use real I2C0 block below?
 
-> +- vdda-supply: phandle of the regulator that provides the supply voltage
-> +  Power IC supply
-> +- vdd3p3-supply: phandle of the regulator that provides the supply voltage
-> +  Power IC supply
-> +- reset-gpios: phandle of gpio for reset line
-> +  This should be 8mA, gpio can be configured using mux, pinctrl, pinctrl-names
-> +  (active low)
-> +- mode-gpios: phandle of the gpio for choosing the mode of the display
-> +  for single DSI
-
-The modes are what?
-
-> +- ports: This device has one video port driven by one DSI. Their connections
-> +  are modeled using the OF graph bindings specified in
-> +  Documentation/devicetree/bindings/graph.txt.
-> +  - port@0: DSI input port driven by master DSI
+>   	sfp: sfp {
+>   		compatible = "sff,sfp";
+> -		i2c-bus = <&i2c1>;
+> +		i2c-bus = <&i2c0>;
+>   		mod-def0-gpios = <&gpioa 28 GPIO_ACTIVE_LOW>;
+>   		los-gpios = <&gpioa 24 GPIO_ACTIVE_HIGH>;
+>   		tx-fault-gpios = <&gpioa 30 GPIO_ACTIVE_HIGH>;
+> @@ -74,6 +65,10 @@
+>   	};
+>   };
+>   
+> +&i2c0 {
+> +	status = "okay";
+> +};
 > +
-> +Example:
-> +
-> +	dsi@ae94000 {
-> +		panel@0 {
-> +			compatible = "visionox,rm69299-1080p-display";
-> +			reg = <0>;
-> +
-> +			vdda-supply = <&src_pp1800_l8c>;
-> +			vdd3p3-supply = <&src_pp2800_l18a>;
-> +
-> +			pinctrl-names = "default", "suspend";
-> +			pinctrl-0 = <&disp_pins_default>;
-> +			pinctrl-1 = <&disp_pins_default>;
-> +
-> +			reset-gpios = <&pm6150l_gpios 3 0>;
-> +
-> +			display-timings {
-> +				timing0: timing-0 {
-> +					/* originally
-> +					 * 268316160 Mhz,
-> +					 * but value below fits
-> +					 * better w/ downstream
-> +					 */
-> +					clock-frequency = <158695680>;
-> +					hactive = <1080>;
-> +					vactive = <2248>;
-> +					hfront-porch = <26>;
-> +					hback-porch = <36>;
-> +					hsync-len = <2>;
-> +					vfront-porch = <56>;
-> +					vback-porch = <4>;
-> +					vsync-len = <4>;
-> +				};
-> +			};
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				port@0 {
-> +					reg = <0>;
-> +					panel0_in: endpoint {
-> +						remote-endpoint = <&dsi0_out>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> -- 
-> 2.7.4
+>   &amac0 {
+>   	status = "okay";
+>   };
 > 
+
+Change looks good to me.
+
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+
+Thanks,
+
+Ray
