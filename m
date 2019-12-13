@@ -2,88 +2,113 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0B9C341C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BABC34971
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F13246AE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pVt/LDAz"
+	by mail.kernel.org (Postfix) with ESMTP id C804D2472C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfLMMhR (ORCPT
+        id S1727152AbfLMMyW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 07:37:17 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:46634 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbfLMMhR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 07:37:17 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBDCatZK063138;
-        Fri, 13 Dec 2019 06:36:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576240615;
-        bh=NeiiM4xZ/0N3jI/I7BaOGTbQEeH7LTybGv0Y3rfkgmc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=pVt/LDAzXzRx9weTRpz11GrL5PBx5k6VIMdCtLfTx8NmMfoUDqrplKjazExneA/pa
-         xOWJq3xmv8sx+JAADF6+oV2I3FytLV46PwtPRJjoPRxRvKO43N5JY8RkpLNEtyGKMk
-         sfkGu6xqBoTUnL58nv2v5pA+vdgZubNhhtglteQA=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBDCatV7044241
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Dec 2019 06:36:55 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Dec 2019 06:36:52 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Dec 2019 06:36:52 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBDCaobp077581;
-        Fri, 13 Dec 2019 06:36:51 -0600
-Subject: Re: [PATCH 1/4] ARM: dts: am437x-gp-evm: add HDMI support
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-References: <20191125131100.9839-1-tomi.valkeinen@ti.com>
- <20191212172104.GY35479@atomide.com> <20191212173110.GA35479@atomide.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <7ef4e361-88c3-d8d5-a6fa-6082465eeb83@ti.com>
-Date:   Fri, 13 Dec 2019 14:36:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 13 Dec 2019 07:54:22 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57108 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727050AbfLMMyV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 07:54:21 -0500
+Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 2EA78294061;
+        Fri, 13 Dec 2019 12:54:19 +0000 (GMT)
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: [PATCH v3 0/7] media: rockchip: Add the rkvdec driver
+Date:   Fri, 13 Dec 2019 13:54:07 +0100
+Message-Id: <20191213125414.90725-1-boris.brezillon@collabora.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191212173110.GA35479@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/12/2019 19:31, Tony Lindgren wrote:
+Hello,
 
-> Anyways, I'm applying the changes to dra76-evm am57xx-idk-common
-> into omap-for-v5.6/dt as they have no GPIO pin limitation.
+This is v3 of the rkvdec driver adding both the core of the driver and
+a backend to decode H24 streams.
 
-Thanks!
+The most notable change in this version is the addition of generic
+helpers to build the reflists, along with Jonas' patch adding new DPB
+flags to express the field being referenced by each DPB entry.
 
-> I'd like to hear comments from folks on the first two though.
+Driver-wise, a few things have been reworked/clarified, but most of the
+code is unchanged. See the changelog attached to each patch for more
+details.
 
-Just to summarize the discussion, let's drop the first two patches (am4).
+Regards,
 
-  Tomi
+Boris
+
+Boris Brezillon (6):
+  media: vb2: Add a helper to get the vb2 buffer attached to a request
+  media: v4l2-core: Add helpers to build the H264 P/B0/B1 reflists
+  media: hantro: h264: Use the generic H264 reflist builder
+  media: dt-bindings: rockchip: Document RK3399 Video Decoder bindings
+  media: rkvdec: Add the rkvdec driver
+  arm64: dts: rockchip: rk3399: Define the rockchip Video Decoder node
+
+Jonas Karlman (1):
+  media: uapi: h264: Add DPB entry field reference flags
+
+ .../bindings/media/rockchip,vdec.yaml         |   71 +
+ .../media/uapi/v4l/ext-ctrls-codec.rst        |   16 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi      |   14 +-
+ .../media/common/videobuf2/videobuf2-core.c   |   23 +
+ drivers/media/v4l2-core/Kconfig               |    4 +
+ drivers/media/v4l2-core/Makefile              |    1 +
+ drivers/media/v4l2-core/v4l2-h264.c           |  258 ++++
+ drivers/staging/media/Kconfig                 |    2 +
+ drivers/staging/media/Makefile                |    1 +
+ drivers/staging/media/hantro/hantro_h264.c    |  237 +---
+ drivers/staging/media/rkvdec/Kconfig          |   15 +
+ drivers/staging/media/rkvdec/Makefile         |    3 +
+ drivers/staging/media/rkvdec/rkvdec-h264.c    | 1154 +++++++++++++++++
+ drivers/staging/media/rkvdec/rkvdec-regs.h    |  239 ++++
+ drivers/staging/media/rkvdec/rkvdec.c         | 1130 ++++++++++++++++
+ drivers/staging/media/rkvdec/rkvdec.h         |  124 ++
+ include/media/h264-ctrls.h                    |    2 +
+ include/media/v4l2-h264.h                     |   86 ++
+ include/media/videobuf2-core.h                |   11 +
+ 19 files changed, 3161 insertions(+), 230 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+ create mode 100644 drivers/media/v4l2-core/v4l2-h264.c
+ create mode 100644 drivers/staging/media/rkvdec/Kconfig
+ create mode 100644 drivers/staging/media/rkvdec/Makefile
+ create mode 100644 drivers/staging/media/rkvdec/rkvdec-h264.c
+ create mode 100644 drivers/staging/media/rkvdec/rkvdec-regs.h
+ create mode 100644 drivers/staging/media/rkvdec/rkvdec.c
+ create mode 100644 drivers/staging/media/rkvdec/rkvdec.h
+ create mode 100644 include/media/v4l2-h264.h
 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.23.0
+
