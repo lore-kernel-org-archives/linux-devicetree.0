@@ -2,117 +2,102 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED407C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4632C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D62206B7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B29D2465A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:37:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KqUrGGff"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ozjhT9Lx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfLMKhD (ORCPT
+        id S1726386AbfLMKhj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:37:03 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:48542 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMKhD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 05:37:03 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 863019F4;
-        Fri, 13 Dec 2019 11:36:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576233419;
-        bh=jwy8V32la/gbk1rg9AIOa9ojDpfNGVEao4L/0jvjxYc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KqUrGGff/NfA7HqTmXvE9Ld2qQ+GprK4M+mLKT/HJTmSCm37lu0wlfcsvJE3eD7Qq
-         obrr+X92bKjXgJO/Bqressdu0zqSDhaj9eYwYymhP4Zykww4Q1v7cv2mKuiNgfc+bE
-         ito566zT/eVFj67j0x5KGjko7axwc66+ff9ZxeMc=
-Date:   Fri, 13 Dec 2019 12:36:50 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jyri Sarha <jsarha@ti.com>
-Cc:     dri-devel@lists.freedesktop.org, tony@atomide.com,
-        sam@ravnborg.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, tomi.valkeinen@ti.com,
-        peter.ujfalusi@ti.com, bparrot@ti.com
-Subject: Re: [PATCH v2 2/3] dt-bindings: display: Add obsolete note to
- "ti,tilcdc,panel" binding
-Message-ID: <20191213103650.GA4860@pendragon.ideasonboard.com>
-References: <cover.1575901747.git.jsarha@ti.com>
- <459ed943fe0725200062171755bcfe5f73713d50.1575901747.git.jsarha@ti.com>
- <20191209145024.GB12841@pendragon.ideasonboard.com>
- <5f585e0b-be58-b474-f27b-875e254426a8@ti.com>
+        Fri, 13 Dec 2019 05:37:39 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39587 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMKhj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 05:37:39 -0500
+Received: by mail-wm1-f68.google.com with SMTP id d5so5999999wmb.4
+        for <devicetree@vger.kernel.org>; Fri, 13 Dec 2019 02:37:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Q5ocr36Lob8hEeIWs3h/05wUQjQ+K9T4cwQK/71/Rho=;
+        b=ozjhT9LxrWoNn5+kruUUFRJPWCwFQD0DkqHF6Ig4DOJUCO4vI+jtZUQZFLC2js49Sj
+         NuIOBOuolNM2SxE5kENSvIQHZVZRPnvKRv3Hx/vkcThIr+nL7ktfGwQ7jJwPTo2unwfB
+         OQUfDXRNh0Ag9DDGGB2CsSkLxrYZE77mzjH5UrY3CfvD7oEkKgJ87NTH6Nx8n06x93Sk
+         UZw1bAbky2AcB8TR3mH6K2fC7FZnS1vzNig4nsvlpaEXlqhf0kuVgWg7qghUcYdupMbU
+         v4EWB4P/w6SgSSSdN+d/U/bWZJfcB50ezKAIXZkFvJ/3Rr6L5ZKWYal2yyIa/FozQmex
+         z+Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Q5ocr36Lob8hEeIWs3h/05wUQjQ+K9T4cwQK/71/Rho=;
+        b=a+OJFatmIsr/j+QmMwvM2iraYc2rIHzfTCI1edigHalzRwKQ5elUHLHiF88MX2qQ/e
+         hopgPDytwS2dLdvDNl1gxLic5HhsuSerOhKIoLIeRju6GroaSNbZI3vpjDLokRehv3t1
+         HylvDgmHDjw3JkZhDDr3l870+yh92xELP/CCRf/LBE2R54olXQbQuDBKUhcGXQwbRIYQ
+         4P0w9AsxxVnhNMfgEm1cInLMQIK2bLxv83CI7nCyAL6t+QqJA9qBiroWdM/TZjc/c6G2
+         4kSSjvTa2bc//IaMW07+2xNm2QXkxVIKOJYH4uKOerqINoosa7EmKE884x4MCDZ/CwwM
+         JM/A==
+X-Gm-Message-State: APjAAAXyL8QZTm84qzOh+fv9B7q2pvoupH099gP9XFmXCNm85LBnYn36
+        y3FozH2TSGxZVJxejNpx7Du1rg==
+X-Google-Smtp-Source: APXvYqxnyCKPIUq28BfNLWLn/OmW1/9wwqrfPkgBDBgdwgpsg60dQCt7fUIEYsF/ccJNzGARb9NYQA==
+X-Received: by 2002:a05:600c:2488:: with SMTP id 8mr12247781wms.152.1576233457453;
+        Fri, 13 Dec 2019 02:37:37 -0800 (PST)
+Received: from dell ([95.149.164.71])
+        by smtp.gmail.com with ESMTPSA id y22sm3999712wma.35.2019.12.13.02.37.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 02:37:36 -0800 (PST)
+Date:   Fri, 13 Dec 2019 10:37:33 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     support.opensource@diasemi.com, robh+dt@kernel.org,
+        linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [RESEND PATCH v3 2/3] mfd: da9062: add support for the DA9062
+ GPIOs in the core
+Message-ID: <20191213103733.GB3648@dell>
+References: <20191212160413.15232-1-m.felsch@pengutronix.de>
+ <20191212160413.15232-3-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5f585e0b-be58-b474-f27b-875e254426a8@ti.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191212160413.15232-3-m.felsch@pengutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jyri,
+On Thu, 12 Dec 2019, Marco Felsch wrote:
 
-On Fri, Dec 13, 2019 at 11:04:49AM +0200, Jyri Sarha wrote:
-> On 09/12/2019 16:50, Laurent Pinchart wrote:
-> > On Mon, Dec 09, 2019 at 04:42:15PM +0200, Jyri Sarha wrote:
-> >> The "ti,tilcdc,panel" binding should not be used anymore, since tilcdc
-> >> is fully capable of using generic drm panels like panel-simple and
-> >> panel-common binding. However, the obsolete binding is still widely
-> >> used in many mainline supported platforms that I do not have access to
-> >> and who knows how many custom platforms. So I am afraid we have to
-> >> keep the old bundled tilcdc panel driver around.
-> > 
-> > But can't we drop the bindings instead of marking them as obsolete, even
-> > if we keep the driver around for some time ?
-> > 
+> Currently the da9062 GPIO's aren't available. The patch adds the support
+> to make these available by adding a gpio device with the corresponding
+> irq resources. Furthermore the patch fixes a minor style issue for the
+> onkey device.
 > 
-> I guess that would be alright too.
-> 
-> > Also, would it make sense to set a date for the removal of the driver,
-> > and add it to the WARN() message in patch 3/3 ?
-> > 
-> 
-> Not sure about a date. I would feel quite uncomfortable of removing the
-> driver, while there is still mainline DTSes using "ti,tilcdc,panel". I
-> guess the next step would be putting the legacy panel driver behind a
-> default = N config option. Then I would probably hear something if there
-> are people actively using those DTSes. Maybe the date could be about
-> that too.
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  drivers/mfd/da9062-core.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
 
-The mainline DTSes are not really an issue, they should be fixed in
-mainline to use new bindings, and all will be good. The problem is
-systems using out-of-tree DTSes, or systems that will upgrade the kernel
-but not the DT.
-
-> >> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/display/tilcdc/panel.txt | 6 ++++++
-> >>  1 file changed, 6 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/display/tilcdc/panel.txt b/Documentation/devicetree/bindings/display/tilcdc/panel.txt
-> >> index 808216310ea2..54963f9173cc 100644
-> >> --- a/Documentation/devicetree/bindings/display/tilcdc/panel.txt
-> >> +++ b/Documentation/devicetree/bindings/display/tilcdc/panel.txt
-> >> @@ -1,5 +1,11 @@
-> >>  Device-Tree bindings for tilcdc DRM generic panel output driver
-> >>  
-> >> +NOTE: This binding (and the related driver) is obsolete and should not
-> >> +      be used anymore. Please refer to drm panel-common binding (and
-> >> +      to a generic drm panel driver like panel-simple).
-> >> +      Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> >> +      (drivers/gpu/drm/panel/panel-simple.c)
-> >> +
-> >>  Required properties:
-> >>   - compatible: value should be "ti,tilcdc,panel".
-> >>   - panel-info: configuration info to configure LCDC correctly for the panel
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
 -- 
-Regards,
-
-Laurent Pinchart
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
