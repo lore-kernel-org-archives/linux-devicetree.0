@@ -2,324 +2,166 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66015C79DB9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B73C79DC6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4345247F2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE3B246B3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="wn0wp5tC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbfLMRHm (ORCPT
+        id S1728194AbfLMRKu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 12:07:42 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2190 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728014AbfLMRHm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Dec 2019 12:07:42 -0500
-Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 0AEC623F6DFD88433130;
-        Fri, 13 Dec 2019 17:07:40 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 13 Dec 2019 17:07:31 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 13 Dec
- 2019 17:07:31 +0000
-Date:   Fri, 13 Dec 2019 17:07:29 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-CC:     <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-acpi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <joro@8bytes.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <lorenzo.pieralisi@arm.com>, <guohanjun@huawei.com>,
-        <sudeep.holla@arm.com>, <rjw@rjwysocki.net>, <lenb@kernel.org>,
-        <will@kernel.org>, <robin.murphy@arm.com>, <bhelgaas@google.com>,
-        <eric.auger@redhat.com>, <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH v3 10/13] iommu/arm-smmu-v3: Add second level of context
- descriptor table
-Message-ID: <20191213170729.00003539@Huawei.com>
-In-Reply-To: <20191209180514.272727-11-jean-philippe@linaro.org>
-References: <20191209180514.272727-1-jean-philippe@linaro.org>
-        <20191209180514.272727-11-jean-philippe@linaro.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 13 Dec 2019 12:10:50 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57346 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728379AbfLMRKu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 12:10:50 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A61B7E1D;
+        Fri, 13 Dec 2019 18:10:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1576257047;
+        bh=zn9I2+W9n9yW37O2l/bdOIDUCOKYH46nzAWKSfMmVvY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wn0wp5tCAQBmrc56Ik8TmVWk61nc4RX1gJmKqw8lmCyCVW+KVYoSLrShHab6Xt4dC
+         uqbqZALEMxZVX2t/yhcWTbEfZ/jk/9cZcOTbmApylU5oZJ/wf+QHSfA6AUmqeKwpFq
+         3CQSiQyMdpPGSgke/7BeNf2TEVR0W1cHhj8ZZs+o=
+Date:   Fri, 13 Dec 2019 19:10:38 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        devicetree@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Biju Das <biju.das@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Simon Horman <horms@verge.net.au>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v4 06/13] drm/bridge: lvds-codec: Add "lvds-decoder"
+ support
+Message-ID: <20191213171038.GH4860@pendragon.ideasonboard.com>
+References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1573660292-10629-7-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1573660292-10629-7-git-send-email-fabrizio.castro@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 9 Dec 2019 19:05:11 +0100
-Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+Hi Fabrizio,
 
-> The SMMU can support up to 20 bits of SSID. Add a second level of page
-> tables to accommodate this. Devices that support more than 1024 SSIDs now
-> have a table of 1024 L1 entries (8kB), pointing to tables of 1024 context
-> descriptors (64kB), allocated on demand.
+On Wed, Nov 13, 2019 at 03:51:25PM +0000, Fabrizio Castro wrote:
+> Add support for transparent LVDS decoders by adding a new
+> compatible string ("lvds-decoder") to the driver.
+> This patch also adds member connector_type to struct lvds_codec,
+> and that's because LVDS decoders have a different connector type
+> from LVDS encoders. We fill this new member up with the data
+> matching the compatible string.
 > 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-
-One tiny little comment inline.  I really don't mind if you ignore it ;)
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
 > ---
->  drivers/iommu/arm-smmu-v3.c | 153 +++++++++++++++++++++++++++++++++---
->  1 file changed, 143 insertions(+), 10 deletions(-)
+> v3->v4:
+> * New patch
+> ---
+>  drivers/gpu/drm/bridge/lvds-codec.c | 19 ++++++++++++++++---
+>  1 file changed, 16 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index fc5119f34187..52adcdfda58b 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -224,6 +224,7 @@
+> diff --git a/drivers/gpu/drm/bridge/lvds-codec.c b/drivers/gpu/drm/bridge/lvds-codec.c
+> index b5801a2..c32e125 100644
+> --- a/drivers/gpu/drm/bridge/lvds-codec.c
+> +++ b/drivers/gpu/drm/bridge/lvds-codec.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_graph.h>
+>  #include <linux/platform_device.h>
 >  
->  #define STRTAB_STE_0_S1FMT		GENMASK_ULL(5, 4)
->  #define STRTAB_STE_0_S1FMT_LINEAR	0
-> +#define STRTAB_STE_0_S1FMT_64K_L2	2
->  #define STRTAB_STE_0_S1CTXPTR_MASK	GENMASK_ULL(51, 6)
->  #define STRTAB_STE_0_S1CDMAX		GENMASK_ULL(63, 59)
->  
-> @@ -263,7 +264,20 @@
->  
->  #define STRTAB_STE_3_S2TTB_MASK		GENMASK_ULL(51, 4)
->  
-> -/* Context descriptor (stage-1 only) */
-> +/*
-> + * Context descriptors.
-> + *
-> + * Linear: when less than 1024 SSIDs are supported
-> + * 2lvl: at most 1024 L1 entries,
-> + *       1024 lazy entries per table.
-> + */
-> +#define CTXDESC_SPLIT			10
-> +#define CTXDESC_L2_ENTRIES		(1 << CTXDESC_SPLIT)
-> +
-> +#define CTXDESC_L1_DESC_DWORDS		1
-> +#define CTXDESC_L1_DESC_VALID		1
-> +#define CTXDESC_L1_DESC_L2PTR_MASK	GENMASK_ULL(51, 12)
-> +
->  #define CTXDESC_CD_DWORDS		8
->  #define CTXDESC_CD_0_TCR_T0SZ		GENMASK_ULL(5, 0)
->  #define ARM64_TCR_T0SZ			GENMASK_ULL(5, 0)
-> @@ -575,7 +589,10 @@ struct arm_smmu_cd_table {
+> @@ -17,6 +18,7 @@ struct lvds_codec {
+>  	struct drm_bridge bridge;
+>  	struct drm_bridge *panel_bridge;
+>  	struct gpio_desc *powerdown_gpio;
+> +	u32 connector_type;
 >  };
 >  
->  struct arm_smmu_s1_cfg {
-> -	struct arm_smmu_cd_table	table;
-> +	struct arm_smmu_cd_table	*tables;
-> +	size_t				num_tables;
-> +	__le64				*l1ptr;
-> +	dma_addr_t			l1ptr_dma;
->  	struct arm_smmu_ctx_desc	cd;
->  	u8				s1fmt;
->  	u8				s1cdmax;
-> @@ -1521,9 +1538,53 @@ static void arm_smmu_free_cd_leaf_table(struct arm_smmu_device *smmu,
->  {
->  	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
+>  static int lvds_codec_attach(struct drm_bridge *bridge)
+> @@ -65,6 +67,7 @@ static int lvds_codec_probe(struct platform_device *pdev)
+>  	if (!lvds_codec)
+>  		return -ENOMEM;
 >  
-> +	if (!table->ptr)
-> +		return;
->  	dmam_free_coherent(smmu->dev, size, table->ptr, table->ptr_dma);
+> +	lvds_codec->connector_type = (u32)of_device_get_match_data(&pdev->dev);
+
+I'm now getting a compilation failure here:
+
+drivers/gpu/drm/bridge/lvds-codec.c: In function ‘lvds_codec_probe’:
+drivers/gpu/drm/bridge/lvds-codec.c:68:31: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
+  lvds_codec->connector_type = (u32)of_device_get_match_data(&pdev->dev);
+                               ^
+
+The fix should be simple:
+
+	lvds_codec->connector_type = (uintptr_t)of_device_get_match_data(dev);
+
+I'm bothered by the fact that I've compiled this before without any
+issue, so this really puzzles me. Do you get the same warning ?
+
+>  	lvds_codec->powerdown_gpio = devm_gpiod_get_optional(dev, "powerdown",
+>  							     GPIOD_OUT_HIGH);
+>  	if (IS_ERR(lvds_codec->powerdown_gpio)) {
+> @@ -105,7 +108,7 @@ static int lvds_codec_probe(struct platform_device *pdev)
+>  
+>  	lvds_codec->panel_bridge =
+>  		devm_drm_panel_bridge_add_typed(dev, panel,
+> -						DRM_MODE_CONNECTOR_LVDS);
+> +						lvds_codec->connector_type);
+>  	if (IS_ERR(lvds_codec->panel_bridge))
+>  		return PTR_ERR(lvds_codec->panel_bridge);
+>  
+> @@ -133,8 +136,18 @@ static int lvds_codec_remove(struct platform_device *pdev)
 >  }
 >  
-> +static void arm_smmu_write_cd_l1_desc(__le64 *dst,
-> +				      struct arm_smmu_cd_table *table)
-> +{
-> +	u64 val = (table->ptr_dma & CTXDESC_L1_DESC_L2PTR_MASK) |
-> +		  CTXDESC_L1_DESC_VALID;
-> +
-> +	WRITE_ONCE(*dst, cpu_to_le64(val));
-> +}
-> +
-> +static __le64 *arm_smmu_get_cd_ptr(struct arm_smmu_domain *smmu_domain,
-> +				   u32 ssid)
-> +{
-> +	__le64 *l1ptr;
-> +	unsigned int idx;
-> +	struct arm_smmu_cd_table *table;
-> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
-> +	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
-> +
-> +	if (cfg->s1fmt == STRTAB_STE_0_S1FMT_LINEAR) {
-> +		table = &cfg->tables[0];
-> +		idx = ssid;
-> +	} else {
-> +		idx = ssid >> CTXDESC_SPLIT;
-> +		if (idx >= cfg->num_tables)
-> +			return NULL;
-> +
-> +		table = &cfg->tables[idx];
-> +		if (!table->ptr) {
-> +			if (arm_smmu_alloc_cd_leaf_table(smmu, table,
-> +							 CTXDESC_L2_ENTRIES))
-> +				return NULL;
-> +
-> +			l1ptr = cfg->l1ptr + idx * CTXDESC_L1_DESC_DWORDS;
-> +			arm_smmu_write_cd_l1_desc(l1ptr, table);
-> +			/* An invalid L1CD can be cached */
-> +			arm_smmu_sync_cd(smmu_domain, ssid, false);
-> +		}
-> +		idx = ssid & (CTXDESC_L2_ENTRIES - 1);
-> +	}
-> +	return table->ptr + idx * CTXDESC_CD_DWORDS;
-> +}
-> +
->  static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
->  {
->  	u64 val = 0;
-> @@ -1556,8 +1617,10 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
->  	u64 val;
->  	bool cd_live;
->  	struct arm_smmu_device *smmu = smmu_domain->smmu;
-> -	__le64 *cdptr = smmu_domain->s1_cfg.table.ptr + ssid *
-> -			CTXDESC_CD_DWORDS;
-> +	__le64 *cdptr = arm_smmu_get_cd_ptr(smmu_domain, ssid);
-> +
-> +	if (!cdptr)
-> +		return -ENOMEM;
->  
->  	val = le64_to_cpu(cdptr[0]);
->  	cd_live = !!(val & CTXDESC_CD_0_V);
-> @@ -1604,20 +1667,87 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
->  
->  static int arm_smmu_alloc_cd_tables(struct arm_smmu_domain *smmu_domain)
->  {
-> +	int ret;
-> +	size_t size = 0;
-> +	size_t max_contexts;
->  	struct arm_smmu_device *smmu = smmu_domain->smmu;
->  	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
->  
-> -	cfg->s1fmt = STRTAB_STE_0_S1FMT_LINEAR;
-> -	return arm_smmu_alloc_cd_leaf_table(smmu, &cfg->table,
-> -					    1 << cfg->s1cdmax);
-> +	max_contexts = 1 << cfg->s1cdmax;
-> +
-> +	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB) ||
-> +	    max_contexts <= CTXDESC_L2_ENTRIES) {
-> +		cfg->s1fmt = STRTAB_STE_0_S1FMT_LINEAR;
-> +		cfg->num_tables = 1;
-> +	} else {
-> +		cfg->s1fmt = STRTAB_STE_0_S1FMT_64K_L2;
-> +		cfg->num_tables = DIV_ROUND_UP(max_contexts,
-> +					       CTXDESC_L2_ENTRIES);
-> +
-> +		size = cfg->num_tables * (CTXDESC_L1_DESC_DWORDS << 3);
-> +		cfg->l1ptr = dmam_alloc_coherent(smmu->dev, size,
-> +						 &cfg->l1ptr_dma,
-> +						 GFP_KERNEL);
-> +		if (!cfg->l1ptr) {
-> +			dev_warn(smmu->dev,
-> +				 "failed to allocate L1 context table\n");
-> +			return -ENOMEM;
-> +		}
-> +	}
-> +
-> +	cfg->tables = devm_kzalloc(smmu->dev, sizeof(struct arm_smmu_cd_table) *
-> +				   cfg->num_tables, GFP_KERNEL);
-> +	if (!cfg->tables) {
-> +		ret = -ENOMEM;
-> +		goto err_free_l1;
-> +	}
-> +
-> +	/*
-> +	 * Only allocate a leaf table for linear case. With two levels, leaf
-> +	 * tables are allocated lazily.
-> +	 */
-> +	if (!cfg->l1ptr) {
+>  static const struct of_device_id lvds_codec_match[] = {
+> -	{ .compatible = "lvds-encoder" },
+> -	{ .compatible = "thine,thc63lvdm83d" },
+> +	{
+> +		.compatible = "lvds-decoder",
+> +		.data = (void *)DRM_MODE_CONNECTOR_DPI,
+> +	},
+> +	{
+> +		.compatible = "lvds-encoder",
+> +		.data = (void *)DRM_MODE_CONNECTOR_LVDS,
+> +	},
+> +	{
+> +		.compatible = "thine,thc63lvdm83d",
+> +		.data = (void *)DRM_MODE_CONNECTOR_LVDS,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, lvds_codec_match);
 
-This might have been the tiniest bit clearer if the check matched the description
-by checking it's a linear table rather than what is kind of a side effect of it
-not being non linear.
+-- 
+Regards,
 
-	if (cfg->s1fmt == STRTAB_STE_0_S1FMT_LINEAR)
-
-
-> +		ret = arm_smmu_alloc_cd_leaf_table(smmu, &cfg->tables[0],
-> +						   max_contexts);
-> +		if (ret)
-> +			goto err_free_tables;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_free_tables:
-> +	devm_kfree(smmu->dev, cfg->tables);
-> +	cfg->tables = NULL;
-> +err_free_l1:
-> +	if (cfg->l1ptr) {
-> +		dmam_free_coherent(smmu->dev, size, cfg->l1ptr, cfg->l1ptr_dma);
-> +		cfg->l1ptr = NULL;
-> +		cfg->l1ptr_dma = 0;
-> +	}
-> +	return ret;
->  }
->  
->  static void arm_smmu_free_cd_tables(struct arm_smmu_domain *smmu_domain)
->  {
-> +	int i;
->  	struct arm_smmu_device *smmu = smmu_domain->smmu;
->  	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
-> +	size_t num_leaf_entries = 1 << cfg->s1cdmax;
-> +	struct arm_smmu_cd_table *table = cfg->tables;
-> +
-> +	if (cfg->l1ptr) {
-> +		size_t size = cfg->num_tables * (CTXDESC_L1_DESC_DWORDS << 3);
->  
-> -	arm_smmu_free_cd_leaf_table(smmu, &cfg->table, 1 << cfg->s1cdmax);
-> +		dmam_free_coherent(smmu->dev, size, cfg->l1ptr, cfg->l1ptr_dma);
-> +		cfg->l1ptr = NULL;
-> +		cfg->l1ptr_dma = 0;
-> +		num_leaf_entries = CTXDESC_L2_ENTRIES;
-> +	}
-> +
-> +	for (i = 0; i < cfg->num_tables; i++, table++)
-> +		arm_smmu_free_cd_leaf_table(smmu, table, num_leaf_entries);
-> +	devm_kfree(smmu->dev, cfg->tables);
-> +	cfg->tables = NULL;
->  }
->  
->  /* Stream table manipulation functions */
-> @@ -1737,6 +1867,9 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
->  	}
->  
->  	if (s1_cfg) {
-> +		dma_addr_t ptr_dma = s1_cfg->l1ptr ? s1_cfg->l1ptr_dma :
-> +				     s1_cfg->tables[0].ptr_dma;
-> +
->  		BUG_ON(ste_live);
->  		dst[1] = cpu_to_le64(
->  			 FIELD_PREP(STRTAB_STE_1_S1DSS, STRTAB_STE_1_S1DSS_SSID0) |
-> @@ -1749,7 +1882,7 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
->  		   !(smmu->features & ARM_SMMU_FEAT_STALL_FORCE))
->  			dst[1] |= cpu_to_le64(STRTAB_STE_1_S1STALLD);
->  
-> -		val |= (s1_cfg->table.ptr_dma & STRTAB_STE_0_S1CTXPTR_MASK) |
-> +		val |= (ptr_dma & STRTAB_STE_0_S1CTXPTR_MASK) |
->  			FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_S1_TRANS) |
->  			FIELD_PREP(STRTAB_STE_0_S1CDMAX, s1_cfg->s1cdmax) |
->  			FIELD_PREP(STRTAB_STE_0_S1FMT, s1_cfg->s1fmt);
-> @@ -2265,7 +2398,7 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
->  	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
->  		struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
->  
-> -		if (cfg->table.ptr) {
-> +		if (cfg->tables) {
->  			arm_smmu_free_cd_tables(smmu_domain);
->  			arm_smmu_bitmap_free(smmu->asid_map, cfg->cd.asid);
->  		}
-
-
+Laurent Pinchart
