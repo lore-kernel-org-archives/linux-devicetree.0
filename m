@@ -2,124 +2,289 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E207C2D0C9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 07:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D534C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 07:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541FD2465B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 07:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6521924658
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 07:44:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bbL6Rm5k"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="jlzK9T0X";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bMzqLlFe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725793AbfLMHml (ORCPT
+        id S1725924AbfLMHoA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 02:42:41 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48892 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMHml (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 02:42:41 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBD7gbqu051326;
-        Fri, 13 Dec 2019 01:42:37 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576222957;
-        bh=pfosKWY+DPLN2snhBDjr+kFJG45sxdEpRrJaIyk+4yw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bbL6Rm5keRegYLGlwMIpi6/23iadkdBBo8P8Mg8irbEZr6TXOvJZQKM21yu5eKt6L
-         0nlVDZG8zJlkLXjhpXTuWEkBUATpo0UGRq+zuAo7UhmrwxpMMGgN+6oH7OTodYecuj
-         KV/DSlc8LyiJ/51g7vxHlIRglEhkOK0yM7A5yymw=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBD7gb2J061928;
-        Fri, 13 Dec 2019 01:42:37 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Dec 2019 01:42:35 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Dec 2019 01:42:34 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBD7gWJu119926;
-        Fri, 13 Dec 2019 01:42:33 -0600
-Subject: Re: [Patch v3 0/3] ARM: dts: am43x-vpfe/ov2659.patch
-To:     Tony Lindgren <tony@atomide.com>, Benoit Parrot <bparrot@ti.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191211140720.10539-1-bparrot@ti.com>
- <20191212174123.GF35479@atomide.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <c4ae58dc-3c81-f493-a665-6926baa0f04c@ti.com>
-Date:   Fri, 13 Dec 2019 09:42:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 13 Dec 2019 02:44:00 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:51681 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725468AbfLMHn7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Dec 2019 02:43:59 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id A86F0226EE;
+        Fri, 13 Dec 2019 02:43:58 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Fri, 13 Dec 2019 02:43:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=V/dkQqEhLQZVHxS63i+CEEgpu+
+        G4fLu9zf6DuAwnDME=; b=jlzK9T0XIoe/Cg3kmMNln6fyYPgqy1SZU+C/G0qPCI
+        QWP8B8ofUx2j4AbUo8LnHnA8WV/LU4kOR/q6NEojD0W1AtlJDcRslR6qCKd+MT2s
+        nECl7+V4hppIQeDl5Rsa6S8vAVDwqplSk6TUUFa8XLdzB8qlju6Dsz/1/5OXp/9g
+        qM292p0nsxH0o3wxxL1k1Yr6DdjVWT+ZiFAxg0cqJbWTlKw9mXqnFOtshqYAz/IN
+        OjrL3o5ZzTkgWPf+BJ4WDq3MO3aXvjzyJa4HgbgSRQAPYI9v89NqaMY94GWorY81
+        6Rqxf1ig0JeBi/BFBF7MkpZuY804Dmp294+Xe9+l9H1w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=V/dkQqEhLQZVHxS63
+        i+CEEgpu+G4fLu9zf6DuAwnDME=; b=bMzqLlFeomEdXco6mDDOKEXiTwSG07iDX
+        yqSxgZ9Hrh9odYYu5hvj1+yhn9LDUi/4UxpAfHSHDphUPoRdsOPTe9KPh04drkFO
+        eaMMAno4E3WG73E1lUxjWjTD7fMwNNnLkuR1cooqdZg02NbJhlhAFgZNZdCGb+2f
+        T7c13a0curZGYJWbOmHI6nIliIDDsxAE0KrOWwr7U8+/C5Z6+2PbU6ONtmLqoAYn
+        Acw5FJIbUt/mstQUthLUXIBpBYfnQI7ARoxfGpJUTMKJT99lAGKIyJ0d6tqRwh0k
+        G+eBXACnz9TfyRe6HgotzAXNtLM9raXc0Z23lGi9CJL5H0w7pRzIw==
+X-ME-Sender: <xms:PUHzXaZiSYiyxdLF2cPV0vMRdRNFu3VCzkRCfib4wwVXTTdYQZUdFQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelkedgudduudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enogevohgrshhtrghlqdfhgeduvddqtddvucdludehtddmnecujfgurhephffvufffkffo
+    ggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgi
+    himhgvsegtvghrnhhordhtvggthheqnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdr
+    ohhrghenucfkphepledtrdekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomh
+    epmhgrgihimhgvsegtvghrnhhordhtvggthhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:PkHzXZH7NHZ_NEmPoMIUGdF6mcGEnBNz-YBn76vFDXIWce3o48mQEA>
+    <xmx:PkHzXb1asWJuiPDnn32TS1cOjg6ZId7KLXFFUododURAkW7MwIjKqg>
+    <xmx:PkHzXRcxMjf-B6VLMPTDjFqm8QIwRn2iDGXCxZOrunYjlFyFIj0otQ>
+    <xmx:PkHzXZEJZsKYh823OunFMjqrES31qFRVO3ZEYfHpgcWehTKO3BpK_Q>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AF4B03060193;
+        Fri, 13 Dec 2019 02:43:57 -0500 (EST)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        mchehab@kernel.org, linux-media@vger.kernel.org,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH] dt-bindings: media: Convert Allwinner A31 CSI to a schema
+Date:   Fri, 13 Dec 2019 08:43:55 +0100
+Message-Id: <20191213074355.26840-1-maxime@cerno.tech>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191212174123.GF35479@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/12/2019 19:41, Tony Lindgren wrote:
-> * Benoit Parrot <bparrot@ti.com> [191211 06:04]:
->> This patch series adds the missing camera endpoint (ov2659) as well as
->> the required source clocks nodes for the sensor.
->>
->> On the am437x-sk-evm the camera sensor is sourced from clkout1 but that
->> clock nodes/tree was removed as it was unsed at the time, we are
->> re-adding the needed clock nodes here.
-> 
-> Tero, it seems I can already pick this series?
+The newer Allwinner SoCs have a camera controller that is supported in
+Linux, with a matching Device Tree binding.
 
-I believe it is ready if you approve the clkout1 clock patch.
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
 
-> Or ou want to queue the changes to am43xx-clocks.dtsi along with all
-> your other clock patches?
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ .../media/allwinner,sun6i-a31-csi.yaml        | 115 ++++++++++++++++++
+ .../devicetree/bindings/media/sun6i-csi.txt   |  61 ----------
+ 2 files changed, 115 insertions(+), 61 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun6i-a31-csi.yaml
+ delete mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
 
-Well, I have actually never queued any omap2+ dts patches myself, and I 
-don't think there would be too many of those coming for next merge either.
+diff --git a/Documentation/devicetree/bindings/media/allwinner,sun6i-a31-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun6i-a31-csi.yaml
+new file mode 100644
+index 000000000000..1fd9b5532a21
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/allwinner,sun6i-a31-csi.yaml
+@@ -0,0 +1,115 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/allwinner,sun6i-a31-csi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A31 CMOS Sensor Interface (CSI) Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <mripard@kernel.org>
++
++properties:
++  compatible:
++    enum:
++      - allwinner,sun6i-a31-csi
++      - allwinner,sun8i-a83t-csi
++      - allwinner,sun8i-h3-csi
++      - allwinner,sun8i-v3s-csi
++      - allwinner,sun50i-a64-csi
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Bus Clock
++      - description: Module Clock
++      - description: DRAM Clock
++
++  clock-names:
++    items:
++      - const: bus
++      - const: mod
++      - const: ram
++
++  resets:
++    maxItems: 1
++
++  # See ./video-interfaces.txt for details
++  port:
++    type: object
++
++    properties:
++      endpoint:
++        type: object
++
++        properties:
++          remote-endpoint: true
++
++          bus-width:
++            enum: [ 8, 10, 12, 16 ]
++
++          pclk-sample: true
++          hsync-active: true
++          vsync-active: true
++
++        required:
++          - bus-width
++          - remote-endpoint
++
++    required:
++      - endpoint
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - resets
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/sun8i-v3s-ccu.h>
++    #include <dt-bindings/reset/sun8i-v3s-ccu.h>
++
++    csi1: csi@1cb4000 {
++        compatible = "allwinner,sun8i-v3s-csi";
++        reg = <0x01cb4000 0x1000>;
++        interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&ccu CLK_BUS_CSI>,
++                 <&ccu CLK_CSI1_SCLK>,
++                 <&ccu CLK_DRAM_CSI>;
++        clock-names = "bus",
++                      "mod",
++                      "ram";
++        resets = <&ccu RST_BUS_CSI>;
++
++        port {
++            /* Parallel bus endpoint */
++            csi1_ep: endpoint {
++                remote-endpoint = <&adv7611_ep>;
++                bus-width = <16>;
++
++                /*
++                 * If hsync-active/vsync-active are missing,
++                 * embedded BT.656 sync is used.
++                 */
++                 hsync-active = <0>; /* Active low */
++                 vsync-active = <0>; /* Active low */
++                 pclk-sample = <1>;  /* Rising */
++            };
++        };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+deleted file mode 100644
+index a2e3e56f0257..000000000000
+--- a/Documentation/devicetree/bindings/media/sun6i-csi.txt
++++ /dev/null
+@@ -1,61 +0,0 @@
+-Allwinner V3s Camera Sensor Interface
+--------------------------------------
+-
+-Allwinner V3s SoC features a CSI module(CSI1) with parallel interface.
+-
+-Required properties:
+-  - compatible: value must be one of:
+-    * "allwinner,sun6i-a31-csi"
+-    * "allwinner,sun8i-a83t-csi"
+-    * "allwinner,sun8i-h3-csi"
+-    * "allwinner,sun8i-v3s-csi"
+-    * "allwinner,sun50i-a64-csi"
+-  - reg: base address and size of the memory-mapped region.
+-  - interrupts: interrupt associated to this IP
+-  - clocks: phandles to the clocks feeding the CSI
+-    * bus: the CSI interface clock
+-    * mod: the CSI module clock
+-    * ram: the CSI DRAM clock
+-  - clock-names: the clock names mentioned above
+-  - resets: phandles to the reset line driving the CSI
+-
+-The CSI node should contain one 'port' child node with one child 'endpoint'
+-node, according to the bindings defined in
+-Documentation/devicetree/bindings/media/video-interfaces.txt.
+-
+-Endpoint node properties for CSI
+----------------------------------
+-See the video-interfaces.txt for a detailed description of these properties.
+-- remote-endpoint	: (required) a phandle to the bus receiver's endpoint
+-			   node
+-- bus-width:		: (required) must be 8, 10, 12 or 16
+-- pclk-sample		: (optional) (default: sample on falling edge)
+-- hsync-active		: (required; parallel-only)
+-- vsync-active		: (required; parallel-only)
+-
+-Example:
+-
+-csi1: csi@1cb4000 {
+-	compatible = "allwinner,sun8i-v3s-csi";
+-	reg = <0x01cb4000 0x1000>;
+-	interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+-	clocks = <&ccu CLK_BUS_CSI>,
+-		 <&ccu CLK_CSI1_SCLK>,
+-		 <&ccu CLK_DRAM_CSI>;
+-	clock-names = "bus", "mod", "ram";
+-	resets = <&ccu RST_BUS_CSI>;
+-
+-	port {
+-		/* Parallel bus endpoint */
+-		csi1_ep: endpoint {
+-			remote-endpoint = <&adv7611_ep>;
+-			bus-width = <16>;
+-
+-			/* If hsync-active/vsync-active are missing,
+-			   embedded BT.656 sync is used */
+-			hsync-active = <0>; /* Active low */
+-			vsync-active = <0>; /* Active low */
+-			pclk-sample = <1>;  /* Rising */
+-		};
+-	};
+-};
+-- 
+2.23.0
 
--Tero
-
-> 
-> Regards,
-> 
-> Tony
-> 
->   
->> Changes since v2:
->> - Fixed/added Tony's ack
->>
->> Changes since v1:
->> - Fix clock name to make it generic
->> - Add non-standard clock node naming to commit message as per Tony's
->>    comment
->> - Rename all clock nodes to use '-' instead of '_'
->>
->> Benoit Parrot (2):
->>    ARM: dts: am437x-sk-evm: Add VPFE and OV2659 entries
->>    ARM: dts: am43x-epos-evm: Add VPFE and OV2659 entries
->>
->> Tero Kristo (1):
->>    ARM: dts: am43xx: add support for clkout1 clock
->>
->>   arch/arm/boot/dts/am437x-sk-evm.dts  | 27 +++++++++++++-
->>   arch/arm/boot/dts/am43x-epos-evm.dts | 23 +++++++++++-
->>   arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
->>   3 files changed, 102 insertions(+), 2 deletions(-)
->>
->> -- 
->> 2.17.1
->>
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
