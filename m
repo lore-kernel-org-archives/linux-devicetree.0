@@ -2,67 +2,67 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD42C33CA2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E02C34966
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22CFA2474C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EAFE24741
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:37:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vOOpviAx"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nZ9BQpSu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfLMNaB (ORCPT
+        id S1727512AbfLMNaF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 08:30:01 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40584 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbfLMNaB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 08:30:01 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so6567667wmi.5
-        for <devicetree@vger.kernel.org>; Fri, 13 Dec 2019 05:30:00 -0800 (PST)
+        Fri, 13 Dec 2019 08:30:05 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40589 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727425AbfLMNaF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 08:30:05 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t14so6567783wmi.5
+        for <devicetree@vger.kernel.org>; Fri, 13 Dec 2019 05:30:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CgnEiw//WJHGzufAg0EVPn2uPGD0ymse5mrY0tAd6l4=;
-        b=vOOpviAxpLRGWbDnsRDeW/Z1cMyneMze+jcUF80fZMjE8m6MgW1/3+1igyAiE8jaQZ
-         sd0ebigH6c+U2qkc0FI8CrJdSX8t/BFyvVanWL+z/ZwFmiq8KMr6hU04tpRbTrysoWaa
-         yoPfSR4+yq0vvpWheb1LEqa6KrqxM4/w1DHAbcWu6R2h7cUrw86N2hRISkX0Sqf11C5/
-         tomV/QGS/iS3FPhs4Qvi1TeuZWNaa5y1JuD7iZ079m1bD5Zbm6JGMM/bbeJrhG+RBg4J
-         V4ST4UPBQEhdvtiaiIlEFYgjErWwFvWkj9ry2CB3q4X2skuv5zdQMWGc0Xopg/dgE4z+
-         fPxg==
+        bh=VXzCIVNIyEIalSwrDVu1JlYLLJVG8LUdZccZXShpYsw=;
+        b=nZ9BQpSuWb9dDeJykWlitqmovokkBjW/QjlPbblKCvaHm0mccziJSL6ajoVWDfotQt
+         XnXJBWVcWNLc5JqFW+o9Tl23W+/w+x5W/n0yEqrgk6z0/klrDcJ9SfNGCgMevbuYx1lG
+         PrEHbPePlNDmwl725H0hAvDzGoMTkkksqbQhhcoCR03XcDFG3miJ7j1meXOF47Dlzqj/
+         PhoneeU8HryDHVuUxDu+S7zYoeFUXDwS9XIFegBzSCM1Iacw2SqzmaHN/hkDNLrrDDuR
+         oN6lS4cBVlahfCWW3hMbLY9yQzsgKZp/9i5oJV08NN4dEaKFVgf18DKoGYD6cvDudgHb
+         zQMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=CgnEiw//WJHGzufAg0EVPn2uPGD0ymse5mrY0tAd6l4=;
-        b=Rf/hoYZzwgJSMLUxWnkBYdA5wlWb3JJ+uJzgwOAzto72JPedHU0BOirULrDwe6pBVg
-         sfwFKVBtROWvKEVnLS3+rE9vqMD6VrKeAGWmzDiP7XfJv3fPUqcIXVmkIQ47GmFPvdjg
-         NQXYa3KxqBsPZ0eDT3Y3YQzudvWD51HSONb8bMEGedq6azMRvRbMqfuFBn9JKnydBZR7
-         bHTftsgNbuPD3qQ15MO9vlQ2tLCJl8nHJdxIHljYOGbLzeo5iYYmb0jD9deoW4YKVElV
-         8KghmbBIw783I0OOlnT/eUf86ukJECG990uxs/9ujX3fuNbbiGH0lE8rZpmL8JTUbOe/
-         FsOg==
-X-Gm-Message-State: APjAAAXohjHdX0f5ukr+U2QGAx7hc8XMD0rGewDtCyBvISnAPNL20ZlZ
-        1J8+ryv2C0TlaS3DL+ew28spjQ==
-X-Google-Smtp-Source: APXvYqys8/RNfak7NGL62z6NcWptRE36wV1YR+wvRxs1Ya8mDCpWIYIyNly0sr/UON3XlfgQlSltTw==
-X-Received: by 2002:a05:600c:149:: with SMTP id w9mr12997218wmm.132.1576243799677;
-        Fri, 13 Dec 2019 05:29:59 -0800 (PST)
+        bh=VXzCIVNIyEIalSwrDVu1JlYLLJVG8LUdZccZXShpYsw=;
+        b=CCUy1zq2AjenXNtmXuu40UR5vma5QwP46NLm4CY+dr1yTrip2VO/EyyS91ZdD0IstD
+         0mJ0swvii1NRzoi+ObHq0mPQ1dMeVlqhsoWTysfewigdg+HzOHkv9D2EqbY5ABT9zS8J
+         SNEDRazMOpQEw/+kqV75W1qgmYhbHzm0UU0MQrL72ULe3IReOa2TWARmBdMuLBndD142
+         tJrOoYBUj8HcrVDuV8RRdGU8u7/MNblkNjv+A9MMB/m/rOy0j8XiiAu3jqJbG9R5gjnh
+         FaapGJt0H4UNtssUo3CpUuQ3dxWA94ouRsO8oX1SsABcMX2Us2w4c6hksT+KmFNqLmm+
+         3aiw==
+X-Gm-Message-State: APjAAAUIIgABTcp9LUtUhwkIvNu83bxAOxmvFITNYbP/qZIQpFJoN7dS
+        0c3w1NlQ/lbUY+RtaIKinAp+LQ==
+X-Google-Smtp-Source: APXvYqySye0Al7ofzrrLCFePLmE9J5EDhkpPFb1QMhV+Eca0/HHqNuayvmb667XyzUHwTfXeZTWmWA==
+X-Received: by 2002:a1c:8086:: with SMTP id b128mr13635797wmd.80.1576243802038;
+        Fri, 13 Dec 2019 05:30:02 -0800 (PST)
 Received: from localhost.localdomain ([2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca])
-        by smtp.gmail.com with ESMTPSA id n3sm10540543wmc.27.2019.12.13.05.29.58
+        by smtp.gmail.com with ESMTPSA id n3sm10540543wmc.27.2019.12.13.05.30.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 05:29:59 -0800 (PST)
+        Fri, 13 Dec 2019 05:30:01 -0800 (PST)
 From:   Guillaume La Roque <glaroque@baylibre.com>
 To:     narmstrong@baylibre.com, mchehab@kernel.org,
         hverkuil-cisco@xs4all.nl, khilman@baylibre.com,
         devicetree@vger.kernel.org
 Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] media: dt-bindings: media: meson-ao-cec: Add support of ao-sysctrl syscon
-Date:   Fri, 13 Dec 2019 14:29:54 +0100
-Message-Id: <20191213132956.11074-2-glaroque@baylibre.com>
+Subject: [PATCH v2 3/3] media: platform: meson-ao-cec-g12a: add wakeup support
+Date:   Fri, 13 Dec 2019 14:29:56 +0100
+Message-Id: <20191213132956.11074-4-glaroque@baylibre.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191213132956.11074-1-glaroque@baylibre.com>
 References: <20191213132956.11074-1-glaroque@baylibre.com>
@@ -71,30 +71,93 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-ao-sysctrl syscon phandle property is needed for CEC wakeup support.
-This property is optional.
+add register configuration to activate wakeup feature in bl301
 
 Tested-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- .../devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml    | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/platform/meson/ao-cec-g12a.c | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml b/Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml
-index 41197578f19a..1f721498d249 100644
---- a/Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml
-+++ b/Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml
-@@ -32,6 +32,10 @@ properties:
-     allOf:
-       - $ref: /schemas/types.yaml#/definitions/phandle
+diff --git a/drivers/media/platform/meson/ao-cec-g12a.c b/drivers/media/platform/meson/ao-cec-g12a.c
+index 891533060d49..85850b974126 100644
+--- a/drivers/media/platform/meson/ao-cec-g12a.c
++++ b/drivers/media/platform/meson/ao-cec-g12a.c
+@@ -25,6 +25,7 @@
+ #include <media/cec.h>
+ #include <media/cec-notifier.h>
+ #include <linux/clk-provider.h>
++#include <linux/mfd/syscon.h>
  
-+  amlogic,ao-sysctrl:
-+    description: phandle to the ao-sysctrl syscon
-+    $ref: '/schemas/types.yaml#/definitions/phandle'
+ /* CEC Registers */
+ 
+@@ -168,6 +169,18 @@
+ 
+ #define CECB_WAKEUPCTRL		0x31
+ 
++#define CECB_FUNC_CFG_REG		0xA0
++#define CECB_FUNC_CFG_MASK		GENMASK(6, 0)
++#define CECB_FUNC_CFG_CEC_ON		0x01
++#define CECB_FUNC_CFG_OTP_ON		0x02
++#define CECB_FUNC_CFG_AUTO_STANDBY	0x04
++#define CECB_FUNC_CFG_AUTO_POWER_ON	0x08
++#define CECB_FUNC_CFG_ALL		0x2f
++#define CECB_FUNC_CFG_NONE		0x0
 +
- allOf:
-   - if:
-       properties:
++#define CECB_LOG_ADDR_REG	0xA4
++#define CECB_LOG_ADDR_MASK	GENMASK(22, 16)
++
+ struct meson_ao_cec_g12a_data {
+ 	/* Setup the internal CECB_CTRL2 register */
+ 	bool				ctrl2_setup;
+@@ -177,6 +190,7 @@ struct meson_ao_cec_g12a_device {
+ 	struct platform_device		*pdev;
+ 	struct regmap			*regmap;
+ 	struct regmap			*regmap_cec;
++	struct regmap			*regmap_ao_sysctrl;
+ 	spinlock_t			cec_reg_lock;
+ 	struct cec_notifier		*notify;
+ 	struct cec_adapter		*adap;
+@@ -518,6 +532,13 @@ meson_ao_cec_g12a_set_log_addr(struct cec_adapter *adap, u8 logical_addr)
+ 					 BIT(logical_addr - 8));
+ 	}
+ 
++	if (ao_cec->regmap_ao_sysctrl)
++		ret |= regmap_update_bits(ao_cec->regmap_ao_sysctrl,
++					 CECB_LOG_ADDR_REG,
++					 CECB_LOG_ADDR_MASK,
++					 FIELD_PREP(CECB_LOG_ADDR_MASK,
++						    logical_addr));
++
+ 	/* Always set Broadcast/Unregistered 15 address */
+ 	ret |= regmap_update_bits(ao_cec->regmap_cec, CECB_LADD_HIGH,
+ 				  BIT(CEC_LOG_ADDR_UNREGISTERED - 8),
+@@ -618,6 +639,13 @@ static int meson_ao_cec_g12a_adap_enable(struct cec_adapter *adap, bool enable)
+ 		regmap_write(ao_cec->regmap_cec, CECB_CTRL2,
+ 			     FIELD_PREP(CECB_CTRL2_RISE_DEL_MAX, 2));
+ 
++	if (ao_cec->regmap_ao_sysctrl) {
++		regmap_update_bits(ao_cec->regmap_ao_sysctrl,
++				   CECB_FUNC_CFG_REG,
++				   CECB_FUNC_CFG_MASK,
++				   CECB_FUNC_CFG_ALL);
++	}
++
+ 	meson_ao_cec_g12a_irq_setup(ao_cec, true);
+ 
+ 	return 0;
+@@ -685,6 +713,11 @@ static int meson_ao_cec_g12a_probe(struct platform_device *pdev)
+ 		goto out_probe_adapter;
+ 	}
+ 
++	ao_cec->regmap_ao_sysctrl = syscon_regmap_lookup_by_phandle
++		(pdev->dev.of_node, "amlogic,ao-sysctrl");
++	if (IS_ERR(ao_cec->regmap_ao_sysctrl))
++		dev_warn(&pdev->dev, "ao-sysctrl syscon regmap lookup failed.\n");
++
+ 	irq = platform_get_irq(pdev, 0);
+ 	ret = devm_request_threaded_irq(&pdev->dev, irq,
+ 					meson_ao_cec_g12a_irq,
 -- 
 2.17.1
 
