@@ -2,116 +2,213 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFACC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C23C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D827F21655
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67B3A206B7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 10:42:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="TAyF7Whl"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="RpFkaa9J";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QbEiOiTN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725945AbfLMKmP (ORCPT
+        id S1725906AbfLMKm1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 05:42:15 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:49176 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfLMKmP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 05:42:15 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0C9329F4;
-        Fri, 13 Dec 2019 11:42:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576233733;
-        bh=OPViJPaiwbV2JTOTiAegI/0110zI2wQylSeMT+FKqKc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TAyF7Whl+kY9pTyYAmxs4xi8h2VUSLM3YMhdxUWEQOO7hQc0M4nh6MYijxDDdm7Z/
-         O7WYfAhf8l+PVa6UOiU8R3Z+4hpPdUk+OgjJ6KSozylSIfXE0VYAY77NUYFaSbdoOz
-         lh8OYHg9PKMDczll7Yo6pI5bXdB3V2vbcRa0CA+4=
-Date:   Fri, 13 Dec 2019 12:42:04 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, dri-devel@lists.freedesktop.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/4] ARM: dts: am437x-gp-evm: add HDMI support
-Message-ID: <20191213104204.GB4860@pendragon.ideasonboard.com>
-References: <20191125131100.9839-1-tomi.valkeinen@ti.com>
- <20191212172104.GY35479@atomide.com>
- <20191212173110.GA35479@atomide.com>
- <d09526b2-8435-bef2-0489-0c3c8173d451@ti.com>
+        Fri, 13 Dec 2019 05:42:27 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:47171 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725890AbfLMKm0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Dec 2019 05:42:26 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 75F6E5DBA;
+        Fri, 13 Dec 2019 05:42:25 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Fri, 13 Dec 2019 05:42:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=vgk7FL9HE/DhoT+VdhEoE7vu/ra
+        uoTEyo8weCVOH8SA=; b=RpFkaa9J+pcmp6q042NfBbI+t4NPy44WfK7eZAubKAs
+        ZKmfz+/gQwdfw1VGjcCP+TdJtLpuWqWnNnhhbKHE2CH3XRisIvVteygfQ57kgJIh
+        5Z41vC5AaG/c0m6i2kvDEKdKH2AryU2VlZDn9Tp5wgzGHu0/qYBnWgaS8JPryXju
+        UbWLNXvcYi6Oj6GdPr61Q1gpdYMHe7o4Zht6oWpo+zpjLNAkBCvV6QaIpL2Snz91
+        XN2ZptryfOMVfuOpgtbXYoIbXMihPb0jGhEaCB7x9IwFt0evCzXkhg+0DFjubWe7
+        dR0EGJUd0AHegkEHACR6ir4Ti5qUmRoK0mDxFMzIxSA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=vgk7FL
+        9HE/DhoT+VdhEoE7vu/rauoTEyo8weCVOH8SA=; b=QbEiOiTNPE4vD8e/j0D6Xz
+        hHkAJO9PuQOnrlRvK0TlELR1Obr+MrBiuuswLxi7Q3mS8oN/vNVAYtWU9Oq7h3Yv
+        Yjmxk4cvIjlZugr4tv0TeRqVxbeR+eUdshIWKLJq6B3l0b/epJTZLEnnCbNo8jQv
+        +r5b4Qzh0yb4K4c07DS2cYxLqx1TXi7LDs8CxvBcbJ64NNYHJGlKXMOAnIOpp+YJ
+        hrjk+lSxeylKsjso+5EAs515iBCaOCERQHOhBd8/hYgpwkhL+4qZVmaIjv72/UKa
+        5wqVWweRSSQ+vIS/1xKtttFZXsgccfp2L/Gdf9mngF7wEDEoIwERndy7ZMbjTxLg
+        ==
+X-ME-Sender: <xms:EGvzXaWsPeAoZSrolyzvTW9LlB-g28VteYOcfsoU5i36WZ1vL3LUpw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelledgudelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
+    hnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrieekrdejieenucfr
+    rghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthhenucevlh
+    hushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:EGvzXZLVgHDuGQlZli344liZwYvtfwgs-eiRQu2IdBbpEuf_EENilw>
+    <xmx:EGvzXVjism9prFcsHIdmqepdKm3Dnqcevmf2NqkpaIDFrKsDkm4DNA>
+    <xmx:EGvzXZk1lj4Xasztv1_-P3ol-owH8fF-NI_OA7SHt3KUCpt2hVa85w>
+    <xmx:EWvzXZiSmSwJzI-7t7-Mit9M7DaCXnPWb3Vi_3NGoSes6QqBt6GP0A>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 98B163060158;
+        Fri, 13 Dec 2019 05:42:24 -0500 (EST)
+Date:   Fri, 13 Dec 2019 11:42:23 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jyri Sarha <jsarha@ti.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        yamonkar@cadence.com, praneeth@ti.com, sjakhade@cadence.com,
+        robh+dt@kernel.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com,
+        laurent.pinchart@ideasonboard.com, subhajit_paul@ti.com,
+        sam@ravnborg.org
+Subject: Re: [PATCH v3 1/5] dt-bindings: display: ti, k2g-dss: Add dt-schema
+ yaml binding
+Message-ID: <20191213104223.u55zlm2zwpgarvil@gilmour.lan>
+References: <cover.1576158368.git.jsarha@ti.com>
+ <7c2e386d48cf0c8b932804f24e3f6ea81fe3d3a3.1576158368.git.jsarha@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="h7rjevoyojpmg3m3"
 Content-Disposition: inline
-In-Reply-To: <d09526b2-8435-bef2-0489-0c3c8173d451@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <7c2e386d48cf0c8b932804f24e3f6ea81fe3d3a3.1576158368.git.jsarha@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tomi,
 
-On Fri, Dec 13, 2019 at 11:24:02AM +0200, Tomi Valkeinen wrote:
-> On 12/12/2019 19:31, Tony Lindgren wrote:
-> > * Tony Lindgren <tony@atomide.com> [191212 17:21]:
-> >> Hi,
-> >>
-> >> * Tomi Valkeinen <tomi.valkeinen@ti.com> [191125 05:11]:
-> >>> Add HDMI support for AM437x GP EVM. The HDMI uses SiI9022 HDMI encoder,
-> >>> and is mutually exclusive with the LCD. The choice between LCD and HDMI
-> >>> is made by booting either with am437x-gp-evm.dtb or
-> >>> am437x-gp-evm-hdmi.dtb.
-> >>
-> >> So Linux kernel needs a new board device tree file to toggle a GPIO line
-> >> to switch between LCD mode and HDMI?
-> >>
-> >> That does not sound very user friendly for something that's supposed
-> >> to be hot pluggabe :)
-> 
-> True. We've had this for a long time in the TI kernel. I don't know how to implement this better, 
-> except perhaps with DT overlays, but that's essentially the same method.
-> 
-> >>> +/* Override SelLCDorHDMI from am437x-gp-evm.dts to select HDMI */
-> >>> +&gpio5 {
-> >>> +	p8 {
-> >>> +		output-low;
-> >>> +	};
-> >>> +};
-> >>
-> >> How about just leave the gpio unconfigured and document that a userspace
-> >> tool or /sys/kernel/debug/gpio is needed to toggle between the modes?
-> 
-> That sounds much worse than two dts files. How does X or weston know about the gpio?
-> 
-> And the "external" gpio wouldn't work well with DRM. We need to add all the displays at probe time, 
-> so we'd have LCD and HDMI. The gpio makes one of those operable, but only the external parts. The 
-> display controller has just one output, and we'd have a conflict there too as both displays would be 
-> connected to that single output. And as the display controller driver doesn't know about the gpio, 
-> it would fail "randomly" for one of the displays if the other one is already enabled by the userspace.
-> 
-> I think the correct way would be to have DRM framework understand that we have two displays, which 
-> are mutually exclusive, and the display pipeline drivers would have the means to switch the gpio. 
-> And that the display setup could be communicated properly to the userspace, and the userspace would 
-> understand it. I don't think any of those exists.
+--h7rjevoyojpmg3m3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Isn't this what possible_clones in drm_encoder is for ? It notifies
-userspace of mutual exclusions between encoders.
+Hi,
 
-> So, the only good solution I have figured out is to just say that we have a single display at 
-> runtime, defined by the dt file.
-> 
-> On some boards (k2g-evm, if I recall right) we have similar HW setup, but with a physical switch. We 
-> use the same method there, with two dts files. Again, if I recall right, the switch setting can be 
-> seen by the SW, so if there's a better solution to the AM4 case, probably similar could be used with 
-> k2g-evm, where the drivers would react to the user changing the switch.
+On Thu, Dec 12, 2019 at 03:51:57PM +0200, Jyri Sarha wrote:
+> Add dt-schema yaml bindig for K2G DSS, an ultra-light version of TI
+> Keystone Display SubSystem.
+>
+> Version history:
+>
+> v2: no change
+>
+> v3: - Add ports node
+>     - Add includes to dts example
+>     - reindent dts example
+>
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  .../bindings/display/ti/ti,k2g-dss.yaml       | 118 ++++++++++++++++++
+>  1 file changed, 118 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+> new file mode 100644
+> index 000000000000..90158e8b6aad
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+> @@ -0,0 +1,118 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 Texas Instruments Incorporated
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/ti/ti,k2g-dss.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Texas Instruments K2G Display Subsystem
+> +
+> +maintainers:
+> +  - Jyri Sarha <jsarha@ti.com>
+> +  - Tomi Valkeinen <tomi.valkeinen@ti.com>
+> +
+> +description: |
+> +  The K2G DSS is an ultra-light version of TI Keystone Display
+> +  SubSystem. It has only one output port and video plane. The
+> +  output is DPI.
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,k2g-dss
+> +
+> +  reg:
+> +    maxItems: 5
+> +    minItems: 5
 
--- 
-Regards,
+When they are equal, you need only one of the two, the tools will add
+the other.
 
-Laurent Pinchart
+Also, adding a description of what those registers are supposed to be
+would be great.
+
+> +
+> +  reg-names:
+> +    items:
+> +      - const: cfg
+> +      - const: common
+> +      - const: vid1
+> +      - const: ovr1
+> +      - const: vp1
+> +
+> +  clocks:
+> +    maxItems: 2
+> +    minItems: 2
+
+Ditto
+
+> +
+> +  clock-names:
+> +    items:
+> +      - const: fck
+> +      - const: vp1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +    description: phandle to the associated power domain
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      Ports as described in Documentation/devictree/bindings/graph.txt
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        description:
+> +          The DSS DPI output port node
+
+If there's only one port, why do you need ports in the first place?
+
+Thanks!
+Maxime
+
+--h7rjevoyojpmg3m3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfNrDwAKCRDj7w1vZxhR
+xXoAAP4+hx3XYi8AsAWRYJersbx7MZ2tEkHeK0WLriGTWXJ5fwEAyV7WaqLUhkzn
+qbrivmLoR+AKdYiDgIO+USQn229uMwE=
+=vNap
+-----END PGP SIGNATURE-----
+
+--h7rjevoyojpmg3m3--
