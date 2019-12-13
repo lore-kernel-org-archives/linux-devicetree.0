@@ -4,446 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73302C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1263CC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 23:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC85214D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F06214D8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 23:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576277884;
-	bh=CY77ow/B69IYlKu1fkA157kljZd7O9dayj4LkfH5TzM=;
+	s=default; t=1576278107;
+	bh=zDPv/9RxcSm5oTlvIS9ne5tb4tHAmwNZymPZG0Rt3eI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qKMoyMAXc40k3RscYlzd4DcVlEvqInLm/KyvdEYVLc8Gm3+q6q2qZ1x59r5N5U9rJ
-	 AY7J3l6FjNIVwO88hTQGAqSOwaq9GSa1Tt2kk4dZjAJ+a1UDGMwtM0nRC1XiWsopMH
-	 4ZUulpoV1sKUSXjZXw7X+os9pGszkAwhoE4xBRRU=
+	b=v1/SG7W5edmLO5T4rt/9ak2N5qptQlWLcmB71hgXq6h0wFbjOWuP+Byl5ApAuqzB/
+	 n910pNs7XvOXtG5nQR28wnERYsPKOMHdZQbZFRNivyLzKDyFHEST94SW1wHgcj7Dk4
+	 o33u7FroCpZLvq5KGfnmwaE39AOqQysvOrQbAjTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfLMW6D (ORCPT
+        id S1726680AbfLMXBm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:58:03 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40139 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMW6D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 17:58:03 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i15so959038oto.7;
-        Fri, 13 Dec 2019 14:58:02 -0800 (PST)
+        Fri, 13 Dec 2019 18:01:42 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35814 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfLMXBk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 18:01:40 -0500
+Received: by mail-ot1-f67.google.com with SMTP id o9so1012271ote.2;
+        Fri, 13 Dec 2019 15:01:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qiHxkm6KtZo6Tc2gJFAGw7nvz1X4DY5P/hEZQp6y9Gg=;
-        b=lkfmxkKRxb4xMWvLOVSOF45FHKzNTdI9Ew2SzgvVNwTCrHtlBUfqSz534DSW/z0Eya
-         Vi7mq0A/21VFQQ7JSTCsAvx/UIRfzqKhGpu50frakrRyVr+CEDDzqfLtQhfmxStqvstg
-         C89eMwyBlQYfclkUqJl2+kKJZzJA3qntr3hLUTJSsgXqgRIVM3mPK6IAKydX7kDXLFrN
-         uUbBLd92Kw4zvHuqrJGVm/6HUZOkxtbRjPnpI3XYdjR7OX8iGFsVNMSlmcT4vveEZn55
-         nf7cPYCV1W+z+Z4tNH+2CYXgJ3H/1fqaZVifRnyUSLX6raa06lTfyWODpY842Usr5/i3
-         KxBQ==
-X-Gm-Message-State: APjAAAVs8zoKtF151XTFEzlV2IIJsA4x4T2EyMg+siHe0GyGKV4lGJmy
-        usJHcCJkOj5ePMbCXZ2hpQ==
-X-Google-Smtp-Source: APXvYqwmrBRTx8NiFcOlSM6Mbs/9f80Gl2thmPUknxOfQb4wS9RiU8VvOkxdByU3XcH1WHnRoBqqNw==
-X-Received: by 2002:a9d:7094:: with SMTP id l20mr17643097otj.190.1576277881707;
-        Fri, 13 Dec 2019 14:58:01 -0800 (PST)
+        bh=Xm+fbSPSrtSF+VAo9R4McLST/GPCqY57riiToMxZYhk=;
+        b=Z6EkM0OMpBqdrkUWxt8yxTu+GO2GHC2q7QZxg0RB2OlmOAm47PADXpHunO+4B+Fe5n
+         OkB5yKPBAdAAv3H8ZOqNwCjv3GL8/xHnbH9T90Ov36QA3ex8USbd9FRprwdqA7EKHor0
+         pDC/7M4hoOQhA5lK08DSgijmOdhATk2Y6ceCMIB6uLjA9Om6CmHAhqwMN/dy5oJ5iLQW
+         BXlD4IMcNWhystddBKPpXNzhuewRncpd2xS6ROjPCM3HyCftfSN9MN1rMbsggvDNDAQP
+         cIFc9F+z2yQ8934Rg5HuJMjGcWSAnOUdZbLuNl5ZvuSZXS2J8rlSVL7Vyk5kf30BEpit
+         VCrA==
+X-Gm-Message-State: APjAAAXi+rpAIxiga1RhHz8iSGI0Ck/7LKjuPk9LwUySJx1MgLB/NIUm
+        4x1SujnOm3p6+OkNadkRBA==
+X-Google-Smtp-Source: APXvYqzIiqaq+YQWjf3lNmJ6LHP6WcxhXoPUE2+l/x5bazKzbr6i8wjJ+zH26j5rSs1hAKNV6cutNQ==
+X-Received: by 2002:a05:6830:605:: with SMTP id w5mr16417678oti.298.1576278099402;
+        Fri, 13 Dec 2019 15:01:39 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a17sm3796931otq.49.2019.12.13.14.58.00
+        by smtp.gmail.com with ESMTPSA id d136sm3799652oib.32.2019.12.13.15.01.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 14:58:00 -0800 (PST)
-Date:   Fri, 13 Dec 2019 16:58:00 -0600
+        Fri, 13 Dec 2019 15:01:38 -0800 (PST)
+Date:   Fri, 13 Dec 2019 17:01:38 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Chandan Uddaraju <chandanu@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, seanpaul@chromium.org,
-        robdclark@gmail.com, abhinavk@codeaurora.org,
-        nganji@codeaurora.org, jsanka@codeaurora.org, hoegsberg@google.com,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [DPU PATCH v3 1/5] dt-bindings: msm/dp: add bindings of
- DP/DP-PLL driver for Snapdragon 845
-Message-ID: <20191213225800.GA21739@bogus>
-References: <1575294437-6129-1-git-send-email-chandanu@codeaurora.org>
- <0101016ec6ddf4fc-cbe2c43a-6b6c-4035-846a-038fac788c62-000000@us-west-2.amazonses.com>
+To:     Jun Nie <jun.nie@linaro.org>
+Cc:     ulf.hansson@linaro.org, mark.rutland@arm.com,
+        adrian.hunter@intel.com, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/4] mmc: sdhci: dt: Add DMA boundary and HS400 properties
+Message-ID: <20191213230137.GA15696@bogus>
+References: <20191202144104.5069-1-jun.nie@linaro.org>
+ <20191202144104.5069-3-jun.nie@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0101016ec6ddf4fc-cbe2c43a-6b6c-4035-846a-038fac788c62-000000@us-west-2.amazonses.com>
+In-Reply-To: <20191202144104.5069-3-jun.nie@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 01:47:45PM +0000, Chandan Uddaraju wrote:
-> Add bindings for Snapdragon 845 DisplayPort and
-> display-port PLL driver.
-
-Is it just me, but I keep getting 2 copies of codeaurora emails?
-
+On Mon, Dec 02, 2019 at 10:41:02PM +0800, Jun Nie wrote:
+> DMA memory cannot cross specific boundary on some controller, such as 128MB
+> on SDHCI Designware. Add sdhci-dma-mem-boundary property to split DMA
+> operation in such case.
 > 
-> Changes in V2:
-> Provide details about sel-gpio
-
-This is V3, what changed in V3?
-
+> sdhci-ctrl-hs400 specify the HS400 mode setting for register
+> SDHCI_HOST_CONTROL2(offset 0x3E:bit[2:0]). Because this value is not
+> defined in SDHC Standard specification.
 > 
-> Signed-off-by: Chandan Uddaraju <chandanu@codeaurora.org>
+> Signed-off-by: Jun Nie <jun.nie@linaro.org>
 > ---
->  .../devicetree/bindings/display/msm/dp.txt         | 249 +++++++++++++++++++++
->  .../devicetree/bindings/display/msm/dpu.txt        |  16 +-
->  2 files changed, 261 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dp.txt
-
-New bindings should be in DT schema format.
-
-> diff --git a/Documentation/devicetree/bindings/display/msm/dp.txt b/Documentation/devicetree/bindings/display/msm/dp.txt
-> new file mode 100644
-> index 0000000..38be36d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/msm/dp.txt
-> @@ -0,0 +1,249 @@
-> +Qualcomm Technologies, Inc.
-> +DP is the master Display Port device which supports DP host controllers that are compatible with VESA Display Port interface specification.
-> +DP Controller: Required properties:
-> +- compatible:           Should be "qcom,dp-display".
-
-Needs to be more specific like including the SoC name.
-
-> +- reg:                  Base address and length of DP hardware's memory mapped regions.
-> +- cell-index:           Specifies the controller instance.
-
-FDT doesn't use cell-index.
-
-> +- reg-names:            A list of strings that name the list of regs.
-> +			"dp_ahb" - DP controller memory region.
-> +			"dp_aux" - DP AUX memory region.
-> +			"dp_link" - DP link layer memory region.
-> +			"dp_p0" - DP pixel clock domain memory region.
-> +			"dp_phy" - DP PHY memory region.
-> +			"dp_ln_tx0" - USB3 DP PHY combo TX-0 lane memory region.
-> +			"dp_ln_tx1" - USB3 DP PHY combo TX-1 lane memory region.
-> +			"dp_mmss_cc" - Display Clock Control memory region.
-
-Sounds like a separate clock controller node...
-
-> +			"qfprom_physical" - QFPROM Phys memory region.
-> +			"dp_pll" - USB3 DP combo PLL memory region.
-> +			"usb3_dp_com" - USB3 DP PHY combo memory region.
-
-Should be a separate phy node?
-
-> +			"hdcp_physical" - DP HDCP memory region.
-
-The 'dp_' part is redundant.
-
-What does 'physical' mean? Addresses in DT are always physical.
-
-> +- interrupt-parent	phandle to the interrupt parent device node.
-
-Don't document interrupt-parent. It's not required either because it 
-could be in a parent node.
-
-> +- interrupts:		The interrupt signal from the DP block.
-> +- clocks:               Clocks required for Display Port operation. See [1] for details on clock bindings.
-> +- clock-names:          Names of the clocks corresponding to handles. Following clocks are required:
-> +			"core_aux_clk", "core_usb_ref_clk_src","core_usb_ref_clk", "core_usb_cfg_ahb_clk",
-> +			"core_usb_pipe_clk", "ctrl_link_clk", "ctrl_link_iface_clk", "ctrl_crypto_clk",
-> +			"ctrl_pixel_clk", "pixel_clk_rcg", "pixel_parent".
-
-Clocks should be actual clock inputs to the module. If 'pixel_parent' is 
-just some parent clock you want to assign, then use assigned-clocks.
-
-> +- pll-node:		phandle to DP PLL node.
-
-But you have a DP PLL reg region defined. Is this something else?
-
-Needs a 'qcom' prefix if it stays.
-
-> +- vdda-1p2-supply:		phandle to vdda 1.2V regulator node.
-> +- vdda-0p9-supply:		phandle to vdda 0.9V regulator node.
-> +- qcom,aux-cfg0-settings:		Specifies the DP AUX configuration 0 settings. The first
-> +					entry in this array corresponds to the register offset
-> +					within DP AUX, while the remaining entries indicate the
-> +					programmable values.
-
-Needs more details on what these are and why they must be in DT. We 
-generally don't just stuff DT with raw values to initial registers with.
-
-Line lengths should be <80 char.
-
-> +- qcom,aux-cfg1-settings:		Specifies the DP AUX configuration 1 settings. The first
-> +					entry in this array corresponds to the register offset
-> +					within DP AUX, while the remaining entries indicate the
-> +					programmable values.
-> +- qcom,aux-cfg2-settings:		Specifies the DP AUX configuration 2 settings. The first
-> +					entry in this array corresponds to the register offset
-> +					within DP AUX, while the remaining entries indicate the
-> +					programmable values.
-> +- qcom,aux-cfg3-settings:		Specifies the DP AUX configuration 3 settings. The first
-> +					entry in this array corresponds to the register offset
-> +					within DP AUX, while the remaining entries indicate the
-> +					programmable values.
-> +- qcom,aux-cfg4-settings:		Specifies the DP AUX configuration 4 settings. The first
-> +					entry in this array corresponds to the register offset
-> +					within DP AUX, while the remaining entries indicate the
-> +					programmable values.
-> +- qcom,aux-cfg5-settings:		Specifies the DP AUX configuration 5 settings. The first
-> +					entry in this array corresponds to the register offset
-> +					within DP AUX, while the remaining entries indicate the
-> +					programmable values.
-> +- qcom,aux-cfg6-settings:		Specifies the DP AUX configuration 6 settings. The first
-> +					entry in this array corresponds to the register offset
-> +					within DP AUX, while the remaining entries indicate the
-> +					programmable values.
-> +- qcom,aux-cfg7-settings:		Specifies the DP AUX configuration 7 settings. The first
-> +					entry in this array corresponds to the register offset
-> +					within DP AUX, while the remaining entries indicate the
-> +					programmable values.
-> +- qcom,aux-cfg8-settings:		Specifies the DP AUX configuration 8 settings. The first
-> +					entry in this array corresponds to the register offset
-> +					within DP AUX, while the remaining entries indicate the
-> +					programmable values.
-> +- qcom,aux-cfg9-settings:		Specifies the DP AUX configuration 9 settings. The first
-> +					entry in this array corresponds to the register offset
-> +					within DP AUX, while the remaining entries indicate the
-> +					programmable values.
-> +- qcom,max-pclk-frequency-khz:	An integer specifying the maximum. pixel clock in KHz supported by Display Port.
-
-Wrap your lines.
-
-> +- extcon:				Phandle for the external connector class interface.
-
-Don't use extcon. Either dp-connector or usb-connector binding instead.
-
-> +- qcom,<type>-supply-entries:		A node that lists the elements of the supply used by the a particular "type" of DP module. The module "types"
-> +					can be "core", "ctrl", and "phy". Within the same type,
-> +					there can be more than one instance of this binding,
-> +					in which case the entry would be appended with the
-> +					supply entry index.
-> +					e.g. qcom,ctrl-supply-entry@0
-> +					-- qcom,supply-name: name of the supply (vdd/vdda/vddio)
-> +					-- qcom,supply-min-voltage: minimum voltage level (uV)
-> +					-- qcom,supply-max-voltage: maximum voltage level (uV)
-> +					-- qcom,supply-enable-load: load drawn (uA) from enabled supply
-> +					-- qcom,supply-disable-load: load drawn (uA) from disabled supply
-> +					-- qcom,supply-pre-on-sleep: time to sleep (ms) before turning on
-> +					-- qcom,supply-post-on-sleep: time to sleep (ms) after turning on
-> +					-- qcom,supply-pre-off-sleep: time to sleep (ms) before turning off
-> +					-- qcom,supply-post-off-sleep: time to sleep (ms) after turning off
-
-Not sure what you're trying to do here, but looks like the regulator 
-binding should be used.
-
-> +- pinctrl-names:	List of names to assign mdss pin states defined in pinctrl device node
-> +					Refer to pinctrl-bindings.txt
-> +- pinctrl-<0..n>:	Lists phandles each pointing to the pin configuration node within a pin
-> +					controller. These pin configurations are installed in the pinctrl
-> +					device node. Refer to pinctrl-bindings.txt
-> +DP Endpoint properties:
-> +  - remote-endpoint: For port@0, set to phandle of the connected panel/bridge's
-> +    input endpoint. For port@1, set to the DPU interface output. See [2] for
-> +    device graph info.
-> +
-> +Optional properties:
-> +- qcom,aux-en-gpio:		Specifies the aux-channel enable gpio.
-> +- qcom,aux-sel-gpio:		Specifies the mux-selection that might be needed for aux interface.
-
--gpios is the preferred form.
-
-> +
-> +
-> +DP PLL: Required properties:
-
-Should be a separate doc.
-
-> +- compatible:           Should be "qcom,dp-pll-10nm".
-> +- reg:                  Base address and length of DP hardware's memory mapped regions.
-> +- cell-index:           Specifies the PLL instance.
-> +- reg-names:            A list of strings that name the list of regs.
-> +			"pll_base" - DP PLL memory region.
-> +			"phy_base" - DP PHY memory region.
-> +			"ln_tx0_base" - USB3 DP PHY combo TX-0 lane memory region.
-> +			"ln_tx1_base" - USB3 DP PHY combo TX-1 lane memory region.
-> +			"gdsc_base" - gdsc memory region.
-> +- interrupt-parent	phandle to the interrupt parent device node.
-> +- interrupts:		The interrupt signal from the DP block.
-> +- clocks:               Clocks required for Display Port operation. See [1] for details on clock bindings.
-> +- clock-names:          Names of the clocks corresponding to handles. Following clocks are required:
-> +			"iface_clk", "ref_clk", cfg_ahb_clk", "pipe_clk".
-> +- clock-rate:           Initial clock rate to be configured. For the shared clocks, the default value			     is set to zero so that minimum clock value is configured. Non-zero clock
-> +			value can be used to configure DP pixel clock.
-> +
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +[2] Documentation/devicetree/bindings/graph.txt
-> +
-> +Example:
-> +	msm_dp: dp_display@ae90000{
-> +		cell-index = <0>;
-> +		compatible = "qcom,dp-display";
-> +
-> +		reg =   <0 0x90000 0x0dc>,
-> +			<0 0x90200 0x0c0>,
-> +			<0 0x90400 0x508>,
-> +			<0 0x90a00 0x094>,
-> +			<1 0xeaa00 0x200>,
-> +			<1 0xea200 0x200>,
-> +			<1 0xea600 0x200>,
-> +			<2 0x02000 0x1a0>,
-> +			<3 0x00000 0x621c>,
-> +			<1 0xea000 0x180>,
-> +			<1 0xe8000 0x20>,
-> +			<4 0xe1000 0x034>;
-> +		reg-names = "dp_ahb", "dp_aux", "dp_link",
-> +			"dp_p0", "dp_phy", "dp_ln_tx0", "dp_ln_tx1",
-> +			"dp_mmss_cc", "qfprom_physical", "dp_pll",
-> +			"usb3_dp_com", "hdcp_physical";
-> +
-> +		interrupt-parent = <&mdss>;
-> +		interrupts = <12 0>;
-> +
-> +		extcon = <&usb_1_ssphy>;
-> +		clocks =  <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
-> +			<&rpmhcc RPMH_CXO_CLK>,
-> +			<&gcc GCC_USB3_PRIM_CLKREF_CLK>,
-> +			<&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-> +			<&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>,
-> +			<&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
-> +			<&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
-> +			<&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>,
-> +			<&dispcc DISP_CC_MDSS_DP_CRYPTO_CLK>,
-> +			<&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
-> +		clock-names = "core_aux_clk", "core_ref_clk_src",
-> +			"core_usb_ref_clk", "core_usb_cfg_ahb_clk",
-> +			"core_usb_pipe_clk", "ctrl_link_clk",
-> +			"ctrl_link_iface_clk", "ctrl_pixel_clk",
-> +			"crypto_clk", "pixel_clk_rcg";
-> +
-> +		pll-node = <&dp_pll>;
-> +		qcom,aux-cfg0-settings = [20 00];
-> +		qcom,aux-cfg1-settings = [24 13 23 1d];
-> +		qcom,aux-cfg2-settings = [28 24];
-> +		qcom,aux-cfg3-settings = [2c 00];
-> +		qcom,aux-cfg4-settings = [30 0a];
-> +		qcom,aux-cfg5-settings = [34 26];
-> +		qcom,aux-cfg6-settings = [38 0a];
-> +		qcom,aux-cfg7-settings = [3c 03];
-> +		qcom,aux-cfg8-settings = [40 bb];
-> +		qcom,aux-cfg9-settings = [44 03];
-> +
-> +		qcom,max-pclk-frequency-khz = <675000>;
-> +
-> +		qcom,ctrl-supply-entries {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			qcom,ctrl-supply-entry@0 {
-> +				reg = <0>;
-> +				qcom,supply-name = "vdda-1p2";
-> +				qcom,supply-min-voltage = <1200000>;
-> +				qcom,supply-max-voltage = <1200000>;
-> +				qcom,supply-enable-load = <21800>;
-> +				qcom,supply-disable-load = <4>;
-> +			};
-> +		};
-> +
-> +		qcom,phy-supply-entries {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			qcom,phy-supply-entry@0 {
-> +				reg = <0>;
-> +				qcom,supply-name = "vdda-0p9";
-> +				qcom,supply-min-voltage = <880000>;
-> +				qcom,supply-max-voltage = <880000>;
-> +				qcom,supply-enable-load = <36000>;
-> +				qcom,supply-disable-load = <32>;
-> +			};
-> +		};
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				dp_in: endpoint {
-> +					remote-endpoint = <&dpu_intf0_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				dp_out: endpoint {
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	dp_pll: dp-pll@c011000 {
-> +		compatible = "qcom,dp-pll-10nm";
-> +		label = "DP PLL";
-> +		cell-index = <0>;
-> +		#clock-cells = <1>;
-> +
-> +		reg = <1 0xea000 0x200>,
-> +		      <1 0xeaa00 0x200>,
-> +		      <1 0xea200 0x200>,
-> +		      <1 0xea600 0x200>,
-> +		      <2 0x03000 0x8>;
-> +		reg-names = "pll_base", "phy_base", "ln_tx0_base",
-> +			"ln_tx1_base", "gdsc_base";
-> +
-> +		clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +			 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
-> +			 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-> +			 <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
-> +		clock-names = "iface_clk", "ref_clk",
-> +			"cfg_ahb_clk", "pipe_clk";
-> +		clock-rate = <0>;
-> +
-> +	};
-> diff --git a/Documentation/devicetree/bindings/display/msm/dpu.txt b/Documentation/devicetree/bindings/display/msm/dpu.txt
-> index a61dd40..eac6e1c 100644
-> --- a/Documentation/devicetree/bindings/display/msm/dpu.txt
-> +++ b/Documentation/devicetree/bindings/display/msm/dpu.txt
-> @@ -63,8 +63,9 @@ Required properties:
->  	Documentation/devicetree/bindings/graph.txt
->  	Documentation/devicetree/bindings/media/video-interfaces.txt
->  
-> -	Port 0 -> DPU_INTF1 (DSI1)
-> -	Port 1 -> DPU_INTF2 (DSI2)
-> +	Port 0 -> DPU_INTF0 (DP)
-> +	Port 1 -> DPU_INTF1 (DSI1)
-> +	Port 2 -> DPU_INTF2 (DSI2)
-
-No, you can't redefine existing binding.
-
->  
->  Optional properties:
->  - assigned-clocks: list of clock specifiers for clocks needing rate assignment
-> @@ -125,13 +126,20 @@ Example:
->  
->  				port@0 {
->  					reg = <0>;
-> -					dpu_intf1_out: endpoint {
-> -						remote-endpoint = <&dsi0_in>;
-> +					dpu_intf0_out: endpoint {
-> +						remote-endpoint = <&dp_in>;
->  					};
->  				};
->  
->  				port@1 {
->  					reg = <1>;
-> +					dpu_intf1_out: endpoint {
-> +						remote-endpoint = <&dsi0_in>;
-> +					};
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
->  					dpu_intf2_out: endpoint {
->  						remote-endpoint = <&dsi1_in>;
->  					};
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+>  Documentation/devicetree/bindings/mmc/sdhci.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci.txt b/Documentation/devicetree/bindings/mmc/sdhci.txt
+> index 0e9923a64024..e6d7feb9a741 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci.txt
+> @@ -11,3 +11,11 @@ Optional properties:
+>  - sdhci-caps: The sdhci capabilities register is incorrect. This 64bit
+>    property corresponds to the bits in the sdhci capability register. If the
+>    bit is on in the property then the bit should be turned on.
+> +- sdhci-dma-mem-boundary: The sdhci controller DMA memory space boundary.
+> +  If the controller's DMA cannot cross a specific memory space boundary,
+> +  such as 128MB, set this value in dt and driver will split the DMA
+> +  operation when crossing such boundary.
+
+This should be implied by the compatible string.
+
+> +- sdhci-ctrl-hs400: The HS400 is not defined in SDHC Standard specification
+> +  for SDHCI_HOST_CONTROL2(offset 0x3E:bit[2:0]). Different controllers have
+> +  have different value for HS400 mode. If 0x5 is not the HS400 mode value
+> +  for your controller, you should specify the value with this property.
+
+This too, unless it needs to be tuned per board.
+
+Can you be more specific as to what the possible values are and what 
+they do?
+
+Rob
