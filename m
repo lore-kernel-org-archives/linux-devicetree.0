@@ -2,128 +2,147 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F85FC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E4AC2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51ADB214D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31EE2465A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:28:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FQZd9y93"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="S2CBRI9I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725799AbfLMJYV (ORCPT
+        id S1726004AbfLMJ2O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:24:21 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46684 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfLMJYV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 04:24:21 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBD9O5OB120533;
-        Fri, 13 Dec 2019 03:24:05 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576229045;
-        bh=11ocqYIH8oHlulnnmzbnn8ms1756271GCd5ksM38j64=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FQZd9y93cFlQDmcVTGtaY5Qk03gH4KvQBEfjq1PEmOXOFsZuZAyVS3BP5RMu2/qHK
-         GwlAO1cmNP9LuGjl4/uIW+PyZn7n5hzB0Wvd45wvO6pTkljjBR5sdcOESxNFGjOC8C
-         wI7atAwHntlnBXlBaz4B5XQAzV0OLTe2mKZsLXe4=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBD9O5jh051527
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Dec 2019 03:24:05 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Dec 2019 03:24:05 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Dec 2019 03:24:05 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBD9O3Bh067719;
-        Fri, 13 Dec 2019 03:24:03 -0600
-Subject: Re: [PATCH 1/4] ARM: dts: am437x-gp-evm: add HDMI support
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-References: <20191125131100.9839-1-tomi.valkeinen@ti.com>
- <20191212172104.GY35479@atomide.com> <20191212173110.GA35479@atomide.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <d09526b2-8435-bef2-0489-0c3c8173d451@ti.com>
-Date:   Fri, 13 Dec 2019 11:24:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 13 Dec 2019 04:28:14 -0500
+Received: from mailgw01.mediatek.com ([216.200.240.184]:39410 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfLMJ2N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 04:28:13 -0500
+X-UUID: b091016788a9488ea279a735d3e135bb-20191213
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=f1qK2+7LZodsQlO7o2fhFIATRwJd4H3mQKGMDaRrhWg=;
+        b=S2CBRI9IIeLbtgqzvQhYB6IxXK+S2jUQNv6LzqYBSJ9q/hCJ2g8mM//wmqh39b48Dz4ghWXDBi2MAh/nbJH0ujUwgYusT5fTB1q2wD6/TIB3EPG2JRb6A5j3bo8/Q/mMJkGDNzEeaGzD8fWZ0fpJPlTdNzn4xo3vsPA68fFDBuE=;
+X-UUID: b091016788a9488ea279a735d3e135bb-20191213
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 772190440; Fri, 13 Dec 2019 01:28:10 -0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 13 Dec 2019 17:07:59 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 13 Dec 2019 17:07:35 +0800
+Message-ID: <1576228087.2242.0.camel@mtksdaap41>
+Subject: Re: [PATCH v8 3/4] misc: eeprom: at24: support pm_runtime control
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     linux-i2c <linux-i2c@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        linux-devicetree <devicetree@vger.kernel.org>
+Date:   Fri, 13 Dec 2019 17:08:07 +0800
+In-Reply-To: <CAMpxmJWh3YMkn_1B=nJLmRRXn9uD2kU4grf8c+sMbWtKFZOv=w@mail.gmail.com>
+References: <20191213081230.23494-1-bibby.hsieh@mediatek.com>
+         <20191213081230.23494-4-bibby.hsieh@mediatek.com>
+         <CAMpxmJWh3YMkn_1B=nJLmRRXn9uD2kU4grf8c+sMbWtKFZOv=w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20191212173110.GA35479@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/12/2019 19:31, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [191212 17:21]:
->> Hi,
->>
->> * Tomi Valkeinen <tomi.valkeinen@ti.com> [191125 05:11]:
->>> Add HDMI support for AM437x GP EVM. The HDMI uses SiI9022 HDMI encoder,
->>> and is mutually exclusive with the LCD. The choice between LCD and HDMI
->>> is made by booting either with am437x-gp-evm.dtb or
->>> am437x-gp-evm-hdmi.dtb.
->>
->> So Linux kernel needs a new board device tree file to toggle a GPIO line
->> to switch between LCD mode and HDMI?
->>
->> That does not sound very user friendly for something that's supposed
->> to be hot pluggabe :)
+T24gRnJpLCAyMDE5LTEyLTEzIGF0IDEwOjAyICswMTAwLCBCYXJ0b3N6IEdvbGFzemV3c2tpIHdy
+b3RlOg0KPiBwdC4sIDEzIGdydSAyMDE5IG8gMDk6NDcgQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVo
+QG1lZGlhdGVrLmNvbT4gbmFwaXNhxYIoYSk6DQo+ID4NCj4gPiBBbHRob3VnaCBpbiB0aGUgbW9z
+dCBwbGF0Zm9ybXMsIHRoZSBwb3dlciBvZiBlZXByb20gYXJlIGFsd2F5DQo+ID4gb24sIHNvbWUg
+cGxhdGZvcm1zIGRpc2FibGUgdGhlIGVlcHJvbSBwb3dlciBpbiBvcmRlciB0byBtZWV0DQo+ID4g
+bG93IHBvd2VyIHJlcXVlc3QuIFRoaXMgcGF0Y2ggYWRkIHRoZSBwbV9ydW50aW1lIG9wcyB0byBj
+b250cm9sDQo+ID4gcG93ZXIgdG8gc3VwcG9ydCBhbGwgcGxhdGZvcm1zLg0KPiA+DQo+ID4gU2ln
+bmVkLW9mZi1ieTogQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gPiAt
+LS0NCj4gPiAgZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0LmMgfCA0MCArKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNDAgaW5zZXJ0aW9u
+cygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWlzYy9lZXByb20vYXQyNC5jIGIv
+ZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0LmMNCj4gPiBpbmRleCAwNjgxZDVmZGQ1MzguLjA2YWUy
+Y2MzMmY3OSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL21pc2MvZWVwcm9tL2F0MjQuYw0KPiA+
+ICsrKyBiL2RyaXZlcnMvbWlzYy9lZXByb20vYXQyNC5jDQo+ID4gQEAgLTIyLDYgKzIyLDcgQEAN
+Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L252bWVtLXByb3ZpZGVyLmg+DQo+ID4gICNpbmNsdWRlIDxs
+aW51eC9yZWdtYXAuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4NCj4gPiAr
+I2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPg0KPiA+ICAjaW5jbHVkZSA8bGlu
+dXgvZ3Bpby9jb25zdW1lci5oPg0KPiA+DQo+ID4gIC8qIEFkZHJlc3MgcG9pbnRlciBpcyAxNiBi
+aXQuICovDQo+ID4gQEAgLTkxLDYgKzkyLDcgQEAgc3RydWN0IGF0MjRfZGF0YSB7DQo+ID4NCj4g
+PiAgICAgICAgIHN0cnVjdCBncGlvX2Rlc2MgKndwX2dwaW87DQo+ID4NCj4gPiArICAgICAgIHN0
+cnVjdCByZWd1bGF0b3IgKnZjY19yZWc7DQo+ID4gICAgICAgICAvKg0KPiA+ICAgICAgICAgICog
+U29tZSBjaGlwcyB0aWUgdXAgbXVsdGlwbGUgSTJDIGFkZHJlc3NlczsgZHVtbXkgZGV2aWNlcyBy
+ZXNlcnZlDQo+ID4gICAgICAgICAgKiB0aGVtIGZvciB1cywgYW5kIHdlJ2xsIHVzZSB0aGVtIHdp
+dGggU01CdXMgY2FsbHMuDQo+ID4gQEAgLTY2Miw2ICs2NjQsMTIgQEAgc3RhdGljIGludCBhdDI0
+X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpDQo+ID4gICAgICAgICBhdDI0LT5jbGll
+bnRbMF0uY2xpZW50ID0gY2xpZW50Ow0KPiA+ICAgICAgICAgYXQyNC0+Y2xpZW50WzBdLnJlZ21h
+cCA9IHJlZ21hcDsNCj4gPg0KPiA+ICsgICAgICAgYXQyNC0+dmNjX3JlZyA9IGRldm1fcmVndWxh
+dG9yX2dldChkZXYsICJ2Y2MiKTsNCj4gPiArICAgICAgIGlmIChJU19FUlIoYXQyNC0+dmNjX3Jl
+ZykpIHsNCj4gPiArICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJmYWlsZWQgdG8gZ2V0IGF0
+MjQgVkNDIHJlZ3VsYXRvclxuIik7DQo+IA0KPiBUaGUgcmVndWxhdG9yIGNvcmUgaXMgcXVpdGUg
+dmVyYm9zZSBpbiBpdHMgZXJyb3IgbWVzc2FnZXMgd2hlbiBjYWxsaW5nDQo+IHJlZ3VsYXRvcl9n
+ZXQoKSAtIHlvdSBkb24ndCBuZWVkIHRvIGFkZCB5b3VycyBoZXJlLiBKdXN0IHJldHVybiB0aGUN
+Cj4gZXJyb3IgY29kZS4NCg0KT2ssIHdpbGwgcmVtb3ZlIGl0Lg0KDQo+IA0KPiA+ICsgICAgICAg
+ICAgICAgICByZXR1cm4gUFRSX0VSUihhdDI0LT52Y2NfcmVnKTsNCj4gPiArICAgICAgIH0NCj4g
+PiArDQo+ID4gICAgICAgICBhdDI0LT53cF9ncGlvID0gZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwo
+ZGV2LCAid3AiLCBHUElPRF9PVVRfSElHSCk7DQo+ID4gICAgICAgICBpZiAoSVNfRVJSKGF0MjQt
+PndwX2dwaW8pKQ0KPiA+ICAgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihhdDI0LT53cF9n
+cGlvKTsNCj4gPiBAQCAtNzAxLDYgKzcwOSwxMiBAQCBzdGF0aWMgaW50IGF0MjRfcHJvYmUoc3Ry
+dWN0IGkyY19jbGllbnQgKmNsaWVudCkNCj4gPg0KPiA+ICAgICAgICAgaTJjX3NldF9jbGllbnRk
+YXRhKGNsaWVudCwgYXQyNCk7DQo+ID4NCj4gPiArICAgICAgIGVyciA9IHJlZ3VsYXRvcl9lbmFi
+bGUoYXQyNC0+dmNjX3JlZyk7DQo+ID4gKyAgICAgICBpZiAoZXJyKSB7DQo+ID4gKyAgICAgICAg
+ICAgICAgIGRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSBhdDI0IHZjYyByZWd1bGF0b3Jc
+biIpOw0KPiANCj4gRHJvcCB0aGUgYXQyNCBuYW1lIC0gZGV2X2VycigpIHdpbGwgcHJpbnQgdGhl
+IGRldmljZSBuYW1lIGZvciB5b3UuDQo+IA0KT2suDQo+ID4gKyAgICAgICAgICAgICAgIHJldHVy
+biBlcnI7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICAgICAgICAgLyogZW5hYmxlIHJ1bnRp
+bWUgcG0gKi8NCj4gPiAgICAgICAgIHBtX3J1bnRpbWVfc2V0X2FjdGl2ZShkZXYpOw0KPiA+ICAg
+ICAgICAgcG1fcnVudGltZV9lbmFibGUoZGV2KTsNCj4gPiBAQCAtNzEzLDYgKzcyNyw3IEBAIHN0
+YXRpYyBpbnQgYXQyNF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50KQ0KPiA+ICAgICAg
+ICAgcG1fcnVudGltZV9pZGxlKGRldik7DQo+ID4gICAgICAgICBpZiAoZXJyKSB7DQo+ID4gICAg
+ICAgICAgICAgICAgIHBtX3J1bnRpbWVfZGlzYWJsZShkZXYpOw0KPiA+ICsgICAgICAgICAgICAg
+ICByZWd1bGF0b3JfZGlzYWJsZShhdDI0LT52Y2NfcmVnKTsNCj4gPiAgICAgICAgICAgICAgICAg
+cmV0dXJuIC1FTk9ERVY7DQo+ID4gICAgICAgICB9DQo+ID4NCj4gPiBAQCAtNzI5LDE0ICs3NDQs
+MzkgQEAgc3RhdGljIGludCBhdDI0X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpDQo+
+ID4gIHN0YXRpYyBpbnQgYXQyNF9yZW1vdmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkNCj4g
+PiAgew0KPiA+ICAgICAgICAgcG1fcnVudGltZV9kaXNhYmxlKCZjbGllbnQtPmRldik7DQo+ID4g
+KyAgICAgICBpZiAocG1fcnVudGltZV9zdGF0dXNfc3VzcGVuZGVkKCZjbGllbnQtPmRldikpDQo+
+ID4gKyAgICAgICAgICAgICAgIHJlZ3VsYXRvcl9kaXNhYmxlKGF0MjQtPnZjY19yZWcpOw0KPiAN
+Cj4gV2h5IGRpZG4ndCB5b3UgZml4IHRoZSBpbnZlcnRlZCBsb2dpYyBoZXJlIGFzIEkgcG9pbnRl
+ZCBvdXQgYmFjayBpbiB2Ng0KPiBvZiB0aGlzIHNlcmllcz8NCj4gDQpTb3JyeSBmb3IgbWlzc2lu
+ZyBpdCBhZ2Fpbi4uLg0KSSB3aWxsIGFkZCBpbnZlcnQgbmV4dCB2ZXJzaW9uLg0KDQpCaWJieQ0K
+PiBCYXJ0DQo+IA0KPiA+ICAgICAgICAgcG1fcnVudGltZV9zZXRfc3VzcGVuZGVkKCZjbGllbnQt
+PmRldik7DQo+ID4NCj4gPiAgICAgICAgIHJldHVybiAwOw0KPiA+ICB9DQo+ID4NCj4gPiArc3Rh
+dGljIGludCBfX21heWJlX3VudXNlZCBhdDI0X3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0K
+PiA+ICt7DQo+ID4gKyAgICAgICBzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0gdG9faTJjX2Ns
+aWVudChkZXYpOw0KPiA+ICsgICAgICAgc3RydWN0IGF0MjRfZGF0YSAqYXQyNCA9IGkyY19nZXRf
+Y2xpZW50ZGF0YShjbGllbnQpOw0KPiA+ICsNCj4gPiArICAgICAgIHJldHVybiByZWd1bGF0b3Jf
+ZGlzYWJsZShhdDI0LT52Y2NfcmVnKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBf
+X21heWJlX3VudXNlZCBhdDI0X3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gK3sNCj4g
+PiArICAgICAgIHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQgPSB0b19pMmNfY2xpZW50KGRldik7
+DQo+ID4gKyAgICAgICBzdHJ1Y3QgYXQyNF9kYXRhICphdDI0ID0gaTJjX2dldF9jbGllbnRkYXRh
+KGNsaWVudCk7DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIHJlZ3VsYXRvcl9lbmFibGUoYXQy
+NC0+dmNjX3JlZyk7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZGV2
+X3BtX29wcyBhdDI0X3BtX29wcyA9IHsNCj4gPiArICAgICAgIFNFVF9TWVNURU1fU0xFRVBfUE1f
+T1BTKHBtX3J1bnRpbWVfZm9yY2Vfc3VzcGVuZCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHBtX3J1bnRpbWVfZm9yY2VfcmVzdW1lKQ0KPiA+ICsgICAgICAgU0VUX1JVTlRJ
+TUVfUE1fT1BTKGF0MjRfc3VzcGVuZCwgYXQyNF9yZXN1bWUsIE5VTEwpDQo+ID4gK307DQo+ID4g
+Kw0KPiA+ICBzdGF0aWMgc3RydWN0IGkyY19kcml2ZXIgYXQyNF9kcml2ZXIgPSB7DQo+ID4gICAg
+ICAgICAuZHJpdmVyID0gew0KPiA+ICAgICAgICAgICAgICAgICAubmFtZSA9ICJhdDI0IiwNCj4g
+PiArICAgICAgICAgICAgICAgLnBtID0gJmF0MjRfcG1fb3BzLA0KPiA+ICAgICAgICAgICAgICAg
+ICAub2ZfbWF0Y2hfdGFibGUgPSBhdDI0X29mX21hdGNoLA0KPiA+ICAgICAgICAgICAgICAgICAu
+YWNwaV9tYXRjaF90YWJsZSA9IEFDUElfUFRSKGF0MjRfYWNwaV9pZHMpLA0KPiA+ICAgICAgICAg
+fSwNCj4gPiAtLQ0KPiA+IDIuMTguMA0KDQo=
 
-True. We've had this for a long time in the TI kernel. I don't know how to implement this better, 
-except perhaps with DT overlays, but that's essentially the same method.
-
->>> +/* Override SelLCDorHDMI from am437x-gp-evm.dts to select HDMI */
->>> +&gpio5 {
->>> +	p8 {
->>> +		output-low;
->>> +	};
->>> +};
->>
->> How about just leave the gpio unconfigured and document that a userspace
->> tool or /sys/kernel/debug/gpio is needed to toggle between the modes?
-
-That sounds much worse than two dts files. How does X or weston know about the gpio?
-
-And the "external" gpio wouldn't work well with DRM. We need to add all the displays at probe time, 
-so we'd have LCD and HDMI. The gpio makes one of those operable, but only the external parts. The 
-display controller has just one output, and we'd have a conflict there too as both displays would be 
-connected to that single output. And as the display controller driver doesn't know about the gpio, 
-it would fail "randomly" for one of the displays if the other one is already enabled by the userspace.
-
-I think the correct way would be to have DRM framework understand that we have two displays, which 
-are mutually exclusive, and the display pipeline drivers would have the means to switch the gpio. 
-And that the display setup could be communicated properly to the userspace, and the userspace would 
-understand it. I don't think any of those exists.
-
-So, the only good solution I have figured out is to just say that we have a single display at 
-runtime, defined by the dt file.
-
-On some boards (k2g-evm, if I recall right) we have similar HW setup, but with a physical switch. We 
-use the same method there, with two dts files. Again, if I recall right, the switch setting can be 
-seen by the SW, so if there's a better solution to the AM4 case, probably similar could be used with 
-k2g-evm, where the drivers would react to the user changing the switch.
-
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
