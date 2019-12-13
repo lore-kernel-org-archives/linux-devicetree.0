@@ -2,118 +2,264 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8526DC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 08:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02C7C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 08:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A782465A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 08:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 565002253D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 08:48:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kpTI1o/2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="razj/7vZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfLMIrA (ORCPT
+        id S1725928AbfLMIsA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:47:00 -0500
-Received: from mailgw02.mediatek.com ([216.200.240.185]:51935 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfLMIq7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 03:46:59 -0500
-X-UUID: bc384c60e406488fa87ddc5686c575e7-20191213
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=EbyLLh8fLgxiUJJArCFl+4W6spqur8NIC5o9y+Ad+tg=;
-        b=kpTI1o/2uV4vlI07AITFhkqNSNmTXJkK2H6rBlWWhKQDPVrkr3a6slv95yAyFTvqS8CcNELz0FlqBxTRes2ukca00jMGEW+8qrXtr/dFvGt32I8vN7FokQAbMqW10ViftTPnDxEIdYzkyMmZtULYmoE8F7WsoThDZFChYGQJPc0=;
-X-UUID: bc384c60e406488fa87ddc5686c575e7-20191213
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1710396386; Fri, 13 Dec 2019 00:46:55 -0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 13 Dec 2019 16:12:15 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 13 Dec 2019 16:11:59 +0800
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        <linux-i2c@vger.kernel.org>
-CC:     <tfiga@chromium.org>, <drinkcat@chromium.org>,
-        <srv_heupstream@mediatek.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v8 3/4] misc: eeprom: at24: support pm_runtime control
-Date:   Fri, 13 Dec 2019 16:12:29 +0800
-Message-ID: <20191213081230.23494-4-bibby.hsieh@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20191213081230.23494-1-bibby.hsieh@mediatek.com>
-References: <20191213081230.23494-1-bibby.hsieh@mediatek.com>
+        Fri, 13 Dec 2019 03:48:00 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:43086 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfLMIsA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 03:48:00 -0500
+Received: by mail-pj1-f68.google.com with SMTP id g4so902200pjs.10;
+        Fri, 13 Dec 2019 00:48:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=faCBlmgTPQdYlEVpkeE4GNu+nPqEqsfQJpXTYDba5FY=;
+        b=razj/7vZ+JbucAknGmxck6+vSzm5wRHRzOWy+lxigo91chdg+RZNqKWqZLz5UnasAa
+         nM3svl9rWcegDadG0F32DfWvS3lwWb+b7IiieoollGSgm4Ru1LxV4Sz++ZwCxL199eqY
+         5AYzdVnOM8vPrMqe4NtHYIS/2wzqsHoTSMBr8yQJ+Z2kVgsE79bSBkXH5tkLkmSYASb5
+         VkSgCiGgWUBq6b73uhCHrvEW+2++cB/P+pC3wleeDo5AYqaLCuOr3eaxYjIa3Yzxwzjz
+         lfPNR64+8x3FaUI+krXPecsw7dSiNmwBpJl71Tcu9qxBDLq2WDxU4lqKHyDiDJVhnq8O
+         iEJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=faCBlmgTPQdYlEVpkeE4GNu+nPqEqsfQJpXTYDba5FY=;
+        b=SEk6GSLNkvivc4aut0gITiu0YmFl3VVXOwZwwBwox42JAdqL8dctM99e9fTbkasG91
+         ur7LF9SMdyvZf5T3UeqI2JxE0eEOkrVVtYqApAHcH6x/2UUK0xfsNrEkjsMZnu1Wrf0u
+         KAHG+S9qyHypQjpwcCH+GVMShjmshO+UnhnilVd2OVUk+FQi729eVgbqaoUoivXWclrB
+         YQw7t2HS91OzHiDhPPe96Y8MLEdt7etXKlBOU31QP5J4LZAGDAx9aTud++TMa2ZTVJTa
+         GJyJPVHjpviyVmpkiiHllAqQ2iaGyBb3bNUrUdbDR4HWBY+kPilEizsMBJjdpJTJCB1i
+         rAlQ==
+X-Gm-Message-State: APjAAAV2NoxVz3fqDRx0AWi2yYaL9MzJuRmk/yNduPDmgILhApWt+LJK
+        7syUXa2xCwtPsZT6A3e7eNg=
+X-Google-Smtp-Source: APXvYqxLS8SmpcnrtfIR9E7GHF2j8As78boRZwVuSxFdSNtc8n66W9/XnnKOusFfrKiYhQE90NkjzQ==
+X-Received: by 2002:a17:902:8bc4:: with SMTP id r4mr14931561plo.82.1576226879597;
+        Fri, 13 Dec 2019 00:47:59 -0800 (PST)
+Received: from prasmi.domain.name ([103.219.60.167])
+        by smtp.gmail.com with ESMTPSA id 68sm9985632pge.14.2019.12.13.00.47.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 00:47:58 -0800 (PST)
+From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [v2 0/6] Add support for PCIe controller to work in endpoint mode on R-Car SoCs
+Date:   Fri, 13 Dec 2019 08:47:42 +0000
+Message-Id: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QWx0aG91Z2ggaW4gdGhlIG1vc3QgcGxhdGZvcm1zLCB0aGUgcG93ZXIgb2YgZWVwcm9tIGFyZSBh
-bHdheQ0Kb24sIHNvbWUgcGxhdGZvcm1zIGRpc2FibGUgdGhlIGVlcHJvbSBwb3dlciBpbiBvcmRl
-ciB0byBtZWV0DQpsb3cgcG93ZXIgcmVxdWVzdC4gVGhpcyBwYXRjaCBhZGQgdGhlIHBtX3J1bnRp
-bWUgb3BzIHRvIGNvbnRyb2wNCnBvd2VyIHRvIHN1cHBvcnQgYWxsIHBsYXRmb3Jtcy4NCg0KU2ln
-bmVkLW9mZi1ieTogQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCi0tLQ0K
-IGRyaXZlcnMvbWlzYy9lZXByb20vYXQyNC5jIHwgNDAgKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNDAgaW5zZXJ0aW9ucygrKQ0KDQpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0LmMgYi9kcml2ZXJzL21pc2MvZWVwcm9t
-L2F0MjQuYw0KaW5kZXggMDY4MWQ1ZmRkNTM4Li4wNmFlMmNjMzJmNzkgMTAwNjQ0DQotLS0gYS9k
-cml2ZXJzL21pc2MvZWVwcm9tL2F0MjQuYw0KKysrIGIvZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0
-LmMNCkBAIC0yMiw2ICsyMiw3IEBADQogI2luY2x1ZGUgPGxpbnV4L252bWVtLXByb3ZpZGVyLmg+
-DQogI2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5oPg0KICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1l
-Lmg+DQorI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPg0KICNpbmNsdWRlIDxs
-aW51eC9ncGlvL2NvbnN1bWVyLmg+DQogDQogLyogQWRkcmVzcyBwb2ludGVyIGlzIDE2IGJpdC4g
-Ki8NCkBAIC05MSw2ICs5Miw3IEBAIHN0cnVjdCBhdDI0X2RhdGEgew0KIA0KIAlzdHJ1Y3QgZ3Bp
-b19kZXNjICp3cF9ncGlvOw0KIA0KKwlzdHJ1Y3QgcmVndWxhdG9yICp2Y2NfcmVnOw0KIAkvKg0K
-IAkgKiBTb21lIGNoaXBzIHRpZSB1cCBtdWx0aXBsZSBJMkMgYWRkcmVzc2VzOyBkdW1teSBkZXZp
-Y2VzIHJlc2VydmUNCiAJICogdGhlbSBmb3IgdXMsIGFuZCB3ZSdsbCB1c2UgdGhlbSB3aXRoIFNN
-QnVzIGNhbGxzLg0KQEAgLTY2Miw2ICs2NjQsMTIgQEAgc3RhdGljIGludCBhdDI0X3Byb2JlKHN0
-cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpDQogCWF0MjQtPmNsaWVudFswXS5jbGllbnQgPSBjbGll
-bnQ7DQogCWF0MjQtPmNsaWVudFswXS5yZWdtYXAgPSByZWdtYXA7DQogDQorCWF0MjQtPnZjY19y
-ZWcgPSBkZXZtX3JlZ3VsYXRvcl9nZXQoZGV2LCAidmNjIik7DQorCWlmIChJU19FUlIoYXQyNC0+
-dmNjX3JlZykpIHsNCisJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIGdldCBhdDI0IFZDQyByZWd1
-bGF0b3JcbiIpOw0KKwkJcmV0dXJuIFBUUl9FUlIoYXQyNC0+dmNjX3JlZyk7DQorCX0NCisNCiAJ
-YXQyNC0+d3BfZ3BpbyA9IGRldm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKGRldiwgIndwIiwgR1BJT0Rf
-T1VUX0hJR0gpOw0KIAlpZiAoSVNfRVJSKGF0MjQtPndwX2dwaW8pKQ0KIAkJcmV0dXJuIFBUUl9F
-UlIoYXQyNC0+d3BfZ3Bpbyk7DQpAQCAtNzAxLDYgKzcwOSwxMiBAQCBzdGF0aWMgaW50IGF0MjRf
-cHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkNCiANCiAJaTJjX3NldF9jbGllbnRkYXRh
-KGNsaWVudCwgYXQyNCk7DQogDQorCWVyciA9IHJlZ3VsYXRvcl9lbmFibGUoYXQyNC0+dmNjX3Jl
-Zyk7DQorCWlmIChlcnIpIHsNCisJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSBhdDI0
-IHZjYyByZWd1bGF0b3JcbiIpOw0KKwkJcmV0dXJuIGVycjsNCisJfQ0KKw0KIAkvKiBlbmFibGUg
-cnVudGltZSBwbSAqLw0KIAlwbV9ydW50aW1lX3NldF9hY3RpdmUoZGV2KTsNCiAJcG1fcnVudGlt
-ZV9lbmFibGUoZGV2KTsNCkBAIC03MTMsNiArNzI3LDcgQEAgc3RhdGljIGludCBhdDI0X3Byb2Jl
-KHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpDQogCXBtX3J1bnRpbWVfaWRsZShkZXYpOw0KIAlp
-ZiAoZXJyKSB7DQogCQlwbV9ydW50aW1lX2Rpc2FibGUoZGV2KTsNCisJCXJlZ3VsYXRvcl9kaXNh
-YmxlKGF0MjQtPnZjY19yZWcpOw0KIAkJcmV0dXJuIC1FTk9ERVY7DQogCX0NCiANCkBAIC03Mjks
-MTQgKzc0NCwzOSBAQCBzdGF0aWMgaW50IGF0MjRfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNs
-aWVudCkNCiBzdGF0aWMgaW50IGF0MjRfcmVtb3ZlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQp
-DQogew0KIAlwbV9ydW50aW1lX2Rpc2FibGUoJmNsaWVudC0+ZGV2KTsNCisJaWYgKHBtX3J1bnRp
-bWVfc3RhdHVzX3N1c3BlbmRlZCgmY2xpZW50LT5kZXYpKQ0KKwkJcmVndWxhdG9yX2Rpc2FibGUo
-YXQyNC0+dmNjX3JlZyk7DQogCXBtX3J1bnRpbWVfc2V0X3N1c3BlbmRlZCgmY2xpZW50LT5kZXYp
-Ow0KIA0KIAlyZXR1cm4gMDsNCiB9DQogDQorc3RhdGljIGludCBfX21heWJlX3VudXNlZCBhdDI0
-X3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0KK3sNCisJc3RydWN0IGkyY19jbGllbnQgKmNs
-aWVudCA9IHRvX2kyY19jbGllbnQoZGV2KTsNCisJc3RydWN0IGF0MjRfZGF0YSAqYXQyNCA9IGky
-Y19nZXRfY2xpZW50ZGF0YShjbGllbnQpOw0KKw0KKwlyZXR1cm4gcmVndWxhdG9yX2Rpc2FibGUo
-YXQyNC0+dmNjX3JlZyk7DQorfQ0KKw0KK3N0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgYXQyNF9y
-ZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KK3sNCisJc3RydWN0IGkyY19jbGllbnQgKmNsaWVu
-dCA9IHRvX2kyY19jbGllbnQoZGV2KTsNCisJc3RydWN0IGF0MjRfZGF0YSAqYXQyNCA9IGkyY19n
-ZXRfY2xpZW50ZGF0YShjbGllbnQpOw0KKw0KKwlyZXR1cm4gcmVndWxhdG9yX2VuYWJsZShhdDI0
-LT52Y2NfcmVnKTsNCit9DQorDQorc3RhdGljIGNvbnN0IHN0cnVjdCBkZXZfcG1fb3BzIGF0MjRf
-cG1fb3BzID0gew0KKwlTRVRfU1lTVEVNX1NMRUVQX1BNX09QUyhwbV9ydW50aW1lX2ZvcmNlX3N1
-c3BlbmQsDQorCQkJCXBtX3J1bnRpbWVfZm9yY2VfcmVzdW1lKQ0KKwlTRVRfUlVOVElNRV9QTV9P
-UFMoYXQyNF9zdXNwZW5kLCBhdDI0X3Jlc3VtZSwgTlVMTCkNCit9Ow0KKw0KIHN0YXRpYyBzdHJ1
-Y3QgaTJjX2RyaXZlciBhdDI0X2RyaXZlciA9IHsNCiAJLmRyaXZlciA9IHsNCiAJCS5uYW1lID0g
-ImF0MjQiLA0KKwkJLnBtID0gJmF0MjRfcG1fb3BzLA0KIAkJLm9mX21hdGNoX3RhYmxlID0gYXQy
-NF9vZl9tYXRjaCwNCiAJCS5hY3BpX21hdGNoX3RhYmxlID0gQUNQSV9QVFIoYXQyNF9hY3BpX2lk
-cyksDQogCX0sDQotLSANCjIuMTguMA0K
+From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+This patch series adds support for PCIe controller on rcar to work in endpoint mode,
+this also extends the epf framework to handle features of outbound regions.
+
+Note:
+The cadence/rockchip/designware endpoint drivers are build tested only.
+
+Changes for v2:
+1] Fixed review comments from Biju for dt-bindings to include an example
+   for a tested platform.
+2] Fixed review comments from Kishon to extend the features of outbound
+   regions in epf framework.
+3] Added support to parse outbound-ranges in OF.
+
+lspci output on host:
+====================
+
+01:00.0 Unassigned class [ff00]: Renesas Technology Corp. Device 002d
+        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0
+        Interrupt: pin A routed to IRQ 152
+        Region 0: Memory at fe200200 (64-bit, non-prefetchable) [size=128]
+        Region 2: Memory at fe200000 (64-bit, non-prefetchable) [size=256]
+        Region 4: Memory at fe200100 (64-bit, non-prefetchable) [size=256]
+        Capabilities: [40] Power Management version 3
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+                Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+        Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
+                Address: 00000004fa36f000  Data: 0001
+                Masking: fffffffe  Pending: 00000000
+        Capabilities: [70] Express (v2) Endpoint, MSI 00
+                DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
+                        ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 0.000W
+                DevCtl: Report errors: Correctable- Non-Fatal- Fatal- Unsupported-
+                        RlxdOrd- ExtTag+ PhantFunc- AuxPwr- NoSnoop+
+                        MaxPayload 128 bytes, MaxReadReq 128 bytes
+                DevSta: CorrErr+ UncorrErr+ FatalErr- UnsuppReq+ AuxPwr- TransPend-
+                LnkCap: Port #0, Speed 5GT/s, Width x1, ASPM L0s, Exit Latency L0s unlimited
+                        ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+                LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+                LnkSta: Speed 5GT/s, Width x1, TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
+                DevCap2: Completion Timeout: Not Supported, TimeoutDis+, LTR-, OBFF Not Supported
+                         AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+                DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled
+                         AtomicOpsCtl: ReqEn-
+                LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance- SpeedDis-
+                         Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+                         Compliance De-emphasis: -6dB
+                LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
+                         EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
+        Capabilities: [100 v1] Virtual Channel
+                Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
+                Arb:    Fixed- WRR32- WRR64- WRR128-
+                Ctrl:   ArbSelect=Fixed
+                Status: InProgress-
+                VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
+                        Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
+                        Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
+                        Status: NegoPending- InProgress-
+        Kernel driver in use: pci-endpoint-test
+00: 12 19 2d 00 06 00 10 00 00 00 00 ff 00 00 00 00
+10: 04 02 20 fe 00 00 00 00 04 00 20 fe 00 00 00 00
+20: 04 01 20 fe 00 00 00 00 00 00 00 00 00 00 00 00
+30: 00 00 00 00 40 00 00 00 00 00 00 00 98 01 00 00
+
+BAR Test
+========
+root@g2e:~# pcitest -b 0
+BAR0:           OKAY
+root@g2e:~# pcitest -b 1
+BAR1:           NOT OKAY
+root@g2e:~# pcitest -b 2
+BAR2:           OKAY
+root@g2e:~# pcitest -b 3
+BAR3:           NOT OKAY
+root@g2e:~# pcitest -b 4
+BAR4:           OKAY
+root@g2e:~# pcitest -b 5
+BAR5:           NOT OKAY
+
+Note: BAR test for 1/3/5 fail because they are configured to be 64bits
+
+Interrupt Test
+==============
+root@g2e:~# pcitest -i 0
+SET IRQ TYPE TO LEGACY:         OKAY
+root@g2e:~# pcitest -l
+LEGACY IRQ:     OKAY
+
+Read Test
+=========
+root@g2e:~# pcitest -r -s 1
+READ (      1 bytes):           OKAY
+root@g2e:~# pcitest -r -s 1024
+READ (   1024 bytes):           OKAY
+root@g2e:~# pcitest -r -s 1025
+READ (   1025 bytes):           OKAY
+root@g2e:~# pcitest -r -s 1024000
+READ (1024000 bytes):           OKAY
+root@g2e:~# pcitest -r -s 1024001
+READ (1024001 bytes):           OKAY
+
+Write Test
+==========
+root@g2e:~# pcitest -w -s 1
+WRITE (      1 bytes):          OKAY
+root@g2e:~# pcitest -w -s 1024
+WRITE (   1024 bytes):          OKAY
+root@g2e:~# pcitest -w -s 1025
+WRITE (   1025 bytes):          OKAY
+root@g2e:~# pcitest -w -s 1024000
+WRITE (1024000 bytes):          OKAY
+root@g2e:~# pcitest -w -s 1024001
+WRITE (1024001 bytes):          OKAY
+
+Copy Test
+=========
+root@g2e:~# pcitest -c -s 1
+COPY (      1 bytes):           OKAY
+root@g2e:~# pcitest -c -s 1024
+COPY (   1024 bytes):           OKAY
+root@g2e:~# pcitest -c -s 1025
+COPY (   1025 bytes):           OKAY
+root@g2e:~# pcitest -c -s 1024000
+COPY (1024000 bytes):           OKAY
+root@g2e:~# pcitest -c -s 1024001
+COPY (1024001 bytes):           OKAY
+
+Lad, Prabhakar (6):
+  pci: pcie-rcar: preparation for adding endpoint support
+  pci: endpoint: add support to handle features of outbound memory
+  of: address: add support to parse PCI outbound-ranges
+  dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
+    controller
+  pci: rcar: add support for rcar pcie controller in endpoint mode
+  misc: pci_endpoint_test: add device-id for RZ/G2E pcie controller
+
+ .../devicetree/bindings/pci/rcar-pci-ep.txt        |   37 +
+ arch/arm64/configs/defconfig                       |    2 +-
+ drivers/misc/pci_endpoint_test.c                   |    3 +
+ drivers/of/address.c                               |   44 +-
+ drivers/pci/controller/Kconfig                     |   11 +-
+ drivers/pci/controller/Makefile                    |    3 +-
+ drivers/pci/controller/dwc/pcie-designware-ep.c    |   30 +-
+ drivers/pci/controller/pcie-cadence-ep.c           |   11 +-
+ drivers/pci/controller/pcie-rcar-ep.c              |  494 ++++++++
+ drivers/pci/controller/pcie-rcar-host.c            | 1056 +++++++++++++++++
+ drivers/pci/controller/pcie-rcar.c                 | 1229 +-------------------
+ drivers/pci/controller/pcie-rcar.h                 |  129 ++
+ drivers/pci/controller/pcie-rockchip-ep.c          |   13 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c      |   47 +-
+ drivers/pci/endpoint/pci-epc-core.c                |    7 +-
+ drivers/pci/endpoint/pci-epc-mem.c                 |  216 +++-
+ include/linux/of_address.h                         |   21 +
+ include/linux/pci-epc.h                            |   72 +-
+ 18 files changed, 2152 insertions(+), 1273 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+ create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
+ create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+ create mode 100644 drivers/pci/controller/pcie-rcar.h
+
+-- 
+2.7.4
 
