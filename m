@@ -2,91 +2,152 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AC6C2D0C9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139ECC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD9E720706
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF822077B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 22:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576275803;
-	bh=/fWrbCaX7213GutJNHW8jgAcMWLVUpScB9pkaVFwqjU=;
+	s=default; t=1576276057;
+	bh=axY4rGnunz7vuk85RHaGJxTK/73TSIsc14PnD4lJozY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yCl6mWbq5tH0ViMAVnaDwyajTOX2oDT/JODFhJEFyZFlKjkzb3yhtTFlbfHEi5Meh
-	 HkUK2/+Hn1lxqV/fR183nOn8uzHXqKwEdErV16LpaBVHeF6BmcZQvFIFBibkPoZkxH
-	 fBMM4LoSciMPuS0KXjMi8xi6CLyu6OFI/FTOHS+M=
+	b=YhMxptkrne4oKSL1j3g0EVuGe4t0O0DdGLwhr4qxmECC2Cfhv+u2pJm7lTdw9gnZs
+	 aFyYrzigtaTkFHin4ppfUprM9wapaHQ7z2pTPGYR1wU1uKMrRaf0qb6GuqxNQwyZ6w
+	 S4itbVUKBwiUhi96t+cKU5wyZhiawe0BCXGcyTyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfLMWXT (ORCPT
+        id S1726345AbfLMW1h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 17:23:19 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43316 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfLMWXT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 17:23:19 -0500
-Received: by mail-ot1-f66.google.com with SMTP id p8so840832oth.10;
-        Fri, 13 Dec 2019 14:23:19 -0800 (PST)
+        Fri, 13 Dec 2019 17:27:37 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44418 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfLMW1h (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 17:27:37 -0500
+Received: by mail-ot1-f65.google.com with SMTP id x3so839028oto.11;
+        Fri, 13 Dec 2019 14:27:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WFqftU66d4lywk7YGZ8vQ6KoD9czO0JD1+b7jkC8Eqg=;
-        b=rzCSMo2MX00Wdvp9juhU6Koug51XE5NcOQM+yKyLCFNeeRt1zKoDWFYk1WZXipJuEs
-         g3yvqd3hS/w6xLtCZDuEEK7uDLR/FTPM8UYSfvtEc/yUaobhG/iE/XqwL4zpHHdDPviC
-         JgVkUN4fUgnrMGS0RHnFR3M6N/EHwq/PA4jJBH/CgUtHfcfzUmG65NSKd4iaHrLd8bMs
-         KuTZWnevcVkpGNiEqg+iMG25m0IqZu/7zScGzNxlyhb0CwflVvL+PP144jwMPY3esGfz
-         jGSDkB29KiZitYYEzZo2scr7s6y8qG2AJkHrA4A7Wj22UJzCjlazST/ER+Jtx6x+CHAa
-         Ph2g==
-X-Gm-Message-State: APjAAAX5Y6RepbzGnHPj7EzA3GChjhWoON4x344XQRgHAEtYzM3AIzQL
-        XKiTr08Wm282ZSSHUil0sg==
-X-Google-Smtp-Source: APXvYqy7Ii9i/4Qz6GD0XbnXcIegXItw0XTqvH2+WBespuMeepCyhsU1dWL9fRUGXYM3UeXhG6HziQ==
-X-Received: by 2002:a9d:6a8f:: with SMTP id l15mr16702538otq.59.1576275798548;
-        Fri, 13 Dec 2019 14:23:18 -0800 (PST)
+        bh=yUrvPMiCDtXnhqrg59MpZ/13pnaz/iZ88MgzmTpy4Uk=;
+        b=NxQfqF6+a6u/L3hWaIfXiBouawHXHW1+uf/e2KJplRYGi8gFoejk4xPo8DpQDA7J3L
+         glfcS+ZLR2lM5KmexGJzUTKDTj1HynrhM33ZWDEnu+UGP5kmxm4IQDd3nIv0EgeN+ft+
+         YvXMgvvJse4Y0piOwRugOkp13SYRXpZyH0fmqCZoMNJy3NyLBDJ8B1bd2POBxzSZQjSd
+         +bbzg+fPGfh/95xSvZFW+i47E4zcNNf6n6SuMqrCDSvXHws6j49Ykh/EB/lytvSZIh1T
+         I3XMD8zTEtaZb7iIa34yBLW6wBgBVL+Xc9mZ4ob55J2FfyntLfPu8nsbIvsz669JvUzb
+         BQ3A==
+X-Gm-Message-State: APjAAAWUQ1hJjcuHM/9VGT64WRGvwbGsLnLl31POCaLeuy2H3ZfhP0Ls
+        37ncY4ce9ndce55Y4A79Gg==
+X-Google-Smtp-Source: APXvYqyGkIUrZPq7+IYf+cJy5RzuFTEd7QfG91GtnXfuBL0xk/hpDG676A2pBOwmoCHsx3dmxHBnPg==
+X-Received: by 2002:a05:6830:1b6d:: with SMTP id d13mr17365107ote.258.1576276056206;
+        Fri, 13 Dec 2019 14:27:36 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k5sm3780843otp.33.2019.12.13.14.23.17
+        by smtp.gmail.com with ESMTPSA id m25sm3797099otq.5.2019.12.13.14.27.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 14:23:17 -0800 (PST)
-Date:   Fri, 13 Dec 2019 16:23:17 -0600
+        Fri, 13 Dec 2019 14:27:35 -0800 (PST)
+Date:   Fri, 13 Dec 2019 16:27:35 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     support.opensource@diasemi.com, lee.jones@linaro.org,
-        robh+dt@kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, joel@jms.id.au, andrew@aj.id.au,
-        lgirdwood@gmail.com, broonie@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
-Subject: Re: [PATCH v3 5/6] dt-bindings: mfd: da9062: add regulator gpio
- enable/disable documentation
-Message-ID: <20191213222317.GA32740@bogus>
-References: <20191129172537.31410-1-m.felsch@pengutronix.de>
- <20191129172537.31410-6-m.felsch@pengutronix.de>
+To:     Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] dt-bindings: net: bluetooth: add DT bindings for
+ Realtek controllers
+Message-ID: <20191213222735.GA456@bogus>
+References: <20191130202314.142096-1-bonstra@bonstra.fr.eu.org>
+ <20191130202314.142096-2-bonstra@bonstra.fr.eu.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191129172537.31410-6-m.felsch@pengutronix.de>
+In-Reply-To: <20191130202314.142096-2-bonstra@bonstra.fr.eu.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 29 Nov 2019 18:25:36 +0100, Marco Felsch wrote:
-> At the gpio-based regulator enable/disable documentation. This property
-> can be applied to each subnode within the 'regulators' node so each
-> regulator can be configured differently.
+On Sat, Nov 30, 2019 at 09:23:12PM +0100, Hugo Grostabussiat wrote:
+> The rtl_bt driver already supports some Realtek controllers on ACPI
+> platforms.
+> This commit adds bindings for DT-only platforms.
 > 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> Signed-off-by: Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>
 > ---
-> Changelog:
-> v3:
-> - adapt binding description
+>  .../bindings/net/realtek-bluetooth.yaml       | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
 > 
->  Documentation/devicetree/bindings/mfd/da9062.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
+> diff --git a/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml b/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
+> new file mode 100644
+> index 000000000000..6b62e5132c90
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
+> @@ -0,0 +1,52 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/realtek-bluetooth.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Realtek Bluetooth controllers device tree bindings
+> +
+> +description: |
+> +  Device tree bindings for serial attached Realtek Bluetooth controllers.
+> +
+> +maintainers:
+> +  - Marcel Holtmann <marcel@holtmann.org>
+> +  - Johan Hedberg <johan.hedberg@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: realtek,rt8723bs-bt
+> +
+> +  powerdown-gpios:
+> +    description: GPIO line controlling the power down (BT_DIS#) signal
+> +    maxItems: 1
+> +
+> +  device-wake-gpios:
+> +    description: GPIO line controlling the device wakeup (BT_WAKE) signal
+> +    maxItems: 1
+> +
+> +  host-wake-gpios:
+> +    description: GPIO line sampling the host wakeup (BT_HOST_WAKE) signal
+> +    maxItems: 1
+> +
+> +  firmware-name:
+> +    description: |
+> +      Name of the configuration file to load in addition to firmware
+> +    $ref: http://devicetree.org/schemas/types.yaml#/definitions/string
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This should be just:
+
+$ref: /schemas/types.yaml#/definitions/string
+
+> +
+> +required:
+> +  - compatible
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    uart1 {
+> +      bluetooth {
+> +        compatible = "realtek,rtl8723bs-bt";
+> +        powerdown-gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>;
+> +        host-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>;
+> +        device-wake-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>;
+> +        firmware-name = "rtl8723bs_config-teres_a64_i.bin";
+> +      };
+> +    };
+> -- 
+> 2.24.0
+> 
