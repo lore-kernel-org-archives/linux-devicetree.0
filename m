@@ -2,99 +2,177 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEF8C2D0C9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6C8C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D5C206D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73F9206D8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:05:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="VwkjP4Xa"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f4MB4TnP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725945AbfLMJEv (ORCPT
+        id S1725793AbfLMJFK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:04:51 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:37358 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMJEv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 04:04:51 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 7C26027E0FF8;
-        Fri, 13 Dec 2019 10:04:49 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id oTghcug-zDYp; Fri, 13 Dec 2019 10:04:48 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 447DD27E1025;
-        Fri, 13 Dec 2019 10:04:48 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 447DD27E1025
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1576227888;
-        bh=YbT6pQyDPlpE+GVVX0wl0vX9pyh+DxB2qE6TYF3nbGk=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=VwkjP4XaxfogLWOEwImB8DT5kHh6DTipWmZcNlg0zKKZN3Xtfo9xao5NO4RpQf4gi
-         1N8525L8NtviJqpMAMp4JVC9drbVSjhJfp219lnVT117ybvaWeploErA9UjIQG/t7V
-         KdLxNsnCmMAr16wsBwsR6nFV2dMb7yaJbNnVM7s8=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id QiA5EynfsNfZ; Fri, 13 Dec 2019 10:04:48 +0100 (CET)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 2AEE127E0FF8;
-        Fri, 13 Dec 2019 10:04:48 +0100 (CET)
-Date:   Fri, 13 Dec 2019 10:04:48 +0100 (CET)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        "open list, GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <695291639.96501294.1576227887986.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <CACRpkdbHGitYzwVEVYLUmaE+Qn0ix1O1bOSjoTJomf+h9b4+rg@mail.gmail.com>
-References: <20191204101042.4275-1-cleger@kalray.eu> <CACRpkdbHGitYzwVEVYLUmaE+Qn0ix1O1bOSjoTJomf+h9b4+rg@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Add pinctrl support for dwapb gpio driver
+        Fri, 13 Dec 2019 04:05:10 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:52368 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMJFJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 04:05:09 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBD94rXb125790;
+        Fri, 13 Dec 2019 03:04:53 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576227893;
+        bh=ttQBV4pScAqE9Q5W14IqurKxACH8gfNRqEPYyi+rNEo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=f4MB4TnPWPnpLQ4kG0V5lVEQjA8+KbznrtwRTAk5SJTtyRAq5CEKVjxQDDBpnoj7d
+         swyatbD+yFAtvV2Xtiq5hpGJV5SU2qUh4UXQF0QigOohzu0uuZSbFDWaFwRnm3SZj6
+         KlLLemoLZCGUpWZWEOuzfqTyPPO6Xu3B3I0v/MmU=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBD94rQt112007
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Dec 2019 03:04:53 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
+ Dec 2019 03:04:52 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 13 Dec 2019 03:04:52 -0600
+Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBD94oGE102633;
+        Fri, 13 Dec 2019 03:04:50 -0600
+Subject: Re: [PATCH v2 2/3] dt-bindings: display: Add obsolete note to
+ "ti,tilcdc,panel" binding
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     <dri-devel@lists.freedesktop.org>, <tony@atomide.com>,
+        <sam@ravnborg.org>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <tomi.valkeinen@ti.com>, <peter.ujfalusi@ti.com>, <bparrot@ti.com>
+References: <cover.1575901747.git.jsarha@ti.com>
+ <459ed943fe0725200062171755bcfe5f73713d50.1575901747.git.jsarha@ti.com>
+ <20191209145024.GB12841@pendragon.ideasonboard.com>
+From:   Jyri Sarha <jsarha@ti.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <5f585e0b-be58-b474-f27b-875e254426a8@ti.com>
+Date:   Fri, 13 Dec 2019 11:04:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - GC75 (Linux)/8.8.12_GA_3794)
-Thread-Topic: Add pinctrl support for dwapb gpio driver
-Thread-Index: SRXaXJiVFyFDIZi2qjVcUnwBi2wsHQ==
+In-Reply-To: <20191209145024.GB12841@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Ok thanks for your review, I will do that.
+On 09/12/2019 16:50, Laurent Pinchart wrote:
+> Hi Jyri,
+> 
+> Thank you for the patch.
+> 
+> On Mon, Dec 09, 2019 at 04:42:15PM +0200, Jyri Sarha wrote:
+>> The "ti,tilcdc,panel" binding should not be used anymore, since tilcdc
+>> is fully capable of using generic drm panels like panel-simple and
+>> panel-common binding. However, the obsolete binding is still widely
+>> used in many mainline supported platforms that I do not have access to
+>> and who knows how many custom platforms. So I am afraid we have to
+>> keep the old bundled tilcdc panel driver around.
+> 
+> But can't we drop the bindings instead of marking them as obsolete, even
+> if we keep the driver around for some time ?
+> 
 
-Regards,
+I guess that would be alright too.
 
-Cl=C3=A9ment L=C3=A9ger
+> Also, would it make sense to set a date for the removal of the driver,
+> and add it to the WARN() message in patch 3/3 ?
+> 
 
------ On 13 Dec, 2019, at 09:59, Linus Walleij linus.walleij@linaro.org wro=
-te:
+Not sure about a date. I would feel quite uncomfortable of removing the
+driver, while there is still mainline DTSes using "ti,tilcdc,panel". I
+guess the next step would be putting the legacy panel driver behind a
+default = N config option. Then I would probably hear something if there
+are people actively using those DTSes. Maybe the date could be about
+that too.
 
-> On Wed, Dec 4, 2019 at 11:10 AM Clement Leger <cleger@kalray.eu> wrote:
->=20
->> Synopsys DWAPB IP includes support for pin control. This control is basi=
-c
->> and allows to switch between a hardware and a software function.
->> Software function is when driving GPIOs from IP and hardware is controll=
-ed
->> by external signals.
->> This serie export necessary interface to be able to move the driver to
->> pinctrl folder and then implement the pinctrl support which is based on =
-the
->> digicolor driver. The idea is to avoid hardcoding pins in driver since
->> this IP is a generic one available on multiple SoC.
->=20
-> The overall approach is correct, just tidy up the patch series the
-> way indicated by Andy and we can probably proceed efficiently with
-> this. I will review the patch adding the pinctrl interfaces separately.
->=20
-> Yours,
-> Linus Walleij
+BR,
+Jyri
+
+>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/display/tilcdc/panel.txt | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/tilcdc/panel.txt b/Documentation/devicetree/bindings/display/tilcdc/panel.txt
+>> index 808216310ea2..54963f9173cc 100644
+>> --- a/Documentation/devicetree/bindings/display/tilcdc/panel.txt
+>> +++ b/Documentation/devicetree/bindings/display/tilcdc/panel.txt
+>> @@ -1,5 +1,11 @@
+>>  Device-Tree bindings for tilcdc DRM generic panel output driver
+>>  
+>> +NOTE: This binding (and the related driver) is obsolete and should not
+>> +      be used anymore. Please refer to drm panel-common binding (and
+>> +      to a generic drm panel driver like panel-simple).
+>> +      Documentation/devicetree/bindings/display/panel/panel-common.yaml
+>> +      (drivers/gpu/drm/panel/panel-simple.c)
+>> +
+>>  Required properties:
+>>   - compatible: value should be "ti,tilcdc,panel".
+>>   - panel-info: configuration info to configure LCDC correctly for the panel
+> 
+
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
