@@ -2,199 +2,93 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313B1C2D0C9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 21:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A596C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 21:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFCFF2465B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 21:30:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="h20vYc3J"
+	by mail.kernel.org (Postfix) with ESMTP id BFF2F2467A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 21:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576272861;
+	bh=i308i35R2GxOxkZnEOSRWTojjzXiolt5uBVw41WsxaY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LAnAZelGZY1RHbwLm6ZZMwHXkol3Ym95J7QRbeqAbfoWiNRb5i2+DrKGXUKu3Sb7Z
+	 nsT8RnOr9DzHZIij+B/cHTaMMTF+Opw0EJ2naM07VF+5DAfOD4hm/ERcMln112j/zU
+	 FjVXEUVQ42Cd3FR0bXFqiGoy9eK81R83h0sWrNo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725818AbfLMVaW (ORCPT
+        id S1725747AbfLMVeV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:30:22 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58934 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMVaW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 16:30:22 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BE8379D6;
-        Fri, 13 Dec 2019 22:30:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576272619;
-        bh=ugVPzgYz0NiaLKYKQDyg5loFUyhvh5heLoWsUgIayTc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h20vYc3JpzU7aPXMJuCzSilRyu7hCfAEhPKmpzptuvhM1yxYrX6ZuQ37jp/dFAkyf
-         HBVWeDYwmLMzLjZErobm6JmN9h+hfEBDkZ4Ar2muxFLMK5/WGHiZ6irpH4glu2v4la
-         mz80OBvKOg4r5lQiLbDRRIzTNsaI101SMCL2aKVI=
-Date:   Fri, 13 Dec 2019 23:30:10 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 13 Dec 2019 16:34:21 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37772 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfLMVeV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 16:34:21 -0500
+Received: by mail-ot1-f67.google.com with SMTP id k14so746052otn.4;
+        Fri, 13 Dec 2019 13:34:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CnL0ppP0hu7PBsUqVprgfTmViSxAVBY2hM4t+lEup30=;
+        b=KfLYesjRMXVEv5JsN9TJ0Z8DO4bfG0oqoO18/D4lEYVhPwP/dcaaqB+uIynRrnuOdc
+         Zf9S630/ZLJ9Ub4ftx++e7KHSoZb3hPtkqPSXQV/dLjYyNqXP3kLl15YZlCF90OD57zR
+         SItJXIdOpW4Y6eGFaGcq374RcyjUVK9ftiZKiAFyK26YeISxqt0e+mP5VyJ4sOywJFwd
+         bC8AjB03hZfH2ELBQ1Qiz03d1O0Foc7PO2hVZCC4LzHnY3pJXUxdkS5ISK1Vnuw0WsX2
+         o572auBBovnGBB050+neKe4vrLRqREzpwPUxKshUL17pn3bNNgratq3R18j0K7IWEeXP
+         QwwA==
+X-Gm-Message-State: APjAAAXnULB8J0UaOvzixqyJou9UoRgSm03gGTnUl4bbDCkiJwx5EBAS
+        bb0DnxWZGNX3iixsyHnQrg==
+X-Google-Smtp-Source: APXvYqxtLmwCSQzcGbNdN9x9BipFNkJ2YdICwPsaYd45wZnOrdGRLQWzOOV9fMbVNvAU4hoYVvYkLw==
+X-Received: by 2002:a9d:6181:: with SMTP id g1mr17366399otk.104.1576272860189;
+        Fri, 13 Dec 2019 13:34:20 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a16sm3798678otd.64.2019.12.13.13.34.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 13:34:19 -0800 (PST)
+Date:   Fri, 13 Dec 2019 15:34:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        ebiharaml@si-linux.co.jp
-Subject: Re: [PATCH v4 3/7] drm: rcar-du: lvds: Get dual link configuration
- from DT
-Message-ID: <20191213213010.GN4860@pendragon.ideasonboard.com>
-References: <1575649974-31472-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1575649974-31472-4-git-send-email-fabrizio.castro@bp.renesas.com>
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH] powerpc/devicetrees: Change 'gpios' to 'cs-gpios' on
+ fsl,spi nodes
+Message-ID: <20191213213418.GA17361@bogus>
+References: <7556683b57d8ce100855857f03d1cd3d2903d045.1574943062.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575649974-31472-4-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <7556683b57d8ce100855857f03d1cd3d2903d045.1574943062.git.christophe.leroy@c-s.fr>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Fabrizio,
+On Thu, Nov 28, 2019 at 12:16:35PM +0000, Christophe Leroy wrote:
+> Since commit 0f0581b24bd0 ("spi: fsl: Convert to use CS GPIO
+> descriptors"), the prefered way to define chipselect GPIOs is using
+> 'cs-gpios' property instead of the legacy 'gpios' property.
 
-Thank you for the patch.
+This will break using a new dtb on a kernel without the above commit. Or 
+with any OS that never made the change.
 
-On Fri, Dec 06, 2019 at 04:32:50PM +0000, Fabrizio Castro wrote:
-> For dual-LVDS configurations, it is now possible to mark the
-> DT port nodes for the sink with boolean properties (like
-> dual-lvds-even-pixels and dual-lvds-odd-pixels) to let drivers
-> know the encoders need to be configured in dual-LVDS mode.
+I'm fine with the doc change, but you should keep 'gpios' as deprecated.
+
 > 
-> Rework the implementation of rcar_lvds_parse_dt_companion
-> to make use of the DT markers while keeping backward
-> compatibility.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 > ---
-> v3->v4:
-> * New patch extracted from patch:
->   "drm: rcar-du: lvds: Add dual-LVDS panels support"
-> ---
->  drivers/gpu/drm/rcar-du/rcar_lvds.c | 56 +++++++++++++++++++++++++++++++------
->  1 file changed, 47 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> index 3cb0a83..6c1f171 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> @@ -669,8 +669,10 @@ EXPORT_SYMBOL_GPL(rcar_lvds_dual_link);
->  static int rcar_lvds_parse_dt_companion(struct rcar_lvds *lvds)
->  {
->  	const struct of_device_id *match;
-> -	struct device_node *companion;
-> +	struct device_node *companion, *p0, *p1;
-
-Could you rename p0 and p1 to port0 and port1, and spit them to a
-separate line of variable declaration ?
-
-> +	struct rcar_lvds *companion_lvds;
->  	struct device *dev = lvds->dev;
-> +	int dual_link;
->  	int ret = 0;
->  
->  	/* Locate the companion LVDS encoder for dual-link operation, if any. */
-> @@ -689,13 +691,55 @@ static int rcar_lvds_parse_dt_companion(struct rcar_lvds *lvds)
->  		goto done;
->  	}
->  
-> +	/*
-> +	 * We need to work out if the sink is expecting us to function in
-> +	 * dual-link mode. We do this by looking at the DT port nodes we are
-> +	 * connected to, if they are marked as expecting even pixels and
-> +	 * odd pixels than we need to enable vertical stripe output.
-> +	 */
-> +	p0 = of_graph_get_port_by_id(dev->of_node, 1);
-> +	p1 = of_graph_get_port_by_id(companion, 1);
-> +	dual_link = drm_of_lvds_get_dual_link_pixel_order(p0, p1);
-> +	of_node_put(p0);
-> +	of_node_put(p1);
-> +	if (dual_link >= DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS) {
-> +		lvds->dual_link = true;
-> +	} else if (lvds->next_bridge && lvds->next_bridge->timings) {
-> +		/*
-> +		 * Early dual-link bridge specific implementations populate the
-> +		 * timings field of drm_bridge, read the dual_link flag off the
-> +		 * bridge directly for backward compatibility.
-> +		 */
-> +		lvds->dual_link = lvds->next_bridge->timings->dual_link;
-> +	}
-> +
-> +	if (!lvds->dual_link) {
-> +		dev_dbg(dev, "Single-link configuration detected\n");
-> +		goto done;
-> +	}
-> +
->  	lvds->companion = of_drm_find_bridge(companion);
->  	if (!lvds->companion) {
->  		ret = -EPROBE_DEFER;
->  		goto done;
->  	}
->  
-> -	dev_dbg(dev, "Found companion encoder %pOF\n", companion);
-> +	dev_dbg(dev,
-> +		"Dual-link configuration detected (companion encoder %pOF)\n",
-> +		companion);
-> +
-> +	companion_lvds = bridge_to_rcar_lvds(lvds->companion);
-
-Could you move this line after the FIXME comment ?
-
-With these small issues fixed,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +
-> +	/*
-> +	 * FIXME: We should not be messing with the companion encoder private
-> +	 * data from the primary encoder, we should rather let the companion
-> +	 * encoder work things out on its own. However, the companion encoder
-> +	 * doesn't hold a reference to the primary encoder, and
-> +	 * drm_of_lvds_get_dual_link_pixel_order needs to be given references
-> +	 * to the output ports of both encoders, therefore leave it like this
-> +	 * for the time being.
-> +	 */
-> +	companion_lvds->dual_link = true;
->  
->  done:
->  	of_node_put(companion);
-> @@ -739,13 +783,7 @@ static int rcar_lvds_parse_dt(struct rcar_lvds *lvds)
->  	if (ret)
->  		goto done;
->  
-> -	if ((lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK) &&
-> -	    lvds->next_bridge)
-> -		lvds->dual_link = lvds->next_bridge->timings
-> -				? lvds->next_bridge->timings->dual_link
-> -				: false;
-> -
-> -	if (lvds->dual_link)
-> +	if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK)
->  		ret = rcar_lvds_parse_dt_companion(lvds);
->  
->  done:
-
--- 
-Regards,
-
-Laurent Pinchart
+>  Documentation/devicetree/bindings/spi/fsl-spi.txt | 8 ++++----
+>  arch/powerpc/boot/dts/mgcoge.dts                  | 2 +-
+>  arch/powerpc/boot/dts/mpc832x_rdb.dts             | 2 +-
+>  arch/powerpc/boot/dts/mpc8610_hpcd.dts            | 2 +-
+>  4 files changed, 7 insertions(+), 7 deletions(-)
