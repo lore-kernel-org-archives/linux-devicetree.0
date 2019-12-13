@@ -2,109 +2,132 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397E3C341A0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CC2C3403D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF38246C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715142471F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbfLMPVj (ORCPT
+        id S1727924AbfLMPVw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:21:39 -0500
-Received: from out28-52.mail.aliyun.com ([115.124.28.52]:42509 "EHLO
-        out28-52.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727872AbfLMPVi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 10:21:38 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07670759|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.826969-0.0200583-0.152973;DS=CONTINUE|ham_system_inform|0.423128-0.00153908-0.575333;FP=12401601434723292222|1|1|1|0|-1|-1|-1;HT=e02c03306;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GGSxanS_1576250475;
-Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GGSxanS_1576250475)
-          by smtp.aliyun-inc.com(10.147.40.233);
-          Fri, 13 Dec 2019 23:21:29 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
-        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v2 5/5] clk: Ingenic: Remove unnecessary spinlock when reading registers.
-Date:   Fri, 13 Dec 2019 23:21:12 +0800
-Message-Id: <1576250472-124315-7-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Fri, 13 Dec 2019 10:21:52 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58986 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727698AbfLMPVv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 10:21:51 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A1DFD292A9A;
+        Fri, 13 Dec 2019 15:21:48 +0000 (GMT)
+Date:   Fri, 13 Dec 2019 16:21:45 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v3 1/7] media: vb2: Add a helper to get the vb2 buffer
+ attached to a request
+Message-ID: <20191213162145.6bb10078@collabora.com>
+In-Reply-To: <20191213150935.GC24654@pendragon.ideasonboard.com>
+References: <20191213125414.90725-1-boris.brezillon@collabora.com>
+        <20191213125414.90725-2-boris.brezillon@collabora.com>
+        <20191213150935.GC24654@pendragon.ideasonboard.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It is not necessary to use spinlock when reading registers,
-so remove it from cgu.c.
+On Fri, 13 Dec 2019 17:09:35 +0200
+Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
 
-Suggested-by: Paul Cercueil <paul@crapouillou.net>
-Suggested-by: Paul Burton <paulburton@kernel.org>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
+> Hi Boris,
+> 
+> On Fri, Dec 13, 2019 at 01:54:08PM +0100, Boris Brezillon wrote:
+> > vb2_request_get_buf() returns the N-th buffer attached to a media
+> > request.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > ---
+> > Changes in v3:
+> > * None
+> > 
+> > Changes in v2:
+> > * Adjust the kernel doc as suggested by Hans
+> > ---
+> >  .../media/common/videobuf2/videobuf2-core.c   | 23 +++++++++++++++++++
+> >  include/media/videobuf2-core.h                | 11 +++++++++
+> >  2 files changed, 34 insertions(+)
+> > 
+> > diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
+> > index 4489744fbbd9..c4c7980dcb0d 100644
+> > --- a/drivers/media/common/videobuf2/videobuf2-core.c
+> > +++ b/drivers/media/common/videobuf2/videobuf2-core.c
+> > @@ -1416,6 +1416,29 @@ unsigned int vb2_request_buffer_cnt(struct media_request *req)
+> >  }
+> >  EXPORT_SYMBOL_GPL(vb2_request_buffer_cnt);
+> >  
+> > +struct vb2_buffer *vb2_request_get_buf(struct media_request *req,
+> > +				       unsigned int n)
+> > +{
+> > +	struct media_request_object *obj;
+> > +	struct vb2_buffer *buf = NULL;
+> > +	unsigned int nbufs = 0;
+> > +	unsigned long flags;
+> > +
+> > +	spin_lock_irqsave(&req->lock, flags);
+> > +	list_for_each_entry(obj, &req->objects, list) {
+> > +		if (!vb2_request_object_is_buffer(obj) ||
+> > +		    nbufs++ < n)
+> > +			continue;
+> > +
+> > +		buf = container_of(obj, struct vb2_buffer, req_obj);
+> > +		break;
+> > +	}
+> > +	spin_unlock_irqrestore(&req->lock, flags);
+> > +
+> > +	return buf;
+> > +}
+> > +EXPORT_SYMBOL_GPL(vb2_request_get_buf);
+> > +
+> >  int vb2_core_prepare_buf(struct vb2_queue *q, unsigned int index, void *pb)
+> >  {
+> >  	struct vb2_buffer *vb;
+> > diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
+> > index a2b2208b02da..6206e25df764 100644
+> > --- a/include/media/videobuf2-core.h
+> > +++ b/include/media/videobuf2-core.h
+> > @@ -1225,4 +1225,15 @@ bool vb2_request_object_is_buffer(struct media_request_object *obj);
+> >   */
+> >  unsigned int vb2_request_buffer_cnt(struct media_request *req);
+> >  
+> > +/**
+> > + * vb2_request_get_buf() - return the buffer at index @idx
+> > + *
+> > + * @req:	the request.
+> > + * @n:		search for the Nth buffer in the req object list  
+> 
+> It's not very clear to me what "n" is here. Wouldn't it be better to
+> pass the queue pointer instead, to get a buffer for a given queue ?
 
-Notes:
-    v2:
-    New Patch.
-
- drivers/clk/ingenic/cgu.c | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
-index ae1ddcb..3c95451 100644
---- a/drivers/clk/ingenic/cgu.c
-+++ b/drivers/clk/ingenic/cgu.c
-@@ -76,16 +76,13 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
- 	const struct ingenic_cgu_pll_info *pll_info;
- 	unsigned m, n, od_enc, od;
- 	bool bypass;
--	unsigned long flags;
- 	u32 ctl;
- 
- 	clk_info = &cgu->clock_info[ingenic_clk->idx];
- 	BUG_ON(clk_info->type != CGU_CLK_PLL);
- 	pll_info = &clk_info->pll;
- 
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->pll_reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
- 
- 	m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
- 	m += pll_info->m_offset;
-@@ -94,9 +91,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
- 	od_enc = ctl >> pll_info->od_shift;
- 	od_enc &= GENMASK(pll_info->od_bits - 1, 0);
- 
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->bypass_reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
- 
- 	bypass = !pll_info->no_bypass_bit &&
- 		 !!(ctl & BIT(pll_info->bypass_bit));
-@@ -269,12 +264,9 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
- 	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
--	unsigned long flags;
- 	u32 ctl;
- 
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->pll_reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
- 
- 	return !!(ctl & BIT(pll_info->enable_bit));
- }
--- 
-2.7.4
-
+Yep, that would work too and would be much clearer. I'll do that,
+thanks for the suggestion.
