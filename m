@@ -2,144 +2,131 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B9FC3402C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D10C34033
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0CA246C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mDAhW94I"
+	by mail.kernel.org (Postfix) with ESMTP id D48BF246F6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbfLMPJs (ORCPT
+        id S1727856AbfLMPVf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:09:48 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:55304 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727536AbfLMPJs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 10:09:48 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 312F7E00;
-        Fri, 13 Dec 2019 16:09:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576249785;
-        bh=o0CHrYc/I6WkpvTk7+BesHWKBfYO6bupATH/o75dbwU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mDAhW94IwncfLplmU4vn8//7eN/1PBQpAfRa6g+02MsXGWgvOlLAWSlNlB5ip3tyw
-         7jySM6NlCLHobkLpS4V2XvoClJQiu4zmNpvXFxOkdIfEAFaKiTXrdx+jFCImi4u4Hb
-         lalLOR5/uDbq2GZcZN5F78GoizUvG8WavsE1/5lM=
-Date:   Fri, 13 Dec 2019 17:09:35 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 1/7] media: vb2: Add a helper to get the vb2 buffer
- attached to a request
-Message-ID: <20191213150935.GC24654@pendragon.ideasonboard.com>
-References: <20191213125414.90725-1-boris.brezillon@collabora.com>
- <20191213125414.90725-2-boris.brezillon@collabora.com>
+        Fri, 13 Dec 2019 10:21:35 -0500
+Received: from out28-172.mail.aliyun.com ([115.124.28.172]:39288 "EHLO
+        out28-172.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbfLMPVf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 10:21:35 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4287215|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0376297-0.00652272-0.955848;DS=CONTINUE|ham_regular_dialog|0.00548571-0.000451498-0.994063;FP=17206493567010594298|1|1|1|0|-1|-1|-1;HT=e02c03311;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GGSxanS_1576250475;
+Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GGSxanS_1576250475)
+          by smtp.aliyun-inc.com(10.147.40.233);
+          Fri, 13 Dec 2019 23:21:26 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
+        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: [PATCH v2 3/5] dt-bindings: clock: Add X1830 bindings.
+Date:   Fri, 13 Dec 2019 23:21:10 +0800
+Message-Id: <1576250472-124315-5-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191213125414.90725-2-boris.brezillon@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+Add the clock bindings for the X1830 Soc from Ingenic.
 
-On Fri, Dec 13, 2019 at 01:54:08PM +0100, Boris Brezillon wrote:
-> vb2_request_get_buf() returns the N-th buffer attached to a media
-> request.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> ---
-> Changes in v3:
-> * None
-> 
-> Changes in v2:
-> * Adjust the kernel doc as suggested by Hans
-> ---
->  .../media/common/videobuf2/videobuf2-core.c   | 23 +++++++++++++++++++
->  include/media/videobuf2-core.h                | 11 +++++++++
->  2 files changed, 34 insertions(+)
-> 
-> diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
-> index 4489744fbbd9..c4c7980dcb0d 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-core.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-core.c
-> @@ -1416,6 +1416,29 @@ unsigned int vb2_request_buffer_cnt(struct media_request *req)
->  }
->  EXPORT_SYMBOL_GPL(vb2_request_buffer_cnt);
->  
-> +struct vb2_buffer *vb2_request_get_buf(struct media_request *req,
-> +				       unsigned int n)
-> +{
-> +	struct media_request_object *obj;
-> +	struct vb2_buffer *buf = NULL;
-> +	unsigned int nbufs = 0;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&req->lock, flags);
-> +	list_for_each_entry(obj, &req->objects, list) {
-> +		if (!vb2_request_object_is_buffer(obj) ||
-> +		    nbufs++ < n)
-> +			continue;
-> +
-> +		buf = container_of(obj, struct vb2_buffer, req_obj);
-> +		break;
-> +	}
-> +	spin_unlock_irqrestore(&req->lock, flags);
-> +
-> +	return buf;
-> +}
-> +EXPORT_SYMBOL_GPL(vb2_request_get_buf);
-> +
->  int vb2_core_prepare_buf(struct vb2_queue *q, unsigned int index, void *pb)
->  {
->  	struct vb2_buffer *vb;
-> diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
-> index a2b2208b02da..6206e25df764 100644
-> --- a/include/media/videobuf2-core.h
-> +++ b/include/media/videobuf2-core.h
-> @@ -1225,4 +1225,15 @@ bool vb2_request_object_is_buffer(struct media_request_object *obj);
->   */
->  unsigned int vb2_request_buffer_cnt(struct media_request *req);
->  
-> +/**
-> + * vb2_request_get_buf() - return the buffer at index @idx
-> + *
-> + * @req:	the request.
-> + * @n:		search for the Nth buffer in the req object list
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 
-It's not very clear to me what "n" is here. Wouldn't it be better to
-pass the queue pointer instead, to get a buffer for a given queue ?
+Notes:
+    v1->v2:
+    Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
+    to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
+    the old mailbox is in an unstable state.
 
-> + *
-> + * Return a vb2 buffer or NULL if there's no buffer at the specified position
-> + */
-> +struct vb2_buffer *vb2_request_get_buf(struct media_request *req,
-> +				       unsigned int n);
-> +
->  #endif /* _MEDIA_VIDEOBUF2_CORE_H */
+ .../devicetree/bindings/clock/ingenic,cgu.txt      |  1 +
+ include/dt-bindings/clock/x1830-cgu.h              | 46 ++++++++++++++++++++++
+ 2 files changed, 47 insertions(+)
+ create mode 100644 include/dt-bindings/clock/x1830-cgu.h
 
+diff --git a/Documentation/devicetree/bindings/clock/ingenic,cgu.txt b/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
+index 75598e6..74bfc57 100644
+--- a/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
++++ b/Documentation/devicetree/bindings/clock/ingenic,cgu.txt
+@@ -12,6 +12,7 @@ Required properties:
+   * ingenic,jz4770-cgu
+   * ingenic,jz4780-cgu
+   * ingenic,x1000-cgu
++  * ingenic,x1830-cgu
+ - reg : The address & length of the CGU registers.
+ - clocks : List of phandle & clock specifiers for clocks external to the CGU.
+   Two such external clocks should be specified - first the external crystal
+diff --git a/include/dt-bindings/clock/x1830-cgu.h b/include/dt-bindings/clock/x1830-cgu.h
+new file mode 100644
+index 00000000..6499170
+--- /dev/null
++++ b/include/dt-bindings/clock/x1830-cgu.h
+@@ -0,0 +1,46 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides clock numbers for the ingenic,x1830-cgu DT binding.
++ *
++ * They are roughly ordered as:
++ *   - external clocks
++ *   - PLLs
++ *   - muxes/dividers in the order they appear in the x1830 programmers manual
++ *   - gates in order of their bit in the CLKGR* registers
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_X1830_CGU_H__
++#define __DT_BINDINGS_CLOCK_X1830_CGU_H__
++
++#define X1830_CLK_EXCLK		0
++#define X1830_CLK_RTCLK		1
++#define X1830_CLK_APLL		2
++#define X1830_CLK_MPLL		3
++#define X1830_CLK_EPLL		4
++#define X1830_CLK_VPLL		5
++#define X1830_CLK_SCLKA		6
++#define X1830_CLK_CPUMUX	7
++#define X1830_CLK_CPU		8
++#define X1830_CLK_L2CACHE	9
++#define X1830_CLK_AHB0		10
++#define X1830_CLK_AHB2PMUX	11
++#define X1830_CLK_AHB2		12
++#define X1830_CLK_PCLK		13
++#define X1830_CLK_DDR		14
++#define X1830_CLK_MAC		15
++#define X1830_CLK_MSCMUX	16
++#define X1830_CLK_MSC0		17
++#define X1830_CLK_MSC1		18
++#define X1830_CLK_SSIPLL	19
++#define X1830_CLK_SSIMUX	20
++#define X1830_CLK_SSI0		21
++#define X1830_CLK_SMB0		22
++#define X1830_CLK_SMB1		23
++#define X1830_CLK_SMB2		24
++#define X1830_CLK_UART0		25
++#define X1830_CLK_UART1		26
++#define X1830_CLK_SSI1		27
++#define X1830_CLK_SFC		28
++#define X1830_CLK_PDMA		29
++
++#endif /* __DT_BINDINGS_CLOCK_X1830_CGU_H__ */
 -- 
-Regards,
+2.7.4
 
-Laurent Pinchart
