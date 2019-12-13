@@ -2,88 +2,124 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29423C80D5F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90697C33CA6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C97F2477D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576269664;
-	bh=irQB7XfqVcrHTID7Hl74AzsdoIFGThig7okTIO1hY1o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T1Ts1klL+mQrrSAp/pjVfXJKP0JFtxRMyqpqGIpPxOZZoh0NjpyrEW66SmBd9O8jT
-	 Xfc9xAupx37qLFXP2+rA2x/ho1raCn3YgzXsMMqwre56HuJd6+7qfXo4ASoXhrXTEE
-	 UtItGVXTLoLj/cfiUjlNfVK0tjFtgeq78FlrTtBs=
+	by mail.kernel.org (Postfix) with ESMTP id C365F24784
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:41:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXre7i2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbfLMTtW (ORCPT
+        id S1728894AbfLMTvd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 14:49:22 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45627 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728767AbfLMTtV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 14:49:21 -0500
-Received: by mail-oi1-f195.google.com with SMTP id v10so1726626oiv.12;
-        Fri, 13 Dec 2019 11:49:21 -0800 (PST)
+        Fri, 13 Dec 2019 14:51:33 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37508 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728696AbfLMTvd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 14:51:33 -0500
+Received: by mail-pg1-f193.google.com with SMTP id q127so22626pga.4;
+        Fri, 13 Dec 2019 11:51:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Tc6p/vzIYhyddj7vHAkwwUtjdL96r1yW+buff2VY9JA=;
+        b=cXre7i2Yv1FmRcR8LuhXxbhP8wV/cMwiFulKdK9Dhll3/FBXVSXlQapj5Ybtnys6e8
+         4mbFWzNgAO2j4ziHuT8yBWKelNubnrTDSd5NYNx7cCctJYfN+5g9L9CJDq0vXf7YEaY4
+         d0jbFE2A3NFC6XOmhLgFOCCP327E8rj4m4KFcFXzHVjp4mituDLRPI+NR+t1mXgPhkCj
+         M7ZIIRVKfgfrUOneBqGil6nu/ST7x6uV5zKSh4NtT/z/8dIwnd7UlCuLDsj1Gjmzeja8
+         P8HVhkjJSbGBuvIU0UfrXICm/usY0hHl9OL/9Leb6+0XaIznggXXeBB8fgYE5IPb/Xua
+         RiAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=puPqkib5wW1ufDZCsroCWU8Z4B1OBGBUiK23E46Afz4=;
-        b=KNPJ+NEkbAYAtH2YP5ecMo23dU1OAPH53alMBJ/ExXs5qY/KcukrxcrQrb+Bkrolas
-         +jxbPooZVJk0gpYd7Vazpg78RswM1k9VY5DIbUtV/Km6eqjOVFYJyR8xbN1cGPs8yqF2
-         BUZV70ykp7f7E0m80Y4mfAsEtDxtgSPC0kgQo73EAnu8a8P3inKsAb3ehsUtSsg2sXWJ
-         NgT172gi6WbKOJc7mHuudjc2MqkdOuMDhMThStr0cpkfZdiIoXFIOf3F3Mmyg6esiPcq
-         UjpIp2Xuxmm2NaYU0MWysBfRjoyP/aN67E50sxSgSMIRD7QNSEk5+Asv+fffL34GMmSs
-         22GA==
-X-Gm-Message-State: APjAAAV5oJRLwhV4HZFnuxnzzroFwC5WYqv+pLVNJzQv0/SHyL0Z4hXQ
-        mMaX8cv5HgrsxL2nfHUeNg==
-X-Google-Smtp-Source: APXvYqy9I8IPN8N57ObqYrugXpghM9TdPjB6AiccNCqXdBpXYtudSo6lvGrpH79nOj6dlId4HooUgQ==
-X-Received: by 2002:a05:6808:b1c:: with SMTP id s28mr7980503oij.2.1576266560907;
-        Fri, 13 Dec 2019 11:49:20 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j130sm3633161oia.34.2019.12.13.11.49.18
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Tc6p/vzIYhyddj7vHAkwwUtjdL96r1yW+buff2VY9JA=;
+        b=jcXYIV+VbRSShzULLONV+DskUBESSZCFMx2UrlSoACZ1UBhWzsRxwrh7dGgFnKi9T9
+         KZE5wD9G1drL1cGSvurAoY7IpKceyMlgdgXcwdE+LH6MJKA9anY6p2coXQP0GzXuZWdR
+         qQbR9fscgeauNI+kUWpj3KHo0qbDjdppoDAMxgCWy81wWFEI90CDIVpchm2rGupLV2QQ
+         D/13Wv5BiFbr+mG3fCS5j5e0J2VwbyXIFfemxub29dxZKCUErWZoE2NS/PlNt7wgK2pj
+         FT8ovsuNvtB15k9GOZubuxUtAxYEOLrB4NKN90w1HxSY/TnHABltTsifsGHyrBghPzg9
+         CyHA==
+X-Gm-Message-State: APjAAAXzETxsXY2e94L+JrckWftumyn2q01gc2j+sWiJgtTgZjdDXvzo
+        ohx6hooVpqJIhPrTGVOkEPc=
+X-Google-Smtp-Source: APXvYqx98LWsP2NEgocpB6/0UXE+Z2zVCQCD4PJc++G98WekMVHcmQlpxjEhXTaDOG9/4zmYD7kpDw==
+X-Received: by 2002:a63:31cf:: with SMTP id x198mr1321442pgx.272.1576266692563;
+        Fri, 13 Dec 2019 11:51:32 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id p186sm12417117pfp.56.2019.12.13.11.51.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 11:49:19 -0800 (PST)
-Date:   Fri, 13 Dec 2019 13:49:18 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     shubhrajyoti.datta@gmail.com
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, soren.brinkmann@xilinx.com,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: Re: [PATCH v3 02/10] clk: clock-wizard: Move the clockwizard to clk
-Message-ID: <20191213194918.GA13693@bogus>
-References: <cover.1574922435.git.shubhrajyoti.datta@xilinx.com>
- <610b14b71d4c3c4c28cbedc340f6a92f15e25241.1574922435.git.shubhrajyoti.datta@xilinx.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <610b14b71d4c3c4c28cbedc340f6a92f15e25241.1574922435.git.shubhrajyoti.datta@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 13 Dec 2019 11:51:32 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM IPROC ARM
+        ARCHITECTURE),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ARM: dts: NSP: Use hardware I2C for BCM958625HR
+Date:   Fri, 13 Dec 2019 11:51:02 -0800
+Message-Id: <20191213195102.23789-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 12:06:09PM +0530, shubhrajyoti.datta@gmail.com wrote:
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> 
-> Move the clocking wizard driver from staging to clk.
-> 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> ---
->  drivers/clk/Kconfig                 |   6 +
->  drivers/clk/Makefile                |   1 +
->  drivers/clk/clk-xlnx-clock-wizard.c | 335 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 342 insertions(+)
->  create mode 100644 drivers/clk/clk-xlnx-clock-wizard.c
+Now that the i2c-bcm-iproc driver has been fixed to permit reading more
+than 63 bytes in a single transaction with commit fd01eecdf959 ("i2c:
+iproc: Fix i2c master read more than 63 bytes") we no longer need to
+bitbang i2c over GPIOs which was necessary before to allow the
+PHYLINK/SFP subsystems to read SFP modules.
 
-I don't see anything moved here.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ arch/arm/boot/dts/bcm958625hr.dts | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-Rob
+diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+index a2c9de35ddfb..536fb24f38bb 100644
+--- a/arch/arm/boot/dts/bcm958625hr.dts
++++ b/arch/arm/boot/dts/bcm958625hr.dts
+@@ -55,18 +55,9 @@
+ 		priority = <200>;
+ 	};
+ 
+-	/* Hardware I2C block cannot do more than 63 bytes per transfer,
+-	 * which would prevent reading from a SFP's EEPROM (256 byte).
+-	 */
+-	i2c1: i2c {
+-		compatible = "i2c-gpio";
+-		sda-gpios = <&gpioa 5 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+-		scl-gpios = <&gpioa 4 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+-	};
+-
+ 	sfp: sfp {
+ 		compatible = "sff,sfp";
+-		i2c-bus = <&i2c1>;
++		i2c-bus = <&i2c0>;
+ 		mod-def0-gpios = <&gpioa 28 GPIO_ACTIVE_LOW>;
+ 		los-gpios = <&gpioa 24 GPIO_ACTIVE_HIGH>;
+ 		tx-fault-gpios = <&gpioa 30 GPIO_ACTIVE_HIGH>;
+@@ -74,6 +65,10 @@
+ 	};
+ };
+ 
++&i2c0 {
++	status = "okay";
++};
++
+ &amac0 {
+ 	status = "okay";
+ };
+-- 
+2.17.1
+
