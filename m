@@ -2,305 +2,128 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C77C3497A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F061C79DA3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF0D247E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9DC247D7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbfLMQlV (ORCPT
+        id S1728371AbfLMQpN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 11:41:21 -0500
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:58958 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728335AbfLMQlU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 11:41:20 -0500
-Received: from ramsan ([84.195.182.253])
-        by baptiste.telenet-ops.be with bizsmtp
-        id dUhG2100N5USYZQ01UhGr1; Fri, 13 Dec 2019 17:41:19 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ifo0C-0006uP-Ez; Fri, 13 Dec 2019 17:41:16 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ifo0C-0000yt-Do; Fri, 13 Dec 2019 17:41:16 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Magnus Damm <magnus.damm@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/7] ARM: dts: renesas: Group tuples in regulator-gpio states properties
-Date:   Fri, 13 Dec 2019 17:41:08 +0100
-Message-Id: <20191213164115.3697-2-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191213164115.3697-1-geert+renesas@glider.be>
-References: <20191213164115.3697-1-geert+renesas@glider.be>
+        Fri, 13 Dec 2019 11:45:13 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2189 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728109AbfLMQpM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Dec 2019 11:45:12 -0500
+Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id D295B1175F5A999CD297;
+        Fri, 13 Dec 2019 16:45:10 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 13 Dec 2019 16:45:10 +0000
+Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 13 Dec
+ 2019 16:45:10 +0000
+Date:   Fri, 13 Dec 2019 16:45:08 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+CC:     <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-acpi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <joro@8bytes.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <guohanjun@huawei.com>,
+        <sudeep.holla@arm.com>, <rjw@rjwysocki.net>, <lenb@kernel.org>,
+        <will@kernel.org>, <robin.murphy@arm.com>, <bhelgaas@google.com>,
+        <eric.auger@redhat.com>, <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH v3 01/13] iommu/arm-smmu-v3: Drop __GFP_ZERO flag from
+ DMA allocation
+Message-ID: <20191213164508.00001f99@Huawei.com>
+In-Reply-To: <20191209180514.272727-2-jean-philippe@linaro.org>
+References: <20191209180514.272727-1-jean-philippe@linaro.org>
+        <20191209180514.272727-2-jean-philippe@linaro.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.57]
+X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-To improve human readability and enable automatic validation, the tuples
-in the "states" properties of device nodes compatible with
-"regulator-gpio" should be grouped, as reported by "make dtbs_check":
+On Mon, 9 Dec 2019 19:05:02 +0100
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
 
-    $ make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/regulator/gpio-regulator.yaml
-    arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: regulator-vccq-sdhi0: states:0: Additional items are not allowed (1800000, 0 were unexpected)
-    arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: regulator-vccq-sdhi0: states:0: [3300000, 1, 1800000, 0] is too long
-    arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: regulator-vccq-sdhi1: states:0: Additional items are not allowed (1800000, 0 were unexpected)
-    arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: regulator-vccq-sdhi1: states:0: [3300000, 1, 1800000, 0] is too long
-    arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: regulator-vccq-sdhi2: states:0: Additional items are not allowed (1800000, 0 were unexpected)
-    arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: regulator-vccq-sdhi2: states:0: [3300000, 1, 1800000, 0] is too long
-    ...
+> Since commit 518a2f1925c3 ("dma-mapping: zero memory returned from
+> dma_alloc_*"), dma_alloc_* always initializes memory to zero, so there
+> is no need to use dma_zalloc_* or pass the __GFP_ZERO flag anymore.
+> 
+> The flag was introduced by commit 04fa26c71be5 ("iommu/arm-smmu: Convert
+> DMA buffer allocations to the managed API"), since the managed API
+> didn't provide a dmam_zalloc_coherent() function.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Fix this by grouping the tuples using angle brackets.
+Good to tidy these up whilst we are here.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/boot/dts/iwg20d-q7-common.dtsi       | 3 +--
- arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 3 +--
- arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts   | 3 +--
- arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts     | 3 +--
- arch/arm/boot/dts/r8a7779-marzen.dts          | 3 +--
- arch/arm/boot/dts/r8a7790-lager.dts           | 6 ++----
- arch/arm/boot/dts/r8a7791-koelsch.dts         | 9 +++------
- arch/arm/boot/dts/r8a7791-porter.dts          | 6 ++----
- arch/arm/boot/dts/r8a7793-gose.dts            | 9 +++------
- arch/arm/boot/dts/r8a7794-alt.dts             | 6 ++----
- arch/arm/boot/dts/r8a7794-silk.dts            | 3 +--
- 11 files changed, 18 insertions(+), 36 deletions(-)
+Jonathan
 
-diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-index ab5ae934876279e0..ebbe1518ef8a6adb 100644
---- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-+++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-@@ -132,8 +132,7 @@
- 
- 		gpios = <&gpio2 30 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-index 242cccfe9ba12db5..6bf6ed880c8647ad 100644
---- a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-+++ b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-@@ -60,8 +60,7 @@
- 
- 		enable-gpio = <&pfc 74 GPIO_ACTIVE_HIGH>;
- 		gpios = <&pfc 17 GPIO_ACTIVE_HIGH>;
--		states = <3300000 0
--			  1800000 1>;
-+		states = <3300000 0>, <1800000 1>;
- 
- 		enable-active-high;
- 	};
-diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-index ce6603b0994b7f36..58d369ad82799f4a 100644
---- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-+++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-@@ -76,8 +76,7 @@
- 
- 		gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-index 450efe92300876ea..8ac61b50aec03190 100644
---- a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-+++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-@@ -65,8 +65,7 @@
- 
- 		gpios = <&gpio2 24 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/r8a7779-marzen.dts b/arch/arm/boot/dts/r8a7779-marzen.dts
-index c755f0b8fd0d72db..d2240b89ee52929b 100644
---- a/arch/arm/boot/dts/r8a7779-marzen.dts
-+++ b/arch/arm/boot/dts/r8a7779-marzen.dts
-@@ -48,8 +48,7 @@
- 
- 		gpios = <&gpio3 20 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- 
- 	ethernet@18000000 {
-diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-index 6ec2cf7eb35455d3..097fd9317c6e2966 100644
---- a/arch/arm/boot/dts/r8a7790-lager.dts
-+++ b/arch/arm/boot/dts/r8a7790-lager.dts
-@@ -150,8 +150,7 @@
- 
- 		gpios = <&gpio5 29 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- 
- 	vcc_sdhi2: regulator-vcc-sdhi2 {
-@@ -174,8 +173,7 @@
- 
- 		gpios = <&gpio5 30 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- 
- 	audio_clock: audio_clock {
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-index af6bd8fcd5a4e364..2b096d5e06fb0499 100644
---- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-@@ -193,8 +193,7 @@
- 
- 		gpios = <&gpio2 12 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- 
- 	vcc_sdhi1: regulator-vcc-sdhi1 {
-@@ -217,8 +216,7 @@
- 
- 		gpios = <&gpio2 13 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- 
- 	vcc_sdhi2: regulator-vcc-sdhi2 {
-@@ -241,8 +239,7 @@
- 
- 		gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- 
- 	audio_clock: audio_clock {
-diff --git a/arch/arm/boot/dts/r8a7791-porter.dts b/arch/arm/boot/dts/r8a7791-porter.dts
-index d6cf16aac14d80f5..f9ece7ab2010679a 100644
---- a/arch/arm/boot/dts/r8a7791-porter.dts
-+++ b/arch/arm/boot/dts/r8a7791-porter.dts
-@@ -63,8 +63,7 @@
- 
- 		gpios = <&gpio2 12 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- 
- 	vcc_sdhi2: regulator-vcc-sdhi2 {
-@@ -85,8 +84,7 @@
- 
- 		gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- 
- 	hdmi-out {
-diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
-index 48fbeb6340fd4dac..22ca7cd1e7d23ec9 100644
---- a/arch/arm/boot/dts/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/r8a7793-gose.dts
-@@ -179,8 +179,7 @@
- 
- 		gpios = <&gpio2 12 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- 
- 	vcc_sdhi1: regulator-vcc-sdhi1 {
-@@ -203,8 +202,7 @@
- 
- 		gpios = <&gpio2 13 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- 
- 	vcc_sdhi2: regulator-vcc-sdhi2 {
-@@ -227,8 +225,7 @@
- 
- 		gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- 
- 	audio_clock: audio_clock {
-diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
-index 1d22fcdc5d22358d..f79fce74cd9c3162 100644
---- a/arch/arm/boot/dts/r8a7794-alt.dts
-+++ b/arch/arm/boot/dts/r8a7794-alt.dts
-@@ -60,8 +60,7 @@
- 
- 		gpios = <&gpio2 29 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- 
- 	vcc_sdhi1: regulator-vcc-sdhi1 {
-@@ -84,8 +83,7 @@
- 
- 		gpios = <&gpio4 29 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- 
- 	lbsc {
-diff --git a/arch/arm/boot/dts/r8a7794-silk.dts b/arch/arm/boot/dts/r8a7794-silk.dts
-index b3177aea45d10252..2c16ad85430020bb 100644
---- a/arch/arm/boot/dts/r8a7794-silk.dts
-+++ b/arch/arm/boot/dts/r8a7794-silk.dts
-@@ -126,8 +126,7 @@
- 
- 		gpios = <&gpio4 29 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- 
- 	vga-encoder {
--- 
-2.17.1
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index effe72eb89e7..d4e8b7f8d9f4 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -1675,7 +1675,7 @@ static int arm_smmu_init_l2_strtab(struct arm_smmu_device *smmu, u32 sid)
+>  
+>  	desc->span = STRTAB_SPLIT + 1;
+>  	desc->l2ptr = dmam_alloc_coherent(smmu->dev, size, &desc->l2ptr_dma,
+> -					  GFP_KERNEL | __GFP_ZERO);
+> +					  GFP_KERNEL);
+>  	if (!desc->l2ptr) {
+>  		dev_err(smmu->dev,
+>  			"failed to allocate l2 stream table for SID %u\n",
+> @@ -2161,8 +2161,7 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
+>  		return asid;
+>  
+>  	cfg->cdptr = dmam_alloc_coherent(smmu->dev, CTXDESC_CD_DWORDS << 3,
+> -					 &cfg->cdptr_dma,
+> -					 GFP_KERNEL | __GFP_ZERO);
+> +					 &cfg->cdptr_dma, GFP_KERNEL);
+>  	if (!cfg->cdptr) {
+>  		dev_warn(smmu->dev, "failed to allocate context descriptor\n");
+>  		ret = -ENOMEM;
+> @@ -2883,7 +2882,7 @@ static int arm_smmu_init_strtab_2lvl(struct arm_smmu_device *smmu)
+>  
+>  	l1size = cfg->num_l1_ents * (STRTAB_L1_DESC_DWORDS << 3);
+>  	strtab = dmam_alloc_coherent(smmu->dev, l1size, &cfg->strtab_dma,
+> -				     GFP_KERNEL | __GFP_ZERO);
+> +				     GFP_KERNEL);
+>  	if (!strtab) {
+>  		dev_err(smmu->dev,
+>  			"failed to allocate l1 stream table (%u bytes)\n",
+> @@ -2910,7 +2909,7 @@ static int arm_smmu_init_strtab_linear(struct arm_smmu_device *smmu)
+>  
+>  	size = (1 << smmu->sid_bits) * (STRTAB_STE_DWORDS << 3);
+>  	strtab = dmam_alloc_coherent(smmu->dev, size, &cfg->strtab_dma,
+> -				     GFP_KERNEL | __GFP_ZERO);
+> +				     GFP_KERNEL);
+>  	if (!strtab) {
+>  		dev_err(smmu->dev,
+>  			"failed to allocate linear stream table (%u bytes)\n",
+
 
