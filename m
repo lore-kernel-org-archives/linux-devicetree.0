@@ -2,198 +2,117 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B65C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28F7C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA3B224658
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:03:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DHJyLHtt"
+	by mail.kernel.org (Postfix) with ESMTP id 9F74522527
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 09:04:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfLMJDF (ORCPT
+        id S1725810AbfLMJED convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 04:03:05 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:46401 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfLMJDE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 04:03:04 -0500
-Received: by mail-qk1-f195.google.com with SMTP id r14so1103584qke.13
-        for <devicetree@vger.kernel.org>; Fri, 13 Dec 2019 01:03:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kTG9gv9SOZIPOVJzDJM+df2CjEEz9qevtkCrk8J1s0A=;
-        b=DHJyLHttSXK0xDOQ9VfWwJ6rbNYj0rhTyg/y2yVcZFMXlagW9jJGLzI4znvQrkD+cj
-         fYKvlYAgxLh9Z/Z5xbQ6Q9yVL9w3tQqpsaaIPCLYw63SO+rQDQJHQLsK9p7Y/V+TynLW
-         BnRg4Jotw1sJSc+yVnppfeuSht1KYIi2C+IF6ZA3NbW/a+EnteinBPfgCK8CdibAaHxa
-         Y0J09NP2xsX7d5ZfWD4mQh0yYZPSZNTqqJW6olMpYSnbCeYpIBfehyNKDkxlW6OOLpzL
-         MKygFCFg58eMUhZA5sVwcFrl0/sjtoeBn/fm9thq2A1uOQQQRBGg4Hn0LsrVRcXjrn8j
-         JbwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kTG9gv9SOZIPOVJzDJM+df2CjEEz9qevtkCrk8J1s0A=;
-        b=TDyUQvICx5TMvnjocgjbK9VmsuNZ9QpbkZH2byaeWBT3zQKP9m3ChT4UZHRKnRuN5j
-         7wk6JM+XKm+FMMuu0Bp8wUdcu/ZSDHSsrDc1cA2JLZ8i6n+2eOMhiifNP6SQeuSiRnYU
-         +sr9Oj8fnw401HbtoMqL+QPzU+yDe1C5MutlQTbMkPIU13JpcCD0d6g5vjJSAxPDJkc8
-         8Sr2u7LkRrpHrtM7p+Cln4C+Wmp+dn+ef0/0SWAlWskgVMhW8msrpbDs4MntFgW1Opp4
-         vmJcC451eLmfOAE6pxP6Co++V+4dBkD3+ZHQoRCPlDSB6QpZKMxfMh46UEhpajAHktNh
-         6L8A==
-X-Gm-Message-State: APjAAAVfb+480+tQX4CXnvrJfI5aXU7qfDDZZrWUfNtmCYztilnWPCt8
-        HML6Z4Idla38UvAo642kmlOhBlgcOHP+mDsItrqHqCsF
-X-Google-Smtp-Source: APXvYqyPTiUNv1U6uLx+OKkkfK2bAqiNb78Jc0oCvWzUDV4NVgH64g14KOX4K8npYUqsx8DnR1sZBnKCH9aro9rEa5o=
-X-Received: by 2002:a37:6fc4:: with SMTP id k187mr12032137qkc.21.1576227783386;
- Fri, 13 Dec 2019 01:03:03 -0800 (PST)
-MIME-Version: 1.0
-References: <20191213081230.23494-1-bibby.hsieh@mediatek.com> <20191213081230.23494-4-bibby.hsieh@mediatek.com>
-In-Reply-To: <20191213081230.23494-4-bibby.hsieh@mediatek.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 13 Dec 2019 10:02:52 +0100
-Message-ID: <CAMpxmJWh3YMkn_1B=nJLmRRXn9uD2kU4grf8c+sMbWtKFZOv=w@mail.gmail.com>
-Subject: Re: [PATCH v8 3/4] misc: eeprom: at24: support pm_runtime control
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 13 Dec 2019 04:04:03 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54256 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbfLMJED (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 04:04:03 -0500
+Received: from beast.luon.net (unknown [IPv6:2001:470:78b1:0:40e2:7ff:fef4:3122])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sjoerd)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A12F528ECCE;
+        Fri, 13 Dec 2019 09:04:00 +0000 (GMT)
+Received: by beast.luon.net (Postfix, from userid 1000)
+        id 63AE63E1F0D; Fri, 13 Dec 2019 10:03:57 +0100 (CET)
+Message-ID: <a16cabd53ec24dfab7d8a53cab761f019a6d988f.camel@collabora.co.uk>
+Subject: Re: [PATCH] ARM: dts: imx6qdl: Enable egalax touch screen
+From:   Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     linux-arm-kernel@lists.infradead.org,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>
+        devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 13 Dec 2019 10:03:57 +0100
+In-Reply-To: <20191212162522.irg6pg4fhgxwkp53@pengutronix.de>
+References: <20191212160220.2265521-1-sjoerd.simons@collabora.co.uk>
+         <20191212160722.wgqjeeknvm257hwi@pengutronix.de>
+         <e9c3d1d5f8b57d92e5823f74762a2de2b20f8e88.camel@collabora.co.uk>
+         <20191212162522.irg6pg4fhgxwkp53@pengutronix.de>
+Organization: Collabora Ltd.
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.34.1-2+b1 
+MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pt., 13 gru 2019 o 09:47 Bibby Hsieh <bibby.hsieh@mediatek.com> napisa=C5=
-=82(a):
->
-> Although in the most platforms, the power of eeprom are alway
-> on, some platforms disable the eeprom power in order to meet
-> low power request. This patch add the pm_runtime ops to control
-> power to support all platforms.
->
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/misc/eeprom/at24.c | 40 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->
-> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-> index 0681d5fdd538..06ae2cc32f79 100644
-> --- a/drivers/misc/eeprom/at24.c
-> +++ b/drivers/misc/eeprom/at24.c
-> @@ -22,6 +22,7 @@
->  #include <linux/nvmem-provider.h>
->  #include <linux/regmap.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/gpio/consumer.h>
->
->  /* Address pointer is 16 bit. */
-> @@ -91,6 +92,7 @@ struct at24_data {
->
->         struct gpio_desc *wp_gpio;
->
-> +       struct regulator *vcc_reg;
->         /*
->          * Some chips tie up multiple I2C addresses; dummy devices reserv=
-e
->          * them for us, and we'll use them with SMBus calls.
-> @@ -662,6 +664,12 @@ static int at24_probe(struct i2c_client *client)
->         at24->client[0].client =3D client;
->         at24->client[0].regmap =3D regmap;
->
-> +       at24->vcc_reg =3D devm_regulator_get(dev, "vcc");
-> +       if (IS_ERR(at24->vcc_reg)) {
-> +               dev_err(dev, "failed to get at24 VCC regulator\n");
+On Thu, 2019-12-12 at 17:25 +0100, Marco Felsch wrote:
+> On 19-12-12 17:22, Sjoerd Simons wrote:
+> > On Thu, 2019-12-12 at 17:07 +0100, Marco Felsch wrote:
+> > > Hi Sjoerd,
+> > > 
+> > > On 19-12-12 17:02, Sjoerd Simons wrote:
+> > > > Sabrelite boards can have an lvds screen attached with a built-
+> > > > in
+> > > > i2c touch
+> > > > screen. Enable this in the dtsi.
+> > > 
+> > > Can this be any screen available on the market?
+> > 
+> > I guess i should have been more clear here; This is the touchscreen
+> > in
+> > the hannstar display (already part of the dts) that was sold as an
+> > accessoiry to the sabrelite.
+> 
+> That is more clear =) Pls can you add this to the commit message?
 
-The regulator core is quite verbose in its error messages when calling
-regulator_get() - you don't need to add yours here. Just return the
-error code.
+Ofcourse will do; You also made me dig up the model number etc so i'll
+include that information.
 
-> +               return PTR_ERR(at24->vcc_reg);
-> +       }
-> +
->         at24->wp_gpio =3D devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_HI=
-GH);
->         if (IS_ERR(at24->wp_gpio))
->                 return PTR_ERR(at24->wp_gpio);
-> @@ -701,6 +709,12 @@ static int at24_probe(struct i2c_client *client)
->
->         i2c_set_clientdata(client, at24);
->
-> +       err =3D regulator_enable(at24->vcc_reg);
-> +       if (err) {
-> +               dev_err(dev, "Failed to enable at24 vcc regulator\n");
+> > Same as the screen that can be used on the boundary nitrogen6
+> > boards
+> > (which do have the touch part already enabled in the dts)
+> > 
+> > > > Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+> > > > ---
+> > > > 
+> > > >  arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 8 ++++++++
+> > > >  1 file changed, 8 insertions(+)
+> > > > 
+> > > > diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> > > > b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> > > > index 8468216dae9b..382b127b2251 100644
+> > > > --- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> > > > +++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> > > > @@ -416,6 +416,14 @@ &i2c3 {
+> > > >  	pinctrl-names = "default";
+> > > >  	pinctrl-0 = <&pinctrl_i2c3>;
+> > > >  	status = "okay";
+> > > > +
+> > > > +	touchscreen@4 {
+> > > > +		compatible = "eeti,egalax_ts";
+> > > > +		reg = <0x04>;
+> > > > +		interrupt-parent = <&gpio1>;
+> > > > +		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
+> > > > +		wakeup-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+> > > 
+> > > The wakeup-gpio and the irq-line are sharing the same gpio line?
+> 
+> Lastly should we add a own pinctrl entry for the touchscreen?
 
-Drop the at24 name - dev_err() will print the device name for you.
+Would probably make sense to do that indeed; Will have a look
 
-> +               return err;
-> +       }
-> +
->         /* enable runtime pm */
->         pm_runtime_set_active(dev);
->         pm_runtime_enable(dev);
-> @@ -713,6 +727,7 @@ static int at24_probe(struct i2c_client *client)
->         pm_runtime_idle(dev);
->         if (err) {
->                 pm_runtime_disable(dev);
-> +               regulator_disable(at24->vcc_reg);
->                 return -ENODEV;
->         }
->
-> @@ -729,14 +744,39 @@ static int at24_probe(struct i2c_client *client)
->  static int at24_remove(struct i2c_client *client)
->  {
->         pm_runtime_disable(&client->dev);
-> +       if (pm_runtime_status_suspended(&client->dev))
-> +               regulator_disable(at24->vcc_reg);
+Thanks for the review!
 
-Why didn't you fix the inverted logic here as I pointed out back in v6
-of this series?
-
-Bart
-
->         pm_runtime_set_suspended(&client->dev);
->
->         return 0;
->  }
->
-> +static int __maybe_unused at24_suspend(struct device *dev)
-> +{
-> +       struct i2c_client *client =3D to_i2c_client(dev);
-> +       struct at24_data *at24 =3D i2c_get_clientdata(client);
-> +
-> +       return regulator_disable(at24->vcc_reg);
-> +}
-> +
-> +static int __maybe_unused at24_resume(struct device *dev)
-> +{
-> +       struct i2c_client *client =3D to_i2c_client(dev);
-> +       struct at24_data *at24 =3D i2c_get_clientdata(client);
-> +
-> +       return regulator_enable(at24->vcc_reg);
-> +}
-> +
-> +static const struct dev_pm_ops at24_pm_ops =3D {
-> +       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +                               pm_runtime_force_resume)
-> +       SET_RUNTIME_PM_OPS(at24_suspend, at24_resume, NULL)
-> +};
-> +
->  static struct i2c_driver at24_driver =3D {
->         .driver =3D {
->                 .name =3D "at24",
-> +               .pm =3D &at24_pm_ops,
->                 .of_match_table =3D at24_of_match,
->                 .acpi_match_table =3D ACPI_PTR(at24_acpi_ids),
->         },
-> --
-> 2.18.0
+-- 
+Sjoerd Simons
+Collabora Ltd.
