@@ -2,215 +2,114 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90261C341B1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DFDC751DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB8152470C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00787247C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:39:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uy1iVBwF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKVRcrFQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbfLMPmA (ORCPT
+        id S1728103AbfLMQFv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:42:00 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:41298 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfLMPl7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 10:41:59 -0500
-Received: by mail-il1-f193.google.com with SMTP id z90so2411214ilc.8;
-        Fri, 13 Dec 2019 07:41:58 -0800 (PST)
+        Fri, 13 Dec 2019 11:05:51 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:43187 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728099AbfLMQFv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 11:05:51 -0500
+Received: by mail-yw1-f68.google.com with SMTP id s187so22199ywe.10;
+        Fri, 13 Dec 2019 08:05:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yHFriWwVf2bpxF8jwq7dYnH8TViQ3A2S0W8/bFkGrXk=;
-        b=uy1iVBwF5qVEjnordVcIXzD6+GC42UB/aLnp1utugxlHKBypM+B2oVMmWYF9Fwhyck
-         fzcQ/3dWMofY1YSJluLV0zdkMwBIs6YM27G1ksMcOmD4iNEgx73faeivK1equeR2rLay
-         Jx1LboWVnDiCAOlZMzAlqOL7QcRqtEgr0LmVhQkcfXwpizeHvtmxh1x3TCYLRBPQeGsf
-         CnWXzBO5soVgh93FPTDopuxNIC1euJ2ScGt6v4RQ3qBIldjr/A06HIEWH8TlMYwwUiLW
-         WQV3j1KcU0HNCVHyjeTdtFpFD1wfg39bby/vYuZ3OcvJMiS+xAhr2VUpOzYJs6mAhLao
-         PuIw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XEqMHcTdDOYOvlqXuxrY0ZDmTfpLPgj3LFItvyhrGW8=;
+        b=NKVRcrFQi760LHcc2CA3mSfP216r5ge0bRp8GoTBxQzDEoVuCBqhn0AnB12G/DmyIN
+         7Zi15rAWKE+6u8EKYPiy3nu7oTaK5y4xGj5v1FFU9OeZdev3wLePzS27Rkg9I+xGub9I
+         BjVjua+vP5CtwTTtDm0Erd2lv6gGzHFiO+eHL3CS+WnWEJavdNg4ge7f1YNh8qPoTOvJ
+         oLeb8/YH+bUQBRJK+1ii49WoOVdX9FMfzWXw+QClPLnUwhLIqprDDRsL2pU6LRXvQd85
+         JKxf1xFOMXICKrzwC0pUKzTXHqKJHui89SGkOKuS83pvy6UfKsVaILzw1wcnRL9L9mEa
+         Nbhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yHFriWwVf2bpxF8jwq7dYnH8TViQ3A2S0W8/bFkGrXk=;
-        b=Z6YE78oOkD8GJ/00wVFxXHhpb9tRUDoGhW6ebC2hylOppMFP7J300WcAJlW5WNpYWc
-         rJi50YjjUOLYCDoPaS+COrLkIGGoEjRuMm3ztYTKHyI6rZPy7hqVdLUeU2SUmhMVEWhk
-         sbgujeYqHUR2qww1FffpdVUkl1mxiAh1fsDoDO7o9YTCOcCo86NoXZuEx+uO2ge+NTn6
-         InRMaZZg1P/DFrfnS09ERoh5zyJXoUCmg90jkeXA368xuFsg0CPHz8+i93LTS5PCNhQY
-         1TpW7yTRvBDglfIgqKXCBbNVkm7KgFY2WnvjMUWIAgEXmCTq56uOC0KcQVRO9nEcwpET
-         rFcA==
-X-Gm-Message-State: APjAAAVbE/P0Ze8Zk01j4EWdc8L2/0P/165nd8hQcRzp9hBYnsFKRlhh
-        WoXNIvqP0bCfimFcBwmd1/Yb2pRla6j184RP0oM=
-X-Google-Smtp-Source: APXvYqzYQQrOqzq0lGlikGdKHOscdMMUlYZqW+h4DlZuPmBdDG28bYhGZKbxxSS7VizcvE2SXU3vAnQLc/C5vPctLEU=
-X-Received: by 2002:a92:d38e:: with SMTP id o14mr14108231ilo.238.1576251718323;
- Fri, 13 Dec 2019 07:41:58 -0800 (PST)
-MIME-Version: 1.0
-References: <20191213074533.27048-1-maxime@cerno.tech>
-In-Reply-To: <20191213074533.27048-1-maxime@cerno.tech>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Fri, 13 Dec 2019 23:41:46 +0800
-Message-ID: <CAEExFWunpXqKDyxqhHGJhtcQ7pwEYkWL0wvwUp==_jrd9wACbQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: interconnect: Convert Allwinner MBUS
- controller to a schema
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XEqMHcTdDOYOvlqXuxrY0ZDmTfpLPgj3LFItvyhrGW8=;
+        b=sIptDIS6AalEA1rtX6Rte91Svnp3l3R4BfNfkD5PXqpMTgULeX+BCKigqDYhwx5rWw
+         LlOq1+AXqvbHblJK74yxcoBSj9UFvNw9zzqzhVmHbHaxyQFgmdBw9fosIcrcul/5jW8n
+         v5bavzQzdc8NoIWWSJVTVEM0I7kI7QUTIV2W+SD0slgrRhTW11Y0uIqVt8Es20hIA7Y+
+         ueLWVlzdRlk4gonRwt6yb3G7uL/Z7bFWpccQ86ZLRFBnjzUesU0Yp08GHVxaKfTrbKf4
+         H2tMvDyYV70cVHhp5s9viZCA1gz/MLhS0VpWvhJvjVb0SdRPMI+DE7arMTe3afvgp42l
+         FqmA==
+X-Gm-Message-State: APjAAAXemg3wc4XybPsNNamwQino2XTQMspbFXMDMpixsjqXVPyitm6B
+        ahSBmLsKWA+inNlw1bjrJi0=
+X-Google-Smtp-Source: APXvYqys0XoQhk+58M8smG2N+QHVvjzqTiqDCi74zIQgQS1eYZb6PW/ZmzSN70o7vzlpSbz5S4WEFw==
+X-Received: by 2002:a0d:c041:: with SMTP id b62mr9089386ywd.488.1576253149508;
+        Fri, 13 Dec 2019 08:05:49 -0800 (PST)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id v38sm3984694ywh.63.2019.12.13.08.05.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2019 08:05:48 -0800 (PST)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     peng.fan@nxp.com, ping.bai@nxp.com, Adam Ford <aford173@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        georgi.djakov@linaro.org, Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2 0/7] soc: imx: Enable additional functionality of i.MX8M Mini
+Date:   Fri, 13 Dec 2019 10:05:35 -0600
+Message-Id: <20191213160542.15757-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 3:45 PM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> The older Allwinner SoCs have an MBUS controller that is used by Linux,
-> with a matching Device Tree binding.
->
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for that controller over to a YAML schemas.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  .../arm/sunxi/allwinner,sun4i-a10-mbus.yaml   | 65 +++++++++++++++++++
->  .../bindings/arm/sunxi/sunxi-mbus.txt         | 37 -----------
->  2 files changed, 65 insertions(+), 37 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml
->  delete mode 100644 Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml b/Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml
-> new file mode 100644
-> index 000000000000..9370e64992dd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/sunxi/allwinner,sun4i-a10-mbus.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner Memory Bus (MBUS) controller
-> +
-> +maintainers:
-> +  - Chen-Yu Tsai <wens@csie.org>
-> +  - Maxime Ripard <mripard@kernel.org>
-> +
-> +description: |
-> +  The MBUS controller drives the MBUS that other devices in the SoC
-> +  will use to perform DMA. It also has a register interface that
-> +  allows to monitor and control the bandwidth and priorities for
-> +  masters on that bus.
-> +
-> +  Each device having to perform their DMA through the MBUS must have
-> +  the interconnects and interconnect-names properties set to the MBUS
-> +  controller and with "dma-mem" as the interconnect name.
-> +
-> +properties:
-> +  "#interconnect-cells":
-> +    const: 1
-> +    description:
-> +      The content of the cell is the MBUS ID.
-> +
-> +  compatible:
-> +    enum:
-> +      - allwinner,sun5i-a13-mbus
-> +      - allwinner,sun8i-h3-mbus
+The GPCv2 controller on the i.MX8M Mini is compatible with the driver
+used for the i.MX8MQ except for the register locations and names.
+The GPCv2 controller is used to enable additional periperals currently
+unavailable on the i.MX8M Mini.  In order to make them function,
+the GPCv2 needs to be adapted so the drivers can associate their
+power domain to the GPCv2 to enable them.
 
-Is there a driver in mainline  for it?
+This series makes one include file slightly more generic,
+adds the iMX8M Mini entries, updates the bindings, adds them
+to the device tree, then associates the new power domain to
+both the OTG and PCIe controllers.
 
-Thx,
-Yangtao
+Some peripherals may need additional power domain drivers in the future
+due to limitations of the GPC driver, but the drivers for VPU and others are
+not available yet.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  dma-ranges:
-> +    description:
-> +      See section 2.3.9 of the DeviceTree Specification.
-> +
-> +required:
-> +  - "#interconnect-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - dma-ranges
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/sun5i-ccu.h>
-> +
-> +    mbus: dram-controller@1c01000 {
-> +        compatible = "allwinner,sun5i-a13-mbus";
-> +        reg = <0x01c01000 0x1000>;
-> +        clocks = <&ccu CLK_MBUS>;
-> +        dma-ranges = <0x00000000 0x40000000 0x20000000>;
-> +        #interconnect-cells = <1>;
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt b/Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt
-> deleted file mode 100644
-> index 2005bb486705..000000000000
-> --- a/Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt
-> +++ /dev/null
-> @@ -1,37 +0,0 @@
-> -Allwinner Memory Bus (MBUS) controller
-> -
-> -The MBUS controller drives the MBUS that other devices in the SoC will
-> -use to perform DMA. It also has a register interface that allows to
-> -monitor and control the bandwidth and priorities for masters on that
-> -bus.
-> -
-> -Required properties:
-> - - compatible: Must be one of:
-> -       - allwinner,sun5i-a13-mbus
-> -       - allwinner,sun8i-h3-mbus
-> - - reg: Offset and length of the register set for the controller
-> - - clocks: phandle to the clock driving the controller
-> - - dma-ranges: See section 2.3.9 of the DeviceTree Specification
-> - - #interconnect-cells: Must be one, with the argument being the MBUS
-> -   port ID
-> -
-> -Each device having to perform their DMA through the MBUS must have the
-> -interconnects and interconnect-names properties set to the MBUS
-> -controller and with "dma-mem" as the interconnect name.
-> -
-> -Example:
-> -
-> -mbus: dram-controller@1c01000 {
-> -       compatible = "allwinner,sun5i-a13-mbus";
-> -       reg = <0x01c01000 0x1000>;
-> -       clocks = <&ccu CLK_MBUS>;
-> -       dma-ranges = <0x00000000 0x40000000 0x20000000>;
-> -       #interconnect-cells = <1>;
-> -};
-> -
-> -fe0: display-frontend@1e00000 {
-> -       compatible = "allwinner,sun5i-a13-display-frontend";
-> -       ...
-> -       interconnects = <&mbus 19>;
-> -       interconnect-names = "dma-mem";
-> -};
-> --
-> 2.23.0
->
+Adam Ford (7):
+  soc: imx: gpcv2: Rename imx8mq-power.h to imx8m-power.h
+  soc: imx: gpcv2: Update imx8m-power.h to include iMX8M Mini
+  soc: imx: gpcv2: add support for i.MX8M Mini SoC
+  dt-bindings: imx-gpcv2: Update bindings to support i.MX8M Mini
+  arm64: dts: imx8mm: add GPC power domains
+  ARM64: dts: imx8mm: Fix clocks and power domain for USB OTG
+  arm64: dts: imx8mm: Add PCIe support
+
+ .../bindings/power/fsl,imx-gpcv2.txt          |   6 +-
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi     | 127 ++++++++-
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     |   2 +-
+ drivers/soc/imx/gpcv2.c                       | 246 +++++++++++++++++-
+ .../power/{imx8mq-power.h => imx8m-power.h}   |  14 +
+ 5 files changed, 387 insertions(+), 8 deletions(-)
+ rename include/dt-bindings/power/{imx8mq-power.h => imx8m-power.h} (57%)
+
+-- 
+2.20.1
+
