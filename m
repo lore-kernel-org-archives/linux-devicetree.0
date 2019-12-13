@@ -2,88 +2,118 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA3FC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 08:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8526DC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 08:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156FC24658
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 08:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A782465A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 08:47:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a+daNgiQ"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kpTI1o/2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725890AbfLMIm1 (ORCPT
+        id S1726345AbfLMIrA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 03:42:27 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44401 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfLMImY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 03:42:24 -0500
-Received: by mail-lf1-f68.google.com with SMTP id v201so1318122lfa.11
-        for <devicetree@vger.kernel.org>; Fri, 13 Dec 2019 00:42:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+3AGyagak+SsQwMgJI8DqZjJRt+2sRcK1YdTOf2bFE8=;
-        b=a+daNgiQiCYJ8MM6UhnHVrWdoGUXOn3GJH0VpgdC9SpDGXCOkLoPmTrlEqRvbWJSWy
-         scJgeIUaLdduo9o91tDrNbzuthgAPOM+aFslD2C8TAcTn1tMXB+WFmtOrTcyb+iujSMm
-         7oUPcMGhQBLpN99Q5fopI9AB5FHtDFFgTs4hShQap/ML5xXW3jaBZ0I1lvhSAhM1jDPv
-         ujjyEpNoH383Drw+a2PgfQ3Yo6URBxeqlRWSJygP0NQJUkP0r2uCOw88AmCK3y5gPvfc
-         4JPfg+gDEUV27h+riy/0uIHzNAKSe1b2pC1GVrN+eAOOp5FrGij5sffNU2QagZHee+tA
-         xU6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+3AGyagak+SsQwMgJI8DqZjJRt+2sRcK1YdTOf2bFE8=;
-        b=mif1RkOie/UYHAuvC/JJ0Cb8PEKQlk6A57wfONy8xo2sFodA+CGDcBKEQIejm2HITV
-         1Ghh2oQTOzGmzmOvyT1CCpbfmO+S+QlpXQSI/bWA5e8B7CXIkxzXZj6J6mkcc1trZ8sd
-         Jq8289jX1RTKkJZIdk+Qlzm+spmAmlJ8pKeSXgOrLgipV5BMAtJYxqFNzpgM2Wc8/XuK
-         ewUFYo3bOqRWtob8deRM+M4HXfl5496xx5glZTAX43laBlzdgkXS5xisqbnqT5/oefW/
-         dWtkn9BiBIqLh2tWiDJAAtIVj8S1gWaI8ivExAWSGAdqHxh3iCvr34Z9DuN79qGG2105
-         aAyQ==
-X-Gm-Message-State: APjAAAV/WMqfV846pe5FTGLqQ+T8I6R13/I+wPLSoTEueTXya9UXWebe
-        +ud4B1/Xu6xCrnjBSANaVIzZcV/0diYrcMhHByKQdA==
-X-Google-Smtp-Source: APXvYqz79bn/tRSB6q2MlLzPdVGXKAD3lMBgrE6UtCaOD5iDixhhmHkxpkSan8geCglyFBt3hCB+ZaEC8V1y5zn49yA=
-X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr8062235lfp.133.1576226541430;
- Fri, 13 Dec 2019 00:42:21 -0800 (PST)
+        Fri, 13 Dec 2019 03:47:00 -0500
+Received: from mailgw02.mediatek.com ([216.200.240.185]:51935 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfLMIq7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 03:46:59 -0500
+X-UUID: bc384c60e406488fa87ddc5686c575e7-20191213
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=EbyLLh8fLgxiUJJArCFl+4W6spqur8NIC5o9y+Ad+tg=;
+        b=kpTI1o/2uV4vlI07AITFhkqNSNmTXJkK2H6rBlWWhKQDPVrkr3a6slv95yAyFTvqS8CcNELz0FlqBxTRes2ukca00jMGEW+8qrXtr/dFvGt32I8vN7FokQAbMqW10ViftTPnDxEIdYzkyMmZtULYmoE8F7WsoThDZFChYGQJPc0=;
+X-UUID: bc384c60e406488fa87ddc5686c575e7-20191213
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1710396386; Fri, 13 Dec 2019 00:46:55 -0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 13 Dec 2019 16:12:15 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 13 Dec 2019 16:11:59 +0800
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        <linux-i2c@vger.kernel.org>
+CC:     <tfiga@chromium.org>, <drinkcat@chromium.org>,
+        <srv_heupstream@mediatek.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v8 3/4] misc: eeprom: at24: support pm_runtime control
+Date:   Fri, 13 Dec 2019 16:12:29 +0800
+Message-ID: <20191213081230.23494-4-bibby.hsieh@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20191213081230.23494-1-bibby.hsieh@mediatek.com>
+References: <20191213081230.23494-1-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
-References: <20191202061432.3996-1-andrew@aj.id.au>
-In-Reply-To: <20191202061432.3996-1-andrew@aj.id.au>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 13 Dec 2019 09:42:10 +0100
-Message-ID: <CACRpkdZVdP+rfnhF8Dfk+jLsqTEvm_tqv6to2s4nnJh8diaM+A@mail.gmail.com>
-Subject: Re: [PATCH 0/7] pinctrl: aspeed-g6: USB and pinconf support
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 7:12 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+QWx0aG91Z2ggaW4gdGhlIG1vc3QgcGxhdGZvcm1zLCB0aGUgcG93ZXIgb2YgZWVwcm9tIGFyZSBh
+bHdheQ0Kb24sIHNvbWUgcGxhdGZvcm1zIGRpc2FibGUgdGhlIGVlcHJvbSBwb3dlciBpbiBvcmRl
+ciB0byBtZWV0DQpsb3cgcG93ZXIgcmVxdWVzdC4gVGhpcyBwYXRjaCBhZGQgdGhlIHBtX3J1bnRp
+bWUgb3BzIHRvIGNvbnRyb2wNCnBvd2VyIHRvIHN1cHBvcnQgYWxsIHBsYXRmb3Jtcy4NCg0KU2ln
+bmVkLW9mZi1ieTogQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCi0tLQ0K
+IGRyaXZlcnMvbWlzYy9lZXByb20vYXQyNC5jIHwgNDAgKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNDAgaW5zZXJ0aW9ucygrKQ0KDQpkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0LmMgYi9kcml2ZXJzL21pc2MvZWVwcm9t
+L2F0MjQuYw0KaW5kZXggMDY4MWQ1ZmRkNTM4Li4wNmFlMmNjMzJmNzkgMTAwNjQ0DQotLS0gYS9k
+cml2ZXJzL21pc2MvZWVwcm9tL2F0MjQuYw0KKysrIGIvZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0
+LmMNCkBAIC0yMiw2ICsyMiw3IEBADQogI2luY2x1ZGUgPGxpbnV4L252bWVtLXByb3ZpZGVyLmg+
+DQogI2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5oPg0KICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1l
+Lmg+DQorI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPg0KICNpbmNsdWRlIDxs
+aW51eC9ncGlvL2NvbnN1bWVyLmg+DQogDQogLyogQWRkcmVzcyBwb2ludGVyIGlzIDE2IGJpdC4g
+Ki8NCkBAIC05MSw2ICs5Miw3IEBAIHN0cnVjdCBhdDI0X2RhdGEgew0KIA0KIAlzdHJ1Y3QgZ3Bp
+b19kZXNjICp3cF9ncGlvOw0KIA0KKwlzdHJ1Y3QgcmVndWxhdG9yICp2Y2NfcmVnOw0KIAkvKg0K
+IAkgKiBTb21lIGNoaXBzIHRpZSB1cCBtdWx0aXBsZSBJMkMgYWRkcmVzc2VzOyBkdW1teSBkZXZp
+Y2VzIHJlc2VydmUNCiAJICogdGhlbSBmb3IgdXMsIGFuZCB3ZSdsbCB1c2UgdGhlbSB3aXRoIFNN
+QnVzIGNhbGxzLg0KQEAgLTY2Miw2ICs2NjQsMTIgQEAgc3RhdGljIGludCBhdDI0X3Byb2JlKHN0
+cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpDQogCWF0MjQtPmNsaWVudFswXS5jbGllbnQgPSBjbGll
+bnQ7DQogCWF0MjQtPmNsaWVudFswXS5yZWdtYXAgPSByZWdtYXA7DQogDQorCWF0MjQtPnZjY19y
+ZWcgPSBkZXZtX3JlZ3VsYXRvcl9nZXQoZGV2LCAidmNjIik7DQorCWlmIChJU19FUlIoYXQyNC0+
+dmNjX3JlZykpIHsNCisJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIGdldCBhdDI0IFZDQyByZWd1
+bGF0b3JcbiIpOw0KKwkJcmV0dXJuIFBUUl9FUlIoYXQyNC0+dmNjX3JlZyk7DQorCX0NCisNCiAJ
+YXQyNC0+d3BfZ3BpbyA9IGRldm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKGRldiwgIndwIiwgR1BJT0Rf
+T1VUX0hJR0gpOw0KIAlpZiAoSVNfRVJSKGF0MjQtPndwX2dwaW8pKQ0KIAkJcmV0dXJuIFBUUl9F
+UlIoYXQyNC0+d3BfZ3Bpbyk7DQpAQCAtNzAxLDYgKzcwOSwxMiBAQCBzdGF0aWMgaW50IGF0MjRf
+cHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkNCiANCiAJaTJjX3NldF9jbGllbnRkYXRh
+KGNsaWVudCwgYXQyNCk7DQogDQorCWVyciA9IHJlZ3VsYXRvcl9lbmFibGUoYXQyNC0+dmNjX3Jl
+Zyk7DQorCWlmIChlcnIpIHsNCisJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSBhdDI0
+IHZjYyByZWd1bGF0b3JcbiIpOw0KKwkJcmV0dXJuIGVycjsNCisJfQ0KKw0KIAkvKiBlbmFibGUg
+cnVudGltZSBwbSAqLw0KIAlwbV9ydW50aW1lX3NldF9hY3RpdmUoZGV2KTsNCiAJcG1fcnVudGlt
+ZV9lbmFibGUoZGV2KTsNCkBAIC03MTMsNiArNzI3LDcgQEAgc3RhdGljIGludCBhdDI0X3Byb2Jl
+KHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpDQogCXBtX3J1bnRpbWVfaWRsZShkZXYpOw0KIAlp
+ZiAoZXJyKSB7DQogCQlwbV9ydW50aW1lX2Rpc2FibGUoZGV2KTsNCisJCXJlZ3VsYXRvcl9kaXNh
+YmxlKGF0MjQtPnZjY19yZWcpOw0KIAkJcmV0dXJuIC1FTk9ERVY7DQogCX0NCiANCkBAIC03Mjks
+MTQgKzc0NCwzOSBAQCBzdGF0aWMgaW50IGF0MjRfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNs
+aWVudCkNCiBzdGF0aWMgaW50IGF0MjRfcmVtb3ZlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQp
+DQogew0KIAlwbV9ydW50aW1lX2Rpc2FibGUoJmNsaWVudC0+ZGV2KTsNCisJaWYgKHBtX3J1bnRp
+bWVfc3RhdHVzX3N1c3BlbmRlZCgmY2xpZW50LT5kZXYpKQ0KKwkJcmVndWxhdG9yX2Rpc2FibGUo
+YXQyNC0+dmNjX3JlZyk7DQogCXBtX3J1bnRpbWVfc2V0X3N1c3BlbmRlZCgmY2xpZW50LT5kZXYp
+Ow0KIA0KIAlyZXR1cm4gMDsNCiB9DQogDQorc3RhdGljIGludCBfX21heWJlX3VudXNlZCBhdDI0
+X3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0KK3sNCisJc3RydWN0IGkyY19jbGllbnQgKmNs
+aWVudCA9IHRvX2kyY19jbGllbnQoZGV2KTsNCisJc3RydWN0IGF0MjRfZGF0YSAqYXQyNCA9IGky
+Y19nZXRfY2xpZW50ZGF0YShjbGllbnQpOw0KKw0KKwlyZXR1cm4gcmVndWxhdG9yX2Rpc2FibGUo
+YXQyNC0+dmNjX3JlZyk7DQorfQ0KKw0KK3N0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgYXQyNF9y
+ZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KK3sNCisJc3RydWN0IGkyY19jbGllbnQgKmNsaWVu
+dCA9IHRvX2kyY19jbGllbnQoZGV2KTsNCisJc3RydWN0IGF0MjRfZGF0YSAqYXQyNCA9IGkyY19n
+ZXRfY2xpZW50ZGF0YShjbGllbnQpOw0KKw0KKwlyZXR1cm4gcmVndWxhdG9yX2VuYWJsZShhdDI0
+LT52Y2NfcmVnKTsNCit9DQorDQorc3RhdGljIGNvbnN0IHN0cnVjdCBkZXZfcG1fb3BzIGF0MjRf
+cG1fb3BzID0gew0KKwlTRVRfU1lTVEVNX1NMRUVQX1BNX09QUyhwbV9ydW50aW1lX2ZvcmNlX3N1
+c3BlbmQsDQorCQkJCXBtX3J1bnRpbWVfZm9yY2VfcmVzdW1lKQ0KKwlTRVRfUlVOVElNRV9QTV9P
+UFMoYXQyNF9zdXNwZW5kLCBhdDI0X3Jlc3VtZSwgTlVMTCkNCit9Ow0KKw0KIHN0YXRpYyBzdHJ1
+Y3QgaTJjX2RyaXZlciBhdDI0X2RyaXZlciA9IHsNCiAJLmRyaXZlciA9IHsNCiAJCS5uYW1lID0g
+ImF0MjQiLA0KKwkJLnBtID0gJmF0MjRfcG1fb3BzLA0KIAkJLm9mX21hdGNoX3RhYmxlID0gYXQy
+NF9vZl9tYXRjaCwNCiAJCS5hY3BpX21hdGNoX3RhYmxlID0gQUNQSV9QVFIoYXQyNF9hY3BpX2lk
+cyksDQogCX0sDQotLSANCjIuMTguMA0K
 
-> This series adds USB and pinconf support to the AST2600 pincontrol driver. The
-> patches have largely been developed by Johnny Huang from ASPEED and have been
-> used for bringup and verification of the chip. The were developed around the
-> time of the 5.4 merge window but I got distracted for a while and haven't had
-> an opportunity to send them until now. They've had a run in the OpenBMC kernel
-> tree and so shouldn't cause any issues, but given where we are for 5.5 I'm just
-> getting them in early for 5.6 so we don't miss another release.
-
-All 7 patches applied!
-
-Yours,
-Linus Walleij
