@@ -2,132 +2,210 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CC2C3403D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EB1C3403F
 	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715142471F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F46A24721
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbfLMPVw (ORCPT
+        id S1727926AbfLMPVy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 10:21:52 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58986 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727698AbfLMPVv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 10:21:51 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A1DFD292A9A;
-        Fri, 13 Dec 2019 15:21:48 +0000 (GMT)
-Date:   Fri, 13 Dec 2019 16:21:45 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 1/7] media: vb2: Add a helper to get the vb2 buffer
- attached to a request
-Message-ID: <20191213162145.6bb10078@collabora.com>
-In-Reply-To: <20191213150935.GC24654@pendragon.ideasonboard.com>
-References: <20191213125414.90725-1-boris.brezillon@collabora.com>
-        <20191213125414.90725-2-boris.brezillon@collabora.com>
-        <20191213150935.GC24654@pendragon.ideasonboard.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 13 Dec 2019 10:21:54 -0500
+Received: from out28-98.mail.aliyun.com ([115.124.28.98]:47148 "EHLO
+        out28-98.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727654AbfLMPVy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 10:21:54 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.0743636|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.280575-0.0161179-0.703307;DS=CONTINUE|ham_regular_dialog|0.0495091-0.000718223-0.949773;FP=12546292627815290035|1|1|1|0|-1|-1|-1;HT=e02c03309;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GGSxanS_1576250475;
+Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GGSxanS_1576250475)
+          by smtp.aliyun-inc.com(10.147.40.233);
+          Fri, 13 Dec 2019 23:21:23 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
+        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: [PATCH v2 1/5] clk: Ingenic: Adjust cgu code to make it compatible with X1830.
+Date:   Fri, 13 Dec 2019 23:21:08 +0800
+Message-Id: <1576250472-124315-3-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576250472-124315-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 13 Dec 2019 17:09:35 +0200
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+The PLL of X1830 Soc from Ingenic has been greatly changed,
+the bypass control is placed in another register, so now two
+registers may needed to control the PLL. To this end, the
+original "reg" was changed to "pll_reg", and a new "bypass_reg"
+was introduced. In addition, when calculating rate, the PLL of
+X1830 introduced an extra 2x multiplier, so a new "rate_multiplier"
+was introduced.
 
-> Hi Boris,
-> 
-> On Fri, Dec 13, 2019 at 01:54:08PM +0100, Boris Brezillon wrote:
-> > vb2_request_get_buf() returns the N-th buffer attached to a media
-> > request.
-> > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > ---
-> > Changes in v3:
-> > * None
-> > 
-> > Changes in v2:
-> > * Adjust the kernel doc as suggested by Hans
-> > ---
-> >  .../media/common/videobuf2/videobuf2-core.c   | 23 +++++++++++++++++++
-> >  include/media/videobuf2-core.h                | 11 +++++++++
-> >  2 files changed, 34 insertions(+)
-> > 
-> > diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
-> > index 4489744fbbd9..c4c7980dcb0d 100644
-> > --- a/drivers/media/common/videobuf2/videobuf2-core.c
-> > +++ b/drivers/media/common/videobuf2/videobuf2-core.c
-> > @@ -1416,6 +1416,29 @@ unsigned int vb2_request_buffer_cnt(struct media_request *req)
-> >  }
-> >  EXPORT_SYMBOL_GPL(vb2_request_buffer_cnt);
-> >  
-> > +struct vb2_buffer *vb2_request_get_buf(struct media_request *req,
-> > +				       unsigned int n)
-> > +{
-> > +	struct media_request_object *obj;
-> > +	struct vb2_buffer *buf = NULL;
-> > +	unsigned int nbufs = 0;
-> > +	unsigned long flags;
-> > +
-> > +	spin_lock_irqsave(&req->lock, flags);
-> > +	list_for_each_entry(obj, &req->objects, list) {
-> > +		if (!vb2_request_object_is_buffer(obj) ||
-> > +		    nbufs++ < n)
-> > +			continue;
-> > +
-> > +		buf = container_of(obj, struct vb2_buffer, req_obj);
-> > +		break;
-> > +	}
-> > +	spin_unlock_irqrestore(&req->lock, flags);
-> > +
-> > +	return buf;
-> > +}
-> > +EXPORT_SYMBOL_GPL(vb2_request_get_buf);
-> > +
-> >  int vb2_core_prepare_buf(struct vb2_queue *q, unsigned int index, void *pb)
-> >  {
-> >  	struct vb2_buffer *vb;
-> > diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
-> > index a2b2208b02da..6206e25df764 100644
-> > --- a/include/media/videobuf2-core.h
-> > +++ b/include/media/videobuf2-core.h
-> > @@ -1225,4 +1225,15 @@ bool vb2_request_object_is_buffer(struct media_request_object *obj);
-> >   */
-> >  unsigned int vb2_request_buffer_cnt(struct media_request *req);
-> >  
-> > +/**
-> > + * vb2_request_get_buf() - return the buffer at index @idx
-> > + *
-> > + * @req:	the request.
-> > + * @n:		search for the Nth buffer in the req object list  
-> 
-> It's not very clear to me what "n" is here. Wouldn't it be better to
-> pass the queue pointer instead, to get a buffer for a given queue ?
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+---
 
-Yep, that would work too and would be much clearer. I'll do that,
-thanks for the suggestion.
+Notes:
+    v1->v2:
+    1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
+      array (reg[2]).
+    2.Remove the "pll_info->version" and add a "pll_info->rate_multiplier".
+    3.Fix the coding style and add more detailed commit message.
+    4.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
+      to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
+      the old mailbox is in an unstable state.
+
+ drivers/clk/ingenic/cgu.c | 32 +++++++++++++++++++++-----------
+ drivers/clk/ingenic/cgu.h |  8 ++++++--
+ 2 files changed, 27 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+index 6e96303..ae1ddcb 100644
+--- a/drivers/clk/ingenic/cgu.c
++++ b/drivers/clk/ingenic/cgu.c
+@@ -84,7 +84,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	pll_info = &clk_info->pll;
+ 
+ 	spin_lock_irqsave(&cgu->lock, flags);
+-	ctl = readl(cgu->base + pll_info->reg);
++	ctl = readl(cgu->base + pll_info->pll_reg);
+ 	spin_unlock_irqrestore(&cgu->lock, flags);
+ 
+ 	m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
+@@ -93,6 +93,11 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	n += pll_info->n_offset;
+ 	od_enc = ctl >> pll_info->od_shift;
+ 	od_enc &= GENMASK(pll_info->od_bits - 1, 0);
++
++	spin_lock_irqsave(&cgu->lock, flags);
++	ctl = readl(cgu->base + pll_info->bypass_reg);
++	spin_unlock_irqrestore(&cgu->lock, flags);
++
+ 	bypass = !pll_info->no_bypass_bit &&
+ 		 !!(ctl & BIT(pll_info->bypass_bit));
+ 
+@@ -106,7 +111,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	BUG_ON(od == pll_info->od_max);
+ 	od++;
+ 
+-	return div_u64((u64)parent_rate * m, n * od);
++	return div_u64((u64)parent_rate * m * pll_info->rate_multiplier, n * od);
+ }
+ 
+ static unsigned long
+@@ -139,7 +144,7 @@ ingenic_pll_calc(const struct ingenic_cgu_clk_info *clk_info,
+ 	if (pod)
+ 		*pod = od;
+ 
+-	return div_u64((u64)parent_rate * m, n * od);
++	return div_u64((u64)parent_rate * m * pll_info->rate_multiplier, n * od);
+ }
+ 
+ static inline const struct ingenic_cgu_clk_info *to_clk_info(
+@@ -183,7 +188,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 			clk_info->name, req_rate, rate);
+ 
+ 	spin_lock_irqsave(&cgu->lock, flags);
+-	ctl = readl(cgu->base + pll_info->reg);
++	ctl = readl(cgu->base + pll_info->pll_reg);
+ 
+ 	ctl &= ~(GENMASK(pll_info->m_bits - 1, 0) << pll_info->m_shift);
+ 	ctl |= (m - pll_info->m_offset) << pll_info->m_shift;
+@@ -194,7 +199,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 	ctl &= ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift);
+ 	ctl |= pll_info->od_encoding[od - 1] << pll_info->od_shift;
+ 
+-	writel(ctl, cgu->base + pll_info->reg);
++	writel(ctl, cgu->base + pll_info->pll_reg);
+ 	spin_unlock_irqrestore(&cgu->lock, flags);
+ 
+ 	return 0;
+@@ -212,16 +217,21 @@ static int ingenic_pll_enable(struct clk_hw *hw)
+ 	u32 ctl;
+ 
+ 	spin_lock_irqsave(&cgu->lock, flags);
+-	ctl = readl(cgu->base + pll_info->reg);
++	ctl = readl(cgu->base + pll_info->bypass_reg);
+ 
+ 	ctl &= ~BIT(pll_info->bypass_bit);
++
++	writel(ctl, cgu->base + pll_info->bypass_reg);
++
++	ctl = readl(cgu->base + pll_info->pll_reg);
++
+ 	ctl |= BIT(pll_info->enable_bit);
+ 
+-	writel(ctl, cgu->base + pll_info->reg);
++	writel(ctl, cgu->base + pll_info->pll_reg);
+ 
+ 	/* wait for the PLL to stabilise */
+ 	for (i = 0; i < timeout; i++) {
+-		ctl = readl(cgu->base + pll_info->reg);
++		ctl = readl(cgu->base + pll_info->pll_reg);
+ 		if (ctl & BIT(pll_info->stable_bit))
+ 			break;
+ 		mdelay(1);
+@@ -245,11 +255,11 @@ static void ingenic_pll_disable(struct clk_hw *hw)
+ 	u32 ctl;
+ 
+ 	spin_lock_irqsave(&cgu->lock, flags);
+-	ctl = readl(cgu->base + pll_info->reg);
++	ctl = readl(cgu->base + pll_info->pll_reg);
+ 
+ 	ctl &= ~BIT(pll_info->enable_bit);
+ 
+-	writel(ctl, cgu->base + pll_info->reg);
++	writel(ctl, cgu->base + pll_info->pll_reg);
+ 	spin_unlock_irqrestore(&cgu->lock, flags);
+ }
+ 
+@@ -263,7 +273,7 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
+ 	u32 ctl;
+ 
+ 	spin_lock_irqsave(&cgu->lock, flags);
+-	ctl = readl(cgu->base + pll_info->reg);
++	ctl = readl(cgu->base + pll_info->pll_reg);
+ 	spin_unlock_irqrestore(&cgu->lock, flags);
+ 
+ 	return !!(ctl & BIT(pll_info->enable_bit));
+diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
+index 0dc8004..f7b6908 100644
+--- a/drivers/clk/ingenic/cgu.h
++++ b/drivers/clk/ingenic/cgu.h
+@@ -16,7 +16,9 @@
+ 
+ /**
+  * struct ingenic_cgu_pll_info - information about a PLL
+- * @reg: the offset of the PLL's control register within the CGU
++ * @pll_reg: the offset of the PLL's control register within the CGU
++ * @bypass_reg: the offset of the bypass control register within the CGU
++ * @rate_multiplier: the multiplier needed by pll rate calculation
+  * @m_shift: the number of bits to shift the multiplier value by (ie. the
+  *           index of the lowest bit of the multiplier value in the PLL's
+  *           control register)
+@@ -43,7 +45,9 @@
+  * @no_bypass_bit: if set, the PLL has no bypass functionality
+  */
+ struct ingenic_cgu_pll_info {
+-	unsigned reg;
++	unsigned pll_reg;
++	unsigned bypass_reg;
++	unsigned rate_multiplier;
+ 	const s8 *od_encoding;
+ 	u8 m_shift, m_bits, m_offset;
+ 	u8 n_shift, n_bits, n_offset;
+-- 
+2.7.4
+
