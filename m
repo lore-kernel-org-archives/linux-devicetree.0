@@ -2,84 +2,99 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BF8C00454
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 21:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 627A8C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 21:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF98F2465E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 21:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97AD424682
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 21:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576270905;
-	bh=4HO+C7qWI46svOmlvOTW0VO4gmsmkmYP/ZNU3TEZmvc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d5/jdSe7NG6gLREqS6xa6VN8A0dpr+2Fp9zT6/Nd41iNrKg36Ban7+aEShRpt6cbm
-	 bi1YjOvVQbaSqJx0FUrMyoXKWS9k5BJvZ4IYB++hXPpTiWKQvhbtn2ox6r5ZjvRAtm
-	 JaQ3eb48XYTpHNPyTRfZE9OF6s/nsrazLA+O4TlM=
+	s=default; t=1576270934;
+	bh=+dKkT9qss0TqkoVOkTkEq+PspUmRCwAnZfc5MFA4ENA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kx96REzz4yj/5Iqijt8qoiZOqdlIgFn+dmQqxKsbbq/XXhai0/pNB1gS7sWhCyWz8
+	 6VRPGQdzlwLDbpP/L0ZINA0M4f7uZs1X1twgNe5MvG0pB7Dae/Fejp3aPRF5grj75Q
+	 H3KGAYy9/6pAKtN2zgqzbAHge9LbpjsjRV+MC2WA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfLMVBq (ORCPT
+        id S1726004AbfLMVCO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 16:01:46 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38169 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfLMVBp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 16:01:45 -0500
-Received: by mail-oi1-f195.google.com with SMTP id b8so1888421oiy.5;
-        Fri, 13 Dec 2019 13:01:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KOxUGgicEuCv+hKKbBEUiThIOKvSQbqIIf6kqpfyaVc=;
-        b=swhInsy5FbbZDT64urBsfBUuxZjnmwKqhK5BXganbfDuY4IJs/Y9Wil7am06/hh0gy
-         zPy9RMpn/y8iqmXHWfnVBt6vhhOJ4Gc8JkDvgCU/u0pjfhfs6LkgY8TJugCDIcWxWUhe
-         z1U/eY8iki5x2mxQCrBFVcYwdQX9JdVOrxayV+/t+OFDXHO3l/JLYnojBDTdbSgOFUSt
-         xZs6GbBbUlO7PwZHy0OWy3NdExBdoBbdbw5IOTEnjb27AjxR0xf85rEHWqeo1kW/ccDr
-         h8mdWMoZTv3EQf+fTCkWNsNEeEx3Ac2u2ut8hRn6E/lRGq1nYB5q76xDJ1jyoTPVRS/Q
-         HPUQ==
-X-Gm-Message-State: APjAAAVYF0a/B2angSwlbjSEkbffddiUiqnwRPGh9dD3DmzxMCWtd0OS
-        xLIoXMKA43xX4b661xytrw==
-X-Google-Smtp-Source: APXvYqyu5bi0OplQ8EqPYVfMSdVGRLNuQ2frsbckjG/8mRvUUzDsb55kQPsfvbWV4Nz+AJW/ejlSRw==
-X-Received: by 2002:aca:c507:: with SMTP id v7mr8001693oif.157.1576270905038;
-        Fri, 13 Dec 2019 13:01:45 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m2sm3696429oim.13.2019.12.13.13.01.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 13:01:44 -0800 (PST)
-Date:   Fri, 13 Dec 2019 15:01:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     kbingham@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
-        Simon Goda <simon.goda@doulos.com>,
-        Kieran Bingham <kbingham@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: vendor: Add JHD LCD vendor
-Message-ID: <20191213210144.GA18725@bogus>
-References: <20191128105508.3916-1-kbingham@kernel.org>
- <20191128105508.3916-2-kbingham@kernel.org>
+        Fri, 13 Dec 2019 16:02:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbfLMVCO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Dec 2019 16:02:14 -0500
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07EDB2465E;
+        Fri, 13 Dec 2019 21:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576270933;
+        bh=+dKkT9qss0TqkoVOkTkEq+PspUmRCwAnZfc5MFA4ENA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LhHtURfCvYmIuRkJl99Qo4S/nI7eK7un+4JAniuPEYc13zprB59KF7t7i++Z6NeZ0
+         yaLz2PsMmvHqR/ShLKJhzoFL45g70ouFfoSU8+Ug6F6LS86EAMxj6EaZW+wT/2pat3
+         3jyrr61NeviJnSr9l2R62Si/MxU3Oq+AGSELqrAI=
+Received: by mail-pl1-f176.google.com with SMTP id p27so1725298pli.10;
+        Fri, 13 Dec 2019 13:02:13 -0800 (PST)
+X-Gm-Message-State: APjAAAVvFC+lug4SRvof++l8PEvfQo7g/zkl7LVjmMPQIbErPwoNYMiY
+        9frVdBYIfwWo896JXbdetgeHplb05fqLhZpjMw==
+X-Google-Smtp-Source: APXvYqyB90WtC9yvdYd6CmgFqz44rFwwJP+EgXqkcen8gQAUWJSXIFADvOtFxe2f6ycbB1XDnFfJpLpI9ICEyUjapLU=
+X-Received: by 2002:a0c:f68f:: with SMTP id p15mr13564621qvn.79.1576250763417;
+ Fri, 13 Dec 2019 07:26:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128105508.3916-2-kbingham@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191213074055.26193-1-maxime@cerno.tech>
+In-Reply-To: <20191213074055.26193-1-maxime@cerno.tech>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 13 Dec 2019 09:25:51 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLxGe9sWrTdZhuT69o_LBxQTi6TxcbT28WdC1gsPw5+fQ@mail.gmail.com>
+Message-ID: <CAL_JsqLxGe9sWrTdZhuT69o_LBxQTi6TxcbT28WdC1gsPw5+fQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: media: Convert Allwinner hardware codec to a schema
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 28 Nov 2019 10:55:06 +0000, kbingham@kernel.org wrote:
-> From: Kieran Bingham <kbingham@kernel.org>
-> 
-> Jing Handa Electronics is an LCD manufacturer based in Shenzhen, China.
->  http://www.jhdlcd.com.cn/Company.html
-> 
-> Signed-off-by: Kieran Bingham <kbingham@kernel.org>
+On Fri, Dec 13, 2019 at 1:41 AM Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> The Allwinner SoCs have a hardware video codec that is supported in Linux,
+> with a matching Device Tree binding.
+>
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for that controller over to a YAML schemas.
+>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+>  .../allwinner,sun4i-a10-video-engine.yaml     | 83 +++++++++++++++++++
+>  .../devicetree/bindings/media/cedrus.txt      | 57 -------------
+>  2 files changed, 83 insertions(+), 57 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-video-engine.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/media/cedrus.txt
+>
+> diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-video-engine.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-video-engine.yaml
+> new file mode 100644
+> index 000000000000..47c8513555b2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-video-engine.yaml
+> @@ -0,0 +1,83 @@
+> +# SPDX-License-Identifier: GPL-2.0+
 
-Acked-by: Rob Herring <robh@kernel.org>
+Do you have rights to change the license (adding '+' aka '-or-later')?
+If so, please add BSD-2-Clause. I don't have any other comments, so
+just confirm and I can change it when applying.
+
+Rob
