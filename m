@@ -6,84 +6,68 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D08BC3496E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA950C34011
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB052471D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C8C246D0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbfLMO5h (ORCPT
+        id S1727456AbfLMPDu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 09:57:37 -0500
-Received: from muru.com ([72.249.23.125]:47058 "EHLO muru.com"
+        Fri, 13 Dec 2019 10:03:50 -0500
+Received: from muru.com ([72.249.23.125]:47090 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727497AbfLMO5h (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:57:37 -0500
+        id S1727329AbfLMPDt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Dec 2019 10:03:49 -0500
 Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 935CC80BF;
-        Fri, 13 Dec 2019 14:58:14 +0000 (UTC)
-Date:   Fri, 13 Dec 2019 06:57:32 -0800
+        by muru.com (Postfix) with ESMTPS id 670AE8161;
+        Fri, 13 Dec 2019 15:04:26 +0000 (UTC)
+Date:   Fri, 13 Dec 2019 07:03:44 -0800
 From:   Tony Lindgren <tony@atomide.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        dri-devel@lists.freedesktop.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/4] ARM: dts: am437x-gp-evm: add HDMI support
-Message-ID: <20191213145732.GH35479@atomide.com>
-References: <20191125131100.9839-1-tomi.valkeinen@ti.com>
- <20191212172104.GY35479@atomide.com>
- <20191212173110.GA35479@atomide.com>
- <d09526b2-8435-bef2-0489-0c3c8173d451@ti.com>
- <20191213104204.GB4860@pendragon.ideasonboard.com>
- <2f5cfca4-d36d-da2d-59ba-b76669daeded@ti.com>
- <20191213114207.GC4860@pendragon.ideasonboard.com>
- <36d8dde1-1a76-5a5f-2a41-8bc52dfcf2fa@ti.com>
- <20191213122845.GD4860@pendragon.ideasonboard.com>
- <3900f4b3-4604-cb64-ebdd-ae168ef1d2fb@ti.com>
+To:     Dave Gerlach <d-gerlach@ti.com>
+Cc:     Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 0/5] ARM: OMAP2+: Introduce cpuidle for am335x/am437x
+Message-ID: <20191213150344.GJ35479@atomide.com>
+References: <20191213030755.16096-1-d-gerlach@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3900f4b3-4604-cb64-ebdd-ae168ef1d2fb@ti.com>
+In-Reply-To: <20191213030755.16096-1-d-gerlach@ti.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [191213 12:34]:
-> On 13/12/2019 14:28, Laurent Pinchart wrote:
+* Dave Gerlach <d-gerlach@ti.com> [191212 19:07]:
+> Hi,
+> This series adds support for cpuidle on am335x and am437x using the
+> cpuidle_arm driver. When testing on am335x-evm and am437x-gp-evm the
+> follow power consumption reductions are seen on v5.5-rc1 baseline:
 > 
-> > > So... In the DT file, we would have multiple endpoints in the same output port in DSS, one going to
-> > > the panel, one to the SiI9022? omapdrm could then create two encoders, one abstracting the DPI
-> > > output and the connection to the panel, one abstracting the DPI output and SiI9022?
-> > 
-> > That's the idea, yes.
-> > 
-> > > And then someone would need to handle the GPIO, and set it based on the output used. These kind of
-> > > gpios are always difficult, as they don't belong anywhere =).
-> > 
-> > https://lore.kernel.org/lkml/20191211061911.238393-5-hsinyi@chromium.org/
-> > 
-> > Still, the infrastructure in omapdrm would need quite a bit of work.
-> > We're just about to get a helper layer for linear pipelines merged, and
-> > we already need to go one step further :-)
 > 
-> Alright, sounds like this will be doable in the future. So let's drop this
-> and the epos HDMI patches for now.
-
-Oh OK. Sounds like no other solution is usable right now short of
-separate dts files like you've done.
-
-> This does sound like quite a bit of work, as you say, so I have no idea when
-> we can get there (on the omapdrm side). In the minimum we should first get
-> the big omapdrm rework done, in order to avoid nasty conflicts.
+> Idling at command line, CPUFreq userspace governor to 300MHz:
+>   am335x-evm:
+>     VDD_MPU: 48 mW -> 5 mW
 > 
-> Thanks for educating me =).
+>   am437x-gp-evm:
+>     VDD_MPU: 32 mW -> 3 mW
+> 
+> 
+> Idling at command line, CPUFreq userspace governor to 1GHz:
+>   am335x-evm:
+>     VDD_MPU: 313 mW -> 18 mW
+> 
+>   am437x-gp-evm:
+>     VDD_MPU: 208 mW -> 10 mW
 
-Sounds a nice plan though :)
+Hey this is great! A beverage on me when we get a chance :)
 
-Thanks,
+For merging, looks like I should take the series after folks are happy
+with it. Santosh, care to review and ack if it looks OK?
+
+Regards,
 
 Tony
