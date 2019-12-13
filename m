@@ -2,115 +2,105 @@ Return-Path: <SRS0=VR/D=2D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A40DC3B1BB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D12C34965
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA34246B1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Dz5wO7vZ"
+	by mail.kernel.org (Postfix) with ESMTP id DBB2B246B1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Dec 2019 20:36:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfLMLMG (ORCPT
+        id S1726263AbfLMLTn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 06:12:06 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:16232 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726608AbfLMLMG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Dec 2019 06:12:06 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBDB9en6024382;
-        Fri, 13 Dec 2019 12:09:57 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=kn47bweEcRXjNdyx35wkLzXPiXE55ZWSwCRUAHvHXbA=;
- b=Dz5wO7vZTR3jxun7AaF48i5y0oFQ2pc7iZZlcyCCMeEoJin3Bpr6/iMy3UkCYKt/ZWhQ
- FnZweSWH/7Z+75WlrB0Nv/PaYOaTctPY/lJeJK7XWfivA3LkclQTOj0XdVWBVEoG8kqg
- Hu5En5eAQ443ZWw24bS3/KmdLOnlMX2xdv+Jscv6hMMc6aDrHjHGXm8zt4SUx8fl56Y+
- k5LGLR/wSWPEfXHBoIAouty4/WnpjAucLQXa1OYl2PH5Aoud0m63qvG61hMwRjXFIqZR
- kXp3fj/NXokm2BmWU4zdAm02br9XtEkBSQl1VqzBi0Q45nZDkXOJm5NRjnTQyS0+Jbcj 8g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wrbrfvrut-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Dec 2019 12:09:57 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0406A100034;
-        Fri, 13 Dec 2019 12:09:52 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BDC572AB94E;
-        Fri, 13 Dec 2019 12:09:52 +0100 (CET)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 13 Dec
- 2019 12:09:52 +0100
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Fri, 13 Dec 2019 12:09:51 +0100
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Alexandre TORGUE <alexandre.torgue@st.com>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: pwm: fix nodename pattern
-Thread-Topic: [PATCH] dt-bindings: pwm: fix nodename pattern
-Thread-Index: AQHVsDO3MV8l3Qp4hkSb3+FMjTJqHqe1R/UAgADP3oCAALXMAIABDOQA
-Date:   Fri, 13 Dec 2019 11:09:51 +0000
-Message-ID: <7b0167ca-6797-b89a-dd61-fa6db30022f7@st.com>
-References: <20191211150021.20125-1-benjamin.gaignard@st.com>
- <CAL_JsqJKWoX_kY2kSieOA-wXO5xKtDbhXPMCjg-d4FHHEvOmHg@mail.gmail.com>
- <60921a82-9241-9c6e-0a17-0bd93dc52978@st.com>
- <CAL_JsqLboOKoJ0SjjS_AFkibdHzVo4tK3Z2xSUxVNBrdt5UEsQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqLboOKoJ0SjjS_AFkibdHzVo4tK3Z2xSUxVNBrdt5UEsQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AD768ADD1075174EBB9969B3FA46AC4C@st.com>
-Content-Transfer-Encoding: base64
+        Fri, 13 Dec 2019 06:19:43 -0500
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:34393 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfLMLTn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 06:19:43 -0500
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: eiJK/ho0PLTN/W/TZv4L8fCLMsk2rWwqeRexdairxClYIYqTCstyOVbmqUJxGEjQM8wREs2MZy
+ K0cs3joknrwichsV9J2JWGI6NWXE/psEwpdVQhMa26mw+MuergPWoqNCOj1kWlTnu0KGShOowY
+ oQ92g4HerIWcEhnCncXF/aEWgC2jJ00peqf7M5B5Anyzy1REOLO2Qt/0Zcev/su+BAKEfFNntI
+ 34CO6pp7l3NXSzI7n0Mh2KSiboVaY9jdxbdLL6mqSVqcSepivvgehsVUoLwADlkPHfr7guUag0
+ u6s=
+X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
+   d="scan'208";a="58436419"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Dec 2019 04:19:42 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 13 Dec 2019 04:19:41 -0700
+Received: from m18063-ThinkPad-T460p.microchip.com (10.10.85.251) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Fri, 13 Dec 2019 04:19:37 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>, <daniel.lezcano@linaro.org>,
+        <tglx@linutronix.de>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v4 1/2] dt-bindings: arm: atmel: add bindings for PIT64B
+Date:   Fri, 13 Dec 2019 13:19:21 +0200
+Message-ID: <1576235962-30123-2-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576235962-30123-1-git-send-email-claudiu.beznea@microchip.com>
+References: <1576235962-30123-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-13_03:2019-12-13,2019-12-13 signatures=0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQpPbiAxMi8xMi8xOSA4OjA3IFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gVGh1LCBEZWMg
-MTIsIDIwMTkgYXQgMjoxNiBBTSBCZW5qYW1pbiBHQUlHTkFSRA0KPiA8YmVuamFtaW4uZ2FpZ25h
-cmRAc3QuY29tPiB3cm90ZToNCj4+DQo+PiBPbiAxMi8xMS8xOSA4OjUyIFBNLCBSb2IgSGVycmlu
-ZyB3cm90ZToNCj4+PiBPbiBXZWQsIERlYyAxMSwgMjAxOSBhdCA5OjAwIEFNIEJlbmphbWluIEdh
-aWduYXJkDQo+Pj4gPGJlbmphbWluLmdhaWduYXJkQHN0LmNvbT4gd3JvdGU6DQo+Pj4+IFR5cGlj
-YWwgcHdtIG5vZGVzIHNob3VsZCBiZSBuYW1lZCBwd21AeHh4Lg0KPj4+PiBUaGUgcGF0dGVybiBz
-aG91bGRuJ3QgbWF0Y2ggbm9kZXMgbmFtZWQgcHdtLXh4eCB0byBhdm9pZA0KPj4+PiBjb25mbGlj
-dHMgd2l0aCBwaW5tdXggb3IgcHdtLWZhbiBub2Rlcy4NCj4+PiBJdCBvbmx5IG1hdGNoZXMgcHdt
-LSQoYS1oZXgtbnVtYmVyKSwgbm90IGFueSBzdHJpbmcsIHNvIHRoYXQgc2hvdWxkbid0DQo+Pj4g
-YmUgYSBwcm9ibGVtLiBUaGlzIGlzIG5lZWRlZCBmb3IgdGhpbmdzIGxpa2UgR1BJTyBiYXNlZCBk
-ZXZpY2VzIChub3QNCj4+PiBqdXN0IFBXTXMpIHdoaWNoIGRvbid0IGhhdmUgYW55IGFkZHJlc3Mu
-DQo+Pj4NCj4+PiBQaW5tdXggbm9kZXMgYXJlIGdvaW5nIHRvIG5lZWQgdG8gYWRvcHQgc29tZSBz
-b3J0IG9mIHN0YW5kYXJkIHBhdHRlcm4NCj4+PiB3ZSBjYW4gbWF0Y2ggb24uDQo+PiBJIGhhdmUg
-cHVzaCBhIHBhdGNoIHRvIHN0b3AgdXNpbmcgJ0AnIGFuZCAnXycgaW4gcGlubXV4IGdyb3VwcyBu
-YW1lczoNCj4+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMTYyNTkx
-Lw0KPj4gSXQgcmVtb3ZlIHRoZSB3YXJuaW5ncyB3aGVuIGNvbXBpbGluZyB0aGUgZGV2aWNldHJl
-IHdpdGggVz0xMiBidXQgcHdtLnlhbWwNCj4+IGNvbXBsYWluIGJlY2F1c2UgcHdtIHBpbm11eCBp
-cyBuYW1lZCBwd20tMS4NCj4+DQo+PiBIb3cgY2FuIEkgc29sdmUgdGhlc2UgaXNzdWVzIGF0IHRo
-ZSBzYW1lIHRpbWUgPw0KPiBOYW1lIHRoZSBub2RlcyAqLXBpbnMgb3IgKi1waW5zLVswLTldLiBZ
-b3UncmUgcHJvYmFibHkgZ29pbmcgdG8gbmVlZA0KPiBzb21lIHBhdHRlcm4gYW55d2F5cyB3aGVu
-IHlvdSBkbyBhIHBpbm11eCBzY2hlbWEuDQorIEFsZXggYmVjYXVzZSB0aGF0IGltcGFjdCBwaW4g
-bm9kZSBwYXR0ZXJuIGluIHN0LHN0bTMyLXBpbmN0cmwueWFtbA0KDQpCZW5qYW1pbg0KDQo+IFJv
-Yg==
+Add device tree bindings for PIT64B timer.
+
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/atmel-sysregs.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
+index 9fbde401a090..e003a553b986 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
+@@ -10,6 +10,12 @@ PIT Timer required properties:
+ - interrupts: Should contain interrupt for the PIT which is the IRQ line
+   shared across all System Controller members.
+ 
++PIT64B Timer required properties:
++- compatible: Should be "microchip,sam9x60-pit64b"
++- reg: Should contain registers location and length
++- interrupts: Should contain interrupt for PIT64B timer
++- clocks: Should contain the available clock sources for PIT64B timer.
++
+ System Timer (ST) required properties:
+ - compatible: Should be "atmel,at91rm9200-st", "syscon", "simple-mfd"
+ - reg: Should contain registers location and length
+-- 
+2.7.4
+
