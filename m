@@ -2,163 +2,158 @@ Return-Path: <SRS0=22nm=2E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C05C43603
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 02:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02787C43603
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 02:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0552073D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 02:13:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BrGWiWYw"
+	by mail.kernel.org (Postfix) with ESMTP id C9F872253D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 02:32:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576290744;
+	bh=Eqc89Omw2jaNSyVCeKQpbJEzJvaQOE+Lhw+SBNFW1as=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FcO0FJOXWFMMd+3hxoFY/eyK9zGuRrV+KZ62SbPJVbfGdabI9JE6F7LgORvbZC4Yd
+	 RYMZfN3VcIZrRac8Ts34j0MznHuVqpR+RWgeyV3POBjRHA1RQIVXtt7m2/MDxqFRGk
+	 Dhy7yQsS8SFIlvMdL8dYHUf2iwFG5kzJSD1AOnAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfLNCNY (ORCPT
+        id S1726422AbfLNCcY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Dec 2019 21:13:24 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:43487 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbfLNCNY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Dec 2019 21:13:24 -0500
-Received: by mail-pj1-f68.google.com with SMTP id g4so477473pjs.10
-        for <devicetree@vger.kernel.org>; Fri, 13 Dec 2019 18:13:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:subject:cc:to:in-reply-to:references:message-id
-         :mime-version:content-transfer-encoding;
-        bh=LlBgPd4jKU/ivB4inJv2NdvJiBH02P7hq9N0GagI2Hc=;
-        b=BrGWiWYwglLuch8nF6G6oTkqNFA41MXuP9p9xbZitOO4McQTuD58hZzHKG/a03AzkK
-         X42N8H0YvBPayz8I6Uh0XriwvXTVsejiXkIozcO4JgDIOkGFu1bZem2KEuMyLKAsPLL0
-         DzzY0oiQTF62+chWS2BeE/+P/XE/6/9LJNDzBKLLn9r7XmqtsIE2a/xwU9ZhTEVmlLtY
-         uVygOLJb1lOyo3gUbP24BGF05pbUAps3FPiYHRv9AFl1ek/+rbe3zhTz+ggEsoL8pc9O
-         Hz1TZIeeuZ5mPgTIqEG6ASO3x/BqGvjVtQnGFYp6crcvwEIkSVcW+fl1vaNiskAok30F
-         f/9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:cc:to:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=LlBgPd4jKU/ivB4inJv2NdvJiBH02P7hq9N0GagI2Hc=;
-        b=oSEnIqjQmgt6IaST8J1Uf0W2Vhm3ztL+0Thhdx/06afAwebnauKGLO0Gn3/F3I/E5O
-         QpZQejATjo+AritzCnrzjVrq6NdcXCzk44qK1oI6DoDosyoGpouCyxbbGFN5o54ajxg2
-         lo5htK6Uo9jRybeRsB/N0ULRIWd6ILqvbClBm1jyUdxzxsmMrMdP8bLd+1n3sB6++Vmq
-         bt5tmQk2qa8vIX6ZSH6gGMgG8yvwvvwBDMVwfNSnQdxx3VoyWg0hKnBlqJOaDHMhlXvu
-         McEMbpdg5R0AVCJ+ozhyx/HFFT5GnfC2CxccbpU2YGK31Vpg2/IhIvcGHNRjv7MgrPkZ
-         j4CQ==
-X-Gm-Message-State: APjAAAVat9daQs6t1t8Mnx4xB6sFBguS3I+CdhzNzXOjg66lE9byHLmn
-        zkqb1eAE/G4SK501pyZ30y48SioC8/o=
-X-Google-Smtp-Source: APXvYqwgMNyHwqaM8GRlUVZchzrPIFh4IykzVZXcNvpGe5skS7V0neTV1XyOGJHuYGdSk9AcfCXhUg==
-X-Received: by 2002:a17:902:b418:: with SMTP id x24mr2855620plr.85.1576289603789;
-        Fri, 13 Dec 2019 18:13:23 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:7f69:cd98:a2a2:a03d])
-        by smtp.gmail.com with ESMTPSA id y62sm13929924pfg.45.2019.12.13.18.13.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 18:13:23 -0800 (PST)
-Date:   Fri, 13 Dec 2019 18:13:23 -0800 (PST)
-X-Google-Original-Date: Fri, 13 Dec 2019 18:13:20 PST (-0800)
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject:     Re: [PATCH 1/2] riscv: dts: Add DT support for SiFive L2 cache controller
-CC:     robh+dt@kernel.org, mark.rutland@arm.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, bmeng.cn@gmail.com, allison@lohutok.net,
-        alexios.zavras@intel.com, Atish Patra <Atish.Patra@wdc.com>,
-        tglx@linutronix.de, Greg KH <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, yash.shah@sifive.com
-To:     yash.shah@sifive.com
-In-Reply-To: <1575890706-36162-2-git-send-email-yash.shah@sifive.com>
-References: <1575890706-36162-2-git-send-email-yash.shah@sifive.com>
-  <1575890706-36162-1-git-send-email-yash.shah@sifive.com>
-Message-ID: <mhng-119ed5ed-d9c3-422f-8d56-5794caef643c@palmerdabbelt-glaptop>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Fri, 13 Dec 2019 21:32:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbfLNCcY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Dec 2019 21:32:24 -0500
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE4E724671;
+        Sat, 14 Dec 2019 02:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576290743;
+        bh=Eqc89Omw2jaNSyVCeKQpbJEzJvaQOE+Lhw+SBNFW1as=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jZkbjakqLdjtzYgUNB/HYiBz3IBx4bt7kPaHKKN2tdiyTsc/jpOHeRDwVOQnR+K6Q
+         su3Hi4gSfXWdv4OJ7ZXcgYPwxPVXUMKtoBZHIGiQEZLm+cCpc8+qFZUjagsB56r0Gw
+         XQYDJVWfe4jc6/Tz2U9yjeSzMr2sPxMdZ4YluL8Q=
+Received: by mail-wr1-f45.google.com with SMTP id b6so812910wrq.0;
+        Fri, 13 Dec 2019 18:32:22 -0800 (PST)
+X-Gm-Message-State: APjAAAXC8vFip97N4hbjqo/xPgZO86PeUuCoASHLumyE4GCxj/1l1N6/
+        FTz9D88rTYXgplYFcHorQSsB+rjjDjHExbxB7tk=
+X-Google-Smtp-Source: APXvYqydbgYkBfEkSoHYnoVFyJ9oQyanZL22yafvKiwGMvhkX5QHDVviEUybs0JIej2bMIEu5E4NYaiS2pFxFoLorOM=
+X-Received: by 2002:adf:81e3:: with SMTP id 90mr15946921wra.23.1576290741171;
+ Fri, 13 Dec 2019 18:32:21 -0800 (PST)
+MIME-Version: 1.0
+References: <20191213125414.90725-1-boris.brezillon@collabora.com>
+ <20191213125414.90725-6-boris.brezillon@collabora.com> <20191213152332.GF4860@pendragon.ideasonboard.com>
+ <20191213162550.59730f89@collabora.com>
+In-Reply-To: <20191213162550.59730f89@collabora.com>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Sat, 14 Dec 2019 10:32:12 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64u34+ukyvGuDWDMyC2L3TE8-sPPx1SOP5RVAPF+ssooA@mail.gmail.com>
+Message-ID: <CAGb2v64u34+ukyvGuDWDMyC2L3TE8-sPPx1SOP5RVAPF+ssooA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] media: dt-bindings: rockchip: Document RK3399
+ Video Decoder bindings
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 09 Dec 2019 03:25:05 PST (-0800), yash.shah@sifive.com wrote:
-> Add the L2 cache controller DT node in SiFive FU540 soc-specific DT file
+On Sat, Dec 14, 2019 at 4:38 AM Boris Brezillon
+<boris.brezillon@collabora.com> wrote:
 >
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+> On Fri, 13 Dec 2019 17:23:32 +0200
+> Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
 >
-> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> index afa43c7..812db02 100644
-> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> @@ -19,6 +19,16 @@
->  	chosen {
->  	};
+> > Hi Boris,
+> >
+> > Thank you for the patch.
+> >
+> > On Fri, Dec 13, 2019 at 01:54:12PM +0100, Boris Brezillon wrote:
+> > > Document the Rockchip RK3399 Video Decoder bindings.
+> > >
+> > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > > ---
+> > > Changes in v3:
+> > > * Fix dtbs_check failures
+> > > ---
+> > >  .../bindings/media/rockchip,vdec.yaml         | 71 +++++++++++++++++++
+> > >  1 file changed, 71 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/rockchip,vdec.yaml b/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+> > > new file mode 100644
+> > > index 000000000000..7167c3d6a389
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+> > > @@ -0,0 +1,71 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/rockchip,vdec.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Rockchip Video Decoder (VDec) Device Tree Bindings
+> > > +
+> > > +maintainers:
+> > > +  - Heiko Stuebner <heiko@sntech.de>
+> > > +
+> > > +description: |-
+> > > +  The Rockchip rk3399 has a stateless Video Decoder that can decodes H.264,
+> > > +  HEVC an VP9 streams.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: rockchip,rk3399-vdec
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    items:
+> > > +      - description: The Video Decoder AXI interface clock
+> > > +      - description: The Video Decoder AHB interface clock
+> > > +      - description: The Video Decoded CABAC clock
+> > > +      - description: The Video Decoder core clock
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: aclk
+> >
+> > How about calling it "axi" ? None of the other clock names have "clk".
+> >
+> > > +      - const: iface
+> >
+> > And "ahb" here, as the AXI interface clock is also an interface clock ?
 >
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		l2_lim: lim@0x8000000 {
-> +			reg = <0x0 0x8000000 0x0 0x2000000>;
-> +		};
-> +	};
-> +
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> @@ -54,6 +64,7 @@
->  			reg = <1>;
->  			riscv,isa = "rv64imafdc";
->  			tlb-split;
-> +			next-level-cache = <&l2cache>;
->  			cpu1_intc: interrupt-controller {
->  				#interrupt-cells = <1>;
->  				compatible = "riscv,cpu-intc";
-> @@ -77,6 +88,7 @@
->  			reg = <2>;
->  			riscv,isa = "rv64imafdc";
->  			tlb-split;
-> +			next-level-cache = <&l2cache>;
->  			cpu2_intc: interrupt-controller {
->  				#interrupt-cells = <1>;
->  				compatible = "riscv,cpu-intc";
-> @@ -100,6 +112,7 @@
->  			reg = <3>;
->  			riscv,isa = "rv64imafdc";
->  			tlb-split;
-> +			next-level-cache = <&l2cache>;
->  			cpu3_intc: interrupt-controller {
->  				#interrupt-cells = <1>;
->  				compatible = "riscv,cpu-intc";
-> @@ -123,6 +136,7 @@
->  			reg = <4>;
->  			riscv,isa = "rv64imafdc";
->  			tlb-split;
-> +			next-level-cache = <&l2cache>;
->  			cpu4_intc: interrupt-controller {
->  				#interrupt-cells = <1>;
->  				compatible = "riscv,cpu-intc";
-> @@ -246,6 +260,18 @@
->  			#pwm-cells = <3>;
->  			status = "disabled";
->  		};
-> +		l2cache: cache-controller@2010000 {
-> +			compatible = "sifive,fu540-c000-ccache", "cache";
-> +			cache-block-size = <64>;
-> +			cache-level = <2>;
-> +			cache-sets = <1024>;
-> +			cache-size = <2097152>;
-> +			cache-unified;
-> +			interrupt-parent = <&plic0>;
-> +			interrupts = <1 2 3>;
-> +			reg = <0x0 0x2010000 0x0 0x1000>;
-> +			memory-region = <&l2_lim>;
-> +		};
->
->  	};
->  };
+> Sure, I can do that.
 
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Another possibility: "master" for the AXI clock, and "slave" for the AHB clock.
+The AXI interface is likely the DMA master, while the AHB interface is a slave
+interface for the control registers.
+
+This is mostly based on hints from the crypto block.
+
+ChenYu
