@@ -2,93 +2,102 @@ Return-Path: <SRS0=22nm=2E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B1BC43603
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 15:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8259BC43603
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 15:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 653B424671
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 15:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="O3/7BTbB";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="ZsRuzvtw"
+	by mail.kernel.org (Postfix) with ESMTP id 611E32465E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 15:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfLNP2m (ORCPT
+        id S1726705AbfLNPeF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Dec 2019 10:28:42 -0500
-Received: from node.akkea.ca ([192.155.83.177]:55528 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726841AbfLNP2l (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 14 Dec 2019 10:28:41 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 162E54E200E;
-        Sat, 14 Dec 2019 15:28:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1576337321; bh=s9cS0kOUcH2uE/d4ffbDRkm1lMRvgvsU6VbvQ8wFuRk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=O3/7BTbBGpFJxy94eoDljHn6nK/OBQNdb2oV4uqP7uwqJuuUTYFcVITIRu/JBTwPb
-         y8USBYyISoqp1zeYrAqGmsYpnpLpLsILwKcP1g4/64Z7wM8eQxk1EpuVIMSf0hTCPz
-         M9M/55MSrGg951UtM7iCK6ZIyI277waib6Yo3o6g=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id DAF4LvUi9G-W; Sat, 14 Dec 2019 15:28:40 +0000 (UTC)
-Received: from thinkpad-tablet.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id 8D4294E2003;
-        Sat, 14 Dec 2019 15:28:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1576337320; bh=s9cS0kOUcH2uE/d4ffbDRkm1lMRvgvsU6VbvQ8wFuRk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=ZsRuzvtw+LCX7rYvFeWI4OqJ9TaFSXrIG+TGs9wKLozFdh+bdOTOTuajepkcFjoTJ
-         7h0uczEL7eyjVwlF7f1KE5b0cOuYvtKfyAHdjrbY2rT/qFXpc/a/7yzlx6qsF/Ig2i
-         KjfcuQzBJT9v36Jf+2yYzICz2+TisxOznNY6KqhQ=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     krzk@kernel.org
-Cc:     Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm, "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v2 2/2] device-tree: bindings: max17042_battery: add all of the compatible strings
-Date:   Sat, 14 Dec 2019 07:27:55 -0800
-Message-Id: <20191214152755.25138-3-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191214152755.25138-1-angus@akkea.ca>
-References: <20191214152755.25138-1-angus@akkea.ca>
+        Sat, 14 Dec 2019 10:34:05 -0500
+Received: from out28-145.mail.aliyun.com ([115.124.28.145]:47570 "EHLO
+        out28-145.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfLNPeF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Dec 2019 10:34:05 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08317678|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.74776-0.016813-0.235427;DS=CONTINUE|ham_system_inform|0.227493-0.000573989-0.771933;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03300;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GH4QmPi_1576337632;
+Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GH4QmPi_1576337632)
+          by smtp.aliyun-inc.com(10.147.41.143);
+          Sat, 14 Dec 2019 23:33:59 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
+        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: [PATCH v3 1/5] clk: Ingenic: Remove unnecessary spinlock when reading registers.
+Date:   Sat, 14 Dec 2019 23:33:46 +0800
+Message-Id: <1576337630-78576-3-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576337630-78576-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576337630-78576-1-git-send-email-zhouyanjie@wanyeetech.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The bindings are missing documentation for some of the compatible
-strings.
+It is not necessary to use spinlock when reading registers,
+so remove it from cgu.c.
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Suggested-by: Paul Cercueil <paul@crapouillou.net>
+Suggested-by: Paul Burton <paulburton@kernel.org>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
- .../devicetree/bindings/power/supply/max17042_battery.txt   | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/max17042_battery.txt b/Documentation/devicetree/bindings/power/supply/max17042_battery.txt
-index 3f3894aaeebc..f34c5daae9af 100644
---- a/Documentation/devicetree/bindings/power/supply/max17042_battery.txt
-+++ b/Documentation/devicetree/bindings/power/supply/max17042_battery.txt
-@@ -2,7 +2,11 @@ max17042_battery
- ~~~~~~~~~~~~~~~~
+Notes:
+    v2:
+    New patch.
+    
+    v2->v3:
+    Adjust order from [5/5] in v2 to [1/5] in v3.
+
+ drivers/clk/ingenic/cgu.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+index 6e96303..8bd3998 100644
+--- a/drivers/clk/ingenic/cgu.c
++++ b/drivers/clk/ingenic/cgu.c
+@@ -76,16 +76,13 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	const struct ingenic_cgu_pll_info *pll_info;
+ 	unsigned m, n, od_enc, od;
+ 	bool bypass;
+-	unsigned long flags;
+ 	u32 ctl;
  
- Required properties :
-- - compatible : "maxim,max17042"
-+ - compatible : one of the following
-+ * "maxim,max17042"
-+ * "maxim,max17047"
-+ * "maxim,max17050"
-+ * "maxim,max17055"
+ 	clk_info = &cgu->clock_info[ingenic_clk->idx];
+ 	BUG_ON(clk_info->type != CGU_CLK_PLL);
+ 	pll_info = &clk_info->pll;
  
- Optional properties :
-  - maxim,rsns-microohm : Resistance of rsns resistor in micro Ohms
+-	spin_lock_irqsave(&cgu->lock, flags);
+ 	ctl = readl(cgu->base + pll_info->reg);
+-	spin_unlock_irqrestore(&cgu->lock, flags);
+ 
+ 	m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
+ 	m += pll_info->m_offset;
+@@ -259,12 +256,9 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+ 	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+ 	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
+-	unsigned long flags;
+ 	u32 ctl;
+ 
+-	spin_lock_irqsave(&cgu->lock, flags);
+ 	ctl = readl(cgu->base + pll_info->reg);
+-	spin_unlock_irqrestore(&cgu->lock, flags);
+ 
+ 	return !!(ctl & BIT(pll_info->enable_bit));
+ }
 -- 
-2.17.1
+2.7.4
 
