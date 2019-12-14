@@ -2,250 +2,111 @@ Return-Path: <SRS0=22nm=2E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EC9C00454
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 18:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73360C2D0C9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 19:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37021214D8
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 18:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48453214AF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 19:20:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="tDyiQ5J4"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="urKzNnWl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbfLNSJ4 (ORCPT
+        id S1726803AbfLNTUh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Dec 2019 13:09:56 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:57900 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfLNSJ4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Dec 2019 13:09:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1576346992; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kjxytof43EwC/NCcO7/Oddxq3k1AJWoIntsJ65bazro=;
-        b=tDyiQ5J4mDcbQ7n1Ws1TdW82WBe/kq0hrCHXRDypyUG5z7Xo1mQ9GO9qenauBVo4s+T15h
-        jN8zxNcPN5DIXvp8FRC/KTzpXkVuznERcyz6re7OGILIUkVZwWwBLDz94sufvhTtI7lwif
-        0tRT4o+IBk6ShxouANXs++F8Xn+ErTg=
-Date:   Sat, 14 Dec 2019 19:09:47 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 2/5] clk: Ingenic: Adjust cgu code to make it
- compatible with X1830.
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Message-Id: <1576346987.3.2@crapouillou.net>
-In-Reply-To: <1576337630-78576-4-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1576337630-78576-1-git-send-email-zhouyanjie@wanyeetech.com>
-        <1576337630-78576-4-git-send-email-zhouyanjie@wanyeetech.com>
+        Sat, 14 Dec 2019 14:20:37 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:48885 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbfLNTUg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Dec 2019 14:20:36 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 2B35823D06;
+        Sat, 14 Dec 2019 20:20:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1576351234;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ysL33np8BhyER+fKb3WeaE9uREJDfQ24GzS2e8pwjVM=;
+        b=urKzNnWl7W9ntJNgz/JcLqu7bxbv+9W+rCNhoIJgIBG+ICP6RDNdT7jR5NueER9veiIxaj
+        f0JGpp3oLLYZLNUvV3o3zPuYuRiVyQggUauNZFRxL8G0Wssb+4hEdGxQXcOWBqBC/ljgWC
+        cWse9yfwrjI5+t/2OrO6mW7f7cf3dQQ=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH 1/2] dt-bindings: mtd: spi-nor: document new flag
+Date:   Sat, 14 Dec 2019 20:19:42 +0100
+Message-Id: <20191214191943.3679-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 2B35823D06
+X-Spamd-Result: default: False [6.40 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[10];
+         MID_CONTAINS_FROM(1.00)[];
+         NEURAL_HAM(-0.00)[-0.700];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Zhou,
+Document the new flag "no-unlock".
 
-The patch looks good but it should be merged with [3/5]. Because right=20
-now it is not atomic, if you only have the first two patches applied=20
-the kernel won't compile.
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+Does the property need a prefix? I couldn't find any hint. If so, what
+should it be? "m25p," or "spi-nor," ?
 
--Paul
+ Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-
-Le sam., d=C3=A9c. 14, 2019 at 23:33, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yan=
-jie)=20
-<zhouyanjie@wanyeetech.com> a =C3=A9crit :
-> The PLL of X1830 Soc from Ingenic has been greatly changed,
-> the bypass control is placed in another register, so now two
-> registers may needed to control the PLL. To this end, the
-> original "reg" was changed to "pll_reg", and a new "bypass_reg"
-> was introduced. In addition, when calculating rate, the PLL of
-> X1830 introduced an extra 2x multiplier, so a new "rate_multiplier"
-> was introduced.
->=20
-> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech.com>
-> ---
->=20
-> Notes:
->     v1->v2:
->     1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
->       array (reg[2]).
->     2.Remove the "pll_info->version" and add a=20
-> "pll_info->rate_multiplier".
->     3.Fix the coding style and add more detailed commit message.
->     4.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
->       to "=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeetec=
-h.com>" because
->       the old mailbox is in an unstable state.
->=20
->     v2->v3:
->     Adjust order from [1/5] in v2 to [2/5] in v3.
->=20
->  drivers/clk/ingenic/cgu.c | 30 +++++++++++++++++++-----------
->  drivers/clk/ingenic/cgu.h |  8 ++++++--
->  2 files changed, 25 insertions(+), 13 deletions(-)
->=20
-> diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
-> index 8bd3998..3c95451 100644
-> --- a/drivers/clk/ingenic/cgu.c
-> +++ b/drivers/clk/ingenic/cgu.c
-> @@ -82,7 +82,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned=20
-> long parent_rate)
->  	BUG_ON(clk_info->type !=3D CGU_CLK_PLL);
->  	pll_info =3D &clk_info->pll;
->=20
-> -	ctl =3D readl(cgu->base + pll_info->reg);
-> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
->=20
->  	m =3D (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
->  	m +=3D pll_info->m_offset;
-> @@ -90,6 +90,9 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned=20
-> long parent_rate)
->  	n +=3D pll_info->n_offset;
->  	od_enc =3D ctl >> pll_info->od_shift;
->  	od_enc &=3D GENMASK(pll_info->od_bits - 1, 0);
-> +
-> +	ctl =3D readl(cgu->base + pll_info->bypass_reg);
-> +
->  	bypass =3D !pll_info->no_bypass_bit &&
->  		 !!(ctl & BIT(pll_info->bypass_bit));
->=20
-> @@ -103,7 +106,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw,=20
-> unsigned long parent_rate)
->  	BUG_ON(od =3D=3D pll_info->od_max);
->  	od++;
->=20
-> -	return div_u64((u64)parent_rate * m, n * od);
-> +	return div_u64((u64)parent_rate * m * pll_info->rate_multiplier, n=20
-> * od);
->  }
->=20
->  static unsigned long
-> @@ -136,7 +139,7 @@ ingenic_pll_calc(const struct=20
-> ingenic_cgu_clk_info *clk_info,
->  	if (pod)
->  		*pod =3D od;
->=20
-> -	return div_u64((u64)parent_rate * m, n * od);
-> +	return div_u64((u64)parent_rate * m * pll_info->rate_multiplier, n=20
-> * od);
->  }
->=20
->  static inline const struct ingenic_cgu_clk_info *to_clk_info(
-> @@ -180,7 +183,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned=20
-> long req_rate,
->  			clk_info->name, req_rate, rate);
->=20
->  	spin_lock_irqsave(&cgu->lock, flags);
-> -	ctl =3D readl(cgu->base + pll_info->reg);
-> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
->=20
->  	ctl &=3D ~(GENMASK(pll_info->m_bits - 1, 0) << pll_info->m_shift);
->  	ctl |=3D (m - pll_info->m_offset) << pll_info->m_shift;
-> @@ -191,7 +194,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned=20
-> long req_rate,
->  	ctl &=3D ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift);
->  	ctl |=3D pll_info->od_encoding[od - 1] << pll_info->od_shift;
->=20
-> -	writel(ctl, cgu->base + pll_info->reg);
-> +	writel(ctl, cgu->base + pll_info->pll_reg);
->  	spin_unlock_irqrestore(&cgu->lock, flags);
->=20
->  	return 0;
-> @@ -209,16 +212,21 @@ static int ingenic_pll_enable(struct clk_hw *hw)
->  	u32 ctl;
->=20
->  	spin_lock_irqsave(&cgu->lock, flags);
-> -	ctl =3D readl(cgu->base + pll_info->reg);
-> +	ctl =3D readl(cgu->base + pll_info->bypass_reg);
->=20
->  	ctl &=3D ~BIT(pll_info->bypass_bit);
-> +
-> +	writel(ctl, cgu->base + pll_info->bypass_reg);
-> +
-> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
-> +
->  	ctl |=3D BIT(pll_info->enable_bit);
->=20
-> -	writel(ctl, cgu->base + pll_info->reg);
-> +	writel(ctl, cgu->base + pll_info->pll_reg);
->=20
->  	/* wait for the PLL to stabilise */
->  	for (i =3D 0; i < timeout; i++) {
-> -		ctl =3D readl(cgu->base + pll_info->reg);
-> +		ctl =3D readl(cgu->base + pll_info->pll_reg);
->  		if (ctl & BIT(pll_info->stable_bit))
->  			break;
->  		mdelay(1);
-> @@ -242,11 +250,11 @@ static void ingenic_pll_disable(struct clk_hw=20
-> *hw)
->  	u32 ctl;
->=20
->  	spin_lock_irqsave(&cgu->lock, flags);
-> -	ctl =3D readl(cgu->base + pll_info->reg);
-> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
->=20
->  	ctl &=3D ~BIT(pll_info->enable_bit);
->=20
-> -	writel(ctl, cgu->base + pll_info->reg);
-> +	writel(ctl, cgu->base + pll_info->pll_reg);
->  	spin_unlock_irqrestore(&cgu->lock, flags);
->  }
->=20
-> @@ -258,7 +266,7 @@ static int ingenic_pll_is_enabled(struct clk_hw=20
-> *hw)
->  	const struct ingenic_cgu_pll_info *pll_info =3D &clk_info->pll;
->  	u32 ctl;
->=20
-> -	ctl =3D readl(cgu->base + pll_info->reg);
-> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
->=20
->  	return !!(ctl & BIT(pll_info->enable_bit));
->  }
-> diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
-> index 0dc8004..f7b6908 100644
-> --- a/drivers/clk/ingenic/cgu.h
-> +++ b/drivers/clk/ingenic/cgu.h
-> @@ -16,7 +16,9 @@
->=20
->  /**
->   * struct ingenic_cgu_pll_info - information about a PLL
-> - * @reg: the offset of the PLL's control register within the CGU
-> + * @pll_reg: the offset of the PLL's control register within the CGU
-> + * @bypass_reg: the offset of the bypass control register within the=20
-> CGU
-> + * @rate_multiplier: the multiplier needed by pll rate calculation
->   * @m_shift: the number of bits to shift the multiplier value by=20
-> (ie. the
->   *           index of the lowest bit of the multiplier value in the=20
-> PLL's
->   *           control register)
-> @@ -43,7 +45,9 @@
->   * @no_bypass_bit: if set, the PLL has no bypass functionality
->   */
->  struct ingenic_cgu_pll_info {
-> -	unsigned reg;
-> +	unsigned pll_reg;
-> +	unsigned bypass_reg;
-> +	unsigned rate_multiplier;
->  	const s8 *od_encoding;
->  	u8 m_shift, m_bits, m_offset;
->  	u8 n_shift, n_bits, n_offset;
-> --
-> 2.7.4
->=20
-
-=
+diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+index f03be904d3c2..2d305c893ed7 100644
+--- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
++++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+@@ -78,6 +78,12 @@ Optional properties:
+ 		   cannot reboot properly if the flash is left in the "wrong"
+ 		   state. This boolean flag can be used on such systems, to
+ 		   denote the absence of a reliable reset mechanism.
++- no-unlock : By default, linux unlocks the whole flash because there
++		   are legacy flash devices which are locked by default
++		   after reset. Set this flag if you don't want linux to
++		   unlock the whole flash automatically. In this case you
++		   can control the non-volatile bits by the
++		   flash_lock/flash_unlock tools.
+ 
+ Example:
+ 
+-- 
+2.20.1
 
