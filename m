@@ -2,91 +2,106 @@ Return-Path: <SRS0=22nm=2E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E43FC2D0C9
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 07:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1702C43603
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 07:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A43C2467A
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 07:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D1B2465E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 07:30:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=fpond.eu header.i=@fpond.eu header.b="mz9AefMF"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="QKTuuexY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725877AbfLNHIu (ORCPT
+        id S1725883AbfLNHaO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Dec 2019 02:08:50 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.20]:13313 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfLNHIu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Dec 2019 02:08:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576307324;
-        s=strato-dkim-0002; d=fpond.eu;
-        h=Subject:References:In-Reply-To:Message-ID:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=xoyv/3s59blSQ6n6Btq7mNh0UEMyxLKUvn0Ar4iYJSY=;
-        b=mz9AefMFRyFat51BPgCy+lY0MQbghlT6je+ad6XTRO0AuWUN662LRzy+tcueStdq7h
-        R5gdpd+5pIGhxPfoyY5y1Ps+ote09kCn96haTkarddJmRJP2p9qJPvH4YEcxtcsvcjcv
-        GIEek/+wgxzNfADbiB5EQcAZwy24G64qqB0H/cwlTd0TxPuVJbw8I+5AQEkfu/dqKHXA
-        CAArcoRZCVnI1MFfajvYQLE0FVozVoOVW9niQTuQQ9bniGVbWe5KIXH5SStnDnble6al
-        fQSxKhXQmAlKIEd1MhWmQ/9AxCKIEPBbN2gToIZ6dodOO9wlKBeKdE6mM1dFdFE3V5tg
-        FC+Q==
-X-RZG-AUTH: ":OWANVUa4dPFUgKR/3dpvnYP0Np73amq+g13rqGzvv3qxio1R8fGl/w6F/Yo="
-X-RZG-CLASS-ID: mo00
-Received: from oxapp02-01.back.ox.d0m.de
-        by smtp-ox.front (RZmta 46.0.7 AUTH)
-        with ESMTPSA id 308726vBE78i6Yz
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Sat, 14 Dec 2019 08:08:44 +0100 (CET)
-Date:   Sat, 14 Dec 2019 08:08:44 +0100 (CET)
-From:   Ulrich Hecht <uli@fpond.eu>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sat, 14 Dec 2019 02:30:14 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:17387 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725851AbfLNHaO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 14 Dec 2019 02:30:14 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47ZfM828F5z9v4kg;
+        Sat, 14 Dec 2019 08:30:12 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=QKTuuexY; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id rXUFt3zZMGyh; Sat, 14 Dec 2019 08:30:12 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47ZfM813fFz9v4kF;
+        Sat, 14 Dec 2019 08:30:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1576308612; bh=jJtG71JXNYzYDF4z7ntC3bwNQLarVarmUswHWhluOuQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QKTuuexYKKEPVIL8i2FVj9ntngPsKl2SiB7u/7pALV0PsyXDg/Aea96V+3KDifu1Y
+         mslw9qUfpy3D4X6gNwmrP2n8zKN6Y2GPjsXcghjD65vUZkYbppmnD0JQKozphLtqSx
+         LgOdj0j4PXqcDBaUN6qFU0nqsjPcXZIVjMUMutVo=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0C4908B788;
+        Sat, 14 Dec 2019 08:30:13 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id eEW_ZV8vhUP2; Sat, 14 Dec 2019 08:30:12 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 228048B755;
+        Sat, 14 Dec 2019 08:30:12 +0100 (CET)
+Subject: Re: [PATCH] powerpc/devicetrees: Change 'gpios' to 'cs-gpios' on
+ fsl,spi nodes
+To:     Rob Herring <robh@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Message-ID: <506390662.44203.1576307324771@webmail.strato.com>
-In-Reply-To: <20191213164115.3697-1-geert+renesas@glider.be>
-References: <20191213164115.3697-1-geert+renesas@glider.be>
-Subject: Re: [PATCH 0/7] arm: dts: renesas: Group tuples in
- reg/ranges/dma-ranges/states properties
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org
+References: <7556683b57d8ce100855857f03d1cd3d2903d045.1574943062.git.christophe.leroy@c-s.fr>
+ <20191213213418.GA17361@bogus>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <678cdcce-9bad-519a-68a5-a43414c15f94@c-s.fr>
+Date:   Sat, 14 Dec 2019 08:30:11 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.1-Rev25
-X-Originating-Client: open-xchange-appsuite
+In-Reply-To: <20191213213418.GA17361@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-> On December 13, 2019 at 5:41 PM Geert Uytterhoeven <geert+renesas@glider.be> wrote:
-> 
-> 
-> 	Hi all,
-> 
-> To improve human readability and enable automatic validation, tuples
-> in various properties should be grouped.  While "make dtbs_check" does
-> not impose this yet for all properties, it does for some, hence
-> triggering me to fix (I hope) all of them.
-> 
-> Unfortunately even after this, a few "... is too long" warnings are
-> still printed (e.g. for PCI "ranges"), which I believe are false
-> positives.
-> 
-> This series is against renesas-devel-2019-12-13-v5.5-rc1[*] with
-> "[PATCH] ARM: dts: rcar-gen2: Fix PCI high address in
-> interrupt-map-mask" applied on top.
-> 
-> Thanks for your comments!
 
-For the whole series:
-Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+Le 13/12/2019 à 22:34, Rob Herring a écrit :
+> On Thu, Nov 28, 2019 at 12:16:35PM +0000, Christophe Leroy wrote:
+>> Since commit 0f0581b24bd0 ("spi: fsl: Convert to use CS GPIO
+>> descriptors"), the prefered way to define chipselect GPIOs is using
+>> 'cs-gpios' property instead of the legacy 'gpios' property.
+> 
+> This will break using a new dtb on a kernel without the above commit. Or
+> with any OS that never made the change.
 
-CU
-Uli
+Why would anybody use a new dtb on an old kernel ? I have not tagged 
+this change for stable, it will only apply to DTBs in new kernels, won't 
+it ?
+
+That's not the first time DTS have to change for new kernels. For 
+instance, some time ago I had to replace all 'gpios' property by a set 
+of 'rdy-gpio', 'nce-gpio', 'ale-gpio' and 'cle-gpio' properties to 
+continue using 'gpio-control-nand' driver.
+
+> 
+> I'm fine with the doc change, but you should keep 'gpios' as deprecated.
+
+Ok
+
+Christophe
