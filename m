@@ -2,183 +2,302 @@ Return-Path: <SRS0=22nm=2E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2AFC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 08:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3808C43603
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 09:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE07320706
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 08:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD94824656
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 09:01:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="mJ3rPadH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725876AbfLNIVx (ORCPT
+        id S1725975AbfLNJBL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Dec 2019 03:21:53 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:34860 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfLNIVx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Dec 2019 03:21:53 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 0910B804F6;
-        Sat, 14 Dec 2019 09:21:47 +0100 (CET)
-Date:   Sat, 14 Dec 2019 09:21:45 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     allen <allen.chen@ite.com.tw>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Pi-Hsun Shih <pihsun@chromium.org>,
-        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 3/4] dt-bindings: Add binding for IT6505.
-Message-ID: <20191214082145.GD22818@ravnborg.org>
-References: <1575957299-12977-1-git-send-email-allen.chen@ite.com.tw>
- <1575957299-12977-4-git-send-email-allen.chen@ite.com.tw>
+        Sat, 14 Dec 2019 04:01:11 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:42009 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725883AbfLNJBK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 14 Dec 2019 04:01:10 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBE8xS0O017919;
+        Sat, 14 Dec 2019 10:00:33 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=OhQ87nOVCyVrMrNbzdrdurBS96FAwDKcffAQqC4Jm7c=;
+ b=mJ3rPadH3jVPOJEfGsPkmLO6fBNSBKZU3qF6jsJiYZnO3p55BWE9FeGNpg8jymggC370
+ UVMqxrHUdcet3GqiJsp9uFrMUR0jF73pcQD5E3lJSKHU7A/xYaasSxqsNePNce80GoL5
+ TCdDFur+XoKWXNKGlXwXmGbXBM62GQOjUZJKkA7kfDJD3ZcMEyASjs5Nil7tOSLCj+qA
+ saamzNpscNpPOiyyqBBHZ0jAONxsiWEXqHLUmlGcW71oK9RDvKU/AQs59vs6Th4lR3mZ
+ Er19mAoeQGmIBcvP3CWCk/tkSUlPMjwyrBS4BN5xPjalW4UgIATWUs1bisos9asYTnC0 Og== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wvpd114rq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 14 Dec 2019 10:00:33 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4F28F10002A;
+        Sat, 14 Dec 2019 10:00:28 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 359E9220C68;
+        Sat, 14 Dec 2019 10:00:28 +0100 (CET)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Sat, 14 Dec 2019 10:00:27
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <alexandre.torgue@st.com>
+CC:     <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v2] dt-bindings: rtc: Convert stm32 rtc bindings to json-schema
+Date:   Sat, 14 Dec 2019 10:00:25 +0100
+Message-ID: <20191214090025.10648-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575957299-12977-4-git-send-email-allen.chen@ite.com.tw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Ns9eNvu6AAAA:8
-        a=cm27Pg_UAAAA:8 a=gEfo2CItAAAA:8 a=7gkXJVJtAAAA:8 a=Dou_bMkpY0JcbTnmFP0A:9
-        a=CjuIK1q_8ugA:10 a=LZLx1i01EnjtqRv10NxV:22 a=xmb-EsYY8bH0VWELuYED:22
-        a=sptkURWiP4Gy88Gu7hUp:22 a=E9Po1WZjFZOl8hwRPBS3:22
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-14_01:2019-12-13,2019-12-14 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Allen.
+Convert the STM32 RTC binding to DT schema format using json-schema
 
-On Tue, Dec 10, 2019 at 01:53:41PM +0800, allen wrote:
-> Add a DT binding documentation for IT6505.
-> 
-> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> ---
->  .../bindings/display/bridge/ite,it6505.yaml        | 99 ++++++++++++++++++++++
->  1 file changed, 99 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-> new file mode 100644
-> index 00000000..23a106a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-> @@ -0,0 +1,99 @@
-> +# SPDX-License-Identifier: GPL-2.0
-Please dual license new bindings like this:
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+changes in version 2:
+- remove useless type definitions
+- move properties definitions in the core of the yaml
 
-(GPL-2.0-only OR BSD-2-Clause)
+ .../devicetree/bindings/rtc/st,stm32-rtc.txt       |  61 ---------
+ .../devicetree/bindings/rtc/st,stm32-rtc.yaml      | 139 +++++++++++++++++++++
+ 2 files changed, 139 insertions(+), 61 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml
 
+diff --git a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+deleted file mode 100644
+index 130ca5b98253..000000000000
+--- a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
++++ /dev/null
+@@ -1,61 +0,0 @@
+-STM32 Real Time Clock
+-
+-Required properties:
+-- compatible: can be one of the following:
+-  - "st,stm32-rtc" for devices compatible with stm32(f4/f7).
+-  - "st,stm32h7-rtc" for devices compatible with stm32h7.
+-  - "st,stm32mp1-rtc" for devices compatible with stm32mp1.
+-- reg: address range of rtc register set.
+-- clocks: can use up to two clocks, depending on part used:
+-  - "rtc_ck": RTC clock source.
+-  - "pclk": RTC APB interface clock.
+-    It is not present on stm32(f4/f7).
+-    It is required on stm32(h7/mp1).
+-- clock-names: must be "rtc_ck" and "pclk".
+-    It is required on stm32(h7/mp1).
+-- interrupts: rtc alarm interrupt. On stm32mp1, a second interrupt is required
+-  for rtc alarm wakeup interrupt.
+-- st,syscfg: phandle/offset/mask triplet. The phandle to pwrcfg used to
+-  access control register at offset, and change the dbp (Disable Backup
+-  Protection) bit represented by the mask, mandatory to disable/enable backup
+-  domain (RTC registers) write protection.
+-    It is required on stm32(f4/f7/h7).
+-
+-Optional properties (to override default rtc_ck parent clock on stm32(f4/f7/h7):
+-- assigned-clocks: reference to the rtc_ck clock entry.
+-- assigned-clock-parents: phandle of the new parent clock of rtc_ck.
+-
+-Example:
+-
+-	rtc: rtc@40002800 {
+-		compatible = "st,stm32-rtc";
+-		reg = <0x40002800 0x400>;
+-		clocks = <&rcc 1 CLK_RTC>;
+-		assigned-clocks = <&rcc 1 CLK_RTC>;
+-		assigned-clock-parents = <&rcc 1 CLK_LSE>;
+-		interrupt-parent = <&exti>;
+-		interrupts = <17 1>;
+-		st,syscfg = <&pwrcfg 0x00 0x100>;
+-	};
+-
+-	rtc: rtc@58004000 {
+-		compatible = "st,stm32h7-rtc";
+-		reg = <0x58004000 0x400>;
+-		clocks = <&rcc RTCAPB_CK>, <&rcc RTC_CK>;
+-		clock-names = "pclk", "rtc_ck";
+-		assigned-clocks = <&rcc RTC_CK>;
+-		assigned-clock-parents = <&rcc LSE_CK>;
+-		interrupt-parent = <&exti>;
+-		interrupts = <17 1>;
+-		interrupt-names = "alarm";
+-		st,syscfg = <&pwrcfg 0x00 0x100>;
+-	};
+-
+-	rtc: rtc@5c004000 {
+-		compatible = "st,stm32mp1-rtc";
+-		reg = <0x5c004000 0x400>;
+-		clocks = <&rcc RTCAPB>, <&rcc RTC>;
+-		clock-names = "pclk", "rtc_ck";
+-		interrupts-extended = <&intc GIC_SPI 3 IRQ_TYPE_NONE>,
+-				      <&exti 19 1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml
+new file mode 100644
+index 000000000000..0a54296d7218
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml
+@@ -0,0 +1,139 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/rtc/st,stm32-rtc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 Real Time Clock Bindings
++
++maintainers:
++  - Gabriel Fernandez <gabriel.fernandez@st.com>
++
++properties:
++  compatible:
++    enum:
++      - st,stm32-rtc
++      - st,stm32h7-rtc
++      - st,stm32mp1-rtc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: pclk
++      - const: rtc_ck
++
++  interrupts:
++    maxItems: 1
++
++  st,syscfg:
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
++      - items:
++          minItems: 3
++          maxItems: 3
++    description: |
++       Phandle/offset/mask triplet. The phandle to pwrcfg used to
++       access control register at offset, and change the dbp (Disable Backup
++       Protection) bit represented by the mask, mandatory to disable/enable backup
++       domain (RTC registers) write protection.
++
++  assigned-clocks:
++    description: |
++      override default rtc_ck parent clock reference to the rtc_ck clock entry
++    maxItems: 1
++
++  assigned-clock-parents:
++    description: |
++      override default rtc_ck parent clock phandle of the new parent clock of rtc_ck
++    maxItems: 1
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: st,stm32-rtc
++
++    then:
++      properties:
++        clocks:
++          minItems: 1
++          maxItems: 1
++
++        clock-names: false
++
++      required:
++        - st,syscfg
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: st,stm32h7-rtc
++
++    then:
++       properties:
++         clocks:
++           minItems: 2
++           maxItems: 2
++
++       required:
++         - clock-names
++         - st,syscfg
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: st,stm32mp1-rtc
++
++    then:
++       properties:
++         clocks:
++           minItems: 2
++           maxItems: 2
++
++         assigned-clocks: false
++         assigned-clock-parents: false
++
++       required:
++         - clock-names
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - interrupts
++
++examples:
++  - |
++    #include <dt-bindings/mfd/stm32f4-rcc.h>
++    #include <dt-bindings/clock/stm32fx-clock.h>
++    rtc@40002800 {
++      compatible = "st,stm32-rtc";
++      reg = <0x40002800 0x400>;
++      clocks = <&rcc 1 CLK_RTC>;
++      assigned-clocks = <&rcc 1 CLK_RTC>;
++      assigned-clock-parents = <&rcc 1 CLK_LSE>;
++      interrupt-parent = <&exti>;
++      interrupts = <17 1>;
++      st,syscfg = <&pwrcfg 0x00 0x100>;
++    };
++
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    rtc@5c004000 {
++      compatible = "st,stm32mp1-rtc";
++      reg = <0x5c004000 0x400>;
++      clocks = <&rcc RTCAPB>, <&rcc RTC>;
++      clock-names = "pclk", "rtc_ck";
++      interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++    };
++
++...
+-- 
+2.15.0
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/ite,it6505.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ITE it6505 Device Tree Bindings
-> +
-> +maintainers:
-> +  - Allen Chen <allen.chen@ite.com.tw>
-> +
-> +description: |
-> +  The IT6505 is a high-performance DisplayPort 1.1a transmitter,
-> +fully compliant with DisplayPort 1.1a, HDCP 1.3 specifications.
-> +The IT6505 supports color depth of up to 36 bits (12 bits/color)
-> +and ensures robust transmission of high-quality uncompressed video
-> +content, along with uncompressed and compressed digital audio content.
-Can we get consistent indent of the text here.
-With this fixed:
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-
-> +
-> +  Aside from the various video output formats supported, the IT6505
-> +also encodes and transmits up to 8 channels of I2S digital audio,
-> +with sampling rate up to 192kHz and sample size up to 24 bits.
-> +In addition, an S/PDIF input port takes in compressed audio of up to
-> +192kHz frame rate.
-> +
-> +  Each IT6505 chip comes preprogrammed with an unique HDCP key,
-> +in compliance with the HDCP 1.3 standard so as to provide secure
-> +transmission of high-definition content. Users of the IT6505 need not
-> +purchase any HDCP keys or ROMs.
-> +
-> +properties:
-> +  compatible:
-> +    const: ite,it6505
-> +
-> +  reg:
-> +    - maxItems: 1
-> +    - description: i2c address of the bridge
-> +
-> +  ovdd-supply:
-> +    - maxItems: 1
-> +    - description: I/O voltage
-> +
-> +  pwr18-supply:
-> +    - maxItems: 1
-> +    - description: core voltage
-> +
-> +  interrupts:
-> +    - maxItems: 1
-> +    - description: interrupt specifier of INT pin
-> +
-> +  reset-gpios:
-> +    - maxItems: 1
-> +    - description: gpio specifier of RESET pin
-> +
-> +  hpd-gpios:
-> +    - maxItems: 1
-> +    - description:
-> +        - Hotplug detect GPIO
-> +        - Indicates which GPIO should be used for hotplug detection
-> +
-> +  extcon:
-> +    - maxItems: 1
-> +    - description: extcon specifier for the Power Delivery
-> +
-> +  port:
-> +    - type: object
-> +    - description: A port node pointing to DPI host port node
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - ovdd-supply
-> +  - pwr18-supply
-> +  - interrupts
-> +  - reset-gpios
-> +  - hpd-gpios
-> +  - extcon
-> +
-> +examples:
-> +  - |
-> +    dp-bridge@5c {
-> +        compatible = "ite,it6505";
-> +        interrupts = <152 IRQ_TYPE_EDGE_RISING 152 0>;
-> +        reg = <0x5c>;
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&it6505_pins>;
-> +        ovdd-supply = <&mt6358_vsim1_reg>;
-> +        pwr18-supply = <&it6505_pp18_reg>;
-> +        reset-gpios = <&pio 179 1>;
-> +        hpd-gpios = <&pio 9 0>;
-> +        extcon = <&usbc_extcon>;
-> +
-> +        port {
-> +            it6505_in: endpoint {
-> +                remote-endpoint = <&dpi_out>;
-> +            };
-> +        };
-> +    };
-> +
-> +---
