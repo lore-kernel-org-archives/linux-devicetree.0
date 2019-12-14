@@ -8,63 +8,66 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E304C43603
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 21:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9D3C43603
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 21:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7C8207FD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 21:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C111A207FD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 21:45:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ElrcNo2u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sgp1qhp7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfLNVke (ORCPT
+        id S1726792AbfLNVp0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Dec 2019 16:40:34 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37763 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbfLNVkd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Dec 2019 16:40:33 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w15so2674822wru.4;
-        Sat, 14 Dec 2019 13:40:31 -0800 (PST)
+        Sat, 14 Dec 2019 16:45:26 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54245 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbfLNVpZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Dec 2019 16:45:25 -0500
+Received: by mail-wm1-f67.google.com with SMTP id m24so1168302wmc.3;
+        Sat, 14 Dec 2019 13:45:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PhUdizJXHis9nvqChYNQezBXXr/KTa1xm2ZX6660eG0=;
-        b=ElrcNo2uBfkWa7F5++Z2fNpcTr7Y/itJ8yZzyT/K/ZVSKVYsgihd64+hNNjVS5totV
-         TGZp6nHUQ1cdGcSkrvhjtDZf6TYfwL89mghHjQ9LPLYOKGPMK58JT3ocu3zCKhnwc35V
-         JSQmicqb18Fk+k/txs9W//IlcCKozDfiZcufchJTorhK49eO7+cSib+GB9PvR0iTxHnX
-         TD2OFxxTgv+wkyQnan4KO8ibF18rOAArRnTS/bfocdowG8tXe4tjLFsafOdyleHuQXi8
-         Qp/SdbdwKhGvRma5k7FYFidcj8dIm6XzNm/j/q+WjIp7nbFQND3wCuvZFST2IdXvmQk0
-         zWiQ==
+        bh=tu3x5DvVaF4fvb8tHGJH3kTKyXmLijX9qXFMor/D1QE=;
+        b=Sgp1qhp7WTODAPlKLwRtxp3dWgg3cGqwM0NhI3kaw8Z/21iZIiF2K+kK9+HgEty3va
+         v67BC34OrTZ3ld4b5DoO40PH8IOwCdTMU2P8yQ+MqF8icA85QcttKkkBHn7kgSE6Ga2r
+         DT73EiwqFzJ4uaWiH0BTFVNfCWMjg4jgKn0z8smQjUY2D8tuPFCZkm0savC04TywtpBh
+         Z+3wFI0FY4ypKL6QAaVIyKNqEjaHo1c/4mMbwgUvdWUS4fcOJlzzQcTUhqYlBjfAHHX+
+         CfiAXtjoaRXnORY3KOhzUMjTMFuegmRk1w49ZrME8WTBz2dNDC5c7qHAmxV0LnHy4b6t
+         cj2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=PhUdizJXHis9nvqChYNQezBXXr/KTa1xm2ZX6660eG0=;
-        b=FUVhmQlK8mBQHS7I7tLJo6vKpuWBkBFsG6y6EcOmcfciUJeQLJAH/dv/Sq52hTROng
-         0ofYe2Wc05llkY11EVPcF9L2KP+1VsoAflkhpOUhgsXzgflyL0KoyxefxrGGbnpdG993
-         DmPOPgJzHgzo36aOv9u5gKpUFbeNjF6OGw8it7bs9Xu1K44qynf0ONZZe4tIbr6Xq8Xf
-         1RZVdGa9Z5QUgcpSiKaAcMvq7zn8mkFAgFLZQip3dcRtcDrEegREuVxebYXRFDwclFDE
-         1LFxB091XmYR95L8vvI1o5hnZJ38LPlB9jG/5ERrkg6Mpt/4fow4K8zOmchwxeYLfB4S
-         ET8w==
-X-Gm-Message-State: APjAAAXrgDtPItXHL+pXlFW5zOXcb4JyjM3gb4tIO+r+Fg9IBVEN+Kg3
-        5WPa/6vM/5Jnak6T+G1fWsk=
-X-Google-Smtp-Source: APXvYqxvYRJ0Fla5E8lBLuPzEo60WNyLqxOaEQbZGi/x8xB6ohiEEQVH6bOExbPFc5U9ZZqmXFKkPQ==
-X-Received: by 2002:adf:eb8e:: with SMTP id t14mr20586229wrn.384.1576359630560;
-        Sat, 14 Dec 2019 13:40:30 -0800 (PST)
+        bh=tu3x5DvVaF4fvb8tHGJH3kTKyXmLijX9qXFMor/D1QE=;
+        b=oBTKBRzyYzPe9+QSzsfTJ/KFPXzUEkeK3+8M/o/0vk4b5yyjKKMpGzAyLu4OLvRcKh
+         Q1b2cbegD38SRjc4ZVmLPtaUH38DyxxXbm5vJls0YS8Wpvwe9Der2ozrrf8xg+8f07iz
+         zpzc9+fPgfOKy1WqS43GNQopP0tR4Q2hlrvGJc/HDaSAlkhKlyUUEGuqPxzS03+j49Ee
+         OvBOSu2CE7aVYrMD8abkTB9vKhwNi1pLGqfxFzEw82LsC8GKpOgINOEs7pwmeliGeqtt
+         mBBDAXXFxLScezIZlL2W79Q5rWMir0y43KPV/Maqt9ceBDlnbYGMAD2wp8H1YPidxbu4
+         QLfg==
+X-Gm-Message-State: APjAAAWb/Oo/C+y39QFUwiQOqG8Lwmi7BMIV0pgfiuzK4aYiXrBdPcp2
+        VwnfGMEkSnYXy9QRHjWTam1OPFOJGnc=
+X-Google-Smtp-Source: APXvYqw3MkxDbeQ99c7FNupCdEu+PV2fe/++NSCEnYCJnLA6ndkRotN8/DzHtt1TTKUqHCEA2yp1Lg==
+X-Received: by 2002:a1c:8086:: with SMTP id b128mr21555600wmd.80.1576359922831;
+        Sat, 14 Dec 2019 13:45:22 -0800 (PST)
 Received: from ziggy.stardust ([95.169.225.199])
-        by smtp.gmail.com with ESMTPSA id l2sm14929359wmi.5.2019.12.14.13.40.28
+        by smtp.gmail.com with ESMTPSA id z18sm15132787wmf.21.2019.12.14.13.45.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Dec 2019 13:40:29 -0800 (PST)
-Subject: Re: [PATCH] arm64: dts: mt8173: add Mediatek JPEG Codec
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Kurtz <djkurtz@chromium.org>
-References: <20191213045720.172738-1-hsinyi@chromium.org>
+        Sat, 14 Dec 2019 13:45:22 -0800 (PST)
+Subject: Re: [PATCH v17 4/6] soc: mediatek: cmdq: add polling function
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+References: <20191121015410.18852-1-bibby.hsieh@mediatek.com>
+ <20191121015410.18852-5-bibby.hsieh@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -140,12 +143,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <759103c9-e090-277b-a727-1d5223caffb3@gmail.com>
-Date:   Sat, 14 Dec 2019 22:40:27 +0100
+Message-ID: <7da96547-3f40-2be8-64b7-313acf290597@gmail.com>
+Date:   Sat, 14 Dec 2019 22:45:21 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191213045720.172738-1-hsinyi@chromium.org>
+In-Reply-To: <20191121015410.18852-5-bibby.hsieh@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -154,44 +157,135 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Jassi,
 
-
-On 13/12/2019 05:57, Hsin-Yi Wang wrote:
-> Add JPEG codec node in mt8173.
+On 21/11/2019 02:54, Bibby Hsieh wrote:
+> add polling function in cmdq helper functions
 > 
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 > ---
-
-Applied to v5.5-next/dts64
-
-Thanks!
-
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   | 36 ++++++++++++++++++++++++
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
+>  include/linux/soc/mediatek/mtk-cmdq.h    | 32 +++++++++++++++++++++
+>  3 files changed, 69 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 15f1842f6df3..82df8940d515 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -1401,6 +1401,20 @@ vcodec_enc: vcodec@18002000 {
->  						 <&topckgen CLK_TOP_UNIVPLL1_D2>;
->  		};
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 11bfcc150ebd..9094fda5a8fe 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/soc/mediatek/mtk-cmdq.h>
 >  
-> +		jpegdec: jpegdec@18004000 {
-> +			compatible = "mediatek,mt8173-jpgdec";
-> +			reg = <0 0x18004000 0 0x1000>;
-> +			interrupts = <GIC_SPI 203 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&vencsys CLK_VENC_CKE0>,
-> +				 <&vencsys CLK_VENC_CKE3>;
-> +			clock-names = "jpgdec-smi",
-> +				      "jpgdec";
-> +			power-domains = <&scpsys MT8173_POWER_DOMAIN_VENC>;
-> +			mediatek,larb = <&larb3>;
-> +			iommus = <&iommu M4U_PORT_JPGDEC_WDMA>,
-> +				 <&iommu M4U_PORT_JPGDEC_BSDMA>;
-> +		};
+>  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
+> +#define CMDQ_POLL_ENABLE_MASK	BIT(0)
+>  #define CMDQ_EOC_IRQ_EN		BIT(0)
+>  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
+>  				<< 32 | CMDQ_EOC_IRQ_EN)
+> @@ -214,6 +215,41 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_clear_event);
+>  
+> +int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
+> +		  u16 offset, u32 value)
+> +{
+> +	struct cmdq_instruction inst = { {0} };
+> +	int err;
 > +
->  		vencltsys: clock-controller@19000000 {
->  			compatible = "mediatek,mt8173-vencltsys", "syscon";
->  			reg = <0 0x19000000 0 0x1000>;
+> +	inst.op = CMDQ_CODE_POLL;
+> +	inst.value = value;
+> +	inst.offset = offset;
+> +	inst.subsys = subsys;
+> +	err = cmdq_pkt_append_command(pkt, inst);
+> +
+> +	return err;
+> +}
+> +EXPORT_SYMBOL(cmdq_pkt_poll);
+> +
+> +int cmdq_pkt_poll_mask(struct cmdq_pkt *pkt, u8 subsys,
+> +		       u16 offset, u32 value, u32 mask)
+> +{
+> +	struct cmdq_instruction inst = { {0} };
+> +	int err;
+> +
+> +	inst.op = CMDQ_CODE_MASK;
+> +	inst.mask = ~mask;
+> +	err = cmdq_pkt_append_command(pkt, inst);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	offset = offset | CMDQ_POLL_ENABLE_MASK;
+> +	err = cmdq_pkt_poll(pkt, subsys, offset, value);
+> +
+> +	return err;
+> +}
+> +EXPORT_SYMBOL(cmdq_pkt_poll_mask);
+> +
+>  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  {
+>  	struct cmdq_instruction inst = { {0} };
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> index 678760548791..a4dc45fbec0a 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -55,6 +55,7 @@
+>  enum cmdq_code {
+>  	CMDQ_CODE_MASK = 0x02,
+>  	CMDQ_CODE_WRITE = 0x04,
+> +	CMDQ_CODE_POLL = 0x08,
+
+I understand that this is a minor change in the code, so I queued this in my
+branch v5.5-next/soc for now.
+Let me know if you need a stable branch with the commit to merge it into your tree.
+
+Hope there is no problem with that.
+
+Regards,
+Matthias
+
+>  	CMDQ_CODE_JUMP = 0x10,
+>  	CMDQ_CODE_WFE = 0x20,
+>  	CMDQ_CODE_EOC = 0x40,
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index 9618debb9ceb..92bd5b5c6341 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -99,6 +99,38 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+>   */
+>  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+>  
+> +/**
+> + * cmdq_pkt_poll() - Append polling command to the CMDQ packet, ask GCE to
+> + *		     execute an instruction that wait for a specified
+> + *		     hardware register to check for the value w/o mask.
+> + *		     All GCE hardware threads will be blocked by this
+> + *		     instruction.
+> + * @pkt:	the CMDQ packet
+> + * @subsys:	the CMDQ sub system code
+> + * @offset:	register offset from CMDQ sub system
+> + * @value:	the specified target register value
+> + *
+> + * Return: 0 for success; else the error code is returned
+> + */
+> +int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
+> +		  u16 offset, u32 value);
+> +
+> +/**
+> + * cmdq_pkt_poll_mask() - Append polling command to the CMDQ packet, ask GCE to
+> + *		          execute an instruction that wait for a specified
+> + *		          hardware register to check for the value w/ mask.
+> + *		          All GCE hardware threads will be blocked by this
+> + *		          instruction.
+> + * @pkt:	the CMDQ packet
+> + * @subsys:	the CMDQ sub system code
+> + * @offset:	register offset from CMDQ sub system
+> + * @value:	the specified target register value
+> + * @mask:	the specified target register mask
+> + *
+> + * Return: 0 for success; else the error code is returned
+> + */
+> +int cmdq_pkt_poll_mask(struct cmdq_pkt *pkt, u8 subsys,
+> +		       u16 offset, u32 value, u32 mask);
+>  /**
+>   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
+>   *                          packet and call back at the end of done packet
 > 
