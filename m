@@ -2,133 +2,129 @@ Return-Path: <SRS0=22nm=2E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7195C43603
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 15:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798BBC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 18:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8271E20706
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 15:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB8724125
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Dec 2019 18:07:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+R88c7R"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="rycc+mG2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbfLNPqk (ORCPT
+        id S1726803AbfLNSHw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Dec 2019 10:46:40 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40277 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfLNPqk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Dec 2019 10:46:40 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c14so2002319wrn.7;
-        Sat, 14 Dec 2019 07:46:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=4ZheM6H1IJf91c1ZceviNMo0bD3V67BjHbfGbfFZiDQ=;
-        b=c+R88c7R0IFMXSgL7bFY3SG0xEGz8jTGqMRLXSXdSgjMZ8NzhFr4pyDNFM52Qlx3aC
-         gVryr6ldpTFFY+5iU+28QaPoRQdhYp8sHsQpLHI4VnnmlK6u4OgEUR3ryfQR48fMi8Kf
-         PRnDK8ddLTvbgvD4gxLJM5yJw44sNPM3b3dF9wZshjKCZ35oqSt3k8aVT01azxClcdSr
-         JXv52XWrTwgiJUpVd/1hlwVHM7vm/vO8+f+n8aR954H8PAFCEKa47zgKNdF71jaCuD3a
-         J3K5/9p4qwEpShcI7qCNAWJ+d5NBmc44qKSBJx05XhcDKSfRdPPl4bSuQ4wSUMuts9WI
-         /pDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=4ZheM6H1IJf91c1ZceviNMo0bD3V67BjHbfGbfFZiDQ=;
-        b=Q3D/ZtscAGMeMlHpCkL0HvfirN5TVyGaf2oFWjGSdLX+eZYpW5f3z3kHRLxRHAws97
-         V4thB+lPw1hTZ6zw0lT1dtJ77+DjIllWl8I2FWSUpSeO0gAhC6wdkXpmM0yjEiU2JoQn
-         Cw8aiOwXJwn1ExdSfd251T4HVoaMg+aqfCpTHermAGN/dGxzJPVyVoeLqB45KOnM5n9F
-         kLg50cZh9Ad3VQ5AGVw2tHxsBEaptqYHdiDiW2LRJS1CCrLcqaH0c+qXz07bg2wBkx7e
-         AQCCGx3kQzEmn8eaoRPJM8ESygaOhJRKzl7znFbdDOHB6XKHLrMf7wKuyyN63mhSbatK
-         6LGA==
-X-Gm-Message-State: APjAAAVt+tIIniosOQiuhJeUd3QtUHusKemmwbq41YGRU9iMpWz83yEx
-        dnYiMmKnct9ljThviMwRRlMl8Yr32z1lyg==
-X-Google-Smtp-Source: APXvYqxUWjq2pg/m7vAarnMa01TbxmF7dhf3iGJcVpBhIKgU/YHr0zB5TJ8QARwhlC7PuseFZK7R2Q==
-X-Received: by 2002:adf:df0e:: with SMTP id y14mr18158363wrl.377.1576338398416;
-        Sat, 14 Dec 2019 07:46:38 -0800 (PST)
-Received: from apple.sigmaris.info (apple.sigmaris.info. [2a02:8010:6606:0:feaa:14ff:fe20:9878])
-        by smtp.gmail.com with ESMTPSA id s65sm14819596wmf.48.2019.12.14.07.46.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 14 Dec 2019 07:46:37 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [PATCH v3 4/7] media: hantro: h264: Use the generic H264 reflist
- builder
-From:   Hugh Cole-Baker <sigmaris@gmail.com>
-In-Reply-To: <20191213125414.90725-5-boris.brezillon@collabora.com>
-Date:   Sat, 14 Dec 2019 15:46:35 +0000
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        linux-media@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
-        Ezequiel Garcia <ezequiel@collabora.com>
+        Sat, 14 Dec 2019 13:07:52 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:55596 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfLNSHv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Dec 2019 13:07:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1576346868; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZT2nfN79WKkY25XI09ribZUpmxko5AgJRuhVtZX21qo=;
+        b=rycc+mG2TcvGcPDixft9zvbFOY3l5I4eORFU8FgZxSWjlhS+PIDP1QGCkYQ/htuivYNrx/
+        zV5DHZLJjJxnEV9QMZNaisa9bUGr8Tm9S5a37Wg7yWIRC06FsCgcQIlRgJR4RLZ+BTAZqh
+        QVbiBsMLp7d1OP0fTE69ISmVbPzUVMM=
+Date:   Sat, 14 Dec 2019 19:07:43 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3 1/5] clk: Ingenic: Remove unnecessary spinlock when
+ reading registers.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Message-Id: <1576346863.3.1@crapouillou.net>
+In-Reply-To: <1576337630-78576-3-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576337630-78576-1-git-send-email-zhouyanjie@wanyeetech.com>
+        <1576337630-78576-3-git-send-email-zhouyanjie@wanyeetech.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <24EFC68C-CF34-4D6E-8927-1CFA0CE81F45@gmail.com>
-References: <20191213125414.90725-1-boris.brezillon@collabora.com>
- <20191213125414.90725-5-boris.brezillon@collabora.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-X-Mailer: Apple Mail (2.3445.9.1)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi Zhou,
 
-> On 13 Dec 2019, at 12:54, Boris Brezillon =
-<boris.brezillon@collabora.com> wrote:
+You can also remove the locks around ingenic_cgu_gate_get(), they are=20
+useless. Then also edit the doc of this function as currently it says=20
+that the caller must hold the lock.
+
+-Paul
+
+
+Le sam., d=C3=A9c. 14, 2019 at 23:33, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yan=
+jie)=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+> It is not necessary to use spinlock when reading registers,
+> so remove it from cgu.c.
 >=20
-> Now that the core provides generic reflist builders, we can use them
-> instead of implementing our own.
->=20
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Suggested-by: Paul Cercueil <paul@crapouillou.net>
+> Suggested-by: Paul Burton <paulburton@kernel.org>
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
 > ---
-> Changes in v3:
-> * New patch
-> ---
-> drivers/staging/media/hantro/hantro_h264.c | 237 +--------------------
-> 1 file changed, 8 insertions(+), 229 deletions(-)
 >=20
-> diff --git a/drivers/staging/media/hantro/hantro_h264.c =
-b/drivers/staging/media/hantro/hantro_h264.c
-> index 568640eab3a6..d998272d20e6 100644
-> --- a/drivers/staging/media/hantro/hantro_h264.c
-> +++ b/drivers/staging/media/hantro/hantro_h264.c
-> @@ -11,7 +11,7 @@
->  */
+> Notes:
+>     v2:
+>     New patch.
 >=20
-> #include <linux/types.h>
-> -#include <linux/sort.h>
-> +#include <media/v4l2-h264.h>
+>     v2->v3:
+>     Adjust order from [5/5] in v2 to [1/5] in v3.
+>=20
+>  drivers/clk/ingenic/cgu.c | 6 ------
+>  1 file changed, 6 deletions(-)
+>=20
+> diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+> index 6e96303..8bd3998 100644
+> --- a/drivers/clk/ingenic/cgu.c
+> +++ b/drivers/clk/ingenic/cgu.c
+> @@ -76,16 +76,13 @@ ingenic_pll_recalc_rate(struct clk_hw *hw,=20
+> unsigned long parent_rate)
+>  	const struct ingenic_cgu_pll_info *pll_info;
+>  	unsigned m, n, od_enc, od;
+>  	bool bypass;
+> -	unsigned long flags;
+>  	u32 ctl;
+>=20
+>  	clk_info =3D &cgu->clock_info[ingenic_clk->idx];
+>  	BUG_ON(clk_info->type !=3D CGU_CLK_PLL);
+>  	pll_info =3D &clk_info->pll;
+>=20
+> -	spin_lock_irqsave(&cgu->lock, flags);
+>  	ctl =3D readl(cgu->base + pll_info->reg);
+> -	spin_unlock_irqrestore(&cgu->lock, flags);
+>=20
+>  	m =3D (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
+>  	m +=3D pll_info->m_offset;
+> @@ -259,12 +256,9 @@ static int ingenic_pll_is_enabled(struct clk_hw=20
+> *hw)
+>  	struct ingenic_cgu *cgu =3D ingenic_clk->cgu;
+>  	const struct ingenic_cgu_clk_info *clk_info =3D=20
+> to_clk_info(ingenic_clk);
+>  	const struct ingenic_cgu_pll_info *pll_info =3D &clk_info->pll;
+> -	unsigned long flags;
+>  	u32 ctl;
+>=20
+> -	spin_lock_irqsave(&cgu->lock, flags);
+>  	ctl =3D readl(cgu->base + pll_info->reg);
+> -	spin_unlock_irqrestore(&cgu->lock, flags);
+>=20
+>  	return !!(ctl & BIT(pll_info->enable_bit));
+>  }
+> --
+> 2.7.4
+>=20
 
-With this patch, CONFIG_VIDEO_HANTRO needs to depend on =
-CONFIG_V4L2_H264,
-without that it can encounter linking errors due to missing symbols for
-v4l2_h264_init_reflist_builder, etc.
+=
 
-> #include <media/v4l2-mem2mem.h>
-> #include "hantro.h"
-> @@ -240,229 +240,6 @@ static void prepare_table(struct hantro_ctx =
-*ctx)
-> 	reorder_scaling_list(ctx);
-> }
-> ..snip..
-
---
-Regards,
-
-Hugh Cole-Baker=
