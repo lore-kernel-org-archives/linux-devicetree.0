@@ -7,71 +7,70 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E38ACC43603
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 17:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6DFC43603
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 17:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62CE20726
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 17:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA098206E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 17:46:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tQIuy/2H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IiF1Q9f0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfLORfy (ORCPT
+        id S1726539AbfLORqP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Dec 2019 12:35:54 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:42314 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfLORfy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Dec 2019 12:35:54 -0500
-Received: by mail-pj1-f68.google.com with SMTP id o11so1948019pjp.9
-        for <devicetree@vger.kernel.org>; Sun, 15 Dec 2019 09:35:53 -0800 (PST)
+        Sun, 15 Dec 2019 12:46:15 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41163 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbfLORqP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Dec 2019 12:46:15 -0500
+Received: by mail-pl1-f196.google.com with SMTP id bd4so3448077plb.8
+        for <devicetree@vger.kernel.org>; Sun, 15 Dec 2019 09:46:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=85nlbiKq3rpWsz2dGxuU4NqF4J9BzTqVbiVO4kippfs=;
-        b=tQIuy/2HcSdEay7ekVyEGAsa4RSKJtYFmcBDN3MlSjp8wysm9Xpf0fq/KgE/GU6Zkc
-         uwqRgv3TuBK9XAd3A1wQ77riVWT49jovChLRJl9H0M12+E9J7+i82TM/4VhRxkTRxkzR
-         wa8hq05Z2iiRMBMUCRRe0M5986rrL+V6rvrDSluKjnCF986cq4znIm1a3LO3UTkNysfS
-         HIByxSxltXtAI9etxUc70cpBugSlOCbN6XsJkJKdbx8pJcT7gxZBINadrTQ6d83ptbqO
-         CGRMwMhNAN32Y8YNJmQJkVvhTeSKrol3GWcuCKv094Zb5Za287OMVT3p6eEBhcA1ZY+K
-         xHDA==
+        bh=E0v8BsJYt4cJXe3rlwgSZiboiBQsoAsO6HkNzr+KGMs=;
+        b=IiF1Q9f01EWMfmah72PemS4xhqWeS6mhP/Z6/UoCSOHpoiItwy//QR1eVMpTPP7xIw
+         wnJ1hDanm8rig8mWoCAnUrkezM+9zlBi1/8HaUv9MLZRUsHKL2MGbLFLkyjKWWfzjBqi
+         rtEnQ3A0dCZF8OFgisATogXORgvEKaswDmqided4Y72mJiniKvyEICN0Rf5RU2o3c3c2
+         2zdN+z2mVDTel6OkveifdARpBEiyk88zSYFFBTY88JMIq2851eS05hox5ngYsssOk039
+         seOO7NgogQBDHFy6xDhNP578zwOfDh2OZyMqSzhm7qHXwCequjKjuaiseFJRWeyyMGam
+         5ygg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=85nlbiKq3rpWsz2dGxuU4NqF4J9BzTqVbiVO4kippfs=;
-        b=WiPIrz9jDJ8gKcjvh2qMBAcDSRCoJLzZbQcd0wdP31jJZpjR6kf1klHQfIjklAkq4D
-         idHb7V8djmfR2mjcbtwHREtkgNbG6Z5taOxXi9s/WxnryQZPxN+Jw5Q18WeSQFeRA5v+
-         TAWoCqFpIiM0QoUNt5qm46OsKMMi2za7MOOFXynfunwURhco51/E/8HrexMKTPgW/xuv
-         LSNpNyVob1gkmr4FT6Y+yTIpI2n8cwQSQ6XxfW7o6F8x2fpbKji5O7vMxmxSOtAzIODH
-         t/AxDvBfWD23P47+UVGxpVxrTEIvJoZM55TZnu6XdeCUg9fsb/l+H2OPPNz1QlsNG2S3
-         A3Nw==
-X-Gm-Message-State: APjAAAUV00U4U2PQXOumuMQKm+jupl+UMxGPSYAnMNWPt+NnbhwZp5iD
-        /zTLEAH+2efvmy/PdLDrEwKg
-X-Google-Smtp-Source: APXvYqxaLfB48R/yYSynM4mJt1uNrHQ/vR38PBU61rkRabHdtFR6nTdX3wg7HpbcKSK67x5dyusrXA==
-X-Received: by 2002:a17:902:b609:: with SMTP id b9mr11776684pls.70.1576431353150;
-        Sun, 15 Dec 2019 09:35:53 -0800 (PST)
+        bh=E0v8BsJYt4cJXe3rlwgSZiboiBQsoAsO6HkNzr+KGMs=;
+        b=HnUw24XDkirs3QsX6QbeZY5VBTJM9vlkcRyaxze3ScPa8lGFD/oLDPG2ZpEGMJHHIi
+         tyOrrYkGOgu+MKvfTaTw9KD4XkSaZpJlekAxtcqDGHUZnwE5yPmgZq/PziEpkA4eNoKt
+         xpCqn5Zvr7EvUTWUfX+ArwkfTO6v2PLVcTub2cG7ZHxzR8sIBg6dzliHmVkyzDhbxZFU
+         NT1uO2jCicx3FCKODPXHKDa68KdTDLVVg50XFh7djbz2vu1Tt/sULX/T7XCTr+c1mcmv
+         wk9y5jfjVfRY50zya36H+7HFUc05oGWjY2neRzrqWOzyNj2xI/1iFYrUqp7BqZYDl7Oj
+         1Shg==
+X-Gm-Message-State: APjAAAXx362vcxrAyosmBc9pZjPD/2G20aUxiVkW4SENCF5Ds6FGqJmK
+        Hq4VXGa9ecXi/oBChLBxP3dR5F5u3sE1
+X-Google-Smtp-Source: APXvYqxBGgk0qogpfgu/D5jEao5hhISZ5aQbGx9LJNIKdnEsjX1FnOawcpTEMyrJB0DQ2q4N2JkOXw==
+X-Received: by 2002:a17:90a:21a1:: with SMTP id q30mr13335510pjc.8.1576431974335;
+        Sun, 15 Dec 2019 09:46:14 -0800 (PST)
 Received: from Mani-XPS-13-9360 ([2409:4072:78f:3e30:ad66:df45:6a09:a260])
-        by smtp.gmail.com with ESMTPSA id g19sm18735361pfh.134.2019.12.15.09.35.45
+        by smtp.gmail.com with ESMTPSA id y197sm10426009pfc.79.2019.12.15.09.46.09
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 15 Dec 2019 09:35:52 -0800 (PST)
-Date:   Sun, 15 Dec 2019 23:05:42 +0530
+        Sun, 15 Dec 2019 09:46:13 -0800 (PST)
+Date:   Sun, 15 Dec 2019 23:16:06 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Sakari Ailus <sakari.ailus@iki.fi>
 Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
         a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH 2/5] media: i2c: imx290: Add support for test pattern
- generation
-Message-ID: <20191215173542.GB11427@Mani-XPS-13-9360>
+Subject: Re: [PATCH 3/5] media: i2c: imx290: Add RAW12 mode support
+Message-ID: <20191215174606.GC11427@Mani-XPS-13-9360>
 References: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
- <20191129190541.30315-3-manivannan.sadhasivam@linaro.org>
- <20191203084850.GA5282@valkosipuli.retiisi.org.uk>
+ <20191129190541.30315-4-manivannan.sadhasivam@linaro.org>
+ <20191203085417.GB5282@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191203084850.GA5282@valkosipuli.retiisi.org.uk>
+In-Reply-To: <20191203085417.GB5282@valkosipuli.retiisi.org.uk>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -80,120 +79,106 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Sakari,
 
-On Tue, Dec 03, 2019 at 10:48:50AM +0200, Sakari Ailus wrote:
+On Tue, Dec 03, 2019 at 10:54:17AM +0200, Sakari Ailus wrote:
 > Hi Manivannan,
 > 
-> On Sat, Nov 30, 2019 at 12:35:38AM +0530, Manivannan Sadhasivam wrote:
-> > Add support for generating following test patterns by IMX290:
-> > 
-> > * Sequence Pattern 1
-> > * Horizontal Color-bar Chart
-> > * Vertical Color-bar Chart
-> > * Sequence Pattern 2
-> > * Gradation Pattern 1
-> > * Gradation Pattern 2
-> > * 000/555h Toggle Pattern
+> On Sat, Nov 30, 2019 at 12:35:39AM +0530, Manivannan Sadhasivam wrote:
+> > IMX290 is capable of outputting frames in both Raw Bayer (packed) 10 and
+> > 12 bit formats. Since the driver already supports RAW10 mode, let's add
+> > the missing RAW12 mode as well.
 > > 
 > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > > ---
-> >  drivers/media/i2c/imx290.c | 41 +++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 40 insertions(+), 1 deletion(-)
+> >  drivers/media/i2c/imx290.c | 32 ++++++++++++++++++++++++++++++++
+> >  1 file changed, 32 insertions(+)
 > > 
 > > diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> > index 1d49910937fb..e218c959a729 100644
+> > index e218c959a729..d5bb3a59ac46 100644
 > > --- a/drivers/media/i2c/imx290.c
 > > +++ b/drivers/media/i2c/imx290.c
-> > @@ -26,12 +26,19 @@
-> >  #define IMX290_REGHOLD 0x3001
-> >  #define IMX290_XMSTA 0x3002
-> >  #define IMX290_FR_FDG_SEL 0x3009
-> > +#define IMX290_BLKLEVEL_LOW 0x300a
-> > +#define IMX290_BLKLEVEL_HIGH 0x300b
-> >  #define IMX290_GAIN 0x3014
-> >  #define IMX290_HMAX_LOW 0x301c
-> >  #define IMX290_HMAX_HIGH 0x301d
-> > +#define IMX290_PGCTRL 0x308c
-> >  #define IMX290_PHY_LANE_NUM 0x3407
-> >  #define IMX290_CSI_LANE_MODE 0x3443
+> > @@ -75,6 +75,7 @@ struct imx290 {
+> >  	struct clk *xclk;
+> >  	struct regmap *regmap;
+> >  	int nlanes;
+> > +	u8 bpp;
 > >  
-> > +#define IMX290_PGCTRL_REGEN BIT(0)
-> > +#define IMX290_PGCTRL_THRU BIT(1)
-> > +#define IMX290_PGCTRL_MODE(n) ((n) << 4)
-> > +
-> >  /* HMAX fields */
-> >  #define IMX290_HMAX_2_1920 0x1130
-> >  #define IMX290_HMAX_4_1920 0x0898
-> > @@ -99,6 +106,17 @@ static const struct regmap_config imx290_regmap_config = {
-> >  	.cache_type = REGCACHE_RBTREE,
+> >  	struct v4l2_subdev sd;
+> >  	struct v4l2_fwnode_endpoint ep;
+> > @@ -98,6 +99,7 @@ struct imx290_pixfmt {
+> >  
+> >  static const struct imx290_pixfmt imx290_formats[] = {
+> >  	{ MEDIA_BUS_FMT_SRGGB10_1X10 },
+> > +	{ MEDIA_BUS_FMT_SRGGB12_1X12 },
 > >  };
 > >  
-> > +static const char * const imx290_test_pattern_menu[] = {
-> > +	"Disabled",
-> > +	"Sequence Pattern 1",
-> > +	"Horizontal Color-bar Chart",
-> > +	"Vertical Color-bar Chart",
-> > +	"Sequence Pattern 2",
-> > +	"Gradation Pattern 1",
-> > +	"Gradation Pattern 2",
-> > +	"000/555h Toggle Pattern",
+> >  static const struct regmap_config imx290_regmap_config = {
+> > @@ -265,6 +267,18 @@ static const struct imx290_regval imx290_10bit_settings[] = {
+> >  	{ 0x300b, 0x00},
+> >  };
+> >  
+> > +static const struct imx290_regval imx290_12bit_settings[] = {
+> > +	{ 0x3005, 0x01 },
+> > +	{ 0x3046, 0x01 },
+> > +	{ 0x3129, 0x00 },
+> > +	{ 0x317c, 0x00 },
+> > +	{ 0x31ec, 0x0e },
+> > +	{ 0x3441, 0x0c },
+> > +	{ 0x3442, 0x0c },
+> > +	{ 0x300a, 0xf0 },
+> > +	{ 0x300b, 0x00 },
 > > +};
 > > +
-> >  static const struct imx290_regval imx290_global_init_settings[] = {
-> >  	{ 0x3007, 0x00 },
-> >  	{ 0x3018, 0x65 },
-> > @@ -394,6 +412,22 @@ static int imx290_set_ctrl(struct v4l2_ctrl *ctrl)
-> >  	case V4L2_CID_GAIN:
-> >  		ret = imx290_set_gain(imx290, ctrl->val);
+> >  /* supported link frequencies */
+> >  static const s64 imx290_link_freq[] = {
+> >  	IMX290_DEFAULT_LINK_FREQ,
+> > @@ -550,6 +564,21 @@ static int imx290_write_current_format(struct imx290 *imx290,
+> >  			dev_err(imx290->dev, "Could not set format registers\n");
+> >  			return ret;
+> >  		}
+> > +
+> > +		imx290->bpp = 10;
+> > +
+> > +		break;
+> > +	case MEDIA_BUS_FMT_SRGGB12_1X12:
+> > +		ret = imx290_set_register_array(imx290, imx290_12bit_settings,
+> > +						ARRAY_SIZE(
+> > +							imx290_12bit_settings));
+> > +		if (ret < 0) {
+> > +			dev_err(imx290->dev, "Could not set format registers\n");
+> > +			return ret;
+> > +		}
+> > +
+> > +		imx290->bpp = 12;
+> > +
 > >  		break;
-> > +	case V4L2_CID_TEST_PATTERN:
-> > +		if (ctrl->val) {
-> > +			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x00);
-> > +			imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
-> > +			mdelay(10);
+> >  	default:
+> >  		dev_err(imx290->dev, "Unknown pixel format\n");
+> > @@ -910,6 +939,9 @@ static int imx290_probe(struct i2c_client *client)
+> >  		goto free_err;
+> >  	}
+> >  
+> > +	/* Default bits per pixel value */
+> > +	imx290->bpp = 10;
 > 
-> Any particular reason for a busy loop instead of sleeping? Same below.
+> Where is the format being initialised at the moment? Nowhere?
+> 
+> If that is the case, I think it should be fixed before this patch.
 > 
 
-Nothing. I should've used msleep() here... Will change it.
+Sorry, I don't quite understand what you're suggesting here. The bpp
+is initialised because that's the default bit value at power up and
+this value is being used below in imx290_calc_pixel_rate(). I'm not sure
+why we need to initialise the format before set_fmt!
 
 Thanks,
 Mani
 
-> > +			imx290_write_reg(imx290, IMX290_PGCTRL,
-> > +					 (u8)(IMX290_PGCTRL_REGEN |
-> > +					 IMX290_PGCTRL_THRU |
-> > +					 IMX290_PGCTRL_MODE(ctrl->val)));
-> > +		} else {
-> > +			imx290_write_reg(imx290, IMX290_PGCTRL, 0x00);
-> > +			mdelay(10);
-> > +			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x3c);
-> > +			imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
-> > +		}
-> > +		break;
-> >  	default:
-> >  		ret = -EINVAL;
-> >  		break;
-> > @@ -878,7 +912,7 @@ static int imx290_probe(struct i2c_client *client)
-> >  
+> > +
 > >  	mutex_init(&imx290->lock);
 > >  
-> > -	v4l2_ctrl_handler_init(&imx290->ctrls, 3);
-> > +	v4l2_ctrl_handler_init(&imx290->ctrls, 4);
-> >  
-> >  	v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
-> >  			  V4L2_CID_GAIN, 0, 72, 1, 0);
-> > @@ -896,6 +930,11 @@ static int imx290_probe(struct i2c_client *client)
-> >  					       INT_MAX, 1,
-> >  					       imx290_modes[0].pixel_rate);
-> >  
-> > +	v4l2_ctrl_new_std_menu_items(&imx290->ctrls, &imx290_ctrl_ops,
-> > +				     V4L2_CID_TEST_PATTERN,
-> > +				     ARRAY_SIZE(imx290_test_pattern_menu) - 1,
-> > +				     0, 0, imx290_test_pattern_menu);
-> > +
-> >  	imx290->sd.ctrl_handler = &imx290->ctrls;
-> >  
-> >  	if (imx290->ctrls.error) {
+> >  	v4l2_ctrl_handler_init(&imx290->ctrls, 4);
 > 
 > -- 
+> Kind regards,
+> 
 > Sakari Ailus
