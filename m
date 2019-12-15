@@ -2,90 +2,143 @@ Return-Path: <SRS0=1FHL=2F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BD0C43603
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 19:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F56C2D0CB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 20:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E0F24679
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 19:56:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="DUvMIF0Q"
+	by mail.kernel.org (Postfix) with ESMTP id 0B9BE2467B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 20:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfLOT42 (ORCPT
+        id S1726267AbfLOU1X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Dec 2019 14:56:28 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37588 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbfLOT41 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Dec 2019 14:56:27 -0500
-Received: by mail-pg1-f195.google.com with SMTP id q127so2426038pga.4
-        for <devicetree@vger.kernel.org>; Sun, 15 Dec 2019 11:56:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=xVlHo/nlCMF/qBOiT/VWeXY0vmm1o3tLmTZcUn6/oaU=;
-        b=DUvMIF0QFOTQxH81JOUzG93EnqkGo8iYo7Lrg7rDp7kmCy6fNi6LPYdGbuqMmmu2S/
-         vMk5R1Tekf+KM6khmVWfEBHeKGd+Wcv2jCAhovSwh8RjJZaRBfk28pjyuiMG8HNghhN+
-         RGpRL7jhtzoad+EEq+rR/V5hOa4pErRPSq+SaZBigyAKRf6YXqLM1hQ5euCCFf5xtp/Z
-         YTgjPnsFknNsrc1ov6fL8oK+ABWoNVAW7bwwxEeErIJKhQ5iJrzk2MqKPm/NVGCgIcbt
-         bXcJnvnnxPH+i+AGlY8aIW2Iout+LDUg9YYF2Yw9Oe3rgYWimi2IYVB3vRIfTrBbz3yN
-         9hiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=xVlHo/nlCMF/qBOiT/VWeXY0vmm1o3tLmTZcUn6/oaU=;
-        b=GKTFrWW8o63aN82WsIaYmzM7Snyp5Rmv0R+yFLbEXpbVRl/qM4JM9dJLTdFUVuURQI
-         OgHH6+EX+PC/gHazcBIaPC4eulbrguk4d4mfZDfumTQKJatKiuaFyr1WHhWBxjMQaH/V
-         B5n9LrlT1tcBef9xcqKEGyd/XTP0Ho2t3AhSxR+4/8ka3jUJ3H7+0CFVZjTNr6yUwaZq
-         81RX+VIMSpjX95TPU+1LzSdWYCja7D0IFKfUfXaWRD78Cjm1VPoTcGrlyzbjVc82TiRq
-         uoOE/3KTkWd0gYQYB4DRUMt1QxaGQpHZ69aheWpjS0tI8SytyNPel69On48OcINsuXPP
-         pDHQ==
-X-Gm-Message-State: APjAAAWE7Az3DziV0g7Vbaq/Q66PpGMjrcUt0Iaj74BCGm93+f7gmLiH
-        tr6sXxoNAsNfkORcur6V/z1ipw==
-X-Google-Smtp-Source: APXvYqxEKsNxK2ArifpMSeV3q5mX++F0jrdmxTOyWcJDZYYNJOVdT9sdTwJBe4gGIhdguz3qVIfILA==
-X-Received: by 2002:a62:8205:: with SMTP id w5mr12272097pfd.136.1576439787225;
-        Sun, 15 Dec 2019 11:56:27 -0800 (PST)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id i3sm19528061pfg.94.2019.12.15.11.56.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 11:56:26 -0800 (PST)
-Date:   Sun, 15 Dec 2019 11:56:23 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Palmer Dabbelt <palmerdabbelt@google.com>
-cc:     yash.shah@sifive.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        aou@eecs.berkeley.edu, bmeng.cn@gmail.com, allison@lohutok.net,
-        alexios.zavras@intel.com, Atish Patra <Atish.Patra@wdc.com>,
-        tglx@linutronix.de, Greg KH <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] riscv: cacheinfo: Add support to determine no. of
- L2 cache way enabled
-In-Reply-To: <mhng-a1ba4b8a-4c6a-43e9-a87a-f8bbbe3555d8@palmerdabbelt-glaptop>
-Message-ID: <alpine.DEB.2.21.9999.1912151155010.64438@viisi.sifive.com>
-References: <1575890706-36162-3-git-send-email-yash.shah@sifive.com>  <1575890706-36162-1-git-send-email-yash.shah@sifive.com> <mhng-a1ba4b8a-4c6a-43e9-a87a-f8bbbe3555d8@palmerdabbelt-glaptop>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Sun, 15 Dec 2019 15:27:23 -0500
+Received: from mail.bugwerft.de ([46.23.86.59]:51232 "EHLO mail.bugwerft.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726146AbfLOU1X (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Dec 2019 15:27:23 -0500
+Received: from [192.168.178.200] (p57BC9BBE.dip0.t-ipconnect.de [87.188.155.190])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 0143A2E79BE;
+        Sun, 15 Dec 2019 20:20:57 +0000 (UTC)
+Subject: Re: [PATCH 07/10] i2c: Add driver for AD242x bus controller
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
+        pascal.huerst@gmail.com
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-9-daniel@zonque.org>
+ <64adf5d7-754a-f1da-aa9b-11579c5a2780@lucaceresoli.net>
+ <20191212163315.GA3932@kunai>
+From:   Daniel Mack <daniel@zonque.org>
+Autocrypt: addr=daniel@zonque.org; prefer-encrypt=mutual; keydata=
+ mQINBFJqOksBEADTAqNa32jIMmtknN+kbl2QCQ+O8onAyfBXW2+ULByC+54ELTsKnuAChxYB
+ pimYqixmqbD9f7PrnU4/zAEMr8yJaTLp1uFHN1Qivx268wVlFBP+rnhULsiwcsJVWWIeeUxR
+ Fk6V7K8RQMGsk0jwTfF+zHfKc7qPIMVh7peZalyIn6giqcQKM6SNrsCjLKlIachR/SstmMOG
+ 5sXkykOh0pqgqj0aDzs2H9UYJyuA1OTkrN8AwA6SgwbZxRThdgbFKY7WaBPALcGK+89OCtwE
+ UV6SIF9cUd0EvaqyawJbjPGRFJ4KckAfZYRdRWtd+2njeC9hehfB/mQVDBzHtquSO6HPKqt/
+ 4hDtQDXv4qAyBNDi50uXmORKxSJkcFlBGAl0RGOCcegilCfjQHX6XHPXbAfuoJGYyt1i4Iuy
+ Doz5KVxm0SPftRNfg5eVKm3akIEdR1HI315866/QInkinngZ8BItVj+B89pwcbMcaG4cFcB8
+ 4sWOLDPiGob2oaMe88y3whxVW8a+PAyfvesLJFeLGfjtBOO1sGtUa/qudcqS74oyfqVmRz+V
+ sxEQ9xW9MZsZuvZYNT9nHGAP4ekpAs/ZGYX2sraU8394EDhKb2tkQz952D7BH2/xrGleOar2
+ BnkuCR/M9iS2BPNTYZEYQfIdj7NI3Qbn4vKtM3IMnPWRFS7ZuQARAQABtB9EYW5pZWwgTWFj
+ ayA8ZGFuaWVsQHpvbnF1ZS5vcmc+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIe
+ AQIXgAIZAQUCWom+IAAKCRC6YTEa/GNUJDAiD/42ybmeJ4r9yEmdgJraRiDDdcMTPuDwRICQ
+ oxiMBph+eBjdveCaG4K2IjbUouhXKXVAiugSbyHWL9vcBzcPIy+mcxCSf0BC6BCzhR60ontC
+ GTZAGNXVL98RhlnDGtFBPKZfXy1V8LaAe9puyBysv3/RAanc85B6Rv0bMRh/1nKf2rQWHmM5
+ bnPrxSDh2X3CJEMCCtoTo5jZ3YnkZae7DmVL/0JWGrCPfTXrBsJi+EVNFy2D57DdAWFbcl8C
+ eiQrwBPfVomQTQ0EgLl8gC2V1UxjgdBy3Vpf0MIjlNvE0Lv3MPCwV3X33+07wtpGK7DzJY8N
+ MI+Woe/Qp49QenYL2Xx/R7frfdIG4HAnUaeIGR+1PGqbX9Kc3htKIP9DV3j9xLHkIfhI+2HH
+ HEptLuoewPS2egdtJo4LNWM7WMquJcve/dMae2MWlLfPQiTTy8RUPd8PtTSxrmUAYwGzAPYQ
+ JATxoi/g02BtwsxNxp9gN9tlPEdP+0O2vptN3leADrt6nW495TlbuYwJaz4VPGrkziKpV9HU
+ KgGaRwr0/RpONO4TFk6wTIa2Tak/y8s7rfnr+t7OVp7gG7/CKozRZMv/YijQhelMk4D6E6UI
+ oE5ZQ7bkBRZj0V3fkFl7FM1wzk1WJ2jUhw3wNIy5vQ36rTCoeLDEVpZO1MeVh09FbEDJkBu5
+ SrkCDQRSajpLARAA4lEVCaGHcCIhxLSxvPjgzj7BzpmPaJbMd92DeKtUcB2vHhhuqa0WQSGO
+ jKlaQdTqowVIQ974snsmNNwF5w8mss46T1X+2WS7YKAyn4dDScukY54thYthOkOn4DbKV6S0
+ 4IV30DL9/5iQHszl9FNY7MIdvwMM7ozxJYrUv+wKcfOBh4zbFisXCu+jPobyKe+5XurJXXZ9
+ 2aSDkrKPT9zKSUz+fElb/mL7o4NCeQcK5yvKMgj1MqT7O+V5F3gM/bh0srNMxL8w27pgYm6e
+ O99M3vNkRd+qyXOsc6dLqgSkxsoRuWVX8vJROi6gMdn7O/AZ85t5paFIj5rqRJyYTPDRKN2Z
+ ayT+ZPlF14b6LaodbPbZXEwiPfGhUwuVSwUjKHjcJMLLi5vq62fq1X/cCi2midjFY6nQsSn9
+ Mldx6v7JJWW8hvlnw+smduhg0UCfwx0KCI9wSPE2MUbm6KKS4DwAPbi0WCeUcNzRUxTCAs6c
+ a9EOH0qsEAH7vwLzCf5lFiTMolhDJLZrsYvS1MBN4FxsyC7MMW2j4rMk2v0STORRGNY5oxrn
+ LAO52ns135O2A22Mnhqo+ssjhJQAvEr5f13/qUEP0w79Qg9BUE5yfwJsalhgVfEvKabrNDKu
+ a7UqNZ5lJZO2TdCi7OYl34WEnS3e+3qY2oHSL5n4kLiT/v+/1U0AEQEAAYkCHwQYAQIACQIb
+ DAUCV6sTCAAKCRC6YTEa/GNUJHw5D/4luZ1GFCPW8kqkmpBUFTVjZqOhhT+z0KnrBsisJSOH
+ VR8MraCDWHo/u4PTgqwF38PvyeZ4jXTXv+5FYjN6sJ8ydnfsUOORoM/KUafXmAug3zafqFd9
+ CzELh8FutTRYncoJMmL2HAbHqQRZlcFj6mKYFKqN+pA3tPbl3QpDORxMzeSn0J4sQeaVkIw2
+ inqYKTW+7vMi9/toMBNPEJPgSG77opYcEVjtDCPeAermjt6Ypqb0NyvE7zHLXpw3zcIA+Zge
+ 0VIIW5bXco8520SJfDCKlS3IJlxOGgLVbcWwMayhO8cw8kWHg4KqjWQPvfsuhALGUidfhC3h
+ L/o+2sOPZXT09OIR4arkuWH7xPF2X+L13TJ52OqVt0ERX5D9/7AwTArpCK6Vr3hybscBwFdW
+ DduIc9DAFQ4AzQuURhAP2wHBmayrVDdtwtZVxyO6b6G2brkdbCpFEzeg66Q1jp/R5GXgNMBi
+ qkqS7nnXncMTx6jmMAxHQ3XoXzPIZmBvWmD9Z0gCyTU6lSFSiGLO7KegnaRgBlJX/kmZ7Xfu
+ YbiKOFbQ6XDctinOnZW5HFQiNQ+qkkx/CEcC1tXPY+JMjmA43KfCtwCjZbmi/bmb1JHJNZ9O
+ H/iGc7WLxMDmqqBiZcQMQ0fcvv9Pj/NM8qNTDPtWeMwHV1p5s/U9nT8E35Hvbwx1Zg==
+Message-ID: <482316ef-775a-cb7b-015e-e00463503e6b@zonque.org>
+Date:   Sun, 15 Dec 2019 21:27:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191212163315.GA3932@kunai>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 13 Dec 2019, Palmer Dabbelt wrote:
+Hi,
 
-> I thought the plan was to get this stuff out of arch/riscv?  It looks like it
-> only got half-way done.
+Thanks for the review!
 
-That's still the plan.  Will probably send that one upstream in v5.5-rc.  
+On 12/12/2019 5:33 pm, Wolfram Sang wrote:
+> Hi Luca,
+> 
+> thanks for the review!
+> 
+>> good, but I think there's a problem in this function. A "normal"
+>> master_xfer function issues a repeated start between one msg and the
+>> next one, at least in the typical case where all msgs have the same
+>> slave address. Your implementation breaks repeated start. At first sight
+>> we might need more complex code here to coalesce all consecutive msgs
+>> with the same address into a single i2c_transfer() call.
+> 
+> Note that it is by far the standard case that all messages in a transfer
+> have the same client address (99,999%?). But technically, this is not a
+> requirement and the repeated start on the bus is totally independent of
+> the addresses used. It is just a master wanting to send without being
+> interrupted by another master.
 
-Am not a huge fan of moving it to drivers/soc, for a few different 
-reasons, but some people seem to feel very passionately about it.
+I'm not quite sure I understand.
+
+Let's assume the following setup. An i2c client (some driver code) is
+sending a list of messages to the a2b xfer function, which in turn is
+logically connected to a 'real' i2c bus master that'll put the data on
+the wire.
+
+The a2b code has to tell the 'master node' the final destination of the
+payload by programming registers on its primary i2c address, and then
+forwards the messages to its secondary i2c address. The layout of the
+messages don't change, and neither do the flags; i2c messages are being
+sent as i2c messages, except their addresses are changed, a bit like NAT
+in networking. That procedure is described on page 3-4 of the TRM,
+"Remote Peripheral I2C Accesses".
+
+The 'real' i2c master that handles the hardware bus is responsible for
+adding start conditions, and as the messages as such are untouched, I
+believe it should do the right thing. The code in my xfer functions
+merely suppresses reprogramming remote addresses by remembering the last
+one that was used, but that is independent of the start conditions on
+the wire.
+
+Maybe I'm missing anything. Could you provide an example that explains
+in which case this approach would leads to issues?
 
 
-- Paul
+Thanks,
+Daniel
