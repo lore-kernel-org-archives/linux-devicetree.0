@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096D4C2D0D3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 04:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF06C2D0CF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 04:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F2F24680
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 04:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A296020663
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 04:25:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="AyTWz8hf";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X7QgrJ73"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="Y3B7esRl";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Oe0HD8Xi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfLOEZC (ORCPT
+        id S1726793AbfLOEZG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Dec 2019 23:25:02 -0500
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:51733 "EHLO
+        Sat, 14 Dec 2019 23:25:06 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:55703 "EHLO
         new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726049AbfLOEZB (ORCPT
+        by vger.kernel.org with ESMTP id S1726019AbfLOEZF (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sat, 14 Dec 2019 23:25:01 -0500
+        Sat, 14 Dec 2019 23:25:05 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C5C1A5ADA;
-        Sat, 14 Dec 2019 23:24:59 -0500 (EST)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 379475AC9;
+        Sat, 14 Dec 2019 23:25:04 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Sat, 14 Dec 2019 23:24:59 -0500
+  by compute5.internal (MEProxy); Sat, 14 Dec 2019 23:25:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=prkazFno9jDv+
-        JC8ZyNF1WpqYcj2SiRZFvsXHXq54pA=; b=AyTWz8hfZfZayKfdaRtUAH9ngksVc
-        bGTIp5/sUC3XHVHnb0L4x0I4KA6dPaY+CYKIc8VoLB2UKhu19vvsBQJv15wwhXLb
-        QkGxrbCf6XcMzbvtPABdeNtmpqb7OkBXC2fxOmSckI1MKg8Q82ruHrB+6aR23qsN
-        D58PH3uMUe+SYskyz/+kVgy3+a6Bl6+xNvIDe5ZuKHEVA4YambOoHjXObBNefpsU
-        qfuOOG8U6q45yRB3qHGXOqJ8fjExVNkRD08JFJkM4zWRJzSggQ6rUkQv9CD9xms/
-        u02wFg1yliRCcO17v22LIlVb+eC31VIXtoXdVsOGcrh2uwlNskmnTJtMg==
+        :mime-version:content-transfer-encoding; s=fm1; bh=eiExqcZ7ujXnf
+        ULrpep8+tjQvNG7hCVX9mCQFkEA6Uo=; b=Y3B7esRl9WjdxAbHeNYyrAjnpTM5n
+        /sxSOD24kVHfDwnWXzc2FcA0QeX+Syj9i8dtZz/HLEb96dWpD90JPa2DDsbG10qq
+        4qp9saXXWWXMD7wOGjpEfA2ZBy3F588WejM4+hUDCNddldCGctUhQTjJJtEdZKtU
+        ZgnuJFqVGgxe/FVzNxYkWApkmkQJrbeaHg0jYbhFfXNJ841aeD5t4oRGtFGb7ifU
+        4WPajAbXxI4R+C5O4WTzm7HJfHbrNNMalRaXBdTqC4HPlL2YOHJWdBeREiek+29K
+        EIuP5IbCbDQfy6RvOT9C/Wcf9cOAswMvclhtT7bRCGpal1ek3jqsaqBNQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=prkazFno9jDv+JC8ZyNF1WpqYcj2SiRZFvsXHXq54pA=; b=X7QgrJ73
-        XbrY1ookExO5uvBanHDN+saOeGgpCdr9rx1FO+gb0bPwjvrsj3GD5OIjnA+UahZC
-        bdDkxi4jEAVEhiYeAPy1mr3W0bwi0j8PQXNsznEjI7GjHHrDYdWuZnZ4mZ4AxFhl
-        ThFzod8d8xJ2DpVA55ksC9hTaMJ5+WR4VpTToNC3/yfrxRE7bVEUNJUaB+yweBWl
-        B6Hr5ngJljT70d2a8Fn1kumkZbVqJQyVG/uTF9pt5vS3G5d7wngsT9TKfIbSulW7
-        n6fADe+xEoBjCcx24PnckgUkl90PnIVRwb7metDsYjcsAkLr8MX/vVg/mRM608bg
-        rbkvY3gGl1KAcA==
-X-ME-Sender: <xms:m7X1XXa8H5Nivd5_VRcgLsmM-cDFcT-uKoT7l-y23yb5ROSYQ--tcg>
+        fm1; bh=eiExqcZ7ujXnfULrpep8+tjQvNG7hCVX9mCQFkEA6Uo=; b=Oe0HD8Xi
+        1Mk7itRp/qo0Mk7pIEd/zKrwkmAT+4VBjv7vwuJq/ybqpemhfBTI2Xne8EBclGfP
+        xNl+10hp1MAddEx9AbVSXE8Ng/PNI5k/jg/2QyYhZDNaKn2jW3xrs0YMtSG3YRKc
+        ldF0KsHlOmF87mgZ2kNbtFwm8GA1/MqlUFnXvZo1zx9LTj3zwBb3K+yyU6GGraqs
+        ZK0I0U8K9kKd5kF67i/XKy84Rdny2+Evnn/QD3II5pRN6QN/4As1oC4QdrBaz5E3
+        1nnzBqdiPxMr5+CCw63bWtt6T0/aBKS4SjkkJsEV+PelyL4PDUmtjesCRm1EBZfk
+        pQR+e8WWak2tXA==
+X-ME-Sender: <xms:oLX1XYDiok_1POBQxg95OkoXKhgLHZktDPGxuFQK7HTd-nJ1SQFbtA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtvddgieelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
     lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
     epjedtrddufeehrddugeekrdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghm
-    uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:m7X1Xao3wtlc3owlKLXO2yNv5SlfdCiJPU_5c1puYt3ItKO2s5ZkNw>
-    <xmx:m7X1XU9cF7RxttdFYUsSi4tai8LtN4CPYO_Oryn_dQQ27w9DNk69HA>
-    <xmx:m7X1XR9RtFQMvERGZcQLt_qs38q5019juofDbsolHgCS49TsN9RwMg>
-    <xmx:m7X1XUjuEAPSvRbEIs3lxIeWQTF_UZAZafkuVt2pbsE0JpTJnPTcWA>
+    uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgepvd
+X-ME-Proxy: <xmx:oLX1XSLpkAWwI3qOhoCsdTWKd9fqMHG0la571rOACOwOKvyhpipQdQ>
+    <xmx:oLX1XbzWSA3A86E2CJGAWj90Ea1rxhHH_sRktGr7nCtFPxqbiVhXfA>
+    <xmx:oLX1XWw7An2FuzIJTNcjVCiiH8eFAWLmCHz95XkzsfH8fRw2GK3Tpw>
+    <xmx:oLX1XRH3K7Di1erBh9UIyftu4nis3iwYuRKcTDaFU4EYI89DrSYflQ>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D190780059;
-        Sat, 14 Dec 2019 23:24:58 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2730A80059;
+        Sat, 14 Dec 2019 23:25:03 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Jassi Brar <jassisinghbrar@gmail.com>,
@@ -78,9 +78,9 @@ To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v5 3/8] mailbox: sun6i-msgbox: Add a new mailbox driver
-Date:   Sat, 14 Dec 2019 22:24:50 -0600
-Message-Id: <20191215042455.51001-4-samuel@sholland.org>
+Subject: [PATCH v5 8/8] firmware: arm_scpi: Support unidirectional mailbox channels
+Date:   Sat, 14 Dec 2019 22:24:55 -0600
+Message-Id: <20191215042455.51001-9-samuel@sholland.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191215042455.51001-1-samuel@sholland.org>
 References: <20191215042455.51001-1-samuel@sholland.org>
@@ -91,388 +91,125 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Allwinner sun6i, sun8i, sun9i, and sun50i SoCs contain a hardware
-message box used for communication between the ARM CPUs and the ARISC
-management coprocessor. This mailbox contains 8 unidirectional
-4-message FIFOs.
+Some mailbox controllers have only unidirectional channels, so we need a
+pair of them for each SCPI channel. If a mbox-names property is present,
+look for "rx" and "tx" mbox channels; otherwise, the existing behavior
+is preserved, and a single mbox channel is used for each SCPI channel.
 
-Add a driver for it, so it can be used for SCPI or other communication
-protocols.
+Note that since the mailbox framework only supports a single phandle
+with each name (mbox_request_channel_byname always returns the first
+one), this new mode only supports a single SCPI channel.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- drivers/mailbox/Kconfig        |   9 +
- drivers/mailbox/Makefile       |   2 +
- drivers/mailbox/sun6i-msgbox.c | 332 +++++++++++++++++++++++++++++++++
- 3 files changed, 343 insertions(+)
- create mode 100644 drivers/mailbox/sun6i-msgbox.c
+ drivers/firmware/arm_scpi.c | 58 +++++++++++++++++++++++++++++--------
+ 1 file changed, 46 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index ab4eb750bbdd..5a577a6734cf 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -227,4 +227,13 @@ config ZYNQMP_IPI_MBOX
- 	  message to the IPI buffer and will access the IPI control
- 	  registers to kick the other processor or enquire status.
+diff --git a/drivers/firmware/arm_scpi.c b/drivers/firmware/arm_scpi.c
+index a80c331c3a6e..36ff9dd8d0fa 100644
+--- a/drivers/firmware/arm_scpi.c
++++ b/drivers/firmware/arm_scpi.c
+@@ -231,7 +231,8 @@ struct scpi_xfer {
  
-+config SUN6I_MSGBOX
-+	tristate "Allwinner sun6i/sun8i/sun9i/sun50i Message Box"
-+	depends on ARCH_SUNXI || COMPILE_TEST
-+	default ARCH_SUNXI
-+	help
-+	  Mailbox implementation for the hardware message box present in
-+	  various Allwinner SoCs. This mailbox is used for communication
-+	  between the application CPUs and the power management coprocessor.
-+
- endif
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index c22fad6f696b..2e4364ef5c47 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -48,3 +48,5 @@ obj-$(CONFIG_STM32_IPCC) 	+= stm32-ipcc.o
- obj-$(CONFIG_MTK_CMDQ_MBOX)	+= mtk-cmdq-mailbox.o
+ struct scpi_chan {
+ 	struct mbox_client cl;
+-	struct mbox_chan *chan;
++	struct mbox_chan *rx_chan;
++	struct mbox_chan *tx_chan;
+ 	void __iomem *tx_payload;
+ 	void __iomem *rx_payload;
+ 	struct list_head rx_pending;
+@@ -505,7 +506,7 @@ static int scpi_send_message(u8 idx, void *tx_buf, unsigned int tx_len,
+ 	msg->rx_len = rx_len;
+ 	reinit_completion(&msg->done);
  
- obj-$(CONFIG_ZYNQMP_IPI_MBOX)	+= zynqmp-ipi-mailbox.o
+-	ret = mbox_send_message(scpi_chan->chan, msg);
++	ret = mbox_send_message(scpi_chan->tx_chan, msg);
+ 	if (ret < 0 || !rx_buf)
+ 		goto out;
+ 
+@@ -854,8 +855,13 @@ static void scpi_free_channels(void *data)
+ 	struct scpi_drvinfo *info = data;
+ 	int i;
+ 
+-	for (i = 0; i < info->num_chans; i++)
+-		mbox_free_channel(info->channels[i].chan);
++	for (i = 0; i < info->num_chans; i++) {
++		struct scpi_chan *pchan = &info->channels[i];
 +
-+obj-$(CONFIG_SUN6I_MSGBOX)	+= sun6i-msgbox.o
-diff --git a/drivers/mailbox/sun6i-msgbox.c b/drivers/mailbox/sun6i-msgbox.c
-new file mode 100644
-index 000000000000..7a41e732457c
---- /dev/null
-+++ b/drivers/mailbox/sun6i-msgbox.c
-@@ -0,0 +1,332 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (c) 2017-2019 Samuel Holland <samuel@sholland.org>
-+
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+#include <linux/spinlock.h>
-+
-+#define NUM_CHANS		8
-+
-+#define CTRL_REG(n)		(0x0000 + 0x4 * ((n) / 4))
-+#define CTRL_RX(n)		BIT(0 + 8 * ((n) % 4))
-+#define CTRL_TX(n)		BIT(4 + 8 * ((n) % 4))
-+
-+#define REMOTE_IRQ_EN_REG	0x0040
-+#define REMOTE_IRQ_STAT_REG	0x0050
-+#define LOCAL_IRQ_EN_REG	0x0060
-+#define LOCAL_IRQ_STAT_REG	0x0070
-+
-+#define RX_IRQ(n)		BIT(0 + 2 * (n))
-+#define RX_IRQ_MASK		0x5555
-+#define TX_IRQ(n)		BIT(1 + 2 * (n))
-+#define TX_IRQ_MASK		0xaaaa
-+
-+#define FIFO_STAT_REG(n)	(0x0100 + 0x4 * (n))
-+#define FIFO_STAT_MASK		GENMASK(0, 0)
-+
-+#define MSG_STAT_REG(n)		(0x0140 + 0x4 * (n))
-+#define MSG_STAT_MASK		GENMASK(2, 0)
-+
-+#define MSG_DATA_REG(n)		(0x0180 + 0x4 * (n))
-+
-+#define mbox_dbg(mbox, ...)	dev_dbg((mbox)->controller.dev, __VA_ARGS__)
-+
-+struct sun6i_msgbox {
-+	struct mbox_controller controller;
-+	struct clk *clk;
-+	spinlock_t lock;
-+	void __iomem *regs;
-+};
-+
-+static bool sun6i_msgbox_last_tx_done(struct mbox_chan *chan);
-+static bool sun6i_msgbox_peek_data(struct mbox_chan *chan);
-+
-+static inline int channel_number(struct mbox_chan *chan)
-+{
-+	return chan - chan->mbox->chans;
-+}
-+
-+static inline struct sun6i_msgbox *to_sun6i_msgbox(struct mbox_chan *chan)
-+{
-+	return chan->con_priv;
-+}
-+
-+static irqreturn_t sun6i_msgbox_irq(int irq, void *dev_id)
-+{
-+	struct sun6i_msgbox *mbox = dev_id;
-+	uint32_t status;
-+	int n;
-+
-+	/* Only examine channels that are currently enabled. */
-+	status = readl(mbox->regs + LOCAL_IRQ_EN_REG) &
-+		 readl(mbox->regs + LOCAL_IRQ_STAT_REG);
-+
-+	if (!(status & RX_IRQ_MASK))
-+		return IRQ_NONE;
-+
-+	for (n = 0; n < NUM_CHANS; ++n) {
-+		struct mbox_chan *chan = &mbox->controller.chans[n];
-+
-+		if (!(status & RX_IRQ(n)))
-+			continue;
-+
-+		while (sun6i_msgbox_peek_data(chan)) {
-+			uint32_t msg = readl(mbox->regs + MSG_DATA_REG(n));
-+
-+			mbox_dbg(mbox, "Channel %d received 0x%08x\n", n, msg);
-+			mbox_chan_received_data(chan, &msg);
++		if (pchan->tx_chan != pchan->rx_chan)
++			mbox_free_channel(pchan->tx_chan);
++		mbox_free_channel(pchan->rx_chan);
++	}
+ }
+ 
+ static int scpi_remove(struct platform_device *pdev)
+@@ -903,6 +909,7 @@ static int scpi_probe(struct platform_device *pdev)
+ 	struct resource res;
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
++	bool use_mbox_names = false;
+ 
+ 	scpi_info = devm_kzalloc(dev, sizeof(*scpi_info), GFP_KERNEL);
+ 	if (!scpi_info)
+@@ -916,6 +923,14 @@ static int scpi_probe(struct platform_device *pdev)
+ 		dev_err(dev, "no mboxes property in '%pOF'\n", np);
+ 		return -ENODEV;
+ 	}
++	if (of_get_property(dev->of_node, "mbox-names", NULL)) {
++		use_mbox_names = true;
++		if (count != 2) {
++			dev_err(dev, "need exactly 2 mboxes with mbox-names\n");
++			return -ENODEV;
 +		}
-+
-+		/* The IRQ can be cleared only once the FIFO is empty. */
-+		writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
++		count /= 2;
 +	}
+ 
+ 	scpi_info->channels = devm_kcalloc(dev, count, sizeof(struct scpi_chan),
+ 					   GFP_KERNEL);
+@@ -961,15 +976,34 @@ static int scpi_probe(struct platform_device *pdev)
+ 		mutex_init(&pchan->xfers_lock);
+ 
+ 		ret = scpi_alloc_xfer_list(dev, pchan);
+-		if (!ret) {
+-			pchan->chan = mbox_request_channel(cl, idx);
+-			if (!IS_ERR(pchan->chan))
+-				continue;
+-			ret = PTR_ERR(pchan->chan);
+-			if (ret != -EPROBE_DEFER)
+-				dev_err(dev, "failed to get channel%d err %d\n",
+-					idx, ret);
++		if (ret)
++			return ret;
 +
-+	return IRQ_HANDLED;
-+}
++		if (use_mbox_names) {
++			pchan->rx_chan = mbox_request_channel_byname(cl, "rx");
++			if (IS_ERR(pchan->rx_chan)) {
++				ret = PTR_ERR(pchan->rx_chan);
++				goto fail;
++			}
++			pchan->tx_chan = mbox_request_channel_byname(cl, "tx");
++			if (IS_ERR(pchan->rx_chan)) {
++				ret = PTR_ERR(pchan->tx_chan);
++				goto fail;
++			}
++		} else {
++			pchan->rx_chan = mbox_request_channel(cl, idx);
++			if (IS_ERR(pchan->rx_chan)) {
++				ret = PTR_ERR(pchan->rx_chan);
++				goto fail;
++			}
++			pchan->tx_chan = pchan->rx_chan;
+ 		}
++		continue;
 +
-+static int sun6i_msgbox_send_data(struct mbox_chan *chan, void *data)
-+{
-+	struct sun6i_msgbox *mbox = to_sun6i_msgbox(chan);
-+	int n = channel_number(chan);
-+	uint32_t msg = *(uint32_t *)data;
-+
-+	/* Using a channel backwards gets the hardware into a bad state. */
-+	if (WARN_ON_ONCE(!(readl(mbox->regs + CTRL_REG(n)) & CTRL_TX(n))))
-+		return 0;
-+
-+	/* We cannot post a new message if the FIFO is full. */
-+	if (readl(mbox->regs + FIFO_STAT_REG(n)) & FIFO_STAT_MASK) {
-+		mbox_dbg(mbox, "Channel %d busy sending 0x%08x\n", n, msg);
-+		return -EBUSY;
-+	}
-+
-+	writel(msg, mbox->regs + MSG_DATA_REG(n));
-+	mbox_dbg(mbox, "Channel %d sent 0x%08x\n", n, msg);
-+
-+	return 0;
-+}
-+
-+static int sun6i_msgbox_startup(struct mbox_chan *chan)
-+{
-+	struct sun6i_msgbox *mbox = to_sun6i_msgbox(chan);
-+	int n = channel_number(chan);
-+
-+	/* The coprocessor is responsible for setting channel directions. */
-+	if (readl(mbox->regs + CTRL_REG(n)) & CTRL_RX(n)) {
-+		/* Flush the receive FIFO. */
-+		while (sun6i_msgbox_peek_data(chan))
-+			readl(mbox->regs + MSG_DATA_REG(n));
-+		writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
-+
-+		/* Enable the receive IRQ. */
-+		spin_lock(&mbox->lock);
-+		writel(readl(mbox->regs + LOCAL_IRQ_EN_REG) | RX_IRQ(n),
-+		       mbox->regs + LOCAL_IRQ_EN_REG);
-+		spin_unlock(&mbox->lock);
-+	}
-+
-+	mbox_dbg(mbox, "Channel %d startup complete\n", n);
-+
-+	return 0;
-+}
-+
-+static void sun6i_msgbox_shutdown(struct mbox_chan *chan)
-+{
-+	struct sun6i_msgbox *mbox = to_sun6i_msgbox(chan);
-+	int n = channel_number(chan);
-+
-+	if (readl(mbox->regs + CTRL_REG(n)) & CTRL_RX(n)) {
-+		/* Disable the receive IRQ. */
-+		spin_lock(&mbox->lock);
-+		writel(readl(mbox->regs + LOCAL_IRQ_EN_REG) & ~RX_IRQ(n),
-+		       mbox->regs + LOCAL_IRQ_EN_REG);
-+		spin_unlock(&mbox->lock);
-+
-+		/* Attempt to flush the FIFO until the IRQ is cleared. */
-+		do {
-+			while (sun6i_msgbox_peek_data(chan))
-+				readl(mbox->regs + MSG_DATA_REG(n));
-+			writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
-+		} while (readl(mbox->regs + LOCAL_IRQ_STAT_REG) & RX_IRQ(n));
-+	}
-+
-+	mbox_dbg(mbox, "Channel %d shutdown complete\n", n);
-+}
-+
-+static bool sun6i_msgbox_last_tx_done(struct mbox_chan *chan)
-+{
-+	struct sun6i_msgbox *mbox = to_sun6i_msgbox(chan);
-+	int n = channel_number(chan);
-+
-+	/*
-+	 * The hardware allows snooping on the remote user's IRQ statuses.
-+	 * We consider a message to be acknowledged only once the receive IRQ
-+	 * for that channel is cleared. Since the receive IRQ for a channel
-+	 * cannot be cleared until the FIFO for that channel is empty, this
-+	 * ensures that the message has actually been read. It also gives the
-+	 * recipient an opportunity to perform minimal processing before
-+	 * acknowledging the message.
-+	 */
-+	return !(readl(mbox->regs + REMOTE_IRQ_STAT_REG) & RX_IRQ(n));
-+}
-+
-+static bool sun6i_msgbox_peek_data(struct mbox_chan *chan)
-+{
-+	struct sun6i_msgbox *mbox = to_sun6i_msgbox(chan);
-+	int n = channel_number(chan);
-+
-+	return readl(mbox->regs + MSG_STAT_REG(n)) & MSG_STAT_MASK;
-+}
-+
-+static const struct mbox_chan_ops sun6i_msgbox_chan_ops = {
-+	.send_data    = sun6i_msgbox_send_data,
-+	.startup      = sun6i_msgbox_startup,
-+	.shutdown     = sun6i_msgbox_shutdown,
-+	.last_tx_done = sun6i_msgbox_last_tx_done,
-+	.peek_data    = sun6i_msgbox_peek_data,
-+};
-+
-+static int sun6i_msgbox_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct mbox_chan *chans;
-+	struct reset_control *reset;
-+	struct resource *res;
-+	struct sun6i_msgbox *mbox;
-+	int i, ret;
-+
-+	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-+	if (!mbox)
-+		return -ENOMEM;
-+
-+	chans = devm_kcalloc(dev, NUM_CHANS, sizeof(*chans), GFP_KERNEL);
-+	if (!chans)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < NUM_CHANS; ++i)
-+		chans[i].con_priv = mbox;
-+
-+	mbox->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(mbox->clk)) {
-+		ret = PTR_ERR(mbox->clk);
-+		dev_err(dev, "Failed to get clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(mbox->clk);
-+	if (ret) {
-+		dev_err(dev, "Failed to enable clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	reset = devm_reset_control_get(dev, NULL);
-+	if (IS_ERR(reset)) {
-+		ret = PTR_ERR(reset);
-+		dev_err(dev, "Failed to get reset control: %d\n", ret);
-+		goto err_disable_unprepare;
-+	}
-+
-+	/*
-+	 * NOTE: We rely on platform firmware to preconfigure the channel
-+	 * directions, and we share this hardware block with other firmware
-+	 * that runs concurrently with Linux (e.g. a trusted monitor).
-+	 *
-+	 * Therefore, we do *not* assert the reset line if probing fails or
-+	 * when removing the device.
-+	 */
-+	ret = reset_control_deassert(reset);
-+	if (ret) {
-+		dev_err(dev, "Failed to deassert reset: %d\n", ret);
-+		goto err_disable_unprepare;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		ret = -ENODEV;
-+		goto err_disable_unprepare;
-+	}
-+
-+	mbox->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(mbox->regs)) {
-+		ret = PTR_ERR(mbox->regs);
-+		dev_err(dev, "Failed to map MMIO resource: %d\n", ret);
-+		goto err_disable_unprepare;
-+	}
-+
-+	/* Disable all IRQs for this end of the msgbox. */
-+	writel(0, mbox->regs + LOCAL_IRQ_EN_REG);
-+
-+	ret = devm_request_irq(dev, irq_of_parse_and_map(dev->of_node, 0),
-+			       sun6i_msgbox_irq, 0, dev_name(dev), mbox);
-+	if (ret) {
-+		dev_err(dev, "Failed to register IRQ handler: %d\n", ret);
-+		goto err_disable_unprepare;
-+	}
-+
-+	mbox->controller.dev           = dev;
-+	mbox->controller.ops           = &sun6i_msgbox_chan_ops;
-+	mbox->controller.chans         = chans;
-+	mbox->controller.num_chans     = NUM_CHANS;
-+	mbox->controller.txdone_irq    = false;
-+	mbox->controller.txdone_poll   = true;
-+	mbox->controller.txpoll_period = 5;
-+
-+	spin_lock_init(&mbox->lock);
-+	platform_set_drvdata(pdev, mbox);
-+
-+	ret = mbox_controller_register(&mbox->controller);
-+	if (ret) {
-+		dev_err(dev, "Failed to register controller: %d\n", ret);
-+		goto err_disable_unprepare;
-+	}
-+
-+	return 0;
-+
-+err_disable_unprepare:
-+	clk_disable_unprepare(mbox->clk);
-+
-+	return ret;
-+}
-+
-+static int sun6i_msgbox_remove(struct platform_device *pdev)
-+{
-+	struct sun6i_msgbox *mbox = platform_get_drvdata(pdev);
-+
-+	mbox_controller_unregister(&mbox->controller);
-+	/* See the comment in sun6i_msgbox_probe about the reset line. */
-+	clk_disable_unprepare(mbox->clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sun6i_msgbox_of_match[] = {
-+	{ .compatible = "allwinner,sun6i-a31-msgbox", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sun6i_msgbox_of_match);
-+
-+static struct platform_driver sun6i_msgbox_driver = {
-+	.driver = {
-+		.name = "sun6i-msgbox",
-+		.of_match_table = sun6i_msgbox_of_match,
-+	},
-+	.probe  = sun6i_msgbox_probe,
-+	.remove = sun6i_msgbox_remove,
-+};
-+module_platform_driver(sun6i_msgbox_driver);
-+
-+MODULE_AUTHOR("Samuel Holland <samuel@sholland.org>");
-+MODULE_DESCRIPTION("Allwinner sun6i/sun8i/sun9i/sun50i Message Box");
-+MODULE_LICENSE("GPL v2");
++fail:
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "failed to get channel%d err %d\n",
++				idx, ret);
+ 		return ret;
+ 	}
+ 
 -- 
 2.23.0
 
