@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656ECC2D0CB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BE6C2D0CD
 	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 17:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2C722B48
+	by mail.kernel.org (Postfix) with ESMTP id 850D122B48
 	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 17:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1576429225;
-	bh=NPSuZ6u/sK4SlEDJ0oH9si5g4gTkgubMSRdexHBwM4g=;
+	bh=EvY3LwRt0f5Tvf7gcoGOEsDupUlInqW1mNCeFk7ve3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JPvtaiITfVNRnCxbXZHbxnUmbubPUhBxd9aw3X/54sy4gePe8cGr4WygcwW3cnP8d
-	 dQpNhYIZK1QaJgQPN/qKHskm8gnkZ4LKx/aW49h+xcmCTw9xksAY9MnIMbb7y1dMM9
-	 IKL0ZEvekvB38FTOil7p8xl5ohV52D2Tyt7+zsCs=
+	b=NoZQCTh+YlAddsDROLfWfCOQ29Td82ErJKaQeWePbWwKhmAvWv4m6YJMEeLCoNVlr
+	 NGymmurLcEHU1e44CvRxGirLJgPBjI290/vLKVP/sMWX8ukqyWvKc5n7g7gln7yZrL
+	 eB96XCf8+VzxR24II0MmkP5pEFXA9tRddLWV1B+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfLORAY (ORCPT
+        id S1727030AbfLORAY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Sun, 15 Dec 2019 12:00:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54890 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:54888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbfLOQ7a (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1726136AbfLOQ7a (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Sun, 15 Dec 2019 11:59:30 -0500
 Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7379A2465B;
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FAEC24654;
         Sun, 15 Dec 2019 16:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576429169;
-        bh=NPSuZ6u/sK4SlEDJ0oH9si5g4gTkgubMSRdexHBwM4g=;
+        bh=EvY3LwRt0f5Tvf7gcoGOEsDupUlInqW1mNCeFk7ve3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qIXQlg9wbdGZXjiEkHcQk33NuX/6vZv5AznWEx+QQaKc0cPCRXyWcreLkSlIvrxj+
-         6sd709V2okmUuC+zbJ2fGCmk1U8u45MT+uN24eVRFEdfkuV9YqEW7p6hoMhjCep0J1
-         fgu9XM1jTDew+Zn1w/QZC4zNpROJWYtxrWrz5pSQ=
+        b=qPHlms8RDy0m/MzsOfVjqrcisYEQwVZwsvvQLsGFf/yO16N1gXeFT/9lGSdDVBI2J
+         9WykYKUqXK28CKGeZrJh6uST59Zb+UD7f94fN6fJMsYbySt6uOdMBjzCO2SXTTM2+y
+         crawrkADDaSicfm7uuE1/DW0batDau1NcqoaBe+I=
 Received: by wens.tw (Postfix, from userid 1000)
-        id 1BB865F9B4; Mon, 16 Dec 2019 00:59:26 +0800 (CST)
+        id 374BC5FD34; Mon, 16 Dec 2019 00:59:26 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <mripard@kernel.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -50,9 +50,9 @@ To:     Maxime Ripard <mripard@kernel.org>,
 Cc:     Chen-Yu Tsai <wens@kernel.org>, linux-media@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 01/14] dt-bindings: media: sun4i-csi: Add compatible for CSI1 on A10/A20
-Date:   Mon, 16 Dec 2019 00:59:11 +0800
-Message-Id: <20191215165924.28314-2-wens@kernel.org>
+Subject: [PATCH 03/14] media: sun4i-csi: Fix data sampling polarity handling
+Date:   Mon, 16 Dec 2019 00:59:13 +0800
+Message-Id: <20191215165924.28314-4-wens@kernel.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191215165924.28314-1-wens@kernel.org>
 References: <20191215165924.28314-1-wens@kernel.org>
@@ -65,56 +65,35 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-The CSI1 block has the same structure and layout as the CSI0 block.
-Differences include:
+The CLK_POL field specifies whether data is sampled on the falling or
+rising edge of PCLK, not whether the data lines are active high or low.
+Evidence of this can be found in the timing diagram labeled "horizontal
+size setting and pixel clock timing".
 
-  - Only one channel in BT.656 instead of four in CSI0
-  - 10-bit raw data input vs 8-bit in CSI0
-  - 24-bit RGB888/YUV444 input vs 16-bit RGB565/YUV422 in CSI0
-  - No ISP hardware
+Fix the setting by checking the correct flag, V4L2_MBUS_PCLK_SAMPLE_RISING.
+While at it, reorder the three polarity flag checks so HSYNC and VSYNC
+are grouped together.
 
-The hardware found in the A20 is the same as in the A10.
-
+Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- .../bindings/media/allwinner,sun4i-a10-csi.yaml       | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-index d3e423fcb6c2..221fe630c7d5 100644
---- a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-+++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-@@ -16,7 +16,12 @@ description: |-
+diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
+index d6979e11a67b..8b567d0f019b 100644
+--- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
++++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
+@@ -279,8 +279,8 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	       csi->regs + CSI_WIN_CTRL_H_REG);
  
- properties:
-   compatible:
--    const: allwinner,sun7i-a20-csi0
-+    oneOf:
-+      - const: allwinner,sun4i-a10-csi1
-+      - const: allwinner,sun7i-a20-csi0
-+      - items:
-+        - const: allwinner,sun7i-a20-csi1
-+        - const: allwinner,sun4i-a10-csi1
- 
-   reg:
-     maxItems: 1
-@@ -25,12 +30,16 @@ properties:
-     maxItems: 1
- 
-   clocks:
-+    minItems: 2
-+    maxItems: 3
-     items:
-       - description: The CSI interface clock
-       - description: The CSI ISP clock
-       - description: The CSI DRAM clock
- 
-   clock-names:
-+    minItems: 2
-+    maxItems: 3
-     items:
-       - const: bus
-       - const: isp
+ 	hsync_pol = !!(bus->flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH);
+-	pclk_pol = !!(bus->flags & V4L2_MBUS_DATA_ACTIVE_HIGH);
+ 	vsync_pol = !!(bus->flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH);
++	pclk_pol = !!(bus->flags & V4L2_MBUS_PCLK_SAMPLE_RISING);
+ 	writel(CSI_CFG_INPUT_FMT(csi_fmt->input) |
+ 	       CSI_CFG_OUTPUT_FMT(csi_fmt->output) |
+ 	       CSI_CFG_VSYNC_POL(vsync_pol) |
 -- 
 2.24.0
 
