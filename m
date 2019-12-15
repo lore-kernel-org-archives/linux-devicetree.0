@@ -2,98 +2,129 @@ Return-Path: <SRS0=1FHL=2F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A356EC43603
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 12:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF432C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 14:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BAD820726
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 12:20:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576412421;
-	bh=HSM3kjnBrmViAteF1Ui9aJjj67DF4kRB2tovXrQ0mBU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Hp+T1LvoC0XZe70wwRzu21GJOm6YociSLzvaWc3iTSXs6vbEcm/sWjV2C3VhxHK5n
-	 mlC6aDweLI5SxVoDOnTnZSMYgkNOFbMIkjE+W+mDycMub7GbPKOQ/jF2KwsppoyNFH
-	 2pTHP4Nixbd3VszodTRzmX6WSVn6lS0YjGMiWZE8=
+	by mail.kernel.org (Postfix) with ESMTP id 9FEEF206E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 14:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbfLOMUV (ORCPT
+        id S1726118AbfLOOMF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Dec 2019 07:20:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbfLOMUU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Dec 2019 07:20:20 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A861F2054F;
-        Sun, 15 Dec 2019 12:20:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576412420;
-        bh=HSM3kjnBrmViAteF1Ui9aJjj67DF4kRB2tovXrQ0mBU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BKLPJDnXCefdxeDeWugRF4NcYVsItDmAfNaVKXhiFK/cNXDSAusKqKPPoLPVA/4CG
-         Q/U0JnC1Yh1WnWieSWvXGmcqJA9QOSCANtPlmlzSkjOfxUV6sLszVKZsJDTTHzCJfw
-         DkZZsrUhKD5meTAP2WPkUCc/5sXCfh9DvwKaNY+I=
-Date:   Sun, 15 Dec 2019 12:20:14 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Rodrigo Carvalho <rodrigorsdc@gmail.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH v6 2/2] dt-bindings: iio: accel: add binding
- documentation for ADIS16240
-Message-ID: <20191215122014.1e6ce604@archlinux>
-In-Reply-To: <20191213191036.GA28558@bogus>
-References: <20191207045339.9186-1-rodrigorsdc@gmail.com>
-        <20191207045339.9186-2-rodrigorsdc@gmail.com>
-        <20191213191036.GA28558@bogus>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Dec 2019 09:12:05 -0500
+Received: from out28-194.mail.aliyun.com ([115.124.28.194]:45803 "EHLO
+        out28-194.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfLOOME (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Dec 2019 09:12:04 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07524233|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.748144-0.0180301-0.233826;DS=SPAM|spam_ad|0.859637-0.000764868-0.139599;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03311;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.GHcsMuJ_1576419116;
+Received: from 192.168.88.128(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GHcsMuJ_1576419116)
+          by smtp.aliyun-inc.com(10.147.41.143);
+          Sun, 15 Dec 2019 22:11:58 +0800
+Subject: Re: [PATCH v3 1/5] clk: Ingenic: Remove unnecessary spinlock when
+ reading registers.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1576337630-78576-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1576337630-78576-3-git-send-email-zhouyanjie@wanyeetech.com>
+ <1576346863.3.1@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5DF63F2E.2040608@wanyeetech.com>
+Date:   Sun, 15 Dec 2019 22:11:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1576346863.3.1@crapouillou.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 13 Dec 2019 13:10:36 -0600
-Rob Herring <robh@kernel.org> wrote:
+Hi Paul,
 
-> On Sat,  7 Dec 2019 01:53:39 -0300, Rodrigo Carvalho wrote:
-> > This patch add device tree binding documentation for ADIS16240.
-> > 
-> > Signed-off-by: Rodrigo Carvalho <rodrigorsdc@gmail.com>
-> > ---
-> > V6:
-> >   - Update SPDX license identifier
-> > 
-> >  .../bindings/iio/accel/adi,adis16240.yaml     | 49 +++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> >   
-> 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-> 
-> If a tag was not added on purpose, please state why and what changed.
+On 2019年12月15日 02:07, Paul Cercueil wrote:
+> Hi Zhou,
+>
+> You can also remove the locks around ingenic_cgu_gate_get(), they are 
+> useless. Then also edit the doc of this function as currently it says 
+> that the caller must hold the lock.
+>
 
-Applied to the togreg branch of iio.git, picking up Rob's tag from v5.
+Sure, I'll remove it in v4.
 
-Pushed out as testing for the autobuilders to poke at it.
+Thanks and best regards!
 
-Thanks,
-
-Jonathan
+> -Paul
+>
+>
+> Le sam., déc. 14, 2019 at 23:33, 周琰杰 (Zhou Yanjie) 
+> <zhouyanjie@wanyeetech.com> a écrit :
+>> It is not necessary to use spinlock when reading registers,
+>> so remove it from cgu.c.
+>>
+>> Suggested-by: Paul Cercueil <paul@crapouillou.net>
+>> Suggested-by: Paul Burton <paulburton@kernel.org>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> ---
+>>
+>> Notes:
+>>     v2:
+>>     New patch.
+>>
+>>     v2->v3:
+>>     Adjust order from [5/5] in v2 to [1/5] in v3.
+>>
+>>  drivers/clk/ingenic/cgu.c | 6 ------
+>>  1 file changed, 6 deletions(-)
+>>
+>> diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+>> index 6e96303..8bd3998 100644
+>> --- a/drivers/clk/ingenic/cgu.c
+>> +++ b/drivers/clk/ingenic/cgu.c
+>> @@ -76,16 +76,13 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, 
+>> unsigned long parent_rate)
+>>      const struct ingenic_cgu_pll_info *pll_info;
+>>      unsigned m, n, od_enc, od;
+>>      bool bypass;
+>> -    unsigned long flags;
+>>      u32 ctl;
+>>
+>>      clk_info = &cgu->clock_info[ingenic_clk->idx];
+>>      BUG_ON(clk_info->type != CGU_CLK_PLL);
+>>      pll_info = &clk_info->pll;
+>>
+>> -    spin_lock_irqsave(&cgu->lock, flags);
+>>      ctl = readl(cgu->base + pll_info->reg);
+>> -    spin_unlock_irqrestore(&cgu->lock, flags);
+>>
+>>      m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
+>>      m += pll_info->m_offset;
+>> @@ -259,12 +256,9 @@ static int ingenic_pll_is_enabled(struct clk_hw 
+>> *hw)
+>>      struct ingenic_cgu *cgu = ingenic_clk->cgu;
+>>      const struct ingenic_cgu_clk_info *clk_info = 
+>> to_clk_info(ingenic_clk);
+>>      const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
+>> -    unsigned long flags;
+>>      u32 ctl;
+>>
+>> -    spin_lock_irqsave(&cgu->lock, flags);
+>>      ctl = readl(cgu->base + pll_info->reg);
+>> -    spin_unlock_irqrestore(&cgu->lock, flags);
+>>
+>>      return !!(ctl & BIT(pll_info->enable_bit));
+>>  }
+>> -- 
+>> 2.7.4
+>>
+>
 
