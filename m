@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDE0C2D0D4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 04:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0766C2D0D1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 04:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 557EC2467A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 04:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3FAF24679
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 04:25:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="cILIeY3Z";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Dg8URCxD"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="HCuIys0K";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EzLWb1oV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfLOEZD (ORCPT
+        id S1726834AbfLOEZO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Dec 2019 23:25:03 -0500
+        Sat, 14 Dec 2019 23:25:14 -0500
 Received: from new3-smtp.messagingengine.com ([66.111.4.229]:60083 "EHLO
         new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726019AbfLOEZC (ORCPT
+        by vger.kernel.org with ESMTP id S1726739AbfLOEZE (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sat, 14 Dec 2019 23:25:02 -0500
+        Sat, 14 Dec 2019 23:25:04 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 9263F5AE5;
-        Sat, 14 Dec 2019 23:25:01 -0500 (EST)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 4E96B5AE9;
+        Sat, 14 Dec 2019 23:25:03 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Sat, 14 Dec 2019 23:25:01 -0500
+  by compute5.internal (MEProxy); Sat, 14 Dec 2019 23:25:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=8789/HvoJo8OL
-        hH4D97+su6QiBZWTXGYa2xCWRaRHwI=; b=cILIeY3Z4KXPzFGl0PtaP3J12xU/i
-        sBAlIji5BtRUFCc4hGfyR6DQM1pLGL2YVPBerB2V/RimH695drH9RZLt6uSdSNFe
-        ntM60qiHWAiNvj39hxAIVDrvrk2qfLk/8TVDuRHpn1BUlRNlWby6GFLI8MVUOwCJ
-        xiK04nHlN0Ihkn9Hdo8dGSC1aAvj7RURf3PngByfcY5rYA0hr3UJ9XFYCjR7LPHl
-        BWh7YYvf2pVQin+W/F8PSAzRGibkmzSQXxgkjSYiWRqoUf4xAGMBrYK48Vwua/0c
-        /iA8fOIiGJrqYLAVF2TlcN6/4hdHhmOpTeVNCxqHAkFCfzPKnGujnYl/Q==
+        :mime-version:content-transfer-encoding; s=fm1; bh=b6HojHijxWb+y
+        5XleJvk+mLWd4R6gqj7yGjWhlzWNIc=; b=HCuIys0KuTmOuDOGPeH1i5uklfFtJ
+        0cPQbfJmG53IwKJpiDhN6Rkrw5BdEWXgt/bfqMxVteVzW/err946kNpLsprx8sZN
+        KNzI0l8v4w0EgeiALxeL4vvEMbmz7Gxt4td7IT0pypjb6tcp79N7RKupFpNK7EaF
+        P/CmXLNWjfziSeADmr1fDhIbfpMO6VXZuuUWjSIDtRkf7/I0Z8ejbxHVFqItELqJ
+        U4mWJBJpGmMX1sTeYlCkoYvh2rLuEkMF6ReokLQzgfv+zRdBBIqVq+gQ84FMJFkB
+        t7kpkuqfu57aynS2wTIgXf7LMLXGZlbOVBxURIrxzcxAna2wL5Qs4mkTA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=8789/HvoJo8OLhH4D97+su6QiBZWTXGYa2xCWRaRHwI=; b=Dg8URCxD
-        RdRp+j1QEzh7Fci2mGoiruU0VNPcJ8impL1Pua5EcheDrm//0lPnN36w3lWNe4ua
-        rLZry2x7mb54p8lUWpeGHDNUoLk41lEM2jB6EKaHzPT8kwr68Hfy5BEs0oiz2nWr
-        Zcj4m9jstXdeirSlYpOPqD+SGX760otvr0cACjydkmealuBe+pz+EQ8pbaN61e3g
-        qCAseNBnrFVjrTbK75ot1GAF3lCHrSKovnj/4pZ9s1czsDenXTP9H6ePnxD3e3Ve
-        tgX80tEFRLclcsWa6d4gUoWpEiT5fW7ZVJH1R7NGcQEWjG+PJinzMv2t5zLHHizP
-        gFfB+fInb8u/EQ==
-X-ME-Sender: <xms:nbX1XYfF0dSesqG6yEA7zCV6RT81JSkM67v6xf0aBSrm9du6wP15Cw>
+        fm1; bh=b6HojHijxWb+y5XleJvk+mLWd4R6gqj7yGjWhlzWNIc=; b=EzLWb1oV
+        R/IT+zv7mmdIiWf4Ne9Jw6b6kG/JK5wV34ldDiR0I1hhilVQqbZwznORkyb8J3kl
+        cNeiU4WKKAXJM6Ac2IkJIe+bYoJ3D5/qsloyXSF8VVHf82rBIiPYGK7qSmmFY+BG
+        ee0B3zWXpi7nBhjCHeMbykgowa6Bvf7MnPtc5Z1fLXRIOqparUnJYbZ0XeixPUkk
+        e3Td9JSkJ5mNbZHQELxsio9KZr6MmhDylHauLNpklGLhNQmPfck2rl9Y9Pr/g/Ou
+        S0hyhK9DWp0kJ+m28c0xlr/RIyaAIg60EYAedv+alYCx1nHhbd3c4jdGeBhXzK5m
+        /9XPJIYCDR/WJQ==
+X-ME-Sender: <xms:n7X1XZnGGCNl5aNUin-fHyezI3e1aOn6fmXgi92TMYXXZoxrl9-VdA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtvddgieelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -57,13 +57,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtvddgieelucetufdoteggod
     lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
     epjedtrddufeehrddugeekrdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghm
     uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgepvd
-X-ME-Proxy: <xmx:nbX1XXtcrgsqVaryJlhgH4NoRuZVe1M9sbntBgGBF0-QW9s_cFiLbA>
-    <xmx:nbX1Xf2ipNlAkXqU3E60ZrfyAhqxUyhbJVEaaK7-qp4LlbgRzcUQGg>
-    <xmx:nbX1XVHbtGMH8LvVVGZUh-XkxGcZtoSjv5d2y5f2lHjp5MUgTH_b9g>
-    <xmx:nbX1XYGbnck0lgGMl_E0tQNNthMDRP3JUp3-Ie7qBKsQgCOWafAWPw>
+X-ME-Proxy: <xmx:n7X1XalNUiokq8tv2nhCBpg8T7Vi-4dCg2aGeEUj_0UdxQ4zU5nZCg>
+    <xmx:n7X1Xds1oPgAB8wKLD0CBnXYuuN6pMjqk3dYuabyL550qoNU_t5Kyg>
+    <xmx:n7X1XUKXkWUzg3-86Lp4B44SPWUkmSlhXgv4r1nWBCDjtHR1kp-1Mw>
+    <xmx:n7X1XTuF4PovPZZzfHh5emB3_6CdFT7xUu15P285jMtoNTx-E_MUPA>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A99738005C;
-        Sat, 14 Dec 2019 23:25:00 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 614B78005B;
+        Sat, 14 Dec 2019 23:25:02 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Jassi Brar <jassisinghbrar@gmail.com>,
@@ -78,9 +78,9 @@ To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v5 5/8] ARM: dts: sunxi: h3/h5: Add msgbox node
-Date:   Sat, 14 Dec 2019 22:24:52 -0600
-Message-Id: <20191215042455.51001-6-samuel@sholland.org>
+Subject: [PATCH v5 7/8] arm64: dts: allwinner: h6: Add msgbox node
+Date:   Sat, 14 Dec 2019 22:24:54 -0600
+Message-Id: <20191215042455.51001-8-samuel@sholland.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191215042455.51001-1-samuel@sholland.org>
 References: <20191215042455.51001-1-samuel@sholland.org>
@@ -91,36 +91,36 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The H3 and H5 SoCs contain a message box that can be used to send
-messages and interrupts back and forth between the ARM application CPUs
-and the ARISC coprocessor. Add a device tree node for it.
+The H6 SoC contains a message box that can be used to send messages and
+interrupts back and forth between the ARM application CPUs and the ARISC
+coprocessor. Add a device tree node for it.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 10 ++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
  1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index 0afea59486c2..6c5b283962a1 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -233,6 +233,16 @@
- 			reg = <0x1c14000 0x400>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 8e5999cd08bb..70ee56ba2091 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -240,6 +240,16 @@
+ 			#dma-cells = <1>;
  		};
  
-+		msgbox: mailbox@1c17000 {
-+			compatible = "allwinner,sun8i-h3-msgbox",
++		msgbox: mailbox@3003000 {
++			compatible = "allwinner,sun50i-h6-msgbox",
 +				     "allwinner,sun6i-a31-msgbox";
-+			reg = <0x01c17000 0x1000>;
++			reg = <0x03003000 0x1000>;
 +			clocks = <&ccu CLK_BUS_MSGBOX>;
 +			resets = <&ccu RST_BUS_MSGBOX>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
 +			#mbox-cells = <1>;
 +		};
 +
- 		usb_otg: usb@1c19000 {
- 			compatible = "allwinner,sun8i-h3-musb";
- 			reg = <0x01c19000 0x400>;
+ 		sid: efuse@3006000 {
+ 			compatible = "allwinner,sun50i-h6-sid";
+ 			reg = <0x03006000 0x400>;
 -- 
 2.23.0
 
