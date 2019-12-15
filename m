@@ -2,63 +2,177 @@ Return-Path: <SRS0=1FHL=2F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815A5C43603
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 16:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4200C43603
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 16:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62543206D8
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 16:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86992206E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 16:31:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576427471;
+	bh=ktyZ/NUBXxF+ma0Le443TdiIJHqPYVPSGT5eOza8uqI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oU+jSb/Fuabul9JhMLb1J5iIvRxQ4O8wMi4xO0PGXyYKZC22NPrwlIJoZC8VXSzTj
+	 wL2MjGITOh1Gw26PM2m0nBX1YJ11EqaOBWhN5z7BtgAKs4yDFgwq8iTpN06bMcH7Ku
+	 adfHoNgDuPPKXgdJHW6zTWs3RQU8sfoQFAx7kdpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfLOQVn (ORCPT
+        id S1726135AbfLOQbL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Dec 2019 11:21:43 -0500
-Received: from out28-145.mail.aliyun.com ([115.124.28.145]:52956 "EHLO
-        out28-145.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfLOQVn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Dec 2019 11:21:43 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1772895|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0837881-0.00162941-0.914583;DS=CONTINUE|ham_system_inform|0.0392732-0.000340861-0.960386;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03311;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.GHgOK.D_1576426866;
-Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GHgOK.D_1576426866)
-          by smtp.aliyun-inc.com(10.147.41.143);
-          Mon, 16 Dec 2019 00:21:13 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
-        mark.rutland@arm.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, linus.walleij@linaro.org
-Subject: [PATCH v8 0/5] Fix bugs in X1000/X1500 and add X1830 pinctrl driver v8
-Date:   Mon, 16 Dec 2019 00:20:59 +0800
-Message-Id: <1576426864-35348-2-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576426864-35348-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1576426864-35348-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Sun, 15 Dec 2019 11:31:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726118AbfLOQbK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Dec 2019 11:31:10 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61AAD206D8;
+        Sun, 15 Dec 2019 16:31:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576427469;
+        bh=ktyZ/NUBXxF+ma0Le443TdiIJHqPYVPSGT5eOza8uqI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=L+WoZdCmm5LMRzwz4zR4g1Ti3mhatn96qsmpPNqBsFyUBpYYSCGoRHnV8nIdNmAZX
+         BZsbhawqYisPXqRxdyVnJdjSiceDTfgYGlFSkV7dNgt7j0GOaEvtDdp0kJ5bGt6Dvj
+         RV/ghdgshYlEBUlMXhwim7yLiaTtEz1mfXDKNVmU=
+Date:   Sun, 15 Dec 2019 16:31:03 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Dan Robertson <dan@dlrobertson.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v6 2/2] iio: (bma400) add driver for the BMA400
+Message-ID: <20191215163103.17cee7d4@archlinux>
+In-Reply-To: <CAHp75VezHcGwwWZ8tSf6FKoYQ_c4=WhYE2ag6OtcAJ2Z9M3ZOA@mail.gmail.com>
+References: <20191211010308.1525-1-dan@dlrobertson.com>
+        <20191211010308.1525-3-dan@dlrobertson.com>
+        <CAHp75VdAJwMkPZQLLQrOk4HABjG-parEOmH8S-6kU+zyYnnfww@mail.gmail.com>
+        <20191212001735.GA4667@nessie>
+        <CAHp75VezHcGwwWZ8tSf6FKoYQ_c4=WhYE2ag6OtcAJ2Z9M3ZOA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-v7->v8:
-Separate the part of introduce reg_offset in [4/4] in v7 into [3/5] in v8.
+On Thu, 12 Dec 2019 11:41:45 +0200
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-周琰杰 (Zhou Yanjie) (5):
-  pinctrl: Ingenic: Fix bugs in X1000 and X1500.
-  pinctrl: Ingenic: Add missing parts for X1000 and X1500.
-  pinctrl: Ingenic: Introduce reg_offset and use it instead hard code.
-  dt-bindings: pinctrl: Add bindings for Ingenic X1830.
-  pinctrl: Ingenic: Add pinctrl driver for X1830.
+> On Thu, Dec 12, 2019 at 2:33 AM Dan Robertson <dan@dlrobertson.com> wrote:
+> > On Wed, Dec 11, 2019 at 03:21:56PM +0200, Andy Shevchenko wrote:  
+> > > On Wed, Dec 11, 2019 at 3:20 AM Dan Robertson <dan@dlrobertson.com> wrote:  
+> 
+> > > > +#define BMA400_LP_OSR_SHIFT         0x05
+> > > > +#define BMA400_NP_OSR_SHIFT         0x04
+> > > > +#define BMA400_SCALE_SHIFT          0x06  
+> > >
+> > > I'm not sure why this is being defined as hex number instead of plain decimal...  
+> >
+> > Sounds good.
+> >  
+> > > > +#define BMA400_TWO_BITS_MASK        GENMASK(1, 0)
+> > > > +#define BMA400_LP_OSR_MASK          GENMASK(6, BMA400_LP_OSR_SHIFT)
+> > > > +#define BMA400_NP_OSR_MASK          GENMASK(5, BMA400_NP_OSR_SHIFT)
+> > > > +#define BMA400_ACC_ODR_MASK         GENMASK(3, 0)
+> > > > +#define BMA400_ACC_SCALE_MASK       GENMASK(7, BMA400_SCALE_SHIFT)  
+> > >
+> > > And here simple better to put same numbers. It will help to read.  
+> >
+> > Do you mean for the shift or for the mask?  
+> 
+> SHIFTs -> plain decimals
+> 
+> > > > +EXPORT_SYMBOL(bma400_regmap_config);  
+> > >
+> > > I'm not sure I got the idea why this one is being exported.  
+> >
+> > It needs to be exported so that it can be used in the bma400_i2c module and the
+> > future bma400_spi module. In theory, if we _really_ do not want to export this,
+> > then we can define separate regmap configs in each of the bma400_i2c and
+> > (future) bma400_spi modules, but then we would have to export the is_volitile_reg
+> > and is_writable_reg functions. As a result, I do not see any benefits to that
+> > method over exporting the config, but I could be convinced otherwise.  
+> 
+> I think there might be better way to do this.
+> But I leave it to you and maintainer to agree on (I will be fine with
+> any solution you will come to).
 
- .../bindings/pinctrl/ingenic,pinctrl.txt           |   8 +-
- drivers/pinctrl/pinctrl-ingenic.c                  | 456 ++++++++++++++++++---
- 2 files changed, 395 insertions(+), 69 deletions(-)
+This does always feel a bit silly.  We have plenty of cases of both
+the suggested options (replicate vs export). I don't really care either way.
 
--- 
-2.7.4
+
+> 
+> > > > +               if (uhz || hz % BMA400_ACC_ODR_MIN_WHOLE_HZ)
+> > > > +                       return -EINVAL;
+> > > > +
+> > > > +               val = hz / BMA400_ACC_ODR_MIN_WHOLE_HZ;
+> > > > +               idx = __ffs(val);
+> > > > +  
+> > >  
+> > > > +               if (val ^ BIT(idx))  
+> > >
+> > > Seems like funny way of checking is_power_of_2(). But it's up to maintainers.
+> > > And your variant may even be better here (in code generation perspective)...
+> > >
+> > > However, the whole idea here is, IIUC, to have something like
+> > >
+> > >   hz = 2^idx * BMA400_ACC_ODR_MIN_WHOLE_HZ
+> > >
+> > > I think you may do it without divisions, i.e. call __ffs() first and then do
+> > >    idx = __ffs(...);
+> > >    val = hz >> idx;
+> > >    if (val != BMA400_ACC_ODR_MIN_WHOLE_HZ)
+> > >     return -EINVAL;
+> > >
+> > > or something like above.  
+> >
+> > It would be more obvious what is being done here with is_power_of_two. I'll
+> > revisit this function with your suggestions. If I can make it simpler, I'll
+> > go this route.  
+> 
+> The main point here to get rid of divisions. Is it achievable?
+> 
+> > > > +                       return -EINVAL;  
+> > >
+> > > ...  
+> 
+> > > > +       ret = regmap_read(data->regmap, BMA400_ACC_CONFIG0_REG, &val);
+> > > > +       if (ret < 0)  
+> > >
+> > > I'm wondering if in all of these regmap_read()...
+> > >  
+> > > > +               return ret;  
+> > >  
+> > > > +       ret = regmap_write(data->regmap, BMA400_ACC_CONFIG0_REG,
+> > > > +                          mode | (val & ~BMA400_TWO_BITS_MASK));
+> > > > +       if (ret < 0) {  
+> > >
+> > > ...and regmap_write() calls you ever can get a positive returned code.  
+> >
+> > From the regmap_read/regmap_write docs:
+> >  
+> > > * A value of zero will be returned on success, a negative errno will
+> > > * be returned in error cases.  
+> >
+> > So I assume ret <= 0  
+> 
+> There is no positive codes mentioned at all. And you assume right.
+> But why we care about positive codes if they never can be returned?
+Agreed, for regmap calls, definitely prefer the driver to check with
+if (ret)
+	...
+> 
 
