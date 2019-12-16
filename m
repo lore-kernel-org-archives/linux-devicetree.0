@@ -2,238 +2,147 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F306FC2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 22:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CC0C2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 22:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2BE724673
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 22:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D325821835
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 22:22:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="bjBTJepl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfLPWRi (ORCPT
+        id S1727438AbfLPWWI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 17:17:38 -0500
-Received: from mga07.intel.com ([134.134.136.100]:14406 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726141AbfLPWRh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 17:17:37 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 14:17:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,323,1571727600"; 
-   d="scan'208";a="205261770"
-Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.147]) ([10.7.153.147])
-  by orsmga007.jf.intel.com with ESMTP; 16 Dec 2019 14:17:34 -0800
-Subject: Re: [PATCH v11 14/14] hwmon: Add PECI dimmtemp driver
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
+        Mon, 16 Dec 2019 17:22:08 -0500
+Received: from mail-eopbgr1410117.outbound.protection.outlook.com ([40.107.141.117]:21568
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725836AbfLPWWH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 17:22:07 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kQ4mc0e9hk79Ho0knuzRD5mn4fR6wOt5IX3eoK8brUdmlXWBeg4QaJ9+Y7ptl7V/4OLaL/UOQj3OO8mC7vom3EuZGhlm3zR77sujV5gJyTkc6VelgCxQ4jPuHAbV1V5d67FHpXl6yZfD/wbaHXLTbiaSkpn6RtmSxs/tNkRuBmX1mxjuZKQiaHolM+o4Tma9kGzSpEexLsHWU0JtDl9SXlXl2L5F/zY93dsHC9F/E321Oz+DsGXwDQmmqwJb+oK8LidrTujLDy+VGlOSKQOlmDhcynE8VRbTQ4AWq9k9Fxewj79fJ4s8oiAGnvkbekaLtWdsbC/5D3j6aRW7F6nURw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZM7x4/dxpf2yVgpNms5omvMeZY1cUKJkl/IOnV+kAiw=;
+ b=meNDZX5YNB0Uw2wv7Jv1MFEZQUyZ+d+ArNMoSx4TytMRMiP8CNQWvy28Hwf4vWz/5FW1JPSFT4FE2Oo+f0yAVSHQlJ/G5+u3iUAyrQClvikBeM8R4YCWLjsBROdYik1mNF9tgR8OS09bTs12vbyYyq7+Cj/f2HxCdyYb4w6Hl46So7Jr4RL1dW2E/ML5/CU06f4tKjF4eiS7XG1DIdNkB5lumElM3fJozVNM5AobOQQrAMYJNsbE7UQms4jNjO5BA5zowHF7/ZVfOctrTkB8aLahzo5ctub2XLd+DtJGqVWu6GRMfBPJZpgbRbPxWEziUZaMXLlw6+cFrezdUPLOMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZM7x4/dxpf2yVgpNms5omvMeZY1cUKJkl/IOnV+kAiw=;
+ b=bjBTJeplLsg2noH7nEsgihncB1owFwjMRG2fCAB6lMUm9VcuvP9iHAgqlVtvwI0iUMacNz7db8JO31fukuCuvbrc7dC6S+ZUe9CqFgn7g5RXyDW1y1Cggcs7sLDe/FeUDcxr0hHf7/SZlmxRoZz4OEIVSpgcezwAwZ79m4sDkvo=
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
+ TY1PR01MB1596.jpnprd01.prod.outlook.com (52.133.162.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.18; Mon, 16 Dec 2019 22:21:24 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
+ 22:21:24 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>,
-        Tomohiro Kusumi <kusumi.tomohiro@gmail.com>,
-        "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>,
-        Frederic Barrat <fbarrat@linux.vnet.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        David Kershner <david.kershner@unisys.com>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Sagar Dharia <sdharia@codeaurora.org>,
-        Johan Hovold <johan@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        openbmc@lists.ozlabs.org, Alan Cox <alan@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jason M Biils <jason.m.bills@linux.intel.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Stef van Os <stef.van.os@prodrive-technologies.com>
-References: <20191211194624.2872-1-jae.hyun.yoo@linux.intel.com>
- <20191211194624.2872-15-jae.hyun.yoo@linux.intel.com>
- <d75aaad9-ae07-feeb-966a-899ecfe9d4b3@roeck-us.net>
- <5ed9f292-e024-ffda-a1a8-870ba0f05c58@linux.intel.com>
- <20191216212120.GA12089@roeck-us.net>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <c6ccb0ff-c0b4-86b2-1768-ba63713034a4@linux.intel.com>
-Date:   Mon, 16 Dec 2019 14:17:34 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191216212120.GA12089@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: RE: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
+Thread-Topic: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
+Thread-Index: AQHVrDsFo/XrCnZmIE+HK5Vec6rH7qevIW6AgAK0x/CAA35sAIABOkowgAa4UICAABhMQA==
+Date:   Mon, 16 Dec 2019 22:21:23 +0000
+Message-ID: <TY1PR01MB1562B9EB96818DCA507079808A510@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20191206134202.18784-1-chris.brandt@renesas.com>
+ <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com>
+ <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
+ <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <590840ce-a250-2512-3d04-c2420d83f7da@cogentembedded.com>
+In-Reply-To: <590840ce-a250-2512-3d04-c2420d83f7da@cogentembedded.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctNjIyNzMwMDAtMjA1Mi0xMWVhLWFhNTYtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XDYyMjczMDAxLTIwNTItMTFlYS1hYTU2LTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iMjAzNiIgdD0iMTMyMjEwMDg0ODA1MTIxODc5IiBoPSJ6R3VaZys0bEgxNlZjNVgvcGk1T2ZJa3pxWmc9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [75.60.247.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: da50c817-175d-4d27-a896-08d782764924
+x-ms-traffictypediagnostic: TY1PR01MB1596:
+x-microsoft-antispam-prvs: <TY1PR01MB15964B0FD39AD7353DA111628A510@TY1PR01MB1596.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02530BD3AA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(376002)(366004)(346002)(136003)(39860400002)(199004)(189003)(7416002)(64756008)(76116006)(66946007)(66476007)(66556008)(2906002)(7696005)(86362001)(33656002)(478600001)(4326008)(316002)(8936002)(66446008)(6506007)(9686003)(81166006)(5660300002)(81156014)(26005)(186003)(8676002)(71200400001)(52536014)(54906003)(110136005)(55016002)(582214001);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1596;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9UmYBD3CyCFznE6yCd4LwSw0KLfViR5WxXMCFHtw9/Ux4o2+mgTRMWFRyHcNfLlKm8kd+xZQ9nYoPrcAkRCSeDvVzLKTQCyGwBP9Fqeav9I33ikpBHLbZok3fBnRSRxrXZa2ZTTdSlOAmkH/cFQMtb1s+5UwbVj+5jE294CzVpe2NBUuSU4NWVpas9C9+eiZ3h7jFi1YoSHMrcyDeqkY2o2ATPfI0Nx2phblTYc0Z44faTEszijYfhGBO9OlnSfDt4YwTPnJz/xYOCljGDiNRiFitKfQQExYlOBUCLAJ+3D8n7S6BJUdRqDyJkrAry+EhEpaH2PCGowLslPwbzgpgnSdb/5DvwX/HFT4yXtHyWqHtj4VGYIPdSbWH3PzgU03VsJfCiHu+01RSqRNpXkg5iiPSnmySFvW3bUMbkMhrniCo0196K5pXBzGJaIyKwfacKTFB3//oUS5GJf8McXO4IOi0cANr5J4SvVvBW6RM1Yex4CkJX1pXqb9Y/zqmI5I
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: da50c817-175d-4d27-a896-08d782764924
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 22:21:23.5029
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7ItarIGcZuAJKi+oYajFT2gmiUC71U8UwGW5tJEYescy00Z/KFfROUk+PnY6BK8bIFNGNNnN2Q4ZGnSP1B18X5p3qhf3cGqtLkmeLgWQZS8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1596
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-[...]
-
->>>> +static int get_dimm_temp(struct peci_dimmtemp *priv, int dimm_no)
->>>> +{
->>>> +    int dimm_order = dimm_no % priv->gen_info->dimm_idx_max;
->>>> +    int chan_rank = dimm_no / priv->gen_info->dimm_idx_max;
->>>> +    struct peci_rd_pci_cfg_local_msg rp_msg;
->>>> +    u8  cfg_data[4];
->>>> +    int ret;
->>>> +
->>>> +    if (!peci_sensor_need_update(&priv->temp[dimm_no]))
->>>> +        return 0;
->>>> +
->>>> +    ret = read_ddr_dimm_temp_config(priv, chan_rank, cfg_data);
->>>> +    if (ret)
->>>> +        return ret;
->>>> +
->>>> +    priv->temp[dimm_no].value = cfg_data[dimm_order] * 1000;
->>>> +
->>>> +    switch (priv->gen_info->model) {
->>>> +    case INTEL_FAM6_SKYLAKE_X:
->>>> +        rp_msg.addr = priv->mgr->client->addr;
->>>> +        rp_msg.bus = 2;
->>>> +        /*
->>>> +         * Device 10, Function 2: IMC 0 channel 0 -> rank 0
->>>> +         * Device 10, Function 6: IMC 0 channel 1 -> rank 1
->>>> +         * Device 11, Function 2: IMC 0 channel 2 -> rank 2
->>>> +         * Device 12, Function 2: IMC 1 channel 0 -> rank 3
->>>> +         * Device 12, Function 6: IMC 1 channel 1 -> rank 4
->>>> +         * Device 13, Function 2: IMC 1 channel 2 -> rank 5
->>>> +         */
->>>> +        rp_msg.device = 10 + chan_rank / 3 * 2 +
->>>> +                 (chan_rank % 3 == 2 ? 1 : 0);
->>>> +        rp_msg.function = chan_rank % 3 == 1 ? 6 : 2;
->>>> +        rp_msg.reg = 0x120 + dimm_order * 4;
->>>> +        rp_msg.rx_len = 4;
->>>> +
->>>> +        ret = peci_command(priv->mgr->client->adapter,
->>>> +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
->>>> +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
->>>> +            ret = -EAGAIN;
->>>> +        if (ret)
->>>> +            return ret;
->>>> +
->>>> +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
->>>> +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
->>>> +        break;
->>>> +    case INTEL_FAM6_SKYLAKE_XD:
->>>> +        rp_msg.addr = priv->mgr->client->addr;
->>>> +        rp_msg.bus = 2;
->>>> +        /*
->>>> +         * Device 10, Function 2: IMC 0 channel 0 -> rank 0
->>>> +         * Device 10, Function 6: IMC 0 channel 1 -> rank 1
->>>> +         * Device 12, Function 2: IMC 1 channel 0 -> rank 2
->>>> +         * Device 12, Function 6: IMC 1 channel 1 -> rank 3
->>>> +         */
->>>> +        rp_msg.device = 10 + chan_rank / 2 * 2;
->>>> +        rp_msg.function = (chan_rank % 2) ? 6 : 2;
->>>> +        rp_msg.reg = 0x120 + dimm_order * 4;
->>>> +        rp_msg.rx_len = 4;
->>>> +
->>>> +        ret = peci_command(priv->mgr->client->adapter,
->>>> +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
->>>> +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
->>>> +            ret = -EAGAIN;
->>>> +        if (ret)
->>>> +            return ret;
->>>> +
->>>> +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
->>>> +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
->>>> +        break;
->>>> +    case INTEL_FAM6_HASWELL_X:
->>>> +    case INTEL_FAM6_BROADWELL_X:
->>>> +        rp_msg.addr = priv->mgr->client->addr;
->>>> +        rp_msg.bus = 1;
->>>> +        /*
->>>> +         * Device 20, Function 0: IMC 0 channel 0 -> rank 0
->>>> +         * Device 20, Function 1: IMC 0 channel 1 -> rank 1
->>>> +         * Device 21, Function 0: IMC 0 channel 2 -> rank 2
->>>> +         * Device 21, Function 1: IMC 0 channel 3 -> rank 3
->>>> +         * Device 23, Function 0: IMC 1 channel 0 -> rank 4
->>>> +         * Device 23, Function 1: IMC 1 channel 1 -> rank 5
->>>> +         * Device 24, Function 0: IMC 1 channel 2 -> rank 6
->>>> +         * Device 24, Function 1: IMC 1 channel 3 -> rank 7
->>>> +         */
->>>> +        rp_msg.device = 20 + chan_rank / 2 + chan_rank / 4;
->>>> +        rp_msg.function = chan_rank % 2;
->>>> +        rp_msg.reg = 0x120 + dimm_order * 4;
->>>> +        rp_msg.rx_len = 4;
->>>> +
->>>> +        ret = peci_command(priv->mgr->client->adapter,
->>>> +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
->>>> +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
->>>> +            ret = -EAGAIN;
->>>> +        if (ret)
->>>> +            return ret;
->>>> +
->>>> +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
->>>> +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
->>>> +        break;
->>>> +    default:
->>>> +        return -EOPNOTSUPP;
->>>
->>> It looks like the sensors are created even on unsupported platforms,
->>> which would generate error messages whenever someone tries to read
->>> the attributes.
->>>
->>> There should be some code early on checking this, and the driver
->>> should not even instantiate if the CPU model is not supported.
->>
->> Actually, this 'default' case will not be happened because this driver
->> will be registered only when the CPU model is supported. The CPU model
->> checking code is in 'intel-peci-client.c' which is [11/14] of this
->> patch set.
->>
-> 
-> That again assumes that both drivers will be modified in sync in the future.
-> We can not make that assumption.
-
-As you said, both drivers must be modified in sync in the future because
-each Intel CPU family uses different way of reading DIMM temperature.
-In case if supported CPU checking code updated without making sync with
-it, this driver will return the error.
-
-[...]
-
->>>> +    ret = create_dimm_temp_info(priv);
->>>> +    if (ret && ret != -EAGAIN) {
->>>> +        dev_err(dev, "Failed to create DIMM temp info\n");
->>>
->>> Does this generate error messages if there are no DIMMS ?
->>
->> Yes, this error message will be printed out once if it meets a timeout
->> in DIMM scanning when there is no DIMM.
->>
-> 
-> Is that indeed an error, or are there situations where no DIMMs are
-> detected and that is a perfectly valid situation ? An error message
-> is only acceptable if this is indeed an error in all situations.
-
-If a machine under monitoring has two Intel CPUs installed but only one
-CPU has a DIMM, it's also an working configuration although it's an
-unusual H/W configuration. I'll fix that to dbg printing.
-
-Thanks,
-
-Jae
+SGVsbG8NCg0KT24gTW9uLCBEZWMgMTYsIDIwMTksIFNlcmdlaSBTaHR5bHlvdiB3cm90ZToNCj4g
+PiBBcyBhIHNpZGUgbm90ZSwgdGhlcmUgaXMgYW5vdGhlciBIVyBibG9jayBpbiBSZW5lc2FzIHRo
+YXQgZG9lcyB0aGUgc2FtZQ0KPiA+IHRoaW5nIGFzIHRoZSBTUEktQlNDIHRoYXQgdGhleSB1c2Ug
+aW4gdGhlIE1DVSBkZXZpY2VzLiBUaGF0IG9uZSB0aGV5DQo+IA0KPiAgICBNQ1U/DQpZdXAuDQog
+IEJ1dC4uLml0IGhhcyBubyBzaWduaWZpY2FuY2UgdG8gdGhpcyBkaXNjdXNzaW9uIHRob3VnaCA6
+KQ0KDQoNCj4gPiBXaGVuIEkgZmlyc3Qgc2F3IHRoZSBzZXJpZXMgb24gdGhlIG1haWxpbmcgbGlz
+dCwgbXkgcGxhbiB3YXMgdG8ganVzdCB3YWl0DQo+ID4gYW5kIHRoZW4gYWRkIFJaL0ExIGFuZCBS
+Wi9BMiBzdXBwb3J0LiBCdXQuLi4uaXQgbG9va3MgbGlrZSBpdCBhbGwgZGllZC4NCj4gDQo+ICAg
+IE5vLiA6LSkgSXQgd2FzIHdvcmtlZCBvbiBkdXJpbmcgYWxsIHRoZXNlIG1vbnRocy4uLiBJIGp1
+c3QgZmluYWxseSBkZWNpZGVkDQo+IHRvIHN0b3AsIHRha2UgYSBkZWVwIGJyZWF0aCwgYW5kIHBv
+c3Qgd2hhdCBwYXRjaGVzIEkgaGFkIGFjY3VtdWxhdGVkLCB3aXRob3V0DQo+IHRoZSB3aG9sZSBk
+cml2ZXIgc3VpdGUgd29ya2luZyBmaXJzdC4uLiBJJ20gc29ycnkgaXQgdG9vayBzbyBsb25nLi4u
+Lg0KDQpTbyBhdCB0aGUgbW9tZW50LCB0aGVyZSBpcyBub3RoaW5nIHlldCBmb3IgbWUgdG8gJ3Ry
+eScgb24gdGhlIFJaL0Egc2VyaWVzLCBjb3JyZWN0Pw0KDQoNCj4gPiBNeSB1bmRlcnN0YW5kaW5n
+IGlzIHRoYXQgSHlwZXJGbGFzaCB1c2VzIHN0YW5kYXJkIENGSSBjb21tYW5kcywgc28gYWxsDQo+
+IA0KPiAgICBUaGUgQ0ZJIGNvbW1hbmQgc2V0IGRyaXZlciBuZWVkZWQgc29tZSBjaGFuZ2VzIHRv
+byAoZS5nLiB1c2luZyB0aGUgc3RhdHVzDQo+IHJlZ2lzdGVyIHRvIGRldGVybWluZSBpZiBhIGNv
+bW1hbmQgaXMgZG9uZSkuDQoNClNvIHRoZSBleGlzdGluZyBNVEQtU1BJIGxheWVyIGtub3dzIGhv
+dyB0byB0YWxrIHRvIFNQSSBkZXZpY2VzLg0KQW5kLCB5b3UndmUgZml4ZWQgdXAgdGhlIGV4aXN0
+aW5nIENGSSBsYXllciB0byB0YWxrIHRvIEh5cGVyRmxhc2ggZGV2aWNlcy4NCkJ1dCwgeW91IGRv
+IG5vdCB3YW50IHRoZXNlIE1URCBsYXllciB0byB0YWxrIGRpcmVjdGx5IHRvIGEgUmVuZXNhcyBI
+VyBkcml2ZXI/DQpZb3Ugd2FudCB0byBwdXQgYW5vdGhlciBzb2Z0d2FyZSBsYXllciBpbiBiZXR3
+ZWVuPw0KDQoNCkknbSBndWVzc2luZyB0aGF0IGZyb20gdGhpcyBzdGF0ZW1lbnQuLi4uDQoNCj4g
+Pj4+IGxpYnJhcnkgdGhhdCB5b3UgYXJlIHByb3Bvc2luZyBoYXZlIGEgdmVyeSBkaWZmZXJlbnQg
+QVBJIHRoYW4ganVzdA0KPiA+Pj4gJ3NlbmQgYnl0ZXMnIGFuZCAncmVjZWl2ZSBieXRlcyc/DQo+
+ID4+DQo+ID4+ICAgIFRoZXJlJ3MgInByZXBhcmUiIGFuZCAidHJhbnNmZXIiIEFQSXMgYW5kIGFs
+c28gImRpcmVjdCBtYXAgcmVhZCIgQVBJLg0KPiANCj4gICBUaGUgMXN0IG9uZSBwcmVwYXJlcyB0
+aGUgdmFsdWVzIHRvIGJlIHdyaXR0ZW4gaW4gZWl0aGVyIFNQSSBtb2RlIG9yIGRpcmVjdA0KPiBy
+ZWFkIG1vZGUgcmVnaXN0ZXJzLiBUaGVuIHlvdSBjYW4gY2FsbCAidHJhbnNmZXIiIG9yICJkaXJl
+Y3QgbWFvIHJlYWQiIHdoaWNoDQo+IHdvdWxkIHdyaXRlIG91dCB0aGUgcmVnaXN0ZXIgdmFsdWVz
+IGludG8gZWl0aGVyIHNldC4uLg0KDQouLi50aGF0IHlvdSB3YW50IG1vcmUgY29udHJvbCBvZiB0
+aGUgZGF0YSBzdHJlYW0gYmVpbmcgcGFzc2VkIHRvIHRoZSBSUEMtSUYgZHJpdmVyLg0KQ29ycmVj
+dD8/DQoNCkl0IGFsbCBrZWVwcyBzb3VuZGluZyBjb21wbGljYXRlZCwgdW5sZXNzIEknbSBqdXN0
+IG5vdCB1bmRlcnN0YW5kaW5nIHRoZSBjb2RlDQp5b3UgYXJlIHRyeWluZyB0byBpbXBsZW1lbnQu
+DQoNCg0KQ2hyaXMNCg0K
