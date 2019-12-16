@@ -2,103 +2,80 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 738FDC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9581C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 465D1206EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B525C206CB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:55:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iRmdKUmm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbfLPLpa (ORCPT
+        id S1727385AbfLPLzv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:45:30 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58418 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727425AbfLPLpa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:45:30 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9077BAD54;
-        Mon, 16 Dec 2019 11:45:28 +0000 (UTC)
-Message-ID: <cc827c6d4ea0d760b7df217a98bdee6b0c684137.camel@suse.de>
-Subject: Re: [PATCH v5 0/6] Raspberry Pi 4 PCIe support
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     maz@kernel.org, linux-kernel@vger.kernel.org,
-        james.quinlan@broadcom.com, mbrugger@suse.com,
-        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
-        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Date:   Mon, 16 Dec 2019 12:45:26 +0100
-In-Reply-To: <20191216113646.GT24359@e119886-lin.cambridge.arm.com>
-References: <20191216110113.30436-1-nsaenzjulienne@suse.de>
-         <20191216113646.GT24359@e119886-lin.cambridge.arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-DLw2p4RvYw24q5zmQ4Z4"
-User-Agent: Evolution 3.34.2 
+        Mon, 16 Dec 2019 06:55:51 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:48288 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727351AbfLPLzv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 06:55:51 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576497350; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=au8vO3KMuxrkifh9G1Cd6WwOUM8vQ2UbFX6nSLazp8w=; b=iRmdKUmmfxRAnvm0nMF0OFHewuawYAOtTlCMlDXVHkaKsou7OS3v+s1fh62tHYWHfkxY2ThQ
+ EA7l7zqKZDwpoCWZ+TrkdPHUGZgAboHvbYUXQm/Rwn4o6DX0eQvmRPsBJ02OH/P9T5TWa1FQ
+ Mf9o9ykYxpRXRnKe9O1ie0Aw3NA=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df770c2.7fac525fe5e0-smtp-out-n01;
+ Mon, 16 Dec 2019 11:55:46 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 69F4DC433CB; Mon, 16 Dec 2019 11:55:46 +0000 (UTC)
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D6E1BC433CB;
+        Mon, 16 Dec 2019 11:55:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D6E1BC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        rnayak@codeaurora.org
+Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH 0/2] Add RPMH power-domain node for SC7180 SoCs
+Date:   Mon, 16 Dec 2019 17:25:29 +0530
+Message-Id: <20191216115531.17573-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This patch series converts the RPMH/RPM power-domain bindings to yaml and
+adds the RPMH power-domain device node for SC7180 SoCs.
 
---=-DLw2p4RvYw24q5zmQ4Z4
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Sibi Sankar (2):
+  dt-bindings: power: rpmpd: Convert rpmpd bindings to yaml
+  arm64: dts: qcom: sc7180: Add rpmh power-domain node
 
-On Mon, 2019-12-16 at 11:36 +0000, Andrew Murray wrote:
-> On Mon, Dec 16, 2019 at 12:01:06PM +0100, Nicolas Saenz Julienne wrote:
-> > This series aims at providing support for Raspberry Pi 4's PCIe
-> > controller, which is also shared with the Broadcom STB family of
-> > devices.
-> >=20
-> > There was a previous attempt to upstream this some years ago[1] but was
-> > blocked as most STB PCIe integrations have a sparse DMA mapping[2] whic=
-h
-> > is something currently not supported by the kernel.  Luckily this is no=
-t
-> > the case for the Raspberry Pi 4.
-> >=20
->=20
-> Hi Nicolas,
->=20
-> This series looks good to me now. Unless there is further feedback I'll a=
-sk
-> Lorenzo to merge this when he returns in the new year.
+ .../devicetree/bindings/power/qcom,rpmpd.txt  | 150 ----------------
+ .../devicetree/bindings/power/qcom,rpmpd.yaml | 170 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          |  55 ++++++
+ 3 files changed, 225 insertions(+), 150 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+ create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
 
-Thanks!
-
-> Thanks for the log2.h efforts - perhaps this can be picked up again one d=
-ay.
-
-I'm not giving up on it yet :)
-
-Regards,
-Nicolas
-
-
---=-DLw2p4RvYw24q5zmQ4Z4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl33blYACgkQlfZmHno8
-x/5aYwf+N1/Ua9CzF4VJc5Fs8Q99JDhaoGWxqIBldY6pt0TGhmCO6ao6z9UCUGde
-3n5X7AZwwbVuSQlBbnGxCP4Ji+4O8O/tsc/PmcFN4dt0FALtUD1lbEwFq6khdQqN
-DaeJqlyjvkQkZifOGYjNH2UjzI4dCyxtFDOMSNr8YP3RcSdjwV01zghOdSSjaV05
-X5jUsfAf5AB8eabnkNt+C7FORGf7T8Ll3LdhCgtNJOf3GyIwkotQ2TlqckA8xhqS
-hPRTW9DaXn6IWYAX3kCwrFhoX4/qxddXhz6GOw5HA5Lh25Zq8Zq4KG3xOlsI9HRy
-j0AIKO9Pmg+mDDa936sR1oijKJZm3w==
-=Axoa
------END PGP SIGNATURE-----
-
---=-DLw2p4RvYw24q5zmQ4Z4--
-
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
