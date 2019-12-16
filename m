@@ -2,160 +2,210 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE29C2D0CF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC84C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C78207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E615B20828
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:42:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PkkVrt+q"
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="jbh0NrtO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfLPIlY (ORCPT
+        id S1726944AbfLPImz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:41:24 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54592 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbfLPIlY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 03:41:24 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBG8fDeg028547;
-        Mon, 16 Dec 2019 02:41:13 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576485673;
-        bh=GQ0EO7q8Lqa3xSoXIC84Xc5lNVaeufWJSswA3pvWUWg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=PkkVrt+qL5LYRULFUkL/FepG6A+SwwwgV1+hEB3D2vdHT4J0FnY40thn6e3ldQL83
-         fL0RiSuSxSfae81A/YqNCD7fhto9Y+DCHgoZ/h4ie8tvj1E7I7n9DwJUnlLNXEJ0v8
-         hbWrUrv6+uYtVoE+gw5wDHcJuaK06IysXhoZ6ctw=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBG8fDx6008225
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Dec 2019 02:41:13 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Dec 2019 02:41:13 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Dec 2019 02:41:13 -0600
-Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBG8f9Sv078293;
-        Mon, 16 Dec 2019 02:41:10 -0600
-Subject: Re: [PATCH v3 4/7] mmc: sdhci: Add quirk for disabling DTO during
- erase command
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>
-CC:     <kishon@ti.com>, <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        <ulf.hansson@linaro.org>, <zhang.chunyan@linaro.org>,
-        <tony@atomide.com>
-References: <20191210095151.15441-1-faiz_abbas@ti.com>
- <20191210095151.15441-5-faiz_abbas@ti.com>
- <003f7e7a-a762-5355-9404-4a6655754fb0@intel.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <09bb8f31-534d-c278-45c3-e0314286819c@ti.com>
-Date:   Mon, 16 Dec 2019 14:12:19 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 16 Dec 2019 03:42:55 -0500
+Received: from zimbra2.kalray.eu ([92.103.151.219]:55486 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbfLPImz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 03:42:55 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 7EEE827E06A1;
+        Mon, 16 Dec 2019 09:42:52 +0100 (CET)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id NQCUBw1mJnlk; Mon, 16 Dec 2019 09:42:52 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id E710F27E06A4;
+        Mon, 16 Dec 2019 09:42:51 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu E710F27E06A4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1576485772;
+        bh=gR7DBMPuqguujsqKIqRecEZSem6IJvNPYFmN412TxpE=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=jbh0NrtOycOeLM+mv/6Qm0MWzA3LsgKaAoDSSzCTSuBJuLPu4hyxbyDzv4+u2dAqd
+         Ut/+P9QcfH1yqk208VSPQ/f42Me7Iazu7MYNL3ZLD/8/rUFa3Y2IcYUfZape/+Au4P
+         55rQF+HRulYfMLAvhF2py1Q8opFZfxQvN/I3+628=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id JDFXdj145mgC; Mon, 16 Dec 2019 09:42:51 +0100 (CET)
+Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id C66D827E0650;
+        Mon, 16 Dec 2019 09:42:51 +0100 (CET)
+Date:   Mon, 16 Dec 2019 09:42:51 +0100 (CET)
+From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Fabien DESSENNE <fabien.dessenne@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <1428337657.96784882.1576485771590.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <1576362603.3.5@crapouillou.net>
+References: <20191210164014.50739-1-paul@crapouillou.net> <20191210164014.50739-3-paul@crapouillou.net> <f25180f2-7c6d-0022-12b2-cd9c202f39d3@st.com> <1576362603.3.5@crapouillou.net>
+Subject: Re: [PATCH v4 3/5] remoteproc: Add prepare/unprepare callbacks
 MIME-Version: 1.0
-In-Reply-To: <003f7e7a-a762-5355-9404-4a6655754fb0@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - GC75 (Linux)/8.8.12_GA_3794)
+Thread-Topic: remoteproc: Add prepare/unprepare callbacks
+Thread-Index: uueckZt7bHlt5Prq/c0hmSkfQsRjRg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adrian,
+Hi Paul
 
+----- On 14 Dec, 2019, at 23:30, Paul Cercueil paul@crapouillou.net wrote:
 
-On 13/12/19 3:10 pm, Adrian Hunter wrote:
-> On 10/12/19 11:51 am, Faiz Abbas wrote:
->> Some controllers might prematurely issue a data timeout during an erase
->> command. Add a quirk to disable the interrupt when an erase command is
->> issued.
->>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> ---
->>  drivers/mmc/host/sdhci.c | 5 +++++
->>  drivers/mmc/host/sdhci.h | 2 ++
->>  2 files changed, 7 insertions(+)
->>
->> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->> index 6f3d4991bee1..b8934c50b9c4 100644
->> --- a/drivers/mmc/host/sdhci.c
->> +++ b/drivers/mmc/host/sdhci.c
->> @@ -1532,6 +1532,11 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
->>  	/* Initially, a command has no error */
->>  	cmd->error = 0;
->>  
->> +	if (cmd->opcode == MMC_ERASE &&
->> +	    (host->quirks2 & SDHCI_QUIRK2_DISABLE_DTO_FOR_ERASE)) {
->> +		sdhci_set_data_timeout_irq(host, false);
->> +	}
-> 
-> If you factor out __sdhci_set_timeout() like below then
-> you could implement ->set_timeout() to do this.
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index ad6d2f93aa0b..389e3239eadc 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1002,27 +1002,28 @@ static void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
->  	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
->  }
->  
-> -static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
-> +void __sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
->  {
-> -	u8 count;
-> -
-> -	if (host->ops->set_timeout) {
-> -		host->ops->set_timeout(host, cmd);
-> -	} else {
-> -		bool too_big = false;
-> -
-> -		count = sdhci_calc_timeout(host, cmd, &too_big);
-> +	bool too_big = false;
-> +	u8 count = sdhci_calc_timeout(host, cmd, &too_big);
-> +
-> +	if (too_big && host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) {
-> +		sdhci_calc_sw_timeout(host, cmd);
-> +		sdhci_set_data_timeout_irq(host, false);
-> +	} else if (!(host->ier & SDHCI_INT_DATA_TIMEOUT)) {
-> +		sdhci_set_data_timeout_irq(host, true);
-> +	}
->  
-> -		if (too_big &&
-> -		    host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) {
-> -			sdhci_calc_sw_timeout(host, cmd);
-> -			sdhci_set_data_timeout_irq(host, false);
-> -		} else if (!(host->ier & SDHCI_INT_DATA_TIMEOUT)) {
-> -			sdhci_set_data_timeout_irq(host, true);
-> -		}
-> +	sdhci_writeb(host, count, SDHCI_TIMEOUT_CONTROL);
-> +}
-> +EXPORT_SYMBOL_GPL(__sdhci_set_timeout);
->  
-> -		sdhci_writeb(host, count, SDHCI_TIMEOUT_CONTROL);
-> -	}
-> +static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
-> +{
-> +	if (host->ops->set_timeout)
-> +		host->ops->set_timeout(host, cmd);
-> +	else
-> +		__sdhci_set_timeout(host, cmd);
->  }
+> Hi Fabien,
+>=20
+>=20
+> Le jeu., d=C3=A9c. 12, 2019 at 10:03, Fabien DESSENNE
+> <fabien.dessenne@st.com> a =C3=A9crit :
+>> Hi Paul
+>>=20
+>>=20
+>> On 10/12/2019 5:40 PM, Paul Cercueil wrote:
+>>>  The .prepare() callback is called before the firmware is loaded to
+>>>  memory. This is useful for instance in the case where some setup is
+>>>  required for the memory to be accessible.
+>>=20
+>>=20
+>> I am trying to figure out what king of 'setup' may be required. From
+>> the
+>> ingenic driver I understand that you need to enable clocks to allow
+>> some
+>> memory access.
+>>=20
+>> Instead of adding this new ops, why not enabling clocks in probe()?
+>=20
+> Enabling the clocks in the probe means that the clocks will be
+> unconditionally enabled until the driver is removed, even if the remote
+> processor end up being unused. That would be a waste of power.
 
-Ok. I'll add the refactoring as a separate patch.
+We have the same kind of "problem" for k1c remoteproc driver (not yet
+upstream, depends on new arch). We need to enable clocks to load code
+into remote processor memory and currently we do that in probe.
+However, as you stated, we would like to enable them as late as possible
+(just before loading code) to avoid wasting power unnecessarily. So the
+"prepare" callback totally makes sense.
 
-Thanks,
-Faiz
+Regards,
+
+Cl=C3=A9ment
+
+>=20
+> Cheers,
+> -Paul
+>=20
+>=20
+>>=20
+>> BR
+>>=20
+>> Fabien
+>>=20
+>>=20
+>>>=20
+>>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>>  ---
+>>>=20
+>>>  Notes:
+>>>       v2-v4: No change
+>>>=20
+>>>    drivers/remoteproc/remoteproc_core.c | 16 +++++++++++++++-
+>>>    include/linux/remoteproc.h           |  4 ++++
+>>>    2 files changed, 19 insertions(+), 1 deletion(-)
+>>>=20
+>>>  diff --git a/drivers/remoteproc/remoteproc_core.c
+>>> b/drivers/remoteproc/remoteproc_core.c
+>>>  index 0a9fc7fdd1c3..3ea5f675a148 100644
+>>>  --- a/drivers/remoteproc/remoteproc_core.c
+>>>  +++ b/drivers/remoteproc/remoteproc_core.c
+>>>  @@ -1299,11 +1299,19 @@ static int rproc_start(struct rproc *rproc,
+>>> const struct firmware *fw)
+>>>    =09struct device *dev =3D &rproc->dev;
+>>>    =09int ret;
+>>>=20
+>>>  +=09if (rproc->ops->prepare) {
+>>>  +=09=09ret =3D rproc->ops->prepare(rproc);
+>>>  +=09=09if (ret) {
+>>>  +=09=09=09dev_err(dev, "Failed to prepare rproc: %d\n", ret);
+>>>  +=09=09=09return ret;
+>>>  +=09=09}
+>>>  +=09}
+>>>  +
+>>>    =09/* load the ELF segments to memory */
+>>>    =09ret =3D rproc_load_segments(rproc, fw);
+>>>    =09if (ret) {
+>>>    =09=09dev_err(dev, "Failed to load program segments: %d\n", ret);
+>>>  -=09=09return ret;
+>>>  +=09=09goto unprepare_rproc;
+>>>    =09}
+>>>=20
+>>>    =09/*
+>>>  @@ -1354,6 +1362,9 @@ static int rproc_start(struct rproc *rproc,
+>>> const struct firmware *fw)
+>>>    =09rproc_unprepare_subdevices(rproc);
+>>>    reset_table_ptr:
+>>>    =09rproc->table_ptr =3D rproc->cached_table;
+>>>  +unprepare_rproc:
+>>>  +=09if (rproc->ops->unprepare)
+>>>  +=09=09rproc->ops->unprepare(rproc);
+>>>=20
+>>>    =09return ret;
+>>>    }
+>>>  @@ -1483,6 +1494,9 @@ static int rproc_stop(struct rproc *rproc,
+>>> bool crashed)
+>>>=20
+>>>    =09rproc->state =3D RPROC_OFFLINE;
+>>>=20
+>>>  +=09if (rproc->ops->unprepare)
+>>>  +=09=09rproc->ops->unprepare(rproc);
+>>>  +
+>>>    =09dev_info(dev, "stopped remote processor %s\n", rproc->name);
+>>>=20
+>>>    =09return 0;
+>>>  diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>>>  index 5f201f0c86c3..a6272d1ba384 100644
+>>>  --- a/include/linux/remoteproc.h
+>>>  +++ b/include/linux/remoteproc.h
+>>>  @@ -355,6 +355,8 @@ enum rsc_handling_status {
+>>>=20
+>>>    /**
+>>>     * struct rproc_ops - platform-specific device handlers
+>>>  + * @prepare:=09prepare the device for power up (before the firmware
+>>> is loaded)
+>>>  + * @unprepare:=09unprepare the device after it is stopped
+>>>     * @start:=09power on the device and boot it
+>>>     * @stop:=09power off the device
+>>>     * @kick:=09kick a virtqueue (virtqueue id given as a parameter)
+>>>  @@ -371,6 +373,8 @@ enum rsc_handling_status {
+>>>     * @get_boot_addr:=09get boot address to entry point specified in
+>>> firmware
+>>>     */
+>>>    struct rproc_ops {
+>>>  +=09int (*prepare)(struct rproc *rproc);
+>>>  +=09void (*unprepare)(struct rproc *rproc);
+>>>    =09int (*start)(struct rproc *rproc);
+>>>    =09int (*stop)(struct rproc *rproc);
+> >>    =09void (*kick)(struct rproc *rproc, int vqid);
