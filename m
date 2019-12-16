@@ -2,223 +2,115 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8DBC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5349C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 429DC20700
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:42:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vS28tL8o"
+	by mail.kernel.org (Postfix) with ESMTP id B77A320725
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576496701;
+	bh=tBPCluDOeiVFvi//ARpCPZost7eycvWv/FKjj7MB9gM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LdJ31HrGubkHVOYnqdCbJOSxx1VDtaAa8zHGVXwDvDCkf3ecRztaBmGrKHBi62gZ+
+	 hS7fS+Az1Qf4BhyTtaShcRTmxNqVD/oq6BXc4TQgCy54w0byGY9jmRFQttweSAs6Wq
+	 EJffMcuuw7Y/jrf0OZl1MlO0NSahVxSjMzvogxDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbfLPLmM (ORCPT
+        id S1727351AbfLPLo5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:42:12 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:33930 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727344AbfLPLmM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:42:12 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576496531; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=cCAbvx8d76X6UnOOZeIMAnfSmKqs+7sEPAPeeSxg55o=; b=vS28tL8oM59XGiczL0CuBrCHjLU6tSA21aagzpVCCWzb/fDUWZc9OPd9EGVsVsdKsd4AzeJR
- 5z390wA/EYFOs0oGoC+XCE46Pzdv9CtDzw/uozMSM/WlJrr+pPJ1RmazrVtdovJzNzJ99SfI
- jbvu2vg2YKfM9WTE+MWFhblMR5U=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df76d90.7f94a41c46c0-smtp-out-n01;
- Mon, 16 Dec 2019 11:42:08 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E9810C43383; Mon, 16 Dec 2019 11:42:08 +0000 (UTC)
-Received: from cheath10p342229-lin.qca.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tamizhr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E4B91C433A2;
-        Mon, 16 Dec 2019 11:42:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E4B91C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tamizhr@codeaurora.org
-From:   Tamizh Chelvam <tamizhr@codeaurora.org>
-To:     ath10k@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Tamizh Chelvam <tamizhr@codeaurora.org>
-Subject: [PATCH 2/2] ath10k: Add support to read btcoex related data from DT
-Date:   Mon, 16 Dec 2019 17:10:15 +0530
-Message-Id: <1576496415-23064-2-git-send-email-tamizhr@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1576496415-23064-1-git-send-email-tamizhr@codeaurora.org>
-References: <1576496415-23064-1-git-send-email-tamizhr@codeaurora.org>
+        Mon, 16 Dec 2019 06:44:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:51524 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727316AbfLPLo5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 06:44:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6BFE1FB;
+        Mon, 16 Dec 2019 03:44:56 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3535C3F6CF;
+        Mon, 16 Dec 2019 03:44:56 -0800 (PST)
+Date:   Mon, 16 Dec 2019 11:44:54 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191216114454.GB4161@sirena.org.uk>
+References: <20191129172537.31410-1-m.felsch@pengutronix.de>
+ <20191129172537.31410-4-m.felsch@pengutronix.de>
+ <20191204134631.GT1998@sirena.org.uk>
+ <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+ <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+ <20191212161019.GF4310@sirena.org.uk>
+ <20191212162152.5uu3feacduetysq7@pengutronix.de>
+ <20191212165124.GJ4310@sirena.org.uk>
+ <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
+Content-Disposition: inline
+In-Reply-To: <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+X-Cookie: Backed up the system lately?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-BTCOEX feature is not supported by all QCA4019 chipsets.
-Since btcoex enabled by default in firmware, host needs to
-enable COEX support depends on the hardware. Enabling it
-by default in unsupported hardware will cause some
-feature disabled in hardware.
-This patch will read btcoex_support flag and
-wlan priority gpio pin number from DT. Depends on the
-btcoex_support flag value host will expose BTCOEX support
-and wlan priority gpio pin number to target.
 
-Testing:
-	* Tested HW : QCA4019
-	* Tested FW : 10.4-3.2.1.1-00017
+--oC1+HKm2/end4ao3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Tamizh Chelvam <tamizhr@codeaurora.org>
----
- drivers/net/wireless/ath/ath10k/core.c  | 44 ++++++++++++++++++++++++++++++++-
- drivers/net/wireless/ath/ath10k/core.h  |  9 +++++++
- drivers/net/wireless/ath/ath10k/debug.c |  3 +++
- drivers/net/wireless/ath/ath10k/mac.c   |  3 ++-
- drivers/net/wireless/ath/ath10k/wmi.c   |  2 +-
- 5 files changed, 58 insertions(+), 3 deletions(-)
+On Mon, Dec 16, 2019 at 09:55:25AM +0100, Marco Felsch wrote:
+> On 19-12-12 16:51, Mark Brown wrote:
 
-diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
-index 5ec16ce..f9434bc 100644
---- a/drivers/net/wireless/ath/ath10k/core.c
-+++ b/drivers/net/wireless/ath/ath10k/core.c
-@@ -2119,6 +2119,40 @@ static int ath10k_download_cal_data(struct ath10k *ar)
- 	return 0;
- }
- 
-+static void ath10k_core_fetch_btcoex_dt(struct ath10k *ar)
-+{
-+	struct device_node *node;
-+	u32 coex_support = 0;
-+	int ret;
-+
-+	node = ar->dev->of_node;
-+	if (!node)
-+		goto out;
-+
-+	ret = of_property_read_u32(node, "qcom,coexist-support", &coex_support);
-+	if (ret) {
-+		ar->coex_support = ATH10K_DT_COEX_NOT_FOUND;
-+		goto out;
-+	}
-+
-+	if (coex_support) {
-+		ar->coex_support = ATH10K_DT_COEX_SUPPORTED;
-+	} else {
-+		ar->coex_support = ATH10K_DT_COEX_NOT_SUPPORTED;
-+		ar->coex_gpio_pin = -1;
-+		goto out;
-+	}
-+
-+	ret = of_property_read_u32(node, "qcom,coexist-gpio-pin",
-+				   &ar->coex_gpio_pin);
-+	if (ret)
-+		ar->coex_gpio_pin = -1;
-+
-+out:
-+	ath10k_dbg(ar, ATH10K_DBG_BOOT, "boot coex_support %d coex_gpio_pin %d\n",
-+		   ar->coex_support, ar->coex_gpio_pin);
-+}
-+
- static int ath10k_init_uart(struct ath10k *ar)
- {
- 	int ret;
-@@ -2696,14 +2730,22 @@ int ath10k_core_start(struct ath10k *ar, enum ath10k_firmware_mode mode,
- 		if (test_bit(WMI_SERVICE_BSS_CHANNEL_INFO_64, ar->wmi.svc_map))
- 			val |= WMI_10_4_BSS_CHANNEL_INFO_64;
- 
-+		ath10k_core_fetch_btcoex_dt(ar);
-+
- 		/* 10.4 firmware supports BT-Coex without reloading firmware
- 		 * via pdev param. To support Bluetooth coexistence pdev param,
- 		 * WMI_COEX_GPIO_SUPPORT of extended resource config should be
- 		 * enabled always.
-+		 *
-+		 * We can still enable BTCOEX if firmware has the support
-+		 * eventhough btceox_support value is
-+		 * ATH10K_DT_BTCOEX_NOT_FOUND
- 		 */
-+
- 		if (test_bit(WMI_SERVICE_COEX_GPIO, ar->wmi.svc_map) &&
- 		    test_bit(ATH10K_FW_FEATURE_BTCOEX_PARAM,
--			     ar->running_fw->fw_file.fw_features))
-+			     ar->running_fw->fw_file.fw_features) &&
-+		    ar->coex_support != ATH10K_DT_COEX_NOT_SUPPORTED)
- 			val |= WMI_10_4_COEX_GPIO_SUPPORT;
- 
- 		if (test_bit(WMI_SERVICE_TDLS_EXPLICIT_MODE_ONLY,
-diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
-index 5101bf2..90f437a 100644
---- a/drivers/net/wireless/ath/ath10k/core.h
-+++ b/drivers/net/wireless/ath/ath10k/core.h
-@@ -875,6 +875,12 @@ enum ath10k_tx_pause_reason {
- 	ATH10K_TX_PAUSE_MAX,
- };
- 
-+enum ath10k_dt_coex_support_flag {
-+	ATH10K_DT_COEX_NOT_FOUND,
-+	ATH10K_DT_COEX_SUPPORTED,
-+	ATH10K_DT_COEX_NOT_SUPPORTED,
-+};
-+
- struct ath10k_fw_file {
- 	const struct firmware *firmware;
- 
-@@ -1222,6 +1228,9 @@ struct ath10k {
- 	struct ath10k_bus_params bus_param;
- 	struct completion peer_delete_done;
- 
-+	enum ath10k_dt_coex_support_flag coex_support;
-+	int coex_gpio_pin;
-+
- 	/* must be last */
- 	u8 drv_priv[0] __aligned(sizeof(void *));
- };
-diff --git a/drivers/net/wireless/ath/ath10k/debug.c b/drivers/net/wireless/ath/ath10k/debug.c
-index e000677..bb452a1 100644
---- a/drivers/net/wireless/ath/ath10k/debug.c
-+++ b/drivers/net/wireless/ath/ath10k/debug.c
-@@ -1978,6 +1978,9 @@ static ssize_t ath10k_write_btcoex(struct file *file,
- 	if (strtobool(buf, &val) != 0)
- 		return -EINVAL;
- 
-+	if (ar->coex_support == ATH10K_DT_COEX_NOT_SUPPORTED)
-+		return -EOPNOTSUPP;
-+
- 	mutex_lock(&ar->conf_mutex);
- 
- 	if (ar->state != ATH10K_STATE_ON &&
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 767c7bf..63c22653 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -4982,7 +4982,8 @@ static int ath10k_start(struct ieee80211_hw *hw)
- 	param = ar->wmi.pdev_param->enable_btcoex;
- 	if (test_bit(WMI_SERVICE_COEX_GPIO, ar->wmi.svc_map) &&
- 	    test_bit(ATH10K_FW_FEATURE_BTCOEX_PARAM,
--		     ar->running_fw->fw_file.fw_features)) {
-+		     ar->running_fw->fw_file.fw_features) &&
-+	    ar->coex_support != ATH10K_DT_COEX_NOT_SUPPORTED) {
- 		ret = ath10k_wmi_pdev_set_param(ar, param, 0);
- 		if (ret) {
- 			ath10k_warn(ar,
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-index 13f7531..4684aa75 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -8787,7 +8787,7 @@ static int ath10k_wmi_10_4_op_get_vdev_subtype(struct ath10k *ar,
- 	cmd = (struct wmi_ext_resource_config_10_4_cmd *)skb->data;
- 	cmd->host_platform_config = __cpu_to_le32(type);
- 	cmd->fw_feature_bitmap = __cpu_to_le32(fw_feature_bitmap);
--	cmd->wlan_gpio_priority = __cpu_to_le32(-1);
-+	cmd->wlan_gpio_priority = __cpu_to_le32(ar->coex_gpio_pin);
- 	cmd->coex_version = __cpu_to_le32(WMI_NO_COEX_VERSION_SUPPORT);
- 	cmd->coex_gpio_pin1 = __cpu_to_le32(-1);
- 	cmd->coex_gpio_pin2 = __cpu_to_le32(-1);
--- 
-1.9.1
+> > Something needs to say what that thing is, especially if it's runtime
+> > controllable.  In your case from the point of view of software there is
+> > actually no enable control so we shouldn't be providing an enable
+> > operation to the framework.
+
+> The enabel control signal is always available, please check [1] table
+> 63. There is a mux in front of the enable pin so:
+
+What I'm saying is that I think the binding needs to explicitly talk
+about that since at the minute it's really confusing reading it as it
+is, it sounds very much like it's trying to override that in a chip
+specific fashion as using gpiolib and the GPIO bindings for pinmuxing is
+really quite unusual.
+
+--oC1+HKm2/end4ao3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl33bjYACgkQJNaLcl1U
+h9CVdAf+Kp9Gt6jI1smdYRC5q9QzC1/I+pAe/kPYZU9nCkKrN7T/h4QamB0ktmgq
+8ovpP1GU56emAoDhnLgevc9IiJHlvlzog0LL0RWzMb4zf7CuC3hqDt/mIEwKvVqv
+vXueIgBOwgBYjkunL4ECOsMz4I1v5uBCmbJTCQwnZWpzkTdabJmr49W0LX2y/yPI
+9AgCDJBU1mvD78xAlwMiBWHILuSWcja4dXyBFE0Q4IWyFF1HkslkgrBQL7YY0LaI
+wFmnd/nERtjKaTK3ZqL7cXKjz+PbyswmJXT0E1Y4rDRit//tgtJVoUGVmCP5KYpY
+bBjSjH7xodB796EmcMPayWwZ23L96g==
+=MSqr
+-----END PGP SIGNATURE-----
+
+--oC1+HKm2/end4ao3--
