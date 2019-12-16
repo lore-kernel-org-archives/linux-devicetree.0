@@ -2,179 +2,163 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A40C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD1EC2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453EF2067C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:02:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="AAQQx//1"
+	by mail.kernel.org (Postfix) with ESMTP id 1DC5C20717
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbfLPQCD (ORCPT
+        id S1726252AbfLPQLF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:02:03 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:44228 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbfLPQCD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:02:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PFTbYGO/dc90I2YXG41N9f41dU8GVWMEed9i++G4Wv8=; b=AAQQx//12skpZ/haFxx66yTiC
-        dN9Vm0vL43P4Cm/Jxigzt0tPdg0f4RovXhWvsx7jGU+5eDHgQ/IR1fADbyAW8tN2Ivmtj29p5X/Xf
-        GOeC8uxFOI+i9ArqkrmhWraELxw4+KIExOuPqswF6nBIpY+OijyxDiVlq9BKFsVACDyq4=;
-Received: from [77.247.85.102] (helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1igson-0005GN-4P; Mon, 16 Dec 2019 17:01:57 +0100
-Received: from [::1] (helo=localhost)
-        by eeepc with esmtp (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1igsoj-0004ec-Vp; Mon, 16 Dec 2019 17:01:54 +0100
-Date:   Mon, 16 Dec 2019 17:01:52 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH v4 2/5] mfd: rn5t618: add IRQ support
-Message-ID: <20191216170152.25da1051@kemnade.info>
-In-Reply-To: <20191216152715.GH2369@dell>
-References: <20191211215409.32764-1-andreas@kemnade.info>
-        <20191211215409.32764-3-andreas@kemnade.info>
-        <20191216152715.GH2369@dell>
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
+        Mon, 16 Dec 2019 11:11:05 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33284 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbfLPQLF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 11:11:05 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id E3E5A28FC78
+Message-ID: <ca0c26d124a0139de31405eacb7d098173897d16.camel@collabora.com>
+Subject: Re: [PATCH v4 1/4] drm: bridge: dw_mipi_dsi: access registers via a
+ regmap
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rockchip@lists.infradead.org
+Cc:     kernel@collabora.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-imx@nxp.com,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Date:   Mon, 16 Dec 2019 13:10:52 -0300
+In-Reply-To: <20191202193359.703709-2-adrian.ratiu@collabora.com>
+References: <20191202193359.703709-1-adrian.ratiu@collabora.com>
+         <20191202193359.703709-2-adrian.ratiu@collabora.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/XbepMN/1jKrHdjWF6aXCDE7"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---Sig_/XbepMN/1jKrHdjWF6aXCDE7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Adrian,
 
-On Mon, 16 Dec 2019 15:27:15 +0000
-Lee Jones <lee.jones@linaro.org> wrote:
+Thanks for the patch. This is nice consolidation work.
+I'm Ccing Heiko for the Rockchip part.
 
-> On Wed, 11 Dec 2019, Andreas Kemnade wrote:
->=20
-> > This adds support for IRQ handling in the RC5T619 which is required
-> > for properly implementing subdevices like RTC.
-> > For now only definitions for the variant RC5T619 are included.
-> >=20
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > ---
-> > Changes in v4:
-> > merge rn5t618-irq.c into rn5t618.c
-> > use macros for IRQ table
-> >=20
-> > Changes in v3:
-> > alignment cleanup
-> >=20
-> > Changes in v2:
-> > - no dead code, did some more testing and thinking for that
-> > - remove extra empty lines
-> >  drivers/mfd/Kconfig         |  1 +
-> >  drivers/mfd/rn5t618.c       | 88 +++++++++++++++++++++++++++++++++++++=
-++++++++
-> >  include/linux/mfd/rn5t618.h | 15 ++++++++
-> >  3 files changed, 104 insertions(+)
-> >=20
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index ae24d3ea68ea..522e068d0082 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -1057,6 +1057,7 @@ config MFD_RN5T618
-> >  	depends on OF
-> >  	select MFD_CORE
-> >  	select REGMAP_I2C
-> > +	select REGMAP_IRQ
-> >  	help
-> >  	  Say yes here to add support for the Ricoh RN5T567,
-> >  	  RN5T618, RC5T619 PMIC.
-> > diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-> > index da5cd9c92a59..76d997c0cfe4 100644
-> > --- a/drivers/mfd/rn5t618.c
-> > +++ b/drivers/mfd/rn5t618.c
-> > @@ -8,6 +8,8 @@
-> > =20
-> >  #include <linux/delay.h>
-> >  #include <linux/i2c.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/irq.h>
-> >  #include <linux/mfd/core.h>
-> >  #include <linux/mfd/rn5t618.h>
-> >  #include <linux/module.h>
-> > @@ -45,9 +47,63 @@ static const struct regmap_config rn5t618_regmap_con=
-fig =3D {
-> >  	.cache_type	=3D REGCACHE_RBTREE,
-> >  };
-> > =20
-> > +static const struct regmap_irq rc5t619_irqs[] =3D {
-> > +	REGMAP_IRQ_REG(RN5T618_IRQ_SYS, 0, BIT(0)),
-> > +	REGMAP_IRQ_REG(RN5T618_IRQ_DCDC, 0, BIT(1)),
-> > +	REGMAP_IRQ_REG(RN5T618_IRQ_RTC, 0, BIT(2)),
-> > +	REGMAP_IRQ_REG(RN5T618_IRQ_ADC, 0, BIT(3)),
-> > +	REGMAP_IRQ_REG(RN5T618_IRQ_GPIO, 0, BIT(4)),
-> > +	REGMAP_IRQ_REG(RN5T618_IRQ_CHG, 0, BIT(6)),
-> > +};
-> > +
-> > +static const struct regmap_irq_chip rc5t619_irq_chip =3D {
-> > +	.name =3D "rc5t619",
-> > +	.irqs =3D rc5t619_irqs,
-> > +	.num_irqs =3D ARRAY_SIZE(rc5t619_irqs),
-> > +	.num_regs =3D 1,
-> > +	.status_base =3D RN5T618_INTMON,
-> > +	.mask_base =3D RN5T618_INTEN,
-> > +	.mask_invert =3D true,
-> > +};
-> > +
-> >  static struct rn5t618 *rn5t618_pm_power_off;
-> >  static struct notifier_block rn5t618_restart_handler;
-> > =20
-> > +int rn5t618_irq_init(struct rn5t618 *rn5t618) =20
->=20
-> Static?
->=20
-yes, it should be static since IRQ and core do live
-in the same file now.
+See below for some comments.
 
-Regards,
-Andreas
+On Mon, 2019-12-02 at 21:33 +0200, AdrianAdrian Ratiu wrote:
+> Convert the common bridge code and the two rockchip & stm drivers
+> which currently use it to the regmap API in anticipation for further
+> changes to make it more generic and add older DSI host controller
+> support as found on i.mx6 based devices.
+> 
+> The regmap becomes an internal state of the bridge. No functional
+> changes other than requiring the platform drivers to use the
+> pre-configured regmap supplied by the bridge after its probe() call
+> instead of ioremp'ing the registers themselves.
+> 
+> In subsequent commits the bridge will become able to detect the
+> DSI host core version and init the regmap with different register
+> layouts. The platform drivers will continue to use the regmap without
+> modifications or worrying about the specific layout in use (in other
+> words the layout is abstracted away via the regmap).
+> 
+> Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 215 ++++++++++--------
+>  .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   |  17 +-
 
---Sig_/XbepMN/1jKrHdjWF6aXCDE7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+At least for Rockchip, I'd rather see this done in two
+steps: first some regmap infrastructure introduced,
+and then in a follow-up patch, the rockchip driver
+moved to it.
 
------BEGIN PGP SIGNATURE-----
+It's safer, and better from a bisection POV, and from
+a first look it seems doable.
 
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl33qnAACgkQl4jFM1s/
-ye/HZg//az7XDNxeh0oR3qY1nTmAOtRxQEviyCIvDuStB2kAvGRFnrfBBm7ZnO3n
-js7yQjVP9rdLvQzKTnmBem8gwFCRfP+83lgQrW9nUenFbN0eqDlY6ManEHXqcWx4
-1PTQKZ6u8vNHDIYE9fwxkzK4WrJfKSmIxuc24fosCfVk14zA92eCM1dHn2VoQ/TJ
-dqMty9nrGsSEJXOdPNCAItQ7QGUDWhU2RBQnHltux4Con8YXlIT5fgjVyFOjMcSK
-1jFTiL1pTR/CT8rdm8fwVycCESoLxe55YPdy5j0Z19f3fCUdsIUH+OG1H3nLpqy6
-F9d70fvm3M00qcAGxnIerDB/w1QvG2CbzB49zcHPe2B14m4L+V4wAmnyyKCuuJL4
-Wzn7maA82ahCI5Oczr2hAWq8YSg3xC6Nb+1IE5KKTQC6gjYgBJwyRdOkx7xrL+Oz
-x9BHrn93nE6Iqv6w+FD5mYAsil+li/yTS/H8WocQATSv+efMQR+jxwKZe3NTMRrA
-imX/7Tu4arf9erPttL3GBVL6HDAemWtChWMdyUhr6K5bZH5LpAQeLionvQ1Chm2/
-GT0ovDs5IZ7+CwhFJxbZUqsmXVPrvBP+cQSt1AwEmkvO3YXoovYGgCBk9YaCH6sU
-Qj7YZtbMjYxmogsqc93Wk+aMFGytSdlTTOSYDJhdBcwsyzI3djw=
-=kwXw
------END PGP SIGNATURE-----
+>  drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         |  34 ++-
 
---Sig_/XbepMN/1jKrHdjWF6aXCDE7--
+It would be good to do try the same for STM. It's also
+simpler to review that way.
+
+>  include/drm/bridge/dw_mipi_dsi.h              |   2 +-
+>  4 files changed, 145 insertions(+), 123 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> index b6e793bb653c..6cb57807f3f9 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+>  #include <linux/reset.h>
+>  
+>  #include <video/mipi_display.h>
+> @@ -226,7 +227,7 @@ struct dw_mipi_dsi {
+>  	struct mipi_dsi_host dsi_host;
+>  	struct drm_bridge *panel_bridge;
+>  	struct device *dev;
+> -	void __iomem *base;
+> +	struct regmap *regs;
+> 
+
+You have the regmap here...
+>  
+>  	struct clk *pclk;
+>  
+[..]
+> @@ -954,7 +952,6 @@ static int dw_mipi_dsi_rockchip_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	dsi->dev = dev;
+> -	dsi->pdata.base = dsi->base;
+>  	dsi->pdata.max_data_lanes = dsi->cdata->max_data_lanes;
+>  	dsi->pdata.phy_ops = &dw_mipi_dsi_rockchip_phy_ops;
+>  	dsi->pdata.host_ops = &dw_mipi_dsi_rockchip_host_ops;
+> @@ -970,6 +967,8 @@ static int dw_mipi_dsi_rockchip_probe(struct platform_device *pdev)
+>  		goto err_clkdisable;
+>  	}
+>  
+> +	dsi->regs = dsi->pdata.regs;
+> +
+
+... and this goes for both STM and Rockchip: I don't think you need neither
+the struct dw_mipi_dsi_plat_data.regs nor the
+structdw_mipi_dsi_{rockchip, stm}.regs. You should be able to
+just access the regmap via the struct dw_mipi_dsi.
+
+[..]
+>  
+>  err_dsi_probe:
+> @@ -474,7 +472,7 @@ static struct platform_driver dw_mipi_dsi_stm_driver = {
+>  	.remove		= dw_mipi_dsi_stm_remove,
+>  	.driver		= {
+>  		.of_match_table = dw_mipi_dsi_stm_dt_ids,
+> -		.name	= "stm32-display-dsi",
+> +		.name	= DRIVER_NAME,
+
+Unrelated change, please drop it.
+
+>  		.pm = &dw_mipi_dsi_stm_pm_ops,
+>  	},
+>  };
+
+Thanks,
+Ezequiel
+
