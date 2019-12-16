@@ -2,151 +2,114 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CB9C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F29C4C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6CE206A5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48DB206EC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576504829;
+	bh=jdFxBKgT93c3jWBHm8m4ZNJqE+g91z3/HhdnxSdPqNs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Veru184iInnIrEv5snjC+u1bTGZkWxqGqn9celMu8QgH4r13qG+cmYKiVj/MZpZ+C
+	 Fj+LtkDppjotLlQI42Retb5OqmbbpkN9j1hsb0GT5VBLBHnKFy8DYdZhMvfd88qZXm
+	 qB0wbPeEn7k0W40fRruhrfvK8otkpaGKFg2Usf1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbfLPN6t (ORCPT
+        id S1727906AbfLPOA3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:58:49 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59930 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727609AbfLPN6s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 08:58:48 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id AC99B291972
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
-        drinkcat@chromium.org, hsinyi@chromium.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Ulrich Hecht <uli@fpond.eu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
+        Mon, 16 Dec 2019 09:00:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727895AbfLPOA3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:00:29 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6FF220684;
+        Mon, 16 Dec 2019 14:00:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576504828;
+        bh=jdFxBKgT93c3jWBHm8m4ZNJqE+g91z3/HhdnxSdPqNs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2MtKvPzn98o3Zde83TLKGVd+xDbArRelFftBwc4hJgoFOq4ZUxwNBRDKkPUuUB/9G
+         c2GG1mAcpt/gchMK2fkzpckK2B1hcMkqg/W2NL/BoDoZTjZPpkfBaWosvLXSyWaS4O
+         nJcWWO3X8ePpccLyO9K5a+audJq7aT6i7koZLXsA=
+Date:   Mon, 16 Dec 2019 15:00:25 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jitao Shi <jitao.shi@mediatek.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v21 0/2] drm/bridge: PS8640 MIPI-to-eDP bridge
-Date:   Mon, 16 Dec 2019 14:58:32 +0100
-Message-Id: <20191216135834.27775-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Ondrej Jirman <megous@megous.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v5 1/8] clk: sunxi-ng: Mark msgbox clocks as critical
+Message-ID: <20191216140025.6sfmqneiyxjqe6v7@gilmour.lan>
+References: <20191215042455.51001-1-samuel@sholland.org>
+ <20191215042455.51001-2-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="orhnilvx6yyc5lzw"
+Content-Disposition: inline
+In-Reply-To: <20191215042455.51001-2-samuel@sholland.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi all,
 
-This driver seems to continue failing to reach upstream. The latest
-version send by Ulrich [1] one month ago, seems to fix all the issues
-that prevented the driver to get merged, but, recent changes ended with
-this driver not building in current mainline. This new version is like a
-RESEND with these build errors fixed, and also a couple of few changes more
-to use device managed resources when available.
+--orhnilvx6yyc5lzw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This bridge is required to have the embedded display working on an Acer
-Chromebook R13 ("Elm"). Hopefully we are a bit more close to have this
-driver merged. If more changes are required, please let me know and I
-will work on it.
+On Sat, Dec 14, 2019 at 10:24:48PM -0600, Samuel Holland wrote:
+> The msgbox clock is critical because the hardware it controls is shared
+> between Linux and system firmware. The message box may be used by the
+> EL3 secure monitor's PSCI implementation. On 64-bit sunxi SoCs, this is
+> provided by ARM TF-A; 32-bit SoCs use a different implementation. The
+> secure monitor uses the message box to forward requests to power
+> management firmware running on a separate CPU.
+>
+> It is not enough for the secure monitor to enable the clock each time
+> Linux performs a SMC into EL3, as both the firmware and Linux can run
+> concurrently on separate CPUs. So it is never safe for Linux to turn
+> this clock off, and it should be marked as critical.
+>
+> At this time, such power management firmware only exists for the A64 and
+> H5 SoCs.  However, it makes sense to take care of all CCU drivers now
+> for consistency, and to ease the transition in the future once firmware
+> is ported to the other SoCs.
+>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-Note: Along these around 20 revisions of this driver I was unable to
-reconstruct the full changelog history, so I'm skipping this. Sorry
-about that, I promise I'll maintain the changelog for future revisions.
+This is pretty much the same case than for the AR100 clock though,
+right?
 
-Thanks,
- Enric
+I'm still not sure about why we should enable it that clock all the
+time, even if you're not using the ARISC.
 
-[1] https://patchwork.kernel.org/cover/11176929/
+Maxime
 
-Changes in v21:
- - Use devm_i2c_new_dummy_device and fix build issue using deprecated i2c_new_dummy
- - Fix build issue due missing drm_bridge.h
- - Do not remove in ps8640_remove device managed resources
+--orhnilvx6yyc5lzw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Changes in v19:
- - fixed return value of ps8640_probe() when no panel is found
+-----BEGIN PGP SIGNATURE-----
 
-Changes in v18:
- - followed DRM API changes
- - use DEVICE_ATTR_RO()
- - remove firmware update code
- - add SPDX identifier
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeN+QAKCRDj7w1vZxhR
+xZBuAP9Ia+0yr/oIdBQG1t+E3BzWwHMnlV5Sjd2kxueCGpo/HQD/bOzlGVC7h/lX
+e+NB4e8WsigEdVU31jCtR+QPP4lVzQo=
+=bWXY
+-----END PGP SIGNATURE-----
 
-Changes in v17:
- - remove some unused head files.
- - add macros for ps8640 pages.
- - remove ddc_i2c client
- - add mipi_dsi_device_register_full
- - remove the manufacturer from the name and i2c_device_id
-
-Changes in v16:
- - Disable ps8640 DSI MCS Function.
- - Rename gpios name more clearly.
- - Tune the ps8640 power on sequence.
-
-Changes in v15:
- - Drop drm_connector_(un)register calls from parade ps8640.
-   The main DRM driver mtk_drm_drv now calls
-   drm_connector_register_all() after drm_dev_register() in the
-   mtk_drm_bind() function. That function should iterate over all
-   connectors and call drm_connector_register() for each of them.
-   So, remove drm_connector_(un)register calls from parade ps8640.
-
-Changes in v14:
- - update copyright info.
- - change bridge_to_ps8640 and connector_to_ps8640 to inline function.
- - fix some coding style.
- - use sizeof as array counter.
- - use drm_get_edid when read edid.
- - add mutex when firmware updating.
-
-Changes in v13:
- - add const on data, ps8640_write_bytes(struct i2c_client *client, const u8 *data, u16 data_len)
- - fix PAGE2_SW_REST tyro.
- - move the buf[3] init to entrance of the function.
-
-Changes in v12:
- - fix hw_chip_id build warning
-
-Changes in v11:
- - Remove depends on I2C, add DRM depends
- - Reuse ps8640_write_bytes() in ps8640_write_byte()
- - Use timer check for polling like the routines in <linux/iopoll.h>
- - Fix no drm_connector_unregister/drm_connector_cleanup when ps8640_bridge_attach fail
- - Check the ps8640 hardware id in ps8640_validate_firmware
- - Remove fw_version check
- - Move ps8640_validate_firmware before ps8640_enter_bl
- - Add ddc_i2c unregister when probe fail and ps8640_remove
-
-Jitao Shi (2):
-  Documentation: bridge: Add documentation for ps8640 DT properties
-  drm/bridge: Add I2C based driver for ps8640 bridge
-
- .../bindings/display/bridge/ps8640.txt        |  44 ++
- drivers/gpu/drm/bridge/Kconfig                |  11 +
- drivers/gpu/drm/bridge/Makefile               |   1 +
- drivers/gpu/drm/bridge/parade-ps8640.c        | 655 ++++++++++++++++++
- 4 files changed, 711 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.txt
- create mode 100644 drivers/gpu/drm/bridge/parade-ps8640.c
-
--- 
-2.20.1
-
+--orhnilvx6yyc5lzw--
