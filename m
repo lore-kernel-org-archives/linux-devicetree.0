@@ -2,97 +2,105 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 863A8C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73580C2D0CF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB8E20725
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:10:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y8bMJA3m"
+	by mail.kernel.org (Postfix) with ESMTP id 5364720725
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfLPIKF (ORCPT
+        id S1726903AbfLPIKc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:10:05 -0500
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:43913 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbfLPIKE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 03:10:04 -0500
-Received: by mail-vk1-f195.google.com with SMTP id h13so1359980vkn.10
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 00:10:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OaW5Hnc1v0arti4eZTySZ/4BhiMhUg3N5njmRM9tic4=;
-        b=y8bMJA3mew2fcZQ7cpXVf/KhayFi/B2k/6eZ6N9Sv26pXuVqEg0g0meW5SHvNxQfq1
-         CXwOdlE68eobeKxZqVXVuPhvmAKrGBZ00op1yOHOqf2RzzZdbivN1O9T7iqMgHbtag1E
-         VwmOxqjG6r1lXxi/Bd4ob/QiGnbJlx+9Lu8ssLMLyoKWTFehEF3qpaCr65WL/1kTblAG
-         9beDIfbJ4JyuJkm7MsuQyUcsPH+1zGPW3RNrZr2X6/HicmoX3P81W77kszgcHAAcSs8G
-         McuF9QkoLFHowla+BmUpoKkQvBWQlDRfJ3F6f+bUotqCHKyHtS6h6fzgLXT6tDAI0Da1
-         FeOQ==
+        Mon, 16 Dec 2019 03:10:32 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41691 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbfLPIKc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 03:10:32 -0500
+Received: by mail-ot1-f68.google.com with SMTP id r27so8060642otc.8;
+        Mon, 16 Dec 2019 00:10:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OaW5Hnc1v0arti4eZTySZ/4BhiMhUg3N5njmRM9tic4=;
-        b=G5UOffZeZL8L75HJrj+p83qaF8UYn1OTD64vSuRB4zWg8qHlh7ay1gBw+6ZKozK90J
-         DLQbpFcb6VLF1/RJpGon5x5hr6BlQfcVLWQEcnXPK6FxbGOQu6w1GnYCktX9FH0bmMEY
-         fu+s92pO6pD1KGvLYNA4uz2SxNq1Dq7RI+vWdxbYjvg+3ymoRudTgzqKBSNb0bwE8YAs
-         M3yqu4kgLofWD8iThwP8GA0Knz5t0tnk8QfhyUIMkGsarvkCGgdzE3PqLki09DSowTRW
-         weFv5dv0/o7qaUsmnQOcgnn+hLlvip5rNXN3PcuJ0OdfpFUVWolTtW7nl/kysnLu0cZo
-         /FZA==
-X-Gm-Message-State: APjAAAWTvdQWvSFNFBeTXOgEINa3W9imxMAol5kbf4q28vdPwHdYlWcp
-        c6hufVznut9IMo5g7CwFqZT4C3kfoP/k+WPnNQtUvw==
-X-Google-Smtp-Source: APXvYqxrAb1mbxQGpITUr96izDI9QHkdc32NxrkBD2ZJlXCzk+6QUM2DiUNw2b1ZYAJSZRzpOYold++C0qlU8ALpepg=
-X-Received: by 2002:a1f:add3:: with SMTP id w202mr1458047vke.30.1576483803676;
- Mon, 16 Dec 2019 00:10:03 -0800 (PST)
+        bh=4j5mB296K3OjWTSnZCBs+O5j2Ao0bxQ6pvOe40JZ42w=;
+        b=PjN0Fvkei6Za6b/T7Ww/fy24HHf2ase7GEaO+LZ9Nv4lENJpKpqefL0jE/45YRhCdE
+         JhnsiaRu50vg6wz8wINa78JF7uBCLDyTL5N2WNiZJ7Pr/942PwdveRG725N8WTSmiOU6
+         4/LzcqSiuJ+cnY9NMk3qmFSQqc7vBmLM0DbX+fObIbPdJO8YqLx5GZUMxCh10xYp7d16
+         Va/6KsVzvWkCLWte5BWTgfsIV2iofPrUmdYjd/Fx6axEFSfnv2h2f3wD9Vazg/dOzBW3
+         mozn6JJT3CdMvdj6NPaCdWdKEoykqTqfwwll/7SXif2b7S3YOZZ/Ga5FZSW/Sr0qlk5v
+         U6/A==
+X-Gm-Message-State: APjAAAXhYuPfRb8gOXfCboT+JcMGQeawYyKFgnSXlHFtuKLuNANL//DM
+        DUrcz2U4ZqgK8fQ/78GuVFpypp/05LvEZQK/7n4=
+X-Google-Smtp-Source: APXvYqyWZq4vxFZ0rUlordJFdD6oxjJaIIHj04emaSwV2tCBVu27DKwDtUKc+AphFf1h7JipnnYtHMfDu3xlZDC/BMg=
+X-Received: by 2002:a9d:dc1:: with SMTP id 59mr31271896ots.250.1576483831730;
+ Mon, 16 Dec 2019 00:10:31 -0800 (PST)
 MIME-Version: 1.0
-References: <20191210154157.21930-1-ktouil@baylibre.com> <20191210154157.21930-3-ktouil@baylibre.com>
-In-Reply-To: <20191210154157.21930-3-ktouil@baylibre.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 09:09:52 +0100
-Message-ID: <CACRpkdZPO+nBA=H0qJUiSq2iA0BDg=n3Ez5wPgnrtLc3MYdpJw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] nvmem: add support for the write-protect pin
-To:     Khouloud Touil <ktouil@baylibre.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <87mubt3tux.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87mubt3tux.wl-kuninori.morimoto.gx@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 16 Dec 2019 09:10:20 +0100
+Message-ID: <CAMuHMdWgPJ-m+sphVi5RDDqg=T3-v1h5aDkVCxmfjENx54DVTg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: renesas: r8a77990-ebisu: remove
+ clkout-lr-synchronous from rcar_sound
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        baylibre-upstreaming@groups.io,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux-DT <devicetree@vger.kernel.org>,
+        Linux-ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 4:42 PM Khouloud Touil <ktouil@baylibre.com> wrote:
+Hi Morimoto-san,
 
-> The write-protect pin handling looks like a standard property that
-> could benefit other users if available in the core nvmem framework.
+On Mon, Dec 16, 2019 at 3:08 AM Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 >
-> Instead of modifying all the memory drivers to check this pin, make
-> the NVMEM subsystem check if the write-protect GPIO being passed
-> through the nvmem_config or defined in the device tree and pull it
-> low whenever writing to the memory.
+> rcar_sound doesn't support clkout-lr-synchronous in upstream.
+> It was supported under out-of-tree rcar_sound.
+> upstream rcar_sound is supporting
+>         - clkout-lr-synchronous
+>         + clkout-lr-asynchronous
 >
-> There was a suggestion for introducing the gpiodesc from pdata, but
-> as pdata is already removed it could be replaced by adding it to
-> nvmem_config.
->
-> Reference: https://lists.96boards.org/pipermail/dev/2018-August/001056.html
->
-> Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-This is consistent IMO, we just specify that WP is active high
-as in "when it is high, it actively protects against writing", so:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Thanks for your patch!
 
-Yours,
-Linus Walleij
+IIUIC, as no upstream code looks at this property, there is no need to
+apply this as a fix for v5.5, and it is safe to queue this for v5.6?
+
+Nevertheless, I think it is good to add
+Fixes: 56629fcba94c698d ("arm64: dts: renesas: ebisu: Enable Audio")
+No need to resend, I can add that while applying.
+
+Thank you!
+
+> --- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+> +++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+> @@ -636,7 +636,6 @@
+>         /* audio_clkout0/1/2/3 */
+>         #clock-cells = <1>;
+>         clock-frequency = <12288000 11289600>;
+> -       clkout-lr-synchronous;
+>
+>         status = "okay";
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
