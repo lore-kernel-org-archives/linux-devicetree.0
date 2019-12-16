@@ -2,162 +2,114 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C66C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E2DC2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 444A2206D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B14F206EC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:55:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576508134;
+	bh=G5qmjCDdT1w/WFe2hlox5kS/aHkrbDR0OUGRD1SamhA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ht+1M5ydagd1rJDon4uDxnBBV8K32bFDPHWIFFu2q69ynRn3HgkI9C3h8KcKGjick
+	 +AjrJCZlsP0xH5lrRrR0bINH1mpuoX5fqbNpcegMK9vFje0wt62a9/9xsYzCiygCk6
+	 ubwgBr9cSmVjiQuGW7UddiZ2M0B8OZYnK79wtThQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbfLPOtg (ORCPT
+        id S1728148AbfLPOzd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:49:36 -0500
-Received: from foss.arm.com ([217.140.110.172]:57802 "EHLO foss.arm.com"
+        Mon, 16 Dec 2019 09:55:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:57962 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728014AbfLPOtg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:49:36 -0500
+        id S1728008AbfLPOzd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:55:33 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6271C1FB;
-        Mon, 16 Dec 2019 06:49:35 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CDCA93F718;
-        Mon, 16 Dec 2019 06:49:34 -0800 (PST)
-Date:   Mon, 16 Dec 2019 14:49:33 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6664A1FB;
+        Mon, 16 Dec 2019 06:55:32 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D91B93F718;
+        Mon, 16 Dec 2019 06:55:31 -0800 (PST)
+Date:   Mon, 16 Dec 2019 14:55:28 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
- perform only 32-bit accesses
-Message-ID: <20191216144932.GY24359@e119886-lin.cambridge.arm.com>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-6-kishon@ti.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v6 09/15] regulator: bd71828: Basic support for ROHM
+ bd71828 PMIC regulators
+Message-ID: <20191216145528.GE4161@sirena.org.uk>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vv4Sf/kQfcwinyKX"
 Content-Disposition: inline
-In-Reply-To: <20191209092147.22901-6-kishon@ti.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+X-Cookie: Backed up the system lately?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
-> Certain platforms like TI's J721E allow only 32-bit register accesses.
 
-When I first read this I thought you meant only 32-bit accesses are allowed
-and not other sizes (such as 64-bit). However the limitation you address
-here is that the J721E allows only 32-bit *aligned* register accesses.
+--vv4Sf/kQfcwinyKX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It would be helpful to make this clearer in the commit message.
+On Wed, Dec 11, 2019 at 11:46:11AM +0200, Matti Vaittinen wrote:
 
-You can also shorten the commit subject to 'PCI: cadence: Add read/write
-accessors for 32-bit aligned accesses' or similar.
-
-> Add read and write accessors to perform only 32-bit accesses in order to
-> support platfroms like TI's J721E.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence.c | 40 +++++++++++++++++++
->  drivers/pci/controller/cadence/pcie-cadence.h |  2 +
->  2 files changed, 42 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
-> index cd795f6fc1e2..de5b3b06f2d0 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
-> @@ -7,6 +7,46 @@
->  
->  #include "pcie-cadence.h"
->  
-> +u32 cdns_pcie_read32(void __iomem *addr, int size)
-
-Given there is already a cdns_pcie_readl in pcie-cadence.h it may help
-to name this in a way that doesn't cause confusion. Here 32 is perhaps
-being used to suggest the size of the actual read performed, the
-maximum size of 'size' or the alignment.
-
-
+> +static int bd71828_ldo6_get_voltage(struct regulator_dev *rdev)
 > +{
-> +	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
-> +	unsigned int offset = (unsigned long)addr & 0x3;
-> +	u32 val = readl(aligned_addr);
-> +
-> +	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-> +		pr_err("Invalid Address in function:%s\n", __func__);
-
-Would this be better as a BUG? Without a BUG this error could get ignored
-and yet the device may not behave as expected.
-
-
-> +		return 0;
-> +	}
-> +
-> +	if (size > 2)
-> +		return val;
-
-I think you make the assumption here that if size > 2 then it's 4. It could
-be 3 (though unlikely) in which case you'd want to fall through to the next
-line.
-
-> +
-> +	return (val >> (8 * offset)) & ((1 << (size * 8)) - 1);
+> +	return BD71828_LDO_6_VOLTAGE;
 > +}
 > +
-> +void cdns_pcie_write32(void __iomem *addr, int size, u32 value)
-> +{
+> +static const struct regulator_ops bd71828_ldo6_ops = {
+> +	.enable = regulator_enable_regmap,
+> +	.disable = regulator_disable_regmap,
+> +	.get_voltage = bd71828_ldo6_get_voltage,
 
-And same feedback for this function.
+You can just set fixed_uV in the regulator_desc, you don't need a
+get_voltage() operation here.  Otherwise this looks good, I'll apply it
+and please send an incremental fix for this.
 
-Thanks,
+--vv4Sf/kQfcwinyKX
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Andrew Murray
+-----BEGIN PGP SIGNATURE-----
 
-> +	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
-> +	unsigned int offset = (unsigned long)addr & 0x3;
-> +	u32 mask;
-> +	u32 val;
-> +
-> +	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-> +		pr_err("Invalid Address in function:%s\n", __func__);
-> +		return;
-> +	}
-> +
-> +	if (size > 2) {
-> +		writel(value, addr);
-> +		return;
-> +	}
-> +
-> +	mask = ~(((1 << (size * 8)) - 1) << (offset * 8));
-> +	val = readl(aligned_addr) & mask;
-> +	val |= value << (offset * 8);
-> +	writel(val, aligned_addr);
-> +}
-> +
->  void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
->  				   u32 r, bool is_io,
->  				   u64 cpu_addr, u64 pci_addr, size_t size)
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index f0395eaf9df5..5171d0da37da 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -498,6 +498,8 @@ void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r);
->  void cdns_pcie_disable_phy(struct cdns_pcie *pcie);
->  int cdns_pcie_enable_phy(struct cdns_pcie *pcie);
->  int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie);
-> +u32 cdns_pcie_read32(void __iomem *addr, int size);
-> +void cdns_pcie_write32(void __iomem *addr, int size, u32 value);
->  extern const struct dev_pm_ops cdns_pcie_pm_ops;
->  
->  #endif /* _PCIE_CADENCE_H */
-> -- 
-> 2.17.1
-> 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl33mt8ACgkQJNaLcl1U
+h9DPqggAhcsF1ZeRBaP6Lzz9ZA0lX48wnM91c45AzpXxhBPVmVU8EJrJFkmUT+zI
+VYHCWzrWqZoUwoxRDUntTg0W7omOi4CoU10/2SGjxkdxHiAmutKvaV8e155DaKRj
+hhZGeaSRdWgD3uYUZGBB1W9OYmzuHx6NtlL76FfabMt6TTPQCq7X3VjSuI4wi4oN
+7JLtu6Gzf2WNSmP1uqZLMSqk1RvgZa2K1rgRwf+SYhTD21VWliTuq/qGtg0zmijW
+BA398k1yTl123ecTnS9Fnk+IsqPSTd/mBJT4TmFkdakxVm3JSYIqpqIiJYZtGOBs
+aUVTHrBVlYfYIk4raTP8w2l2xYiNdg==
+=0wbA
+-----END PGP SIGNATURE-----
+
+--vv4Sf/kQfcwinyKX--
