@@ -2,43 +2,43 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F29C4C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3149C4741C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C48DB206EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89CCD20717
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576504829;
-	bh=jdFxBKgT93c3jWBHm8m4ZNJqE+g91z3/HhdnxSdPqNs=;
+	s=default; t=1576505071;
+	bh=eqhwT21aMAQai25oTPNjuF/wi6Lr8PnjARGwV07MqLM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Veru184iInnIrEv5snjC+u1bTGZkWxqGqn9celMu8QgH4r13qG+cmYKiVj/MZpZ+C
-	 Fj+LtkDppjotLlQI42Retb5OqmbbpkN9j1hsb0GT5VBLBHnKFy8DYdZhMvfd88qZXm
-	 qB0wbPeEn7k0W40fRruhrfvK8otkpaGKFg2Usf1w=
+	b=07colzax+BrDygXiKoaApVmlmzdvAU5jKmCAHmCN+43Kzm/HJks5Nd9+21nmkBgCc
+	 99pLR2lltKTovQ5wwWvG7ic/AXAbZfmhRmTXBrDawiO1nh8p52BEbOechlf5t5K4CM
+	 XdS2pl/5zb/+u5w3VrYFFq9yM2Tu/DINxEDJCcnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfLPOA3 (ORCPT
+        id S1727965AbfLPOE0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:00:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57650 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 09:04:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727895AbfLPOA3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:00:29 -0500
+        id S1728015AbfLPOE0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:04:26 -0500
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6FF220684;
-        Mon, 16 Dec 2019 14:00:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C951C206A5;
+        Mon, 16 Dec 2019 14:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576504828;
-        bh=jdFxBKgT93c3jWBHm8m4ZNJqE+g91z3/HhdnxSdPqNs=;
+        s=default; t=1576505065;
+        bh=eqhwT21aMAQai25oTPNjuF/wi6Lr8PnjARGwV07MqLM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2MtKvPzn98o3Zde83TLKGVd+xDbArRelFftBwc4hJgoFOq4ZUxwNBRDKkPUuUB/9G
-         c2GG1mAcpt/gchMK2fkzpckK2B1hcMkqg/W2NL/BoDoZTjZPpkfBaWosvLXSyWaS4O
-         nJcWWO3X8ePpccLyO9K5a+audJq7aT6i7koZLXsA=
-Date:   Mon, 16 Dec 2019 15:00:25 +0100
+        b=A8aG72OOaT8znWL8+GmFhVW5bWEDI5ITGF2n2FOZQrOGAZPAK8TwebfG6yZ/idgLI
+         72X8kyE2neY4gEQpT7V7jx7S3d/A8I93FNZ7g4n7lf6lWWMvpr01tj0/lLzWy59qJT
+         uaTK+pIxRpmLZ3iLVuMB5bPe6qQRh9KJfGq2Dmw0=
+Date:   Mon, 16 Dec 2019 15:04:22 +0100
 From:   Maxime Ripard <mripard@kernel.org>
 To:     Samuel Holland <samuel@sholland.org>
 Cc:     Chen-Yu Tsai <wens@csie.org>,
@@ -54,62 +54,159 @@ Cc:     Chen-Yu Tsai <wens@csie.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v5 1/8] clk: sunxi-ng: Mark msgbox clocks as critical
-Message-ID: <20191216140025.6sfmqneiyxjqe6v7@gilmour.lan>
+Subject: Re: [PATCH v5 2/8] dt-bindings: mailbox: Add a sun6i message box
+ binding
+Message-ID: <20191216140422.on4bredklgdxywbw@gilmour.lan>
 References: <20191215042455.51001-1-samuel@sholland.org>
- <20191215042455.51001-2-samuel@sholland.org>
+ <20191215042455.51001-3-samuel@sholland.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="orhnilvx6yyc5lzw"
+        protocol="application/pgp-signature"; boundary="6kpcajowhdygmdk2"
 Content-Disposition: inline
-In-Reply-To: <20191215042455.51001-2-samuel@sholland.org>
+In-Reply-To: <20191215042455.51001-3-samuel@sholland.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---orhnilvx6yyc5lzw
+--6kpcajowhdygmdk2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sat, Dec 14, 2019 at 10:24:48PM -0600, Samuel Holland wrote:
-> The msgbox clock is critical because the hardware it controls is shared
-> between Linux and system firmware. The message box may be used by the
-> EL3 secure monitor's PSCI implementation. On 64-bit sunxi SoCs, this is
-> provided by ARM TF-A; 32-bit SoCs use a different implementation. The
-> secure monitor uses the message box to forward requests to power
-> management firmware running on a separate CPU.
->
-> It is not enough for the secure monitor to enable the clock each time
-> Linux performs a SMC into EL3, as both the firmware and Linux can run
-> concurrently on separate CPUs. So it is never safe for Linux to turn
-> this clock off, and it should be marked as critical.
->
-> At this time, such power management firmware only exists for the A64 and
-> H5 SoCs.  However, it makes sense to take care of all CCU drivers now
-> for consistency, and to ease the transition in the future once firmware
-> is ported to the other SoCs.
+Hi,
+
+On Sat, Dec 14, 2019 at 10:24:49PM -0600, Samuel Holland wrote:
+> This mailbox hardware is present in Allwinner sun6i, sun8i, sun9i, and
+> sun50i SoCs. Add a device tree binding for it. As it has only been
+> tested on the A83T, A64, H3/H5, and H6 SoCs, only those compatibles are
+> included.
 >
 > Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+>  .../mailbox/allwinner,sun6i-a31-msgbox.yaml   | 78 +++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml b/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
+> new file mode 100644
+> index 000000000000..dd746e07acfd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
+> @@ -0,0 +1,78 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mailbox/allwinner,sun6i-a31-msgbox.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner sunxi Message Box
+> +
+> +maintainers:
+> +  - Samuel Holland <samuel@sholland.org>
+> +
+> +description: |
+> +  The hardware message box on sun6i, sun8i, sun9i, and sun50i SoCs is a
+> +  two-user mailbox controller containing 8 unidirectional FIFOs. An interrupt
+> +  is raised for received messages, but software must poll to know when a
+> +  transmitted message has been acknowledged by the remote user. Each FIFO can
+> +  hold four 32-bit messages; when a FIFO is full, clients must wait before
+> +  attempting more transmissions.
+> +
+> +  Refer to ./mailbox.txt for generic information about mailbox device-tree
+> +  bindings.
+> +
+> +properties:
+> +  compatible:
+> +     items:
+> +      - enum:
+> +          - allwinner,sun8i-a83t-msgbox
+> +          - allwinner,sun8i-h3-msgbox
+> +          - allwinner,sun50i-a64-msgbox
+> +          - allwinner,sun50i-h6-msgbox
+> +      - const: allwinner,sun6i-a31-msgbox
 
-This is pretty much the same case than for the AR100 clock though,
-right?
+This will fail for the A31, since it won't have two compatibles but
+just one.
 
-I'm still not sure about why we should enable it that clock all the
-time, even if you're not using the ARISC.
+You can have something like this if you want to do it with an enum:
 
+compatible:
+  oneOf:
+    - const: allwinner,sun6i-a31-msgbox
+    - items:
+      - enum:
+        - allwinner,sun8i-a83t-msgbox
+        - allwinner,sun8i-h3-msgbox
+        - allwinner,sun50i-a64-msgbox
+        - allwinner,sun50i-h6-msgbox
+      - const: allwinner,sun6i-a31-msgbox
+
+> +  reg:
+> +    items:
+> +      - description: MMIO register range
+
+There's no need for an obvious description like this.
+Just set it to maxItems: 1
+
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: bus clock
+> +
+> +  resets:
+> +    maxItems: 1
+> +    description: bus reset
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: controller interrupt
+
+Ditto, you can drop the description here.
+
+> +  '#mbox-cells':
+> +    const: 1
+
+However, you should document what the argument is about?
+
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - resets
+> +  - interrupts
+> +  - '#mbox-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/sun8i-h3-ccu.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/reset/sun8i-h3-ccu.h>
+> +
+> +    msgbox: mailbox@1c17000 {
+> +            compatible = "allwinner,sun8i-h3-msgbox",
+> +                         "allwinner,sun6i-a31-msgbox";
+> +            reg = <0x01c17000 0x1000>;
+> +            clocks = <&ccu CLK_BUS_MSGBOX>;
+> +            resets = <&ccu RST_BUS_MSGBOX>;
+> +            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +            #mbox-cells = <1>;
+> +    };
+
+Look good otherwise, thanks!
 Maxime
 
---orhnilvx6yyc5lzw
+--6kpcajowhdygmdk2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeN+QAKCRDj7w1vZxhR
-xZBuAP9Ia+0yr/oIdBQG1t+E3BzWwHMnlV5Sjd2kxueCGpo/HQD/bOzlGVC7h/lX
-e+NB4e8WsigEdVU31jCtR+QPP4lVzQo=
-=bWXY
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeO5gAKCRDj7w1vZxhR
+xZz1AP4ummpThYn1v2bFsXFQFsYqcm6TRKjZ8eZz+DriVOSSjAEAgxnXw2btNZrv
+PVGRNuENk6kHsBf7eVmnaJa2MVik5Qs=
+=/Mdk
 -----END PGP SIGNATURE-----
 
---orhnilvx6yyc5lzw--
+--6kpcajowhdygmdk2--
