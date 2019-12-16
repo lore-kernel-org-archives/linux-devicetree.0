@@ -2,94 +2,185 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9D0C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEDEC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA5A82072B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22EAD206CB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:20:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576495259;
+	bh=Mpc6KplCorpdPPjd389Z2K1v+WF0Ie2Wk28APYU3EIs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JXF5mRIsns2+N0zZMz0E7VKU1WpAdmn0amUuGfoVSO+/Hgz83Yig3+oELpEcxP9HB
+	 RKPs+f2/PXmfzXp5gr0LGG+AsEhabtNIJ8PXa5uAC5uIKHIksttLLTi6k/ZAyKv3DM
+	 M6eArV/KvMxwcL758gVDHgh8u2fBKzCqqk8z/eqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfLPLS1 (ORCPT
+        id S1727427AbfLPLUs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:18:27 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46122 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727059AbfLPLS1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:18:27 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0C713AD4F;
-        Mon, 16 Dec 2019 11:18:25 +0000 (UTC)
-Message-ID: <e94310c04571b23e57d802aecb4789d7c6d35d74.camel@suse.de>
-Subject: Re: [PATCH v5 1/6] dt-bindings: PCI: Add bindings for brcmstb's
- PCIe device
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Matthias Brugger <mbrugger@suse.com>, andrew.murray@arm.com,
-        maz@kernel.org, linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        phil@raspberrypi.org, jeremy.linton@arm.com,
+        Mon, 16 Dec 2019 06:20:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40488 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727086AbfLPLUr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 06:20:47 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77993206CB;
+        Mon, 16 Dec 2019 11:20:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576495247;
+        bh=Mpc6KplCorpdPPjd389Z2K1v+WF0Ie2Wk28APYU3EIs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UGMeVmTnoijpaXf0URFSEnCAv2QMv1w4vRp1RBYhvOjr4CWEskkLNUgDf2fd+/91T
+         u9eHV45b6wdXZsbDBv6MufHf+l5akQjQKX51yICGrGeVg8jgDQZilSbp6BAom+IqcC
+         Y7wsZm3BFQcwZ8XuLl9OoumuAFnRAITIuNShN1oI=
+Date:   Mon, 16 Dec 2019 12:20:42 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org, james.quinlan@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
-Date:   Mon, 16 Dec 2019 12:18:23 +0100
-In-Reply-To: <39a8ab96-2b32-1d9c-63cd-8114a58f723c@suse.com>
-References: <20191216110113.30436-1-nsaenzjulienne@suse.de>
-         <20191216110113.30436-2-nsaenzjulienne@suse.de>
-         <39a8ab96-2b32-1d9c-63cd-8114a58f723c@suse.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-4ZM5h4FNm971ZXqZ/T37"
-User-Agent: Evolution 3.34.2 
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Subject: Re: [PATCH v12 1/7] dt-bindings: sun6i-dsi: Document A64 MIPI-DSI
+ controller
+Message-ID: <20191216112042.f4xvlgnbm4dk6wkq@gilmour.lan>
+References: <20191203134816.5319-1-jagan@amarulasolutions.com>
+ <20191203134816.5319-2-jagan@amarulasolutions.com>
+ <20191204133600.gnv6dnhk6upe7xod@gilmour.lan>
+ <CAMty3ZDU57Hj3ZSBC6sSMFWN9-HQadA03hmXUNUVS1W0UQQ3DA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="j7bmzwiznwnaw3ax"
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZDU57Hj3ZSBC6sSMFWN9-HQadA03hmXUNUVS1W0UQQ3DA@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---=-4ZM5h4FNm971ZXqZ/T37
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+--j7bmzwiznwnaw3ax
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 2019-12-16 at 12:14 +0100, Matthias Brugger wrote:
-> > +
-> > +  msi-controller:
-> > +    description: Identifies the node as an MSI controller.
->=20
-> are you missing "type: boolean" here?
+On Mon, Dec 16, 2019 at 04:37:20PM +0530, Jagan Teki wrote:
+> On Wed, Dec 4, 2019 at 7:06 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Tue, Dec 03, 2019 at 07:18:10PM +0530, Jagan Teki wrote:
+> > > The MIPI DSI controller in Allwinner A64 is similar to A33.
+> > >
+> > > But unlike A33, A64 doesn't have DSI_SCLK gating so it is valid
+> > > to have separate compatible for A64 on the same driver.
+> > >
+> > > DSI_SCLK uses mod clock-names on dt-bindings, so the same
+> > > is not required for A64.
+> > >
+> > > On that note
+> > > - A64 require minimum of 1 clock like the bus clock
+> > > - A33 require minimum of 2 clocks like both bus, mod clocks
+> > >
+> > > So, update dt-bindings so-that it can document both A33,
+> > > A64 bindings requirements.
+> > >
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > ---
+> > > Changes for v12:
+> > > - Use 'enum' instead of oneOf+const
+> > >
+> > >  .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 20 +++++++++++++++++--
+> > >  1 file changed, 18 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> > > index dafc0980c4fa..b91446475f35 100644
+> > > --- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> > > +++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> > > @@ -15,7 +15,9 @@ properties:
+> > >    "#size-cells": true
+> > >
+> > >    compatible:
+> > > -    const: allwinner,sun6i-a31-mipi-dsi
+> > > +    enum:
+> > > +      - allwinner,sun6i-a31-mipi-dsi
+> > > +      - allwinner,sun50i-a64-mipi-dsi
+> > >
+> > >    reg:
+> > >      maxItems: 1
+> > > @@ -24,6 +26,8 @@ properties:
+> > >      maxItems: 1
+> > >
+> > >    clocks:
+> > > +    minItems: 1
+> > > +    maxItems: 2
+> > >      items:
+> > >        - description: Bus Clock
+> > >        - description: Module Clock
+> > > @@ -63,13 +67,25 @@ required:
+> > >    - reg
+> > >    - interrupts
+> > >    - clocks
+> > > -  - clock-names
+> > >    - phys
+> > >    - phy-names
+> > >    - resets
+> > >    - vcc-dsi-supply
+> > >    - port
+> > >
+> > > +allOf:
+> > > +  - if:
+> > > +      properties:
+> > > +         compatible:
+> > > +           contains:
+> > > +             const: allwinner,sun6i-a31-mipi-dsi
+> > > +      then:
+> > > +        properties:
+> > > +          clocks:
+> > > +            minItems: 2
+> > > +        required:
+> > > +          - clock-names
+> > > +
+> >
+> > Your else condition should check that the number of clocks items is 1
+> > on the A64
+>
+> But the minItems mentioned as 1 in clocks, which is unchanged number
+> by default. doesn't it sufficient?
 
-As per RobH's suggestion[1] I assumed the type on msi-controller and msi-pa=
-rent
-is alredy defined.
+In the main schema, it's said that the clocks property can have one or
+two elements (to cover the A31 case that has one, and the A64 case
+that has 2).
 
-Regards,
-Nicolas
+This is fine.
 
-[1] https://patchwork.kernel.org/patch/11239717/#23008585
+Later on, you enforce that the A64 has two elements, and this is fine
+too.
 
+However, you never check that on the A31 you only have one clock, and
+you could very well have two and no one would notice.
 
---=-4ZM5h4FNm971ZXqZ/T37
+Maxime
+
+--j7bmzwiznwnaw3ax
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl33Z/8ACgkQlfZmHno8
-x/7P7gf+NuNPpIsO6gLiH8DJTHrzG+A4soBpSgB0r3XzWZfc0Rem+xaaojNEVDTT
-po1m4X5pXKLejfpfB7srdeIweCg2xg3Pm61W6750iDhgKOtF7CNj91zkYkkSMIvs
-0lvWgo25TX1z3O/Z+dfRrPSMKMR1Rhos4KLxFALXiSakdoPsaoetmz7pkAdgXwqr
-0jKv3rerg41Q0yJi/zQSJcbvFCGd05ghq2Z+SdUtnqu5Iw/VEmorK6bo22W911w9
-3Kr9RHGM6dtTTMqS3rZWk3zfx1HuwhXjU93ObTavjtYqSL0UrCt9RCLoMgDA95hM
-f44IH0GrZdZuUqHOO0YN77qenyPzlg==
-=xgVD
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfdoigAKCRDj7w1vZxhR
+xeS/AP9UV7Xns9t5VOhLEF+tbuQ+jcstzHVAz1d0xXveWqK7uAEAqK1mC/scTm09
+qaYD48OkBiF38cUHEBrXBJdLGSE9gQI=
+=7xiu
 -----END PGP SIGNATURE-----
 
---=-4ZM5h4FNm971ZXqZ/T37--
-
+--j7bmzwiznwnaw3ax--
