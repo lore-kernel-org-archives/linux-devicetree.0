@@ -2,82 +2,140 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBAAC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 06:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FBAC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 06:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5337120717
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 06:47:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="Q7/FsZxq"
+	by mail.kernel.org (Postfix) with ESMTP id 98F0A20700
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 06:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfLPGrX (ORCPT
+        id S1726252AbfLPGz6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 01:47:23 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34375 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbfLPGrW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 01:47:22 -0500
-Received: by mail-pg1-f194.google.com with SMTP id r11so3118571pgf.1
-        for <devicetree@vger.kernel.org>; Sun, 15 Dec 2019 22:47:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YPHzDwynlmOFdAU5St+7P/aISgKvPX7+uyfwjb3J5vQ=;
-        b=Q7/FsZxqSwMa+BzKGhf/87FEkHKFRHq6bnEriH4r/8faI2wq55Pf+hh6Dn/1A1L1hE
-         QpDC8Tw2cEi1FMh9isaL5Wm2ZOPxXOZWcDiADyPoncHeRi4uNuQVZ3vevcMF6Zmy/s06
-         xmkVNHiSNCCl1q561PMnqZFynvhDCjvRPKlbXzMKMW6IL5ryRPiH7VvsfdkMe7Zfg23b
-         ZInoD7zU0DqJdxovEj9bVs8SpG+oMV7T58xRpRHQNmDSFiQ6/cgLseuSCkkXC5Tjb9Rc
-         15Kg06QdQIh1L0juCm+0Wblblnt87P6qJKU6kJsjsSXtxS5uEzMSMllQ/53QAInBoJnm
-         HzYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YPHzDwynlmOFdAU5St+7P/aISgKvPX7+uyfwjb3J5vQ=;
-        b=Te8DNbwX9RBYrW7gy66L0mqOrRysUrlppNiu5d0RPGRgRvm1YCJZlpnSDOfS9kHNmT
-         xpP2HPxYjpmefxP6EpOtCQZEc+ITiRCjbaNlFWrj9B8p4U/6q7JyWrbY8BFwcwP40ble
-         m7iZC52+PJXQ3sEsTpVHb0JNG4V18SP+PhImhd0Jn4ylS4XrgxJWOEnrFA1pwrgHt/Dn
-         /+/EQiPS18Sn7Xk6FCFvNJkQBsvYE/UsmWQedrIb5IKaAeh+W1wHAXBXZANhP3PrlNwv
-         2G6cQ8RuLQxHfSsyu4fj7e3No2nkX02dA5+bCgHsZE9lY/kylH8jT/OObXMWOU2hhdZI
-         tU5A==
-X-Gm-Message-State: APjAAAVInsBi7gO7M39y7KPjBofkOs9fRbnNXpGJbqWSI3k7LEqna2co
-        7wm0KWB8PJJN43wVUQUnRJ0wQA==
-X-Google-Smtp-Source: APXvYqzcXDlL9EfEPDbT8ec8JfIiOjcIeAoXu12dG22SBfYFW7LzFWn8hWSWuniHIINm1Ku+0eA7YQ==
-X-Received: by 2002:a63:753:: with SMTP id 80mr15150274pgh.95.1576478842024;
-        Sun, 15 Dec 2019 22:47:22 -0800 (PST)
-Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id g7sm20758515pfq.33.2019.12.15.22.47.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 22:47:21 -0800 (PST)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     nsaenzjulienne@suse.de
-Cc:     andrew.murray@arm.com, bcm-kernel-feedback-list@broadcom.com,
-        devicetree@vger.kernel.org, eric@anholt.net, f.fainelli@gmail.com,
-        james.quinlan@broadcom.com, jeremy.linton@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        mark.rutland@arm.com, maz@kernel.org, mbrugger@suse.com,
-        phil@raspberrypi.org, robh+dt@kernel.org, wahrenst@gmx.net,
-        linux@endlessm.com
-Subject: Re: [PATCH v4 2/8] ARM: dts: bcm2711: Enable PCIe controller
-Date:   Mon, 16 Dec 2019 14:46:38 +0800
-Message-Id: <20191216064638.5067-1-jian-hong@endlessm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191203114743.1294-3-nsaenzjulienne@suse.de>
-References: <20191203114743.1294-3-nsaenzjulienne@suse.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 16 Dec 2019 01:55:58 -0500
+Received: from mga12.intel.com ([192.55.52.136]:7948 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbfLPGz5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 01:55:57 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Dec 2019 22:55:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,320,1571727600"; 
+   d="scan'208";a="217078894"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga006.jf.intel.com with ESMTP; 15 Dec 2019 22:55:54 -0800
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     p.zabel@pengutronix.de, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH v5 1/2] dt-bindings: reset: Add YAML schemas for the Intel Reset controller
+Date:   Mon, 16 Dec 2019 14:55:41 +0800
+Message-Id: <a58894158cba812e6d35df165252772b07c8a0b6.1576202050.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thanks for your effort! System can have USB with this patch series, if the device tree is modified properly.
-Here is the question: Will not the device tree "scb/ranges" in this patch conflict with commit be8af7a9e3cc ("ARM: dts: bcm2711-rpi-4: Enable GENET support")?
+Add YAML schemas for the reset controller on Intel
+Gateway SoC.
 
-Jian-Hong Pan
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes on v5:
+	Add Reviewed-by: Rob Herring <robh@kernel.org>
+	Rebase patches on v5.5-rc1 kernel
+
+Changes on v4:
+	Address Rob review comments
+	  Drop oneOf and items for 'compatible'
+	  Add maxItems for 'reg' and 'intel,global-reset'
+
+Changes on v3:
+	Fix DTC warnings
+	Add support to legacy xrx200 SoC
+	Change file name to intel,rcu-gw.yaml
+
+ .../devicetree/bindings/reset/intel,rcu-gw.yaml    | 63 ++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+
+diff --git a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+new file mode 100644
+index 000000000000..246dea8a2ec9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reset/intel,rcu-gw.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: System Reset Controller on Intel Gateway SoCs
++
++maintainers:
++  - Dilip Kota <eswara.kota@linux.intel.com>
++
++properties:
++  compatible:
++    enum:
++      - intel,rcu-lgm
++      - intel,rcu-xrx200
++
++  reg:
++    description: Reset controller registers.
++    maxItems: 1
++
++  intel,global-reset:
++    description: Global reset register offset and bit offset.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - maxItems: 2
++
++  "#reset-cells":
++    minimum: 2
++    maximum: 3
++    description: |
++      First cell is reset request register offset.
++      Second cell is bit offset in reset request register.
++      Third cell is bit offset in reset status register.
++      For LGM SoC, reset cell count is 2 as bit offset in
++      reset request and reset status registers is same. Whereas
++      3 for legacy SoCs as bit offset differs.
++
++required:
++  - compatible
++  - reg
++  - intel,global-reset
++  - "#reset-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    rcu0: reset-controller@e0000000 {
++        compatible = "intel,rcu-lgm";
++        reg = <0xe0000000 0x20000>;
++        intel,global-reset = <0x10 30>;
++        #reset-cells = <2>;
++    };
++
++    pwm: pwm@e0d00000 {
++        status = "disabled";
++        compatible = "intel,lgm-pwm";
++        reg = <0xe0d00000 0x30>;
++        clocks = <&cgu0 1>;
++        #pwm-cells = <2>;
++        resets = <&rcu0 0x30 21>;
++    };
+-- 
+2.11.0
+
