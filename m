@@ -2,111 +2,114 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB9FC2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B998C2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 144FC206EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:21:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576509699;
-	bh=Cw5yrFeph9fXCYVC95bvd8jskgsxlhRJXiqAqD8JNUo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b8WavvONXvfx0L0Eomd3BuUlNZPhCCkYIrjZyu+CAJoWivvLt4aBk9WV3OGbGdSq1
-	 R9m73Ea5f/dTy+96w1fWP73oG9kvOrZZwz1+emDiQd7SVRChthCmy8LeMqcBoMLrRM
-	 z1KfETXDJldHb0zn2UAL/J4yypN1GB62n/IywK88=
+	by mail.kernel.org (Postfix) with ESMTP id 534FB206E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:21:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l9eRHG6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbfLPPVi (ORCPT
+        id S1728350AbfLPPVm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:21:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:58714 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728221AbfLPPVi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:21:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7CBCF1FB;
-        Mon, 16 Dec 2019 07:21:37 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F08EE3F718;
-        Mon, 16 Dec 2019 07:21:36 -0800 (PST)
-Date:   Mon, 16 Dec 2019 15:21:35 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Chris Brandt <Chris.Brandt@renesas.com>
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 16 Dec 2019 10:21:42 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35381 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728275AbfLPPVl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 10:21:41 -0500
+Received: by mail-wr1-f68.google.com with SMTP id g17so7760686wro.2
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 07:21:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=qLW85+iCakysrIL3d9ahlxs/+0bq3c8q3dQkkBI+mAY=;
+        b=l9eRHG6cELj/1PPW5EMQL8KGSpML40lgI42oonoObgVkQJpwcUpAhOzugGJ1YzDVh/
+         Xn+g5HPMl+dLsYUrlg7312P/+FNbj9QEnm2kVtOKCQdPOD447fXhj6oyX5lGi6hArYGI
+         ORKa/zBvvQR/ijSqhhv+sdOOlpsJpm4PmFmwb3UgJplzSokAD8u8b9pQ7kaUsCXJ9f9m
+         Lv/bhO/Swr+5cFJ21U8uk/Jd33llMPn0xeTlVRk8bVjXZJZrg3/QC8m5DHrKlgB4M0QV
+         osHGkfb8Z2PSqzmCGeUX3qd3TpPIq2QDjMGPHvZoY2oInrkzLxNL6LEBL8zZzqTbZKg1
+         pYfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=qLW85+iCakysrIL3d9ahlxs/+0bq3c8q3dQkkBI+mAY=;
+        b=ljaic7+S8C+eHU+6CG9qXa2ZpC1jGTzCrVw+h2BPTrFzDH5U8x3lJ963EOFgenNFG5
+         Vww5SP4w7mS8CZEQWoJuLw61Usymkuqr6N2Vqt/G0YmKJZmJ5VjgH7Bq/hnEabnmZmK1
+         7jx8rthNhcv3tgIjDeVkf6jld5iP/NGCNcZKWBJdOXYH4gKJjvqXW6YL9IArv0ooqQyk
+         L4B3RpjNyMF02eBl1JFHh4fHS+NApIszWz5WcLPYYtVe4e6xVX/nBUSYUxtbGL5p8NkA
+         oEncTQ0DqlTQlDzvbCFW+A7mn30UIiL6feECDwh0LJBY9SVla7uV7bxsQL2f3hHG53VP
+         UHkA==
+X-Gm-Message-State: APjAAAU9UnK26HpwsYMFDhoiA0dzFiUTShdHmUJPffFM8so9T4ma/Yvd
+        CVoEiIzsQIAkwxUs9xL2gomRsw==
+X-Google-Smtp-Source: APXvYqweC7S5MEqLKn13rfYs2+xIpXzL1Op8mNT8o+RON6KKvlXrllfQ92Cbjp2t7tj6nFBRu6VFaw==
+X-Received: by 2002:a5d:4b8f:: with SMTP id b15mr32672267wrt.100.1576509699617;
+        Mon, 16 Dec 2019 07:21:39 -0800 (PST)
+Received: from dell ([185.17.149.202])
+        by smtp.gmail.com with ESMTPSA id x10sm22076901wrv.60.2019.12.16.07.21.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 07:21:39 -0800 (PST)
+Date:   Mon, 16 Dec 2019 15:21:38 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@free-electrons.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: Re: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
-Message-ID: <20191216152135.GG4161@sirena.org.uk>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com>
- <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
- <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <20191212152855.GD4310@sirena.org.uk>
- <TY1PR01MB15627D5522BE325B7BE74E328A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <20191212171307.GL4310@sirena.org.uk>
- <TY1PR01MB156256ED8A09D4CD02AC26AC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Tianping Fang <tianping.fang@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
+Subject: Re: [PATCH v7 6/6] rtc: Add support for the MediaTek MT6358 RTC
+Message-ID: <20191216152138.GF2369@dell>
+References: <1576057435-3561-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1576057435-3561-7-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yQbNiKLmgenwUfTN"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <TY1PR01MB156256ED8A09D4CD02AC26AC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-X-Cookie: Backed up the system lately?
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1576057435-3561-7-git-send-email-hsin-hsiung.wang@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, 11 Dec 2019, Hsin-Hsiung Wang wrote:
 
---yQbNiKLmgenwUfTN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> From: Ran Bi <ran.bi@mediatek.com>
+> 
+> This add support for the MediaTek MT6358 RTC. Driver using
+> compatible data to store different RTC_WRTGR address offset.
+> 
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>  drivers/rtc/rtc-mt6397.c       | 24 ++++++++++++++++--------
 
-On Thu, Dec 12, 2019 at 05:25:43PM +0000, Chris Brandt wrote:
-> On Thu, Dec 12, 2019, Mark Brown wrote:
+>  include/linux/mfd/mt6397/rtc.h | 16 +++++++++++++++-
 
-> > I don't really know enough about the device and there was *huge* amounts
-> > of discussion which I'd have to try to page in so it'd be really good if
-> > there were some agreement among those of you working with this device as
-> > to what the best way forwards is.  I'm not sure any of the issues were
-> > at the framework level so that's probably more sensible anyway.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-> I'm trying to figure out if the differences are 'technical' or
-> 'ideological' (ie, R-Car use cases vs RZ use cases).
-> Of course we can do anything we want in our vendor BSPs, but I'd like
-> to see a common upstream path.
-
-That'd certainly be good to achieve.  Hopefully we can get some
-agreement between everyone on what the best way forwards is.  I don't
-recall any substantial framework concerns with either driver so I think
-it's more a renesas question.
-
---yQbNiKLmgenwUfTN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl33oP4ACgkQJNaLcl1U
-h9AaYgf9FWzuFWeQnyYn63oY+9wqMpwmFKKYapmBdLEDpM4FvBClhmmHDFp7/Z3M
-Gu5PZc0KJUDCrmBr2oulXL7cVjG1WlON/AkYHhU/OHElt1VJstBbUxGc1umu3Xap
-+m2wEFfP63AvTL+d2fhkGhCOcQ5qsYRf1oYfUWTw550yMdR5CNnaPe0a81GJKd9W
-RapZHUrSdZDd46Ab6e2y/wCb+JyA0thWLr3ctUN5zmGTYQSeXEMJcxTEHaRxjJSw
-M3K/Ta9DbWE4IoaH/9avPv8TClP9KieW1ts4flJRc2E7bJ/Xp6bV1aZTU63iKvwJ
-2XyTtPY0KF/rO+dilSJ9gwcLHaRksw==
-=YGOH
------END PGP SIGNATURE-----
-
---yQbNiKLmgenwUfTN--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
