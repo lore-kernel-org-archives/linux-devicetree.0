@@ -2,175 +2,113 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA558C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5955CC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80F2620700
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC8B206CB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:11:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="izo3SXym"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gAzRCm/M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfLPLJm (ORCPT
+        id S1727570AbfLPLLw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:09:42 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38812 "EHLO
+        Mon, 16 Dec 2019 06:11:52 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34632 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727482AbfLPLJl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 06:09:41 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so6732387wrh.5
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 03:09:40 -0800 (PST)
+        with ESMTP id S1727567AbfLPLLw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 06:11:52 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t2so6756853wrr.1
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 03:11:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=GSwxZqA1p+v3fIchljXoOSOPXRU+x5PdBqx4Li7pnc8=;
-        b=izo3SXymVRSx/zAI+IcDTMigV+sq6Wd7JcYeHw99As5psoxVLMP2hcsI3tHbJwGtRI
-         C1sl5Vl4ZnUr/g4Lri6/L0G1Ju0FJSX8nD9LjZuQRdgrzwHoo/Ut2Td8QUfkMcUybSdX
-         NU7xZlV9yhVGfht/rPWB1BHz+9UV7SQQjY1Ga+C/cD+lxck8sXdO/Ghs0/6CDX5tWdei
-         1nHfn4kprePHhxmwL34DXxU9LdEfN7tSGZv3N8yDY+TjCtFJT8NUDa7V4xnZdL2vZK4K
-         NrCEHpLB2JVYhVXCTfpGgDw0iZcMyU/Vde4HcItkAUyqkTZSA0oax2At8u69pqDaw+Ss
-         nk6w==
+        bh=2dxoabKlBZGvbp4gfeIRY6j7pCmpniW5VhZdZM1jvSg=;
+        b=gAzRCm/Mi70HEKFLVKwdw4o6dgW1+mLf9GMIm8nSgC7Qz7NVXFTtfe89fsNxF5IPwO
+         sNRdlKFk1DehYMbFr3XQ+pzSGskhva5BA9u9F5N1Y+UyWNBPIWImKo/IOxWFzToLNjXz
+         I7HXqTpp1ZR7c9w2GQKByZ+FLo7L14/KXzvlnLv99C3e1u2ojDXJu2LMgf+bEWt/aWGm
+         5GYZubOutSIqq8w7Ef4Qv0BVyjXAJKWKOhfacE46OxeHUKmjbYzDTDM8SL/J+GayssjG
+         pKQvwVNHZ5buP2ykKauqxNaYT4XEvhGGimm7YEeqZppb2oGCLnev0ZZnNcDUvRjkzstJ
+         ImqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=GSwxZqA1p+v3fIchljXoOSOPXRU+x5PdBqx4Li7pnc8=;
-        b=glO/QTZPN3bznmcT4Ep0EbQckCrSeot866IqHcy/XtRzSLhHT+sDHOzACcCmJX2UPX
-         Kwr6FZEWlFIJKKUvYKLkLHdiewR4T9rFDX6kvKniyKD+MdOgEtq8/UXc13FD7ncjwHGY
-         +5crCFydQLHGDUTAetKF1RyUhaCSZ9EqK8mH7V7+VABVukVqmWqR/jytjwqKAQXkMm+d
-         pbdJFagZWhoqyPQUXhxjkZMpA7IK3802ZF7jqV9Nuou+wGodDRDOEYhm4Jt2A8v45vY8
-         eGpwlKFCrOVLoO+tGIgdoG8fW85mKFxYaB5iz05Ex7I7BE2bDMsBWsF7iwVd1hNzuIAx
-         AfPg==
-X-Gm-Message-State: APjAAAU1ggYPWcD0+x1eq2ZnnVLcPkoRrH+kgR5iGAe9zW+1PpB/A20J
-        08iNKbdbFG1wuAFJQq+hXgrF9A==
-X-Google-Smtp-Source: APXvYqzqbT4cHx/a6uUClyqUgv58zyyf1LeRoaH/ossUkpuxVMrtMTrwQ8kwz8ldw4PfghfhWvf7Iw==
-X-Received: by 2002:a5d:49c7:: with SMTP id t7mr28690138wrs.369.1576494579832;
-        Mon, 16 Dec 2019 03:09:39 -0800 (PST)
+        bh=2dxoabKlBZGvbp4gfeIRY6j7pCmpniW5VhZdZM1jvSg=;
+        b=awRPeoMBGQcIztHMe/u7igsipSIHIPJTluqwUJs23Xz7Aoq8N5fjsSBZvjs9xuQ6fj
+         0ZJUc8zJ9PPHDHuW3b/eVOu6djhiHk9QM6v7RNV3XF5HbX2mGUJa3bTZzp3GoSDk4XlL
+         fHFB7iGsabIpICQ8D81Q1uKkkO6+TUgQ/jDgfbezWTDa1TgmXkzOfIJYu2XENpWS1l+y
+         Mu1TE3V1WaqywWGwL+gOewuklICwzHFfnxfE7hxQ8mErNSpMabq2SYrwdgFNpWHXtOXZ
+         3AOws4stuOoNJgJ5WO5VugIBkP4aYtRcwdriBaqPzNc7cUhP/4hVotoGOpvdrNqlTh1y
+         akNw==
+X-Gm-Message-State: APjAAAXdD2kop74UhK3lxYiLc4pKq+AeTC4ICpWsMwZyE9fbHlePqfYR
+        aI2o/jYo1eli9LwOhSEx7KEB+w==
+X-Google-Smtp-Source: APXvYqx8pA749AH1DqU2BLWtKrkPOyGDfdptUcuuJl8+7mbfN9t9G/HQd47nlhBpyBSIKall5Rya2w==
+X-Received: by 2002:adf:bc87:: with SMTP id g7mr30557610wrh.121.1576494711131;
+        Mon, 16 Dec 2019 03:11:51 -0800 (PST)
 Received: from dell ([2.27.35.132])
-        by smtp.gmail.com with ESMTPSA id l3sm21080860wrt.29.2019.12.16.03.09.38
+        by smtp.gmail.com with ESMTPSA id g25sm24456932wmh.3.2019.12.16.03.11.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 03:09:39 -0800 (PST)
-Date:   Mon, 16 Dec 2019 11:09:39 +0000
+        Mon, 16 Dec 2019 03:11:50 -0800 (PST)
+Date:   Mon, 16 Dec 2019 11:11:50 +0000
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] dt-bindings: mfd: update TI tps6105x chip bindings
-Message-ID: <20191216110939.GJ3601@dell>
-References: <20191209140234.6558-1-TheSven73@gmail.com>
- <20191209140234.6558-3-TheSven73@gmail.com>
+        Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Daniel Schultz <d.schultz@phytec.de>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFCv1 1/8] mfd: rk808: Refactor shutdown functions
+Message-ID: <20191216111150.GA2369@dell>
+References: <20191206184536.2507-1-linux.amoon@gmail.com>
+ <20191206184536.2507-2-linux.amoon@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191209140234.6558-3-TheSven73@gmail.com>
+In-Reply-To: <20191206184536.2507-2-linux.amoon@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 09 Dec 2019, Sven Van Asbroeck wrote:
+On Fri, 06 Dec 2019, Anand Moon wrote:
 
-> The driver has been extended to optionally get its operational
-> mode, regulator init data and LED naming from the devicetree.
+> From: Daniel Schultz <d.schultz@phytec.de>
 > 
-> Tree: next-20191118
-
-Please refrain from putting this in the commit message.
-
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> Since all shutdown functions have almost the same code, all logic
+> from the shutdown functions can be refactored to a new function
+> "rk808_update_bits", which can update a register by a given address
+> and bitmask and value.
+> 
+> link: https://lore.kernel.org/patchwork/patch/937404/
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
+> [rebased on latest kernel]
+> Modified the API to set the value.
+> This changes were submited with below patch.
+> [0] https://lore.kernel.org/patchwork/patch/937404/
+> ---
+>  drivers/mfd/rk808.c | 87 ++++++++++++++-------------------------------
+>  1 file changed, 26 insertions(+), 61 deletions(-)
 
-... if you really want to put that in, place it here, so it doesn't
-become part of the kernel's Git history.
-
->  .../devicetree/bindings/mfd/tps6105x.txt      | 47 ++++++++++++++++++-
->  1 file changed, 46 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/tps6105x.txt b/Documentation/devicetree/bindings/mfd/tps6105x.txt
-> index 93602c7a19c8..d15763740a3f 100644
-> --- a/Documentation/devicetree/bindings/mfd/tps6105x.txt
-> +++ b/Documentation/devicetree/bindings/mfd/tps6105x.txt
-> @@ -7,11 +7,56 @@ Required properties:
->  - compatible:		"ti,tps61050" or "ti,tps61052"
->  - reg:			Specifies the I2C slave address
->  
-> -Example:
-> +Optional sub-node:
-> +
-> +This subnode selects the chip's operational mode.
-> +There can be at most one single available subnode.
-> +
-> +- regulator: presence of this sub-node puts the chip in regulator mode.
-> +	see Documentation/devicetree/bindings/regulator/regulator.txt
-
-Relative paths are preferred.
-
-> +- led: presence of this sub-node puts the chip in led mode.
-> +	Optional properties:
-> +	- function : see ../leds/common.txt
-> +	- color    : see ../leds/common.txt
-> +	- label    : see ../leds/common.txt
-
-Yes, like this.
-
-> +			(deprecated)
-> +
-> +Example (GPIO operation only):
-> +
-> +i2c0 {
-> +	tps61052@33 {
-> +		compatible = "ti,tps61052";
-> +		reg = <0x33>;
-> +	};
-> +};
-> +
-> +Example (GPIO + regulator operation):
->  
->  i2c0 {
->  	tps61052@33 {
->  		compatible = "ti,tps61052";
->  		reg = <0x33>;
-> +
-> +		regulator {
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +			regulator-always-on;
-> +		};
-> +	};
-> +};
-> +
-> +Example (GPIO + led operation):
-> +
-> +#include <dt-bindings/leds/common.h>
-> +
-> +i2c0 {
-> +	tps61052@33 {
-> +		compatible = "ti,tps61052";
-> +		reg = <0x33>;
-> +
-> +		led {
-> +			color = <LED_COLOR_ID_WHITE>;
-> +		};
->  	};
->  };
+Not sure what's happening with these (competing?) patch-sets.  I'm not
+planning on getting involved until you guys have arrived at and agreed
+upon a single solution.
 
 -- 
 Lee Jones [李琼斯]
