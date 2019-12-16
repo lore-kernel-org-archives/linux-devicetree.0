@@ -2,157 +2,178 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2ABC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA558C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 478E52072B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F2620700
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:09:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="dP+KqavQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="izo3SXym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfLPLHc (ORCPT
+        id S1727560AbfLPLJm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:07:32 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43386 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727422AbfLPLHc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 06:07:32 -0500
-Received: by mail-io1-f68.google.com with SMTP id s2so6419394iog.10
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 03:07:32 -0800 (PST)
+        Mon, 16 Dec 2019 06:09:42 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38812 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727482AbfLPLJl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 06:09:41 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y17so6732387wrh.5
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 03:09:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KfZaSbdFEASJkf9WsXHl71dcv4ETqMgnXgcnwp3Mq+I=;
-        b=dP+KqavQmuo0QMDmi4neiVk93gyhwe17pjwdfjNCR4kaW410MUv5U9XBebG0Af2JUg
-         uSjY0f9+4haCQspqumE1JA6bnz8vOxRbsSA26BD2mrXZCVUyRjkx08KynOVeOGtZ0Ok4
-         rzKSsE7NpKWocqf5Jm4pm2f4YI9vDE48P61aE=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=GSwxZqA1p+v3fIchljXoOSOPXRU+x5PdBqx4Li7pnc8=;
+        b=izo3SXymVRSx/zAI+IcDTMigV+sq6Wd7JcYeHw99As5psoxVLMP2hcsI3tHbJwGtRI
+         C1sl5Vl4ZnUr/g4Lri6/L0G1Ju0FJSX8nD9LjZuQRdgrzwHoo/Ut2Td8QUfkMcUybSdX
+         NU7xZlV9yhVGfht/rPWB1BHz+9UV7SQQjY1Ga+C/cD+lxck8sXdO/Ghs0/6CDX5tWdei
+         1nHfn4kprePHhxmwL34DXxU9LdEfN7tSGZv3N8yDY+TjCtFJT8NUDa7V4xnZdL2vZK4K
+         NrCEHpLB2JVYhVXCTfpGgDw0iZcMyU/Vde4HcItkAUyqkTZSA0oax2At8u69pqDaw+Ss
+         nk6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KfZaSbdFEASJkf9WsXHl71dcv4ETqMgnXgcnwp3Mq+I=;
-        b=ScI9c0Be4f3bRB6OY5lh4ODPc4leV8KpamX5XNXGI49Dexq/fhJys/ME4AdMk9Uue7
-         SZ0wfFMmHa5EfmNdJ/S+xznitn+tbbA3cTlySlcrGuT9UOINhm56O8oST+GhL9MY3JHB
-         PfEqtSgjYlFaIpDQKp8pM3g6rOzV8M8srIbJbv/WKo+xQq6ZXvTElVPWLgrN7wJGr4ls
-         bsthLu9vrUiFTSj080y/wWUL8LGSn3VQnfZOpQLucVELxsXvYu8hQabaTxVpRu2Dq7xa
-         i3KC2j6imaSTjkTH/zvgIAMi4CwV2TzzmISlNCcQliVi8DsI1+qfHVNrd0udRNS0R57S
-         DGcw==
-X-Gm-Message-State: APjAAAVagrOCCpQ4LHpJ/cO+mPw/F96YOgBNhfNryXPs+iGRRLYeYnCM
-        9o6WrLPROsBxZUxwyAY8PvgRZoMIIuoSw9Tb/WhiKA==
-X-Google-Smtp-Source: APXvYqxYm4/U2soHztfqAotrtRHQmYHhxvY2dRK0oTC0bL7+7SnLpoXa+xv9qJGP1N2VQheZkh2UqTeKeOZ/EbOzqgQ=
-X-Received: by 2002:a5d:97c9:: with SMTP id k9mr17260864ios.297.1576494451527;
- Mon, 16 Dec 2019 03:07:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20191203134816.5319-1-jagan@amarulasolutions.com>
- <20191203134816.5319-2-jagan@amarulasolutions.com> <20191204133600.gnv6dnhk6upe7xod@gilmour.lan>
-In-Reply-To: <20191204133600.gnv6dnhk6upe7xod@gilmour.lan>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Mon, 16 Dec 2019 16:37:20 +0530
-Message-ID: <CAMty3ZDU57Hj3ZSBC6sSMFWN9-HQadA03hmXUNUVS1W0UQQ3DA@mail.gmail.com>
-Subject: Re: [PATCH v12 1/7] dt-bindings: sun6i-dsi: Document A64 MIPI-DSI controller
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=GSwxZqA1p+v3fIchljXoOSOPXRU+x5PdBqx4Li7pnc8=;
+        b=glO/QTZPN3bznmcT4Ep0EbQckCrSeot866IqHcy/XtRzSLhHT+sDHOzACcCmJX2UPX
+         Kwr6FZEWlFIJKKUvYKLkLHdiewR4T9rFDX6kvKniyKD+MdOgEtq8/UXc13FD7ncjwHGY
+         +5crCFydQLHGDUTAetKF1RyUhaCSZ9EqK8mH7V7+VABVukVqmWqR/jytjwqKAQXkMm+d
+         pbdJFagZWhoqyPQUXhxjkZMpA7IK3802ZF7jqV9Nuou+wGodDRDOEYhm4Jt2A8v45vY8
+         eGpwlKFCrOVLoO+tGIgdoG8fW85mKFxYaB5iz05Ex7I7BE2bDMsBWsF7iwVd1hNzuIAx
+         AfPg==
+X-Gm-Message-State: APjAAAU1ggYPWcD0+x1eq2ZnnVLcPkoRrH+kgR5iGAe9zW+1PpB/A20J
+        08iNKbdbFG1wuAFJQq+hXgrF9A==
+X-Google-Smtp-Source: APXvYqzqbT4cHx/a6uUClyqUgv58zyyf1LeRoaH/ossUkpuxVMrtMTrwQ8kwz8ldw4PfghfhWvf7Iw==
+X-Received: by 2002:a5d:49c7:: with SMTP id t7mr28690138wrs.369.1576494579832;
+        Mon, 16 Dec 2019 03:09:39 -0800 (PST)
+Received: from dell ([2.27.35.132])
+        by smtp.gmail.com with ESMTPSA id l3sm21080860wrt.29.2019.12.16.03.09.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 03:09:39 -0800 (PST)
+Date:   Mon, 16 Dec 2019 11:09:39 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] dt-bindings: mfd: update TI tps6105x chip bindings
+Message-ID: <20191216110939.GJ3601@dell>
+References: <20191209140234.6558-1-TheSven73@gmail.com>
+ <20191209140234.6558-3-TheSven73@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191209140234.6558-3-TheSven73@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 7:06 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Tue, Dec 03, 2019 at 07:18:10PM +0530, Jagan Teki wrote:
-> > The MIPI DSI controller in Allwinner A64 is similar to A33.
-> >
-> > But unlike A33, A64 doesn't have DSI_SCLK gating so it is valid
-> > to have separate compatible for A64 on the same driver.
-> >
-> > DSI_SCLK uses mod clock-names on dt-bindings, so the same
-> > is not required for A64.
-> >
-> > On that note
-> > - A64 require minimum of 1 clock like the bus clock
-> > - A33 require minimum of 2 clocks like both bus, mod clocks
-> >
-> > So, update dt-bindings so-that it can document both A33,
-> > A64 bindings requirements.
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> > Changes for v12:
-> > - Use 'enum' instead of oneOf+const
-> >
-> >  .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 20 +++++++++++++++++--
-> >  1 file changed, 18 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> > index dafc0980c4fa..b91446475f35 100644
-> > --- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> > +++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> > @@ -15,7 +15,9 @@ properties:
-> >    "#size-cells": true
-> >
-> >    compatible:
-> > -    const: allwinner,sun6i-a31-mipi-dsi
-> > +    enum:
-> > +      - allwinner,sun6i-a31-mipi-dsi
-> > +      - allwinner,sun50i-a64-mipi-dsi
-> >
-> >    reg:
-> >      maxItems: 1
-> > @@ -24,6 +26,8 @@ properties:
-> >      maxItems: 1
-> >
-> >    clocks:
-> > +    minItems: 1
-> > +    maxItems: 2
-> >      items:
-> >        - description: Bus Clock
-> >        - description: Module Clock
-> > @@ -63,13 +67,25 @@ required:
-> >    - reg
-> >    - interrupts
-> >    - clocks
-> > -  - clock-names
-> >    - phys
-> >    - phy-names
-> >    - resets
-> >    - vcc-dsi-supply
-> >    - port
-> >
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +         compatible:
-> > +           contains:
-> > +             const: allwinner,sun6i-a31-mipi-dsi
-> > +      then:
-> > +        properties:
-> > +          clocks:
-> > +            minItems: 2
-> > +        required:
-> > +          - clock-names
-> > +
->
-> Your else condition should check that the number of clocks items is 1
-> on the A64
+On Mon, 09 Dec 2019, Sven Van Asbroeck wrote:
 
-But the minItems mentioned as 1 in clocks, which is unchanged number
-by default. doesn't it sufficient?
+> The driver has been extended to optionally get its operational
+> mode, regulator init data and LED naming from the devicetree.
+> 
+> Tree: next-20191118
+
+Please refrain from putting this in the commit message.
+
+> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
+
+... if you really want to put that in, place it here, so it doesn't
+become part of the kernel's Git history.
+
+>  .../devicetree/bindings/mfd/tps6105x.txt      | 47 ++++++++++++++++++-
+>  1 file changed, 46 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/tps6105x.txt b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+> index 93602c7a19c8..d15763740a3f 100644
+> --- a/Documentation/devicetree/bindings/mfd/tps6105x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+> @@ -7,11 +7,56 @@ Required properties:
+>  - compatible:		"ti,tps61050" or "ti,tps61052"
+>  - reg:			Specifies the I2C slave address
+>  
+> -Example:
+> +Optional sub-node:
+> +
+> +This subnode selects the chip's operational mode.
+> +There can be at most one single available subnode.
+> +
+> +- regulator: presence of this sub-node puts the chip in regulator mode.
+> +	see Documentation/devicetree/bindings/regulator/regulator.txt
+
+Relative paths are preferred.
+
+> +- led: presence of this sub-node puts the chip in led mode.
+> +	Optional properties:
+> +	- function : see ../leds/common.txt
+> +	- color    : see ../leds/common.txt
+> +	- label    : see ../leds/common.txt
+
+Yes, like this.
+
+> +			(deprecated)
+> +
+> +Example (GPIO operation only):
+> +
+> +i2c0 {
+> +	tps61052@33 {
+> +		compatible = "ti,tps61052";
+> +		reg = <0x33>;
+> +	};
+> +};
+> +
+> +Example (GPIO + regulator operation):
+>  
+>  i2c0 {
+>  	tps61052@33 {
+>  		compatible = "ti,tps61052";
+>  		reg = <0x33>;
+> +
+> +		regulator {
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			regulator-always-on;
+> +		};
+> +	};
+> +};
+> +
+> +Example (GPIO + led operation):
+> +
+> +#include <dt-bindings/leds/common.h>
+> +
+> +i2c0 {
+> +	tps61052@33 {
+> +		compatible = "ti,tps61052";
+> +		reg = <0x33>;
+> +
+> +		led {
+> +			color = <LED_COLOR_ID_WHITE>;
+> +		};
+>  	};
+>  };
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
