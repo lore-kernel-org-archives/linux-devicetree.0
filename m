@@ -2,378 +2,222 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3286CC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 06:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B796C2D0CF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 07:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2ED420700
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 06:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2736A20733
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 07:16:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ha9L17WA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfLPG4B (ORCPT
+        id S1726561AbfLPHQv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 01:56:01 -0500
-Received: from mga05.intel.com ([192.55.52.43]:56252 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfLPG4A (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 01:56:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Dec 2019 22:56:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,320,1571727600"; 
-   d="scan'208";a="221440388"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Dec 2019 22:55:58 -0800
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     p.zabel@pengutronix.de, robh@kernel.org,
-        martin.blumenstingl@googlemail.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v5 2/2] reset: intel: Add system reset controller driver
-Date:   Mon, 16 Dec 2019 14:55:42 +0800
-Message-Id: <decb025c9bd0ddc1da96801e57242bc8f5ce35d0.1576202050.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <a58894158cba812e6d35df165252772b07c8a0b6.1576202050.git.eswara.kota@linux.intel.com>
-References: <a58894158cba812e6d35df165252772b07c8a0b6.1576202050.git.eswara.kota@linux.intel.com>
-In-Reply-To: <a58894158cba812e6d35df165252772b07c8a0b6.1576202050.git.eswara.kota@linux.intel.com>
-References: <a58894158cba812e6d35df165252772b07c8a0b6.1576202050.git.eswara.kota@linux.intel.com>
+        Mon, 16 Dec 2019 02:16:51 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33243 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbfLPHQu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 02:16:50 -0500
+Received: by mail-il1-f196.google.com with SMTP id r81so4656153ilk.0
+        for <devicetree@vger.kernel.org>; Sun, 15 Dec 2019 23:16:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DdW2X0TaM/Yjl1cs8WJAfaWb8b937afv0ai4eAXIEbQ=;
+        b=ha9L17WAZBqCDEiESxhWvrNiQOpHmRyoVhTON48lus8d3oYRR3rIxvfPGWw1YPCSrl
+         wYa2PqtQQIyQ65YCU6knRNnaLZxgn8GLNj4kMLfTA/FhkTmPaZPvLA9hUUNHoEk3G9As
+         09om+raRs1ka5EgN3yL7DTjgKQLTiYDsNjVSI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DdW2X0TaM/Yjl1cs8WJAfaWb8b937afv0ai4eAXIEbQ=;
+        b=uBxBeakza3eBgGHy/CoRPzFBBvSfK3Di6Q/kwb7BiHG4L7Nxuq955t/XIt+toaSJ+t
+         m7oExpxPlcQNGPuo3SMtDCEFqrsZ0LaT2/fmc7Jypu1OjreS8rf08yrOtAvqOiYlK1Sb
+         qZMMNdw/CgySfsXxbOHkjEHJTTbfOUIekmaNrBEL09IR6Nu1Ynh8qHpXl5PNN07ECbN8
+         k8dLAlGa4jk118qxPliuBv85CPaMMs3A00bbBmOBLzZ1KMYmlSG+mCrn8bsqZj7W5ZNr
+         GUdtsLj52BVH8YL9l/8V73eeFHYs1rsY7lOACogiqDNXUe9wcCvOVqBkwv+ZVSKdNdqQ
+         ezzg==
+X-Gm-Message-State: APjAAAUafqZiOyVgL6DwjbP9BRHu7ExRWKrWsW/NqGRjPEPXspvY5BNt
+        44O158U39/oLWlQIWA5Q0JvQHcz42MeXuiayHaleOQ==
+X-Google-Smtp-Source: APXvYqx3LVRZM6HCeLKsjVRJpN93LQNOQCxa7ygHr779jDj9jz6qFUfOmbd97fsgpcFQeRAI55T1yDrqMsqHtxzf2MY=
+X-Received: by 2002:a92:5d88:: with SMTP id e8mr11295212ilg.106.1576480608958;
+ Sun, 15 Dec 2019 23:16:48 -0800 (PST)
+MIME-Version: 1.0
+References: <20191211061911.238393-1-hsinyi@chromium.org> <20191211061911.238393-4-hsinyi@chromium.org>
+ <CAL_Jsq+jkgDj6-SH1FrnjB1CQmf33=XUwN3N_fw_aJsQm3Fq9A@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+jkgDj6-SH1FrnjB1CQmf33=XUwN3N_fw_aJsQm3Fq9A@mail.gmail.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Mon, 16 Dec 2019 15:16:23 +0800
+Message-ID: <CAJMQK-iwF78=2PDMxp=cvS3sotNi7kjj1ZoVO9q_axejUPdLYA@mail.gmail.com>
+Subject: Re: [PATCH RESEND 3/4] dt-bindings: drm/bridge: Add GPIO display mux binding
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add driver for the reset controller present on Intel
-Gateway SoCs for performing reset management of the
-devices present on the SoC. Driver also registers a
-reset handler to peform the entire device reset.
+On Sat, Dec 14, 2019 at 5:29 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Wed, Dec 11, 2019 at 12:19 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+> >
+> > From: Nicolas Boichat <drinkcat@chromium.org>
+> >
+> > Add bindings for Generic GPIO mux driver.
+> >
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > ---
+> > Change from RFC to v1:
+> > - txt to yaml
+> > ---
+> >  .../bindings/display/bridge/gpio-mux.yaml     | 89 +++++++++++++++++++
+> >  1 file changed, 89 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml b/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
+> > new file mode 100644
+> > index 000000000000..cef098749066
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
+> > @@ -0,0 +1,89 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/bridge/gpio-mux.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Generic display mux (1 input, 2 outputs)
+>
+> What makes it generic? Doesn't the mux chip have power supply,
+> possibly a reset line or not, etc.? What about a mux where the GPIO
+> controls the mux?
+>
+> Generally, we avoid 'generic' bindings because h/w is rarely generic.
+> You can have a generic driver which works on multiple devices.
+>
+Then how about making it mt8173-oak-gpio-mux? Since this is currently
+only used in this board.
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
----
-Changes on v5:
-	Rebase patches on v5.5-rc1 kernel
+> > +
+> > +maintainers:
+> > +  - Nicolas Boichat <drinkcat@chromium.org>
+> > +
+> > +description: |
+> > +  This bindings describes a simple display (e.g. HDMI) mux, that has 1
+> > +  input, and 2 outputs. The mux status is controlled by hardware, and
+> > +  its status is read back using a GPIO.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: gpio-display-mux
+> > +
+> > +  detect-gpios:
+> > +    maxItems: 1
+> > +    description: GPIO that indicates the active output
+> > +
+> > +  ports:
+> > +    type: object
+> > +
+> > +    properties:
+> > +      port@0:
+> > +        type: object
+> > +        description: |
+> > +          Video port for input.
+> > +
+> > +      port@1:
+> > +        type: object
+> > +        description: |
+> > +          2 video ports for output.
+> > +          The reg value in the endpoints matches the GPIO status: when
+> > +          GPIO is asserted, endpoint with reg value <1> is selected.
+>
+> You should describe 'endpoint@0' and 'endpoint@1' here too.
+Will add in next version, thanks
+>
+> > +
+> > +    required:
+> > +      - port@0
+> > +      - port@1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - detect-gpios
+> > +  - ports
+> > +
+> > +examples:
+> > +  - |
+> > +    hdmi_mux: hdmi_mux {
+> > +      compatible = "gpio-display-mux";
+> > +      status = "okay";
+>
+> Don't show status in examples.
+>
+> > +      detect-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
+> > +      pinctrl-names = "default";
+> > +      pinctrl-0 = <&hdmi_mux_pins>;
+> > +      ddc-i2c-bus = <&hdmiddc0>;
+>
+> Not documented. Is the i2c bus muxed too? If not, then this is in the
+> wrong place.
+>
+It's muxed, but this is required because of [1], so it should be
+removed in this example.
 
-Changes on v4:
-	No Change
-
-Changes on v3:
-	Address review comments:
-		Remove intel_reset_device() as not supported
-	reset-intel-syscon.c renamed to reset-intel-gw.c
-	Remove syscon and add regmap logic
-	Add support to legacy xrx200 SoC
-	Use bitfield helper functions for bit operations.
-	Change config RESET_INTEL_SYSCON-> RESET_INTEL_GW
- drivers/reset/Kconfig          |   9 ++
- drivers/reset/Makefile         |   1 +
- drivers/reset/reset-intel-gw.c | 262 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 272 insertions(+)
- create mode 100644 drivers/reset/reset-intel-gw.c
-
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 3ad7817ce1f0..218571cda38d 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -64,6 +64,15 @@ config RESET_IMX7
- 	help
- 	  This enables the reset controller driver for i.MX7 SoCs.
- 
-+config RESET_INTEL_GW
-+	bool "Intel Reset Controller Driver"
-+	depends on OF
-+	select REGMAP_MMIO
-+	help
-+	  This enables the reset controller driver for Intel Gateway SoCs.
-+	  Say Y to control the reset signals provided by reset controller.
-+	  Otherwise, say N.
-+
- config RESET_LANTIQ
- 	bool "Lantiq XWAY Reset Driver" if COMPILE_TEST
- 	default SOC_TYPE_XWAY
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index cf60ce526064..a196d545b4b8 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
- obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
- obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
- obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
-+obj-$(CONFIG_RESET_INTEL_GW) += reset-intel-gw.o
- obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
- obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
- obj-$(CONFIG_RESET_MESON) += reset-meson.o
-diff --git a/drivers/reset/reset-intel-gw.c b/drivers/reset/reset-intel-gw.c
-new file mode 100644
-index 000000000000..da285833cd22
---- /dev/null
-+++ b/drivers/reset/reset-intel-gw.c
-@@ -0,0 +1,262 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019 Intel Corporation.
-+ * Lei Chuanhua <Chuanhua.lei@intel.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/init.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/regmap.h>
-+#include <linux/reset-controller.h>
-+
-+#define RCU_RST_STAT	0x0024
-+#define RCU_RST_REQ	0x0048
-+
-+#define REG_OFFSET	GENMASK(31, 16)
-+#define BIT_OFFSET	GENMASK(15, 8)
-+#define STAT_BIT_OFFSET	GENMASK(7, 0)
-+
-+#define to_reset_data(x)	container_of(x, struct intel_reset_data, rcdev)
-+
-+struct intel_reset_soc {
-+	bool legacy;
-+	u32 reset_cell_count;
-+};
-+
-+struct intel_reset_data {
-+	struct reset_controller_dev rcdev;
-+	struct notifier_block restart_nb;
-+	const struct intel_reset_soc *soc_data;
-+	struct regmap *regmap;
-+	struct device *dev;
-+	u32 reboot_id;
-+};
-+
-+static const struct regmap_config intel_rcu_regmap_config = {
-+	.name =		"intel-reset",
-+	.reg_bits =	32,
-+	.reg_stride =	4,
-+	.val_bits =	32,
-+	.fast_io =	true,
-+};
-+
-+/*
-+ * Reset status register offset relative to
-+ * the reset control register(X) is X + 4
-+ */
-+static u32 id_to_reg_and_bit_offsets(struct intel_reset_data *data,
-+				     unsigned long id, u32 *rst_req,
-+				     u32 *req_bit, u32 *stat_bit)
-+{
-+	*rst_req = FIELD_GET(REG_OFFSET, id);
-+	*req_bit = FIELD_GET(BIT_OFFSET, id);
-+
-+	if (data->soc_data->legacy)
-+		*stat_bit = FIELD_GET(STAT_BIT_OFFSET, id);
-+	else
-+		*stat_bit = *req_bit;
-+
-+	if (data->soc_data->legacy && *rst_req == RCU_RST_REQ)
-+		return RCU_RST_STAT;
-+	else
-+		return *rst_req + 0x4;
-+}
-+
-+static int intel_set_clr_bits(struct intel_reset_data *data,
-+			      unsigned long id, bool set, u64 timeout)
-+{
-+	u32 rst_req, req_bit, rst_stat, stat_bit, val;
-+	int ret;
-+
-+	rst_stat = id_to_reg_and_bit_offsets(data, id, &rst_req,
-+					     &req_bit, &stat_bit);
-+
-+	val = set ? BIT(req_bit) : 0;
-+	ret = regmap_update_bits(data->regmap, rst_req,  BIT(req_bit), val);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_read_poll_timeout(data->regmap, rst_stat, val,
-+					set == !!(val & BIT(stat_bit)),
-+					20, timeout);
-+}
-+
-+static int intel_assert_device(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	int ret;
-+
-+	ret = intel_set_clr_bits(data, id, true, 200);
-+	if (ret)
-+		dev_err(data->dev, "Reset assert failed %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int intel_deassert_device(struct reset_controller_dev *rcdev,
-+				 unsigned long id)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	int ret;
-+
-+	ret = intel_set_clr_bits(data, id, false, 200);
-+	if (ret)
-+		dev_err(data->dev, "Reset deassert failed %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int intel_reset_status(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	u32 rst_req, req_bit, rst_stat, stat_bit, val;
-+	int ret;
-+
-+	rst_stat = id_to_reg_and_bit_offsets(data, id, &rst_req,
-+					     &req_bit, &stat_bit);
-+	ret = regmap_read(data->regmap, rst_stat, &val);
-+	if (ret)
-+		return ret;
-+
-+	return !!(val & BIT(stat_bit));
-+}
-+
-+static const struct reset_control_ops intel_reset_ops = {
-+	.assert =	intel_assert_device,
-+	.deassert =	intel_deassert_device,
-+	.status	=	intel_reset_status,
-+};
-+
-+static int intel_reset_xlate(struct reset_controller_dev *rcdev,
-+			     const struct of_phandle_args *spec)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	u32 id;
-+
-+	if (spec->args[1] > 31)
-+		return -EINVAL;
-+
-+	id = FIELD_PREP(REG_OFFSET, spec->args[0]);
-+	id |= FIELD_PREP(BIT_OFFSET, spec->args[1]);
-+
-+	if (data->soc_data->legacy) {
-+		if (spec->args[2] > 31)
-+			return -EINVAL;
-+
-+		id |= FIELD_PREP(STAT_BIT_OFFSET, spec->args[2]);
-+	}
-+
-+	return id;
-+}
-+
-+static int intel_reset_restart_handler(struct notifier_block *nb,
-+				       unsigned long action, void *data)
-+{
-+	struct intel_reset_data *reset_data;
-+
-+	reset_data = container_of(nb, struct intel_reset_data, restart_nb);
-+	intel_assert_device(&reset_data->rcdev, reset_data->reboot_id);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int intel_reset_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	struct intel_reset_data *data;
-+	void __iomem *base;
-+	u32 rb_id[3];
-+	int ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->soc_data = of_device_get_match_data(dev);
-+	if (!data->soc_data)
-+		return -ENODEV;
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	data->regmap = devm_regmap_init_mmio(dev, base,
-+					     &intel_rcu_regmap_config);
-+	if (IS_ERR(data->regmap)) {
-+		dev_err(dev, "regmap initialization failed\n");
-+		return PTR_ERR(data->regmap);
-+	}
-+
-+	ret = device_property_read_u32_array(dev, "intel,global-reset", rb_id,
-+					     data->soc_data->reset_cell_count);
-+	if (ret) {
-+		dev_err(dev, "Failed to get global reset offset!\n");
-+		return ret;
-+	}
-+
-+	data->dev =			dev;
-+	data->rcdev.of_node =		np;
-+	data->rcdev.owner =		dev->driver->owner;
-+	data->rcdev.ops	=		&intel_reset_ops;
-+	data->rcdev.of_xlate =		intel_reset_xlate;
-+	data->rcdev.of_reset_n_cells =	data->soc_data->reset_cell_count;
-+	ret = devm_reset_controller_register(&pdev->dev, &data->rcdev);
-+	if (ret)
-+		return ret;
-+
-+	data->reboot_id = FIELD_PREP(REG_OFFSET, rb_id[0]);
-+	data->reboot_id |= FIELD_PREP(BIT_OFFSET, rb_id[1]);
-+
-+	if (data->soc_data->legacy)
-+		data->reboot_id |= FIELD_PREP(STAT_BIT_OFFSET, rb_id[2]);
-+
-+	data->restart_nb.notifier_call	= intel_reset_restart_handler;
-+	data->restart_nb.priority	= 128;
-+	register_restart_handler(&data->restart_nb);
-+
-+	return 0;
-+}
-+
-+struct intel_reset_soc xrx200_data = {
-+	.legacy =		true,
-+	.reset_cell_count =	3,
-+};
-+
-+struct intel_reset_soc lgm_data = {
-+	.legacy =		false,
-+	.reset_cell_count =	2,
-+};
-+
-+static const struct of_device_id intel_reset_match[] = {
-+	{ .compatible = "intel,rcu-lgm", .data = &lgm_data },
-+	{ .compatible = "intel,rcu-xrx200", .data = &xrx200_data },
-+	{}
-+};
-+
-+static struct platform_driver intel_reset_driver = {
-+	.probe = intel_reset_probe,
-+	.driver = {
-+		.name = "intel-reset",
-+		.of_match_table = intel_reset_match,
-+	},
-+};
-+
-+static int __init intel_reset_init(void)
-+{
-+	return platform_driver_register(&intel_reset_driver);
-+}
-+
-+/*
-+ * RCU is system core entity which is in Always On Domain whose clocks
-+ * or resource initialization happens in system core initialization.
-+ * Also, it is required for most of the platform or architecture
-+ * specific devices to perform reset operation as part of initialization.
-+ * So perform RCU as post core initialization.
-+ */
-+postcore_initcall(intel_reset_init);
--- 
-2.11.0
-
+[1]https://elixir.bootlin.com/linux/v5.5-rc2/source/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt#L24
+> > +
+> > +      ports {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        port@0 { /* input */
+> > +          reg = <0>;
+> > +
+> > +          hdmi_mux_in: endpoint {
+> > +            remote-endpoint = <&hdmi0_out>;
+> > +          };
+> > +        };
+> > +
+> > +        port@1 { /* output */
+> > +          reg = <1>;
+> > +
+> > +          #address-cells = <1>;
+> > +          #size-cells = <0>;
+> > +
+> > +          hdmi_mux_out_anx: endpoint@0 {
+> > +            reg = <0>;
+> > +            remote-endpoint = <&anx7688_in>;
+> > +          };
+> > +
+> > +          hdmi_mux_out_hdmi: endpoint@1 {
+> > +            reg = <1>;
+> > +            remote-endpoint = <&hdmi_connector_in>;
+> > +          };
+> > +        };
+> > +      };
+> > +    };
+> > --
+> > 2.24.0.525.g8f36a354ae-goog
+> >
