@@ -2,126 +2,131 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FA4C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 07:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE97EC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 07:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E92A206CB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 07:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8530E2072B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 07:52:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T9+hyjIO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfLPHri (ORCPT
+        id S1726712AbfLPHws (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 02:47:38 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39197 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfLPHri (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 02:47:38 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1igl6M-0003xT-O3; Mon, 16 Dec 2019 08:47:34 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1igl6M-0007Km-68; Mon, 16 Dec 2019 08:47:34 +0100
-Date:   Mon, 16 Dec 2019 08:47:34 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [RESEND PATCH v3 3/3] pinctrl: da9062: add driver support
-Message-ID: <20191216074734.ctjxx6rqtj6mt2dw@pengutronix.de>
-References: <20191212160413.15232-1-m.felsch@pengutronix.de>
- <20191212160413.15232-4-m.felsch@pengutronix.de>
- <AM5PR1001MB0994E2D72A95E4AC4796F80A80550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+        Mon, 16 Dec 2019 02:52:48 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42281 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfLPHws (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 02:52:48 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 66so8005885otd.9;
+        Sun, 15 Dec 2019 23:52:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=teaKbuiwSImi7RfIBsT5A595WaRZ9qMw7uZTBvgzoPo=;
+        b=T9+hyjIOYswgHEv4Tk1y+UNP7CGTbnEox9pCdGBWORd9ZZ8iJyE++oJ17Ew7Pahdw8
+         eV4gf9dCyNCNDRSAH/6T+z2+0xICmVRXxTvFJK3lXXeCq+konXyjj9WGgZhxkc3ABdiF
+         JEM7Gm1bSUKBl2NJoGdxXv/p/bAUz4rzX+FTOUyLZb6hIqR2WQMjUJNm42ULZRiJZZoc
+         ga24v8E8mr7DcvLxPW8MMCvY2OXxWEnyGfPcU+z0xN5sXyUwN7CB3kpXsWqkjc+ot3QR
+         6s8GOULh2ygu7Y0nuPsI8e9UL1ThafpjTBl47lNjqSxsBLfirQSGATt1hukDBeom5QaS
+         NYZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=teaKbuiwSImi7RfIBsT5A595WaRZ9qMw7uZTBvgzoPo=;
+        b=i8UQsnBUKManNbfKeGEx09gaawx5DdjPvw2tZ3nV+0D8LrmGh0MAeBdEFet7stC96C
+         iXOu5pPhZ2Pll4HELXt/QfodfpQmhIjdQyu5Sm007o6HKjqyzW5XLhQOmqFZnkbdU5yK
+         UxpNivJOCS8G7t9fg28FvvP9C+IP8UZFnDnBSSn5Xe89jf5xL4lStB3vIshOZBNoF18j
+         OPIAWyAHp4vJTPnrY8/wGuz2S68SchMffnbFnV1XuorzrGvSuRn2/SvNubOOguY/qwbc
+         EFT1qHVXWy7CUVIOMO+S3xKKYPAyn252efyuRKUdkrDNEZt3vfUN4LvRt5/ui0hm1TXM
+         OQ9w==
+X-Gm-Message-State: APjAAAW8fPY11K+qYAuCFimhpbIxw2WQMbjuzfUH81FrUCEPTGNsZYoo
+        UxDpXVoK8xYq0Kuk+5wmu6gLQqBQHf+b15oY58g=
+X-Google-Smtp-Source: APXvYqzJWsrCKHBWPt/+qDVqGaXSw/dwYOelFmuU1LMlbhh0onKHLZCdb9U0GQHZ+rXpK2GlmhJM1lVnV2qMLZqENUI=
+X-Received: by 2002:a9d:175:: with SMTP id 108mr30137165otu.325.1576482767410;
+ Sun, 15 Dec 2019 23:52:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM5PR1001MB0994E2D72A95E4AC4796F80A80550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:38:41 up 30 days, 22:57, 40 users,  load average: 0.92, 1.16,
- 1.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20191213084748.11210-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191213185011.GA170447@google.com>
+In-Reply-To: <20191213185011.GA170447@google.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 16 Dec 2019 07:52:20 +0000
+Message-ID: <CA+V-a8u7RO1L1ExPXwHuSpKrCA47iRPFySUn1royEGoOxy0=2A@mail.gmail.com>
+Subject: Re: [v2 1/6] pci: pcie-rcar: preparation for adding endpoint support
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adam,
+Hi Bjorn,
 
-On 19-12-12 16:48, Adam Thomson wrote:
-> On 12 December 2019 16:04, Marco Felsch wrote:
-> 
-> > +static int da9062_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
-> > +				  unsigned long config)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	struct regmap *regmap = pctl->da9062->regmap;
-> > +	int gpio_mode;
-> > +
-> > +	/*
-> > +	 * We need to meet the following restrictions [1, Figure 18]:
-> > +	 * - PIN_CONFIG_BIAS_PULL_DOWN -> only allowed if the pin is used as
-> > +	 *				  gpio input
-> > +	 * - PIN_CONFIG_BIAS_PULL_UP   -> only allowed if the pin is used as
-> > +	 *				  gpio output open-drain.
-> > +	 */
-> > +
-> > +	switch (pinconf_to_config_param(config)) {
-> > +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> > +		gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-> > +		if (gpio_mode < 0)
-> > +			return -EINVAL;
-> > +		else if (gpio_mode != DA9062_PIN_GPI)
-> > +			return -ENOTSUPP;
-> > +		return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-> > +					  BIT(offset), BIT(offset));
-> > +	case PIN_CONFIG_BIAS_PULL_UP:
-> > +		gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-> > +		if (gpio_mode < 0)
-> > +			return -EINVAL;
-> > +		else if (gpio_mode != DA9062_PIN_GPO_OD)
-> > +			return -ENOTSUPP;
-> > +		return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-> > +					  BIT(offset), BIT(offset));
-> 
-> Apologies for the delay on reviewing. Just looking at the datasheet, how do we
-> disable PULL_DOWN (for input) and PULL_UP (for output)? Should we not have a
-> 'PIN_CONFIG_BIAS_DISABLE' case here to handle this?
+On Fri, Dec 13, 2019 at 9:06 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Dec 13, 2019 at 08:47:43AM +0000, Lad Prabhakar wrote:
+> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > this patch prepares for adding endpoint support to rcar controller,
+> > there are no functional changes with this patch, a common file is
+> > created so that it can be shared with endpoint driver. Alongside
+> > this patch fixes checkpatch reported issues.
+>
+> Can you please split this into:
+>
+>   - a patch that moves code only, with no other changes except any
+>     necessary Kconfig and Makefile changes
+>   - another patch that fixes the checkpatch things
+>
+> When the checkpatch fixes are buried in the code move, it's impossible
+> to review them.
+>
+thank you for the review.sure I'll split up the patches and resend.
 
-No worries, thanks for the review :)
-Nice catch, Linus is it okay to add this as follow up patch? The current
-patch isn't wrong without the 'PIN_CONFIG_BIAS_DISABLE' case.
+Cheers,
+--Prabhakar
 
-Regards,
-  Marco
-
-> > +	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> > +		return da9062_pctl_set_pin_mode(pctl, offset,
-> > +						DA9062_PIN_GPO_OD);
-> > +	case PIN_CONFIG_DRIVE_PUSH_PULL:
-> > +		return da9062_pctl_set_pin_mode(pctl, offset,
-> > +						DA9062_PIN_GPO_PP);
-> > +	default:
-> > +		return -ENOTSUPP;
-> > +	}
-> > +}
-> 
-
+> > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  arch/arm64/configs/defconfig            |    2 +-
+> >  drivers/pci/controller/Kconfig          |    4 +-
+> >  drivers/pci/controller/Makefile         |    2 +-
+> >  drivers/pci/controller/pcie-rcar-host.c | 1056 ++++++++++++++++++++++++++
+> >  drivers/pci/controller/pcie-rcar.c      | 1229 ++-----------------------------
+> >  drivers/pci/controller/pcie-rcar.h      |  129 ++++
+> >  6 files changed, 1242 insertions(+), 1180 deletions(-)
+> >  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+> >  create mode 100644 drivers/pci/controller/pcie-rcar.h
