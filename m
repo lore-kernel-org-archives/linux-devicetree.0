@@ -2,684 +2,444 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B69DC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323E8C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1DF520684
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8FE2206B7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:57:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="klqpv8Dg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="u5JGSR7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfLPNyc (ORCPT
+        id S1727894AbfLPN5N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:54:32 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:35565 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727895AbfLPNyc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 08:54:32 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191216135429euoutp02368dea0ca30b2bea8d1b758a97414022~g3nZlJKUe1078110781euoutp02S
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 13:54:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191216135429euoutp02368dea0ca30b2bea8d1b758a97414022~g3nZlJKUe1078110781euoutp02S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576504469;
-        bh=rVs6lcbfb4ZKreUTB93l96Ha+e/BI6/rSLMkHIfBuvE=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=klqpv8Dg6GbNgrrai8M2nH5T7pkZYH54vuvo/5aBKe4JkKNDyX29kpdTLB4+Re+k0
-         aKV6MX64za/3laBukMo2xxFNHN5OePFt3w4wEJ1YB+hWuTRhY600V0Iz0JQZM7bygG
-         wQNNzyIN3jOMNxO2kuGmC6cV8MXy6vGCb+YGQ0YI=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191216135429eucas1p1a2ccc4e372fd7080c6f8aaa0f2d5b34f~g3nZO-_FH3095630956eucas1p12;
-        Mon, 16 Dec 2019 13:54:29 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 84.E0.61286.59C87FD5; Mon, 16
-        Dec 2019 13:54:29 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191216135428eucas1p14e60602673b6974b30c2c5c1ce3afa7e~g3nYryuLn3095230952eucas1p16;
-        Mon, 16 Dec 2019 13:54:28 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191216135428eusmtrp29ab3ab3a9c6c7b28e60499670033f9ff~g3nYq-7Pt2793427934eusmtrp2r;
-        Mon, 16 Dec 2019 13:54:28 +0000 (GMT)
-X-AuditID: cbfec7f2-f0bff7000001ef66-90-5df78c95f587
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id BF.9B.07950.49C87FD5; Mon, 16
-        Dec 2019 13:54:28 +0000 (GMT)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191216135427eusmtip18a91989c3bca47ca378a2463420930a4~g3nX6fTyc3234532345eusmtip1A;
-        Mon, 16 Dec 2019 13:54:27 +0000 (GMT)
-Subject: Re: [PATCH v4 04/11] drm/bridge: Make the bridge chain a
- double-linked list
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        kernel@collabora.com, Sam Ravnborg <sam@ravnborg.org>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chris Healy <cphealy@gmail.com>, devicetree@vger.kernel.org,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <4e901ab9-07d4-4238-7322-c7c5a3959513@samsung.com>
-Date:   Mon, 16 Dec 2019 14:54:25 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.1
+        Mon, 16 Dec 2019 08:57:13 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:59926 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727609AbfLPN5N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 08:57:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1576504630; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=W+6FWvfy4DCYdNXvWOb8dl37HhLH88Anxlx3K9JQ+AA=;
+        b=u5JGSR7a5JvvS2+BZGD6t84AinGBl2UDHu8o2O3pUCcdcM+RYaFs+AA5GBHNL9ChlA9ADj
+        jlOtnvZdoknYYB5qGVdLTCEtQH/pIarYTogdydXFHtjnoJ+1lFEbc9wkdAXynbWSlgJKWe
+        JF1dPr2g69CiX7wFrFL2bvOFobl8BAg=
+Date:   Mon, 16 Dec 2019 14:57:05 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 2/2] I2C: JZ4780: Add support for the X1000.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        mark.rutland@arm.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 2374286503@qq.com
+Message-Id: <1576504625.3.4@crapouillou.net>
+In-Reply-To: <1576490771-120353-4-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576490771-120353-1-git-send-email-zhouyanjie@wanyeetech.com>
+        <1576490771-120353-4-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-In-Reply-To: <20191203141515.3597631-5-boris.brezillon@collabora.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRiGec85O+dsOTlNwyeLikWF0Zd98ULfUHB+Vpg/qlGrTlvktDa1
-        DCKbzmyapGLqEiuZqMsyrUxtRZq5ljnStMyIDK3wY1hWLM2ynU6W/673fu6H+7nhZUlVCh3K
-        HoqOFYzR2ig1raCqm0Y8i3PSfZplg4UBuOu6R4aTUtfh5qdPCFzvdBH4UqNfav82ROMOXx+J
-        3YMdFL7pSZfhFvMgg89m2hlc/LKVwA0Zu3B3xWFsudfI4NKR2wjnZffReKSukNqo4ssLyxE/
-        1Glh+O6ccYKveWNHfK3tDcNfTM2X8VWOszT/+Hwbwb9NcxG8/UIHzWfcciD+wblsiv9SNWur
-        cqdi7QEh6lC8YFy6fq9C3zNaQx1xZKPjPcmnyUR0I96K5CxwK2HMV0eIrOJKEbwz661I4eev
-        CKo/v2CkxxcEH3x3qYmNUksdI22UIHg/EimZvAgqbfdl4iCIiwT3WOIfU7Cfe8bzkGgiuZ8U
-        pP0Y+5NHc+Fg9VppkZXceuixJpIiU9w8yEq76l9m2WmcBlJL9JJlKrjzeylRlnNboHF0uyiT
-        3Gy44y0gJQ6Brt5LhBgFnJMFd0YSLR29GSyNH/9yEPS7bjESz4Tx2omFJH99zzVGeqQjeG4W
-        rxZda+Chq1UmJpNcGFTULZXkTVDsPE2LMnCB0OmdKh0RCFnVuaQkKyE1RSW554PNdf1fbP2z
-        NvI8UtsmNbNNqmObVMf2P/cyohwoRIgzGXSCKTxaOLbEpDWY4qJ1S/bHGKqQ/3c2/3IN16Bv
-        bfsaEMcidYASYn0alUwbb0owNCBgSXWwsmaOX1Ie0CacEIwxe4xxUYKpAc1gKXWIckVRn0bF
-        6bSxwmFBOCIYJ6YEKw9NRJWBfS06u31K10LHieln5K25ZVfSgsmwg8mZTsXAnZ+yHRFhmYX1
-        A3aNbvdce9aGhIj49k9nXvWvdW+jnfrkpg1Dc6LMnkUFL8q8y7vKv7cP5d6/2rRK+BhT8jil
-        9235gp3H5EdPDQtFUwaGe+2GgOTVJ8Mt5kdfx7pLO19vKssZ7VRTJr02fCFpNGl/Axeuwg+Z
-        AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNKsWRmVeSWpSXmKPExsVy+t/xu7pTer7HGlyeqW5xa905VovmDluL
-        02dOMVkc3HOcyWL+EaDQla/v2Syufn/JbHHyzVUWi83nelgtzja9YbfonLiE3WLp9YtMFof6
-        oi0erM+2aN17hN1ixc+tjBYzJr9ks/i5ax6Lg5DHmnlrGD3e32hl93gw9T+Tx467Sxg9ds66
-        y+4xu2Mmq8emVZ1sHicmXGLyuN99nMljybSrbB59W1Yxehzonczi8XmTXABvlJ5NUX5pSapC
-        Rn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G4187WApWTWaseNzS
-        yNzAuKGsi5GTQ0LARGJF6y72LkYuDiGBpYwSWy7MZYFIyEicnNbACmELS/y51sUGUfSaUWLh
-        lX1MIAlhgTCJk38a2EFsESD77aWVLCBFzAL/WSRunuthgui4zCjx8+EqsLFsAoYSXW9BRnFy
-        8ArYSTzuamAGsVkEVCUmda8GmyQqECvxfeUnRogaQYmTM58A9XJwcAq4Shz5FQQSZhYwk5i3
-        +SEzhC0vsf3tHChbXOLWk/lMExiFZiHpnoWkZRaSlllIWhYwsqxiFEktLc5Nzy020itOzC0u
-        zUvXS87P3cQITBjbjv3csoOx613wIUYBDkYlHl6Jku+xQqyJZcWVuYcYJTiYlUR4dygAhXhT
-        EiurUovy44tKc1KLDzGaAv02kVlKNDkfmMzySuINTQ3NLSwNzY3Njc0slMR5OwQOxggJpCeW
-        pGanphakFsH0MXFwSjUwdjTaexu84AhSLzmXx5gQvfO5ZdtPi6AVKqnfdb5GXPP66dtt+VKW
-        yy3j0iveM4uNLkeJB+XJGrEKHkkMnGRj7Lz/9MduFd39vtJb9I5vELjy/WUfU49XRP+/S6va
-        L5bsygt17d4R5Bjb/zJcqvfVXv/LMptPVFg3T/tWdmxOoEiQoVuUc78SS3FGoqEWc1FxIgDp
-        ZKIxLgMAAA==
-X-CMS-MailID: 20191216135428eucas1p14e60602673b6974b30c2c5c1ce3afa7e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191203141542eucas1p23771a9c49ef18144c832fc536bdae61a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191203141542eucas1p23771a9c49ef18144c832fc536bdae61a
-References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
-        <CGME20191203141542eucas1p23771a9c49ef18144c832fc536bdae61a@eucas1p2.samsung.com>
-        <20191203141515.3597631-5-boris.brezillon@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi All,
+Hi Zhou,
 
-On 03.12.2019 15:15, Boris Brezillon wrote:
-> So that each element in the chain can easily access its predecessor.
-> This will be needed to support bus format negotiation between elements
-> of the bridge chain.
->
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-I've noticed that this patch got merged to linux-next as commit 
-05193dc38197021894b17239fafbd2eb1afe5a45. Sadly it breaks booting of 
-Samsung Exynos5250-based Arndale board. Booting stops after following 
-messages:
-
-[drm] Exynos DRM: using 14400000.fimd device for DMA mapping operations
-exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
-exynos-drm exynos-drm: bound 14450000.mixer (ops mixer_component_ops)
-exynos-drm exynos-drm: bound 14500000.dsi (ops exynos_dsi_component_ops)
-exynos-drm exynos-drm: bound 14530000.hdmi (ops hdmi_component_ops)
-[drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[drm] No driver support for vblank timestamp query.
-[drm] Cannot find any crtc or sizes
-[drm] Cannot find any crtc or sizes
-[drm] Initialized exynos 1.1.0 20180330 for exynos-drm on minor 0
-
-I will try to debug this and provide more information soon.
-
+Le lun., d=C3=A9c. 16, 2019 at 18:06, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yan=
+jie)=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+> Add support for probing i2c driver on the X1000 Soc from Ingenic.
+> call the corresponding fifo parameter according to the device
+> model obtained from the devicetree.
+>=20
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
 > ---
-> Changes in v4:
-> * Simplify the drm_bridge_attach() logic
-> * Fix list iteration bugs
-> * Patch VC4 and Exynos DSI drivers to match core changes
-> * Add R-bs
->
-> Changes in v3:
-> * None
->
-> Changes in v2:
-> * Adjust things to the "dummy encoder bridge" change (patch 2 in this
->    series)
-> ---
->   drivers/gpu/drm/drm_bridge.c            | 171 +++++++++++++++---------
->   drivers/gpu/drm/drm_encoder.c           |  16 +--
->   drivers/gpu/drm/exynos/exynos_drm_dsi.c |   5 +-
->   drivers/gpu/drm/vc4/vc4_dsi.c           |  10 +-
->   include/drm/drm_bridge.h                |  12 +-
->   include/drm/drm_encoder.h               |   7 +-
->   6 files changed, 143 insertions(+), 78 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> index 54c874493c57..b6517b4fa3d1 100644
-> --- a/drivers/gpu/drm/drm_bridge.c
-> +++ b/drivers/gpu/drm/drm_bridge.c
-> @@ -55,7 +55,7 @@
->    * just provide additional hooks to get the desired output at the end of the
->    * encoder chain.
->    *
-> - * Bridges can also be chained up using the &drm_bridge.next pointer.
-> + * Bridges can also be chained up using the &drm_bridge.chain_node field.
->    *
->    * Both legacy CRTC helpers and the new atomic modeset helpers support bridges.
->    */
-> @@ -128,20 +128,21 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
->   	bridge->dev = encoder->dev;
->   	bridge->encoder = encoder;
->   
-> +	if (previous)
-> +		list_add(&bridge->chain_node, &previous->chain_node);
+>=20
+> Notes:
+>     v1->v2:
+>     Add code to check device_get_match_data(), if it return a NULL=20
+> ptr,
+>     then print an error message and return -ENODEV.
+>=20
+>  drivers/i2c/busses/i2c-jz4780.c | 155=20
+> +++++++++++++++++++++++++++++-----------
+>  1 file changed, 115 insertions(+), 40 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-jz4780.c=20
+> b/drivers/i2c/busses/i2c-jz4780.c
+> index 25dcd73..f07a07c 100644
+> --- a/drivers/i2c/busses/i2c-jz4780.c
+> +++ b/drivers/i2c/busses/i2c-jz4780.c
+> @@ -4,6 +4,7 @@
+>   *
+>   * Copyright (C) 2006 - 2009 Ingenic Semiconductor Inc.
+>   * Copyright (C) 2015 Imagination Technologies
+> + * Copyright (C) 2019 =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)=20
+> <zhouyanjie@wanyeetech.com>
+>   */
+>=20
+>  #include <linux/bitops.h>
+> @@ -17,6 +18,7 @@
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/sched.h>
+>  #include <linux/slab.h>
+> @@ -55,6 +57,7 @@
+>  #define JZ4780_I2C_ACKGC	0x98
+>  #define JZ4780_I2C_ENSTA	0x9C
+>  #define JZ4780_I2C_SDAHD	0xD0
+> +#define X1000_I2C_SDAHD		0x7C
+>=20
+>  #define JZ4780_I2C_CTRL_STPHLD		BIT(7)
+>  #define JZ4780_I2C_CTRL_SLVDIS		BIT(6)
+> @@ -73,6 +76,8 @@
+>  #define JZ4780_I2C_STA_TFNF		BIT(1)
+>  #define JZ4780_I2C_STA_ACT		BIT(0)
+>=20
+> +#define X1000_I2C_DC_STOP		BIT(9)
+> +
+>  static const char * const jz4780_i2c_abrt_src[] =3D {
+>  	"ABRT_7B_ADDR_NOACK",
+>  	"ABRT_10ADDR1_NOACK",
+> @@ -130,18 +135,33 @@ static const char * const jz4780_i2c_abrt_src[]=20
+> =3D {
+>  #define JZ4780_I2CFLCNT_ADJUST(n)	(((n) - 1) < 8 ? 8 : ((n) - 1))
+>=20
+>  #define JZ4780_I2C_FIFO_LEN	16
+> -#define TX_LEVEL		3
+> -#define RX_LEVEL		(JZ4780_I2C_FIFO_LEN - TX_LEVEL - 1)
+> +
+> +#define X1000_I2C_FIFO_LEN	64
+>=20
+>  #define JZ4780_I2C_TIMEOUT	300
+>=20
+>  #define BUFSIZE 200
+>=20
+> +enum ingenic_i2c_version {
+> +	ID_JZ4780,
+> +	ID_X1000,
+> +};
+> +
+> +/* ingenic_i2c_config: SoC specific config data. */
+> +struct ingenic_i2c_config {
+> +	enum ingenic_i2c_version version;
+> +
+> +	int fifosize;
+> +	int tx_level;
+> +	int rx_level;
+> +};
+> +
+>  struct jz4780_i2c {
+>  	void __iomem		*iomem;
+>  	int			 irq;
+>  	struct clk		*clk;
+>  	struct i2c_adapter	 adap;
+> +	const struct ingenic_i2c_config *cdata;
+>=20
+>  	/* lock to protect rbuf and wbuf between xfer_rd/wr and irq handler=20
+> */
+>  	spinlock_t		lock;
+> @@ -340,11 +360,18 @@ static int jz4780_i2c_set_speed(struct=20
+> jz4780_i2c *i2c)
+>=20
+>  	if (hold_time >=3D 0) {
+>  		/*i2c hold time enable */
+> -		hold_time |=3D JZ4780_I2C_SDAHD_HDENB;
+> -		jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, hold_time);
+> +		if (i2c->cdata->version >=3D ID_X1000)
+> +			jz4780_i2c_writew(i2c, X1000_I2C_SDAHD, hold_time);
+> +		else {
+
+If only one branch of a conditional statement is a single statement,=20
+then you should use braces in both branches.
+
+See:=20
+https://www.kernel.org/doc/html/v4.10/process/coding-style.html#placing-bra=
+ces-and-spaces
+
+
+> +			hold_time |=3D JZ4780_I2C_SDAHD_HDENB;
+> +			jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, hold_time);
+> +		}
+>  	} else {
+>  		/* disable hold time */
+> -		jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, 0);
+> +		if (i2c->cdata->version >=3D ID_X1000)
+> +			jz4780_i2c_writew(i2c, X1000_I2C_SDAHD, 0);
+> +		else
+> +			jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, 0);
+>  	}
+>=20
+>  	return 0;
+> @@ -359,9 +386,11 @@ static int jz4780_i2c_cleanup(struct jz4780_i2c=20
+> *i2c)
+>  	spin_lock_irqsave(&i2c->lock, flags);
+>=20
+>  	/* can send stop now if need */
+> -	tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -	tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	if (i2c->cdata->version < ID_X1000) {
+> +		tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> +		tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	}
+>=20
+>  	/* disable all interrupts first */
+>  	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, 0);
+> @@ -399,11 +428,18 @@ static int jz4780_i2c_prepare(struct jz4780_i2c=20
+> *i2c)
+>  	return jz4780_i2c_enable(i2c);
+>  }
+>=20
+> -static void jz4780_i2c_send_rcmd(struct jz4780_i2c *i2c, int=20
+> cmd_count)
+> +static void jz4780_i2c_send_rcmd(struct jz4780_i2c *i2c,
+> +				       int cmd_count, int cmd_left)
+
+Sorry to be pedantic ;) but this line is not properly indented. You=20
+should indent with tab charaters (configure your IDE for one tab =3D=3D 4=20
+spaces) as much as possible, then use spaces to align the first word.
+
+With these two things fixed:
+Acked-by: Paul Cercueil <paul@crapouillou.net>
+
+Cheers,
+-Paul
+
+
+>  {
+>  	int i;
+>=20
+> -	for (i =3D 0; i < cmd_count; i++)
+> +	for (i =3D 0; i < cmd_count - 1; i++)
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_DC, JZ4780_I2C_DC_READ);
+> +
+> +	if ((cmd_left =3D=3D 0) && (i2c->cdata->version >=3D ID_X1000))
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_DC,
+> +				JZ4780_I2C_DC_READ | X1000_I2C_DC_STOP);
 > +	else
-> +		list_add(&bridge->chain_node, &encoder->bridge_chain);
+>  		jz4780_i2c_writew(i2c, JZ4780_I2C_DC, JZ4780_I2C_DC_READ);
+>  }
+>=20
+> @@ -458,37 +494,44 @@ static irqreturn_t jz4780_i2c_irq(int irqno,=20
+> void *dev_id)
+>=20
+>  		rd_left =3D i2c->rd_total_len - i2c->rd_data_xfered;
+>=20
+> -		if (rd_left <=3D JZ4780_I2C_FIFO_LEN)
+> +		if (rd_left <=3D i2c->cdata->fifosize)
+>  			jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, rd_left - 1);
+>  	}
+>=20
+>  	if (intst & JZ4780_I2C_INTST_TXEMP) {
+>  		if (i2c->is_write =3D=3D 0) {
+>  			int cmd_left =3D i2c->rd_total_len - i2c->rd_cmd_xfered;
+> -			int max_send =3D (JZ4780_I2C_FIFO_LEN - 1)
+> +			int max_send =3D (i2c->cdata->fifosize - 1)
+>  					 - (i2c->rd_cmd_xfered
+>  					 - i2c->rd_data_xfered);
+>  			int cmd_to_send =3D min(cmd_left, max_send);
+>=20
+>  			if (i2c->rd_cmd_xfered !=3D 0)
+>  				cmd_to_send =3D min(cmd_to_send,
+> -						  JZ4780_I2C_FIFO_LEN
+> -						  - TX_LEVEL - 1);
+> +						  i2c->cdata->fifosize
+> +						  - i2c->cdata->tx_level - 1);
+>=20
+>  			if (cmd_to_send) {
+> -				jz4780_i2c_send_rcmd(i2c, cmd_to_send);
+>  				i2c->rd_cmd_xfered +=3D cmd_to_send;
+> +				cmd_left =3D i2c->rd_total_len -
+> +						i2c->rd_cmd_xfered;
+> +				jz4780_i2c_send_rcmd(i2c,
+> +						cmd_to_send, cmd_left);
 > +
->   	if (bridge->funcs->attach) {
->   		ret = bridge->funcs->attach(bridge);
->   		if (ret < 0) {
-> +			list_del(&bridge->chain_node);
->   			bridge->dev = NULL;
->   			bridge->encoder = NULL;
->   			return ret;
->   		}
->   	}
->   
-> -	if (previous)
-> -		previous->next = bridge;
-> -	else
-> -		encoder->bridge = bridge;
-> -
->   	return 0;
->   }
->   EXPORT_SYMBOL(drm_bridge_attach);
-> @@ -157,6 +158,7 @@ void drm_bridge_detach(struct drm_bridge *bridge)
->   	if (bridge->funcs->detach)
->   		bridge->funcs->detach(bridge);
->   
-> +	list_del(&bridge->chain_node);
->   	bridge->dev = NULL;
->   }
->   
-> @@ -190,18 +192,21 @@ bool drm_bridge_chain_mode_fixup(struct drm_bridge *bridge,
->   				 const struct drm_display_mode *mode,
->   				 struct drm_display_mode *adjusted_mode)
->   {
-> -	bool ret = true;
-> +	struct drm_encoder *encoder;
->   
->   	if (!bridge)
->   		return true;
->   
-> -	if (bridge->funcs->mode_fixup)
-> -		ret = bridge->funcs->mode_fixup(bridge, mode, adjusted_mode);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
-> +		if (!bridge->funcs->mode_fixup)
-> +			continue;
->   
-> -	ret = ret && drm_bridge_chain_mode_fixup(bridge->next, mode,
-> -						 adjusted_mode);
-> +		if (!bridge->funcs->mode_fixup(bridge, mode, adjusted_mode))
-> +			return false;
+>  			}
+>=20
+> -			cmd_left =3D i2c->rd_total_len - i2c->rd_cmd_xfered;
+>  			if (cmd_left =3D=3D 0) {
+>  				intmsk =3D jz4780_i2c_readw(i2c, JZ4780_I2C_INTM);
+>  				intmsk &=3D ~JZ4780_I2C_INTM_MTXEMP;
+>  				jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, intmsk);
+>=20
+> -				tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -				tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> -				jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +				if (i2c->cdata->version < ID_X1000) {
+> +					tmp =3D jz4780_i2c_readw(i2c,
+> +							JZ4780_I2C_CTRL);
+> +					tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> +					jz4780_i2c_writew(i2c,
+> +							JZ4780_I2C_CTRL, tmp);
+> +				}
+>  			}
+>  		} else {
+>  			unsigned short data;
+> @@ -497,23 +540,26 @@ static irqreturn_t jz4780_i2c_irq(int irqno,=20
+> void *dev_id)
+>  			i2c_sta =3D jz4780_i2c_readw(i2c, JZ4780_I2C_STA);
+>=20
+>  			while ((i2c_sta & JZ4780_I2C_STA_TFNF) &&
+> -			       (i2c->wt_len > 0)) {
+> +					(i2c->wt_len > 0)) {
+>  				i2c_sta =3D jz4780_i2c_readw(i2c, JZ4780_I2C_STA);
+>  				data =3D *i2c->wbuf;
+>  				data &=3D ~JZ4780_I2C_DC_READ;
+> -				jz4780_i2c_writew(i2c, JZ4780_I2C_DC,
+> -						  data);
+> +				if ((!i2c->stop_hold) && (i2c->cdata->version >=3D
+> +						ID_X1000))
+> +					data |=3D X1000_I2C_DC_STOP;
+> +				jz4780_i2c_writew(i2c, JZ4780_I2C_DC, data);
+>  				i2c->wbuf++;
+>  				i2c->wt_len--;
+>  			}
+>=20
+>  			if (i2c->wt_len =3D=3D 0) {
+> -				if (!i2c->stop_hold) {
+> +				if ((!i2c->stop_hold) && (i2c->cdata->version <
+> +						ID_X1000)) {
+>  					tmp =3D jz4780_i2c_readw(i2c,
+> -							       JZ4780_I2C_CTRL);
+> +							JZ4780_I2C_CTRL);
+>  					tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> -					jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL,
+> -							  tmp);
+> +					jz4780_i2c_writew(i2c,
+> +							JZ4780_I2C_CTRL, tmp);
+>  				}
+>=20
+>  				jz4780_i2c_trans_done(i2c);
+> @@ -567,20 +613,22 @@ static inline int jz4780_i2c_xfer_read(struct=20
+> jz4780_i2c *i2c,
+>  	i2c->rd_data_xfered =3D 0;
+>  	i2c->rd_cmd_xfered =3D 0;
+>=20
+> -	if (len <=3D JZ4780_I2C_FIFO_LEN)
+> +	if (len <=3D i2c->cdata->fifosize)
+>  		jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, len - 1);
+>  	else
+> -		jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, RX_LEVEL);
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, i2c->cdata->rx_level);
+>=20
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, TX_LEVEL);
+> +	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, i2c->cdata->tx_level);
+>=20
+>  	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM,
+>  			  JZ4780_I2C_INTM_MRXFL | JZ4780_I2C_INTM_MTXEMP
+>  			  | JZ4780_I2C_INTM_MTXABT | JZ4780_I2C_INTM_MRXOF);
+>=20
+> -	tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -	tmp |=3D JZ4780_I2C_CTRL_STPHLD;
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	if (i2c->cdata->version < ID_X1000) {
+> +		tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> +		tmp |=3D JZ4780_I2C_CTRL_STPHLD;
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
 > +	}
->   
-> -	return ret;
-> +	return true;
->   }
->   EXPORT_SYMBOL(drm_bridge_chain_mode_fixup);
->   
-> @@ -224,18 +229,24 @@ enum drm_mode_status
->   drm_bridge_chain_mode_valid(struct drm_bridge *bridge,
->   			    const struct drm_display_mode *mode)
->   {
-> -	enum drm_mode_status ret = MODE_OK;
-> +	struct drm_encoder *encoder;
->   
->   	if (!bridge)
-> -		return ret;
-> +		return MODE_OK;
->   
-> -	if (bridge->funcs->mode_valid)
-> -		ret = bridge->funcs->mode_valid(bridge, mode);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
-> +		enum drm_mode_status ret;
-> +
-> +		if (!bridge->funcs->mode_valid)
-> +			continue;
->   
-> -	if (ret != MODE_OK)
-> -		return ret;
-> +		ret = bridge->funcs->mode_valid(bridge, mode);
-> +		if (ret != MODE_OK)
-> +			return ret;
+>=20
+>  	spin_unlock_irqrestore(&i2c->lock, flags);
+>=20
+> @@ -626,14 +674,16 @@ static inline int jz4780_i2c_xfer_write(struct=20
+> jz4780_i2c *i2c,
+>  	i2c->wbuf =3D buf;
+>  	i2c->wt_len =3D len;
+>=20
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, TX_LEVEL);
+> +	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, i2c->cdata->tx_level);
+>=20
+>  	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, JZ4780_I2C_INTM_MTXEMP
+>  					| JZ4780_I2C_INTM_MTXABT);
+>=20
+> -	tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -	tmp |=3D JZ4780_I2C_CTRL_STPHLD;
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	if (i2c->cdata->version < ID_X1000) {
+> +		tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> +		tmp |=3D JZ4780_I2C_CTRL_STPHLD;
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
 > +	}
->   
-> -	return drm_bridge_chain_mode_valid(bridge->next, mode);
-> +	return MODE_OK;
->   }
->   EXPORT_SYMBOL(drm_bridge_chain_mode_valid);
->   
-> @@ -251,13 +262,20 @@ EXPORT_SYMBOL(drm_bridge_chain_mode_valid);
->    */
->   void drm_bridge_chain_disable(struct drm_bridge *bridge)
->   {
-> +	struct drm_encoder *encoder;
-> +	struct drm_bridge *iter;
+>=20
+>  	spin_unlock_irqrestore(&i2c->lock, flags);
+>=20
+> @@ -716,8 +766,25 @@ static const struct i2c_algorithm=20
+> jz4780_i2c_algorithm =3D {
+>  	.functionality	=3D jz4780_i2c_functionality,
+>  };
+>=20
+> +static const struct ingenic_i2c_config jz4780_i2c_config =3D {
+> +	.version =3D ID_JZ4780,
 > +
->   	if (!bridge)
->   		return;
->   
-> -	drm_bridge_chain_disable(bridge->next);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_reverse(iter, &encoder->bridge_chain, chain_node) {
-> +		if (iter->funcs->disable)
-> +			iter->funcs->disable(iter);
->   
-> -	if (bridge->funcs->disable)
-> -		bridge->funcs->disable(bridge);
-> +		if (iter == bridge)
-> +			break;
+> +	.fifosize =3D JZ4780_I2C_FIFO_LEN,
+> +	.tx_level =3D JZ4780_I2C_FIFO_LEN / 2,
+> +	.rx_level =3D JZ4780_I2C_FIFO_LEN / 2 - 1,
+> +};
+> +
+> +static const struct ingenic_i2c_config x1000_i2c_config =3D {
+> +	.version =3D ID_X1000,
+> +
+> +	.fifosize =3D X1000_I2C_FIFO_LEN,
+> +	.tx_level =3D X1000_I2C_FIFO_LEN / 2,
+> +	.rx_level =3D X1000_I2C_FIFO_LEN / 2 - 1,
+> +};
+> +
+>  static const struct of_device_id jz4780_i2c_of_matches[] =3D {
+> -	{ .compatible =3D "ingenic,jz4780-i2c", },
+> +	{ .compatible =3D "ingenic,jz4780-i2c", .data =3D &jz4780_i2c_config },
+> +	{ .compatible =3D "ingenic,x1000-i2c", .data =3D &x1000_i2c_config },
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, jz4780_i2c_of_matches);
+> @@ -734,6 +801,12 @@ static int jz4780_i2c_probe(struct=20
+> platform_device *pdev)
+>  	if (!i2c)
+>  		return -ENOMEM;
+>=20
+> +	i2c->cdata =3D device_get_match_data(&pdev->dev);
+> +	if (!i2c->cdata) {
+> +		dev_err(&pdev->dev, "Error: No device match found\n");
+> +		return -ENODEV;
 > +	}
->   }
->   EXPORT_SYMBOL(drm_bridge_chain_disable);
->   
-> @@ -274,13 +292,16 @@ EXPORT_SYMBOL(drm_bridge_chain_disable);
->    */
->   void drm_bridge_chain_post_disable(struct drm_bridge *bridge)
->   {
-> +	struct drm_encoder *encoder;
 > +
->   	if (!bridge)
->   		return;
->   
-> -	if (bridge->funcs->post_disable)
-> -		bridge->funcs->post_disable(bridge);
-> -
-> -	drm_bridge_chain_post_disable(bridge->next);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
-> +		if (bridge->funcs->post_disable)
-> +			bridge->funcs->post_disable(bridge);
+>  	i2c->adap.owner		=3D THIS_MODULE;
+>  	i2c->adap.algo		=3D &jz4780_i2c_algorithm;
+>  	i2c->adap.algo_data	=3D i2c;
+> @@ -777,9 +850,11 @@ static int jz4780_i2c_probe(struct=20
+> platform_device *pdev)
+>=20
+>  	dev_info(&pdev->dev, "Bus frequency is %d KHz\n", i2c->speed);
+>=20
+> -	tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> -	tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> -	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+> +	if (i2c->cdata->version < ID_X1000) {
+> +		tmp =3D jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+> +		tmp &=3D ~JZ4780_I2C_CTRL_STPHLD;
+> +		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
 > +	}
->   }
->   EXPORT_SYMBOL(drm_bridge_chain_post_disable);
->   
-> @@ -300,13 +321,16 @@ void drm_bridge_chain_mode_set(struct drm_bridge *bridge,
->   			       const struct drm_display_mode *mode,
->   			       const struct drm_display_mode *adjusted_mode)
->   {
-> +	struct drm_encoder *encoder;
-> +
->   	if (!bridge)
->   		return;
->   
-> -	if (bridge->funcs->mode_set)
-> -		bridge->funcs->mode_set(bridge, mode, adjusted_mode);
-> -
-> -	drm_bridge_chain_mode_set(bridge->next, mode, adjusted_mode);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
-> +		if (bridge->funcs->mode_set)
-> +			bridge->funcs->mode_set(bridge, mode, adjusted_mode);
-> +	}
->   }
->   EXPORT_SYMBOL(drm_bridge_chain_mode_set);
->   
-> @@ -323,13 +347,17 @@ EXPORT_SYMBOL(drm_bridge_chain_mode_set);
->    */
->   void drm_bridge_chain_pre_enable(struct drm_bridge *bridge)
->   {
-> +	struct drm_encoder *encoder;
-> +	struct drm_bridge *iter;
-> +
->   	if (!bridge)
->   		return;
->   
-> -	drm_bridge_chain_pre_enable(bridge->next);
-> -
-> -	if (bridge->funcs->pre_enable)
-> -		bridge->funcs->pre_enable(bridge);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_reverse(iter, &encoder->bridge_chain, chain_node) {
-> +		if (iter->funcs->pre_enable)
-> +			iter->funcs->pre_enable(iter);
-> +	}
->   }
->   EXPORT_SYMBOL(drm_bridge_chain_pre_enable);
->   
-> @@ -345,13 +373,16 @@ EXPORT_SYMBOL(drm_bridge_chain_pre_enable);
->    */
->   void drm_bridge_chain_enable(struct drm_bridge *bridge)
->   {
-> +	struct drm_encoder *encoder;
-> +
->   	if (!bridge)
->   		return;
->   
-> -	if (bridge->funcs->enable)
-> -		bridge->funcs->enable(bridge);
-> -
-> -	drm_bridge_chain_enable(bridge->next);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
-> +		if (bridge->funcs->enable)
-> +			bridge->funcs->enable(bridge);
-> +	}
->   }
->   EXPORT_SYMBOL(drm_bridge_chain_enable);
->   
-> @@ -370,15 +401,22 @@ EXPORT_SYMBOL(drm_bridge_chain_enable);
->   void drm_atomic_bridge_chain_disable(struct drm_bridge *bridge,
->   				     struct drm_atomic_state *state)
->   {
-> +	struct drm_encoder *encoder;
-> +	struct drm_bridge *iter;
-> +
->   	if (!bridge)
->   		return;
->   
-> -	drm_atomic_bridge_chain_disable(bridge->next, state);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_reverse(iter, &encoder->bridge_chain, chain_node) {
-> +		if (iter->funcs->atomic_disable)
-> +			iter->funcs->atomic_disable(iter, state);
-> +		else if (iter->funcs->disable)
-> +			iter->funcs->disable(iter);
->   
-> -	if (bridge->funcs->atomic_disable)
-> -		bridge->funcs->atomic_disable(bridge, state);
-> -	else if (bridge->funcs->disable)
-> -		bridge->funcs->disable(bridge);
-> +		if (iter == bridge)
-> +			break;
-> +	}
->   }
->   EXPORT_SYMBOL(drm_atomic_bridge_chain_disable);
->   
-> @@ -398,15 +436,18 @@ EXPORT_SYMBOL(drm_atomic_bridge_chain_disable);
->   void drm_atomic_bridge_chain_post_disable(struct drm_bridge *bridge,
->   					  struct drm_atomic_state *state)
->   {
-> +	struct drm_encoder *encoder;
-> +
->   	if (!bridge)
->   		return;
->   
-> -	if (bridge->funcs->atomic_post_disable)
-> -		bridge->funcs->atomic_post_disable(bridge, state);
-> -	else if (bridge->funcs->post_disable)
-> -		bridge->funcs->post_disable(bridge);
-> -
-> -	drm_atomic_bridge_chain_post_disable(bridge->next, state);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
-> +		if (bridge->funcs->atomic_post_disable)
-> +			bridge->funcs->atomic_post_disable(bridge, state);
-> +		else if (bridge->funcs->post_disable)
-> +			bridge->funcs->post_disable(bridge);
-> +	}
->   }
->   EXPORT_SYMBOL(drm_atomic_bridge_chain_post_disable);
->   
-> @@ -426,15 +467,22 @@ EXPORT_SYMBOL(drm_atomic_bridge_chain_post_disable);
->   void drm_atomic_bridge_chain_pre_enable(struct drm_bridge *bridge,
->   					struct drm_atomic_state *state)
->   {
-> +	struct drm_encoder *encoder;
-> +	struct drm_bridge *iter;
-> +
->   	if (!bridge)
->   		return;
->   
-> -	drm_atomic_bridge_chain_pre_enable(bridge->next, state);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_reverse(iter, &encoder->bridge_chain, chain_node) {
-> +		if (iter->funcs->atomic_pre_enable)
-> +			iter->funcs->atomic_pre_enable(iter, state);
-> +		else if (iter->funcs->pre_enable)
-> +			iter->funcs->pre_enable(iter);
->   
-> -	if (bridge->funcs->atomic_pre_enable)
-> -		bridge->funcs->atomic_pre_enable(bridge, state);
-> -	else if (bridge->funcs->pre_enable)
-> -		bridge->funcs->pre_enable(bridge);
-> +		if (iter == bridge)
-> +			break;
-> +	}
->   }
->   EXPORT_SYMBOL(drm_atomic_bridge_chain_pre_enable);
->   
-> @@ -453,15 +501,18 @@ EXPORT_SYMBOL(drm_atomic_bridge_chain_pre_enable);
->   void drm_atomic_bridge_chain_enable(struct drm_bridge *bridge,
->   				    struct drm_atomic_state *state)
->   {
-> +	struct drm_encoder *encoder;
-> +
->   	if (!bridge)
->   		return;
->   
-> -	if (bridge->funcs->atomic_enable)
-> -		bridge->funcs->atomic_enable(bridge, state);
-> -	else if (bridge->funcs->enable)
-> -		bridge->funcs->enable(bridge);
-> -
-> -	drm_atomic_bridge_chain_enable(bridge->next, state);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
-> +		if (bridge->funcs->atomic_enable)
-> +			bridge->funcs->atomic_enable(bridge, state);
-> +		else if (bridge->funcs->enable)
-> +			bridge->funcs->enable(bridge);
-> +	}
->   }
->   EXPORT_SYMBOL(drm_atomic_bridge_chain_enable);
->   
-> diff --git a/drivers/gpu/drm/drm_encoder.c b/drivers/gpu/drm/drm_encoder.c
-> index a2cc7e7241a9..e555281f43d4 100644
-> --- a/drivers/gpu/drm/drm_encoder.c
-> +++ b/drivers/gpu/drm/drm_encoder.c
-> @@ -140,6 +140,7 @@ int drm_encoder_init(struct drm_device *dev,
->   		goto out_put;
->   	}
->   
-> +	INIT_LIST_HEAD(&encoder->bridge_chain);
->   	list_add_tail(&encoder->head, &dev->mode_config.encoder_list);
->   	encoder->index = dev->mode_config.num_encoder++;
->   
-> @@ -160,23 +161,16 @@ EXPORT_SYMBOL(drm_encoder_init);
->   void drm_encoder_cleanup(struct drm_encoder *encoder)
->   {
->   	struct drm_device *dev = encoder->dev;
-> +	struct drm_bridge *bridge, *next;
->   
->   	/* Note that the encoder_list is considered to be static; should we
->   	 * remove the drm_encoder at runtime we would have to decrement all
->   	 * the indices on the drm_encoder after us in the encoder_list.
->   	 */
->   
-> -	if (encoder->bridge) {
-> -		struct drm_bridge *bridge;
-> -		struct drm_bridge *next;
-> -
-> -		bridge = drm_bridge_chain_get_first_bridge(encoder);
-> -		while (bridge) {
-> -			next = drm_bridge_get_next_bridge(bridge);
-> -			drm_bridge_detach(bridge);
-> -			bridge = next;
-> -		}
-> -	}
-> +	list_for_each_entry_safe(bridge, next, &encoder->bridge_chain,
-> +				 chain_node)
-> +		drm_bridge_detach(bridge);
->   
->   	drm_mode_object_unregister(dev, &encoder->base);
->   	kfree(encoder->name);
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> index d984097704b8..7de82e22252a 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> @@ -255,6 +255,7 @@ struct exynos_dsi {
->   	struct mipi_dsi_host dsi_host;
->   	struct drm_connector connector;
->   	struct drm_panel *panel;
-> +	struct list_head bridge_chain;
->   	struct drm_bridge *out_bridge;
->   	struct device *dev;
->   
-> @@ -1522,7 +1523,7 @@ static int exynos_dsi_host_attach(struct mipi_dsi_host *host,
->   	if (out_bridge) {
->   		drm_bridge_attach(encoder, out_bridge, NULL);
->   		dsi->out_bridge = out_bridge;
-> -		encoder->bridge = NULL;
-> +		list_splice(&encoder->bridge_chain, &dsi->bridge_chain);
->   	} else {
->   		int ret = exynos_dsi_create_connector(encoder);
->   
-> @@ -1588,6 +1589,7 @@ static int exynos_dsi_host_detach(struct mipi_dsi_host *host,
->   		if (dsi->out_bridge->funcs->detach)
->   			dsi->out_bridge->funcs->detach(dsi->out_bridge);
->   		dsi->out_bridge = NULL;
-> +		INIT_LIST_HEAD(&dsi->bridge_chain);
->   	}
->   
->   	if (drm->mode_config.poll_enabled)
-> @@ -1735,6 +1737,7 @@ static int exynos_dsi_probe(struct platform_device *pdev)
->   	init_completion(&dsi->completed);
->   	spin_lock_init(&dsi->transfer_lock);
->   	INIT_LIST_HEAD(&dsi->transfer_list);
-> +	INIT_LIST_HEAD(&dsi->bridge_chain);
->   
->   	dsi->dsi_host.ops = &exynos_dsi_ops;
->   	dsi->dsi_host.dev = dev;
-> diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.c
-> index ff81b54ea281..6c5b80ad6154 100644
-> --- a/drivers/gpu/drm/vc4/vc4_dsi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_dsi.c
-> @@ -499,6 +499,7 @@ struct vc4_dsi {
->   	struct mipi_dsi_host dsi_host;
->   	struct drm_encoder *encoder;
->   	struct drm_bridge *bridge;
-> +	struct list_head bridge_chain;
->   
->   	void __iomem *regs;
->   
-> @@ -1460,6 +1461,8 @@ static int vc4_dsi_bind(struct device *dev, struct device *master, void *data)
->   				       GFP_KERNEL);
->   	if (!vc4_dsi_encoder)
->   		return -ENOMEM;
-> +
-> +	INIT_LIST_HEAD(&dsi->bridge_chain);
->   	vc4_dsi_encoder->base.type = VC4_ENCODER_TYPE_DSI1;
->   	vc4_dsi_encoder->dsi = dsi;
->   	dsi->encoder = &vc4_dsi_encoder->base.base;
-> @@ -1610,7 +1613,7 @@ static int vc4_dsi_bind(struct device *dev, struct device *master, void *data)
->   	 * from our driver, since we need to sequence them within the
->   	 * encoder's enable/disable paths.
->   	 */
-> -	dsi->encoder->bridge = NULL;
-> +	list_splice(&dsi->encoder->bridge_chain, &dsi->bridge_chain);
->   
->   	if (dsi->port == 0)
->   		vc4_debugfs_add_regset32(drm, "dsi0_regs", &dsi->regset);
-> @@ -1632,6 +1635,11 @@ static void vc4_dsi_unbind(struct device *dev, struct device *master,
->   	if (dsi->bridge)
->   		pm_runtime_disable(dev);
->   
-> +	/*
-> +	 * Restore the bridge_chain so the bridge detach procedure can happen
-> +	 * normally.
-> +	 */
-> +	list_splice(&dsi->bridge_chain, &dsi->encoder->bridge_chain);
->   	vc4_dsi_encoder_destroy(dsi->encoder);
->   
->   	if (dsi->port == 1)
-> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index bd78c256b1ed..c118726469ee 100644
-> --- a/include/drm/drm_bridge.h
-> +++ b/include/drm/drm_bridge.h
-> @@ -384,8 +384,8 @@ struct drm_bridge {
->   	struct drm_device *dev;
->   	/** @encoder: encoder to which this bridge is connected */
->   	struct drm_encoder *encoder;
-> -	/** @next: the next bridge in the encoder chain */
-> -	struct drm_bridge *next;
-> +	/** @chain_node: used to form a bridge chain */
-> +	struct list_head chain_node;
->   #ifdef CONFIG_OF
->   	/** @of_node: device node pointer to the bridge */
->   	struct device_node *of_node;
-> @@ -420,7 +420,10 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
->   static inline struct drm_bridge *
->   drm_bridge_get_next_bridge(struct drm_bridge *bridge)
->   {
-> -	return bridge->next;
-> +	if (list_is_last(&bridge->chain_node, &bridge->encoder->bridge_chain))
-> +		return NULL;
-> +
-> +	return list_next_entry(bridge, chain_node);
->   }
->   
->   /**
-> @@ -434,7 +437,8 @@ drm_bridge_get_next_bridge(struct drm_bridge *bridge)
->   static inline struct drm_bridge *
->   drm_bridge_chain_get_first_bridge(struct drm_encoder *encoder)
->   {
-> -	return encoder->bridge;
-> +	return list_first_entry_or_null(&encoder->bridge_chain,
-> +					struct drm_bridge, chain_node);
->   }
->   
->   bool drm_bridge_chain_mode_fixup(struct drm_bridge *bridge,
-> diff --git a/include/drm/drm_encoder.h b/include/drm/drm_encoder.h
-> index f06164f44efe..5623994b6e9e 100644
-> --- a/include/drm/drm_encoder.h
-> +++ b/include/drm/drm_encoder.h
-> @@ -172,7 +172,12 @@ struct drm_encoder {
->   	 * &drm_connector_state.crtc.
->   	 */
->   	struct drm_crtc *crtc;
-> -	struct drm_bridge *bridge;
-> +
-> +	/**
-> +	 * @bridge_chain: Bridges attached to this encoder.
-> +	 */
-> +	struct list_head bridge_chain;
-> +
->   	const struct drm_encoder_funcs *funcs;
->   	const struct drm_encoder_helper_funcs *helper_private;
->   };
+>=20
+>  	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, 0x0);
+>=20
+> --
+> 2.7.4
+>=20
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+=
 
