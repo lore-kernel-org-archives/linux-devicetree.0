@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EADC3F68F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52779C2D0D1
 	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 12:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62F6320725
+	by mail.kernel.org (Postfix) with ESMTP id 318A62146E
 	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 12:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfLPMrs (ORCPT
+        id S1727727AbfLPMrs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Mon, 16 Dec 2019 07:47:48 -0500
-Received: from michel.telenet-ops.be ([195.130.137.88]:54846 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727739AbfLPMrs (ORCPT
+Received: from andre.telenet-ops.be ([195.130.132.53]:58742 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727667AbfLPMrs (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 07:47:48 -0500
 Received: from ramsan ([84.195.182.253])
-        by michel.telenet-ops.be with bizsmtp
-        id ecnj210015USYZQ06cnjWp; Mon, 16 Dec 2019 13:47:47 +0100
+        by andre.telenet-ops.be with bizsmtp
+        id ecnj210045USYZQ01cnjSx; Mon, 16 Dec 2019 13:47:45 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1igpmo-0004EO-U9; Mon, 16 Dec 2019 13:47:42 +0100
+        id 1igpmp-0004EX-0g; Mon, 16 Dec 2019 13:47:43 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1igpmo-0004LP-TI; Mon, 16 Dec 2019 13:47:42 +0100
+        id 1igpmo-0004LY-W0; Mon, 16 Dec 2019 13:47:42 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Magnus Damm <magnus.damm@gmail.com>
 Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
         linux-renesas-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 2/6] arm64: dts: renesas: r8a77961: Add GPIO nodes
-Date:   Mon, 16 Dec 2019 13:47:36 +0100
-Message-Id: <20191216124740.16647-3-geert+renesas@glider.be>
+Subject: [PATCH v2 5/6] arm64: dts: renesas: r8a77961: Add I2C nodes
+Date:   Mon, 16 Dec 2019 13:47:39 +0100
+Message-Id: <20191216124740.16647-6-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191216124740.16647-1-geert+renesas@glider.be>
 References: <20191216124740.16647-1-geert+renesas@glider.be>
@@ -46,156 +46,168 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device nodes for the GPIO controllers on the Renesas R-Car M3-W+
-(r8a77961) SoC.
+Add device nodes for the I2C and IIC Controllers on the Renesas R-Car
+M3-W+ (r8a77961) SoC, including DMA properties linking them to the DMA
+controllers.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v2:
   - No changes.
 
-Test procedure (with "arm64: dts: renesas: r8a77961: Add RAVB node"):
-  1. "ifconfig eth0 1.2.3.4",
-  2. "watch grep e6052000.gpio /proc/interrupts",
-  3. See interrupt count increase when Ethernet link goes up.
+Test procedure (MAX9611 ADC, BR24T01 EEPROM):
+  1. "grep . /sys/bus/iio/devices/iio:device[01]/in*",
+  2. "hd /sys/devices/platform/soc/e60b0000.i2c/i2c-?/?-0050/eeprom".
 ---
- arch/arm64/boot/dts/renesas/r8a77961.dtsi | 85 +++++++++++++++++++++--
- 1 file changed, 80 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a77961.dtsi | 117 +++++++++++++++++++++-
+ 1 file changed, 114 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a77961.dtsi b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
-index ea2c6445977f3d99..10e768ce2bc70e0c 100644
+index cd6cbf6a281f7c0f..77fbe0f508a50778 100644
 --- a/arch/arm64/boot/dts/renesas/r8a77961.dtsi
 +++ b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
-@@ -328,49 +328,124 @@
- 			status = "disabled";
+@@ -481,27 +481,138 @@
+ 			/* placeholder */
  		};
  
-+		gpio0: gpio@e6050000 {
-+			compatible = "renesas,gpio-r8a77961",
-+				     "renesas,rcar-gen3-gpio";
-+			reg = <0 0xe6050000 0 0x50>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 0 16>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 912>;
++		i2c0: i2c@e6500000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a77961",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe6500000 0 0x40>;
++			interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 931>;
 +			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 912>;
++			resets = <&cpg 931>;
++			dmas = <&dmac1 0x91>, <&dmac1 0x90>,
++			       <&dmac2 0x91>, <&dmac2 0x90>;
++			dma-names = "tx", "rx", "tx", "rx";
++			i2c-scl-internal-delay-ns = <110>;
++			status = "disabled";
 +		};
 +
-+		gpio1: gpio@e6051000 {
-+			compatible = "renesas,gpio-r8a77961",
-+				     "renesas,rcar-gen3-gpio";
-+			reg = <0 0xe6051000 0 0x50>;
-+			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 32 29>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 911>;
++		i2c1: i2c@e6508000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a77961",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe6508000 0 0x40>;
++			interrupts = <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 930>;
 +			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 911>;
++			resets = <&cpg 930>;
++			dmas = <&dmac1 0x93>, <&dmac1 0x92>,
++			       <&dmac2 0x93>, <&dmac2 0x92>;
++			dma-names = "tx", "rx", "tx", "rx";
++			i2c-scl-internal-delay-ns = <6>;
++			status = "disabled";
 +		};
 +
- 		gpio2: gpio@e6052000 {
-+			compatible = "renesas,gpio-r8a77961",
-+				     "renesas,rcar-gen3-gpio";
- 			reg = <0 0xe6052000 0 0x50>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
- 			#gpio-cells = <2>;
- 			gpio-controller;
-+			gpio-ranges = <&pfc 0 64 15>;
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
+ 		i2c2: i2c@e6510000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a77961",
++				     "renesas,rcar-gen3-i2c";
+ 			reg = <0 0xe6510000 0 0x40>;
 -			/* placeholder */
-+			clocks = <&cpg CPG_MOD 910>;
++			interrupts = <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 929>;
 +			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 910>;
- 		};
- 
- 		gpio3: gpio@e6053000 {
-+			compatible = "renesas,gpio-r8a77961",
-+				     "renesas,rcar-gen3-gpio";
- 			reg = <0 0xe6053000 0 0x50>;
-+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
- 			#gpio-cells = <2>;
- 			gpio-controller;
-+			gpio-ranges = <&pfc 0 96 16>;
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
--			/* placeholder */
-+			clocks = <&cpg CPG_MOD 909>;
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 909>;
- 		};
- 
- 		gpio4: gpio@e6054000 {
-+			compatible = "renesas,gpio-r8a77961",
-+				     "renesas,rcar-gen3-gpio";
- 			reg = <0 0xe6054000 0 0x50>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
- 			#gpio-cells = <2>;
- 			gpio-controller;
-+			gpio-ranges = <&pfc 0 128 18>;
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
--			/* placeholder */
-+			clocks = <&cpg CPG_MOD 908>;
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 908>;
- 		};
- 
- 		gpio5: gpio@e6055000 {
-+			compatible = "renesas,gpio-r8a77961",
-+				     "renesas,rcar-gen3-gpio";
- 			reg = <0 0xe6055000 0 0x50>;
-+			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
- 			#gpio-cells = <2>;
- 			gpio-controller;
-+			gpio-ranges = <&pfc 0 160 26>;
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
--			/* placeholder */
-+			clocks = <&cpg CPG_MOD 907>;
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 907>;
- 		};
- 
- 		gpio6: gpio@e6055400 {
-+			compatible = "renesas,gpio-r8a77961",
-+				     "renesas,rcar-gen3-gpio";
- 			reg = <0 0xe6055400 0 0x50>;
-+			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
- 			#gpio-cells = <2>;
- 			gpio-controller;
-+			gpio-ranges = <&pfc 0 192 32>;
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
--			/* placeholder */
-+			clocks = <&cpg CPG_MOD 906>;
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 906>;
++			resets = <&cpg 929>;
++			dmas = <&dmac1 0x95>, <&dmac1 0x94>,
++			       <&dmac2 0x95>, <&dmac2 0x94>;
++			dma-names = "tx", "rx", "tx", "rx";
++			i2c-scl-internal-delay-ns = <6>;
++			status = "disabled";
 +		};
 +
-+		gpio7: gpio@e6055800 {
-+			compatible = "renesas,gpio-r8a77961",
-+				     "renesas,rcar-gen3-gpio";
-+			reg = <0 0xe6055800 0 0x50>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 224 4>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 905>;
++		i2c3: i2c@e66d0000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a77961",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe66d0000 0 0x40>;
++			interrupts = <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 928>;
 +			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 905>;
++			resets = <&cpg 928>;
++			dmas = <&dmac0 0x97>, <&dmac0 0x96>;
++			dma-names = "tx", "rx";
++			i2c-scl-internal-delay-ns = <110>;
++			status = "disabled";
  		};
  
- 		pfc: pin-controller@e6060000 {
+ 		i2c4: i2c@e66d8000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a77961",
++				     "renesas,rcar-gen3-i2c";
+ 			reg = <0 0xe66d8000 0 0x40>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 927>;
++			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
++			resets = <&cpg 927>;
++			dmas = <&dmac0 0x99>, <&dmac0 0x98>;
++			dma-names = "tx", "rx";
++			i2c-scl-internal-delay-ns = <110>;
++			status = "disabled";
++		};
++
++		i2c5: i2c@e66e0000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a77961",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe66e0000 0 0x40>;
++			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 919>;
++			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
++			resets = <&cpg 919>;
++			dmas = <&dmac0 0x9b>, <&dmac0 0x9a>;
++			dma-names = "tx", "rx";
++			i2c-scl-internal-delay-ns = <110>;
++			status = "disabled";
++		};
++
++		i2c6: i2c@e66e8000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a77961",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe66e8000 0 0x40>;
++			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 918>;
++			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
++			resets = <&cpg 918>;
++			dmas = <&dmac0 0x9d>, <&dmac0 0x9c>;
++			dma-names = "tx", "rx";
++			i2c-scl-internal-delay-ns = <6>;
++			status = "disabled";
+ 		};
+ 
+ 		i2c_dvfs: i2c@e60b0000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			compatible = "renesas,iic-r8a77961",
++				     "renesas,rcar-gen3-iic",
++				     "renesas,rmobile-iic";
+ 			reg = <0 0xe60b0000 0 0x425>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 926>;
++			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
++			resets = <&cpg 926>;
++			dmas = <&dmac0 0x11>, <&dmac0 0x10>;
++			dma-names = "tx", "rx";
++			status = "disabled";
+ 		};
+ 
++
+ 		hscif1: serial@e6550000 {
+ 			reg = <0 0xe6550000 0 0x60>;
+ 			/* placeholder */
 -- 
 2.17.1
 
