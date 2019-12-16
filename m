@@ -2,55 +2,56 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE64C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 17:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8AAC2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 17:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3AC820700
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 17:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136E520717
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 17:47:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="IGnhB3L2"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="UzAut7oP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbfLPRrl (ORCPT
+        id S1726227AbfLPRrs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:47:41 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40485 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbfLPRrl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 12:47:41 -0500
-Received: by mail-pf1-f195.google.com with SMTP id q8so5971784pfh.7
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 09:47:40 -0800 (PST)
+        Mon, 16 Dec 2019 12:47:48 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42432 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbfLPRrq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 12:47:46 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 4so5964677pfz.9
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 09:47:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=23EgKnWEsl0Hd3XbTrDUtuEdXnQvPbAjdUpGkg0hfXw=;
-        b=IGnhB3L2ap3ulPumsoKZ4TVu/FXmghrIC8FwJJpv4Dfc3bbyxjUaFsLSYDCUhkyW4p
-         +xreDjgbdjUxX7sC1gFq9aTbQ106feVMgzzFTVc8tnhMRI6v14HsQKFIkyuf/GInQA/u
-         KccmCNYTo1rTVXvYurh1NY7uS4X8vgOpk+9rw=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hw5Av0omrpqDMS7vMjj661LVLxdnMyCAfz7uWvwVCL8=;
+        b=UzAut7oPZ6MwulRVGd8z4CDfcsQG18oSMOJeImKi0I4vNbCimNPWgWxR6T1cuHUrkn
+         QuhGtJyUnUuhh8/vFQAoC0pckg8wppSCIzyHSEO3UDa6otYVEjP5f+FFluCbxdOuQ3/r
+         QgQj8JMj+hVg+QKXCgElrEGcaf2ifPzofkon8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=23EgKnWEsl0Hd3XbTrDUtuEdXnQvPbAjdUpGkg0hfXw=;
-        b=oW/SAT/4IwFsiyaKSx7TLRn+ADsBauO4a0cSLWXXu3fRJwS4uCCm4BLPz4zNtsu2JC
-         g0GPz0qopL2vvs2O6SemaLbv5ZkbL3a3Otlx5fp2W7G+crua4PtGyarU05gn382vQtjy
-         cMEeG3o4MSu4hCzGZsPadB3lhZaj9+hIazt7G6lTdnJhnJZz2fHiHDPDfG8DO4AHSZGE
-         klSb7GEz20awb+i13DGZxTMv5DH16OyhBzaa4CJ6ow0/MB7x6j/LLK142NfdXooEXFss
-         wTt48qYGbW/aWH9rlCZK7GvLfS7YvZPGmz6gK73Ii0OQt/SsA4aMYzzag/c/Qjk7olkg
-         ubWQ==
-X-Gm-Message-State: APjAAAUPF9rP2zwHEomqu8pq+NLhPgHAJyOjAx8FgVGT+jkr+0IJ6qoK
-        X3vM15zBl2ibqYfXG2JLVQ5Z1w==
-X-Google-Smtp-Source: APXvYqyImG7BVxbhsOeBlgf/l2MpA9ppdirUWWsjIQfweo+/Xeo7ac2PoYXkrH8FYNr02BUC+wD+oA==
-X-Received: by 2002:a63:211f:: with SMTP id h31mr18905268pgh.299.1576518460259;
-        Mon, 16 Dec 2019 09:47:40 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hw5Av0omrpqDMS7vMjj661LVLxdnMyCAfz7uWvwVCL8=;
+        b=relF1VWTWS2RIRUezpthTODUPktZMwCEmHagT8ZQG1rzlUSbRLoLNBb8SrQvNnBp/J
+         V2eX5Lqm5X4P2n+fpABOAUohrtD/jCoeFFtNgY+iQL7wY/H+mt03WJsupwLlTGfUN0Xx
+         QH87JV5lBjv4SzFx2Etjh4J0EPXmKdc+FuC1dfnw88PUiCHe1H/Q80Lopu79S2UH1tM/
+         fQfl2/QsgGzb/xKLTz6URWhClRD3Dh1Yspnf3cXC7p8qc/gxV3Q7gP4j0tUDl4PHrZU3
+         +8qrDoVPq7D8+1+lmFDMfsBucEogH1By4dn1hT6bv4fTFKhHApfAfDnuomYIM6aKBhVO
+         0svg==
+X-Gm-Message-State: APjAAAWKJfN9vt0+YKBD4YBrTij/XVPTKr0nZ9HdhpYNb4WJ+oWEYR28
+        OsDJPQdEdY2/GYSDuooTfZHmjg==
+X-Google-Smtp-Source: APXvYqyXoQALeAM+zoIV40agZm7icWv+ejSDOE9brdNu2AiqwbmAeH5gOOEc/CZzDWaZYkhS1xv4Kg==
+X-Received: by 2002:a63:5f91:: with SMTP id t139mr19298242pgb.185.1576518465339;
+        Mon, 16 Dec 2019 09:47:45 -0800 (PST)
 Received: from localhost.localdomain ([2405:201:c809:c7d5:6d28:a89:f9e1:1506])
-        by smtp.gmail.com with ESMTPSA id a6sm22342924pgg.25.2019.12.16.09.47.35
+        by smtp.gmail.com with ESMTPSA id a6sm22342924pgg.25.2019.12.16.09.47.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 09:47:39 -0800 (PST)
+        Mon, 16 Dec 2019 09:47:44 -0800 (PST)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
@@ -60,10 +61,12 @@ Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v3 0/4] arm64: dts: rockchip: Add Rock Pi N10 support
-Date:   Mon, 16 Dec 2019 23:17:07 +0530
-Message-Id: <20191216174711.17856-1-jagan@amarulasolutions.com>
+Subject: [PATCH v3 1/4] dt-bindings: arm: rockchip: Add Rock Pi N10 binding
+Date:   Mon, 16 Dec 2019 23:17:08 +0530
+Message-Id: <20191216174711.17856-2-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+In-Reply-To: <20191216174711.17856-1-jagan@amarulasolutions.com>
+References: <20191216174711.17856-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -71,42 +74,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Unlike, other Rock PI boards from radxa, Rock Pi N10 SBC is based
-on SOM + Carrier board combination.
-
 Rock Pi N10 is a Rockchip RK3399Pro based SBC, which has
 - VMARC RK3399Pro SOM (as per SMARC standard) from Vamrs.
-- Dalang carrier board from Radxa.
+- Compatible carrier board from Radxa.
 
-patch 0001: dt-bindings for Rock Pi N10
+VMARC RK3399Pro SOM need to mount on top of dalang carrier
+board for making Rock PI N10 SBC.
 
-patch 0002: VMARC RK3399Pro SOM dtsi support
+Add dt-bindings for it.
 
-patch 0003: Radxa Dalang carrier board dtsi support
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v3:
+- Move som binding on board side
 
-patch 0004: Rock Pi N10 dts support
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Tested basic peripherals and will all more in future patches.
-
-Any inputs?
-Jagan.
-
-Jagan Teki (4):
-  dt-bindings: arm: rockchip: Add Rock Pi N10 binding
-  arm64: dts: rockchip: Add VMARC RK3399Pro SOM initial support
-  ARM: dts: rockchip: Add Radxa Dalang Carrier board
-  arm64: dts: rockchip: Add Radxa Rock Pi N10 initial support
-
- .../devicetree/bindings/arm/rockchip.yaml     |   6 +
- .../dts/rockchip-radxa-dalang-carrier.dtsi    |  81 +++++
- arch/arm64/boot/dts/rockchip/Makefile         |   1 +
- .../dts/rockchip/rk3399pro-rock-pi-n10.dts    |  17 +
- .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 333 ++++++++++++++++++
- 5 files changed, 438 insertions(+)
- create mode 100644 arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 45728fd22af8..c3eb32f1a9ee 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -423,6 +423,12 @@ properties:
+           - const: radxa,rockpi4
+           - const: rockchip,rk3399
+ 
++      - description: Radxa ROCK Pi N10
++        items:
++          - const: radxa,rockpi-n10
++          - const: vamrs,rk3399pro-vmarc-som
++          - const: rockchip,rk3399pro
++
+       - description: Radxa Rock2 Square
+         items:
+           - const: radxa,rock2-square
 -- 
 2.18.0.321.gffc6fa0e3
 
