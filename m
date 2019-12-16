@@ -2,147 +2,111 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E675C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A6DC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41827206A5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:42:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576503766;
-	bh=0v1JfGDc126fBItXKyc4ZIJSHxrFHERbL9A2i0S0nOw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wXzAZl4zAA5WSNERFfq2fP+0sK9s4377hMliwnwsSYw/lGaWVnwfBENlxQulhxRn6
-	 6baeHmPhWB1+ihsLeHQIjoJfYf1V7ixu2SIu+C2mXhd2g9P8Y8z2+a/rBquDGRfatN
-	 TGsT7jZ6OlTnq9kdu1xQ1OSYgADiVBIVxYQzBDbs=
+	by mail.kernel.org (Postfix) with ESMTP id 229BA20409
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:45:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbfLPNmp (ORCPT
+        id S1727917AbfLPNpb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:42:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48336 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 08:45:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:55834 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbfLPNmp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:42:45 -0500
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17008206A5;
-        Mon, 16 Dec 2019 13:42:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576503764;
-        bh=0v1JfGDc126fBItXKyc4ZIJSHxrFHERbL9A2i0S0nOw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ruVVJXDbduFLcwmSg679iQNeoDdg2lFWVI2v2BkPye/QTPMzJtCbNQkVk3HdtCzPL
-         vIiVV5+GGHi5bfDHgRz48mDmGjUs3RWbjuphkSYfuT5JxVD5AGMfaCaPQ6crSKK8AE
-         62YZgGLK9jZFrziJ90Rr9otNwUAt5e96ZzUklCbo=
-Received: by mail-wr1-f48.google.com with SMTP id c14so7319027wrn.7;
-        Mon, 16 Dec 2019 05:42:44 -0800 (PST)
-X-Gm-Message-State: APjAAAWsLxbqC14UVWQuMgu0FjBjhzC6g4pZQ71b46AkAqZWXv72Ct2J
-        XaTgpMVryadG39CbgowZSDxA7DoenaqKrFrk14k=
-X-Google-Smtp-Source: APXvYqxPODUBwPoRDFD7zdAeQAap8dbisfaU0qDmq581xzIb9kxHBDLrHbRDpofwtqywSNRWgqebLus37HOu3FGBw5s=
-X-Received: by 2002:a5d:6b88:: with SMTP id n8mr31556564wrx.288.1576503762492;
- Mon, 16 Dec 2019 05:42:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20191215165924.28314-1-wens@kernel.org> <20191215165924.28314-12-wens@kernel.org>
- <20191216133931.wliwn5woy3hstdg3@gilmour.lan>
-In-Reply-To: <20191216133931.wliwn5woy3hstdg3@gilmour.lan>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Mon, 16 Dec 2019 21:42:30 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64=p7RX_visHWawAFfPr8=ZDH4JqsoK__xnHKo6s3QOwg@mail.gmail.com>
-Message-ID: <CAGb2v64=p7RX_visHWawAFfPr8=ZDH4JqsoK__xnHKo6s3QOwg@mail.gmail.com>
-Subject: Re: [PATCH 11/14] ARM: dts: sun8i: r40: Add device node for CSI0
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        id S1727894AbfLPNpa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:45:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E22C11FB;
+        Mon, 16 Dec 2019 05:45:29 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5412F3F718;
+        Mon, 16 Dec 2019 05:45:29 -0800 (PST)
+Date:   Mon, 16 Dec 2019 13:45:27 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH 01/13] PCI: cadence: Remove stray "pm_runtime_put_sync()"
+ in error path
+Message-ID: <20191216134526.GW24359@e119886-lin.cambridge.arm.com>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-2-kishon@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209092147.22901-2-kishon@ti.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 9:39 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Mon, Dec 16, 2019 at 12:59:21AM +0800, Chen-Yu Tsai wrote:
-> > From: Chen-Yu Tsai <wens@csie.org>
-> >
-> > The CSI0 and CSI1 blocks are the same as found on the A20. However only
-> > CSI0 is supported upstream right now.
-> >
-> > Add a device node for CSI0 using the A20 compatible as a fallback, and
-> > the standard pinctrl options. Also add the MBUS interconnect.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > ---
-> >  arch/arm/boot/dts/sun8i-r40.dtsi | 36 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 36 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-> > index 82ea0b5b0710..2d1e97cc4155 100644
-> > --- a/arch/arm/boot/dts/sun8i-r40.dtsi
-> > +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-> > @@ -180,6 +180,20 @@ nmi_intc: interrupt-controller@1c00030 {
-> >                       interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-> >               };
-> >
-> > +             csi0: csi@1c09000 {
-> > +                     compatible = "allwinner,sun8i-r40-csi0",
-> > +                                  "allwinner,sun7i-a20-csi0";
-> > +                     reg = <0x01c09000 0x1000>;
-> > +                     interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> > +                     clocks = <&ccu CLK_BUS_CSI0>, <&ccu CLK_CSI_SCLK>,
-> > +                              <&ccu CLK_DRAM_CSI0>;
-> > +                     clock-names = "bus", "isp", "ram";
-> > +                     resets = <&ccu RST_BUS_CSI0>;
-> > +                     interconnects = <&mbus 5>;
-> > +                     interconnect-names = "dma-mem";
-> > +                     status = "disabled";
-> > +             };
-> > +
-> >               mmc0: mmc@1c0f000 {
-> >                       compatible = "allwinner,sun8i-r40-mmc",
-> >                                    "allwinner,sun50i-a64-mmc";
-> > @@ -355,6 +369,20 @@ clk_out_a_pin: clk-out-a-pin {
-> >                               function = "clk_out_a";
-> >                       };
-> >
-> > +                     /omit-if-no-ref/
-> > +                     csi0_8bits_pins: csi0-8bits-pins {
-> > +                             pins = "PE0", "PE2", "PE3", "PE4", "PE5",
-> > +                                    "PE6", "PE7", "PE8", "PE9", "PE10",
-> > +                                    "PE11";
-> > +                             function = "csi0";
-> > +                     };
-> > +
-> > +                     /omit-if-no-ref/
-> > +                     csi0_mclk_pin: csi0-mclk-pin {
-> > +                             pins = "PE1";
-> > +                             function = "csi0";
-> > +                     };
-> > +
-> >                       gmac_rgmii_pins: gmac-rgmii-pins {
-> >                               pins = "PA0", "PA1", "PA2", "PA3",
-> >                                      "PA4", "PA5", "PA6", "PA7",
-> > @@ -624,6 +652,14 @@ gmac_mdio: mdio {
-> >                       };
-> >               };
-> >
-> > +             mbus: dram-controller@1c62000 {
-> > +                     compatible = "allwinner,sun8i-r40-mbus";
-> > +                     reg = <0x01c62000 0x1000>;
-> > +                     clocks = <&ccu 155>;
->
-> We should export the clock too?
+On Mon, Dec 09, 2019 at 02:51:35PM +0530, Kishon Vijay Abraham I wrote:
+> commit bd22885aa188f135fd9 ("PCI: cadence: Refactor driver to use
+> as a core library") while refactoring the Cadence PCIe driver to be
+> used as library, removed pm_runtime_get_sync() from cdns_pcie_ep_setup()
+> and cdns_pcie_host_setup() but missed to remove the corresponding
+> pm_runtime_put_sync() in the error path. Fix it here.
+> 
+> Fixes: commit bd22885aa188f135fd9 ("PCI: cadence: Refactor driver to use
 
-I meant to do it separately. Haven't gotten to it though.
+As this is a fix, a commit subject starting with PCI: cadence: Fix ... may
+be more obvious.
 
-ChenYu
+I'd suggest you use the shorter form of this, i.e. Fixes: %h (\"%s\"))
+
+Fixes: bd22885aa188 ("PCI: cadence: Refactor driver to use as a core library")
+
+> as a core library")
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c   | 2 --
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 2 --
+>  2 files changed, 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index 1c173dad67d1..560f22b4d165 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -473,7 +473,5 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+>  	pci_epc_mem_exit(epc);
+>  
+>   err_init:
+> -	pm_runtime_put_sync(dev);
+> -
+>  	return ret;
+>  }
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 9b1c3966414b..ccf55e143e1d 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -275,7 +275,5 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	pci_free_resource_list(&resources);
+>  
+>   err_init:
+> -	pm_runtime_put_sync(dev);
+> -
+
+There is probably more you can do here for both -host and -ep:
+
+ - Remove the possibly now unused <linux/pm_runtime.h> include
+ - Remove the err_init label and return directly from source.
+
+Thanks,
+
+Andrew Murray
+
+>  	return ret;
+>  }
+> -- 
+> 2.17.1
+> 
