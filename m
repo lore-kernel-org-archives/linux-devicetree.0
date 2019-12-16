@@ -1,101 +1,69 @@
-Return-Path: <SRS0=1FHL=2F=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E773C43603
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 23:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6DCC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 00:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3B52467F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Dec 2019 23:33:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="VTbj5pMF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gMw2MLwR"
+	by mail.kernel.org (Postfix) with ESMTP id 68D3F24685
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 00:32:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfLOXdV (ORCPT
+        id S1726487AbfLPAcY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Dec 2019 18:33:21 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:35323 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726299AbfLOXdV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Dec 2019 18:33:21 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id E2EF822348;
-        Sun, 15 Dec 2019 18:33:19 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 15 Dec 2019 18:33:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=lzvbMSFkVBR+nAocAB/eyxxphB8B1S4
-        O1CMOCvIRkYg=; b=VTbj5pMFSVZMVT7DLLhNqZee/qfUdpnNDdx36+SC/dzZoul
-        i6gJqNcdAXdAD7yXYiMZxGQ90NOYdWI+2m1rqljGkGtNtXAvtxTlgw5wIbG9f9sq
-        XbS47Q53S0MIvRphJfNoVpVBG6iaR5/MA1C5JPyK1+6Di/BBMxSBg7ObycblOvH7
-        /cwaSIp0lw33SYMBhyU1gDM+xnBaSA/0+PM8uimxpV0uVnPPfBPDX3eTAwcTd7ig
-        E8jRLPAVr/aEp+g/nUsfbkrc9ktVmU5I+gM2oarsRqus72w1YfZJ80xz8xWA5YiI
-        EDoLx1IKzrCzEAWrQUFkM0pgrVQcTyT1w9ZfLog==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=lzvbMS
-        FkVBR+nAocAB/eyxxphB8B1S4O1CMOCvIRkYg=; b=gMw2MLwRV8HiPZPynrJvdp
-        QFfd/wzjfxOiBSkUWVsAOcI739DKAuCe3x3dqIgCHRIgc8Q9ZM/7UxOzsykIN6uB
-        utST9rch5vnvj9BApLN7Ysy1AfSTh32mb25RBNeYwZFcm1lqZz6rLbzuJ48kHTnX
-        18zw5NNymXzMLFJJQxtydvu5wdd4qL6gGEI8mAaaP9+Jh23qSHcrBWe49Nz80kdP
-        5LHVdqwqr42uVnJquUplkZIzjIh95y43kvvoeRAGaiSqRitmSN5Ftf1/l1D/GGa1
-        n4BSk91Kk8d1JPdkkzwJffc2WMBqTa1U3rlZswIwshnYB8ZcXToByiIGhEPPISvQ
-        ==
-X-ME-Sender: <xms:vsL2XeKfNhmf3dE2gzpbzSs86ap6GIT2CTE7EPK6YQnAElmTyqdjZQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtgedgudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:vsL2XQFldtGw-XBJ4xn4Sr5zMs6iCzbRlpQm8X6rp4tuqn3GhBl4VA>
-    <xmx:vsL2XQnx8qCojcex_yzhvksBdgoI8_Oc_QIClvjdvJZucVCPsybWXw>
-    <xmx:vsL2Xe01UqS1qt5wLIomDWeSscJlJ1dcSYXP7sFVH6wmLv1McK_Svg>
-    <xmx:v8L2XS1LxoMGXcASWDNuCFtSobL8cOMOIezDEfUBHtK3xKa7FlhVfA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id AE86EE00A2; Sun, 15 Dec 2019 18:33:18 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-680-g58d4e90-fmstable-20191213v1
-Mime-Version: 1.0
-Message-Id: <8017a61e-e579-41ea-816a-4a76a6dc41e9@www.fastmail.com>
-In-Reply-To: <20191213135131.GA1822@cnn>
-References: <20191213135131.GA1822@cnn>
-Date:   Mon, 16 Dec 2019 10:05:02 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     manikandan-e <manikandan.hcl.ers.epl@gmail.com>,
-        "Joel Stanley" <joel@jms.id.au>
-Cc:     "Sai Dasari" <sdasari@fb.com>, "Vijay Khemka" <vijaykhemka@fb.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, manikandan.e@hcl.com,
-        openbmc@lists.ozlabs.org
-Subject: Re: [PATCH v5] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Content-Type: text/plain
+        Sun, 15 Dec 2019 19:32:24 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:50710 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726478AbfLPAcY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Dec 2019 19:32:24 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.fritz.box)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1igeJ6-0004oF-CU; Mon, 16 Dec 2019 01:32:16 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     dri-devel@lists.freedesktop.org
+Cc:     thierry.reding@gmail.com, sam@ravnborg.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, heiko@sntech.de,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH v2 1/3] dt-bindings: Add vendor prefix for Xinpeng Technology
+Date:   Mon, 16 Dec 2019 01:32:04 +0100
+Message-Id: <20191216003206.6672-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 14 Dec 2019, at 00:21, Manikandan Elumalai wrote:
-> The Yosemite V2 is a facebook multi-node server
-> platform that host four OCP server. The BMC
-> in the Yosemite V2 platform based on AST2500 SoC.
-> 
-> This patch adds linux device tree entry related to
-> Yosemite V2 specific devices connected to BMC SoC.
-> 
-> Signed-off-by : Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> Acked-by        : Andrew Jeffery <andrew@aj.id.au>
-> Reviewed-by  : Vijay Khemka <vkhemka@fb.com>
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-In the future, don't worry about aligning parts of the tag text. Single space is
-the custom (and is less effort!)
+Shenzhen Xinpeng Technology Co., Ltd produces for example display panels.
 
-Andrew
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 6046f4555852..85e7c26a05c7 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1056,6 +1056,8 @@ patternProperties:
+     description: Extreme Engineering Solutions (X-ES)
+   "^xillybus,.*":
+     description: Xillybus Ltd.
++  "^xinpeng,.*":
++    description: Shenzhen Xinpeng Technology Co., Ltd
+   "^xlnx,.*":
+     description: Xilinx
+   "^xunlong,.*":
+-- 
+2.24.0
+
