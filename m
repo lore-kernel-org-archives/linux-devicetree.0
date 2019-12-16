@@ -2,212 +2,87 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52779C2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 12:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4641FC2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 12:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 318A62146E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 12:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12CC020725
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 12:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbfLPMrs (ORCPT
+        id S1727716AbfLPMrt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:47:48 -0500
-Received: from andre.telenet-ops.be ([195.130.132.53]:58742 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbfLPMrs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 07:47:48 -0500
+        Mon, 16 Dec 2019 07:47:49 -0500
+Received: from michel.telenet-ops.be ([195.130.137.88]:54834 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727605AbfLPMrt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 07:47:49 -0500
 Received: from ramsan ([84.195.182.253])
-        by andre.telenet-ops.be with bizsmtp
-        id ecnj210045USYZQ01cnjSx; Mon, 16 Dec 2019 13:47:45 +0100
+        by michel.telenet-ops.be with bizsmtp
+        id ecnh2100r5USYZQ06cnhWU; Mon, 16 Dec 2019 13:47:47 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1igpmp-0004EX-0g; Mon, 16 Dec 2019 13:47:43 +0100
+        id 1igpmn-0004EJ-MJ; Mon, 16 Dec 2019 13:47:41 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1igpmo-0004LY-W0; Mon, 16 Dec 2019 13:47:42 +0100
+        id 1igpmn-0004LK-KM; Mon, 16 Dec 2019 13:47:41 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Magnus Damm <magnus.damm@gmail.com>
 Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
         linux-renesas-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 5/6] arm64: dts: renesas: r8a77961: Add I2C nodes
-Date:   Mon, 16 Dec 2019 13:47:39 +0100
-Message-Id: <20191216124740.16647-6-geert+renesas@glider.be>
+Subject: [PATCH v2 0/6] arm64: dts: renesas: r8a77961: Add more device nodes
+Date:   Mon, 16 Dec 2019 13:47:34 +0100
+Message-Id: <20191216124740.16647-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191216124740.16647-1-geert+renesas@glider.be>
-References: <20191216124740.16647-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device nodes for the I2C and IIC Controllers on the Renesas R-Car
-M3-W+ (r8a77961) SoC, including DMA properties linking them to the DMA
-controllers.
+	Hi all,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - No changes.
+This patch series broadens support for the R-Car M3-W+ (aka R-Car M3-W
+ES3.0) Soc (R8A77961), by adding more device nodes to its DT source
+file, up to what can be tested reasonably using remote access.
+For your convenience, it is available in the topic/r8a77961-v2 branch of
+my renesas-drivers git repository at
+git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
 
-Test procedure (MAX9611 ADC, BR24T01 EEPROM):
-  1. "grep . /sys/bus/iio/devices/iio:device[01]/in*",
-  2. "hd /sys/devices/platform/soc/e60b0000.i2c/i2c-?/?-0050/eeprom".
----
- arch/arm64/boot/dts/renesas/r8a77961.dtsi | 117 +++++++++++++++++++++-
- 1 file changed, 114 insertions(+), 3 deletions(-)
+Changes compared to v1:
+  - Group SYS-DMAC interrupt specifiers.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77961.dtsi b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
-index cd6cbf6a281f7c0f..77fbe0f508a50778 100644
---- a/arch/arm64/boot/dts/renesas/r8a77961.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
-@@ -481,27 +481,138 @@
- 			/* placeholder */
- 		};
- 
-+		i2c0: i2c@e6500000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,i2c-r8a77961",
-+				     "renesas,rcar-gen3-i2c";
-+			reg = <0 0xe6500000 0 0x40>;
-+			interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 931>;
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 931>;
-+			dmas = <&dmac1 0x91>, <&dmac1 0x90>,
-+			       <&dmac2 0x91>, <&dmac2 0x90>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			i2c-scl-internal-delay-ns = <110>;
-+			status = "disabled";
-+		};
-+
-+		i2c1: i2c@e6508000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,i2c-r8a77961",
-+				     "renesas,rcar-gen3-i2c";
-+			reg = <0 0xe6508000 0 0x40>;
-+			interrupts = <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 930>;
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 930>;
-+			dmas = <&dmac1 0x93>, <&dmac1 0x92>,
-+			       <&dmac2 0x93>, <&dmac2 0x92>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			i2c-scl-internal-delay-ns = <6>;
-+			status = "disabled";
-+		};
-+
- 		i2c2: i2c@e6510000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			compatible = "renesas,i2c-r8a77961",
-+				     "renesas,rcar-gen3-i2c";
- 			reg = <0 0xe6510000 0 0x40>;
--			/* placeholder */
-+			interrupts = <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 929>;
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 929>;
-+			dmas = <&dmac1 0x95>, <&dmac1 0x94>,
-+			       <&dmac2 0x95>, <&dmac2 0x94>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			i2c-scl-internal-delay-ns = <6>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@e66d0000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,i2c-r8a77961",
-+				     "renesas,rcar-gen3-i2c";
-+			reg = <0 0xe66d0000 0 0x40>;
-+			interrupts = <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 928>;
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 928>;
-+			dmas = <&dmac0 0x97>, <&dmac0 0x96>;
-+			dma-names = "tx", "rx";
-+			i2c-scl-internal-delay-ns = <110>;
-+			status = "disabled";
- 		};
- 
- 		i2c4: i2c@e66d8000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			compatible = "renesas,i2c-r8a77961",
-+				     "renesas,rcar-gen3-i2c";
- 			reg = <0 0xe66d8000 0 0x40>;
--			/* placeholder */
-+			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 927>;
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 927>;
-+			dmas = <&dmac0 0x99>, <&dmac0 0x98>;
-+			dma-names = "tx", "rx";
-+			i2c-scl-internal-delay-ns = <110>;
-+			status = "disabled";
-+		};
-+
-+		i2c5: i2c@e66e0000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,i2c-r8a77961",
-+				     "renesas,rcar-gen3-i2c";
-+			reg = <0 0xe66e0000 0 0x40>;
-+			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 919>;
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 919>;
-+			dmas = <&dmac0 0x9b>, <&dmac0 0x9a>;
-+			dma-names = "tx", "rx";
-+			i2c-scl-internal-delay-ns = <110>;
-+			status = "disabled";
-+		};
-+
-+		i2c6: i2c@e66e8000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,i2c-r8a77961",
-+				     "renesas,rcar-gen3-i2c";
-+			reg = <0 0xe66e8000 0 0x40>;
-+			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 918>;
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 918>;
-+			dmas = <&dmac0 0x9d>, <&dmac0 0x9c>;
-+			dma-names = "tx", "rx";
-+			i2c-scl-internal-delay-ns = <6>;
-+			status = "disabled";
- 		};
- 
- 		i2c_dvfs: i2c@e60b0000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			compatible = "renesas,iic-r8a77961",
-+				     "renesas,rcar-gen3-iic",
-+				     "renesas,rmobile-iic";
- 			reg = <0 0xe60b0000 0 0x425>;
--			/* placeholder */
-+			interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 926>;
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 926>;
-+			dmas = <&dmac0 0x11>, <&dmac0 0x10>;
-+			dma-names = "tx", "rx";
-+			status = "disabled";
- 		};
- 
-+
- 		hscif1: serial@e6550000 {
- 			reg = <0 0xe6550000 0 0x60>;
- 			/* placeholder */
+This has been tested on a Salvator-XS development board.
+More details can be found in the individual patches.
+
+To be queued in renesas-devel for v5.6.
+Thanks!
+
+Geert Uytterhoeven (6):
+  arm64: dts: renesas: r8a77961: Add RWDT node
+  arm64: dts: renesas: r8a77961: Add GPIO nodes
+  arm64: dts: renesas: r8a77961: Add RAVB node
+  arm64: dts: renesas: r8a77961: Add SYS-DMAC nodes
+  arm64: dts: renesas: r8a77961: Add I2C nodes
+  arm64: dts: renesas: r8a77961: Add SDHI nodes
+
+ arch/arm64/boot/dts/renesas/r8a77961.dtsi | 390 +++++++++++++++++++++-
+ 1 file changed, 377 insertions(+), 13 deletions(-)
+
 -- 
 2.17.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
