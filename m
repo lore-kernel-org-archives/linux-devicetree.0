@@ -2,46 +2,47 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9581C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4FBC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B525C206CB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A23EB20725
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iRmdKUmm"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lNymz8Qi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfLPLzv (ORCPT
+        id S1727501AbfLPLz4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:55:51 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:48288 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727351AbfLPLzv (ORCPT
+        Mon, 16 Dec 2019 06:55:56 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:42656 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727480AbfLPLzz (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:55:51 -0500
+        Mon, 16 Dec 2019 06:55:55 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576497350; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=au8vO3KMuxrkifh9G1Cd6WwOUM8vQ2UbFX6nSLazp8w=; b=iRmdKUmmfxRAnvm0nMF0OFHewuawYAOtTlCMlDXVHkaKsou7OS3v+s1fh62tHYWHfkxY2ThQ
- EA7l7zqKZDwpoCWZ+TrkdPHUGZgAboHvbYUXQm/Rwn4o6DX0eQvmRPsBJ02OH/P9T5TWa1FQ
- Mf9o9ykYxpRXRnKe9O1ie0Aw3NA=
-X-Mailgun-Sending-Ip: 104.130.122.25
+ s=smtp; t=1576497354; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=DxtWNO9bQTd8ysz9d48B5NN4eyzBXe6e6GV1muQQduQ=; b=lNymz8Qi1K+Gvby5lNbJy7Pg4u+IAyF8/uWnnQSSCDU9UxRG/Y3YpNrsbK2UTQh3kLzg3wd4
+ a15Qna3hPPHZdiiL6BlCFBiPnw1Vxez5VRHmXhoFHxER0S1TVL+FAezqHmrpsernIMyGinJ+
+ nnniuZP+ZK+1U+cxwAikxxHNLCk=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df770c2.7fac525fe5e0-smtp-out-n01;
- Mon, 16 Dec 2019 11:55:46 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5df770ca.7f2257d34ea0-smtp-out-n02;
+ Mon, 16 Dec 2019 11:55:54 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 69F4DC433CB; Mon, 16 Dec 2019 11:55:46 +0000 (UTC)
+        id 2883DC433A2; Mon, 16 Dec 2019 11:55:54 +0000 (UTC)
 Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D6E1BC433CB;
-        Mon, 16 Dec 2019 11:55:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D6E1BC433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 47FB6C433A2;
+        Mon, 16 Dec 2019 11:55:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 47FB6C433A2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
 From:   Sibi Sankar <sibis@codeaurora.org>
@@ -51,10 +52,12 @@ Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org,
         Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 0/2] Add RPMH power-domain node for SC7180 SoCs
-Date:   Mon, 16 Dec 2019 17:25:29 +0530
-Message-Id: <20191216115531.17573-1-sibis@codeaurora.org>
+Subject: [PATCH 2/2] arm64: dts: qcom: sc7180: Add rpmh power-domain node
+Date:   Mon, 16 Dec 2019 17:25:31 +0530
+Message-Id: <20191216115531.17573-3-sibis@codeaurora.org>
 X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20191216115531.17573-1-sibis@codeaurora.org>
+References: <20191216115531.17573-1-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -62,20 +65,86 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch series converts the RPMH/RPM power-domain bindings to yaml and
-adds the RPMH power-domain device node for SC7180 SoCs.
+Add the DT node for the rpmhpd power controller on SC7180 SoCs.
 
-Sibi Sankar (2):
-  dt-bindings: power: rpmpd: Convert rpmpd bindings to yaml
-  arm64: dts: qcom: sc7180: Add rpmh power-domain node
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 55 ++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
- .../devicetree/bindings/power/qcom,rpmpd.txt  | 150 ----------------
- .../devicetree/bindings/power/qcom,rpmpd.yaml | 170 ++++++++++++++++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi          |  55 ++++++
- 3 files changed, 225 insertions(+), 150 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
- create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 01bbb58ae5160..fb17dc62d7ab1 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/phy/phy-qcom-qusb2.h>
++#include <dt-bindings/power/qcom-rpmpd.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+ 
+ / {
+@@ -1284,6 +1285,60 @@
+ 				clock-names = "xo";
+ 				#clock-cells = <1>;
+ 			};
++
++			rpmhpd: power-controller {
++				compatible = "qcom,sc7180-rpmhpd";
++				#power-domain-cells = <1>;
++				operating-points-v2 = <&rpmhpd_opp_table>;
++
++				rpmhpd_opp_table: opp-table {
++					compatible = "operating-points-v2";
++
++					rpmhpd_opp_ret: opp1 {
++						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
++					};
++
++					rpmhpd_opp_min_svs: opp2 {
++						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
++					};
++
++					rpmhpd_opp_low_svs: opp3 {
++						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
++					};
++
++					rpmhpd_opp_svs: opp4 {
++						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
++					};
++
++					rpmhpd_opp_svs_l1: opp5 {
++						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
++					};
++
++					rpmhpd_opp_svs_l2: opp6 {
++						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
++					};
++
++					rpmhpd_opp_nom: opp7 {
++						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
++					};
++
++					rpmhpd_opp_nom_l1: opp8 {
++						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
++					};
++
++					rpmhpd_opp_nom_l2: opp9 {
++						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
++					};
++
++					rpmhpd_opp_turbo: opp10 {
++						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
++					};
++
++					rpmhpd_opp_turbo_l1: opp11 {
++						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
++					};
++				};
++			};
+ 		};
+ 
+ 		cpufreq_hw: cpufreq@18323000 {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
