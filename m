@@ -2,126 +2,155 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDE9C2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F204C47409
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88822082E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="dZKk5Aqv"
+	by mail.kernel.org (Postfix) with ESMTP id DB4472082E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576522134;
+	bh=yjiQnM+DiLOl9/dLE+ps0ETJFM9psMggkN5gVCSGycY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kmA2DINE29ncZZMikg7gWyphWNDChWaia5dXXA9pb8Ba6DwfUMZoOMM3cLuM6SS5h
+	 Li+QmjweKwFuj1T3+CEm1xN1gA2LSkcpR9KeQHvk7AD2GjPl3M6ASaYEnpMqcAcfqa
+	 c/SBMXcCj/fr7zxqEpFcs4Dn3UkB+3c37RGXlyJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbfLPSrd (ORCPT
+        id S1727830AbfLPRxx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:47:33 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39503 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbfLPSra (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 13:47:30 -0500
-Received: by mail-lj1-f194.google.com with SMTP id e10so7941604ljj.6
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 10:47:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZzVqpm7vISxN2XVUCXGY2m/2XgAiTT0hZi9cW/dInYQ=;
-        b=dZKk5AqvtPHFii8jZi+8J/lePw5/aQn7GaI4xJEsfiKeEXKxrjqY7SsMgUzuGBuAnJ
-         lhHmUXQNOUmAKADBgGGctmtIDE3s/1+6pcASqF2hFgTu8mD30bn9yMBCo9ZTLNOxljHx
-         QYDm+2L84AhvHNfnxjn+ViFTqrOeIfMOVPu7Prn88zScJX9hR2BR2hWtwKdwQrdLAV2Q
-         eMvufEfsfkYQJhyt6Ah6X7ItvTdP8KnIZaJQ0bHcOQ1ywCsoMJ4rdxsO8mFO1zOkOPES
-         nuI7/rn3Hlv7CyP/TU81LEOUpC8Pqo6udw7BvliaHjOa/FSQLmOs+87UyF19Vsk+bk65
-         Mi/g==
+        Mon, 16 Dec 2019 12:53:53 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41206 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727825AbfLPRxu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 12:53:50 -0500
+Received: by mail-ot1-f68.google.com with SMTP id r27so10123833otc.8;
+        Mon, 16 Dec 2019 09:53:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ZzVqpm7vISxN2XVUCXGY2m/2XgAiTT0hZi9cW/dInYQ=;
-        b=oCmJPxH0U5j37/Zd0DyMSJHTboluTMZV9wGF0xWTeZt8vETOfvNNcXP+4qsdQSOQht
-         I7lcj0FvzeR0rHZkoNKKMEChAU9wk5bLXKj3p4+5fLM1mNJYRz6Z7pJO7Il+iAVtQ3fl
-         BnpSjynbJ+rWLB+vs4wCvPb8dJ2/D5sQ/X2ZOigh5Kkcv0NYC/xFkwzt4ciKVtGJTCv2
-         LsBj7aZ7dFlxQglBkYR+VBvL77+qzjmaE3TOWNfhWsu5ZK3RjIpWUr8SD+3NP/LD7aex
-         2FtXC3JdRswlZromaelJcGd7O/E2ymugL2nbmTNGRqpE9g0XFo2pgu0YDkmPwq/XI1NX
-         ye8g==
-X-Gm-Message-State: APjAAAW6Mh4yD5wNIXOJm+YDQx5fIHb1OtoU9VfmVOSJXx4BkgZghwvS
-        zLdf7df3O7akGz6ZVsgU9+5VwA==
-X-Google-Smtp-Source: APXvYqwA7Ysm4UNtu9E+akNwfRxfaN3bIefRHQCWigpiGZVf0Q7o0UssOPcmwHdK6c+oVuOA9w9V3Q==
-X-Received: by 2002:a2e:3a12:: with SMTP id h18mr379963lja.81.1576522049068;
-        Mon, 16 Dec 2019 10:47:29 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:48df:e424:ff05:dd96:8970:d4c9])
-        by smtp.gmail.com with ESMTPSA id g27sm9427223lfj.49.2019.12.16.10.47.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Dec 2019 10:47:28 -0800 (PST)
-Subject: Re: [PATCH v2 1/6] spi: Add SPIBSC driver
-To:     Chris Brandt <Chris.Brandt@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <20191206134202.18784-2-chris.brandt@renesas.com>
- <37c13497-d20f-583f-72d7-1e3c8a241990@cogentembedded.com>
- <TYXPR01MB1568ED4D40CEC399E64F6A2B8A550@TYXPR01MB1568.jpnprd01.prod.outlook.com>
- <7386b38f-2f52-39cb-3887-e97b024ec563@cogentembedded.com>
- <2e3211c6-59e8-3057-66a2-29b89a353b8a@cogentembedded.com>
- <TY1PR01MB1562F30F0B58465A6988F29C8A540@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <a9b051ac-da70-37bb-bb82-540f0f161b25@cogentembedded.com>
-Date:   Mon, 16 Dec 2019 21:47:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aBXY62WKg7TVrV/PrvfxtQolVM/NjuBDVHTt/R6DLuE=;
+        b=UgHxp/5nS1XO/xpYRPc8yH795Td/Hb0q1sdMrfCiQD2pONJNXoxOFeTKNAX1Ome5za
+         9fNsbsHK1TI04xhedLMhBFHGsfchft/k2a684a74LEb/nsf62r/yRCew6p3BHoFTg7Ee
+         7uKUJBnml+pYd3pouslQzwgaV4Lc6Uwp/5xvSKd9Cr5GFUgHGTnHpac4/GORRvRe1TKK
+         +25CkaVnuoowu2/uygN7j8wBoU4SDBIYV5ksjH1KTW/naNwlocIufZ5W8yp9TOMgDT3j
+         mNrc7lkpoG5+EF0i8Q+EnQL43S7NuTWp34ojTcl3aaMLtYx6wu2rnUXbEie8dXQ/+9wA
+         W88A==
+X-Gm-Message-State: APjAAAXnauYDfYbn+kE+3TBT+JsENo+xGSylvx/H3OmEn4EP0t9YIB0C
+        GN+F+/KbExDqtGjbkIX+KA==
+X-Google-Smtp-Source: APXvYqyvQQhFHfBUrNhwpcX+S7tO+0IFqa6VhHfOEkR78UZtjxvAtAexqLGRaE8IhXrJrj6Fbo87yg==
+X-Received: by 2002:a9d:65cf:: with SMTP id z15mr34322760oth.238.1576518829512;
+        Mon, 16 Dec 2019 09:53:49 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r10sm6964864otn.37.2019.12.16.09.53.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 09:53:49 -0800 (PST)
+Date:   Mon, 16 Dec 2019 11:53:48 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        peter.harliman.liem@intel.com
+Subject: Re: [PATCH v9 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
+ for LGM eMMC PHY
+Message-ID: <20191216175348.GA18405@bogus>
+References: <20191216034838.21875-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20191216034838.21875-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <TY1PR01MB1562F30F0B58465A6988F29C8A540@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216034838.21875-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/13/2019 11:43 PM, Chris Brandt wrote:
-
->>    The patch isn't applicable as well, and the behaviour is the same as in
->> 5.2.-rc6 based
->> kernel --deleted file is back after remounting, sync or not...
+On Mon, Dec 16, 2019 at 11:48:37AM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > 
-> Do the basic R/W operations works?
+> Add a YAML schema to use the host controller driver with the
+> eMMC PHY on Intel's Lightning Mountain SoC.
 > 
-> Here is the first test I do on my platforms. After I passed this, everything
-> else seems to worked pretty good (writing large files).
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> ---
+>  .../bindings/phy/intel,lgm-emmc-phy.yaml           | 58 ++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
 > 
-> $ flash_eraseall -j /dev/mtd4
-> $ mount -t jffs2 /dev/mtdblock4 /mnt
-> $ echo "hello" > /mnt/hello.txt
-> $ sync
+> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+> new file mode 100644
+> index 000000000000..a7d4224b2001
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+> @@ -0,0 +1,58 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
+> +
+> +maintainers:
+> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> +
+> +description: |+
+> +  Bindings for eMMC PHY on Intel's Lightning Mountain SoC, syscon
+> +  node is used to reference the base address of eMMC phy registers.
+> +
+> +  The eMMC PHY node should be the child of a syscon node with the
+> +  required property:
+> +
+> +  - compatible:         Should be one of the following:
+> +                        "intel,lgm-syscon", "syscon"
+> +  - reg:
+> +      maxItems: 1
+> +
+> +properties:
+> +  compatible:
+> +      const: intel,lgm-emmc-phy
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +required:
+> +  - "#phy-cells"
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
 
-   This works but the created file doesn't survive a remount.
- 
-> If the Flash was recognized at boot, then we know that the ID command (0x9F)
-> at least worked. Meaning read commands were at least working (which is the
-> difficult one for this HW...writing is easier)
+Need to drop clock-names here too and in the example.
 
-   BTW, during boot I'm seeing with thsi driver:
-
-spi spi0.0: setup: ignoring unsupported mode bits 800                           
-spi-nor spi0.0: Failed to parse optional parameter table: ff81                  
-
-   (The 2nd message is also seen with my drivers).
-
-> Chris
-
-MBR, Sergei
+> +
+> +examples:
+> +  - |
+> +    sysconf: chiptop@e0200000 {
+> +      compatible = "intel,lgm-syscon", "syscon";
+> +      reg = <0xe0200000 0x100>;
+> +
+> +      emmc-phy: emmc-phy@a8 {
+> +        compatible = "intel,lgm-emmc-phy";
+> +        reg = <0x00a8 0x10>;
+> +        clocks = <&emmc>;
+> +        clock-names = "emmcclk";
+> +        #phy-cells = <0>;
+> +      };
+> +    };
+> +...
+> -- 
+> 2.11.0
+> 
