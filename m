@@ -2,105 +2,94 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE2AC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9D0C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A09CD206CB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:15:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLf3wLEt"
+	by mail.kernel.org (Postfix) with ESMTP id AA5A82072B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:18:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfLPLPu (ORCPT
+        id S1727412AbfLPLS1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:15:50 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:36732 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbfLPLPt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 06:15:49 -0500
-Received: by mail-yw1-f67.google.com with SMTP id n184so2320506ywc.3;
-        Mon, 16 Dec 2019 03:15:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AUR5yQ/XBT06UW39mN8rkGX71PlTXaLwibh2EkbRSl4=;
-        b=bLf3wLEtQdqplXZbaAVgHW4CkMv36oTw85Uv6jYHflFMCdfkgBm3COKTreaqbxmTdc
-         qiQgf7Asyt34117bNjfapKHllrdYu2aoKvtU54bA5PHaOuxEstcysNdqT1mGvCFn3VSr
-         O7gxnRTqEZf7DdmoauTvdncvdPzLgfqI4ZcVvNs0bTv1ARLfm0oFUubEmWjQBydsLUWW
-         xubQnyJpDEuXJaqnsR9P/+G+aOWXoOWmSf4Cie4ZZid8Hqmu+pL5JhTNoXt9n4RIRysI
-         /CtF4UXgW2snlxoKkJRpwo28By8edBy1m5gO9aDIYx+fFAl7Szs2enxTOpGMH1bjEuYI
-         RuKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AUR5yQ/XBT06UW39mN8rkGX71PlTXaLwibh2EkbRSl4=;
-        b=dMY8KxJSD9v3MupPXjWN4Fg/jJUC5GeXSw5Z9nZpjkyshLtixt5BBKoZZavhj9ObsC
-         tg4lLai3TtTvKaJ79+6nAFKqbvxbalT9lKqjttBAuvZUqDFflcXK/czKEyEdqMugA78+
-         CK2LYccTFR3Az8qxLoHjPJSiHJSWPU2LL8GGo45iDou9fzUVuj63zhbhAdXnL++K5KMd
-         VMuTeHeYNWED3bR4IV/SUSyMuuy+IRYzz0LIropGHFFhI5ou1J7xlcS2NEHOoVewqJlY
-         Yx1Yx2vzu0dpogaQ7Z/ju94Vr6rJKXV3QSJLGTeFyIXds1TjhCPGDmcESjRA2nGJVA19
-         3GUQ==
-X-Gm-Message-State: APjAAAU7dRkmeBkWXIMQZmYcPkQI8frWMiWEgFMgJql7ls46T7yGscaS
-        jNj8YpVUhQA1pCXrgYxoopQ=
-X-Google-Smtp-Source: APXvYqw1gE7A6yrW3oJywOj16NPJXMW4gLQQwOzMm61XMUGaeLODWIdavMuwLNE52GKWKXjEbGrfOw==
-X-Received: by 2002:a81:3acb:: with SMTP id h194mr18371887ywa.406.1576494948651;
-        Mon, 16 Dec 2019 03:15:48 -0800 (PST)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id o69sm7644544ywd.38.2019.12.16.03.15.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 03:15:47 -0800 (PST)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: imx8mm: Change SDMA1 ahb clock for imx8mm
-Date:   Mon, 16 Dec 2019 05:15:30 -0600
-Message-Id: <20191216111530.29558-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 16 Dec 2019 06:18:27 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46122 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727059AbfLPLS1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 06:18:27 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0C713AD4F;
+        Mon, 16 Dec 2019 11:18:25 +0000 (UTC)
+Message-ID: <e94310c04571b23e57d802aecb4789d7c6d35d74.camel@suse.de>
+Subject: Re: [PATCH v5 1/6] dt-bindings: PCI: Add bindings for brcmstb's
+ PCIe device
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Matthias Brugger <mbrugger@suse.com>, andrew.murray@arm.com,
+        maz@kernel.org, linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        phil@raspberrypi.org, jeremy.linton@arm.com,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-rpi-kernel@lists.infradead.org, james.quinlan@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
+Date:   Mon, 16 Dec 2019 12:18:23 +0100
+In-Reply-To: <39a8ab96-2b32-1d9c-63cd-8114a58f723c@suse.com>
+References: <20191216110113.30436-1-nsaenzjulienne@suse.de>
+         <20191216110113.30436-2-nsaenzjulienne@suse.de>
+         <39a8ab96-2b32-1d9c-63cd-8114a58f723c@suse.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-4ZM5h4FNm971ZXqZ/T37"
+User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Using SDMA1 with UART1 is causing a "Timeout waiting for CH0" error.
-This patch changes to ahb clock from SDMA1_ROOT to AHB which
-fixes the timeout error.
 
-Fixes:  a05ea40eb384 ("arm64: dts: imx: Add i.mx8mm dtsi support")
+--=-4ZM5h4FNm971ZXqZ/T37
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
----
-A similar fix was made to the i.MX8MQ for the same reason
+On Mon, 2019-12-16 at 12:14 +0100, Matthias Brugger wrote:
+> > +
+> > +  msi-controller:
+> > +    description: Identifies the node as an MSI controller.
+>=20
+> are you missing "type: boolean" here?
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 6edbdfe2d0d7..3d95b66a2d71 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -740,7 +740,7 @@
- 				reg = <0x30bd0000 0x10000>;
- 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MM_CLK_SDMA1_ROOT>,
--					 <&clk IMX8MM_CLK_SDMA1_ROOT>;
-+					 <&clk IMX8MM_CLK_AHB>;
- 				clock-names = "ipg", "ahb";
- 				#dma-cells = <3>;
- 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
--- 
-2.20.1
+As per RobH's suggestion[1] I assumed the type on msi-controller and msi-pa=
+rent
+is alredy defined.
+
+Regards,
+Nicolas
+
+[1] https://patchwork.kernel.org/patch/11239717/#23008585
+
+
+--=-4ZM5h4FNm971ZXqZ/T37
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl33Z/8ACgkQlfZmHno8
+x/7P7gf+NuNPpIsO6gLiH8DJTHrzG+A4soBpSgB0r3XzWZfc0Rem+xaaojNEVDTT
+po1m4X5pXKLejfpfB7srdeIweCg2xg3Pm61W6750iDhgKOtF7CNj91zkYkkSMIvs
+0lvWgo25TX1z3O/Z+dfRrPSMKMR1Rhos4KLxFALXiSakdoPsaoetmz7pkAdgXwqr
+0jKv3rerg41Q0yJi/zQSJcbvFCGd05ghq2Z+SdUtnqu5Iw/VEmorK6bo22W911w9
+3Kr9RHGM6dtTTMqS3rZWk3zfx1HuwhXjU93ObTavjtYqSL0UrCt9RCLoMgDA95hM
+f44IH0GrZdZuUqHOO0YN77qenyPzlg==
+=xgVD
+-----END PGP SIGNATURE-----
+
+--=-4ZM5h4FNm971ZXqZ/T37--
 
