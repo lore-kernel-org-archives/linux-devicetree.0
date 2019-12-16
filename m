@@ -2,142 +2,143 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB651C2D0CF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1747FC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 09:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB7DA222D9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E94207FF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 09:02:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="YJSTGTO4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="COi/sBQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfLPI73 (ORCPT
+        id S1726908AbfLPJCb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:59:29 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:53562 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfLPI73 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 03:59:29 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-1b-5df7476d9f32
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 5B.FD.08102.D6747FD5; Mon, 16 Dec 2019 09:59:26 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 16 Dec 2019 09:59:14 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Subject: Re: [PATCH v6 10/15] gpio: devres: Add devm_gpiod_get_parent_array
-Thread-Topic: [PATCH v6 10/15] gpio: devres: Add devm_gpiod_get_parent_array
-Thread-Index: AQHVsAgD2gnib6iDu0CtY9qHC9JPxqe8ZSSAgAAIPIA=
-Date:   Mon, 16 Dec 2019 08:59:14 +0000
-Message-ID: <812acba9df70c4bb6975580c7965b61e923a3a13.camel@fi.rohmeurope.com>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-         <f34765b5cb4e949c2e85415ded3d0ee7736cc97b.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-         <CACRpkdbUS7WeQ7OoTtjGnB7L=uhYncwwcHxkJ1Uj6GqYCGNGJA@mail.gmail.com>
-In-Reply-To: <CACRpkdbUS7WeQ7OoTtjGnB7L=uhYncwwcHxkJ1Uj6GqYCGNGJA@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <43C53F21BE36E2478B2439D9C76E2F2B@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 16 Dec 2019 04:02:31 -0500
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:39467 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726818AbfLPJCb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 04:02:31 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 59F9D220E4;
+        Mon, 16 Dec 2019 04:02:29 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 16 Dec 2019 04:02:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=PokdvDG1nIQ/VMznTA7Po0YeHU3
+        1cRXWMuqHfQ3NJtg=; b=YJSTGTO4Tm5092gDSitpZ2D9YojwZmjpYQ4yf17WeaO
+        S62neg2L+plGl78oORgNkUhdvAcnTUI78kAtBN5vmlOcBTBdOACbS55QMWs3277X
+        oEvmsdeWirzh+FyxVrKfeea+pmRSPRScQGvoXjbWFquIhkV3vPfd5h/LZmz0jFI+
+        dJeWiiBO+hpc7ieJCAcEiY91lmhM0ginH4bE3qgquYk9QlWRyHEFHywF4coSIwD8
+        Dq9nWBVMvNnvTLSuqwirjBXNXhpP5dO+4J1uktdS9IdbOX2g9/wl1nuuOMqAhIWz
+        kNGsCU0ogni6rvsUMSKDJzL9jt2Pbz8ZAuRkLxxR0RQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=PokdvD
+        G1nIQ/VMznTA7Po0YeHU31cRXWMuqHfQ3NJtg=; b=COi/sBQnSthKVUVXnORwE3
+        IIiNa3F9ZM630Nrca7TW7BqNOJrW6RREmN5/s11eBYP4Ixd0EopdkOAFFAODJ3N9
+        6onFhrHDD0P0ZkzkCb2LW3ujbUepshk9VHvYrq6iaRs63CZ8rzRALudJ+QbhP8Ao
+        pdVjND1Zgs3P93rH+P4YTmRmYC1pf2ZBfaPH4EdeRoGZ3MIBqDhcRv+tBTHZxciR
+        mh/JH9GidEsKebWvExmvACpx7sm43gwA/UDTuRki2UZ08hQY/1M8UuKAtnBXz6SQ
+        kFKYqZNKPKkLoDljTuxKNGGn5VvPoZP/pUSbY7UsZ7SRdBrK/v50OPnmtP4YLSNg
+        ==
+X-ME-Sender: <xms:JEj3XfO3DgPMWtkL0_tEqDpOSL3xmPJpJYXwChYdwvgeTsEuAVlqKg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtgedguddviecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkpheple
+    dtrdekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegt
+    vghrnhhordhtvggthhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:JEj3XS_aAcYxVdfoixy9pTNkh9pOkfOZhCyEI8dE8ASSDpMb5ouHBg>
+    <xmx:JEj3XbDW5p1eeMEya66DYNNbWka8n2oswKd0aNKEJIehGg04Vi3EkA>
+    <xmx:JEj3XSAQ0q1gaQSuE-mmcb6TV9JsOuAxBfBeT0rCLJHat8_SzQ1h1g>
+    <xmx:JUj3XQ70tQjv19i7LTUiFBLM026EyZbjzFx8Zjsz9eQy-UkZJORuvA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DF7EC8005C;
+        Mon, 16 Dec 2019 04:02:27 -0500 (EST)
+Date:   Mon, 16 Dec 2019 10:02:25 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: media: Convert Allwinner hardware codec to
+ a schema
+Message-ID: <20191216090225.4lll6kpqbrba7ldf@gilmour.lan>
+References: <20191213074055.26193-1-maxime@cerno.tech>
+ <CAL_JsqLxGe9sWrTdZhuT69o_LBxQTi6TxcbT28WdC1gsPw5+fQ@mail.gmail.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Tb0wTZxzee3e9u4JnjoLruyrLvMQs4qhzW7J3izF8mHqLhrlooi4hcIwb
-        JcCVXFsn7MM6mSJgGGrVWQuIUiSCQjvYGNGNIP8sWwUVVtl060bIAAPBuRKR4e44FT69T37P
-        8/ye58PvpXGDlzLRWZJdlCUhhyOjiPa6x75EaetMyuvTlwGqGRikUNFkLYX+O9ZNoYcVAQKd
-        CI+QaKS9CKCqzqAOlfY161Dh+UYS/drSRKDf/+0CKHL7MIZccxcwNH3kng5VH6oh0DdVcwDd
-        avOQqOW+srm7/jaJvL8MYMjj7SXQ1INiDA0ENqMTgUkK3Q10kahwIISjg1c7KTQ/5CNQWXBr
-        UjzfUNkA+MezxwA/FTpI8ZUNn/Hfu+9SvP9iMcn/NnSF5H+saKD482XHdXzkp6MEP1rdSPA9
-        oe8w/lTlI4xvPNIJ+Lr6GYr/x//yDvaj6I3pgn3fzqxMaf2mtGjLz3PHybwDK/ef8spOUGcq
-        AXoasm/BUHktpmIDOwjgpdPWEhCl4F4AZ4ddCkHTJLsRltyhVE0c+w681ushVA3O9kbDs8Ew
-        UIlYdhu81TxLaKLt8GYoiGv4Xej0RxbMBLsGBvo8C3OGTYYTQx5SC5sAsOWPCZ1K6NkPYbP/
-        24VGgI2Hxc7JBYyzRugfndFprVlYc+UGruEVcOyv+adzDl59FCbU0ji7Fja2rdesSbC07x7Q
-        8GroKg1TWocYeP30CFEOXnQvSXAvut1L3O4lbvcS91mguwhgrpCVkynYxQ1mWXSYZaslV3k+
-        tub6gXZ2D1vBk473OwBGgw7wEo1xK5hddyIphuXp1ox8i2CzpMqOHNHWASCNc3FM6yszKQYm
-        Q8gvEGXrM2olTXBG5tXw0RQDq2Zli2KeKD9jV9E0B5n8LYoxRhYzxf2fZOXYF2mM1qvLo0xx
-        NlHKEGXBYbekqueRalPuQ6WWKbku1c7Y8oRcZapZA2AdXT5WcQ6nOyu853ADIVkl0WRkLm1W
-        pKwqtTik50HjwEgDLpYJqIuWKX/v+Z5xJQJTIt5IjqgRdmGRMjnBvvu6np6JdU0O7vPXajL7
-        h7/62ydVtvYXvrma/DL7vfiE9jM248ntadhgUpvxWqg+OHwgb9Aylrimu7Tgi9pNiVumpk17
-        fReuJ7bNv1Ck7/c8iPF98ENV+qg5ZPz0UFxC/dobrvyTyy/vPlxmHi8wJ++5Wf3nE33Xbpi9
-        I+3rt5uc22I5wmYRNiTgsk34H70bqoo4BAAA
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="m6uvfkvcj5remb43"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLxGe9sWrTdZhuT69o_LBxQTi6TxcbT28WdC1gsPw5+fQ@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQpIaSBkZWUgSG8gcGVlcHMhIChMaW51cyAmIExlZSArIG90aGVyIGludGVyZXN0ZWQpLA0KDQpP
-biBNb24sIDIwMTktMTItMTYgYXQgMDk6MjkgKzAxMDAsIExpbnVzIFdhbGxlaWogd3JvdGU6DQo+
-IE9uIFdlZCwgRGVjIDExLCAyMDE5IGF0IDEwOjQ3IEFNIE1hdHRpIFZhaXR0aW5lbg0KPiA8bWF0
-dGkudmFpdHRpbmVuQGZpLnJvaG1ldXJvcGUuY29tPiB3cm90ZToNCj4gDQo+ID4gQnVuY2ggb2Yg
-TUZEIHN1Yi1kZXZpY2VzIHdoaWNoIGFyZSBpbnN0YW50aWF0ZWQgYnkgTUZEIGRvIG5vdCBoYXZl
-DQo+ID4gb3duIGRldmljZS10cmVlIG5vZGVzIGJ1dCBoYXZlIChmb3IgZXhhbXBsZSkgdGhlIEdQ
-SU8gY29uc3VtZXINCj4gPiBpbmZvcm1hdGlvbiBpbiBwYXJlbnQgZGV2aWNlJ3MgRFQgbm9kZS4g
-QWRkIHJlc291cmNlIG1hbmFnZWQNCj4gPiBkZXZtX2dwaW9kX2dldF9hcnJheSgpIGZvciBzdWNo
-IGRldmljZXMgc28gdGhhdCB0aGV5IGNhbiBnZXQgdGhlDQo+ID4gY29uc3VtZXIgaW5mb3JtYXRp
-b24gZnJvbSBwYXJlbnQgRFQgd2hpbGUgc3RpbGwgYmluZGluZyB0aGUgR1BJTw0KPiA+IHJlc2Vy
-dmF0aW9uIGxpZmUtdGltZSB0byB0aGlzIHN1Yi1kZXZpY2UgbGlmZSB0aW1lLg0KPiA+IA0KPiA+
-IElmIGRldm1fZ3Bpb2RfZ2V0X2FycmF5IGlzIHVzZWQgYXMgc3VjaCAtIHRoZW4gdW5sb2FkaW5n
-IGFuZCB0aGVuDQo+ID4gcmUtbG9hZGluZyB0aGUgY2hpbGQgZGV2aWNlIGZhaWxzIGFzIHRoZSBH
-UElPcyByZXNlcnZlZCBkdXJpbmcNCj4gPiBmaXJzdA0KPiA+IGxvYWQgYXJlIG5vdCBmcmVlZCB3
-aGVuIGRyaXZlciBmb3Igc3ViLWRldmljZSBpcyB1bmxvYWQgKGlmIHBhcmVudA0KPiA+IHN0YXlz
-IHRoZXJlKS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRp
-LnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4NCj4gPiAtLS0NCj4gPiANCj4gPiBDaGFuZ2Vz
-IHNpbmNlIHY1Og0KPiA+IC0gcmVuYW1lZCBpbnRlcm5hbCBmdW5jdGlvbiAobm8gX18gLSBwcmVm
-aXhlcyBmb3IgTGludXMgOl0gKQ0KPiANCj4gVGhhbmtzLCBhcyB0aGVyZSBhcmUgdGhpbmdzIGhh
-cHBlbmluZyBpbiB0aGUgR1BJTyBzdWJzeXN0ZW0gSQ0KPiBoYXZlIHB1dCB0aGlzIG9uZSBwYXRj
-aCBvbiBhbiBpbW11dGFibGUgYnJhbmNoIGhlcmU6DQo+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcv
-cHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2xpbnVzdy9saW51eC1ncGlvLmdpdC9sb2cvP2g9aWIt
-ZGV2bS1ncGlvZC1nZXQtcGFyZW50LWFycmF5DQo+IA0KPiBQbGVhc2UgYXNrIHRoZSBtYWludGFp
-bmVyIChJIGd1ZXNzIExlZT8pIHRvIHB1bGwgdGhpcyBpbnRvIHdoZXJldmVyDQo+IHRoZSByZXN0
-IG9mIHRoZSBwYXRjaGVzIHNob3VsZCBiZSBtZXJnZWQgaWYgeW91IHdhbnQgcGF0Y2hlcyBiZXlv
-bmQNCj4gdGhpcyBwb2ludCB0byBiZSBhcHBsaWVkIGZvciB0aGUgbmV4dCAodjUuNikgbWVyZ2Ug
-d2luZG93LCB0aGVuIHRoaXMNCj4gcGF0Y2ggaXMgbm90IG5lZWRlZCBpbiB0aGUgc2VyaWVzLg0K
-DQpJIGRyb3BwZWQgdGhlIHJ1bi1sZXZlbCBzdXBwb3J0IGZyb20gcmVndWxhdG9yIHBhdGNoIChm
-b3Igbm93IGF0DQpsZWFzdCkuIFRoaXMgbWVhbnMgdGhhdCBJIG5vIGxvbmdlciBoYXZlIEdQSU8g
-Y29uc3VtZXJzIG5lZWRpbmcgdGhpcw0KbmV3IEFQSSBpbiB0aGUgc2VyaWVzLiBXaGljaCBtZWFu
-cyB0d28gdGhpbmdzOg0KDQoxLiBUaGVyZSBpcyBubyBpbi10cmVlIHVzZXJzIG9mIHRoaXMgbmV3
-IEFQSSBhcyBvZiBub3cuIFRoaXMgQVBJIGhhcw0KdmFsaWQgdXNlLWNhc2UgaW1tZWRpYXRlbHkg
-d2hlbiBhbiBNRkQgc3ViLWRldmljZSB3aGljaCBoYXMgbm8gb3duDQooc3ViLWRldmljZSBzcGVj
-aWZpYykgY29tcGF0aWJsZSBpbiBEVCB3YW50cyB0byBnZXQgdGhlIEdQSU8gYXJyYXkgYW5kDQp1
-c2UgZGV2bSAtIGJ1dCBJIGFtIG5vdCBzdXJlIGlmIHdlIGhhdmUgYW55IGluLXRyZWUuIChJIGNo
-ZWNrZWQgY3VycmVudA0KZGV2bV9ncGlvZF9nZXRfYXJyYXkoKSB1c2VycyBhbmQgZGlkbid0IHNl
-ZSBhbnkgTUZEIHN1Yi1kZXZpY2VzIHdoaWNoDQp3b3VsZCBoYXZlIGVycm9ybmVvdXNseSB1c2Vk
-IHRoZSBwYXJlbnQgZGV2aWNlIGZvciBtYW5hZ2VtZW50IC0gYnV0IEkNCmRpZG4ndCBjaGVjayBp
-ZiB0aGVyZSBpcyBhbnkgbm9uLWRldm0gdmFyaWFudCB1c2VycyB0aGF0IG1pZ2h0IGJlbmVmaXQN
-CmZyb20gdGhpcyBBUEkpDQoNCjIuIFRoZXJlIGlzIG5vIGRlcGVuZGVuY3kgZnJvbSB0aGlzIHNl
-cmllcyB0byB0aGUgbmV3IEFQSS4NCg0KDQpTbywgdGhlcmUgaXMgdHdvIG90aGVyIG9wdGlvbnMg
-b25lIGNhbiBjb25zaWRlcjoNCjEuIERyb3AgdGhpcyBwYXRjaCBjb21wbGV0ZWx5IGZyb20gdGhl
-IHNlcmllcyBhbmQgR1BJTyB0cmVlLg0KMi4gQXBwbHkgaXQgdG8gR1BJTyB0cmVlIG9ubHkgYW5k
-IGRyb3AgaXQgZnJvbSB0aGlzIHNlcmllcyAoaWYgdGhpcyBpcw0Kc3RpbGwgc2VlbiB1c2VmdWwp
-Lg0KDQpCciwNCglNYXR0aQ0K
+
+--m6uvfkvcj5remb43
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Rob,
+
+On Fri, Dec 13, 2019 at 09:25:51AM -0600, Rob Herring wrote:
+> On Fri, Dec 13, 2019 at 1:41 AM Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > The Allwinner SoCs have a hardware video codec that is supported in Linux,
+> > with a matching Device Tree binding.
+> >
+> > Now that we have the DT validation in place, let's convert the device tree
+> > bindings for that controller over to a YAML schemas.
+> >
+> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> > ---
+> >  .../allwinner,sun4i-a10-video-engine.yaml     | 83 +++++++++++++++++++
+> >  .../devicetree/bindings/media/cedrus.txt      | 57 -------------
+> >  2 files changed, 83 insertions(+), 57 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-video-engine.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/media/cedrus.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-video-engine.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-video-engine.yaml
+> > new file mode 100644
+> > index 000000000000..47c8513555b2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-video-engine.yaml
+> > @@ -0,0 +1,83 @@
+> > +# SPDX-License-Identifier: GPL-2.0+
+>
+> Do you have rights to change the license (adding '+' aka '-or-later')?
+> If so, please add BSD-2-Clause. I don't have any other comments, so
+> just confirm and I can change it when applying.
+
+That's a mistake, sorry. I'm not the original author, so I can't
+change that license...
+
+Maxime
+
+--m6uvfkvcj5remb43
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfdIHAAKCRDj7w1vZxhR
+xQt4AP4/p/4KNTdKVqnOZrFTUx14YJGw+5ype+Zlt96KJY2C/AEAnAjDE6yL/asL
+hMgtOPL6fesvTr+8PmH7F+3mUWVRqww=
+=bz4j
+-----END PGP SIGNATURE-----
+
+--m6uvfkvcj5remb43--
