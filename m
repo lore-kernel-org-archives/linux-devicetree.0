@@ -2,265 +2,123 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB66C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD91C2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83E91206A5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C162082E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:17:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576505869;
+	bh=IQNavyKi0vrFitwEWkaIaMNA22XrAI9Jh2hXEfJH/S0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=avrUWPqEJMZNQJCabz1WdXv0vUuAZ9X9aGrd3ob2UiUHifP2HmTbgCGMAsuKUZOMe
+	 n4dR7MOhIfZAcmmkRbGQGkcdo2Mz7t9Prio9yICeBtKIAp7iOnUPiNkv+F4ZfyqQj3
+	 M95hL7IMhno8JXCb5AFNGqgyb1rAOwjWELZYLr3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbfLPOHd (ORCPT
+        id S1728092AbfLPORs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:07:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:56638 "EHLO foss.arm.com"
+        Mon, 16 Dec 2019 09:17:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727807AbfLPOHc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:07:32 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E65101FB;
-        Mon, 16 Dec 2019 06:07:31 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E7983F718;
-        Mon, 16 Dec 2019 06:07:31 -0800 (PST)
-Date:   Mon, 16 Dec 2019 14:07:29 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH 03/13] PCI: cadence: Add support to use custom read and
- write accessors
-Message-ID: <20191216140729.GX24359@e119886-lin.cambridge.arm.com>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-4-kishon@ti.com>
+        id S1727974AbfLPORr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:17:47 -0500
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B54202072B;
+        Mon, 16 Dec 2019 14:17:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576505866;
+        bh=IQNavyKi0vrFitwEWkaIaMNA22XrAI9Jh2hXEfJH/S0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0UAzFff7wvUvbN58awlwQRh/zutRHMnzsFZ/J+0f6XS+7/84/k6W5/crv1KG05rHj
+         xSPmTeMqSd/hxVbpfe4BS2z4en5pg9XCm1GD9o6NexACE0quInxp2lBpSFeNeBLcLo
+         EZdEcXem8f1KOemOfxNOFGjwuFoSL3Iacll6YJzA=
+Received: by mail-qt1-f182.google.com with SMTP id t17so5852562qtr.7;
+        Mon, 16 Dec 2019 06:17:46 -0800 (PST)
+X-Gm-Message-State: APjAAAXii65COQOmdKJ20nfOCpic2fR6OysbGL9QwIDpLfHD70oq+Bn/
+        OsrFiGlRJq7XvN+SgjJQdmqbgh5tRXHPv9z7dQ==
+X-Google-Smtp-Source: APXvYqz2f5Gs15/ox6X7o2WZBhM9ygGDGyp6eAHEdmJvScGaM+GL2FIGu82kDvhjbzebssozOwhOMq161rtPybRoLuw=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr24605834qtg.110.1576505865893;
+ Mon, 16 Dec 2019 06:17:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209092147.22901-4-kishon@ti.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+References: <20191202133332.178110-1-amirmizi6@gmail.com> <20191202133332.178110-5-amirmizi6@gmail.com>
+ <20191213223623.GA14809@bogus> <CAMHTsUW5dH-5LCW9GYzDnWEcqPt-Ch_21efQVpAKMdSvCXB00Q@mail.gmail.com>
+In-Reply-To: <CAMHTsUW5dH-5LCW9GYzDnWEcqPt-Ch_21efQVpAKMdSvCXB00Q@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 16 Dec 2019 08:17:34 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+7Wnh7pXBGtMZ=b2TD4zcY-8n-58OzrvCKx0Rc+1gpGw@mail.gmail.com>
+Message-ID: <CAL_Jsq+7Wnh7pXBGtMZ=b2TD4zcY-8n-58OzrvCKx0Rc+1gpGw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] dt-bindings: tpm: Add YAML schema for TPM TIS I2C options
+To:     Amir Mizinski <amirmizi6@gmail.com>
+Cc:     Eyal.Cohen@nuvoton.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Oshri Alkobi <oshrialkoby85@gmail.com>,
+        Alexander Steffen <alexander.steffen@infineon.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        IS20 Oshri Alkoby <oshri.alkoby@nuvoton.com>,
+        Tomer Maimon <tmaimon77@gmail.com>, gcwilson@us.ibm.com,
+        kgoldman@us.ibm.com, ayna@linux.vnet.ibm.com,
+        IS30 Dan Morav <Dan.Morav@nuvoton.com>,
+        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
+        amir.mizinski@nuvoton.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 02:51:37PM +0530, Kishon Vijay Abraham I wrote:
-> Add support to use custom read and write accessors. Platforms that
-> doesn't support half word or byte access or any other constraint
+On Mon, Dec 16, 2019 at 7:53 AM Amir Mizinski <amirmizi6@gmail.com> wrote:
+>
+> On Sat, Dec 14, 2019 at 12:36 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Mon, Dec 02, 2019 at 03:33:31PM +0200, amirmizi6@gmail.com wrote:
+> > > From: Amir Mizinski <amirmizi6@gmail.com>
+> > >
+> > > Added a YAML schema to support tpm tis i2c realted dt-bindings for the I2c PTP based physical layer.
+> >
+> > Wrap your commmit message. And TPM, TIS?, and I2C should be capitalized.
+>
+> Thanks,  ill fix that.
+>
+> >
+> > >
+> > > Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> > > ---
+> > >  .../bindings/security/tpm/tpm-tis-i2c.yaml         | 38 ++++++++++++++++++++++
+> > >  1 file changed, 38 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
+> >
+> > Please read my comments on v1 (The first v1 from 11/10, not the 2nd v1
+> > you sent).
+>
+> I sent a follow up comment regarding this:
+> https://patchwork.kernel.org/patch/11236253/
+> (2nd v1 was sent by mistake. sorry about that)
 
-s/doesn't/don't/
+Sorry I missed your reply. However, you didn't address these comments:
 
-> while accessing registers can use this feature to populate custom
-> read and write accessors. These custom accessors are used for both
-> standard register access and configuration space register access.
+> There's a bigger issue that the h/w here is more than just an I2C
+> protocol. The chip may have multiple power supplies, clocks, reset
+> lines, etc. HID over I2C seems like a similar case. Does the spec define
+> *all* of that? If not, you need chip specific compatibles. You can keep
+> this as a fallback though.
 
-You can put the following sentence underneath a --- as it's not needed
-in the commit message (but may be helpful to reviewers).
+To rephrase this, a protocol does not fully describe the h/w and DT
+should describe the h/w.
 
-> This is in preparation for adding PCIe support in TI's J721E SoC which
-> uses Cadence PCIe core.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence.h | 99 +++++++++++++++++--
->  1 file changed, 90 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index a2b28b912ca4..d0d91c69fa1d 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -223,6 +223,11 @@ enum cdns_pcie_msg_routing {
->  	MSG_ROUTING_GATHER,
->  };
->  
-> +struct cdns_pcie_ops {
-> +	u32	(*read)(void __iomem *addr, int size);
-> +	void	(*write)(void __iomem *addr, int size, u32 value);
-> +};
-> +
->  /**
->   * struct cdns_pcie - private data for Cadence PCIe controller drivers
->   * @reg_base: IO mapped register base
-> @@ -239,7 +244,7 @@ struct cdns_pcie {
->  	int			phy_count;
->  	struct phy		**phy;
->  	struct device_link	**link;
-> -	const struct cdns_pcie_common_ops *ops;
+Also, you should include the interrupt whether you use it in the
+driver currently or not. Again, it's about describing the h/w, not
+what a driver happens to use ATM.
 
-What was cdns_pcie_common_ops? It's not defined in the current tree is it?
-
-> +	const struct cdns_pcie_ops *ops;
->  };
->  
->  /**
-> @@ -301,21 +306,47 @@ struct cdns_pcie_ep {
->  /* Register access */
->  static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
->  {
-> +	void __iomem *addr = pcie->reg_base + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x1, value);
-> +		return;
-> +	}
-> +
->  	writeb(value, pcie->reg_base + reg);
-
-Can you use 'addr' here instead of 'pcie->reg_base + reg'? (And similar for the
-rest of them).
-
-Thanks,
-
-Andrew Murray
-
-
->  }
->  
->  static inline void cdns_pcie_writew(struct cdns_pcie *pcie, u32 reg, u16 value)
->  {
-> +	void __iomem *addr = pcie->reg_base + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x2, value);
-> +		return;
-> +	}
-> +
->  	writew(value, pcie->reg_base + reg);
->  }
->  
->  static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
->  {
-> +	void __iomem *addr = pcie->reg_base + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x4, value);
-> +		return;
-> +	}
-> +
->  	writel(value, pcie->reg_base + reg);
->  }
->  
->  static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
->  {
-> +	void __iomem *addr = pcie->reg_base + reg;
-> +
-> +	if (pcie->ops && pcie->ops->read)
-> +		return pcie->ops->read(addr, 0x4);
-> +
->  	return readl(pcie->reg_base + reg);
->  }
->  
-> @@ -323,47 +354,97 @@ static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
->  static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
->  				       u32 reg, u8 value)
->  {
-> -	writeb(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x1, value);
-> +		return;
-> +	}
-> +
-> +	writeb(value, addr);
->  }
->  
->  static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
->  				       u32 reg, u16 value)
->  {
-> -	writew(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x2, value);
-> +		return;
-> +	}
-> +
-> +	writew(value, addr);
->  }
->  
->  /* Endpoint Function register access */
->  static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
->  					  u32 reg, u8 value)
->  {
-> -	writeb(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x1, value);
-> +		return;
-> +	}
-> +
-> +	writeb(value, addr);
->  }
->  
->  static inline void cdns_pcie_ep_fn_writew(struct cdns_pcie *pcie, u8 fn,
->  					  u32 reg, u16 value)
->  {
-> -	writew(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x2, value);
-> +		return;
-> +	}
-> +
-> +	writew(value, addr);
->  }
->  
->  static inline void cdns_pcie_ep_fn_writel(struct cdns_pcie *pcie, u8 fn,
->  					  u32 reg, u32 value)
->  {
-> -	writel(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-> +
-> +	if (pcie->ops && pcie->ops->write) {
-> +		pcie->ops->write(addr, 0x4, value);
-> +		return;
-> +	}
-> +
-> +	writel(value, addr);
->  }
->  
->  static inline u8 cdns_pcie_ep_fn_readb(struct cdns_pcie *pcie, u8 fn, u32 reg)
->  {
-> -	return readb(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-> +
-> +	if (pcie->ops && pcie->ops->read)
-> +		return pcie->ops->read(addr, 0x1);
-> +
-> +	return readb(addr);
->  }
->  
->  static inline u16 cdns_pcie_ep_fn_readw(struct cdns_pcie *pcie, u8 fn, u32 reg)
->  {
-> -	return readw(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-> +
-> +	if (pcie->ops && pcie->ops->read)
-> +		return pcie->ops->read(addr, 0x2);
-> +
-> +	return readw(addr);
->  }
->  
->  static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
->  {
-> -	return readl(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
-> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
-> +
-> +	if (pcie->ops && pcie->ops->read)
-> +		return pcie->ops->read(addr, 0x4);
-> +
-> +	return readl(addr);
->  }
->  
->  #ifdef CONFIG_PCIE_CADENCE_HOST
-> -- 
-> 2.17.1
-> 
+Rob
