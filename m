@@ -2,98 +2,116 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A30AC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD68C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8AB120725
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B75A720725
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbfLPIyY (ORCPT
+        id S1726867AbfLPIzc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:54:24 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55904 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfLPIyY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 03:54:24 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 08BAE28A017;
-        Mon, 16 Dec 2019 08:54:22 +0000 (GMT)
-Date:   Mon, 16 Dec 2019 09:54:19 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Hugh Cole-Baker <sigmaris@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        linux-media@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: Re: [PATCH v3 4/7] media: hantro: h264: Use the generic H264
- reflist builder
-Message-ID: <20191216095419.4dfb8501@collabora.com>
-In-Reply-To: <24EFC68C-CF34-4D6E-8927-1CFA0CE81F45@gmail.com>
-References: <20191213125414.90725-1-boris.brezillon@collabora.com>
-        <20191213125414.90725-5-boris.brezillon@collabora.com>
-        <24EFC68C-CF34-4D6E-8927-1CFA0CE81F45@gmail.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 16 Dec 2019 03:55:32 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40207 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfLPIzc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 03:55:32 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1igmA2-0003x9-Gv; Mon, 16 Dec 2019 09:55:26 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1igmA1-0001w3-8N; Mon, 16 Dec 2019 09:55:25 +0100
+Date:   Mon, 16 Dec 2019 09:55:25 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+References: <20191129172537.31410-1-m.felsch@pengutronix.de>
+ <20191129172537.31410-4-m.felsch@pengutronix.de>
+ <20191204134631.GT1998@sirena.org.uk>
+ <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+ <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+ <20191212161019.GF4310@sirena.org.uk>
+ <20191212162152.5uu3feacduetysq7@pengutronix.de>
+ <20191212165124.GJ4310@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212165124.GJ4310@sirena.org.uk>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:40:13 up 30 days, 23:58, 39 users,  load average: 0.04, 0.06,
+ 0.08
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 14 Dec 2019 15:46:35 +0000
-Hugh Cole-Baker <sigmaris@gmail.com> wrote:
-
-> Hi Boris,
+On 19-12-12 16:51, Mark Brown wrote:
+> On Thu, Dec 12, 2019 at 05:21:53PM +0100, Marco Felsch wrote:
 > 
-> > On 13 Dec 2019, at 12:54, Boris Brezillon <boris.brezillon@collabora.com> wrote:
-> > 
-> > Now that the core provides generic reflist builders, we can use them
-> > instead of implementing our own.
-> > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > ---
-> > Changes in v3:
-> > * New patch
-> > ---
-> > drivers/staging/media/hantro/hantro_h264.c | 237 +--------------------
-> > 1 file changed, 8 insertions(+), 229 deletions(-)
-> > 
-> > diff --git a/drivers/staging/media/hantro/hantro_h264.c b/drivers/staging/media/hantro/hantro_h264.c
-> > index 568640eab3a6..d998272d20e6 100644
-> > --- a/drivers/staging/media/hantro/hantro_h264.c
-> > +++ b/drivers/staging/media/hantro/hantro_h264.c
-> > @@ -11,7 +11,7 @@
-> >  */
-> > 
-> > #include <linux/types.h>
-> > -#include <linux/sort.h>
-> > +#include <media/v4l2-h264.h>  
+> > "... what's driving the input ..":
+> > Sorry I didn't get you here. What did you mean? The input is driven by
+> > the host. This can be any gpio line and in my case it is a gpio line
+> > driven by the soc-hw during a suspend operation.
 > 
-> With this patch, CONFIG_VIDEO_HANTRO needs to depend on CONFIG_V4L2_H264,
-> without that it can encounter linking errors due to missing symbols for
-> v4l2_h264_init_reflist_builder, etc.
+> Something needs to say what that thing is, especially if it's runtime
+> controllable.  In your case from the point of view of software there is
+> actually no enable control so we shouldn't be providing an enable
+> operation to the framework.
 
-Oops, you're right (I didn't notice it since I had it selected by
-CONFIG_VIDEO_ROCKCHIP_VDEC). I'll fix that in v4.
+The enabel control signal is always available, please check [1] table
+63. There is a mux in front of the enable pin so:
 
-Thanks,
+             +-------------
+ Seq. |\     |   Regulator
+ GPI1 | \    |
+ GPI2 | | -- > Enable
+ GPI3 | /    |
+      |/     .
+             .
+             .
 
-Boris
+Adam please correct me if this is wrong.
+
+[1] https://www.dialog-semiconductor.com/sites/default/files/da9062_datasheet_3v6.pdf
+
+Regards,
+  Marco
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
