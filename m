@@ -2,154 +2,211 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B422C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34864C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCD8206D8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576503575;
-	bh=7SGMKiJuU0qvOnDKNSk19Hh1fTjIukPVmdPORtDYtmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kbYyuAHOXxPWpULktkgWOyDyxlVBlK35WqlmmPMORTzrk6hlHFr2lt4bActZutGy/
-	 LdgB3fkIWbCLuOdZ4aLOxd3Hn7Nb2PF3gfXCGqS+fYuHE+6HxqlMXDohoUOTB5rdy+
-	 RTWeLEN+c+wMEnCgQl3h6SdDlenFesHd7eAEJoyw=
+	by mail.kernel.org (Postfix) with ESMTP id 0727B206A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:41:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="VLG56Qhb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbfLPNje (ORCPT
+        id S1727826AbfLPNlH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:39:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727641AbfLPNje (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:39:34 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 121A620409;
-        Mon, 16 Dec 2019 13:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576503573;
-        bh=7SGMKiJuU0qvOnDKNSk19Hh1fTjIukPVmdPORtDYtmg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vfLGXmzS2aEJJUXCz87hGKfWnfKZK5c+nQN4ASKWZC/3ARcgJPTTGa+WMDjs1sCGz
-         hAJOTeLNBGoTrgn63VcheYdOsnr3rihcQ7gSl17aXmp5oXdeYdin1sQ0wtwpLbkMPd
-         gvnWCW7oIuMe3ciOPsbHGa/nr2xx6KpcjOQZK1DI=
-Date:   Mon, 16 Dec 2019 14:39:31 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mon, 16 Dec 2019 08:41:07 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:44946 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727609AbfLPNlH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 08:41:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1576503665; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=H294czyNOxXLRiUnhSh84JjUSdKrChOTGztkeWRPDKo=;
+        b=VLG56Qhb4PeiZEfefSApkXt0NDXHvwvrVQs0rh0WWwe7SpqMouCkultiOpoRvX8QaHOfGY
+        vJ0kXn/DRBXXNFdihWuqNY52w4vIhyq0hyFHhSD+tjMXA4qJuJM6eTqfh6fN0Wz5IE/hOi
+        MFHGTdIY0v+446X6LvcA7+AEDNvkwc0=
+Date:   Mon, 16 Dec 2019 14:41:00 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 2/5] remoteproc: Add device-managed variants of
+ rproc_alloc/rproc_add
+To:     =?iso-8859-1?q?Cl=E9ment?= Leger <cleger@kalray.eu>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 11/14] ARM: dts: sun8i: r40: Add device node for CSI0
-Message-ID: <20191216133931.wliwn5woy3hstdg3@gilmour.lan>
-References: <20191215165924.28314-1-wens@kernel.org>
- <20191215165924.28314-12-wens@kernel.org>
+        Mark Rutland <mark.rutland@arm.com>, od <od@zcrc.me>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-Id: <1576503660.3.3@crapouillou.net>
+In-Reply-To: <340758118.96812669.1576493172804.JavaMail.zimbra@kalray.eu>
+References: <20191210164014.50739-1-paul@crapouillou.net>
+        <20191210164014.50739-2-paul@crapouillou.net>
+        <340758118.96812669.1576493172804.JavaMail.zimbra@kalray.eu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qmlybd2b72avx3db"
-Content-Disposition: inline
-In-Reply-To: <20191215165924.28314-12-wens@kernel.org>
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Cl=E9ment,
 
---qmlybd2b72avx3db
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Dec 16, 2019 at 12:59:21AM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->
-> The CSI0 and CSI1 blocks are the same as found on the A20. However only
-> CSI0 is supported upstream right now.
->
-> Add a device node for CSI0 using the A20 compatible as a fallback, and
-> the standard pinctrl options. Also add the MBUS interconnect.
->
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
->  arch/arm/boot/dts/sun8i-r40.dtsi | 36 ++++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-> index 82ea0b5b0710..2d1e97cc4155 100644
-> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-> @@ -180,6 +180,20 @@ nmi_intc: interrupt-controller@1c00030 {
->  			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
->  		};
->
-> +		csi0: csi@1c09000 {
-> +			compatible = "allwinner,sun8i-r40-csi0",
-> +				     "allwinner,sun7i-a20-csi0";
-> +			reg = <0x01c09000 0x1000>;
-> +			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_CSI0>, <&ccu CLK_CSI_SCLK>,
-> +				 <&ccu CLK_DRAM_CSI0>;
-> +			clock-names = "bus", "isp", "ram";
-> +			resets = <&ccu RST_BUS_CSI0>;
-> +			interconnects = <&mbus 5>;
-> +			interconnect-names = "dma-mem";
-> +			status = "disabled";
-> +		};
-> +
->  		mmc0: mmc@1c0f000 {
->  			compatible = "allwinner,sun8i-r40-mmc",
->  				     "allwinner,sun50i-a64-mmc";
-> @@ -355,6 +369,20 @@ clk_out_a_pin: clk-out-a-pin {
->  				function = "clk_out_a";
->  			};
->
-> +			/omit-if-no-ref/
-> +			csi0_8bits_pins: csi0-8bits-pins {
-> +				pins = "PE0", "PE2", "PE3", "PE4", "PE5",
-> +				       "PE6", "PE7", "PE8", "PE9", "PE10",
-> +				       "PE11";
-> +				function = "csi0";
-> +			};
-> +
-> +			/omit-if-no-ref/
-> +			csi0_mclk_pin: csi0-mclk-pin {
-> +				pins = "PE1";
-> +				function = "csi0";
-> +			};
-> +
->  			gmac_rgmii_pins: gmac-rgmii-pins {
->  				pins = "PA0", "PA1", "PA2", "PA3",
->  				       "PA4", "PA5", "PA6", "PA7",
-> @@ -624,6 +652,14 @@ gmac_mdio: mdio {
->  			};
->  		};
->
-> +		mbus: dram-controller@1c62000 {
-> +			compatible = "allwinner,sun8i-r40-mbus";
-> +			reg = <0x01c62000 0x1000>;
-> +			clocks = <&ccu 155>;
+Le lun., d=E9c. 16, 2019 at 11:46, Cl=E9ment Leger <cleger@kalray.eu> a=20
+=E9crit :
+> Hi Paul,
+>=20
+> I tested it on our driver and freeing/remove are called correctly on=20
+> probe error and on module removal.
+>=20
+> Tested-By: Clement Leger <cleger@kalray.eu>
 
-We should export the clock too?
+Great, thanks.
 
-Maxime
->
+Did you also test the prepare/unprepare callbacks? Is it working for=20
+you?
 
---qmlybd2b72avx3db
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+-Paul
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeJEwAKCRDj7w1vZxhR
-xX4mAP9raoaBd1QdA12eLJMz9YoIz/KDkCY7IQsU8z/3jU+6kAEA/VtzPoBPHD0K
-JHbPLHhucKTZH4r3G5PLW3g/rkleMQA=
-=CsA8
------END PGP SIGNATURE-----
+> ----- On 10 Dec, 2019, at 17:40, Paul Cercueil paul@crapouillou.net=20
+> wrote:
+>=20
+>>  Add API functions devm_rproc_alloc() and devm_rproc_add(), which=20
+>> behave
+>>  like rproc_alloc() and rproc_add() respectively, but register their
+>>  respective cleanup function to be called on driver detach.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>     v3: New patch
+>>     v4: No change
+>>=20
+>>  drivers/remoteproc/remoteproc_core.c | 67=20
+>> ++++++++++++++++++++++++++++
+>>  include/linux/remoteproc.h           |  5 +++
+>>  2 files changed, 72 insertions(+)
+>>=20
+>>  diff --git a/drivers/remoteproc/remoteproc_core.c
+>>  b/drivers/remoteproc/remoteproc_core.c
+>>  index 307df98347ba..0a9fc7fdd1c3 100644
+>>  --- a/drivers/remoteproc/remoteproc_core.c
+>>  +++ b/drivers/remoteproc/remoteproc_core.c
+>>  @@ -1932,6 +1932,33 @@ int rproc_add(struct rproc *rproc)
+>>  }
+>>  EXPORT_SYMBOL(rproc_add);
+>>=20
+>>  +static void devm_rproc_remove(void *rproc)
+>>  +{
+>>  +	rproc_del(rproc);
+>>  +}
+>>  +
+>>  +/**
+>>  + * devm_rproc_add() - resource managed rproc_add()
+>>  + * @dev: the underlying device
+>>  + * @rproc: the remote processor handle to register
+>>  + *
+>>  + * This function performs like rproc_add() but the registered=20
+>> rproc device will
+>>  + * automatically be removed on driver detach.
+>>  + *
+>>  + * Returns 0 on success and an appropriate error code otherwise.
+>>  + */
+>>  +int devm_rproc_add(struct device *dev, struct rproc *rproc)
+>>  +{
+>>  +	int err;
+>>  +
+>>  +	err =3D rproc_add(rproc);
+>>  +	if (err)
+>>  +		return err;
+>>  +
+>>  +	return devm_add_action_or_reset(dev, devm_rproc_remove, rproc);
+>>  +}
+>>  +EXPORT_SYMBOL(devm_rproc_add);
+>>  +
+>>  /**
+>>   * rproc_type_release() - release a remote processor instance
+>>   * @dev: the rproc's device
+>>  @@ -2149,6 +2176,46 @@ int rproc_del(struct rproc *rproc)
+>>  }
+>>  EXPORT_SYMBOL(rproc_del);
+>>=20
+>>  +static void devm_rproc_free(struct device *dev, void *res)
+>>  +{
+>>  +	rproc_free(*(struct rproc **)res);
+>>  +}
+>>  +
+>>  +/**
+>>  + * devm_rproc_alloc() - resource managed rproc_alloc()
+>>  + * @dev: the underlying device
+>>  + * @name: name of this remote processor
+>>  + * @ops: platform-specific handlers (mainly start/stop)
+>>  + * @firmware: name of firmware file to load, can be NULL
+>>  + * @len: length of private data needed by the rproc driver (in=20
+>> bytes)
+>>  + *
+>>  + * This function performs like rproc_alloc() but the acuired rproc=20
+>> device will
+>>  + * automatically be released on driver detach.
+>>  + *
+>>  + * On success the new rproc is returned, and on failure, NULL.
+>>  + */
+>>  +struct rproc *devm_rproc_alloc(struct device *dev, const char=20
+>> *name,
+>>  +			       const struct rproc_ops *ops,
+>>  +			       const char *firmware, int len)
+>>  +{
+>>  +	struct rproc **ptr, *rproc;
+>>  +
+>>  +	ptr =3D devres_alloc(devm_rproc_free, sizeof(*ptr), GFP_KERNEL);
+>>  +	if (!ptr)
+>>  +		return ERR_PTR(-ENOMEM);
+>>  +
+>>  +	rproc =3D rproc_alloc(dev, name, ops, firmware, len);
+>>  +	if (rproc) {
+>>  +		*ptr =3D rproc;
+>>  +		devres_add(dev, ptr);
+>>  +	} else {
+>>  +		devres_free(ptr);
+>>  +	}
+>>  +
+>>  +	return rproc;
+>>  +}
+>>  +EXPORT_SYMBOL(devm_rproc_alloc);
+>>  +
+>>  /**
+>>   * rproc_add_subdev() - add a subdevice to a remoteproc
+>>   * @rproc: rproc handle to add the subdevice to
+>>  diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>>  index 16ad66683ad0..5f201f0c86c3 100644
+>>  --- a/include/linux/remoteproc.h
+>>  +++ b/include/linux/remoteproc.h
+>>  @@ -595,6 +595,11 @@ int rproc_add(struct rproc *rproc);
+>>  int rproc_del(struct rproc *rproc);
+>>  void rproc_free(struct rproc *rproc);
+>>=20
+>>  +struct rproc *devm_rproc_alloc(struct device *dev, const char=20
+>> *name,
+>>  +			       const struct rproc_ops *ops,
+>>  +			       const char *firmware, int len);
+>>  +int devm_rproc_add(struct device *dev, struct rproc *rproc);
+>>  +
+>>  void rproc_add_carveout(struct rproc *rproc, struct rproc_mem_entry=20
+>> *mem);
+>>=20
+>>  struct rproc_mem_entry *
+>>  --
+>>  2.24.0
 
---qmlybd2b72avx3db--
+=
+
