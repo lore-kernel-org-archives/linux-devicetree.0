@@ -2,98 +2,151 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E83DC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9665AC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E68206EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:53:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576511633;
-	bh=KewUIYX6Xb/KUGmI7ZCD6D7PdVzt41J+GOTmkmhhx98=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zkjds1fOTLf8a3G+f3V7ew1k1wMBloOLMwvQcz2LqQEUa4agP3GjNnZIH3iss7wNQ
-	 goOya2IX5vxOHmcYAZjVcKWjV8VK/SePdUOsxSIFjpm8Gql9m2ccDyWtZ7LK53Tr+5
-	 DAXkmSVnI1Xs9ZvAkOW2JAc7++cWfEFiB4rDO4j8=
+	by mail.kernel.org (Postfix) with ESMTP id 6ACC12067C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:00:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="bahBcOQE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfLPPxw (ORCPT
+        id S1728239AbfLPQAV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:53:52 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46659 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727707AbfLPPxw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 10:53:52 -0500
-Received: by mail-oi1-f195.google.com with SMTP id a124so3631936oii.13;
-        Mon, 16 Dec 2019 07:53:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/9D5bT/6tP3rVi8f9x2mTx0nceNBLJn6Pnm6PW8Q2Io=;
-        b=IMMOqhHMM4umPNXoi0CYT4A5c6zMjeP8xKsqb2W+e1P5Bi1/r4rrRY2HAouHJBScFP
-         KEo95eOWpO0mCWAX07tfkLNW98aUbgUvWS45SgM1h6Ui5MNI/2VasRUq2o7wyM7Oyv+p
-         +3VClTtYWptZT6XeUlIGhcp/nHGm12L2xtlKPihdlp/MQnsw/dMrBzyZGHjj+B63rXFD
-         OYA1hCkIHqW9C8Bn/EpdQ8Xt/LPsX96s6yqsYlulGCLbYZ2K0x1Okc/XdGy1nwUmYWah
-         oP2M2hU3GsmK1hrwmiZh0mBesrRq7YHbGpQNbYlvdo29rTI/AokFwVM3bww/7EcWdo2D
-         6yNA==
-X-Gm-Message-State: APjAAAUE38cil935cPexsEJTVbblede4JFhZQpFXq/z23Uc2oLBZVRYx
-        rhdFR9OU8CMZQcA1pZBzbA==
-X-Google-Smtp-Source: APXvYqyjwLNiOdATGwneeb/VvNya7K52309SCLgJd3wlYpmyowMytvhPIlCjsXsVJ32JPzuOA6Vxbw==
-X-Received: by 2002:aca:5f87:: with SMTP id t129mr10180489oib.36.1576511631553;
-        Mon, 16 Dec 2019 07:53:51 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e65sm6962874otb.62.2019.12.16.07.53.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 07:53:51 -0800 (PST)
-Date:   Mon, 16 Dec 2019 09:53:50 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, ran.wang_1@nxp.com,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
-Subject: Re: [v5 3/3] Documentation: dt: binding: fsl: Add
- 'fsl,ippdexpcr1-alt-addr' property
-Message-ID: <20191216155350.GA10941@bogus>
-References: <20191203122818.21941-1-biwen.li@nxp.com>
- <20191203122818.21941-3-biwen.li@nxp.com>
+        Mon, 16 Dec 2019 11:00:21 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:41490 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726916AbfLPQAV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 11:00:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=TGS6+SfNbYsSCiX0i/Vze/bvZqEPAq9yguFMTOt+qeE=; b=bahBcOQEYf+ySP5k1DGY+HdaS
+        ZUHbgUMOSarIkdQoM8LMLUgFjUPb1TO+430OmjbBeOQdjtejJ/p1/wLYlZLpdDdHeNH/ayqHEAoF/
+        y7V8LKFhvU9TXDv8G39mShYJyNzPvbIbLr9sq6+tXq0r3rqcsp6ymRK+GmJL7pQvykhxE=;
+Received: from [77.247.85.102] (helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1igsn4-0005FX-By; Mon, 16 Dec 2019 17:00:10 +0100
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1igsn1-0004dj-Ta; Mon, 16 Dec 2019 17:00:07 +0100
+Date:   Mon, 16 Dec 2019 17:00:00 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH v4 4/5] mfd: rn5t618: add more subdevices
+Message-ID: <20191216170000.022a4c31@kemnade.info>
+In-Reply-To: <20191216153106.GK2369@dell>
+References: <20191211215409.32764-1-andreas@kemnade.info>
+        <20191211215409.32764-5-andreas@kemnade.info>
+        <20191216153106.GK2369@dell>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203122818.21941-3-biwen.li@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_//.OSMD9FJV2e9zRYmChQGSF"; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue,  3 Dec 2019 20:28:18 +0800, Biwen Li wrote:
-> The 'fsl,ippdexpcr1-alt-addr' property is used to handle an errata A-008646
-> on LS1021A
-> 
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
-> Change in v5:
-> 	- none
-> 
-> Change in v4:
-> 	- rename property name
-> 	  fsl,ippdexpcr-alt-addr -> fsl,ippdexpcr1-alt-addr
-> 
-> Change in v3:
->   	- rename property name
-> 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
-> 
-> Change in v2:
->   	- update desc of the property
-> 	  'fsl,rcpm-scfg'
-> 
->  .../devicetree/bindings/soc/fsl/rcpm.txt      | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
+--Sig_//.OSMD9FJV2e9zRYmChQGSF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Mon, 16 Dec 2019 15:31:06 +0000
+Lee Jones <lee.jones@linaro.org> wrote:
+
+> On Wed, 11 Dec 2019, Andreas Kemnade wrote:
+>=20
+> > The RC5T619 has a RTC which is missing in the
+> > RN5T618. Add it as subdevice to prepare for their implementation
+> >=20
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > ---
+> > Changes in v3:
+> > - alignment cleanup
+> >  drivers/mfd/rn5t618.c | 16 ++++++++++++++--
+> >  1 file changed, 14 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+> > index d78eb29b94a4..18d56a732b20 100644
+> > --- a/drivers/mfd/rn5t618.c
+> > +++ b/drivers/mfd/rn5t618.c
+> > @@ -22,6 +22,12 @@ static const struct mfd_cell rn5t618_cells[] =3D {
+> >  	{ .name =3D "rn5t618-wdt" },
+> >  };
+> > =20
+> > +static const struct mfd_cell rc5t619_cells[] =3D {
+> > +	{ .name =3D "rn5t618-regulator" },
+> > +	{ .name =3D "rc5t619-rtc" },
+> > +	{ .name =3D "rn5t618-wdt" },
+> > +};
+> > +
+> >  static bool rn5t618_volatile_reg(struct device *dev, unsigned int reg)
+> >  {
+> >  	switch (reg) {
+> > @@ -173,8 +179,14 @@ static int rn5t618_i2c_probe(struct i2c_client *i2=
+c,
+> >  		return ret;
+> >  	}
+> > =20
+> > -	ret =3D devm_mfd_add_devices(&i2c->dev, -1, rn5t618_cells,
+> > -				   ARRAY_SIZE(rn5t618_cells), NULL, 0, NULL);
+> > +	if (priv->variant =3D=3D RC5T619)
+> > +		ret =3D devm_mfd_add_devices(&i2c->dev, -1, rc5t619_cells, =20
+>=20
+> Ref: The "-1", please use this as an opportunity to use the defines.
+>=20
+> > +					   ARRAY_SIZE(rc5t619_cells),
+> > +					   NULL, 0, NULL);
+> > +	else =20
+>=20
+> Are you sure it's not possible for 'variant' to be an unsupported
+> device?
+>=20
+Well, does it change the behavior for devices other than the rc5t619?
+I do not think so. If the mfd driver is bound to unsupported devices,
+rn5t618_of_match is wrong.
+
+Or do you want separate cell arrays for each of the three variant now to
+ease future extensions?
+
+Regards,
+Andreas
+
+--Sig_//.OSMD9FJV2e9zRYmChQGSF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl33qgAACgkQl4jFM1s/
+ye8L3Q/9FC/7kYfw6hbthxCJkPmri2gjx5kxI9eS0GygR7CTvGRUmSY6EfeuMHVo
+Pw7GmY2MlgUdrvWePw0iZaVEkO4P66w5vx/29Cv4p3ul5KHaJj4Pz//zK214WYSZ
+yrMMvMgCsBNQdV0jwr0ATFSoQImuFlj6i967FQCCj6fxesfEBtR7IMYNrVjxMNAH
+rmBJxSKTa++pNcw1vGSKnWw2bTCYYcWazhtKVUWTeP0mYGcpzmjEFzeUmUBgQu9o
+A8LFRdEr69Tg7Zq55B8BytfcLcMlkaPjO1a5WMchWXpNixmepWzv6R3KMQ0HpA0D
+XnQi9Lmh3CGBONYwcwznx53+msc8B8ACmQd5tvmLPzzbg55+LEQ6GOc7dSontY4z
+4EScSx0GWioZO8No5QRndainByPTAAnln3+OFCQ4/XcPIUN/clV6xt4rxQ7a6WPL
+8nkOeHsvncUxcIuZ5zrgunUsgElDsmtfAxHSAIQBZaF8XExtmrHSvVKS+/hKjIHL
+9ZrfcmGTy8eMYqUzlWrMBNFCem9OjsXl/bb58szFEOGTZZ6hk3ZnlEthMZdpvEaM
+E2tC7LNYGySAe4ImDmdrguYut3Hfkc2UYq4HQo82c/wSfmlvgBWHOEe1ohP53JP0
+n35O5UJYWyR3NfBAf70jC4Y6DGKfNoakj7A9KgJBiL1g592r/48=
+=1S8M
+-----END PGP SIGNATURE-----
+
+--Sig_//.OSMD9FJV2e9zRYmChQGSF--
