@@ -2,102 +2,139 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08C9C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 10:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9947AC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 10:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E07206D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 10:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46050206D3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 10:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="exuPW0UO"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="hpoeKy4M";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wDSmux4G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbfLPKr0 (ORCPT
+        id S1727459AbfLPKsW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:47:26 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35769 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfLPKr0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 05:47:26 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p17so6162751wmb.0
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 02:47:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ZGx3tMIAXh3e/jErEj3mGjKXeLEgC7vtrPLTzgdf8RI=;
-        b=exuPW0UOilBqSGIgd1GEmKBKjaCM6C7IqNc5ARGzMvdH+2VKEGi4kCAYsRLH5x5ln7
-         muPuiE+DqbobB47BrGIWsTYD8ELklZ8V16TN8er5Xm6cvN43NgG2VQqbi+Nlheayyss0
-         YBRLlxs8sEaw7AuKMh0YcXZ8gX0Og6DYxUVo/w0QXBK5o0HJ32zDIxZcvvYmYa5qYEnC
-         v7loC741CYlgWr/spE9TJxpKmJQOnI3c3zsuJNjJQWvfKi4zKDXu3pIhnWeJTYAsuDNm
-         jxt2qOd2vBEe7TSB9OweQ/kab2YiqYzYt60WXR3qIcIujgTJouMLTC6OP7Ew8l9vh9Ad
-         aBIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZGx3tMIAXh3e/jErEj3mGjKXeLEgC7vtrPLTzgdf8RI=;
-        b=KXivgAELTP/5RJrlemXasFpWBrAJOn31LKUI4uqEkxB+fazlx69J+d+3um71CWA3Uq
-         nUfG57c6B73GE/YzS6RRDTZNvZR/95LYhgJOf0BUROSFv/xds3b42OEMnChkvpHyNnag
-         5PtK8y2vFCcWzcW2nbcge+edmwAzzOkMdF5vmBqq0FaM7L6Px1M9fHWjhprUooruFJEA
-         XzW7Q/EtrRSqOIAkXbGygywDvgIE6S4/3Wt52q9zbEwPpeyNcAiGktXzM3lUwBr+6G5m
-         LNC0hSn3dz4ZuqzIDcevCdqccTs3Z4BuQE5YPEksSCDd6OKqldPzhtPjIOfnrSq5mEwX
-         86GA==
-X-Gm-Message-State: APjAAAWpea0w98VCjF8R8+Z1Tzm+4bgUYyvVEyZBww1Lgj2F6MU0U8hh
-        k97H0gn0r961gags4greKbtAbQ==
-X-Google-Smtp-Source: APXvYqwPxdSUxsc3QRujG1tAM8/rOSnkzPzMmIUqZawkxN8jwdGWvT5xmNwUIBP45uIeoMFRuQM1tg==
-X-Received: by 2002:a1c:7715:: with SMTP id t21mr29005012wmi.149.1576493244116;
-        Mon, 16 Dec 2019 02:47:24 -0800 (PST)
-Received: from dell ([2.27.35.132])
-        by smtp.gmail.com with ESMTPSA id n1sm20959404wrw.52.2019.12.16.02.47.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 02:47:23 -0800 (PST)
-Date:   Mon, 16 Dec 2019 10:47:23 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 3/5] devicetree: mfd: max14577: Add reference to
- max14040_battery.txt descriptions
-Message-ID: <20191216104723.GG3601@dell>
-References: <20191205154410.29462-1-matheus@castello.eng.br>
- <20191205154410.29462-4-matheus@castello.eng.br>
+        Mon, 16 Dec 2019 05:48:22 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:56731 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727099AbfLPKsV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:48:21 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 8277E712E;
+        Mon, 16 Dec 2019 05:48:20 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 16 Dec 2019 05:48:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=b2sdt1L+RtAvCJWD+Ejy+ZFvgQM
+        jCXlABUGffB8yAfA=; b=hpoeKy4M0e/xSvJLEpsfWD6wOgXYRtamc7oXmnJ0piJ
+        I3b0fZd7v59vpwxad7wQ7IxLTz9XYIZcSri9aKECh0m9CZAqp7RJy/wpf+TKCk0H
+        5drdwgmqEjXT2Q+noD1x+8Jeh0cexJphIVqVMMezk5wyNUeVKsY512uvA2jyko62
+        joC4nuay5b6kHnbeRsHJctp83oWLygRop0qtKLLF4l0x4L5U29IPwBc1qC6a147H
+        iyKQZeFWzr9T1mpkPO5GSA02X+Tb7bU/Eh/l1s+CXUMrr18ApOQ+vwKrZWnS7o5z
+        08+V6irSPmYEc1zbk10CNKSW89FJVspqMaV3OK1+0QQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=b2sdt1
+        L+RtAvCJWD+Ejy+ZFvgQMjCXlABUGffB8yAfA=; b=wDSmux4G5XsrldAYsui0YF
+        pYc8Svcsbxs4ZWyysfS0XnYYgzgFlGK65W2CxBUJlCWNyTC5mWVMT2cvaAfXSHfS
+        uquhig/HLIC5SSZgSyJBr7pRjkYsl0aioO4aAme/OFok3dRbGp+dYN3Egryn3BjN
+        ZQKtlfGjZRyzGqWJsuYq79ril5x5A7tBykog+2quKzQOsD601klvnizLN6sSJe21
+        ORNH77lHrfe3ksC54G4wLc/YrjRHzwzNEC0MhJHCxcStVH5pKSPVYX6Vcg0Y8+K6
+        O4HW2lD5mxpboe7fh8+ay7aHynmv3gNcxX2SFDwT0RtxurAfT9HyrPMpoL9KjUtw
+        ==
+X-ME-Sender: <xms:82D3XYYias_kvtl7_R0ILc0k8BsgyyYH-tzt2rV1jsQwfOdwtKr3XA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddthedgvddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggv
+    rhhnohdrthgvtghhnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:82D3XWofO-dhm5zVt2cImA2pQHn1JHEAMECKaBperVUf4LUGme1KBQ>
+    <xmx:82D3XcYf6FwSIxZiZteTo-Eyu0wayV82DR75lHASu3ZTWx5dJdEZjQ>
+    <xmx:82D3XeTmSoQpebhQDlaOCf4ZnlRApl7Hq_DyQFTnf4GRE6ikH9CZZQ>
+    <xmx:9GD3XYvCRlj-vrtszBqs79rDoXPTEjGttA70nTEU0BduQ4J5v2mBdw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id ACF288005A;
+        Mon, 16 Dec 2019 05:48:18 -0500 (EST)
+Date:   Mon, 16 Dec 2019 11:48:16 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Sandy Huang <hjc@rock-chips.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 02/12] dt-bindings: display: rockchip-lvds: Document PX30
+ PHY
+Message-ID: <20191216104816.zttjrgck3rdr54ok@gilmour.lan>
+References: <20191213181051.25983-1-miquel.raynal@bootlin.com>
+ <20191213181051.25983-3-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="inqcuz5g7xh4n5en"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191205154410.29462-4-matheus@castello.eng.br>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191213181051.25983-3-miquel.raynal@bootlin.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 05 Dec 2019, Matheus Castello wrote:
 
-> max77836 MFD has a fuel gauge that has a low SOC alert feature that is
-> described in Documentation/devicetree/bindings/power/supply/max17040_battery.txt.
-> Adding the reference to de documentation here.
-> 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> Acked-by: Rob Herring <robh@kernel.org>
+--inqcuz5g7xh4n5en
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Dec 13, 2019 at 07:10:41PM +0100, Miquel Raynal wrote:
+> PX30 SoCs use a single PHY shared by two display pipelines: MIPI DSI
+> and LVDS. In the case of the LVDS IP, document the possibility to fill
+> a PHY handle.
+>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > ---
->  Documentation/devicetree/bindings/mfd/max14577.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  .../devicetree/bindings/display/rockchip/rockchip-lvds.txt     | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-lvds.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-lvds.txt
+> index aa5663a6fd42..ec7b4341cfd2 100644
+> --- a/Documentation/devicetree/bindings/display/rockchip/rockchip-lvds.txt
+> +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-lvds.txt
+> @@ -19,6 +19,9 @@ Required properties:
+>  - rockchip,grf: phandle to the general register files syscon
+>  - rockchip,output: "rgb", "lvds" or "duallvds", This describes the output interface
+>
+> +- phys: LVDS/DSI DPHY (px30 only)
+> +- phy-names: name of the PHY, should be "dphy"
 
-Applied, thanks.
+Should or must?
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Also, phy-names is optional only for px30
+
+Maxime
+
+--inqcuz5g7xh4n5en
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfdg8AAKCRDj7w1vZxhR
+xel0AP9MqWCTdMxRsTUEkW3yY3dbF1oX5qWpR8bMcDtuj70uRwEA57+6MTtKXQt5
+k9opFOaTXgz5rq8ptFWDC/kAy5Z8/Ao=
+=SRme
+-----END PGP SIGNATURE-----
+
+--inqcuz5g7xh4n5en--
