@@ -2,134 +2,175 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06713C2D0CF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B201C2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D00F9206D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2BD2075A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:54:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJ58NKxp"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F0P+45XX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfLPItv (ORCPT
+        id S1726875AbfLPIyQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:49:51 -0500
-Received: from mail-ot1-f47.google.com ([209.85.210.47]:41117 "EHLO
-        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbfLPItv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 03:49:51 -0500
-Received: by mail-ot1-f47.google.com with SMTP id r27so8211115otc.8;
-        Mon, 16 Dec 2019 00:49:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4xOLwi7XGa06O+FcZfECpskN3Lf2VXslN2VEftJlRvg=;
-        b=dJ58NKxpobcoCFcVrixIygWkFd2lRYRcK62+F0oqTQy0PfcLrohbjZ/4794t+zXWew
-         6YLPUjhuSc++1fWNSHL/u93PNyCv2AvGz6o5coEvJZP3/hXPveU7fhP50DZUhQl1cz7m
-         V5fbw5287Yw5Yh7oHOP+LKFl2v6NCNjzpdDHSpDJqcHwSxuqAjcA54zuTxIvsu+dfUvy
-         UjipEEgIYB2tmihK3Vq8xjpTJ7WIBIUSWu1i2WoVVYyGSEL2gBFGJRoiUBwuf9+OYdfq
-         fv/+7QQ5mAQxYsEukysEKYsNNsRRs/bU9NflxHI5EA4lz+ZI6DUvHdRkPSA7tteynrLD
-         HAbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4xOLwi7XGa06O+FcZfECpskN3Lf2VXslN2VEftJlRvg=;
-        b=Nfe4K/bYqsEzecM5mGaT1laPBKUT0gxjznuZ8Zoc0U04SFNPoxLReKv++1M1m65073
-         guSmbiC9WaJst9L6wc7WPeVzSo/kK3GPxJtkIukzkN/Eu3B18iQw9CF4H3yfvuHVhNxo
-         efDEEEkdLHXt+/P8be1q1lQnkfJ7GKdXrFnqtfCDAQgyu/jZFrnnAZzqWisIikHniNSo
-         SNLoHQN2D2JMTvm8sbufodDw9l5WUdb7NuSE7Moa1ePnAyuMlJ9FcbIclt79rY0P42lm
-         xEJa9DMiW135os1/fRglkqv33+TFiQcN5ejCkcaFdz/wcDq4xwYqnKBzWt4ZTFP3+LkS
-         JYDA==
-X-Gm-Message-State: APjAAAWVndGIal8uv+3/eXXmGtT69aW8hwwgb2dp0enbGiD/4aECeqZT
-        lyN4h5uPrT6fM9tTMHWJuiNRJRHnp5iV+6WB/2A=
-X-Google-Smtp-Source: APXvYqwlbGXOP54hraUBXqLyvcB1sZC55s35DdLDVTvMlWDnFYSYzIpnhC0yoc7BBbnE7hMFzhGGWwdDVzlod+Kll6g=
-X-Received: by 2002:a05:6830:16d0:: with SMTP id l16mr31683433otr.176.1576486189948;
- Mon, 16 Dec 2019 00:49:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191213084748.11210-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAL_JsqLSYroDZGWksJJ=E+01X=3Tji4+GmK8s3i+d2BJphqiLQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqLSYroDZGWksJJ=E+01X=3Tji4+GmK8s3i+d2BJphqiLQ@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 16 Dec 2019 08:49:23 +0000
-Message-ID: <CA+V-a8uKBuVUQvkoJ9pJYX97Qy3JazTyLCy-2T35gOX77AP8vg@mail.gmail.com>
-Subject: Re: [v2 3/6] of: address: add support to parse PCI outbound-ranges
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mon, 16 Dec 2019 03:54:16 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50762 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbfLPIyQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 03:54:16 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBG8rqsP083176;
+        Mon, 16 Dec 2019 02:53:52 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576486432;
+        bh=6aFcWyhsHHVnr6Cqjh6RFG3uMltbSLRzg3ZmXfAwROo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=F0P+45XXO+oyrT9rlcf9tv/US8pM8xKSRjl88mVxP6m173McAj6Pyhkfi+bIFs8oh
+         W3IDPIBKql+P+k+9vXABGrikOVH+ShRd+3NHkLQy0AFryRaIEvVF7KwOjF0qQFXtQU
+         TlwhjfDx+D/yzAhFW7NqrutL/8PZPK8Q+YS8YyYA=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBG8rqNW082176
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Dec 2019 02:53:52 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
+ Dec 2019 02:53:50 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 16 Dec 2019 02:53:50 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBG8rlLb101138;
+        Mon, 16 Dec 2019 02:53:48 -0600
+Subject: Re: [PATCH 1/2] dt-bindings: mtd: spi-nor: document new flag
+To:     Michael Walle <michael@walle.cc>, <linux-mtd@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+References: <20191214191943.3679-1-michael@walle.cc>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <556fe468-0080-ad05-8228-5ff8f1b3dac6@ti.com>
+Date:   Mon, 16 Dec 2019 14:24:15 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <20191214191943.3679-1-michael@walle.cc>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-Thank you for the review.
+On 15/12/19 12:49 am, Michael Walle wrote:
+> Document the new flag "no-unlock".
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+> Does the property need a prefix? I couldn't find any hint. If so, what
+> should it be? "m25p," or "spi-nor," ?
+> 
+>  Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> index f03be904d3c2..2d305c893ed7 100644
+> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> @@ -78,6 +78,12 @@ Optional properties:
+>  		   cannot reboot properly if the flash is left in the "wrong"
+>  		   state. This boolean flag can be used on such systems, to
+>  		   denote the absence of a reliable reset mechanism.
+> +- no-unlock : By default, linux unlocks the whole flash because there
+> +		   are legacy flash devices which are locked by default
+> +		   after reset. Set this flag if you don't want linux to
+> +		   unlock the whole flash automatically. In this case you
+> +		   can control the non-volatile bits by the
+> +		   flash_lock/flash_unlock tools.
+>  
 
-On Fri, Dec 13, 2019 at 8:37 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Fri, Dec 13, 2019 at 2:48 AM Lad Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> >
-> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > this patch adds support to parse PCI outbound-ranges, the
-> > outbound-regions are similar to pci ranges except it doesn't
-> > have pci address, below is the format for bar-ranges:
-> >
-> > outbound-ranges = <flags upper32_cpuaddr lower32_cpuaddr
-> >                    upper32_size lower32_size>;
->
-> You can't just make up a new ranges property. Especially one that
-> doesn't follow how 'ranges' works. We already have 'dma-ranges' to
-> translate device to memory addresses.
->
-> Explain the problem or feature you need, not the solution you came up
-> with. Why do you need this and other endpoint bindings haven't?
->
-rcar SoC's supports multiple outbound region for mapping the PCI address
-locally to the system. This lead to discussion where there exist controllers
-which support regions for high/low priority transfer and similarly regions
-for large/small memory allocations, as a result a new ranges property was
-added, where we can specify the flags which would indicate how the outbound
-region can be used during requests.
+Current SPI NOR framework unconditionally unlocks entire flash which
+I agree is not the best thing to do, but I don't think we need
+new DT property here. MTD cmdline partitions and DT partitions already 
+provide a way to specify that a partition should remain locked[1][2]
 
-The current endpoint controller drivers just support  single region.
+SPI NOR framework should instead set MTD_POWERUP_LOCK flags in mtd->flags
+for flash devices that power up with lock bits set. And MTD core will 
+take care of unlocking flash regions while taking into account partition
+flags defined by user as part of MTD partitions defined in DT or
+via cmdline args.
 
-Cheers,
---Prabhakar
+So that change should to be set MTD_POWERUP_LOCK for
+in SPI NOR core. Can you check below[3] (untested) diff helps?
+This should prevent unlocking partitions that are to remain locked 
+as specified in DT/cmdline 
+
+[1] Documentation/devicetree/bindings/mtd/partition.txt
+[2] drivers/mtd/parsers/cmdlinepart.c (see "lk" parameter)
+
+[3]
+
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index 1082b6bb1393..6adb950849f6 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -4914,23 +4914,6 @@ static int spi_nor_quad_enable(struct spi_nor *nor)
+ 	return nor->params.quad_enable(nor);
+ }
+ 
+-/**
+- * spi_nor_unlock_all() - Unlocks the entire flash memory array.
+- * @nor:	pointer to a 'struct spi_nor'.
+- *
+- * Some SPI NOR flashes are write protected by default after a power-on reset
+- * cycle, in order to avoid inadvertent writes during power-up. Backward
+- * compatibility imposes to unlock the entire flash memory array at power-up
+- * by default.
+- */
+-static int spi_nor_unlock_all(struct spi_nor *nor)
+-{
+-	if (nor->flags & SNOR_F_HAS_LOCK)
+-		return spi_nor_unlock(&nor->mtd, 0, nor->params.size);
+-
+-	return 0;
+-}
+-
+ static int spi_nor_init(struct spi_nor *nor)
+ {
+ 	int err;
+@@ -4941,11 +4924,11 @@ static int spi_nor_init(struct spi_nor *nor)
+ 		return err;
+ 	}
+ 
+-	err = spi_nor_unlock_all(nor);
+-	if (err) {
+-		dev_dbg(nor->dev, "Failed to unlock the entire flash memory array\n");
+-		return err;
+-	}
++	/*
++	 * Flashes may power up locked. Set this flag so that MTD core
++	 * takes care of unlocking partitions as required.
++	 */
++	nor->mtd.flags |= MTD_POWERUP_LOCK;
+ 
+ 	if (nor->addr_width == 4 && !(nor->flags & SNOR_F_4B_OPCODES)) {
+ 		/*
+
+
+
+
+-- 
+Regards
+Vignesh
