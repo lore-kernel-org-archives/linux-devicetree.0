@@ -2,411 +2,268 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3BCC2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5FEC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 657B520725
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5AC2206CB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:59:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="G7qQCZKg"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QS4oJUXM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfLPLzy (ORCPT
+        id S1727435AbfLPL7F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:55:54 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:42656 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727241AbfLPLzv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:55:51 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576497351; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=yr368A1U8+Ymzyj50vnz3Ib8PJaaegeu+ZGhjpsOx28=; b=G7qQCZKggwXAiXK/nTXAhXT1MAEduplKfYMFHfpYp6Ahmn1lSEXESGbh8ifyLejlcOPtM/ti
- okSkz1aJBWxcmSiiR/qNpVtIM+fVmz1qRjmTI64ohjd7vPurxFR0fAObogD/O9js0ETA8mfj
- f4z/qBcU9kUC3OV/nRMKlMfOg7M=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df770c6.7fc4b062c768-smtp-out-n01;
- Mon, 16 Dec 2019 11:55:50 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C0648C4479D; Mon, 16 Dec 2019 11:55:50 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8F76DC447A2;
-        Mon, 16 Dec 2019 11:55:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8F76DC447A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        rnayak@codeaurora.org
-Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 1/2] dt-bindings: power: rpmpd: Convert rpmpd bindings to yaml
-Date:   Mon, 16 Dec 2019 17:25:30 +0530
-Message-Id: <20191216115531.17573-2-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20191216115531.17573-1-sibis@codeaurora.org>
-References: <20191216115531.17573-1-sibis@codeaurora.org>
+        Mon, 16 Dec 2019 06:59:05 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36915 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfLPL7F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 06:59:05 -0500
+Received: by mail-ed1-f67.google.com with SMTP id cy15so4788580edb.4
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 03:59:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OdxYjoNvvAigHgcFiC0RbqBfDi1gELByEUzUPakRzAU=;
+        b=QS4oJUXMBR1LKAmIRfNd7TsTPRvZM+p35ulJJJ0tqyFHzhtpDodYo5LQgsYohpMD38
+         jd2GpYZzmeFrxdjcvVHDIEQU5Ob37zkgIrdMFcPd6V+3m11xQam+VZueAHmC/FTDgrce
+         M3ruBdp8qqJK+f4rArJwqJ1LXk+sdQpFvLVbA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OdxYjoNvvAigHgcFiC0RbqBfDi1gELByEUzUPakRzAU=;
+        b=CpaQkBJScBgAISMh52SM6F6BViIAyJBw3/1+eFQ2QuLGdYC5ecY3JSmFuYqWSishV2
+         Rlmziw4/C64+qcuyl6/spxw0e3O8Sv8wGxJPuRUd3cOjJ9ak3C7P+s8JGHDcz4aFnbbL
+         qY3Oz4euELPTgnEPaGNapC8igE3sx2yFP0WkM9rKU5vqwlV+lDDuGZDCz2bailb9LVby
+         ik6EIS92bYvnswpw1nMr/BoNXJjoRmjfGmXClTD2+ROYDR+Hwv3jBk7LdwONgMC8VW1D
+         eAFtKPCCAo9s46EeuZB6qbPlNLBl1O0OmeApV/pL6pooqN9Nv/0fv5F2p/P2WDHRpK0q
+         xQcw==
+X-Gm-Message-State: APjAAAWkO4nFuk8fD1g6UJJ92r2UfzRQtW/7HNI1I4Ke1/nUL2jdp8re
+        8SkAx2gd5iACEVOYQG+I+k2h3uu8//LM1g==
+X-Google-Smtp-Source: APXvYqwJZoNKkfbr3Z/Gltz0WmAQTMFZ9+jnenRUlUlLDWryEh8csmac7VxlIlWv+8NSyaGpYQXoYg==
+X-Received: by 2002:a17:906:1c5b:: with SMTP id l27mr31891859ejg.143.1576497542336;
+        Mon, 16 Dec 2019 03:59:02 -0800 (PST)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
+        by smtp.gmail.com with ESMTPSA id p18sm91284ejx.80.2019.12.16.03.59.01
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 03:59:01 -0800 (PST)
+Received: by mail-wr1-f41.google.com with SMTP id c14so6917095wrn.7
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 03:59:01 -0800 (PST)
+X-Received: by 2002:adf:f586:: with SMTP id f6mr28927980wro.46.1576497541085;
+ Mon, 16 Dec 2019 03:59:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191216080445.8747-1-bibby.hsieh@mediatek.com> <20191216080445.8747-5-bibby.hsieh@mediatek.com>
+In-Reply-To: <20191216080445.8747-5-bibby.hsieh@mediatek.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Mon, 16 Dec 2019 20:58:49 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5CU79CnRkpo8bpijMCvtzKAkQXj6nadt3YyQSCcq5roXQ@mail.gmail.com>
+Message-ID: <CAAFQd5CU79CnRkpo8bpijMCvtzKAkQXj6nadt3YyQSCcq5roXQ@mail.gmail.com>
+Subject: Re: [PATCH v9 4/4] i2c: core: support bus regulator controlling in adapter
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert RPM/RPMH power-domain bindings to yaml.
+Hi Bibby,
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- .../devicetree/bindings/power/qcom,rpmpd.txt  | 150 ----------------
- .../devicetree/bindings/power/qcom,rpmpd.yaml | 170 ++++++++++++++++++
- 2 files changed, 170 insertions(+), 150 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
- create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+On Mon, Dec 16, 2019 at 5:04 PM Bibby Hsieh <bibby.hsieh@mediatek.com> wrote:
+>
+> Although in the most platforms, the bus power of i2c
+> are alway on, some platforms disable the i2c bus power
+> in order to meet low power request.
+>
+> We get and enable bulk regulator in i2c adapter device.
+>
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/i2c/i2c-core-base.c | 65 +++++++++++++++++++++++++++++++++++++
+>  include/linux/i2c.h         |  3 ++
+>  2 files changed, 68 insertions(+)
+>
 
-diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-deleted file mode 100644
-index 6346d00b1b400..0000000000000
---- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-+++ /dev/null
-@@ -1,150 +0,0 @@
--Qualcomm RPM/RPMh Power domains
--
--For RPM/RPMh Power domains, we communicate a performance state to RPM/RPMh
--which then translates it into a corresponding voltage on a rail
--
--Required Properties:
-- - compatible: Should be one of the following
--	* qcom,msm8976-rpmpd: RPM Power domain for the msm8976 family of SoC
--	* qcom,msm8996-rpmpd: RPM Power domain for the msm8996 family of SoC
--	* qcom,msm8998-rpmpd: RPM Power domain for the msm8998 family of SoC
--	* qcom,qcs404-rpmpd: RPM Power domain for the qcs404 family of SoC
--	* qcom,sc7180-rpmhpd: RPMh Power domain for the sc7180 family of SoC
--	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of SoC
--	* qcom,sm8150-rpmhpd: RPMh Power domain for the sm8150 family of SoC
-- - #power-domain-cells: number of cells in Power domain specifier
--	must be 1.
-- - operating-points-v2: Phandle to the OPP table for the Power domain.
--	Refer to Documentation/devicetree/bindings/power/power_domain.txt
--	and Documentation/devicetree/bindings/opp/opp.txt for more details
--
--Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
--various OPPs for different platforms as well as Power domain indexes
--
--Example: rpmh power domain controller and OPP table
--
--#include <dt-bindings/power/qcom-rpmhpd.h>
--
--opp-level values specified in the OPP tables for RPMh power domains
--should use the RPMH_REGULATOR_LEVEL_* constants from
--<dt-bindings/power/qcom-rpmhpd.h>
--
--	rpmhpd: power-controller {
--		compatible = "qcom,sdm845-rpmhpd";
--		#power-domain-cells = <1>;
--		operating-points-v2 = <&rpmhpd_opp_table>;
--
--		rpmhpd_opp_table: opp-table {
--			compatible = "operating-points-v2";
--
--			rpmhpd_opp_ret: opp1 {
--				opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
--			};
--
--			rpmhpd_opp_min_svs: opp2 {
--				opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
--			};
--
--			rpmhpd_opp_low_svs: opp3 {
--				opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
--			};
--
--			rpmhpd_opp_svs: opp4 {
--				opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
--			};
--
--			rpmhpd_opp_svs_l1: opp5 {
--				opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
--			};
--
--			rpmhpd_opp_nom: opp6 {
--				opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
--			};
--
--			rpmhpd_opp_nom_l1: opp7 {
--				opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
--			};
--
--			rpmhpd_opp_nom_l2: opp8 {
--				opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
--			};
--
--			rpmhpd_opp_turbo: opp9 {
--				opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
--			};
--
--			rpmhpd_opp_turbo_l1: opp10 {
--				opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
--			};
--		};
--	};
--
--Example: rpm power domain controller and OPP table
--
--	rpmpd: power-controller {
--		compatible = "qcom,msm8996-rpmpd";
--		#power-domain-cells = <1>;
--		operating-points-v2 = <&rpmpd_opp_table>;
--
--		rpmpd_opp_table: opp-table {
--			compatible = "operating-points-v2";
--
--			rpmpd_opp_low: opp1 {
--				opp-level = <1>;
--			};
--
--			rpmpd_opp_ret: opp2 {
--				opp-level = <2>;
--			};
--
--			rpmpd_opp_svs: opp3 {
--				opp-level = <3>;
--			};
--
--			rpmpd_opp_normal: opp4 {
--				opp-level = <4>;
--			};
--
--			rpmpd_opp_high: opp5 {
--				opp-level = <5>;
--			};
--
--			rpmpd_opp_turbo: opp6 {
--				opp-level = <6>;
--			};
--		};
--	};
--
--Example: Client/Consumer device using OPP table
--
--	leaky-device0@12350000 {
--		compatible = "foo,i-leak-current";
--		reg = <0x12350000 0x1000>;
--		power-domains = <&rpmhpd SDM845_MX>;
--		operating-points-v2 = <&leaky_opp_table>;
--	};
--
--
--	leaky_opp_table: opp-table {
--		compatible = "operating-points-v2";
--
--		opp1 {
--			opp-hz = /bits/ 64 <144000>;
--			required-opps = <&rpmhpd_opp_low>;
--		};
--
--		opp2 {
--			opp-hz = /bits/ 64 <400000>;
--			required-opps = <&rpmhpd_opp_ret>;
--		};
--
--		opp3 {
--			opp-hz = /bits/ 64 <20000000>;
--			required-opps = <&rpmpd_opp_svs>;
--		};
--
--		opp4 {
--			opp-hz = /bits/ 64 <25000000>;
--			required-opps = <&rpmpd_opp_normal>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-new file mode 100644
-index 0000000000000..4aebf024e4427
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-@@ -0,0 +1,170 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/qcom,rpmpd.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm RPM/RPMh Power domains
-+
-+maintainers:
-+  - Rajendra Nayak <rnayak@codeaurora.org>
-+
-+description:
-+  For RPM/RPMh Power domains, we communicate a performance state to RPM/RPMh
-+  which then translates it into a corresponding voltage on a rail
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,msm8976-rpmpd
-+      - qcom,msm8996-rpmpd
-+      - qcom,msm8998-rpmpd
-+      - qcom,qcs404-rpmpd
-+      - qcom,sc7180-rpmhpd
-+      - qcom,sdm845-rpmhpd
-+      - qcom,sm8150-rpmhpd
-+
-+  '#power-domain-cells':
-+    const: 1
-+
-+  operating-points-v2: true
-+
-+  opp-table:
-+    type: object
-+
-+required:
-+  - compatible
-+  - '#power-domain-cells'
-+  - operating-points-v2
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+
-+    // Example 1 (rpmh power domain controller and OPP table):
-+
-+    #include <dt-bindings/power/qcom-rpmpd.h>
-+
-+    rpmhpd: power-controller {
-+      compatible = "qcom,sdm845-rpmhpd";
-+      #power-domain-cells = <1>;
-+      operating-points-v2 = <&rpmhpd_opp_table>;
-+
-+      rpmhpd_opp_table: opp-table {
-+        compatible = "operating-points-v2";
-+
-+        rpmhpd_opp_ret: opp1 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-+        };
-+
-+        rpmhpd_opp_min_svs: opp2 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-+        };
-+
-+        rpmhpd_opp_low_svs: opp3 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+        };
-+
-+        rpmhpd_opp_svs: opp4 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+        };
-+
-+        rpmhpd_opp_svs_l1: opp5 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+        };
-+
-+        rpmhpd_opp_nom: opp6 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-+        };
-+
-+        rpmhpd_opp_nom_l1: opp7 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-+        };
-+
-+        rpmhpd_opp_nom_l2: opp8 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-+        };
-+
-+        rpmhpd_opp_turbo: opp9 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-+        };
-+
-+        rpmhpd_opp_turbo_l1: opp10 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-+        };
-+      };
-+    };
-+
-+  - |
-+
-+    // Example 2 (rpm power domain controller and OPP table):
-+
-+    rpmpd: power-controller {
-+      compatible = "qcom,msm8996-rpmpd";
-+      #power-domain-cells = <1>;
-+      operating-points-v2 = <&rpmpd_opp_table>;
-+
-+      rpmpd_opp_table: opp-table {
-+        compatible = "operating-points-v2";
-+
-+        rpmpd_opp_low: opp1 {
-+          opp-level = <1>;
-+        };
-+
-+        rpmpd_opp_ret: opp2 {
-+          opp-level = <2>;
-+        };
-+
-+        rpmpd_opp_svs: opp3 {
-+          opp-level = <3>;
-+        };
-+
-+        rpmpd_opp_normal: opp4 {
-+          opp-level = <4>;
-+        };
-+
-+        rpmpd_opp_high: opp5 {
-+          opp-level = <5>;
-+        };
-+
-+        rpmpd_opp_turbo: opp6 {
-+          opp-level = <6>;
-+        };
-+      };
-+    };
-+
-+  - |
-+
-+    // Example 3 (Client/Consumer device using OPP table):
-+
-+    leaky-device0@12350000 {
-+      compatible = "foo,i-leak-current";
-+      reg = <0x12350000 0x1000>;
-+      power-domains = <&rpmhpd 0>;
-+      operating-points-v2 = <&leaky_opp_table>;
-+    };
-+
-+    leaky_opp_table: opp-table {
-+      compatible = "operating-points-v2";
-+      opp1 {
-+        opp-hz = /bits/ 64 <144000>;
-+        required-opps = <&rpmhpd_opp_low>;
-+      };
-+
-+      opp2 {
-+        opp-hz = /bits/ 64 <400000>;
-+        required-opps = <&rpmhpd_opp_ret>;
-+      };
-+
-+      opp3 {
-+        opp-hz = /bits/ 64 <20000000>;
-+        required-opps = <&rpmpd_opp_svs>;
-+      };
-+
-+      opp4 {
-+        opp-hz = /bits/ 64 <25000000>;
-+        required-opps = <&rpmpd_opp_normal>;
-+      };
-+    };
-+...
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks for the patch! Please see my comments below.
+
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 9333c865d4a9..e95ebd0af200 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -306,6 +306,7 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
+>  static int i2c_device_probe(struct device *dev)
+>  {
+>         struct i2c_client       *client = i2c_verify_client(dev);
+> +       struct i2c_adapter      *adap = client->adapter;
+>         struct i2c_driver       *driver;
+>         int status;
+>
+> @@ -371,6 +372,12 @@ static int i2c_device_probe(struct device *dev)
+>
+>         dev_dbg(dev, "probe\n");
+>
+> +       status = regulator_enable(adap->bus_reg);
+> +       if (status != 0) {
+> +               dev_err(&adap->dev, "Failed to enable power regulator\n");
+> +               goto err_clear_wakeup_irq;
+> +       }
+> +
+>         status = of_clk_set_defaults(dev->of_node, false);
+>         if (status < 0)
+>                 goto err_clear_wakeup_irq;
+> @@ -407,6 +414,7 @@ static int i2c_device_probe(struct device *dev)
+>  static int i2c_device_remove(struct device *dev)
+>  {
+>         struct i2c_client       *client = i2c_verify_client(dev);
+> +       struct i2c_adapter      *adap = client->adapter;
+>         struct i2c_driver       *driver;
+>         int status = 0;
+>
+> @@ -420,6 +428,8 @@ static int i2c_device_remove(struct device *dev)
+>         }
+>
+>         dev_pm_domain_detach(&client->dev, true);
+> +       if (!pm_runtime_status_suspended(&adap->dev))
+> +               regulator_disable(adap->bus_reg);
+>
+>         dev_pm_clear_wake_irq(&client->dev);
+>         device_init_wakeup(&client->dev, false);
+> @@ -431,6 +441,54 @@ static int i2c_device_remove(struct device *dev)
+>         return status;
+>  }
+>
+> +#ifdef CONFIG_PM_SLEEP
+> +static int i2c_resume(struct device *dev)
+> +{
+> +       struct i2c_client *client = i2c_verify_client(dev);
+> +       struct i2c_adapter *adap = client->adapter;
+
+We need to ensure here that if the slave device was not runtime
+suspended before the system suspend, the regulator is enabled before
+the slave's resume callback is called.
+
+> +
+> +       return pm_generic_resume(&adap->dev);
+> +}
+> +
+> +static int i2c_suspend(struct device *dev)
+> +{
+> +       struct i2c_client *client = i2c_verify_client(dev);
+> +       struct i2c_adapter *adap = client->adapter;
+> +
+> +       return pm_generic_suspend(&adap->dev);
+
+We need to ensure that the regulator is disabled when the system suspends.
+
+> +}
+> +#endif
+> +
+> +#ifdef CONFIG_PM
+> +static int i2c_runtime_resume(struct device *dev)
+> +{
+> +       struct i2c_client *client = i2c_verify_client(dev);
+> +       struct i2c_adapter *adap = client->adapter;
+> +
+> +       pm_generic_runtime_resume(&adap->dev);
+
+Why adap->dev? This callback is expected to execute a PM operation on
+the I2C slave device.
+
+Also, don't we need some error handling here?
+
+> +
+> +       return regulator_enable(adap->bus_reg);
+> +}
+> +
+> +static int i2c_runtime_suspend(struct device *dev)
+> +{
+> +       struct i2c_client *client = i2c_verify_client(dev);
+> +       struct i2c_adapter *adap = client->adapter;
+> +
+> +       pm_generic_runtime_suspend(&adap->dev);
+
+Ditto.
+
+> +
+> +       if (!pm_runtime_status_suspended(&adap->dev))
+
+Since we just executed a suspend operation on the device, how is it
+possible that it isn't suspended?
+
+> +               return regulator_disable(client->adapter->bus_reg);
+> +
+> +       return 0;
+> +}
+> +#endif
+> +
+> +static const struct dev_pm_ops i2c_device_pm = {
+> +       SET_SYSTEM_SLEEP_PM_OPS(i2c_suspend, i2c_resume)
+> +       SET_RUNTIME_PM_OPS(i2c_runtime_suspend, i2c_runtime_resume, NULL)
+> +};
+> +
+>  static void i2c_device_shutdown(struct device *dev)
+>  {
+>         struct i2c_client *client = i2c_verify_client(dev);
+> @@ -488,6 +546,7 @@ struct bus_type i2c_bus_type = {
+>         .probe          = i2c_device_probe,
+>         .remove         = i2c_device_remove,
+>         .shutdown       = i2c_device_shutdown,
+> +       .pm             = &i2c_device_pm,
+>  };
+>  EXPORT_SYMBOL_GPL(i2c_bus_type);
+>
+> @@ -1351,6 +1410,11 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
+>                 goto out_reg;
+>
+>         dev_dbg(&adap->dev, "adapter [%s] registered\n", adap->name);
+> +       adap->bus_reg = devm_regulator_get(&adap->dev, "bus");
+> +       if (IS_ERR(adap->bus_reg)) {
+> +               res = PTR_ERR(adap->bus_reg);
+> +               goto out_reg;
+> +       }
+>
+>         pm_runtime_no_callbacks(&adap->dev);
+>         pm_suspend_ignore_children(&adap->dev, true);
+> @@ -1580,6 +1644,7 @@ void i2c_del_adapter(struct i2c_adapter *adap)
+>         dev_dbg(&adap->dev, "adapter [%s] unregistered\n", adap->name);
+>
+>         pm_runtime_disable(&adap->dev);
+> +       devm_regulator_put(adap->bus_reg);
+>
+>         i2c_host_notify_irq_teardown(adap);
+>
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index d2f786706657..833b81a680da 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -15,6 +15,7 @@
+>  #include <linux/device.h>      /* for struct device */
+>  #include <linux/sched.h>       /* for completion */
+>  #include <linux/mutex.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <linux/rtmutex.h>
+>  #include <linux/irqdomain.h>           /* for Host Notify IRQ */
+>  #include <linux/of.h>          /* for struct device_node */
+> @@ -330,6 +331,7 @@ struct i2c_client {
+>         int init_irq;                   /* irq set at initialization    */
+>         int irq;                        /* irq issued by device         */
+>         struct list_head detected;
+> +
+
+Unnecessary change.
+
+Best regards,
+Tomasz
