@@ -2,337 +2,604 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F0BC2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05850C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9889221835
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF769218AC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:21:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p0lL2isV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Leh+onp1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbfLPVLa (ORCPT
+        id S1726681AbfLPVVY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:11:30 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:34839 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfLPVL3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 16:11:29 -0500
-Received: by mail-il1-f196.google.com with SMTP id g12so6609213ild.2
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 13:11:28 -0800 (PST)
+        Mon, 16 Dec 2019 16:21:24 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45455 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbfLPVVY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 16:21:24 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 2so6297827pfg.12;
+        Mon, 16 Dec 2019 13:21:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fkYJ5pa9nbKOKyFcP8C8UHZBwLa5GTQfg7UnOmnBomE=;
-        b=p0lL2isV5hhyipvhkSqpkezqiNxO/gomyfNXgVp1sNiokvE7WHAgy5YsnlImH0Rcbp
-         FZlC8YcC64xQb73aWSxz20NfuGmGUn5JWUrrcpX6iKK6iYlxmH9L8Er8YZQVt2CR6XZY
-         CUDjfqHU9fSm7uD+buILT2h3MCCk+3b7gh5Xl4UsUEGhhoHxDK1b070+sxL3GEkCzEQD
-         1ka6D1oeH/jAsr+lvK/ENdP2aQqzNUP1t5t0vBxnC37Qz41qx2mLaAZKhqE/HodKMfUL
-         nKKEBe8aTv7w5xUTv3r6Fi3ARFBjvmdU+ULTqhd8l5rSPGfacfny7kNCbG5NGNNMOHKT
-         F6hg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=NIsiOPIXGNdPj2KeSYFK0YZfg6aOCR5rYXMYdDTxxjg=;
+        b=Leh+onp1c6334yt/mm+fFaM9lLR5NyudDQon1Vm+d+zouiogxkNO9Udu6U0ilXLZAK
+         oAEBpEhg7LfX7GSrYmjwQeNY5eQwcUngig+Lhl0UUzbWbzOOemFmxuDrug+XIUnvXu1e
+         xhJVAjywS/FrI2507lqJNncqe9hBQghN74/i0aKa2/BHrQR7I6fFqy+J7V7+URNwG3wd
+         R/TdzXt1WE/pk43Wn+8pcyReJYwAn8Ty/IC0sohoCX+VIvzwSjg6jHuj34Pg8ujZWe1y
+         +BA1Bs8DG53nkgN/WZCTuaCrYFTa/tD0tGOSw4Mv/TYybb7Gty50NmOPk1HGUBcyxPz/
+         gAaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fkYJ5pa9nbKOKyFcP8C8UHZBwLa5GTQfg7UnOmnBomE=;
-        b=O+ZAbkAqhsgw0KzaMRCkmNXYG8vTII88b22yxWdTv//27VlHxv5FLAvg78GDN7se3e
-         ZAK2q9wueDBua+X89Wcu0syvry+VxXwjbxFM+jjFVC+aws4wWrT9A/aHFxQv9JMpgVVK
-         vza2IW5fgx3zvbZwLL+dO41R8Py8XiHnpSfk0XjYAeWC3hz1KK65aowRrGrpwFvXqavM
-         TzOiL7H7hphTZAy+U/91Wk0RAgpvSiEH69LM9+YoWKcqlcBkbvteYW25r67a2Pu6NGUc
-         A2phoR8cL4yIYadllvBmrrLtJuDtUuyoybPKrX73UCf9ksb9cyN5fx0OYesAkbuQpeaT
-         tCzg==
-X-Gm-Message-State: APjAAAVSYZvEGSwrRQ97rEbcfQYXXrG/oWkHPV4wt9uvKh+t6BJfTDU2
-        OQTesqYdyr9XAE+Q8F6B20Smuhk01qyy8Nqhff505g==
-X-Google-Smtp-Source: APXvYqxVHsdIC8VlRYTzYqeb69NqWhrUbzqstR4rImviApaGK7bQAGkdHjoiFC5rrFcG91bXmTXETB1cct+Y6qGPmJU=
-X-Received: by 2002:a92:5f86:: with SMTP id i6mr13599326ill.57.1576530688363;
- Mon, 16 Dec 2019 13:11:28 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=NIsiOPIXGNdPj2KeSYFK0YZfg6aOCR5rYXMYdDTxxjg=;
+        b=nXgPUG24hxHuxmgSVGnTmVqtz2PQ5Qi06EP/k8V8JK49B9UzhX3ho2KgsPsEW5qxqn
+         G+HTyeJk7KYlkgwjosvz8Y9XxmuE2XIcEfocnCFIuZ5V6JlckZftmPt6rXW1ZQAyeAGD
+         7/3qCDcjj9tymBg5Ad4eNUvYZXkjUntPXVORTOVBIai/CqZbquuxJTzlvP0Bajt2OmIH
+         EyS9oB8uJYGM5zt6OSnfRyuuKiKcHpN2MLHTWUor4sSHEDZR3O480+DBt0MYYWWk8g0Q
+         3PFk0RmrZGXEX7kWVKh6uBK5IufXQKHjNFTKvbnsWe2/mmYp5iDZ5+wROxHseEYPdKPp
+         /qnQ==
+X-Gm-Message-State: APjAAAWstKS9DnwQpg0Po+qPjefGpQF05vruy+KcC8Tm8dsqL8iDhgTs
+        ExTPrjro7ZOK/qAByLPz6+A=
+X-Google-Smtp-Source: APXvYqwMJME3LORIz+L/PbewupGbLPbnaMhEHCZv3ap7ixap1Q0Z1HQjfP2Tmx6HbqS5s8g/QX7bZA==
+X-Received: by 2002:a63:904c:: with SMTP id a73mr21103525pge.335.1576531282840;
+        Mon, 16 Dec 2019 13:21:22 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w11sm23510386pfn.4.2019.12.16.13.21.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 16 Dec 2019 13:21:21 -0800 (PST)
+Date:   Mon, 16 Dec 2019 13:21:20 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>,
+        Tomohiro Kusumi <kusumi.tomohiro@gmail.com>,
+        "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>,
+        Frederic Barrat <fbarrat@linux.vnet.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        David Kershner <david.kershner@unisys.com>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Sagar Dharia <sdharia@codeaurora.org>,
+        Johan Hovold <johan@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juergen Gross <jgross@suse.com>,
+        Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        openbmc@lists.ozlabs.org, Alan Cox <alan@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jason M Biils <jason.m.bills@linux.intel.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Stef van Os <stef.van.os@prodrive-technologies.com>
+Subject: Re: [PATCH v11 14/14] hwmon: Add PECI dimmtemp driver
+Message-ID: <20191216212120.GA12089@roeck-us.net>
+References: <20191211194624.2872-1-jae.hyun.yoo@linux.intel.com>
+ <20191211194624.2872-15-jae.hyun.yoo@linux.intel.com>
+ <d75aaad9-ae07-feeb-966a-899ecfe9d4b3@roeck-us.net>
+ <5ed9f292-e024-ffda-a1a8-870ba0f05c58@linux.intel.com>
 MIME-Version: 1.0
-References: <20191211230959.5577-1-mike.leach@linaro.org>
-In-Reply-To: <20191211230959.5577-1-mike.leach@linaro.org>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Mon, 16 Dec 2019 14:11:17 -0700
-Message-ID: <CANLsYkx_bG4GLcP5qhdDgHNmGa0C6Wi0HaLcdzCJj1yHE0iNXQ@mail.gmail.com>
-Subject: Re: [PATCH v6 13/15] docs: coresight: Update documentation for
- CoreSight to cover CTI.
-To:     Mike Leach <mike.leach@linaro.org>, Jon Corbet <corbet@lwn.net>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        devicetree@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5ed9f292-e024-ffda-a1a8-870ba0f05c58@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 11 Dec 2019 at 16:10, Mike Leach <mike.leach@linaro.org> wrote:
->
-> Add new document covering CTI / CTM usage in CoreSight.
->
-> Add section in coresight.rst introducing CTI and CTM modules with link
-> to new document.
->
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  .../trace/coresight/coresight-ect.rst         | 211 ++++++++++++++++++
->  Documentation/trace/coresight/coresight.rst   |  13 ++
->  2 files changed, 224 insertions(+)
->  create mode 100644 Documentation/trace/coresight/coresight-ect.rst
->
-> diff --git a/Documentation/trace/coresight/coresight-ect.rst b/Documentation/trace/coresight/coresight-ect.rst
-> new file mode 100644
-> index 000000000000..3e06588f24fa
-> --- /dev/null
-> +++ b/Documentation/trace/coresight/coresight-ect.rst
-> @@ -0,0 +1,211 @@
-> +=============================================
-> +CoreSight Embedded Cross Trigger (CTI & CTM).
-> +=============================================
-> +
-> +    :Author:   Mike Leach <mike.leach@linaro.org>
-> +    :Date:     November 2019
-> +
-> +Hardware Description
-> +--------------------
-> +
-> +The CoreSight Cross Trigger Interface (CTI) is a hardware device that takes
-> +individual input and output hardware signals known as triggers to and from
-> +devices and interconnects them via the Cross Trigger Matrix (CTM) to other
-> +devices via numbered channels, in order to propagate events between devices.
-> +
-> +e.g.::
-> +
-> + 0000000  in_trigs  :::::::
-> + 0 C   0----------->:     :             +======>(other CTI channel IO)
-> + 0  P  0<-----------:     :             v
-> + 0   U 0  out_trigs :     : Channels  *****      :::::::
-> + 0000000            : CTI :<=========>*CTM*<====>: CTI :---+
-> + #######  in_trigs  :     : (id 0-3)  *****      :::::::   v
-> + # ETM #----------->:     :                         ^   #######
-> + #     #<-----------:     :                         +---# ETR #
-> + ####### out_trigs  :::::::                             #######
-> +
-> +The CTI driver enables the programming of the CTI to attach triggers to
-> +channels. When an input trigger becomes active, the attached channel will
-> +become active. Any output trigger attached to that channel will also
-> +become active. The active channel is propagated to other CTIs via the CTM,
-> +activating connected output triggers there, unless filtered by the CTI
-> +channel gate.
-> +
-> +It is also possible to activate a channel using system software directly
-> +programming registers in the CTI.
-> +
-> +The CTIs are registered by the system to be associated with CPUs and/or other
-> +CoreSight devices on the trace data path. When these devices are enabled the
-> +attached CTIs will also be enabled. By default/on power up the CTIs have
-> +no programmed trigger/channel attachments, so will not affect the system
-> +until explicitly programmed.
-> +
-> +The hardware trigger connections between CTIs and devices is implementation
-> +defined, unless the CPU/ETM combination is a v8 architecture, in which case
-> +the connections have an architecturally defined standard layout.
-> +
-> +The hardware trigger signals can also be connected to non-CoreSight devices
-> +(e.g. UART), or be propagated off chip as hardware IO lines.
-> +
-> +All the CTI devices are associated with a CTM. On many systems there will be a
-> +single effective CTM (one CTM, or multiple CTMs all interconnected), but it is
-> +possible that systems can have nets of CTIs+CTM that are not interconnected by
-> +a CTM to each other. On these systems a CTM index is declared to associate
-> +CTI devices that are interconnected via a given CTM.
-> +
-> +Sysfs files and directories
-> +---------------------------
-> +
-> +The CTI devices appear on the existing CoreSight bus alongside the other
-> +CoreSight devices::
-> +
-> +    >$ ls /sys/bus/coresight/devices
-> +     cti_cpu0  cti_cpu2  cti_sys0  etm0  etm2  funnel0  replicator0  tmc_etr0
-> +     cti_cpu1  cti_cpu3  cti_sys1  etm1  etm3  funnel1  tmc_etf0     tpiu0
-> +
-> +The ``cti_cpu<N>`` named CTIs are associated with a CPU, and any ETM used by
-> +that core. the ``cti_sys<N>`` CTIs are general system infrastructure CTIs that
-> +can be associated with other CoreSight devices, or other system hardware
-> +capable of generating or using trigger signals.::
-> +
-> +  >$ ls /sys/bus/coresight/devices/etm0/cti_cpu0
-> +  channels  ctmid  enable  nr_trigger_cons mgmt  power  regs  subsystem
-> +  triggers0 triggers1  uevent
-> +
-> +*Key file items are:-*
-> +   * ``enable``: enables/disables the CTI.
-> +   * ``ctmid`` : associated CTM - only relevant if system has multiple CTI+CTM
-> +     clusters that are not interconnected.
-> +   * ``nr_trigger_cons`` : total connections - triggers<N> directories.
-> +
-> +*Sub-directories:-*
-> +   * ``triggers<N>``: contains list of triggers for an individual connection.
-> +   * ``channels``: Contains the channel API - CTI main programming interface.
-> +   * ``regs``: Gives access to the raw programmable CTI regs.
-> +   * ``mgmt``: the standard CoreSight management registers.
-> +
-> +
-> +triggers<N> directories
-> +~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +Individual trigger connection information. This describes trigger signals for
-> +CoreSight and non-CoreSight connections.
-> +
-> +Each triggers directory has a set of parameters describing the triggers for
-> +the connection.
-> +
-> +   * ``name`` : name of connection
-> +   * ``in_signals`` : input trigger signal indexes used in this connection.
-> +   * ``in_types`` : functional types for in signals.
-> +   * ``out_signals`` : output trigger signals for this connection.
-> +   * ``out_types`` : functional types for out signals.
-> +
-> +e.g::
-> +
-> +    >$ ls ./cti_cpu0/triggers0/
-> +    in_signals  in_types  name  out_signals  out_types
-> +    >$ cat ./cti_cpu0/triggers0/name
-> +    cpu0
-> +    >$ cat ./cti_cpu0/triggers0/out_signals
-> +    0-2
-> +    >$ cat ./cti_cpu0/triggers0/out_types
-> +    pe_edbgreq pe_dbgrestart pe_ctiirq
-> +    >$ cat ./cti_cpu0/triggers0/in_signals
-> +    0-1
-> +    >$ cat ./cti_cpu0/triggers0/in_types
-> +    pe_dbgtrigger pe_pmuirq
-> +
-> +If a connection has zero signals in either the 'in' or 'out' triggers then
-> +those parameters will be omitted.
-> +
-> +Channels API Directory
-> +~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +This provides an easy way to attach triggers to channels, without needing
-> +the multiple register operations that are required if manipulating the
-> +'regs' sub-dir elements directly.
-> +
-> +A number of files provide this API::
-> +
-> +   >$ ls ./cti_sys0/channels/
-> +   chan_clear         chan_inuse         chan_xtrigs_view      trigin_detach
-> +   chan_free          chan_pulse         chan_xtrigs_view_sel  trigout_attach
-> +   chan_gate_disable  chan_set           trig_filter_enable    trigout_detach
-> +   chan_gate_enable   chan_xtrigs_reset  trigin_attach         trigout_filtered
-> +
-> +Most access to these elements take the form::
-> +
-> +  echo <chan> [<trigger>] > /<device_path>/<operation>
-> +
-> +where the optional <trigger> is only needed for trigXX_attach | detach
-> +operations.
-> +
-> +e.g.::
-> +
-> +   >$ echo 0 1 > ./cti_sys0/channels/trigout_attach
-> +   >$ echo 0 > ./cti_sys0/channels/chan_set
-> +
-> +Attaches trigout(1) to channel(0), then activates channel(0) generating a
-> +set state on cti_sys0.trigout(1)
-> +
-> +
-> +*API operations*
-> +
-> +   * ``trigin_attach, trigout_attach``: Attach a channel to a trigger signal.
-> +   * ``trigin_detach, trigout_detach``: Detach a channel from a trigger signal.
-> +   * ``chan_set``: Set the channel - the set state will be propagated around
-> +     the CTM to other connected devices.
-> +   * ``chan_clear``: Clear the channel.
-> +   * ``chan_pulse``: Set the channel for a single CoreSight clock cycle.
-> +   * ``chan_gate_enable``: Write operation sets the CTI gate to propagate
-> +     (enable) the channel to other devices. This operation takes a channel
-> +     number. CTI gate is enabled for all channels by default at power up. Read
-> +     to list the currently enabled channels on the gate.
-> +   * ``chan_gate_disable``: Write channel number to disable gate for that
-> +     channel.
-> +   * ``chan_inuse``: Show the current channels attached to any signal
-> +   * ``chan_free``: Show channels with no attached signals.
-> +   * ``chan_xtrig_view``: write a channel number to select a channel to view,
-> +     read to show the cross triggers programmed for the selected channel.
-> +   * ``trig_filter_enable``: Defaults to enabled, disable to allow potentially
-> +     dangerous output signals to be set.
-> +   * ``trigout_filtered``: Trigger out signals that are prevented from being
-> +     set if filtering ``trig_filter_enable`` is enabled. One use is to prevent
-> +     accidental ``EDBGREQ`` signals stopping a core.
-> +   * ``chan_xtrigs_reset``: Write 1 to clear all channel / trigger programming.
-> +     Resets device hardware to default state.
-> +
-> +
-> +The example below attaches input trigger index 1 to channel 2, and output
-> +trigger index 6 to the same channel. It then examines the state of the
-> +channel / trigger connections using the appropriate sysfs attributes.
-> +
-> +The settings mean that if either input trigger 1, or channel 2 go active then
-> +trigger out 6 will go active. We then enable the CTI, and use the software
-> +channel control to activate channel 2. We see the active channel on the
-> +``choutstatus`` register and the active signal on the ``trigoutstatus``
-> +register. Finally clearing the channel removes this.
-> +
-> +e.g.::
-> +
-> +   .../cti_sys0/channels# echo 2 1 > trigin_attach
-> +   .../cti_sys0/channels# echo 2 6 > trigout_attach
-> +   .../cti_sys0/channels# cat chan_free
-> +   0-1,3
-> +   .../cti_sys0/channels# cat chan_inuse
-> +   2
-> +   .../cti_sys0/channels# echo 2 > chan_xtrigs_view
-> +   .../cti_sys0/channels# cat chan_xtrigs_view
-> +   [2] IN: 1 OUT: 6
-> +   .../cti_sys0/# echo 1 > enable
-> +   .../cti_sys0/channels# echo 2 > chan_set
-> +   .../cti_sys0/channels# cat ../regs/choutstatus
-> +   0x4
-> +   .../cti_sys0/channels# cat ../regs/trigoutstatus
-> +   0x40
-> +   .../cti_sys0/channels# echo 2 > chan_clear
-> +   .../cti_sys0/channels# cat ../regs/trigoutstatus
-> +   0x0
-> +   .../cti_sys0/channels# cat ../regs/choutstatus
-> +   0x0
-> diff --git a/Documentation/trace/coresight/coresight.rst b/Documentation/trace/coresight/coresight.rst
-> index a566719f8e7e..108600ee1e12 100644
-> --- a/Documentation/trace/coresight/coresight.rst
-> +++ b/Documentation/trace/coresight/coresight.rst
-> @@ -491,8 +491,21 @@ interface provided for that purpose by the generic STM API::
->
->  Details on how to use the generic STM API can be found here:- :doc:`../stm` [#second]_.
->
-> +The CTI & CTM Modules
-> +---------------------
-> +
-> +The CTI (Cross Trigger Interface) provides a set of trigger signals between
-> +individual CTIs and components, and can propagate these between all CTIs via
-> +channels on the CTM (Cross Trigger Matrix).
-> +
-> +A separate documentation file is provided to explain the use of these devices.
-> +(:doc:`coresight-ect`) [#fourth]_.
-> +
-> +
->  .. [#first] Documentation/ABI/testing/sysfs-bus-coresight-devices-stm
->
->  .. [#second] Documentation/trace/stm.rst
->
->  .. [#third] https://github.com/Linaro/perf-opencsd
-> +
-> +.. [#fourth] Documentation/trace/coresight/coresight-ect.rst
+On Mon, Dec 16, 2019 at 01:04:31PM -0800, Jae Hyun Yoo wrote:
+> Hi Guenter,
+> 
+> On 12/12/2019 10:32 PM, Guenter Roeck wrote:
+> > On 12/11/19 11:46 AM, Jae Hyun Yoo wrote:
+> > > This commit adds PECI dimmtemp hwmon driver.
+> > > 
+> > > Cc: Guenter Roeck <linux@roeck-us.net>
+> > > Cc: Jean Delvare <jdelvare@suse.com>
+> > > Cc: Alan Cox <alan@linux.intel.com>
+> > > Cc: Andrew Jeffery <andrew@aj.id.au>
+> > > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Cc: Arnd Bergmann <arnd@arndb.de>
+> > > Cc: Jason M Biils <jason.m.bills@linux.intel.com>
+> > > Cc: Joel Stanley <joel@jms.id.au>
+> > > Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> > > Cc: Andrew Lunn <andrew@lunn.ch>
+> > > Cc: Stef van Os <stef.van.os@prodrive-technologies.com>
+> > > Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+> > > Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
+> > > Reviewed-by: James Feist <james.feist@linux.intel.com>
+> > > Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
+> > > Acked-by: Guenter Roeck <linux@roeck-us.net>
+> > > ---
+> > > Changes since v10:
+> > > - Added Skylake Xeon D support.
+> > > - Added max and crit properties for temperature threshold checking.
+> > > - Fixed minor bugs and style issues.
+> > > 
+> > >   drivers/hwmon/Kconfig         |  14 ++
+> > >   drivers/hwmon/Makefile        |   1 +
+> > >   drivers/hwmon/peci-dimmtemp.c | 393 ++++++++++++++++++++++++++++++++++
+> > >   3 files changed, 408 insertions(+)
+> > >   create mode 100644 drivers/hwmon/peci-dimmtemp.c
+> > > 
+> > > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> > > index b6604759579c..d3370fbab40c 100644
+> > > --- a/drivers/hwmon/Kconfig
+> > > +++ b/drivers/hwmon/Kconfig
+> > > @@ -1363,6 +1363,20 @@ config SENSORS_PECI_CPUTEMP
+> > >         This driver can also be built as a module. If so, the module
+> > >         will be called peci-cputemp.
+> > > +config SENSORS_PECI_DIMMTEMP
+> > > +    tristate "PECI DIMM temperature monitoring client"
+> > > +    depends on PECI
+> > > +    select MFD_INTEL_PECI_CLIENT
+> > > +    help
+> > > +      If you say yes here you get support for the generic Intel
+> > > PECI hwmon
+> > > +      driver which provides Digital Thermal Sensor (DTS) thermal
+> > > readings of
+> > > +      DIMM components that are accessible using the PECI Client Command
+> > > +      Suite via the processor PECI client.
+> > > +      Check <file:Documentation/hwmon/peci-dimmtemp.rst> for details.
+> > > +
+> > > +      This driver can also be built as a module. If so, the module
+> > > +      will be called peci-dimmtemp.
+> > > +
+> > >   source "drivers/hwmon/pmbus/Kconfig"
+> > >   config SENSORS_PWM_FAN
+> > > diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> > > index d6fea48697af..4015c4b60bf4 100644
+> > > --- a/drivers/hwmon/Makefile
+> > > +++ b/drivers/hwmon/Makefile
+> > > @@ -145,6 +145,7 @@ obj-$(CONFIG_SENSORS_PC87360)    += pc87360.o
+> > >   obj-$(CONFIG_SENSORS_PC87427)    += pc87427.o
+> > >   obj-$(CONFIG_SENSORS_PCF8591)    += pcf8591.o
+> > >   obj-$(CONFIG_SENSORS_PECI_CPUTEMP)    += peci-cputemp.o
+> > > +obj-$(CONFIG_SENSORS_PECI_DIMMTEMP)    += peci-dimmtemp.o
+> > >   obj-$(CONFIG_SENSORS_POWR1220)  += powr1220.o
+> > >   obj-$(CONFIG_SENSORS_PWM_FAN)    += pwm-fan.o
+> > >   obj-$(CONFIG_SENSORS_RASPBERRYPI_HWMON)    += raspberrypi-hwmon.o
+> > > diff --git a/drivers/hwmon/peci-dimmtemp.c
+> > > b/drivers/hwmon/peci-dimmtemp.c
+> > > new file mode 100644
+> > > index 000000000000..974f453f9366
+> > > --- /dev/null
+> > > +++ b/drivers/hwmon/peci-dimmtemp.c
+> > > @@ -0,0 +1,393 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +// Copyright (c) 2018-2019 Intel Corporation
+> > > +
+> > > +#include <linux/hwmon.h>
+> > > +#include <linux/jiffies.h>
+> > > +#include <linux/mfd/intel-peci-client.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of_device.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/workqueue.h>
+> > > +#include "peci-hwmon.h"
+> > > +
+> > > +#define DIMM_MASK_CHECK_DELAY_JIFFIES  msecs_to_jiffies(5000)
+> > > +#define DIMM_MASK_CHECK_RETRY_MAX      60 /* 60 x 5 secs = 5 minutes */
+> > > +
+> > > +struct peci_dimmtemp {
+> > > +    struct peci_client_manager *mgr;
+> > > +    struct device *dev;
+> > > +    char name[PECI_NAME_SIZE];
+> > > +    const struct cpu_gen_info *gen_info;
+> > > +    struct workqueue_struct *work_queue;
+> > > +    struct delayed_work work_handler;
+> > > +    struct peci_sensor_data temp[DIMM_NUMS_MAX];
+> > > +    long temp_max[DIMM_NUMS_MAX];
+> > > +    long temp_crit[DIMM_NUMS_MAX];
+> > > +    u32 dimm_mask;
+> > > +    int retry_count;
+> > > +    u32 temp_config[DIMM_NUMS_MAX + 1];
+> > > +    struct hwmon_channel_info temp_info;
+> > > +    const struct hwmon_channel_info *info[2];
+> > > +    struct hwmon_chip_info chip;
+> > > +};
+> > > +
+> > > +static const char *dimmtemp_label[CHAN_RANK_MAX][DIMM_IDX_MAX] = {
+> > > +    { "DIMM A1", "DIMM A2", "DIMM A3" },
+> > > +    { "DIMM B1", "DIMM B2", "DIMM B3" },
+> > > +    { "DIMM C1", "DIMM C2", "DIMM C3" },
+> > > +    { "DIMM D1", "DIMM D2", "DIMM D3" },
+> > > +    { "DIMM E1", "DIMM E2", "DIMM E3" },
+> > > +    { "DIMM F1", "DIMM F2", "DIMM F3" },
+> > > +    { "DIMM G1", "DIMM G2", "DIMM G3" },
+> > > +    { "DIMM H1", "DIMM H2", "DIMM H3" },
+> > > +};
+> > > +
+> > > +static inline int read_ddr_dimm_temp_config(struct peci_dimmtemp *priv,
+> > > +                        int chan_rank,
+> > > +                        u8 *cfg_data)
+> > > +{
+> > > +    return peci_client_read_package_config(priv->mgr,
+> > > +                           PECI_MBX_INDEX_DDR_DIMM_TEMP,
+> > > +                           chan_rank, cfg_data);
+> > > +}
+> > > +
+> > > +static int get_dimm_temp(struct peci_dimmtemp *priv, int dimm_no)
+> > > +{
+> > > +    int dimm_order = dimm_no % priv->gen_info->dimm_idx_max;
+> > > +    int chan_rank = dimm_no / priv->gen_info->dimm_idx_max;
+> > > +    struct peci_rd_pci_cfg_local_msg rp_msg;
+> > > +    u8  cfg_data[4];
+> > > +    int ret;
+> > > +
+> > > +    if (!peci_sensor_need_update(&priv->temp[dimm_no]))
+> > > +        return 0;
+> > > +
+> > > +    ret = read_ddr_dimm_temp_config(priv, chan_rank, cfg_data);
+> > > +    if (ret)
+> > > +        return ret;
+> > > +
+> > > +    priv->temp[dimm_no].value = cfg_data[dimm_order] * 1000;
+> > > +
+> > > +    switch (priv->gen_info->model) {
+> > > +    case INTEL_FAM6_SKYLAKE_X:
+> > > +        rp_msg.addr = priv->mgr->client->addr;
+> > > +        rp_msg.bus = 2;
+> > > +        /*
+> > > +         * Device 10, Function 2: IMC 0 channel 0 -> rank 0
+> > > +         * Device 10, Function 6: IMC 0 channel 1 -> rank 1
+> > > +         * Device 11, Function 2: IMC 0 channel 2 -> rank 2
+> > > +         * Device 12, Function 2: IMC 1 channel 0 -> rank 3
+> > > +         * Device 12, Function 6: IMC 1 channel 1 -> rank 4
+> > > +         * Device 13, Function 2: IMC 1 channel 2 -> rank 5
+> > > +         */
+> > > +        rp_msg.device = 10 + chan_rank / 3 * 2 +
+> > > +                 (chan_rank % 3 == 2 ? 1 : 0);
+> > > +        rp_msg.function = chan_rank % 3 == 1 ? 6 : 2;
+> > > +        rp_msg.reg = 0x120 + dimm_order * 4;
+> > > +        rp_msg.rx_len = 4;
+> > > +
+> > > +        ret = peci_command(priv->mgr->client->adapter,
+> > > +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
+> > > +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
+> > > +            ret = -EAGAIN;
+> > > +        if (ret)
+> > > +            return ret;
+> > > +
+> > > +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
+> > > +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
+> > > +        break;
+> > > +    case INTEL_FAM6_SKYLAKE_XD:
+> > > +        rp_msg.addr = priv->mgr->client->addr;
+> > > +        rp_msg.bus = 2;
+> > > +        /*
+> > > +         * Device 10, Function 2: IMC 0 channel 0 -> rank 0
+> > > +         * Device 10, Function 6: IMC 0 channel 1 -> rank 1
+> > > +         * Device 12, Function 2: IMC 1 channel 0 -> rank 2
+> > > +         * Device 12, Function 6: IMC 1 channel 1 -> rank 3
+> > > +         */
+> > > +        rp_msg.device = 10 + chan_rank / 2 * 2;
+> > > +        rp_msg.function = (chan_rank % 2) ? 6 : 2;
+> > > +        rp_msg.reg = 0x120 + dimm_order * 4;
+> > > +        rp_msg.rx_len = 4;
+> > > +
+> > > +        ret = peci_command(priv->mgr->client->adapter,
+> > > +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
+> > > +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
+> > > +            ret = -EAGAIN;
+> > > +        if (ret)
+> > > +            return ret;
+> > > +
+> > > +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
+> > > +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
+> > > +        break;
+> > > +    case INTEL_FAM6_HASWELL_X:
+> > > +    case INTEL_FAM6_BROADWELL_X:
+> > > +        rp_msg.addr = priv->mgr->client->addr;
+> > > +        rp_msg.bus = 1;
+> > > +        /*
+> > > +         * Device 20, Function 0: IMC 0 channel 0 -> rank 0
+> > > +         * Device 20, Function 1: IMC 0 channel 1 -> rank 1
+> > > +         * Device 21, Function 0: IMC 0 channel 2 -> rank 2
+> > > +         * Device 21, Function 1: IMC 0 channel 3 -> rank 3
+> > > +         * Device 23, Function 0: IMC 1 channel 0 -> rank 4
+> > > +         * Device 23, Function 1: IMC 1 channel 1 -> rank 5
+> > > +         * Device 24, Function 0: IMC 1 channel 2 -> rank 6
+> > > +         * Device 24, Function 1: IMC 1 channel 3 -> rank 7
+> > > +         */
+> > > +        rp_msg.device = 20 + chan_rank / 2 + chan_rank / 4;
+> > > +        rp_msg.function = chan_rank % 2;
+> > > +        rp_msg.reg = 0x120 + dimm_order * 4;
+> > > +        rp_msg.rx_len = 4;
+> > > +
+> > > +        ret = peci_command(priv->mgr->client->adapter,
+> > > +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
+> > > +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
+> > > +            ret = -EAGAIN;
+> > > +        if (ret)
+> > > +            return ret;
+> > > +
+> > > +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
+> > > +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
+> > > +        break;
+> > > +    default:
+> > > +        return -EOPNOTSUPP;
+> > 
+> > It looks like the sensors are created even on unsupported platforms,
+> > which would generate error messages whenever someone tries to read
+> > the attributes.
+> > 
+> > There should be some code early on checking this, and the driver
+> > should not even instantiate if the CPU model is not supported.
+> 
+> Actually, this 'default' case will not be happened because this driver
+> will be registered only when the CPU model is supported. The CPU model
+> checking code is in 'intel-peci-client.c' which is [11/14] of this
+> patch set.
+> 
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+That again assumes that both drivers will be modified in sync in the future.
+We can not make that assumption.
 
-> --
-> 2.17.1
->
+> > > +    }
+> > > +
+> > > +    peci_sensor_mark_updated(&priv->temp[dimm_no]);
+> > > +
+> > > +    return 0;
+> > > +}
+> > > +
+> > > +static int dimmtemp_read_string(struct device *dev,
+> > > +                enum hwmon_sensor_types type,
+> > > +                u32 attr, int channel, const char **str)
+> > > +{
+> > > +    struct peci_dimmtemp *priv = dev_get_drvdata(dev);
+> > > +    u32 dimm_idx_max = priv->gen_info->dimm_idx_max;
+> > > +    int chan_rank, dimm_idx;
+> > > +
+> > > +    if (attr != hwmon_temp_label)
+> > > +        return -EOPNOTSUPP;
+> > > +
+> > > +    chan_rank = channel / dimm_idx_max;
+> > > +    dimm_idx = channel % dimm_idx_max;
+> > > +    *str = dimmtemp_label[chan_rank][dimm_idx];
+> > 
+> > Similar to the other patch, I am concerned that this can end up setting
+> > *str
+> > to NULL at some point in the future.
+> 
+> Okay. I'll make dynamic label string table generation code for it as
+> well.
+> 
+> > > +
+> > > +    return 0;
+> > > +}
+> > > +
+> > > +static int dimmtemp_read(struct device *dev, enum
+> > > hwmon_sensor_types type,
+> > > +             u32 attr, int channel, long *val)
+> > > +{
+> > > +    struct peci_dimmtemp *priv = dev_get_drvdata(dev);
+> > > +    int ret;
+> > > +
+> > > +    ret = get_dimm_temp(priv, channel);
+> > > +    if (ret)
+> > > +        return ret;
+> > > +
+> > > +    switch (attr) {
+> > > +    case hwmon_temp_input:
+> > > +        *val = priv->temp[channel].value;
+> > > +        break;
+> > > +    case hwmon_temp_max:
+> > > +        *val = priv->temp_max[channel];
+> > > +        break;
+> > > +    case hwmon_temp_crit:
+> > > +        *val = priv->temp_crit[channel];
+> > > +        break;
+> > > +    default:
+> > > +        ret = -EOPNOTSUPP;
+> > > +        break;
+> > > +    }
+> > > +
+> > > +    return ret;
+> > > +}
+> > > +
+> > > +static umode_t dimmtemp_is_visible(const void *data,
+> > > +                   enum hwmon_sensor_types type,
+> > > +                   u32 attr, int channel)
+> > > +{
+> > > +    const struct peci_dimmtemp *priv = data;
+> > > +
+> > > +    if (priv->temp_config[channel] & BIT(attr) &&
+> > > +        priv->dimm_mask & BIT(channel))
+> > > +        return 0444;
+> > > +
+> > > +    return 0;
+> > > +}
+> > > +
+> > > +static const struct hwmon_ops dimmtemp_ops = {
+> > > +    .is_visible = dimmtemp_is_visible,
+> > > +    .read_string = dimmtemp_read_string,
+> > > +    .read = dimmtemp_read,
+> > > +};
+> > > +
+> > > +static int check_populated_dimms(struct peci_dimmtemp *priv)
+> > > +{
+> > > +    u32 chan_rank_max = priv->gen_info->chan_rank_max;
+> > > +    u32 dimm_idx_max = priv->gen_info->dimm_idx_max;
+> > > +    int chan_rank, dimm_idx;
+> > > +    u8  cfg_data[4];
+> > > +
+> > > +    for (chan_rank = 0; chan_rank < chan_rank_max; chan_rank++) {
+> > > +        int ret;
+> > > +
+> > > +        ret = read_ddr_dimm_temp_config(priv, chan_rank, cfg_data);
+> > > +        if (ret) {
+> > > +            priv->dimm_mask = 0;
+> > > +            return ret;
+> > > +        }
+> > > +
+> > > +        for (dimm_idx = 0; dimm_idx < dimm_idx_max; dimm_idx++)
+> > > +            if (cfg_data[dimm_idx])
+> > > +                priv->dimm_mask |= BIT(chan_rank *
+> > > +                               dimm_idx_max +
+> > > +                               dimm_idx);
+> > > +    }
+> > > +
+> > > +    if (!priv->dimm_mask)
+> > > +        return -EAGAIN;
+> > > +
+> > > +    dev_dbg(priv->dev, "Scanned populated DIMMs: 0x%x\n",
+> > > priv->dimm_mask);
+> > > +
+> > > +    return 0;
+> > > +}
+> > > +
+> > > +static int create_dimm_temp_info(struct peci_dimmtemp *priv)
+> > > +{
+> > > +    int ret, i, config_idx, channels;
+> > > +    struct device *hwmon_dev;
+> > > +
+> > > +    ret = check_populated_dimms(priv);
+> > > +    if (ret) {
+> > > +        if (ret == -EAGAIN) {
+> > > +            if (priv->retry_count < DIMM_MASK_CHECK_RETRY_MAX) {
+> > > +                queue_delayed_work(priv->work_queue,
+> > > +                           &priv->work_handler,
+> > > +                         DIMM_MASK_CHECK_DELAY_JIFFIES);
+> > > +                priv->retry_count++;
+> > > +                dev_dbg(priv->dev,
+> > > +                    "Deferred DIMM temp info creation\n");
+> > > +            } else {
+> > > +                dev_err(priv->dev,
+> > > +                    "Timeout DIMM temp info creation\n");
+> > > +                ret = -ETIMEDOUT;
+> > > +            }
+> > > +        }
+> > > +
+> > > +        return ret;
+> > > +    }
+> > > +
+> > > +    channels = priv->gen_info->chan_rank_max *
+> > > +           priv->gen_info->dimm_idx_max;
+> > > +    for (i = 0, config_idx = 0; i < channels; i++)
+> > > +        if (priv->dimm_mask & BIT(i))
+> > > +            while (i >= config_idx)
+> > > +                priv->temp_config[config_idx++] =
+> > > +                    HWMON_T_LABEL | HWMON_T_INPUT |
+> > > +                    HWMON_T_MAX | HWMON_T_CRIT;
+> > > +
+> > > +    priv->chip.ops = &dimmtemp_ops;
+> > > +    priv->chip.info = priv->info;
+> > > +
+> > > +    priv->info[0] = &priv->temp_info;
+> > > +
+> > > +    priv->temp_info.type = hwmon_temp;
+> > > +    priv->temp_info.config = priv->temp_config;
+> > > +
+> > > +    hwmon_dev = devm_hwmon_device_register_with_info(priv->dev,
+> > > +                             priv->name,
+> > > +                             priv,
+> > > +                             &priv->chip,
+> > > +                             NULL);
+> > > +    ret = PTR_ERR_OR_ZERO(hwmon_dev);
+> > > +    if (!ret)
+> > > +        dev_dbg(priv->dev, "%s: sensor '%s'\n",
+> > > +            dev_name(hwmon_dev), priv->name);
+> > > +
+> > 
+> > Any chance to make this consistent with the other driver ?
+> 
+> Will change this to:
+> 
+> if (IS_ERR(hwmon_dev)) {
+> 	dev_err(&priv->dev, "Failed to register hwmon device\n");
+> 	return PTR_ERR(hwmon_dev);
+> }
+> 
+> > > +    return ret;
+> > > +}
+> > > +
+> > > +static void create_dimm_temp_info_delayed(struct work_struct *work)
+> > > +{
+> > > +    struct delayed_work *dwork = to_delayed_work(work);
+> > > +    struct peci_dimmtemp *priv = container_of(dwork, struct
+> > > peci_dimmtemp,
+> > > +                          work_handler);
+> > > +    int ret;
+> > > +
+> > > +    ret = create_dimm_temp_info(priv);
+> > > +    if (ret && ret != -EAGAIN)
+> > > +        dev_dbg(priv->dev, "Failed to create DIMM temp info\n");
+> > > +}
+> > > +
+> > > +static int peci_dimmtemp_probe(struct platform_device *pdev)
+> > > +{
+> > > +    struct peci_client_manager *mgr = dev_get_drvdata(pdev->dev.parent);
+> > > +    struct device *dev = &pdev->dev;
+> > > +    struct peci_dimmtemp *priv;
+> > > +    int ret;
+> > > +
+> > > +    if ((mgr->client->adapter->cmd_mask &
+> > > +        (BIT(PECI_CMD_GET_TEMP) | BIT(PECI_CMD_RD_PKG_CFG))) !=
+> > > +        (BIT(PECI_CMD_GET_TEMP) | BIT(PECI_CMD_RD_PKG_CFG)))
+> > > +        return -ENODEV;
+> > > +
+> > > +    priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > > +    if (!priv)
+> > > +        return -ENOMEM;
+> > > +
+> > > +    dev_set_drvdata(dev, priv);
+> > > +    priv->mgr = mgr;
+> > > +    priv->dev = dev;
+> > > +    priv->gen_info = mgr->gen_info;
+> > > +
+> > > +    snprintf(priv->name, PECI_NAME_SIZE, "peci_dimmtemp.cpu%d",
+> > > +         priv->mgr->client->addr - PECI_BASE_ADDR);
+> > > +
+> > > +    priv->work_queue = alloc_ordered_workqueue(priv->name, 0);
+> > > +    if (!priv->work_queue)
+> > > +        return -ENOMEM;
+> > > +
+> > > +    INIT_DELAYED_WORK(&priv->work_handler,
+> > > create_dimm_temp_info_delayed);
+> > > +
+> > > +    ret = create_dimm_temp_info(priv);
+> > > +    if (ret && ret != -EAGAIN) {
+> > > +        dev_err(dev, "Failed to create DIMM temp info\n");
+> > 
+> > Does this generate error messages if there are no DIMMS ?
+> 
+> Yes, this error message will be printed out once if it meets a timeout
+> in DIMM scanning when there is no DIMM.
+> 
+
+Is that indeed an error, or are there situations where no DIMMs are
+detected and that is a perfectly valid situation ? An error message
+is only acceptable if this is indeed an error in all situations.
+
+Guenter
