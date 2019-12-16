@@ -2,179 +2,142 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270F2C2D0D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 12:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65B6C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5935206D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 12:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C56206CB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:25:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="tsO1ZGF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbfLPMrt (ORCPT
+        id S1727833AbfLPNZM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:47:49 -0500
-Received: from michel.telenet-ops.be ([195.130.137.88]:54840 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727720AbfLPMrt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 07:47:49 -0500
-Received: from ramsan ([84.195.182.253])
-        by michel.telenet-ops.be with bizsmtp
-        id ecnj210055USYZQ06cnjWq; Mon, 16 Dec 2019 13:47:47 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1igpmo-0004EU-WD; Mon, 16 Dec 2019 13:47:43 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1igpmo-0004LV-Ua; Mon, 16 Dec 2019 13:47:42 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Magnus Damm <magnus.damm@gmail.com>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 4/6] arm64: dts: renesas: r8a77961: Add SYS-DMAC nodes
-Date:   Mon, 16 Dec 2019 13:47:38 +0100
-Message-Id: <20191216124740.16647-5-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191216124740.16647-1-geert+renesas@glider.be>
-References: <20191216124740.16647-1-geert+renesas@glider.be>
+        Mon, 16 Dec 2019 08:25:12 -0500
+Received: from vps.xff.cz ([195.181.215.36]:45352 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727758AbfLPNZM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:25:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1576502709; bh=es+nOMcbHNUvRapBUN4dNUN1UmQSHOWrTb4CbncHywQ=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=tsO1ZGF1xfKCIUq16OlM2icXeTDgx8P0RR99yzocXToFCSskUe4dEZqEyANAQwbZh
+         nzkxDr39xTguJz3bbHmXeowcERvh5XnXHD1zwPNH2XirEWE6tkTzeLpa6CRwNHK9OU
+         dzQjLfqVJDbcHudGbMBRHzmlYsObxhMjB4WV0A8Q=
+Date:   Mon, 16 Dec 2019 14:25:09 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Stefan Wahren <wahrenst@gmx.net>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Eric Anholt <eric@anholt.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH V4 01/10] bluetooth: hci_bcm: Fix RTS handling during
+ startup
+Message-ID: <20191216132509.ofqcdpwxsd7324ql@core.my.home>
+Mail-Followup-To: Stefan Wahren <wahrenst@gmx.net>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+References: <1570375708-26965-1-git-send-email-wahrenst@gmx.net>
+ <1570375708-26965-2-git-send-email-wahrenst@gmx.net>
+ <61789264-a4c2-ac85-9d74-d186213ec70a@gmx.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <61789264-a4c2-ac85-9d74-d186213ec70a@gmx.net>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device nodes for the System DMA Controllers (SYS-DMAC) on the
-Renesas R-Car M3-W+ (r8a77961) SoC.
+Hello,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Group interrupt specifiers.
+On Sun, Oct 20, 2019 at 11:17:28PM +0200, Stefan Wahren wrote:
+> Hi Marcel,
+> hi Johan,
+> 
+> Am 06.10.19 um 17:28 schrieb Stefan Wahren:
+> > The RPi 4 uses the hardware handshake lines for CYW43455, but the chip
+> > doesn't react to HCI requests during DT probe. The reason is the inproper
+> > handling of the RTS line during startup. According to the startup
+> > signaling sequence in the CYW43455 datasheet, the hosts RTS line must
+> > be driven after BT_REG_ON and BT_HOST_WAKE.
+> >
+> > Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> > ---
+> >  drivers/bluetooth/hci_bcm.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+> > index 7646636..0f73f6a 100644
+> > --- a/drivers/bluetooth/hci_bcm.c
+> > +++ b/drivers/bluetooth/hci_bcm.c
+> > @@ -445,9 +445,11 @@ static int bcm_open(struct hci_uart *hu)
+> >
+> >  out:
+> >  	if (bcm->dev) {
+> > +		hci_uart_set_flow_control(hu, true);
+> >  		hu->init_speed = bcm->dev->init_speed;
+> >  		hu->oper_speed = bcm->dev->oper_speed;
+> >  		err = bcm_gpio_set_power(bcm->dev, true);
+> > +		hci_uart_set_flow_control(hu, false);
+> >  		if (err)
+> >  			goto err_unset_hu;
+> >  	}
+> > --
+> > 2.7.4
+> 
+> would be nice to get some feedback about this.
 
-Test procedure (with "arm64: dts: renesas: r8a77961: Add i2c nodes"):
-  1. "hd /sys/devices/platform/soc/e60b0000.i2c/i2c-?/?-0050/eeprom",
-  2. See dma-controller interrupt count in /proc/interrupts has
-     increased.
----
- arch/arm64/boot/dts/renesas/r8a77961.dtsi | 102 ++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
+I started seeing failures on Orange Pi 3 in 5.5-rc:
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77961.dtsi b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
-index 4a7597cc07514c41..cd6cbf6a281f7c0f 100644
---- a/arch/arm64/boot/dts/renesas/r8a77961.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
-@@ -518,6 +518,108 @@
- 			/* placeholder */
- 		};
- 
-+		dmac0: dma-controller@e6700000 {
-+			compatible = "renesas,dmac-r8a77961",
-+				     "renesas,rcar-dmac";
-+			reg = <0 0xe6700000 0 0x10000>;
-+			interrupts = <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 201 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 203 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error",
-+					"ch0", "ch1", "ch2", "ch3",
-+					"ch4", "ch5", "ch6", "ch7",
-+					"ch8", "ch9", "ch10", "ch11",
-+					"ch12", "ch13", "ch14", "ch15";
-+			clocks = <&cpg CPG_MOD 219>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 219>;
-+			#dma-cells = <1>;
-+			dma-channels = <16>;
-+		};
-+
-+		dmac1: dma-controller@e7300000 {
-+			compatible = "renesas,dmac-r8a77961",
-+				     "renesas,rcar-dmac";
-+			reg = <0 0xe7300000 0 0x10000>;
-+			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error",
-+					"ch0", "ch1", "ch2", "ch3",
-+					"ch4", "ch5", "ch6", "ch7",
-+					"ch8", "ch9", "ch10", "ch11",
-+					"ch12", "ch13", "ch14", "ch15";
-+			clocks = <&cpg CPG_MOD 218>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 218>;
-+			#dma-cells = <1>;
-+			dma-channels = <16>;
-+		};
-+
-+		dmac2: dma-controller@e7310000 {
-+			compatible = "renesas,dmac-r8a77961",
-+				     "renesas,rcar-dmac";
-+			reg = <0 0xe7310000 0 0x10000>;
-+			interrupts = <GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 426 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 427 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 428 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 429 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 430 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 431 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error",
-+					"ch0", "ch1", "ch2", "ch3",
-+					"ch4", "ch5", "ch6", "ch7",
-+					"ch8", "ch9", "ch10", "ch11",
-+					"ch12", "ch13", "ch14", "ch15";
-+			clocks = <&cpg CPG_MOD 217>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A77961_PD_ALWAYS_ON>;
-+			resets = <&cpg 217>;
-+			#dma-cells = <1>;
-+			dma-channels = <16>;
-+		};
-+
- 		avb: ethernet@e6800000 {
- 			compatible = "renesas,etheravb-r8a77961",
- 				     "renesas,etheravb-rcar-gen3";
--- 
-2.17.1
+[    3.839134] Bluetooth: hci0: command 0xfc18 tx timeout
+[   11.999136] Bluetooth: hci0: BCM: failed to write update baudrate (-110)
+[   12.004613] Bluetooth: hci0: Failed to set baudrate
+[   12.123187] Bluetooth: hci0: BCM: chip id 130
+[   12.128398] Bluetooth: hci0: BCM: features 0x0f
+[   12.154686] Bluetooth: hci0: BCM4345C5
+[   12.157165] Bluetooth: hci0: BCM4345C5 (003.006.006) build 0000
+[   15.343684] Bluetooth: hci0: BCM4345C5 (003.006.006) build 0038
 
+Switch to higher baudrate works again after reverting this patch.
+
+That board also uses RTS/CTS signalling.
+
+I guess the patch needs re-thinking/maybe other chips may not need this?
+
+I don't have access to datasheets.
+
+regards,
+	o.
+
+> Regards
+> Stefan
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
