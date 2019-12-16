@@ -2,52 +2,50 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D35BC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 09:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DC3C2D0CF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 09:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24D624649
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 09:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8D2215A4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 09:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="svry36Y9"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hGgFG2xx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfLPJ4h (ORCPT
+        id S1727035AbfLPJ4W (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:56:37 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:58806 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727333AbfLPJ43 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 04:56:29 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBG9uNvB106117;
-        Mon, 16 Dec 2019 03:56:23 -0600
+        Mon, 16 Dec 2019 04:56:22 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:36500 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727261AbfLPJ4W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 04:56:22 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBG9uE39056765;
+        Mon, 16 Dec 2019 03:56:14 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576490183;
-        bh=Zekc0AXiObZrPPvegTp4K5GUPS8IXJOxaEdMQ6wwWA0=;
+        s=ti-com-17Q1; t=1576490174;
+        bh=jhwu9vb8HP8nAIfykGv+pt0vdo/1Nu+RVLPQfa9+g5k=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=svry36Y9SEy5nqCBDS949P2MxIkwOQjKA3MD3JzF9M4taTFldpbTbhILGa09CT9sD
-         u2TbCA8zg2rBfLuAys6/0p/HVhwqh/Pp9OCvfEnovIVd+gOSj7Gapwprait5EZY7aQ
-         Z4MhrxKxE550fy7nOBCzMy53CA67gUtLgBNPT3JE=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBG9uN4V094791
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Dec 2019 03:56:23 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+        b=hGgFG2xxApG2qi1VT886GXFoWiFmA5SiVxjLdE/1N5FFFfF3cjFHtvlWl2SC7slWD
+         JG9M+2pC6r+sjv0rP/L3FEyENiKPlxib/NG7rXdhKQjMJN7UtuJeDSB/tMeEt5zVIb
+         RvNl4erroGanRZbU1tvGDCpmpvRd72OObyftl7fk=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBG9uEc3038130;
+        Mon, 16 Dec 2019 03:56:14 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Dec 2019 03:56:22 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 03:56:14 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Dec 2019 03:56:22 -0600
+ Frontend Transport; Mon, 16 Dec 2019 03:56:14 -0600
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBG9tsJS084408;
-        Mon, 16 Dec 2019 03:56:20 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBG9tsJP084408;
+        Mon, 16 Dec 2019 03:56:11 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Anil Varughese <aniljoy@cadence.com>,
@@ -56,9 +54,9 @@ CC:     <devicetree@vger.kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v4 09/14] phy: cadence: Sierra: Check for PLL lock during PHY power on
-Date:   Mon, 16 Dec 2019 15:27:07 +0530
-Message-ID: <20191216095712.13266-10-kishon@ti.com>
+Subject: [PATCH v4 06/14] phy: cadence: Sierra: Modify register macro names to be in sync with Sierra user guide
+Date:   Mon, 16 Dec 2019 15:27:04 +0530
+Message-ID: <20191216095712.13266-7-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191216095712.13266-1-kishon@ti.com>
 References: <20191216095712.13266-1-kishon@ti.com>
@@ -70,100 +68,214 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Check for PLL lock during PHY power on.
+No functional change. Modify register offset macro names to be in sync with
+Sierra user guide.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/phy/cadence/phy-cadence-sierra.c | 33 +++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ drivers/phy/cadence/phy-cadence-sierra.c | 167 ++++++++++++-----------
+ 1 file changed, 84 insertions(+), 83 deletions(-)
 
 diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
-index 497c83827670..62bff4b043f0 100644
+index bc2ae260359c..d490e1641cf9 100644
 --- a/drivers/phy/cadence/phy-cadence-sierra.c
 +++ b/drivers/phy/cadence/phy-cadence-sierra.c
-@@ -55,6 +55,7 @@
- #define SIERRA_PLLCTRL_SUBRATE_PREG			0x03A
- #define SIERRA_PLLCTRL_GEN_D_PREG			0x03E
- #define SIERRA_PLLCTRL_CPGAIN_MODE_PREG			0x03F
-+#define SIERRA_PLLCTRL_STATUS_PREG			0x044
- #define SIERRA_CLKPATH_BIASTRIM_PREG			0x04B
- #define SIERRA_DFE_BIASTRIM_PREG			0x04C
- #define SIERRA_DRVCTRL_ATTEN_PREG			0x06A
-@@ -141,11 +142,14 @@
+@@ -22,57 +22,58 @@
+ #include <dt-bindings/phy/phy.h>
  
- #define SIERRA_MACRO_ID					0x00007364
- #define SIERRA_MAX_LANES				4
-+#define PLL_LOCK_TIME					100000
+ /* PHY register offsets */
+-#define SIERRA_COMMON_CDB_OFFSET	0x0
+-#define SIERRA_MACRO_ID_REG		0x0
++#define SIERRA_COMMON_CDB_OFFSET		0x0
++#define SIERRA_MACRO_ID_REG			0x0
+ 
+ #define SIERRA_LANE_CDB_OFFSET(ln, block_offset, reg_offset)	\
+ 				((0x4000 << (block_offset)) + \
+ 				 (((ln) << 9) << (reg_offset)))
+-#define SIERRA_DET_STANDEC_A		0x000
+-#define SIERRA_DET_STANDEC_B		0x001
+-#define SIERRA_DET_STANDEC_C		0x002
+-#define SIERRA_DET_STANDEC_D		0x003
+-#define SIERRA_DET_STANDEC_E		0x004
+-#define SIERRA_PSM_LANECAL		0x008
+-#define SIERRA_PSM_DIAG			0x015
+-#define SIERRA_PSC_TX_A0		0x028
+-#define SIERRA_PSC_TX_A1		0x029
+-#define SIERRA_PSC_TX_A2		0x02A
+-#define SIERRA_PSC_TX_A3		0x02B
+-#define SIERRA_PSC_RX_A0		0x030
+-#define SIERRA_PSC_RX_A1		0x031
+-#define SIERRA_PSC_RX_A2		0x032
+-#define SIERRA_PSC_RX_A3		0x033
+-#define SIERRA_PLLCTRL_SUBRATE		0x03A
+-#define SIERRA_PLLCTRL_GEN_D		0x03E
+-#define SIERRA_DRVCTRL_ATTEN		0x06A
+-#define SIERRA_CLKPATHCTRL_TMR		0x081
+-#define SIERRA_RX_CREQ_FLTR_A_MODE1	0x087
+-#define SIERRA_RX_CREQ_FLTR_A_MODE0	0x088
+-#define SIERRA_CREQ_CCLKDET_MODE01	0x08E
+-#define SIERRA_RX_CTLE_MAINTENANCE	0x091
+-#define SIERRA_CREQ_FSMCLK_SEL		0x092
+-#define SIERRA_CTLELUT_CTRL		0x098
+-#define SIERRA_DFE_ECMP_RATESEL		0x0C0
+-#define SIERRA_DFE_SMP_RATESEL		0x0C1
+-#define SIERRA_DEQ_VGATUNE_CTRL		0x0E1
+-#define SIERRA_TMRVAL_MODE3		0x16E
+-#define SIERRA_TMRVAL_MODE2		0x16F
+-#define SIERRA_TMRVAL_MODE1		0x170
+-#define SIERRA_TMRVAL_MODE0		0x171
+-#define SIERRA_PICNT_MODE1		0x174
+-#define SIERRA_CPI_OUTBUF_RATESEL	0x17C
+-#define SIERRA_LFPSFILT_NS		0x18A
+-#define SIERRA_LFPSFILT_RD		0x18B
+-#define SIERRA_LFPSFILT_MP		0x18C
+-#define SIERRA_SDFILT_H2L_A		0x191
++
++#define SIERRA_DET_STANDEC_A_PREG		0x000
++#define SIERRA_DET_STANDEC_B_PREG		0x001
++#define SIERRA_DET_STANDEC_C_PREG		0x002
++#define SIERRA_DET_STANDEC_D_PREG		0x003
++#define SIERRA_DET_STANDEC_E_PREG		0x004
++#define SIERRA_PSM_LANECAL_PREG			0x008
++#define SIERRA_PSM_DIAG_PREG			0x015
++#define SIERRA_PSC_TX_A0_PREG			0x028
++#define SIERRA_PSC_TX_A1_PREG			0x029
++#define SIERRA_PSC_TX_A2_PREG			0x02A
++#define SIERRA_PSC_TX_A3_PREG			0x02B
++#define SIERRA_PSC_RX_A0_PREG			0x030
++#define SIERRA_PSC_RX_A1_PREG			0x031
++#define SIERRA_PSC_RX_A2_PREG			0x032
++#define SIERRA_PSC_RX_A3_PREG			0x033
++#define SIERRA_PLLCTRL_SUBRATE_PREG		0x03A
++#define SIERRA_PLLCTRL_GEN_D_PREG		0x03E
++#define SIERRA_DRVCTRL_ATTEN_PREG		0x06A
++#define SIERRA_CLKPATHCTRL_TMR_PREG		0x081
++#define SIERRA_RX_CREQ_FLTR_A_MODE1_PREG	0x087
++#define SIERRA_RX_CREQ_FLTR_A_MODE0_PREG	0x088
++#define SIERRA_CREQ_CCLKDET_MODE01_PREG		0x08E
++#define SIERRA_RX_CTLE_MAINTENANCE_PREG		0x091
++#define SIERRA_CREQ_FSMCLK_SEL_PREG		0x092
++#define SIERRA_CTLELUT_CTRL_PREG		0x098
++#define SIERRA_DFE_ECMP_RATESEL_PREG		0x0C0
++#define SIERRA_DFE_SMP_RATESEL_PREG		0x0C1
++#define SIERRA_DEQ_VGATUNE_CTRL_PREG		0x0E1
++#define SIERRA_TMRVAL_MODE3_PREG		0x16E
++#define SIERRA_TMRVAL_MODE2_PREG		0x16F
++#define SIERRA_TMRVAL_MODE1_PREG		0x170
++#define SIERRA_TMRVAL_MODE0_PREG		0x171
++#define SIERRA_PICNT_MODE1_PREG			0x174
++#define SIERRA_CPI_OUTBUF_RATESEL_PREG		0x17C
++#define SIERRA_LFPSFILT_NS_PREG			0x18A
++#define SIERRA_LFPSFILT_RD_PREG			0x18B
++#define SIERRA_LFPSFILT_MP_PREG			0x18C
++#define SIERRA_SDFILT_H2L_A_PREG		0x191
+ 
+ #define SIERRA_PHY_CONFIG_CTRL_OFFSET(block_offset)	\
+ 				      (0xc000 << (block_offset))
+-#define SIERRA_PHY_PLL_CFG		0xe
++#define SIERRA_PHY_PLL_CFG			0xe
+ 
+-#define SIERRA_MACRO_ID			0x00007364
+-#define SIERRA_MAX_LANES		4
++#define SIERRA_MACRO_ID				0x00007364
++#define SIERRA_MAX_LANES			4
  
  static const struct reg_field macro_id_type =
  				REG_FIELD(SIERRA_MACRO_ID_REG, 0, 15);
- static const struct reg_field phy_pll_cfg_1 =
- 				REG_FIELD(SIERRA_PHY_PLL_CFG, 1, 1);
-+static const struct reg_field pllctrl_lock =
-+				REG_FIELD(SIERRA_PLLCTRL_STATUS_PREG, 0, 0);
+@@ -496,42 +497,42 @@ static struct cdns_reg_pairs cdns_usb_regs[] = {
+ 	 * These values are specific to this specific hardware
+ 	 * configuration.
+ 	 */
+-	{0xFE0A, SIERRA_DET_STANDEC_A},
+-	{0x000F, SIERRA_DET_STANDEC_B},
+-	{0x55A5, SIERRA_DET_STANDEC_C},
+-	{0x69AD, SIERRA_DET_STANDEC_D},
+-	{0x0241, SIERRA_DET_STANDEC_E},
+-	{0x0110, SIERRA_PSM_LANECAL},
+-	{0xCF00, SIERRA_PSM_DIAG},
+-	{0x001F, SIERRA_PSC_TX_A0},
+-	{0x0007, SIERRA_PSC_TX_A1},
+-	{0x0003, SIERRA_PSC_TX_A2},
+-	{0x0003, SIERRA_PSC_TX_A3},
+-	{0x0FFF, SIERRA_PSC_RX_A0},
+-	{0x0003, SIERRA_PSC_RX_A1},
+-	{0x0003, SIERRA_PSC_RX_A2},
+-	{0x0001, SIERRA_PSC_RX_A3},
+-	{0x0001, SIERRA_PLLCTRL_SUBRATE},
+-	{0x0406, SIERRA_PLLCTRL_GEN_D},
+-	{0x0000, SIERRA_DRVCTRL_ATTEN},
+-	{0x823E, SIERRA_CLKPATHCTRL_TMR},
+-	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE1},
+-	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE0},
+-	{0x7B3C, SIERRA_CREQ_CCLKDET_MODE01},
+-	{0x023C, SIERRA_RX_CTLE_MAINTENANCE},
+-	{0x3232, SIERRA_CREQ_FSMCLK_SEL},
+-	{0x8452, SIERRA_CTLELUT_CTRL},
+-	{0x4121, SIERRA_DFE_ECMP_RATESEL},
+-	{0x4121, SIERRA_DFE_SMP_RATESEL},
+-	{0x9999, SIERRA_DEQ_VGATUNE_CTRL},
+-	{0x0330, SIERRA_TMRVAL_MODE0},
+-	{0x01FF, SIERRA_PICNT_MODE1},
+-	{0x0009, SIERRA_CPI_OUTBUF_RATESEL},
+-	{0x000F, SIERRA_LFPSFILT_NS},
+-	{0x0009, SIERRA_LFPSFILT_RD},
+-	{0x0001, SIERRA_LFPSFILT_MP},
+-	{0x8013, SIERRA_SDFILT_H2L_A},
+-	{0x0400, SIERRA_TMRVAL_MODE1},
++	{0xFE0A, SIERRA_DET_STANDEC_A_PREG},
++	{0x000F, SIERRA_DET_STANDEC_B_PREG},
++	{0x55A5, SIERRA_DET_STANDEC_C_PREG},
++	{0x69AD, SIERRA_DET_STANDEC_D_PREG},
++	{0x0241, SIERRA_DET_STANDEC_E_PREG},
++	{0x0110, SIERRA_PSM_LANECAL_PREG},
++	{0xCF00, SIERRA_PSM_DIAG_PREG},
++	{0x001F, SIERRA_PSC_TX_A0_PREG},
++	{0x0007, SIERRA_PSC_TX_A1_PREG},
++	{0x0003, SIERRA_PSC_TX_A2_PREG},
++	{0x0003, SIERRA_PSC_TX_A3_PREG},
++	{0x0FFF, SIERRA_PSC_RX_A0_PREG},
++	{0x0003, SIERRA_PSC_RX_A1_PREG},
++	{0x0003, SIERRA_PSC_RX_A2_PREG},
++	{0x0001, SIERRA_PSC_RX_A3_PREG},
++	{0x0001, SIERRA_PLLCTRL_SUBRATE_PREG},
++	{0x0406, SIERRA_PLLCTRL_GEN_D_PREG},
++	{0x0000, SIERRA_DRVCTRL_ATTEN_PREG},
++	{0x823E, SIERRA_CLKPATHCTRL_TMR_PREG},
++	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE1_PREG},
++	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE0_PREG},
++	{0x7B3C, SIERRA_CREQ_CCLKDET_MODE01_PREG},
++	{0x023C, SIERRA_RX_CTLE_MAINTENANCE_PREG},
++	{0x3232, SIERRA_CREQ_FSMCLK_SEL_PREG},
++	{0x8452, SIERRA_CTLELUT_CTRL_PREG},
++	{0x4121, SIERRA_DFE_ECMP_RATESEL_PREG},
++	{0x4121, SIERRA_DFE_SMP_RATESEL_PREG},
++	{0x9999, SIERRA_DEQ_VGATUNE_CTRL_PREG},
++	{0x0330, SIERRA_TMRVAL_MODE0_PREG},
++	{0x01FF, SIERRA_PICNT_MODE1_PREG},
++	{0x0009, SIERRA_CPI_OUTBUF_RATESEL_PREG},
++	{0x000F, SIERRA_LFPSFILT_NS_PREG},
++	{0x0009, SIERRA_LFPSFILT_RD_PREG},
++	{0x0001, SIERRA_LFPSFILT_MP_PREG},
++	{0x8013, SIERRA_SDFILT_H2L_A_PREG},
++	{0x0400, SIERRA_TMRVAL_MODE1_PREG},
+ };
  
- struct cdns_sierra_inst {
- 	struct phy *phy;
-@@ -192,6 +196,7 @@ struct cdns_sierra_phy {
- 	struct regmap *regmap_common_cdb;
- 	struct regmap_field *macro_id_type;
- 	struct regmap_field *phy_pll_cfg_1;
-+	struct regmap_field *pllctrl_lock[SIERRA_MAX_LANES];
- 	struct clk *clk;
- 	int nsubnodes;
- 	bool autoconf;
-@@ -291,10 +296,25 @@ static int cdns_sierra_phy_init(struct phy *gphy)
+ static struct cdns_reg_pairs cdns_pcie_regs[] = {
+@@ -540,10 +541,10 @@ static struct cdns_reg_pairs cdns_pcie_regs[] = {
+ 	 * These values are specific to this specific hardware
+ 	 * configuration.
+ 	 */
+-	{0x891f, SIERRA_DET_STANDEC_D},
+-	{0x0053, SIERRA_DET_STANDEC_E},
+-	{0x0400, SIERRA_TMRVAL_MODE2},
+-	{0x0200, SIERRA_TMRVAL_MODE3},
++	{0x891f, SIERRA_DET_STANDEC_D_PREG},
++	{0x0053, SIERRA_DET_STANDEC_E_PREG},
++	{0x0400, SIERRA_TMRVAL_MODE2_PREG},
++	{0x0200, SIERRA_TMRVAL_MODE3_PREG},
+ };
  
- static int cdns_sierra_phy_on(struct phy *gphy)
- {
-+	struct cdns_sierra_phy *sp = dev_get_drvdata(gphy->dev.parent);
- 	struct cdns_sierra_inst *ins = phy_get_drvdata(gphy);
-+	struct device *dev = sp->dev;
-+	u32 val;
-+	int ret;
- 
- 	/* Take the PHY lane group out of reset */
--	return reset_control_deassert(ins->lnk_rst);
-+	ret = reset_control_deassert(ins->lnk_rst);
-+	if (ret) {
-+		dev_err(dev, "Failed to take the PHY lane out of reset\n");
-+		return ret;
-+	}
-+
-+	ret = regmap_field_read_poll_timeout(sp->pllctrl_lock[ins->mlane],
-+					     val, val, 1000, PLL_LOCK_TIME);
-+	if (ret < 0)
-+		dev_err(dev, "PLL lock of lane failed\n");
-+
-+	return ret;
- }
- 
- static int cdns_sierra_phy_off(struct phy *gphy)
-@@ -350,6 +370,7 @@ static int cdns_regfield_init(struct cdns_sierra_phy *sp)
- 	struct device *dev = sp->dev;
- 	struct regmap_field *field;
- 	struct regmap *regmap;
-+	int i;
- 
- 	regmap = sp->regmap_common_cdb;
- 	field = devm_regmap_field_alloc(dev, regmap, macro_id_type);
-@@ -367,6 +388,16 @@ static int cdns_regfield_init(struct cdns_sierra_phy *sp)
- 	}
- 	sp->phy_pll_cfg_1 = field;
- 
-+	for (i = 0; i < SIERRA_MAX_LANES; i++) {
-+		regmap = sp->regmap_lane_cdb[i];
-+		field = devm_regmap_field_alloc(dev, regmap, pllctrl_lock);
-+		if (IS_ERR(field)) {
-+			dev_err(dev, "P%d_ENABLE reg field init failed\n", i);
-+			return PTR_ERR(field);
-+		}
-+		sp->pllctrl_lock[i] =  field;
-+	}
-+
- 	return 0;
- }
- 
+ static const struct cdns_sierra_data cdns_map_sierra = {
 -- 
 2.17.1
 
