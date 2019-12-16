@@ -2,61 +2,89 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C941C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 10:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D0BC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 10:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E14B32082E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 10:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 783AE20725
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 10:16:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576491404;
+	bh=oK2Z+gvU7X/ZRWb2P9P4VPxCD0n4mPIDKj1lZYaWRxk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m56/fdtQn4IuXwSigJef6a245rpdfn6HHsdOKBKFTeOMOFL6oVTE4LBExvDTJankJ
+	 I9miBb77yMFctMlAZtt+98TwpsphD0MPJjTcu8APmP/yVIqcC9RmbRrGOfkeR+6D8e
+	 TROFj04hniN71p7Ph44emGUW0/pK/XwYBRLdFdxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbfLPKGf (ORCPT
+        id S1727229AbfLPKQi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:06:35 -0500
-Received: from out28-75.mail.aliyun.com ([115.124.28.75]:46129 "EHLO
-        out28-75.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727297AbfLPKGf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 05:06:35 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3297215|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0160889-0.000375421-0.983536;DS=CONTINUE|ham_system_inform|0.00381865-0.000386367-0.995795;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03279;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.GICQvrI_1576490773;
-Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GICQvrI_1576490773)
-          by smtp.aliyun-inc.com(10.147.44.129);
-          Mon, 16 Dec 2019 18:06:18 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, mark.rutland@arm.com,
-        paul@crapouillou.net, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 2374286503@qq.com
-Subject: [PATCH v2 0/2] Add I2C support for the Ingenic X1000 SoC
-Date:   Mon, 16 Dec 2019 18:06:09 +0800
-Message-Id: <1576490771-120353-2-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576490771-120353-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1576490771-120353-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Mon, 16 Dec 2019 05:16:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727099AbfLPKQh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:16:37 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 918F9205ED;
+        Mon, 16 Dec 2019 10:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576491397;
+        bh=oK2Z+gvU7X/ZRWb2P9P4VPxCD0n4mPIDKj1lZYaWRxk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1Iqa3GZCKAN/BdWeWt2q2lMQjNnKzlvJOdMtwDeLaqUTOmPSgXJd6jkhBaSdtyeAF
+         vEKERaSI8CjRBdZMKlASq1MHUEYQumryWPzIQDwoaElZzL6qbKPjxf25MgAXrohkq8
+         XROoXtS44NgmZ6tOAWC1LXi38QxyxMxneL5bfz9Q=
+Date:   Mon, 16 Dec 2019 11:16:34 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] arm64: dts: allwinner: unify header comment style
+Message-ID: <20191216101634.tzef62pzxlsy6xpp@gilmour.lan>
+References: <20191214132642.29564-1-peron.clem@gmail.com>
+ <20191214132642.29564-3-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zxlxqylynajtnxui"
+Content-Disposition: inline
+In-Reply-To: <20191214132642.29564-3-peron.clem@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-v1->v2:
-Add code to check device_get_match_data(), if it return a NULL ptr,
-then print an error message and return -ENODEV.
 
-周琰杰 (Zhou Yanjie) (2):
-  dt-bindings: I2C: Add X1000 bindings.
-  I2C: JZ4780: Add support for the X1000.
+--zxlxqylynajtnxui
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- .../devicetree/bindings/i2c/i2c-jz4780.txt         |   4 +-
- drivers/i2c/busses/i2c-jz4780.c                    | 155 +++++++++++++++------
- 2 files changed, 118 insertions(+), 41 deletions(-)
+On Sat, Dec 14, 2019 at 02:26:42PM +0100, Cl=E9ment P=E9ron wrote:
+> Allwinner device tree files used different comment style for
+> copyright notice.
+>
+> Update this to keep a coherency.
+>
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
 
--- 
-2.7.4
+Applied all three patches, thanks!
+Maxime
 
+--zxlxqylynajtnxui
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfdZggAKCRDj7w1vZxhR
+xd7CAQCeM3JWttlLb8tuINHhejhLTsUpHbCjus1qXKBxmKRLdwD/X28cgdu5O2ZQ
+KhbaqZ4aE9ttkiDXqIdrw2cPY0Ft/QA=
+=iT1Z
+-----END PGP SIGNATURE-----
+
+--zxlxqylynajtnxui--
