@@ -2,211 +2,265 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3149C4741C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB66C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CCD20717
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:04:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576505071;
-	bh=eqhwT21aMAQai25oTPNjuF/wi6Lr8PnjARGwV07MqLM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=07colzax+BrDygXiKoaApVmlmzdvAU5jKmCAHmCN+43Kzm/HJks5Nd9+21nmkBgCc
-	 99pLR2lltKTovQ5wwWvG7ic/AXAbZfmhRmTXBrDawiO1nh8p52BEbOechlf5t5K4CM
-	 XdS2pl/5zb/+u5w3VrYFFq9yM2Tu/DINxEDJCcnc=
+	by mail.kernel.org (Postfix) with ESMTP id 83E91206A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbfLPOE0 (ORCPT
+        id S1727965AbfLPOHd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:04:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60140 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 09:07:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:56638 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728015AbfLPOE0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:04:26 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C951C206A5;
-        Mon, 16 Dec 2019 14:04:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576505065;
-        bh=eqhwT21aMAQai25oTPNjuF/wi6Lr8PnjARGwV07MqLM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A8aG72OOaT8znWL8+GmFhVW5bWEDI5ITGF2n2FOZQrOGAZPAK8TwebfG6yZ/idgLI
-         72X8kyE2neY4gEQpT7V7jx7S3d/A8I93FNZ7g4n7lf6lWWMvpr01tj0/lLzWy59qJT
-         uaTK+pIxRpmLZ3iLVuMB5bPe6qQRh9KJfGq2Dmw0=
-Date:   Mon, 16 Dec 2019 15:04:22 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        id S1727807AbfLPOHc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:07:32 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E65101FB;
+        Mon, 16 Dec 2019 06:07:31 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E7983F718;
+        Mon, 16 Dec 2019 06:07:31 -0800 (PST)
+Date:   Mon, 16 Dec 2019 14:07:29 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ondrej Jirman <megous@megous.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v5 2/8] dt-bindings: mailbox: Add a sun6i message box
- binding
-Message-ID: <20191216140422.on4bredklgdxywbw@gilmour.lan>
-References: <20191215042455.51001-1-samuel@sholland.org>
- <20191215042455.51001-3-samuel@sholland.org>
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH 03/13] PCI: cadence: Add support to use custom read and
+ write accessors
+Message-ID: <20191216140729.GX24359@e119886-lin.cambridge.arm.com>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-4-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6kpcajowhdygmdk2"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191215042455.51001-3-samuel@sholland.org>
+In-Reply-To: <20191209092147.22901-4-kishon@ti.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Dec 09, 2019 at 02:51:37PM +0530, Kishon Vijay Abraham I wrote:
+> Add support to use custom read and write accessors. Platforms that
+> doesn't support half word or byte access or any other constraint
 
---6kpcajowhdygmdk2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+s/doesn't/don't/
 
-Hi,
+> while accessing registers can use this feature to populate custom
+> read and write accessors. These custom accessors are used for both
+> standard register access and configuration space register access.
 
-On Sat, Dec 14, 2019 at 10:24:49PM -0600, Samuel Holland wrote:
-> This mailbox hardware is present in Allwinner sun6i, sun8i, sun9i, and
-> sun50i SoCs. Add a device tree binding for it. As it has only been
-> tested on the A83T, A64, H3/H5, and H6 SoCs, only those compatibles are
-> included.
->
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+You can put the following sentence underneath a --- as it's not needed
+in the commit message (but may be helpful to reviewers).
+
+> This is in preparation for adding PCIe support in TI's J721E SoC which
+> uses Cadence PCIe core.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  .../mailbox/allwinner,sun6i-a31-msgbox.yaml   | 78 +++++++++++++++++++
->  1 file changed, 78 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
->
-> diff --git a/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml b/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
-> new file mode 100644
-> index 000000000000..dd746e07acfd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
-> @@ -0,0 +1,78 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mailbox/allwinner,sun6i-a31-msgbox.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  drivers/pci/controller/cadence/pcie-cadence.h | 99 +++++++++++++++++--
+>  1 file changed, 90 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index a2b28b912ca4..d0d91c69fa1d 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -223,6 +223,11 @@ enum cdns_pcie_msg_routing {
+>  	MSG_ROUTING_GATHER,
+>  };
+>  
+> +struct cdns_pcie_ops {
+> +	u32	(*read)(void __iomem *addr, int size);
+> +	void	(*write)(void __iomem *addr, int size, u32 value);
+> +};
 > +
-> +title: Allwinner sunxi Message Box
+>  /**
+>   * struct cdns_pcie - private data for Cadence PCIe controller drivers
+>   * @reg_base: IO mapped register base
+> @@ -239,7 +244,7 @@ struct cdns_pcie {
+>  	int			phy_count;
+>  	struct phy		**phy;
+>  	struct device_link	**link;
+> -	const struct cdns_pcie_common_ops *ops;
+
+What was cdns_pcie_common_ops? It's not defined in the current tree is it?
+
+> +	const struct cdns_pcie_ops *ops;
+>  };
+>  
+>  /**
+> @@ -301,21 +306,47 @@ struct cdns_pcie_ep {
+>  /* Register access */
+>  static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
+>  {
+> +	void __iomem *addr = pcie->reg_base + reg;
 > +
-> +maintainers:
-> +  - Samuel Holland <samuel@sholland.org>
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x1, value);
+> +		return;
+> +	}
 > +
-> +description: |
-> +  The hardware message box on sun6i, sun8i, sun9i, and sun50i SoCs is a
-> +  two-user mailbox controller containing 8 unidirectional FIFOs. An interrupt
-> +  is raised for received messages, but software must poll to know when a
-> +  transmitted message has been acknowledged by the remote user. Each FIFO can
-> +  hold four 32-bit messages; when a FIFO is full, clients must wait before
-> +  attempting more transmissions.
+>  	writeb(value, pcie->reg_base + reg);
+
+Can you use 'addr' here instead of 'pcie->reg_base + reg'? (And similar for the
+rest of them).
+
+Thanks,
+
+Andrew Murray
+
+
+>  }
+>  
+>  static inline void cdns_pcie_writew(struct cdns_pcie *pcie, u32 reg, u16 value)
+>  {
+> +	void __iomem *addr = pcie->reg_base + reg;
 > +
-> +  Refer to ./mailbox.txt for generic information about mailbox device-tree
-> +  bindings.
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x2, value);
+> +		return;
+> +	}
 > +
-> +properties:
-> +  compatible:
-> +     items:
-> +      - enum:
-> +          - allwinner,sun8i-a83t-msgbox
-> +          - allwinner,sun8i-h3-msgbox
-> +          - allwinner,sun50i-a64-msgbox
-> +          - allwinner,sun50i-h6-msgbox
-> +      - const: allwinner,sun6i-a31-msgbox
-
-This will fail for the A31, since it won't have two compatibles but
-just one.
-
-You can have something like this if you want to do it with an enum:
-
-compatible:
-  oneOf:
-    - const: allwinner,sun6i-a31-msgbox
-    - items:
-      - enum:
-        - allwinner,sun8i-a83t-msgbox
-        - allwinner,sun8i-h3-msgbox
-        - allwinner,sun50i-a64-msgbox
-        - allwinner,sun50i-h6-msgbox
-      - const: allwinner,sun6i-a31-msgbox
-
-> +  reg:
-> +    items:
-> +      - description: MMIO register range
-
-There's no need for an obvious description like this.
-Just set it to maxItems: 1
-
+>  	writew(value, pcie->reg_base + reg);
+>  }
+>  
+>  static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
+>  {
+> +	void __iomem *addr = pcie->reg_base + reg;
 > +
-> +  clocks:
-> +    maxItems: 1
-> +    description: bus clock
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x4, value);
+> +		return;
+> +	}
 > +
-> +  resets:
-> +    maxItems: 1
-> +    description: bus reset
+>  	writel(value, pcie->reg_base + reg);
+>  }
+>  
+>  static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
+>  {
+> +	void __iomem *addr = pcie->reg_base + reg;
 > +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: controller interrupt
-
-Ditto, you can drop the description here.
-
-> +  '#mbox-cells':
-> +    const: 1
-
-However, you should document what the argument is about?
-
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - resets
-> +  - interrupts
-> +  - '#mbox-cells'
+> +	if (pcie->ops && pcie->ops->read)
+> +		return pcie->ops->read(addr, 0x4);
 > +
-> +additionalProperties: false
+>  	return readl(pcie->reg_base + reg);
+>  }
+>  
+> @@ -323,47 +354,97 @@ static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
+>  static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
+>  				       u32 reg, u8 value)
+>  {
+> -	writeb(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
 > +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/sun8i-h3-ccu.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/reset/sun8i-h3-ccu.h>
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x1, value);
+> +		return;
+> +	}
 > +
-> +    msgbox: mailbox@1c17000 {
-> +            compatible = "allwinner,sun8i-h3-msgbox",
-> +                         "allwinner,sun6i-a31-msgbox";
-> +            reg = <0x01c17000 0x1000>;
-> +            clocks = <&ccu CLK_BUS_MSGBOX>;
-> +            resets = <&ccu RST_BUS_MSGBOX>;
-> +            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> +            #mbox-cells = <1>;
-> +    };
-
-Look good otherwise, thanks!
-Maxime
-
---6kpcajowhdygmdk2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeO5gAKCRDj7w1vZxhR
-xZz1AP4ummpThYn1v2bFsXFQFsYqcm6TRKjZ8eZz+DriVOSSjAEAgxnXw2btNZrv
-PVGRNuENk6kHsBf7eVmnaJa2MVik5Qs=
-=/Mdk
------END PGP SIGNATURE-----
-
---6kpcajowhdygmdk2--
+> +	writeb(value, addr);
+>  }
+>  
+>  static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
+>  				       u32 reg, u16 value)
+>  {
+> -	writew(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
+> +
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x2, value);
+> +		return;
+> +	}
+> +
+> +	writew(value, addr);
+>  }
+>  
+>  /* Endpoint Function register access */
+>  static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
+>  					  u32 reg, u8 value)
+>  {
+> -	writeb(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
+> +
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x1, value);
+> +		return;
+> +	}
+> +
+> +	writeb(value, addr);
+>  }
+>  
+>  static inline void cdns_pcie_ep_fn_writew(struct cdns_pcie *pcie, u8 fn,
+>  					  u32 reg, u16 value)
+>  {
+> -	writew(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
+> +
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x2, value);
+> +		return;
+> +	}
+> +
+> +	writew(value, addr);
+>  }
+>  
+>  static inline void cdns_pcie_ep_fn_writel(struct cdns_pcie *pcie, u8 fn,
+>  					  u32 reg, u32 value)
+>  {
+> -	writel(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
+> +
+> +	if (pcie->ops && pcie->ops->write) {
+> +		pcie->ops->write(addr, 0x4, value);
+> +		return;
+> +	}
+> +
+> +	writel(value, addr);
+>  }
+>  
+>  static inline u8 cdns_pcie_ep_fn_readb(struct cdns_pcie *pcie, u8 fn, u32 reg)
+>  {
+> -	return readb(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
+> +
+> +	if (pcie->ops && pcie->ops->read)
+> +		return pcie->ops->read(addr, 0x1);
+> +
+> +	return readb(addr);
+>  }
+>  
+>  static inline u16 cdns_pcie_ep_fn_readw(struct cdns_pcie *pcie, u8 fn, u32 reg)
+>  {
+> -	return readw(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
+> +
+> +	if (pcie->ops && pcie->ops->read)
+> +		return pcie->ops->read(addr, 0x2);
+> +
+> +	return readw(addr);
+>  }
+>  
+>  static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
+>  {
+> -	return readl(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
+> +
+> +	if (pcie->ops && pcie->ops->read)
+> +		return pcie->ops->read(addr, 0x4);
+> +
+> +	return readl(addr);
+>  }
+>  
+>  #ifdef CONFIG_PCIE_CADENCE_HOST
+> -- 
+> 2.17.1
+> 
