@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 110FBC2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D095FC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C50432072D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A3F3206D8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576503374;
-	bh=hNHO7qhuEn1+H5H1TDdAFoLepebeVApFqZHiSXCaSeg=;
+	s=default; t=1576503426;
+	bh=OlLjTfGQi5/U4jUE0lWUYWNrQUVkF9ABRFYEb3H6wRM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=geIr+iVLUjlny9Mek3+r0mgKV1+Xadd2SInHXCeAn8vApvLrfBEw+KHK2IPL6paa2
-	 oxs8AwO86MuHGaxL1si9qn2LavBVC/CRDA8+6+FpLjLyIf6t7GM7NIBwv0YQ+p5bgF
-	 yYgqDzIpVriw6HEsCBn2OKqv3hPHm27uR276sdpQ=
+	b=bJfr6XSKT/wIhYdl1qVbClB4icX7PunUNV8IPZdg2DBlCvDBM0+GK0Ua7yfWtIEnw
+	 ugsZ9UHjgucPT/4rTofkXdzBWEoRp32kiSyM+cgyij1orZkY+/9rGUcfvyMtScVp1W
+	 j0IqhrHAGGxO1OCcyLuyr9y0nvD2OhI5rtaq7xuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbfLPNgH (ORCPT
+        id S1727794AbfLPNhG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:36:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45606 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 08:37:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727601AbfLPNgH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:36:07 -0500
+        id S1727788AbfLPNhG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:37:06 -0500
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41866206CB;
-        Mon, 16 Dec 2019 13:36:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00E49206A5;
+        Mon, 16 Dec 2019 13:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576503366;
-        bh=hNHO7qhuEn1+H5H1TDdAFoLepebeVApFqZHiSXCaSeg=;
+        s=default; t=1576503425;
+        bh=OlLjTfGQi5/U4jUE0lWUYWNrQUVkF9ABRFYEb3H6wRM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A6y4BII/Y9MV3DxdIIQ7EWpX9KGs5x36m7xIL3euGRGccXYzlnaCJl7X8nRYSzjq/
-         yG+bIbehrGRUTHr/vYq65XJfC40UM3n0XCN4zaPNVmrbfnAGJXcqLbYzNoH+1InrFV
-         7OHJK3jpcjsuXMcyiOjUK63zjGFCj+1GaGKiKjyw=
-Date:   Mon, 16 Dec 2019 14:36:03 +0100
+        b=UN3eg7bkh56gQzbPJKX92DS2oPbfzk/s8NFCYvwapn+olTsxbwocauo+FhEgEbHcQ
+         oVENs8AlxstW3j1z2VhLfYFGQ6Xhmp7LZh1iQ3H4OC9FogVfZVkmRrIBpGFIyKVQQt
+         e6d4Og6pZ0miFTtZaa0ZOojvY10otamRfSr8r9r8=
+Date:   Mon, 16 Dec 2019 14:37:03 +0100
 From:   Maxime Ripard <mripard@kernel.org>
 To:     Chen-Yu Tsai <wens@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -48,37 +48,39 @@ Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 03/14] media: sun4i-csi: Fix data sampling polarity
- handling
-Message-ID: <20191216133603.gbr2iaikch5lfv6v@gilmour.lan>
+Subject: Re: [PATCH 04/14] media: sun4i-csi: Fix [HV]sync polarity handling
+Message-ID: <20191216133703.4udteob37py5s3ms@gilmour.lan>
 References: <20191215165924.28314-1-wens@kernel.org>
- <20191215165924.28314-4-wens@kernel.org>
+ <20191215165924.28314-5-wens@kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pxaf47l7hgrm57u2"
+        protocol="application/pgp-signature"; boundary="2fe4ttno4f4fmseg"
 Content-Disposition: inline
-In-Reply-To: <20191215165924.28314-4-wens@kernel.org>
+In-Reply-To: <20191215165924.28314-5-wens@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---pxaf47l7hgrm57u2
+--2fe4ttno4f4fmseg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Dec 16, 2019 at 12:59:13AM +0800, Chen-Yu Tsai wrote:
+On Mon, Dec 16, 2019 at 12:59:14AM +0800, Chen-Yu Tsai wrote:
 > From: Chen-Yu Tsai <wens@csie.org>
 >
-> The CLK_POL field specifies whether data is sampled on the falling or
-> rising edge of PCLK, not whether the data lines are active high or low.
-> Evidence of this can be found in the timing diagram labeled "horizontal
-> size setting and pixel clock timing".
+> The Allwinner camera sensor interface has a different definition of
+> [HV]sync. While the timing diagram uses the names HSYNC and VSYNC,
+> the note following the diagram and register names use HREF and VREF.
+> Combined they imply the hardware uses either [HV]REF or inverted
+> [HV]SYNC. There are also registers to set horizontal skip lengths
+> in pixels and vertical skip lengths in lines, also known as back
+> porches.
 >
-> Fix the setting by checking the correct flag, V4L2_MBUS_PCLK_SAMPLE_RISING.
-> While at it, reorder the three polarity flag checks so HSYNC and VSYNC
-> are grouped together.
+> Fix the polarity handling by using the opposite polarity flag for
+> the checks. Also rename `[hv]sync_pol` to `[hv]ref_pol` to better
+> match the hardware register description.
 >
 > Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
 > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
@@ -88,15 +90,15 @@ Acked-by: Maxime Ripard <mripard@kernel.org>
 Thanks!
 Maxime
 
---pxaf47l7hgrm57u2
+--2fe4ttno4f4fmseg
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeIQwAKCRDj7w1vZxhR
-xVxhAP9flbDGwjgJDkotx80gPBlJVBaAWNlKf5+rVukqwTZs9AEA/EU/dnK5KzU0
-QEqJQQjjDUSZ+fxuByQBiPtKJqftfQ0=
-=LpuS
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeIfwAKCRDj7w1vZxhR
+xRA/AP4vF6S6Kyoc+sq1NvPSmvANUDxkredIbI6JCHlMsiFG3QD9H7FUVTe0FnrF
+Al8s9SSOmN2Cb9+DM0+mq5Jb6GxZyQQ=
+=u2Iv
 -----END PGP SIGNATURE-----
 
---pxaf47l7hgrm57u2--
+--2fe4ttno4f4fmseg--
