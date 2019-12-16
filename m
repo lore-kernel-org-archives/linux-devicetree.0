@@ -2,177 +2,226 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95EAC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDBAC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB82524673
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:32:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576531963;
-	bh=RnCbR/UokR0tkdAHXan/QQsz6CT3rvpjpJmoOICx/i8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hn57fe08+DEk5VNTy3fysELZVmOLgBvUDzwlgRu83LPxxm9Vg4FMS3QB8HmHNf0WN
-	 Ps3641sfo6qadvJ3TcVQhZxmHo1qVZkzug6rKRNS8xbmwyjUpC8jQEx4/ybQU2l0T3
-	 7qIj0uobZzsJkWJEw+5XZRrWW89vwwyFnOlGcE7w=
+	by mail.kernel.org (Postfix) with ESMTP id 9D52924655
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:35:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="j86Mefoe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfLPVcn (ORCPT
+        id S1726882AbfLPVfG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:32:43 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33930 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbfLPVcn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 16:32:43 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l136so4536153oig.1;
-        Mon, 16 Dec 2019 13:32:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IwX6HJZp4kUU0mQp40RPAIjG9iBuDE869U4douXPaCM=;
-        b=oRFCYraemLikzKtfQPGf0LIsieSX34DZvEqiQ04x7dt68F3LfK+R4bgpc4POk7Vj2W
-         Pwm7txAeSYRLuXpHhlaGOXs2dqbG/VdOvI7EX5aayjg7vovieqqiHIeuoeqNnyaxRPkX
-         Lb85yQANb7heXkI13RoLyFRdScXlcjUyx3WkgLr0u0dHsYap11X2a3SclP+UlW5MAxCi
-         p5AF5kO6fXM6KaIaoP39OBRM2INPi9FijmS9ftXqlCjDUqMGHRe+JfIrwrTFN2oQhUnB
-         0VYuJ6wWyXfjfAXI+6jocxfWjMZ496B9qs7d33sS2/sAPzmWY9jDJ6n9jMl6XhN+TEII
-         yVwg==
-X-Gm-Message-State: APjAAAWpymeLUJY4dcJVRE9ayeN/52OonEaAV1M2J4OR2rFZJbtUqNnL
-        uToC52yJN4orDx1BZQSW/HNWFVU=
-X-Google-Smtp-Source: APXvYqyYoLgBFZUpZNtijSy8O8SasS0luLaBe0bGajSGqQBBqoLECG2BqHBeXpEAA+UelSKWQG+g1w==
-X-Received: by 2002:aca:5490:: with SMTP id i138mr672651oib.69.1576531961744;
-        Mon, 16 Dec 2019 13:32:41 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l128sm7166832oif.55.2019.12.16.13.32.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 13:32:41 -0800 (PST)
-Date:   Mon, 16 Dec 2019 15:32:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     tomislav.denis@avl.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] bindings: iio: pressure: Add dlh-i2c documentation
-Message-ID: <20191216213240.GA19920@bogus>
-References: <20191204100354.16652-1-tomislav.denis@avl.com>
- <20191204100354.16652-4-tomislav.denis@avl.com>
- <20191207113442.08260820@archlinux>
+        Mon, 16 Dec 2019 16:35:06 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57772 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726610AbfLPVfF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 16:35:05 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 41F84A34;
+        Mon, 16 Dec 2019 22:35:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1576532102;
+        bh=0W0zxY2knSzySHv9r8fNX8fp00bT/DWSXaIMjThF/UE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j86Mefoe9v3RDZVHrcamnGVBkPK6H9SE+9ICTOVzpmAAK6MM7XAr1ZOURbI3WL5To
+         Bk5C684bU4YY9tZhziyUOnN/yQ4cJceRu0jEcjeYc5O/pFXyfJdpwUA4xa/E0zV+C+
+         oLBO5Xzc/4dSbDXrI7HtCSlKYgTl8L3sv66M4nJg=
+Date:   Mon, 16 Dec 2019 23:34:51 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        ebiharaml@si-linux.co.jp
+Subject: Re: [PATCH v5 4/6] drm: rcar-du: lvds: Allow for even and odd pixels
+ swap
+Message-ID: <20191216213451.GH4856@pendragon.ideasonboard.com>
+References: <1576527154-18391-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1576527154-18391-5-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191207113442.08260820@archlinux>
+In-Reply-To: <1576527154-18391-5-git-send-email-fabrizio.castro@bp.renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Dec 07, 2019 at 11:34:42AM +0000, Jonathan Cameron wrote:
-> On Wed, 4 Dec 2019 11:03:54 +0100
-> <tomislav.denis@avl.com> wrote:
-> 
-> > From: Tomislav Denis <tomislav.denis@avl.com>
-> > 
-> > Add a device tree binding documentation for DLH series pressure
-> > sensors.
-> > 
-> > Signed-off-by: Tomislav Denis <tomislav.denis@avl.com>
-> 
-> One question for DT maintainers.  
-> 
-> Should the file be named after a specific part of is a generic
-> name for the parts covered acceptable?  I would assume it should
-> be a part number, but not sure what precedence there is.
+Hi Fabrizio,
 
-I would use asc,dlhl60.yaml I think. The rule is match the compatible if 
-there's only one. Otherwise, no hard rule really. Use the first/oldest 
-compatible, do wildcard, or vendor prefix and something else.
+Thank you for the patch.
 
-> Otherwise looks good to me, but I will let it sit to give time
-> for DT review.
+On Mon, Dec 16, 2019 at 08:12:32PM +0000, Fabrizio Castro wrote:
+> DT properties dual-lvds-even-pixels and dual-lvds-odd-pixels
+> can be used to work out if the driver needs to swap even
+> and odd pixels around.
 > 
-> Thanks,
+> This patch makes use of the return value from function
+> drm_of_lvds_get_dual_link_pixel_order to determine if we
+> need to swap odd and even pixels around for things to work
+> properly.
 > 
-> Jonathan
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 > 
-> > ---
-> >  .../bindings/iio/pressure/asc,dlh-i2c.yaml         | 51 ++++++++++++++++++++++
-> >  MAINTAINERS                                        |  1 +
-> >  2 files changed, 52 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/pressure/asc,dlh-i2c.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/pressure/asc,dlh-i2c.yaml b/Documentation/devicetree/bindings/iio/pressure/asc,dlh-i2c.yaml
-> > new file mode 100644
-> > index 0000000..5de2277
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/pressure/asc,dlh-i2c.yaml
-> > @@ -0,0 +1,51 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/pressure/dlh-i2c.yaml#
+> ---
+> v4->v5:
+> * Addressed comments from Laurent's review
+> 
+> v3->v4:
+> * New patch extracted from patch:
+>   "drm: rcar-du: lvds: Add dual-LVDS panels support"
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_lvds.c | 67 +++++++++++++++++++++++++++++--------
+>  1 file changed, 53 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> index 3eb208e..c6a38c3 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> @@ -37,6 +37,12 @@ enum rcar_lvds_mode {
+>  	RCAR_LVDS_MODE_VESA = 4,
+>  };
+>  
+> +enum rcar_lvds_link_type {
+> +	RCAR_LVDS_SINGLE_LINK = 0,
+> +	RCAR_LVDS_DUAL_LINK_EVEN_ODD_PIXELS = 1,
+> +	RCAR_LVDS_DUAL_LINK_ODD_EVEN_PIXELS = 2,
+> +};
+> +
+>  #define RCAR_LVDS_QUIRK_LANES		BIT(0)	/* LVDS lanes 1 and 3 inverted */
+>  #define RCAR_LVDS_QUIRK_GEN3_LVEN	BIT(1)	/* LVEN bit needs to be set on R8A77970/R8A7799x */
+>  #define RCAR_LVDS_QUIRK_PWD		BIT(2)	/* PWD bit available (all of Gen3 but E3) */
+> @@ -67,7 +73,7 @@ struct rcar_lvds {
+>  	} clocks;
+>  
+>  	struct drm_bridge *companion;
+> -	bool dual_link;
+> +	enum rcar_lvds_link_type dual_link;
 
-Note that the filename doesn't match here. Run 'make dt_binding_check'.
+Do you think we should rename this to link_type (and test for
+lvds->link_type != RCAR_LVDS_SINGLE_LINK) instead of lvds->dual_link) ?
+Apart from that,
 
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: All Sensors DLH series low voltage digital pressure sensors
-> > +
-> > +maintainers:
-> > +  - Tomislav Denis <tomislav.denis@avl.com>
-> > +
-> > +description: |
-> > +  Bindings for the All Sensors DLH series pressure sensors.
-> > +
-> > +  Specifications about the sensors can be found at:
-> > +    http://www.allsensors.com/cad/DS-0355_Rev_B.PDF
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - asc,dlhl60d
-> > +      - asc,dlhl60g
-> > +
-> > +  reg:
-> > +    description: I2C device address
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    description: interrupt mapping for EOC(data ready) pin
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    i2c0 {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      pressure@29 {
-> > +          compatible = "asc,dlhl60d";
-> > +          reg = <0x29>;
-> > +          interrupt-parent = <&gpio0>;
-> > +          interrupts = <10 IRQ_TYPE_EDGE_RISING>;
-> > +      };
-> > +    };
-> > +...
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 39d6f0f..8f0eab0 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -674,6 +674,7 @@ W:	http://www.allsensors.com/
-> >  S:	Maintained
-> >  L:	linux-iio@vger.kernel.org
-> >  F:	drivers/iio/pressure/dlh-i2c.c
-> > +F:	Documentation/devicetree/bindings/iio/pressure/dlh-i2c.yaml
-> >  
-> >  ALLEGRO DVT VIDEO IP CORE DRIVER
-> >  M:	Michael Tretter <m.tretter@pengutronix.de>
-> 
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  };
+>  
+>  #define bridge_to_rcar_lvds(b) \
+> @@ -484,12 +490,31 @@ static void rcar_lvds_atomic_enable(struct drm_bridge *bridge,
+>  	rcar_lvds_write(lvds, LVDCHCR, lvdhcr);
+>  
+>  	if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK) {
+> -		/*
+> -		 * Configure vertical stripe based on the mode of operation of
+> -		 * the connected device.
+> -		 */
+> -		rcar_lvds_write(lvds, LVDSTRIPE,
+> -				lvds->dual_link ? LVDSTRIPE_ST_ON : 0);
+> +		u32 lvdstripe = 0;
+> +
+> +		if (lvds->dual_link) {
+> +			/*
+> +			 * By default we generate even pixels from the primary
+> +			 * encoder and odd pixels from the companion encoder.
+> +			 * Swap pixels around if the sink requires odd pixels
+> +			 * from the primary encoder and even pixels from the
+> +			 * companion encoder.
+> +			 */
+> +			bool swap_pixels = lvds->dual_link ==
+> +				RCAR_LVDS_DUAL_LINK_ODD_EVEN_PIXELS;
+> +
+> +			/*
+> +			 * Configure vertical stripe since we are dealing with
+> +			 * an LVDS dual-link connection.
+> +			 *
+> +			 * ST_SWAP is reserved for the companion encoder, only
+> +			 * set it in the primary encoder.
+> +			 */
+> +			lvdstripe = LVDSTRIPE_ST_ON
+> +				  | (lvds->companion && swap_pixels ?
+> +				     LVDSTRIPE_ST_SWAP : 0);
+> +		}
+> +		rcar_lvds_write(lvds, LVDSTRIPE, lvdstripe);
+>  	}
+>  
+>  	/*
+> @@ -716,15 +741,26 @@ static int rcar_lvds_parse_dt_companion(struct rcar_lvds *lvds)
+>  	of_node_put(port0);
+>  	of_node_put(port1);
+>  
+> -	if (dual_link >= DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS)
+> -		lvds->dual_link = true;
+> -	else if (lvds->next_bridge && lvds->next_bridge->timings)
+> +	switch (dual_link) {
+> +	case DRM_LVDS_DUAL_LINK_ODD_EVEN_PIXELS:
+> +		lvds->dual_link = RCAR_LVDS_DUAL_LINK_ODD_EVEN_PIXELS;
+> +		break;
+> +	case DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS:
+> +		lvds->dual_link = RCAR_LVDS_DUAL_LINK_EVEN_ODD_PIXELS;
+> +		break;
+> +	default:
+>  		/*
+>  		 * Early dual-link bridge specific implementations populate the
+> -		 * timings field of drm_bridge, read the dual_link flag off the
+> -		 * bridge directly for backward compatibility.
+> +		 * timings field of drm_bridge. If the flag is set, we assume
+> +		 * that we are expected to generate even pixels from the primary
+> +		 * encoder, and odd pixels from the companion encoder.
+>  		 */
+> -		lvds->dual_link = lvds->next_bridge->timings->dual_link;
+> +		if (lvds->next_bridge && lvds->next_bridge->timings &&
+> +		    lvds->next_bridge->timings->dual_link)
+> +			lvds->dual_link = RCAR_LVDS_DUAL_LINK_EVEN_ODD_PIXELS;
+> +		else
+> +			lvds->dual_link = RCAR_LVDS_SINGLE_LINK;
+> +	}
+>  
+>  	if (!lvds->dual_link) {
+>  		dev_dbg(dev, "Single-link configuration detected\n");
+> @@ -741,6 +777,9 @@ static int rcar_lvds_parse_dt_companion(struct rcar_lvds *lvds)
+>  		"Dual-link configuration detected (companion encoder %pOF)\n",
+>  		companion);
+>  
+> +	if (lvds->dual_link == RCAR_LVDS_DUAL_LINK_ODD_EVEN_PIXELS)
+> +		dev_dbg(dev, "Data swapping required\n");
+> +
+>  	/*
+>  	 * FIXME: We should not be messing with the companion encoder private
+>  	 * data from the primary encoder, we should rather let the companion
+> @@ -751,7 +790,7 @@ static int rcar_lvds_parse_dt_companion(struct rcar_lvds *lvds)
+>  	 * for the time being.
+>  	 */
+>  	companion_lvds = bridge_to_rcar_lvds(lvds->companion);
+> -	companion_lvds->dual_link = true;
+> +	companion_lvds->dual_link = lvds->dual_link;
+>  
+>  done:
+>  	of_node_put(companion);
+
+-- 
+Regards,
+
+Laurent Pinchart
