@@ -2,147 +2,164 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D1AC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05167C2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82696205C9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDA7206EC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:27:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zrI8kgBB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbfLPPZt (ORCPT
+        id S1728395AbfLPP1T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:25:49 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60820 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728173AbfLPPZt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 10:25:49 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0033B28AC2E;
-        Mon, 16 Dec 2019 15:25:45 +0000 (GMT)
-Date:   Mon, 16 Dec 2019 16:25:42 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        kernel@collabora.com, Sam Ravnborg <sam@ravnborg.org>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chris Healy <cphealy@gmail.com>, devicetree@vger.kernel.org,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v4 04/11] drm/bridge: Make the bridge chain a
- double-linked list
-Message-ID: <20191216162542.261c821c@collabora.com>
-In-Reply-To: <75a06e2a-4587-ee16-0f5d-af75fbe89793@samsung.com>
-References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
-        <CGME20191203141542eucas1p23771a9c49ef18144c832fc536bdae61a@eucas1p2.samsung.com>
-        <20191203141515.3597631-5-boris.brezillon@collabora.com>
-        <4e901ab9-07d4-4238-7322-c7c5a3959513@samsung.com>
-        <20191216155551.083dcbaf@collabora.com>
-        <75a06e2a-4587-ee16-0f5d-af75fbe89793@samsung.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 16 Dec 2019 10:27:19 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41118 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728259AbfLPP1T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 10:27:19 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c9so7766204wrw.8
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 07:27:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=q3MgqIM7Lebzkf8JO0ojhPzDqiRHLK5vJzUfeZMc1zU=;
+        b=zrI8kgBBoboagFSLXfmTf0mbONsvoKKFbRJjR42YqaEaWnlMrQyzcWb1XMd3mJDIDA
+         XEZRkQ8P8pAI2TuMYE0eBA7sLbLxsitGBmzo66TAenENXpkSFTIFTH0BiQJz45X9zJoE
+         H4pmwfVFQeaforibR4y0VCfdsHWTqBW+kukg7d1cOXYSeCS7D/lHY2Uhncb2P8QqzA70
+         QSUUf4iuWxxGW1iyZsIULB6RumULY/boFuV9T8RrnUAG3Ab1ce71ZAZH6Wte3H9d3TUM
+         oKjbW/zgqasVXHvbr6TC5orVS8GePjn2BhNh9z4+f09Xp+aUnWtHm6yqFLV/d/iNoCV9
+         h5Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=q3MgqIM7Lebzkf8JO0ojhPzDqiRHLK5vJzUfeZMc1zU=;
+        b=inMTrrbm49KFGnSDGYuGOjYl8+zAOX8p/2Dhka9V1txRG6h+sFQG9YWkLoaKI8PiKs
+         NZNvQQaDiLTTb8VeiyiTffRJlPLpUj2i/emdhyv59KjmfstJoDlPYC4eLJKkbViSgNki
+         mnZotxC5ZTeG26p/1lIJ4UcJwGooUGSqYtStzpGWCkZkK0WBMySTKuNVDF1a8vucAKz/
+         F3/i4axnDB7AnXcZgkUfgbZxmmxCm5a0g1vBW6pYgTZH15joYv9YVUA9yfOHksanS5mQ
+         ZzmKc105G8niUSoauKV/JI4tkvP5Vz0EU1n/NM3wBY7cPY8WC6Z+0ki14BF/CHvqXVSw
+         2LQA==
+X-Gm-Message-State: APjAAAWWXLxwjigDVTUADwJi1G1sRNNJB9WyPIKOc7A/DQt5cxk9BBEl
+        Ub566TrWubrNs6uT/FokhFm8nQ==
+X-Google-Smtp-Source: APXvYqzUTemS2PAuC/RnjCOMgKkGPqFGklDx/Gs//sa0fLFQ2EuYXh0JOOt4jLFQ6QC7CwPooTMy4g==
+X-Received: by 2002:a5d:6b82:: with SMTP id n2mr30708752wrx.153.1576510037406;
+        Mon, 16 Dec 2019 07:27:17 -0800 (PST)
+Received: from dell ([185.17.149.202])
+        by smtp.gmail.com with ESMTPSA id o66sm17974890wmo.20.2019.12.16.07.27.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 07:27:16 -0800 (PST)
+Date:   Mon, 16 Dec 2019 15:27:15 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH v4 2/5] mfd: rn5t618: add IRQ support
+Message-ID: <20191216152715.GH2369@dell>
+References: <20191211215409.32764-1-andreas@kemnade.info>
+ <20191211215409.32764-3-andreas@kemnade.info>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191211215409.32764-3-andreas@kemnade.info>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 16 Dec 2019 16:02:36 +0100
-Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+On Wed, 11 Dec 2019, Andreas Kemnade wrote:
 
-> Hi Boris,
+> This adds support for IRQ handling in the RC5T619 which is required
+> for properly implementing subdevices like RTC.
+> For now only definitions for the variant RC5T619 are included.
 > 
-> On 16.12.2019 15:55, Boris Brezillon wrote:
-> > On Mon, 16 Dec 2019 14:54:25 +0100
-> > Marek Szyprowski <m.szyprowski@samsung.com> wrote:  
-> >> On 03.12.2019 15:15, Boris Brezillon wrote:  
-> >>> So that each element in the chain can easily access its predecessor.
-> >>> This will be needed to support bus format negotiation between elements
-> >>> of the bridge chain.
-> >>>
-> >>> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> >>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> >>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>  
-> >> I've noticed that this patch got merged to linux-next as commit
-> >> 05193dc38197021894b17239fafbd2eb1afe5a45. Sadly it breaks booting of
-> >> Samsung Exynos5250-based Arndale board. Booting stops after following
-> >> messages:
-> >>
-> >> [drm] Exynos DRM: using 14400000.fimd device for DMA mapping operations
-> >> exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
-> >> exynos-drm exynos-drm: bound 14450000.mixer (ops mixer_component_ops)
-> >> exynos-drm exynos-drm: bound 14500000.dsi (ops exynos_dsi_component_ops)
-> >> exynos-drm exynos-drm: bound 14530000.hdmi (ops hdmi_component_ops)
-> >> [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-> >> [drm] No driver support for vblank timestamp query.
-> >> [drm] Cannot find any crtc or sizes
-> >> [drm] Cannot find any crtc or sizes
-> >> [drm] Initialized exynos 1.1.0 20180330 for exynos-drm on minor 0
-> >>
-> >> I will try to debug this and provide more information soon.
-> >>  
-> > Can you try with this diff applied?  
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> Changes in v4:
+> merge rn5t618-irq.c into rn5t618.c
+> use macros for IRQ table
 > 
-> This patch doesn't change anything.
-
-Okay. Can you do a list_for_each_entry() on both encoder->bridge_chain
-and dsi->bridge_chain (dump bridge pointers in a pr_info()) before and
-after the list_splice_init() call?
-
+> Changes in v3:
+> alignment cleanup
 > 
-> > --->8---  
-> > diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> > index 3955f84dc893..118ecedc7621 100644
-> > --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> > +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> > @@ -1523,7 +1523,7 @@ static int exynos_dsi_host_attach(struct mipi_dsi_host *host,
-> >          if (out_bridge) {
-> >                  drm_bridge_attach(encoder, out_bridge, NULL);
-> >                  dsi->out_bridge = out_bridge;
-> > -               list_splice(&encoder->bridge_chain, &dsi->bridge_chain);
-> > +               list_splice_init(&encoder->bridge_chain, &dsi->bridge_chain);
-> >          } else {
-> >                  int ret = exynos_dsi_create_connector(encoder);
-> >   
-> > diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.c
-> > index 6c5b80ad6154..e1378d48210f 100644
-> > --- a/drivers/gpu/drm/vc4/vc4_dsi.c
-> > +++ b/drivers/gpu/drm/vc4/vc4_dsi.c
-> > @@ -1613,7 +1613,7 @@ static int vc4_dsi_bind(struct device *dev, struct device *master, void *data)
-> >           * from our driver, since we need to sequence them within the
-> >           * encoder's enable/disable paths.
-> >           */
-> > -       list_splice(&dsi->encoder->bridge_chain, &dsi->bridge_chain);
-> > +       list_splice_init(&dsi->encoder->bridge_chain, &dsi->bridge_chain);
-> >   
-> >          if (dsi->port == 0)
-> >                  vc4_debugfs_add_regset32(drm, "dsi0_regs", &dsi->regset);
-> > @@ -1639,7 +1639,7 @@ static void vc4_dsi_unbind(struct device *dev, struct device *master,
-> >           * Restore the bridge_chain so the bridge detach procedure can happen
-> >           * normally.
-> >           */
-> > -       list_splice(&dsi->bridge_chain, &dsi->encoder->bridge_chain);
-> > +       list_splice_init(&dsi->bridge_chain, &dsi->encoder->bridge_chain);
-> >          vc4_dsi_encoder_destroy(dsi->encoder);
-> >   
-> >          if (dsi->port == 1)
-> >
-> >  
-> Best regards
+> Changes in v2:
+> - no dead code, did some more testing and thinking for that
+> - remove extra empty lines
+>  drivers/mfd/Kconfig         |  1 +
+>  drivers/mfd/rn5t618.c       | 88 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/rn5t618.h | 15 ++++++++
+>  3 files changed, 104 insertions(+)
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index ae24d3ea68ea..522e068d0082 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1057,6 +1057,7 @@ config MFD_RN5T618
+>  	depends on OF
+>  	select MFD_CORE
+>  	select REGMAP_I2C
+> +	select REGMAP_IRQ
+>  	help
+>  	  Say yes here to add support for the Ricoh RN5T567,
+>  	  RN5T618, RC5T619 PMIC.
+> diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+> index da5cd9c92a59..76d997c0cfe4 100644
+> --- a/drivers/mfd/rn5t618.c
+> +++ b/drivers/mfd/rn5t618.c
+> @@ -8,6 +8,8 @@
+>  
+>  #include <linux/delay.h>
+>  #include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/rn5t618.h>
+>  #include <linux/module.h>
+> @@ -45,9 +47,63 @@ static const struct regmap_config rn5t618_regmap_config = {
+>  	.cache_type	= REGCACHE_RBTREE,
+>  };
+>  
+> +static const struct regmap_irq rc5t619_irqs[] = {
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_SYS, 0, BIT(0)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_DCDC, 0, BIT(1)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_RTC, 0, BIT(2)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_ADC, 0, BIT(3)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_GPIO, 0, BIT(4)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_CHG, 0, BIT(6)),
+> +};
+> +
+> +static const struct regmap_irq_chip rc5t619_irq_chip = {
+> +	.name = "rc5t619",
+> +	.irqs = rc5t619_irqs,
+> +	.num_irqs = ARRAY_SIZE(rc5t619_irqs),
+> +	.num_regs = 1,
+> +	.status_base = RN5T618_INTMON,
+> +	.mask_base = RN5T618_INTEN,
+> +	.mask_invert = true,
+> +};
+> +
+>  static struct rn5t618 *rn5t618_pm_power_off;
+>  static struct notifier_block rn5t618_restart_handler;
+>  
+> +int rn5t618_irq_init(struct rn5t618 *rn5t618)
 
+Static?
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
