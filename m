@@ -2,137 +2,147 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8B7C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D1AC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70905206E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:24:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hRiLsi+0"
+	by mail.kernel.org (Postfix) with ESMTP id 82696205C9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:25:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfLPPYk (ORCPT
+        id S1728259AbfLPPZt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:24:40 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5140 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728173AbfLPPYk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 10:24:40 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df7a19b0000>; Mon, 16 Dec 2019 07:24:11 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 16 Dec 2019 07:24:38 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 16 Dec 2019 07:24:38 -0800
-Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Dec
- 2019 15:24:37 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id 7D6A842762; Mon, 16 Dec 2019 17:24:35 +0200 (EET)
-Date:   Mon, 16 Dec 2019 17:24:35 +0200
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mperttunen@nvidia.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <allison@lohutok.net>, <pgaikwad@nvidia.com>,
-        <mturquette@baylibre.com>, <horms+renesas@verge.net.au>,
-        <Jisheng.Zhang@synaptics.com>, <krzk@kernel.org>, <arnd@arndb.de>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>, <vidyas@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
-Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-Message-ID: <20191216152435.GD28289@pdeschrijver-desktop.Nvidia.com>
-References: <ccb715cc-c927-ea91-a26e-24d6eeeeef1a@gmail.com>
- <ee1d39d4-9a57-da9b-fce6-8130dac1d2fd@nvidia.com>
- <49da77dc-b346-68eb-9ef8-42cfb3221489@nvidia.com>
- <3f1c9325-3017-62be-1e3b-82fd28540fdf@nvidia.com>
- <6fcbff3d-8695-7cd0-60de-6eb523b6964c@gmail.com>
- <20191211151028.GZ28289@pdeschrijver-desktop.Nvidia.com>
- <0930a710-174b-859b-294c-e9f81f6a3b5e@gmail.com>
- <20191216122005.GB28289@pdeschrijver-desktop.Nvidia.com>
- <53653719-f8e5-f6d1-a1d1-e53c7ccd7636@gmail.com>
- <20191216151132.GC28289@pdeschrijver-desktop.Nvidia.com>
+        Mon, 16 Dec 2019 10:25:49 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60820 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728173AbfLPPZt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 10:25:49 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0033B28AC2E;
+        Mon, 16 Dec 2019 15:25:45 +0000 (GMT)
+Date:   Mon, 16 Dec 2019 16:25:42 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        kernel@collabora.com, Sam Ravnborg <sam@ravnborg.org>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chris Healy <cphealy@gmail.com>, devicetree@vger.kernel.org,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v4 04/11] drm/bridge: Make the bridge chain a
+ double-linked list
+Message-ID: <20191216162542.261c821c@collabora.com>
+In-Reply-To: <75a06e2a-4587-ee16-0f5d-af75fbe89793@samsung.com>
+References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
+        <CGME20191203141542eucas1p23771a9c49ef18144c832fc536bdae61a@eucas1p2.samsung.com>
+        <20191203141515.3597631-5-boris.brezillon@collabora.com>
+        <4e901ab9-07d4-4238-7322-c7c5a3959513@samsung.com>
+        <20191216155551.083dcbaf@collabora.com>
+        <75a06e2a-4587-ee16-0f5d-af75fbe89793@samsung.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191216151132.GC28289@pdeschrijver-desktop.Nvidia.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576509852; bh=pWpE3o2tiFHLJrLl2PwAQ76GOSg2rnsHi4e46CsvdYo=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=hRiLsi+0bgoX0LbYPMmHbTnHOo4XYITpxTxVLSJvqrPn4Y4HaOUe5qOtNOX6K/HwQ
-         IakYnabL3/kvgSPFbR4DDxhCx2/6ZXC+eapBKe1/HspBvR8b8WgpoYPT2z8N0YH2/s
-         LVrKCk4tMYRPtg8ODqcRTIoXpAjVpjuJ/18a5uWW3qIObSEod0rUHqhQbZ4Jwv3gG0
-         ylTDc1ZUpulC1Zmbm3ucygH2kyvW+Kmj31wB5CqubFkD/jfIsDmd4ZsmhWk8PJWC7h
-         XjtKy4D/SFcO/J6QdnLgB+gumP5lBNke494+Qvh8jMLnRBaTmLGgMeo7+oMenxEjfH
-         sgQseh+Itf0SQ==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 05:11:32PM +0200, Peter De Schrijver wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Mon, Dec 16, 2019 at 05:23:23PM +0300, Dmitry Osipenko wrote:
-> > >> Could you please clarify what do you mean by the "existing users"?
-> > >> AFAIK, nothing in kernel uses mux clocks.
-> > >
-> > > The DT clk bindings allow for parent initialization, so it's certainly
-> > > possible there are some DTs which rely on this. We promised to never
-> > > break the bindings, which changing to 1 clock would do.
-> >
-> > What about this variant:
-> >
-> >   1. Keep the old CaR code in place.
-> >
-> >   2. Make CaR driver to scan whole device-tree for the legacy PMC clocks.
-> >
-> >   3. If legacy clock is found, then register PMC clocks from CaR.
-> >
-> >   4. If legacy clocks are not found, then don't register PMC clocks from
-> > CaR.
-> >
-> >   5. Add clocks support to the PMC driver and only register them if
-> > legacy clocks are not registered by CaR.
-> >
-> > Now both old and new DTBs can co-exist and work, everyone happy.
-> 
-> That seems even more work.. Today the only upstream user is audio.
-> Currently these clocks are setup by the CAR clock driver. However
-> as they will move to the PMC driver, this mechanism cannot be used.
-> Hence the plan is to modify the audio driver to check for the PMC clocks
-> in DT and if they are not available use the CAR clocks as fallback.
-> The whole reason the clocks move to the PMC driver, is that when PMC
-> becomes secure, all accesses have to go via an SMC. Given that we don't
-> want SMCs all over the Tegra drivers, it's a good opportunity to move
-> the PMC clock handling into the PMC driver. PMC can be secure with both
-> 'new' and old DTs, so just registering the PMC clocks in the CAR driver
-> if legacy clocks are found in the DT, won't always work.
-> 
+On Mon, 16 Dec 2019 16:02:36 +0100
+Marek Szyprowski <m.szyprowski@samsung.com> wrote:
 
-Given the audio driver needs to change anyway, we can indeed use 1 clock
-per PMC clk_out_ rather than 2 as we have today. As this models the hw
-slightly better, I think we should do that as you suggested.
+> Hi Boris,
+> 
+> On 16.12.2019 15:55, Boris Brezillon wrote:
+> > On Mon, 16 Dec 2019 14:54:25 +0100
+> > Marek Szyprowski <m.szyprowski@samsung.com> wrote:  
+> >> On 03.12.2019 15:15, Boris Brezillon wrote:  
+> >>> So that each element in the chain can easily access its predecessor.
+> >>> This will be needed to support bus format negotiation between elements
+> >>> of the bridge chain.
+> >>>
+> >>> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> >>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> >>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>  
+> >> I've noticed that this patch got merged to linux-next as commit
+> >> 05193dc38197021894b17239fafbd2eb1afe5a45. Sadly it breaks booting of
+> >> Samsung Exynos5250-based Arndale board. Booting stops after following
+> >> messages:
+> >>
+> >> [drm] Exynos DRM: using 14400000.fimd device for DMA mapping operations
+> >> exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
+> >> exynos-drm exynos-drm: bound 14450000.mixer (ops mixer_component_ops)
+> >> exynos-drm exynos-drm: bound 14500000.dsi (ops exynos_dsi_component_ops)
+> >> exynos-drm exynos-drm: bound 14530000.hdmi (ops hdmi_component_ops)
+> >> [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+> >> [drm] No driver support for vblank timestamp query.
+> >> [drm] Cannot find any crtc or sizes
+> >> [drm] Cannot find any crtc or sizes
+> >> [drm] Initialized exynos 1.1.0 20180330 for exynos-drm on minor 0
+> >>
+> >> I will try to debug this and provide more information soon.
+> >>  
+> > Can you try with this diff applied?  
+> 
+> This patch doesn't change anything.
 
-Peter.
+Okay. Can you do a list_for_each_entry() on both encoder->bridge_chain
+and dsi->bridge_chain (dump bridge pointers in a pr_info()) before and
+after the list_splice_init() call?
+
+> 
+> > --->8---  
+> > diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> > index 3955f84dc893..118ecedc7621 100644
+> > --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> > +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> > @@ -1523,7 +1523,7 @@ static int exynos_dsi_host_attach(struct mipi_dsi_host *host,
+> >          if (out_bridge) {
+> >                  drm_bridge_attach(encoder, out_bridge, NULL);
+> >                  dsi->out_bridge = out_bridge;
+> > -               list_splice(&encoder->bridge_chain, &dsi->bridge_chain);
+> > +               list_splice_init(&encoder->bridge_chain, &dsi->bridge_chain);
+> >          } else {
+> >                  int ret = exynos_dsi_create_connector(encoder);
+> >   
+> > diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.c
+> > index 6c5b80ad6154..e1378d48210f 100644
+> > --- a/drivers/gpu/drm/vc4/vc4_dsi.c
+> > +++ b/drivers/gpu/drm/vc4/vc4_dsi.c
+> > @@ -1613,7 +1613,7 @@ static int vc4_dsi_bind(struct device *dev, struct device *master, void *data)
+> >           * from our driver, since we need to sequence them within the
+> >           * encoder's enable/disable paths.
+> >           */
+> > -       list_splice(&dsi->encoder->bridge_chain, &dsi->bridge_chain);
+> > +       list_splice_init(&dsi->encoder->bridge_chain, &dsi->bridge_chain);
+> >   
+> >          if (dsi->port == 0)
+> >                  vc4_debugfs_add_regset32(drm, "dsi0_regs", &dsi->regset);
+> > @@ -1639,7 +1639,7 @@ static void vc4_dsi_unbind(struct device *dev, struct device *master,
+> >           * Restore the bridge_chain so the bridge detach procedure can happen
+> >           * normally.
+> >           */
+> > -       list_splice(&dsi->bridge_chain, &dsi->encoder->bridge_chain);
+> > +       list_splice_init(&dsi->bridge_chain, &dsi->encoder->bridge_chain);
+> >          vc4_dsi_encoder_destroy(dsi->encoder);
+> >   
+> >          if (dsi->port == 1)
+> >
+> >  
+> Best regards
+
