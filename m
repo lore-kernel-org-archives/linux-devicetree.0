@@ -2,95 +2,201 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B73C9C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0077C2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8741D206E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 787C2206D7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:59:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkwOuyKn"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="mvCGoG39"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbfLPQvG (ORCPT
+        id S1726092AbfLPQ7W (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:51:06 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45794 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbfLPQvF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 11:51:05 -0500
-Received: by mail-qt1-f195.google.com with SMTP id l12so6268842qtq.12;
-        Mon, 16 Dec 2019 08:51:05 -0800 (PST)
+        Mon, 16 Dec 2019 11:59:22 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44777 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbfLPQ7V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 11:59:21 -0500
+Received: by mail-io1-f65.google.com with SMTP id b10so7660353iof.11
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 08:59:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=W4O6k67GfjEXcryRt2BFpux0k7KGkAzksxyGgmCZObI=;
-        b=WkwOuyKnh0BhjsoRSwFvRhyT1WaVvJkcZqYxEpSDAVi3J3jIrqy7j/7xlyv6VCXRGt
-         3wwfk6pFKaqZ3U2Z/KxGtAYlizFb9mpmyopREGI+wLBVlSAXMPlOuumSIuuPwbdegamS
-         0Tunu0zfoL9n9pvKN1twtQHXPDs4Z79Bw8EShQC/yDuNv46VNYEeHWWXwQcd7dQ8y87k
-         WbNxAeqlxgAvsQ6JDHehwefju1x76YPgyF7fwLR1yl3jqLRSONSepfSWXtDpR8OEcKpd
-         b+k4+ouvh6f7e+dHrlbAMBospmbr0n1A9OFjLVLmto+vXaH37ZyHFe/Y8Dr1AI/aNf/k
-         bQpA==
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wT7SZ+OLO630PVI5NYrvDjy+jNlP7/vPSuqmUxImjRI=;
+        b=mvCGoG390lkQhIGt10C5uJOnQlDLqM7ckcj5+vO5/E5UBpBhaLT0+k2/e7I4DLcEeY
+         2ifgfrg+zjpexA6m1T2Ge1sRCpRRTyvEIhEZTAMP9J664HhTWziOuDAb1+iyH7srY7PA
+         ozqRWgCYhHDvJDJ5yuT6pDwnFshn+bjNE7YmA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=W4O6k67GfjEXcryRt2BFpux0k7KGkAzksxyGgmCZObI=;
-        b=TXPjzRRr1v6uVp288Yjrf8wzDURXE0HWjbBhWPtgZhz6WgFyW8brlh0xQcpp/UueDV
-         RDtgjUavYpj9xWpaUnUMi+cnrNGQbMGIz+T/LPqn7FC3CAEILTijgdRMGii1zI5VOrnL
-         P5SPiBs8meWmln5SYq2PaSmiMxTuf9cv3igHg9OWgCRG/ipL1wtdAlXD80osRHfiGNYh
-         wTqUaAc6bdcRpurDjdKnaJ62WMhfYud7k9PHBsCQTWqiCUrXF4XVEB1pDgPl/HStS7KL
-         QbhFkP0ri1xbGZ2Zk4I2qFOOnXBgfcB3+T/bJ6JhvtmEWkP/bHrNlfEEIFCqc5275Wv+
-         1kcA==
-X-Gm-Message-State: APjAAAUwnHQzoq5EHxoa/GV5UHre1xF2LDcmZTsk5IkSwaaRZk1sZGql
-        AqYsnF+xk06whuiN/A+ekII=
-X-Google-Smtp-Source: APXvYqy6tZPu2WmGWY9idlGNMroe5J64lIFHSkS5SMk8g1WTtdP61Exq4/UAlvvkbagvetYBkxYoaw==
-X-Received: by 2002:ac8:7586:: with SMTP id s6mr105053qtq.309.1576515064844;
-        Mon, 16 Dec 2019 08:51:04 -0800 (PST)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id b3sm7102789qtr.86.2019.12.16.08.51.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 08:51:04 -0800 (PST)
-Date:   Mon, 16 Dec 2019 11:51:03 -0500
-Message-ID: <20191216115103.GD2051941@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v5 4/5] net: dsa: add support for Atheros AR9331 TAG
- format
-In-Reply-To: <20191216074403.313-5-o.rempel@pengutronix.de>
-References: <20191216074403.313-1-o.rempel@pengutronix.de>
- <20191216074403.313-5-o.rempel@pengutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wT7SZ+OLO630PVI5NYrvDjy+jNlP7/vPSuqmUxImjRI=;
+        b=D/w6wvGmD4KXGD6SiIcRvQxLpZjWwqnsbsyRzv08wDpsMek7eCrI2W1sYq2/tegMZm
+         fd9IzESZXDa/E3YU+DzU6E+nufORdVlkBAX1YqbFlOEMKQvNk7KrBIZMW9kTt9IIvpIG
+         L+TBR8ABuTLx2uuW/N/LJILcGlRs2ncvbeWD+h0wlPIDa3iKJB6qqn+z1vGyfYjXC/sX
+         lDhPILvIdn+c9oPG8IkhbmcX8IQr5ZFdKiZ0NZvAgx8lGjvJPoM15pGY0W8YZtfgomIY
+         rJOC0iy9S32813LheTAOavmS8jESrAFZaAONB9kM6U+c62i3QtaMnwl7huqsXGJq78IG
+         BYKg==
+X-Gm-Message-State: APjAAAU5jEDLB4xEq04Caz67dBpSnavWw0Wy6VKKkl47Gk2Y76dUyd3s
+        /b3Ah916QsZLvoInE+lKA7DmQO1M4pT+O+JIS9yY0A==
+X-Google-Smtp-Source: APXvYqxdRoeWD1Tywgum5/3SAGtinVvAq8t3n49rScn14Yz2lW3axKTMURLW3omvXjZ5mdfPRnnhCaLiPDyJLxS1qSY=
+X-Received: by 2002:a05:6602:2504:: with SMTP id i4mr19060859ioe.173.1576515559642;
+ Mon, 16 Dec 2019 08:59:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20191203134816.5319-1-jagan@amarulasolutions.com>
+ <20191203134816.5319-2-jagan@amarulasolutions.com> <20191204133600.gnv6dnhk6upe7xod@gilmour.lan>
+ <CAMty3ZDU57Hj3ZSBC6sSMFWN9-HQadA03hmXUNUVS1W0UQQ3DA@mail.gmail.com> <20191216112042.f4xvlgnbm4dk6wkq@gilmour.lan>
+In-Reply-To: <20191216112042.f4xvlgnbm4dk6wkq@gilmour.lan>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Mon, 16 Dec 2019 22:29:08 +0530
+Message-ID: <CAMty3ZBU-XaxR_vM5L2yVbhR5ftfbtDn3jP00qCxBF+owVyqDQ@mail.gmail.com>
+Subject: Re: [PATCH v12 1/7] dt-bindings: sun6i-dsi: Document A64 MIPI-DSI controller
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 16 Dec 2019 08:44:02 +0100, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-> Add support for tag format used in Atheros AR9331 built-in switch.
-> 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+On Mon, Dec 16, 2019 at 4:50 PM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Mon, Dec 16, 2019 at 04:37:20PM +0530, Jagan Teki wrote:
+> > On Wed, Dec 4, 2019 at 7:06 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > >
+> > > On Tue, Dec 03, 2019 at 07:18:10PM +0530, Jagan Teki wrote:
+> > > > The MIPI DSI controller in Allwinner A64 is similar to A33.
+> > > >
+> > > > But unlike A33, A64 doesn't have DSI_SCLK gating so it is valid
+> > > > to have separate compatible for A64 on the same driver.
+> > > >
+> > > > DSI_SCLK uses mod clock-names on dt-bindings, so the same
+> > > > is not required for A64.
+> > > >
+> > > > On that note
+> > > > - A64 require minimum of 1 clock like the bus clock
+> > > > - A33 require minimum of 2 clocks like both bus, mod clocks
+> > > >
+> > > > So, update dt-bindings so-that it can document both A33,
+> > > > A64 bindings requirements.
+> > > >
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > ---
+> > > > Changes for v12:
+> > > > - Use 'enum' instead of oneOf+const
+> > > >
+> > > >  .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 20 +++++++++++++++++--
+> > > >  1 file changed, 18 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> > > > index dafc0980c4fa..b91446475f35 100644
+> > > > --- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> > > > +++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> > > > @@ -15,7 +15,9 @@ properties:
+> > > >    "#size-cells": true
+> > > >
+> > > >    compatible:
+> > > > -    const: allwinner,sun6i-a31-mipi-dsi
+> > > > +    enum:
+> > > > +      - allwinner,sun6i-a31-mipi-dsi
+> > > > +      - allwinner,sun50i-a64-mipi-dsi
+> > > >
+> > > >    reg:
+> > > >      maxItems: 1
+> > > > @@ -24,6 +26,8 @@ properties:
+> > > >      maxItems: 1
+> > > >
+> > > >    clocks:
+> > > > +    minItems: 1
+> > > > +    maxItems: 2
+> > > >      items:
+> > > >        - description: Bus Clock
+> > > >        - description: Module Clock
+> > > > @@ -63,13 +67,25 @@ required:
+> > > >    - reg
+> > > >    - interrupts
+> > > >    - clocks
+> > > > -  - clock-names
+> > > >    - phys
+> > > >    - phy-names
+> > > >    - resets
+> > > >    - vcc-dsi-supply
+> > > >    - port
+> > > >
+> > > > +allOf:
+> > > > +  - if:
+> > > > +      properties:
+> > > > +         compatible:
+> > > > +           contains:
+> > > > +             const: allwinner,sun6i-a31-mipi-dsi
+> > > > +      then:
+> > > > +        properties:
+> > > > +          clocks:
+> > > > +            minItems: 2
+> > > > +        required:
+> > > > +          - clock-names
+> > > > +
+> > >
+> > > Your else condition should check that the number of clocks items is 1
+> > > on the A64
+> >
+> > But the minItems mentioned as 1 in clocks, which is unchanged number
+> > by default. doesn't it sufficient?
+>
+> In the main schema, it's said that the clocks property can have one or
+> two elements (to cover the A31 case that has one, and the A64 case
+> that has 2).
+>
+> This is fine.
+>
+> Later on, you enforce that the A64 has two elements, and this is fine
+> too.
 
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Actually A31 case has 2 and A64 case has 1.
+
+>
+> However, you never check that on the A31 you only have one clock, and
+> you could very well have two and no one would notice.
+
+I did check A31 case for 2 but not in A64. this is what you mean? so
+adding A64 check like below would fine?
+
+allOf:
+  - if:
+      properties:
+         compatible:
+           contains:
+             const: allwinner,sun6i-a31-mipi-dsi
+      then:
+        properties:
+          clocks:
+            minItems: 2
+        required:
+          - clock-names
+  - if:
+      properties:
+         compatible:
+           contains:
+             const: allwinner,sun50i-a64-mipi-dsi
+      then:
+        properties:
+          clocks:
+            minItems: 1
