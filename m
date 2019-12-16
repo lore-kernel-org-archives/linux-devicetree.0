@@ -2,118 +2,105 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE04EC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6E6C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5BBD206D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C7120700
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:08:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="II1ecyDO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q5x+Bkta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfLPIE6 (ORCPT
+        id S1726749AbfLPII3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:04:58 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:44218 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726783AbfLPIE5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 03:04:57 -0500
-X-UUID: 066aca06bdff4d21bbc8a06e890cc7f2-20191216
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=77VbVuR/4GKH/NIE43ZNXEdDPN9zvEbCfzRGXHwyi9s=;
-        b=II1ecyDO2TBe7ieN0X0vwTURJzqggDYMhYBlB79SuM7pfIRIseXAkVsjR2jxIOMoW9Ibelx+Cu1RC1ylDxTTNOAspkBuugDW6XvrvL/5QEMX3y4IJDGS/XJn0jv5a81LBfHaUPMiGLF6XqfJyeyzB+HgTpIwP5pYfKNW5RRO2Wk=;
-X-UUID: 066aca06bdff4d21bbc8a06e890cc7f2-20191216
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 709417858; Mon, 16 Dec 2019 16:04:47 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 16 Dec 2019 16:04:29 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 16 Dec 2019 16:04:28 +0800
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Wolfram Sang <wsa@the-dreams.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        <linux-i2c@vger.kernel.org>
-CC:     <tfiga@chromium.org>, <drinkcat@chromium.org>,
-        <srv_heupstream@mediatek.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v9 3/4] misc: eeprom: at24: support pm_runtime control
-Date:   Mon, 16 Dec 2019 16:04:44 +0800
-Message-ID: <20191216080445.8747-4-bibby.hsieh@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20191216080445.8747-1-bibby.hsieh@mediatek.com>
-References: <20191216080445.8747-1-bibby.hsieh@mediatek.com>
+        Mon, 16 Dec 2019 03:08:29 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:37194 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbfLPII3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 03:08:29 -0500
+Received: by mail-ua1-f66.google.com with SMTP id f9so1764458ual.4
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 00:08:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q6wmtqrWytSgVVPaG+tJiiZU+H7YE7GNP+DoOxtH1VI=;
+        b=Q5x+BktaOm2b3vqBHMvP5gzjjoxagKJ79ZZToE4NJrZ47jD69ofO1gQcxdrv3AgM+1
+         4OaRDkeeLIr3Qcnzc+ndcMDhKYlIx7NFEDP+nr09xZo+x6EH1CjzS+Gk8yewKOxcXour
+         fgsEnvJqJ5ymbKxwAdF9OuuMDz6Za6gzyXqPzxyM/TgAyX4v8M6WRbEbiZVPzGSvmSl2
+         w84dXiQJjoT5pZ5r/sxd4bgs1WgI8vTIws4k5w+VAFSZmAyrIanEcKNjEJiraO9TFO8f
+         HB3tbj/39d1t/rlYDtNIpWRDpcWcWIG1lsiCQXaOj/XHJcATVvQv8jCdMp1hPNXZM9A2
+         8H5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q6wmtqrWytSgVVPaG+tJiiZU+H7YE7GNP+DoOxtH1VI=;
+        b=VSwldwUbtc7EN128HAy/qinqp9B/bfSc/pJ7kS9TgeUIJjx/cMtOqRe4oUgDFJN8WK
+         s9nV99+fDlJm1sO2+p9tgiJjwR4jLXq31+Uicbqqgnn42uMqkZYnN9j0yvzv+2kziwaG
+         JZCQDsrO9xyAWawZ++24lxZUelGLYQLeFzHJqyW8K/PkElHZqbTnPs7/SxEGpLlVpaGP
+         q5fr/HH7AJfFt5r9ExxQiE/NKd7wUsCxOK/7MaefJ7SAwIRi8JJo10B84VbYbo+zaCfi
+         0tLc1bpOOK1+c53/OK0isZ16Vrbw+QCXroYynETX/Tdt0lFyLfWSqS8++jj/WlBer5WA
+         T+5A==
+X-Gm-Message-State: APjAAAVfktgst18UlU50FYf6t+whuxMTPUvRhXlDmLy6VciKZg+DxHWA
+        AOzk54fRpezhZNB0iympEKtznu43/tJgYO2faCQSYA==
+X-Google-Smtp-Source: APXvYqwTmNQL9yAF4ysRmXvFWucNUjVzF64EIGjJntMayVn5WjwCpACT1hjuTxdjff5Z5fVgnzInp5q0Ayr6YWbMa9w=
+X-Received: by 2002:ab0:2716:: with SMTP id s22mr22593797uao.20.1576483708557;
+ Mon, 16 Dec 2019 00:08:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20191210154157.21930-1-ktouil@baylibre.com> <20191210154157.21930-2-ktouil@baylibre.com>
+In-Reply-To: <20191210154157.21930-2-ktouil@baylibre.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 16 Dec 2019 09:08:17 +0100
+Message-ID: <CACRpkdZb6OppcdCcaQ9abdkDJMk4escyyEm1TMB75rRxoN5e2A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
+To:     Khouloud Touil <ktouil@baylibre.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        baylibre-upstreaming@groups.io,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QWx0aG91Z2ggaW4gdGhlIG1vc3QgcGxhdGZvcm1zLCB0aGUgcG93ZXIgb2YgZWVwcm9tIGFyZSBh
-bHdheQ0Kb24sIHNvbWUgcGxhdGZvcm1zIGRpc2FibGUgdGhlIGVlcHJvbSBwb3dlciBpbiBvcmRl
-ciB0byBtZWV0DQpsb3cgcG93ZXIgcmVxdWVzdC4gVGhpcyBwYXRjaCBhZGQgdGhlIHBtX3J1bnRp
-bWUgb3BzIHRvIGNvbnRyb2wNCnBvd2VyIHRvIHN1cHBvcnQgYWxsIHBsYXRmb3Jtcy4NCg0KU2ln
-bmVkLW9mZi1ieTogQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCi0tLQ0K
-IGRyaXZlcnMvbWlzYy9lZXByb20vYXQyNC5jIHwgMzggKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgMzggaW5zZXJ0aW9ucygrKQ0KDQpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0LmMgYi9kcml2ZXJzL21pc2MvZWVwcm9t
-L2F0MjQuYw0KaW5kZXggMDY4MWQ1ZmRkNTM4Li42YmEyM2E3ZTRkYTEgMTAwNjQ0DQotLS0gYS9k
-cml2ZXJzL21pc2MvZWVwcm9tL2F0MjQuYw0KKysrIGIvZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0
-LmMNCkBAIC0yMiw2ICsyMiw3IEBADQogI2luY2x1ZGUgPGxpbnV4L252bWVtLXByb3ZpZGVyLmg+
-DQogI2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5oPg0KICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1l
-Lmg+DQorI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPg0KICNpbmNsdWRlIDxs
-aW51eC9ncGlvL2NvbnN1bWVyLmg+DQogDQogLyogQWRkcmVzcyBwb2ludGVyIGlzIDE2IGJpdC4g
-Ki8NCkBAIC05MSw2ICs5Miw3IEBAIHN0cnVjdCBhdDI0X2RhdGEgew0KIA0KIAlzdHJ1Y3QgZ3Bp
-b19kZXNjICp3cF9ncGlvOw0KIA0KKwlzdHJ1Y3QgcmVndWxhdG9yICp2Y2NfcmVnOw0KIAkvKg0K
-IAkgKiBTb21lIGNoaXBzIHRpZSB1cCBtdWx0aXBsZSBJMkMgYWRkcmVzc2VzOyBkdW1teSBkZXZp
-Y2VzIHJlc2VydmUNCiAJICogdGhlbSBmb3IgdXMsIGFuZCB3ZSdsbCB1c2UgdGhlbSB3aXRoIFNN
-QnVzIGNhbGxzLg0KQEAgLTY2Miw2ICs2NjQsMTAgQEAgc3RhdGljIGludCBhdDI0X3Byb2JlKHN0
-cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpDQogCWF0MjQtPmNsaWVudFswXS5jbGllbnQgPSBjbGll
-bnQ7DQogCWF0MjQtPmNsaWVudFswXS5yZWdtYXAgPSByZWdtYXA7DQogDQorCWF0MjQtPnZjY19y
-ZWcgPSBkZXZtX3JlZ3VsYXRvcl9nZXQoZGV2LCAidmNjIik7DQorCWlmIChJU19FUlIoYXQyNC0+
-dmNjX3JlZykpDQorCQlyZXR1cm4gUFRSX0VSUihhdDI0LT52Y2NfcmVnKTsNCisNCiAJYXQyNC0+
-d3BfZ3BpbyA9IGRldm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKGRldiwgIndwIiwgR1BJT0RfT1VUX0hJ
-R0gpOw0KIAlpZiAoSVNfRVJSKGF0MjQtPndwX2dwaW8pKQ0KIAkJcmV0dXJuIFBUUl9FUlIoYXQy
-NC0+d3BfZ3Bpbyk7DQpAQCAtNzAxLDYgKzcwNywxMiBAQCBzdGF0aWMgaW50IGF0MjRfcHJvYmUo
-c3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkNCiANCiAJaTJjX3NldF9jbGllbnRkYXRhKGNsaWVu
-dCwgYXQyNCk7DQogDQorCWVyciA9IHJlZ3VsYXRvcl9lbmFibGUoYXQyNC0+dmNjX3JlZyk7DQor
-CWlmIChlcnIpIHsNCisJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSB2Y2MgcmVndWxh
-dG9yXG4iKTsNCisJCXJldHVybiBlcnI7DQorCX0NCisNCiAJLyogZW5hYmxlIHJ1bnRpbWUgcG0g
-Ki8NCiAJcG1fcnVudGltZV9zZXRfYWN0aXZlKGRldik7DQogCXBtX3J1bnRpbWVfZW5hYmxlKGRl
-dik7DQpAQCAtNzEzLDYgKzcyNSw3IEBAIHN0YXRpYyBpbnQgYXQyNF9wcm9iZShzdHJ1Y3QgaTJj
-X2NsaWVudCAqY2xpZW50KQ0KIAlwbV9ydW50aW1lX2lkbGUoZGV2KTsNCiAJaWYgKGVycikgew0K
-IAkJcG1fcnVudGltZV9kaXNhYmxlKGRldik7DQorCQlyZWd1bGF0b3JfZGlzYWJsZShhdDI0LT52
-Y2NfcmVnKTsNCiAJCXJldHVybiAtRU5PREVWOw0KIAl9DQogDQpAQCAtNzI5LDE0ICs3NDIsMzkg
-QEAgc3RhdGljIGludCBhdDI0X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpDQogc3Rh
-dGljIGludCBhdDI0X3JlbW92ZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50KQ0KIHsNCiAJcG1f
-cnVudGltZV9kaXNhYmxlKCZjbGllbnQtPmRldik7DQorCWlmICghcG1fcnVudGltZV9zdGF0dXNf
-c3VzcGVuZGVkKCZjbGllbnQtPmRldikpDQorCQlyZWd1bGF0b3JfZGlzYWJsZShhdDI0LT52Y2Nf
-cmVnKTsNCiAJcG1fcnVudGltZV9zZXRfc3VzcGVuZGVkKCZjbGllbnQtPmRldik7DQogDQogCXJl
-dHVybiAwOw0KIH0NCiANCitzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGF0MjRfc3VzcGVuZChz
-dHJ1Y3QgZGV2aWNlICpkZXYpDQorew0KKwlzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0gdG9f
-aTJjX2NsaWVudChkZXYpOw0KKwlzdHJ1Y3QgYXQyNF9kYXRhICphdDI0ID0gaTJjX2dldF9jbGll
-bnRkYXRhKGNsaWVudCk7DQorDQorCXJldHVybiByZWd1bGF0b3JfZGlzYWJsZShhdDI0LT52Y2Nf
-cmVnKTsNCit9DQorDQorc3RhdGljIGludCBfX21heWJlX3VudXNlZCBhdDI0X3Jlc3VtZShzdHJ1
-Y3QgZGV2aWNlICpkZXYpDQorew0KKwlzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0gdG9faTJj
-X2NsaWVudChkZXYpOw0KKwlzdHJ1Y3QgYXQyNF9kYXRhICphdDI0ID0gaTJjX2dldF9jbGllbnRk
-YXRhKGNsaWVudCk7DQorDQorCXJldHVybiByZWd1bGF0b3JfZW5hYmxlKGF0MjQtPnZjY19yZWcp
-Ow0KK30NCisNCitzdGF0aWMgY29uc3Qgc3RydWN0IGRldl9wbV9vcHMgYXQyNF9wbV9vcHMgPSB7
-DQorCVNFVF9TWVNURU1fU0xFRVBfUE1fT1BTKHBtX3J1bnRpbWVfZm9yY2Vfc3VzcGVuZCwNCisJ
-CQkJcG1fcnVudGltZV9mb3JjZV9yZXN1bWUpDQorCVNFVF9SVU5USU1FX1BNX09QUyhhdDI0X3N1
-c3BlbmQsIGF0MjRfcmVzdW1lLCBOVUxMKQ0KK307DQorDQogc3RhdGljIHN0cnVjdCBpMmNfZHJp
-dmVyIGF0MjRfZHJpdmVyID0gew0KIAkuZHJpdmVyID0gew0KIAkJLm5hbWUgPSAiYXQyNCIsDQor
-CQkucG0gPSAmYXQyNF9wbV9vcHMsDQogCQkub2ZfbWF0Y2hfdGFibGUgPSBhdDI0X29mX21hdGNo
-LA0KIAkJLmFjcGlfbWF0Y2hfdGFibGUgPSBBQ1BJX1BUUihhdDI0X2FjcGlfaWRzKSwNCiAJfSwN
-Ci0tIA0KMi4xOC4wDQo=
+On Tue, Dec 10, 2019 at 4:42 PM Khouloud Touil <ktouil@baylibre.com> wrote:
 
+> +  wp-gpios:
+> +    description:
+> +      GPIO to which the write-protect pin of the chip is connected.
+> +      The write-protect GPIO is asserted, when it's driven high
+> +      (logical '1') to block the write operation. It's deasserted,
+> +      when it's driven low (logical '0') to allow writing.
+> +    maxItems: 1
+
+OK I guess we can't get it less convoluted. This section is consistent.
+
+>  patternProperties:
+>    "^.*@[0-9a-f]+$":
+>      type: object
+> @@ -66,6 +74,7 @@ examples:
+>        qfprom: eeprom@700000 {
+>            #address-cells = <1>;
+>            #size-cells = <1>;
+> +          wp-gpios = <&gpio1 3 0>;
+
+In the example please use the include for GPIO:
+
+#include <dt-bindings/gpio/gpio.h>
+
+wp-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
+
+You can just put the #include directive right before the
+example, it should work fine.
+
+Yours,
+Linus Walleij
