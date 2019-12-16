@@ -2,403 +2,167 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52124C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 03:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B5AC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 04:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD4024684
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 03:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B54E22B48
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 04:04:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kGwLd5at"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLPDsw (ORCPT
+        id S1726718AbfLPEEq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Dec 2019 22:48:52 -0500
-Received: from mga04.intel.com ([192.55.52.120]:4144 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbfLPDsv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Dec 2019 22:48:51 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Dec 2019 19:48:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,320,1571727600"; 
-   d="scan'208";a="389328663"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga005.jf.intel.com with ESMTP; 15 Dec 2019 19:48:46 -0800
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com
-Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, peter.harliman.liem@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v9 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
-Date:   Mon, 16 Dec 2019 11:48:38 +0800
-Message-Id: <20191216034838.21875-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191216034838.21875-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20191216034838.21875-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Sun, 15 Dec 2019 23:04:46 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44289 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbfLPEEq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Dec 2019 23:04:46 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x7so2864917pgl.11
+        for <devicetree@vger.kernel.org>; Sun, 15 Dec 2019 20:04:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KahZqBcsSeKct0EiqWh21SP8RWNU6LEX1G6vgvPIaWU=;
+        b=kGwLd5atrUc73L3QDEe7IMwNAXlqPT7cFEDLFPFPUXSsHutHgEC2AwTFxI/8VI+KQn
+         iPEHYAOrXYVuYu6BVCM+RofvQdR1HSJ65F7IOjR0VY2VBWfdQC/xxujDPNoz+pcVV5tH
+         iGF/BFq+NZosrFooUh0y88Mv2AI4mN0k4s/masJGoL+CTBYIBkF7b5M28IJQFurpuagy
+         04HZG76QJ0Lpt6u/axhtJI7XnmlHNsyhq7U2WQ+dc7Lo1VLQptTYkAj9NkLkeIcyJrfs
+         IVhsNjaw+gS3tdlGE7mmg1hK5ftiznqpMdPFSttg7rACDfQTOGvPqlEmBgsy8lggHuE5
+         dALQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KahZqBcsSeKct0EiqWh21SP8RWNU6LEX1G6vgvPIaWU=;
+        b=V7raHKcTf6Cccx6xbgNn8YAkfFWTjmqC+4KMt+vYSthcM7J3RahV6mJRf4HlHIj2PM
+         PuVeY38hpW0vgZGfGm0PzZ7Lrisl797dHWQhRlvKgOoj0OiIw8wi6Fj9VIPW2i17Z/6Y
+         VCARn1IZqtwc1XeP/5MxU/+M1RtK3wjT1B9WarZ81KRI6Rl5DkoKjZeQ7IlTphQppGjl
+         XsjbJc4qKS48LHKVOTo2dhzOIQB/7Nj3RtE1VAVF7pUnuWI7pFkB3a7PgWu/vgTNNeb5
+         sR+Dqg5iVHWx/zIaJE5RR+ZhWu6VpFIggItzimXHS41NnclsYWo1+6gM8tU0x3O0iT3g
+         kLiQ==
+X-Gm-Message-State: APjAAAVFj4o3xlN8ulWQaaKO9ICIBXd0OKcXSRgsCrV3uysDyxyHuUjG
+        BGHEZIXnbSRWtDIj8hj4cuPV
+X-Google-Smtp-Source: APXvYqyVi0+Wbe50rt3k5sbyx+Sr5W0wpzKMSIEk9kmraZfdbZ3nxQhfzWFDFBYzxcKOueAOPfg6eg==
+X-Received: by 2002:a63:9d8f:: with SMTP id i137mr15549868pgd.33.1576469085659;
+        Sun, 15 Dec 2019 20:04:45 -0800 (PST)
+Received: from Mani-XPS-13-9360 ([2409:4072:797:cc22:ad66:df45:6a09:a260])
+        by smtp.gmail.com with ESMTPSA id g191sm19637765pfb.19.2019.12.15.20.04.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 15 Dec 2019 20:04:44 -0800 (PST)
+Date:   Mon, 16 Dec 2019 09:34:34 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     karthik poduval <karthik.poduval@gmail.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>, mchehab@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH 4/5] media: i2c: imx290: Add support to enumerate all
+ frame sizes
+Message-ID: <20191216040434.GA14778@Mani-XPS-13-9360>
+References: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
+ <20191129190541.30315-5-manivannan.sadhasivam@linaro.org>
+ <20191203085604.GC5282@valkosipuli.retiisi.org.uk>
+ <20191215174834.GD11427@Mani-XPS-13-9360>
+ <CAFP0Ok8Vqze8ZRyT1WvMXZeBLcx7oKcTO1Kad4kSFLbpHkok-A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFP0Ok8Vqze8ZRyT1WvMXZeBLcx7oKcTO1Kad4kSFLbpHkok-A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Sun, Dec 15, 2019 at 03:52:37PM -0800, karthik poduval wrote:
+> What if someone adds RAW8 or RAW14 formats in future the enum frame sizes
+> code doesn't have to be patched again if written using a loop on formats
+> array.
+> 
 
-Add support for eMMC PHY on Intel's Lightning Mountain SoC.
+Please don't top post :)
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
----
- drivers/phy/Kconfig                |   1 +
- drivers/phy/Makefile               |   1 +
- drivers/phy/intel/Kconfig          |   9 ++
- drivers/phy/intel/Makefile         |   2 +
- drivers/phy/intel/phy-intel-emmc.c | 283 +++++++++++++++++++++++++++++++++++++
- 5 files changed, 296 insertions(+)
- create mode 100644 drivers/phy/intel/Kconfig
- create mode 100644 drivers/phy/intel/Makefile
- create mode 100644 drivers/phy/intel/phy-intel-emmc.c
+IMX290 only supports RAW10 and RAW12 formats. And I don't think this driver
+can handle any other CMOS sensors from Sony, so looping over imx290_formats
+seems unnecessary to me.
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 0263db2ac874..b3ed94b98d9b 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -69,5 +69,6 @@ source "drivers/phy/socionext/Kconfig"
- source "drivers/phy/st/Kconfig"
- source "drivers/phy/tegra/Kconfig"
- source "drivers/phy/ti/Kconfig"
-+source "drivers/phy/intel/Kconfig"
- 
- endmenu
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index c96a1afc95bd..310c149a9df5 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -18,6 +18,7 @@ obj-y					+= broadcom/	\
- 					   cadence/	\
- 					   freescale/	\
- 					   hisilicon/	\
-+					   intel/	\
- 					   lantiq/	\
- 					   marvell/	\
- 					   motorola/	\
-diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
-new file mode 100644
-index 000000000000..4ea6a8897cd7
---- /dev/null
-+++ b/drivers/phy/intel/Kconfig
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Phy drivers for Intel Lightning Mountain(LGM) platform
-+#
-+config PHY_INTEL_EMMC
-+	tristate "Intel EMMC PHY driver"
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support the Intel EMMC PHY
-diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
-new file mode 100644
-index 000000000000..6b876a75599d
---- /dev/null
-+++ b/drivers/phy/intel/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_PHY_INTEL_EMMC)            += phy-intel-emmc.o
-diff --git a/drivers/phy/intel/phy-intel-emmc.c b/drivers/phy/intel/phy-intel-emmc.c
-new file mode 100644
-index 000000000000..1a358e7fd236
---- /dev/null
-+++ b/drivers/phy/intel/phy-intel-emmc.c
-@@ -0,0 +1,283 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel eMMC PHY driver
-+ * Copyright (C) 2019 Intel, Corp.
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/* eMMC phy register definitions */
-+#define EMMC_PHYCTRL0_REG	0xa8
-+#define DR_TY_MASK		GENMASK(30, 28)
-+#define DR_TY_SHIFT(x)		(((x) << 28) & DR_TY_MASK)
-+#define OTAPDLYENA		BIT(14)
-+#define OTAPDLYSEL_MASK		GENMASK(13, 10)
-+#define OTAPDLYSEL_SHIFT(x)	(((x) << 10) & OTAPDLYSEL_MASK)
-+
-+#define EMMC_PHYCTRL1_REG	0xac
-+#define PDB_MASK		BIT(0)
-+#define PDB_SHIFT(x)		(((x) << 0) & PDB_MASK)
-+#define ENDLL_MASK		BIT(7)
-+#define ENDLL_SHIFT(x)		(((x) << 7) & ENDLL_MASK)
-+
-+#define EMMC_PHYCTRL2_REG	0xb0
-+#define FRQSEL_25M		0
-+#define FRQSEL_50M		1
-+#define FRQSEL_100M		2
-+#define FRQSEL_150M		3
-+#define FRQSEL_MASK		GENMASK(24, 22)
-+#define FRQSEL_SHIFT(x)		(((x) << 22) & FRQSEL_MASK)
-+
-+#define EMMC_PHYSTAT_REG	0xbc
-+#define CALDONE_MASK		BIT(9)
-+#define DLLRDY_MASK		BIT(8)
-+#define IS_CALDONE(x)	((x) & CALDONE_MASK)
-+#define IS_DLLRDY(x)	((x) & DLLRDY_MASK)
-+
-+struct intel_emmc_phy {
-+	struct regmap *syscfg;
-+	struct clk *emmcclk;
-+};
-+
-+static int intel_emmc_phy_power(struct phy *phy, bool on_off)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+	unsigned int caldone;
-+	unsigned int dllrdy;
-+	unsigned int freqsel;
-+	unsigned long rate;
-+	int ret, quot;
-+
-+	/*
-+	 * Keep phyctrl_pdb and phyctrl_endll low to allow
-+	 * initialization of CALIO state M/C DFFs
-+	 */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK,
-+				 PDB_SHIFT(0));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Already finish power_off above */
-+	if (!on_off)
-+		return 0;
-+
-+	rate = clk_get_rate(priv->emmcclk);
-+	quot = DIV_ROUND_CLOSEST(rate, 50000000);
-+	if (quot > FRQSEL_150M)
-+		dev_warn(&phy->dev, "Unsupported rate: %lu\n", rate);
-+	freqsel = clamp_t(int, quot, FRQSEL_25M, FRQSEL_150M);
-+
-+	/*
-+	 * According to the user manual, calpad calibration
-+	 * cycle takes more than 2us without the minimal recommended
-+	 * value, so we may need a little margin here
-+	 */
-+	udelay(5);
-+
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK,
-+				 PDB_SHIFT(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * According to the user manual, it asks driver to wait 5us for
-+	 * calpad busy trimming. However it is documented that this value is
-+	 * PVT(A.K.A process,voltage and temperature) relevant, so some
-+	 * failure cases are found which indicates we should be more tolerant
-+	 * to calpad busy trimming.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg, EMMC_PHYSTAT_REG,
-+				       caldone, IS_CALDONE(caldone),
-+				       0, 50);
-+	if (ret) {
-+		dev_err(&phy->dev, "caldone failed, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Set the frequency of the DLL operation */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL2_REG, FRQSEL_MASK,
-+				 FRQSEL_SHIFT(freqsel));
-+	if (ret) {
-+		dev_err(&phy->dev, "set the frequency of dll failed:%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Turn on the DLL */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, ENDLL_MASK,
-+				 ENDLL_SHIFT(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "turn on the dll failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * After enabling analog DLL circuits docs say that we need 10.2 us if
-+	 * our source clock is at 50 MHz and that lock time scales linearly
-+	 * with clock speed.  If we are powering on the PHY and the card clock
-+	 * is super slow (like 100 kHZ) this could take as long as 5.1 ms as
-+	 * per the math: 10.2 us * (50000000 Hz / 100000 Hz) => 5.1 ms
-+	 * Hopefully we won't be running at 100 kHz, but we should still make
-+	 * sure we wait long enough.
-+	 *
-+	 * NOTE: There appear to be corner cases where the DLL seems to take
-+	 * extra long to lock for reasons that aren't understood.  In some
-+	 * extreme cases we've seen it take up to over 10ms (!).  We'll be
-+	 * generous and give it 50ms.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg,
-+				       EMMC_PHYSTAT_REG,
-+				       dllrdy, IS_DLLRDY(dllrdy),
-+				       0, 50 * USEC_PER_MSEC);
-+	if (ret) {
-+		dev_err(&phy->dev, "dllrdy failed. ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int intel_emmc_phy_init(struct phy *phy)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	/*
-+	 * We purposely get the clock here and not in probe to avoid the
-+	 * circular dependency problem. We expect:
-+	 * - PHY driver to probe
-+	 * - SDHCI driver to start probe
-+	 * - SDHCI driver to register it's clock
-+	 * - SDHCI driver to get the PHY
-+	 * - SDHCI driver to init the PHY
-+	 *
-+	 * The clock is optional, so upon any error just return it like
-+	 * any other error to user.
-+	 *
-+	 */
-+	priv->emmcclk = clk_get_optional(&phy->dev, "emmcclk");
-+	if (IS_ERR(priv->emmcclk)) {
-+		dev_err(&phy->dev, "ERROR: getting emmcclk\n");
-+		return PTR_ERR(priv->emmcclk);
-+	}
-+
-+	return 0;
-+}
-+
-+static int intel_emmc_phy_exit(struct phy *phy)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	clk_put(priv->emmcclk);
-+
-+	return 0;
-+}
-+
-+static int intel_emmc_phy_power_on(struct phy *phy)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	/* Drive impedance: 50 Ohm */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, DR_TY_MASK,
-+				 DR_TY_SHIFT(6));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR set drive-impednce-50ohm: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay: disable */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, OTAPDLYENA,
-+				 0);
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR Set output tap delay : %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG,
-+				 OTAPDLYSEL_MASK, OTAPDLYSEL_SHIFT(4));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: output tap dly select: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Power up eMMC phy analog blocks */
-+	return intel_emmc_phy_power(phy, true);
-+}
-+
-+static int intel_emmc_phy_power_off(struct phy *phy)
-+{
-+	/* Power down eMMC phy analog blocks */
-+	return intel_emmc_phy_power(phy, false);
-+}
-+
-+static const struct phy_ops ops = {
-+	.init		= intel_emmc_phy_init,
-+	.exit		= intel_emmc_phy_exit,
-+	.power_on	= intel_emmc_phy_power_on,
-+	.power_off	= intel_emmc_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int intel_emmc_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct intel_emmc_phy *priv;
-+	struct phy *generic_phy;
-+	struct phy_provider *phy_provider;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	/* Get eMMC phy (accessed via chiptop) regmap */
-+	priv->syscfg = syscon_regmap_lookup_by_phandle(np, "intel,syscon");
-+	if (IS_ERR(priv->syscfg)) {
-+		dev_err(dev, "failed to find syscon\n");
-+		return PTR_ERR(priv->syscfg);
-+	}
-+
-+	generic_phy = devm_phy_create(dev, np, &ops);
-+	if (IS_ERR(generic_phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(generic_phy);
-+	}
-+
-+	phy_set_drvdata(generic_phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id intel_emmc_phy_dt_ids[] = {
-+	{ .compatible = "intel,lgm-emmc-phy" },
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, intel_emmc_phy_dt_ids);
-+
-+static struct platform_driver intel_emmc_driver = {
-+	.probe		= intel_emmc_phy_probe,
-+	.driver		= {
-+		.name	= "intel-emmc-phy",
-+		.of_match_table = intel_emmc_phy_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(intel_emmc_driver);
-+
-+MODULE_AUTHOR("Peter Harliman Liem <peter.harliman.liem@intel.com>");
-+MODULE_DESCRIPTION("Intel eMMC PHY driver");
--- 
-2.11.0
+Thanks,
+Mani
 
+> On Sun, Dec 15, 2019, 9:49 AM Manivannan Sadhasivam <
+> manivannan.sadhasivam@linaro.org> wrote:
+> 
+> > Hi Sakari,
+> >
+> > On Tue, Dec 03, 2019 at 10:56:04AM +0200, Sakari Ailus wrote:
+> > > On Sat, Nov 30, 2019 at 12:35:40AM +0530, Manivannan Sadhasivam wrote:
+> > > > Add support to enumerate all frame sizes supported by IMX290. This is
+> > > > required for using with userspace tools such as libcamera.
+> > > >
+> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org
+> > >
+> > > > ---
+> > > >  drivers/media/i2c/imx290.c | 20 ++++++++++++++++++++
+> > > >  1 file changed, 20 insertions(+)
+> > > >
+> > > > diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+> > > > index d5bb3a59ac46..f26c4a0ee0a0 100644
+> > > > --- a/drivers/media/i2c/imx290.c
+> > > > +++ b/drivers/media/i2c/imx290.c
+> > > > @@ -468,6 +468,25 @@ static int imx290_enum_mbus_code(struct
+> > v4l2_subdev *sd,
+> > > >     return 0;
+> > > >  }
+> > > >
+> > > > +static int imx290_enum_frame_size(struct v4l2_subdev *subdev,
+> > > > +                             struct v4l2_subdev_pad_config *cfg,
+> > > > +                             struct v4l2_subdev_frame_size_enum *fse)
+> > > > +{
+> > > > +   if ((fse->code != imx290_formats[0].code) &&
+> > > > +       (fse->code != imx290_formats[1].code))
+> > >
+> > > Please use a loop over imx290_formats instead.
+> > >
+> >
+> > May I know why? What benefit does it provide over current method?
+> >
+> > Thanks,
+> > Mani
+> >
+> > > > +           return -EINVAL;
+> > > > +
+> > > > +   if (fse->index >= ARRAY_SIZE(imx290_modes))
+> > > > +           return -EINVAL;
+> > > > +
+> > > > +   fse->min_width = imx290_modes[fse->index].width;
+> > > > +   fse->max_width = imx290_modes[fse->index].width;
+> > > > +   fse->min_height = imx290_modes[fse->index].height;
+> > > > +   fse->max_height = imx290_modes[fse->index].height;
+> > > > +
+> > > > +   return 0;
+> > > > +}
+> > > > +
+> > > >  static int imx290_get_fmt(struct v4l2_subdev *sd,
+> > > >                       struct v4l2_subdev_pad_config *cfg,
+> > > >                       struct v4l2_subdev_format *fmt)
+> > > > @@ -820,6 +839,7 @@ static const struct v4l2_subdev_video_ops
+> > imx290_video_ops = {
+> > > >  static const struct v4l2_subdev_pad_ops imx290_pad_ops = {
+> > > >     .init_cfg = imx290_entity_init_cfg,
+> > > >     .enum_mbus_code = imx290_enum_mbus_code,
+> > > > +   .enum_frame_size = imx290_enum_frame_size,
+> > > >     .get_fmt = imx290_get_fmt,
+> > > >     .set_fmt = imx290_set_fmt,
+> > > >  };
+> > >
+> > > --
+> > > Regards,
+> > >
+> > > Sakari Ailus
+> >
