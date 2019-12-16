@@ -2,175 +2,98 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B201C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A30AC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2BD2075A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:54:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F0P+45XX"
+	by mail.kernel.org (Postfix) with ESMTP id E8AB120725
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 08:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfLPIyQ (ORCPT
+        id S1726989AbfLPIyY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:54:16 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50762 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfLPIyQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 03:54:16 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBG8rqsP083176;
-        Mon, 16 Dec 2019 02:53:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576486432;
-        bh=6aFcWyhsHHVnr6Cqjh6RFG3uMltbSLRzg3ZmXfAwROo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=F0P+45XXO+oyrT9rlcf9tv/US8pM8xKSRjl88mVxP6m173McAj6Pyhkfi+bIFs8oh
-         W3IDPIBKql+P+k+9vXABGrikOVH+ShRd+3NHkLQy0AFryRaIEvVF7KwOjF0qQFXtQU
-         TlwhjfDx+D/yzAhFW7NqrutL/8PZPK8Q+YS8YyYA=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBG8rqNW082176
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Dec 2019 02:53:52 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Dec 2019 02:53:50 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Dec 2019 02:53:50 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBG8rlLb101138;
-        Mon, 16 Dec 2019 02:53:48 -0600
-Subject: Re: [PATCH 1/2] dt-bindings: mtd: spi-nor: document new flag
-To:     Michael Walle <michael@walle.cc>, <linux-mtd@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-References: <20191214191943.3679-1-michael@walle.cc>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <556fe468-0080-ad05-8228-5ff8f1b3dac6@ti.com>
-Date:   Mon, 16 Dec 2019 14:24:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 16 Dec 2019 03:54:24 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55904 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbfLPIyY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 03:54:24 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 08BAE28A017;
+        Mon, 16 Dec 2019 08:54:22 +0000 (GMT)
+Date:   Mon, 16 Dec 2019 09:54:19 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Hugh Cole-Baker <sigmaris@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        linux-media@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-rockchip@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH v3 4/7] media: hantro: h264: Use the generic H264
+ reflist builder
+Message-ID: <20191216095419.4dfb8501@collabora.com>
+In-Reply-To: <24EFC68C-CF34-4D6E-8927-1CFA0CE81F45@gmail.com>
+References: <20191213125414.90725-1-boris.brezillon@collabora.com>
+        <20191213125414.90725-5-boris.brezillon@collabora.com>
+        <24EFC68C-CF34-4D6E-8927-1CFA0CE81F45@gmail.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191214191943.3679-1-michael@walle.cc>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Sat, 14 Dec 2019 15:46:35 +0000
+Hugh Cole-Baker <sigmaris@gmail.com> wrote:
 
-On 15/12/19 12:49 am, Michael Walle wrote:
-> Document the new flag "no-unlock".
+> Hi Boris,
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
-> Does the property need a prefix? I couldn't find any hint. If so, what
-> should it be? "m25p," or "spi-nor," ?
+> > On 13 Dec 2019, at 12:54, Boris Brezillon <boris.brezillon@collabora.com> wrote:
+> > 
+> > Now that the core provides generic reflist builders, we can use them
+> > instead of implementing our own.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > ---
+> > Changes in v3:
+> > * New patch
+> > ---
+> > drivers/staging/media/hantro/hantro_h264.c | 237 +--------------------
+> > 1 file changed, 8 insertions(+), 229 deletions(-)
+> > 
+> > diff --git a/drivers/staging/media/hantro/hantro_h264.c b/drivers/staging/media/hantro/hantro_h264.c
+> > index 568640eab3a6..d998272d20e6 100644
+> > --- a/drivers/staging/media/hantro/hantro_h264.c
+> > +++ b/drivers/staging/media/hantro/hantro_h264.c
+> > @@ -11,7 +11,7 @@
+> >  */
+> > 
+> > #include <linux/types.h>
+> > -#include <linux/sort.h>
+> > +#include <media/v4l2-h264.h>  
 > 
->  Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> index f03be904d3c2..2d305c893ed7 100644
-> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> @@ -78,6 +78,12 @@ Optional properties:
->  		   cannot reboot properly if the flash is left in the "wrong"
->  		   state. This boolean flag can be used on such systems, to
->  		   denote the absence of a reliable reset mechanism.
-> +- no-unlock : By default, linux unlocks the whole flash because there
-> +		   are legacy flash devices which are locked by default
-> +		   after reset. Set this flag if you don't want linux to
-> +		   unlock the whole flash automatically. In this case you
-> +		   can control the non-volatile bits by the
-> +		   flash_lock/flash_unlock tools.
->  
+> With this patch, CONFIG_VIDEO_HANTRO needs to depend on CONFIG_V4L2_H264,
+> without that it can encounter linking errors due to missing symbols for
+> v4l2_h264_init_reflist_builder, etc.
 
-Current SPI NOR framework unconditionally unlocks entire flash which
-I agree is not the best thing to do, but I don't think we need
-new DT property here. MTD cmdline partitions and DT partitions already 
-provide a way to specify that a partition should remain locked[1][2]
+Oops, you're right (I didn't notice it since I had it selected by
+CONFIG_VIDEO_ROCKCHIP_VDEC). I'll fix that in v4.
 
-SPI NOR framework should instead set MTD_POWERUP_LOCK flags in mtd->flags
-for flash devices that power up with lock bits set. And MTD core will 
-take care of unlocking flash regions while taking into account partition
-flags defined by user as part of MTD partitions defined in DT or
-via cmdline args.
+Thanks,
 
-So that change should to be set MTD_POWERUP_LOCK for
-in SPI NOR core. Can you check below[3] (untested) diff helps?
-This should prevent unlocking partitions that are to remain locked 
-as specified in DT/cmdline 
-
-[1] Documentation/devicetree/bindings/mtd/partition.txt
-[2] drivers/mtd/parsers/cmdlinepart.c (see "lk" parameter)
-
-[3]
-
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 1082b6bb1393..6adb950849f6 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -4914,23 +4914,6 @@ static int spi_nor_quad_enable(struct spi_nor *nor)
- 	return nor->params.quad_enable(nor);
- }
- 
--/**
-- * spi_nor_unlock_all() - Unlocks the entire flash memory array.
-- * @nor:	pointer to a 'struct spi_nor'.
-- *
-- * Some SPI NOR flashes are write protected by default after a power-on reset
-- * cycle, in order to avoid inadvertent writes during power-up. Backward
-- * compatibility imposes to unlock the entire flash memory array at power-up
-- * by default.
-- */
--static int spi_nor_unlock_all(struct spi_nor *nor)
--{
--	if (nor->flags & SNOR_F_HAS_LOCK)
--		return spi_nor_unlock(&nor->mtd, 0, nor->params.size);
--
--	return 0;
--}
--
- static int spi_nor_init(struct spi_nor *nor)
- {
- 	int err;
-@@ -4941,11 +4924,11 @@ static int spi_nor_init(struct spi_nor *nor)
- 		return err;
- 	}
- 
--	err = spi_nor_unlock_all(nor);
--	if (err) {
--		dev_dbg(nor->dev, "Failed to unlock the entire flash memory array\n");
--		return err;
--	}
-+	/*
-+	 * Flashes may power up locked. Set this flag so that MTD core
-+	 * takes care of unlocking partitions as required.
-+	 */
-+	nor->mtd.flags |= MTD_POWERUP_LOCK;
- 
- 	if (nor->addr_width == 4 && !(nor->flags & SNOR_F_4B_OPCODES)) {
- 		/*
-
-
-
-
--- 
-Regards
-Vignesh
+Boris
