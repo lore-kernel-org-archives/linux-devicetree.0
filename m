@@ -2,125 +2,101 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CFDC2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110FBC2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DAEB206E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:30:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WU2LMml9"
+	by mail.kernel.org (Postfix) with ESMTP id C50432072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 13:36:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576503374;
+	bh=hNHO7qhuEn1+H5H1TDdAFoLepebeVApFqZHiSXCaSeg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=geIr+iVLUjlny9Mek3+r0mgKV1+Xadd2SInHXCeAn8vApvLrfBEw+KHK2IPL6paa2
+	 oxs8AwO86MuHGaxL1si9qn2LavBVC/CRDA8+6+FpLjLyIf6t7GM7NIBwv0YQ+p5bgF
+	 yYgqDzIpVriw6HEsCBn2OKqv3hPHm27uR276sdpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfLPNaM (ORCPT
+        id S1727849AbfLPNgH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:30:12 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:35324 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727763AbfLPNaM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 08:30:12 -0500
-Received: by mail-pj1-f65.google.com with SMTP id w23so2992713pjd.2;
-        Mon, 16 Dec 2019 05:30:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=c6k2uM/4KQBTBeEC+JGE88itWoiZaxFzfzDFaOUPwN4=;
-        b=WU2LMml9ybURvvoAkKn84Ls2pu5xuXxxs5xMy9YIAIuH+QpEBES7Fx3AEg2Awx0eZC
-         eOP9lj+obKAHaeQTG8x7AKkZRmJVsKhTCrmDoU+lTu4fD7hbjbbB0TDh8anWmiR4NE8Q
-         0vRnJFCI88IlQ/i2lgF5OkFvvmdA4xSVQw46d82pfn1UYopKvLJdYUDFZEOie4D29ofs
-         jhr83+VsoL5WyjrRsBkdTtIISTH1IF0nFzXfQYAZkctwUem7bQamJ24XBDBIj+xvPmhA
-         AGv5C2QbcM9PBGJxMstdHAuE0iPKFOisBpolMprqccxSmygVz+ynNZOFYWIQiWOsIKW0
-         X9QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=c6k2uM/4KQBTBeEC+JGE88itWoiZaxFzfzDFaOUPwN4=;
-        b=elD5O4Z7FQ4hGHLyDNuTWJH3MA1bZd96RVOwgDO9dL2L6UuzsZ6mjGZJuICjGl/Loy
-         GyUPcmwBIr8uW0shDph5qvfanTHKh8/lOmslXzZx1ZU6bGPziq3y/m21TCHMhdoPuYmP
-         t7n6T9CHf9JuEfwhtrnhzLoulwcMoirdzI1x0bFdtlaLYLRDtrfKh38b/Sqn2Yu8noRX
-         UwgFbwKCfX8Xv/8K9nBXwyyFLATgXCJs33IwQjD2sXnH6LSpP7mLJDSVHB/k6MPWX5Pk
-         B1DlgtDGJtRjFDHFaiR5xQufLvFaKnrmLM/3733ECMxDOSYFjTqn7JT5QAHhlsKpJk6x
-         /C2w==
-X-Gm-Message-State: APjAAAVbaOrV3ZStzPTmW/8n4PvLr5AnYsA4l9v6vlYUlffrNcQnXsUi
-        ZkbJkCmAiIu7iejuU8o2+bE=
-X-Google-Smtp-Source: APXvYqyJ6TZHpyv2Kz7CGI3OHria7rp9vvxislgxfsCZuO3kdTuBGJfZKrdme0Kw7m9+Qlmwh7TBjw==
-X-Received: by 2002:a17:902:d915:: with SMTP id c21mr15807890plz.295.1576503011717;
-        Mon, 16 Dec 2019 05:30:11 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 13sm5365907pfi.78.2019.12.16.05.30.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 05:30:10 -0800 (PST)
-Subject: Re: [PATCH v5 2/4] dt-bindings: watchdog: add new binding for meson
- secure watchdog
-To:     Xingyu Chen <xingyu.chen@amlogic.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        Jerome Brunet <jbrunet@baylibre.com>
-References: <1576153187-28378-1-git-send-email-xingyu.chen@amlogic.com>
- <1576153187-28378-3-git-send-email-xingyu.chen@amlogic.com>
- <CAFBinCBHLqgPExPsVaSWdSOr0Oj-jeYa4Z82U-pJ=fS+D1wGnA@mail.gmail.com>
- <f7b0afe7-e317-2422-de7e-878837f9f238@amlogic.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <a8f5ab1d-264c-5b2c-e72b-3774b9f44c22@roeck-us.net>
-Date:   Mon, 16 Dec 2019 05:30:08 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 08:36:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727601AbfLPNgH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:36:07 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41866206CB;
+        Mon, 16 Dec 2019 13:36:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576503366;
+        bh=hNHO7qhuEn1+H5H1TDdAFoLepebeVApFqZHiSXCaSeg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A6y4BII/Y9MV3DxdIIQ7EWpX9KGs5x36m7xIL3euGRGccXYzlnaCJl7X8nRYSzjq/
+         yG+bIbehrGRUTHr/vYq65XJfC40UM3n0XCN4zaPNVmrbfnAGJXcqLbYzNoH+1InrFV
+         7OHJK3jpcjsuXMcyiOjUK63zjGFCj+1GaGKiKjyw=
+Date:   Mon, 16 Dec 2019 14:36:03 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 03/14] media: sun4i-csi: Fix data sampling polarity
+ handling
+Message-ID: <20191216133603.gbr2iaikch5lfv6v@gilmour.lan>
+References: <20191215165924.28314-1-wens@kernel.org>
+ <20191215165924.28314-4-wens@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <f7b0afe7-e317-2422-de7e-878837f9f238@amlogic.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pxaf47l7hgrm57u2"
+Content-Disposition: inline
+In-Reply-To: <20191215165924.28314-4-wens@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/15/19 10:03 PM, Xingyu Chen wrote:
-> Hi, Martin
-> 
-> Sorry for the late reply.
-> 
-> On 2019/12/13 4:05, Martin Blumenstingl wrote:
->> Hi Xingyu and Rob,
->>
->> On Thu, Dec 12, 2019 at 1:20 PM Xingyu Chen <xingyu.chen@amlogic.com> wrote:
->> [...]
->>> +examples:
->>> +  - |
->>> +    watchdog {
->>> +          compatible = "amlogic,meson-sec-wdt";
->>> +          timeout-sec = <60>;
->>> +    };
->> in v3 of this patch Rob commented that there shouldn't be an OF node
->> if there are no additional properties
->> with timeout-sec there's now an additional property so my
->> understanding is that it's fine to have an OF node
-> Your understanding is correct.
->>
->> what I don't understand yet is where this node should be placed.
->> is it supposed to be a child node of the secure monitor node (for
->> which we already have a binding here:
->> Documentation/devicetree/bindings/firmware/meson/meson_sm.txt) or
->> where else would we place it inside the .dts?
-> IMO,  Although the watchdog node need to reference the meson_sm node, there is no
-> bus-like dependencies between the devices which the two nodes corresponding to.
-> so i think that the watchdog node as child node of meson_sm maybe not appropriate.
 
-The watchdog driver needs the meson SM's dt node, and it depends on the existence
-of that node. That seems enough of a relationship to warrant having it as child note.
+--pxaf47l7hgrm57u2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Guenter
+On Mon, Dec 16, 2019 at 12:59:13AM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>
+> The CLK_POL field specifies whether data is sampled on the falling or
+> rising edge of PCLK, not whether the data lines are active high or low.
+> Evidence of this can be found in the timing diagram labeled "horizontal
+> size setting and pixel clock timing".
+>
+> Fix the setting by checking the correct flag, V4L2_MBUS_PCLK_SAMPLE_RISING.
+> While at it, reorder the three polarity flag checks so HSYNC and VSYNC
+> are grouped together.
+>
+> Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+
+Acked-by: Maxime Ripard <mripard@kernel.org>
+
+Thanks!
+Maxime
+
+--pxaf47l7hgrm57u2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeIQwAKCRDj7w1vZxhR
+xVxhAP9flbDGwjgJDkotx80gPBlJVBaAWNlKf5+rVukqwTZs9AEA/EU/dnK5KzU0
+QEqJQQjjDUSZ+fxuByQBiPtKJqftfQ0=
+=LpuS
+-----END PGP SIGNATURE-----
+
+--pxaf47l7hgrm57u2--
