@@ -2,93 +2,95 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFEEC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 17:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBC7C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 17:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A08D206EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 17:08:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576516120;
-	bh=QXjZ3NUYOTcRGYoFgeBkUlOrcelwhDJ23ou7b18ZyKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OIsNT9ufJqQcHMG6wg2vwufaoTtr37vivTOUAThHm/z4eLq3NbqUv4x7DXAlkBn0p
-	 bJ0zcTJjmpEZIaL7HGNU1JIIXL1bKB53ARgwKkZkc52GpLCiUOWuJTGvKthE5CejGt
-	 ZpDE9pApTZI/R5Zco2/szgCVJCto+e5kp9+VECUg=
+	by mail.kernel.org (Postfix) with ESMTP id 33ABC20717
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 17:09:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjom40UK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfLPRIj (ORCPT
+        id S1727306AbfLPRJ2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:08:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44510 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726795AbfLPRId (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:08:33 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44F2C206EC;
-        Mon, 16 Dec 2019 17:08:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576516112;
-        bh=QXjZ3NUYOTcRGYoFgeBkUlOrcelwhDJ23ou7b18ZyKs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zsdLiGBIeBF8PChIX3V4KiCUO47SxnGY6Zut2ucgG76ai2dOrnn9RlXaqtd0FvD52
-         PY5QytrdGzCuUcqZfP4xJMC4tFpYRX2FqjHXyMgW0Ygs8eOxOUZuGpR3E6daVi+qaI
-         feDaBlzvSpq7qrbYTLhK7XPKcYj3WX81LSjDDaUM=
-Date:   Mon, 16 Dec 2019 18:08:30 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>,
+        Mon, 16 Dec 2019 12:09:28 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43623 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbfLPRJ1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 12:09:27 -0500
+Received: by mail-qk1-f193.google.com with SMTP id t129so4194836qke.10;
+        Mon, 16 Dec 2019 09:09:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=cRdiI5895IHbTdlAPPP3A1KuNzj2PTuHghUKJHQUK7s=;
+        b=kjom40UKwoyBBozt2pTDiwWQD320JRNPsQXGFHG+9sFDnMKM8F96donp2dcl3LlXyW
+         YR1f9oHJwyWOOrkNZMwYre4kxZQNfiyCNgSka/5jAhvLKls5LpIsFcMUtjCv3RcQoekj
+         EGDEirORjghztTDZyhNhM0HjMe/otkPNo8qe9RRXFF2gsTat9gh5lLW3PQlax8gwcYut
+         aP1XhNQBHHFX5m9tbWZvRmzbRxzAVvkLjarNNvu3fETQUB0RKJCooOUmrU1FyD+ITXBS
+         uD4QMfxjzi6E/IAeBve74JxZjTsl+t+/0SEFza8sAbjzhHZ4vq1eAeiSN98qkKcBrYDc
+         HeLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=cRdiI5895IHbTdlAPPP3A1KuNzj2PTuHghUKJHQUK7s=;
+        b=PDxdsAY84cS+hDdwNJjrdOxKJV9nF8v31P4jM6tY/dKDd95kBaCxPzZTF0QO8ROneF
+         yVC1njRjosnCIEA1ZgzbA1nm5YUEYwL91z8eSIOJhzIy2BEjiYoQvkdcirdGlGuuW7ND
+         PyNFLhus9FqcDmJyhYYQEjgImiYE/t4grVIeb3e7SSVoWAAJ2JLZuJqGXyAlb8MWWz+h
+         TzQ8LauoGRDiSfeH7YtJ6difBPBsDCduqn11SECFQ3aqZ0KhS8UD2ZHm6QQj09S9rQH7
+         a7CLX8s3ecRRBw6WxndnC9Wk+9t9yPauwpjrNy/A08/4cMcI60VM+V8RBKZeqkFc2xsb
+         vjdQ==
+X-Gm-Message-State: APjAAAVkuzCf/8/Wpna2tt2qXE5HCM4CpaU815s4OCX4X9Uv9oKYsv1R
+        4hi1lbjQjal7kLkvJC0tOCY=
+X-Google-Smtp-Source: APXvYqxxShGrIzFxlpk3IdPx/vm3r70u8GTI6U+Of9Q8cdoU2xAVM8oRA52j02qEZUKXLGcqdZv2og==
+X-Received: by 2002:ae9:e519:: with SMTP id w25mr300086qkf.260.1576516166519;
+        Mon, 16 Dec 2019 09:09:26 -0800 (PST)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id r37sm7051726qtj.44.2019.12.16.09.09.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 09:09:25 -0800 (PST)
+Date:   Mon, 16 Dec 2019 12:09:24 -0500
+Message-ID: <20191216120924.GG2051941@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org
-Subject: Re: [PATCH 3/3] dt-bindings: clocks: Convert Allwinner A80 DE clocks
- to a schema
-Message-ID: <20191216170830.sw2svgszlebb7cfu@gilmour.lan>
-References: <20191209093558.50940-1-maxime@cerno.tech>
- <20191209093558.50940-3-maxime@cerno.tech>
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v5 5/5] net: dsa: add support for Atheros AR9331 built-in
+ switch
+In-Reply-To: <20191216074403.313-6-o.rempel@pengutronix.de>
+References: <20191216074403.313-1-o.rempel@pengutronix.de>
+ <20191216074403.313-6-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jfxwmnq66iyhmoim"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191209093558.50940-3-maxime@cerno.tech>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, 16 Dec 2019 08:44:03 +0100, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+> Provide basic support for Atheros AR9331 built-in switch. So far it
+> works as port multiplexer without any hardware offloading support.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
---jfxwmnq66iyhmoim
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Dec 09, 2019 at 10:35:58AM +0100, Maxime Ripard wrote:
-> The Allwinner A80 SoC has a display clocks controller that is supported in
-> Linux, with a matching Device Tree binding.
->
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for that controller over to a YAML schemas.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-
-Applied all three.
-
-Maxime
-
---jfxwmnq66iyhmoim
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfe6DgAKCRDj7w1vZxhR
-xfX7AP9Z+s6gPPC1reoTZSt7GAPc/TEDd7kUms0QWUcLZnu9NAEAyLHUh87Tow0u
-/b0eA5xrrvHPxmsK7y+/Pw/uqXoQXAk=
-=6iZL
------END PGP SIGNATURE-----
-
---jfxwmnq66iyhmoim--
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
