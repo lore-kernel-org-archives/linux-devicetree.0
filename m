@@ -2,106 +2,98 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3B6C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 12:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F087FC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 12:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756A620726
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 12:21:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DZZyv8KM"
+	by mail.kernel.org (Postfix) with ESMTP id C11E0206CB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 12:25:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfLPMVu (ORCPT
+        id S1727512AbfLPMZF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:21:50 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:43441 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727532AbfLPMVu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 07:21:50 -0500
-Received: by mail-vk1-f196.google.com with SMTP id h13so1535400vkn.10
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 04:21:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4Osz9VkIv77cDwS5TcCegl7t+g2vcc4c6bR2gC0bBTE=;
-        b=DZZyv8KM/AkMijIzHa1GdiQtmMM5jFO5/iApv4ZaWBvNM353Ymxg2+pnW5EC9h1d10
-         raOcV/4ZpE2mLiy9niImgy6S2uIbA8AxH7zU77oNYUJK5xvF07asZDBu2dJQL1Nt3X8x
-         6HN96msV5Xasoa7rvuf7T9sxjtSopJk43dVkSSJ1RkjWKxqXtfKtVaWoc6wECXGLbsW6
-         +5KQFjSFWGoSMFLp4WestwfyV+ESb9MvghUFcvSOF1K4p1gyWUHq00PnIs22QsYnLQ66
-         zzcsQnc5XGu/COfqK2j7KirCwaIBS0mSgbm1k2K1q1CxtYxlAMMyEMywAX2JwUw3AoxK
-         cEcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4Osz9VkIv77cDwS5TcCegl7t+g2vcc4c6bR2gC0bBTE=;
-        b=aZWSTf12UC8zRrSBqXEVLTVtmrpxb2jZGWqULPA5BlTEWsTuAfhcYZ/BGz8u2pydNM
-         mLtH4z0u99C0cgX7nvDTHhEtxTIGWlvN/Ya2q7Vq2xKm6jOlSbiFuQP1jxevq/SX5R8G
-         ViruBu+e6i9QL7Z4fbtFHPP+87XUbfKf/8fKVe4Eo0kq9QAjDKZi0Lze0uQQaZr0PU34
-         gH7RNFI/Ltt6OU4yD9BeWGRO4HqSB7kOckW4Daq8kB59xnwnQaJnCz2EASjxj92N2Wl1
-         /O2AxphMCfgYbCuIPFufrmJGgK7APp7mqDJuug17AcfVuV8l5GIE409rhwid0lIVURYq
-         wN3A==
-X-Gm-Message-State: APjAAAX91aRu5Bh1a0VgoJX2sgo3v3gciitmAYS3DGzGRVNIzazu0az2
-        zY6ETGhyDFPkA7CrGLBqIsYaV1N2/8eGigWYmou7KA==
-X-Google-Smtp-Source: APXvYqx0xjbvyReO9ph3sJ/hbSdKSuPIz6dCp5eLmtjvK0OiHzZ5p261fyvWyE0OL/9Yo5d+jJByHNJNcdJ2/e/Yeww=
-X-Received: by 2002:a1f:add3:: with SMTP id w202mr2070054vke.30.1576498909436;
- Mon, 16 Dec 2019 04:21:49 -0800 (PST)
+        Mon, 16 Dec 2019 07:25:05 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:56914 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727486AbfLPMZF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 07:25:05 -0500
+Received: from wf0651.dip.tu-dresden.de ([141.76.182.139] helo=phil.sntech)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1igpQm-0008GW-Fd; Mon, 16 Dec 2019 13:24:56 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     kishon@ti.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, heiko@sntech.de,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH RESEND 1/2] dt-bindings: phy: drop #clock-cells from rockchip,px30-dsi-dphy
+Date:   Mon, 16 Dec 2019 13:24:47 +0100
+Message-Id: <20191216122448.27867-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <f34765b5cb4e949c2e85415ded3d0ee7736cc97b.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <CACRpkdbUS7WeQ7OoTtjGnB7L=uhYncwwcHxkJ1Uj6GqYCGNGJA@mail.gmail.com> <812acba9df70c4bb6975580c7965b61e923a3a13.camel@fi.rohmeurope.com>
-In-Reply-To: <812acba9df70c4bb6975580c7965b61e923a3a13.camel@fi.rohmeurope.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 13:21:38 +0100
-Message-ID: <CACRpkdbi9AhGnG3hBwXNQV9foK=JNBH8WUNvXZVxbEX4LyDCig@mail.gmail.com>
-Subject: Re: [PATCH v6 10/15] gpio: devres: Add devm_gpiod_get_parent_array
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 9:59 AM Vaittinen, Matti
-<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-> I dropped the run-level support from regulator patch (for now at
-> least). This means that I no longer have GPIO consumers needing this
-> new API in the series.
+Further review of the dsi components for the px30 revealed that the
+phy shouldn't expose the pll as clock but instead handle settings
+via phy parameters.
 
-OK I dropped it for now, we can add it when needed.
+As the phy binding is new and not used anywhere yet, just drop them
+so they don't get used.
 
-Yours,
-Linus Walleij
+Fixes: 3817c7961179 ("dt-bindings: phy: add yaml binding for rockchip,px30-dsi-dphy")
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+---
+Hi Kishon,
+
+maybe suitable as a fix for 5.5-rc?
+
+Thanks
+Heiko
+
+ .../devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml      | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml b/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
+index bb0da87bcd84..476c56a1dc8c 100644
+--- a/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
++++ b/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
+@@ -13,9 +13,6 @@ properties:
+   "#phy-cells":
+     const: 0
+ 
+-  "#clock-cells":
+-    const: 0
+-
+   compatible:
+     enum:
+       - rockchip,px30-dsi-dphy
+@@ -49,7 +46,6 @@ properties:
+ 
+ required:
+   - "#phy-cells"
+-  - "#clock-cells"
+   - compatible
+   - reg
+   - clocks
+@@ -66,7 +62,6 @@ examples:
+         reg = <0x0 0xff2e0000 0x0 0x10000>;
+         clocks = <&pmucru 13>, <&cru 12>;
+         clock-names = "ref", "pclk";
+-        #clock-cells = <0>;
+         resets = <&cru 12>;
+         reset-names = "apb";
+         #phy-cells = <0>;
+-- 
+2.23.0
+
