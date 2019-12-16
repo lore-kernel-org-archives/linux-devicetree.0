@@ -2,150 +2,114 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C46C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E17C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D700020733
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jS7jD2bC"
+	by mail.kernel.org (Postfix) with ESMTP id 8A4F020725
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576511565;
+	bh=eaQ3x3sQJkJ+Ir/RJSw4LQ05zXXPEkT+Q2g7IkDI1xk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rxqyxPn7E3+8BE3kKEP5ew7TAuxrxHHr+o5heZojGuziUXhgjqZuT19V3DH+nFuw8
+	 PfxdwCY0NVHyvrJ6rSg4ZmyI3uuRHht8DOevwXeXq1NjqgEa1eqaUgK73UjVyyaqW7
+	 XPqZuIeO8WQu6MTvs3UQt6OumNFtls+DRQ+HLsH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbfLPPti (ORCPT
+        id S1728154AbfLPPwg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:49:38 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35023 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728392AbfLPPti (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 10:49:38 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 15so4611917lfr.2;
-        Mon, 16 Dec 2019 07:49:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XLefccWn9eLOZQVYfFnGLvT38QOza41B05dCschHmWs=;
-        b=jS7jD2bCBBvJFfInfLsysA2/SacydhvAKRLPbaCZm9kCX3pEbkU+DyscpMbKooRhZs
-         h544dWURUQyOXo0/bQwEhellGMd/VlQ1/IcSyTS+qUgsTb+ammoM8tYoeKcpP14K50cn
-         CzG2pZnRX/+R+VKhQoR92F2AE926B49SvZBkZK41mZIrcGzX/zczjvwddjAc4tGGr4dE
-         c1SEq/1MlAViqx+mT2+xxjepaaXMZ+LrVn663Yd1HFRTJmq/WpoMUzxo8sUBoxd9sUPk
-         kjNxn2YRCiNFR2aiDMxWrTf0OaHZMHPTKCCcxJpJL5FKJFm3zCmoTjWWQzCfll95dnS+
-         otdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XLefccWn9eLOZQVYfFnGLvT38QOza41B05dCschHmWs=;
-        b=I8CCwJ1Aj6DQrFSgXEnoTrZECWLE5cYS/WJzXxqNo1/xYQOrREPt6mTLVCaoIK6s5R
-         3MoN6ICTyIwaQ45GSSaBngT2moPwsMaBxtpnEawN6wK83kP6n/XG3raOogO4pX5zgQqV
-         Ok+ni9hj9W8k869x9XfC+odgBJ2RW3sBN44GQGELcLVjgkGNeylQAGLCp7gVrxwLfdn0
-         mYk9awcE9BXbhncFiXVdPuxrf18HWWY7z47VyEOOevKG3N4B8LMivxOm4COFOd1HDui3
-         U4i5w6G9ZLWnKEr6stW32KJkDEOcS2dXWCmiww+2RfsFG8N0Zp+k658Q9r/tqHjAqOJ7
-         ql9g==
-X-Gm-Message-State: APjAAAUR2J+irtFut7MlbRUO4heQih639J/O4eRHmvGOARDe0KjUas6X
-        33BTmuzXMvUYNbmrnnLSkAQ=
-X-Google-Smtp-Source: APXvYqwgxkuXc185DH64gccxf2DghtR89KC9lp7fJkIdwOQboVqZO5SyW248v+/giOL9Y7/LPT5P3A==
-X-Received: by 2002:a19:c210:: with SMTP id l16mr17999700lfc.35.1576511375718;
-        Mon, 16 Dec 2019 07:49:35 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id n13sm10730783lji.91.2019.12.16.07.49.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 07:49:34 -0800 (PST)
-Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, sboyd@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com, allison@lohutok.net, pgaikwad@nvidia.com,
-        mturquette@baylibre.com, horms+renesas@verge.net.au,
-        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
-        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        alexios.zavras@intel.com, alsa-devel@alsa-project.org
-References: <ccb715cc-c927-ea91-a26e-24d6eeeeef1a@gmail.com>
- <ee1d39d4-9a57-da9b-fce6-8130dac1d2fd@nvidia.com>
- <49da77dc-b346-68eb-9ef8-42cfb3221489@nvidia.com>
- <3f1c9325-3017-62be-1e3b-82fd28540fdf@nvidia.com>
- <6fcbff3d-8695-7cd0-60de-6eb523b6964c@gmail.com>
- <20191211151028.GZ28289@pdeschrijver-desktop.Nvidia.com>
- <0930a710-174b-859b-294c-e9f81f6a3b5e@gmail.com>
- <20191216122005.GB28289@pdeschrijver-desktop.Nvidia.com>
- <53653719-f8e5-f6d1-a1d1-e53c7ccd7636@gmail.com>
- <20191216151132.GC28289@pdeschrijver-desktop.Nvidia.com>
- <20191216152435.GD28289@pdeschrijver-desktop.Nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <fa538845-cb8e-cf88-34be-3ceb2daa63c2@gmail.com>
-Date:   Mon, 16 Dec 2019 18:49:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 16 Dec 2019 10:52:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727763AbfLPPwe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 10:52:34 -0500
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 941902146E;
+        Mon, 16 Dec 2019 15:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576511553;
+        bh=eaQ3x3sQJkJ+Ir/RJSw4LQ05zXXPEkT+Q2g7IkDI1xk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lgRlANm6ITls3sYB0vkQAD5vJ57JdMCMEmQ/XRM0hA1divZOs2sBzjxEwuea7F3a7
+         ZAVlVG4YApTTQ/jZ68HF7/swo8gY4cFHYBLoYfyuvleEGHa3MTCyE1ipkW679xQY1G
+         eFE5gJNMOLFuUWQsTsLrlxPgMeabqRVppPGDh7KU=
+Received: by mail-qv1-f44.google.com with SMTP id l14so2293794qvu.12;
+        Mon, 16 Dec 2019 07:52:33 -0800 (PST)
+X-Gm-Message-State: APjAAAXb8i6qbCpmyTM+eR23BkUA2pmVn8hz7vbNMZ2j8UBJ0vIqeV7g
+        TGf8IDaUcP5rV2NYQm6nAHPoPOuGzrumjiaclA==
+X-Google-Smtp-Source: APXvYqwVJYkAlWIdZU2TFQfbL6hRU5QxGwsrdp61SPZ/B7ThiZyfT8pRxhhI4yQUPA1YvRv8RCRQMv+9we0zkJBDmxg=
+X-Received: by 2002:ad4:450a:: with SMTP id k10mr25719233qvu.136.1576511552698;
+ Mon, 16 Dec 2019 07:52:32 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191216152435.GD28289@pdeschrijver-desktop.Nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191202233127.31160-1-ray.jui@broadcom.com> <20191202233127.31160-2-ray.jui@broadcom.com>
+ <62254bbb-168e-c0ad-a72d-bd659a2c23fa@gmail.com> <0f0e965b-2e57-8b6b-0c72-1a1008497793@broadcom.com>
+ <20191213235013.GA9997@bogus> <a5af90d0-eebf-3bf8-46d8-75160a1fc7de@gmail.com>
+In-Reply-To: <a5af90d0-eebf-3bf8-46d8-75160a1fc7de@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 16 Dec 2019 09:52:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKXdo+wouHZV9VFQojtQNK3NOLmj3NtnTmVo2fX541GPA@mail.gmail.com>
+Message-ID: <CAL_JsqKXdo+wouHZV9VFQojtQNK3NOLmj3NtnTmVo2fX541GPA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: soc: Add binding doc for iProc IDM device
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Ray Jui <ray.jui@broadcom.com>, Stefan Wahren <wahrenst@gmx.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-16.12.2019 18:24, Peter De Schrijver пишет:
-> On Mon, Dec 16, 2019 at 05:11:32PM +0200, Peter De Schrijver wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> On Mon, Dec 16, 2019 at 05:23:23PM +0300, Dmitry Osipenko wrote:
->>>>> Could you please clarify what do you mean by the "existing users"?
->>>>> AFAIK, nothing in kernel uses mux clocks.
->>>>
->>>> The DT clk bindings allow for parent initialization, so it's certainly
->>>> possible there are some DTs which rely on this. We promised to never
->>>> break the bindings, which changing to 1 clock would do.
->>>
->>> What about this variant:
->>>
->>>   1. Keep the old CaR code in place.
->>>
->>>   2. Make CaR driver to scan whole device-tree for the legacy PMC clocks.
->>>
->>>   3. If legacy clock is found, then register PMC clocks from CaR.
->>>
->>>   4. If legacy clocks are not found, then don't register PMC clocks from
->>> CaR.
->>>
->>>   5. Add clocks support to the PMC driver and only register them if
->>> legacy clocks are not registered by CaR.
->>>
->>> Now both old and new DTBs can co-exist and work, everyone happy.
->>
->> That seems even more work.. Today the only upstream user is audio.
->> Currently these clocks are setup by the CAR clock driver. However
->> as they will move to the PMC driver, this mechanism cannot be used.
->> Hence the plan is to modify the audio driver to check for the PMC clocks
->> in DT and if they are not available use the CAR clocks as fallback.
->> The whole reason the clocks move to the PMC driver, is that when PMC
->> becomes secure, all accesses have to go via an SMC. Given that we don't
->> want SMCs all over the Tegra drivers, it's a good opportunity to move
->> the PMC clock handling into the PMC driver. PMC can be secure with both
->> 'new' and old DTs, so just registering the PMC clocks in the CAR driver
->> if legacy clocks are found in the DT, won't always work.
->>
-> 
-> Given the audio driver needs to change anyway, we can indeed use 1 clock
-> per PMC clk_out_ rather than 2 as we have today. As this models the hw
-> slightly better, I think we should do that as you suggested.
-> 
-> Peter.
-> 
+On Fri, Dec 13, 2019 at 6:00 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 12/13/2019 3:50 PM, Rob Herring wrote:
+> > On Fri, Dec 06, 2019 at 05:09:34PM -0800, Ray Jui wrote:
+> >>
+> >>
+> >> On 12/5/19 4:09 PM, Florian Fainelli wrote:
+> >>> On 12/2/19 3:31 PM, Ray Jui wrote:
+> >>>> Add binding document for iProc based IDM devices.
+> >>>>
+> >>>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> >>>
+> >>> Looks good to me, it's 2019, nearly 2020, maybe make this a YAML
+> >>> compatible binding since it is a new one?
+> >>>
+> >>
+> >> Sorry I am not aware of this YAML requirement until now.
+> >>
+> >> Is this a new requirement that new DT binding document should be made with
+> >> YAML format?
+> >
+> > The format has been in place in the kernel for a year now and we've
+> > moved slowly towards it being required. If you're paying that little
+> > attention to upstream, then yes it's definitely required so someone else
+> > doesn't get stuck converting your binding later.
+> >
+> > BTW, I think all but RPi chips still need their SoC/board bindings
+> > converted. One of the few not yet converted...
+>
+> Is there something more to do than what Stefan did here:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ab06837dd269b600396b298e9f4678d02b11b71d
 
-Okay, let's try and see how it will go.
+No, that's it.
+
+> we could convert other Broadcom SoCs, and there, just found another
+> weekend project!
+> --
+> Florian
