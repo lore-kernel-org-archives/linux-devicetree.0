@@ -2,374 +2,124 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E080C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 09:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D37C2D0D0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 09:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5A220725
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 09:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284F9207FF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 09:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qARgZVYL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REYdlWoC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfLPJ0P (ORCPT
+        id S1727327AbfLPJ2R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:26:15 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:49714 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727002AbfLPJ0P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:26:15 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576488374; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=uTGnsX9HMG9dubiHjOyToucnTgvVizTCl+f2DfPpes4=; b=qARgZVYLJaSAiB+XVySHld2hSoGNEffo7QMeVt2UEY+UcVt+aPZmgM0GFCjjw8UFMUYCqvOP
- KhyI9ymUzUQlcknXeffjSwcYnppWG3owFYXEpPrM3mHUokcj8+dza+fG9vMF79uMTI3WHyYz
- tgOs0rNqJmMTsXCdr0k2EW8EUrg=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df74daf.7f07ab4a10a0-smtp-out-n03;
- Mon, 16 Dec 2019 09:26:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 407B6C4479D; Mon, 16 Dec 2019 09:26:06 +0000 (UTC)
-Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DE948C43383;
-        Mon, 16 Dec 2019 09:26:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DE948C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-From:   Akash Asthana <akashast@codeaurora.org>
-To:     robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        swboyd@chromium.org, Akash Asthana <akashast@codeaurora.org>
-Subject: [PATCH] dt-bindings: geni-se: Convert QUP geni-se bindings to YAML
-Date:   Mon, 16 Dec 2019 14:55:51 +0530
-Message-Id: <1576488351-22396-1-git-send-email-akashast@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 16 Dec 2019 04:28:17 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34696 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727269AbfLPJ2Q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 04:28:16 -0500
+Received: by mail-ot1-f65.google.com with SMTP id a15so8417998otf.1;
+        Mon, 16 Dec 2019 01:28:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pg5InTeU1+5SFJs1OkGX+MSzCriOaN0CGMKcgjVfhPY=;
+        b=REYdlWoCppoJSnQwoBaE+mlNj/PWBu2hmjNYDPB3EHKKn9ekNqeKBaqE5S+WEvj5eP
+         mIaOoJmFrZRpmT2YwDXMnszw1lDZUYFxnjs/tQVIalouwWG0HEHlE74hFo275GegcKTS
+         dIvktzgT7iSkOp5KFfHf3gICWW9UVUplMnhk+UFJ3hZAdOpZE1UoJy2hwc0ZOjTJSZW0
+         MHzZ+4sWJyuGy/MhabiLR4qrNTF25t3/9Ms5+WBAF1C/qEaz2ezxDv/XS3S6vEn2tWpU
+         vZhy3yPAcT3xNalK5FcjqBI74kSsU+6nNY1b3r9GSfsS9o4ABXvei8js/FgwPczmKU4y
+         9CMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pg5InTeU1+5SFJs1OkGX+MSzCriOaN0CGMKcgjVfhPY=;
+        b=hHtRTBcHm8l66N7v5pfT5LGH+JATA167YOiLMj4nR11SMUTY5SiwFKhNzMD+k1sYCI
+         fVxG/YvQN+feDrq6MPKqs4kavcAQohXejV1vGkk8cvyzUnuzix4ZCvYPLBMbwfCWU3pB
+         7PiZlSUpZN2Xkj5ALst9WuNb8ncWDRTZwjc5c/YdYEYsk2H+F52nhXfWyADUYCwxfX7Q
+         745lZyYtNiRNq+oxIszHeNTjTXPYFqayWgrJ9aQfk8Z3fFxzTbj4tThi3Jhol8Yk56eW
+         4j55BOcHlqNjYk209EUiyeZFUdvlieRTEdJP8zpZidfqdL5+eDim/ufdrS+HbFPWAX0R
+         ccDQ==
+X-Gm-Message-State: APjAAAUAUK73h4B6cVsgWsTI1pEdP4bU334QWNkpnD8L3GKk0stNSXJo
+        EQ0SrU+1Ayle4TOq0Don4t+xjp5H4LitP2L8H68=
+X-Google-Smtp-Source: APXvYqyGefY4ixRGGGVDGR32f4i/isJOglkcBFAsGS3yQVb39Cm/FzUVt3sGpLUqE3PoqwHroNp3cfe6VCKqeo0YAnY=
+X-Received: by 2002:a05:6830:147:: with SMTP id j7mr15240871otp.44.1576488495702;
+ Mon, 16 Dec 2019 01:28:15 -0800 (PST)
+MIME-Version: 1.0
+References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191213184627.GA169673@google.com>
+In-Reply-To: <20191213184627.GA169673@google.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 16 Dec 2019 09:27:49 +0000
+Message-ID: <CA+V-a8ugehRVuV2kwYgkTVp3Vk4ftKsQVfW0=vL4L7BZbDdeNg@mail.gmail.com>
+Subject: Re: [v2 0/6] Add support for PCIe controller to work in endpoint mode
+ on R-Car SoCs
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert QUP geni-se bindings to DT schema format using json-schema.
+Hi Bjorn,
 
-Signed-off-by: Akash Asthana <akashast@codeaurora.org>
----
- .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |  94 ----------
- .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 196 +++++++++++++++++++++
- 2 files changed, 196 insertions(+), 94 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+On Fri, Dec 13, 2019 at 9:06 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Dec 13, 2019 at 08:47:42AM +0000, Lad Prabhakar wrote:
+>
+> > Lad, Prabhakar (6):
+> >   pci: pcie-rcar: preparation for adding endpoint support
+> >   pci: endpoint: add support to handle features of outbound memory
+> >   of: address: add support to parse PCI outbound-ranges
+> >   dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
+> >     controller
+> >   pci: rcar: add support for rcar pcie controller in endpoint mode
+> >   misc: pci_endpoint_test: add device-id for RZ/G2E pcie controller
+>
+> The next time you post this, please update the subject lines to match
+> existing conventions (capitalize "PCI", description is a complete
+> sentence starting with a capitalized verb, etc").  Run "git log
+> --online" on the file you're changing and make yours look the same.
+>
+>   s/pci: /PCI: /
+>   s/pcie-rcar: /rcar: /
+>   s/pcie/PCIe/
+>   s/device-id/Device ID/
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-deleted file mode 100644
-index dab7ca9..0000000
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-+++ /dev/null
-@@ -1,94 +0,0 @@
--Qualcomm Technologies, Inc. GENI Serial Engine QUP Wrapper Controller
--
--Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
--is a programmable module for supporting a wide range of serial interfaces
--like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
--Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
--Wrapper controller is modeled as a node with zero or more child nodes each
--representing a serial engine.
--
--Required properties:
--- compatible:		Must be "qcom,geni-se-qup".
--- reg:			Must contain QUP register address and length.
--- clock-names:		Must contain "m-ahb" and "s-ahb".
--- clocks:		AHB clocks needed by the device.
--
--Required properties if child node exists:
--- #address-cells: 	Must be <1> for Serial Engine Address
--- #size-cells: 		Must be <1> for Serial Engine Address Size
--- ranges: 		Must be present
--
--Properties for children:
--
--A GENI based QUP wrapper controller node can contain 0 or more child nodes
--representing serial devices.  These serial devices can be a QCOM UART, I2C
--controller, SPI controller, or some combination of aforementioned devices.
--Please refer below the child node definitions for the supported serial
--interface protocols.
--
--Qualcomm Technologies Inc. GENI Serial Engine based I2C Controller
--
--Required properties:
--- compatible:		Must be "qcom,geni-i2c".
--- reg: 			Must contain QUP register address and length.
--- interrupts: 		Must contain I2C interrupt.
--- clock-names: 		Must contain "se".
--- clocks: 		Serial engine core clock needed by the device.
--- #address-cells:	Must be <1> for I2C device address.
--- #size-cells:		Must be <0> as I2C addresses have no size component.
--
--Optional property:
--- clock-frequency:	Desired I2C bus clock frequency in Hz.
--			When missing default to 100000Hz.
--
--Child nodes should conform to I2C bus binding as described in i2c.txt.
--
--Qualcomm Technologies Inc. GENI Serial Engine based UART Controller
--
--Required properties:
--- compatible:		Must be "qcom,geni-debug-uart" or "qcom,geni-uart".
--- reg: 			Must contain UART register location and length.
--- interrupts: 		Must contain UART core interrupts.
--- clock-names:		Must contain "se".
--- clocks:		Serial engine core clock needed by the device.
--
--Qualcomm Technologies Inc. GENI Serial Engine based SPI Controller
--node binding is described in
--Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt.
--
--Example:
--	geniqup@8c0000 {
--		compatible = "qcom,geni-se-qup";
--		reg = <0x8c0000 0x6000>;
--		clock-names = "m-ahb", "s-ahb";
--		clocks = <&clock_gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
--			<&clock_gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges;
--
--		i2c0: i2c@a94000 {
--			compatible = "qcom,geni-i2c";
--			reg = <0xa94000 0x4000>;
--			interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
--			clock-names = "se";
--			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S5_CLK>;
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&qup_1_i2c_5_active>;
--			pinctrl-1 = <&qup_1_i2c_5_sleep>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--		};
--
--		uart0: serial@a88000 {
--			compatible = "qcom,geni-debug-uart";
--			reg = <0xa88000 0x7000>;
--			interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
--			clock-names = "se";
--			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>;
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&qup_1_uart_3_active>;
--			pinctrl-1 = <&qup_1_uart_3_sleep>;
--		};
--
--	}
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-new file mode 100644
-index 0000000..2c3b911
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-@@ -0,0 +1,196 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/soc/qcom/qcom,geni-se.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: GENI Serial Engine QUP Wrapper Controller
-+
-+maintainers:
-+ - Mukesh Savaliya <msavaliy@codeaurora.org>
-+ - Akash Asthana <akashast@codeaurora.org>
-+
-+description: |
-+ Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
-+ is a programmable module for supporting a wide range of serial interfaces
-+ like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
-+ Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
-+ Wrapper controller is modeled as a node with zero or more child nodes each
-+ representing a serial engine.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,geni-se-qup
-+
-+  reg:
-+    description: QUP wrapper common register address and length.
-+
-+  clock-names:
-+    items:
-+      - const: m-ahb
-+      - const: s-ahb
-+
-+  clocks:
-+    minItems: 2
-+    maxItems: 2
-+    items:
-+      - description: Master AHB Clock
-+      - description: Slave AHB Clock
-+
-+  "#address-cells":
-+     const: 2
-+
-+  "#size-cells":
-+     const: 2
-+
-+  ranges: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
-+
-+patternProperties:
-+  "[i2c|spi]@[0-9]+$":
-+    type: object
-+    description: GENI Serial Engine based I2C and SPI Controller.
-+                 SPI in master mode supports up to 50MHz, up to four chip
-+                 selects, programmable data path from 4 bits to 32 bits and
-+                 numerous protocol variants.
-+
-+    properties:
-+      compatible:
-+        enum:
-+          - qcom,geni-i2c
-+          - qcom,geni-spi
-+
-+      reg:
-+        description: GENI Serial Engine register address and length.
-+
-+      interrupts:
-+        maxItems: 1
-+
-+      clock-names:
-+        const: se
-+
-+      clocks:
-+        description: Serial engine core clock needed by the device.
-+        maxItems: 1
-+
-+      "#address-cells":
-+         const: 1
-+
-+      "#size-cells":
-+         const: 0
-+
-+      clock-frequency:
-+        description: Desired I2C bus clock frequency in Hz.
-+        default: 100000
-+
-+    required:
-+      - compatible
-+      - reg
-+      - interrupts
-+      - clock-names
-+      - clocks
-+      - "#address-cells"
-+      - "#size-cells"
-+
-+  "serial@[0-9]+$":
-+    type: object
-+    description: GENI Serial Engine based UART Controller.
-+
-+    properties:
-+      compatible:
-+        enum:
-+          - qcom,geni-uart
-+          - qcom,geni-debug-uart
-+
-+      reg:
-+        description: GENI Serial Engine register address and length.
-+
-+      interrupts:
-+        description: Contains UART core and wakeup interrupts for wakeup
-+                     capable UART devices. We configure wakeup interrupt
-+                     on UART RX line using TLMM interrupt controller.
-+        maxItems: 2
-+
-+      clock-names:
-+        const: se
-+
-+      clocks:
-+        description: Serial engine core clock needed by the device.
-+        maxItems: 1
-+
-+    required:
-+      - compatible
-+      - reg
-+      - interrupts
-+      - clock-names
-+      - clocks
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    soc: soc@0 {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        qupv3_id_0: geniqup@8c0000 {
-+            compatible = "qcom,geni-se-qup";
-+            reg = <0 0x008c0000 0 0x6000>;
-+            clocks = <&gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
-+                <&gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
-+            #address-cells = <2>;
-+            #size-cells = <2>;
-+            ranges;
-+            status = "disabled";
-+
-+            i2c0: i2c@880000 {
-+                compatible = "qcom,geni-i2c";
-+                reg = <0 0x00880000 0 0x4000>;
-+                clock-names = "se";
-+                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+                pinctrl-names = "default";
-+                pinctrl-0 = <&qup_i2c0_default>;
-+                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                status = "disabled";
-+            };
-+
-+            spi0: spi@880000 {
-+                compatible = "qcom,geni-spi";
-+                reg = <0 0x00880000 0 0x4000>;
-+                clock-names = "se";
-+                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+                pinctrl-names = "default";
-+                pinctrl-0 = <&qup_spi0_default>;
-+                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                status = "disabled";
-+            };
-+
-+            uart0: serial@880000 {
-+                compatible = "qcom,geni-uart";
-+                reg = <0 0x00880000 0 0x4000>;
-+                clock-names = "se";
-+                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+                pinctrl-names = "default";
-+                pinctrl-0 = <&qup_uart0_default>;
-+                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+                status = "disabled";
-+            };
-+        };
-+    };
-+
-+...
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+Thank you for the review, I'll fix the above in next iteration.
+
+Cheers,
+--Prabhakar
