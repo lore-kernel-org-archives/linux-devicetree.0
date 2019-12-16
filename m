@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71764C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A970C2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4817820726
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5ECC20717
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KaZBIWJT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oxv5/Hns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfLPQNe (ORCPT
+        id S1726663AbfLPQNk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:13:34 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36620 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbfLPQNb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 11:13:31 -0500
-Received: by mail-pl1-f193.google.com with SMTP id d15so4674551pll.3;
-        Mon, 16 Dec 2019 08:13:30 -0800 (PST)
+        Mon, 16 Dec 2019 11:13:40 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36226 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbfLPQNg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 11:13:36 -0500
+Received: by mail-pj1-f66.google.com with SMTP id n96so3192639pjc.3;
+        Mon, 16 Dec 2019 08:13:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gDY4jEFGJ9H7V2r9z4CnsZu5TcOGMUSykJmuesqXvp0=;
-        b=KaZBIWJT3JJ/4Bhz6HxeE3e6wso/zKd+VCvepjFk7IR2R3EldpDy+EnYgPdm/L6heF
-         vRHnW8CKlW8Y6IJcp5aNfwqOa+bfosO2nLsoF3Jkan2MvOLKN/QghluFbanGijeXI0Lw
-         UIACFmNdF6JjLFBQV13L/uL9Z8jvT2FITa/SSByk+n7B6K93H1vJJdOG/O5KbodgXiue
-         0ZJxOINyaZSow/NbaYAet6pR+HXs67wkuU7SdcETttstg2NHMG5tk5XZzFSsY3ZwiXvd
-         H3qgBROaUziZ+sRPPNOnCXXMBm3GPDqTlbhn/JrjcgMO+J05fYCkKX/PUM3G4jnfVqzJ
-         teXg==
+        bh=LmXS6uIWfMnXSZXtQtWkCqjkZwd/k/U9KsfhUQk5CGY=;
+        b=Oxv5/HnsdBDvtAaPP7gUfZsYhaCcmLLW2e+eOvnsnxS3uxoVYPIbIvKMgAuTo6hC6b
+         3/tbojC/zZq2CNoP9tDRwUUFr4RN9axRLuwNlxOkFLi5v3omGtoKl/sATFg/bf0BME0X
+         wGVZ3xmqydN6XcAM9P1yQ/8DRPc4yv03+LUiYZWPVCX9+IWlPaTX910rjS4tIJ8Odu3g
+         4LJUFaZUolAfWDkDpit+Pg6ZBIcBu6COWS6a9uck8ldAOJ84nuA15xuxLSmMxhuPIGSM
+         kHxdICXdDlBBjpBGslmSsj5e+wLtqVHmWv7SCEqNiJfKdqiCturx9M2CJhJruJIjOcsC
+         dqCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gDY4jEFGJ9H7V2r9z4CnsZu5TcOGMUSykJmuesqXvp0=;
-        b=PS0EaSYN2Ddjq6/pCHNBifHSCq4DXT6IQLDt+qMsbjxffEpJ4Wl/K5g6wjDFAw/xHl
-         LExEB9JRleS6GILAYfdHmMBG9/v/ClZE9DJowrn8HW4Zwr/kWxfWO3zUjjmuZ1IYEvK3
-         4HC5jDej+xIykK3vGKvLojTdjWWODvbuD0lSuLhfYRAiNPRKZQzO9KUWSkbwmqq19XKs
-         rRgsnUZwFt4HQJbGt6IGlc04fSFH3qCoY5J3SZS8KrBqcgnD0R7kRuDS41pwWYMZDUxy
-         OhLDjZQ1tjWY0OkfyBPCP3cPfMovPCX892U3idZBanAR7gReHTu44QHQ7cRnR7kG8Vny
-         j0Bw==
-X-Gm-Message-State: APjAAAVICWF5n0eUNSowvQvu5IVFdyw5ceCI1aZJejF7cmOiGoTjFsru
-        iGYXi0yAKxL75AJ5tt/kjDZqB08y
-X-Google-Smtp-Source: APXvYqyq+Ik+IgBGQx2AGkfrShrPsw9p78XvtEWGA23K6U+u0iMt/0g8VCH++ATfNtQDUtRaBLIkWg==
-X-Received: by 2002:a17:902:968f:: with SMTP id n15mr16971115plp.12.1576512809945;
-        Mon, 16 Dec 2019 08:13:29 -0800 (PST)
+        bh=LmXS6uIWfMnXSZXtQtWkCqjkZwd/k/U9KsfhUQk5CGY=;
+        b=h3TrSrxigDjm9LPmZZ0zqLhHsXFm8pI9964HrLB0qz9uCejnUDM8i1EuAQmeYXqhH6
+         UFEXd74uNcGlvLggqOMdsF3DcdbuDdecwJKQhPEsnbU4oCJ3Vz4UKamctxzxgjQgawGG
+         I7jlwr+nRZnlZdZfTUwUrqY1ba70DrLfQFaJZtwZ0lG0nl6zYp1kwusKPYG0ne8L3lNO
+         SKnqWRC+bexpo4R3OcgP5DntaU0ZsIgOsdGWWkVQ/lquPlOwcMwoISA13xAieU4WLvjF
+         MQSbuNtlO4y87qRHgU+AhyKFTUQbDOgEz4CgCRHp7T2aIOLzjA+yXennCDnUGlaWGQcY
+         M5gg==
+X-Gm-Message-State: APjAAAXkM9a6Eokcm14GsmEUaGoAu8RWW/1dc8xpo5nJPvATqG1KZcXp
+        JFChy6HO9+S26UQ35Mhd2uqKMC/w
+X-Google-Smtp-Source: APXvYqz/UCHZT0/948BnhH4ryWuFQfMaEU2JUR/+28pQ2nNU4X4wbTxJguBDY+2byLbGbAVt23pmgA==
+X-Received: by 2002:a17:90a:e64b:: with SMTP id ep11mr19144877pjb.58.1576512815981;
+        Mon, 16 Dec 2019 08:13:35 -0800 (PST)
 Received: from localhost.localdomain (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id 83sm23478433pgh.12.2019.12.16.08.13.28
+        by smtp.gmail.com with ESMTPSA id 83sm23478433pgh.12.2019.12.16.08.13.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 08:13:29 -0800 (PST)
+        Mon, 16 Dec 2019 08:13:35 -0800 (PST)
 From:   Richard Cochran <richardcochran@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
@@ -69,9 +69,9 @@ Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Willem de Bruijn <willemb@google.com>,
         Wingman Kwok <w-kwok2@ti.com>
-Subject: [PATCH V6 net-next 01/11] net: phy: Introduce helper functions for time stamping support.
-Date:   Mon, 16 Dec 2019 08:13:16 -0800
-Message-Id: <153343b4ae5dd92dff803127c467dcce58a5933f.1576511937.git.richardcochran@gmail.com>
+Subject: [PATCH V6 net-next 05/11] net: netcp_ethss: Use the PHY time stamping interface.
+Date:   Mon, 16 Dec 2019 08:13:20 -0800
+Message-Id: <26366cff657f6182d581d7cdf425bbd1aaf97718.1576511937.git.richardcochran@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1576511937.git.richardcochran@gmail.com>
 References: <cover.1576511937.git.richardcochran@gmail.com>
@@ -82,89 +82,56 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some parts of the networking stack and at least one driver test fields
-within the 'struct phy_device' in order to query time stamping
-capabilities and to invoke time stamping methods.  This patch adds a
-functional interface around the time stamping fields.  This will allow
-insulating the callers from future changes to the details of the time
-stamping implemenation.
+Thie netcp_ethss driver tests fields of the phy_device in order to
+determine whether to defer to the PHY's time stamping functionality.
+This patch replaces the open coded logic with an invocation of the
+proper methods.
 
 Signed-off-by: Richard Cochran <richardcochran@gmail.com>
 ---
- include/linux/phy.h | 60 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ drivers/net/ethernet/ti/netcp_ethss.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 5032d453ac66..fc51aacb03a7 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -936,6 +936,66 @@ static inline bool phy_polling_mode(struct phy_device *phydev)
- 	return phydev->irq == PHY_POLL;
+diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+index 86a3f42a3dcc..1280ccd581d4 100644
+--- a/drivers/net/ethernet/ti/netcp_ethss.c
++++ b/drivers/net/ethernet/ti/netcp_ethss.c
+@@ -2533,8 +2533,6 @@ static int gbe_del_vid(void *intf_priv, int vid)
  }
  
-+/**
-+ * phy_has_hwtstamp - Tests whether a PHY time stamp configuration.
-+ * @phydev: the phy_device struct
-+ */
-+static inline bool phy_has_hwtstamp(struct phy_device *phydev)
-+{
-+	return phydev && phydev->drv && phydev->drv->hwtstamp;
-+}
-+
-+/**
-+ * phy_has_rxtstamp - Tests whether a PHY supports receive time stamping.
-+ * @phydev: the phy_device struct
-+ */
-+static inline bool phy_has_rxtstamp(struct phy_device *phydev)
-+{
-+	return phydev && phydev->drv && phydev->drv->rxtstamp;
-+}
-+
-+/**
-+ * phy_has_tsinfo - Tests whether a PHY reports time stamping and/or
-+ * PTP hardware clock capabilities.
-+ * @phydev: the phy_device struct
-+ */
-+static inline bool phy_has_tsinfo(struct phy_device *phydev)
-+{
-+	return phydev && phydev->drv && phydev->drv->ts_info;
-+}
-+
-+/**
-+ * phy_has_txtstamp - Tests whether a PHY supports transmit time stamping.
-+ * @phydev: the phy_device struct
-+ */
-+static inline bool phy_has_txtstamp(struct phy_device *phydev)
-+{
-+	return phydev && phydev->drv && phydev->drv->txtstamp;
-+}
-+
-+static inline int phy_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
-+{
-+	return phydev->drv->hwtstamp(phydev, ifr);
-+}
-+
-+static inline bool phy_rxtstamp(struct phy_device *phydev, struct sk_buff *skb,
-+				int type)
-+{
-+	return phydev->drv->rxtstamp(phydev, skb, type);
-+}
-+
-+static inline int phy_ts_info(struct phy_device *phydev,
-+			      struct ethtool_ts_info *tsinfo)
-+{
-+	return phydev->drv->ts_info(phydev, tsinfo);
-+}
-+
-+static inline void phy_txtstamp(struct phy_device *phydev, struct sk_buff *skb,
-+				int type)
-+{
-+	phydev->drv->txtstamp(phydev, skb, type);
-+}
-+
- /**
-  * phy_is_internal - Convenience function for testing if a PHY is internal
-  * @phydev: the phy_device struct
+ #if IS_ENABLED(CONFIG_TI_CPTS)
+-#define HAS_PHY_TXTSTAMP(p) ((p)->drv && (p)->drv->txtstamp)
+-#define HAS_PHY_RXTSTAMP(p) ((p)->drv && (p)->drv->rxtstamp)
+ 
+ static void gbe_txtstamp(void *context, struct sk_buff *skb)
+ {
+@@ -2566,7 +2564,7 @@ static int gbe_txtstamp_mark_pkt(struct gbe_intf *gbe_intf,
+ 	 * We mark it here because skb_tx_timestamp() is called
+ 	 * after all the txhooks are called.
+ 	 */
+-	if (phydev && HAS_PHY_TXTSTAMP(phydev)) {
++	if (phy_has_txtstamp(phydev)) {
+ 		skb_shinfo(p_info->skb)->tx_flags |= SKBTX_IN_PROGRESS;
+ 		return 0;
+ 	}
+@@ -2588,7 +2586,7 @@ static int gbe_rxtstamp(struct gbe_intf *gbe_intf, struct netcp_packet *p_info)
+ 	if (p_info->rxtstamp_complete)
+ 		return 0;
+ 
+-	if (phydev && HAS_PHY_RXTSTAMP(phydev)) {
++	if (phy_has_rxtstamp(phydev)) {
+ 		p_info->rxtstamp_complete = true;
+ 		return 0;
+ 	}
+@@ -2830,7 +2828,7 @@ static int gbe_ioctl(void *intf_priv, struct ifreq *req, int cmd)
+ 	struct gbe_intf *gbe_intf = intf_priv;
+ 	struct phy_device *phy = gbe_intf->slave->phy;
+ 
+-	if (!phy || !phy->drv->hwtstamp) {
++	if (!phy_has_hwtstamp(phy)) {
+ 		switch (cmd) {
+ 		case SIOCGHWTSTAMP:
+ 			return gbe_hwtstamp_get(gbe_intf, req);
 -- 
 2.20.1
 
