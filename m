@@ -2,243 +2,234 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB30EC2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0A3C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9647206EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XB4eZu0l"
+	by mail.kernel.org (Postfix) with ESMTP id BB6DD2082E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576521259;
+	bh=3B/xY3EwSSqZ4KRIPY2Ks0+ZNevGFMiaNyRoFEJVXfQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OGteOIaZb/ZdtSz8U4p0eEcNmRUY8jYJoMhnStRbD4bvRQFdBCIHtwXdflA1RM3I4
+	 lMbEYsrnooB19XwRpaUNSxz2axwXLYqEQFAh7ZBPLtmuvErDW9xAuaf1L6zktczmGH
+	 RqW8w/5vd5BJZumOVJJQRQb6DoTRhnkQZby7sk/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbfLPSeK (ORCPT
+        id S1729004AbfLPSeP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:34:10 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:38655 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730435AbfLPSJ1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 13:09:27 -0500
-Received: by mail-pj1-f65.google.com with SMTP id l4so3327172pjt.5
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 10:09:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc:user-agent:date;
-        bh=oLhatwVrJ644AorppWAQgibVdhj+hDy5xTYrVrxWuSY=;
-        b=XB4eZu0lXjwSCThvHlfv8sQLrCkNqhUeZMxRKCn5ndRQ8BqBL26KJxKGDqYM4cYOyL
-         +eKyYt/ih2o4fp9ijgj+CS02oNx5VT0dCy/oWIMKXb6MDVodmNcIDMyHyhb+a1I0vRKY
-         oR7u8sgCYdbcgHMObVGab2vjhZP3z4HMVdaKc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc
-         :user-agent:date;
-        bh=oLhatwVrJ644AorppWAQgibVdhj+hDy5xTYrVrxWuSY=;
-        b=se75zj5M0OgbS9GKmeOdYNeRv9QwFpjBv83cq/3EMJgZ0JAtHfbSE9Ma6dsISZSq3C
-         TjokKRuk1JMp7I7Z9BrmRmii4TwwCXEqHzYHFFqpZq6T7oEdTRyp6GqCkyNP6wRGDgrJ
-         hJshPGSipRqphgDDFlzhCoT6d9AcwM8jo5VbiAXQF+el5zn4rmyzhxenYYUGvDrOeJuJ
-         U0OMrF1562rzbHrs5jqMv++M6e9GbH2F1TOQFz1w6lDXaTxpODo6WE+4AobG/3Du8UNk
-         HbP2JeFpxueubjHBMtd/74+yBx/CL6dpnfdMeuuVuHHdAKFybx+yaKKfo8S8LLjWBwOf
-         bbng==
-X-Gm-Message-State: APjAAAWh0VfhmIFC5g4SfuXTlTKb5ZxYWpZNOmSHsSSrmnQGG7S03xie
-        OB9gLM5voEs8ZyFksCu24DVWiw==
-X-Google-Smtp-Source: APXvYqxrawoK5xzsyGWqjq5NJ8kXJHDEnSx6/wihLYKUsFNx+1Lz67ZcYpS5cmyXYR3OGT4jkBDn0w==
-X-Received: by 2002:a17:90a:e64b:: with SMTP id ep11mr499838pjb.58.1576519766114;
-        Mon, 16 Dec 2019 10:09:26 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id u20sm22883784pgf.29.2019.12.16.10.09.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 10:09:25 -0800 (PST)
-Message-ID: <5df7c855.1c69fb81.44dfc.29c1@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1576474742-23409-2-git-send-email-sanm@codeaurora.org>
-References: <1576474742-23409-1-git-send-email-sanm@codeaurora.org> <1576474742-23409-2-git-send-email-sanm@codeaurora.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Mon, 16 Dec 2019 13:34:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727330AbfLPSeN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:34:13 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80EC2206EC;
+        Mon, 16 Dec 2019 18:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576521253;
+        bh=3B/xY3EwSSqZ4KRIPY2Ks0+ZNevGFMiaNyRoFEJVXfQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lEUGZ0qHZo+CVeE5WsVgQhI7P2irPvdQQdvpMgxYvGTSp1kwZc3UY1nH28TmfQwXF
+         VNmlZ6HSmQKZiCCqF6fT4KzAArKVHd/uGAZlo48DHA2Y7y+VFeZL0lJIo4ooiEmRzI
+         n05Cczd68EE7ioFDM6k6mV3KJahfqsKGnqjwqA5s=
+Date:   Mon, 16 Dec 2019 19:34:10 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Mon, 16 Dec 2019 10:09:24 -0800
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Subject: Re: [PATCH v12 1/7] dt-bindings: sun6i-dsi: Document A64 MIPI-DSI
+ controller
+Message-ID: <20191216183410.akrmytbvaeg37wms@gilmour.lan>
+References: <20191203134816.5319-1-jagan@amarulasolutions.com>
+ <20191203134816.5319-2-jagan@amarulasolutions.com>
+ <20191204133600.gnv6dnhk6upe7xod@gilmour.lan>
+ <CAMty3ZDU57Hj3ZSBC6sSMFWN9-HQadA03hmXUNUVS1W0UQQ3DA@mail.gmail.com>
+ <20191216112042.f4xvlgnbm4dk6wkq@gilmour.lan>
+ <CAMty3ZBU-XaxR_vM5L2yVbhR5ftfbtDn3jP00qCxBF+owVyqDQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mp32uvvqn4k2266y"
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZBU-XaxR_vM5L2yVbhR5ftfbtDn3jP00qCxBF+owVyqDQ@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2019-12-15 21:39:01)
-> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Docum=
-entation/devicetree/bindings/usb/qcom,dwc3.yaml
-> new file mode 100644
-> index 0000000..c8eda58
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-> @@ -0,0 +1,153 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm SuperSpeed DWC3 USB SoC controller
-> +
-> +maintainers:
-> +  - Manu Gautam <mgautam@codeaurora.org>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - qcom,msm8996-dwc3
-> +          - qcom,msm8998-dwc3
-> +          - qcom,sdm845-dwc3
-> +      - const: qcom,dwc3
-> +
-> +  reg:
-> +    description: Offset and length of register set for QSCRATCH wrapper
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    enum: [ 1, 2 ]
-> +
-> +  "#size-cells":
-> +    enum: [ 1, 2 ]
 
-Hm... ok. Interesting.
+--mp32uvvqn4k2266y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +
-> +  power-domains:
-> +    description: specifies a phandle to PM domain provider node
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description:
-> +      A list of phandle and clock-specifier pairs for the clocks
-> +      listed in clock-names.
-> +    minItems: 3
-> +    items:
-> +      - description: System Config NOC clock. Not present on "qcom,msm89=
-96-dwc3" compatible.
-> +      - description: Master/Core clock, have to be >=3D 125 MHz for SS o=
-peration and >=3D 60MHz for HS operation
-> +      - description: System bus AXI clock. Not present on "qcom,msm8996-=
-dwc3" compatible.
-> +      - description: Mock utmi clock needed for ITP/SOF generation in ho=
-st mode.Its frequency should be 19.2MHz.
-> +      - description: Sleep clock, used for wakeup when USB3 core goes in=
-to low power mode (U3).
-> +
-> +  clock-names:
-> +    minItems: 3
-> +    items:
-> +      - const: cfg_noc
-> +      - const: core
-> +      - const: iface
-> +      - const: mock_utmi
-> +      - const: sleep
+On Mon, Dec 16, 2019 at 10:29:08PM +0530, Jagan Teki wrote:
+> On Mon, Dec 16, 2019 at 4:50 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Mon, Dec 16, 2019 at 04:37:20PM +0530, Jagan Teki wrote:
+> > > On Wed, Dec 4, 2019 at 7:06 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > >
+> > > > On Tue, Dec 03, 2019 at 07:18:10PM +0530, Jagan Teki wrote:
+> > > > > The MIPI DSI controller in Allwinner A64 is similar to A33.
+> > > > >
+> > > > > But unlike A33, A64 doesn't have DSI_SCLK gating so it is valid
+> > > > > to have separate compatible for A64 on the same driver.
+> > > > >
+> > > > > DSI_SCLK uses mod clock-names on dt-bindings, so the same
+> > > > > is not required for A64.
+> > > > >
+> > > > > On that note
+> > > > > - A64 require minimum of 1 clock like the bus clock
+> > > > > - A33 require minimum of 2 clocks like both bus, mod clocks
+> > > > >
+> > > > > So, update dt-bindings so-that it can document both A33,
+> > > > > A64 bindings requirements.
+> > > > >
+> > > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > ---
+> > > > > Changes for v12:
+> > > > > - Use 'enum' instead of oneOf+const
+> > > > >
+> > > > >  .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 20 +++++++++++++++++--
+> > > > >  1 file changed, 18 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> > > > > index dafc0980c4fa..b91446475f35 100644
+> > > > > --- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> > > > > @@ -15,7 +15,9 @@ properties:
+> > > > >    "#size-cells": true
+> > > > >
+> > > > >    compatible:
+> > > > > -    const: allwinner,sun6i-a31-mipi-dsi
+> > > > > +    enum:
+> > > > > +      - allwinner,sun6i-a31-mipi-dsi
+> > > > > +      - allwinner,sun50i-a64-mipi-dsi
+> > > > >
+> > > > >    reg:
+> > > > >      maxItems: 1
+> > > > > @@ -24,6 +26,8 @@ properties:
+> > > > >      maxItems: 1
+> > > > >
+> > > > >    clocks:
+> > > > > +    minItems: 1
+> > > > > +    maxItems: 2
+> > > > >      items:
+> > > > >        - description: Bus Clock
+> > > > >        - description: Module Clock
+> > > > > @@ -63,13 +67,25 @@ required:
+> > > > >    - reg
+> > > > >    - interrupts
+> > > > >    - clocks
+> > > > > -  - clock-names
+> > > > >    - phys
+> > > > >    - phy-names
+> > > > >    - resets
+> > > > >    - vcc-dsi-supply
+> > > > >    - port
+> > > > >
+> > > > > +allOf:
+> > > > > +  - if:
+> > > > > +      properties:
+> > > > > +         compatible:
+> > > > > +           contains:
+> > > > > +             const: allwinner,sun6i-a31-mipi-dsi
+> > > > > +      then:
+> > > > > +        properties:
+> > > > > +          clocks:
+> > > > > +            minItems: 2
+> > > > > +        required:
+> > > > > +          - clock-names
+> > > > > +
+> > > >
+> > > > Your else condition should check that the number of clocks items is 1
+> > > > on the A64
+> > >
+> > > But the minItems mentioned as 1 in clocks, which is unchanged number
+> > > by default. doesn't it sufficient?
+> >
+> > In the main schema, it's said that the clocks property can have one or
+> > two elements (to cover the A31 case that has one, and the A64 case
+> > that has 2).
+> >
+> > This is fine.
+> >
+> > Later on, you enforce that the A64 has two elements, and this is fine
+> > too.
+>
+> Actually A31 case has 2 and A64 case has 1.
+>
+> >
+> > However, you never check that on the A31 you only have one clock, and
+> > you could very well have two and no one would notice.
+>
+> I did check A31 case for 2 but not in A64. this is what you mean? so
+> adding A64 check like below would fine?
+>
+> allOf:
+>   - if:
+>       properties:
+>          compatible:
+>            contains:
+>              const: allwinner,sun6i-a31-mipi-dsi
 
-Order matters. Can 'core' and 'iface' come first and then the others
-after that? Same comment applies to clocks property.
+You need a new line here
 
-> +
-> +  assigned-clocks:
-> +    items:
-> +      - description: Phandle to MOCK_UTMI_CLK.
-> +      - description: Phandle to MASTER_CLK.
-> +
-> +  assigned-clock-rates:
-> +    description:
-> +      Should be 19.2MHz (19200000) for MOCK_UTMI_CLK
-> +      >=3D125MHz (125000000) for MASTER_CLK in SS mode
-> +      >=3D60MHz (60000000) for MASTER_CLK in HS mode
-> +    maxItems: 2
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description:
-> +      Specifies interrupts from controller wrapper used
-> +      to wakeup from low power/suspend state. Must contain
-> +      one or more entry for interrupt-names property.
-> +    items:
-> +      - description: The interrupt that is asserted when a wakeup event =
-is received on USB2 bus.
-> +      - description: The interrupt that is asserted when a wakeup event =
-is received on USB3 bus.
-> +      - description: Wakeup event on DM line.
-> +      - description: Wakeup event on DP line.
-> +
-> +  interrupt-names:
-> +    $ref: /schemas/types.yaml#/definitions/string-array
-> +    items:
-> +      - const: hs_phy_irq
-> +      - const: ss_phy_irq
-> +      - const: dm_hs_phy_irq
-> +      - const: dp_hs_phy_irq
-> +
-> +  qcom,select-utmi-as-pipe-clk:
-> +    description:
+>       then:
 
-Don't these multi-line descriptions need a pipe, | ?
+This is the wrong level of indentation, it needs to be at the same level than if
 
-> +      If present, disable USB3 pipe_clk requirement.
-> +      Used when dwc3 operates without SSPHY and only
-> +      HS/FS/LS modes are supported.
-> +    type: boolean
-> +
-> +# Required child node:
-> +
-> +patternProperties:
-> +  "^dwc3@[0-9a-f]+$":
-> +    type: object
-> +    description:
-> +      A child node must exist to represent the core DWC3 IP block
-> +      The content of the node is defined in dwc3.txt.
-> +
-> +# Phy documentation is provided in the following places:
-> +# Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
-> +# Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 =
-PHY
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - power-domains
-> +  - clocks
-> +  - clock-names
+>         properties:
+>           clocks:
+>             minItems: 2
 
-Are 'interrupts' required?
+Newline
 
-> +
-> +examples:
-> +  - |
-> +        usb3_0: usb30@a6f8800 {
+>         required:
+>           - clock-names
 
-Should node name be something like 'usb3'? Or is this usb 3.0 so it's
-'usb30'?
+Newline
 
-> +            compatible =3D "qcom,dwc3";
-> +            reg =3D <0xa6f8800 0x400>;
-> +            #address-cells =3D <1>;
-> +            #size-cells =3D <1>;
-> +            ranges;
-> +            interrupts =3D <0 131 0>, <0 486 0>, <0 488 0>, <0 489 0>;
-> +            interrupt-names =3D "hs_phy_irq", "ss_phy_irq",
-> +                    "dm_hs_phy_irq", "dp_hs_phy_irq";
+>   - if:
+>       properties:
+>          compatible:
+>            contains:
+>              const: allwinner,sun50i-a64-mipi-dsi
+>       then:
+>         properties:
+>           clocks:
+>             minItems: 1
+
+(and same thing here).
+
+But yeah, otherwise that's what I meant
+
+Maxime
+
+--mp32uvvqn4k2266y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXffOIgAKCRDj7w1vZxhR
+xeCTAPwKh1UHnjrREIv+Ip48UOc+A2n/MnUOkDPNQizA9EusMgD/RunnzYlmm6CU
+wsu3s/XV5XJ3nmdYaKKmSIlQ7HZmEAs=
+=RcnJ
+-----END PGP SIGNATURE-----
+
+--mp32uvvqn4k2266y--
