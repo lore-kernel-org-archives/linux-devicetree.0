@@ -2,172 +2,161 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9C9C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 10:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCFFC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 10:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A448020725
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 10:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE5D20700
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 10:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="P6aWTboU"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="IMLrsBod";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="q+xW6eiN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfLPKwO (ORCPT
+        id S1727506AbfLPK6c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:52:14 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:42740 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfLPKwO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 05:52:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1576493531; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tJtKg4YBH/DsNNYyKShEC+cjzAd8qY62spFT3pgBt20=;
-        b=P6aWTboUJ49iR09mjEKD0sd3Jw123RPpiEYdRir1RQrcwtYq/ezKQrhszcaPBdS7A7DVQP
-        phKTilD8m1ja30fBqFmDrw+6BwZgBakNHExJ8ugrmvA3GrzeNUY4xoyEKDi/UYAMYQE5Gp
-        wfMBzqHQjI4GCgur+IiYHqri5cnNqPI=
-Date:   Mon, 16 Dec 2019 11:52:05 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: RE: [PATCH v2 3/3] power/supply: Add generic USB charger driver
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 16 Dec 2019 05:58:32 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:58445 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727403AbfLPK6b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:58:31 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 5EA5E7118;
+        Mon, 16 Dec 2019 05:58:30 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 16 Dec 2019 05:58:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=7E2TpTwENCgP1MRD7/Eziybb/Th
+        2bGLOCc12fC88q6E=; b=IMLrsBodXXXGicPZCQDlL4YhxJ8yYXkJiGeQPJQQwf4
+        cvkx9X6OxYx4AIhSKnPbdJllQHaNKzzF32/qX58QgboLLpEQjhHszLxaPpdgMMqV
+        5jwKe1BCnPBcTCzsnR03dumppfba/ket7EzIV/vDMcpIzk6A9IEqm5vtpgGTV0is
+        zhsxVo69knhpEPIVcq8TwJ3MXG2+XWNQp+POUAs1H0De5zyyiyMRlkSCghfcP6au
+        1A6KiA/ogyumRutouWKKu8dAEzQyxprg9hq1qJbuVHeCMMxACjaQnueTYxbD/Xbp
+        1EaHOWLopra/MTOUFxZc/cLJR14aFWEUPkFkB2CgpAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=7E2TpT
+        wENCgP1MRD7/Eziybb/Th2bGLOCc12fC88q6E=; b=q+xW6eiNUtLhXYj2T6MpV1
+        DO8WdVfGXHlYR8Od+K4ZToowmTlu5f3/0IOeXhM0VokgQyeONZ1a7SFy1qvQ09sS
+        RJo277PYsWoBr9JZzYUX1G8wrKf8zaGzsV3XCIqtSdwweXbLBWtRqbsDZDQyVKT8
+        BBUNVnMhxMxo6H0jMMQkFW58R8n+XHpB9KIkoJH+b3JN5yZPUEtHDIGdPI5GMBV/
+        YEWDRRva+BF230lJgh67fWaDUDKu+WGR40H/0ooi009xOpo+5NNKgJ0NOx8/e41Q
+        pUtQwoztthAvbEQgK30HoL9BjVCTgbU5uRqaC5EzMJnejxYGnCQB2JqhHaGLlKxw
+        ==
+X-ME-Sender: <xms:VGP3XUY8i-9w8CG05Yj5PzjIikoPOmggk-UF_ctcBee-8Lck051Ulg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddthedgvddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggv
+    rhhnohdrthgvtghhnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:VGP3Xbt6ohxrttMcaXVI6FmO7AAaqrpN7X7GqTN0Wk7tLzLIlYh-yg>
+    <xmx:VGP3XRtN1Yg5tIbLqODohz6GBDmEP1smxIZbRdwPBUzowBcnBB7ffA>
+    <xmx:VGP3XQe2jz2UyPBCXhDoFD1nNHKHF_HUD8nsB_jR_XrJ_cT8fDkXMA>
+    <xmx:VmP3XVbpO_j_XIh2rB_1sEeclFhYceWTGR5NP61U8O2Mv5Qzxs8Stw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 690A280063;
+        Mon, 16 Dec 2019 05:58:28 -0500 (EST)
+Date:   Mon, 16 Dec 2019 11:58:27 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, od@zcrc.me,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Message-Id: <1576493525.3.0@crapouillou.net>
-In-Reply-To: <VI1PR04MB5327401FFD2D32E937548DD48B510@VI1PR04MB5327.eurprd04.prod.outlook.c
-        om>
-References: <20191211155032.167032-1-paul@crapouillou.net>
-        <20191211155032.167032-3-paul@crapouillou.net>
-        <20191212091814.GA7035@b29397-desktop> <1576270147.3.0@crapouillou.net>
-        <VI1PR04MB5327401FFD2D32E937548DD48B510@VI1PR04MB5327.eurprd04.prod.outlook.com>
+        devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Sandy Huang <hjc@rock-chips.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 09/12] drm/rockchip: lvds: Add PX30 support
+Message-ID: <20191216105827.rxkfbwemkqw446jx@gilmour.lan>
+References: <20191213181051.25983-1-miquel.raynal@bootlin.com>
+ <20191213181051.25983-10-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="akf2tzjwfz7nnjic"
+Content-Disposition: inline
+In-Reply-To: <20191213181051.25983-10-miquel.raynal@bootlin.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Peter,
 
+--akf2tzjwfz7nnjic
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Le lun., d=E9c. 16, 2019 at 01:24, Peter Chen <peter.chen@nxp.com> a=20
-=E9crit :
->=20
->>  >>  +
->>  >>  +	desc =3D &charger->desc;
->>  >>  +	desc->name =3D "usb-charger";
->>  >>  +	desc->properties =3D usb_charger_properties;
->>  >>  +	desc->num_properties =3D ARRAY_SIZE(usb_charger_properties);
->>  >>  +	desc->get_property =3D usb_charger_get_property;
->>  >>  +	desc->type =3D POWER_SUPPLY_TYPE_USB;
->>  >
->>  > What's your further plan for this generic USB charger?
->>  > To support BC1.2, we need to know charger type, and how we could=20
->> get
->>  > it?
->>  >
->>  > Peter
->>=20
->>  Well I don't really know. The USB role framework does not give any=20
->> info about
->>  what's plugged.
->>=20
->=20
-> What's the use case for this patch set? How it be used?
+Hi,
 
-My devicetree:
+On Fri, Dec 13, 2019 at 07:10:48PM +0100, Miquel Raynal wrote:
+> +static int px30_lvds_grf_config(struct drm_encoder *encoder,
+> +				struct drm_display_mode *mode)
+> +{
+> +	struct rockchip_lvds *lvds = encoder_to_lvds(encoder);
+> +	u8 nhsync = !(mode->flags & DRM_MODE_FLAG_PHSYNC);
+> +	u8 nvsync = !(mode->flags & DRM_MODE_FLAG_PVSYNC);
+> +	u8 ndclk = !(mode->flags & DRM_MODE_FLAG_PCSYNC);
+> +	int ret;
+> +
+> +	if (lvds->output != DISPLAY_OUTPUT_LVDS) {
+> +		DRM_DEV_ERROR(lvds->dev, "Unsupported display output %d\n",
+> +			      lvds->output);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (nhsync ^ nvsync) {
+> +		DRM_DEV_ERROR(lvds->dev, "Unsupported Hsync/Vsync polarity\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Set format */
+> +	ret = regmap_update_bits(lvds->grf, PX30_LVDS_GRF_PD_VO_CON1,
+> +				 PX30_LVDS_FORMAT(lvds->format),
+> +				 PX30_LVDS_FORMAT(lvds->format));
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Control Hsync/Vsync polarity */
+> +	ret = regmap_update_bits(lvds->grf, PX30_LVDS_GRF_PD_VO_CON0,
+> +				 PX30_LVDS_TIE_CLKS(1),
+> +				 PX30_LVDS_TIE_CLKS(1));
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set Hsync/Vsync polarity */
+> +	ret = regmap_update_bits(lvds->grf, PX30_LVDS_GRF_PD_VO_CON0,
+> +				 PX30_LVDS_INVERT_CLKS(1),
+> +				 PX30_LVDS_INVERT_CLKS(nhsync));
+> +	if (ret)
+> +		return ret;
 
-usb_otg: usb@13440000 {
-	compatible =3D "ingenic,jz4770-musb", "simple-mfd";
-	reg =3D <0x13440000 0x10000>;
-	[...]
+I don't know the hardware but it seems pretty weird to me. hsync and
+vsync in LVDS are not clocks (or even signals), they're a bit in the
+payload. Is there any explanation in the datasheet (or even a
+datasheet in the first place)?
 
-	usb-role-switch;
+Maxime
 
-	connector {
-		compatible =3D "gpio-usb-b-connector", "usb-b-connector";
-		label =3D "mini-USB";
-		type =3D "mini";
+--akf2tzjwfz7nnjic
+Content-Type: application/pgp-signature; name="signature.asc"
 
-		id-gpios =3D <&gpf 18 GPIO_ACTIVE_HIGH>;
-		vbus-gpios =3D <&gpb 5 GPIO_ACTIVE_HIGH>;
-		[...]
-	};
+-----BEGIN PGP SIGNATURE-----
 
-	usb_charger: usb-charger {
-		compatible =3D "usb-charger";
-	};
-};
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfdjUgAKCRDj7w1vZxhR
+xRBYAP44GLCelEvFF7JRcxbERsDpTT+xk8XxtfgoWUly8jPqegD+Jrne3aLXYopK
+ogFPLh6TeB2oQ1+pAWNgKDtT5Zntxwo=
+=SVmk
+-----END PGP SIGNATURE-----
 
-The new gpio-usb-connector driver uses the ID/VBUS GPIOs to detect in=20
-which state (device, host, unconnected) a OTG connector is. However,=20
-that means I cannot use the standard gpio-charger driver to detect the=20
-presence of a charger based on the state of the VBUS gpio, since it's=20
-already requested here. So the point of this patchset is to provide an=20
-alternative to gpio-charger that works with OTG controllers compatible=20
-with 'usb-role-switch'.
-
-Cheers,
--Paul
-
-
->>  >
->>  >>  +
->>  >>  +	charger->charger =3D devm_power_supply_register(dev, desc,=20
->> &cfg);
->>  >>  +	if (IS_ERR(charger->charger)) {
->>  >>  +		dev_err(dev, "Unable to register charger");
->>  >>  +		return PTR_ERR(charger->charger);
->>  >>  +	}
->>  >>  +
->>  >>  +	err =3D usb_role_switch_register_notifier(charger->role,
->>  >> &charger->nb);
->>  >>  +	if (err) {
->>  >>  +		dev_err(dev, "Unable to register USB role switch notifier");
->>  >>  +		return err;
->>  >>  +	}
->>  >>  +
->>  >>  +	return devm_add_action_or_reset(dev, usb_charger_unregister,
->>  >> charger);
->>  >>  +}
->>  >>  +
->>  >>  +static const struct of_device_id usb_charger_of_match[] =3D {
->>  >>  +	{ .compatible =3D "usb-charger" },
->>  >>  +	{ /* sentinel */ },
->>  >>  +};
->>  >>  +MODULE_DEVICE_TABLE(of, usb_charger_of_match);  +  +static=20
->> struct
->>  >> platform_driver usb_charger_driver =3D {
->>  >>  +	.driver =3D {
->>  >>  +		.name =3D "usb-charger",
->>  >>  +		.of_match_table =3D of_match_ptr(usb_charger_of_match),
->>  >>  +	},
->>  >>  +	.probe =3D usb_charger_probe,
->>  >>  +};
->>  >>  +module_platform_driver(usb_charger_driver);
->>  >>  +
->>  >>  +MODULE_DESCRIPTION("Simple USB charger driver");
->>  >> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
->>  >> +MODULE_LICENSE("GPL");
->>  >>  --
->>  >>  2.24.0
->>  >>
->>  >
->>  > --
->>  >
->>  > Thanks,
->>  > Peter Chen
->>=20
->=20
-
-=
-
+--akf2tzjwfz7nnjic--
