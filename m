@@ -2,91 +2,107 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED76C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8256C2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7E1206D7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7EA206D7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 16:31:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v75PO5hR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbfLPQ11 (ORCPT
+        id S1726545AbfLPQbp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:27:27 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:43148 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbfLPQ11 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:27:27 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 4D5C5FB03;
-        Mon, 16 Dec 2019 17:27:25 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id sZtjjrcIejdo; Mon, 16 Dec 2019 17:27:24 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 92F69498AE; Mon, 16 Dec 2019 17:27:23 +0100 (CET)
-Date:   Mon, 16 Dec 2019 17:27:23 +0100
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <guido.gunther@puri.sm>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org,
-        kernel@puri.sm, linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: imx8mq-librem5-devkit: add accelerometer and
- gyro sensor
-Message-ID: <20191216162723.GA23173@bogon.m.sigxcpu.org>
-References: <20191203130336.18763-1-martin.kepplinger@puri.sm>
+        Mon, 16 Dec 2019 11:31:45 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52181 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfLPQbp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 11:31:45 -0500
+Received: by mail-wm1-f68.google.com with SMTP id d73so7452070wmd.1
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 08:31:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=tOdF2v2tnPw84XyFs+DLGKUeb/1Y9vVZVEyHczF+0yg=;
+        b=v75PO5hRYI3xifwe8IjjxOk8gXJmuPeTk8r/sebv8k5VXvGx2syxR0H2BKR6+vXv2H
+         tXer/YdwJlAMyR6zpiMe252PHatrAG2aKC/69EAn0ZDmqxbtiiKDtszJ1HIgL3DgkLRd
+         Y71pqiVAxrAniWaaLJfzb0lXCjDqpPY6au4dWY3RakMG9IrCBjprhEWpW4oSTXYKR6o2
+         mdt/kTckQyZGRZ8izFK+O2fSRgUC3kCpertIvQABHrTv22+fA88ER9ECqNDpFSkkqWlN
+         vlL4nqfNXTN3xHkdXsyHbGlOzAyx7gQHwXYJX9pETi/63ceapo1lij7b17hsEHuP5nWb
+         PQ8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=tOdF2v2tnPw84XyFs+DLGKUeb/1Y9vVZVEyHczF+0yg=;
+        b=jTY0Hf1dLZ/pb+WR9Z/loxn6556nChV4QaDth6p228yXCzZ+C5aWxfVpvH1P7U9tAh
+         XT0nuMlzzoMOERYaPnHrao02mtRD4doMWX29m9WpnNJyTq4AQgMhyt5GuZ3wZUfv4TQY
+         lCji546tLYotZK9FuzmjbjWVf8k11TMzoJL8G/f5Cebr/beHH1/Z0uxC1DoLISTBaExg
+         YXROdskNpnAzmvpUMSURlmfz+EBlLcs7HndN+sWaIyHLY/EOzVppknwXnF+fOxUdLB0C
+         mzGRjcBolUiT6Ae7u6hgs5bOePu4l08B80mihqWFz7bURDkd7po86tw8MCNnQtQQgELK
+         F0YQ==
+X-Gm-Message-State: APjAAAXUbIxcAE/PuZKpoPtg0bAUF8cx45+1nx+Lvb+1hGATFjgfCSBL
+        g1O9Cdv13NsgCa16qR9NUop8KQ==
+X-Google-Smtp-Source: APXvYqza4ODdROrK4+NXBOk9wQRDqm6YbdINa4RvvhiswJwObb7hlbCMFzyXEVki5DExzxaNMZShsg==
+X-Received: by 2002:a05:600c:2218:: with SMTP id z24mr31321397wml.50.1576513902937;
+        Mon, 16 Dec 2019 08:31:42 -0800 (PST)
+Received: from dell ([185.17.149.202])
+        by smtp.gmail.com with ESMTPSA id w20sm21142865wmk.34.2019.12.16.08.31.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 08:31:42 -0800 (PST)
+Date:   Mon, 16 Dec 2019 16:31:41 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     support.opensource@diasemi.com, robh+dt@kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        joel@jms.id.au, andrew@aj.id.au, lgirdwood@gmail.com,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Subject: Re: [PATCH v3 5/6] dt-bindings: mfd: da9062: add regulator gpio
+ enable/disable documentation
+Message-ID: <20191216163141.GS2369@dell>
+References: <20191129172537.31410-1-m.felsch@pengutronix.de>
+ <20191129172537.31410-6-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191203130336.18763-1-martin.kepplinger@puri.sm>
+In-Reply-To: <20191129172537.31410-6-m.felsch@pengutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-On Tue, Dec 03, 2019 at 02:03:36PM +0100, Martin Kepplinger wrote:
-> Now that there is driver support, describe the accel and gyro sensor parts
-> of the LSM9DS1 IMU.
+On Fri, 29 Nov 2019, Marco Felsch wrote:
+
+> At the gpio-based regulator enable/disable documentation. This property
+> can be applied to each subnode within the 'regulators' node so each
+> regulator can be configured differently.
 > 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 > ---
->  arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 7 +++++++
->  1 file changed, 7 insertions(+)
+> Changelog:
+> v3:
+> - adapt binding description
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> index 683a11035643..7a92704c53ec 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> @@ -415,6 +415,13 @@
->  	pinctrl-0 = <&pinctrl_i2c3>;
->  	status = "okay";
->  
-> +	accel_gyro@6a {
-> +		compatible = "st,lsm9ds1-imu";
-> +		reg = <0x6a>;
-> +		vdd-supply = <&reg_3v3_p>;
-> +		vddio-supply = <&reg_3v3_p>;
-> +	};
-> +
+>  Documentation/devicetree/bindings/mfd/da9062.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-Reviewed-by: Guido G�nther <agx@sigxcpu.org>
- -- Guido
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
->  	magnetometer@1e	{
->  		compatible = "st,lsm9ds1-magn";
->  		reg = <0x1e>;
-> -- 
-> 2.20.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
