@@ -2,268 +2,208 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5FEC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C2EC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 12:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5AC2206CB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A461B20CC7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 12:05:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QS4oJUXM"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nDJx9W5K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfLPL7F (ORCPT
+        id S1727385AbfLPMFJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:59:05 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36915 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbfLPL7F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 06:59:05 -0500
-Received: by mail-ed1-f67.google.com with SMTP id cy15so4788580edb.4
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 03:59:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OdxYjoNvvAigHgcFiC0RbqBfDi1gELByEUzUPakRzAU=;
-        b=QS4oJUXMBR1LKAmIRfNd7TsTPRvZM+p35ulJJJ0tqyFHzhtpDodYo5LQgsYohpMD38
-         jd2GpYZzmeFrxdjcvVHDIEQU5Ob37zkgIrdMFcPd6V+3m11xQam+VZueAHmC/FTDgrce
-         M3ruBdp8qqJK+f4rArJwqJ1LXk+sdQpFvLVbA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OdxYjoNvvAigHgcFiC0RbqBfDi1gELByEUzUPakRzAU=;
-        b=CpaQkBJScBgAISMh52SM6F6BViIAyJBw3/1+eFQ2QuLGdYC5ecY3JSmFuYqWSishV2
-         Rlmziw4/C64+qcuyl6/spxw0e3O8Sv8wGxJPuRUd3cOjJ9ak3C7P+s8JGHDcz4aFnbbL
-         qY3Oz4euELPTgnEPaGNapC8igE3sx2yFP0WkM9rKU5vqwlV+lDDuGZDCz2bailb9LVby
-         ik6EIS92bYvnswpw1nMr/BoNXJjoRmjfGmXClTD2+ROYDR+Hwv3jBk7LdwONgMC8VW1D
-         eAFtKPCCAo9s46EeuZB6qbPlNLBl1O0OmeApV/pL6pooqN9Nv/0fv5F2p/P2WDHRpK0q
-         xQcw==
-X-Gm-Message-State: APjAAAWkO4nFuk8fD1g6UJJ92r2UfzRQtW/7HNI1I4Ke1/nUL2jdp8re
-        8SkAx2gd5iACEVOYQG+I+k2h3uu8//LM1g==
-X-Google-Smtp-Source: APXvYqwJZoNKkfbr3Z/Gltz0WmAQTMFZ9+jnenRUlUlLDWryEh8csmac7VxlIlWv+8NSyaGpYQXoYg==
-X-Received: by 2002:a17:906:1c5b:: with SMTP id l27mr31891859ejg.143.1576497542336;
-        Mon, 16 Dec 2019 03:59:02 -0800 (PST)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
-        by smtp.gmail.com with ESMTPSA id p18sm91284ejx.80.2019.12.16.03.59.01
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 03:59:01 -0800 (PST)
-Received: by mail-wr1-f41.google.com with SMTP id c14so6917095wrn.7
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 03:59:01 -0800 (PST)
-X-Received: by 2002:adf:f586:: with SMTP id f6mr28927980wro.46.1576497541085;
- Mon, 16 Dec 2019 03:59:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20191216080445.8747-1-bibby.hsieh@mediatek.com> <20191216080445.8747-5-bibby.hsieh@mediatek.com>
-In-Reply-To: <20191216080445.8747-5-bibby.hsieh@mediatek.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Mon, 16 Dec 2019 20:58:49 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5CU79CnRkpo8bpijMCvtzKAkQXj6nadt3YyQSCcq5roXQ@mail.gmail.com>
-Message-ID: <CAAFQd5CU79CnRkpo8bpijMCvtzKAkQXj6nadt3YyQSCcq5roXQ@mail.gmail.com>
-Subject: Re: [PATCH v9 4/4] i2c: core: support bus regulator controlling in adapter
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>
+        Mon, 16 Dec 2019 07:05:09 -0500
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:44550 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727241AbfLPMFI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 07:05:08 -0500
+X-UUID: 99596b7cd1b34e16ad389c4c76883501-20191216
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Clqeu4fvpnmS/ZiCD2V6ResMoNTOcGR52Rz6w11NnqM=;
+        b=nDJx9W5KJFahX1t1CcbTr7Djqfdsn5p3qRV2ehZQXEYnybufZMQXcAT/Oj81dnmmwA2ooS79lPFVO8zU0vyQpWzRzcmssPJtIXM8iCqxY1dK+KxMLFHsSRTfr4PFH4sx1CanzsQOM6iSgwbLOIR2V0mO7l3V3QqUfJ8CLX23g8k=;
+X-UUID: 99596b7cd1b34e16ad389c4c76883501-20191216
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 60780563; Mon, 16 Dec 2019 20:05:03 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 16 Dec
+ 2019 20:04:02 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 16 Dec 2019 20:04:44 +0800
+Message-ID: <1576497901.28043.71.camel@mhfsdcap03>
+Subject: Re: [RESEND,PATCH 01/13] dt-bindings: mediatek: Add bindings for
+ MT6779
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Chao Hao <chao.hao@mediatek.com>
+CC:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Jun Yan <jun.yan@mediatek.com>,
+        Cui Zhang <cui.zhang@mediatek.com>,
+        Guangming Cao <guangming.cao@mediatek.com>,
+        Anan Sun <anan.sun@mediatek.com>,
+        Miles Chen <miles.chen@mediatek.com>
+Date:   Mon, 16 Dec 2019 20:05:01 +0800
+In-Reply-To: <20191104115238.2394-2-chao.hao@mediatek.com>
+References: <20191104115238.2394-1-chao.hao@mediatek.com>
+         <20191104115238.2394-2-chao.hao@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: A9E5E71080A842134B9DA6CCB99242C492F30F72968470E68E8786C7F60B10FC2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bibby,
+T24gTW9uLCAyMDE5LTExLTA0IGF0IDE5OjUyICswODAwLCBDaGFvIEhhbyB3cm90ZToNCj4gVGhp
+cyBwYXRjaCBhZGRzIGRlc2NyaXB0aW9uIGZvciBNVDY3NzkgSU9NTVUuDQo+IA0KPiBNVDY3Nzkg
+aGFzIHR3byBpb21tdXMsIHRoZXkgYXJlIE1NX0lPTU1VIGFuZCBBUFVfSU9NTVUgd2hpY2gNCj4g
+dXNlIEFSTSBTaG9ydC1EZXNjcmlwdG9yIHRyYW5zbGF0aW9uIGZvcm1hdC4NCj4gDQo+IFRoZSBN
+VDY3NzkgSU9NTVUgaGFyZHdhcmUgZGlhZ3JhbSBpcyBhcyBiZWxvdywgaXQgaXMgb25seSBhIGJy
+aWVmDQo+IGRpYWdyYW0gYWJvdXQgaW9tbXUsIGl0IGRvbid0IGZvY3VzIG9uIHRoZSBwYXJ0IG9m
+IHNtaV9sYXJiLCBzbw0KPiBJIGRvbid0IGRlc2NyaWJlIHRoZSBzbWlfbGFyYiBkZXRhaWxlZGx5
+Lg0KPiANCj4gCQkJICAgICBFTUkNCj4gCQkJICAgICAgfA0KPiAJICAgLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gCSAgIHwJCQkJCXwNCj4gICAgICAgICBNTV9JT01N
+VSAgICAgICAgICAgICAgICAgICAgICAgICAgICBBUFVfSU9NTVUNCj4gCSAgIHwJCQkJCXwNCj4g
+ICAgICAgIFNNSV9DT01NT00tLS0tLS0tLS0tLQkJICAgICBBUFVfQlVTDQo+ICAgICAgICAgICB8
+CQkgICB8CQkJfA0KPiAgICAgU01JX0xBUkIoMH4xMSkgIFNNSV9MQVJCMTIoRkFLRSkJICAgIFNN
+SV9MQVJCMTMoRkFLRSkNCj4gCSAgfAkJICAgfAkJCXwNCj4gCSAgfAkJICAgfAkJICAgLS0tLS0t
+LS0tLS0tLS0NCj4gCSAgfAkJICAgfAkJICAgfAkgfAl8DQo+ICAgIE11bHRpbWVkaWEgZW5naW5l
+CSAgQ0NVCQkgIFZQVSAgIE1ETEEgICBFTURBDQo+IA0KPiBBbGwgdGhlIGNvbm5lY3Rpb25zIGFy
+ZSBoYXJkd2FyZSBmaXhlZCwgc29mdHdhcmUgY2FuIG5vdCBhZGp1c3QgaXQuDQo+IA0KPiBGcm9t
+IHRoZSBkaWFncmFtIGFib3ZlLCBNTV9JT01NVSBwcm92aWRlcyBtYXBwaW5nIGZvciBtdWx0aW1l
+ZGlhIGVuZ2luZSwNCj4gYnV0IENDVSBpcyBjb25uZWN0ZWQgd2l0aCBzbWlfY29tbW9uIGRpcmVj
+dGx5LCB3ZSBjYW4gdGFrZSB0aGVtIGFzIGxhcmIxMi4NCj4gQVBVX0lPTU1VIHByb3ZpZGVzIG1h
+cHBpbmcgZm9yIEFQVSBlbmdpbmUsIHdlIGNhbiB0YWtlIHRoZW0gbGFyYjEzLg0KPiBMYXJiMTIg
+YW5kIExhcmIxMyBhcmUgZmFrZSBsYXJicy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IENoYW8gSGFv
+IDxjaGFvLmhhb0BtZWRpYXRlay5jb20+DQo+IC0tLQ0KPiAgLi4uL2JpbmRpbmdzL2lvbW11L21l
+ZGlhdGVrLGlvbW11LnR4dCAgICAgICAgIHwgICAyICsNCj4gIGluY2x1ZGUvZHQtYmluZGluZ3Mv
+bWVtb3J5L210Njc3OS1sYXJiLXBvcnQuaCB8IDIxNyArKysrKysrKysrKysrKysrKysNCj4gIDIg
+ZmlsZXMgY2hhbmdlZCwgMjE5IGluc2VydGlvbnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBp
+bmNsdWRlL2R0LWJpbmRpbmdzL21lbW9yeS9tdDY3NzktbGFyYi1wb3J0LmgNCj4gDQo+IGRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW9tbXUvbWVkaWF0ZWss
+aW9tbXUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lvbW11L21lZGlh
+dGVrLGlvbW11LnR4dA0KPiBpbmRleCBjZTU5YTUwNWY1YTQuLmMxY2NkODU4MmViMiAxMDA2NDQN
+Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lvbW11L21lZGlhdGVr
+LGlvbW11LnR4dA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW9t
+bXUvbWVkaWF0ZWssaW9tbXUudHh0DQo+IEBAIC01OCw2ICs1OCw3IEBAIFJlcXVpcmVkIHByb3Bl
+cnRpZXM6DQo+ICAtIGNvbXBhdGlibGUgOiBtdXN0IGJlIG9uZSBvZiB0aGUgZm9sbG93aW5nIHN0
+cmluZzoNCj4gIAkibWVkaWF0ZWssbXQyNzAxLW00dSIgZm9yIG10MjcwMSB3aGljaCB1c2VzIGdl
+bmVyYXRpb24gb25lIG00dSBIVy4NCj4gIAkibWVkaWF0ZWssbXQyNzEyLW00dSIgZm9yIG10Mjcx
+MiB3aGljaCB1c2VzIGdlbmVyYXRpb24gdHdvIG00dSBIVy4NCj4gKwkibWVkaWF0ZWssbXQ2Nzc5
+LW00dSIgZm9yIG10Njc3OSB3aGljaCB1c2VzIGdlbmVyYXRpb24gdHdvIG00dSBIVy4NCj4gIAki
+bWVkaWF0ZWssbXQ3NjIzLW00dSIsICJtZWRpYXRlayxtdDI3MDEtbTR1IiBmb3IgbXQ3NjIzIHdo
+aWNoIHVzZXMNCj4gIAkJCQkJCSAgICAgZ2VuZXJhdGlvbiBvbmUgbTR1IEhXLg0KPiAgCSJtZWRp
+YXRlayxtdDgxNzMtbTR1IiBmb3IgbXQ4MTczIHdoaWNoIHVzZXMgZ2VuZXJhdGlvbiB0d28gbTR1
+IEhXLg0KPiBAQCAtNzgsNiArNzksNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAgCVNwZWNp
+ZmllcyB0aGUgbXRrX200dV9pZCBhcyBkZWZpbmVkIGluDQo+ICAJZHQtYmluZGluZy9tZW1vcnkv
+bXQyNzAxLWxhcmItcG9ydC5oIGZvciBtdDI3MDEsIG10NzYyMw0KPiAgCWR0LWJpbmRpbmcvbWVt
+b3J5L210MjcxMi1sYXJiLXBvcnQuaCBmb3IgbXQyNzEyLA0KPiArCWR0LWJpbmRpbmcvbWVtb3J5
+L210Njc3OS1sYXJiLXBvcnQuaCBmb3IgbXQ2Nzc5LA0KPiAgCWR0LWJpbmRpbmcvbWVtb3J5L210
+ODE3My1sYXJiLXBvcnQuaCBmb3IgbXQ4MTczLCBhbmQNCj4gIAlkdC1iaW5kaW5nL21lbW9yeS9t
+dDgxODMtbGFyYi1wb3J0LmggZm9yIG10ODE4My4NCj4gIA0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVk
+ZS9kdC1iaW5kaW5ncy9tZW1vcnkvbXQ2Nzc5LWxhcmItcG9ydC5oIGIvaW5jbHVkZS9kdC1iaW5k
+aW5ncy9tZW1vcnkvbXQ2Nzc5LWxhcmItcG9ydC5oDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+
+IGluZGV4IDAwMDAwMDAwMDAwMC4uOGI3ZjJkMjQ0NmVhDQo+IC0tLSAvZGV2L251bGwNCj4gKysr
+IGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9tZW1vcnkvbXQ2Nzc5LWxhcmItcG9ydC5oDQo+IEBAIC0w
+LDAgKzEsMjE3IEBADQo+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCAqLw0K
+PiArLyoNCj4gKyAqIENvcHlyaWdodCAoYykgMjAxOSBNZWRpYVRlayBJbmMuDQo+ICsgKiBBdXRo
+b3I6IENoYW8gSGFvIDxjaGFvLmhhb0BtZWRpYXRlay5jb20+DQo+ICsgKi8NCj4gKw0KPiArI2lm
+bmRlZiBfRFRTX0lPTU1VX1BPUlRfTVQ2Nzc5X0hfDQo+ICsjZGVmaW5lIF9EVFNfSU9NTVVfUE9S
+VF9NVDY3NzlfSF8NCj4gKw0KPiArI2RlZmluZSBNVEtfTTRVX0lEKGxhcmIsIHBvcnQpCQkgKCgo
+bGFyYikgPDwgNSkgfCAocG9ydCkpDQo+ICsNCj4gKyNkZWZpbmUgTTRVX0xBUkIwX0lECQkJIDAN
+Cj4gKyNkZWZpbmUgTTRVX0xBUkIxX0lECQkJIDENCj4gKyNkZWZpbmUgTTRVX0xBUkIyX0lECQkJ
+IDINCj4gKyNkZWZpbmUgTTRVX0xBUkIzX0lECQkJIDMNCj4gKyNkZWZpbmUgTTRVX0xBUkI0X0lE
+CQkJIDQNCj4gKyNkZWZpbmUgTTRVX0xBUkI1X0lECQkJIDUNCj4gKyNkZWZpbmUgTTRVX0xBUkI2
+X0lECQkJIDYNCj4gKyNkZWZpbmUgTTRVX0xBUkI3X0lECQkJIDcNCj4gKyNkZWZpbmUgTTRVX0xB
+UkI4X0lECQkJIDgNCj4gKyNkZWZpbmUgTTRVX0xBUkI5X0lECQkJIDkNCj4gKyNkZWZpbmUgTTRV
+X0xBUkIxMF9JRAkJCSAxMA0KPiArI2RlZmluZSBNNFVfTEFSQjExX0lECQkJIDExDQo+ICsjZGVm
+aW5lIE00VV9MQVJCMTJfSUQJCQkgMTINCj4gKyNkZWZpbmUgTTRVX0xBUkIxM19JRAkJCSAxMw0K
+PiArDQo+ICsvKiBsYXJiMCAqLw0KPiArI2RlZmluZSBNNFVfUE9SVF9ESVNQX1BPU1RNQVNLMAkJ
+IE1US19NNFVfSUQoTTRVX0xBUkIwX0lELCAwKQ0KPiArI2RlZmluZSBNNFVfUE9SVF9ESVNQX09W
+TDBfSERSCQkgTVRLX000VV9JRChNNFVfTEFSQjBfSUQsIDEpDQo+ICsjZGVmaW5lIE00VV9QT1JU
+X0RJU1BfT1ZMMV9IRFIJCSBNVEtfTTRVX0lEKE00VV9MQVJCMF9JRCwgMikNCj4gKyNkZWZpbmUg
+TTRVX1BPUlRfRElTUF9PVkwwCQkgTVRLX000VV9JRChNNFVfTEFSQjBfSUQsIDMpDQo+ICsjZGVm
+aW5lIE00VV9QT1JUX0RJU1BfT1ZMMQkJIE1US19NNFVfSUQoTTRVX0xBUkIwX0lELCA0KQ0KPiAr
+I2RlZmluZSBNNFVfUE9SVF9ESVNQX1BWUklDMAkJIE1US19NNFVfSUQoTTRVX0xBUkIwX0lELCA1
+KQ0KPiArI2RlZmluZSBNNFVfUE9SVF9ESVNQX1JETUEwCQkgTVRLX000VV9JRChNNFVfTEFSQjBf
+SUQsIDYpDQo+ICsjZGVmaW5lIE00VV9QT1JUX0RJU1BfV0RNQTAJCSBNVEtfTTRVX0lEKE00VV9M
+QVJCMF9JRCwgNykNCj4gKyNkZWZpbmUgTTRVX1BPUlRfRElTUF9GQUtFMAkJIE1US19NNFVfSUQo
+TTRVX0xBUkIwX0lELCA4KQ0KPiArDQo+ICsvKiBsYXJiMSAqLw0KPiArI2RlZmluZSBNNFVfUE9S
+VF9ESVNQX09WTDBfMkxfSERSCSBNVEtfTTRVX0lEKE00VV9MQVJCMV9JRCwgMCkNCj4gKyNkZWZp
+bmUgTTRVX1BPUlRfRElTUF9PVkwxXzJMX0hEUgkgTVRLX000VV9JRChNNFVfTEFSQjFfSUQsIDEp
+DQo+ICsjZGVmaW5lIE00VV9QT1JUX0RJU1BfT1ZMMF8yTAkJIE1US19NNFVfSUQoTTRVX0xBUkIx
+X0lELCAyKQ0KPiArI2RlZmluZSBNNFVfUE9SVF9ESVNQX09WTDFfMkwJCSBNVEtfTTRVX0lEKE00
+VV9MQVJCMV9JRCwgMykNCj4gKyNkZWZpbmUgTTRVX1BPUlRfRElTUF9SRE1BMQkJIE1US19NNFVf
+SUQoTTRVX0xBUkIxX0lELCA0KQ0KPiArI2RlZmluZSBNNFVfUE9SVF9NRFBfUFZSSUMwCQkgTVRL
+X000VV9JRChNNFVfTEFSQjFfSUQsIDUpDQo+ICsjZGVmaW5lIE00VV9QT1JUX01EUF9QVlJJQzEJ
+CSBNVEtfTTRVX0lEKE00VV9MQVJCMV9JRCwgNikNCj4gKyNkZWZpbmUgTTRVX1BPUlRfTURQX1JE
+TUEwCQkgTVRLX000VV9JRChNNFVfTEFSQjFfSUQsIDcpDQo+ICsjZGVmaW5lIE00VV9QT1JUX01E
+UF9SRE1BMQkJIE1US19NNFVfSUQoTTRVX0xBUkIxX0lELCA4KQ0KPiArI2RlZmluZSBNNFVfUE9S
+VF9NRFBfV1JPVDBfUgkJIE1US19NNFVfSUQoTTRVX0xBUkIxX0lELCA5KQ0KPiArI2RlZmluZSBN
+NFVfUE9SVF9NRFBfV1JPVDBfVwkJIE1US19NNFVfSUQoTTRVX0xBUkIxX0lELCAxMCkNCj4gKyNk
+ZWZpbmUgTTRVX1BPUlRfTURQX1dST1QxX1IJCSBNVEtfTTRVX0lEKE00VV9MQVJCMV9JRCwgMTEp
+DQo+ICsjZGVmaW5lIE00VV9QT1JUX01EUF9XUk9UMV9XCQkgTVRLX000VV9JRChNNFVfTEFSQjFf
+SUQsIDEyKQ0KPiArI2RlZmluZSBNNFVfUE9SVF9ESVNQX0ZBS0UxCQkgTVRLX000VV9JRChNNFVf
+TEFSQjFfSUQsIDEzKQ0KPiArDQo+ICsvKiBsYXJiMi1WREVDICovDQo+ICsjZGVmaW5lIE00VV9Q
+T1JUX0hXX1ZERUNfTUNfRVhUICAgICAgICAgIE1US19NNFVfSUQoTTRVX0xBUkIyX0lELCAwKQ0K
+PiArI2RlZmluZSBNNFVfUE9SVF9IV19WREVDX1VGT19FWFQgICAgICAgICBNVEtfTTRVX0lEKE00
+VV9MQVJCMl9JRCwgMSkNCj4gKyNkZWZpbmUgTTRVX1BPUlRfSFdfVkRFQ19QUF9FWFQgICAgICAg
+ICAgTVRLX000VV9JRChNNFVfTEFSQjJfSUQsIDIpDQo+ICsjZGVmaW5lIE00VV9QT1JUX0hXX1ZE
+RUNfUFJFRF9SRF9FWFQgICAgIE1US19NNFVfSUQoTTRVX0xBUkIyX0lELCAzKQ0KPiArI2RlZmlu
+ZSBNNFVfUE9SVF9IV19WREVDX1BSRURfV1JfRVhUICAgICBNVEtfTTRVX0lEKE00VV9MQVJCMl9J
+RCwgNCkNCj4gKyNkZWZpbmUgTTRVX1BPUlRfSFdfVkRFQ19QUFdSQVBfRVhUICAgICAgTVRLX000
+VV9JRChNNFVfTEFSQjJfSUQsIDUpDQo+ICsjZGVmaW5lIE00VV9QT1JUX0hXX1ZERUNfVElMRV9F
+WFQgICAgICAgIE1US19NNFVfSUQoTTRVX0xBUkIyX0lELCA2KQ0KPiArI2RlZmluZSBNNFVfUE9S
+VF9IV19WREVDX1ZMRF9FWFQgICAgICAgICBNVEtfTTRVX0lEKE00VV9MQVJCMl9JRCwgNykNCj4g
+KyNkZWZpbmUgTTRVX1BPUlRfSFdfVkRFQ19WTEQyX0VYVCAgICAgICAgTVRLX000VV9JRChNNFVf
+TEFSQjJfSUQsIDgpDQo+ICsjZGVmaW5lIE00VV9QT1JUX0hXX1ZERUNfQVZDX01WX0VYVCAgICAg
+IE1US19NNFVfSUQoTTRVX0xBUkIyX0lELCA5KQ0KPiArI2RlZmluZSBNNFVfUE9SVF9IV19WREVD
+X1VGT19FTkNfRVhUICAgICBNVEtfTTRVX0lEKE00VV9MQVJCMl9JRCwgMTApDQo+ICsjZGVmaW5l
+IE00VV9QT1JUX0hXX1ZERUNfUkdfQ1RSTF9ETUFfRVhUIE1US19NNFVfSUQoTTRVX0xBUkIyX0lE
+LCAxMSkNCj4gKw0KPiArLypsYXJiMy1WRU5DKi8NCg0KTm9ybWFsbHkgYWRkIHNwYWNlIGJlZm9y
+ZSBhbmQgYWZ0ZXIgdGhlIHdvcmQuIExpa2U6IC8qIGxhcmIzLVZFTkMgKi8NCg0KYmVsb3cgYXJl
+IHRoZSBzYW1lLg0KDQo+ICsjZGVmaW5lIE00VV9QT1JUX1ZFTkNfUkNQVQkJIE1US19NNFVfSUQo
+TTRVX0xBUkIzX0lELCAwKQ0KPiArI2RlZmluZSBNNFVfUE9SVF9WRU5DX1JFQwkJIE1US19NNFVf
+SUQoTTRVX0xBUkIzX0lELCAxKQ0KPiArI2RlZmluZSBNNFVfUE9SVF9WRU5DX0JTRE1BCQkgTVRL
+X000VV9JRChNNFVfTEFSQjNfSUQsIDIpDQo+ICsjZGVmaW5lIE00VV9QT1JUX1ZFTkNfU1ZfQ09N
+VgkJIE1US19NNFVfSUQoTTRVX0xBUkIzX0lELCAzKQ0KPiArI2RlZmluZSBNNFVfUE9SVF9WRU5D
+X1JEX0NPTVYJCSBNVEtfTTRVX0lEKE00VV9MQVJCM19JRCwgNCkNCj4gKyNkZWZpbmUgTTRVX1BP
+UlRfVkVOQ19OQk1fUkRNQQkJIE1US19NNFVfSUQoTTRVX0xBUkIzX0lELCA1KQ0KPiArI2RlZmlu
+ZSBNNFVfUE9SVF9WRU5DX05CTV9SRE1BX0xJVEUJIE1US19NNFVfSUQoTTRVX0xBUkIzX0lELCA2
+KQ0KPiArI2RlZmluZSBNNFVfUE9SVF9KUEdFTkNfWV9SRE1BCQkgTVRLX000VV9JRChNNFVfTEFS
+QjNfSUQsIDcpDQo+ICsjZGVmaW5lIE00VV9QT1JUX0pQR0VOQ19DX1JETUEJCSBNVEtfTTRVX0lE
+KE00VV9MQVJCM19JRCwgOCkNCj4gKyNkZWZpbmUgTTRVX1BPUlRfSlBHRU5DX1FfVEFCTEUJCSBN
+VEtfTTRVX0lEKE00VV9MQVJCM19JRCwgOSkNCj4gKyNkZWZpbmUgTTRVX1BPUlRfSlBHRU5DX0JT
+RE1BCQkgTVRLX000VV9JRChNNFVfTEFSQjNfSUQsIDEwKQ0KPiArI2RlZmluZSBNNFVfUE9SVF9K
+UEdERUNfV0RNQQkJIE1US19NNFVfSUQoTTRVX0xBUkIzX0lELCAxMSkNCj4gKyNkZWZpbmUgTTRV
+X1BPUlRfSlBHREVDX0JTRE1BCQkgTVRLX000VV9JRChNNFVfTEFSQjNfSUQsIDEyKQ0KPiArI2Rl
+ZmluZSBNNFVfUE9SVF9WRU5DX05CTV9XRE1BCQkgTVRLX000VV9JRChNNFVfTEFSQjNfSUQsIDEz
+KQ0KPiArI2RlZmluZSBNNFVfUE9SVF9WRU5DX05CTV9XRE1BX0xJVEUJIE1US19NNFVfSUQoTTRV
+X0xBUkIzX0lELCAxNCkNCj4gKyNkZWZpbmUgTTRVX1BPUlRfVkVOQ19DVVJfTFVNQQkJIE1US19N
+NFVfSUQoTTRVX0xBUkIzX0lELCAxNSkNCj4gKyNkZWZpbmUgTTRVX1BPUlRfVkVOQ19DVVJfQ0hS
+T01BCSBNVEtfTTRVX0lEKE00VV9MQVJCM19JRCwgMTYpDQo+ICsjZGVmaW5lIE00VV9QT1JUX1ZF
+TkNfUkVGX0xVTUEJCSBNVEtfTTRVX0lEKE00VV9MQVJCM19JRCwgMTcpDQo+ICsjZGVmaW5lIE00
+VV9QT1JUX1ZFTkNfUkVGX0NIUk9NQQkgTVRLX000VV9JRChNNFVfTEFSQjNfSUQsIDE4KQ0KPiAr
+DQo+ICsvKmxhcmI0LWR1bW15Ki8NCj4gKw0KPiArLypsYXJiNS1JTUcqLw0KDQpbc25pcF0NCg0K
+PiArDQo+ICsjZGVmaW5lIE00VV9QT1JUX1ZQVQkJCSBNVEtfTTRVX0lEKE00VV9MQVJCMTNfSUQs
+IDApDQo+ICsjZGVmaW5lIE00VV9QT1JUX01ETEEJCQkgTVRLX000VV9JRChNNFVfTEFSQjEzX0lE
+LCAxKQ0KPiArI2RlZmluZSBNNFVfUE9SVF9FRE1BCQkJIE1US19NNFVfSUQoTTRVX0xBUkIxM19J
+RCwgMikNCj4gKw0KPiArI2RlZmluZSBNNFVfUE9SVF9VTktOT1dOCQkgKE00VV9QT1JUX0VETUEg
+KyAxKQ0KDQpXaGVuIGRvIHlvdSBuZWVkIHRoaXMgVU5LTk9XTiBvbmU/IFRoZSBvdGhlciBTb0Mg
+ZG9lc24ndCBoYXZlIGl0LiBQbGVhc2UNCnJlbW92ZSBpZiBpdCBpcyB1bm5lY2Vzc2FyeS4NCg0K
+PiArDQo+ICsjZW5kaWYNCg0K
 
-On Mon, Dec 16, 2019 at 5:04 PM Bibby Hsieh <bibby.hsieh@mediatek.com> wrote:
->
-> Although in the most platforms, the bus power of i2c
-> are alway on, some platforms disable the i2c bus power
-> in order to meet low power request.
->
-> We get and enable bulk regulator in i2c adapter device.
->
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/i2c/i2c-core-base.c | 65 +++++++++++++++++++++++++++++++++++++
->  include/linux/i2c.h         |  3 ++
->  2 files changed, 68 insertions(+)
->
-
-Thanks for the patch! Please see my comments below.
-
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 9333c865d4a9..e95ebd0af200 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -306,6 +306,7 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
->  static int i2c_device_probe(struct device *dev)
->  {
->         struct i2c_client       *client = i2c_verify_client(dev);
-> +       struct i2c_adapter      *adap = client->adapter;
->         struct i2c_driver       *driver;
->         int status;
->
-> @@ -371,6 +372,12 @@ static int i2c_device_probe(struct device *dev)
->
->         dev_dbg(dev, "probe\n");
->
-> +       status = regulator_enable(adap->bus_reg);
-> +       if (status != 0) {
-> +               dev_err(&adap->dev, "Failed to enable power regulator\n");
-> +               goto err_clear_wakeup_irq;
-> +       }
-> +
->         status = of_clk_set_defaults(dev->of_node, false);
->         if (status < 0)
->                 goto err_clear_wakeup_irq;
-> @@ -407,6 +414,7 @@ static int i2c_device_probe(struct device *dev)
->  static int i2c_device_remove(struct device *dev)
->  {
->         struct i2c_client       *client = i2c_verify_client(dev);
-> +       struct i2c_adapter      *adap = client->adapter;
->         struct i2c_driver       *driver;
->         int status = 0;
->
-> @@ -420,6 +428,8 @@ static int i2c_device_remove(struct device *dev)
->         }
->
->         dev_pm_domain_detach(&client->dev, true);
-> +       if (!pm_runtime_status_suspended(&adap->dev))
-> +               regulator_disable(adap->bus_reg);
->
->         dev_pm_clear_wake_irq(&client->dev);
->         device_init_wakeup(&client->dev, false);
-> @@ -431,6 +441,54 @@ static int i2c_device_remove(struct device *dev)
->         return status;
->  }
->
-> +#ifdef CONFIG_PM_SLEEP
-> +static int i2c_resume(struct device *dev)
-> +{
-> +       struct i2c_client *client = i2c_verify_client(dev);
-> +       struct i2c_adapter *adap = client->adapter;
-
-We need to ensure here that if the slave device was not runtime
-suspended before the system suspend, the regulator is enabled before
-the slave's resume callback is called.
-
-> +
-> +       return pm_generic_resume(&adap->dev);
-> +}
-> +
-> +static int i2c_suspend(struct device *dev)
-> +{
-> +       struct i2c_client *client = i2c_verify_client(dev);
-> +       struct i2c_adapter *adap = client->adapter;
-> +
-> +       return pm_generic_suspend(&adap->dev);
-
-We need to ensure that the regulator is disabled when the system suspends.
-
-> +}
-> +#endif
-> +
-> +#ifdef CONFIG_PM
-> +static int i2c_runtime_resume(struct device *dev)
-> +{
-> +       struct i2c_client *client = i2c_verify_client(dev);
-> +       struct i2c_adapter *adap = client->adapter;
-> +
-> +       pm_generic_runtime_resume(&adap->dev);
-
-Why adap->dev? This callback is expected to execute a PM operation on
-the I2C slave device.
-
-Also, don't we need some error handling here?
-
-> +
-> +       return regulator_enable(adap->bus_reg);
-> +}
-> +
-> +static int i2c_runtime_suspend(struct device *dev)
-> +{
-> +       struct i2c_client *client = i2c_verify_client(dev);
-> +       struct i2c_adapter *adap = client->adapter;
-> +
-> +       pm_generic_runtime_suspend(&adap->dev);
-
-Ditto.
-
-> +
-> +       if (!pm_runtime_status_suspended(&adap->dev))
-
-Since we just executed a suspend operation on the device, how is it
-possible that it isn't suspended?
-
-> +               return regulator_disable(client->adapter->bus_reg);
-> +
-> +       return 0;
-> +}
-> +#endif
-> +
-> +static const struct dev_pm_ops i2c_device_pm = {
-> +       SET_SYSTEM_SLEEP_PM_OPS(i2c_suspend, i2c_resume)
-> +       SET_RUNTIME_PM_OPS(i2c_runtime_suspend, i2c_runtime_resume, NULL)
-> +};
-> +
->  static void i2c_device_shutdown(struct device *dev)
->  {
->         struct i2c_client *client = i2c_verify_client(dev);
-> @@ -488,6 +546,7 @@ struct bus_type i2c_bus_type = {
->         .probe          = i2c_device_probe,
->         .remove         = i2c_device_remove,
->         .shutdown       = i2c_device_shutdown,
-> +       .pm             = &i2c_device_pm,
->  };
->  EXPORT_SYMBOL_GPL(i2c_bus_type);
->
-> @@ -1351,6 +1410,11 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
->                 goto out_reg;
->
->         dev_dbg(&adap->dev, "adapter [%s] registered\n", adap->name);
-> +       adap->bus_reg = devm_regulator_get(&adap->dev, "bus");
-> +       if (IS_ERR(adap->bus_reg)) {
-> +               res = PTR_ERR(adap->bus_reg);
-> +               goto out_reg;
-> +       }
->
->         pm_runtime_no_callbacks(&adap->dev);
->         pm_suspend_ignore_children(&adap->dev, true);
-> @@ -1580,6 +1644,7 @@ void i2c_del_adapter(struct i2c_adapter *adap)
->         dev_dbg(&adap->dev, "adapter [%s] unregistered\n", adap->name);
->
->         pm_runtime_disable(&adap->dev);
-> +       devm_regulator_put(adap->bus_reg);
->
->         i2c_host_notify_irq_teardown(adap);
->
-> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> index d2f786706657..833b81a680da 100644
-> --- a/include/linux/i2c.h
-> +++ b/include/linux/i2c.h
-> @@ -15,6 +15,7 @@
->  #include <linux/device.h>      /* for struct device */
->  #include <linux/sched.h>       /* for completion */
->  #include <linux/mutex.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/rtmutex.h>
->  #include <linux/irqdomain.h>           /* for Host Notify IRQ */
->  #include <linux/of.h>          /* for struct device_node */
-> @@ -330,6 +331,7 @@ struct i2c_client {
->         int init_irq;                   /* irq set at initialization    */
->         int irq;                        /* irq issued by device         */
->         struct list_head detected;
-> +
-
-Unnecessary change.
-
-Best regards,
-Tomasz
