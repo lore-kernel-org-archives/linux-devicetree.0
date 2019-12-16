@@ -2,608 +2,223 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7B2C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2C3C43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4B42465E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24B521739
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:09:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qsmmqdUM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfLPVEe (ORCPT
+        id S1726681AbfLPVJD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:04:34 -0500
-Received: from mga03.intel.com ([134.134.136.65]:62784 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbfLPVEe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 16:04:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 13:04:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,322,1571727600"; 
-   d="scan'208";a="205245149"
-Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.147]) ([10.7.153.147])
-  by orsmga007.jf.intel.com with ESMTP; 16 Dec 2019 13:04:31 -0800
-Subject: Re: [PATCH v11 14/14] hwmon: Add PECI dimmtemp driver
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>,
-        Tomohiro Kusumi <kusumi.tomohiro@gmail.com>,
-        "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>,
-        Frederic Barrat <fbarrat@linux.vnet.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        David Kershner <david.kershner@unisys.com>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Sagar Dharia <sdharia@codeaurora.org>,
-        Johan Hovold <johan@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
-        Tomer Maimon <tmaimon77@gmail.com>
-Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        openbmc@lists.ozlabs.org, Alan Cox <alan@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jason M Biils <jason.m.bills@linux.intel.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Stef van Os <stef.van.os@prodrive-technologies.com>
-References: <20191211194624.2872-1-jae.hyun.yoo@linux.intel.com>
- <20191211194624.2872-15-jae.hyun.yoo@linux.intel.com>
- <d75aaad9-ae07-feeb-966a-899ecfe9d4b3@roeck-us.net>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <5ed9f292-e024-ffda-a1a8-870ba0f05c58@linux.intel.com>
-Date:   Mon, 16 Dec 2019 13:04:31 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 16 Dec 2019 16:09:03 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:32808 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfLPVJD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 16:09:03 -0500
+Received: by mail-io1-f65.google.com with SMTP id z8so6740294ioh.0
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 13:09:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9XKO95LrgUJdQH2M6aS3B45u9tLfPn3HpUUUiAVQLoA=;
+        b=qsmmqdUMVLn9soEO7iljMQx+BdYo1M7b+D/KnFZIAUtStJ7phMHyQXvNKKvaizqu4Y
+         wNswTJ7cIGvbgctHA+bF7wHPKODead1bmqQhViZMul47+17Duuw3pcmzUqrq4yv+hOFK
+         CD6+k9NgJzy2N/GCHsKvVYBZALzZRKgZbZgm0HokFj33eWRfQqhuBIW9N5mFsTLCraaH
+         eBd3dxU6B0VcSfKhQ0jTJzKskfAr91bjJemFUwxT5pbY+6pzqTQXveKPvOR7LGT2vTN/
+         I4GTMpUb38nqMz67QfWIOzyHGwj+HI+2n9nJDOlqwgId1E04Yi1+3kGuvL0NZp20/5TB
+         NJnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9XKO95LrgUJdQH2M6aS3B45u9tLfPn3HpUUUiAVQLoA=;
+        b=cw/EbBCiCmla296Mvx6VTr3/o1cFpcChs1lmKE5JwS/LuEEJh2MRvi4jDy3S+TPTVa
+         dbtBdgIiKVpnLknxCLBHetNApXlJPzEbWNRbLmS4+YeHpWpBHdCNSdbZcQrQZMW1HZ6u
+         bIOvQvji3CNGzvFqaGjAmQgvJmJv+N/c3ZOW56eGpWvlC0leGkmLEVHvvjlvhZg3Z63n
+         /o57tLH4fESztTlQdnUJ77TpFck+Kjcl9J8KMX0/KAjj87Sm0GkSRtGhLX5Vk0WVBKVl
+         s9qDFC1POLvL09YW0Z58vbonN4mytcJ1aabnQ3LYAHd9H1UcKHmpyaIhiURtmX+lSTNI
+         SQAA==
+X-Gm-Message-State: APjAAAXh1jYWdXZA5v8N9loW0BivZAt2LBrIlF93pYcLW4yoDUOGqm2e
+        +Zx4uH5fqsfgBi8aqUKnZ/WInWi7IQ5VWrNLlLpqtg==
+X-Google-Smtp-Source: APXvYqy3FlgcCLF0YbioAtrebMVIf/uIe5yi8WD+zW5eCUIzwob/hzy/Ohu8usZQA0aV9gHzcmfgr9PsKPG9RXOD6hE=
+X-Received: by 2002:a6b:8f11:: with SMTP id r17mr1010285iod.50.1576530541898;
+ Mon, 16 Dec 2019 13:09:01 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <d75aaad9-ae07-feeb-966a-899ecfe9d4b3@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191211230902.5414-1-mike.leach@linaro.org>
+In-Reply-To: <20191211230902.5414-1-mike.leach@linaro.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Mon, 16 Dec 2019 14:08:51 -0700
+Message-ID: <CANLsYkx9UBYOfOjW-jg_CmQrOC-f0z+gUfun72+uYhadyaJAJg@mail.gmail.com>
+Subject: Re: [PATCH v6 10/15] dt-bindings: qcom: Add CTI options for qcom msm8916
+To:     Mike Leach <mike.leach@linaro.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        devicetree@vger.kernel.org,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Guenter,
+On Wed, 11 Dec 2019 at 16:09, Mike Leach <mike.leach@linaro.org> wrote:
+>
+> Adds system and CPU bound CTI definitions for Qualcom msm8916 platform
+> (Dragonboard DB410C).
+> System CTIs 2-11 are omitted as no information available at present.
+>
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 85 +++++++++++++++++++++++++--
+>  1 file changed, 81 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index 8686e101905c..68587968f5c0 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -8,6 +8,7 @@
+>  #include <dt-bindings/reset/qcom,gcc-msm8916.h>
+>  #include <dt-bindings/clock/qcom,rpmcc.h>
+>  #include <dt-bindings/thermal/thermal.h>
+> +#include <dt-bindings/arm/coresight-cti-dt.h>
+>
+>  / {
+>         interrupt-parent = <&intc>;
+> @@ -1357,7 +1358,7 @@
+>                         cpu = <&CPU3>;
+>                 };
+>
+> -               etm@85c000 {
+> +               etm0: etm@85c000 {
+>                         compatible = "arm,coresight-etm4x", "arm,primecell";
+>                         reg = <0x85c000 0x1000>;
+>
+> @@ -1375,7 +1376,7 @@
+>                         };
+>                 };
+>
+> -               etm@85d000 {
+> +               etm1: etm@85d000 {
+>                         compatible = "arm,coresight-etm4x", "arm,primecell";
+>                         reg = <0x85d000 0x1000>;
+>
+> @@ -1393,7 +1394,7 @@
+>                         };
+>                 };
+>
+> -               etm@85e000 {
+> +               etm2: etm@85e000 {
+>                         compatible = "arm,coresight-etm4x", "arm,primecell";
+>                         reg = <0x85e000 0x1000>;
+>
+> @@ -1411,7 +1412,7 @@
+>                         };
+>                 };
+>
+> -               etm@85f000 {
+> +               etm3: etm@85f000 {
+>                         compatible = "arm,coresight-etm4x", "arm,primecell";
+>                         reg = <0x85f000 0x1000>;
+>
+> @@ -1429,6 +1430,82 @@
+>                         };
+>                 };
+>
+> +               /* System CTIs */
+> +               /* CTI 0 - TMC connections */
+> +               cti@810000 {
+> +                       compatible = "arm,coresight-cti", "arm,primecell";
+> +                       reg = <0x810000 0x1000>;
+> +
+> +                       clocks = <&rpmcc RPM_QDSS_CLK>;
+> +                       clock-names = "apb_pclk";
+> +               };
+> +
+> +               /* CTI 1 - TPIU connections */
+> +               cti@811000 {
+> +                       compatible = "arm,coresight-cti", "arm,primecell";
+> +                       reg = <0x811000 0x1000>;
+> +
+> +                       clocks = <&rpmcc RPM_QDSS_CLK>;
+> +                       clock-names = "apb_pclk";
+> +               };
+> +
+> +               /* CTIs 2-11 - no information - not instantiated */
+> +
+> +               /* Core CTIs; CTIs 12-15 */
+> +               /* CTI - CPU-0 */
+> +               cti@858000 {
+> +                       compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
+> +                                    "arm,primecell";
+> +                       reg = <0x858000 0x1000>;
+> +
+> +                       clocks = <&rpmcc RPM_QDSS_CLK>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       cpu = <&CPU0>;
+> +                       arm,cs-dev-assoc = <&etm0>;
+> +
+> +               };
+> +
+> +               /* CTI - CPU-1 */
+> +               cti@859000 {
+> +                       compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
+> +                                    "arm,primecell";
+> +                       reg = <0x859000 0x1000>;
+> +
+> +                       clocks = <&rpmcc RPM_QDSS_CLK>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       cpu = <&CPU1>;
+> +                       arm,cs-dev-assoc = <&etm1>;
+> +               };
+> +
+> +               /* CTI - CPU-2 */
+> +               cti@85a000 {
+> +                       compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
+> +                                    "arm,primecell";
+> +                       reg = <0x85a000 0x1000>;
+> +
+> +                       clocks = <&rpmcc RPM_QDSS_CLK>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       cpu = <&CPU2>;
+> +                       arm,cs-dev-assoc = <&etm2>;
+> +               };
+> +
+> +               /* CTI - CPU-3 */
+> +               cti@85b000 {
+> +                       compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
+> +                                    "arm,primecell";
+> +                       reg = <0x85b000 0x1000>;
+> +
+> +                       clocks = <&rpmcc RPM_QDSS_CLK>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       cpu = <&CPU3>;
+> +                       arm,cs-dev-assoc = <&etm3>;
+> +               };
+> +
+> +
 
-On 12/12/2019 10:32 PM, Guenter Roeck wrote:
-> On 12/11/19 11:46 AM, Jae Hyun Yoo wrote:
->> This commit adds PECI dimmtemp hwmon driver.
->>
->> Cc: Guenter Roeck <linux@roeck-us.net>
->> Cc: Jean Delvare <jdelvare@suse.com>
->> Cc: Alan Cox <alan@linux.intel.com>
->> Cc: Andrew Jeffery <andrew@aj.id.au>
->> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
->> Cc: Joel Stanley <joel@jms.id.au>
->> Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
->> Cc: Andrew Lunn <andrew@lunn.ch>
->> Cc: Stef van Os <stef.van.os@prodrive-technologies.com>
->> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->> Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
->> Reviewed-by: James Feist <james.feist@linux.intel.com>
->> Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
->> Acked-by: Guenter Roeck <linux@roeck-us.net>
->> ---
->> Changes since v10:
->> - Added Skylake Xeon D support.
->> - Added max and crit properties for temperature threshold checking.
->> - Fixed minor bugs and style issues.
->>
->>   drivers/hwmon/Kconfig         |  14 ++
->>   drivers/hwmon/Makefile        |   1 +
->>   drivers/hwmon/peci-dimmtemp.c | 393 ++++++++++++++++++++++++++++++++++
->>   3 files changed, 408 insertions(+)
->>   create mode 100644 drivers/hwmon/peci-dimmtemp.c
->>
->> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
->> index b6604759579c..d3370fbab40c 100644
->> --- a/drivers/hwmon/Kconfig
->> +++ b/drivers/hwmon/Kconfig
->> @@ -1363,6 +1363,20 @@ config SENSORS_PECI_CPUTEMP
->>         This driver can also be built as a module. If so, the module
->>         will be called peci-cputemp.
->> +config SENSORS_PECI_DIMMTEMP
->> +    tristate "PECI DIMM temperature monitoring client"
->> +    depends on PECI
->> +    select MFD_INTEL_PECI_CLIENT
->> +    help
->> +      If you say yes here you get support for the generic Intel PECI 
->> hwmon
->> +      driver which provides Digital Thermal Sensor (DTS) thermal 
->> readings of
->> +      DIMM components that are accessible using the PECI Client Command
->> +      Suite via the processor PECI client.
->> +      Check <file:Documentation/hwmon/peci-dimmtemp.rst> for details.
->> +
->> +      This driver can also be built as a module. If so, the module
->> +      will be called peci-dimmtemp.
->> +
->>   source "drivers/hwmon/pmbus/Kconfig"
->>   config SENSORS_PWM_FAN
->> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
->> index d6fea48697af..4015c4b60bf4 100644
->> --- a/drivers/hwmon/Makefile
->> +++ b/drivers/hwmon/Makefile
->> @@ -145,6 +145,7 @@ obj-$(CONFIG_SENSORS_PC87360)    += pc87360.o
->>   obj-$(CONFIG_SENSORS_PC87427)    += pc87427.o
->>   obj-$(CONFIG_SENSORS_PCF8591)    += pcf8591.o
->>   obj-$(CONFIG_SENSORS_PECI_CPUTEMP)    += peci-cputemp.o
->> +obj-$(CONFIG_SENSORS_PECI_DIMMTEMP)    += peci-dimmtemp.o
->>   obj-$(CONFIG_SENSORS_POWR1220)  += powr1220.o
->>   obj-$(CONFIG_SENSORS_PWM_FAN)    += pwm-fan.o
->>   obj-$(CONFIG_SENSORS_RASPBERRYPI_HWMON)    += raspberrypi-hwmon.o
->> diff --git a/drivers/hwmon/peci-dimmtemp.c 
->> b/drivers/hwmon/peci-dimmtemp.c
->> new file mode 100644
->> index 000000000000..974f453f9366
->> --- /dev/null
->> +++ b/drivers/hwmon/peci-dimmtemp.c
->> @@ -0,0 +1,393 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// Copyright (c) 2018-2019 Intel Corporation
->> +
->> +#include <linux/hwmon.h>
->> +#include <linux/jiffies.h>
->> +#include <linux/mfd/intel-peci-client.h>
->> +#include <linux/module.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/workqueue.h>
->> +#include "peci-hwmon.h"
->> +
->> +#define DIMM_MASK_CHECK_DELAY_JIFFIES  msecs_to_jiffies(5000)
->> +#define DIMM_MASK_CHECK_RETRY_MAX      60 /* 60 x 5 secs = 5 minutes */
->> +
->> +struct peci_dimmtemp {
->> +    struct peci_client_manager *mgr;
->> +    struct device *dev;
->> +    char name[PECI_NAME_SIZE];
->> +    const struct cpu_gen_info *gen_info;
->> +    struct workqueue_struct *work_queue;
->> +    struct delayed_work work_handler;
->> +    struct peci_sensor_data temp[DIMM_NUMS_MAX];
->> +    long temp_max[DIMM_NUMS_MAX];
->> +    long temp_crit[DIMM_NUMS_MAX];
->> +    u32 dimm_mask;
->> +    int retry_count;
->> +    u32 temp_config[DIMM_NUMS_MAX + 1];
->> +    struct hwmon_channel_info temp_info;
->> +    const struct hwmon_channel_info *info[2];
->> +    struct hwmon_chip_info chip;
->> +};
->> +
->> +static const char *dimmtemp_label[CHAN_RANK_MAX][DIMM_IDX_MAX] = {
->> +    { "DIMM A1", "DIMM A2", "DIMM A3" },
->> +    { "DIMM B1", "DIMM B2", "DIMM B3" },
->> +    { "DIMM C1", "DIMM C2", "DIMM C3" },
->> +    { "DIMM D1", "DIMM D2", "DIMM D3" },
->> +    { "DIMM E1", "DIMM E2", "DIMM E3" },
->> +    { "DIMM F1", "DIMM F2", "DIMM F3" },
->> +    { "DIMM G1", "DIMM G2", "DIMM G3" },
->> +    { "DIMM H1", "DIMM H2", "DIMM H3" },
->> +};
->> +
->> +static inline int read_ddr_dimm_temp_config(struct peci_dimmtemp *priv,
->> +                        int chan_rank,
->> +                        u8 *cfg_data)
->> +{
->> +    return peci_client_read_package_config(priv->mgr,
->> +                           PECI_MBX_INDEX_DDR_DIMM_TEMP,
->> +                           chan_rank, cfg_data);
->> +}
->> +
->> +static int get_dimm_temp(struct peci_dimmtemp *priv, int dimm_no)
->> +{
->> +    int dimm_order = dimm_no % priv->gen_info->dimm_idx_max;
->> +    int chan_rank = dimm_no / priv->gen_info->dimm_idx_max;
->> +    struct peci_rd_pci_cfg_local_msg rp_msg;
->> +    u8  cfg_data[4];
->> +    int ret;
->> +
->> +    if (!peci_sensor_need_update(&priv->temp[dimm_no]))
->> +        return 0;
->> +
->> +    ret = read_ddr_dimm_temp_config(priv, chan_rank, cfg_data);
->> +    if (ret)
->> +        return ret;
->> +
->> +    priv->temp[dimm_no].value = cfg_data[dimm_order] * 1000;
->> +
->> +    switch (priv->gen_info->model) {
->> +    case INTEL_FAM6_SKYLAKE_X:
->> +        rp_msg.addr = priv->mgr->client->addr;
->> +        rp_msg.bus = 2;
->> +        /*
->> +         * Device 10, Function 2: IMC 0 channel 0 -> rank 0
->> +         * Device 10, Function 6: IMC 0 channel 1 -> rank 1
->> +         * Device 11, Function 2: IMC 0 channel 2 -> rank 2
->> +         * Device 12, Function 2: IMC 1 channel 0 -> rank 3
->> +         * Device 12, Function 6: IMC 1 channel 1 -> rank 4
->> +         * Device 13, Function 2: IMC 1 channel 2 -> rank 5
->> +         */
->> +        rp_msg.device = 10 + chan_rank / 3 * 2 +
->> +                 (chan_rank % 3 == 2 ? 1 : 0);
->> +        rp_msg.function = chan_rank % 3 == 1 ? 6 : 2;
->> +        rp_msg.reg = 0x120 + dimm_order * 4;
->> +        rp_msg.rx_len = 4;
->> +
->> +        ret = peci_command(priv->mgr->client->adapter,
->> +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
->> +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
->> +            ret = -EAGAIN;
->> +        if (ret)
->> +            return ret;
->> +
->> +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
->> +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
->> +        break;
->> +    case INTEL_FAM6_SKYLAKE_XD:
->> +        rp_msg.addr = priv->mgr->client->addr;
->> +        rp_msg.bus = 2;
->> +        /*
->> +         * Device 10, Function 2: IMC 0 channel 0 -> rank 0
->> +         * Device 10, Function 6: IMC 0 channel 1 -> rank 1
->> +         * Device 12, Function 2: IMC 1 channel 0 -> rank 2
->> +         * Device 12, Function 6: IMC 1 channel 1 -> rank 3
->> +         */
->> +        rp_msg.device = 10 + chan_rank / 2 * 2;
->> +        rp_msg.function = (chan_rank % 2) ? 6 : 2;
->> +        rp_msg.reg = 0x120 + dimm_order * 4;
->> +        rp_msg.rx_len = 4;
->> +
->> +        ret = peci_command(priv->mgr->client->adapter,
->> +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
->> +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
->> +            ret = -EAGAIN;
->> +        if (ret)
->> +            return ret;
->> +
->> +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
->> +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
->> +        break;
->> +    case INTEL_FAM6_HASWELL_X:
->> +    case INTEL_FAM6_BROADWELL_X:
->> +        rp_msg.addr = priv->mgr->client->addr;
->> +        rp_msg.bus = 1;
->> +        /*
->> +         * Device 20, Function 0: IMC 0 channel 0 -> rank 0
->> +         * Device 20, Function 1: IMC 0 channel 1 -> rank 1
->> +         * Device 21, Function 0: IMC 0 channel 2 -> rank 2
->> +         * Device 21, Function 1: IMC 0 channel 3 -> rank 3
->> +         * Device 23, Function 0: IMC 1 channel 0 -> rank 4
->> +         * Device 23, Function 1: IMC 1 channel 1 -> rank 5
->> +         * Device 24, Function 0: IMC 1 channel 2 -> rank 6
->> +         * Device 24, Function 1: IMC 1 channel 3 -> rank 7
->> +         */
->> +        rp_msg.device = 20 + chan_rank / 2 + chan_rank / 4;
->> +        rp_msg.function = chan_rank % 2;
->> +        rp_msg.reg = 0x120 + dimm_order * 4;
->> +        rp_msg.rx_len = 4;
->> +
->> +        ret = peci_command(priv->mgr->client->adapter,
->> +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
->> +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
->> +            ret = -EAGAIN;
->> +        if (ret)
->> +            return ret;
->> +
->> +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
->> +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
->> +        break;
->> +    default:
->> +        return -EOPNOTSUPP;
-> 
-> It looks like the sensors are created even on unsupported platforms,
-> which would generate error messages whenever someone tries to read
-> the attributes.
-> 
-> There should be some code early on checking this, and the driver
-> should not even instantiate if the CPU model is not supported.
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Actually, this 'default' case will not be happened because this driver
-will be registered only when the CPU model is supported. The CPU model
-checking code is in 'intel-peci-client.c' which is [11/14] of this
-patch set.
-
->> +    }
->> +
->> +    peci_sensor_mark_updated(&priv->temp[dimm_no]);
->> +
->> +    return 0;
->> +}
->> +
->> +static int dimmtemp_read_string(struct device *dev,
->> +                enum hwmon_sensor_types type,
->> +                u32 attr, int channel, const char **str)
->> +{
->> +    struct peci_dimmtemp *priv = dev_get_drvdata(dev);
->> +    u32 dimm_idx_max = priv->gen_info->dimm_idx_max;
->> +    int chan_rank, dimm_idx;
->> +
->> +    if (attr != hwmon_temp_label)
->> +        return -EOPNOTSUPP;
->> +
->> +    chan_rank = channel / dimm_idx_max;
->> +    dimm_idx = channel % dimm_idx_max;
->> +    *str = dimmtemp_label[chan_rank][dimm_idx];
-> 
-> Similar to the other patch, I am concerned that this can end up setting 
-> *str
-> to NULL at some point in the future.
-
-Okay. I'll make dynamic label string table generation code for it as
-well.
-
->> +
->> +    return 0;
->> +}
->> +
->> +static int dimmtemp_read(struct device *dev, enum hwmon_sensor_types 
->> type,
->> +             u32 attr, int channel, long *val)
->> +{
->> +    struct peci_dimmtemp *priv = dev_get_drvdata(dev);
->> +    int ret;
->> +
->> +    ret = get_dimm_temp(priv, channel);
->> +    if (ret)
->> +        return ret;
->> +
->> +    switch (attr) {
->> +    case hwmon_temp_input:
->> +        *val = priv->temp[channel].value;
->> +        break;
->> +    case hwmon_temp_max:
->> +        *val = priv->temp_max[channel];
->> +        break;
->> +    case hwmon_temp_crit:
->> +        *val = priv->temp_crit[channel];
->> +        break;
->> +    default:
->> +        ret = -EOPNOTSUPP;
->> +        break;
->> +    }
->> +
->> +    return ret;
->> +}
->> +
->> +static umode_t dimmtemp_is_visible(const void *data,
->> +                   enum hwmon_sensor_types type,
->> +                   u32 attr, int channel)
->> +{
->> +    const struct peci_dimmtemp *priv = data;
->> +
->> +    if (priv->temp_config[channel] & BIT(attr) &&
->> +        priv->dimm_mask & BIT(channel))
->> +        return 0444;
->> +
->> +    return 0;
->> +}
->> +
->> +static const struct hwmon_ops dimmtemp_ops = {
->> +    .is_visible = dimmtemp_is_visible,
->> +    .read_string = dimmtemp_read_string,
->> +    .read = dimmtemp_read,
->> +};
->> +
->> +static int check_populated_dimms(struct peci_dimmtemp *priv)
->> +{
->> +    u32 chan_rank_max = priv->gen_info->chan_rank_max;
->> +    u32 dimm_idx_max = priv->gen_info->dimm_idx_max;
->> +    int chan_rank, dimm_idx;
->> +    u8  cfg_data[4];
->> +
->> +    for (chan_rank = 0; chan_rank < chan_rank_max; chan_rank++) {
->> +        int ret;
->> +
->> +        ret = read_ddr_dimm_temp_config(priv, chan_rank, cfg_data);
->> +        if (ret) {
->> +            priv->dimm_mask = 0;
->> +            return ret;
->> +        }
->> +
->> +        for (dimm_idx = 0; dimm_idx < dimm_idx_max; dimm_idx++)
->> +            if (cfg_data[dimm_idx])
->> +                priv->dimm_mask |= BIT(chan_rank *
->> +                               dimm_idx_max +
->> +                               dimm_idx);
->> +    }
->> +
->> +    if (!priv->dimm_mask)
->> +        return -EAGAIN;
->> +
->> +    dev_dbg(priv->dev, "Scanned populated DIMMs: 0x%x\n", 
->> priv->dimm_mask);
->> +
->> +    return 0;
->> +}
->> +
->> +static int create_dimm_temp_info(struct peci_dimmtemp *priv)
->> +{
->> +    int ret, i, config_idx, channels;
->> +    struct device *hwmon_dev;
->> +
->> +    ret = check_populated_dimms(priv);
->> +    if (ret) {
->> +        if (ret == -EAGAIN) {
->> +            if (priv->retry_count < DIMM_MASK_CHECK_RETRY_MAX) {
->> +                queue_delayed_work(priv->work_queue,
->> +                           &priv->work_handler,
->> +                         DIMM_MASK_CHECK_DELAY_JIFFIES);
->> +                priv->retry_count++;
->> +                dev_dbg(priv->dev,
->> +                    "Deferred DIMM temp info creation\n");
->> +            } else {
->> +                dev_err(priv->dev,
->> +                    "Timeout DIMM temp info creation\n");
->> +                ret = -ETIMEDOUT;
->> +            }
->> +        }
->> +
->> +        return ret;
->> +    }
->> +
->> +    channels = priv->gen_info->chan_rank_max *
->> +           priv->gen_info->dimm_idx_max;
->> +    for (i = 0, config_idx = 0; i < channels; i++)
->> +        if (priv->dimm_mask & BIT(i))
->> +            while (i >= config_idx)
->> +                priv->temp_config[config_idx++] =
->> +                    HWMON_T_LABEL | HWMON_T_INPUT |
->> +                    HWMON_T_MAX | HWMON_T_CRIT;
->> +
->> +    priv->chip.ops = &dimmtemp_ops;
->> +    priv->chip.info = priv->info;
->> +
->> +    priv->info[0] = &priv->temp_info;
->> +
->> +    priv->temp_info.type = hwmon_temp;
->> +    priv->temp_info.config = priv->temp_config;
->> +
->> +    hwmon_dev = devm_hwmon_device_register_with_info(priv->dev,
->> +                             priv->name,
->> +                             priv,
->> +                             &priv->chip,
->> +                             NULL);
->> +    ret = PTR_ERR_OR_ZERO(hwmon_dev);
->> +    if (!ret)
->> +        dev_dbg(priv->dev, "%s: sensor '%s'\n",
->> +            dev_name(hwmon_dev), priv->name);
->> +
-> 
-> Any chance to make this consistent with the other driver ?
-
-Will change this to:
-
-if (IS_ERR(hwmon_dev)) {
-	dev_err(&priv->dev, "Failed to register hwmon device\n");
-	return PTR_ERR(hwmon_dev);
-}
-
->> +    return ret;
->> +}
->> +
->> +static void create_dimm_temp_info_delayed(struct work_struct *work)
->> +{
->> +    struct delayed_work *dwork = to_delayed_work(work);
->> +    struct peci_dimmtemp *priv = container_of(dwork, struct 
->> peci_dimmtemp,
->> +                          work_handler);
->> +    int ret;
->> +
->> +    ret = create_dimm_temp_info(priv);
->> +    if (ret && ret != -EAGAIN)
->> +        dev_dbg(priv->dev, "Failed to create DIMM temp info\n");
->> +}
->> +
->> +static int peci_dimmtemp_probe(struct platform_device *pdev)
->> +{
->> +    struct peci_client_manager *mgr = dev_get_drvdata(pdev->dev.parent);
->> +    struct device *dev = &pdev->dev;
->> +    struct peci_dimmtemp *priv;
->> +    int ret;
->> +
->> +    if ((mgr->client->adapter->cmd_mask &
->> +        (BIT(PECI_CMD_GET_TEMP) | BIT(PECI_CMD_RD_PKG_CFG))) !=
->> +        (BIT(PECI_CMD_GET_TEMP) | BIT(PECI_CMD_RD_PKG_CFG)))
->> +        return -ENODEV;
->> +
->> +    priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->> +    if (!priv)
->> +        return -ENOMEM;
->> +
->> +    dev_set_drvdata(dev, priv);
->> +    priv->mgr = mgr;
->> +    priv->dev = dev;
->> +    priv->gen_info = mgr->gen_info;
->> +
->> +    snprintf(priv->name, PECI_NAME_SIZE, "peci_dimmtemp.cpu%d",
->> +         priv->mgr->client->addr - PECI_BASE_ADDR);
->> +
->> +    priv->work_queue = alloc_ordered_workqueue(priv->name, 0);
->> +    if (!priv->work_queue)
->> +        return -ENOMEM;
->> +
->> +    INIT_DELAYED_WORK(&priv->work_handler, 
->> create_dimm_temp_info_delayed);
->> +
->> +    ret = create_dimm_temp_info(priv);
->> +    if (ret && ret != -EAGAIN) {
->> +        dev_err(dev, "Failed to create DIMM temp info\n");
-> 
-> Does this generate error messages if there are no DIMMS ?
-
-Yes, this error message will be printed out once if it meets a timeout
-in DIMM scanning when there is no DIMM.
-
-Thanks a lot for your review!
-
--Jae
-
->> +        goto err_free_wq;
->> +    }
->> +
->> +    return 0;
->> +
->> +err_free_wq:
->> +    destroy_workqueue(priv->work_queue);
->> +    return ret;
->> +}
->> +
->> +static int peci_dimmtemp_remove(struct platform_device *pdev)
->> +{
->> +    struct peci_dimmtemp *priv = dev_get_drvdata(&pdev->dev);
->> +
->> +    cancel_delayed_work_sync(&priv->work_handler);
->> +    destroy_workqueue(priv->work_queue);
->> +
->> +    return 0;
->> +}
->> +
->> +static const struct platform_device_id peci_dimmtemp_ids[] = {
->> +    { .name = "peci-dimmtemp", .driver_data = 0 },
->> +    { }
->> +};
->> +MODULE_DEVICE_TABLE(platform, peci_dimmtemp_ids);
->> +
->> +static struct platform_driver peci_dimmtemp_driver = {
->> +    .probe    = peci_dimmtemp_probe,
->> +    .remove   = peci_dimmtemp_remove,
->> +    .id_table = peci_dimmtemp_ids,
->> +    .driver   = { .name = KBUILD_MODNAME, },
->> +};
->> +module_platform_driver(peci_dimmtemp_driver);
->> +
->> +MODULE_AUTHOR("Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>");
->> +MODULE_DESCRIPTION("PECI dimmtemp driver");
->> +MODULE_LICENSE("GPL v2");
->>
-> 
-> 
+>                 venus: video-codec@1d00000 {
+>                         compatible = "qcom,msm8916-venus";
+>                         reg = <0x01d00000 0xff000>;
+> --
+> 2.17.1
+>
