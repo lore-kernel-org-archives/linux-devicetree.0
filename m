@@ -2,280 +2,485 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71249C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D074DC2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9D72072B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:49:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576532997;
-	bh=6MJBO7qZQ+iuixMt/i7qk+aJ1/wEIZbVP0/dga2eVzA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EnGCSDMfM5OUt7Qvy7t4Yo59PCk7fTsZ/WvIHr9WCnbrQ4EdaKZM0+kJzm2bNdQRR
-	 ZkVt+AsMZ005/z1El47bIoVMl5bACtOIPYxcMJ+FZz4vgx9kvYUTfqyl50n880zK8v
-	 vVyHfg43ztiCHG5IT4rWeYtiR1WCVSi9ovdoPOoE=
+	by mail.kernel.org (Postfix) with ESMTP id AA2A22467B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 21:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbfLPVty (ORCPT
+        id S1726275AbfLPV5T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 16:49:54 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44609 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfLPVty (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 16:49:54 -0500
-Received: by mail-ot1-f68.google.com with SMTP id x3so10880024oto.11;
-        Mon, 16 Dec 2019 13:49:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HptzT5nDCrwY5+Ndy5nDuVXNd62G0fSk6plJscs64+s=;
-        b=m0a/feoHMgJZRpe3RfWJiWCI+xQQzuDGa92RIjZPxezDfkpSdK3mVMDivsQOfetS5R
-         xi4Y6LVzdKvRsBjunerw4RBkHZ/HWDTcl2tQXQMG/y0YSu9LCKl4oUOpJEAAj4q4D1H9
-         i/X8H8pnMEavb01VIGiGOY47pboA/mJ5xHxevfuQPwh/Nir2lGQ9goF93bYiRpawAiU2
-         xighujP26182mARjuX4v8SGuF3DqgH/hnY5VHD6nCoeHPwUyyHsrLBscSl65a3vXHeEO
-         +ZEnHyICC8ac7+50B81xmSm+6Fe9hq75+mD+yvpaoGQ5IQcxFC1FiJE1arakNqL6Ukii
-         8YkA==
-X-Gm-Message-State: APjAAAXNEnEqzspoawpvv/Kal/L3HdlME+vAE3Evg6QOLDHwUDDeNkcf
-        Dcc7oJQR6H9WqNc2rYc2/DfAwQA=
-X-Google-Smtp-Source: APXvYqxgkaB403WtaFAWNwC6m5B7AcOnZaowDtuEndM91PV4Kl26ED2Pp1qFpLftHvbaAM9KlR57Hw==
-X-Received: by 2002:a05:6830:14d3:: with SMTP id t19mr35544056otq.278.1576532992820;
-        Mon, 16 Dec 2019 13:49:52 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q22sm7146652otm.2.2019.12.16.13.49.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 13:49:51 -0800 (PST)
-Date:   Mon, 16 Dec 2019 15:49:51 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     broonie@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Erwan Leray <erwan.leray@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: Re: [PATCH] dt-bindings: spi: Convert stm32 spi bindings to
- json-schema
-Message-ID: <20191216214951.GA9328@bogus>
-References: <20191204153233.791-1-benjamin.gaignard@st.com>
+        Mon, 16 Dec 2019 16:57:19 -0500
+Received: from mga03.intel.com ([134.134.136.65]:1321 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726940AbfLPV5T (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 16:57:19 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 13:57:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,323,1571727600"; 
+   d="scan'208";a="205256585"
+Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.147]) ([10.7.153.147])
+  by orsmga007.jf.intel.com with ESMTP; 16 Dec 2019 13:57:18 -0800
+Subject: Re: [PATCH v11 11/14] mfd: intel-peci-client: Add Intel PECI client
+ driver
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>,
+        Tomohiro Kusumi <kusumi.tomohiro@gmail.com>,
+        "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>,
+        Frederic Barrat <fbarrat@linux.vnet.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        David Kershner <david.kershner@unisys.com>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Sagar Dharia <sdharia@codeaurora.org>,
+        Johan Hovold <johan@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juergen Gross <jgross@suse.com>,
+        Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        openbmc@lists.ozlabs.org,
+        James Feist <james.feist@linux.intel.com>,
+        Jason M Biils <jason.m.bills@linux.intel.com>,
+        Vernon Mauery <vernon.mauery@linux.intel.com>
+References: <20191211194624.2872-1-jae.hyun.yoo@linux.intel.com>
+ <20191211194624.2872-12-jae.hyun.yoo@linux.intel.com>
+ <20191216160145.GL2369@dell>
+From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Message-ID: <b92c3154-0ee4-3f1a-d913-15653a9469ea@linux.intel.com>
+Date:   Mon, 16 Dec 2019 13:57:17 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204153233.791-1-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191216160145.GL2369@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 04:32:33PM +0100, Benjamin Gaignard wrote:
-> Convert the STM32 spi binding to DT schema format using json-schema
+Hi Lee,
+
+On 12/16/2019 8:01 AM, Lee Jones wrote:
+> On Wed, 11 Dec 2019, Jae Hyun Yoo wrote:
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> CC: Erwan Leray <erwan.leray@st.com>
-> CC: Fabrice Gasnier <fabrice.gasnier@st.com>
-> CC: Amelie Delaunay <amelie.delaunay@st.com>
-> ---
->  .../devicetree/bindings/spi/spi-stm32.txt          |  62 ------------
->  .../devicetree/bindings/spi/st,stm32-spi.yaml      | 105 +++++++++++++++++++++
->  2 files changed, 105 insertions(+), 62 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32.txt
->  create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
+>> This commit adds Intel PECI client driver.
+>>
+>> Cc: Lee Jones <lee.jones@linaro.org>
+>> Cc: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Andrew Jeffery <andrew@aj.id.au>
+>> Cc: James Feist <james.feist@linux.intel.com>
+>> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
+>> Cc: Joel Stanley <joel@jms.id.au>
+>> Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
+>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+>> ---
+>> Changes since v10:
+>> - Fixed minor style issues.
+>>
+>>   drivers/mfd/Kconfig                   |  17 +++
+>>   drivers/mfd/Makefile                  |   1 +
+>>   drivers/mfd/intel-peci-client.c       | 149 ++++++++++++++++++++++++++
+>>   include/linux/mfd/intel-peci-client.h | 117 ++++++++++++++++++++
+>>   4 files changed, 284 insertions(+)
+>>   create mode 100644 drivers/mfd/intel-peci-client.c
+>>   create mode 100644 include/linux/mfd/intel-peci-client.h
+>>
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index 420900852166..7022e54a4703 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -632,6 +632,23 @@ config MFD_INTEL_MSIC
+>>   	  Passage) chip. This chip embeds audio, battery, GPIO, etc.
+>>   	  devices used in Intel Medfield platforms.
+>>   
+>> +config MFD_INTEL_PECI_CLIENT
+>> +	tristate "Intel PECI client"
+>> +	depends on (PECI || COMPILE_TEST)
+>> +	select MFD_CORE
+>> +	help
+>> +	  If you say yes to this option, support will be included for the
+>> +	  Intel PECI (Platform Environment Control Interface) client. PECI is a
+>> +	  one-wire bus interface that provides a communication channel from PECI
+>> +	  clients in Intel processors and chipset components to external
+>> +	  monitoring or control devices.
+>> +
+>> +	  Additional drivers must be enabled in order to use the functionality
+>> +	  of the device.
+>> +
+>> +	  This driver can also be built as a module. If so, the module
+>> +	  will be called intel-peci-client.
+>> +
+>>   config MFD_IPAQ_MICRO
+>>   	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
+>>   	depends on SA1100_H3100 || SA1100_H3600
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index aed99f08739f..91c6fda5cec6 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -211,6 +211,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS)	+= intel-lpss.o
+>>   obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
+>>   obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
+>>   obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
+>> +obj-$(CONFIG_MFD_INTEL_PECI_CLIENT)	+= intel-peci-client.o
+>>   obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
+>>   obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
+>>   obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
+>> diff --git a/drivers/mfd/intel-peci-client.c b/drivers/mfd/intel-peci-client.c
+>> new file mode 100644
+>> index 000000000000..18bf0af0e09e
+>> --- /dev/null
+>> +++ b/drivers/mfd/intel-peci-client.c
+>> @@ -0,0 +1,149 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// Copyright (c) 2018-2019 Intel Corporation
+>> +
+>> +#include <linux/bitfield.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/mfd/intel-peci-client.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/peci.h>
+>> +
+>> +#define CPU_ID_MODEL_MASK      GENMASK(7, 4)
+>> +#define CPU_ID_FAMILY_MASK     GENMASK(11, 8)
+>> +#define CPU_ID_EXT_MODEL_MASK  GENMASK(19, 16)
+>> +#define CPU_ID_EXT_FAMILY_MASK GENMASK(27, 20)
+>> +
+>> +#define LOWER_NIBBLE_MASK      GENMASK(3, 0)
+>> +#define UPPER_NIBBLE_MASK      GENMASK(7, 4)
+>> +#define LOWER_BYTE_MASK        GENMASK(7, 0)
+>> +#define UPPER_BYTE_MASK        GENMASK(16, 8)
+>> +
+>> +static struct mfd_cell peci_functions[] = {
+>> +	{ .name = "peci-cputemp", },
+>> +	{ .name = "peci-dimmtemp", },
+>> +	/* TODO: Add additional PECI sideband functions into here */
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-stm32.txt b/Documentation/devicetree/bindings/spi/spi-stm32.txt
-> deleted file mode 100644
-> index d82755c63eaf..000000000000
-> --- a/Documentation/devicetree/bindings/spi/spi-stm32.txt
-> +++ /dev/null
-> @@ -1,62 +0,0 @@
-> -STMicroelectronics STM32 SPI Controller
-> -
-> -The STM32 SPI controller is used to communicate with external devices using
-> -the Serial Peripheral Interface. It supports full-duplex, half-duplex and
-> -simplex synchronous serial communication with external devices. It supports
-> -from 4 to 32-bit data size. Although it can be configured as master or slave,
-> -only master is supported by the driver.
-> -
-> -Required properties:
-> -- compatible: Should be one of:
-> -  "st,stm32h7-spi"
-> -  "st,stm32f4-spi"
-> -- reg: Offset and length of the device's register set.
-> -- interrupts: Must contain the interrupt id.
-> -- clocks: Must contain an entry for spiclk (which feeds the internal clock
-> -	  generator).
-> -- #address-cells:  Number of cells required to define a chip select address.
-> -- #size-cells: Should be zero.
-> -
-> -Optional properties:
-> -- resets: Must contain the phandle to the reset controller.
-> -- A pinctrl state named "default" may be defined to set pins in mode of
-> -  operation for SPI transfer.
-> -- dmas: DMA specifiers for tx and rx dma. DMA fifo mode must be used. See the
-> -  STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt.
-> -- dma-names: DMA request names should include "tx" and "rx" if present.
-> -- cs-gpios: list of GPIO chip selects. See the SPI bus bindings,
-> -  Documentation/devicetree/bindings/spi/spi-bus.txt
-> -
-> -
-> -Child nodes represent devices on the SPI bus
-> -  See ../spi/spi-bus.txt
-> -
-> -Optional properties:
-> -- st,spi-midi-ns: Only for STM32H7, (Master Inter-Data Idleness) minimum time
-> -		  delay in nanoseconds inserted between two consecutive data
-> -		  frames.
-> -
-> -
-> -Example:
-> -	spi2: spi@40003800 {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		compatible = "st,stm32h7-spi";
-> -		reg = <0x40003800 0x400>;
-> -		interrupts = <36>;
-> -		clocks = <&rcc SPI2_CK>;
-> -		resets = <&rcc 1166>;
-> -		dmas = <&dmamux1 0 39 0x400 0x01>,
-> -		       <&dmamux1 1 40 0x400 0x01>;
-> -		dma-names = "rx", "tx";
-> -		pinctrl-0 = <&spi2_pins_b>;
-> -		pinctrl-names = "default";
-> -		cs-gpios = <&gpioa 11 0>;
-> -
-> -		aardvark@0 {
-> -			compatible = "totalphase,aardvark";
-> -			reg = <0>;
-> -			spi-max-frequency = <4000000>;
-> -			st,spi-midi-ns = <4000>;
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-> new file mode 100644
-> index 000000000000..57ef3a0f57e0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-> @@ -0,0 +1,105 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spi/st,stm32-spi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 SPI Controller bindings
-> +
-> +description: |
-> +  The STM32 SPI controller is used to communicate with external devices using
-> +  the Serial Peripheral Interface. It supports full-duplex, half-duplex and
-> +  simplex synchronous serial communication with external devices. It supports
-> +  from 4 to 32-bit data size.
-> +
-> +maintainers:
-> +  - Erwan Leray <erwan.leray@st.com>
-> +  - Fabrice Gasnier <fabrice.gasnier@st.com>
-> +
-> +allOf:
-> +  - $ref: "spi-controller.yaml#"
-> +  - if:
-> +      properties:
-> +        comptatible:
-> +          constains:
+> No need for this comment.  It's implied.
 
-One of the features of json-schema is ignoring unknown keywords like 
-'constains'. I've tried to mitigate this with the meta-schema, but seems 
-this one didn't get caught. But checkpatch.pl caught it.
+I see. I'll remove this comment.
 
+>> +};
+>> +
+>> +static const struct cpu_gen_info cpu_gen_info_table[] = {
+>> +	{ /* Haswell Xeon */
+>> +		.family        = 6, /* Family code */
+> 
+> Nit: Why don't you just define the number, instead of feeling the need
+> to further clarify by providing a comment?
 
-> +            st,stm32f4-spi
-> +    then:
-> +      properties:
-> +        st,spi-midi-ns: false
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - st,stm32f4-spi
-> +      - st,stm32h7-spi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    description: |
-> +      DMA specifiers for tx and rx dma. DMA fifo mode must be used. See
-> +      the STM32 DMA bindings Documentation/devicetree/bindings/dma/stm32-dma.txt.
-> +    items:
-> +      - description: rx DMA channel
-> +      - description: tx DMA channel
-> +
-> +  dma-names:
-> +    items:
-> +      - const: rx
-> +      - const: tx
-> +
-> +patternProperties:
-> +  "^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-f]+$":
-> +    type: object
-> +    # SPI slave nodes must be children of the SPI master node and can
-> +    # contain the following properties.
-> +    properties:
-> +      st,spi-midi-ns:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
+Makes sense. Will define the number.
 
-Don't need a type since it has a standard unit. I'd assume there's 
-at least some max less than 2^32 you could define.
+>> +		.model         = INTEL_FAM6_HASWELL_X,
+>> +		.core_max      = CORE_MAX_ON_HSX,
+>> +		.chan_rank_max = CHAN_RANK_MAX_ON_HSX,
+>> +		.dimm_idx_max  = DIMM_IDX_MAX_ON_HSX },
+>> +	{ /* Broadwell Xeon */
+>> +		.family        = 6, /* Family code */
+>> +		.model         = INTEL_FAM6_BROADWELL_X,
+>> +		.core_max      = CORE_MAX_ON_BDX,
+>> +		.chan_rank_max = CHAN_RANK_MAX_ON_BDX,
+>> +		.dimm_idx_max  = DIMM_IDX_MAX_ON_BDX },
+>> +	{ /* Skylake Xeon */
+>> +		.family        = 6, /* Family code */
+>> +		.model         = INTEL_FAM6_SKYLAKE_X,
+>> +		.core_max      = CORE_MAX_ON_SKX,
+>> +		.chan_rank_max = CHAN_RANK_MAX_ON_SKX,
+>> +		.dimm_idx_max  = DIMM_IDX_MAX_ON_SKX },
+>> +	{ /* Skylake Xeon D */
+>> +		.family        = 6, /* Family code */
+>> +		.model         = INTEL_FAM6_SKYLAKE_XD,
+>> +		.core_max      = CORE_MAX_ON_SKXD,
+>> +		.chan_rank_max = CHAN_RANK_MAX_ON_SKXD,
+>> +		.dimm_idx_max  = DIMM_IDX_MAX_ON_SKXD },
+>> +};
+>> +
+>> +static int peci_client_get_cpu_gen_info(struct peci_client_manager *priv)
+>> +{
+>> +	struct device *dev = &priv->client->dev;
+>> +	u32 cpu_id;
+>> +	u16 family;
+>> +	u8 model;
+>> +	int ret;
+>> +	int i;
+>> +
+>> +	ret = peci_get_cpu_id(priv->client->adapter, priv->client->addr,
+>> +			      &cpu_id);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	family = FIELD_PREP(LOWER_BYTE_MASK,
+>> +			    FIELD_GET(CPU_ID_FAMILY_MASK, cpu_id)) |
+>> +		 FIELD_PREP(UPPER_BYTE_MASK,
+>> +			    FIELD_GET(CPU_ID_EXT_FAMILY_MASK, cpu_id));
+>> +	model = FIELD_PREP(LOWER_NIBBLE_MASK,
+>> +			   FIELD_GET(CPU_ID_MODEL_MASK, cpu_id)) |
+>> +		FIELD_PREP(UPPER_NIBBLE_MASK,
+>> +			   FIELD_GET(CPU_ID_EXT_MODEL_MASK, cpu_id));
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(cpu_gen_info_table); i++) {
+>> +		const struct cpu_gen_info *cpu_info = &cpu_gen_info_table[i];
+>> +
+>> +		if (family == cpu_info->family && model == cpu_info->model) {
+>> +			priv->gen_info = cpu_info;
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	if (!priv->gen_info) {
+>> +		dev_err(dev, "Can't support this CPU: 0x%x\n", cpu_id);
+>> +		ret = -ENODEV;
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int peci_client_probe(struct peci_client *client)
+>> +{
+>> +	struct device *dev = &client->dev;
+>> +	struct peci_client_manager *priv;
+>> +	uint cpu_no;
+>> +	int ret;
+>> +
+>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>> +	if (!priv)
+>> +		return -ENOMEM;
+>> +
+>> +	dev_set_drvdata(dev, priv);
+>> +	priv->client = client;
+>> +	cpu_no = client->addr - PECI_BASE_ADDR;
+>> +
+>> +	ret = peci_client_get_cpu_gen_info(priv);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = devm_mfd_add_devices(dev, cpu_no, peci_functions,
+>> +				   ARRAY_SIZE(peci_functions), NULL, 0, NULL);
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "Failed to register child devices: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +#if IS_ENABLED(CONFIG_OF)
+> 
+> #ifdef CONFIG_OF
 
-> +        description: |
-> +          Only for STM32H7, (Master Inter-Data Idleness) minimum time
-> +          delay in nanoseconds inserted between two consecutive data frames.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    #include <dt-bindings/reset/stm32mp1-resets.h>
-> +    spi@4000b000 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      compatible = "st,stm32h7-spi";
-> +      reg = <0x4000b000 0x400>;
-> +      interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-> +      clocks = <&rcc SPI2_K>;
-> +      resets = <&rcc SPI2_R>;
-> +      dmas = <&dmamux1 0 39 0x400 0x05>,
-> +             <&dmamux1 1 40 0x400 0x05>;
-> +      dma-names = "rx", "tx";
-> +      cs-gpios = <&gpioa 11 0>;
-> +
-> +      aardvark@0 {
-> +        compatible = "totalphase,aardvark";
-> +        reg = <0>;
-> +        spi-max-frequency = <4000000>;
-> +        st,spi-midi-ns = <4000>;
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> 2.15.0
+Will fix it.
+
+>> +static const struct of_device_id peci_client_of_table[] = {
+>> +	{ .compatible = "intel,peci-client" },
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, peci_client_of_table);
+>> +#endif /* CONFIG_OF */
+> 
+> Please remove this comment.  It doesn't provide anything here.
+
+I see. I'll remove this comment.
+
+>> +static const struct peci_device_id peci_client_ids[] = {
+>> +	{ .name = "peci-client" },
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(peci, peci_client_ids);
+> 
+> Is this a requirement?  If so, why?
+> 
+> We're trying to get rid of unnecessary tables.
+> 
+> Please grep for "probe_new".
+
+This is needed because peci-core.c provides sub tree searching while
+registering a peci bus using of_match_device, also it provides
+runtime registration through sysfs interface using ID match just like
+I2C subsystem does. The probe member in 'struct peci_driver' is defined
+as the new style like this:
+
+struct peci_driver {
+	int (*probe)(struct peci_client *client);
+	[....]
+}
+
+>> +static struct peci_driver peci_client_driver = {
+>> +	.probe    = peci_client_probe,
+>> +	.id_table = peci_client_ids,
+>> +	.driver   = {
+>> +		.name           = KBUILD_MODNAME,
+>> +		.of_match_table = of_match_ptr(peci_client_of_table),
+>> +	},
+>> +};
+>> +module_peci_driver(peci_client_driver);
+>> +
+>> +MODULE_AUTHOR("Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>");
+>> +MODULE_DESCRIPTION("PECI client driver");
+>> +MODULE_LICENSE("GPL v2");
+>> diff --git a/include/linux/mfd/intel-peci-client.h b/include/linux/mfd/intel-peci-client.h
+>> new file mode 100644
+>> index 000000000000..9854303bbc26
+>> --- /dev/null
+>> +++ b/include/linux/mfd/intel-peci-client.h
+>> @@ -0,0 +1,117 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/* Copyright (c) 2018-2019 Intel Corporation */
+>> +
+>> +#ifndef __LINUX_MFD_INTEL_PECI_CLIENT_H
+>> +#define __LINUX_MFD_INTEL_PECI_CLIENT_H
+>> +
+>> +#include <linux/peci.h>
+>> +
+>> +#if IS_ENABLED(CONFIG_X86)
+>> +#include <asm/intel-family.h>
+>> +#else
+>> +/*
+>> + * Architectures other than x86 cannot include the header file so define these
+>> + * at here. These are needed for detecting type of client x86 CPUs behind a PECI
+>> + * connection.
+>> + */
+>> +#define INTEL_FAM6_HASWELL_X		0x3F
+>> +#define INTEL_FAM6_BROADWELL_X		0x4F
+>> +#define INTEL_FAM6_SKYLAKE_X		0x55
+>> +#define INTEL_FAM6_SKYLAKE_XD		0x56
+>> +#endif
+>> +
+>> +#define CORE_MAX_ON_HSX        18 /* Max number of cores on Haswell */
+>> +#define CHAN_RANK_MAX_ON_HSX   8  /* Max number of channel ranks on Haswell */
+>> +#define DIMM_IDX_MAX_ON_HSX    3  /* Max DIMM index per channel on Haswell */
+>> +
+>> +#define CORE_MAX_ON_BDX        24 /* Max number of cores on Broadwell */
+>> +#define CHAN_RANK_MAX_ON_BDX   4  /* Max number of channel ranks on Broadwell */
+>> +#define DIMM_IDX_MAX_ON_BDX    3  /* Max DIMM index per channel on Broadwell */
+>> +
+>> +#define CORE_MAX_ON_SKX        28 /* Max number of cores on Skylake */
+>> +#define CHAN_RANK_MAX_ON_SKX   6  /* Max number of channel ranks on Skylake */
+>> +#define DIMM_IDX_MAX_ON_SKX    2  /* Max DIMM index per channel on Skylake */
+>> +
+>> +#define CORE_MAX_ON_SKXD       16 /* Max number of cores on Skylake D */
+>> +#define CHAN_RANK_MAX_ON_SKXD  2  /* Max number of channel ranks on Skylake D */
+>> +#define DIMM_IDX_MAX_ON_SKXD   2  /* Max DIMM index per channel on Skylake D */
+>> +
+>> +#define CORE_NUMS_MAX          CORE_MAX_ON_SKX
+>> +#define CHAN_RANK_MAX          CHAN_RANK_MAX_ON_HSX
+>> +#define DIMM_IDX_MAX           DIMM_IDX_MAX_ON_HSX
+>> +#define DIMM_NUMS_MAX          (CHAN_RANK_MAX * DIMM_IDX_MAX)
+>> +
+>> +/**
+>> + * struct cpu_gen_info - CPU generation specific information
+>> + * @family: CPU family ID
+>> + * @model: CPU model
+>> + * @core_max: max number of cores
+>> + * @chan_rank_max: max number of channel ranks
+>> + * @dimm_idx_max: max number of DIMM indices
+>> + *
+>> + * CPU generation specific information to identify maximum number of cores and
+>> + * DIMM slots.
+>> + */
+>> +struct cpu_gen_info {
+>> +	u16  family;
+>> +	u8   model;
+>> +	uint core_max;
+>> +	uint chan_rank_max;
+>> +	uint dimm_idx_max;
+>> +};
+>> +
+>> +/**
+>> + * struct peci_client_manager - PECI client manager information
+>> + * @client; pointer to the PECI client
+>> + * @name: PECI client manager name
+>> + * @gen_info: CPU generation info of the detected CPU
+>> + *
+>> + * PECI client manager information for managing PECI sideband functions on a CPU
+>> + * client.
+>> + */
+>> +struct peci_client_manager {
+>> +	struct peci_client *client;
+>> +	char name[PECI_NAME_SIZE];
+>> +	const struct cpu_gen_info *gen_info;
+>> +};
+>> +
+>> +/**
+>> + * peci_client_read_package_config - read from the Package Configuration Space
+>> + * @priv: driver private data structure
+>> + * @index: encoding index for the requested service
+>> + * @param: parameter to specify the exact data being requested
+>> + * @data: data buffer to store the result
+>> + * Context: can sleep
+>> + *
+>> + * A generic PECI command that provides read access to the
+>> + * "Package Configuration Space" that is maintained by the PCU, including
+>> + * various power and thermal management functions. Typical PCS read services
+>> + * supported by the processor may include access to temperature data, energy
+>> + * status, run time information, DIMM temperatures and so on.
+>> + *
+>> + * Return: zero on success, else a negative error code.
+>> + */
+>> +static inline int
+>> +peci_client_read_package_config(struct peci_client_manager *priv,
+>> +				u8 index, u16 param, u8 *data)
+>> +{
+>> +	struct peci_rd_pkg_cfg_msg msg;
+>> +	int ret;
+>> +
+>> +	msg.addr = priv->client->addr;
+>> +	msg.index = index;
+>> +	msg.param = param;
+>> +	msg.rx_len = 4;
+>> +
+>> +	ret = peci_command(priv->client->adapter, PECI_CMD_RD_PKG_CFG, &msg);
+>> +	if (msg.cc != PECI_DEV_CC_SUCCESS)
+>> +		ret = -EAGAIN;
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	memcpy(data, msg.pkg_config, 4);
+>> +
+>> +	return 0;
+>> +}
+> 
+> Where is this function used?
+
+This function is used in MFD cell drivers that are included in this
+patch set, peci-cputemp and peci-dimmtemp drivers. I moved it from
+intel-peci-client.c to this header file as you commented in the previous
+review spin. I also thought about moving it into peci-hwmon.h but
+this command macro is a generic thing for Intel CPUs so I moved into
+here.
+
+Thanks a lot for your review!
+
+-Jae
+
+>> +#endif /* __LINUX_MFD_INTEL_PECI_CLIENT_H */
 > 
