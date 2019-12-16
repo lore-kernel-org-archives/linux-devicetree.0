@@ -2,194 +2,162 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DD9C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C66C2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD431206D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:35:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DX+6a4ic"
+	by mail.kernel.org (Postfix) with ESMTP id 444A2206D3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 14:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfLPOfr (ORCPT
+        id S1728071AbfLPOtg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:35:47 -0500
-Received: from mail-eopbgr60089.outbound.protection.outlook.com ([40.107.6.89]:63393
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728014AbfLPOfr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:35:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HPcO1pLSu4ZkjnyYYNStIlQ47w8CAN9kHnaHlNaCJeAU+0ReIYMwxHrlvTPKV1j0AEvriqDuV5oUJmJvCrU0tlnUtyUv+HEMfo2SePPr3i4L0CcntdmnTn73yMV27T2ko/jSmmxSsjit0MmX4Fx3oKX+ewojnU1h8Mt6Mu8OG1BXiewFq/C0/mPihaePmzozWeagme3mwOLE2YqYrbJ8633weOZm1MVne4RLf3Y45LDv3m9G1KaTodcA6h16ofofl2rUm98r8ST9dHNRBOMebnTx44/8E0NYE/uUHC8de8NggPJyXVvZe283pWoOOoLXobCDFaEoPMSSE1xbySzsIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qxaAqFX80L1buzhWJZDDzjc1AnduXYvz5s91FeSRXxU=;
- b=ULpIs7Xv4mXlqUrA9WqS/b/jid5mUEOxdrAD+pnFv3DcZzUS6nZLs/dp/PTeKkPrLuo+Qi6OJqJ5xxz92H2JYGq90SmotdDN7cGSgbe8gcNrteQhO6ppwLJ3ScXPi6y1onymPSjSKGd7Tti884qPryN4UM9o7wJbkrCQgc/vqvUHEKw4PreeR7QBEzlKDu0ZHF/3I6Cp+/Juq92CudQdrH9hXakgAshdOLuV0t/ZztCEdI3OxCPhaO/usTFnoxGfcvMienuvRs+8mrz2mF+Fnv1LXG6vRQqgc23HryiPsDaY4frTCqzmrSt8fpvcSKSakXjYtCgpzTxgZtx4UGe2cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qxaAqFX80L1buzhWJZDDzjc1AnduXYvz5s91FeSRXxU=;
- b=DX+6a4icQ9ymbNZ/2JNoTz4z45Bd0esNw89gqdKWLvMJVXczqPeKri8+LzT9qlwchY1Puh1q4n34KWerYKaqTEcMsDLd/6hC3kQFeR9rNp78kSb7TEKTqc8j7dzFTIeXQPl7wJNXitnTNVBjPrZuXHPKMLYhe8d94DgGNQAdWjg=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB4077.eurprd04.prod.outlook.com (52.134.123.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.17; Mon, 16 Dec 2019 14:35:43 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::2c49:44c8:2c02:68b1]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::2c49:44c8:2c02:68b1%5]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
- 14:35:42 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Mon, 16 Dec 2019 09:49:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:57802 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728014AbfLPOtg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:49:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6271C1FB;
+        Mon, 16 Dec 2019 06:49:35 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CDCA93F718;
+        Mon, 16 Dec 2019 06:49:34 -0800 (PST)
+Date:   Mon, 16 Dec 2019 14:49:33 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-CC:     =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH RFC v6 5/9] interconnect: imx: Add platform driver for
- imx8mm
-Thread-Topic: [PATCH RFC v6 5/9] interconnect: imx: Add platform driver for
- imx8mm
-Thread-Index: AQHVmyea6vLOQFY6S0eW72n/jayYZA==
-Date:   Mon, 16 Dec 2019 14:35:42 +0000
-Message-ID: <VI1PR04MB702351C3615C360AF5A643A3EE510@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1573761527.git.leonard.crestez@nxp.com>
- <60d36b71294d162d25c9f889177cab30e41d5ae7.1573761527.git.leonard.crestez@nxp.com>
- <537baef4-d3bf-8de9-d168-21af0062b30a@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0d4f113c-6dde-4463-de75-08d782353ae5
-x-ms-traffictypediagnostic: VI1PR04MB4077:|VI1PR04MB4077:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB4077D32B33E3C0DDC8B19F5AEE510@VI1PR04MB4077.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02530BD3AA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(396003)(346002)(376002)(189003)(199004)(9686003)(66946007)(64756008)(66446008)(66556008)(66476007)(7416002)(76116006)(55016002)(316002)(54906003)(110136005)(71200400001)(33656002)(8676002)(81166006)(7696005)(6506007)(53546011)(86362001)(5660300002)(52536014)(186003)(478600001)(4326008)(26005)(8936002)(91956017)(81156014)(2906002)(44832011)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4077;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LCgNjNbpIvcc1nyETWfPr+SupogvMVUGLnOUTp3308qJ+bEeG3j0SX4WSdbnohHoso6uYs/CXWTyJtgXAb41mkMddWe7bQkf7jEv0UBiSARnuom1bzis3xc1b2eIZVS57NZt8RJmlngZkQA1zC0o5epQath/QEiUld4r5dSHnTa9IbFsFPS0XQmP+Bh6ZVZoCfMCPVHgjJVgwawzs5sPgt8TC+kOWIa1rZjYsJcj9dYMbjw2YiFlLmJUR0xhwA/TgTm2EaDe1KenAh2CPVgk/vxSh7KtLEKglASCP1pGpGCsE5U+eY8elSZHu02il/bCa4a9FPQhUs0AVNvw2rWaIYBvwErjeTaTBsBp/IcaqdoVspYw2YXJlGf2s4Z1BAiQdhFl+YXCtpLgL3yW7gtiyQAl0uMK31J7L60PKjKB85y5sU22HXDzzOkfCD0YMsPs/1qr5cBEyoWsMDYyo91o0Xzf1XcbLJEkAVQhDHfTyewXDyt1KVGvNnnC9lYupLCe
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
+ perform only 32-bit accesses
+Message-ID: <20191216144932.GY24359@e119886-lin.cambridge.arm.com>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-6-kishon@ti.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d4f113c-6dde-4463-de75-08d782353ae5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 14:35:42.7731
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jF9cGhZv/3JPAKRwVo+9duJE6EMGym2jkNlsatBO9dG5Sa2e4wnK234Z0c/ezFW2LvSWqhpCQ9lOZrx3PQcRGg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4077
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209092147.22901-6-kishon@ti.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12.12.2019 09:35, Georgi Djakov wrote:=0A=
-> Hi Leonard,=0A=
-> =0A=
-> On 11/14/19 22:09, Leonard Crestez wrote:=0A=
->> Add a platform driver for the i.MX8MM SoC describing bus topology.=0A=
->>=0A=
->> Bandwidth adjustments is currently only supported on the DDRC and main=
-=0A=
->> NOC. Scaling for the vpu/gpu/display NICs could be added in the future.=
-=0A=
->>=0A=
->> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>=0A=
->> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
->> ---=0A=
->>   drivers/interconnect/imx/Kconfig          |   4 +=0A=
->>   drivers/interconnect/imx/Makefile         |   1 +=0A=
->>   drivers/interconnect/imx/imx8mm.c         | 105 ++++++++++++++++++++++=
-=0A=
->>   include/dt-bindings/interconnect/imx8mm.h |  49 ++++++++++=0A=
->>   4 files changed, 159 insertions(+)=0A=
->>   create mode 100644 drivers/interconnect/imx/imx8mm.c=0A=
->>   create mode 100644 include/dt-bindings/interconnect/imx8mm.h=0A=
->>=0A=
->> diff --git a/drivers/interconnect/imx/Kconfig b/drivers/interconnect/imx=
-/Kconfig=0A=
->> index 7d81d3c83a61..15671fe7f600 100644=0A=
->> --- a/drivers/interconnect/imx/Kconfig=0A=
->> +++ b/drivers/interconnect/imx/Kconfig=0A=
->> @@ -1,5 +1,9 @@=0A=
->>   config INTERCONNECT_IMX=0A=
->>   	bool "i.MX interconnect drivers"=0A=
->>   	depends on ARCH_MXC || COMPILE_TEST=0A=
->>   	help=0A=
->>   	  Generic interconnect driver for i.MX SOCs=0A=
->> +=0A=
->> +config INTERCONNECT_IMX8MM=0A=
->> +	def_bool y=0A=
-> =0A=
-> Can this be a module?=0A=
-=0A=
-Yes. I'll turn this into a tristate; at the very least it would be =0A=
-useful to check modprobe cycling.=0A=
-=0A=
-By default imx boots with bus frequency set to "high" so there are no =0A=
-hard dependencies on interconnect.=0A=
-=0A=
-Historically in our vendor tree we had boot drivers which made bus =0A=
-scaling requests (like sdcard and ethernet) but I'm not sure this is =0A=
-strictly required.=0A=
-=0A=
->> +	depends on INTERCONNECT_IMX=0A=
->> diff --git a/drivers/interconnect/imx/Makefile b/drivers/interconnect/im=
-x/Makefile=0A=
->> index bb92fd9fe4a5..5f658c1608a6 100644=0A=
->> --- a/drivers/interconnect/imx/Makefile=0A=
->> +++ b/drivers/interconnect/imx/Makefile=0A=
->> @@ -1 +1,2 @@=0A=
->>   obj-$(CONFIG_INTERCONNECT_IMX) +=3D imx.o=0A=
->> +obj-$(CONFIG_INTERCONNECT_IMX8MM) +=3D imx8mm.o=0A=
->> diff --git a/drivers/interconnect/imx/imx8mm.c b/drivers/interconnect/im=
-x/imx8mm.c=0A=
->> new file mode 100644=0A=
->> index 000000000000..acc002153729=0A=
->> --- /dev/null=0A=
-> =0A=
-> Thanks,=0A=
-> Georgi=0A=
-> =0A=
-=0A=
+On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
+> Certain platforms like TI's J721E allow only 32-bit register accesses.
+
+When I first read this I thought you meant only 32-bit accesses are allowed
+and not other sizes (such as 64-bit). However the limitation you address
+here is that the J721E allows only 32-bit *aligned* register accesses.
+
+It would be helpful to make this clearer in the commit message.
+
+You can also shorten the commit subject to 'PCI: cadence: Add read/write
+accessors for 32-bit aligned accesses' or similar.
+
+> Add read and write accessors to perform only 32-bit accesses in order to
+> support platfroms like TI's J721E.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence.c | 40 +++++++++++++++++++
+>  drivers/pci/controller/cadence/pcie-cadence.h |  2 +
+>  2 files changed, 42 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+> index cd795f6fc1e2..de5b3b06f2d0 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
+> @@ -7,6 +7,46 @@
+>  
+>  #include "pcie-cadence.h"
+>  
+> +u32 cdns_pcie_read32(void __iomem *addr, int size)
+
+Given there is already a cdns_pcie_readl in pcie-cadence.h it may help
+to name this in a way that doesn't cause confusion. Here 32 is perhaps
+being used to suggest the size of the actual read performed, the
+maximum size of 'size' or the alignment.
+
+
+> +{
+> +	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
+> +	unsigned int offset = (unsigned long)addr & 0x3;
+> +	u32 val = readl(aligned_addr);
+> +
+> +	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+> +		pr_err("Invalid Address in function:%s\n", __func__);
+
+Would this be better as a BUG? Without a BUG this error could get ignored
+and yet the device may not behave as expected.
+
+
+> +		return 0;
+> +	}
+> +
+> +	if (size > 2)
+> +		return val;
+
+I think you make the assumption here that if size > 2 then it's 4. It could
+be 3 (though unlikely) in which case you'd want to fall through to the next
+line.
+
+> +
+> +	return (val >> (8 * offset)) & ((1 << (size * 8)) - 1);
+> +}
+> +
+> +void cdns_pcie_write32(void __iomem *addr, int size, u32 value)
+> +{
+
+And same feedback for this function.
+
+Thanks,
+
+Andrew Murray
+
+> +	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
+> +	unsigned int offset = (unsigned long)addr & 0x3;
+> +	u32 mask;
+> +	u32 val;
+> +
+> +	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+> +		pr_err("Invalid Address in function:%s\n", __func__);
+> +		return;
+> +	}
+> +
+> +	if (size > 2) {
+> +		writel(value, addr);
+> +		return;
+> +	}
+> +
+> +	mask = ~(((1 << (size * 8)) - 1) << (offset * 8));
+> +	val = readl(aligned_addr) & mask;
+> +	val |= value << (offset * 8);
+> +	writel(val, aligned_addr);
+> +}
+> +
+>  void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
+>  				   u32 r, bool is_io,
+>  				   u64 cpu_addr, u64 pci_addr, size_t size)
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index f0395eaf9df5..5171d0da37da 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -498,6 +498,8 @@ void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r);
+>  void cdns_pcie_disable_phy(struct cdns_pcie *pcie);
+>  int cdns_pcie_enable_phy(struct cdns_pcie *pcie);
+>  int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie);
+> +u32 cdns_pcie_read32(void __iomem *addr, int size);
+> +void cdns_pcie_write32(void __iomem *addr, int size, u32 value);
+>  extern const struct dev_pm_ops cdns_pcie_pm_ops;
+>  
+>  #endif /* _PCIE_CADENCE_H */
+> -- 
+> 2.17.1
+> 
