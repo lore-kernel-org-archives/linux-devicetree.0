@@ -2,114 +2,98 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E17C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E83DC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4F020725
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E68206EC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 15:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576511565;
-	bh=eaQ3x3sQJkJ+Ir/RJSw4LQ05zXXPEkT+Q2g7IkDI1xk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rxqyxPn7E3+8BE3kKEP5ew7TAuxrxHHr+o5heZojGuziUXhgjqZuT19V3DH+nFuw8
-	 PfxdwCY0NVHyvrJ6rSg4ZmyI3uuRHht8DOevwXeXq1NjqgEa1eqaUgK73UjVyyaqW7
-	 XPqZuIeO8WQu6MTvs3UQt6OumNFtls+DRQ+HLsH0=
+	s=default; t=1576511633;
+	bh=KewUIYX6Xb/KUGmI7ZCD6D7PdVzt41J+GOTmkmhhx98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zkjds1fOTLf8a3G+f3V7ew1k1wMBloOLMwvQcz2LqQEUa4agP3GjNnZIH3iss7wNQ
+	 goOya2IX5vxOHmcYAZjVcKWjV8VK/SePdUOsxSIFjpm8Gql9m2ccDyWtZ7LK53Tr+5
+	 DAXkmSVnI1Xs9ZvAkOW2JAc7++cWfEFiB4rDO4j8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbfLPPwg (ORCPT
+        id S1727388AbfLPPxw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:52:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727763AbfLPPwe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:52:34 -0500
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 941902146E;
-        Mon, 16 Dec 2019 15:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576511553;
-        bh=eaQ3x3sQJkJ+Ir/RJSw4LQ05zXXPEkT+Q2g7IkDI1xk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lgRlANm6ITls3sYB0vkQAD5vJ57JdMCMEmQ/XRM0hA1divZOs2sBzjxEwuea7F3a7
-         ZAVlVG4YApTTQ/jZ68HF7/swo8gY4cFHYBLoYfyuvleEGHa3MTCyE1ipkW679xQY1G
-         eFE5gJNMOLFuUWQsTsLrlxPgMeabqRVppPGDh7KU=
-Received: by mail-qv1-f44.google.com with SMTP id l14so2293794qvu.12;
-        Mon, 16 Dec 2019 07:52:33 -0800 (PST)
-X-Gm-Message-State: APjAAAXb8i6qbCpmyTM+eR23BkUA2pmVn8hz7vbNMZ2j8UBJ0vIqeV7g
-        TGf8IDaUcP5rV2NYQm6nAHPoPOuGzrumjiaclA==
-X-Google-Smtp-Source: APXvYqwVJYkAlWIdZU2TFQfbL6hRU5QxGwsrdp61SPZ/B7ThiZyfT8pRxhhI4yQUPA1YvRv8RCRQMv+9we0zkJBDmxg=
-X-Received: by 2002:ad4:450a:: with SMTP id k10mr25719233qvu.136.1576511552698;
- Mon, 16 Dec 2019 07:52:32 -0800 (PST)
-MIME-Version: 1.0
-References: <20191202233127.31160-1-ray.jui@broadcom.com> <20191202233127.31160-2-ray.jui@broadcom.com>
- <62254bbb-168e-c0ad-a72d-bd659a2c23fa@gmail.com> <0f0e965b-2e57-8b6b-0c72-1a1008497793@broadcom.com>
- <20191213235013.GA9997@bogus> <a5af90d0-eebf-3bf8-46d8-75160a1fc7de@gmail.com>
-In-Reply-To: <a5af90d0-eebf-3bf8-46d8-75160a1fc7de@gmail.com>
+        Mon, 16 Dec 2019 10:53:52 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46659 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727707AbfLPPxw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 10:53:52 -0500
+Received: by mail-oi1-f195.google.com with SMTP id a124so3631936oii.13;
+        Mon, 16 Dec 2019 07:53:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/9D5bT/6tP3rVi8f9x2mTx0nceNBLJn6Pnm6PW8Q2Io=;
+        b=IMMOqhHMM4umPNXoi0CYT4A5c6zMjeP8xKsqb2W+e1P5Bi1/r4rrRY2HAouHJBScFP
+         KEo95eOWpO0mCWAX07tfkLNW98aUbgUvWS45SgM1h6Ui5MNI/2VasRUq2o7wyM7Oyv+p
+         +3VClTtYWptZT6XeUlIGhcp/nHGm12L2xtlKPihdlp/MQnsw/dMrBzyZGHjj+B63rXFD
+         OYA1hCkIHqW9C8Bn/EpdQ8Xt/LPsX96s6yqsYlulGCLbYZ2K0x1Okc/XdGy1nwUmYWah
+         oP2M2hU3GsmK1hrwmiZh0mBesrRq7YHbGpQNbYlvdo29rTI/AokFwVM3bww/7EcWdo2D
+         6yNA==
+X-Gm-Message-State: APjAAAUE38cil935cPexsEJTVbblede4JFhZQpFXq/z23Uc2oLBZVRYx
+        rhdFR9OU8CMZQcA1pZBzbA==
+X-Google-Smtp-Source: APXvYqyjwLNiOdATGwneeb/VvNya7K52309SCLgJd3wlYpmyowMytvhPIlCjsXsVJ32JPzuOA6Vxbw==
+X-Received: by 2002:aca:5f87:: with SMTP id t129mr10180489oib.36.1576511631553;
+        Mon, 16 Dec 2019 07:53:51 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e65sm6962874otb.62.2019.12.16.07.53.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 07:53:51 -0800 (PST)
+Date:   Mon, 16 Dec 2019 09:53:50 -0600
 From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 16 Dec 2019 09:52:21 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKXdo+wouHZV9VFQojtQNK3NOLmj3NtnTmVo2fX541GPA@mail.gmail.com>
-Message-ID: <CAL_JsqKXdo+wouHZV9VFQojtQNK3NOLmj3NtnTmVo2fX541GPA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: soc: Add binding doc for iProc IDM device
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Ray Jui <ray.jui@broadcom.com>, Stefan Wahren <wahrenst@gmx.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, ran.wang_1@nxp.com,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
+Subject: Re: [v5 3/3] Documentation: dt: binding: fsl: Add
+ 'fsl,ippdexpcr1-alt-addr' property
+Message-ID: <20191216155350.GA10941@bogus>
+References: <20191203122818.21941-1-biwen.li@nxp.com>
+ <20191203122818.21941-3-biwen.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203122818.21941-3-biwen.li@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 6:00 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
->
->
-> On 12/13/2019 3:50 PM, Rob Herring wrote:
-> > On Fri, Dec 06, 2019 at 05:09:34PM -0800, Ray Jui wrote:
-> >>
-> >>
-> >> On 12/5/19 4:09 PM, Florian Fainelli wrote:
-> >>> On 12/2/19 3:31 PM, Ray Jui wrote:
-> >>>> Add binding document for iProc based IDM devices.
-> >>>>
-> >>>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> >>>
-> >>> Looks good to me, it's 2019, nearly 2020, maybe make this a YAML
-> >>> compatible binding since it is a new one?
-> >>>
-> >>
-> >> Sorry I am not aware of this YAML requirement until now.
-> >>
-> >> Is this a new requirement that new DT binding document should be made with
-> >> YAML format?
-> >
-> > The format has been in place in the kernel for a year now and we've
-> > moved slowly towards it being required. If you're paying that little
-> > attention to upstream, then yes it's definitely required so someone else
-> > doesn't get stuck converting your binding later.
-> >
-> > BTW, I think all but RPi chips still need their SoC/board bindings
-> > converted. One of the few not yet converted...
->
-> Is there something more to do than what Stefan did here:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ab06837dd269b600396b298e9f4678d02b11b71d
+On Tue,  3 Dec 2019 20:28:18 +0800, Biwen Li wrote:
+> The 'fsl,ippdexpcr1-alt-addr' property is used to handle an errata A-008646
+> on LS1021A
+> 
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v5:
+> 	- none
+> 
+> Change in v4:
+> 	- rename property name
+> 	  fsl,ippdexpcr-alt-addr -> fsl,ippdexpcr1-alt-addr
+> 
+> Change in v3:
+>   	- rename property name
+> 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
+> 
+> Change in v2:
+>   	- update desc of the property
+> 	  'fsl,rcpm-scfg'
+> 
+>  .../devicetree/bindings/soc/fsl/rcpm.txt      | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
 
-No, that's it.
-
-> we could convert other Broadcom SoCs, and there, just found another
-> weekend project!
-> --
-> Florian
+Reviewed-by: Rob Herring <robh@kernel.org>
