@@ -2,161 +2,192 @@ Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCFFC43603
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 10:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B17DFC43603
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE5D20700
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 10:58:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="IMLrsBod";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="q+xW6eiN"
+	by mail.kernel.org (Postfix) with ESMTP id 91D882072B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 11:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfLPK6c (ORCPT
+        id S1727558AbfLPLBa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:58:32 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:58445 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727403AbfLPK6b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:58:31 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 5EA5E7118;
-        Mon, 16 Dec 2019 05:58:30 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 16 Dec 2019 05:58:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=7E2TpTwENCgP1MRD7/Eziybb/Th
-        2bGLOCc12fC88q6E=; b=IMLrsBodXXXGicPZCQDlL4YhxJ8yYXkJiGeQPJQQwf4
-        cvkx9X6OxYx4AIhSKnPbdJllQHaNKzzF32/qX58QgboLLpEQjhHszLxaPpdgMMqV
-        5jwKe1BCnPBcTCzsnR03dumppfba/ket7EzIV/vDMcpIzk6A9IEqm5vtpgGTV0is
-        zhsxVo69knhpEPIVcq8TwJ3MXG2+XWNQp+POUAs1H0De5zyyiyMRlkSCghfcP6au
-        1A6KiA/ogyumRutouWKKu8dAEzQyxprg9hq1qJbuVHeCMMxACjaQnueTYxbD/Xbp
-        1EaHOWLopra/MTOUFxZc/cLJR14aFWEUPkFkB2CgpAw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=7E2TpT
-        wENCgP1MRD7/Eziybb/Th2bGLOCc12fC88q6E=; b=q+xW6eiNUtLhXYj2T6MpV1
-        DO8WdVfGXHlYR8Od+K4ZToowmTlu5f3/0IOeXhM0VokgQyeONZ1a7SFy1qvQ09sS
-        RJo277PYsWoBr9JZzYUX1G8wrKf8zaGzsV3XCIqtSdwweXbLBWtRqbsDZDQyVKT8
-        BBUNVnMhxMxo6H0jMMQkFW58R8n+XHpB9KIkoJH+b3JN5yZPUEtHDIGdPI5GMBV/
-        YEWDRRva+BF230lJgh67fWaDUDKu+WGR40H/0ooi009xOpo+5NNKgJ0NOx8/e41Q
-        pUtQwoztthAvbEQgK30HoL9BjVCTgbU5uRqaC5EzMJnejxYGnCQB2JqhHaGLlKxw
-        ==
-X-ME-Sender: <xms:VGP3XUY8i-9w8CG05Yj5PzjIikoPOmggk-UF_ctcBee-8Lck051Ulg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddthedgvddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggv
-    rhhnohdrthgvtghhnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:VGP3Xbt6ohxrttMcaXVI6FmO7AAaqrpN7X7GqTN0Wk7tLzLIlYh-yg>
-    <xmx:VGP3XRtN1Yg5tIbLqODohz6GBDmEP1smxIZbRdwPBUzowBcnBB7ffA>
-    <xmx:VGP3XQe2jz2UyPBCXhDoFD1nNHKHF_HUD8nsB_jR_XrJ_cT8fDkXMA>
-    <xmx:VmP3XVbpO_j_XIh2rB_1sEeclFhYceWTGR5NP61U8O2Mv5Qzxs8Stw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 690A280063;
-        Mon, 16 Dec 2019 05:58:28 -0500 (EST)
-Date:   Mon, 16 Dec 2019 11:58:27 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mon, 16 Dec 2019 06:01:30 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36828 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727494AbfLPLB3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 06:01:29 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0A418ABF4;
+        Mon, 16 Dec 2019 11:01:27 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
+        phil@raspberrypi.org, wahrenst@gmx.net, jeremy.linton@arm.com,
+        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Sandy Huang <hjc@rock-chips.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 09/12] drm/rockchip: lvds: Add PX30 support
-Message-ID: <20191216105827.rxkfbwemkqw446jx@gilmour.lan>
-References: <20191213181051.25983-1-miquel.raynal@bootlin.com>
- <20191213181051.25983-10-miquel.raynal@bootlin.com>
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH v5 1/6] dt-bindings: PCI: Add bindings for brcmstb's PCIe device
+Date:   Mon, 16 Dec 2019 12:01:07 +0100
+Message-Id: <20191216110113.30436-2-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191216110113.30436-1-nsaenzjulienne@suse.de>
+References: <20191216110113.30436-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="akf2tzjwfz7nnjic"
-Content-Disposition: inline
-In-Reply-To: <20191213181051.25983-10-miquel.raynal@bootlin.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Jim Quinlan <james.quinlan@broadcom.com>
 
---akf2tzjwfz7nnjic
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The DT bindings description of the brcmstb PCIe device is described.
+This node can only be used for now on the Raspberry Pi 4.
 
-Hi,
+Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-On Fri, Dec 13, 2019 at 07:10:48PM +0100, Miquel Raynal wrote:
-> +static int px30_lvds_grf_config(struct drm_encoder *encoder,
-> +				struct drm_display_mode *mode)
-> +{
-> +	struct rockchip_lvds *lvds = encoder_to_lvds(encoder);
-> +	u8 nhsync = !(mode->flags & DRM_MODE_FLAG_PHSYNC);
-> +	u8 nvsync = !(mode->flags & DRM_MODE_FLAG_PVSYNC);
-> +	u8 ndclk = !(mode->flags & DRM_MODE_FLAG_PCSYNC);
-> +	int ret;
-> +
-> +	if (lvds->output != DISPLAY_OUTPUT_LVDS) {
-> +		DRM_DEV_ERROR(lvds->dev, "Unsupported display output %d\n",
-> +			      lvds->output);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (nhsync ^ nvsync) {
-> +		DRM_DEV_ERROR(lvds->dev, "Unsupported Hsync/Vsync polarity\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Set format */
-> +	ret = regmap_update_bits(lvds->grf, PX30_LVDS_GRF_PD_VO_CON1,
-> +				 PX30_LVDS_FORMAT(lvds->format),
-> +				 PX30_LVDS_FORMAT(lvds->format));
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Control Hsync/Vsync polarity */
-> +	ret = regmap_update_bits(lvds->grf, PX30_LVDS_GRF_PD_VO_CON0,
-> +				 PX30_LVDS_TIE_CLKS(1),
-> +				 PX30_LVDS_TIE_CLKS(1));
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Set Hsync/Vsync polarity */
-> +	ret = regmap_update_bits(lvds->grf, PX30_LVDS_GRF_PD_VO_CON0,
-> +				 PX30_LVDS_INVERT_CLKS(1),
-> +				 PX30_LVDS_INVERT_CLKS(nhsync));
-> +	if (ret)
-> +		return ret;
+---
 
-I don't know the hardware but it seems pretty weird to me. hsync and
-vsync in LVDS are not clocks (or even signals), they're a bit in the
-payload. Is there any explanation in the datasheet (or even a
-datasheet in the first place)?
+Changes since v2:
+  - Add pci reference schema
+  - Drop all default properties
+  - Assume msi-controller and msi-parent are properly defined
+  - Add num entries on multiple properties
+  - use unevaluatedProperties
+  - Update required properties
+  - Fix license
 
-Maxime
+Changes since v1:
+  - Fix commit Subject
+  - Remove linux,pci-domain
 
---akf2tzjwfz7nnjic
-Content-Type: application/pgp-signature; name="signature.asc"
+This was based on Jim's original submission[1], converted to yaml and
+adapted to the RPi4 case.
 
------BEGIN PGP SIGNATURE-----
+[1] https://patchwork.kernel.org/patch/10605937/
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfdjUgAKCRDj7w1vZxhR
-xRBYAP44GLCelEvFF7JRcxbERsDpTT+xk8XxtfgoWUly8jPqegD+Jrne3aLXYopK
-ogFPLh6TeB2oQ1+pAWNgKDtT5Zntxwo=
-=SVmk
------END PGP SIGNATURE-----
+ .../bindings/pci/brcm,stb-pcie.yaml           | 97 +++++++++++++++++++
+ 1 file changed, 97 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
 
---akf2tzjwfz7nnjic--
+diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+new file mode 100644
+index 000000000000..77d3e81a437b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+@@ -0,0 +1,97 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Brcmstb PCIe Host Controller Device Tree Bindings
++
++maintainers:
++  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
++
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++
++properties:
++  compatible:
++    const: brcm,bcm2711-pcie # The Raspberry Pi 4
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description: PCIe host controller
++      - description: builtin MSI controller
++
++  interrupt-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: pcie
++      - const: msi
++
++  ranges:
++    maxItems: 1
++
++  dma-ranges:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: sw_pcie
++
++  msi-controller:
++    description: Identifies the node as an MSI controller.
++
++  msi-parent:
++    description: MSI controller the device is capable of using.
++
++  brcm,enable-ssc:
++    description: Indicates usage of spread-spectrum clocking.
++    type: boolean
++
++required:
++  - reg
++  - dma-ranges
++  - "#interrupt-cells"
++  - interrupts
++  - interrupt-names
++  - interrupt-map-mask
++  - interrupt-map
++  - msi-controller
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    scb {
++            #address-cells = <2>;
++            #size-cells = <1>;
++            pcie0: pcie@7d500000 {
++                    compatible = "brcm,bcm2711-pcie";
++                    reg = <0x0 0x7d500000 0x9310>;
++                    device_type = "pci";
++                    #address-cells = <3>;
++                    #size-cells = <2>;
++                    #interrupt-cells = <1>;
++                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
++                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
++                    interrupt-names = "pcie", "msi";
++                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
++                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
++                    msi-parent = <&pcie0>;
++                    msi-controller;
++                    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
++                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
++                    brcm,enable-ssc;
++            };
++    };
+-- 
+2.24.0
+
