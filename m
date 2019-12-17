@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5BFC2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69311C2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78DA921739
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CAD2176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:17:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Abw3cj2l"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FJmV12Z9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbfLQMRU (ORCPT
+        id S1727992AbfLQMR1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:17:20 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33242 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbfLQMRQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 07:17:16 -0500
-Received: by mail-wr1-f66.google.com with SMTP id b6so11089217wrq.0
-        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 04:17:15 -0800 (PST)
+        Tue, 17 Dec 2019 07:17:27 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37592 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727941AbfLQMRP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 07:17:15 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w15so11083372wru.4
+        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 04:17:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UpfkndITw/1h6ZYfXIWQrUX2mzHma7l6m7IK0V8q2nM=;
-        b=Abw3cj2lbXrOSkCCt1xvDj375HfQrVnUYPWgKzH+JhB9zQYVcPTnjK1hhEJN9jH5Ql
-         +7HbWTlFHir+TeCUoAnyrslEoEzqbSih0IRiDUp7aMMvrty/y44lwc0LtC8IRv/kKpL3
-         9LK92xQA+q5VRGlzDFjI8wj8XwXVTi2eJfbmGZSimS5kghu5nF7sjIdyXRTZyqfgZvD6
-         UHsWc7nqcL64ERb2qhhKV6ZfUcLv8ZeEvbCN34dGqUSUdn9uNUXEhwITKHFGPL1QXIzA
-         Vndxjs7P6PwAkeCDH2D22gqhKK3quul4OxL1vo/4BACxS+fXaHKldROOBJSPMEdRgaek
-         +74g==
+        bh=DVqcfTgjqDIP2wy7JDCyl9+vrKLd49ALRMx75DX6+Wc=;
+        b=FJmV12Z9o79SLdhEWr5+T6LjN72YQvI8I5rXdPbm2D1C8KFHb4r2UtTdawkgvN6Ltr
+         u/qyJFDz5dZLFIBXDlt4QcICzRDXUTg0hHw636UCf3Trav1QxVYX7FcNk7heMWHF5kUO
+         pZfnNZrl/H4kFCPeCu0LceG83AVqU+2HNMcKBk2HafX3IdSz09RjjlnhbI9+oAPzomp1
+         Sg/9nNGomHJyWnBV56dsDdX4AjrrU5Gr9gqracEpPdWb8wiqIvHDhFfdG0vruRZM263H
+         QlGZU//Z7L58oXXY3afMyOOKjBCQppKBJfkDlzt+g7M5QEgySkBI/229dfSnRTCz6AcA
+         Hk3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UpfkndITw/1h6ZYfXIWQrUX2mzHma7l6m7IK0V8q2nM=;
-        b=Lnlx6FXZ5cjaHU8e4YewqknXEaxyMxRNjOyEEJWD0o/ymnwGemxLicyurjhGvFk4or
-         /BfyF2BrWgRxOhe+GA15ROMVpV9VCV57GbdQ5gwTLGP1SQ3nRF13ZtAmWzfHKkFMJwiC
-         O3c2YWvZxMdzsy1uGYtz+Fg7a2S+mQtRFufR5DjafUrR1JJT2XUH2HqXaM7mntkAkKAu
-         hsKcK/H29afPt0IxB0DD5QlMGyur8U2OFX8yDeMmWMLx+byKiLVs+hEgm0gJE9FfYTH7
-         6Rdubo0TBxlWKdCj+X5W05QqRVHo37CCEGV7kemuUaoD2OmbS8JasMeVE6Q29J03eBgT
-         e2TQ==
-X-Gm-Message-State: APjAAAU6Hk+YlMgM0tcHLIjF0ckDpic9ho3FIKCHmukrFZKGLbgBetva
-        vTfib3zATiefuchGx00esBQUoPgEN84=
-X-Google-Smtp-Source: APXvYqy7+Vgw/klg6kwKo9JrsWfZ6grcRRW7hNzoqPnmnoCUPlMboTlXRpvXAu9vBFQdcrFu7E0AjA==
-X-Received: by 2002:a5d:6089:: with SMTP id w9mr36327749wrt.228.1576585034676;
-        Tue, 17 Dec 2019 04:17:14 -0800 (PST)
+        bh=DVqcfTgjqDIP2wy7JDCyl9+vrKLd49ALRMx75DX6+Wc=;
+        b=tdQpJT4NgCcWhJCVy37flesO4VyRs6lXDSrwRpU8dKjcTMmqfIto3NQIhbyZqpseqp
+         JCyKO4o1jI3f+8gOPf/mLNS+iVokB1dlwXeE99wplT2nCAp1afZca5/e+jDuCiPjg5Mc
+         uxfpzE+Fiu3dMODdGx8JiqikbNuoweeQPgTQmS6LTYs6khDlZ4YT50Rk760IveReoH3X
+         fwTtUTbpef89CCaVnuv6+fT2trckhuyj9moK7FgW/mqHYP+HaWKSjEM1C9uST6ocX3C8
+         d7JQcVxrhgpgFjxqKzekOnY9MHf5rRSgM3okpch0vJheNCZQyMjh7CT8cG77KrLOxWrc
+         UZwQ==
+X-Gm-Message-State: APjAAAUNf+kK0w/27KXLt3wr8GP1/byizNoRJS/UmZBg19YwSGM6ixGg
+        RQiJ5gddfBk8pJtgcUziHxCGWw==
+X-Google-Smtp-Source: APXvYqxI8zjRqAqvVE2CT5mmoo1tSkKgcBWGCL6qkh/AcQp+7aMawPDnKwJbbrI37VoCCKTPuzhmpg==
+X-Received: by 2002:a05:6000:cf:: with SMTP id q15mr36111061wrx.393.1576585031908;
+        Tue, 17 Dec 2019 04:17:11 -0800 (PST)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id f1sm25087270wru.6.2019.12.17.04.17.13
+        by smtp.gmail.com with ESMTPSA id f1sm25087270wru.6.2019.12.17.04.17.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 04:17:14 -0800 (PST)
+        Tue, 17 Dec 2019 04:17:11 -0800 (PST)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     robh@kernel.org, broonie@kernel.org, lee.jones@linaro.org,
         linus.walleij@linaro.org
@@ -63,9 +63,9 @@ Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
         spapothi@codeaurora.org, bgoswami@codeaurora.org,
         linux-gpio@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v5 11/11] ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
-Date:   Tue, 17 Dec 2019 12:16:42 +0000
-Message-Id: <20191217121642.28534-12-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v5 09/11] gpio: wcd934x: Add support to wcd934x gpio controller
+Date:   Tue, 17 Dec 2019 12:16:40 +0000
+Message-Id: <20191217121642.28534-10-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191217121642.28534-1-srinivas.kandagatla@linaro.org>
 References: <20191217121642.28534-1-srinivas.kandagatla@linaro.org>
@@ -76,167 +76,158 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support to Lenovo Yoga c630 compatible strings
-and related setup to the sound machine driver.
+This patch adds support to wcd934x gpio block found in
+WCD9340/WC9341 Audio codecs.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- sound/soc/qcom/sdm845.c | 86 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 85 insertions(+), 1 deletion(-)
+ drivers/gpio/Kconfig        |   8 +++
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-wcd934x.c | 104 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 113 insertions(+)
+ create mode 100644 drivers/gpio/gpio-wcd934x.c
 
-diff --git a/sound/soc/qcom/sdm845.c b/sound/soc/qcom/sdm845.c
-index 28f3cef696e6..3b5547a27aad 100644
---- a/sound/soc/qcom/sdm845.c
-+++ b/sound/soc/qcom/sdm845.c
-@@ -24,6 +24,9 @@
- #define RIGHT_SPK_TDM_TX_MASK   0xC0
- #define SPK_TDM_RX_MASK         0x03
- #define NUM_TDM_SLOTS           8
-+#define SLIM_MAX_TX_PORTS 16
-+#define SLIM_MAX_RX_PORTS 16
-+#define WCD934X_DEFAULT_MCLK_RATE	9600000
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 8adffd42f8cb..3da3e228c221 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -613,6 +613,14 @@ config GPIO_VX855
+ 	  additional drivers must be enabled in order to use the
+ 	  functionality of the device.
  
- struct sdm845_snd_data {
- 	struct snd_soc_jack jack;
-@@ -36,6 +39,39 @@ struct sdm845_snd_data {
- 
- static unsigned int tdm_slot_offset[8] = {0, 4, 8, 12, 16, 20, 24, 28};
- 
-+static int sdm845_slim_snd_hw_params(struct snd_pcm_substream *substream,
-+				     struct snd_pcm_hw_params *params)
++config GPIO_WCD934X
++	tristate "Qualcomm Technologies Inc WCD9340/WCD9341 gpio controller driver"
++	depends on MFD_WCD934X && OF_GPIO
++	select GPIO_GENERIC
++	help
++         This driver is to supprot GPIO block found on the Qualcomm Technologies
++	 Inc WCD9340/WCD9341 Audio Codec.
++
+ config GPIO_XGENE
+ 	bool "APM X-Gene GPIO controller support"
+ 	depends on ARM64 && OF_GPIO
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 34eb8b2b12dd..116133f905e7 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -157,6 +157,7 @@ obj-$(CONFIG_GPIO_VF610)		+= gpio-vf610.o
+ obj-$(CONFIG_GPIO_VIPERBOARD)		+= gpio-viperboard.o
+ obj-$(CONFIG_GPIO_VR41XX)		+= gpio-vr41xx.o
+ obj-$(CONFIG_GPIO_VX855)		+= gpio-vx855.o
++obj-$(CONFIG_GPIO_WCD934X)		+= gpio-wcd934x.o
+ obj-$(CONFIG_GPIO_WHISKEY_COVE)		+= gpio-wcove.o
+ obj-$(CONFIG_GPIO_WINBOND)		+= gpio-winbond.o
+ obj-$(CONFIG_GPIO_WM831X)		+= gpio-wm831x.o
+diff --git a/drivers/gpio/gpio-wcd934x.c b/drivers/gpio/gpio-wcd934x.c
+new file mode 100644
+index 000000000000..0aac33235c5f
+--- /dev/null
++++ b/drivers/gpio/gpio-wcd934x.c
+@@ -0,0 +1,104 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2019, Linaro Limited
++
++#include <linux/module.h>
++#include <linux/gpio.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/of_device.h>
++
++#define WCD_PIN_MASK(p) BIT(p - 1)
++#define WCD_REG_DIR_CTL_OFFSET 0x42
++#define WCD_REG_VAL_CTL_OFFSET 0x43
++#define WCD934X_NPINS		5
++
++struct wcd_gpio_data {
++	struct regmap *map;
++	struct gpio_chip chip;
++};
++
++static int wcd_gpio_direction_input(struct gpio_chip *chip, unsigned int pin)
 +{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	u32 rx_ch[SLIM_MAX_RX_PORTS], tx_ch[SLIM_MAX_TX_PORTS];
-+	u32 rx_ch_cnt = 0, tx_ch_cnt = 0;
-+	int ret = 0, i;
++	struct wcd_gpio_data *data = gpiochip_get_data(chip);
 +
-+	for (i = 0 ; i < dai_link->num_codecs; i++) {
-+		ret = snd_soc_dai_get_channel_map(rtd->codec_dais[i],
-+				&tx_ch_cnt, tx_ch, &rx_ch_cnt, rx_ch);
-+
-+		if (ret != 0 && ret != -ENOTSUPP) {
-+			pr_err("failed to get codec chan map, err:%d\n", ret);
-+			return ret;
-+		} else if (ret == -ENOTSUPP) {
-+			/* Ignore unsupported */
-+			continue;
-+		}
-+
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-+			ret = snd_soc_dai_set_channel_map(cpu_dai, 0, NULL,
-+							  rx_ch_cnt, rx_ch);
-+		else
-+			ret = snd_soc_dai_set_channel_map(cpu_dai, tx_ch_cnt,
-+							  tx_ch, 0, NULL);
-+	}
-+
-+	return 0;
++	return regmap_update_bits(data->map, WCD_REG_DIR_CTL_OFFSET,
++				  WCD_PIN_MASK(pin), 0);
 +}
 +
- static int sdm845_tdm_snd_hw_params(struct snd_pcm_substream *substream,
- 					struct snd_pcm_hw_params *params)
- {
-@@ -151,6 +187,11 @@ static int sdm845_snd_hw_params(struct snd_pcm_substream *substream,
- 	case QUATERNARY_TDM_TX_0:
- 		ret = sdm845_tdm_snd_hw_params(substream, params);
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		ret = sdm845_slim_snd_hw_params(substream, params);
-+		break;
-+	case QUATERNARY_MI2S_RX:
-+		break;
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
- 		break;
-@@ -173,7 +214,20 @@ static int sdm845_dai_init(struct snd_soc_pcm_runtime *rtd)
- 	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
- 	struct sdm845_snd_data *pdata = snd_soc_card_get_drvdata(card);
- 	struct snd_jack *jack;
--	int rval;
-+	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-+	/*
-+	 * Codec SLIMBUS configuration
-+	 * RX1, RX2, RX3, RX4, RX5, RX6, RX7, RX8, RX9, RX10, RX11, RX12, RX13
-+	 * TX1, TX2, TX3, TX4, TX5, TX6, TX7, TX8, TX9, TX10, TX11, TX12, TX13
-+	 * TX14, TX15, TX16
-+	 */
-+	unsigned int rx_ch[SLIM_MAX_RX_PORTS] = {144, 145, 146, 147, 148, 149,
-+					150, 151, 152, 153, 154, 155, 156};
-+	unsigned int tx_ch[SLIM_MAX_TX_PORTS] = {128, 129, 130, 131, 132, 133,
-+					    134, 135, 136, 137, 138, 139,
-+					    140, 141, 142, 143};
-+	int rval, i;
++static int wcd_gpio_direction_output(struct gpio_chip *chip, unsigned int pin,
++				     int val)
++{
++	struct wcd_gpio_data *data = gpiochip_get_data(chip);
 +
- 
- 	if (!pdata->jack_setup) {
- 		rval = snd_soc_card_jack_new(card, "Headset Jack",
-@@ -211,6 +265,21 @@ static int sdm845_dai_init(struct snd_soc_pcm_runtime *rtd)
- 			return rval;
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		for (i = 0 ; i < dai_link->num_codecs; i++) {
-+			rval = snd_soc_dai_set_channel_map(rtd->codec_dais[i],
-+							  ARRAY_SIZE(tx_ch),
-+							  tx_ch,
-+							  ARRAY_SIZE(rx_ch),
-+							  rx_ch);
-+			if (rval != 0 && rval != -ENOTSUPP)
-+				return rval;
++	regmap_update_bits(data->map, WCD_REG_DIR_CTL_OFFSET,
++			   WCD_PIN_MASK(pin), WCD_PIN_MASK(pin));
 +
-+			snd_soc_dai_set_sysclk(rtd->codec_dais[i], 0,
-+					       WCD934X_DEFAULT_MCLK_RATE,
-+					       SNDRV_PCM_STREAM_PLAYBACK);
-+		}
-+		break;
- 	default:
- 		break;
- 	}
-@@ -256,6 +325,14 @@ static int sdm845_snd_startup(struct snd_pcm_substream *substream)
- 		}
- 		snd_soc_dai_set_fmt(cpu_dai, fmt);
- 		snd_soc_dai_set_fmt(codec_dai, codec_dai_fmt);
-+		break;
-+	case QUATERNARY_MI2S_RX:
-+		snd_soc_dai_set_sysclk(cpu_dai,
-+			Q6AFE_LPASS_CLK_ID_QUAD_MI2S_IBIT,
-+			MI2S_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
-+		snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_CBS_CFS);
++	return regmap_update_bits(data->map, WCD_REG_VAL_CTL_OFFSET,
++				  WCD_PIN_MASK(pin),
++				  val ? WCD_PIN_MASK(pin) : 0);
++}
 +
++static int wcd_gpio_get(struct gpio_chip *chip, unsigned int pin)
++{
++	struct wcd_gpio_data *data = gpiochip_get_data(chip);
++	int value;
 +
- 		break;
- 
- 	case QUATERNARY_TDM_RX_0:
-@@ -294,6 +371,8 @@ static int sdm845_snd_startup(struct snd_pcm_substream *substream)
- 			}
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		break;
- 
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-@@ -338,6 +417,9 @@ static void  sdm845_snd_shutdown(struct snd_pcm_substream *substream)
- 				0, SNDRV_PCM_STREAM_PLAYBACK);
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+	case QUATERNARY_MI2S_RX:
-+		break;
- 
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-@@ -451,6 +533,8 @@ static int sdm845_snd_platform_remove(struct platform_device *pdev)
- 
- static const struct of_device_id sdm845_snd_device_id[]  = {
- 	{ .compatible = "qcom,sdm845-sndcard" },
-+	{ .compatible = "qcom,db845c-sndcard" },
-+	{ .compatible = "lenovo,yoga-c630-sndcard" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, sdm845_snd_device_id);
++	regmap_read(data->map, WCD_REG_VAL_CTL_OFFSET, &value);
++
++	return !!(value && WCD_PIN_MASK(pin));
++}
++
++static void wcd_gpio_set(struct gpio_chip *chip, unsigned int pin, int val)
++{
++	wcd_gpio_direction_output(chip, pin, val);
++}
++
++static int wcd_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct wcd_gpio_data *data;
++	struct gpio_chip *chip;
++
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->map = dev_get_regmap(dev->parent, NULL);
++	if (!data->map) {
++		dev_err(dev, "%s: failed to get regmap\n", __func__);
++		return  -EINVAL;
++	}
++
++	chip = &data->chip;
++	chip->direction_input  = wcd_gpio_direction_input;
++	chip->direction_output = wcd_gpio_direction_output;
++	chip->get = wcd_gpio_get;
++	chip->set = wcd_gpio_set;
++	chip->parent = dev;
++	chip->base = -1;
++	chip->ngpio = WCD934X_NPINS;
++	chip->label = dev_name(dev);
++	chip->of_gpio_n_cells = 2;
++	chip->can_sleep = false;
++
++	return devm_gpiochip_add_data(dev, chip, data);
++}
++
++static const struct of_device_id wcd_gpio_of_match[] = {
++	{ .compatible = "qcom,wcd9340-gpio" },
++	{ .compatible = "qcom,wcd9341-gpio" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, wcd_gpio_of_match);
++
++static struct platform_driver wcd_gpio_driver = {
++	.driver = {
++		   .name = "wcd934x-gpio",
++		   .of_match_table = wcd_gpio_of_match,
++	},
++	.probe = wcd_gpio_probe,
++};
++
++module_platform_driver(wcd_gpio_driver);
++MODULE_DESCRIPTION("Qualcomm Technologies, Inc WCD GPIO control driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.21.0
 
