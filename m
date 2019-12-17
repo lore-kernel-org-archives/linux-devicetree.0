@@ -2,159 +2,231 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85A7C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B884C2D0D1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B85582146E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B2B2465E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576586371;
+	bh=4lc/ehSQDI9aWx5ZLmJtKG/CFsG3TglET/wIcWT4JM8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=E807YbHgjoCyziqFujurXFJS/yb1eDzCwaatGcRPVMDKhBWAYXiqJcCbxn45lJkpG
+	 9gLGHThM3y6moBCB6snH7c2pgsjEeYwUAP2ZOxXBhV2MtYPng4bpCYfws1rk5VRCoE
+	 QLL3WUmrSiTy5oDXXEVveO+NZ00ko+FMAjbIq86Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfLQMjE convert rfc822-to-8bit (ORCPT
+        id S1728028AbfLQMja (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:39:04 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33206 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727406AbfLQMjE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 07:39:04 -0500
-Received: by mail-ot1-f68.google.com with SMTP id b18so5006836otp.0;
-        Tue, 17 Dec 2019 04:39:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LUh0j8xU1Qr9fXtE+2mw/twXvOy9bjYwMRuWrzxT6eQ=;
-        b=EGqp9Wfg8QRJSwpL/3FHCCFImWhwvqbzihUigYc8FCp6e0Ul+zDPnsk/W/Km22NW3N
-         ndKJcKQM/mqtjOjfU92mMem81l4XSdm5Iaugd3joN38a2uDsqPheTm3juR//j94klKmU
-         R3iNS/6eMHwXWM/tsqsxtUoCgfcMy7Y+ApBFW2Md3luVH8JHywKKg6Stn43FLm7tmEJE
-         KJNUjLnL0Zy2LUkJPYVrHqOzwmcVh0xRimHxtYjbWA8ddSsTTdL32A3jAlCamUu12DYK
-         3shmuhU4gTARrjbRzpJvr5yr9NOnu9/zaDso/54rtV2TWmKMP3Hgjx7Kwiq92gnsMaaC
-         hSpQ==
-X-Gm-Message-State: APjAAAV8ABUSVTzamD6DIuMixL/VFXngkyC9EBHvcy6/X9uM6o84qryR
-        5yXKPaI/T6EN7VV6fkC630UCn0nwMK+yXWFSDA8=
-X-Google-Smtp-Source: APXvYqymQtdXQIA9dI50I0zDHkQvsxWBvf/GOqxNthXzUoE+3dKDkD4aXvjDConIraGDEKG0eShllvgWTqpNdNsUfFU=
-X-Received: by 2002:a9d:6c81:: with SMTP id c1mr38348507otr.39.1576586342848;
- Tue, 17 Dec 2019 04:39:02 -0800 (PST)
-MIME-Version: 1.0
-References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1573660292-10629-7-git-send-email-fabrizio.castro@bp.renesas.com>
- <20191213171038.GH4860@pendragon.ideasonboard.com> <TY1PR01MB1770DEDFA6050EA77AA218F8C0500@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <CAMuHMdUE0O9_8g02f2ABiV8SSMXNJB9S9e89p0OJKnTvx8MO9g@mail.gmail.com> <TY1PR01MB17705FC08F72875484DF2208C0500@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY1PR01MB17705FC08F72875484DF2208C0500@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 17 Dec 2019 13:38:51 +0100
-Message-ID: <CAMuHMdVqHekyeOaHwpFyG5buNZp-XmvGizqZ=Gbg40_=NL+s2A@mail.gmail.com>
-Subject: Re: [PATCH v4 06/13] drm/bridge: lvds-codec: Add "lvds-decoder" support
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 17 Dec 2019 07:39:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:35638 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728051AbfLQMj3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:39:29 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CBD6328;
+        Tue, 17 Dec 2019 04:39:28 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98D8C3F718;
+        Tue, 17 Dec 2019 04:39:27 -0800 (PST)
+Date:   Tue, 17 Dec 2019 12:39:26 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dan Murphy <dmurphy@ti.com>, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-clk@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Peter Rosin <peda@axentia.se>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        matti.vaittinen@fi.rohmeurope.com,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        mazziesaccount@gmail.com,
+        Michael Turquette <mturquette@baylibre.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: Applied "dt-bindings: regulator: Document ROHM BD71282 regulator bindings" to the regulator tree
+In-Reply-To: <0985fec1cce98b1db66e5df2d9bcf2dfd9c224a7.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+Message-Id: <applied-0985fec1cce98b1db66e5df2d9bcf2dfd9c224a7.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Fabrizio,
+The patch
 
-On Tue, Dec 17, 2019 at 1:31 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> > From: linux-renesas-soc-owner@vger.kernel.org <linux-renesas-soc-owner@vger.kernel.org> On Behalf Of Geert Uytterhoeven
-> > Sent: 17 December 2019 12:21
-> > Subject: Re: [PATCH v4 06/13] drm/bridge: lvds-codec: Add "lvds-decoder" support
-> >
-> > On Tue, Dec 17, 2019 at 12:03 PM Fabrizio Castro
-> > <fabrizio.castro@bp.renesas.com> wrote:
-> > > > From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > > Sent: 13 December 2019 17:11
-> > > > Subject: Re: [PATCH v4 06/13] drm/bridge: lvds-codec: Add "lvds-decoder" support
-> > > >
-> > > > On Wed, Nov 13, 2019 at 03:51:25PM +0000, Fabrizio Castro wrote:
-> > > > > Add support for transparent LVDS decoders by adding a new
-> > > > > compatible string ("lvds-decoder") to the driver.
-> > > > > This patch also adds member connector_type to struct lvds_codec,
-> > > > > and that's because LVDS decoders have a different connector type
-> > > > > from LVDS encoders. We fill this new member up with the data
-> > > > > matching the compatible string.
-> > > > >
-> > > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+   dt-bindings: regulator: Document ROHM BD71282 regulator bindings
 
-> > > > > --- a/drivers/gpu/drm/bridge/lvds-codec.c
-> > > > > +++ b/drivers/gpu/drm/bridge/lvds-codec.c
+has been applied to the regulator tree at
 
-> > > > > @@ -65,6 +67,7 @@ static int lvds_codec_probe(struct platform_device *pdev)
-> > > > >     if (!lvds_codec)
-> > > > >             return -ENOMEM;
-> > > > >
-> > > > > +   lvds_codec->connector_type = (u32)of_device_get_match_data(&pdev->dev);
-> > > >
-> > > > I'm now getting a compilation failure here:
-> > > >
-> > > > drivers/gpu/drm/bridge/lvds-codec.c: In function ‘lvds_codec_probe’:
-> > > > drivers/gpu/drm/bridge/lvds-codec.c:68:31: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
-> > > >   lvds_codec->connector_type = (u32)of_device_get_match_data(&pdev->dev);
-> > > >                                ^
-> > > >
-> > > > The fix should be simple:
-> > > >
-> > > >       lvds_codec->connector_type = (uintptr_t)of_device_get_match_data(dev);
-> > > >
-> > > > I'm bothered by the fact that I've compiled this before without any
-> > > > issue, so this really puzzles me. Do you get the same warning ?
-> > >
-> > > The warning appears when compiling for arm64, understandably so.
-> > > We must have compiled this for arm only the first time around.
-> > >
-> > > I think the right way to solve this is to either cast to (u32)(uintptr_t) or (u32)(unsigned long).
-> >
-> > Just casting to uintptr_t should be sufficient.
->
-> It should be sufficient for the compiler, but I have seen examples where people
-> preferred to be explicit, like in:
-> drivers/mailbox/mtk-cmdq-mailbox.c
-> drivers/leds/leds-pm8058.c
->
-> Since the kernel is increasing its tightness with respect to warnings, I personally prefer
-> (u32)(uintptr_t), even though not strictly necessary, but I am fine with (uintptr_t) if you
-> don't like (u32)(uintptr_t).
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.6
 
-It depends. I try to have as few casts as possible ("casts are evil").
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-While adding the extra (u32) cast makes it clearer that the intended
-result is a u32 (for now), it will cause silent truncation on 64-bit if
-connector_type is ever enlarged to unsigned long, and larger values are
-used.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-In this particular case this is unlikely, though, as unsigned long would
-still be 32-bit on 32-bit platforms, so the larger values cannot be
-used.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Gr{oetje,eeting}s,
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-                        Geert
+Thanks,
+Mark
 
+From 84a867c078136887dea64fa6e336333b657bc6a1 Mon Sep 17 00:00:00 2001
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Date: Wed, 11 Dec 2019 11:35:57 +0200
+Subject: [PATCH] dt-bindings: regulator: Document ROHM BD71282 regulator
+ bindings
+
+Document ROHM BD71828 PMIC regulator device tree bindings.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Link: https://lore.kernel.org/r/0985fec1cce98b1db66e5df2d9bcf2dfd9c224a7.1576054779.git.matti.vaittinen@fi.rohmeurope.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../regulator/rohm,bd71828-regulator.yaml     | 107 ++++++++++++++++++
+ 1 file changed, 107 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
+
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
+new file mode 100644
+index 000000000000..71ce032b8cf8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
+@@ -0,0 +1,107 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/rohm,bd71828-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD71828 Power Management Integrated Circuit regulators
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++
++description: |
++  This module is part of the ROHM BD71828 MFD device. For more details
++  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
++
++  The regulator controller is represented as a sub-node of the PMIC node
++  on the device tree.
++
++  Regulator nodes should be named to BUCK_<number> and LDO_<number>.
++  The valid names for BD71828 regulator nodes are
++  BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6, BUCK7
++  LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7
++
++patternProperties:
++  "^LDO[1-7]$":
++    type: object
++    allOf:
++      - $ref: regulator.yaml#
++    description:
++      Properties for single LDO regulator.
++
++    properties:
++      regulator-name:
++        pattern: "^ldo[1-7]$"
++        description:
++          should be "ldo1", ..., "ldo7"
++
++  "^BUCK[1-7]$":
++    type: object
++    allOf:
++      - $ref: regulator.yaml#
++    description:
++      Properties for single BUCK regulator.
++
++    properties:
++      regulator-name:
++        pattern: "^buck[1-7]$"
++        description:
++          should be "buck1", ..., "buck7"
++
++      rohm,dvs-run-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 3300000
++        description:
++          PMIC default "RUN" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
++
++      rohm,dvs-idle-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 3300000
++        description:
++          PMIC default "IDLE" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
++
++      rohm,dvs-suspend-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 3300000
++        description:
++          PMIC default "SUSPEND" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
++
++      rohm,dvs-lpsr-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 3300000
++        description:
++          PMIC default "LPSR" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
++
++        # Supported default DVS states:
++        #     buck       |    run     |   idle    | suspend  | lpsr
++        #--------------------------------------------------------------
++        # 1, 2, 6, and 7 | supported  | supported | supported (*)
++        #--------------------------------------------------------------
++        # 3, 4, and 5    |                    supported (**)
++        #--------------------------------------------------------------
++        #
++        #(*)  LPSR and SUSPEND states use same voltage but both states have own
++        #     enable /
++        #     disable settings. Voltage 0 can be specified for a state to make
++        #     regulator disabled on that state.
++        #
++        #(**) All states use same voltage but have own enable / disable
++        #     settings. Voltage 0 can be specified for a state to make
++        #     regulator disabled on that state.
++
++    required:
++      - regulator-name
++  additionalProperties: false
++additionalProperties: false
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
