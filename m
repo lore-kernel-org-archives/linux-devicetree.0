@@ -2,125 +2,101 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE255C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 13:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897CDC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 13:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A110720716
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 13:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B5BD206EC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 13:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEdL9aQ/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gsj7ZKlt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfLQNHf (ORCPT
+        id S1727840AbfLQNKe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:07:35 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42466 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfLQNHf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 08:07:35 -0500
-Received: by mail-io1-f68.google.com with SMTP id f82so10899844ioa.9;
-        Tue, 17 Dec 2019 05:07:34 -0800 (PST)
+        Tue, 17 Dec 2019 08:10:34 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35671 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbfLQNKd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 08:10:33 -0500
+Received: by mail-lf1-f68.google.com with SMTP id 15so6945909lfr.2;
+        Tue, 17 Dec 2019 05:10:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=79YzXGa0/bKZjTejQkahRNRf5+MjE4e315RFe1Zru6E=;
-        b=uEdL9aQ//2cvH7MK3vYjzUibPqOMpLbTDYx1ZHIvvwU2pO5qHei8XziqJDijRDJYJc
-         HpOlQ4Bv3BgBvbn0qm4M9YVmWWm9cATm4M6kDXKvkICp6eBRBdnaML5iB5AMtVrYkZxY
-         /sTSnc9hVxnVnEhbSw/HahNznZNn46SwQPIPn62mZ5zuoE6+eUYBVkPBZe2NcAuYIGgC
-         ARr2MHogOpOibXiVkAYHBd/YpByoHF8+unLbdnMqC22s8+AIY4dtlB4gkb/87fW25ZVL
-         NavvwR4u+E0Dewwms/s+luNATajh4dh6hCOj07nJj27T51LdntG2qA+h4Y6OVOG3Zfni
-         R9ww==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9jk39L8RgpYiTrld7dSlOIM7xyFzKKS6lSCI/KcHWZk=;
+        b=Gsj7ZKltUMuYF0Ggx/KiJ1fsaIQaYjAxnQgADAj5o13RV0RaBOUb5mOBd6isWfIGEq
+         oHKz5YCSfrd7GIDR/8B8bGv4Gb6Qu1U8BqLG7zhh723dz9A94DSNakk/TfT2mO7wFBoX
+         kDe/afzHPqFNsYpGdfcEM2Aj2zsygDnUo6UjomhX58VDd9/Nabb7cr9NJ7cMNVSp4Cl/
+         veUa5Lxf/UTw8d49VAWnS18pfOyXh2QbTCwU79NywB30U2m0AkZV/h4S+wZPIxAYEqmU
+         ofzoIsSx74pG5d3Fxot++GzF1gDArbVNTVl3hledBXRoWw0R1YXIFdp5cvP9n/04qFCs
+         dydA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=79YzXGa0/bKZjTejQkahRNRf5+MjE4e315RFe1Zru6E=;
-        b=aTbIRa5vWj32AaUVTgOt+iX05P4ZjmD6R7t3wQ9wmUyc9/n1Du1YBtqdYyVkr9qCWW
-         wajZb/qCx+ODzT2yS1fYzhi/af/fqRCpio44D5zxCWFpIr0+MNmoUjIWf0ICgoU+KFGO
-         ihcpCLgzPQRcpxQR9LprUPLPw6DGKq+lyE3ONLsIOB/tH4MLP2YuD/MWzamTP7tL2X6U
-         6y0Yr45Tz8QSFTz+b+wyBRfAzr6DCpYzhyZhRCSKFFbdtlTEyk4G58Okka2NYfuVFnf0
-         pi3uYxntxWlkw6ethADMqGUvELJOfscZQE/XvPbg1rTJKRvQyy/JZOTzFPtHpPRg11/Q
-         Gwbw==
-X-Gm-Message-State: APjAAAVqD7dN2OdDH5LvCzLkJzphjcK/AVSyB5HMjNpuggqaKLMrZyh5
-        zaC0jXdtkFP+eR9r8FI8YSBNoShs+YamldpAx0s=
-X-Google-Smtp-Source: APXvYqxs0JVvmohGW3CJM38cF0ip/ZTgWWaOjkWzTyyLdlMiI3ZT24dQAZUD4JM9uMEPgvaFWrK8qOAfXcEpluXtEiM=
-X-Received: by 2002:a5d:9bd0:: with SMTP id d16mr3776062ion.78.1576588053967;
- Tue, 17 Dec 2019 05:07:33 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9jk39L8RgpYiTrld7dSlOIM7xyFzKKS6lSCI/KcHWZk=;
+        b=OC1aOKFApnoQ63jNUZMkNrss8PuoRgzg0qb3vzSSSOLe4V8H9WCithXMoZPZzTtRBA
+         SVndPlsNt9gihcOah4pJlGgh1EGnFr+yN3ifaZmL99BHIewZpAdwanmaZQaGuv3Rl9aq
+         mv6QdK7sdCkqaQ7IzYrkLKtFQyQzkAP1W7UYqFDgN2vF1hWO+U9hpxPgnmPXXXHViuhW
+         N3jSlzD9Uk/sHj6V3en3YXlKEmN4YTKArZpVOYvHa3GdywSj5+vRj/N8JhAzjDi4A5rx
+         XAMGauyDV/4rVtRruPluEAZohGeUqzU2t4yzDO7AbSTnIdvDEk5qvdyTW1mZfHioZZ1X
+         oH3g==
+X-Gm-Message-State: APjAAAW2XJqWx7nYTu7D2Q8PxDHp/iYdjt9lEEaFoQzrpmUXZYXUft+a
+        EE7MJsvvRiSmiAlRx8UZ/zbZ2Akm
+X-Google-Smtp-Source: APXvYqx0SUti1aF3Yq6Y7m+qSFkDDVrvqKoaKj+P6rWZ8vzlLHdRnKn5vmD5Wa9Ke3xg8KQ5QC53mQ==
+X-Received: by 2002:ac2:455c:: with SMTP id j28mr2806295lfm.184.1576588230944;
+        Tue, 17 Dec 2019 05:10:30 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id q14sm12539756ljm.68.2019.12.17.05.10.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 05:10:30 -0800 (PST)
+Subject: Re: [PATCH v1 2/2] dt-bindings: net: broadcom-bluetooth: Document
+ BCM4329 support
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191215185253.14024-1-digetx@gmail.com>
+ <20191215185253.14024-2-digetx@gmail.com>
+ <E971B7A3-B5F2-4F21-B0F4-B7D289080D9A@holtmann.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e59a6d98-eef0-3473-add3-ac6b2fae02a8@gmail.com>
+Date:   Tue, 17 Dec 2019 16:10:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20191213153910.11235-1-aford173@gmail.com> <20191213153910.11235-3-aford173@gmail.com>
- <VI1PR0402MB3485AB1908AD6B6617CFC08C98500@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB3485AB1908AD6B6617CFC08C98500@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 17 Dec 2019 07:07:22 -0600
-Message-ID: <CAHCN7xLrX0R7Uag2vc1qMp4z=1r3haCWrcp4qJT0H0eC3RiA4Q@mail.gmail.com>
-Subject: Re: [PATCH V2 3/3] arm64: defconfig: Enable CRYPTO_DEV_FSL_CAAM
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <E971B7A3-B5F2-4F21-B0F4-B7D289080D9A@holtmann.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 3:11 AM Horia Geanta <horia.geanta@nxp.com> wrote:
->
-> On 12/13/2019 5:39 PM, Adam Ford wrote:
-> > Both the i.MX8MQ and i.MX8M Mini support the CAAM driver, but it
-> So do the Layerscape ARMv8-based SoCs:
-> LS1012A, LS1028A, LS1043A, LS1046A, LS1088A, LS2088A, LX2160A
->
-> > is currently not enabled by default.
-> >
-> > This patch enables this driver by default.
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > ---
-> > V2:  New to series
-> >
-> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > index 6a83ba2aea3e..0212975b908b 100644
-> > --- a/arch/arm64/configs/defconfig
-> > +++ b/arch/arm64/configs/defconfig
-> > @@ -845,6 +845,7 @@ CONFIG_SECURITY=y
-> >  CONFIG_CRYPTO_ECHAINIV=y
-> >  CONFIG_CRYPTO_ANSI_CPRNG=y
-> >  CONFIG_CRYPTO_DEV_SUN8I_CE=m
-> > +CONFIG_CRYPTO_DEV_FSL_CAAM=y
-> This should probably be "m" instead.
+17.12.2019 10:40, Marcel Holtmann пишет:
+> Hi Dmitry,
+> 
+>> The BCM4329 is a 802.11 a/b/g/n WiFi + Bluetooth 2.1 chip which is found
+>> in Azurewave AW-NH611 WiFi+BT module.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>> Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 1 +
+>> 1 file changed, 1 insertion(+)
+> 
+> patch has been applied to bluetooth-next tree.
+> 
+> Regards
+> 
+> Marcel
+> 
 
-Out of curiosity, what is the rule for when things are 'm' vs 'y'?
-
-In the Code Aurora repo, it is set to 'y' and the mainline kernel for
-the i.MX6/7, the imx_v6_v7_defconfig is also set to 'y' which is why I
-used 'y' here.
-
-I can do a V3 to address the other items you noted, but I want to
-understand the rules about the defconfig so I don't make the same
-mistake again.
-
-thanks,
-
-adam
->
-> Horia
+Thank you very much!
