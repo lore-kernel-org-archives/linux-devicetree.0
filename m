@@ -1,250 +1,366 @@
-Return-Path: <SRS0=KHEV=2G=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C10B2C2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 23:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1074BC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 00:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 918992467B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Dec 2019 23:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C532E21835
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 00:08:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMYzJp6U"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CqbFAK7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfLPX1Y (ORCPT
+        id S1727417AbfLQAIt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 18:27:24 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:45727 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfLPX1X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 18:27:23 -0500
-Received: by mail-pj1-f68.google.com with SMTP id r11so3682424pjp.12;
-        Mon, 16 Dec 2019 15:27:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=pP1hagqSYDwwA2YjZ9gfdWx6xDMgnbeyBHGfmn3+DE0=;
-        b=MMYzJp6UxQUQNh58RYjrQGcY6a+hdQWcxSmKtC7oHVd0+x7KJpndeE6yPq3xBAl3jZ
-         B/MX8003PV+SZ2nwo8AxyMJHjMHWpXKKFZsX3sWY/ZhgsSxWp3VW8rlFk3N5TVHYYYEX
-         qpki9caXNC3/QO8osDQ43QRMuA/yh72mDh6umUSu4mOhWTdU8DaM6XUsO20xR7HH/TAY
-         lE2AQsIq2ECvmaIM5v3+cWuHGSiTBIqbd/D1GSPw8a4IbTUmHJ1vwbN5KmsKT+zS7PBd
-         VmO+ZH5dNK6HKl8B0m1c0D/SeFnNP8WfLnr7i9jiwoQ/Z3YF/c3IFNfjz1CggHZdxXJ0
-         rjqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=pP1hagqSYDwwA2YjZ9gfdWx6xDMgnbeyBHGfmn3+DE0=;
-        b=r13koMdXM5QcK2ko7rc8aO3f6i3j4bG/RNYmjKwYr9UazD+vt4EUmbg7L6pZS25pbj
-         DYzjxt2EpyuB+FOZr1sensRFbmfVdF+hB3wMcJb1sO5FHlfzF6e0knCDjXMmnIibGxZr
-         wqWwB69JAhAXHBIaek51cq+kQCRgJpN7Eg+5rxhV2zbGfGbaGE5ZaaMyFA0Ya+YVyFOG
-         clNDnvtLxmNobVrNAS/RiZPZYep1GDclsKXANIYGfjiqWwGXgYLRc2/Y9j9cLwxpJyuS
-         jjt20AfkfHy+iFAJjJBqq4c1yy66IgjmsIi5lXllLXc66OCl8pHVOhw1v9wZ8FuhjG3i
-         JKRw==
-X-Gm-Message-State: APjAAAWlFxcbXrHYaXqppYT6Xf1tfNN3uI+K+zoHNfq1CJwdihGCb+CP
-        CyDa9NybhlKiRoyXEDVUa0g=
-X-Google-Smtp-Source: APXvYqxGQ8NGtMEivlA2YMXllL8k/BlL9MhGxi6roCjQUTeTt1nWxWnBdxfsHtWDSc0zFy7zNwVsAA==
-X-Received: by 2002:a17:90a:bd8f:: with SMTP id z15mr2370209pjr.54.1576538842771;
-        Mon, 16 Dec 2019 15:27:22 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k9sm593648pje.26.2019.12.16.15.27.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 16 Dec 2019 15:27:21 -0800 (PST)
-Date:   Mon, 16 Dec 2019 15:27:20 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
+        Mon, 16 Dec 2019 19:08:49 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:21536 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfLQAIs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 19:08:48 -0500
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191217000845epoutp02d90b0c6a8126aa482dc2c06c8c2c86f1~g--uA_jGz3221532215epoutp02H
+        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 00:08:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191217000845epoutp02d90b0c6a8126aa482dc2c06c8c2c86f1~g--uA_jGz3221532215epoutp02H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576541325;
+        bh=WQb59wUVb4ENykfc/VzmAmvV0Vm4LY77U8HXze17Kxc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=CqbFAK7zkmpHC7x5YTDd8nxrarg0Qyg77GZGdyAvP5jv0kpRgOm2aDfT93dFQfNe+
+         oQptIsE7s3FFVrDXJMS/FmcqXTBoPr8GWPsiEAYTYpzLlouZ1Xb480gEBFcb1k5RqL
+         iDIH6FK4JiOIHF3oM32UoFUBL+K/hc9TX7LaOHKo=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20191217000844epcas1p40836f5eed0ad643180003037fdd17c49~g--tTNxvG2849428494epcas1p4W;
+        Tue, 17 Dec 2019 00:08:44 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47cJQK1VQszMqYlx; Tue, 17 Dec
+        2019 00:08:41 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7F.90.57028.98C18FD5; Tue, 17 Dec 2019 09:08:41 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191217000840epcas1p1ff31c37af0d920704b66477e90dd7661~g--pvkMOK1574215742epcas1p1q;
+        Tue, 17 Dec 2019 00:08:40 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191217000840epsmtrp15cc4e0902d9b9916a12447df3834d4cc~g--puYxiK0451504515epsmtrp1i;
+        Tue, 17 Dec 2019 00:08:40 +0000 (GMT)
+X-AuditID: b6c32a35-4f3ff7000001dec4-95-5df81c894e92
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        54.01.06569.88C18FD5; Tue, 17 Dec 2019 09:08:40 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191217000840epsmtip19b0aeb84ab5a60c2fb52348f76112323~g--pShe-A0399603996epsmtip1p;
+        Tue, 17 Dec 2019 00:08:40 +0000 (GMT)
+Subject: Re: [PATCH RFC v6 1/9] dt-bindings: interconnect: Add bindings for
+ imx8m noc
+To:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Alexandre Bailon <abailon@baylibre.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Saravana Kannan <saravanak@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>,
-        Tomohiro Kusumi <kusumi.tomohiro@gmail.com>,
-        "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>,
-        Frederic Barrat <fbarrat@linux.vnet.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        David Kershner <david.kershner@unisys.com>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Sagar Dharia <sdharia@codeaurora.org>,
-        Johan Hovold <johan@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        openbmc@lists.ozlabs.org, Alan Cox <alan@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jason M Biils <jason.m.bills@linux.intel.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Stef van Os <stef.van.os@prodrive-technologies.com>
-Subject: Re: [PATCH v11 14/14] hwmon: Add PECI dimmtemp driver
-Message-ID: <20191216232720.GA17398@roeck-us.net>
-References: <20191211194624.2872-1-jae.hyun.yoo@linux.intel.com>
- <20191211194624.2872-15-jae.hyun.yoo@linux.intel.com>
- <d75aaad9-ae07-feeb-966a-899ecfe9d4b3@roeck-us.net>
- <5ed9f292-e024-ffda-a1a8-870ba0f05c58@linux.intel.com>
- <20191216212120.GA12089@roeck-us.net>
- <c6ccb0ff-c0b4-86b2-1768-ba63713034a4@linux.intel.com>
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Angus Ainslie <angus@akkea.ca>,
+        Martin Kepplinger <martink@posteo.de>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <b8fc116f-d99f-37c6-ce07-aa0f844ac604@samsung.com>
+Date:   Tue, 17 Dec 2019 09:15:15 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c6ccb0ff-c0b4-86b2-1768-ba63713034a4@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <VI1PR04MB7023A61DD48302CF0E0B3B81EE510@VI1PR04MB7023.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Tb0xTVxzN7Xt9fRC7vVUZdx06fG5LbIb0iXUXY42Zur1FPpCZsDlH4AXe
+        gNB/6WvJHB9kaB1tnIiuGur8yzAF2WgLURAZocAWmJTVZZ2T1W2pC0UcRiqDMZW1fZrx7dzz
+        Oyfnnt/NJTHF1zIlWWGw8GYDp6OJVPzSwFp1lj1jvlA90pOKZr8fAejC9SGAHjivYCjy2zhA
+        lxtL0JnBgBR5O8ZxdKLXR6BWZzeOxsY8MjRae1eG3OH7UuSLhKTIsdCCodhngwA1/xyUoJC7
+        QYpinghAwZEdaPwTN4EuBvoJdOqBE0O23kEZcvgfEehxyIujaGc6am4KYcg7y27NYJ0ON2Db
+        TrcB9t4Nm4w9WRPE2bM+K+trtRPsr6GrBNvx5T7WO90lYesfqdmFgTT2cGcrYGO+Vfny9ys3
+        l/NcKW/O5A0lxtIKQ5mW3rmraFuRZqOayWJy0et0poHT81p6e15+1psVuvg+6MwqTmeNU/mc
+        INDZWzabjVYLn1luFCxamjeV6ky5pnUCpxeshrJ1JUb9JkatXq+JC4sryydnrslMD7d9NGnz
+        EDVgRuMAKSSkNsDrh27KHCCVVFBdALa038XFwwyA7SEbkVApqL8BHKoveOo4PuXHRb4XwMUA
+        LRruAdj20CZLDJZT70Jnhx1L4BVUNTwyWitJiDDKTcI7+6OSxICgVLAveiOZ8Cy1Gv40HwEJ
+        LKe2wHD4fJLHqVdg//3FpD6NKoDDlw480TwHhxtvJ2+RQhXChXAwGYZR6fDm7TMSEb8EL//1
+        BZYIhlQLCQONE4RYYTucCvZgIl4O73zXKROxEk7WH3yCq2HL8CAhmusA7Oz7QSoOcmBf87F4
+        AhlPWAvbr2SL9GrY/e8pIAY/A6dnD0kTEkjJYd1BhShZA3/8PSwR8Quw6VM7cQTQriV1XEsq
+        uJZUcP0fdhbgreB53iToy3iBMTFLX9sHkn9FpekCnwfy/IAiAb1MbqqaK1RIuSphr94PIInR
+        K+RdmXFKXsrt/Zg3G4vMVh0v+IEmvu0GTJlWYoz/PIOliNGsz8nJQRuYjRqGodPl5HywUEGV
+        cRa+kudNvPmpT0KmKGvA280H8lIbF5ZdbZvbeXHPy39EraruqUXlLbz4m+rIi7sHhmPZxU1T
+        09zudv1r2ncM+ytujRXsyw3MejQpE98eP9effTJj67isNlz/1RtvMT1/Dj329Eb/6Tm86txR
+        bd17H9h1o7FfNhVfI3bt0dTNNe1wTDS4Vko+XHn66IVXj0mRatpL40I5x6gws8D9B8x1jSJB
+        BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRzGeXfOzo7S6DQVX000B1kMM7ULb6VWiHAwAr90BbWlxws6lR3n
+        paDMEHKgFTKHVk5MZU6Rbd6maeHUMk1lQlPSJTEtJS28kZmz3Gbgtx/P8/z4f/mTmKCC602m
+        ZmQz0gxxupBwxdv7hL7HHvlsxAZXbPii9eEhgOrHBwBaU3RhyDozBVBHRQJS9Y9yka5lCkfK
+        Hj2BNIpOHI2NaXlopHCRh9SWZS7SW81cJN9swNBqST9AdRMmDjKrn3LRqtYKkGkoCk09UBOo
+        cbSXQC/WFBgq6unnIbnRRqBtsw5H862eqO6lGUO6dfqCD62QqwHdVNUE6J+TRTz6WYEJp6v1
+        MlqvKSboaXM3QbfU3qd1Pwwc+rEtmN7s86BLWzWAXtX7xvBvuoYlMumpOYz0eMQt15SFlQ+8
+        rK3IvIUiLVEAVk7JgQsJqZOw/LsRlwNXUkC9AnDl2zLmLLxguWlgh8kddoN9faxzswTgQqse
+        t2/cqGtQ0VLs2LtTd+HW13cOxqhmEv5eT3EKKgyul7Zx7QVBieCb+UnCzvspf/hxwwrszKci
+        oMVS48hx6jDsXf7LsbMHdRV21lo5zs0B+L5i1nHYhYqFmxbT7rEjcKtqfJc94adZFcfJfrBj
+        6Tn2BLhV7tEr9yiVe5TKPUo1wDXAi8liJckSNiQrNIPJDWLFElaWkRyUkCnRA8fDiEQGMDgY
+        bwQUCYT7+DD7V6yAK85h8yVGAElM6M43HNqJ+Ini/DuMNDNeKktnWCM4SOJCT75f5tsbAipZ
+        nM2kMUwWI/3fckgX7wLgnRdeljd5ObGscfb6lbbhSZ5axIbPdylDecFBa0fP6fTT7eq5s+oJ
+        oTb/Uk3DXJoyOsrlzOmCL90Gw/nC3CTASYqTKCXRcScWk5iAz3nE0OuAwIES2+38i6qpkYeB
+        ym2OzOY1I6qPbC5J8xd3B1eFMDEyC+i990e+GGbkdgtxNkUcIsKkrPgfm5cT1CwDAAA=
+X-CMS-MailID: 20191217000840epcas1p1ff31c37af0d920704b66477e90dd7661
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191114201051epcas5p2a6b58f0d86fb8bed72a206ecd5df295d
+References: <cover.1573761527.git.leonard.crestez@nxp.com>
+        <CGME20191114201051epcas5p2a6b58f0d86fb8bed72a206ecd5df295d@epcas5p2.samsung.com>
+        <6db2ce55ee62dd8548aa8e1e0ecdf8c06eda868f.1573761527.git.leonard.crestez@nxp.com>
+        <c1c03b30-d82a-6f2b-156d-0e1948e0df5b@samsung.com>
+        <afd618d6-d78c-a989-2d1e-60c368ec267f@samsung.com>
+        <VI1PR04MB7023A61DD48302CF0E0B3B81EE510@VI1PR04MB7023.eurprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 02:17:34PM -0800, Jae Hyun Yoo wrote:
-> [...]
+On 12/17/19 12:09 AM, Leonard Crestez wrote:
+> On 16.12.2019 05:18, Chanwoo Choi wrote:
+>> Hi,
+>>
+>> On 12/16/19 10:12 AM, Chanwoo Choi wrote:
+>>> On 11/15/19 5:09 AM, Leonard Crestez wrote:
+>>>> Add initial dt bindings for the interconnects inside i.MX chips.
+>>>> Multiple external IPs are involved but SOC integration means the
+>>>> software controllable interfaces are very similar.
+>>>>
+>>>> Main NOC node acts as interconnect provider if #interconnect-cells is
+>>>> present.
+>>>>
+>>>> Multiple interconnects can be present, each with their own OPP table.
+>>>>
+>>>> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+>>>> ---
+>>>>   .../bindings/interconnect/fsl,imx8m-noc.yaml  | 104 ++++++++++++++++++
+>>>>   1 file changed, 104 insertions(+)
+>>>>   create mode 100644 Documentation/devicetree/bindings/interconnect/fsl,imx8m-noc.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/interconnect/fsl,imx8m-noc.yaml b/Documentation/devicetree/bindings/interconnect/fsl,imx8m-noc.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..5cd94185fec3
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/interconnect/fsl,imx8m-noc.yaml
+>>>> @@ -0,0 +1,104 @@
+>>>> +# SPDX-License-Identifier: GPL-2.0
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: https://protect2.fireeye.com/url?k=8570eb5a-d8a45732-85716015-0cc47a3356b2-92a5b92cc514d07e&u=https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fprotect2.fireeye.com%2Furl%3Fk%3D0c13f3e0-51df3f45-0c1278af-0cc47a30d446-77e809543b673ffd%26u%3Dhttp%3A%2F%2Fdevicetree.org%2Fschemas%2Finterconnect%2Ffsl%2Cimx8m-noc.yaml%23&amp;data=02%7C01%7Cleonard.crestez%40nxp.com%7C2d1f1868afa140702a6b08d781d6ab68%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637120631307418544&amp;sdata=H2q5nQlKYyLIivkBYUTaRD1Nu3WcnphPJny3k%2BK%2BGFE%3D&amp;reserved=0
+>>>> +$schema: https://protect2.fireeye.com/url?k=f7cec483-aa1a78eb-f7cf4fcc-0cc47a3356b2-4154a3c43886f5ed&u=https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fprotect2.fireeye.com%2Furl%3Fk%3D87c672dc-da0abe79-87c7f993-0cc47a30d446-414d3b4d0127419a%26u%3Dhttp%3A%2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=02%7C01%7Cleonard.crestez%40nxp.com%7C2d1f1868afa140702a6b08d781d6ab68%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637120631307418544&amp;sdata=T6PgQ1DWI4OLOx3gifRRt%2FNImdVrgDUoswZ%2FNKw3oR8%3D&amp;reserved=0
+>>>> +
+>>>> +title: Generic i.MX bus frequency device
+>>>> +
+>>>> +maintainers:
+>>>> +  - Leonard Crestez <leonard.crestez@nxp.com>
+>>>> +
+>>>> +description: |
+>>>> +  The i.MX SoC family has multiple buses for which clock frequency (and
+>>>> +  sometimes voltage) can be adjusted.
+>>>> +
+>>>> +  Some of those buses expose register areas mentioned in the memory maps as GPV
+>>>> +  ("Global Programmers View") but not all. Access to this area might be denied
+>>>> +  for normal (non-secure) world.
+>>>> +
+>>>> +  The buses are based on externally licensed IPs such as ARM NIC-301 and
+>>>> +  Arteris FlexNOC but DT bindings are specific to the integration of these bus
+>>>> +  interconnect IPs into imx SOCs.
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    oneOf:
+>>>> +      - items:
+>>>> +        - enum:
+>>>> +          - fsl,imx8mn-nic
+>>>> +          - fsl,imx8mm-nic
+>>>> +          - fsl,imx8mq-nic
+>>>> +        - const: fsl,imx8m-nic
+>>>> +      - items:
+>>>> +        - enum:
+>>>> +          - fsl,imx8mn-noc
+>>>> +          - fsl,imx8mm-noc
+>>>> +          - fsl,imx8mq-noc
+>>>> +        - const: fsl,imx8m-noc
+>>>> +
+>>>> +  reg:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  clocks:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  operating-points-v2: true
+>>>> +  opp-table: true
+>>>> +
+>>>> +  devfreq:
+>>>> +    $ref: "/schemas/types.yaml#/definitions/phandle"
+>>>> +    description:
+>>>> +      Phandle to another devfreq device to match OPPs with by using the
+>>>
+>>> Better to use 'parent' instead of 'another' word for improving the understanding.
+>>
+>> I think that 'devfreq' is not proper way to get the parent node
+>> in devicetree. Because 'devfreq' name is linuxium. The property name
+>> didn't indicate the any h/w device. So, I'll make 'devfreq' property deprecated.
+>>
+>> So, you better to make the specific property for this device driver
+>> like as following: and use devfreq_get_devfreq_by_node() function
+>> which is developed by you in order to get the devfreq instance node.
+>>
+>> 	fsl,parent-device = <&parent devfreq device>;
 > 
-> > > > > +static int get_dimm_temp(struct peci_dimmtemp *priv, int dimm_no)
-> > > > > +{
-> > > > > +    int dimm_order = dimm_no % priv->gen_info->dimm_idx_max;
-> > > > > +    int chan_rank = dimm_no / priv->gen_info->dimm_idx_max;
-> > > > > +    struct peci_rd_pci_cfg_local_msg rp_msg;
-> > > > > +    u8  cfg_data[4];
-> > > > > +    int ret;
-> > > > > +
-> > > > > +    if (!peci_sensor_need_update(&priv->temp[dimm_no]))
-> > > > > +        return 0;
-> > > > > +
-> > > > > +    ret = read_ddr_dimm_temp_config(priv, chan_rank, cfg_data);
-> > > > > +    if (ret)
-> > > > > +        return ret;
-> > > > > +
-> > > > > +    priv->temp[dimm_no].value = cfg_data[dimm_order] * 1000;
-> > > > > +
-> > > > > +    switch (priv->gen_info->model) {
-> > > > > +    case INTEL_FAM6_SKYLAKE_X:
-> > > > > +        rp_msg.addr = priv->mgr->client->addr;
-> > > > > +        rp_msg.bus = 2;
-> > > > > +        /*
-> > > > > +         * Device 10, Function 2: IMC 0 channel 0 -> rank 0
-> > > > > +         * Device 10, Function 6: IMC 0 channel 1 -> rank 1
-> > > > > +         * Device 11, Function 2: IMC 0 channel 2 -> rank 2
-> > > > > +         * Device 12, Function 2: IMC 1 channel 0 -> rank 3
-> > > > > +         * Device 12, Function 6: IMC 1 channel 1 -> rank 4
-> > > > > +         * Device 13, Function 2: IMC 1 channel 2 -> rank 5
-> > > > > +         */
-> > > > > +        rp_msg.device = 10 + chan_rank / 3 * 2 +
-> > > > > +                 (chan_rank % 3 == 2 ? 1 : 0);
-> > > > > +        rp_msg.function = chan_rank % 3 == 1 ? 6 : 2;
-> > > > > +        rp_msg.reg = 0x120 + dimm_order * 4;
-> > > > > +        rp_msg.rx_len = 4;
-> > > > > +
-> > > > > +        ret = peci_command(priv->mgr->client->adapter,
-> > > > > +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
-> > > > > +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
-> > > > > +            ret = -EAGAIN;
-> > > > > +        if (ret)
-> > > > > +            return ret;
-> > > > > +
-> > > > > +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
-> > > > > +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
-> > > > > +        break;
-> > > > > +    case INTEL_FAM6_SKYLAKE_XD:
-> > > > > +        rp_msg.addr = priv->mgr->client->addr;
-> > > > > +        rp_msg.bus = 2;
-> > > > > +        /*
-> > > > > +         * Device 10, Function 2: IMC 0 channel 0 -> rank 0
-> > > > > +         * Device 10, Function 6: IMC 0 channel 1 -> rank 1
-> > > > > +         * Device 12, Function 2: IMC 1 channel 0 -> rank 2
-> > > > > +         * Device 12, Function 6: IMC 1 channel 1 -> rank 3
-> > > > > +         */
-> > > > > +        rp_msg.device = 10 + chan_rank / 2 * 2;
-> > > > > +        rp_msg.function = (chan_rank % 2) ? 6 : 2;
-> > > > > +        rp_msg.reg = 0x120 + dimm_order * 4;
-> > > > > +        rp_msg.rx_len = 4;
-> > > > > +
-> > > > > +        ret = peci_command(priv->mgr->client->adapter,
-> > > > > +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
-> > > > > +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
-> > > > > +            ret = -EAGAIN;
-> > > > > +        if (ret)
-> > > > > +            return ret;
-> > > > > +
-> > > > > +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
-> > > > > +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
-> > > > > +        break;
-> > > > > +    case INTEL_FAM6_HASWELL_X:
-> > > > > +    case INTEL_FAM6_BROADWELL_X:
-> > > > > +        rp_msg.addr = priv->mgr->client->addr;
-> > > > > +        rp_msg.bus = 1;
-> > > > > +        /*
-> > > > > +         * Device 20, Function 0: IMC 0 channel 0 -> rank 0
-> > > > > +         * Device 20, Function 1: IMC 0 channel 1 -> rank 1
-> > > > > +         * Device 21, Function 0: IMC 0 channel 2 -> rank 2
-> > > > > +         * Device 21, Function 1: IMC 0 channel 3 -> rank 3
-> > > > > +         * Device 23, Function 0: IMC 1 channel 0 -> rank 4
-> > > > > +         * Device 23, Function 1: IMC 1 channel 1 -> rank 5
-> > > > > +         * Device 24, Function 0: IMC 1 channel 2 -> rank 6
-> > > > > +         * Device 24, Function 1: IMC 1 channel 3 -> rank 7
-> > > > > +         */
-> > > > > +        rp_msg.device = 20 + chan_rank / 2 + chan_rank / 4;
-> > > > > +        rp_msg.function = chan_rank % 2;
-> > > > > +        rp_msg.reg = 0x120 + dimm_order * 4;
-> > > > > +        rp_msg.rx_len = 4;
-> > > > > +
-> > > > > +        ret = peci_command(priv->mgr->client->adapter,
-> > > > > +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
-> > > > > +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
-> > > > > +            ret = -EAGAIN;
-> > > > > +        if (ret)
-> > > > > +            return ret;
-> > > > > +
-> > > > > +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
-> > > > > +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
-> > > > > +        break;
-> > > > > +    default:
-> > > > > +        return -EOPNOTSUPP;
-> > > > 
-> > > > It looks like the sensors are created even on unsupported platforms,
-> > > > which would generate error messages whenever someone tries to read
-> > > > the attributes.
-> > > > 
-> > > > There should be some code early on checking this, and the driver
-> > > > should not even instantiate if the CPU model is not supported.
-> > > 
-> > > Actually, this 'default' case will not be happened because this driver
-> > > will be registered only when the CPU model is supported. The CPU model
-> > > checking code is in 'intel-peci-client.c' which is [11/14] of this
-> > > patch set.
-> > > 
-> > 
-> > That again assumes that both drivers will be modified in sync in the future.
-> > We can not make that assumption.
+> This is only a "parent" in the sense that it's assigned to 
+> devfreq_passive.data.parent. The "devfreq" name is indeed too generic.
+
+I thought that 'devfreq' property name is generic.
+But, it's not proper for DT binding because DT file show
+the h/w and the relation of h/w. 'devfreq' property name
+has not meant h/w.
+
+So that devfreq core doesn't force to use the specific property
+name to get the devfreq parent instance on DT. Just, devfreq core
+will provide devfreq_get_devfreq_by_node() function.
+
+I developed it on devfre-testing branch[2]. Before I'm sending
+the these patches, you can check them.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/commit/?h=devfreq-testing&id=f3678b4e6b75dccfe8bb87d005da2d68c70fdeab
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/log/?h=devfreq-testing
+
 > 
-> As you said, both drivers must be modified in sync in the future because
-> each Intel CPU family uses different way of reading DIMM temperature.
-> In case if supported CPU checking code updated without making sync with
-> it, this driver will return the error.
+> The DDRC can measure bandwith usage and I want to use the passive 
+> governor to make the main NOC match OPPs.
+
+which one use the passive governor? And which one is the parent 
+devfreq device for devfreq device using passive governor?
+
+In my case, it is difficult to catch the relationship
+between devices. I'd like you to explain the detailed relationship
+on binding document for user.
+
+> But at the bus level DDRC only has AXI and APB slave ports.
+
+'DDRC' indicates the 'drivers/devfreq/imx8m-ddrc.c?
+
+> 
+> Buses on imx don't have a parent/child relationship; in fact there are 
+> even a few cycles.
+
+You mentioned that 'imx don't have a parent/child relationship',
+Why do you use 'passive' governor? It is difficult to understand
+the hierarchy of imx.
+
+> 
+>>
+>> [1] [PATCH RFC v5 04/10] PM / devfreq: Add devfreq_get_devfreq_by_node
+>>
+>>>
+>>>> +      passive governor.
+>>>> +
+>>>> +  '#interconnect-cells':
+>>>> +    description:
+>>>> +      If specified then also act as an interconnect provider. Should only be
+>>>> +      set once per soc on main noc.
+>>>> +    const: 1
+>>>> +
+>>>> +  fsl,scalable-node-ids:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>>>> +    description:
+>>>> +      Array of node ids for scalable nodes. Uses same numeric identifier
+>>>> +      namespace as the consumer "interconnects" binding.
+>>>> +
+>>>> +  fsl,scalable-nodes:
+>>>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>>>> +    description:
+>>>> +      Array of phandles to scalable nodes. Must be of same length as
+>>>> +      fsl,scalable-node-ids.
+>>>> +
+>>>> +required:
+>>>> +  - compatible
+>>>> +  - clocks
+>>>> +
+>>>> +additionalProperties: false
+>>>> +
+>>>> +examples:
+>>>> +  - |
+>>>
+>>> Is it enough example to understand the relation between
+>>> imx8m-ddrc.c, imx-devfreq.c and imx interconnect driver?
+>>>
+>>> In my case, if possible, hope to show the more detailed
+>>> example. This example seems that don't contain the ddrc
+>>> dt node (imx8m-ddrc.c).
+> 
+> OK, I'll elaborate explanation on noc binding.
+
+Thanks. If possible, you better to add almost example cases.
+
+> 
+>>>
+>>>> +    #include <dt-bindings/clock/imx8mq-clock.h>
+>>>> +    #include <dt-bindings/interconnect/imx8mq.h>
+>>>> +    noc: interconnect@32700000 {
+>>>> +            compatible = "fsl,imx8mq-noc", "fsl,imx8m-noc";
+>>>> +            reg = <0x32700000 0x100000>;
+>>>> +            clocks = <&clk IMX8MQ_CLK_NOC>;
+>>>> +            #interconnect-cells = <1>;
+>>>> +            fsl,scalable-node-ids = <IMX8MQ_ICN_NOC>,
+>>>> +                                    <IMX8MQ_ICS_DRAM>;
+>>>> +            fsl,scalable-nodes = <&noc>,
+>>>> +                                 <&ddrc>;
+>>>> +            operating-points-v2 = <&noc_opp_table>;
+>>>> +
+>>>> +            noc_opp_table: opp-table {
+>>>> +                    compatible = "operating-points-v2";
+>>>> +
+>>>> +                    opp-133M {
+>>>> +                            opp-hz = /bits/ 64 <133333333>;
+>>>> +                    };
+>>>> +                    opp-800M {
+>>>> +                            opp-hz = /bits/ 64 <800000000>;
+>>>> +                    };
+>>>> +            };
+>>>> +    };
+> 
 > 
 
-... and in that situation the driver should not instantiate in the
-first place. Its probe function should return -ENODEV.
 
-Guenter
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
