@@ -2,128 +2,131 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E66C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 19:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365D2C2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 19:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAEA218AC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 19:44:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="lMjHeNrD"
+	by mail.kernel.org (Postfix) with ESMTP id 0D61E2072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 19:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbfLQToT (ORCPT
+        id S1727805AbfLQTyB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 14:44:19 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:47043 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727849AbfLQToT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 14:44:19 -0500
-Received: by mail-lj1-f193.google.com with SMTP id z17so12272056ljk.13
-        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 11:44:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Vye4oexJqkfXygyyqfKKuP3+inegaXkNPqfoCHpgpw4=;
-        b=lMjHeNrDcmPquzjFtMxngt+Tg9J0qL9x70PiYWvW1z/pd8s1iFHFz0Vb6ZEYQGn4Gy
-         /1+nYCBnjdA55PBOa7Qo5CZZvxuI5jWXO+vNrhqFSH7p7CcklekDI3G31++vd9nMMHil
-         C+tGHmaL3kFlB5uaTT9GJ9K/AcJL0q2VGWLHBVUjNzk9+R8KI8Vzo07PLFIbK2I4ZK+S
-         ycVfSeVGBr1fFMlqwdStQwEzuzKWEIDjfAsLEZH0Sf6GBPEJ9dmjIjK22vj/60Rn5/y/
-         WGsHoWuh6WZzBYhL6jzyPa6GC0TIqL4UGBDDtU2rfWPKLi1UBzvHvgzAK8BHA0RJywP7
-         6VsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Vye4oexJqkfXygyyqfKKuP3+inegaXkNPqfoCHpgpw4=;
-        b=AUHzDcVrdymA5sqVadMLU64AF4pgBOq5VZRPs8k/Io66TACuiEgX94IXDwRA+oeoTg
-         vIV3G8YiP70XEbfuDi/NuQxfhf8pMTDKrjcwxIQ/XPethCGQKUME3ljScjiHsMV+K6is
-         GP2GTEYQqIBLFVyJBLL7mEGdYNUtmw168tO7Kob1yTuDKd3dsGqhDdpSAEbQS88E3Pn9
-         PNLO6ecIPVPyGdS/COJD8vna3TZmx0Rax8wM0MddqhsnuqXfwwlhhJzYl1064yWaCYTk
-         jZdRuxNuLoVh9nq1bGXyhrxJbXEIYuziuHek8yvPLncm5YhW9LN8evg33fO/lbFmj7qT
-         xneQ==
-X-Gm-Message-State: APjAAAUArawCno2t1fQJl7BPJIF6SV3mhaebDzDCQsKde/WUbg28ZnXd
-        RR4xi4CCXp3Q0DpRAAT4ewRaHQ==
-X-Google-Smtp-Source: APXvYqxGNCXLpZUOsrPpJGhGu15Gp7tw29s3tQRAjYHNkZQ3cn4kdZlrEpaQGbhF+IZ3jDWBkdMdRw==
-X-Received: by 2002:a2e:920b:: with SMTP id k11mr4291780ljg.111.1576611857779;
-        Tue, 17 Dec 2019 11:44:17 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:411:5312:624c:c19e:baea:21d3])
-        by smtp.gmail.com with ESMTPSA id m15sm13324733ljg.4.2019.12.17.11.44.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Dec 2019 11:44:16 -0800 (PST)
-Subject: Re: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-To:     Chris Brandt <Chris.Brandt@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Boris Brezillon <bbrezillon@kernel.org>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com>
- <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
- <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <590840ce-a250-2512-3d04-c2420d83f7da@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <90164352-6b74-ff78-261c-374f51f83330@cogentembedded.com>
-Date:   Tue, 17 Dec 2019 22:44:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Tue, 17 Dec 2019 14:54:01 -0500
+Received: from mga02.intel.com ([134.134.136.20]:22025 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727492AbfLQTyB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 14:54:01 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 11:54:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,326,1571727600"; 
+   d="scan'208";a="389942445"
+Received: from vramados-mobl.amr.corp.intel.com (HELO [10.254.1.250]) ([10.254.1.250])
+  by orsmga005.jf.intel.com with ESMTP; 17 Dec 2019 11:53:59 -0800
+Subject: Re: [alsa-devel] [PATCH 06/10] mfd: Add core driver for AD242x A2B
+ transceivers
+To:     Daniel Mack <daniel@zonque.org>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Cc:     lars@metafoo.de, sboyd@kernel.org, mturquette@baylibre.com,
+        robh+dt@kernel.org, broonie@kernel.org, pascal.huerst@gmail.com,
+        lee.jones@linaro.org
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-8-daniel@zonque.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <c3885b01-e6ec-1b67-6e48-69e3fc40bb62@linux.intel.com>
+Date:   Tue, 17 Dec 2019 13:16:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <590840ce-a250-2512-3d04-c2420d83f7da@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
+In-Reply-To: <20191209183511.3576038-8-daniel@zonque.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/16/2019 11:31 PM, Sergei Shtylyov wrote:
 
-[...]
->> My understanding is that HyperFlash uses standard CFI commands, so all 
-> 
->    The CFI command set driver needed some changes too (e.g. using the status
-> register to determine if a command is done).
-> 
->> we need to do is register a CFI device in the driver, just like we 
->> register a serial flash device.
-> 
->> (I guess I could go look at the sample code for our RTOS package and find out)
->>
->>>> library that you are proposing have a very different API than just
->>>> 'send bytes' and 'receive bytes'?
->>>
->>>    There's "prepare" and "transfer" APIs and also "direct map read" API.
-> 
->   The 1st one prepares the values to be written in either SPI mode or direct
-> read mode registers. Then you can call "transfer" or "direct mao read" which
-> would write out the register values into either set...
-> 
->> I wonder what is the value of the "direct map read" (other than XIP in 
->> RZ/A systems). If you really want to directly access the flash (no 
->> buffering though the MTD layer), you need to register as a mtd-rom device, 
->> and then you don't really need an API at all.
-> 
->   I'd leave this question to Boris, else I never complete this msg. :-) 
+> +config MFD_AD242X
+> +	bool "Analog Devices AD242x A2B support"
+> +	select MFD_CORE
+> +	select REGMAP_I2C
+> +	depends on I2C=y && OF
 
-   Didn't really summon him, doing that now... :-)
+is there a specific reason why I2C needs to be built-in (as opposed to 'm')?
 
->> Chris
+> +/* See Table 3-2 in the datasheet */
 
-MBR, Sergei
+is the datasheet public? I thought it was only available under NDA.
+
+> +	master->sync_clk = devm_clk_get(dev, "sync");
+> +	if (IS_ERR(master->sync_clk)) {
+> +		ret = PTR_ERR(master->sync_clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get sync clk: %d\n", ret);
+> +
+> +		return ret;
+> +	}
+> +
+> +	if (of_property_read_u32(dev->of_node, "clock-frequency",
+> +				 &master->sync_clk_rate)) {
+> +		ret = clk_set_rate(master->sync_clk, master->sync_clk_rate);
+
+shouldn't you check the rate before setting it?
+
+> +		if (ret < 0) {
+> +			dev_err(dev, "Cannot set sync clock rate: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	master->sync_clk_rate = clk_get_rate(master->sync_clk);
+> +	if (master->sync_clk_rate != 44100 && master->sync_clk_rate != 48000) {
+> +		dev_err(dev, "SYNC clock rate %d is invalid\n",
+> +			master->sync_clk_rate);
+> +		return -EINVAL;
+> +	}
+
+this is a bit odd, you set the rate in case there is a property but get 
+it anyways. the last block could be an else?
+
+> +
+> +	ret = clk_prepare_enable(master->sync_clk);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to enable sync clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Master node setup */
+> +
+> +	ret = regmap_write(regmap, AD242X_CONTROL,
+> +			   AD242X_CONTROL_MSTR | AD242X_CONTROL_SOFTRST);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = ad242x_wait_for_irq(master, &master->run_completion, 10);
+
+what is 10?
+
+
+> +static int ad242x_master_remove(struct i2c_client *i2c)
+> +{
+> +	struct ad242x_master *master = i2c_get_clientdata(i2c);
+> +
+> +	if (master->sync_clk)
+> +		clk_disable_unprepare(master->sync_clk);
+
+earlier you tested for IS_ERR(master->sync_clk)?
+
+> +	for (i = 0; i < 4; i++) {
+
+what is 4? 4 hops?
+
