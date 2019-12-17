@@ -2,131 +2,212 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A46C2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 08:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BB2C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 08:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D25D52146E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 08:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ACD82082E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 08:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfLQIfq (ORCPT
+        id S1726561AbfLQIkz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:35:46 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:46783 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726520AbfLQIfp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:35:45 -0500
-Received: from [37.163.141.23] (port=40521 helo=[192.168.43.3])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1ih8KT-0002cv-Fc; Tue, 17 Dec 2019 09:35:41 +0100
-Subject: Re: [PATCH 07/10] i2c: Add driver for AD242x bus controller
-To:     Daniel Mack <daniel@zonque.org>, Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
-        pascal.huerst@gmail.com
-References: <20191209183511.3576038-1-daniel@zonque.org>
- <20191209183511.3576038-9-daniel@zonque.org>
- <64adf5d7-754a-f1da-aa9b-11579c5a2780@lucaceresoli.net>
- <20191212163315.GA3932@kunai>
- <482316ef-775a-cb7b-015e-e00463503e6b@zonque.org>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <4f2e1332-eac3-e54d-5de8-b84a76cb1a34@lucaceresoli.net>
-Date:   Tue, 17 Dec 2019 09:35:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Dec 2019 03:40:55 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:16150 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726402AbfLQIkz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 03:40:55 -0500
+Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 17 Dec
+ 2019 16:41:25 +0800
+Subject: Re: [PATCH v4 2/6] clk: meson: add support for A1 PLL clock ops
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20191206074052.15557-1-jian.hu@amlogic.com>
+ <20191206074052.15557-3-jian.hu@amlogic.com>
+ <1j8snhluhg.fsf@starbuckisacylon.baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <741284be-2ae8-1102-22bc-c510e822c883@amlogic.com>
+Date:   Tue, 17 Dec 2019 16:41:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <482316ef-775a-cb7b-015e-e00463503e6b@zonque.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1j8snhluhg.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.28.39.99]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Daniel,
 
-On 15/12/19 21:27, Daniel Mack wrote:
-> Hi,
+
+On 2019/12/12 18:16, Jerome Brunet wrote:
 > 
-> Thanks for the review!
+> On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
 > 
-> On 12/12/2019 5:33 pm, Wolfram Sang wrote:
->> Hi Luca,
+>> The A1 PLL design is different with previous SoCs. The PLL
+>> internal analog modules Power-on sequence is different
+>> with previous, and thus requires a strict register sequence to
+>> enable the PLL.
 >>
->> thanks for the review!
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> ---
+>>   drivers/clk/meson/clk-pll.c | 21 +++++++++++++++++++++
+>>   drivers/clk/meson/clk-pll.h |  1 +
+>>   drivers/clk/meson/parm.h    |  1 +
+>>   3 files changed, 23 insertions(+)
 >>
->>> good, but I think there's a problem in this function. A "normal"
->>> master_xfer function issues a repeated start between one msg and the
->>> next one, at least in the typical case where all msgs have the same
->>> slave address. Your implementation breaks repeated start. At first sight
->>> we might need more complex code here to coalesce all consecutive msgs
->>> with the same address into a single i2c_transfer() call.
->>
->> Note that it is by far the standard case that all messages in a transfer
->> have the same client address (99,999%?). But technically, this is not a
->> requirement and the repeated start on the bus is totally independent of
->> the addresses used. It is just a master wanting to send without being
->> interrupted by another master.
+>> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+>> index ddb1e5634739..4aff31a51589 100644
+>> --- a/drivers/clk/meson/clk-pll.c
+>> +++ b/drivers/clk/meson/clk-pll.c
+>> @@ -318,6 +318,23 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+>>   	struct clk_regmap *clk = to_clk_regmap(hw);
+>>   	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+>>   
+>> +	/*
+>> +	 * The A1 design is different with previous SoCs.The PLL
+>> +	 * internal analog modules Power-on sequence is different with
+>> +	 * previous, and thus requires a strict register sequence to
+>> +	 * enable the PLL.
 > 
-> I'm not quite sure I understand.
+> The code does something more, not completly different. This comment is
+> not aligned with what the code does
+ok, I will correct the comment.
 > 
-> Let's assume the following setup. An i2c client (some driver code) is
-> sending a list of messages to the a2b xfer function, which in turn is
-> logically connected to a 'real' i2c bus master that'll put the data on
-> the wire.
+>> +	 */
+>> +	if (MESON_PARM_APPLICABLE(&pll->current_en)) {
+>> +		/* Enable the pll */
+>> +		meson_parm_write(clk->map, &pll->en, 1);
+>> +		udelay(10);
+>> +		/* Enable the pll self-adaption module current */
+>> +		meson_parm_write(clk->map, &pll->current_en, 1);
+>> +		udelay(40);
+>> +		meson_parm_write(clk->map, &pll->rst, 1);
+>> +		meson_parm_write(clk->map, &pll->rst, 0);
 > 
-> The a2b code has to tell the 'master node' the final destination of the
-> payload by programming registers on its primary i2c address, and then
-> forwards the messages to its secondary i2c address. The layout of the
-> messages don't change, and neither do the flags; i2c messages are being
-> sent as i2c messages, except their addresses are changed, a bit like NAT
-> in networking. That procedure is described on page 3-4 of the TRM,
-> "Remote Peripheral I2C Accesses".
+> Here you enable the PLL and self adaptation module then reset the PLL.
+> However:
+> #1 when you enter this function, the PLL should already by in reset
+> and disabled
+> #2 the code after that will reset the PLL again
+For A1 PLLs, There is no reset bit, It will not reset the PLL.
+And in V2, you mentioned PARM 'rst' can be used for one toggling, And 
+'rst' is used for BIT(6) in CTRL2.
+
+Quote V2 the HIFI PLL init_regs definition：
+
+
++static const struct reg_sequence a1_hifi_init_regs[] = {
++	{ .reg = ANACTRL_HIFIPLL_CTRL1, .def = 0x01800000 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001100 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL3, .def = 0x100a1100 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL4, .def = 0x00302000 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x01f18440 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x11f18440, .delay_us = 10 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x15f18440, .delay_us = 40 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001140 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001100 },
++};
+
+So maybe another new PARM should be defined to avoid the ambiguity.
+What do you think about it?
+
 > 
-> The 'real' i2c master that handles the hardware bus is responsible for
-> adding start conditions, and as the messages as such are untouched, I
-> believe it should do the right thing. The code in my xfer functions
-> merely suppresses reprogramming remote addresses by remembering the last
-> one that was used, but that is independent of the start conditions on
-> the wire.
-
-My concern is not about the start condition, it's about the *repeated*
-start condition.
-
-The first question is whether the A2B chips can do it. What if the host
-processor sets a slave chip address and then issues two messages
-separated by a repeated start condition? Will the slave transceiver emit
-a repeated start condition too?
-
-If the answer is "yes", then the issue moves to the driver code. A
-master xfer function receives a set of messages that are normally
-emitted with a repeated start between each other. But ad242x_i2c_xfer()
-splits the msgs and calls i2c_transfer_buffer_flags() with one msg at a
-time. i2c_transfer_buffer_flags() then will emit a stop condition.
-
-This is not necessarily a problem, unless multi-master is used, but if
-there are limitations or deviations from the standard they should at
-least be well known and documented.
-
--- 
-Luca
+> So if what you submited works, inserting the following should accomplish
+> the same thing:
+> 
+> ---8<---
+> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+> index 489092dde3a6..9b38df0a7682 100644
+> --- a/drivers/clk/meson/clk-pll.c
+> +++ b/drivers/clk/meson/clk-pll.c
+> @@ -330,6 +330,13 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+>          /* Enable the pll */
+>          meson_parm_write(clk->map, &pll->en, 1);
+> 
+> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
+> +               udelay(10);
+> +               /* Enable the pll self-adaption module current */
+> +               meson_parm_write(clk->map, &pll->current_en, 1);
+> +               udelay(40);
+> +       }
+> +
+>          /* Take the pll out reset */
+>          meson_parm_write(clk->map, &pll->rst, 0);
+> --->8---
+> 
+> 
+> 
+> 
+>> +	}
+>> +
+>>   	/* do nothing if the PLL is already enabled */
+>>   	if (clk_hw_is_enabled(hw))
+>>   		return 0;
+> 
+> In any case, nothing should be done on the clock before this check
+> otherwise you might just break the clock
+> 
+OK, I will put the enabled check ahead.
+>> @@ -347,6 +364,10 @@ static void meson_clk_pll_disable(struct clk_hw *hw)
+>>   
+>>   	/* Disable the pll */
+>>   	meson_parm_write(clk->map, &pll->en, 0);
+>> +
+>> +	/* Disable PLL internal self-adaption module current */
+>> +	if (MESON_PARM_APPLICABLE(&pll->current_en))
+>> +		meson_parm_write(clk->map, &pll->current_en, 0);
+>>   }
+>>   
+>>   static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+>> diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
+>> index 367efd0f6410..30f039242a65 100644
+>> --- a/drivers/clk/meson/clk-pll.h
+>> +++ b/drivers/clk/meson/clk-pll.h
+>> @@ -36,6 +36,7 @@ struct meson_clk_pll_data {
+>>   	struct parm frac;
+>>   	struct parm l;
+>>   	struct parm rst;
+>> +	struct parm current_en;
+>>   	const struct reg_sequence *init_regs;
+>>   	unsigned int init_count;
+>>   	const struct pll_params_table *table;
+>> diff --git a/drivers/clk/meson/parm.h b/drivers/clk/meson/parm.h
+>> index 3c9ef1b505ce..c53fb26577e3 100644
+>> --- a/drivers/clk/meson/parm.h
+>> +++ b/drivers/clk/meson/parm.h
+>> @@ -20,6 +20,7 @@
+>>   	(((reg) & CLRPMASK(width, shift)) | ((val) << (shift)))
+>>   
+>>   #define MESON_PARM_APPLICABLE(p)		(!!((p)->width))
+>> +#define MESON_PARM_CURRENT(p)			(!!((p)->width))
+> 
+> Why do we need that ?
+OK, I will remove it ,and use 'MESON_PARM_APPLICABLE' instead
+> 
+>>   
+>>   struct parm {
+>>   	u16	reg_off;
+> 
+> .
+> 
