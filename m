@@ -2,140 +2,185 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EC2C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 10:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05D8C2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E6C2146E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 10:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC052082E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:03:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lj1Xrahb"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="I/yr/j6R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfLQK7R (ORCPT
+        id S1725940AbfLQLDF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:59:17 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59560 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727489AbfLQK7Q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:59:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576580355;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tAVUgYEbOKAmbmGHd4mLJpWS0BdtmbZWYoTyqnMHjpM=;
-        b=Lj1XrahblT7yT6L0KhG7O/uPLzA4d8+4dd6lFPL2dmen4zji7mMgqCt4XMmOh9ztw5zgCN
-        msYIPEsa9ZnL6BHpEoyRUM4syT+3kGCAyJWoOvjDPEPFhIPxfeAf3tHwlKjBGuEG5mkTSl
-        6QBYQ3Bqa+CaDjGY4FZx1nklxZv1qxc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-241-toc7B--iMgaH3SihD5o5Wg-1; Tue, 17 Dec 2019 05:59:12 -0500
-X-MC-Unique: toc7B--iMgaH3SihD5o5Wg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D132618FF662;
-        Tue, 17 Dec 2019 10:59:08 +0000 (UTC)
-Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C1D465D9C9;
-        Tue, 17 Dec 2019 10:59:04 +0000 (UTC)
-Subject: Re: [PATCH v3 01/13] iommu/arm-smmu-v3: Drop __GFP_ZERO flag from DMA
- allocation
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-References: <20191209180514.272727-1-jean-philippe@linaro.org>
- <20191209180514.272727-2-jean-philippe@linaro.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <2917e0a3-e351-69fe-5e67-adeda9d40617@redhat.com>
-Date:   Tue, 17 Dec 2019 11:59:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20191209180514.272727-2-jean-philippe@linaro.org>
-Content-Type: text/plain; charset=utf-8
+        Tue, 17 Dec 2019 06:03:05 -0500
+Received: from mail-eopbgr1400109.outbound.protection.outlook.com ([40.107.140.109]:9683
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725870AbfLQLDE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 06:03:04 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IISWOdeav7TrWg8Q4yVffqp44x8bY/C48xdtEALrdsRTz8A9sBqlGpf6aLzfjsUkhY8vjJq+ZVqa24TNa0+tbVGKnqA+7yzuaaiGZXltiwFuln0GY3K9nLl/ottjyzrhXEFFHaLVJZH90vw1IwDeormJMA7Q6gtH3aiQTADLXiGOwoQez5O+VelWs/8l+OLAkHsDsmLM/giFgycrBOTJyNrLn8CsOoM8MKRPL2WGh8kY9HdUJ0KUU+8Lt7Zcx9lpO70WFP7IZ8NsiUphcpEJ7UYEPZwMGmifuhuOlxYXLAeU+qiFAbkDniEqn0fyjwZcWSZvbRVnrIiJOOasxUqKuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9IBqzniADRAIE00mLm0EwgMRhysyu7ZgXrh89yWWtYk=;
+ b=NHkbUiO0bffGJ/I9pQWVa5l/aqmGMdKm1cU+4dwFayT1liadj+SCrg1tWOzi6w1CzoL8dEPhroGn1IAAkOIgBakpTH/DYQWkqiuKuiuTk0bWjJZvc5gYBqAaAg+vEDmB8Buts/voGZF0Kwj5yEhbka5oyOsvmDTsEfroR7yDx1mrQ2/HJqhJZ8Fz8TtDzyOFVzTGqe9MiDpGXso4DSeLIniCs5De2p72NCC85DcM/9ksm0JVoFfcJtJbjNQif+9qZciYnmx8uxF+30exM4WinZPWhIV3LhUCYl5RBZ2un1iV+wPpUGTCUDYIbUNPaVMkmHvplVDZ+YN9Q9FEBZ/smA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9IBqzniADRAIE00mLm0EwgMRhysyu7ZgXrh89yWWtYk=;
+ b=I/yr/j6RHcVYl813sVdmnASsrxpFAoOh8ay6c1g9oTd1Y+bitIQ4z1ZhxwDpmgiYd4pOkUde8sgZsiq+6qD3i/1J5JTLXIlcopWneGOMV9f6V7lw5Fkj4gnWcDAVIHyOq5+A1Vl21hUVi2BOuuSJMHMhWH6GPplEELbvGw3Rozs=
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
+ TY1PR01MB1594.jpnprd01.prod.outlook.com (52.133.161.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.19; Tue, 17 Dec 2019 11:03:00 +0000
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::5166:5e51:90f5:3ee1]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::5166:5e51:90f5:3ee1%7]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
+ 11:03:00 +0000
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Peter Rosin <peda@axentia.se>
+Subject: RE: [PATCH v4 06/13] drm/bridge: lvds-codec: Add "lvds-decoder"
+ support
+Thread-Topic: [PATCH v4 06/13] drm/bridge: lvds-codec: Add "lvds-decoder"
+ support
+Thread-Index: AQHVmjpQshhfnt50Ik69GSb05e3v8ae4fAYAgAXgh5A=
+Date:   Tue, 17 Dec 2019 11:02:59 +0000
+Message-ID: <TY1PR01MB1770DEDFA6050EA77AA218F8C0500@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1573660292-10629-7-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20191213171038.GH4860@pendragon.ideasonboard.com>
+In-Reply-To: <20191213171038.GH4860@pendragon.ideasonboard.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b1000ea8-992c-4c9d-d552-08d782e0ae26
+x-ms-traffictypediagnostic: TY1PR01MB1594:|TY1PR01MB1594:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY1PR01MB15949089C9109DDAC0E0F05BC0500@TY1PR01MB1594.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(136003)(366004)(346002)(376002)(189003)(199004)(55016002)(6916009)(8676002)(66446008)(64756008)(66556008)(66476007)(316002)(66946007)(8936002)(4326008)(52536014)(26005)(81166006)(81156014)(33656002)(86362001)(71200400001)(186003)(2906002)(6506007)(53546011)(7696005)(44832011)(5660300002)(54906003)(76116006)(9686003)(7416002)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1594;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: d5iYjd3unIiRUHTsF6wSYc1O0A/5AN+kwedpTVl8IOHX9/wN1dY7hJpL4TBxznlSbRoS+vA/wxj1XbJa4kCvQrzEdsuUFg9/fXwEZ3dYo9W5XzohxS8RgPKpJDzw0UCQFZ8FfOchdAiBIlQCxEVEm9dSss4c7nSP7hGcgPH1tJ4AoVR4fWeeN27ivt2HGQ9VCFe1INvi0/h778Z60iZw8OpfUqkH2ovQ5MpHYZMPkOUahn0CXp363JnRQskWvYpP42XSZ4gym7N7ueafEb/r+wn911+TDN9Zij6VwGCVMvEduxVybhdXywcEM4ecBKaBjcohJgXdPSWUlbu6lm+yULwtQEIIXvga02pplctJC2JhU4G44AEu3R8vOjE8pNfc1xMNpQ8SGftMWP4ibV6lHui7oLdnAGOIZx28FgVhKGI9ZnYuNn060c/6/lZeaYQc
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1000ea8-992c-4c9d-d552-08d782e0ae26
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 11:02:59.8042
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aQOQHxoYO3LoYiyYlXIDplH5RBiMuckX2ugRYwnjZLNAtAHQ+eDwrtSG1Fyrlie78y+Uozr15GZAXp3wvWsS/6o3RFDa37aA8pd0rMPJ+V8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1594
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jean,
-
-On 12/9/19 7:05 PM, Jean-Philippe Brucker wrote:
-> Since commit 518a2f1925c3 ("dma-mapping: zero memory returned from
-> dma_alloc_*"), dma_alloc_* always initializes memory to zero, so there
-> is no need to use dma_zalloc_* or pass the __GFP_ZERO flag anymore.
-> 
-> The flag was introduced by commit 04fa26c71be5 ("iommu/arm-smmu: Convert
-> DMA buffer allocations to the managed API"), since the managed API
-> didn't provide a dmam_zalloc_coherent() function.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-
-Thanks
-
-Eric
-
-> ---
->  drivers/iommu/arm-smmu-v3.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index effe72eb89e7..d4e8b7f8d9f4 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -1675,7 +1675,7 @@ static int arm_smmu_init_l2_strtab(struct arm_smmu_device *smmu, u32 sid)
->  
->  	desc->span = STRTAB_SPLIT + 1;
->  	desc->l2ptr = dmam_alloc_coherent(smmu->dev, size, &desc->l2ptr_dma,
-> -					  GFP_KERNEL | __GFP_ZERO);
-> +					  GFP_KERNEL);
->  	if (!desc->l2ptr) {
->  		dev_err(smmu->dev,
->  			"failed to allocate l2 stream table for SID %u\n",
-> @@ -2161,8 +2161,7 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
->  		return asid;
->  
->  	cfg->cdptr = dmam_alloc_coherent(smmu->dev, CTXDESC_CD_DWORDS << 3,
-> -					 &cfg->cdptr_dma,
-> -					 GFP_KERNEL | __GFP_ZERO);
-> +					 &cfg->cdptr_dma, GFP_KERNEL);
->  	if (!cfg->cdptr) {
->  		dev_warn(smmu->dev, "failed to allocate context descriptor\n");
->  		ret = -ENOMEM;
-> @@ -2883,7 +2882,7 @@ static int arm_smmu_init_strtab_2lvl(struct arm_smmu_device *smmu)
->  
->  	l1size = cfg->num_l1_ents * (STRTAB_L1_DESC_DWORDS << 3);
->  	strtab = dmam_alloc_coherent(smmu->dev, l1size, &cfg->strtab_dma,
-> -				     GFP_KERNEL | __GFP_ZERO);
-> +				     GFP_KERNEL);
->  	if (!strtab) {
->  		dev_err(smmu->dev,
->  			"failed to allocate l1 stream table (%u bytes)\n",
-> @@ -2910,7 +2909,7 @@ static int arm_smmu_init_strtab_linear(struct arm_smmu_device *smmu)
->  
->  	size = (1 << smmu->sid_bits) * (STRTAB_STE_DWORDS << 3);
->  	strtab = dmam_alloc_coherent(smmu->dev, size, &cfg->strtab_dma,
-> -				     GFP_KERNEL | __GFP_ZERO);
-> +				     GFP_KERNEL);
->  	if (!strtab) {
->  		dev_err(smmu->dev,
->  			"failed to allocate linear stream table (%u bytes)\n",
-> 
-
+SGkgTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB5b3VyIGZlZWRiYWNrIQ0KDQo+IEZyb206IExh
+dXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4NCj4gU2Vu
+dDogMTMgRGVjZW1iZXIgMjAxOSAxNzoxMQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0IDA2LzEz
+XSBkcm0vYnJpZGdlOiBsdmRzLWNvZGVjOiBBZGQgImx2ZHMtZGVjb2RlciIgc3VwcG9ydA0KPiAN
+Cj4gSGkgRmFicml6aW8sDQo+IA0KPiBPbiBXZWQsIE5vdiAxMywgMjAxOSBhdCAwMzo1MToyNVBN
+ICswMDAwLCBGYWJyaXppbyBDYXN0cm8gd3JvdGU6DQo+ID4gQWRkIHN1cHBvcnQgZm9yIHRyYW5z
+cGFyZW50IExWRFMgZGVjb2RlcnMgYnkgYWRkaW5nIGEgbmV3DQo+ID4gY29tcGF0aWJsZSBzdHJp
+bmcgKCJsdmRzLWRlY29kZXIiKSB0byB0aGUgZHJpdmVyLg0KPiA+IFRoaXMgcGF0Y2ggYWxzbyBh
+ZGRzIG1lbWJlciBjb25uZWN0b3JfdHlwZSB0byBzdHJ1Y3QgbHZkc19jb2RlYywNCj4gPiBhbmQg
+dGhhdCdzIGJlY2F1c2UgTFZEUyBkZWNvZGVycyBoYXZlIGEgZGlmZmVyZW50IGNvbm5lY3RvciB0
+eXBlDQo+ID4gZnJvbSBMVkRTIGVuY29kZXJzLiBXZSBmaWxsIHRoaXMgbmV3IG1lbWJlciB1cCB3
+aXRoIHRoZSBkYXRhDQo+ID4gbWF0Y2hpbmcgdGhlIGNvbXBhdGlibGUgc3RyaW5nLg0KPiA+DQo+
+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVu
+ZXNhcy5jb20+DQo+ID4NCj4gPiAtLS0NCj4gPiB2My0+djQ6DQo+ID4gKiBOZXcgcGF0Y2gNCj4g
+PiAtLS0NCj4gPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWNvZGVjLmMgfCAxOSArKysr
+KysrKysrKysrKysrLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspLCAz
+IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlk
+Z2UvbHZkcy1jb2RlYy5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWNvZGVjLmMNCj4g
+PiBpbmRleCBiNTgwMWEyLi5jMzJlMTI1IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9icmlkZ2UvbHZkcy1jb2RlYy5jDQo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9s
+dmRzLWNvZGVjLmMNCj4gPiBAQCAtNyw2ICs3LDcgQEANCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2dw
+aW8vY29uc3VtZXIuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ICAjaW5j
+bHVkZSA8bGludXgvb2YuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPg0KPiA+
+ICAjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRm
+b3JtX2RldmljZS5oPg0KPiA+DQo+ID4gQEAgLTE3LDYgKzE4LDcgQEAgc3RydWN0IGx2ZHNfY29k
+ZWMgew0KPiA+ICAJc3RydWN0IGRybV9icmlkZ2UgYnJpZGdlOw0KPiA+ICAJc3RydWN0IGRybV9i
+cmlkZ2UgKnBhbmVsX2JyaWRnZTsNCj4gPiAgCXN0cnVjdCBncGlvX2Rlc2MgKnBvd2VyZG93bl9n
+cGlvOw0KPiA+ICsJdTMyIGNvbm5lY3Rvcl90eXBlOw0KPiA+ICB9Ow0KPiA+DQo+ID4gIHN0YXRp
+YyBpbnQgbHZkc19jb2RlY19hdHRhY2goc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkNCj4gPiBA
+QCAtNjUsNiArNjcsNyBAQCBzdGF0aWMgaW50IGx2ZHNfY29kZWNfcHJvYmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldikNCj4gPiAgCWlmICghbHZkc19jb2RlYykNCj4gPiAgCQlyZXR1cm4g
+LUVOT01FTTsNCj4gPg0KPiA+ICsJbHZkc19jb2RlYy0+Y29ubmVjdG9yX3R5cGUgPSAodTMyKW9m
+X2RldmljZV9nZXRfbWF0Y2hfZGF0YSgmcGRldi0+ZGV2KTsNCj4gDQo+IEknbSBub3cgZ2V0dGlu
+ZyBhIGNvbXBpbGF0aW9uIGZhaWx1cmUgaGVyZToNCj4gDQo+IGRyaXZlcnMvZ3B1L2RybS9icmlk
+Z2UvbHZkcy1jb2RlYy5jOiBJbiBmdW5jdGlvbiDigJhsdmRzX2NvZGVjX3Byb2Jl4oCZOg0KPiBk
+cml2ZXJzL2dwdS9kcm0vYnJpZGdlL2x2ZHMtY29kZWMuYzo2ODozMTogZXJyb3I6IGNhc3QgZnJv
+bSBwb2ludGVyIHRvIGludGVnZXIgb2YgZGlmZmVyZW50IHNpemUgWy1XZXJyb3I9cG9pbnRlci10
+by1pbnQtY2FzdF0NCj4gICBsdmRzX2NvZGVjLT5jb25uZWN0b3JfdHlwZSA9ICh1MzIpb2ZfZGV2
+aWNlX2dldF9tYXRjaF9kYXRhKCZwZGV2LT5kZXYpOw0KPiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgXg0KPiANCj4gVGhlIGZpeCBzaG91bGQgYmUgc2ltcGxlOg0KPiANCj4gCWx2ZHNf
+Y29kZWMtPmNvbm5lY3Rvcl90eXBlID0gKHVpbnRwdHJfdClvZl9kZXZpY2VfZ2V0X21hdGNoX2Rh
+dGEoZGV2KTsNCj4gDQo+IEknbSBib3RoZXJlZCBieSB0aGUgZmFjdCB0aGF0IEkndmUgY29tcGls
+ZWQgdGhpcyBiZWZvcmUgd2l0aG91dCBhbnkNCj4gaXNzdWUsIHNvIHRoaXMgcmVhbGx5IHB1enps
+ZXMgbWUuIERvIHlvdSBnZXQgdGhlIHNhbWUgd2FybmluZyA/DQoNClRoZSB3YXJuaW5nIGFwcGVh
+cnMgd2hlbiBjb21waWxpbmcgZm9yIGFybTY0LCB1bmRlcnN0YW5kYWJseSBzby4NCldlIG11c3Qg
+aGF2ZSBjb21waWxlZCB0aGlzIGZvciBhcm0gb25seSB0aGUgZmlyc3QgdGltZSBhcm91bmQuDQoN
+CkkgdGhpbmsgdGhlIHJpZ2h0IHdheSB0byBzb2x2ZSB0aGlzIGlzIHRvIGVpdGhlciBjYXN0IHRv
+ICh1MzIpKHVpbnRwdHJfdCkgb3IgKHUzMikodW5zaWduZWQgbG9uZykuDQoNCldoYXQncyB5b3Vy
+IHByZWZlcmVuY2U/DQoNClRoYW5rcywNCkZhYg0KDQo+IA0KPiA+ICAJbHZkc19jb2RlYy0+cG93
+ZXJkb3duX2dwaW8gPSBkZXZtX2dwaW9kX2dldF9vcHRpb25hbChkZXYsICJwb3dlcmRvd24iLA0K
+PiA+ICAJCQkJCQkJICAgICBHUElPRF9PVVRfSElHSCk7DQo+ID4gIAlpZiAoSVNfRVJSKGx2ZHNf
+Y29kZWMtPnBvd2VyZG93bl9ncGlvKSkgew0KPiA+IEBAIC0xMDUsNyArMTA4LDcgQEAgc3RhdGlj
+IGludCBsdmRzX2NvZGVjX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4N
+Cj4gPiAgCWx2ZHNfY29kZWMtPnBhbmVsX2JyaWRnZSA9DQo+ID4gIAkJZGV2bV9kcm1fcGFuZWxf
+YnJpZGdlX2FkZF90eXBlZChkZXYsIHBhbmVsLA0KPiA+IC0JCQkJCQlEUk1fTU9ERV9DT05ORUNU
+T1JfTFZEUyk7DQo+ID4gKwkJCQkJCWx2ZHNfY29kZWMtPmNvbm5lY3Rvcl90eXBlKTsNCj4gPiAg
+CWlmIChJU19FUlIobHZkc19jb2RlYy0+cGFuZWxfYnJpZGdlKSkNCj4gPiAgCQlyZXR1cm4gUFRS
+X0VSUihsdmRzX2NvZGVjLT5wYW5lbF9icmlkZ2UpOw0KPiA+DQo+ID4gQEAgLTEzMyw4ICsxMzYs
+MTggQEAgc3RhdGljIGludCBsdmRzX2NvZGVjX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
+ICpwZGV2KQ0KPiA+ICB9DQo+ID4NCj4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2Vf
+aWQgbHZkc19jb2RlY19tYXRjaFtdID0gew0KPiA+IC0JeyAuY29tcGF0aWJsZSA9ICJsdmRzLWVu
+Y29kZXIiIH0sDQo+ID4gLQl7IC5jb21wYXRpYmxlID0gInRoaW5lLHRoYzYzbHZkbTgzZCIgfSwN
+Cj4gPiArCXsNCj4gPiArCQkuY29tcGF0aWJsZSA9ICJsdmRzLWRlY29kZXIiLA0KPiA+ICsJCS5k
+YXRhID0gKHZvaWQgKilEUk1fTU9ERV9DT05ORUNUT1JfRFBJLA0KPiA+ICsJfSwNCj4gPiArCXsN
+Cj4gPiArCQkuY29tcGF0aWJsZSA9ICJsdmRzLWVuY29kZXIiLA0KPiA+ICsJCS5kYXRhID0gKHZv
+aWQgKilEUk1fTU9ERV9DT05ORUNUT1JfTFZEUywNCj4gPiArCX0sDQo+ID4gKwl7DQo+ID4gKwkJ
+LmNvbXBhdGlibGUgPSAidGhpbmUsdGhjNjNsdmRtODNkIiwNCj4gPiArCQkuZGF0YSA9ICh2b2lk
+ICopRFJNX01PREVfQ09OTkVDVE9SX0xWRFMsDQo+ID4gKwl9LA0KPiA+ICAJe30sDQo+ID4gIH07
+DQo+ID4gIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGx2ZHNfY29kZWNfbWF0Y2gpOw0KPiANCj4g
+LS0NCj4gUmVnYXJkcywNCj4gDQo+IExhdXJlbnQgUGluY2hhcnQNCg==
