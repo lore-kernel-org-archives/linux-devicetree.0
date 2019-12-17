@@ -2,143 +2,218 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5629C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 02:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B79C2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 03:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C46A24655
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 02:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC2C22176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 03:15:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OwztODRE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fdc0aNMB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfLQCuU (ORCPT
+        id S1726446AbfLQDP6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 21:50:20 -0500
-Received: from mail-eopbgr30072.outbound.protection.outlook.com ([40.107.3.72]:52878
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726859AbfLQCuT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 21:50:19 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dPq+S92JF077esTAx9ue6Qh53j3536q/5IgSzFD2DqTsSjCfj548Qi9FduQNslm3Vkbozin27O8WplWNVQgEwWvrKKfsED9Y5lFD7WscA/JKIte+qdexv+W6As0zI72HZDnAP0lrhTP0ccBzwi/pbHH6cv3ukK474qnfPo+q/9rZGt0mp+YNv2KrK+oJfQ6kzOqhbhh68q9PtzJjDQTrTUuuB5UHVlr7JjkjBrUWZr1IvZHSfrs+30yfLiugQkQVJDgW6QqYa+tO07VZpuv+oq/OqPnnafBS98IBG7yS9t0DLLRZI+lINTYPfxscrlLGNZ+JkJPsuM1lCk5SiGNSKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gmmHddfra0gGS7w9c8e+0PL+o6cnE/xTkJUf52Sv76c=;
- b=VTC9V94ynWJiuzVZ8byN2+THeoy1P4fA7ocpg1oApMRDXY5npZ4HlwrmtIF+j9TRAuZg2BcvOAYM+BS+YrkJOgP2xFNSIm5jJfy+N7EwA68tXGWTx29g5hJDLqJ95sPfJT3Fgndk0OgsWsaXKAEsvXEKhAo1c35eL43SCzXaV4t49zpCt9va3w+Hk1WratLWyHL1nAVQj9IJDmkLlfEiROojwMII/65MRYP42MOgnFMzVkpNXqUE4jr0t+I+RP/DNVRO0oiuVr4+DmaRI5DI3yb4gpcElOYQ7/ikbQB5+EDEjC8jXJjky0mXDiAeYPL84acHgiLLyLPPs0PS4gRMjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gmmHddfra0gGS7w9c8e+0PL+o6cnE/xTkJUf52Sv76c=;
- b=OwztODREkEPniQsheMPgCRaS9rWbHi4Vc1DF7moDrRqFwFEM2/8Nsb3qn4aOSUIo01ZlfWWR24ODlwADcuFSHrrKQVWx82nFkBGb7C24NKVMx0GvZAFfRpUO0rO+HE3f1wJeJ1v9GFQT12W99CuE2R+A1AB/hntCAwblRmbFhUY=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB6954.eurprd04.prod.outlook.com (52.133.242.211) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.18; Tue, 17 Dec 2019 02:50:15 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::2198:bb00:1add:d638]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::2198:bb00:1add:d638%3]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
- 02:50:15 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Olof Johansson <olof@lixom.net>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Thread-Topic: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Thread-Index: AQHVn1Tsfp+9ZVhNFU2th1+s/za9wae4ifkAgAU/LmA=
-Date:   Tue, 17 Dec 2019 02:50:15 +0000
-Message-ID: <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
-In-Reply-To: <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 23e86835-4041-460b-075a-08d7829bd7fd
-x-ms-traffictypediagnostic: DB8PR04MB6954:|DB8PR04MB6954:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB69544E641E65A9C1B5D141C684500@DB8PR04MB6954.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 02543CD7CD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(4636009)(346002)(396003)(376002)(39860400002)(136003)(366004)(199004)(189003)(13464003)(8936002)(71200400001)(81166006)(81156014)(478600001)(8676002)(9686003)(26005)(66446008)(64756008)(66556008)(5660300002)(66476007)(110136005)(54906003)(316002)(86362001)(7696005)(186003)(33656002)(52536014)(76116006)(6506007)(4326008)(66946007)(2906002)(53546011)(55016002)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6954;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 40bkpwVWTZ11z1B4FkanbXLFwT65eEs29yvwozaO5N5+RkEfd7w8DWD38vhGuBDy8xixOtHVaN1+blZzY+/PwSwh3TmFhJ99JnjAGC6yLNa88VRmfiZePs1dSj48KhQwT4rOJHKmAYu7Gr6Up82AlX9TxILMG2Q3rGGgk8qPaOxMqI9MtkjUG/DM9evKYegRdEE+VCt1sJz+K2NKXh411a9CLTc07uht/kKrexuo4lsoxEKCBmWio1OR/X2fH7Gc63jfb6x8R1APPSR4uxjjSY1UscgcevEsUTGEThuiLMIJCNHHTL5UV12DgvSF3/s42N2pExIEg+srtUI/jraw550LqZF0bnL+4rTTWANmbEPX2X08KZjH8ZaJGxDyTfXKNQNJ78pjb1YQs1nbIw29Jpd8UaDce4IgaiiZ2mAYIiTHViMNf6CFdfUen/2PqZbqUcS4ERlLEwKyF8wECVBBUq+v2wopW96hvtbpdnDoJH0/REpm2ilA+XAzCAu6o8oZ
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 16 Dec 2019 22:15:58 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36697 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbfLQDP6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 22:15:58 -0500
+Received: by mail-ed1-f66.google.com with SMTP id j17so6861755edp.3
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 19:15:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n0ZmwEm6Y6IwUNMyCmLhctNeiL5+CELSaD2v2htB66s=;
+        b=fdc0aNMBWxJTW2PEAzGSAqifbgjBKEGNsA83zAQTv4XrOWu8k3huPlqJjfm6WWctrt
+         m4CRNAl6K2fyr+zXGgjS4R9A+artZqjGeUxuOsfVu9vXMB6oyAdGC6KwqqnzjhPb5RtE
+         J0ycsSMk8hWQiHfKoA7ZxyFv25arNi9EhcHWE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n0ZmwEm6Y6IwUNMyCmLhctNeiL5+CELSaD2v2htB66s=;
+        b=OSzh0ejS4OsmAIX+pRAVQs58n8F1jNu8Qf89cNiBlME6a/buEzZKAbEBNgPIaSLbGi
+         V4S55rLSnOvmoOTny7SqNJvYveEvHfYkDEnis56uq1R6aXguADwzgiVamfzOLutkcsjw
+         Q+VeL43V/mrpvgxJkVRgYonuX3w5+FByA/g1RHueA2eLJvV0h3rA6AKquPOdZA59rtOl
+         V0OferddVKAizLAFrkzt908WPen1eZx8J9FHBuuLjDw3yfL7uTP2rqEQS7oBaacNWyLq
+         U6/93e9VbP9xT//xz9Cs+p60wRGvk5UR/UZd+WTmKf/bmgyEAAFNgXOnED34IDAMzbOy
+         /xKQ==
+X-Gm-Message-State: APjAAAWGZ+xNraubI6yovUP2jD/FJbF7Fga1b7YFNH7dZ1LXNAES5TAL
+        RfPYs2dIsQmsWh2bVf7F5CjyGofHUNwpJA==
+X-Google-Smtp-Source: APXvYqzDaGXubHMA8XeASNpGZydr9YGbMRpp/DAevSoiDVCEIuYLDQ7NqoL2YFfK7yMlVy7JzC6SoQ==
+X-Received: by 2002:a17:906:445:: with SMTP id e5mr2652511eja.218.1576552555261;
+        Mon, 16 Dec 2019 19:15:55 -0800 (PST)
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
+        by smtp.gmail.com with ESMTPSA id w2sm1125748eja.49.2019.12.16.19.15.52
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 19:15:52 -0800 (PST)
+Received: by mail-wr1-f46.google.com with SMTP id w15so9696944wru.4
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 19:15:52 -0800 (PST)
+X-Received: by 2002:adf:f803:: with SMTP id s3mr33909150wrp.7.1576552551964;
+ Mon, 16 Dec 2019 19:15:51 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23e86835-4041-460b-075a-08d7829bd7fd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 02:50:15.0630
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0S1YSLxYqEyWXvHhoqT9raJdjpDw4OuKyKDvu5EyYkmt76lRwJIM1/wfVisFIkpgwtHd5xY9Zm5+/8PS4NAvXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6954
+References: <20191211112849.16705-1-dongchun.zhu@mediatek.com> <20191211112849.16705-2-dongchun.zhu@mediatek.com>
+In-Reply-To: <20191211112849.16705-2-dongchun.zhu@mediatek.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Tue, 17 Dec 2019 12:15:40 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5AnWZqjQEVvw8gv7JzOBHxJvsOWaGrbY8CXQ_87ap-ahA@mail.gmail.com>
+Message-ID: <CAAFQd5AnWZqjQEVvw8gv7JzOBHxJvsOWaGrbY8CXQ_87ap-ahA@mail.gmail.com>
+Subject: Re: [V6, 1/2] media: dt-bindings: media: i2c: Document OV02A10 bindings
+To:     Rob Herring <robh+dt@kernel.org>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        andriy.shevchenko@linux.intel.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Cao Bing Bu <bingbu.cao@intel.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Sj Huang <sj.huang@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Louis Kuo <louis.kuo@mediatek.com>, shengnan.wang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KVGhlIHY5IHBhdGNoZXMgaGF2ZSBhZGRyZXNzZWQgdGhlIGNvbW1lbnRz
-IGZyb20gQW5kcmV3LCBhbmQgaXQgaGFzIGJlZW4gZHJpZWQgYWJvdXQgMSBtb250aCwgY2FuIHlv
-dSBoZWxwIHRvIGFwcGx5IHRoZW0/DQoNClRoYW5rcywNClpoaXFpYW5nDQoNCj4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogT2xvZiBKb2hhbnNzb24gPG9sb2ZAbGl4b20ubmV0
-Pg0KPiBTZW50OiAyMDE55bm0MTLmnIgxNOaXpSAyOjM3DQo+IFRvOiBaLnEuIEhvdSA8emhpcWlh
-bmcuaG91QG54cC5jb20+OyBiaGVsZ2Fhc0Bnb29nbGUuY29tDQo+IENjOiBsaW51eC1wY2lAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0K
-PiByb2JoK2R0QGtlcm5lbC5vcmc7IGFybmRAYXJuZGIuZGU7IG1hcmsucnV0bGFuZEBhcm0uY29t
-Ow0KPiBsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluOyBzaGF3bmd1b0BrZXJuZWwub3JnOw0K
-PiBtLmthcnRoaWtleWFuQG1vYml2ZWlsLmNvLmluOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNv
-bT47DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29t
-Ow0KPiB3aWxsLmRlYWNvbkBhcm0uY29tOyBhbmRyZXcubXVycmF5QGFybS5jb207IE1pbmdrYWkg
-SHUNCj4gPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAu
-Y29tPjsgWGlhb3dlaSBCYW8NCj4gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0h2OSAwMC8xMl0gUENJOiBSZWNvZGUgTW9iaXZlaWwgZHJpdmVyIGFuZCBhZGQgUENJ
-ZSBHZW40DQo+IGRyaXZlciBmb3IgTlhQIExheWVyc2NhcGUgU29Dcw0KPiANCj4gSGkhDQo+IA0K
-PiBPbiBUdWUsIE5vdiAxOSwgMjAxOSBhdCA3OjQ1IFBNIFoucS4gSG91IDx6aGlxaWFuZy5ob3VA
-bnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhv
-dUBueHAuY29tPg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBzZXQgaXMgdG8gcmVjb2RlIHRoZSBNb2Jp
-dmVpbCBkcml2ZXIgYW5kIGFkZCBQQ0llIHN1cHBvcnQNCj4gPiBmb3IgTlhQIExheWVyc2NhcGUg
-c2VyaWVzIFNvQ3MgaW50ZWdyYXRlZCBNb2JpdmVpbCdzIFBDSWUgR2VuNA0KPiA+IGNvbnRyb2xs
-ZXIuDQo+IA0KPiBDYW4gd2UgZ2V0IGEgcmVzcGluIGZvciB0aGlzIG9uIHRvcCBvZiB0aGUgNS41
-IG1lcmdlIHdpbmRvdyBtYXRlcmlhbD8NCj4gR2l2ZW4gdGhhdCBpdCdzIGEgYnVuY2ggb2YgcmVm
-YWN0b3JpbmdzLCBtYW55IG9mIHRoZW0gZG9uJ3QgYXBwbHkgb24gdG9wIG9mDQo+IHRoZSBtYXRl
-cmlhbCB0aGF0IHdhcyBtZXJnZWQuDQo+IA0KPiBJJ2QgbG92ZSB0byBzZWUgdGhlc2UgZ28gaW4g
-c29vbmVyIHJhdGhlciB0aGFuIGxhdGVyIHNvIEkgY2FuIHN0YXJ0IGdldHRpbmcgLW5leHQNCj4g
-cnVubmluZyBvbiBsczIxNjBhIGhlcmUuDQo+IA0KPiANCj4gLU9sb2YNCg==
+Hi Rob, Dongchun,
+
+On Wed, Dec 11, 2019 at 8:29 PM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
+>
+> Add DT bindings documentation for Omnivision OV02A10 image sensor.
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> ---
+>  .../devicetree/bindings/media/i2c/ov02a10.txt      | 54 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  7 +++
+>  2 files changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+>
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov02a10.txt b/Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+> new file mode 100644
+> index 0000000..18acc4f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+> @@ -0,0 +1,54 @@
+> +* Omnivision OV02A10 MIPI CSI-2 sensor
+> +
+> +Required Properties:
+> +- compatible: shall be "ovti,ov02a10"
+> +- clocks: reference to the eclk input clock
+> +- clock-names: shall be "eclk"
+> +- dovdd-supply: Digital I/O voltage supply, 1.8 volts
+> +- avdd-supply: Analog voltage supply, 2.8 volts
+> +- dvdd-supply: Digital core voltage supply, 1.8 volts
+> +- powerdown-gpios: reference to the GPIO connected to the powerdown pin,
+> +                  if any. This is an active low signal to the OV02A10.
+
+On the hardware level this pin is active high, i.e. the device is
+powered down when the signal is high.
+
+> +- reset-gpios: reference to the GPIO connected to the reset pin, if any.
+> +              This is an active high signal to the OV02A10.
+
+On the hardware level this pin is active low, i.e. the device is held
+in reset when the signal is low.
+
+However, there is some confusion around how the polarity flag in the
+GPIO specifier is supposed to be used.
+
+As per [1],
+
+"The gpio-specifier's polarity flag should represent the physical
+level at the GPIO controller that achieves (or represents, for inputs)
+a logically asserted value at the device. The exact definition of
+logically asserted should be defined by the binding for the device."
+
+In this case it sounds like "logically asserted" means the device is
+powered down or held in reset, respectively, which would suggest that
+the specifiers should have GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW
+respectively. The latter would cause the GPIO subsystem to invert the
+values set by the consumers, which would then be confusing from the
+driver implementation point of view.
+
+Should the pin be renamed to "nreset"? It would change the meaning of
+"logically asserted" to "device is not held in reset" and so
+GPIO_ACTIVE_HIGH (or 0) would be the right value to use.
+
+[1] https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/gpio/gpio.txt#L83
+
+Best regards,
+Tomasz
+
+> +
+> +Optional Properties:
+> +- rotation: as defined in
+> +           Documentation/devicetree/bindings/media/video-interfaces.txt,
+> +           valid values are 0 (sensor mounted upright) and 180 (sensor
+> +           mounted upside down).
+> +
+> +The device node shall contain one 'port' child node with an
+> +'endpoint' subnode for its digital output video port,
+> +in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +&i2c4 {
+> +       ov02a10: camera-sensor@3d {
+> +               compatible = "ovti,ov02a10";
+> +               reg = <0x3d>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&camera_pins_cam1_mclk_on>;
+> +
+> +               clocks = <&topckgen CLK_TOP_MUX_CAMTG2>,
+> +                       <&topckgen CLK_TOP_UNIVP_192M_D8>;
+> +               clock-names = "eclk", "freq_mux";
+> +               clock-frequency = <24000000>;
+> +
+> +               dovdd-supply = <&mt6358_vcamio_reg>;
+> +               avdd-supply = <&mt6358_vcama1_reg>;
+> +               dvdd-supply = <&mt6358_vcn18_reg>;
+> +               powerdown-gpios = <&pio 107 GPIO_ACTIVE_LOW>;
+> +               reset-gpios = <&pio 109 GPIO_ACTIVE_HIGH>;
+> +               rotation = <180>;
+> +
+> +               port {
+> +                       /* MIPI CSI-2 bus endpoint */
+> +                       ov02a10_core: endpoint {
+> +                               remote-endpoint = <&ov02a10_0>;
+> +                               link-frequencies = /bits/ 64 <390000000>;
+> +                       };
+> +               };
+> +       };
+> +};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index bd5847e..92a868c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12130,6 +12130,13 @@ T:     git git://linuxtv.org/media_tree.git
+>  S:     Maintained
+>  F:     drivers/media/i2c/ov13858.c
+>
+> +OMNIVISION OV02A10 SENSOR DRIVER
+> +M:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+> +L:     linux-media@vger.kernel.org
+> +T:     git git://linuxtv.org/media_tree.git
+> +S:     Maintained
+> +F:     Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+> +
+>  OMNIVISION OV2680 SENSOR DRIVER
+>  M:     Rui Miguel Silva <rmfrfs@gmail.com>
+>  L:     linux-media@vger.kernel.org
+> --
+> 2.9.2
