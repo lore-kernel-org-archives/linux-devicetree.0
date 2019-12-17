@@ -2,124 +2,159 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F0AC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85A7C2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B34420716
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85582146E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfLQMct (ORCPT
+        id S1727700AbfLQMjE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:32:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:35370 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727427AbfLQMcs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:32:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 053A531B;
-        Tue, 17 Dec 2019 04:32:48 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FF5B3F718;
-        Tue, 17 Dec 2019 04:32:47 -0800 (PST)
-Date:   Tue, 17 Dec 2019 12:32:44 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH 06/13] PCI: cadence: Allow pci_host_bridge to have custom
- pci_ops
-Message-ID: <20191217123243.GC24359@e119886-lin.cambridge.arm.com>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-7-kishon@ti.com>
+        Tue, 17 Dec 2019 07:39:04 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33206 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727406AbfLQMjE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 07:39:04 -0500
+Received: by mail-ot1-f68.google.com with SMTP id b18so5006836otp.0;
+        Tue, 17 Dec 2019 04:39:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LUh0j8xU1Qr9fXtE+2mw/twXvOy9bjYwMRuWrzxT6eQ=;
+        b=EGqp9Wfg8QRJSwpL/3FHCCFImWhwvqbzihUigYc8FCp6e0Ul+zDPnsk/W/Km22NW3N
+         ndKJcKQM/mqtjOjfU92mMem81l4XSdm5Iaugd3joN38a2uDsqPheTm3juR//j94klKmU
+         R3iNS/6eMHwXWM/tsqsxtUoCgfcMy7Y+ApBFW2Md3luVH8JHywKKg6Stn43FLm7tmEJE
+         KJNUjLnL0Zy2LUkJPYVrHqOzwmcVh0xRimHxtYjbWA8ddSsTTdL32A3jAlCamUu12DYK
+         3shmuhU4gTARrjbRzpJvr5yr9NOnu9/zaDso/54rtV2TWmKMP3Hgjx7Kwiq92gnsMaaC
+         hSpQ==
+X-Gm-Message-State: APjAAAV8ABUSVTzamD6DIuMixL/VFXngkyC9EBHvcy6/X9uM6o84qryR
+        5yXKPaI/T6EN7VV6fkC630UCn0nwMK+yXWFSDA8=
+X-Google-Smtp-Source: APXvYqymQtdXQIA9dI50I0zDHkQvsxWBvf/GOqxNthXzUoE+3dKDkD4aXvjDConIraGDEKG0eShllvgWTqpNdNsUfFU=
+X-Received: by 2002:a9d:6c81:: with SMTP id c1mr38348507otr.39.1576586342848;
+ Tue, 17 Dec 2019 04:39:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209092147.22901-7-kishon@ti.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1573660292-10629-7-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20191213171038.GH4860@pendragon.ideasonboard.com> <TY1PR01MB1770DEDFA6050EA77AA218F8C0500@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <CAMuHMdUE0O9_8g02f2ABiV8SSMXNJB9S9e89p0OJKnTvx8MO9g@mail.gmail.com> <TY1PR01MB17705FC08F72875484DF2208C0500@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB17705FC08F72875484DF2208C0500@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 17 Dec 2019 13:38:51 +0100
+Message-ID: <CAMuHMdVqHekyeOaHwpFyG5buNZp-XmvGizqZ=Gbg40_=NL+s2A@mail.gmail.com>
+Subject: Re: [PATCH v4 06/13] drm/bridge: lvds-codec: Add "lvds-decoder" support
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Peter Rosin <peda@axentia.se>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 02:51:40PM +0530, Kishon Vijay Abraham I wrote:
-> Certain platforms like TI's J721E allows only 32-bit configuration
-> space access. In such cases pci_generic_config_read and
-> pci_generic_config_write cannot be used. Add support in Cadence core
-> to let pci_host_bridge have custom pci_ops.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 7 ++++---
->  drivers/pci/controller/cadence/pcie-cadence.h      | 8 ++++++++
->  2 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 0929554f5a81..2efc33b1cade 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -12,8 +12,8 @@
->  
->  #include "pcie-cadence.h"
->  
-> -static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
-> -				      int where)
-> +void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
-> +			       int where)
->  {
->  	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
->  	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
-> @@ -289,7 +289,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  	list_splice_init(&resources, &bridge->windows);
->  	bridge->dev.parent = dev;
->  	bridge->busnr = pcie->bus;
-> -	bridge->ops = &cdns_pcie_host_ops;
-> +	if (!bridge->ops)
-> +		bridge->ops = &cdns_pcie_host_ops;
->  	bridge->map_irq = of_irq_parse_and_map_pci;
->  	bridge->swizzle_irq = pci_common_swizzle;
->  
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index 5171d0da37da..c879dd3d2893 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -472,11 +472,19 @@ static inline bool cdns_pcie_is_link_up(struct cdns_pcie *pcie)
->  
->  #ifdef CONFIG_PCIE_CADENCE_HOST
->  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
-> +void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
-> +			       int where);
+Hi Fabrizio,
 
-The commit message doesn't explain why this change in visibility is needed).
+On Tue, Dec 17, 2019 at 1:31 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> > From: linux-renesas-soc-owner@vger.kernel.org <linux-renesas-soc-owner@vger.kernel.org> On Behalf Of Geert Uytterhoeven
+> > Sent: 17 December 2019 12:21
+> > Subject: Re: [PATCH v4 06/13] drm/bridge: lvds-codec: Add "lvds-decoder" support
+> >
+> > On Tue, Dec 17, 2019 at 12:03 PM Fabrizio Castro
+> > <fabrizio.castro@bp.renesas.com> wrote:
+> > > > From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > > Sent: 13 December 2019 17:11
+> > > > Subject: Re: [PATCH v4 06/13] drm/bridge: lvds-codec: Add "lvds-decoder" support
+> > > >
+> > > > On Wed, Nov 13, 2019 at 03:51:25PM +0000, Fabrizio Castro wrote:
+> > > > > Add support for transparent LVDS decoders by adding a new
+> > > > > compatible string ("lvds-decoder") to the driver.
+> > > > > This patch also adds member connector_type to struct lvds_codec,
+> > > > > and that's because LVDS decoders have a different connector type
+> > > > > from LVDS encoders. We fill this new member up with the data
+> > > > > matching the compatible string.
+> > > > >
+> > > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
->  #else
->  static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  {
->  	return 0;
->  }
-> +
-> +static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus,
-> +					     unsigned int devfn,
-> +					     int where)
-> +{
+> > > > > --- a/drivers/gpu/drm/bridge/lvds-codec.c
+> > > > > +++ b/drivers/gpu/drm/bridge/lvds-codec.c
 
-This still needs to return something right?
+> > > > > @@ -65,6 +67,7 @@ static int lvds_codec_probe(struct platform_device *pdev)
+> > > > >     if (!lvds_codec)
+> > > > >             return -ENOMEM;
+> > > > >
+> > > > > +   lvds_codec->connector_type = (u32)of_device_get_match_data(&pdev->dev);
+> > > >
+> > > > I'm now getting a compilation failure here:
+> > > >
+> > > > drivers/gpu/drm/bridge/lvds-codec.c: In function ‘lvds_codec_probe’:
+> > > > drivers/gpu/drm/bridge/lvds-codec.c:68:31: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
+> > > >   lvds_codec->connector_type = (u32)of_device_get_match_data(&pdev->dev);
+> > > >                                ^
+> > > >
+> > > > The fix should be simple:
+> > > >
+> > > >       lvds_codec->connector_type = (uintptr_t)of_device_get_match_data(dev);
+> > > >
+> > > > I'm bothered by the fact that I've compiled this before without any
+> > > > issue, so this really puzzles me. Do you get the same warning ?
+> > >
+> > > The warning appears when compiling for arm64, understandably so.
+> > > We must have compiled this for arm only the first time around.
+> > >
+> > > I think the right way to solve this is to either cast to (u32)(uintptr_t) or (u32)(unsigned long).
+> >
+> > Just casting to uintptr_t should be sufficient.
+>
+> It should be sufficient for the compiler, but I have seen examples where people
+> preferred to be explicit, like in:
+> drivers/mailbox/mtk-cmdq-mailbox.c
+> drivers/leds/leds-pm8058.c
+>
+> Since the kernel is increasing its tightness with respect to warnings, I personally prefer
+> (u32)(uintptr_t), even though not strictly necessary, but I am fine with (uintptr_t) if you
+> don't like (u32)(uintptr_t).
 
-Thanks,
+It depends. I try to have as few casts as possible ("casts are evil").
 
-Andrew Murray
+While adding the extra (u32) cast makes it clearer that the intended
+result is a u32 (for now), it will cause silent truncation on 64-bit if
+connector_type is ever enlarged to unsigned long, and larger values are
+used.
 
-> +}
->  #endif
->  
->  #ifdef CONFIG_PCIE_CADENCE_EP
-> -- 
-> 2.17.1
-> 
+In this particular case this is unlikely, though, as unsigned long would
+still be 32-bit on 32-bit platforms, so the larger values cannot be
+used.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
