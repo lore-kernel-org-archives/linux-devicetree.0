@@ -2,86 +2,88 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46872C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3161C2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D94820663
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576591923;
-	bh=sJ9ZcIroVoAcSdgRNeq0MYynqRKM5xhE4GjqRLXnliA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XL7qDjY2dRK96mqRzAsFGhyzSv7vw6zbBQWFJUCWHVqIRtBw/cpThSA0EIK0AXglV
-	 HSVsZcW/nL1q1cEsW27snfgngnvsdtiGhnKlxFiupWJHi05of6BymozMbZXtbwX0LQ
-	 R0w37DDM/AqByLibehdfT9v1EXAGrmWvZ4NIaXAE=
+	by mail.kernel.org (Postfix) with ESMTP id AA0B02176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbfLQOMC (ORCPT
+        id S1728807AbfLQOOm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:12:02 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34460 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728575AbfLQOMC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 09:12:02 -0500
-Received: by mail-ot1-f66.google.com with SMTP id a15so919899otf.1;
-        Tue, 17 Dec 2019 06:12:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7rqOZSsecbL2UhtBa4fx6RNVQTfn4hGMuYHOIPPf+Vg=;
-        b=fb0I30PDXz6XyrKKiCrSrS98AXGcnwj5kzborhjfcEF+JuCbdA8rGVCuECur1w938L
-         7yY4XX2uHmQm7ZpokrWq9SeMyO/bhgErbE3YPh9F5npHtoSbNdr9RftaShI0kEdgXvW8
-         PHpN3PUKJKBHip5gdBgkjNNAKmeMWZBHBWQfgJ9t3IwlDcqa1rAZMmIVL+LMGcCVWxoj
-         yeql20Xqrh6hjk6p6kPVGoGmWuA/TfvEY34qIK+U0XnBSqqj0Wne6yeg/dVPFoZ/3o/e
-         yTP0JmjzdiOvfKYCoIc4KpuUBWWGxYRUlG17FfXQmEo7qkfwklX0dLvKxQ0LQ1dglimG
-         s5mA==
-X-Gm-Message-State: APjAAAVpystEA5NA7jOx/1z7WepZBseHhc+RL3E30d4q3jQxSSOrwXMk
-        S2SyNtDN/ijJPK0m9Rr7gQ==
-X-Google-Smtp-Source: APXvYqzpVlXg5lD8QaRZoYczlzBvb9EV2OaM1vk2lbqIALkgqhWBspcL5MF3P9ytTEuLdP0Xt2oy1Q==
-X-Received: by 2002:a9d:1d02:: with SMTP id m2mr35624006otm.45.1576591921370;
-        Tue, 17 Dec 2019 06:12:01 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v25sm8050659otk.51.2019.12.17.06.12.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 06:12:00 -0800 (PST)
-Date:   Tue, 17 Dec 2019 08:11:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     sboyd@kernel.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH 2/7] dt-bindings: Input: drop msm-vibrator in favor of
- clk-vibrator
-Message-ID: <20191217141159.GA21795@bogus>
-References: <20191205002503.13088-1-masneyb@onstation.org>
- <20191205002503.13088-3-masneyb@onstation.org>
+        Tue, 17 Dec 2019 09:14:42 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:52989 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728695AbfLQOOm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 09:14:42 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 4239A3C057F;
+        Tue, 17 Dec 2019 15:14:40 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id a5abf8uTubOv; Tue, 17 Dec 2019 15:14:35 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 0A8123C00BB;
+        Tue, 17 Dec 2019 15:14:35 +0100 (CET)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 17 Dec
+ 2019 15:14:34 +0100
+Date:   Tue, 17 Dec 2019 15:14:34 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Magnus Damm <magnus.damm@gmail.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v2 5/6] arm64: dts: renesas: r8a77961: Add I2C nodes
+Message-ID: <20191217141434.GC27250@vmlxhi-102.adit-jv.com>
+References: <20191216124740.16647-1-geert+renesas@glider.be>
+ <20191216124740.16647-6-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20191205002503.13088-3-masneyb@onstation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191216124740.16647-6-geert+renesas@glider.be>
+X-Originating-IP: [10.72.93.66]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  4 Dec 2019 19:24:58 -0500, Brian Masney wrote:
-> Let's drop the msm-vibrator bindings so that the more generic
-> clk-vibrator can be used instead. No one is currently using these
-> bindings so this won't affect any users.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  .../bindings/input/msm-vibrator.txt           | 36 -------------------
->  1 file changed, 36 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/input/msm-vibrator.txt
-> 
+Hi Geert,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On Mon, Dec 16, 2019 at 01:47:39PM +0100, Geert Uytterhoeven wrote:
+> Add device nodes for the I2C and IIC Controllers on the Renesas R-Car
+> M3-W+ (r8a77961) SoC, including DMA properties linking them to the DMA
+> controllers.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v2:
+>   - No changes.
+> 
+> Test procedure (MAX9611 ADC, BR24T01 EEPROM):
+>   1. "grep . /sys/bus/iio/devices/iio:device[01]/in*",
+>   2. "hd /sys/devices/platform/soc/e60b0000.i2c/i2c-?/?-0050/eeprom".
+> ---
+>  arch/arm64/boot/dts/renesas/r8a77961.dtsi | 117 +++++++++++++++++++++-
+>  1 file changed, 114 insertions(+), 3 deletions(-)
+
+FWIW, I notice changed i2c indexes in dmesg depending if I include the
+i2c aliases visible in below commits:
+
+fcb008a75702c9 ("arm64: dts: r8a7796: add I2C support")
+32bc0c51be7c9d ("arm64: renesas: r8a7795: add I2C support")
+
+Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+
+-- 
+Best Regards,
+Eugeniu
