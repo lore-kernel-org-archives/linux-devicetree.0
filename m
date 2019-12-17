@@ -2,136 +2,175 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2D0C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFC4C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94BE220717
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:11:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DdC7YgFM"
+	by mail.kernel.org (Postfix) with ESMTP id EC06520717
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfLQJL2 (ORCPT
+        id S1726571AbfLQJMo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:11:28 -0500
-Received: from mail-eopbgr50047.outbound.protection.outlook.com ([40.107.5.47]:61071
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725805AbfLQJL1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 04:11:27 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aGsachyJ2Q97NT5QZuw1rD/uoQsp87fQZspah01plFe4cT5406FeIiu5ABeK2I3trNQjVBwgmQ7HPiekMa1N/ZrmdnZ6pZhLNgymrISJJRfNdMntZVQJecUKW1ITc9iTcDX6hptB2kEeNUnuRfi+cXpUYdm6F1BCDOlpj+rIugjcgppGhj0hNFZs1VLVDWNPjkJ5eYhaATx4gZc71btalrtXudM4/rq6U3FUoR0S9XgHPAPW5XQySDw2XwFSWrR6SOi4Dr0qSldfwtHqOqjTge5ITCK8bkSl3QEZs4L6crpTw6hZXid7qsdcid473eVXun6ZElDGHhMNkaRT3jMbzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uHCBa8gRB9OBzU5nYITH/A3Uc31SmwHasrBzudWtsIY=;
- b=Y5fY9S+ubS7o8cPkY9g5gKSJ29zNWpaVpwC3wBAgTTK4n/tHOL6v+c44ltrp3sXNs2nL3nHnSjeVhriLi9tSIj6YeuYr6uG3kp+EsSdUMOVrdewFDesSxl/hgP4WhDThisXElWfjoy7byXjkiVpoJ/I6Ab8dEAaUap4U70W26T+NgusGLOYi6LdR0/dlQChh4XzjiBi0yrlqNd7UyPVR6Xf87S92TTOwx6iEWY+L6FYl8nyBEbCa5sTBfEh2JsomrK4+xTLUJwBewwrMir2xN6nRNGkUTjAYz1siK0MsvcXc8/gXVlS/rP/devybm/hdXPL48SRG8nWdoiQbo99qAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uHCBa8gRB9OBzU5nYITH/A3Uc31SmwHasrBzudWtsIY=;
- b=DdC7YgFMeHQsIWZwaMuL6unZyDJJwrApaWudgenRfuaubJivUehLy1Uq/onpFHkXgr7IWweXdKPrDZwuEd2nGOsa4vwD8uu+b7GymMZBh8Si4am3cM6pc8I8o/9Ec47vLw4GVxS43hnra43E59lWx78agjzg6Yhcrujzx0qFHqs=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3408.eurprd04.prod.outlook.com (52.134.4.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.15; Tue, 17 Dec 2019 09:11:23 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::64c8:fba:99e8:5ec4]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::64c8:fba:99e8:5ec4%6]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
- 09:11:23 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Adam Ford <aford173@gmail.com>,
+        Tue, 17 Dec 2019 04:12:44 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60241 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfLQJMo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 04:12:44 -0500
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ih8uD-0006zW-Mw; Tue, 17 Dec 2019 10:12:37 +0100
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ih8uC-0000Sw-Qj; Tue, 17 Dec 2019 10:12:36 +0100
+Date:   Tue, 17 Dec 2019 10:12:36 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-Subject: Re: [PATCH V2 3/3] arm64: defconfig: Enable CRYPTO_DEV_FSL_CAAM
-Thread-Topic: [PATCH V2 3/3] arm64: defconfig: Enable CRYPTO_DEV_FSL_CAAM
-Thread-Index: AQHVscuAzDa0y7DjIUSGaSZVWPlDjw==
-Date:   Tue, 17 Dec 2019 09:11:23 +0000
-Message-ID: <VI1PR0402MB3485AB1908AD6B6617CFC08C98500@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20191213153910.11235-1-aford173@gmail.com>
- <20191213153910.11235-3-aford173@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [94.69.234.123]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c1191099-a0d9-4819-d464-08d782d1169b
-x-ms-traffictypediagnostic: VI1PR0402MB3408:|VI1PR0402MB3408:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB34086ECE0DF642260E802CD598500@VI1PR0402MB3408.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
-x-forefront-prvs: 02543CD7CD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(39860400002)(396003)(366004)(136003)(199004)(189003)(8676002)(8936002)(81156014)(33656002)(2906002)(86362001)(478600001)(55016002)(5660300002)(110136005)(54906003)(53546011)(7696005)(44832011)(316002)(52536014)(186003)(26005)(91956017)(66946007)(66476007)(66556008)(66446008)(64756008)(4744005)(4326008)(7416002)(71200400001)(6506007)(81166006)(9686003)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3408;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Dxx+6F9fO3cShwy50BYL0Ynr7Ge0WEyjrMH9MFJSM7EeqpnhM6hHbmTUTCu12QzpynGJfsMWzjJeAZJ7MMnQWmusmTgY2yY4++qnr2Gp1WzsF5WcDS/LurYzKEfchTq1e2KSGIeWZdrsxRtA59PdDseQ68oglQHzprDzvK/Hs8zaDbwa2vVH0/sQ+mPBDq9EPNbR8YZhvcEHphKdzxZ1VLE8xlX/MfwYZoepa+JBtD0Oh1uxA9e7Rrin9mCC5t1qee17RA9cFTj03NtdND5JxUxFUcQaUv1jLXfYsRTVjuY8yBmW6xp4wJKXLrzU40pcgHRNMIpKTrXzWc81SYzx9p1sd9YRH8Qz3rIIGVLyaXO7gtEKkjxJx3Ad23q+kKGSmNudsETFTsA+L6DWn2+es0R8G2Ij9I47cm4YGVtQ1d9lfTjqAoy3MpY3sd4KJx6H
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191217091236.GA15806@pengutronix.de>
+References: <20191204134631.GT1998@sirena.org.uk>
+ <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+ <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+ <20191212161019.GF4310@sirena.org.uk>
+ <20191212162152.5uu3feacduetysq7@pengutronix.de>
+ <20191212165124.GJ4310@sirena.org.uk>
+ <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+ <AM5PR1001MB09941005A47B603805D3C53280510@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191217090034.GD31182@pengutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1191099-a0d9-4819-d464-08d782d1169b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 09:11:23.3592
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: naOS5Wbg2iu7uT9JYkkf1PcNTgpFP+3P8TjeOBD1xtKIeXuRb38jj+2anwU8a5290MPKvW0og1piSOXSKJNVZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3408
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217090034.GD31182@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:09:22 up 109 days, 21:23, 85 users,  load average: 0.87, 0.56,
+ 0.48
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/13/2019 5:39 PM, Adam Ford wrote:=0A=
-> Both the i.MX8MQ and i.MX8M Mini support the CAAM driver, but it=0A=
-So do the Layerscape ARMv8-based SoCs:=0A=
-LS1012A, LS1028A, LS1043A, LS1046A, LS1088A, LS2088A, LX2160A=0A=
-=0A=
-> is currently not enabled by default.=0A=
-> =0A=
-> This patch enables this driver by default.=0A=
-> =0A=
-> Signed-off-by: Adam Ford <aford173@gmail.com>=0A=
-> ---=0A=
-> V2:  New to series=0A=
-> =0A=
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig=
-=0A=
-> index 6a83ba2aea3e..0212975b908b 100644=0A=
-> --- a/arch/arm64/configs/defconfig=0A=
-> +++ b/arch/arm64/configs/defconfig=0A=
-> @@ -845,6 +845,7 @@ CONFIG_SECURITY=3Dy=0A=
->  CONFIG_CRYPTO_ECHAINIV=3Dy=0A=
->  CONFIG_CRYPTO_ANSI_CPRNG=3Dy=0A=
->  CONFIG_CRYPTO_DEV_SUN8I_CE=3Dm=0A=
-> +CONFIG_CRYPTO_DEV_FSL_CAAM=3Dy=0A=
-This should probably be "m" instead.=0A=
-=0A=
-Horia=0A=
+On 19-12-17 10:00, Marco Felsch wrote:
+> On 19-12-16 16:32, Adam Thomson wrote:
+> > On 16 December 2019 08:55, Marco Felsch wrote:
+> > 
+> > > On 19-12-12 16:51, Mark Brown wrote:
+> > > > On Thu, Dec 12, 2019 at 05:21:53PM +0100, Marco Felsch wrote:
+> > > >
+> > > > > "... what's driving the input ..":
+> > > > > Sorry I didn't get you here. What did you mean? The input is driven by
+> > > > > the host. This can be any gpio line and in my case it is a gpio line
+> > > > > driven by the soc-hw during a suspend operation.
+> > > >
+> > > > Something needs to say what that thing is, especially if it's runtime
+> > > > controllable.  In your case from the point of view of software there is
+> > > > actually no enable control so we shouldn't be providing an enable
+> > > > operation to the framework.
+> > > 
+> > > The enabel control signal is always available, please check [1] table
+> > > 63. There is a mux in front of the enable pin so:
+> > > 
+> > >              +-------------
+> > >  Seq. |\     |   Regulator
+> > >  GPI1 | \    |
+> > >  GPI2 | | -- > Enable
+> > >  GPI3 | /    |
+> > >       |/     .
+> > >              .
+> > >              .
+> > > 
+> > > Adam please correct me if this is wrong.
+> > 
+> > Yes the register can always be configured regardless of the associated pin
+> > configuration, but if say GPIO1 was configured as a GPO but a regulator was
+> > configured to use GPIO1 as its GPI control mechanism, the output signal from
+> > GPIO1 would be ignored, the sequencer control would not have any effect and
+> > you're simply left with manual I2C control. Really we shouldn't be getting into
+> > that situation though. If a GPIO is to be used as a regulator control signal
+> > then it should be marked as such and I don't think we should be able to use that
+> > pin for anything other than regulator control.
+> 
+> I see, so we have to guarantee that the requested gpio is configured as
+> input. This can be done by:
+> 
+>   if (gpi->flags & FLAG_IS_OUT)
+>   	return -EINVAL;
+
+Sorry didn't noticed that the flags are only used internally. The
+correct check must be:
+
+	/* GPIO must be configured as input */
+	if (!gpiod_get_direction(gpi)) {
+		ret = -EINVAL;
+		goto free;
+	}
+
+> 
+> Regards,
+>   Marco
+> 
+> > > 
+> > > [1] https://www.dialog-
+> > > semiconductor.com/sites/default/files/da9062_datasheet_3v6.pdf
+> > > 
+> > > Regards,
+> > >   Marco
+> > > 
+> > > > _______________________________________________
+> > > > linux-arm-kernel mailing list
+> > > > linux-arm-kernel@lists.infradead.org
+> > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
