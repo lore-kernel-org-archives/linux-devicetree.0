@@ -2,116 +2,116 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAEFC2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C29C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 175D824672
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCA12082E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:22:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gcEbzvRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfLQJP5 (ORCPT
+        id S1726971AbfLQJWB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:15:57 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:50236 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbfLQJP5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 04:15:57 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-67-5df89cca770e
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 46.55.08102.ACC98FD5; Tue, 17 Dec 2019 10:15:54 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Tue, 17 Dec 2019 10:15:49 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Subject: Re: [PATCH v6 09/15] regulator: bd71828: Basic support for ROHM
- bd71828 PMIC regulators
-Thread-Topic: [PATCH v6 09/15] regulator: bd71828: Basic support for ROHM
- bd71828 PMIC regulators
-Thread-Index: AQHVsAfYI3uVDvKcOUypO4bwmJ45Qqe80OIAgAEzbYA=
-Date:   Tue, 17 Dec 2019 09:15:48 +0000
-Message-ID: <f56acdc65ab341f9c4ec0709fbfcc32b9f16d6ae.camel@fi.rohmeurope.com>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-         <5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191216145528.GE4161@sirena.org.uk>
-In-Reply-To: <20191216145528.GE4161@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D46A00866A9A2D4495284B4D77EF2287@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Tue, 17 Dec 2019 04:22:01 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:56918 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726612AbfLQJWB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 04:22:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=0N6OgC5TJ93TNSuGfw9kW7Fv7ytnBT72iBp/cTrj13c=; b=gcEbzvRrdg/n1QmXUXRRYBgdkw
+        GIqcH4B1App1szgKFbOc+2g1sVDDHLgEQ4Ys37jE29mewf4nk/DGRnH+CA5ANBunuV9nCwaWGV93z
+        lUZCYFY3H6YZVIki9mgMK06L/KecTBdErKs1GwvZkXIdnXNPQ/1/CcLwt3i7evKQ328g=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ih93D-0004cn-TU; Tue, 17 Dec 2019 10:21:55 +0100
+Date:   Tue, 17 Dec 2019 10:21:55 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Willem de Bruijn <willemb@google.com>,
+        Wingman Kwok <w-kwok2@ti.com>
+Subject: Re: [PATCH V6 net-next 06/11] net: Introduce a new MII time stamping
+ interface.
+Message-ID: <20191217092155.GL6994@lunn.ch>
+References: <cover.1576511937.git.richardcochran@gmail.com>
+ <28939f11b984759257167e778d0c73c0dd206a35.1576511937.git.richardcochran@gmail.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf0wTZxj2u7veHT/OHRXks07jurjNLSgYtnxuSojxx5k4ssRky1ywPeSk
-        HaXFa1lk/iGRqQMVC0gMpUWlMIkQKwWiokZSKmpnWBpPrEFdmMTfAaYMUFB356nw1/d87/M+
-        z/P+8b40rvVSOtpsdQiilbfoyWiis3GiJSnkHs9MvnJpLqoPX6fQnsE/KPSyoptCI54Qgar6
-        B0g00LkHoMPBHg3a+2ebBhV7fSTqaz9JoL//uwjQqPQ7hg5OHsPQv/vuaNDR3fUEaj08CdC1
-        DjeJ2p+cAKi7SSJRw40whtwNlwk09LQEQ+HQalQVGqTQ7dBFEhWHIzjadT5IoVe9LQQq61mb
-        Po9rrm0G3MSLCsANRXZRXG3zdu6M6zbF+Y+XkNyt3nMkd8HTTHHeskoNN3q1nODuHfUR3KXI
-        KYw7VPsc43z7goBrbBqjuGf++d+xG2OWZ/GOXzaYc6xL0owxplppR35F9LZjrl6iCAxHlYIo
-        GrKp8FC3pCkF0bSWvQ5gl/M+pX4uA7j/SRsoBTRNssth6U1KEcSzSbDqhZdUMM5KMbDm7E8K
-        nsVmQV/Xbkzt2QwvPPC+xV9D6YgHVzDBLoTOcORNnWEz4F23D1ezrgLYJ1W+MY1il8J/HncS
-        CgbsPFhSNIipYYnQf29Mo07Nwvpzf+EqToAP7756W9fD88/7CWVmnF0EfR1LVJgOD3R+orp8
-        BA/u7afUEeLgleoBwglmu6YFuKbErimxa5rYNU18BGiOA5jHmy05vENIWSwKBYtFmylPfjbb
-        8vxAXbqR0+B1YF0AYDQIgDk0pk9gYteOZ2pnZtmyC0283WQQCyyCPQAgjevjmdMLxjK1TDZf
-        +Ksg2t5Rc2lCn8h82l+eqWWVrFxByBfEd+yHNK2HzNNq2TROFHKEbVvMFscUjdFRinm0Lt4u
-        WLMFkS9wmAzKchjs8nYoVKyc+7F8GVrGns/nyVVVGgJf0M6HnjqcDnoa6nAtYbVZBV0iU1gj
-        t7JKq6nA+j7oEUikgX4W43TJbKx8ee99HskRmByxNGNUiXDwU5SuCPx2c8V48k7jB8XSluRy
-        5kZ225dMwFDT2lXcdG3FHXvEGZizJtyzMc1rzm1YPzEjddmGnw2tPa/9kVWNzPBnYzMQPBEb
-        nL1y/mSTbXLolGRMivvq+/Tq1APg2+HKReVp7bqtt9adTW2xGEt2/liRe3I0oWPE/XjrJulZ
-        30Jja9kPKd/oCbuJT/kcF+38/5X8RXI2BAAA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <28939f11b984759257167e778d0c73c0dd206a35.1576511937.git.richardcochran@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGVsbG8gTWFyaywNCg0KT24gTW9uLCAyMDE5LTEyLTE2IGF0IDE0OjU1ICswMDAwLCBNYXJrIEJy
-b3duIHdyb3RlOg0KPiBPbiBXZWQsIERlYyAxMSwgMjAxOSBhdCAxMTo0NjoxMUFNICswMjAwLCBN
-YXR0aSBWYWl0dGluZW4gd3JvdGU6DQo+IA0KPiA+ICtzdGF0aWMgaW50IGJkNzE4MjhfbGRvNl9n
-ZXRfdm9sdGFnZShzdHJ1Y3QgcmVndWxhdG9yX2RldiAqcmRldikNCj4gPiArew0KPiA+ICsJcmV0
-dXJuIEJENzE4MjhfTERPXzZfVk9MVEFHRTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGNv
-bnN0IHN0cnVjdCByZWd1bGF0b3Jfb3BzIGJkNzE4MjhfbGRvNl9vcHMgPSB7DQo+ID4gKwkuZW5h
-YmxlID0gcmVndWxhdG9yX2VuYWJsZV9yZWdtYXAsDQo+ID4gKwkuZGlzYWJsZSA9IHJlZ3VsYXRv
-cl9kaXNhYmxlX3JlZ21hcCwNCj4gPiArCS5nZXRfdm9sdGFnZSA9IGJkNzE4MjhfbGRvNl9nZXRf
-dm9sdGFnZSwNCj4gDQo+IFlvdSBjYW4ganVzdCBzZXQgZml4ZWRfdVYgaW4gdGhlIHJlZ3VsYXRv
-cl9kZXNjLCB5b3UgZG9uJ3QgbmVlZCBhDQo+IGdldF92b2x0YWdlKCkgb3BlcmF0aW9uIGhlcmUu
-ICBPdGhlcndpc2UgdGhpcyBsb29rcyBnb29kLCBJJ2xsIGFwcGx5DQo+IGl0DQo+IGFuZCBwbGVh
-c2Ugc2VuZCBhbiBpbmNyZW1lbnRhbCBmaXggZm9yIHRoaXMuDQoNCkp1c3QgdG8gY29uZmlybSAt
-IGFyZSB5b3UgYWxzbyB0YWtpbmcgaW4gdGhlDQpbUEFUQ0ggdjYgMDgvMTVdIHJlZ3VsYXRvcjog
-YmQ3MTh4NzogU3BsaXQgZHJpdmVyIHRvIGNvbW1vbiBhbmQgYmQ3MTh4Nw0Kc3BlY2lmaWMgcGFy
-dHMNCg0KSSB0aGluayB0aGVyZSBpcyBhIGRlcGVuZGVuY3kuIChJIGFtIHByZXBhcmluZyBuZXh0
-IHZlcnNpb24gb2YgdGhlDQpzZXJpZXMgc28gSSdsbCBkcm9wIHRoZSBhbHJlYWR5IGFwcGxpZWQg
-cGF0Y2hlcy4pDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0K
+> +static int dp83640_hwtstamp(struct mii_timestamper *mii_ts,
+> +			    struct ifreq *ifr);
+> +static int dp83640_ts_info(struct mii_timestamper *mii_ts,
+> +			   struct ethtool_ts_info *info);
+> +static bool dp83640_rxtstamp(struct mii_timestamper *mii_ts,
+> +			     struct sk_buff *skb, int type);
+> +static void dp83640_txtstamp(struct mii_timestamper *mii_ts,
+> +			     struct sk_buff *skb, int type);
+>  static void rx_timestamp_work(struct work_struct *work);
+
+Hi Richard
+
+Forward declarations are considered bad. Please add a new patch to the
+series which moves code around first. You can probably move
+dp83640_probe() further down.
+
+> -static bool dp83640_rxtstamp(struct phy_device *phydev,
+> +static bool dp83640_rxtstamp(struct mii_timestamper *mii_ts,
+>  			     struct sk_buff *skb, int type)
+>  {
+> -	struct dp83640_private *dp83640 = phydev->priv;
+> +	struct dp83640_private *dp83640 =
+> +		container_of(mii_ts, struct dp83640_private, mii_ts);
+>  	struct dp83640_skb_info *skb_info = (struct dp83640_skb_info *)skb->cb;
+>  	struct list_head *this, *next;
+>  	struct rxts *rxts;
+
+David will probably complain about reverse christmas tree. Having to
+fold dp83640_private is unfortunate here. Maybe consider adding a
+macro for the container_of() so you can avoid the fold?
+
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> index 0887ed2bb050..ee45838f90c9 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+> @@ -919,6 +919,8 @@ static void phy_link_change(struct phy_device *phydev, bool up, bool do_carrier)
+>  			netif_carrier_off(netdev);
+>  	}
+>  	phydev->adjust_link(netdev);
+> +	if (phydev->mii_ts && phydev->mii_ts->link_state)
+> +		phydev->mii_ts->link_state(phydev->mii_ts, phydev);
+>  }
+
+FYI:
+
+When using phylink, not phylib, this call will not happen. You need to
+add a similar bit of code in phylink_mac_config().
+
+For the moment what you have is sufficient. I doubt anybody is using
+the dp83640 with phylink, and the new hardware you are targeting seems
+to be RGMII based, not SERDES, which is the main use case for PHYLINK.
+
+   Andrew
