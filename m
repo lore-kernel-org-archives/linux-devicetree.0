@@ -2,74 +2,127 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7ADC2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 16:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B80CC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 16:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61AAD21D7D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 16:46:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576601200;
-	bh=dtdHww0rQgXjndhYivazqMjYBkTgiymWRHanmNJmHDs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LvVrUcSQbAdeL+XJwXrFZ7weB63HOWaI+YR516aOSnC2TZxvA5UPUyg1FjVieihvB
-	 cNiN4tqoX+wGI6DzEwzPslEwAS33jl51jA02hlc/1ckY+fJsK0zdhvmo8cM0lvg6sX
-	 lkX5GrABhqHK3y/ueXgzBGqVqsUVuOTEETSycIG0=
+	by mail.kernel.org (Postfix) with ESMTP id 0F93021D7D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 16:49:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pddLphAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfLQQqk (ORCPT
+        id S1728250AbfLQQtS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:46:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727947AbfLQQqj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:46:39 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C581924655;
-        Tue, 17 Dec 2019 16:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576601199;
-        bh=dtdHww0rQgXjndhYivazqMjYBkTgiymWRHanmNJmHDs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i1Sf0cFRdfMGLk1h3va55thwoCVMSSepJ1VffDuYuF3UGsvI/X4MLb5ga81p5okm/
-         RcNO4KMYaRYu29YGS1/NsGrhz+pQr8WP8ewQIOtWkdUWt+maU1H9TOkumYi9Yisp0I
-         wvWWTThcO29+zhXTiS6j6ZB9V8L4SLcjDUo9dk68=
-Date:   Tue, 17 Dec 2019 17:46:36 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] dt-bindings: Add missing 'properties' keyword enclosing
- 'snps,tso'
-Message-ID: <20191217164636.663okrgubucuvmcv@gilmour.lan>
-References: <20191217163946.25052-1-robh@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217163946.25052-1-robh@kernel.org>
+        Tue, 17 Dec 2019 11:49:18 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33549 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727906AbfLQQtS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 11:49:18 -0500
+Received: by mail-pf1-f193.google.com with SMTP id z16so999222pfk.0;
+        Tue, 17 Dec 2019 08:49:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=c+0J8KwQQeRuaM0/21WPpczUIiJr6lCFaHz9z1AF2s8=;
+        b=pddLphAJBcIIBLslZ9h+JTPt+SkfjTZow7WNG6X0ADMQlld/RUiJRaX/dFqIFJzcBZ
+         PAt5dkaRQU7a6U4DXtwGaQj1+ZQe/iGOqIAPnMPARVhBHj+indcmx/nogWjqZ7AOcTur
+         f1KfICXa4euYmnyYQejDMPn5TMVYdNEloJr4Gn/QAK9TYjo6D0wr42S4/Dxkr7P+T4RE
+         fQjdBKNPXo75EwtssWlAFucTRmVhKnsTTq8W1PHzO7BbfVUNM+BTbC1DMNhHuMAgF35K
+         3UcbY5MEFET98lX4CU5O4OznYXIyadF+TU/EVFHVXM0Jyh4AQ7Q8H7YRlbH71B5Yc/jf
+         RtqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=c+0J8KwQQeRuaM0/21WPpczUIiJr6lCFaHz9z1AF2s8=;
+        b=sGx18dytXjfzuuXowWagOLcPXBdbR+QQ0bfixmWZvaJohxPGTawvOfiEIC72UIxHNM
+         48SiFpfEecwspRffYYFFJbcUM2NuC+9+95LZEOHCzC1uWqiDnX3YcXyavYjjFPQixmoP
+         7TRb5oER35BJzrabs808uKiPI1vrwlZnSpQURBMVzA8cEx4jGV1oNUoZAwvUoW8vdYMY
+         4R4CxOpIhHadp1sgeuPHXC950eyh5f2dWa9uyFTh1HL3nYNo5PnivQGCPCnwoXdWD1Ej
+         KdHN8qlRgg4m9vWf63djsqHXj1qvW58tfDDWsLD5600duPAOVoOXJ9a1NO3/B5DW03gL
+         fVGA==
+X-Gm-Message-State: APjAAAVbzpXgoTSX9yhTxJsXJJbEkueHJrRy69hzsMfxyRA/ukQdlfS4
+        LbPPSb+DDd2oBrn0zMnV3SE=
+X-Google-Smtp-Source: APXvYqwPNblKB6jCfvdk0xiso7sa19pFtP/TOqPYUHZ3/chICtapazOZN0Xb+HEvHL9ZrXBwXTJoXg==
+X-Received: by 2002:a62:7541:: with SMTP id q62mr23158444pfc.256.1576601357697;
+        Tue, 17 Dec 2019 08:49:17 -0800 (PST)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id z19sm26356872pfn.49.2019.12.17.08.49.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 08:49:17 -0800 (PST)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org
+Cc:     andy.gross@linaro.org, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] clk: qcom: Add missing msm8998 gcc_bimc_gfx_clk
+Date:   Tue, 17 Dec 2019 08:49:13 -0800
+Message-Id: <20191217164913.4783-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 10:39:46AM -0600, Rob Herring wrote:
-> DT property definitions must be under a 'properties' keyword. This was
-> missing for 'snps,tso' in an if/then clause. A meta-schema fix will
-> catch future errors like this.
->
-> Fixes: 7db3545aef5f ("dt-bindings: net: stmmac: Convert the binding to a schemas")
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+gcc_bimc_gfx_clk is a required clock for booting the GPU and GPU SMMU.
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+Fixes: 4807c71cc688 (arm64: dts: Add msm8998 SoC and MTP board support)
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/clk/qcom/gcc-msm8998.c               | 14 ++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-msm8998.h |  1 +
+ 2 files changed, 15 insertions(+)
 
-Thanks!
-Maxime
+diff --git a/drivers/clk/qcom/gcc-msm8998.c b/drivers/clk/qcom/gcc-msm8998.c
+index cf31b5d03270..df1d7056436c 100644
+--- a/drivers/clk/qcom/gcc-msm8998.c
++++ b/drivers/clk/qcom/gcc-msm8998.c
+@@ -1996,6 +1996,19 @@ static struct clk_branch gcc_gp3_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_bimc_gfx_clk = {
++	.halt_reg = 0x46040,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x46040,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_bimc_gfx_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_gpu_bimc_gfx_clk = {
+ 	.halt_reg = 0x71010,
+ 	.halt_check = BRANCH_HALT,
+@@ -2810,6 +2823,7 @@ static struct clk_regmap *gcc_msm8998_clocks[] = {
+ 	[GCC_GP1_CLK] = &gcc_gp1_clk.clkr,
+ 	[GCC_GP2_CLK] = &gcc_gp2_clk.clkr,
+ 	[GCC_GP3_CLK] = &gcc_gp3_clk.clkr,
++	[GCC_BIMC_GFX_CLK] = &gcc_bimc_gfx_clk.clkr,
+ 	[GCC_GPU_BIMC_GFX_CLK] = &gcc_gpu_bimc_gfx_clk.clkr,
+ 	[GCC_GPU_BIMC_GFX_SRC_CLK] = &gcc_gpu_bimc_gfx_src_clk.clkr,
+ 	[GCC_GPU_CFG_AHB_CLK] = &gcc_gpu_cfg_ahb_clk.clkr,
+diff --git a/include/dt-bindings/clock/qcom,gcc-msm8998.h b/include/dt-bindings/clock/qcom,gcc-msm8998.h
+index de1d8a1f5966..63e02dc32a0b 100644
+--- a/include/dt-bindings/clock/qcom,gcc-msm8998.h
++++ b/include/dt-bindings/clock/qcom,gcc-msm8998.h
+@@ -182,6 +182,7 @@
+ #define GCC_MSS_GPLL0_DIV_CLK_SRC				173
+ #define GCC_MSS_SNOC_AXI_CLK					174
+ #define GCC_MSS_MNOC_BIMC_AXI_CLK				175
++#define GCC_BIMC_GFX_CLK					176
+ 
+ #define PCIE_0_GDSC						0
+ #define UFS_GDSC						1
+-- 
+2.17.1
+
