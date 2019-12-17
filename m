@@ -2,308 +2,318 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFB7C2D0D5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 18:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB663C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 19:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84C4F20733
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 18:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A36062072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 19:14:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cjy9caXM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbfLQSiu (ORCPT
+        id S1727162AbfLQTOe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:38:50 -0500
-Received: from xavier.telenet-ops.be ([195.130.132.52]:49176 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727909AbfLQSit (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 13:38:49 -0500
-Received: from ramsan ([84.195.182.253])
-        by xavier.telenet-ops.be with bizsmtp
-        id f6ei2100P5USYZQ016eiWp; Tue, 17 Dec 2019 19:38:44 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ihHk2-0003aG-JH; Tue, 17 Dec 2019 19:38:42 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ihHk2-00007x-HX; Tue, 17 Dec 2019 19:38:42 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Magnus Damm <magnus.damm@gmail.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/5] arm64: dts: renesas: Rename r8a7795{-es1,}* to r8a7795[01]*
-Date:   Tue, 17 Dec 2019 19:38:37 +0100
-Message-Id: <20191217183841.432-2-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191217183841.432-1-geert+renesas@glider.be>
-References: <20191217183841.432-1-geert+renesas@glider.be>
+        Tue, 17 Dec 2019 14:14:34 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46583 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbfLQTOe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 14:14:34 -0500
+Received: by mail-io1-f68.google.com with SMTP id t26so11886484ioi.13
+        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 11:14:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gk4zGNe4RkiCC67QiUQNXztH/c+pmqVCrQR1ZNiu5/g=;
+        b=cjy9caXMF5Od130mHudpDibjbCaHKnj0LTk2mAzK7ZlxMECAw8bGp78YldI59f2kg3
+         I3O+ubladcHrSlM7MIk5GJAAWvbF0yYWKOaDCFeR1VqP2T2nTfTkil31EBzvw8duon+o
+         sO4eRl9SNuroo4P86yIvujh9TXBqF+dE33JlE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gk4zGNe4RkiCC67QiUQNXztH/c+pmqVCrQR1ZNiu5/g=;
+        b=FpXxZoj9BPth7UMppbGUiSuCpTXstsN7hL4ph20LjYeE3eLMLWDG1TL1DXnMXyOBve
+         4EeQkjv0wVM07mY1GNlddFXx4P4EZD5jQLeU0e+nmdI7DIsWtmRTWQnm+04sS0KoQjt0
+         9rm1R4Z/iw2pwClJ2K3CQXo2JByf762/Tx/kuDSyXrTCpAJZHCM/e+8vGDiArLgTo4l6
+         TLopSBJuz7JCp7TTH5SnKqqPtUCmeR2QTgsz46iOm75Q8jyQsuLmlFnz5cXLm+MCJP5g
+         UO1KDbXeev3mCxEXYVNgYCOaj8z1pDU5/4B7Jh6c0Lj/Hyyx4GUtYuwRYlV3fxvbc9q3
+         vaWg==
+X-Gm-Message-State: APjAAAXztFYfEEKbceyTik+Oj5M10PfA+s6BkwyrZbZk+BSfAJhnBxYm
+        Kf4t8E3QgVdbWFZxnDIQ3TtbMKoOePQ=
+X-Google-Smtp-Source: APXvYqzUDUDGombOKTds1Cr/sMd+fIcUpe6ydOGCveDNl4cG4kZbUFbFXfj6dLmLTkOWiMxPZT1MsA==
+X-Received: by 2002:a6b:4107:: with SMTP id n7mr4786353ioa.245.1576610073235;
+        Tue, 17 Dec 2019 11:14:33 -0800 (PST)
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com. [209.85.166.170])
+        by smtp.gmail.com with ESMTPSA id y131sm4027518iof.56.2019.12.17.11.14.31
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 11:14:32 -0800 (PST)
+Received: by mail-il1-f170.google.com with SMTP id v69so8166708ili.10
+        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 11:14:31 -0800 (PST)
+X-Received: by 2002:a92:ca90:: with SMTP id t16mr4233941ilo.218.1576610071185;
+ Tue, 17 Dec 2019 11:14:31 -0800 (PST)
+MIME-Version: 1.0
+References: <1576474742-23409-1-git-send-email-sanm@codeaurora.org> <1576474742-23409-2-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <1576474742-23409-2-git-send-email-sanm@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 17 Dec 2019 11:14:17 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=U48gdGHMbQ22M_59t6va2n41Zh1CDTqMJYpLCwiD35Mg@mail.gmail.com>
+Message-ID: <CAD=FV=U48gdGHMbQ22M_59t6va2n41Zh1CDTqMJYpLCwiD35Mg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-usb@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Manu Gautam <mgautam@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Despite using the same compatible values ("r8a7795"-based) because of
-historical reasons, R-Car H3 ES1.x (R8A77950) and R-Car H3 ES2.0+
-(R8A77951) are really different SoCs, with different part numbers.
+Hi,
 
-Reflect this in the DTS files by changing their base names from
-"r8a7795-es1" and "r8a7795" to "r8a77950" resp. "r8a77951".
-Drop all "ES" references next to part numbers, as they are implied by
-the part numbers, and thus redundant.
+On Sun, Dec 15, 2019 at 9:40 PM Sandeep Maheswaram <sanm@codeaurora.org> wrote:
+>
+> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> new file mode 100644
+> index 0000000..c8eda58
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> @@ -0,0 +1,153 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm SuperSpeed DWC3 USB SoC controller
+> +
+> +maintainers:
+> +  - Manu Gautam <mgautam@codeaurora.org>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - qcom,msm8996-dwc3
+> +          - qcom,msm8998-dwc3
+> +          - qcom,sdm845-dwc3
+> +      - const: qcom,dwc3
+> +
+> +  reg:
+> +    description: Offset and length of register set for QSCRATCH wrapper
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    enum: [ 1, 2 ]
+> +
+> +  "#size-cells":
+> +    enum: [ 1, 2 ]
+> +
+> +  power-domains:
+> +    description: specifies a phandle to PM domain provider node
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description:
+> +      A list of phandle and clock-specifier pairs for the clocks
+> +      listed in clock-names.
+> +    minItems: 3
 
-Note that DT binding headers, definitions, and compatible values are
-not renamed, to preserve backward compatibility.
+Actually, maybe the best way to express the min/max is to match what
+'gpu/arm,mali-midgard.yaml' does.  Specifically later down in the
+bindings you can amend this, like this I think:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm64/boot/dts/renesas/Makefile                   | 10 +++++-----
- .../{r8a7795-h3ulcb-kf.dts => r8a77950-h3ulcb-kf.dts}  |  4 ++--
- .../{r8a7795-es1-h3ulcb.dts => r8a77950-h3ulcb.dts}    |  4 ++--
- ...7795-es1-salvator-x.dts => r8a77950-salvator-x.dts} |  4 ++--
- .../dts/renesas/{r8a7795-es1.dtsi => r8a77950.dtsi}    |  4 ++--
- ...8a7795-es1-h3ulcb-kf.dts => r8a77951-h3ulcb-kf.dts} |  4 ++--
- .../{r8a7795-h3ulcb.dts => r8a77951-h3ulcb.dts}        |  4 ++--
- ...{r8a7795-salvator-x.dts => r8a77951-salvator-x.dts} |  4 ++--
- ...8a7795-salvator-xs.dts => r8a77951-salvator-xs.dts} |  8 ++++----
- .../boot/dts/renesas/{r8a7795.dtsi => r8a77951.dtsi}   |  2 +-
- 10 files changed, 24 insertions(+), 24 deletions(-)
- rename arch/arm64/boot/dts/renesas/{r8a7795-h3ulcb-kf.dts => r8a77950-h3ulcb-kf.dts} (75%)
- rename arch/arm64/boot/dts/renesas/{r8a7795-es1-h3ulcb.dts => r8a77950-h3ulcb.dts} (89%)
- rename arch/arm64/boot/dts/renesas/{r8a7795-es1-salvator-x.dts => r8a77950-salvator-x.dts} (96%)
- rename arch/arm64/boot/dts/renesas/{r8a7795-es1.dtsi => r8a77950.dtsi} (98%)
- rename arch/arm64/boot/dts/renesas/{r8a7795-es1-h3ulcb-kf.dts => r8a77951-h3ulcb-kf.dts} (75%)
- rename arch/arm64/boot/dts/renesas/{r8a7795-h3ulcb.dts => r8a77951-h3ulcb.dts} (92%)
- rename arch/arm64/boot/dts/renesas/{r8a7795-salvator-x.dts => r8a77951-salvator-x.dts} (96%)
- rename arch/arm64/boot/dts/renesas/{r8a7795-salvator-xs.dts => r8a77951-salvator-xs.dts} (96%)
- rename arch/arm64/boot/dts/renesas/{r8a7795.dtsi => r8a77951.dtsi} (99%)
+allOf:
+- if:
+    properties:
+      compatible:
+        contains:
+          const: "qcom,msm8996-dwc3"
+  then:
+    properties:
+      clocks:
+        minItems: 3
+        maxItems: 3
+      clock-names:
+        minItems: 3
+        maxItems: 3
 
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index d4cc3323d0668dba..12c2382c0a5427e2 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -4,11 +4,11 @@ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
- dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
- dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
- dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb
--dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
--dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-h3ulcb-kf.dtb
--dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-xs.dtb
--dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-es1-salvator-x.dtb r8a7795-es1-h3ulcb.dtb
--dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-es1-h3ulcb-kf.dtb
-+dtb-$(CONFIG_ARCH_R8A7795) += r8a77951-salvator-x.dtb r8a77951-h3ulcb.dtb
-+dtb-$(CONFIG_ARCH_R8A7795) += r8a77951-h3ulcb-kf.dtb
-+dtb-$(CONFIG_ARCH_R8A7795) += r8a77951-salvator-xs.dtb
-+dtb-$(CONFIG_ARCH_R8A7795) += r8a77950-salvator-x.dtb r8a77950-h3ulcb.dtb
-+dtb-$(CONFIG_ARCH_R8A7795) += r8a77950-h3ulcb-kf.dtb
- dtb-$(CONFIG_ARCH_R8A77960) += r8a77960-salvator-x.dtb r8a77960-m3ulcb.dtb
- dtb-$(CONFIG_ARCH_R8A77960) += r8a77960-m3ulcb-kf.dtb
- dtb-$(CONFIG_ARCH_R8A77960) += r8a77960-salvator-xs.dtb
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dts b/arch/arm64/boot/dts/renesas/r8a77950-h3ulcb-kf.dts
-similarity index 75%
-rename from arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dts
-rename to arch/arm64/boot/dts/renesas/r8a77950-h3ulcb-kf.dts
-index 80791ed27539bf8f..1e84a40f1dcab353 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77950-h3ulcb-kf.dts
-@@ -6,11 +6,11 @@
-  * Copyright (C) 2017 Cogent Embedded, Inc.
-  */
- 
--#include "r8a7795-h3ulcb.dts"
-+#include "r8a77950-h3ulcb.dts"
- #include "ulcb-kf.dtsi"
- 
- / {
--	model = "Renesas H3ULCB Kingfisher board based on r8a7795 ES2.0+";
-+	model = "Renesas H3ULCB Kingfisher board based on r8a77950";
- 	compatible = "shimafuji,kingfisher", "renesas,h3ulcb",
- 		     "renesas,r8a7795";
- };
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a77950-h3ulcb.dts
-similarity index 89%
-rename from arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dts
-rename to arch/arm64/boot/dts/renesas/r8a77950-h3ulcb.dts
-index 598b98168559e0e4..38a6d6a108d488ed 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77950-h3ulcb.dts
-@@ -7,11 +7,11 @@
-  */
- 
- /dts-v1/;
--#include "r8a7795-es1.dtsi"
-+#include "r8a77950.dtsi"
- #include "ulcb.dtsi"
- 
- / {
--	model = "Renesas H3ULCB board based on r8a7795 ES1.x";
-+	model = "Renesas H3ULCB board based on r8a77950";
- 	compatible = "renesas,h3ulcb", "renesas,r8a7795";
- 
- 	memory@48000000 {
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
-similarity index 96%
-rename from arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dts
-rename to arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
-index c72968623e94b790..2438825c9b22e26d 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
-@@ -6,11 +6,11 @@
-  */
- 
- /dts-v1/;
--#include "r8a7795-es1.dtsi"
-+#include "r8a77950.dtsi"
- #include "salvator-x.dtsi"
- 
- / {
--	model = "Renesas Salvator-X board based on r8a7795 ES1.x";
-+	model = "Renesas Salvator-X board based on r8a77950";
- 	compatible = "renesas,salvator-x", "renesas,r8a7795";
- 
- 	memory@48000000 {
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi b/arch/arm64/boot/dts/renesas/r8a77950.dtsi
-similarity index 98%
-rename from arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-rename to arch/arm64/boot/dts/renesas/r8a77950.dtsi
-index 14d8513d2a47336f..15216495e1c8b31c 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77950.dtsi
-@@ -1,11 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Device Tree Source for the R-Car H3 (R8A77950) ES1.x SoC
-+ * Device Tree Source for the R-Car H3 (R8A77950) SoC
-  *
-  * Copyright (C) 2015 Renesas Electronics Corp.
-  */
- 
--#include "r8a7795.dtsi"
-+#include "r8a77951.dtsi"
- 
- &audma0 {
- 	iommus = <&ipmmu_mp1 0>, <&ipmmu_mp1 1>,
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dts b/arch/arm64/boot/dts/renesas/r8a77951-h3ulcb-kf.dts
-similarity index 75%
-rename from arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dts
-rename to arch/arm64/boot/dts/renesas/r8a77951-h3ulcb-kf.dts
-index 2f24dfc45617baf6..647198bb3bf7746a 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77951-h3ulcb-kf.dts
-@@ -6,11 +6,11 @@
-  * Copyright (C) 2017 Cogent Embedded, Inc.
-  */
- 
--#include "r8a7795-es1-h3ulcb.dts"
-+#include "r8a77951-h3ulcb.dts"
- #include "ulcb-kf.dtsi"
- 
- / {
--	model = "Renesas H3ULCB Kingfisher board based on r8a7795 ES1.x";
-+	model = "Renesas H3ULCB Kingfisher board based on r8a77951";
- 	compatible = "shimafuji,kingfisher", "renesas,h3ulcb",
- 		     "renesas,r8a7795";
- };
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a77951-h3ulcb.dts
-similarity index 92%
-rename from arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
-rename to arch/arm64/boot/dts/renesas/r8a77951-h3ulcb.dts
-index 54515eaf0310f172..8ad8f2a539771de8 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77951-h3ulcb.dts
-@@ -7,11 +7,11 @@
-  */
- 
- /dts-v1/;
--#include "r8a7795.dtsi"
-+#include "r8a77951.dtsi"
- #include "ulcb.dtsi"
- 
- / {
--	model = "Renesas H3ULCB board based on r8a7795 ES2.0+";
-+	model = "Renesas H3ULCB board based on r8a77951";
- 	compatible = "renesas,h3ulcb", "renesas,r8a7795";
- 
- 	memory@48000000 {
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a77951-salvator-x.dts
-similarity index 96%
-rename from arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-rename to arch/arm64/boot/dts/renesas/r8a77951-salvator-x.dts
-index 72874f675359e7a4..a402a2fb6e3c313b 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77951-salvator-x.dts
-@@ -6,11 +6,11 @@
-  */
- 
- /dts-v1/;
--#include "r8a7795.dtsi"
-+#include "r8a77951.dtsi"
- #include "salvator-x.dtsi"
- 
- / {
--	model = "Renesas Salvator-X board based on r8a7795 ES2.0+";
-+	model = "Renesas Salvator-X board based on r8a77951";
- 	compatible = "renesas,salvator-x", "renesas,r8a7795";
- 
- 	memory@48000000 {
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dts
-similarity index 96%
-rename from arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-rename to arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dts
-index 36667c81d43d517b..cef9da4376a3f673 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dts
-@@ -1,16 +1,16 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Device Tree Source for the Salvator-X 2nd version board with R-Car H3 ES2.0
-+ * Device Tree Source for the Salvator-X 2nd version board with R-Car H3 ES2.0+
-  *
-  * Copyright (C) 2015-2017 Renesas Electronics Corp.
-  */
- 
- /dts-v1/;
--#include "r8a7795.dtsi"
-+#include "r8a77951.dtsi"
- #include "salvator-xs.dtsi"
- 
- / {
--	model = "Renesas Salvator-X 2nd version board based on r8a7795 ES2.0+";
-+	model = "Renesas Salvator-X 2nd version board based on r8a77951";
- 	compatible = "renesas,salvator-xs", "renesas,r8a7795";
- 
- 	memory@48000000 {
-@@ -136,7 +136,7 @@
- 	 * - On Salvator-X[S], GP6_3[01] are connected to ADV7482 as irq pins
- 	 *   (when SW31 is the default setting on Salvator-XS).
- 	 * - If SW31 is the default setting, you cannot use USB2.0 ch3 on
--	 *   r8a7795 with Salvator-XS.
-+	 *   r8a77951 with Salvator-XS.
- 	 *   Hence the SW31 setting must be changed like 2) below.
- 	 *   1) Default setting of SW31: ON-ON-OFF-OFF-OFF-OFF:
- 	 *	- Connect GP6_3[01] to ADV7842.
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a77951.dtsi
-similarity index 99%
-rename from arch/arm64/boot/dts/renesas/r8a7795.dtsi
-rename to arch/arm64/boot/dts/renesas/r8a77951.dtsi
-index fde6ec122d3b4006..821891548d5fde0f 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77951.dtsi
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Device Tree Source for the R-Car H3 (R8A77950) SoC
-+ * Device Tree Source for the R-Car H3 (R8A77951) SoC
-  *
-  * Copyright (C) 2015 Renesas Electronics Corp.
-  */
--- 
-2.17.1
+...then remove minItems from here.  Now you'll have the default
+min/max of 5 for most devices but for the special case of
+"qcom,msm8996-dwc3" you'll have min/max of 3.
 
+
+> +    items:
+> +      - description: System Config NOC clock. Not present on "qcom,msm8996-dwc3" compatible.
+> +      - description: Master/Core clock, have to be >= 125 MHz for SS operation and >= 60MHz for HS operation
+
+To make the grammer gooder, s/have/has/
+
+
+> +      - description: System bus AXI clock. Not present on "qcom,msm8996-dwc3" compatible.
+> +      - description: Mock utmi clock needed for ITP/SOF generation in host mode.Its frequency should be 19.2MHz.
+> +      - description: Sleep clock, used for wakeup when USB3 core goes into low power mode (U3).
+
+* Please word wrap to ~80 chracters.
+* As Stephen says, order matters.  Please match order of old bindings
+(and in clock-names)
+* Please end each with a period.
+
+
+> +  clock-names:
+> +    minItems: 3
+> +    items:
+> +      - const: cfg_noc
+> +      - const: core
+> +      - const: iface
+> +      - const: mock_utmi
+> +      - const: sleep
+> +
+> +  assigned-clocks:
+> +    items:
+> +      - description: Phandle to MOCK_UTMI_CLK.
+> +      - description: Phandle to MASTER_CLK.
+> +
+> +  assigned-clock-rates:
+> +    description:
+> +      Should be 19.2MHz (19200000) for MOCK_UTMI_CLK
+> +      >=125MHz (125000000) for MASTER_CLK in SS mode
+> +      >=60MHz (60000000) for MASTER_CLK in HS mode
+> +    maxItems: 2
+
+You can still express some limits here even if we don't go all out
+with the "oneOf".  AKA I think this is better:
+
+assigned-clock-rates:
+  items:
+    - const: 19200000
+    - minimum: 60000000
+      description: >= 60 MHz in HS mode, >= 125 MHz in SS mode
+
+
+> +  resets:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description:
+> +      Specifies interrupts from controller wrapper used
+> +      to wakeup from low power/suspend state. Must contain
+> +      one or more entry for interrupt-names property.
+
+Now that sub-items have a description this top level description
+doesn't add anything.  Delete.
+
+
+> +    items:
+> +      - description: The interrupt that is asserted when a wakeup event is received on USB2 bus.
+> +      - description: The interrupt that is asserted when a wakeup event is received on USB3 bus.
+
+Word wrap please.
+
+
+> +      - description: Wakeup event on DM line.
+> +      - description: Wakeup event on DP line.
+> +
+> +  interrupt-names:
+> +    $ref: /schemas/types.yaml#/definitions/string-array
+
+As Rob said in response to your previous version: "Already has a type,
+don't need."
+
+
+> +    items:
+> +      - const: hs_phy_irq
+> +      - const: ss_phy_irq
+> +      - const: dm_hs_phy_irq
+> +      - const: dp_hs_phy_irq
+> +
+> +  qcom,select-utmi-as-pipe-clk:
+> +    description:
+> +      If present, disable USB3 pipe_clk requirement.
+> +      Used when dwc3 operates without SSPHY and only
+> +      HS/FS/LS modes are supported.
+> +    type: boolean
+> +
+> +# Required child node:
+> +
+> +patternProperties:
+> +  "^dwc3@[0-9a-f]+$":
+> +    type: object
+> +    description:
+> +      A child node must exist to represent the core DWC3 IP block
+> +      The content of the node is defined in dwc3.txt.
+> +
+> +# Phy documentation is provided in the following places:
+> +# Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
+> +# Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - power-domains
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +        usb3_0: usb30@a6f8800 {
+> +            compatible = "qcom,dwc3";
+
+Your example is missing the SoC-specific compatible string, so it
+fails your own schema.
+
+
+> +            reg = <0xa6f8800 0x400>;
+> +            #address-cells = <1>;
+> +            #size-cells = <1>;
+> +            ranges;
+> +            interrupts = <0 131 0>, <0 486 0>, <0 488 0>, <0 489 0>;
+
+In general I believe "0" is frowned upon for IRQ flags.  Your example
+should probably be this from sdm845:
+
+interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
+     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
+     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
+     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
+
+...and you'll likely need a #include in the example.  See below.
+
+
+> +            interrupt-names = "hs_phy_irq", "ss_phy_irq",
+> +                    "dm_hs_phy_irq", "dp_hs_phy_irq";
+> +
+> +            clocks = <&gcc GCC_USB30_PRIM_MASTER_CLK>,
+
+As Rob requested in the previous version, please run:
+
+make dt_binding_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+
+If the next version doesn't pass "dt_binding_check" I suspect that
+people will stop reviewing your change, so please make sure you've
+figured out how to do this.
+
+When you do that, you'll see a syntax error here because
+"GCC_USB30_PRIM_MASTER_CLK" isn't defined anywhere in your example.
+You need to include it.  AKA this should be at the top of your
+example:
+
+#include <dt-bindings/clock/qcom,gcc-sdm845.h>
