@@ -2,78 +2,277 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71945C2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E135CC2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA0F2072D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7E6721739
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:07:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2fP/sUsF"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DYjCY3iM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfLQJDN (ORCPT
+        id S1725940AbfLQJHl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:03:13 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:56882 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbfLQJDM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 04:03:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=gNNwQgyhYGxqjRaJVFtxR9UTe7a7RrHVsDq+WBlZ19U=; b=2fP/sUsFvQ5tArmNchd6Y4GWI8
-        1DFQnHe+Y06HA+051VrlU4zRFr161ZKL/rx3Yd2u6zmu7SLsMxz0AV6nyNdyvjIzH0KUniY18P/+S
-        RWUlha2txC/rpA7ORhIc9qfjT/wSmH08XGWmR7c+ZWSZnR1WP2R7l860ZHAzfe6XJua0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ih8l4-0003gA-9G; Tue, 17 Dec 2019 10:03:10 +0100
-Date:   Tue, 17 Dec 2019 10:03:10 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Wingman Kwok <w-kwok2@ti.com>
-Subject: Re: [PATCH V6 net-next 05/11] net: netcp_ethss: Use the PHY time
- stamping interface.
-Message-ID: <20191217090310.GK6994@lunn.ch>
-References: <cover.1576511937.git.richardcochran@gmail.com>
- <26366cff657f6182d581d7cdf425bbd1aaf97718.1576511937.git.richardcochran@gmail.com>
+        Tue, 17 Dec 2019 04:07:41 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:36136 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725805AbfLQJHk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 04:07:40 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBH94A7E005597;
+        Tue, 17 Dec 2019 10:07:26 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=41mvUSOwuAhruiHu99TAoHez/M+143fLkG4jSCqmno8=;
+ b=DYjCY3iMb3XomGOBSJb3DIIBH1iAFGaxNgrnV5mAt3JVS0oLVdFwgBXgxlQ/YePFsseD
+ JHdgin5HBp8CiJDGHEqMma/lDCd5y69flPFJ2rhTJLq7Qm54C0+CWvUwD554kVPfyMrw
+ akg0fxXi6OzjHaCLbJ5wFNpDIikq8E/tXEK7lRfQcKHZ49o1AXQcqWtbNFI5uT3kNUnS
+ JIBLNd/RQBY280Ea8q0V2KhdRPKTkq0T51uhE3nFbbEo7qhePCtvx6gOR7yI/3fIdqxS
+ 30rRXmk2OjnhMDroOEGYXVpy7/rh3VaYf70sSeW0Ru9bdrYZzXnWEFVdWUjA8bhtX9Co IQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wvp36wwta-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Dec 2019 10:07:26 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BDE1A10003D;
+        Tue, 17 Dec 2019 10:07:18 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8B8D42A5785;
+        Tue, 17 Dec 2019 10:07:18 +0100 (CET)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 17 Dec 2019 10:07:17
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <broonie@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <alexandre.torgue@st.com>
+CC:     <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Erwan Leray <erwan.leray@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH v2] dt-bindings: spi: Convert stm32 spi bindings to json-schema
+Date:   Tue, 17 Dec 2019 10:07:15 +0100
+Message-ID: <20191217090715.13334-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <26366cff657f6182d581d7cdf425bbd1aaf97718.1576511937.git.richardcochran@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-17_01:2019-12-16,2019-12-16 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 08:13:20AM -0800, Richard Cochran wrote:
-> Thie netcp_ethss driver tests fields of the phy_device in order to
+Convert the STM32 spi binding to DT schema format using json-schema
 
-The
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+CC: Erwan Leray <erwan.leray@st.com>
+CC: Fabrice Gasnier <fabrice.gasnier@st.com>
+CC: Amelie Delaunay <amelie.delaunay@st.com>
+---
+changes in version 2:
+- fix typo in if block (compatible + contains)
+  The boths typos weren't detected by checkpatch.
+- remove type for st,spi-midi-ns property but not add upper limit
+  because the driver compute a delay (expressed in SPI clock cycles periods)
+  from this value (expressed in nanoseconds) and all that depends of the SPI
+  bus clock.
+ .../devicetree/bindings/spi/spi-stm32.txt          |  62 ------------
+ .../devicetree/bindings/spi/st,stm32-spi.yaml      | 105 +++++++++++++++++++++
+ 2 files changed, 105 insertions(+), 62 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
 
-> determine whether to defer to the PHY's time stamping functionality.
-> This patch replaces the open coded logic with an invocation of the
-> proper methods.
-> 
-> Signed-off-by: Richard Cochran <richardcochran@gmail.com>
+diff --git a/Documentation/devicetree/bindings/spi/spi-stm32.txt b/Documentation/devicetree/bindings/spi/spi-stm32.txt
+deleted file mode 100644
+index d82755c63eaf..000000000000
+--- a/Documentation/devicetree/bindings/spi/spi-stm32.txt
++++ /dev/null
+@@ -1,62 +0,0 @@
+-STMicroelectronics STM32 SPI Controller
+-
+-The STM32 SPI controller is used to communicate with external devices using
+-the Serial Peripheral Interface. It supports full-duplex, half-duplex and
+-simplex synchronous serial communication with external devices. It supports
+-from 4 to 32-bit data size. Although it can be configured as master or slave,
+-only master is supported by the driver.
+-
+-Required properties:
+-- compatible: Should be one of:
+-  "st,stm32h7-spi"
+-  "st,stm32f4-spi"
+-- reg: Offset and length of the device's register set.
+-- interrupts: Must contain the interrupt id.
+-- clocks: Must contain an entry for spiclk (which feeds the internal clock
+-	  generator).
+-- #address-cells:  Number of cells required to define a chip select address.
+-- #size-cells: Should be zero.
+-
+-Optional properties:
+-- resets: Must contain the phandle to the reset controller.
+-- A pinctrl state named "default" may be defined to set pins in mode of
+-  operation for SPI transfer.
+-- dmas: DMA specifiers for tx and rx dma. DMA fifo mode must be used. See the
+-  STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt.
+-- dma-names: DMA request names should include "tx" and "rx" if present.
+-- cs-gpios: list of GPIO chip selects. See the SPI bus bindings,
+-  Documentation/devicetree/bindings/spi/spi-bus.txt
+-
+-
+-Child nodes represent devices on the SPI bus
+-  See ../spi/spi-bus.txt
+-
+-Optional properties:
+-- st,spi-midi-ns: Only for STM32H7, (Master Inter-Data Idleness) minimum time
+-		  delay in nanoseconds inserted between two consecutive data
+-		  frames.
+-
+-
+-Example:
+-	spi2: spi@40003800 {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		compatible = "st,stm32h7-spi";
+-		reg = <0x40003800 0x400>;
+-		interrupts = <36>;
+-		clocks = <&rcc SPI2_CK>;
+-		resets = <&rcc 1166>;
+-		dmas = <&dmamux1 0 39 0x400 0x01>,
+-		       <&dmamux1 1 40 0x400 0x01>;
+-		dma-names = "rx", "tx";
+-		pinctrl-0 = <&spi2_pins_b>;
+-		pinctrl-names = "default";
+-		cs-gpios = <&gpioa 11 0>;
+-
+-		aardvark@0 {
+-			compatible = "totalphase,aardvark";
+-			reg = <0>;
+-			spi-max-frequency = <4000000>;
+-			st,spi-midi-ns = <4000>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
+new file mode 100644
+index 000000000000..f0d979664f07
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
+@@ -0,0 +1,105 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/st,stm32-spi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 SPI Controller bindings
++
++description: |
++  The STM32 SPI controller is used to communicate with external devices using
++  the Serial Peripheral Interface. It supports full-duplex, half-duplex and
++  simplex synchronous serial communication with external devices. It supports
++  from 4 to 32-bit data size.
++
++maintainers:
++  - Erwan Leray <erwan.leray@st.com>
++  - Fabrice Gasnier <fabrice.gasnier@st.com>
++
++allOf:
++  - $ref: "spi-controller.yaml#"
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: st,stm32f4-spi
++
++    then:
++      properties:
++        st,spi-midi-ns: false
++
++properties:
++  compatible:
++    enum:
++      - st,stm32f4-spi
++      - st,stm32h7-spi
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  dmas:
++    description: |
++      DMA specifiers for tx and rx dma. DMA fifo mode must be used. See
++      the STM32 DMA bindings Documentation/devicetree/bindings/dma/stm32-dma.txt.
++    items:
++      - description: rx DMA channel
++      - description: tx DMA channel
++
++  dma-names:
++    items:
++      - const: rx
++      - const: tx
++
++patternProperties:
++  "^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-f]+$":
++    type: object
++    # SPI slave nodes must be children of the SPI master node and can
++    # contain the following properties.
++    properties:
++      st,spi-midi-ns:
++        description: |
++          Only for STM32H7, (Master Inter-Data Idleness) minimum time
++          delay in nanoseconds inserted between two consecutive data frames.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - interrupts
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/reset/stm32mp1-resets.h>
++    spi@4000b000 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      compatible = "st,stm32h7-spi";
++      reg = <0x4000b000 0x400>;
++      interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&rcc SPI2_K>;
++      resets = <&rcc SPI2_R>;
++      dmas = <&dmamux1 0 39 0x400 0x05>,
++             <&dmamux1 1 40 0x400 0x05>;
++      dma-names = "rx", "tx";
++      cs-gpios = <&gpioa 11 0>;
++
++      aardvark@0 {
++        compatible = "totalphase,aardvark";
++        reg = <0>;
++        spi-max-frequency = <4000000>;
++        st,spi-midi-ns = <4000>;
++      };
++    };
++
++...
+-- 
+2.15.0
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
