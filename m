@@ -2,308 +2,130 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60A5C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 16:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1899AC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 16:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC9121835
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 16:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7EC824682
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 16:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjwQiS35"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UjphGrwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfLQQRG (ORCPT
+        id S1728150AbfLQQ22 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:17:06 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41840 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728198AbfLQQRA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 11:17:00 -0500
-Received: by mail-lj1-f195.google.com with SMTP id h23so11583039ljc.8;
-        Tue, 17 Dec 2019 08:16:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H6ypYsxFQ0FmuKGVvw4Sqkr3ujkj1CaK+qwJmBDsjEA=;
-        b=MjwQiS35dgm5KPq5Wt9h03946rFoY/NCv8ffSwpNiXPHlEstmGAujcVSfk1LRdfgNU
-         WrluwUPdIfPs5Hvm28c43cma1r9sJ4hPkdtwv+I6ojjsg+ggOD099Pr6XYSggxkVl/ob
-         WIQIAdSQLhUVmBGauO0dZ0eJeONkB6+OCPn3lyP2odMXoqfq2yrP/4zUGYiH1mulkRzI
-         ln25H0H3OKRSGmAXmVMJhtoa1HRNmMrUyYWqxQxyy40twr1XlHP5YuluJ/Lg1b7SBNxA
-         lzxETxX66QVOBrKCGexz4Tv1Wo4PP1feVimh8920wF6tFEU0YZ/FAgbmVmhCJZgDgYlK
-         mGYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H6ypYsxFQ0FmuKGVvw4Sqkr3ujkj1CaK+qwJmBDsjEA=;
-        b=dz3crx2Ace/IXsRzOJoCPvLlOLrboLfEKLFROCYpOxTtZ3sUdITbiv+Oep52B1Tv8q
-         hvn7ptsbLNIMznAxm+nWXwa692yA7v3hatAHDiQKLaFfgaDWgY1YtlSx6gTSxJOVVWSZ
-         6kydcQ7cV+V/1O0B9Kw2CuRZVt/2bc/ClqrDWGvtqQ3md4o1V1ans+TAZ1gHEoaQnV1O
-         3LhfMGM6uow0hddqZH3Rz1cE0SmbYg5x1trzXPIxoXrnTqdjhKNrJ589aU+JKm0z4vD8
-         5dlBFzABD0Tgj06KTi/CqQ+wyCrgRFwt+6YWtVWlxBDmLSnNlhPB9NWz+CLz3GQHa2Cr
-         2+dA==
-X-Gm-Message-State: APjAAAWWHIzO+q9ZNDmYRwK1/5BQeC82HJnKryTxT+9677aFDBmFgCQD
-        /V1J1Sd8rLcNRIikC+0NUww=
-X-Google-Smtp-Source: APXvYqxMWlDAv/TvZ/ajhTeAFUM0fEKaa62aS9MXtO89NZkxGcSkjRb3uIrT1qwGoyVNXmYk5dOwew==
-X-Received: by 2002:a05:651c:321:: with SMTP id b1mr3884204ljp.62.1576599417760;
-        Tue, 17 Dec 2019 08:16:57 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id q186sm859072ljq.14.2019.12.17.08.16.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 08:16:57 -0800 (PST)
-Subject: Re: [PATCH v3 08/15] ASoC: tegra: Add audio mclk control through
- clk_out_1 and extern1
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, sboyd@kernel.org
-Cc:     gregkh@linuxfoundation.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com, allison@lohutok.net, pdeschrijver@nvidia.com,
-        pgaikwad@nvidia.com, mturquette@baylibre.com,
-        horms+renesas@verge.net.au, Jisheng.Zhang@synaptics.com,
-        krzk@kernel.org, arnd@arndb.de, spujar@nvidia.com,
-        josephl@nvidia.com, vidyas@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alexios.zavras@intel.com,
-        alsa-devel@alsa-project.org
-References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-9-git-send-email-skomatineni@nvidia.com>
- <0ce2e83b-800c-da1e-7a3c-3cf1427cfe20@gmail.com>
- <2eeceabe-b5f0-6f9e-ff8c-4ac6167b7cc3@nvidia.com>
- <41a7325c-9bb9-f681-4d30-d19079869d12@nvidia.com>
- <d8f158cd-3bf5-383a-c9fe-650f6d7ac178@gmail.com>
- <fc491006-a316-5910-acb1-659c768b1038@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <225860bb-38e0-75ea-c08f-6090b2fc16b0@gmail.com>
-Date:   Tue, 17 Dec 2019 19:16:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <fc491006-a316-5910-acb1-659c768b1038@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 17 Dec 2019 11:28:28 -0500
+Received: from mail-eopbgr30078.outbound.protection.outlook.com ([40.107.3.78]:54214
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727906AbfLQQ22 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 11:28:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I2iUNTlCxbcbLxUKTkxKorxQJ9PG9gPK35yigVD8NgOFSIyMpeOHKWZwMzv2bAaLxkGbrSaMtzyn1URBS2phMT69VWzV/8h8TSczOnA3zlmMCpXxsgG0vBnxEFs3neeLGCsX9CO0y+2YVmHhQ3TMgSuJvPAbKmG7tnESisdQRAPzVKFvfzdjjH5BvHR45y//9A2cV7oiD/cmD4apHJpH623NTc6fVLMINxc19n6ugDvdLfSo/htGHHuNeL+hmcjCvja1EoC1o1+SA6MCtwKa5enD4bbGOlnt9nkF7pPaVifD2ogbmpmWNq042LlbxY5kazzulUyU62nqIQy18Iz8bw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oNpIHqHLebtwFmZLxkKAgbq0N0cU4YnNjcl+5giehho=;
+ b=Mmdtan7vtjJYEAudQNjErKMbWtgHJ+K59SFahyDojF0HjNJIh0jMZkYAqQaXlVat01Vy5ezzi/Gzsqr5yt/7OD6TsUCjmSuFtWtOT9YBBC3kSHYz9ouBlXyYeXD+IBsjE5b/os+tHqm2jHNqlbtBWCb3L2UMr7I956ErgAffP4kSw4Onz6QCl6hraPz6GELAH3XimrPO40BqzrgV49MWuWozNoXY2vjS/COBtLtkdd7i4CFsJuA53twXI4yb2oXuGGvEGjY//VSEPj7LplrgTfz6DWR/9bmZu0vBv4cyFczA1qVZAHrRhfH9I+q26XeR7o/EM/p8YPB1ILrF+HNtxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oNpIHqHLebtwFmZLxkKAgbq0N0cU4YnNjcl+5giehho=;
+ b=UjphGrwG5jK/uj+vvl50rSJ2+l/s8ctb3TjxP4yxLPuOx01XROr69XlRjsQhs0XxXAsZYX9HJxQwGQS11ogYE5WzoevrXboM31NoQdVO9NZAGIJ5MQOPe3fjrGgvvGCHrbOxdgxg5OAjz+oVPRY2wCZ6t6EvVpNJRpB9hSdrtBg=
+Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.16.148) by
+ VI1PR0402MB3341.eurprd04.prod.outlook.com (52.134.7.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.20; Tue, 17 Dec 2019 16:28:23 +0000
+Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com
+ ([fe80::69c1:8385:67ab:cb0f]) by VI1PR0402MB3918.eurprd04.prod.outlook.com
+ ([fe80::69c1:8385:67ab:cb0f%2]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
+ 16:28:23 +0000
+From:   Mirela Rabulea <mirela.rabulea@nxp.com>
+To:     "robh@kernel.org" <robh@kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "niklas.soderlund+renesas@ragnatech.se" 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        "laurent.pinchart+renesas@ideasonboard.com" 
+        <laurent.pinchart+renesas@ideasonboard.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Subject: Re: [EXT] Re: [PATCH v3 3/6] media: dt-bindings: Add bindings for
+ i.MX8QXP/QM JPEG driver
+Thread-Topic: [EXT] Re: [PATCH v3 3/6] media: dt-bindings: Add bindings for
+ i.MX8QXP/QM JPEG driver
+Thread-Index: AQHVsa3VTtrMyqMhREKZeLqsBXBpXae9EOcAgAF5vAA=
+Date:   Tue, 17 Dec 2019 16:28:23 +0000
+Message-ID: <1576600102.17593.15.camel@nxp.com>
+References: <1576238781-5911-1-git-send-email-mirela.rabulea@nxp.com>
+         <1576238781-5911-4-git-send-email-mirela.rabulea@nxp.com>
+         <20191216175624.GA24066@bogus>
+In-Reply-To: <20191216175624.GA24066@bogus>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mirela.rabulea@nxp.com; 
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2cfa24f9-5750-4a35-937f-08d7830e22c9
+x-ms-traffictypediagnostic: VI1PR0402MB3341:|VI1PR0402MB3341:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3341A8275BB978157137578F8F500@VI1PR0402MB3341.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(376002)(136003)(366004)(199004)(189003)(478600001)(36756003)(6512007)(6506007)(6916009)(66476007)(2906002)(7416002)(44832011)(4744005)(2616005)(71200400001)(86362001)(103116003)(8936002)(5660300002)(66446008)(66556008)(64756008)(54906003)(186003)(316002)(91956017)(76116006)(4326008)(8676002)(6486002)(66946007)(81166006)(81156014)(4001150100001)(26005)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3341;H:VI1PR0402MB3918.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rTuPZemR8jPgm0jG+gpYPnr8seZS2H/dTcVwDyKZPpCfmoFfC/Ohlkrk/8baNTOwrAHHjXnJ0/jt3046ak4qUPczzgOZM5PwAlH/sbaxdaCVBrZhWtT9dG7Wcysv7VQzSeSOr9dkrhc0RmscopcM/tGAwMc9wErum64zQkiXJiEIeSpldudR/Hvu3EyRBYj2hjJ2DGCjm6dDMZ0JR6PXCgXwVmRRkq0pfRG3bi3zRKSdOmMXiKyoHSKNjB5Z2zhq985l4VlW2n04O8uOtHHf+PuPfza0a2Djb1VrCLc6vVt2BYHCOrlrF1kWchmQato9uWPAMIDMxJBhGU0J2Drd1Bwh/EA207Vqrp4o8uTy5EggcjXJzIB7A6kWosa58nc/dUnSqnoXTWyc+bp7+jwbfgF4dZscB4rxH/xFo6gfZ6To5ayX4VXLJ08ljgiI3Q0doTnZOxP0RlNkd9MLV9CrSIJiIgetEIUozV+bJCWNS8JSSYrOPAwCwCBtfd5SM+07
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <558F85FC2BC68F49B576321DC0B19CEF@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2cfa24f9-5750-4a35-937f-08d7830e22c9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 16:28:23.1421
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YCGO48Px5j4/fs3gywubLEVTcip0xMzelGRgUfCM0VBVFOxMORZuaD5JvJRJ0SAakGjW6NECpNzo+drB737RFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3341
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-17.12.2019 19:12, Sowjanya Komatineni пишет:
-> 
-> On 12/17/19 7:36 AM, Dmitry Osipenko wrote:
->> 17.12.2019 04:29, Sowjanya Komatineni пишет:
->>> On 12/7/19 11:20 AM, Sowjanya Komatineni wrote:
->>>> On 12/7/19 6:58 AM, Dmitry Osipenko wrote:
->>>>> 06.12.2019 05:48, Sowjanya Komatineni пишет:
->>>>>> Current ASoC driver uses extern1 as cdev1 clock from Tegra30 onwards
->>>>>> through device tree.
->>>>>>
->>>>>> Actual audio mclk is clk_out_1 and to use PLLA for mclk rate control,
->>>>>> need to clk_out_1_mux parent to extern1 and extern1 parent to
->>>>>> PLLA_OUT0.
->>>>>>
->>>>>> Currently Tegra clock driver init sets the parents and enables both
->>>>>> clk_out_1 and extern1 clocks. But these clocks parent and enables
->>>>>> should
->>>>>> be controlled by ASoC driver.
->>>>>>
->>>>>> Clock parents can be specified in device tree using assigned-clocks
->>>>>> and assigned-clock-parents.
->>>>>>
->>>>>> To enable audio mclk, both clk_out_1 and extern1 clocks need to be
->>>>>> enabled.
->>>>>>
->>>>>> This patch configures parents for clk_out_1 and extern1 clocks if
->>>>>> device
->>>>>> tree does not specify clock parents inorder to support old device
->>>>>> tree
->>>>>> and controls mclk using both clk_out_1 and extern1 clocks.
->>>>>>
->>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>> ---
->>>>>>    sound/soc/tegra/tegra_asoc_utils.c | 66
->>>>>> ++++++++++++++++++++++++++++++++++++++
->>>>>>    sound/soc/tegra/tegra_asoc_utils.h |  1 +
->>>>>>    2 files changed, 67 insertions(+)
->>>>>>
->>>>>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c
->>>>>> b/sound/soc/tegra/tegra_asoc_utils.c
->>>>>> index 536a578e9512..8e3a3740df7c 100644
->>>>>> --- a/sound/soc/tegra/tegra_asoc_utils.c
->>>>>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
->>>>>> @@ -60,6 +60,7 @@ int tegra_asoc_utils_set_rate(struct
->>>>>> tegra_asoc_utils_data *data, int srate,
->>>>>>        data->set_mclk = 0;
->>>>>>          clk_disable_unprepare(data->clk_cdev1);
->>>>>> +    clk_disable_unprepare(data->clk_extern1);
->>>>>>        clk_disable_unprepare(data->clk_pll_a_out0);
->>>>>>        clk_disable_unprepare(data->clk_pll_a);
->>>>>>    @@ -89,6 +90,14 @@ int tegra_asoc_utils_set_rate(struct
->>>>>> tegra_asoc_utils_data *data, int srate,
->>>>>>            return err;
->>>>>>        }
->>>>>>    +    if (!IS_ERR_OR_NULL(data->clk_extern1)) {
->>>>>> +        err = clk_prepare_enable(data->clk_extern1);
->>>>>> +        if (err) {
->>>>>> +            dev_err(data->dev, "Can't enable extern1: %d\n", err);
->>>>>> +            return err;
->>>>>> +        }
->>>>>> +    }
->>>>>> +
->>>>>>        err = clk_prepare_enable(data->clk_cdev1);
->>>>>>        if (err) {
->>>>>>            dev_err(data->dev, "Can't enable cdev1: %d\n", err);
->>>>>> @@ -109,6 +118,7 @@ int tegra_asoc_utils_set_ac97_rate(struct
->>>>>> tegra_asoc_utils_data *data)
->>>>>>        int err;
->>>>>>          clk_disable_unprepare(data->clk_cdev1);
->>>>>> +    clk_disable_unprepare(data->clk_extern1);
->>>>>>        clk_disable_unprepare(data->clk_pll_a_out0);
->>>>>>        clk_disable_unprepare(data->clk_pll_a);
->>>>>>    @@ -142,6 +152,14 @@ int tegra_asoc_utils_set_ac97_rate(struct
->>>>>> tegra_asoc_utils_data *data)
->>>>>>            return err;
->>>>>>        }
->>>>>>    +    if (!IS_ERR_OR_NULL(data->clk_extern1)) {
->>>>>> +        err = clk_prepare_enable(data->clk_extern1);
->>>>>> +        if (err) {
->>>>>> +            dev_err(data->dev, "Can't enable extern1: %d\n", err);
->>>>>> +            return err;
->>>>>> +        }
->>>>>> +    }
->>>>> Why this is needed given that clk_extern1 is either a child of MCLK or
->>>>> MCLK itself (on T20)? The child clocks are enabled when the parent is
->>>>> enabled.
->>>> For T30 and later, clk_extern1 is one of the source for clk_out_1_mux.
->>>> clk_extern1 is in CAR and it has its own gate and mux.
->>>>
->>>> As audio mclk related clocks (clk_out_1, clk_out_1_mux, and extern1)
->>>> are moved into ASoC driver from clock driver
->>>>
->>>> need to enable extern1 gate as well along with clk_out1 for T30
->>>> through T210.
->>>>
->>>> Just FYI, extern1 enable here happens only when data->clk_extern1 is
->>>> available which is for T30 onwards.
->>>>
->>>>>>        err = clk_prepare_enable(data->clk_cdev1);
->>>>>>        if (err) {
->>>>>>            dev_err(data->dev, "Can't enable cdev1: %d\n", err);
->>>>>> @@ -158,6 +176,7 @@
->>>>>> EXPORT_SYMBOL_GPL(tegra_asoc_utils_set_ac97_rate);
->>>>>>    int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
->>>>>>                  struct device *dev)
->>>>>>    {
->>>>>> +    struct clk *clk_out_1_mux;
->>>>>>        int ret;
->>>>>>          data->dev = dev;
->>>>>> @@ -196,6 +215,51 @@ int tegra_asoc_utils_init(struct
->>>>>> tegra_asoc_utils_data *data,
->>>>>>            goto err_put_pll_a_out0;
->>>>>>        }
->>>>> In a previous patch you added fallback to EXTPERIPH when clk_get(MCLK)
->>>>> fails. This will work perfectly fine for the older kernels which have
->>>>> all clocks in the same single CaR driver, but this may not work that
->>>>> great for the newer kernels because PMC driver isn't registered early
->>>>> during boot and thus it is possible to get a legit -EPROBE_DEFER which
->>>>> shouldn't be ignored. In other words, you need to add into this
->>>>> patch a
->>>>> check for the error code returned by clk_get(MCLK) and fallback
->>>>> only for
->>>>> -EINVAL.
->>>> yeah right, will add check in next version.
->>>>>> +    /*
->>>>>> +     * If clock parents are not set in DT, configure here to use
->>>>>> clk_out_1
->>>>>> +     * as mclk and extern1 as parent for Tegra30 and higher.
->>>>>> +     */
->>>>>> +    if (!of_find_property(dev->of_node, "assigned-clock-parents",
->>>>>> NULL) &&
->>>>>> +        data->soc > TEGRA_ASOC_UTILS_SOC_TEGRA20) {
->>>>>> +        data->clk_extern1 = clk_get_sys("clk_out_1", "extern1");
->>>>>> +        if (IS_ERR(data->clk_extern1)) {
->>>>>> +            dev_err(data->dev, "Can't retrieve clk extern1\n");
->>>>>> +            ret = PTR_ERR(data->clk_extern1);
->>>>>> +            goto err_put_cdev1;
->>>>>> +        }
->>>>>> +
->>>>>> +        ret = clk_set_parent(data->clk_extern1,
->>>>>> data->clk_pll_a_out0);
->>>>>> +        if (ret < 0) {
->>>>>> +            dev_err(data->dev,
->>>>>> +                "Set parent failed for clk extern1: %d\n",
->>>>>> +                ret);
->>>>>> +            goto err_put_cdev1;
->>>>>> +        }
->>>>>> +
->>>>>> +        clk_out_1_mux = clk_get_sys(NULL, "clk_out_1_mux");
->>>>> Note1: clk_get(dev, "clk_out_1_mux") should work here by letting clk
->>>>> core to fall back to the clk_get_sys() by itself. Either way should
->>>>> be good.
->>> clk_get uses device rather and dev_id will be name of this device and
->>> when clk_get fall back to __clk_get_sys() it still will use dev id of
->>> this device rather than actual dev_id that pmc clocks are added to the
->>> lookup. So clk_get_sys() seems to be correct to use as we can specify
->>> exact dev_id and con_id.
->> It should be better to use something "resource managed", thus
->> devm_clk_get() should be a better choice.
->>
->>> Also, clk_find retrieves clock from lookup only when it finds matching
->>> clock with both dev_id and con_id as pmc clocks are registered with both
->>> dev_id and con_id.
->>>
->>> I see existing clock driver adds both extern and pmc clocks (clk_out) to
->>> lookup with same dev_id of clk_out_1/2/3 and con_id of extern1/2/3 and
->>> with this always extern clock will be retrieved and this is probably
->>> because old DT and audio driver always uses extern1 rather than actual
->>> clk_out_1
->>>
->>> But this need to be fixed now as we changed to use clk_out directly
->>> rather than extern (even for other pmc clocks) to match actual hw
->>> design.
->>>
->>> Will fix this as well to register pmc clocks using con_id as
->>> clk_out_1/2/3 in pmc driver and extern clocks using con_id of
->>> extern1/2/3 with dev_id being NULL so we can retrieve these clocks by
->>> just using con_id only using clk_get_sys as we switched to use clk_out_1
->>> directly as pmc clock rather than extern from DT and no longer need to
->>> pair pmc clocks to extern clocks.
->> I'm not sure it's worth the effort to care about con_ids if implicit
->> fallback to clk_get_sys(NULL, "...") does the right thing for the audio
->> driver.
->>
->> IIRC, CCF uses variant of matching clocks by names, although I'm not
->> sure whether that applies to older stable kernels.
->>
->> [snip]
-> 
-> Current clock driver adds EXTERN clock to lookup with dev_id as
-> clk_out_1/2/3 and con_id as extern_1/2/3
-> 
-> With this we can retrieve clock from lookup only with clk_get_sys where
-> we can pass dev_id as clk_out_1/2/3 and con_id as extern_1/2/3.
-> 
-> We cant use devm_clk_get() or clk_get() for retrieving clocks from
-> lookup by passing device object from sound driver as dev_id will be diff
-> and clk_find will return NULL.
-
-Have you actually tried to test that it fails? I think it's a false
-assumption.
-
-> But with the fix of having dev_id as NULL and use only con_id to add to
-> lookup, we can use resource managed APIs devm_clk_get.
-> 
-> So was saying will fix this in clock driver as part of removing
-> clk_out_1/2/3 ids and pmc init from clock driver so we can use
-> devm_clk_get API in audio driver.
-> 
->>
-
+T24gTHUsIDIwMTktMTItMTYgYXQgMTE6NTYgLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBQ
+bGVhc2UgYWRkIEFja2VkLWJ5L1Jldmlld2VkLWJ5IHRhZ3Mgd2hlbiBwb3N0aW5nIG5ldyB2ZXJz
+aW9ucy4NCj4gSG93ZXZlciwNCj4gdGhlcmUncyBubyBuZWVkIHRvIHJlcG9zdCBwYXRjaGVzICpv
+bmx5KiB0byBhZGQgdGhlIHRhZ3MuIFRoZQ0KPiB1cHN0cmVhbQ0KPiBtYWludGFpbmVyIHdpbGwg
+ZG8gdGhhdCBmb3IgYWNrcyByZWNlaXZlZCBvbiB0aGUgdmVyc2lvbiB0aGV5IGFwcGx5Lg0KPiAN
+Cg0KT2ssIHNvcnJ5IGFib3V0IHRoYXQsIEknbGwga2VlcCBpdCBpbiBtaW5kIGZvciBuZXh0IHRp
+bWUuDQoNCj4gSWYgYSB0YWcgd2FzIG5vdCBhZGRlZCBvbiBwdXJwb3NlLCBwbGVhc2Ugc3RhdGUg
+d2h5IGFuZCB3aGF0IGNoYW5nZWQuDQoNClRoZSBzb2xlIHB1cnBvc2UgZm9yIHRoaXMgX3YzIHdh
+cyB0byBhZGQgYSBuZXcgcGF0Y2ggdG8gdGhlIHBhdGNoc2V0LA0KYW5kIEkgbWlzc2VkIHRoZSBv
+cHBvcnR1bml0eSB0byBhZGQgdGhlIHRhZ3MuDQoNClJlZ2FyZHMsDQpNaXJlbGE=
