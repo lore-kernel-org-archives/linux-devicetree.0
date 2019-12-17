@@ -2,69 +2,133 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA8FC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2FFC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 287F12072D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF2E24655
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:56:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cw3f552w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbfLQOu5 (ORCPT
+        id S1726933AbfLQO4U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:50:57 -0500
-Received: from muru.com ([72.249.23.125]:48902 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728087AbfLQOu5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:50:57 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id EE9E58116;
-        Tue, 17 Dec 2019 14:51:35 +0000 (UTC)
-Date:   Tue, 17 Dec 2019 06:50:53 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     linux-omap@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 00/14] Remove legacy sdma code for dt booting omaps
-Message-ID: <20191217145053.GV35479@atomide.com>
-References: <20191217001925.44558-1-tony@atomide.com>
- <a62d8087-afad-fd04-bfe2-79ce6ea08ffe@ti.com>
+        Tue, 17 Dec 2019 09:56:20 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:32867 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfLQO4U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 09:56:20 -0500
+Received: by mail-il1-f195.google.com with SMTP id v15so1290318iln.0
+        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 06:56:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=bLWs/wd6D34VXv138fiD3C4WAkfxJpBi3ZAW7HjBL8c=;
+        b=Cw3f552w0jI9cUaZYNlVyyEH9UFh8XoM7H124UVYAjbot5wooDlvogYx4OcN+jh3e7
+         VKqmCY9lr8C/t92tUqYGNTxe/66dvYDMN4CFVLZovVETxVufwSrIwDIj43rdroiOjR9v
+         0GtwFf0YVGIvlEVS/+o/E2CQ2AUBTo405s7Fb9dfVu8MLZZqfFWJrVlhmpShk8vDOKgl
+         FZSdKO/BVKfCaxJ3sVEdJ8466NMPAcWFITjH+ZAUAFh8+SrukBqDfaII/em8ZiIf/SBy
+         p/i5xoDXjaYTi5o4ZPqoVK2Zj+Y1KtSMjupHC94OJv5oFtcDpb/dU5sGSP3FmtBitJzH
+         jtmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bLWs/wd6D34VXv138fiD3C4WAkfxJpBi3ZAW7HjBL8c=;
+        b=QTL1hGpaFGaL4X6wAVC1wzpo9+JLRDOdMuV2Dym839MtDR9V94qBHeEnrh9aRHjIHA
+         1J4+kG4fcI8Klg/L+IrdGCM7uiXf5NkGN96rSRt55l5a87/gcYByP66sVXwe8o9RTnzK
+         fGnKZnBYeN9vXZ7aZr9bI8oPfXlw4A9v+eOziCBGxE7R7/m1erldkyPrFFKrC/pQvjed
+         TZ4dcPCp1EGUJqQhIL5M0IQRxk37aAgbO8wcpE7PXt+BjdTIafXh2DCYIgJGNMeijh5N
+         IXuHbWLeTXAnrQ+D51ixM9fiPx3KwYnEkCa4BRWd92SIWUkF8l2y+XZBparOMCustgkv
+         Q+Hg==
+X-Gm-Message-State: APjAAAUacgWsUoDLz4Py+kgshLrcDCf4mPa0Sk8RWYwwKYXPvRrr6XoI
+        WB3kNfCmX3Og0NvdTBxAkU6PuJMYmddTM7LiQHohCA==
+X-Google-Smtp-Source: APXvYqxhC/Y7CyWDF3xIroMcRB3lWtq589/h5nwlDksFEV/5sd6lWme315cNRpOwTlhXY/StdhJUQsZrLt7Bni/cOHc=
+X-Received: by 2002:a92:9107:: with SMTP id t7mr17497740ild.51.1576594579808;
+ Tue, 17 Dec 2019 06:56:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a62d8087-afad-fd04-bfe2-79ce6ea08ffe@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191202144104.5069-1-jun.nie@linaro.org> <20191202144104.5069-3-jun.nie@linaro.org>
+ <20191213230137.GA15696@bogus>
+In-Reply-To: <20191213230137.GA15696@bogus>
+From:   Jun Nie <jun.nie@linaro.org>
+Date:   Tue, 17 Dec 2019 22:56:08 +0800
+Message-ID: <CABymUCMgfx=O3-PHKJcaCrxxN0K6b1t2Y-XvOWwTMuDwZyVyVQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] mmc: sdhci: dt: Add DMA boundary and HS400 properties
+To:     Rob Herring <robh@kernel.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>, adrian.hunter@intel.com,
+        linux-mmc <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [191217 09:54]:
-> Thanks for doing this!
-> First things first:
-> Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Rob Herring <robh@kernel.org> =E4=BA=8E2019=E5=B9=B412=E6=9C=8814=E6=97=A5=
+=E5=91=A8=E5=85=AD =E4=B8=8A=E5=8D=887:01=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Mon, Dec 02, 2019 at 10:41:02PM +0800, Jun Nie wrote:
+> > DMA memory cannot cross specific boundary on some controller, such as 1=
+28MB
+> > on SDHCI Designware. Add sdhci-dma-mem-boundary property to split DMA
+> > operation in such case.
+> >
+> > sdhci-ctrl-hs400 specify the HS400 mode setting for register
+> > SDHCI_HOST_CONTROL2(offset 0x3E:bit[2:0]). Because this value is not
+> > defined in SDHC Standard specification.
+> >
+> > Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/mmc/sdhci.txt | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mmc/sdhci.txt b/Document=
+ation/devicetree/bindings/mmc/sdhci.txt
+> > index 0e9923a64024..e6d7feb9a741 100644
+> > --- a/Documentation/devicetree/bindings/mmc/sdhci.txt
+> > +++ b/Documentation/devicetree/bindings/mmc/sdhci.txt
+> > @@ -11,3 +11,11 @@ Optional properties:
+> >  - sdhci-caps: The sdhci capabilities register is incorrect. This 64bit
+> >    property corresponds to the bits in the sdhci capability register. I=
+f the
+> >    bit is on in the property then the bit should be turned on.
+> > +- sdhci-dma-mem-boundary: The sdhci controller DMA memory space bounda=
+ry.
+> > +  If the controller's DMA cannot cross a specific memory space boundar=
+y,
+> > +  such as 128MB, set this value in dt and driver will split the DMA
+> > +  operation when crossing such boundary.
+>
+> This should be implied by the compatible string.
+>
+> > +- sdhci-ctrl-hs400: The HS400 is not defined in SDHC Standard specific=
+ation
+> > +  for SDHCI_HOST_CONTROL2(offset 0x3E:bit[2:0]). Different controllers=
+ have
+> > +  have different value for HS400 mode. If 0x5 is not the HS400 mode va=
+lue
+> > +  for your controller, you should specify the value with this property=
+.
+>
+> This too, unless it needs to be tuned per board.
+>
+> Can you be more specific as to what the possible values are and what
+> they do?
 
-Thanks for testing!
+It is specific to SoC or specific to controller. HS400 mode value on
+DWC3 of new Hisilicon
+ SoC is 7, not 5. This same is to DMA buffer memory address boundary.
+Do you mean you
+want the boundary value and HS400 mode value should bundled with compatible=
+,
+ie. specific SoC or controller, to set a value in sdhci layer from
+platform glue driver?
 
-> But I was only able to test it with CPU_IDLE=n otherwise (even w/o this series)
-> I got a flood of (PandaBoard-ES):
-> 
-> [  315.995819] ------------[ cut here ]------------
-> [  316.000457] WARNING: CPU: 0 PID: 0 at drivers/bus/omap_l3_noc.c:141 l3_interrupt_handler+0x264/0x384
-> [  316.009613] 44000000.ocp:L3 Standard Error: MASTER USBHOSTHS TARGET ABE (Read Link): At Address: 0x00000000 : Data Access in User mode during Functional access
-
-Can you please email me your .config and I'll take a look?
-
-I'm not seeing that with pandaboard es here at least with
-omap2plus_defconfig.
-
-Regards,
-
-Tony
+>
+> Rob
