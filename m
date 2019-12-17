@@ -2,98 +2,127 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBB1C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 22:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3592EC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 22:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C162465E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 22:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07350205ED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 22:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hpI+f7SS"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Hl2Y8hGQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbfLQWgG (ORCPT
+        id S1725886AbfLQWwB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 17:36:06 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39459 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfLQWgG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 17:36:06 -0500
-Received: by mail-pf1-f194.google.com with SMTP id q10so34450pfs.6
-        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 14:36:05 -0800 (PST)
+        Tue, 17 Dec 2019 17:52:01 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38996 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbfLQWwA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 17:52:00 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 77so15571184oty.6
+        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 14:51:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yUR3VGXqcEyFpDj03ashPmu0D0HK7H7Djn3POx5wsk8=;
-        b=hpI+f7SS3jE6F9WghLjeR6FFfhRaI/Dl0bjq4N1UHVAwzEa0E+35JRO9yCK2LtqHDE
-         8XBHKDEf33L2oT3cbE+2OoqgsEUn+kmBgb4ORJqXy8USwnbqd97H9gayACgUHc4qMMqL
-         XIxJX9Y7YV0LYpNPa7HtcL7PvCgjumxAhTcmY=
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Bgj6GFgx8VThztK4Gu3+BzeDA/NznFDz/pSO11pXhjg=;
+        b=Hl2Y8hGQ+0lrr5/hQEqaf+/gbjNx2pyfaxEIghm4QuR3Hf/M3f7QA527VoNpOkY9fo
+         4kv2KeUY085H4H0ll6Hu44CmNk5yWK9kQ6RaeIBkekZDmxTOGIMcXisQhW3IJk9o47XG
+         1ieCEaj2RGguaP15oOZ0sl1hYp4v9vJyI3dgw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yUR3VGXqcEyFpDj03ashPmu0D0HK7H7Djn3POx5wsk8=;
-        b=WlWjuRQN6Sk17R37q9N73l/w+TiD91M91vM751tyvu5Vn/SBM1lEHQWkK83Kf49wIK
-         Z2bntJmXtkaWYiGyY5e1baVa66ostcU75/BFa4PKIrsfB22bbKgdwuYoenTnfSzPjCZ/
-         KMVMLwCERNecRuhOX8FfVZNKpTgfaZhJBgt8D4X+AYSLq92dJ3GPwU8s/anA+b4DMtWl
-         el56EpRbtm5S8hnw2VCPsaeMLF7gE0Kk/6qYhtV/0UzDGDdTTvGywoDHbTjiIJ0m5shp
-         FV9il37EZG/++BsegRuUgz8JtCLn0Lpx/IzvCzT1qQjYHt4TbMFOQXK02U0EHu2xeDFj
-         iXVQ==
-X-Gm-Message-State: APjAAAWbyhJHsIJHamUhvu/xVdU6nzL/iEs+b0KZxxP2citKSkg8FIby
-        x4I5rrlipZnCeNQ+qa8L5kFXfA==
-X-Google-Smtp-Source: APXvYqyse3yodh4Y8GBmMY60C4nZ1Ex8BE7BiinQNGmJIpqd+FR49bz6zBoTrFGG9uLrMKjtWT07ag==
-X-Received: by 2002:a63:1908:: with SMTP id z8mr28108344pgl.350.1576622165581;
-        Tue, 17 Dec 2019 14:36:05 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id 189sm35588pfw.73.2019.12.17.14.36.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 14:36:05 -0800 (PST)
-Date:   Tue, 17 Dec 2019 14:36:03 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linus.walleij@linaro.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm@vger.kernel.org,
-        Roja Rani Yarubandi <rojay@codeaurora.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Fix I2C/UART numbers 2, 4, 7,
- and 9
-Message-ID: <20191217223603.GX228856@google.com>
-References: <20191217130352.1.Id8562de45e8441cac34699047e25e7424281e9d4@changeid>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bgj6GFgx8VThztK4Gu3+BzeDA/NznFDz/pSO11pXhjg=;
+        b=Ldr9NTjuc9GdgVbluD988baMf04z6PCOvwxJ+0yVwVGN6ekaVoD9DXCr0CjPHvGf93
+         Aoo3lVfEM3T3DGtNwbKw3DH7BkiCMjIylviYH7gdp8hmMfifBoQDRMQDVGUjyDqXYCFz
+         tTFX+IwHh0tNtboOduCMrJB6pv03RPR1ulzAxPmIRQRaU7sf4zLKdYP1ZxGlwy2fSDnC
+         MGcE4oBSQgMdPcUmLpeuc2sQYDyqYN9wQINTNR/4vHUaeHpZiR1xiinssEmJ7KKzhX8f
+         FNyXg463FjqIfdGu6/pSBRD+wP9oZpMc5bABa2g2DycvafcRM9uAWB8Wu6LF1HWxKHXY
+         5Feg==
+X-Gm-Message-State: APjAAAXyaks/WXBD5DKWow2Xme/0YMnkuCjjGWOcJggtQu75EBVAuX9T
+        Ner1X2taolCJAekQdzYXaW1fpyr4I1+vf7T1TH4MRQ==
+X-Google-Smtp-Source: APXvYqx+R5wFvTkSiUO0y6MYgmRmL50Cn5ck4GRTtls7IdGYcsg8QD5heARFegvJ+0lTn3tHAVoDp2cT7t3IUAtvC8o=
+X-Received: by 2002:a05:6830:1415:: with SMTP id v21mr41903346otp.188.1576623118725;
+ Tue, 17 Dec 2019 14:51:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191217130352.1.Id8562de45e8441cac34699047e25e7424281e9d4@changeid>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <f947d821-8e67-dcc7-d753-5b04d099792d@gmail.com>
+In-Reply-To: <f947d821-8e67-dcc7-d753-5b04d099792d@gmail.com>
+From:   Yuqing Shen <yuqing.shen@broadcom.com>
+Date:   Tue, 17 Dec 2019 15:51:47 -0700
+Message-ID: <CALqpNLdtWdrQKyH2DEcnW6vq_pwAEcsve=id0sysddNTE6hVpg@mail.gmail.com>
+Subject: Re: [PATCH v7 1/2] dt-bindings: edac: arm-dmc520.txt
+To:     Shiping Ji <shiping.linux@gmail.com>
+Cc:     bp@alien8.de, james.morse@arm.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mchehab@kernel.org,
+        linux-edac@vger.kernel.org, sashal@kernel.org,
+        Hang Li <hangl@microsoft.com>, lewan@microsoft.com,
+        ruizhao@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>, shji@microsoft.com,
+        wangglei@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 01:04:07PM -0800, Douglas Anderson wrote:
-> Commit f4a73f5e2633 ("pinctrl: qcom: sc7180: Add new qup functions")
-> has landed which means that we absolutely need to use the proper names
-> for the pinmuxing for I2C/UART numbers 2, 4, 7, and 9.  Let's do it.
-> 
-> For reference:
-> - If you get only one of this commit and the pinctrl commit then none
->   of I2C/UART 2, 4, 7, and 9 will work.
-> - If you get neither of these commits then I2C 2, 4, 7, and 9 will
->   work but not UART.
-> 
-> ...but despite the above it should be fine for this commit to land in
-> the Qualcomm tree because sc7180.dtsi only exists there (it hasn't
-> made it to mainline).
-> 
-> Fixes: ba3fc6496366 ("arm64: dts: sc7180: Add qupv3_0 and qupv3_1")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Hi, Shiping
+This commit looks good to me.
+Yuqing
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+On Sun, Nov 17, 2019 at 7:10 PM Shiping Ji <shiping.linux@gmail.com> wrote:
+>
+> This is the device tree bindings for new EDAC driver dmc520_edac.c.
+>
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
+> Reviewed-by: Yuqing Shen <yuqing.shen@broadcom.com>
+>  Tested-by: Yuqing Shen <yuqing.shen@broadcom.com>
+> ---
+>      Changes in v7:
+>          - Added arm prefix to the interrupt-config property
+>
+> ---
+>  .../devicetree/bindings/edac/arm-dmc520.txt   | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
+>
+> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> new file mode 100644
+> index 000000000000..476cf8b76f2a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> @@ -0,0 +1,26 @@
+> +* ARM DMC-520 EDAC node
+> +
+> +Required properties:
+> +- compatible  : "brcm,dmc-520", "arm,dmc-520".
+> +- reg   : Address range of the DMC-520 registers.
+> +- interrupts  : DMC-520 interrupt numbers. The example below specifies
+> +     two interrupt lines for dram_ecc_errc_int and
+> +     dram_ecc_errd_int.
+> +- arm,interrupt-config : This is an array of interrupt masks. For each of the
+> +     above interrupt line, add one interrupt mask element to
+> +     it. That is, there is a 1:1 mapping from each interrupt
+> +     line to an interrupt mask. An interrupt mask can represent
+> +     multiple interrupts being enabled. Refer to interrupt_control
+> +     register in DMC-520 TRM for interrupt mapping. In the example
+> +     below, the interrupt configuration enables dram_ecc_errc_int
+> +     and dram_ecc_errd_int. And each interrupt is connected to
+> +     a separate interrupt line.
+> +
+> +Example:
+> +
+> +dmc0: dmc@200000 {
+> + compatible = "brcm,dmc-520", "arm,dmc-520";
+> + reg = <0x200000 0x80000>;
+> + interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
+> + arm,interrupt-config = <0x4>, <0x8>;
+> +};
+> --
+> 2.17.1
+>
