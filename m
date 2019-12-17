@@ -2,197 +2,143 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32D8C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 02:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5629C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 02:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E31624655
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 02:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C46A24655
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 02:50:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qFYMvuRy"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OwztODRE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfLQCcQ (ORCPT
+        id S1726526AbfLQCuU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 21:32:16 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:36999 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbfLQCcQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 21:32:16 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191217023212epoutp03b896752b908d75f6765fb950bcb80981~hB8_ICBjD1028310283epoutp03d
-        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 02:32:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191217023212epoutp03b896752b908d75f6765fb950bcb80981~hB8_ICBjD1028310283epoutp03d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576549932;
-        bh=mMgaBAjJ5TOxfqNYEjY0AzqFRyeAhiQmYb1750iLmJY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=qFYMvuRyoT3erZtiyejMkF6SAlNXrIghNEfq15mk6Io2Y1XQInU+7DNBeZziaTHKc
-         xTr+mHuPS0HZUzh9pNt9SSbfIHBG7jZARx22rQUVXXr6Gyciwk+7hbKMxUwlIugo7X
-         pED8qMKNBOCh+7q69fLt+ovWqgP43l5s5Cohk8pc=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191217023211epcas1p29255cdf63c8f0d1fdbaca5c7f1d571d5~hB89fCwCJ2705127051epcas1p2r;
-        Tue, 17 Dec 2019 02:32:11 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47cMbr2j3gzMqYlx; Tue, 17 Dec
-        2019 02:32:08 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        37.62.51241.52E38FD5; Tue, 17 Dec 2019 11:32:05 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191217023205epcas1p22da079575ecabcd27216985c27dacbb4~hB83U5Rm-2929129291epcas1p2G;
-        Tue, 17 Dec 2019 02:32:05 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191217023205epsmtrp2042d1da9ef4380ac08eae62d2f1fe5ef~hB83T_kAa2622726227epsmtrp2C;
-        Tue, 17 Dec 2019 02:32:05 +0000 (GMT)
-X-AuditID: b6c32a39-14bff7000001c829-14-5df83e2553f4
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        75.6C.10238.42E38FD5; Tue, 17 Dec 2019 11:32:05 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191217023204epsmtip236f0b41761dc42ae328c48f973093a02~hB82_kLk_2632626326epsmtip2S;
-        Tue, 17 Dec 2019 02:32:04 +0000 (GMT)
-Subject: Re: [v5, PATCH 2/5] dt-bindings: devfreq: add compatible for mt8183
- cci devfreq
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com, fan.chen@mediatek.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <2c875e5e-bd57-3d67-5995-8a450735dbda@samsung.com>
-Date:   Tue, 17 Dec 2019 11:38:39 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
-MIME-Version: 1.0
-In-Reply-To: <1574769046-28449-3-git-send-email-andrew-sh.cheng@mediatek.com>
+        Mon, 16 Dec 2019 21:50:20 -0500
+Received: from mail-eopbgr30072.outbound.protection.outlook.com ([40.107.3.72]:52878
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726859AbfLQCuT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 21:50:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dPq+S92JF077esTAx9ue6Qh53j3536q/5IgSzFD2DqTsSjCfj548Qi9FduQNslm3Vkbozin27O8WplWNVQgEwWvrKKfsED9Y5lFD7WscA/JKIte+qdexv+W6As0zI72HZDnAP0lrhTP0ccBzwi/pbHH6cv3ukK474qnfPo+q/9rZGt0mp+YNv2KrK+oJfQ6kzOqhbhh68q9PtzJjDQTrTUuuB5UHVlr7JjkjBrUWZr1IvZHSfrs+30yfLiugQkQVJDgW6QqYa+tO07VZpuv+oq/OqPnnafBS98IBG7yS9t0DLLRZI+lINTYPfxscrlLGNZ+JkJPsuM1lCk5SiGNSKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gmmHddfra0gGS7w9c8e+0PL+o6cnE/xTkJUf52Sv76c=;
+ b=VTC9V94ynWJiuzVZ8byN2+THeoy1P4fA7ocpg1oApMRDXY5npZ4HlwrmtIF+j9TRAuZg2BcvOAYM+BS+YrkJOgP2xFNSIm5jJfy+N7EwA68tXGWTx29g5hJDLqJ95sPfJT3Fgndk0OgsWsaXKAEsvXEKhAo1c35eL43SCzXaV4t49zpCt9va3w+Hk1WratLWyHL1nAVQj9IJDmkLlfEiROojwMII/65MRYP42MOgnFMzVkpNXqUE4jr0t+I+RP/DNVRO0oiuVr4+DmaRI5DI3yb4gpcElOYQ7/ikbQB5+EDEjC8jXJjky0mXDiAeYPL84acHgiLLyLPPs0PS4gRMjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gmmHddfra0gGS7w9c8e+0PL+o6cnE/xTkJUf52Sv76c=;
+ b=OwztODREkEPniQsheMPgCRaS9rWbHi4Vc1DF7moDrRqFwFEM2/8Nsb3qn4aOSUIo01ZlfWWR24ODlwADcuFSHrrKQVWx82nFkBGb7C24NKVMx0GvZAFfRpUO0rO+HE3f1wJeJ1v9GFQT12W99CuE2R+A1AB/hntCAwblRmbFhUY=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB6954.eurprd04.prod.outlook.com (52.133.242.211) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.18; Tue, 17 Dec 2019 02:50:15 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::2198:bb00:1add:d638]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::2198:bb00:1add:d638%3]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
+ 02:50:15 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Olof Johansson <olof@lixom.net>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Thread-Topic: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Thread-Index: AQHVn1Tsfp+9ZVhNFU2th1+s/za9wae4ifkAgAU/LmA=
+Date:   Tue, 17 Dec 2019 02:50:15 +0000
+Message-ID: <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+In-Reply-To: <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDJsWRmVeSWpSXmKPExsWy7bCmga6q3Y9Yg4btehbb179gtZh/5Byr
-        xbc7v5kszja9YbfY9Pgaq8XlXXPYLC43X2S0+Nx7hNFi6fWLTBZNLcYWtxtXsFm8+XGWyeLM
-        6UusFq17j7Bb/Lu2kcVi+l0hi41fPRwEPdbMW8PosXPWXXaPTas62TzuXNvD5rF5Sb1Hy8n9
-        LB5brrazePRtWcXocfzGdiaPz5vkAriism0yUhNTUosUUvOS81My89JtlbyD453jTc0MDHUN
-        LS3MlRTyEnNTbZVcfAJ03TJzgL5RUihLzCkFCgUkFhcr6dvZFOWXlqQqZOQXl9gqpRak5BRY
-        FugVJ+YWl+al6yXn51oZGhgYmQIVJmRnPLm6gqmgT6Di3aSFLA2Mq3i7GDk4JARMJOa2FXcx
-        cnIICexglFi7urCLkQvI/sQosbrhCCuE841R4vHGj6wgVWAN5/tZIBJ7GSW2HbgH5bxnlLjx
-        9DEzSJWwQJTEnjOLGEESIgKTmCUmbH7ACJJgFrjFKPF6PxuIzSagJbH/xQ0wm19AUeLqj8dg
-        NbwCdhKfeuawgNgsAqoSV193g9miAmESJ7e1QNUISpyc+QQszingK7F83Rc2iPniEreezGeC
-        sOUltr+dwwxyhITALXaJXcdfskP84CLxueUoC4QtLPHq+BaouJTE53d72SDsaomVJ4+wQTR3
-        MEps2X8BGgDGEvuXTmYChR6zgKbE+l36EGFFiZ2/50I9ySfx7msPKySAeSU62oQgSpQlLj+4
-        ywRhS0osbu9km8CoNAvJO7OQvDALyQuzEJYtYGRZxSiWWlCcm55abFhgihzbmxjBKV3Lcgfj
-        sXM+hxgFOBiVeHglSr7HCrEmlhVX5h5ilOBgVhLh3aEAFOJNSaysSi3Kjy8qzUktPsRoCgzt
-        icxSosn5wHyTVxJvaGpkbGxsYWJoZmpoqCTOy/HjYqyQQHpiSWp2ampBahFMHxMHp1QDo4Rk
-        1oukyb7iMXw/qyynHDAqaZr0erpB7r0dymY1RzX/Z1kE3zVdxLjrv/S57ld5m2Wq+JS2z7on
-        vvEws4a8ediZMKXVJs5hBa7sm//O3t2qWTmtKTZ7pkXQ19/W0RFFycXTnRmS/fXdW388eN2o
-        NP+hVw/D8YdZffUMM2f63Lx/UNihp99WiaU4I9FQi7moOBEADvC/vv8DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBIsWRmVeSWpSXmKPExsWy7bCSvK6q3Y9YgwUTmC22r3/BajH/yDlW
-        i293fjNZnG16w26x6fE1VovLu+awWVxuvsho8bn3CKPF0usXmSyaWowtbjeuYLN48+Msk8WZ
-        05dYLVr3HmG3+HdtI4vF9LtCFhu/ejgIeqyZt4bRY+esu+wem1Z1snncubaHzWPzknqPlpP7
-        WTy2XG1n8ejbsorR4/iN7UwenzfJBXBFcdmkpOZklqUW6dslcGU8ubqCqaBPoOLdpIUsDYyr
-        eLsYOTkkBEwk5p7vZwGxhQR2M0rMXscFEZeUmHbxKHMXIweQLSxx+HBxFyMXUMlbRon3TZNY
-        QWqEBaIk9pxZxAiSEBGYxizx9N9rNhCHWeAWo8Sm5iPsEC2PGSVm/XrCCNLCJqAlsf/FDTYQ
-        m19AUeLqj8dgcV4BO4lPPXPAzmARUJW4+robzBYVCJPYueQxE0SNoMTJmU/A4pwCvhLL130B
-        m8MsoC7xZ94lZghbXOLWk/lMELa8xPa3c5gnMArPQtI+C0nLLCQts5C0LGBkWcUomVpQnJue
-        W2xYYJiXWq5XnJhbXJqXrpecn7uJERzfWpo7GC8viT/EKMDBqMTDK1HyPVaINbGsuDL3EKME
-        B7OSCO8OBaAQb0piZVVqUX58UWlOavEhRmkOFiVx3qd5xyKFBNITS1KzU1MLUotgskwcnFIN
-        jBbX55vUrH7S/c1o94KH6exT/B6aql46KCHhJDBjb8JC51S5Ws3DmlH3FffVJKx5uDXYraDk
-        /5mHD77+09z6ZPqZLbyf1PoT+je+jLxoJKA4bY4db1ZyHif3hXKrlXkH1ya+SnB8c2adyuem
-        HVocmiZ7D2jNWtL9bZ7SpDT1+sh0Du3zPkxzfJRYijMSDbWYi4oTAUP8nyHrAgAA
-X-CMS-MailID: 20191217023205epcas1p22da079575ecabcd27216985c27dacbb4
-X-Msg-Generator: CA
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 23e86835-4041-460b-075a-08d7829bd7fd
+x-ms-traffictypediagnostic: DB8PR04MB6954:|DB8PR04MB6954:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB69544E641E65A9C1B5D141C684500@DB8PR04MB6954.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(4636009)(346002)(396003)(376002)(39860400002)(136003)(366004)(199004)(189003)(13464003)(8936002)(71200400001)(81166006)(81156014)(478600001)(8676002)(9686003)(26005)(66446008)(64756008)(66556008)(5660300002)(66476007)(110136005)(54906003)(316002)(86362001)(7696005)(186003)(33656002)(52536014)(76116006)(6506007)(4326008)(66946007)(2906002)(53546011)(55016002)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6954;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 40bkpwVWTZ11z1B4FkanbXLFwT65eEs29yvwozaO5N5+RkEfd7w8DWD38vhGuBDy8xixOtHVaN1+blZzY+/PwSwh3TmFhJ99JnjAGC6yLNa88VRmfiZePs1dSj48KhQwT4rOJHKmAYu7Gr6Up82AlX9TxILMG2Q3rGGgk8qPaOxMqI9MtkjUG/DM9evKYegRdEE+VCt1sJz+K2NKXh411a9CLTc07uht/kKrexuo4lsoxEKCBmWio1OR/X2fH7Gc63jfb6x8R1APPSR4uxjjSY1UscgcevEsUTGEThuiLMIJCNHHTL5UV12DgvSF3/s42N2pExIEg+srtUI/jraw550LqZF0bnL+4rTTWANmbEPX2X08KZjH8ZaJGxDyTfXKNQNJ78pjb1YQs1nbIw29Jpd8UaDce4IgaiiZ2mAYIiTHViMNf6CFdfUen/2PqZbqUcS4ERlLEwKyF8wECVBBUq+v2wopW96hvtbpdnDoJH0/REpm2ilA+XAzCAu6o8oZ
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191126115134epcas5p43ec69b25093165dad94f95e9213804cb
-References: <1574769046-28449-1-git-send-email-andrew-sh.cheng@mediatek.com>
-        <CGME20191126115134epcas5p43ec69b25093165dad94f95e9213804cb@epcas5p4.samsung.com>
-        <1574769046-28449-3-git-send-email-andrew-sh.cheng@mediatek.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23e86835-4041-460b-075a-08d7829bd7fd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 02:50:15.0630
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0S1YSLxYqEyWXvHhoqT9raJdjpDw4OuKyKDvu5EyYkmt76lRwJIM1/wfVisFIkpgwtHd5xY9Zm5+/8PS4NAvXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6954
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On 11/26/19 8:50 PM, Andrew-sh.Cheng wrote:
-> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-> 
-> This adds dt-binding documentation of cci devfreq
-> for Mediatek MT8183 SoC platform.
-> 
-> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> ---
->  .../bindings/devfreq/mt8183-cci-devfreq.txt          | 20 ++++++++++++++++++++
-
-mt8183-cci.txt is better without 'devfreq' word.
-
-I recommend to make the binding document with yaml.
-You can refer to the example[1]
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/commit/?h=devfreq-next&id=6ad0b4fb960c3bc32034d8f3ec7609c8bcb8d9a4
-
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt b/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
-> new file mode 100644
-> index 000000000000..a65a70bb9f09
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
-> @@ -0,0 +1,20 @@
-> +* Mediatek Cache Coherent Interconnect(CCI) frequency device
-
-recommend to add the more detailed description 
-of what is the role of this driver.
-
-> +
-> +Required properties:
-> +- compatible: should contain "mediatek,mt8183-cci" for frequency scaling of CCI
-> +- clocks: for frequency scaling of CCI
-> +- clock-names: for frequency scaling of CCI driver to reference
-
-	
-
-> +- regulator: for voltage scaling of CCI
-> +- operating-points-v2: for frequency scaling of CCI opp table
-> +
-> +Example:
-> +	cci: cci {
-> +		compatible = "mediatek,mt8183-cci";
-> +		clocks = <&apmixedsys CLK_APMIXED_CCIPLL>;
-> +		clock-names = "cci_clock";
-
-Recommend to use 'cci' without '_clock' because we can
-know that it's clock name event if '_clock'.
-
-> +		operating-points-v2 = <&cci_opp>;
-> +	};
-> +
-> +	&cci {
-> +		proc-supply = <&mt6358_vproc12_reg>;
-> +	};
-> \ No newline at end of file
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+SGkgTG9yZW56bywNCg0KVGhlIHY5IHBhdGNoZXMgaGF2ZSBhZGRyZXNzZWQgdGhlIGNvbW1lbnRz
+IGZyb20gQW5kcmV3LCBhbmQgaXQgaGFzIGJlZW4gZHJpZWQgYWJvdXQgMSBtb250aCwgY2FuIHlv
+dSBoZWxwIHRvIGFwcGx5IHRoZW0/DQoNClRoYW5rcywNClpoaXFpYW5nDQoNCj4gLS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogT2xvZiBKb2hhbnNzb24gPG9sb2ZAbGl4b20ubmV0
+Pg0KPiBTZW50OiAyMDE55bm0MTLmnIgxNOaXpSAyOjM3DQo+IFRvOiBaLnEuIEhvdSA8emhpcWlh
+bmcuaG91QG54cC5jb20+OyBiaGVsZ2Fhc0Bnb29nbGUuY29tDQo+IENjOiBsaW51eC1wY2lAdmdl
+ci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0K
+PiByb2JoK2R0QGtlcm5lbC5vcmc7IGFybmRAYXJuZGIuZGU7IG1hcmsucnV0bGFuZEBhcm0uY29t
+Ow0KPiBsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluOyBzaGF3bmd1b0BrZXJuZWwub3JnOw0K
+PiBtLmthcnRoaWtleWFuQG1vYml2ZWlsLmNvLmluOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNv
+bT47DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29t
+Ow0KPiB3aWxsLmRlYWNvbkBhcm0uY29tOyBhbmRyZXcubXVycmF5QGFybS5jb207IE1pbmdrYWkg
+SHUNCj4gPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAu
+Y29tPjsgWGlhb3dlaSBCYW8NCj4gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0h2OSAwMC8xMl0gUENJOiBSZWNvZGUgTW9iaXZlaWwgZHJpdmVyIGFuZCBhZGQgUENJ
+ZSBHZW40DQo+IGRyaXZlciBmb3IgTlhQIExheWVyc2NhcGUgU29Dcw0KPiANCj4gSGkhDQo+IA0K
+PiBPbiBUdWUsIE5vdiAxOSwgMjAxOSBhdCA3OjQ1IFBNIFoucS4gSG91IDx6aGlxaWFuZy5ob3VA
+bnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhv
+dUBueHAuY29tPg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBzZXQgaXMgdG8gcmVjb2RlIHRoZSBNb2Jp
+dmVpbCBkcml2ZXIgYW5kIGFkZCBQQ0llIHN1cHBvcnQNCj4gPiBmb3IgTlhQIExheWVyc2NhcGUg
+c2VyaWVzIFNvQ3MgaW50ZWdyYXRlZCBNb2JpdmVpbCdzIFBDSWUgR2VuNA0KPiA+IGNvbnRyb2xs
+ZXIuDQo+IA0KPiBDYW4gd2UgZ2V0IGEgcmVzcGluIGZvciB0aGlzIG9uIHRvcCBvZiB0aGUgNS41
+IG1lcmdlIHdpbmRvdyBtYXRlcmlhbD8NCj4gR2l2ZW4gdGhhdCBpdCdzIGEgYnVuY2ggb2YgcmVm
+YWN0b3JpbmdzLCBtYW55IG9mIHRoZW0gZG9uJ3QgYXBwbHkgb24gdG9wIG9mDQo+IHRoZSBtYXRl
+cmlhbCB0aGF0IHdhcyBtZXJnZWQuDQo+IA0KPiBJJ2QgbG92ZSB0byBzZWUgdGhlc2UgZ28gaW4g
+c29vbmVyIHJhdGhlciB0aGFuIGxhdGVyIHNvIEkgY2FuIHN0YXJ0IGdldHRpbmcgLW5leHQNCj4g
+cnVubmluZyBvbiBsczIxNjBhIGhlcmUuDQo+IA0KPiANCj4gLU9sb2YNCg==
