@@ -1,94 +1,287 @@
-Return-Path: <SRS0=leSB=Z7=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB62C43603
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A10FEC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 18:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE93C20726
-	for <linux-devicetree@archiver.kernel.org>; Mon,  9 Dec 2019 09:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07154206EC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 18:02:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="iXuhNMyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfLIJne (ORCPT
+        id S1727813AbfLQSCD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:43:34 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40330 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbfLIJne (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Dec 2019 04:43:34 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 2A03928DF20;
-        Mon,  9 Dec 2019 09:43:32 +0000 (GMT)
-Date:   Mon, 9 Dec 2019 10:43:28 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
-        Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Clark <robdclark@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 17 Dec 2019 13:02:03 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.166]:31411 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727754AbfLQSCD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 13:02:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576605718;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=BCgViyEUHggaH/2A66pubiKAk00tvESIUfyUxBf6x1Q=;
+        b=iXuhNMyjRKgn0uxt9a3yu2BD8nmJTbz/gAFVRWihO6ZPtR+jzPtXetamJVy6RDA3oF
+        RmmYqRri0f3UGQB3XehlV9XeR8/NnrX2H5W2+77tbEBW7XXFRtd0hXKxsrWz0j3L5vFU
+        +J63856OM/bRhL+EpocPBPhbaLj2Qt/trohPDpSjZA70w+QJE2Ew5MBQdy/+N5Gug7iT
+        bGHEyMrL2r9T14aPTSQfoCWmWn0pHx3NZxBTctbc0dsKTUvtR3d86YMbs8rRVTcNRalw
+        Owr09WkSciJGaQVSDpjyoy5ACWr4UNwdaTbLhesEO8jupaZBEGVP7CAIJa+n82Sut1P3
+        AAOQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlWeXA4JZbo="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.0.7 DYNA|AUTH)
+        with ESMTPSA id q020e2vBHI1h2dM
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Tue, 17 Dec 2019 19:01:43 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH v3 1/8] dt-bindings: add img,pvrsgx.yaml for Imagination GPUs
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20191205170113.GA853@bogus>
+Date:   Tue, 17 Dec 2019 19:01:42 +0100
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v4 00/11] drm: Add support for bus-format negotiation
-Message-ID: <20191209104328.7eeb707a@collabora.com>
-In-Reply-To: <20191203181924.GU4730@pendragon.ideasonboard.com>
-References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
-        <20191203181924.GU4730@pendragon.ideasonboard.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A9C93118-7E78-4910-8446-AF1E7827C23E@goldelico.com>
+References: <cover.1574595627.git.hns@goldelico.com> <c93eff41b4a85ec01fa01819af8a380b7465e01c.1574595627.git.hns@goldelico.com> <20191205170113.GA853@bogus>
+To:     Rob Herring <robh@kernel.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 3 Dec 2019 20:19:24 +0200
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+Hi Rob,
+sorry for the delay. I wanted to wait for v5.5-rc1 and it did take =
+longer...
 
-> Hi Boris,
-> 
-> On Tue, Dec 03, 2019 at 03:15:04PM +0100, Boris Brezillon wrote:
-> > This patch series aims at adding support for runtime bus-format
-> > negotiation between all elements of the
-> > 'encoder -> bridges -> connector/display' section of the pipeline.
-> > 
-> > In order to support that, we need drm bridges to fully take part in the
-> > atomic state validation process, which requires adding a
-> > drm_bridge_state and a new drm_bridge_funcs.atomic_check() hook.
-> > Once those basic building blocks are in place, we can add new hooks to
-> > allow bus format negotiation (those are called just before  
-> > ->atomic_check()). The bus format selection is done at runtime by  
-> > testing all possible combinations across the whole bridge chain until
-> > one is reported to work.
-> > 
-> > No Major changes in this v4. I think I addressed all comments I got
-> > from Neil and Laurent (thanks for the detailed reviews BTW). Note that
-> > this version only contains core changes. Once those changes are merged
-> > I'll send the imx/panel/lvds-codec specific bits.  
-> 
-> I think it would make sense to fast-track patches 01 to 07 (a bit
-> selfishly as I would have a need for them in omapdrm :-)),
+> Am 05.12.2019 um 18:01 schrieb Rob Herring <robh@kernel.org>:
+>=20
+> On Sun, Nov 24, 2019 at 12:40:21PM +0100, H. Nikolaus Schaller wrote:
+>> The Imagination PVR/SGX GPU is part of several SoC from
+>> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo
+>> and others.
+>>=20
+>> With this binding, we describe how the SGX processor is
+>> interfaced to the SoC (registers, interrupt etc.).
+>>=20
+>> In most cases, Clock, Reset and power management is handled
+>> by a parent node or elsewhere.
+>>=20
+>> Tested by make dt_binding_check dtbs_check
+>>=20
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 83 =
++++++++++++++++++++
+>> 1 file changed, 83 insertions(+)
+>> create mode 100644 =
+Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml =
+b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+>> new file mode 100644
+>> index 000000000000..fe206a53cbe1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+>> @@ -0,0 +1,83 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>=20
+> Dual license new bindings: (GPL-2.0-only OR BSD-2-Clause)
 
-I just queued patches 1 to 7 to drm-misc-next.
+What are the consequences?
+
+>=20
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Imagination PVR/SGX GPU
+>> +
+>> +maintainers:
+>> +  - H. Nikolaus Schaller <hns@goldelico.com>
+>> +
+>> +description: |+
+>> +  This binding describes the Imagination SGX5 series of 3D =
+accelerators which
+>> +  are found in several different SoC like TI OMAP, Sitara, Ingenic =
+JZ4780,
+>> +  Allwinner A83, and Intel Poulsbo and CedarView and more.
+>> +
+>> +  For an almost complete list see: =
+https://en.wikipedia.org/wiki/PowerVR#Implementations
+>> + =20
+>> +  Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently =
+covered by
+>> +  this binding but the extension of the pattern is straightforward.
+>> + =20
+>> +  The SGX node is usually a child node of some DT node belonging to =
+the SoC
+>> +  which handles clocks, reset and general address space mapping of =
+the SGX
+>> +  register area.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +    # BeagleBoard ABC, OpenPandora 600MHz
+>=20
+> I'd expect compatibles to be per SoC, not per board.
+
+Yes.
+
+The boards are examples I can test, but any board with the same SoC =
+should work.
+I have added "Example: " in front of all these comments.
+
+>=20
+>> +      - ti,omap3-sgx530-121, img,sgx530-121, img,sgx530, img,sgx5
+>=20
+> 4 compatibles is probably a bit much. Are there not any version or=20
+> feature registers that some of this could be detected?
+
+Well, there are hints that they exist but there is no good documentation
+about it. This means that at the moment the user-space must be able to
+identify the correct blobs that are to be used for a specific SoC. And
+we need different variants compiled as .ko and loaded on demand.
+
+The first one is also used to match different .ko builds from the same
+source tree with different macro definitions for the individual SoC.
+
+It may be possible that we end up in a more generic driver that only =
+matches
+on one of the second to fourth compatible record, and asks runtime API =
+about
+the SoC, but at the moment this does not exist.
+
+> If there are, I'd=20
+> assume the middle 2 strings could be dropped. If not, drop the last =
+one=20
+> and just match on the 3rd string. It's not a long list.
+
+The fourth one is intended to be able distinguish between sgx5 and sgx6.
+
+I also found that I have not defined it in most of the device tree =
+patches.
+
+But yes, we can drop it since AFAIK there are no activities for sgx6.
+And if they start, we can update bindings and boards.
+
+
+>=20
+>> +    # BeagleBoard XM, GTA04, OpenPandora 1GHz
+>> +      - ti,omap3-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
+>> +    # BeagleBone Black
+>> +      - ti,am3352-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
+>> +    # Pandaboard, Pandaboard ES
+>> +      - ti,omap4-sgx540-120, img,sgx540-120, img,sgx540, img,sgx5
+>> +      - ti,omap4-sgx544-112, img,sgx544-112, img,sgx544, img,sgx5
+>> +    # OMAP5 UEVM, Pyra Handheld
+>> +      - ti,omap5-sgx544-116, img,sgx544-116, img,sgx544, img,sgx5
+>> +      - ti,dra7-sgx544-116, img,sgx544-116, img,sgx544, img,sgx5
+>> +    # CI20
+>> +      - ingenic,jz4780-sgx540-120, img,sgx540-120, img,sgx540, =
+img,sgx5
+>> +    # the following entries are not validated with real hardware
+>> +    # more TI
+>> +      - ti,am3517-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
+>> +      - ti,am4-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
+>> +      - ti,ti81xx-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
+>> +    # Banana-Pi-M3 (Allwinner A83T)
+>> +      - allwinner,sun8i-a83t-sgx544-116, img,sgx544-116, img,sgx544, =
+img,sgx5
+>> +    # Atom Z5xx
+>> +      - intel,poulsbo-gma500-sgx535, img,sgx535-116, img,sgx535, =
+img,sgx5
+>> +    # Atom Z24xx
+>> +      - intel,medfield-gma-sgx540, img,sgx540-116, img,sgx540, =
+img,sgx5
+>> +    # Atom N2600, D2500
+>> +      - intel,cedarview-gma3600-sgx545, img,sgx545-116, img,sgx545, =
+img,sgx5
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +    description: physical base address and length of the register =
+area
+>=20
+> No need to give a generic description of a standard property.
+
+Ok. Dropped.
+
+>=20
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +    description: interrupt line from SGX subsystem to core processor
+>=20
+> Same here.
+
+Ok. Dropped.
+
+>=20
+>> +
+>> +  clocks:
+>> +    description: optional clocks
+>=20
+> Need to define how many and what they are. Or drop until you know.
+
+It differs depending on the integration of the SoC. OMAP does not need
+any clock defintions on the gpu node (clocks are handled by sysc parent)
+while JZ4780 needs one (at least in the v3.18 vendor kernel with working
+SGX).
+
+>=20
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>=20
+> Add:
+>=20
+> additionalProperties: false
+
+Ok.
+
+>=20
+>> +
+>> +examples:
+>> +  - |+
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +    gpu@fe00 {
+>> +      compatible =3D "ti,omap-omap5-sgx544-116", "img,sgx544-116", =
+"img,sgx544", "img,sgx5";
+>> +      reg =3D <0xfe00 0x200>;
+>> +      interrupts =3D <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+>> +    };
+>> +
+>> +...
+>> --=20
+>> 2.23.0
+>>=20
+
+[PATCH v4] coming.
+
+BR and thanks,
+Nikolaus
+
