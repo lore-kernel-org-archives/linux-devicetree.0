@@ -2,151 +2,60 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FC4C2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 08:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D6AC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 08:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69589207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 08:01:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FXp9LRcr"
+	by mail.kernel.org (Postfix) with ESMTP id 5B79420663
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 08:14:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfLQIBx (ORCPT
+        id S1726141AbfLQIOh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:01:53 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45266 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbfLQIBt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 03:01:49 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j42so5992984wrj.12
-        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 00:01:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=RYcPZBxNs0LR8aI9ut6hb3/+3nGM5FU0mpuZVJVKBqM=;
-        b=FXp9LRcrDVkA8WcZNt2DGB5je9rP0L5nXs3II0LD3mnz5nxHRMKsTZDw7Rh7CVsHnd
-         Trf/CAJzgiDWE9gsqQS8mcfLBVv/grKk5XvYMo1D0ZvTjsCRtgoJMWjYF/he3STC5esP
-         vuuF0AhTDWnNwTsVc0tSPOmJcXGvngA4IOnO3g35RrvgMZr4z9J05nYyAngrwSYYUmg7
-         Prk/Vzr8zNT27ztxarf9DrfMY7RCTX0H+lZsQ74pe1HPifj6EZlkhjt7lBFTj8cGuHcN
-         diJwgVe1gqW8cgZgNi2TQgIyfUNGpCBYiGOHNnJ4EIpvKuN6PdZM5Aawlms+ugwxNBnJ
-         2XhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=RYcPZBxNs0LR8aI9ut6hb3/+3nGM5FU0mpuZVJVKBqM=;
-        b=Qdx/YZB+/oWUs+YbYv5fyovqujLVk2kQMXc1b2fHQBtsoC/6XT6sQUMsmYqFfmP0Nj
-         1PuxRpM5N1zZuubQUaWqtGgnIOtxHiRtCrHFR1za7itSTeZajvyXSFenTFNLl5MPUma3
-         LcLUrf3SsbZ/XMJ4/jqrnhU4zpz0ZF4kP9GfEYFp1roiAQNJrEtjfUlASFQWUC6/ub6P
-         Um3lpbYNnd/+lcxCIJZjru20a09BupYd57ieFdL1YXYUQ3cb3CceH8hK4s/uZqAYufpK
-         0WWsEQ7M9mGIgEBIMcycbww7qsPbTkrs+qNmtp66CxRGhqKFh+IZnLu9Mk6D6t73SbIc
-         beLQ==
-X-Gm-Message-State: APjAAAVfu2/5QsRYAA5BmeyjT+4MI2AgjMhgx06mXH6o8dDknrhmgX6k
-        uSJAmXVJKUbEOglgw6r54xCEJg==
-X-Google-Smtp-Source: APXvYqxRCna04c3LCNHy/aOTiZ+ysA7HIsZXfmIuviSjkwuNxXEkaWZmYBaJ5/NmY97Bk79fZC35CA==
-X-Received: by 2002:a5d:4749:: with SMTP id o9mr34127834wrs.242.1576569706892;
-        Tue, 17 Dec 2019 00:01:46 -0800 (PST)
-Received: from dell (h185-20-99-142.host.redstation.co.uk. [185.20.99.142])
-        by smtp.gmail.com with ESMTPSA id p26sm2020498wmc.24.2019.12.17.00.01.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 00:01:46 -0800 (PST)
-Date:   Tue, 17 Dec 2019 08:01:46 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH v4 4/5] mfd: rn5t618: add more subdevices
-Message-ID: <20191217080146.GE18955@dell>
-References: <20191211215409.32764-1-andreas@kemnade.info>
- <20191211215409.32764-5-andreas@kemnade.info>
- <20191216153106.GK2369@dell>
- <20191216170000.022a4c31@kemnade.info>
+        Tue, 17 Dec 2019 03:14:37 -0500
+Received: from out28-97.mail.aliyun.com ([115.124.28.97]:49596 "EHLO
+        out28-97.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfLQIOh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 03:14:37 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3438675|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0135656-0.000354012-0.98608;DS=CONTINUE|ham_system_inform|0.00693413-0.00157795-0.991488;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07426;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.GIuIYRX_1576570455;
+Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GIuIYRX_1576570455)
+          by smtp.aliyun-inc.com(10.147.40.44);
+          Tue, 17 Dec 2019 16:14:27 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, mark.rutland@arm.com,
+        paul@crapouillou.net, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 2374286503@qq.com
+Subject: [PATCH v3 0/2] Add I2C support for the Ingenic X1000 SoC v3
+Date:   Tue, 17 Dec 2019 16:14:08 +0800
+Message-Id: <1576570450-122556-2-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576570450-122556-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576570450-122556-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191216170000.022a4c31@kemnade.info>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 16 Dec 2019, Andreas Kemnade wrote:
+v2->v3:
+Fix coding-style issues.
 
-> On Mon, 16 Dec 2019 15:31:06 +0000
-> Lee Jones <lee.jones@linaro.org> wrote:
-> 
-> > On Wed, 11 Dec 2019, Andreas Kemnade wrote:
-> > 
-> > > The RC5T619 has a RTC which is missing in the
-> > > RN5T618. Add it as subdevice to prepare for their implementation
-> > > 
-> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > > ---
-> > > Changes in v3:
-> > > - alignment cleanup
-> > >  drivers/mfd/rn5t618.c | 16 ++++++++++++++--
-> > >  1 file changed, 14 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-> > > index d78eb29b94a4..18d56a732b20 100644
-> > > --- a/drivers/mfd/rn5t618.c
-> > > +++ b/drivers/mfd/rn5t618.c
-> > > @@ -22,6 +22,12 @@ static const struct mfd_cell rn5t618_cells[] = {
-> > >  	{ .name = "rn5t618-wdt" },
-> > >  };
-> > >  
-> > > +static const struct mfd_cell rc5t619_cells[] = {
-> > > +	{ .name = "rn5t618-regulator" },
-> > > +	{ .name = "rc5t619-rtc" },
-> > > +	{ .name = "rn5t618-wdt" },
-> > > +};
-> > > +
-> > >  static bool rn5t618_volatile_reg(struct device *dev, unsigned int reg)
-> > >  {
-> > >  	switch (reg) {
-> > > @@ -173,8 +179,14 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
-> > >  		return ret;
-> > >  	}
-> > >  
-> > > -	ret = devm_mfd_add_devices(&i2c->dev, -1, rn5t618_cells,
-> > > -				   ARRAY_SIZE(rn5t618_cells), NULL, 0, NULL);
-> > > +	if (priv->variant == RC5T619)
-> > > +		ret = devm_mfd_add_devices(&i2c->dev, -1, rc5t619_cells,  
-> > 
-> > Ref: The "-1", please use this as an opportunity to use the defines.
-> > 
-> > > +					   ARRAY_SIZE(rc5t619_cells),
-> > > +					   NULL, 0, NULL);
-> > > +	else  
-> > 
-> > Are you sure it's not possible for 'variant' to be an unsupported
-> > device?
-> > 
-> Well, does it change the behavior for devices other than the rc5t619?
-> I do not think so. If the mfd driver is bound to unsupported devices,
-> rn5t618_of_match is wrong.
+周琰杰 (Zhou Yanjie) (2):
+  dt-bindings: I2C: Add X1000 bindings.
+  I2C: JZ4780: Add support for the X1000.
 
-Right, and can you catch that?
-
-> Or do you want separate cell arrays for each of the three variant now to
-> ease future extensions?
-
-No need for that, thank you.
+ .../devicetree/bindings/i2c/i2c-jz4780.txt         |   4 +-
+ drivers/i2c/busses/i2c-jz4780.c                    | 156 +++++++++++++++------
+ 2 files changed, 119 insertions(+), 41 deletions(-)
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
+
