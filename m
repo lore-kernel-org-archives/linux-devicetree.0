@@ -2,207 +2,99 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A22D3C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3261C2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACA02146E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C95EC2146E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfLQL6b (ORCPT
+        id S1726709AbfLQMB1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:58:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:34626 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727487AbfLQL6b (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:58:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0946D328;
-        Tue, 17 Dec 2019 03:58:30 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76AFA3F6CF;
-        Tue, 17 Dec 2019 03:58:29 -0800 (PST)
-Date:   Tue, 17 Dec 2019 11:58:27 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH 04/13] PCI: cadence: Add support to start link and verify
- link status
-Message-ID: <20191217115826.GA24359@e119886-lin.cambridge.arm.com>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-5-kishon@ti.com>
+        Tue, 17 Dec 2019 07:01:27 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:51715 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbfLQMB1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 07:01:27 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id DB4273C057F;
+        Tue, 17 Dec 2019 13:01:24 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0TeibO5qeoXj; Tue, 17 Dec 2019 13:01:19 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id D400A3C00BB;
+        Tue, 17 Dec 2019 13:01:19 +0100 (CET)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 17 Dec
+ 2019 13:01:19 +0100
+Date:   Tue, 17 Dec 2019 13:01:16 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Magnus Damm <magnus.damm@gmail.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v2 0/6] arm64: dts: renesas: r8a77961: Add more device
+ nodes
+Message-ID: <20191217120116.GA11814@vmlxhi-102.adit-jv.com>
+References: <20191216124740.16647-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20191209092147.22901-5-kishon@ti.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20191216124740.16647-1-geert+renesas@glider.be>
+X-Originating-IP: [10.72.93.66]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 02:51:38PM +0530, Kishon Vijay Abraham I wrote:
-> Add cdns_pcie_ops to start link and verify link status. The registers
-> to start link and to check link status is in Platform specific PCIe
-> wrapper. Add support for platform specific drivers to add callback
-> functions for the PCIe Cadence core to start link and verify link status.
+Hi Geert,
+
+On Mon, Dec 16, 2019 at 01:47:34PM +0100, Geert Uytterhoeven wrote:
+> 	Hi all,
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../pci/controller/cadence/pcie-cadence-ep.c  |  8 ++++++
->  .../controller/cadence/pcie-cadence-host.c    | 28 +++++++++++++++++++
->  drivers/pci/controller/cadence/pcie-cadence.h | 23 +++++++++++++++
->  3 files changed, 59 insertions(+)
+> This patch series broadens support for the R-Car M3-W+ (aka R-Car M3-W
+> ES3.0) Soc (R8A77961), by adding more device nodes to its DT source
+> file, up to what can be tested reasonably using remote access.
+> For your convenience, it is available in the topic/r8a77961-v2 branch of
+> my renesas-drivers git repository at
+> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
+
+I only see below r8a77961.dtsi commit on topic/r8a77961-v2:
+8e4529f2ac8293 ("arm64: dts: renesas: Add Renesas R8A77961 SoC support")
+
+It looks like the patches are from one of below branches?
+ - topic/r8a77961-extra-v2
+ - topic/topic/r8a77961-extra-v1
+
+> Changes compared to v1:
+>   - Group SYS-DMAC interrupt specifiers.
 > 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> index 560f22b4d165..088394b6be04 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> @@ -355,8 +355,10 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
->  {
->  	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
->  	struct cdns_pcie *pcie = &ep->pcie;
-> +	struct device *dev = pcie->dev;
->  	struct pci_epf *epf;
->  	u32 cfg;
-> +	int ret;
->  
->  	/*
->  	 * BIT(0) is hardwired to 1, hence function 0 is always enabled
-> @@ -367,6 +369,12 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
->  		cfg |= BIT(epf->func_no);
->  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
->  
-> +	ret = cdns_pcie_start_link(pcie, true);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to start link\n");
-> +		return ret;
-> +	}
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index ccf55e143e1d..0929554f5a81 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -3,6 +3,7 @@
->  // Cadence PCIe host controller driver.
->  // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
->  
-> +#include <linux/delay.h>
->  #include <linux/kernel.h>
->  #include <linux/of_address.h>
->  #include <linux/of_pci.h>
-> @@ -201,6 +202,23 @@ static int cdns_pcie_host_init(struct device *dev,
->  	return err;
->  }
->  
-> +static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->dev;
-> +	int retries;
-> +
-> +	/* Check if the link is up or not */
-> +	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
-> +		if (cdns_pcie_is_link_up(pcie)) {
-> +			dev_info(dev, "Link up\n");
-> +			return 0;
-> +		}
-> +		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
-> +	}
-> +
-> +	return -ETIMEDOUT;
-> +}
-
-This patch looks fine, except this function (above) is identical to
-dw_pcie_wait_for_link, advk_pcie_wait_for_link and nwl_wait_for_link. Even
-the definitions of LINK_WAIT_USLEEP_xx are the same.
-
-I don't see any justification to duplicating this again - can you consolidate
-these functions to something that all controller drivers can use?
-
-Thanks,
-
-Andrew Murray
-
-> +
->  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  {
->  	struct device *dev = rc->pcie.dev;
-> @@ -254,6 +272,16 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  
->  	pcie->mem_res = res;
->  
-> +	ret = cdns_pcie_start_link(pcie, true);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to start link\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = cdns_pcie_host_wait_for_link(pcie);
-> +	if (ret)
-> +		dev_dbg(dev, "PCIe link never came up\n");
-> +
->  	ret = cdns_pcie_host_init(dev, &resources, rc);
->  	if (ret)
->  		goto err_init;
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index d0d91c69fa1d..f0395eaf9df5 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -10,6 +10,11 @@
->  #include <linux/pci.h>
->  #include <linux/phy/phy.h>
->  
-> +/* Parameters for the waiting for link up routine */
-> +#define LINK_WAIT_MAX_RETRIES	10
-> +#define LINK_WAIT_USLEEP_MIN	90000
-> +#define LINK_WAIT_USLEEP_MAX	100000
-> +
->  /*
->   * Local Management Registers
->   */
-> @@ -226,6 +231,8 @@ enum cdns_pcie_msg_routing {
->  struct cdns_pcie_ops {
->  	u32	(*read)(void __iomem *addr, int size);
->  	void	(*write)(void __iomem *addr, int size, u32 value);
-> +	int	(*start_link)(struct cdns_pcie *pcie, bool start);
-> +	bool	(*is_link_up)(struct cdns_pcie *pcie);
->  };
->  
->  /**
-> @@ -447,6 +454,22 @@ static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
->  	return readl(addr);
->  }
->  
-> +static inline int cdns_pcie_start_link(struct cdns_pcie *pcie, bool start)
-> +{
-> +	if (pcie->ops->start_link)
-> +		return pcie->ops->start_link(pcie, start);
-> +
-> +	return 0;
-> +}
-> +
-> +static inline bool cdns_pcie_is_link_up(struct cdns_pcie *pcie)
-> +{
-> +	if (pcie->ops->is_link_up)
-> +		return pcie->ops->is_link_up(pcie);
-> +
-> +	return true;
-> +}
-> +
->  #ifdef CONFIG_PCIE_CADENCE_HOST
->  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
->  #else
-> -- 
-> 2.17.1
+> This has been tested on a Salvator-XS development board.
+> More details can be found in the individual patches.
 > 
+> To be queued in renesas-devel for v5.6.
+> Thanks!
+> 
+> Geert Uytterhoeven (6):
+>   arm64: dts: renesas: r8a77961: Add RWDT node
+>   arm64: dts: renesas: r8a77961: Add GPIO nodes
+>   arm64: dts: renesas: r8a77961: Add RAVB node
+>   arm64: dts: renesas: r8a77961: Add SYS-DMAC nodes
+>   arm64: dts: renesas: r8a77961: Add I2C nodes
+>   arm64: dts: renesas: r8a77961: Add SDHI nodes
+
+Thanks for your time and for the helpful minimal test-cases, which
+can be reused in future bring-ups.
+
+-- 
+Best Regards,
+Eugeniu
