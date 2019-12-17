@@ -2,170 +2,170 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D7BC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB54C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 502D9207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D9AD20733
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:58:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="a4aLz8mh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OGsiv4nD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfLQJzn (ORCPT
+        id S1726784AbfLQJ6G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:55:43 -0500
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.112]:52695 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726700AbfLQJzn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 04:55:43 -0500
-Received: from [85.158.142.204] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-1.bemta.az-b.eu-central-1.aws.symcld.net id 13/A4-12462-B16A8FD5; Tue, 17 Dec 2019 09:55:39 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCJsWRWlGSWpSXmKPExsWSoc9iqiu97Ee
-  swepnQhbzj5xjtVg1dSeLxf2vRxktpvxZzmSxef4fRovLu+awWXzYdZXZonXvEXYHDo9NqzrZ
-  PO5c28Pm0f/XwOPzJrkAlijWzLyk/IoE1oy1Z96zFXSwVRzYPYW9gfEdSxcjJwejwFJmiYlzM
-  7oYuYDsYywSP5q62SCczYwSv3t/gjksAieYJZqfzAVzhASmMUm8uvWQGcJ5wiix9/BcsGFsAh
-  YSk088YAOxRQRCJV4fbQQrYhbYyCyxZvJ0RpCEsICbxMe7L1kgitwlrrw8zQph+0n8aT8I1sw
-  ioCox8etqMJtXIFFix8MmVohtT5kkzs3/AdbAKWAiMWFnGyvEG7ISXxpXM4PYzALiEreezGcC
-  sSUEBCSW7DnPDGGLSrx8/A+qPlXiZNMNRoi4jsTZ60+gbCWJeXOPQNmyEpfmdwPZHEC2r0TLK
-  T6Y8i0/zrNC2BYSS7pbWSBKVCT+HaqECBdIbPl9hg3CVpM4O7Ed6gIZidszOsBekRBYwSIx4e
-  YexgmM+rOQXA1h60gs2P2JDcLWlli28DXzLHBQCEqcnPmEZQEjyypGi6SizPSMktzEzBxdQwM
-  DXUNDY11zXSMLvcQq3SS91FLd5NS8kqJEoKReYnmxXnFlbnJOil5easkmRmACSylkl9nBOO/r
-  W71DjJIcTEqivDzuP2KF+JLyUyozEosz4otKc1KLDzHKcHAoSfA2LwTKCRalpqdWpGXmAJMpT
-  FqCg0dJhJdlCVCat7ggMbc4Mx0idYpRl2PCy7mLmIVY8vLzUqXEectBigRAijJK8+BGwBL7JU
-  ZZKWFeRgYGBiGegtSi3MwSVPlXjOIcjErCvOYgU3gy80rgNr0COoIJ6Agjv28gR5QkIqSkGpi
-  kXl9XETzBp+wapOPZ7BS0lyuRu9zvVdApu0fxotHxDP+qBCL5PpzZWPSsjNdWzzV4ufYq1vTV
-  Ajlb+VdsveQlMyczTr1R7+CWHb8+GDlJr8wOXC/Y11J43lvrzd+Tuw9de7yzfzOvhXf9MsP7c
-  wrS+NlO977/G9kjbXEuaGudVHnnuvyLGvYeZ6c5qfzOKuaSeCPu0+4Xr36Y7bvmPoucw098gz
-  s+5ordzDhqrZw/V7h405P069p/DKN2vPE4VvE57rX37e2rmfoF55k+M3n9x1n6Ud3t+w7vzv2
-  7v/y16BHNn2qpd3WYCqevs40snD1h7pXnUzPOy5pFnEg+cTYwTtik/0qSj/NU25DLqUosxRmJ
-  hlrMRcWJAC5o6wxnBAAA
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-13.tower-249.messagelabs.com!1576576538!724236!1
-X-Originating-IP: [104.47.4.53]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.22; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 10360 invoked from network); 17 Dec 2019 09:55:39 -0000
-Received: from mail-am5eur02lp2053.outbound.protection.outlook.com (HELO EUR02-AM5-obe.outbound.protection.outlook.com) (104.47.4.53)
-  by server-13.tower-249.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 17 Dec 2019 09:55:39 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oEgj8BG9NstJvp7c9llEsuX9WEcoAv/yHBF607fXgEe7zLp4TqlUkdAu4HKwATU9WRWpVomTN1o3fExMxMVNLKwYXA0uTEY/TStVpwMjnNU1n8pEZLoThOziFLyJIHA0Fd1vYmtK4mm2RIXYN4LAcoA5haJBrwAxuY0COPK4IkVB0lF0Y5FJUMJNQhQxZdCbznoDpFi5meU1//QvP36av0o6S0jY7oSzLD8d30/dwofYAA+S/aib2BrGljQOG/F64V5QcEv9EcXtZG3hozdeGWpvl7YwywcIZC4pxOn0Pusk9TXRaMBBQh06zLSiAnmdwRrmM1uNkIrrRPKdIoWLrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ixHk+NYZYSq3rSpdRFseeILAoCRNtZltpKJEM0fEGAQ=;
- b=b63pBBGe+c9z44VzSg9h2uvyKK9RfG3LUfOxAaSTVIjdnSRKX8THf5ekfC9BL/39y9QkCHEJtd03QkytV1uPH3AttEGYby4bq70j3jSTwKWYdhJJTHdkUkXa9n2lw/pLR+ZzUuTam+RokLxd2lk5vkn+G+jz66nh3NCdS6dCzee0MJ566wR5YehFTmyZsyl6L+OQIqentWn7DM1cPHEsXise5oSkdJS9/XmQXFduk55wyAbh1F4Gh90TsgrSWVmRruHhU9Y6TtFXlmyspD4Hr3/M33NgF6bAMK42qVGbLChnsohVziee2uuGVMENXljX9hWiPmXgSzsnpz9K20pjRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ixHk+NYZYSq3rSpdRFseeILAoCRNtZltpKJEM0fEGAQ=;
- b=a4aLz8mhGVNQtsz6sdIa9wQOM7mYQih7eCKDldP8nfIhyGtVO/htS2Sv6Q/8H7e3yyR0lsOqxIDDpIH1inCxXremrUjyLBbo5K4BGMfaF83nMlCSvwL5qGDMKMSBA9o3iAXlVoIXvDbgae4eGbhm859PSJnDbGzTKEoKhgFJ12I=
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
- AM5PR1001MB1122.EURPRD10.PROD.OUTLOOK.COM (10.169.148.149) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.13; Tue, 17 Dec 2019 09:55:38 +0000
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ed23:3ca0:97ef:c868]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ed23:3ca0:97ef:c868%10]) with mapi id 15.20.2538.019; Tue, 17 Dec
- 2019 09:55:38 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: RE: [RESEND PATCH v3 3/3] pinctrl: da9062: add driver support
-Thread-Topic: [RESEND PATCH v3 3/3] pinctrl: da9062: add driver support
-Thread-Index: AQHVsQXfQ9DGkUJA90ed8RfDS4RwT6e2sLrQgAW3YgCAAC5RgIABUS2AgAA2KNA=
-Date:   Tue, 17 Dec 2019 09:55:38 +0000
-Message-ID: <AM5PR1001MB09945AA014D512511E4DF4A880500@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-References: <20191212160413.15232-1-m.felsch@pengutronix.de>
- <20191212160413.15232-4-m.felsch@pengutronix.de>
- <AM5PR1001MB0994E2D72A95E4AC4796F80A80550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191216074734.ctjxx6rqtj6mt2dw@pengutronix.de>
- <CACRpkdbZ67jp64oMS0Q=aDuo18i_fT22grST0qSVjk_9EV=4hw@mail.gmail.com>
- <20191217064009.GB31182@pengutronix.de>
-In-Reply-To: <20191217064009.GB31182@pengutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.228]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7e08b4cf-e48b-4b92-145e-08d782d744fb
-x-ms-traffictypediagnostic: AM5PR1001MB1122:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR1001MB11225BD0F4BDA0F28510FDB3A7500@AM5PR1001MB1122.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 02543CD7CD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(376002)(39860400002)(396003)(346002)(189003)(199004)(76116006)(52536014)(8676002)(26005)(66476007)(66946007)(66446008)(9686003)(478600001)(5660300002)(2906002)(64756008)(66556008)(71200400001)(55016002)(81166006)(81156014)(53546011)(86362001)(8936002)(55236004)(4744005)(33656002)(186003)(316002)(54906003)(110136005)(6506007)(4326008)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1122;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AbwX28du+0vtu+zp4Lt3OP8/3UFDOsZLVU16obgthkCi5qGx9F+u+JGSKUMeAN1J2GRFVKd+CoqnQ6mdKZVFLxGlzw4elyYUjkritDXafUZ7mqqiY51hE8XACO/ar0M+rp3seQbjmOTIvfUGA/N2nF/3bdrky7ogf4dr6jiMCQbxAl0ywKgAi+Jtm+UNmBqh9pUUFWZCg5lmFvb2TiDdQi5zOr8hS3lZhOREr5MBTgooxMKYAZw5KQuPYLe51TA1vdJWpT72wIW7jws3TI/LmYu+C+YSQoBM+JmnMXhsDfEs/lkL0d/L7Cz9sGkP0ZXtNAM2Jdc+rx0Shso6QYl2Iu3BLmY2h4bGb1CfKk8llDkutIb5HgAizvm3Hd7xU81kSnWdzSkOr55ApXVN0I9ykRazuYd7oX9hoIYGJs7kxcAbH6UdnAdHhTlU3CiPQH4Y
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 17 Dec 2019 04:58:06 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42508 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfLQJ6F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 04:58:05 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBH9vrgG002303;
+        Tue, 17 Dec 2019 03:57:53 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576576673;
+        bh=kte7BVuYVqY32RjMAWvDS4mgoVABOxfQA3f+71NU83s=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=OGsiv4nDN8AQcCdF0Vxp5mNaBT0spklX0Dp0ZJNBZcZy+IplPBUf+lGnTz9jrbaP1
+         Nhno2exXdboT4l7PZnUu5gg6ZqluvmoMXRwfSzbUnwVLaKJD1xQUURlIIJL4AMZemv
+         dRjEA6wPS2zFB8ewJCHA+WS9hcVcOiTjMNfJwk7o=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBH9vrNX015072
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Dec 2019 03:57:53 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 03:57:53 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 03:57:53 -0600
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBH9vpN1058862;
+        Tue, 17 Dec 2019 03:57:51 -0600
+Subject: Re: [PATCH] dt-bindings: net: mdio: use non vendor specific
+ compatible string in example
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        Simon Horman <simon.horman@netronome.com>,
+        netdev <netdev@vger.kernel.org>
+References: <20191127153928.22408-1-grygorii.strashko@ti.com>
+ <CAL_Jsq+viKkF4FFgpMhTjKCMLeGOX1o9Uq-StU6xwFuTcpCL2Q@mail.gmail.com>
+ <eb3cb685-5ddc-8e06-1e26-0f6bc43b294c@ti.com>
+ <CAL_JsqKZ5qexJMSm5MZYQp5LutyHHHObbfA3r2_XQa7E6kjqpg@mail.gmail.com>
+ <72fc7152-abb8-e0b4-0e0f-c8afe649a2c7@ti.com>
+Message-ID: <41f9a362-0eb2-dca9-5975-62a6497ca826@ti.com>
+Date:   Tue, 17 Dec 2019 11:57:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e08b4cf-e48b-4b92-145e-08d782d744fb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 09:55:38.1949
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 89eLLnY0NopC/g+7NMvLWJXR89YCoTxG+hBkkgIopiF1AzdsMy25x0c39h054hP1Y9jPY0+NO/FdViWgV6P5L3BcZmYFBil9Y5mrwenaLkc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1122
+In-Reply-To: <72fc7152-abb8-e0b4-0e0f-c8afe649a2c7@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 17 December 2019 06:40, Marco Felsch wrote:
+Hi Rob,
 
-> On 19-12-16 11:33, Linus Walleij wrote:
-> > On Mon, Dec 16, 2019 at 8:47 AM Marco Felsch <m.felsch@pengutronix.de>
-> wrote:
-> >
-> > > Nice catch, Linus is it okay to add this as follow up patch? The curr=
-ent
-> > > patch isn't wrong without the 'PIN_CONFIG_BIAS_DISABLE' case.
-> >
-> > No strong opinion on that as long as the result is running code.
->=20
-> Of course the code is running and was tested. Just didn't covered this
-> use case.
->=20
-> Adam is this okay with you?
+On 06/12/2019 17:44, Grygorii Strashko wrote:
+> 
+> 
+> On 06/12/2019 17:09, Rob Herring wrote:
+>> On Fri, Dec 6, 2019 at 5:14 AM Grygorii Strashko
+>> <grygorii.strashko@ti.com> wrote:
+>>>
+>>>
+>>>
+>>> On 05/12/2019 19:59, Rob Herring wrote:
+>>>> On Wed, Nov 27, 2019 at 9:39 AM Grygorii Strashko
+>>>> <grygorii.strashko@ti.com> wrote:
+>>>>>
+>>>>> Use non vendor specific compatible string in example, otherwise DT YAML
+>>>>> schemas validation may trigger warnings specific to TI ti,davinci_mdio
+>>>>> and not to the generic MDIO example.
+>>>>>
+>>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>>>>> ---
+>>>>>    Documentation/devicetree/bindings/net/mdio.yaml | 2 +-
+>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
+>>>>> index 5d08d2ffd4eb..524f062c6973 100644
+>>>>> --- a/Documentation/devicetree/bindings/net/mdio.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/net/mdio.yaml
+>>>>> @@ -56,7 +56,7 @@ patternProperties:
+>>>>>    examples:
+>>>>>      - |
+>>>>>        davinci_mdio: mdio@5c030000 {
+>>>>> -        compatible = "ti,davinci_mdio";
+>>>>> +        compatible = "vendor,mdio";
+>>>>
+>>>> The problem with this is eventually 'vendor,mdio' will get flagged as
+>>>> an undocumented compatible. We're a ways off from being able to enable
+>>>> that until we have a majority of bindings converted. Though maybe
+>>>> examples can be enabled sooner rather than later.
+>>>>
+>>>
+>>> May be some generic compatible string be used for all examples,
+>>> like: "vendor,example-ip". What do you think?
+>>
+>> I'm still not clear what problem you are trying to solve. 'may trigger
+>> warnings' doesn't sound like an actual problem.
+> 
+> oh. sry.
+> it's like this
+>   - mdio.yaml describes generic MDIO properties, but uses compatible = "ti,davinci_mdio";
+>   - davinci_mdio (or other IPs) has some custom properties.
+>     Some of them can be marked as required - for example bus_freq.
+>     And in the feature i need to add clocks.
+> 
+>    Now "bus_freq" is required for davinci_mdio, but not required for generic mdio example.
+>    As result, by default, following warning will be produced:
+> /home/grygorii/kernel.org/linux-master/linux/Documentation/devicetree/bindings/net/mdio.example.dt.yaml: mdio@5c030000: 'bus_freq' is a required property
+> 
+>   to w/a above I've added for davinci_mdio:
+> if:
+>    properties:
+>      compatible:
+>        contains:
+>          const: ti,davinci_mdio
+>    required:
+>      - bus_freq
+>   (by the way above is incorrect and if i add "then:" it will still produce warning :), but
+>    it is different story)
+> 
+>   Next if I add "clocks" as required for davinci_mdio I'll get warning again and
+>   will need to hack ti,davinci-mdio.yaml or update example in mdio.yaml.
+> 
+>   So, I'm the position of lucky persons who is working on some HW module which bindings
+>   where occasionally selected as generic example. :)
+> 
+> FYI, below is example from power-domain.yaml:
+> 
+>      parent3: power-controller@12340000 {
+>          compatible = "foo,power-controller";
+>          reg = <0x12340000 0x1000>;
+>          #power-domain-cells = <0>;
+>          domain-idle-states = <&DOMAIN_RET>, <&DOMAIN_PWR_DN>;
+>      };
+> 
 
-If you want to send a follow up straight after then that's ok although to m=
-e
-that seems like more effort. :)
+May be it would be acceptable to just drop "compatible" property from generic MDIO example?
 
-Anyway:
-
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-
->=20
-> Regards,
->   Marco
->=20
-> > Yours,
-> > Linus Walleij
-> >
+-- 
+Best regards,
+grygorii
