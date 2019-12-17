@@ -2,27 +2,28 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61E9C2D0D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 13:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB60C2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E53B21739
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 13:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724D321739
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:00:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbfLQN7j (ORCPT
+        id S1728658AbfLQOAA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:59:39 -0500
-Received: from out28-147.mail.aliyun.com ([115.124.28.147]:48833 "EHLO
-        out28-147.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728539AbfLQN7j (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 08:59:39 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3930146|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.292543-0.0249997-0.682457;DS=CONTINUE|ham_system_inform|0.00638576-0.00125593-0.992358;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03303;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.GJ3eyQr_1576591147;
+        Tue, 17 Dec 2019 09:00:00 -0500
+Received: from out28-53.mail.aliyun.com ([115.124.28.53]:56526 "EHLO
+        out28-53.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728546AbfLQOAA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 09:00:00 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3617134|-1;CH=green;DM=SPAM|CONTINUE|true|0.912045-0.000889018-0.087066;DS=CONTINUE|ham_system_inform|0.0175439-0.000412785-0.982043;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16367;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.GJ3eyQr_1576591147;
 Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GJ3eyQr_1576591147)
           by smtp.aliyun-inc.com(10.147.41.137);
-          Tue, 17 Dec 2019 21:59:32 +0800
+          Tue, 17 Dec 2019 21:59:35 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -32,9 +33,9 @@ Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         paul@crapouillou.net, vkoul@kernel.org, Zubair.Kakakhel@imgtec.com,
         dan.j.williams@intel.com, sernia.zhou@foxmail.com,
         zhenwenjin@gmail.com, 2374286503@qq.com
-Subject: [PATCH 0/2] Add dmaengine driver for X1830.
-Date:   Tue, 17 Dec 2019 21:58:58 +0800
-Message-Id: <1576591140-125668-2-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH 2/2] dmaengine: JZ4780: Add support for the X1830.
+Date:   Tue, 17 Dec 2019 21:59:00 +0800
+Message-Id: <1576591140-125668-4-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576591140-125668-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1576591140-125668-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -46,25 +47,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-1.Modify the documentation description to make it more relevant.
-2.Add the dmaengine bindings for the X1830 SoC from Ingenic.
-3.Add support for probing the dma-jz4780 driver on the
-  X1830 SoC from Ingenic.
-Notice:
-The X1830's dma controller is very similar to the X1000, the
-difference is that the X1830 has 32 dma channels and the
-X1000 has only 8.
+Add support for probing the dma-jz4780 driver on the X1830 Soc.
 
-周琰杰 (Zhou Yanjie) (2):
-  dt-bindings: dmaengine: Add X1830 bindings.
-  dmaengine: JZ4780: Add support for the X1830.
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+---
+ drivers/dma/dma-jz4780.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- .../devicetree/bindings/dma/jz4780-dma.txt         |  6 ++--
- drivers/dma/dma-jz4780.c                           |  7 ++++
- include/dt-bindings/dma/x1830-dma.h                | 39 ++++++++++++++++++++++
- 3 files changed, 50 insertions(+), 2 deletions(-)
- create mode 100644 include/dt-bindings/dma/x1830-dma.h
-
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index fa626ac..f8ee4b7 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -1020,12 +1020,19 @@ static const struct jz4780_dma_soc_data x1000_dma_soc_data = {
+ 	.flags = JZ_SOC_DATA_PROGRAMMABLE_DMA,
+ };
+ 
++static const struct jz4780_dma_soc_data x1830_dma_soc_data = {
++	.nb_channels = 32,
++	.transfer_ord_max = 7,
++	.flags = JZ_SOC_DATA_PROGRAMMABLE_DMA,
++};
++
+ static const struct of_device_id jz4780_dma_dt_match[] = {
+ 	{ .compatible = "ingenic,jz4740-dma", .data = &jz4740_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4725b-dma", .data = &jz4725b_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4770-dma", .data = &jz4770_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4780-dma", .data = &jz4780_dma_soc_data },
+ 	{ .compatible = "ingenic,x1000-dma", .data = &x1000_dma_soc_data },
++	{ .compatible = "ingenic,x1830-dma", .data = &x1830_dma_soc_data },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, jz4780_dma_dt_match);
 -- 
 2.7.4
 
