@@ -2,179 +2,85 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7804C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 15:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D067C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 15:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8DAE2465E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 15:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C472146E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 15:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbfLQPlK (ORCPT
+        id S1727698AbfLQP7d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:41:10 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:43352 "EHLO honk.sigxcpu.org"
+        Tue, 17 Dec 2019 10:59:33 -0500
+Received: from sauhun.de ([88.99.104.3]:54174 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727415AbfLQPlK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:41:10 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id B7084FB03;
-        Tue, 17 Dec 2019 16:41:07 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MCiGb_lMcUkK; Tue, 17 Dec 2019 16:41:06 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 01E8B498AE; Tue, 17 Dec 2019 16:40:59 +0100 (CET)
-Date:   Tue, 17 Dec 2019 16:40:59 +0100
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] leds: lm3692x: Allow to set ovp and brigthness mode
-Message-ID: <20191217154059.GA3929@bogon.m.sigxcpu.org>
-References: <cover.1576499103.git.agx@sigxcpu.org>
- <9c87a17aefbf758d58f199f7046114ee7505a1fa.1576499103.git.agx@sigxcpu.org>
- <3d66b07d-b4c5-43e6-4378-d63cc84b8d43@ti.com>
+        id S1726933AbfLQP7d (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 10:59:33 -0500
+Received: from localhost (p54B330AA.dip0.t-ipconnect.de [84.179.48.170])
+        by pokefinder.org (Postfix) with ESMTPSA id 1E75C2C06A5;
+        Tue, 17 Dec 2019 16:59:31 +0100 (CET)
+Date:   Tue, 17 Dec 2019 16:59:30 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: i2c: rcar: Document r8a77961 support
+Message-ID: <20191217155930.GC14061@ninjato>
+References: <20191205133956.6191-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="YD3LsXFS42OYHhNZ"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3d66b07d-b4c5-43e6-4378-d63cc84b8d43@ti.com>
+In-Reply-To: <20191205133956.6191-1-geert+renesas@glider.be>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dan,
-On Tue, Dec 17, 2019 at 06:53:45AM -0600, Dan Murphy wrote:
-> Guido
-> 
-> On 12/16/19 6:28 AM, Guido Günther wrote:
-> > Overvoltage protection and brightness mode are currently hardcoded
-> > as disabled in the driver. Make these configurable via DT.
-> 
-> Can we split these up to two separate patch series?
 
-Sure, should the binding doc updates be split as well?
+--YD3LsXFS42OYHhNZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> We are adding 2 separate features and if something is incorrect with one of
-> the changes it is a bit hard to debug.
-> 
-> > 
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > ---
-> >   drivers/leds/leds-lm3692x.c | 43 +++++++++++++++++++++++++++++++------
-> >   1 file changed, 37 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-> > index 8b408102e138..2c084b333628 100644
-> > --- a/drivers/leds/leds-lm3692x.c
-> > +++ b/drivers/leds/leds-lm3692x.c
-> > @@ -114,6 +114,7 @@ struct lm3692x_led {
-> >   	struct regulator *regulator;
-> >   	int led_enable;
-> >   	int model_id;
-> > +	u8 boost_ctrl, brightness_ctrl;
-> >   };
-> >   static const struct reg_default lm3692x_reg_defs[] = {
-> > @@ -249,10 +250,7 @@ static int lm3692x_init(struct lm3692x_led *led)
-> >   	if (ret)
-> >   		goto out;
-> > -	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL,
-> > -			LM3692X_BOOST_SW_1MHZ |
-> > -			LM3692X_BOOST_SW_NO_SHIFT |
-> > -			LM3692X_OCP_PROT_1_5A);
-> > +	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL, led->boost_ctrl);
-> >   	if (ret)
-> >   		goto out;
-> 
-> regmap_update_bits
-> 
-> 
-> > @@ -268,8 +266,7 @@ static int lm3692x_init(struct lm3692x_led *led)
-> >   	if (ret)
-> >   		goto out;
-> > -	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL,
-> > -			LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN);
-> > +	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL, led->brightness_ctrl);
-> >   	if (ret)
-> >   		goto out;
-> regmap_update_bits
-> > @@ -326,6 +323,8 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
-> >   {
-> >   	struct fwnode_handle *child = NULL;
-> >   	struct led_init_data init_data = {};
-> > +	u32 ovp = 0;
-> > +	bool exp_mode;
-> >   	int ret;
-> >   	led->enable_gpio = devm_gpiod_get_optional(&led->client->dev,
-> > @@ -350,6 +349,38 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
-> >   		led->regulator = NULL;
-> >   	}
-> > +	led->boost_ctrl = LM3692X_BOOST_SW_1MHZ |
-> > +		LM3692X_BOOST_SW_NO_SHIFT |
-> > +		LM3692X_OCP_PROT_1_5A;
-> Make this a #define and then it can be reused as a mask for
-> regmap_update_bits
-> > +	ret = device_property_read_u32(&led->client->dev,
-> > +				       "ti,overvoltage-volts", &ovp);
-> > +	if (!ret) {
-> 
-> if (ret)
-> 
->     set boost_ctrl to default value since the default is not 0
-> 
-> led->boost_ctrl |= LM3692X_OVP_29V;
-> 
-> else
-> 
->      do case
-> 
-> > +		switch (ovp) {
-> > +		case 0:
-> > +			break;
-> > +		case 22:
-> If the value is 21v why is this case 22?  DT binding says 21 is the first
-> value
-> > +			led->boost_ctrl |= LM3692X_OVP_21V;
-> > +			break;
-> > +		case 25:
-> > +			led->boost_ctrl |= LM3692X_OVP_25V;
-> > +			break;
-> > +		case 29:
-> > +			led->boost_ctrl |= LM3692X_OVP_29V;
-> > +			break;
-> > +		default:
-> > +			dev_err(&led->client->dev, "Invalid OVP %d\n", ovp);
-> > +			return -EINVAL;
-> > +		}
-> > +	}
-> > +	dev_dbg(&led->client->dev, "OVP: %dV", ovp);
-> > +
-> extra debug statement
-> > +	led->brightness_ctrl = LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN;
-> Same comment as before on the #define
-> > +	exp_mode = device_property_read_bool(&led->client->dev,
-> > +				     "ti,brightness-mapping-exponential");
-> > +	dev_dbg(&led->client->dev, "Exponential brightness: %d", exp_mode);
-> 
-> extra debug statement
+On Thu, Dec 05, 2019 at 02:39:56PM +0100, Geert Uytterhoeven wrote:
+> Document support for the I2C controller in the Renesas R-Car M3-W+
+> (R8A77961) SoC.
+>=20
+> Update all references to R-Car M3-W from "r8a7796" to "r8a77960", to
+> avoid confusion between R-Car M3-W (R8A77960) and M3-W+.
+>=20
+> No driver update is needed.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-They're not extra but meant to ease debugging the driver long therm but
-i can drop these if that's not wanted. The rest makes a lot of sense.
-Thanks a lot for having a look so promptly!
+Applied to for-next, thanks!
 
-Cheers,
- -- Guido
 
-> 
-> Dan
-> 
-> 
+--YD3LsXFS42OYHhNZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl34+2IACgkQFA3kzBSg
+KbZshw//XHsVKhoran69BesnkOsqZqrYWgoDHQbxSpl+DT52SyQLelYfUyTsQ+Lc
+q5nS6gXjYcLNrgXbD0p868tB5sEtlq6RPnWOXPDHku1j2Lcw2Xr0MPqgMU4w6uYj
+57mbtsrX4woBklaP+pzpdDpv4ACow6aQEMuh8T7svvnetYgbFWZmeiS7BQ34u33j
+2PIWgiu3nVadY+PyB1VY58ajM/79ByS8cWkmpPWAlGrR2h8ierSFFMRLI8MCw3LH
+3vqHm7kiYY8N4yc/erYfawnrBQzxiGm4hiYuCvbbnN75B2Mq76CegaAus8aGYdhg
+Yu5sVjwdlqU0thTkLXE4kDTBTtCHYAd2oW52Ci2anLcG4xGi3gUjAVc7u67UJaSF
+uqBqtiAudL7F73gl+pokkWjqf8MrpfZs4y6k0DFGnFj3kFtOfGCgPcJNvfxVM6VY
+IxIGBdL8suPqfZDywyRecg3TY1vQhzf3ThMqZd/oIZPXMXnkUZmS8gNI6niueKFD
+nl5bINwPpkYgm2wqGq5hm7lt20z++ZBESgacnIbHE1QuyAy3Nla91A9Kz1TYnPtS
+uYRF0q+eS0yA85QE9N3mxjXZa76kCYPvJYyxjIHsDSacoMVXPaiBFuMMhbpgmNFs
+MxDIe9LCzYx5EgP1t8twMdkaiCM5emZjk/9uejXL5biijHxz6XQ=
+=A/So
+-----END PGP SIGNATURE-----
+
+--YD3LsXFS42OYHhNZ--
