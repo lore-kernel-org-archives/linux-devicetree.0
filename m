@@ -2,115 +2,89 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504FBC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 00:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AA0C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 00:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 265EC2176D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 00:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA252465E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 00:15:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="LlZOOR9c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XIMMf9/V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfLQAL0 (ORCPT
+        id S1727510AbfLQAPj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:11:26 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34982 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727198AbfLQALZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 19:11:25 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j6so8837670lja.2
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 16:11:24 -0800 (PST)
+        Mon, 16 Dec 2019 19:15:39 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:32924 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727274AbfLQAPi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 19:15:38 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d139so1014072wmd.0;
+        Mon, 16 Dec 2019 16:15:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=mgdbNsb2U5szXT98Luh3Bo8MJcnyi91BccDx4009UHE=;
-        b=LlZOOR9cNxBNM4lljL4PWV6m5lhlUA0UqAWkEVPbwfbEurMkEFzYiOEaHfO91gU2uI
-         xjMktLJxGyZ4PgLHjTRIs4URVbpg8C8ESOjdF7giaahBuCRVv3HHk/O9535icb2WfNS1
-         yCGYfmHyCrDjp0q29VuuicGEtKv5yiGXHJOIizZUdjP2HX+V16JiPug8AOgXQTf6iPvc
-         CmFlTKqqwiL7fsQGFz5zUB7sjhFX+Ssi9INqeKv1/ueEJAgg53AHWSlHZG1QnSZzN23V
-         CVVUlGhcikgB6I9qGI6Ofr4F3nFd5fikCeXS/oqGSpTe0GG2MEYK7DgOhD6CMVSe53lb
-         vKLw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=jYYyHoQRxGSOdiAM34+0Cuf2pCrblmn75emCeEW+TKg=;
+        b=XIMMf9/VfNUTzK8xC5swP5gKINuVvSOppAERn4cJimmEiPI7utbo5lBwpIurvsULlN
+         ZRAxW9hPLiaKopQGzZyVA3rp4qegJVGHtd8DWy2GgqQIakE5jtD8/UcYq3RclPCDwkme
+         +dAOs+3NHnBUdhR1LaC62xAaNksRJPEMTOdhPLyW4+7bXGZJARbEnEjv54AtH+ABe1lm
+         yjhZ+EWm1DYQrDoUXtM9M8Sglk7iDOZQJoc+5KhbCInab1uvaRILKajs9DFwZ8VKRov/
+         0EANTx0IWmnOzFm/epTvWxi/jO1QouLdNffbetBAeXMW5F5e0j6w8b0a/0bQVmfKGRvh
+         S3xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=mgdbNsb2U5szXT98Luh3Bo8MJcnyi91BccDx4009UHE=;
-        b=RBhIhD5OyG3PfLgwz4pSILUJBbeJ0hMTZxtF8Ri/FxgslCbg4LRxK68Q1Fso04mI2f
-         zOe1sLHjgwHnKz9TGEHyjJJUaml1WjZXgJzogKY5Bml6NQlRUTtSsK9LQjbwZkZ0pkY6
-         2456A+CnadE4nLdP1jX/l/s4kpSM7hfTXvfnYDL2vM++a6VEPaz1UCIzvII4H/Ju9CY1
-         6XkYW8pXOXPP4ARSRRZ4Ip6GC6tnH6f90QbOTZLpyooLO0cLhgqHq7lEerXKK+EWMPBy
-         GGhAnY5SRq4AZm2DD7loXMBsxW/qoeLSVk9GP8tmtYLMS6nhM18ecbaEVVUJS+wCGhQf
-         1n9A==
-X-Gm-Message-State: APjAAAUzfLb9+hEkS+IA7mE37OuLMKfW9illGhzg1mBPxugkwfYC1Zqu
-        SyWzrKeTZJNkM37Z8HWOr28e2w==
-X-Google-Smtp-Source: APXvYqz3Im0Fgkkiyr2JZbkmyo8my7bPlxXPgPfqc89lQKgQjaIKkN27ALt6zcR5Szea7m3ErnAVNg==
-X-Received: by 2002:a2e:b60d:: with SMTP id r13mr1257632ljn.40.1576541483323;
-        Mon, 16 Dec 2019 16:11:23 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id u25sm9853720lfk.46.2019.12.16.16.11.19
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=jYYyHoQRxGSOdiAM34+0Cuf2pCrblmn75emCeEW+TKg=;
+        b=d/PIYrJD35GCeZwW4EYJM1Dykg3okoKeurf7JvplmSOVt8gE28/Sxn1GF3jyybbzjY
+         gIv4yJLfU+pJUgO7RTVeHaHFe8xE391EWdQsMfUhM3XOsnXQY7xEm6qcMiu/Bpg7Ptsx
+         MstNFXa/o0OOdln6iW7Q5dyA0qgIOpCwI7yDhdk1NspZm4WL4xPFoMyEmaoRYHXx/sdF
+         B95GyM2F/25AgBeRZ6Rp4d71DSyebC5tDmo464Ia/fg0WpuR8+V1bnMtnyzYrVqabJ+b
+         mlZSKTzT9fX1J07X7F6cfxgQfB9orWebelEyRXfdHhvgE9j+lThMmaXXRqNJITsKhdjP
+         9e6g==
+X-Gm-Message-State: APjAAAUZoyuTzzwACPZKV9OA4j1GHQh0Mn8U2nwQqKtEK8arOo6k0ox/
+        BOcqECSfc+2/sutjkByeu2w=
+X-Google-Smtp-Source: APXvYqxv88Tu8puIy5rItp/JvAkWSBThhnCLZh4MZ+XkbDdxa+gknsDt7gomIObMs3IrnIu2iHpQnw==
+X-Received: by 2002:a1c:960c:: with SMTP id y12mr1858359wmd.9.1576541736489;
+        Mon, 16 Dec 2019 16:15:36 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z4sm1049924wme.17.2019.12.16.16.15.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 16:11:22 -0800 (PST)
-Date:   Mon, 16 Dec 2019 16:11:14 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
+        Mon, 16 Dec 2019 16:15:35 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Wingman Kwok <w-kwok2@ti.com>
-Subject: Re: [PATCH V6 net-next 11/11] ptp: Add a driver for InES time
- stamping IP core.
-Message-ID: <20191216161114.3604d45d@cakuba.netronome.com>
-In-Reply-To: <33afc113fa0b301d289522971c83dbbf0d36c8ba.1576511937.git.richardcochran@gmail.com>
-References: <cover.1576511937.git.richardcochran@gmail.com>
-        <33afc113fa0b301d289522971c83dbbf0d36c8ba.1576511937.git.richardcochran@gmail.com>
-Organization: Netronome Systems, Ltd.
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: NSP: Use hardware I2C for BCM958625HR
+Date:   Mon, 16 Dec 2019 16:15:32 -0800
+Message-Id: <20191217001532.13807-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191213195102.23789-1-f.fainelli@gmail.com>
+References: <20191213195102.23789-1-f.fainelli@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 16 Dec 2019 08:13:26 -0800, Richard Cochran wrote:
-> +	clkid = (u64 *)(data + offset + OFF_PTP_CLOCK_ID);
-> +	portn = (u16 *)(data + offset + OFF_PTP_PORT_NUM);
-> +	seqid = (u16 *)(data + offset + OFF_PTP_SEQUENCE_ID);
+On Fri, 13 Dec 2019 11:51:02 -0800, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> Now that the i2c-bcm-iproc driver has been fixed to permit reading more
+> than 63 bytes in a single transaction with commit fd01eecdf959 ("i2c:
+> iproc: Fix i2c master read more than 63 bytes") we no longer need to
+> bitbang i2c over GPIOs which was necessary before to allow the
+> PHYLINK/SFP subsystems to read SFP modules.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
 
-These should perhaps be __be types?
-
-Looks like there is a few other sparse warnings in ptp_ines.c, would
-you mind addressing those?
-
-> +	if (tag_to_msgtype(ts->tag & 0x7) != (*msgtype & 0xf)) {
-> +		pr_debug("msgtype mismatch ts %hhu != skb %hhu\n",
-> +			 tag_to_msgtype(ts->tag & 0x7), *msgtype & 0xf);
-> +		return false;
-> +	}
-> +	if (cpu_to_be64(ts->clkid) != *clkid) {
-> +		pr_debug("clkid mismatch ts %llx != skb %llx\n",
-> +			 cpu_to_be64(ts->clkid), *clkid);
-> +		return false;
-> +	}
-> +	if (ts->portnum != ntohs(*portn)) {
-> +		pr_debug("portn mismatch ts %hu != skb %hu\n",
-> +			 ts->portnum, ntohs(*portn));
-> +		return false;
-> +	}
-> +	if (ts->seqid != ntohs(*seqid)) {
-> +		pr_debug("seqid mismatch ts %hu != skb %hu\n",
-> +			 ts->seqid, ntohs(*seqid));
-> +		return false;
-> +	}
-
+Applied to devicetree/next, thanks!
+--
+Florian
