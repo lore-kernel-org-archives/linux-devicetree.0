@@ -2,98 +2,150 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C88C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 06:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DCEC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 06:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD1C21582
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 06:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9CAF2072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 06:22:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zf8bJkao"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dFn7VKlH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfLQGUn (ORCPT
+        id S1726609AbfLQGWP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 01:20:43 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37381 "EHLO
+        Tue, 17 Dec 2019 01:22:15 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43389 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfLQGUn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 01:20:43 -0500
-Received: by mail-pg1-f194.google.com with SMTP id q127so5082384pga.4
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 22:20:43 -0800 (PST)
+        with ESMTP id S1725886AbfLQGWP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 01:22:15 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k197so5067938pga.10
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 22:22:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k/4+dE6TBvtAZbiMIIRV67E0nc4u23eKs5qpkR7aBsc=;
-        b=Zf8bJkaoXvahdNySVN74ycCQmLoxy4e5zh/QEjLuVcb/JCf6/qKAIx/QIxOu2AylUF
-         NMV/DOrOPmOeOmY0f/G/FTwuHzSTsno4nQwSkTeTsttDr6a+VEguvb69NOqt354udB5u
-         3NVNEK2lBA0XKrW2irpwFs6w6ounikv/qY/RU=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fwHTfnJaI9qnMvf2gSHfOz3OAkZOCzCGX5TYMPhWqUA=;
+        b=dFn7VKlHM/jteR5MfqGleAz/hb1y6mlIHXAhvp1Jq7TNAdwfpl0D30IIVXK32ytp6Q
+         +YAo0OOlee56Yr5UTweg+CKiB565URXCbLnmw4B8JBfXVDOngHrK8DX0OPk6m5eVc0nE
+         b9VPMLnT2AxEfHM/z5N53rqS/4C2J1ciUc/x8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k/4+dE6TBvtAZbiMIIRV67E0nc4u23eKs5qpkR7aBsc=;
-        b=ohqNP7DzhD0URx+3I5EOl1VdfNeBhbS9Wgn5iSqEIMRt8TwBVNg9dEiGxPqr+2Dx4a
-         uRhjD5FZuaEJ3cOlpy98tPYx3Z2xuV46zevARyXvpYxh29bNnKj0wSK5IMruyXIm/oe7
-         nI2h3acddtA7m0/8l/uIZ0jxuxgG5PAmE10TD7r4sPQ+UG3ECb70TfTdc2dh+H5d/H1r
-         DHkk1Y5/T8MflvaG5mD8DZYl7bPSngojky/ev2m7P9hhMCadg2CA19gUgV+VfL7FahWq
-         +10fsnawh7AsIfk9ZJuPhyQiUndNKe8z85Kiaih9Y8QzY23/6miNLd/hI+J1C82ZDUhV
-         vGVg==
-X-Gm-Message-State: APjAAAVMrLlF40hX7GMOth0oZJgCN4BGgFiQE1DgK+MJ7tkapZ1sPsj3
-        Jph6e6D8K6sY61Rb7Z8PIYho7MOpf+uNvA==
-X-Google-Smtp-Source: APXvYqyEClKB5KveoH1dz7RJn9lqOw2w9s8Xx0dDnRonMN4XFIC7VrXPxnzpn33/nSEKlc6SZb1QQQ==
-X-Received: by 2002:a63:360a:: with SMTP id d10mr22663260pga.366.1576563642808;
-        Mon, 16 Dec 2019 22:20:42 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id 100sm1682030pjo.17.2019.12.16.22.20.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 22:20:42 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH] arm64: dts: qcom: sdm845: Rename gic-its node to msi-controller
-Date:   Mon, 16 Dec 2019 22:20:25 -0800
-Message-Id: <20191216222021.1.I684f124a05a1c3f0b113c8d06d5f9da5d69b801e@changeid>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fwHTfnJaI9qnMvf2gSHfOz3OAkZOCzCGX5TYMPhWqUA=;
+        b=MUvetxFHJ2BSNQDRiD6XVYTvI2HlHsliYdWZnJ2QzrRWQCtOKE9h2eogPw8KEYqvpJ
+         NPz98dBa0zJXyC8HC4bh1MVpP1aSt7xh/XDPlDyTnOTVIugx9L+3s7HXG0jZ/qck8hw9
+         nB12qnjoCt4fxy/n2zYTmkT8fuUVgqfBsZs6d2E3yIsj0LD8kLiKwPYVZSNInZuI7o/G
+         pWt9Tf/pLMvjKT2LS0sKZSNlgxr6tEVHPOzLlRr8ZvVbB4kUPNyED5gJ/KoO+2xdy0kh
+         Yb94L/Jx31pzIKj3YbZ8rjA5XLW05eN/bwzmU2N9zgGr7kYqOf8DYM6+j4137AXD0DSD
+         kyIg==
+X-Gm-Message-State: APjAAAWpuusBi52jQ5K3A8pgxRqQvcm9XR69t0aMmJfPtW5UoNtJ9PLh
+        R7V9/8vpc50E0aRWnSQqaMwqw2mRw8E=
+X-Google-Smtp-Source: APXvYqz1+jKe5dY50V7Sx12aMKdUpb+jLUWAqhWauDzdb7RImspghcvN4MQpLT7PqdodOkiZt8jwQg==
+X-Received: by 2002:a62:2a12:: with SMTP id q18mr21200490pfq.203.1576563733953;
+        Mon, 16 Dec 2019 22:22:13 -0800 (PST)
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com. [209.85.210.181])
+        by smtp.gmail.com with ESMTPSA id s22sm784961pfe.90.2019.12.16.22.22.13
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 22:22:13 -0800 (PST)
+Received: by mail-pf1-f181.google.com with SMTP id y14so6944011pfm.13
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 22:22:13 -0800 (PST)
+X-Received: by 2002:a6b:be84:: with SMTP id o126mr2416373iof.269.1576563289206;
+ Mon, 16 Dec 2019 22:14:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191212193544.80640-1-dianders@chromium.org> <20191212113540.7.Ia9bd3fca24ad34a5faaf1c3e58095c74b38abca1@changeid>
+ <5df2b752.1c69fb81.77c46.0f9a@mx.google.com>
+In-Reply-To: <5df2b752.1c69fb81.77c46.0f9a@mx.google.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 16 Dec 2019 22:14:35 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UGRqeAr8vVUfx3ADyxNLJRz3g=YhWNX1adgepx_kADrA@mail.gmail.com>
+Message-ID: <CAD=FV=UGRqeAr8vVUfx3ADyxNLJRz3g=YhWNX1adgepx_kADrA@mail.gmail.com>
+Subject: Re: [PATCH 7/7] arm64: dts: qcom: sc7180: Use 'ranges' in
+ arm,armv7-timer-mem node
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is just like commit ac00546a6780 ("arm64: dts: qcom: sc7180:
-Rename gic-its node to msi-controller") but for sdm845.  This fixes
-all arm64/qcom device trees that I could find.
+Hi,
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+On Thu, Dec 12, 2019 at 1:55 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Douglas Anderson (2019-12-12 11:35:43)
+> > Running `make dtbs_check` yells:
+> >
+> >   arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml: timer@17c20000: #size-cells:0:0: 1 was expected
+> >
+> > It appears that someone was trying to assert the fact that sub-nodes
+> > describing frames would never have a size that's more than 32-bits
+> > big.  That's certainly true in the case of sc7180.
+> >
+> > I guess this is a hint that it's time to do the thing that nobody
+> > seems to do but that "writing-bindings.txt" says we should all do.
+> > Specifically it says: "DO use non-empty 'ranges' to limit the size of
+> > child buses/devices".  That means we should probably limit the
+>
+> It got cut off here. I'm waiting to find out what it is!!
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I was going to say that I should use ranges to limit the address cells
+in addition to the size cells, but then I think I must have got
+distracted and forgot to finish my
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 407d26e92fcc..5d3b470f1be5 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -3203,7 +3203,7 @@ intc: interrupt-controller@17a00000 {
- 			      <0 0x17a60000 0 0x100000>;    /* GICR * 8 */
- 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
- 
--			gic-its@17a40000 {
-+			msi-controller@17a40000 {
- 				compatible = "arm,gic-v3-its";
- 				msi-controller;
- 				#msi-cells = <1>;
--- 
-2.24.1.735.g03f4e72817-goog
 
+> > I believe that this patch is the way to do it and there should be no
+> > bad side effects here.  I believe that since we're far enough down
+> > (not trying to describe an actual device, just some sub-pieces) that
+> > this won't cause us to run into the problems that caused us to
+> > increase the soc-level #address-cells and #size-cells to 2 in sdm845
+> > in commit bede7d2dc8f3 ("arm64: dts: qcom: sdm845: Increase address
+> > and size cells for soc").
+> >
+> > I can at least confirm that "arch_mem_timer" seems to keep getting
+> > interrupts in "/proc/interrupts" after this change.
+> >
+> > Fixes: 90db71e48070 ("arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc")
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+>
+> This pattern exists in most of the qcom dts files. Can you fix all the
+> arm,armv7-timer-mem nodes. Maybe the binding has the same problem too in
+> the example.
+
+Yeah.  I'm a little scared to go and do this for every qcom device
+tree file since I have no good way to test them, but I suppose I can
+give it a shot.  I was kinda thinking that, in general, it would make
+sense for folks to tackle one SoC at a time and make that SoC clean
+and test it.
+
+In any case, your idea about updating the example seemed wise to me,
+so I sent out:
+
+https://lore.kernel.org/r/20191216220512.1.I7dbd712cfe0bdf7b53d9ef9791072b7e9c6d3c33@changeid
+
+I'll put this patch on hold until Rob gives his thoughts on that one
+so we can really make sure we're supposed to be using ranges in this
+way.
+
+-Doug
