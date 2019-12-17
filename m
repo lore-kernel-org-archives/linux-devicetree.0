@@ -2,54 +2,68 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587C3C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C35DCC2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F271E2176D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A046D21739
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbfLQOAE (ORCPT
+        id S1728761AbfLQOHV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:00:04 -0500
-Received: from out28-146.mail.aliyun.com ([115.124.28.146]:50339 "EHLO
-        out28-146.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728613AbfLQOAD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 09:00:03 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4377554|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.161977-0.00782536-0.830198;DS=CONTINUE|ham_system_inform|0.047956-0.0619313-0.890113;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03279;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.GJ3eyQr_1576591147;
-Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GJ3eyQr_1576591147)
-          by smtp.aliyun-inc.com(10.147.41.137);
-          Tue, 17 Dec 2019 21:59:31 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, mark.rutland@arm.com,
-        paul@crapouillou.net, vkoul@kernel.org, Zubair.Kakakhel@imgtec.com,
-        dan.j.williams@intel.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 2374286503@qq.com
-Subject: Add dmaengine driver for X1830.
-Date:   Tue, 17 Dec 2019 21:58:57 +0800
-Message-Id: <1576591140-125668-1-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 17 Dec 2019 09:07:21 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:44354 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726164AbfLQOHV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:07:21 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.sntech)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ihDVJ-0007SU-4b; Tue, 17 Dec 2019 15:07:13 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     dri-devel@lists.freedesktop.org
+Cc:     thierry.reding@gmail.com, sam@ravnborg.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, heiko@sntech.de,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH v3 1/3] dt-bindings: Add vendor prefix for Xinpeng Technology
+Date:   Tue, 17 Dec 2019 15:07:01 +0100
+Message-Id: <20191217140703.23867-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-1.Modify the documentation description to make it more relevant.
-2.Add the dmaengine bindings for the X1830 SoC from Ingenic.
-3.Add support for probing the dma-jz4780 driver on the
-  X1830 SoC from Ingenic.
-Notice:
-The X1830's dma controller is very similar to the X1000, the
-difference is that the X1830 has 32 dma channels and the
-X1000 has only 8.
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+
+Shenzhen Xinpeng Technology Co., Ltd produces for example display panels.
+
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 6046f4555852..85e7c26a05c7 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1056,6 +1056,8 @@ patternProperties:
+     description: Extreme Engineering Solutions (X-ES)
+   "^xillybus,.*":
+     description: Xillybus Ltd.
++  "^xinpeng,.*":
++    description: Shenzhen Xinpeng Technology Co., Ltd
+   "^xlnx,.*":
+     description: Xilinx
+   "^xunlong,.*":
+-- 
+2.24.0
 
