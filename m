@@ -2,80 +2,111 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 566ABC2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D342C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29AD020663
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D98420663
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbfLQOKK (ORCPT
+        id S1728762AbfLQOKF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:10:10 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:52901 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728801AbfLQOKH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 09:10:07 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 2D6123C00BB;
-        Tue, 17 Dec 2019 15:10:06 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id pNCGCFyi540P; Tue, 17 Dec 2019 15:10:01 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 12AE03C057C;
-        Tue, 17 Dec 2019 15:10:01 +0100 (CET)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 17 Dec
- 2019 15:10:00 +0100
-Date:   Tue, 17 Dec 2019 15:10:00 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     Magnus Damm <magnus.damm@gmail.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        <linux-renesas-soc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v2 1/6] arm64: dts: renesas: r8a77961: Add RWDT node
-Message-ID: <20191217141000.GB27250@vmlxhi-102.adit-jv.com>
-References: <20191216124740.16647-1-geert+renesas@glider.be>
- <20191216124740.16647-2-geert+renesas@glider.be>
+        Tue, 17 Dec 2019 09:10:05 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:44566 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728746AbfLQOKF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:10:05 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.sntech)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ihDXy-0007Vs-0g; Tue, 17 Dec 2019 15:09:58 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     dri-devel@lists.freedesktop.org
+Cc:     thierry.reding@gmail.com, sam@ravnborg.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, heiko@sntech.de,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH 2/3] dt-bindings: display: panel: Add binding document for Leadtek LTK500HD1829
+Date:   Tue, 17 Dec 2019 15:09:48 +0100
+Message-Id: <20191217140949.24280-2-heiko@sntech.de>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191217140949.24280-1-heiko@sntech.de>
+References: <20191217140949.24280-1-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191216124740.16647-2-geert+renesas@glider.be>
-X-Originating-IP: [10.72.93.66]
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-On Mon, Dec 16, 2019 at 01:47:35PM +0100, Geert Uytterhoeven wrote:
-> Add a device node for the RCLK Watchdog Timer (RWDT) on the Renesas
-> R-Car M3-W+ (r8a77961) SoC.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v2:
->   - No changes.
-> 
-> Test procedure:
->   1. "cat > /dev/watchdog",
->   2. Wait 60s for reboot.
+The LTK500HD1829 is a 5.0" 720x1280 DSI display.
 
-Same behavior on my target!
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+---
+ .../display/panel/leadtek,ltk500hd1829.yaml   | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
 
-Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-
+diff --git a/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml b/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
+new file mode 100644
+index 000000000000..5f6ed75d7598
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/sony,acx424akp.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Leadtek LTK500HD1829 5.0in 720x1280 DSI panel
++
++maintainers:
++  - Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    const: leadtek,ltk500hd1829
++  reg: true
++  backlight: true
++  port: true
++  reset-gpios: true
++  iovcc-supply:
++     description: regulator that supplies the iovcc voltage
++  vcc-supply:
++     description: regulator that supplies the vcc voltage
++
++required:
++  - compatible
++  - reg
++  - backlight
++  - iovcc-supply
++  - vcc-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    dsi@ff450000 {
++        panel@0 {
++            compatible = "leadtek,ltk500hd1829";
++            reg = <0>;
++            backlight = <&backlight>;
++            iovcc-supply = <&vcc_1v8>;
++            vcc-supply = <&vcc_2v8>;
++        };
++    };
++
++...
 -- 
-Best Regards,
-Eugeniu
+2.24.0
+
