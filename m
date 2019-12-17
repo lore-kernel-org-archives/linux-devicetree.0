@@ -2,88 +2,79 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11226C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9746C2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD3320663
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:14:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="o2nmbjJx"
+	by mail.kernel.org (Postfix) with ESMTP id 83DDD21739
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbfLQOOt (ORCPT
+        id S1728656AbfLQOTv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:14:49 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:16769 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728706AbfLQOOt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:14:49 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576592088; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=IQ/h7WGtsxPAeTcFQEEn1Y2mtfDbwOvIuZQCUrAuAQg=; b=o2nmbjJx6X5bTKOf0y8rtDlF6XsbRwCBJZ+Ixk573QLU4JyW9yCMVue+WxtuHZtFVymcrFmj
- qdAGwuzPyM6PXdZlTzeMjLP/kqL9LPbwffBZxhO5n4QrNi1dwGT2WjWzcMJ1+x1xM80G7cze
- nmte3IO8sluqtU8Bbjl4VxGuxd8=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df8e2d1.7f9b740f11f0-smtp-out-n02;
- Tue, 17 Dec 2019 14:14:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DF7CCC433CB; Tue, 17 Dec 2019 14:14:40 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 17 Dec 2019 09:19:51 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:53009 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728573AbfLQOTu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 09:19:50 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 3A2D23C057F;
+        Tue, 17 Dec 2019 15:19:49 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id q6AQr8NZ-YPY; Tue, 17 Dec 2019 15:19:44 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 27ACCC43383;
-        Tue, 17 Dec 2019 14:14:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 27ACCC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     govinds@codeaurora.org
-Cc:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        linux-wireless@vger.kernel.org, ath10k@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] dt: bindings: add dt entry flag to skip SCM call for msa region
-References: <20191111042508.12628-1-govinds@codeaurora.org>
-        <20191111042508.12628-2-govinds@codeaurora.org>
-        <20191114191640.GA8426@bogus>
-        <0101016e8d2426fc-31499903-e1a0-44b3-83eb-73ba4f4a8b4a-000000@us-west-2.amazonses.com>
-Date:   Tue, 17 Dec 2019 16:14:36 +0200
-In-Reply-To: <0101016e8d2426fc-31499903-e1a0-44b3-83eb-73ba4f4a8b4a-000000@us-west-2.amazonses.com>
-        (govinds@codeaurora.org's message of "Thu, 21 Nov 2019 08:46:27
-        +0000")
-Message-ID: <87pngnavjn.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 11ED73C00BB;
+        Tue, 17 Dec 2019 15:19:44 +0100 (CET)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 17 Dec
+ 2019 15:19:43 +0100
+Date:   Tue, 17 Dec 2019 15:19:43 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Magnus Damm <magnus.damm@gmail.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v2 2/6] arm64: dts: renesas: r8a77961: Add GPIO nodes
+Message-ID: <20191217141943.GD27250@vmlxhi-102.adit-jv.com>
+References: <20191216124740.16647-1-geert+renesas@glider.be>
+ <20191216124740.16647-3-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191216124740.16647-3-geert+renesas@glider.be>
+X-Originating-IP: [10.72.93.66]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-govinds@codeaurora.org writes:
+Hi Geert,
 
-> On 2019-11-15 00:46, Rob Herring wrote:
->> On Mon, Nov 11, 2019 at 09:55:07AM +0530, Govind Singh wrote:
->>> Add boolean context flag to disable SCM call for statically
->>> mapped msa region.
->>
->> Can't this be implied by the compatible string?
->>
->
-> same soc compatible will be used in older TZ vs new TZ.
-> Due to this reason I added this.
+On Mon, Dec 16, 2019 at 01:47:36PM +0100, Geert Uytterhoeven wrote:
+> Add device nodes for the GPIO controllers on the Renesas R-Car M3-W+
+> (r8a77961) SoC.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v2:
+>   - No changes.
+> 
+> Test procedure (with "arm64: dts: renesas: r8a77961: Add RAVB node"):
+>   1. "ifconfig eth0 1.2.3.4",
+>   2. "watch grep e6052000.gpio /proc/interrupts",
+>   3. See interrupt count increase when Ethernet link goes up.
 
-So what should we do? Rob, any suggestions?
-
-Full patch here:
-
-https://patchwork.kernel.org/patch/11236535/
+Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Best Regards,
+Eugeniu
