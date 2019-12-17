@@ -2,83 +2,191 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C96C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 13:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48325C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 13:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F4620716
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 13:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6A020717
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 13:27:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VTL5CDPz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GUJigyGW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbfLQNRE (ORCPT
+        id S1726920AbfLQN1P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:17:04 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:45119 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727152AbfLQNRD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 08:17:03 -0500
-X-UUID: 29d7776f26054b5184dffc385b15fbcb-20191217
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=aC80HxRMBV0tY5Zddqx1ty1wteHBFoyprQsy+llvVXw=;
-        b=VTL5CDPz2OeBi8/qtDysQEzNHNs7TC0Fc9RMhdi1zN9Bw0KEsZJX4KdqHQGooADrQavzoyfrVW4C+6eFlg1CUGYrqahLnS+E5O/H5X5lpv+5eTWbcfRD2Wu7yPNjiu/QcMPzEV+HfUWGQZmz9w3YcmNz9nIO+lNQgX0iNK0ICW8=;
-X-UUID: 29d7776f26054b5184dffc385b15fbcb-20191217
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 763470494; Tue, 17 Dec 2019 21:16:58 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 17 Dec 2019 21:16:39 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 17 Dec 2019 21:16:32 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [v2,1/1] arm: dts: mediatek: add mt7629 pwm support
-Date:   Tue, 17 Dec 2019 21:16:53 +0800
-Message-ID: <1576588613-11530-2-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1576588613-11530-1-git-send-email-sam.shih@mediatek.com>
-References: <1576588613-11530-1-git-send-email-sam.shih@mediatek.com>
+        Tue, 17 Dec 2019 08:27:15 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31622 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726858AbfLQN1P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 08:27:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576589233;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pUq2a5pZ/dt2qGPzTnxHTjJcR3qch9Jn0NM29Gx0avs=;
+        b=GUJigyGWcU335oSByS5Vqq52E8m1ie5RgYu1+SLT3bhurC6t9oKI+SZg6giEaDzAwuP2yX
+        mP3zSihoeiDDCROxhnmcMzatLROia6mh+TdPnLWNjd3W5j+H8TofDwfS8nZ4+LLSONUf1p
+        foD9hdRomb+1L7dl5L/4LNGocQ+zDcM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-210-D7gd0hVnNieBrcFWJ_UiaQ-1; Tue, 17 Dec 2019 08:27:09 -0500
+X-MC-Unique: D7gd0hVnNieBrcFWJ_UiaQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 265F68017DF;
+        Tue, 17 Dec 2019 13:27:07 +0000 (UTC)
+Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 24A2060C63;
+        Tue, 17 Dec 2019 13:27:02 +0000 (UTC)
+Subject: Re: [PATCH v3 05/13] iommu/arm-smmu-v3: Prepare arm_smmu_s1_cfg for
+ SSID support
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+References: <20191209180514.272727-1-jean-philippe@linaro.org>
+ <20191209180514.272727-6-jean-philippe@linaro.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <7b20be5c-0b3f-dbec-ffd6-508b4667cf1b@redhat.com>
+Date:   Tue, 17 Dec 2019 14:27:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20191209180514.272727-6-jean-philippe@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHB3bSBzdXBwb3J0IGZvciBNVDc2MjkuDQpVc2VkOg0KaHR0cHM6Ly9wYXRjaHdv
-cmsua2VybmVsLm9yZy9wYXRjaC8xMTE2MDg1MS8NCg0KQ2hhbmdlIHNpbmNlIHYxOg0KcmVtb3Zl
-IHVudXNlZCBwcm9wZXJ0eSBudW0tcHdtDQoNClNpZ25lZC1vZmYtYnk6IFNhbSBTaGloIDxzYW0u
-c2hpaEBtZWRpYXRlay5jb20+DQotLS0NCiBhcmNoL2FybS9ib290L2R0cy9tdDc2MjkuZHRzaSB8
-IDE0ICsrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKykNCg0K
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL210NzYyOS5kdHNpIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvbXQ3NjI5LmR0c2kNCmluZGV4IDg2N2I4ODEwM2I5ZC4uY2UyYTMwYTI0MDE3IDEwMDY0
-NA0KLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvbXQ3NjI5LmR0c2kNCisrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL210NzYyOS5kdHNpDQpAQCAtMjQxLDYgKzI0MSwyMCBAQA0KIAkJCXN0YXR1cyA9ICJk
-aXNhYmxlZCI7DQogCQl9Ow0KIA0KKwkJcHdtOiBwd21AMTEwMDYwMDAgew0KKwkJCWNvbXBhdGli
-bGUgPSAibWVkaWF0ZWssbXQ3NjI5LXB3bSI7DQorCQkJcmVnID0gPDB4MTEwMDYwMDAgMHgxMDAw
-PjsNCisJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNzcgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCisJ
-CQljbG9ja3MgPSA8JnRvcGNrZ2VuIENMS19UT1BfUFdNX1NFTD4sDQorCQkJCSA8JnBlcmljZmcg
-Q0xLX1BFUklfUFdNX1BEPiwNCisJCQkJIDwmcGVyaWNmZyBDTEtfUEVSSV9QV00xX1BEPjsNCisJ
-CQljbG9jay1uYW1lcyA9ICJ0b3AiLCAibWFpbiIsICJwd20xIjsNCisJCQlhc3NpZ25lZC1jbG9j
-a3MgPSA8JnRvcGNrZ2VuIENMS19UT1BfUFdNX1NFTD47DQorCQkJYXNzaWduZWQtY2xvY2stcGFy
-ZW50cyA9DQorCQkJCQk8JnRvcGNrZ2VuIENMS19UT1BfVU5JVlBMTDJfRDQ+Ow0KKwkJCXN0YXR1
-cyA9ICJkaXNhYmxlZCI7DQorCQl9Ow0KKw0KIAkJaTJjOiBpMmNAMTEwMDcwMDAgew0KIAkJCWNv
-bXBhdGlibGUgPSAibWVkaWF0ZWssbXQ3NjI5LWkyYyIsDQogCQkJCSAgICAgIm1lZGlhdGVrLG10
-MjcxMi1pMmMiOw0KLS0gDQoyLjE3LjENCg==
+Hi Jean,
+
+On 12/9/19 7:05 PM, Jean-Philippe Brucker wrote:
+> When adding SSID support to the SMMUv3 driver, we'll need to manipulate
+> leaf pasid tables and context descriptors. Extract the context
+> descriptor structure and introduce a new table structure.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+
+Thanks
+
+Eric
+
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 44 +++++++++++++++++++++----------------
+>  1 file changed, 25 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index 837b4283b4dc..b287e303b1d7 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -553,16 +553,21 @@ struct arm_smmu_strtab_l1_desc {
+>  	dma_addr_t			l2ptr_dma;
+>  };
+>  
+> +struct arm_smmu_ctx_desc {
+> +	u16				asid;
+> +	u64				ttbr;
+> +	u64				tcr;
+> +	u64				mair;
+> +};
+> +
+> +struct arm_smmu_cd_table {
+> +	__le64				*ptr;
+> +	dma_addr_t			ptr_dma;
+> +};
+> +
+>  struct arm_smmu_s1_cfg {
+> -	__le64				*cdptr;
+> -	dma_addr_t			cdptr_dma;
+> -
+> -	struct arm_smmu_ctx_desc {
+> -		u16	asid;
+> -		u64	ttbr;
+> -		u64	tcr;
+> -		u64	mair;
+> -	}				cd;
+> +	struct arm_smmu_cd_table	table;
+> +	struct arm_smmu_ctx_desc	cd;
+>  };
+>  
+>  struct arm_smmu_s2_cfg {
+> @@ -1471,6 +1476,7 @@ static void arm_smmu_write_ctx_desc(struct arm_smmu_device *smmu,
+>  				    struct arm_smmu_s1_cfg *cfg)
+>  {
+>  	u64 val;
+> +	__le64 *cdptr = cfg->table.ptr;
+>  
+>  	/*
+>  	 * We don't need to issue any invalidation here, as we'll invalidate
+> @@ -1488,12 +1494,12 @@ static void arm_smmu_write_ctx_desc(struct arm_smmu_device *smmu,
+>  	if (smmu->features & ARM_SMMU_FEAT_STALL_FORCE)
+>  		val |= CTXDESC_CD_0_S;
+>  
+> -	cfg->cdptr[0] = cpu_to_le64(val);
+> +	cdptr[0] = cpu_to_le64(val);
+>  
+>  	val = cfg->cd.ttbr & CTXDESC_CD_1_TTB0_MASK;
+> -	cfg->cdptr[1] = cpu_to_le64(val);
+> +	cdptr[1] = cpu_to_le64(val);
+>  
+> -	cfg->cdptr[3] = cpu_to_le64(cfg->cd.mair);
+> +	cdptr[3] = cpu_to_le64(cfg->cd.mair);
+>  }
+>  
+>  /* Stream table manipulation functions */
+> @@ -1624,7 +1630,7 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
+>  		   !(smmu->features & ARM_SMMU_FEAT_STALL_FORCE))
+>  			dst[1] |= cpu_to_le64(STRTAB_STE_1_S1STALLD);
+>  
+> -		val |= (s1_cfg->cdptr_dma & STRTAB_STE_0_S1CTXPTR_MASK) |
+> +		val |= (s1_cfg->table.ptr_dma & STRTAB_STE_0_S1CTXPTR_MASK) |
+>  			FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_S1_TRANS);
+>  	}
+>  
+> @@ -2138,11 +2144,11 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
+>  	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
+>  		struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+>  
+> -		if (cfg->cdptr) {
+> +		if (cfg->table.ptr) {
+>  			dmam_free_coherent(smmu_domain->smmu->dev,
+>  					   CTXDESC_CD_DWORDS << 3,
+> -					   cfg->cdptr,
+> -					   cfg->cdptr_dma);
+> +					   cfg->table.ptr,
+> +					   cfg->table.ptr_dma);
+>  
+>  			arm_smmu_bitmap_free(smmu->asid_map, cfg->cd.asid);
+>  		}
+> @@ -2167,9 +2173,9 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
+>  	if (asid < 0)
+>  		return asid;
+>  
+> -	cfg->cdptr = dmam_alloc_coherent(smmu->dev, CTXDESC_CD_DWORDS << 3,
+> -					 &cfg->cdptr_dma, GFP_KERNEL);
+> -	if (!cfg->cdptr) {
+> +	cfg->table.ptr = dmam_alloc_coherent(smmu->dev, CTXDESC_CD_DWORDS << 3,
+> +					     &cfg->table.ptr_dma, GFP_KERNEL);
+> +	if (!cfg->table.ptr) {
+>  		dev_warn(smmu->dev, "failed to allocate context descriptor\n");
+>  		ret = -ENOMEM;
+>  		goto out_free_asid;
+> 
 
