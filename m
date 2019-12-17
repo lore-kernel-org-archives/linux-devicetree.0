@@ -2,164 +2,272 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C6CC2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B32C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4C824655
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C163E21D7D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:34:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VZf0Iayo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbfLQOaa (ORCPT
+        id S1727941AbfLQOd6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:30:30 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:53164 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728896AbfLQOaa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 09:30:30 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id D977A3C00BB;
-        Tue, 17 Dec 2019 15:30:26 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3Vhf28cP6kOK; Tue, 17 Dec 2019 15:30:21 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id CEA7B3C057F;
-        Tue, 17 Dec 2019 15:30:21 +0100 (CET)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 17 Dec
- 2019 15:30:21 +0100
-Date:   Tue, 17 Dec 2019 15:30:21 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     Magnus Damm <magnus.damm@gmail.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        <linux-renesas-soc@vger.kernel.org>,
+        Tue, 17 Dec 2019 09:33:58 -0500
+Received: from mail-eopbgr70050.outbound.protection.outlook.com ([40.107.7.50]:10086
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727029AbfLQOd6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:33:58 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iAFNgzKIJoRvNuhTqtN+AEnIfYt3BaHIb1xlz63RafhKFB2Py6AkQXj/+SbW/pxo6Q+8rGUAkhEB+kRuRewuw+3d17s2pyGE28rt+vJ5FNq1D5rIlJh9aiduIXfPI/R1rEicjACSg7qaBvc4Am3WlM2epSseZPZc3BsT0CkcHUnCyFoM4GpsiwXmRfOQld1dFZurCwg2kJ60O9IbgOP/MOfe0l92y7YIJEu2BqlBKSA1iFg+TJzSqBwLmCbLRvmQO1gRg0G07bnQktg11SJABmQGz8zYW/NhB8YvUyJT0YXkrpticDkElEFy1C80f1YgC+Vb5tAvwkp8vkkDhV347Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a67BXvFyL5lSprSXzZpMAHmyDRdW/sb9BrE3UvsM554=;
+ b=m8zkFz++YpeGQyTjQQPJqRfzZGfJbPM+sVDcbR2yRbsWQgBIfAMVEWmrFioHaPDpPMjINNOfJ/x9eifLUqpSDypc/wXlykBqumV4i3kcPUKD+hsjDiBWbfyffw2hKlL4mfXlKM2V9ekZNWoqa059342EOREogCyipKX/owCec5r2kKi65ysSHvhcMnX8uQ+WfA92bDuuSpf9njNcHBejpE1wnyHvzXQrZGgv++QZZVp69EQQT/2NmQXAkI/uC9zwNRNMqKAstjhUDMAuTek/u1T/q40mctWEZSb1VCCZ8h6fdk4pmIMZdFa0tV23puBpyZvzIWPRKGzjcpUTnQ+hyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a67BXvFyL5lSprSXzZpMAHmyDRdW/sb9BrE3UvsM554=;
+ b=VZf0Iayo2fYacEUCid43vgViRZXQiK8CcDk2PbIhvsAGmu4PPoTG8Hfg7vvU7CPbpBVuTzMUJ4thqz+m+rWw0LCWrRb6ziP2aHyDZ9NGUZdX5GCRvoCVWIdPoSamG6meOZpoTlt3AoZWIxdarLULrVPhxApFPDoSDj4JjMSAkEo=
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
+ VI1PR04MB5359.eurprd04.prod.outlook.com (20.178.122.92) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.17; Tue, 17 Dec 2019 14:33:52 +0000
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::2c49:44c8:2c02:68b1]) by VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::2c49:44c8:2c02:68b1%5]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
+ 14:33:52 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "lukasz.luba@arm.com" <lukasz.luba@arm.com>,
+        "a.swigon@samsung.com" <a.swigon@samsung.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "kgene@kernel.org" <kgene@kernel.org>,
+        "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>,
+        "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v2 6/6] arm64: dts: renesas: r8a77961: Add SDHI nodes
-Message-ID: <20191217143021.GE27250@vmlxhi-102.adit-jv.com>
-References: <20191216124740.16647-1-geert+renesas@glider.be>
- <20191216124740.16647-7-geert+renesas@glider.be>
-MIME-Version: 1.0
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>
+Subject: Re: [PATCH 2/9] PM / devfreq: Remove devfreq_get_devfreq_by_phandle
+ function
+Thread-Topic: [PATCH 2/9] PM / devfreq: Remove devfreq_get_devfreq_by_phandle
+ function
+Thread-Index: AQHVtJ3+QgbB6+oDD0SBl418fSrNCQ==
+Date:   Tue, 17 Dec 2019 14:33:52 +0000
+Message-ID: <VI1PR04MB70231FA16F12ACA3A3C01772EE500@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <20191217055738.28445-1-cw00.choi@samsung.com>
+ <CGME20191217055105epcas1p2d2930402a559e381a7854f515a683d15@epcas1p2.samsung.com>
+ <20191217055738.28445-3-cw00.choi@samsung.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 87c4335f-9303-4162-ffab-08d782fe2352
+x-ms-traffictypediagnostic: VI1PR04MB5359:
+x-microsoft-antispam-prvs: <VI1PR04MB53598C0A2E09F242C3EBE713EE500@VI1PR04MB5359.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(136003)(366004)(39860400002)(199004)(189003)(8676002)(478600001)(6506007)(53546011)(86362001)(52536014)(5660300002)(186003)(8936002)(4326008)(81156014)(91956017)(55016002)(316002)(7416002)(76116006)(54906003)(110136005)(66946007)(66446008)(9686003)(64756008)(26005)(66556008)(66476007)(2906002)(44832011)(33656002)(7696005)(71200400001)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5359;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kaGmMq+qiqRfPVQdn72HkdkScAhoAYVLa3DcRyr26+4wclZT/udrnlICDOwuJOQqkqtzG7CjIGdL/xd4wPPMoFdH+kPvaR6QCkX5ya+reIsDyD3Fr9YjVgnuxlgCNu8+YByclMIf9eGhjMDVvwtFuLY3BdryN/2Nasdawn81ZRyegeSJptP0puza1I0c2bTUPcear6VZwEYt5jfwIkrENCrxdyav2YCA7IXzFzZJ3ji6XZi5r7inpnSAlEMZt2Wsg0gUBwmyMI849UyT2j9n3j83CsXwCj9tJEe6gKms8JtmhbV96xaOp2u44cwVSyQ6lS89E8LxK8ogXmrnv5dUN/LfcLWnZlkFAq21h1IKutnIWV7PQwS9MrvDz/YCO+GRINmssKz97y/Pfub4QksBK+fBpIbpuUDEOHjUr7gTmVM9VAlw7g/kFvh9OEKZ3Q+V
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191216124740.16647-7-geert+renesas@glider.be>
-X-Originating-IP: [10.72.93.66]
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87c4335f-9303-4162-ffab-08d782fe2352
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 14:33:52.0428
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hD8RERiaMu7LEB27PHVR24KtbWvJDBWmUGf0gwwyfvvy1uHj12fk8lTfZXyEPD8VpnL3ycjOkskGVRqsYz35yQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5359
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On Mon, Dec 16, 2019 at 01:47:40PM +0100, Geert Uytterhoeven wrote:
-> Add device nodes for the SDHI Interfaces on the Renesas R-Car M3-W+
-> (r8a77961) SoC.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v2:
->   - No changes.
-> 
-> Test procedure (eMMC):
->   1. "hd /dev/mmcblk0boot1".
-> ---
->  arch/arm64/boot/dts/renesas/r8a77961.dtsi | 39 +++++++++++++++++++++--
->  1 file changed, 36 insertions(+), 3 deletions(-)
-
-Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-
-[Unrelated to this patch/series] Building the kernel image on your
-topic/r8a77961-extra-v2 branch and booting the M3-W+ Salvator-XS target
-from MMC, I get a panic [1]. Fortunately, this is already fixed by
-7de7de7ca0ae0f ("Fix root mounting with no mount options")
-
-[1] panic booting from SD card (KASAN=y)
-[    8.825749] Waiting for root device /dev/mmcblk1p2...
-[    8.909815] mmc1: new ultra high speed SDR104 SDHC card at address aaaa
-[    8.936963] mmcblk1: mmc1:aaaa SL32G 29.7 GiB 
-[    8.997913]  mmcblk1: p1 p2 p3 < p5 p6 p7 >
-[    9.067410] ==================================================================
-[    9.075652] BUG: KASAN: null-ptr-deref in strncpy+0x4c/0x6c
-[    9.081862] Read of size 1 at addr 0000000000000000 by task swapper/0/1
-[    9.089185] 
-[    9.090944] CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc2+ #2
-[    9.097890] Hardware name: Renesas Salvator-X 2nd version board based on r8a77961 (DT)
-[    9.106652] Call trace:
-[    9.109458]  dump_backtrace+0x0/0x244
-[    9.113574]  show_stack+0x1c/0x24
-[    9.117316]  dump_stack+0xe4/0x140
-[    9.121155]  __kasan_report+0x1b0/0x1c8
-[    9.125458]  kasan_report+0xc/0x14
-[    9.129289]  __asan_load1+0x34/0x60
-[    9.133216]  strncpy+0x4c/0x6c
-[    9.136681]  do_mount_root+0x7c/0x150
-[    9.140797]  mount_block_root+0x1c4/0x304
-[    9.145293]  mount_root+0x17c/0x1bc
-[    9.149222]  prepare_namespace+0x150/0x160
-[    9.153812]  kernel_init_freeable+0x3b8/0x434
-[    9.158686]  kernel_init+0x18/0x130
-[    9.162617]  ret_from_fork+0x10/0x18
-[    9.166630] ==================================================================
-[    9.174629] Disabling lock debugging due to kernel taint
-[    9.180510] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-[    9.189491] Mem abort info:
-[    9.192387]   ESR = 0x96000004
-[    9.195554]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    9.200989]   SET = 0, FnV = 0
-[    9.204145]   EA = 0, S1PTW = 0
-[    9.207394] Data abort info:
-[    9.210374]   ISV = 0, ISS = 0x00000004
-[    9.214318]   CM = 0, WnR = 0
-[    9.217393] [0000000000000000] user address but active_mm is swapper
-[    9.223892] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-[    9.229535] Modules linked in:
-[    9.232646] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B             5.5.0-rc2+ #2
-[    9.240391] Hardware name: Renesas Salvator-X 2nd version board based on r8a77961 (DT)
-[    9.248402] pstate: 60000005 (nZCv daif -PAN -UAO)
-[    9.253260] pc : strncpy+0x4c/0x6c
-[    9.256711] lr : strncpy+0x4c/0x6c
-[    9.260158] sp : ffff000675b57b80
-[    9.263518] x29: ffff000675b57b80 x28: ffff00066ebc7005 
-[    9.268900] x27: 0000000000000008 x26: ffffa000112adf30 
-[    9.274282] x25: fffffe00199af1c0 x24: ffffa00010c31ba0 
-[    9.279664] x23: ffff00066e418fff x22: ffff00066ebc7000 
-[    9.285046] x21: ffff00066e418000 x20: 0000000000000000 
-[    9.290428] x19: ffff00066e418000 x18: 0000000000000000 
-[    9.295809] x17: 00000000000014a0 x16: 0000000000001540 
-[    9.301190] x15: 0000000000001498 x14: 0000000000001480 
-[    9.306570] x13: 0000000000001488 x12: ffff8000ceb6af0e 
-[    9.311952] x11: 1fffe000ceb6af0e x10: 0000000000001710 
-[    9.317334] x9 : ffffa00010c17f3c x8 : ffff000675b57877 
-[    9.322715] x7 : ffff8000ceb6af0f x6 : ffff8000ceb6af0f 
-[    9.328097] x5 : dfffa00000000000 x4 : ffff000675b48000 
-[    9.333478] x3 : ffffa00010c12678 x2 : 0000000000000007 
-[    9.338859] x1 : ac027d2c81180b00 x0 : 0000000000000000 
-[    9.344240] Call trace:
-[    9.346729]  strncpy+0x4c/0x6c
-[    9.349832]  do_mount_root+0x7c/0x150
-[    9.353546]  mount_block_root+0x1c4/0x304
-[    9.357611]  mount_root+0x17c/0x1bc
-[    9.361150]  prepare_namespace+0x150/0x160
-[    9.365303]  kernel_init_freeable+0x3b8/0x434
-[    9.369718]  kernel_init+0x18/0x130
-[    9.373258]  ret_from_fork+0x10/0x18
-[    9.376893] Code: a8c47bfd d65f03c0 aa1403e0 97dc44f6 (39400296) 
-[    9.383067] ---[ end trace 73d9c2c2bc9e939b ]---
-[    9.387965] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-[    9.395737] SMP: stopping secondary CPUs
-[    9.399731] Kernel Offset: disabled
-[    9.403268] CPU features: 0x10002,21006004
-[    9.407415] Memory Limit: none
-[    9.410545] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
-
--- 
-Best Regards,
-Eugeniu
+On 17.12.2019 07:51, Chanwoo Choi wrote:=0A=
+> Previously, devfreq core support 'devfreq' property in order to get=0A=
+> the devfreq device by phandle. But, 'devfreq' property name is not proper=
+=0A=
+> on devicetree binding because this name doesn't mean the any h/w attribut=
+e.=0A=
+> =0A=
+> The devfreq core hand over the right to decide the property name=0A=
+> for getting the devfreq device on devicetree. Each devfreq driver=0A=
+> will decide the property name on devicetree binding and then get=0A=
+> the devfreq device by using devfreq_get_devfreq_by_node().=0A=
+> =0A=
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>=0A=
+> ---=0A=
+>   drivers/devfreq/devfreq.c    | 35 -----------------------------------=
+=0A=
+>   drivers/devfreq/exynos-bus.c | 14 ++++++++++++--=0A=
+>   include/linux/devfreq.h      |  8 --------=0A=
+>   3 files changed, 12 insertions(+), 45 deletions(-)=0A=
+> =0A=
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c=0A=
+> index cb8ca81c8973..c3d3c7c802a0 100644=0A=
+> --- a/drivers/devfreq/devfreq.c=0A=
+> +++ b/drivers/devfreq/devfreq.c=0A=
+> @@ -991,48 +991,13 @@ struct devfreq *devfreq_get_devfreq_by_node(struct =
+device_node *node)=0A=
+>   =0A=
+>   	return ERR_PTR(-ENODEV);=0A=
+>   }=0A=
+> -=0A=
+> -/*=0A=
+> - * devfreq_get_devfreq_by_phandle - Get the devfreq device from devicetr=
+ee=0A=
+> - * @dev - instance to the given device=0A=
+> - * @index - index into list of devfreq=0A=
+> - *=0A=
+> - * return the instance of devfreq device=0A=
+> - */=0A=
+> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int i=
+ndex)=0A=
+> -{=0A=
+> -	struct device_node *node;=0A=
+> -	struct devfreq *devfreq;=0A=
+> -=0A=
+> -	if (!dev)=0A=
+> -		return ERR_PTR(-EINVAL);=0A=
+> -=0A=
+> -	if (!dev->of_node)=0A=
+> -		return ERR_PTR(-EINVAL);=0A=
+> -=0A=
+> -	node =3D of_parse_phandle(dev->of_node, "devfreq", index);=0A=
+> -	if (!node)=0A=
+> -		return ERR_PTR(-ENODEV);=0A=
+> -=0A=
+> -	devfreq =3D devfreq_get_devfreq_by_node(node);=0A=
+> -	of_node_put(node);=0A=
+> -=0A=
+> -	return devfreq;=0A=
+> -}=0A=
+> -=0A=
+>   #else=0A=
+>   struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)=
+=0A=
+>   {=0A=
+>   	return ERR_PTR(-ENODEV);=0A=
+>   }=0A=
+> -=0A=
+> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int i=
+ndex)=0A=
+> -{=0A=
+> -	return ERR_PTR(-ENODEV);=0A=
+> -}=0A=
+>   #endif /* CONFIG_OF */=0A=
+>   EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_node);=0A=
+> -EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_phandle);=0A=
+>   =0A=
+>   /**=0A=
+>    * devm_devfreq_remove_device() - Resource-managed devfreq_remove_devic=
+e()=0A=
+> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c=
+=0A=
+> index 7f5917d59072..9aac2db956d5 100644=0A=
+> --- a/drivers/devfreq/exynos-bus.c=0A=
+> +++ b/drivers/devfreq/exynos-bus.c=0A=
+> @@ -146,6 +146,16 @@ static int exynos_bus_get_dev_status(struct device *=
+dev,=0A=
+>   	return ret;=0A=
+>   }=0A=
+>   =0A=
+> +static struct devfreq *get_parent_devfreq_by_node(struct device_node *np=
+)=0A=
+> +{=0A=
+> +	struct device_node *node =3D of_parse_phandle(np, "devfreq", 0);=0A=
+> +=0A=
+> +	if (!node)=0A=
+> +		return ERR_PTR(-ENODEV);=0A=
+> +=0A=
+> +	return devfreq_get_devfreq_by_node(node);=0A=
+> +}=0A=
+=0A=
+The _by_node suffix here is confusing because it actually fetches a =0A=
+property of the node unlike devfreq_get_devfreq_by_node. Maybe call this =
+=0A=
+get_parent_devfreq_from_node?=0A=
+=0A=
+Since it's a static function it could just be called get_parent_devfreq?=0A=
+=0A=
+> +=0A=
+>   static void exynos_bus_exit(struct device *dev)=0A=
+>   {=0A=
+>   	struct exynos_bus *bus =3D dev_get_drvdata(dev);=0A=
+> @@ -353,8 +363,8 @@ static int exynos_bus_profile_init_passive(struct exy=
+nos_bus *bus,=0A=
+>   	profile->exit =3D exynos_bus_passive_exit;=0A=
+>   =0A=
+>   	/* Get the instance of parent devfreq device */=0A=
+> -	parent_devfreq =3D devfreq_get_devfreq_by_phandle(dev, 0);=0A=
+> -	if (IS_ERR(parent_devfreq))=0A=
+> +	parent_devfreq =3D get_parent_devfreq_by_node(dev->of_node);=0A=
+> +	if (IS_ERR(parent_devfreq)) {=0A=
+>   		return -EPROBE_DEFER;=0A=
+>   =0A=
+>   	passive_data =3D devm_kzalloc(dev, sizeof(*passive_data), GFP_KERNEL);=
+=0A=
+> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h=0A=
+> index e3633ae43349..3ed96426302e 100644=0A=
+> --- a/include/linux/devfreq.h=0A=
+> +++ b/include/linux/devfreq.h=0A=
+> @@ -254,8 +254,6 @@ extern void devm_devfreq_unregister_notifier(struct d=
+evice *dev,=0A=
+>   				struct notifier_block *nb,=0A=
+>   				unsigned int list);=0A=
+>   extern struct devfreq *devfreq_get_devfreq_by_node(struct device_node *=
+node);=0A=
+> -extern struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev=
+,=0A=
+> -						int index);=0A=
+>   =0A=
+>   #if IS_ENABLED(CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND)=0A=
+>   /**=0A=
+> @@ -413,12 +411,6 @@ struct devfreq *devfreq_get_devfreq_by_node(struct d=
+evice_node *node)=0A=
+>   	return ERR_PTR(-ENODEV);=0A=
+>   }=0A=
+>   =0A=
+> -static inline struct devfreq *devfreq_get_devfreq_by_phandle(struct devi=
+ce *dev,=0A=
+> -							int index)=0A=
+> -{=0A=
+> -	return ERR_PTR(-ENODEV);=0A=
+> -}=0A=
+> -=0A=
+>   static inline int devfreq_update_stats(struct devfreq *df)=0A=
+>   {=0A=
+>   	return -EINVAL;=0A=
+> =0A=
+=0A=
