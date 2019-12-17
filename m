@@ -2,66 +2,63 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C08C2D0D5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 18:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF45C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 18:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876D12467B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 18:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA31820733
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 18:07:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="TIguiMO2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="jPyk8Ja+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfLQSC3 (ORCPT
+        id S1728237AbfLQSHP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:02:29 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.100]:21663 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727754AbfLQSC3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 13:02:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576605746;
+        Tue, 17 Dec 2019 13:07:15 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.124]:36500 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727795AbfLQSHO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 13:07:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576606032;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=e9Acl2lPHSViAJlry8h9OxbHdT+QMq3UUsSm00td1FE=;
-        b=TIguiMO2FMlGP0OBGFb0Ugbt2/t/EmumWGKKyvhyw0WbX64YFPu/6THluPg6r5N8mw
-        iyzNBrIDmzicQgv73tHroe9fQx6ZRAbaZaaBZB3xL9G9vmXFPOJEtql7eWroVUmXpCBq
-        lOmwY2DHToY/ToWxfTzLKvq9sxLjbLHe/CMIqNSPu6XxB+WnaJdGSxrVVwNTxEmHJlfr
-        yDKo/DpYDUJSoq+wBgOGd6PRFc9SdFqqEB5Ou3H/HnzCxxRykMSqc0xEsAJEePUWd243
-        fsTHNvjZ08/C7puGDcgsR4TlUR0byKc1HqwQ7cFkL+cJ80aUqF3+Lkd1OpAHRWCR4V+H
-        8WUA==
+        bh=UMXxJFiRafysqC5ToenIitB6VIK2rKk3aw2iJjhwYXI=;
+        b=jPyk8Ja+RdOWhpFdqUTfsfA+H6ltACGPK5lQH4IPxGajY6gI/KZiwKv5k9nWwUsJQg
+        PygrXs70zgHo6VNUVOd17tH5Yjic8n/6YO+tT4x1nTGqrK1ILzsYcjtvG9g23A9wnsLF
+        anF/a6z+jusjZjHmGqvOj2qyJdc8CpU5jG1UMz4KXq47iB3zJHs2FG6AtUu6n2zdpk1k
+        1f1+DxmggO0xBFnmwoNQGg5u9xZgw5kQdpfXVLey+e+AaoGo77XuD0oqmCUiJavU54oc
+        ktSOBIA4/FcP7h1CB08jt/vTRNL+XpxN6SaXhWPK7Auh1Q/ZbBD0aOI3xEDZpBlolXjb
+        I9sQ==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH5Hd8HaSCa"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.0.7 DYNA|AUTH)
-        with ESMTPSA id q020e2vBHI292dX
+        with ESMTPSA id q020e2vBHI732eU
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Tue, 17 Dec 2019 19:02:09 +0100 (CET)
+        Tue, 17 Dec 2019 19:07:03 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v4 4/8] ARM: DTS: omap3: add sgx gpu child node
-Date:   Tue, 17 Dec 2019 19:02:02 +0100
-Message-Id: <103c92a7d19387860aea406e0356249b02a3cbce.1576605726.git.hns@goldelico.com>
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Subject: [PATCH v2 2/2] wl1251: remove ti,power-gpio for SDIO mode
+Date:   Tue, 17 Dec 2019 19:07:00 +0100
+Message-Id: <644b6f86c7ad5c24753a721cb262d8a9a371d914.1576606020.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1576605726.git.hns@goldelico.com>
-References: <cover.1576605726.git.hns@goldelico.com>
+In-Reply-To: <cover.1576606020.git.hns@goldelico.com>
+References: <cover.1576606020.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -69,43 +66,91 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-and add interrupt
+Remove handling of this property from code.
 
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # OpenPandora 600 MHz.
+Note that wl->power_gpio is still needed in
+the header file for SPI mode (N900).
+
+Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/arm/boot/dts/omap34xx.dtsi | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/wireless/ti/wl1251/sdio.c | 32 ++-------------------------
+ 1 file changed, 2 insertions(+), 30 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
-index c4dd9801840d..a858a2e8002d 100644
---- a/arch/arm/boot/dts/omap34xx.dtsi
-+++ b/arch/arm/boot/dts/omap34xx.dtsi
-@@ -159,7 +159,7 @@
- 		 * are also different clocks, but we do not have any dts users
- 		 * for it.
- 		 */
--		sgx_module: target-module@50000000 {
-+		target-module@50000000 {
- 			compatible = "ti,sysc-omap2", "ti,sysc";
- 			reg = <0x50000014 0x4>;
- 			reg-names = "rev";
-@@ -169,10 +169,11 @@
- 			#size-cells = <1>;
- 			ranges = <0 0x50000000 0x4000>;
+diff --git a/drivers/net/wireless/ti/wl1251/sdio.c b/drivers/net/wireless/ti/wl1251/sdio.c
+index a032a1f92b57..4dff8bceb649 100644
+--- a/drivers/net/wireless/ti/wl1251/sdio.c
++++ b/drivers/net/wireless/ti/wl1251/sdio.c
+@@ -15,9 +15,7 @@
+ #include <linux/wl12xx.h>
+ #include <linux/irq.h>
+ #include <linux/pm_runtime.h>
+-#include <linux/gpio.h>
+ #include <linux/of.h>
+-#include <linux/of_gpio.h>
+ #include <linux/of_irq.h>
  
--			/*
--			 * Closed source PowerVR driver, no child device
--			 * binding or driver in mainline
--			 */
-+			sgx: gpu@0 {
-+				compatible = "ti,omap3-sgx530-121", "img,sgx530-121", "img,sgx530";
-+				reg = <0x0 0x4000>;	/* 64kB */
-+				interrupts = <21>;
-+			};
- 		};
- 	};
+ #include "wl1251.h"
+@@ -162,15 +160,6 @@ static int wl1251_sdio_set_power(struct wl1251 *wl, bool enable)
+ printk("%s %d\n", __func__, enable);
  
+ 	if (enable) {
+-		/*
+-		 * Power is controlled by runtime PM, but we still call board
+-		 * callback in case it wants to do any additional setup,
+-		 * for example enabling clock buffer for the module.
+-		 */
+-		if (gpio_is_valid(wl->power_gpio))
+-			gpio_set_value(wl->power_gpio, true);
+-
+-
+ 		ret = pm_runtime_get_sync(&func->dev);
+ 		if (ret < 0) {
+ 			pm_runtime_put_sync(&func->dev);
+@@ -188,9 +177,6 @@ printk("%s %d\n", __func__, enable);
+ 		ret = pm_runtime_put_sync(&func->dev);
+ 		if (ret < 0)
+ 			goto out;
+-
+-		if (gpio_is_valid(wl->power_gpio))
+-			gpio_set_value(wl->power_gpio, false);
+ 	}
+ 
+ out:
+@@ -245,31 +231,17 @@ printk("%s: of=%pOFcC\n", __func__, np);
+ 
+ 	wl1251_board_data = wl1251_get_platform_data();
+ 	if (!IS_ERR(wl1251_board_data)) {
+-		wl->power_gpio = wl1251_board_data->power_gpio;
+ 		wl->irq = wl1251_board_data->irq;
+ 		wl->use_eeprom = wl1251_board_data->use_eeprom;
+ 	} else if (np) {
+-		wl->use_eeprom = of_property_read_bool(np,
+-						       "ti,wl1251-has-eeprom");
+-		wl->power_gpio = of_get_named_gpio(np, "ti,power-gpio", 0);
++		wl->use_eeprom = of_property_read_bool(np, "ti,wl1251-has-eeprom");
+ 		wl->irq = of_irq_get(np, 0);
+-
+-		if (wl->power_gpio == -EPROBE_DEFER ||
+-		    wl->irq == -EPROBE_DEFER) {
++		if (wl->irq == -EPROBE_DEFER) {
+ 			ret = -EPROBE_DEFER;
+ 			goto disable;
+ 		}
+ 	}
+ 
+-	if (gpio_is_valid(wl->power_gpio)) {
+-		ret = devm_gpio_request(&func->dev, wl->power_gpio,
+-								"wl1251 power");
+-		if (ret) {
+-			wl1251_error("Failed to request gpio: %d\n", ret);
+-			goto disable;
+-		}
+-	}
+-
+ 	if (wl->irq) {
+ 		irq_set_status_flags(wl->irq, IRQ_NOAUTOEN);
+ 		ret = request_irq(wl->irq, wl1251_line_irq, 0, "wl1251", wl);
 -- 
 2.23.0
 
