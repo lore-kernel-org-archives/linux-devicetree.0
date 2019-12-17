@@ -2,154 +2,313 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD643C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 13:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15A3C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 13:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93BDF218AC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 13:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94BA62067C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 13:54:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="MCr/BIYD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lTG+PpfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfLQNya (ORCPT
+        id S1728593AbfLQNyf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:54:30 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:46186 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728309AbfLQNy3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 08:54:29 -0500
-Received: from pendragon.ideasonboard.com (85-76-114-113-nat.elisa-mobile.fi [85.76.114.113])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 77CCC9C5;
-        Tue, 17 Dec 2019 14:54:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576590867;
-        bh=a9Znys4PI/NrVQPB6/m8UFFVFKRqUcrKabr7FFz1U2I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MCr/BIYD7JtXnJygA8jtzeEOMAh1Af/VCqhl/qOlcyOdTddo1xKlIjK1P5ic8BwXp
-         hGKwm4Hhp7GHmXVV2ojkoRtdoC7mlqULCe4b0ZkW8ENzcievuDi1L4CD90upFUxy02
-         UvhdbxA8DYpBn0lAKHVTn6Sf+MknFL2hO3jc7QCc=
-Date:   Tue, 17 Dec 2019 15:54:14 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
+        Tue, 17 Dec 2019 08:54:35 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33337 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728574AbfLQNye (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 08:54:34 -0500
+Received: by mail-wr1-f66.google.com with SMTP id b6so11423311wrq.0
+        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 05:54:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=oA8lLtw5+Ki0rvk2E5DHDZT8Xzrj3ly5MFjUCZJfvp4=;
+        b=lTG+PpfFsBwem7LWNxasDI84APR3q/FRpiSMZtA97AEzPrTw2ZyGUJQg/2FxOcmzPj
+         mR8fMTv8VyALWzwIWUVsBn08FAh1PZukJmgC3lBgktyX0rejOrHDGoS+brxtqiakPnkw
+         +Lp5ryB6ZwG4GA7LfhEGedR1eicJaEWe+LMu4udE1xyaJyW9uUIpiZsMoP6UMmVWXSTX
+         pa5+4HCL7T03BoJ5cUrNB0Dol/uKTrsHHawoIZQSQ9Tgj1fhu8JpdmCFKDMsIeTjeWop
+         bSBopk1rH/KXWuS/YL9zR1B30nDVAx0UFUfY375pnL/CKYQhEI+hIlOXnU5xyuBlv5uz
+         bVfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=oA8lLtw5+Ki0rvk2E5DHDZT8Xzrj3ly5MFjUCZJfvp4=;
+        b=Zu1O4E3Z5ABnzV+zpUlMwb9QDFTBkLuviMkzdaztPvrCeOTlSpVSrZ80Cfyz423Yog
+         bXanecz0y1nrrNCdSySP0qiyoO++b8qlCHD9QDvgMP12OLJQvVAyEq1Sr2Wm21hx1aHC
+         LD5PoS35W2BILNVhrWUoc+ridgJJ3+riIa7/3Qatz2Dxyq+G/YImsHhi3LUeRvJ1ZvVr
+         D1HJ9dmuZkspWNBDTjnQ1+TjPlky+TMaW7hNUFujCc6ZuAlZCrGaMsr2jrerKxi9f0Dc
+         /F6j1moI55J6COMX6bVayqVGUO6WtcSHUNfs8Yf8jj64vEmUV76dw38WLBcBUJQcpYRU
+         v1iA==
+X-Gm-Message-State: APjAAAV7zx9MTXw6zU+QNOa69YOuZHdCeveWW+8pqCQqA9fBrX2NrPvJ
+        LkjJhghsYMljjCDfbJaIjt6/VQ==
+X-Google-Smtp-Source: APXvYqwHiX7Jsxay7dET6g2LF2XE9E9hwjKYARcptPGb5BljEooR+jLCasy9A33y/rTtfMlkvAcXww==
+X-Received: by 2002:adf:f80c:: with SMTP id s12mr36904115wrp.1.1576590871292;
+        Tue, 17 Dec 2019 05:54:31 -0800 (PST)
+Received: from dell ([2.27.35.132])
+        by smtp.gmail.com with ESMTPSA id x10sm25415862wrp.58.2019.12.17.05.54.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 05:54:30 -0800 (PST)
+Date:   Tue, 17 Dec 2019 13:54:30 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v4 06/13] drm/bridge: lvds-codec: Add "lvds-decoder"
- support
-Message-ID: <20191217135414.GA4741@pendragon.ideasonboard.com>
-References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1573660292-10629-7-git-send-email-fabrizio.castro@bp.renesas.com>
- <20191213171038.GH4860@pendragon.ideasonboard.com>
- <TY1PR01MB1770DEDFA6050EA77AA218F8C0500@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <CAMuHMdUE0O9_8g02f2ABiV8SSMXNJB9S9e89p0OJKnTvx8MO9g@mail.gmail.com>
- <TY1PR01MB17705FC08F72875484DF2208C0500@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <CAMuHMdVqHekyeOaHwpFyG5buNZp-XmvGizqZ=Gbg40_=NL+s2A@mail.gmail.com>
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v6 05/15] mfd: bd71828: Support ROHM BD71828 PMIC - core
+Message-ID: <20191217135430.GM18955@dell>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <252de5646fedfec7c575269843a47091fe199c79.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <20191216164641.GC18955@dell>
+ <5593db6b3328c0a1a7069d839f5c777b4b3822b6.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdVqHekyeOaHwpFyG5buNZp-XmvGizqZ=Gbg40_=NL+s2A@mail.gmail.com>
+In-Reply-To: <5593db6b3328c0a1a7069d839f5c777b4b3822b6.camel@fi.rohmeurope.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+On Tue, 17 Dec 2019, Vaittinen, Matti wrote:
 
-On Tue, Dec 17, 2019 at 01:38:51PM +0100, Geert Uytterhoeven wrote:
-> On Tue, Dec 17, 2019 at 1:31 PM Fabrizio Castro wrote:
-> > On 17 December 2019 12:21, Geert Uytterhoeven wrote:
-> >> On Tue, Dec 17, 2019 at 12:03 PM Fabrizio Castro wrote:
-> >>> On 13 December 2019 17:11, Laurent Pinchart wrote:
-> >>>> On Wed, Nov 13, 2019 at 03:51:25PM +0000, Fabrizio Castro wrote:
-> >>>>> Add support for transparent LVDS decoders by adding a new
-> >>>>> compatible string ("lvds-decoder") to the driver.
-> >>>>> This patch also adds member connector_type to struct lvds_codec,
-> >>>>> and that's because LVDS decoders have a different connector type
-> >>>>> from LVDS encoders. We fill this new member up with the data
-> >>>>> matching the compatible string.
-> >>>>>
-> >>>>> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >>>>>
-> >>>>> --- a/drivers/gpu/drm/bridge/lvds-codec.c
-> >>>>> +++ b/drivers/gpu/drm/bridge/lvds-codec.c
-> >>>>>
-> >>>>> @@ -65,6 +67,7 @@ static int lvds_codec_probe(struct platform_device *pdev)
-> >>>>>     if (!lvds_codec)
-> >>>>>             return -ENOMEM;
-> >>>>>
-> >>>>> +   lvds_codec->connector_type = (u32)of_device_get_match_data(&pdev->dev);
-> >>>>
-> >>>> I'm now getting a compilation failure here:
-> >>>>
-> >>>> drivers/gpu/drm/bridge/lvds-codec.c: In function ‘lvds_codec_probe’:
-> >>>> drivers/gpu/drm/bridge/lvds-codec.c:68:31: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
-> >>>>   lvds_codec->connector_type = (u32)of_device_get_match_data(&pdev->dev);
-> >>>>                                ^
-> >>>>
-> >>>> The fix should be simple:
-> >>>>
-> >>>>       lvds_codec->connector_type = (uintptr_t)of_device_get_match_data(dev);
-> >>>>
-> >>>> I'm bothered by the fact that I've compiled this before without any
-> >>>> issue, so this really puzzles me. Do you get the same warning ?
-> >>>
-> >>> The warning appears when compiling for arm64, understandably so.
-> >>> We must have compiled this for arm only the first time around.
-> >>>
-> >>> I think the right way to solve this is to either cast to (u32)(uintptr_t) or (u32)(unsigned long).
-> >>
-> >> Just casting to uintptr_t should be sufficient.
-> >
-> > It should be sufficient for the compiler, but I have seen examples where people
-> > preferred to be explicit, like in:
-> > drivers/mailbox/mtk-cmdq-mailbox.c
-> > drivers/leds/leds-pm8058.c
-> >
-> > Since the kernel is increasing its tightness with respect to warnings, I personally prefer
-> > (u32)(uintptr_t), even though not strictly necessary, but I am fine with (uintptr_t) if you
-> > don't like (u32)(uintptr_t).
+> Hello Lee,
 > 
-> It depends. I try to have as few casts as possible ("casts are evil").
+> On Mon, 2019-12-16 at 16:46 +0000, Lee Jones wrote:
+> > On Wed, 11 Dec 2019, Matti Vaittinen wrote:
+> > 
+> > > BD71828GW is a single-chip power management IC for battery-powered
+> > > portable
+> > > devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA
+> > > single-cell linear charger. Also included is a Coulomb counter, a
+> > > real-time
+> > > clock (RTC), 3 GPO/regulator control pins, HALL input and a 32.768
+> > > kHz
+> > > clock gate.
+> > > 
+> > > Add MFD core driver providing interrupt controller facilities and
+> > > i2c
+> > > access to sub device drivers.
+> > > 
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > ---
+> > > 
+> > > Changes since v5:
+> > > - No changes
+> > > 
+> > >  drivers/mfd/Kconfig              |  15 ++
+> > >  drivers/mfd/Makefile             |   2 +-
+> > >  drivers/mfd/rohm-bd71828.c       | 319 +++++++++++++++++++++++
+> > >  include/linux/mfd/rohm-bd71828.h | 425
+> > > +++++++++++++++++++++++++++++++
+> > >  include/linux/mfd/rohm-generic.h |   1 +
+> > >  5 files changed, 761 insertions(+), 1 deletion(-)
+> > >  create mode 100644 drivers/mfd/rohm-bd71828.c
+> > >  create mode 100644 include/linux/mfd/rohm-bd71828.h
+> > 
+> > Couple of small nits.  Once fixed, please apply my:
+> > 
+> > For my own reference:
+> >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> > 
+> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > index 420900852166..c3c9432ef51c 100644
+> > > --- a/drivers/mfd/Kconfig
+> > > +++ b/drivers/mfd/Kconfig
+> > > @@ -1906,6 +1906,21 @@ config MFD_ROHM_BD70528
+> > >  	  10 bits SAR ADC for battery temperature monitor and 1S
+> > > battery
+> > >  	  charger.
+> > >  
+> > > +config MFD_ROHM_BD71828
+> > > +	tristate "ROHM BD71828 Power Management IC"
+> > > +	depends on I2C=y
+> > > +	depends on OF
+> > > +	select REGMAP_I2C
+> > > +	select REGMAP_IRQ
+> > > +	select MFD_CORE
+> > > +	help
+> > > +	  Select this option to get support for the ROHM BD71828 Power
+> > > +	  Management IC. BD71828GW is a single-chip power management IC
+> > > for
+> > > +	  battery-powered portable devices. The IC integrates 7 buck
+> > > +	  converters, 7 LDOs, and a 1500 mA single-cell linear charger.
+> > > +	  Also included is a Coulomb counter, a real-time clock (RTC),
+> > > and
+> > > +	  a 32.768 kHz clock gate.
+> > > +
+> > >  config MFD_STM32_LPTIMER
+> > >  	tristate "Support for STM32 Low-Power Timer"
+> > >  	depends on (ARCH_STM32 && OF) || COMPILE_TEST
+> > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > > index aed99f08739f..ca2d55c679c5 100644
+> > > --- a/drivers/mfd/Makefile
+> > > +++ b/drivers/mfd/Makefile
+> > > @@ -252,6 +252,6 @@ obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
+> > >  obj-$(CONFIG_MFD_SC27XX_PMIC)	+= sprd-sc27xx-spi.o
+> > >  obj-$(CONFIG_RAVE_SP_CORE)	+= rave-sp.o
+> > >  obj-$(CONFIG_MFD_ROHM_BD70528)	+= rohm-bd70528.o
+> > > +obj-$(CONFIG_MFD_ROHM_BD71828)	+= rohm-bd71828.o
+> > >  obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
+> > >  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+> > > -
+> > 
+> > Nit: This is an unrelated change and should not really be in this
+> > patch.
 > 
-> While adding the extra (u32) cast makes it clearer that the intended
-> result is a u32 (for now), it will cause silent truncation on 64-bit if
-> connector_type is ever enlarged to unsigned long, and larger values are
-> used.
+> Ok. Will get rid of it.
 > 
-> In this particular case this is unlikely, though, as unsigned long would
-> still be 32-bit on 32-bit platforms, so the larger values cannot be
-> used.
+> > 
+> > > diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-
+> > > bd71828.c
+> > > new file mode 100644
+> > > index 000000000000..7f445d699fd9
+> > > --- /dev/null
+> > > +++ b/drivers/mfd/rohm-bd71828.c
+> > > @@ -0,0 +1,319 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +//
+> > > +// Copyright (C) 2019 ROHM Semiconductors
+> > > +//
+> > > +// ROHM BD71828 PMIC driver
+> > > +
+> 
+> //snip
+> 
+> > > +
+> > > +static struct i2c_driver bd71828_drv = {
+> > > +	.driver = {
+> > > +		.name = "rohm-bd71828",
+> > > +		.of_match_table = bd71828_of_match,
+> > > +	},
+> > > +	.probe_new = &bd71828_i2c_probe,
+> > > +};
+> > > +
+> > 
+> > Nit: You can remove this line.
+> 
+> Will do.
+> 
+> > 
+> > > +module_i2c_driver(bd71828_drv);
+> > > +
+> > > +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > ");
+> > > +MODULE_DESCRIPTION("ROHM BD71828 Power Management IC driver");
+> > > +MODULE_LICENSE("GPL");
+> > 
+> > This does not match the header.
+> 
+> How is that? This is what is stated in module.h for the 
+> MODULE_LICENSE:
+> 
+> /*
+>  * The following license idents are currently accepted as indicating
+> free
+>  * software modules
+>  *
+>  *	"GPL"				[GNU Public License v2]
+>  *	"GPL v2"			[GNU Public License v2]
+>  *	"GPL and additional rights"	[GNU Public License v2 rights
+> and more]
+>  *	"Dual BSD/GPL"			[GNU Public License v2
+>  *					 or BSD license choice]
+>  *	"Dual MIT/GPL"			[GNU Public License v2
+>  *					 or MIT license choice]
+>  *	"Dual MPL/GPL"			[GNU Public License v2
+>  *					 or Mozilla license choice]
+>  *
+>  * The following other idents are available
+>  *
+>  *	"Proprietary"			[Non free products]
+>  *
+>  * Both "GPL v2" and "GPL" (the latter also in dual licensed strings)
+> are
+>  * merely stating that the module is licensed under the GPL v2, but are
+> not
+>  * telling whether "GPL v2 only" or "GPL v2 or later". The reason why
+> there
+>  * are two variants is a historic and failed attempt to convey more
+>  * information in the MODULE_LICENSE string. For module loading the
+>  * "only/or later" distinction is completely irrelevant and does
+> neither
+>  * replace the proper license identifiers in the corresponding source
+> file
+>  * nor amends them in any way. The sole purpose is to make the
+>  * 'Proprietary' flagging work and to refuse to bind symbols which are
+>  * exported with EXPORT_SYMBOL_GPL when a non free module is loaded.
+>  *
+>  * In the same way "BSD" is not a clear license information. It merely
+>  * states, that the module is licensed under one of the compatible BSD
+>  * license variants. The detailed and correct license information is
+> again
+>  * to be found in the corresponding source files.
+>  *
+>  * There are dual licensed components, but when running with Linux it
+> is the
+>  * GPL that is relevant so this is a non issue. Similarly LGPL linked
+> with GPL
+>  * is a GPL combined work.
+>  *
+>  * This exists for several reasons
+>  * 1.	So modinfo can show license info for users wanting to vet their
+> setup
+>  *	is free
+>  * 2.	So the community can ignore bug reports including proprietary
+> modules
+>  * 3.	So vendors can do likewise based on their own policies
+>  */
+> #define MODULE_LICENSE(_license) MODULE_INFO(license, _license)
+> 
+> I have no objections on changing the license if needed but can you
+> please tell me what is Ok combos then - I am having hard time when
+> trying to select licenses which are acceptable for all.
 
-I also try to add as few casts as possible, so (uintptr_t) would be my
-preference.
+If you have this in your header:
 
-Fabrizio, could you submit a new version of this patch with the problem
-fixed (and with the casts you decide to use, but using uintptr_t instead
-of unsigned long in any case) ?
+  GPL-2.0-only
+
+Your MODULE tags should read:
+
+MODULE_LICENSE("GPL v2");
 
 -- 
-Regards,
-
-Laurent Pinchart
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
