@@ -2,189 +2,227 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09335C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 17:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA220C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 17:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2A524683
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 17:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8614F24655
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 17:19:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YXIFaprR"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="GJAQ8eMC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbfLQRHk (ORCPT
+        id S1727642AbfLQRTB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 12:07:40 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55307 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727675AbfLQRHk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 12:07:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576602458;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MdRymTJlr2MvtgHnglffoNCEP5cidnRw495PTDKXvZY=;
-        b=YXIFaprRYmL4M99cXhi6h1UOEtJn8LiPWOcnfYlkInXfvCYfdCEHmAnMvVzrbx5b7DJv1c
-        mVCqAUSDacqK2hMNVcCg4sMRAhCU5kIo5KA/zKekv9uxs4rmtPHuq1FFwimXmm317fsFoi
-        AYWmbbmMIg97334c8fSmGeIDhTwk7z8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-72-kBQCyaImMeyEcJ-ZjTbuPQ-1; Tue, 17 Dec 2019 12:07:34 -0500
-X-MC-Unique: kBQCyaImMeyEcJ-ZjTbuPQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1EAC318B6401;
-        Tue, 17 Dec 2019 17:07:32 +0000 (UTC)
-Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 065155C28C;
-        Tue, 17 Dec 2019 17:07:27 +0000 (UTC)
-Subject: Re: [PATCH v3 08/13] iommu/arm-smmu-v3: Propate ssid_bits
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-References: <20191209180514.272727-1-jean-philippe@linaro.org>
- <20191209180514.272727-9-jean-philippe@linaro.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <466bbc57-79d4-274c-67bc-4ed591da9968@redhat.com>
-Date:   Tue, 17 Dec 2019 18:07:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 17 Dec 2019 12:19:01 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46693 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727654AbfLQRTB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 12:19:01 -0500
+Received: by mail-lf1-f66.google.com with SMTP id f15so7503541lfl.13
+        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 09:18:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=r6dqBNObWr4LYfk35E/sthMAiwdIizF7BAYUklEVa2g=;
+        b=GJAQ8eMCgnCnz1aPscQ0DAtkpg8VWR5miJdKtP53dopJAPWYnM/MCSvBMd8ugJmup1
+         yMv+bEGBI8MXFoPeZUiJzzpWaGiWOTEdURVGcNSWGbA8UWiJZKrEFPVMlAABWoAPIjIm
+         +PCOCwQh5iYA+htgwpx7+5aeNyy0ZPKHCc4rIhYA9rlFI/6LzZEJpsUX2K/H54h6tyR9
+         dgsFFVB0QMDU/sxhuQvIyK/d8OG9Rmzy9+sMO+IaG8MCdmqKFyUv8NW2Bn9mkpq2DUd3
+         ySxh7TEaCm2Tc0lahskeBMRYCH6Iv9Psp3Wx1Omc947VO3geUX2XGjx89EBQYT1Qcjib
+         pvJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=r6dqBNObWr4LYfk35E/sthMAiwdIizF7BAYUklEVa2g=;
+        b=pbO0b/v1Xc7EQ3piwvO3C1inyt8wiTAsRnE4aLoCaqSKeak5AMS399uN/p3GFBeMJp
+         RHtqW1dfHxH499cJQJtcnJot6Xnkixux7a8362ut+HnF1NZqTzogdtzEQRPLal63N+uv
+         S8ZuD8IaegGEinSfb+hKCDx7vkfn0U0Jhwo9LTGlO5YoUDWZcc+3qFJY13aYpwBIbWEM
+         VMI4LSCbalFXkifGDEuwYl5eB3E5Q/pROikfORF+P1rQ+EE4hmV9ooG6hsYspV9MMG/f
+         EoqpzcJTcsV91WRW5e7quC/4kimT1W+1+NVDFtpYMnJpNPblHg8Cc+Jvbvk6m5x6/jSe
+         6BRA==
+X-Gm-Message-State: APjAAAVP08ZM2UYRsl5/8znGWrrN6giBvxkG/AsPBrnqkq5S0D8CFC/E
+        HmHkqhDSYBizAn45xk3IREjryg==
+X-Google-Smtp-Source: APXvYqzAaXJowj+LMQ1NkOlZ0KLppeaekgoexuXFUA+9sXKsB7TLWCwIPJxK/Wj2tE2cMaOin3iSFA==
+X-Received: by 2002:a05:6512:1dd:: with SMTP id f29mr3485778lfp.106.1576603137675;
+        Tue, 17 Dec 2019 09:18:57 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id v9sm13586121lfe.18.2019.12.17.09.18.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 09:18:57 -0800 (PST)
+Date:   Tue, 17 Dec 2019 09:18:46 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Willem de Bruijn <willemb@google.com>,
+        Wingman Kwok <w-kwok2@ti.com>
+Subject: Re: [PATCH V6 net-next 11/11] ptp: Add a driver for InES time
+ stamping IP core.
+Message-ID: <20191217091846.1ce6ef81@cakuba.netronome.com>
+In-Reply-To: <20191217043433.GA1363@localhost>
+References: <cover.1576511937.git.richardcochran@gmail.com>
+        <33afc113fa0b301d289522971c83dbbf0d36c8ba.1576511937.git.richardcochran@gmail.com>
+        <20191216161114.3604d45d@cakuba.netronome.com>
+        <20191217043433.GA1363@localhost>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <20191209180514.272727-9-jean-philippe@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jean,
-
-On 12/9/19 7:05 PM, Jean-Philippe Brucker wrote:
-
-s/Propate/Propagate in the commit title.
-> Now that we support substream IDs, initialize s1cdmax with the number of
-> SSID bits supported by a master and the SMMU.
+On Mon, 16 Dec 2019 20:34:33 -0800, Richard Cochran wrote:
+> On Mon, Dec 16, 2019 at 04:11:14PM -0800, Jakub Kicinski wrote:
+> > On Mon, 16 Dec 2019 08:13:26 -0800, Richard Cochran wrote:  
+> > > +	clkid = (u64 *)(data + offset + OFF_PTP_CLOCK_ID);
+> > > +	portn = (u16 *)(data + offset + OFF_PTP_PORT_NUM);
+> > > +	seqid = (u16 *)(data + offset + OFF_PTP_SEQUENCE_ID);  
+> > 
+> > These should perhaps be __be types?
+> > 
+> > Looks like there is a few other sparse warnings in ptp_ines.c, would
+> > you mind addressing those?  
 > 
-> Context descriptor tables are allocated once for the first master
-> attached to a domain. Therefore attaching multiple devices with
-> different SSID sizes is tricky, and we currently don't support it.
+> I saw the sparse warnings before (from one of the robots), but I
+> decided that they are false positives.  Or perhaps I don't appreciate
+> what the warnings mean...
 > 
-> As a future improvement it would be nice to at least support attaching a
-> SSID-capable device to a domain that isn't using SSID, by reallocating
-> the SSID table.
-Isn't that use case relevant (I mean using both devices in a non SSID
-use case). For platform devices you can work this around with FW but for
-PCI devices?
-
- This would allow supporting a SSID-capable device that
-> is in the same IOMMU group as a bridge, for example. Varying SSID size
-> is less of a concern, since the PCIe specification "highly recommends"
-> that devices supporting PASID implement all 20 bits of it.
+> Take the 'clkid' pointer for example:
+>  
+> > > +	if (cpu_to_be64(ts->clkid) != *clkid) {
+> > > +		pr_debug("clkid mismatch ts %llx != skb %llx\n",
+> > > +			 cpu_to_be64(ts->clkid), *clkid);
+> > > +		return false;
+> > > +	}  
 > 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Besides, Reviewed-by: Eric Auger <eric.auger@redhat.com>
-
-Thanks
-
-Eric
-
-> ---
->  drivers/iommu/arm-smmu-v3.c | 19 ++++++++++++++++---
->  1 file changed, 16 insertions(+), 3 deletions(-)
+> The field that to which 'clkid' points is in network byte order.  The
+> code correctly converts ts->clkid (in CPU byte order) to network byte
+> order before comparing it with the field.
 > 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index a01071123c34..f260abadde6d 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -2279,6 +2279,7 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
->  }
->  
->  static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
-> +				       struct arm_smmu_master *master,
->  				       struct io_pgtable_cfg *pgtbl_cfg)
->  {
->  	int ret;
-> @@ -2290,6 +2291,8 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
->  	if (asid < 0)
->  		return asid;
->  
-> +	cfg->s1cdmax = master->ssid_bits;
-> +
->  	ret = arm_smmu_alloc_cd_tables(smmu_domain);
->  	if (ret)
->  		goto out_free_asid;
-> @@ -2306,6 +2309,7 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
->  }
->  
->  static int arm_smmu_domain_finalise_s2(struct arm_smmu_domain *smmu_domain,
-> +				       struct arm_smmu_master *master,
->  				       struct io_pgtable_cfg *pgtbl_cfg)
->  {
->  	int vmid;
-> @@ -2322,7 +2326,8 @@ static int arm_smmu_domain_finalise_s2(struct arm_smmu_domain *smmu_domain,
->  	return 0;
->  }
->  
-> -static int arm_smmu_domain_finalise(struct iommu_domain *domain)
-> +static int arm_smmu_domain_finalise(struct iommu_domain *domain,
-> +				    struct arm_smmu_master *master)
->  {
->  	int ret;
->  	unsigned long ias, oas;
-> @@ -2330,6 +2335,7 @@ static int arm_smmu_domain_finalise(struct iommu_domain *domain)
->  	struct io_pgtable_cfg pgtbl_cfg;
->  	struct io_pgtable_ops *pgtbl_ops;
->  	int (*finalise_stage_fn)(struct arm_smmu_domain *,
-> +				 struct arm_smmu_master *,
->  				 struct io_pgtable_cfg *);
->  	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
->  	struct arm_smmu_device *smmu = smmu_domain->smmu;
-> @@ -2384,7 +2390,7 @@ static int arm_smmu_domain_finalise(struct iommu_domain *domain)
->  	domain->geometry.aperture_end = (1UL << pgtbl_cfg.ias) - 1;
->  	domain->geometry.force_aperture = true;
->  
-> -	ret = finalise_stage_fn(smmu_domain, &pgtbl_cfg);
-> +	ret = finalise_stage_fn(smmu_domain, master, &pgtbl_cfg);
->  	if (ret < 0) {
->  		free_io_pgtable_ops(pgtbl_ops);
->  		return ret;
-> @@ -2537,7 +2543,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
->  
->  	if (!smmu_domain->smmu) {
->  		smmu_domain->smmu = smmu;
-> -		ret = arm_smmu_domain_finalise(domain);
-> +		ret = arm_smmu_domain_finalise(domain, master);
->  		if (ret) {
->  			smmu_domain->smmu = NULL;
->  			goto out_unlock;
-> @@ -2549,6 +2555,13 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
->  			dev_name(smmu->dev));
->  		ret = -ENXIO;
->  		goto out_unlock;
-> +	} else if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1 &&
-> +		   master->ssid_bits != smmu_domain->s1_cfg.s1cdmax) {
-> +		dev_err(dev,
-> +			"cannot attach to incompatible domain (%u SSID bits != %u)\n",
-> +			smmu_domain->s1_cfg.s1cdmax, master->ssid_bits);
-> +		ret = -EINVAL;
-> +		goto out_unlock;
->  	}
->  
->  	master->domain = smmu_domain;
-> 
+> So where is the error?
 
+Not necessarily an error as much as a sparse warning, if the type of
+clkid was __be64 that'd make sparse happy.
+
+This is what my build system spat out for a W=1 C=1 build:
+
+../drivers/ptp/ptp_ines.c:490:13: warning: restricted __be64 degrades to integer
+../drivers/ptp/ptp_ines.c:495:28: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:495:28: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:495:28: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:495:28: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:496:17: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:496:17: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:496:17: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:496:17: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:500:26: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:500:26: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:500:26: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:500:26: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:501:17: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:501:17: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:501:17: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:501:17: warning: cast to restricted __be16
+../drivers/ptp/ptp_ines.c:543:28: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:543:28:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:543:28:    got unsigned int *
+../drivers/ptp/ptp_ines.c:547:30: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:547:30:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:547:30:    got unsigned int *
+../drivers/ptp/ptp_ines.c:557:31: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:557:31:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:557:31:    got unsigned int *
+../drivers/ptp/ptp_ines.c:561:31: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:561:31:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:561:31:    got unsigned int *
+../drivers/ptp/ptp_ines.c:562:31: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:562:31:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:562:31:    got unsigned int *
+../drivers/ptp/ptp_ines.c:579:16: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:579:16:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:579:16:    got unsigned int *
+../drivers/ptp/ptp_ines.c:583:24: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:583:24:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:583:24:    got unsigned int *
+../drivers/ptp/ptp_ines.c:626:16: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:626:16:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:626:16:    got unsigned int *
+../drivers/ptp/ptp_ines.c:630:24: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:630:24:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:630:24:    got unsigned int *
+../drivers/ptp/ptp_ines.c:208:21: warning: incorrect type in assignment (different address spaces)
+../drivers/ptp/ptp_ines.c:208:21:    expected struct ines_global_registers *regs
+../drivers/ptp/ptp_ines.c:208:21:    got void [noderef] <asn:2> *base
+../drivers/ptp/ptp_ines.c:225:9: warning: incorrect type in argument 2 (different address spaces)
+../drivers/ptp/ptp_ines.c:225:9:    expected void volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:225:9:    got unsigned int *
+../drivers/ptp/ptp_ines.c:226:9: warning: incorrect type in argument 2 (different address spaces)
+../drivers/ptp/ptp_ines.c:226:9:    expected void volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:226:9:    got unsigned int *
+../drivers/ptp/ptp_ines.c:228:9: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:228:9:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:228:9:    got unsigned int *
+../drivers/ptp/ptp_ines.c:229:9: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:229:9:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:229:9:    got unsigned int *
+../drivers/ptp/ptp_ines.c:230:9: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:230:9:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:230:9:    got unsigned int *
+../drivers/ptp/ptp_ines.c:231:9: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:231:9:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:231:9:    got unsigned int *
+../drivers/ptp/ptp_ines.c:235:17: warning: incorrect type in argument 2 (different address spaces)
+../drivers/ptp/ptp_ines.c:235:17:    expected void volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:235:17:    got unsigned int *
+../drivers/ptp/ptp_ines.c:313:28: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:313:28:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:313:28:    got unsigned int *
+../drivers/ptp/ptp_ines.c:318:30: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:318:30:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:318:30:    got unsigned int *
+../drivers/ptp/ptp_ines.c:326:30: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:326:30:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:326:30:    got unsigned int *
+../drivers/ptp/ptp_ines.c:330:30: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:330:30:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:330:30:    got unsigned int *
+../drivers/ptp/ptp_ines.c:331:30: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:331:30:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:331:30:    got unsigned int *
+../drivers/ptp/ptp_ines.c:401:21: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:401:21:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:401:21:    got unsigned int *
+../drivers/ptp/ptp_ines.c:405:9: warning: incorrect type in argument 2 (different address spaces)
+../drivers/ptp/ptp_ines.c:405:9:    expected void volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:405:9:    got unsigned int *
+../drivers/ptp/ptp_ines.c:406:9: warning: incorrect type in argument 2 (different address spaces)
+../drivers/ptp/ptp_ines.c:406:9:    expected void volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:406:9:    got unsigned int *
+../drivers/ptp/ptp_ines.c:407:9: warning: incorrect type in argument 2 (different address spaces)
+../drivers/ptp/ptp_ines.c:407:9:    expected void volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:407:9:    got unsigned int *
+../drivers/ptp/ptp_ines.c:440:21: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:440:21:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:440:21:    got unsigned int *
+../drivers/ptp/ptp_ines.c:444:9: warning: incorrect type in argument 2 (different address spaces)
+../drivers/ptp/ptp_ines.c:444:9:    expected void volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:444:9:    got unsigned int *
+../drivers/ptp/ptp_ines.c:643:21: warning: incorrect type in argument 1 (different address spaces)
+../drivers/ptp/ptp_ines.c:643:21:    expected void const volatile [noderef] <asn:2> *addr
+../drivers/ptp/ptp_ines.c:643:21:    got unsigned int *
+
+New errors added
