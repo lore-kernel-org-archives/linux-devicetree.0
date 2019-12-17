@@ -2,463 +2,119 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341ECC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 10:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8504DC2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 10:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85A520733
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 10:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5857D2067C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 10:05:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OOHtG9yN"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VAUBSWK1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfLQKCI (ORCPT
+        id S1727359AbfLQKFf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:02:08 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:28362 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726824AbfLQKCI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 05:02:08 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191217100205epoutp0283df87f8de51007d9feff36bf96a2306~hIFxBqYNv2346223462epoutp02a
-        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 10:02:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191217100205epoutp0283df87f8de51007d9feff36bf96a2306~hIFxBqYNv2346223462epoutp02a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576576925;
-        bh=JnDHtsKVse5qbxPZE12i8FqY5KenMgul4NNtd3cn7lQ=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=OOHtG9yNfeIrmCRakcDVHL87XpUyZcRmrgrUnE/2aHF8xKJwhL8wBwYFohmiUqSew
-         37k1SOK1K7ZmiEW1Qp5xz8XD3rOCTFtHcNjh8suZDEucw4yNJM//vph9vX48zBosPN
-         oiB5W/bpJVzlBoYorRN1OmrwClLwnr0RXEh+1vak=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191217100204epcas1p40b1432eeaa2f8caf5ce6598e121ded75~hIFwTpUYc1066710667epcas1p4C;
-        Tue, 17 Dec 2019 10:02:04 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47cYZw5LJSzMqYkg; Tue, 17 Dec
-        2019 10:02:00 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DE.65.52419.897A8FD5; Tue, 17 Dec 2019 19:02:00 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191217100200epcas1p2dd8a436ffe11e247299fa425f99e7336~hIFscPkRd1006710067epcas1p2D;
-        Tue, 17 Dec 2019 10:02:00 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191217100200epsmtrp23ffac60c97a2ea017d5a3199d4e980ed~hIFsbdkqN0274602746epsmtrp2w;
-        Tue, 17 Dec 2019 10:02:00 +0000 (GMT)
-X-AuditID: b6c32a37-5b7ff7000001ccc3-ca-5df8a798bce4
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AE.F5.06569.897A8FD5; Tue, 17 Dec 2019 19:02:00 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191217100159epsmtip21fbba5e3799b5629b4a3716af351806f~hIFsHgfmT0466804668epsmtip28;
-        Tue, 17 Dec 2019 10:01:59 +0000 (GMT)
-Subject: Re: [v5, PATCH 3/5] devfreq: add mediatek cci devfreq
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 17 Dec 2019 05:05:35 -0500
+Received: from mail-eopbgr00076.outbound.protection.outlook.com ([40.107.0.76]:14919
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726700AbfLQKFf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 05:05:35 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xrm7srM+Xe4Jr986aos3VVSisI1sEo5bMa6MU6RqfPxv0TfSnJX2rjwIBGAfXmxMMGIZ9pKoIRa3mDqFLGatafMFlhlRKKMk50HgqWMVYfilATVjsnutsLlTLWarG94Nw4wiLv9UcbrY81REziGN8ES+Dqqlnd7oZjg3a+pMoUHQtEP/GrSY1hTGZGfjuwW1Uimx7xpHcFBI/ZopK9os57DclysM4fICkcklaBGj63SmL+kL9e3DiF5mvhHCQeSf/ZtXCFfUEmRZQQpWXkM62U4FMuYbJ2xgjtO9+5QPbtL8+cqb0Sa0MgwC6sf0e36nRNIERKWo3yZo+PD89lmo7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/wP5vR514tAMVNEUebFaz/uvXPw9OcdmOfsZXCY63AQ=;
+ b=B7761rc88+jirUu2qfr7AZIWSX3mFdSqkLtPu6Lue/toFWetOT+GnNGy9Lj+DklegpcsJpwrV3qPgh9IDqJq5jwVIUDx1ugNQeWyAk8ZYX/A8A039j5J1WJStTb26Hxi0pyvrRbaW8FlNCPWhzITXditZzEvg1SbZqMALYqJv1/RliS+LBxp2qM4rgPpdXagX1aXtqDJyOLOY74iAiJFd7TCcCH6c/aRqp6DNJkJgcxCEO/rSZStIVSlGw9/zBym9BRlylZKvSQrKUZXs1FczzpWt71NNHphB+GlKqo8JoxhXM7a4Iaul6F+xuVetWAaiv2YjBJeKWnZnr3jU50bxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/wP5vR514tAMVNEUebFaz/uvXPw9OcdmOfsZXCY63AQ=;
+ b=VAUBSWK1TDcPt2Nl+ZXzLiOlaQYyqTmsO2I2/10cnmlH2cHVbAZq5JiUG8XPYpOHWCWHu1JlUjHWxtp4iq/b5/iw7XhhIrfAM6EcD1wqzH+g28SOYIuqFP0FeLKAov313kNh2/wxtBUYnjRKHtQcMgT4f3Ol/zBQ2z6OqRyXXbc=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3341.eurprd04.prod.outlook.com (52.134.7.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.20; Tue, 17 Dec 2019 10:05:25 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::64c8:fba:99e8:5ec4]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::64c8:fba:99e8:5ec4%6]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
+ 10:05:25 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Adam Ford <aford173@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com, fan.chen@mediatek.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <bc023722-824c-167e-1a9e-1ebbaef3892b@samsung.com>
-Date:   Tue, 17 Dec 2019 19:08:34 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
-MIME-Version: 1.0
-In-Reply-To: <1574769046-28449-4-git-send-email-andrew-sh.cheng@mediatek.com>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+Subject: Re: [PATCH V2 1/3] crypto: caam: Add support for i.MX8M Mini
+Thread-Topic: [PATCH V2 1/3] crypto: caam: Add support for i.MX8M Mini
+Thread-Index: AQHVsct+bxOq3Vv9C0WchDcVUZ6qgg==
+Date:   Tue, 17 Dec 2019 10:05:25 +0000
+Message-ID: <VI1PR0402MB34855AC446EBA2E2C669F75D98500@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20191213153910.11235-1-aford173@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNJsWRmVeSWpSXmKPExsWy7bCmvu6M5T9iDeZP17bYvv4Fq8X8I+dY
-        Lb7d+c1kcbbpDbvFpsfXWC0u75rDZnG5+SKjxefeI4wWS69fZLJoajG2uN24gs3izY+zTBZn
-        Tl9itWjde4Td4t+1jSwW0+8KWWz86uEg6LFm3hpGj52z7rJ7bFrVyeZx59oeNo/NS+o9Wk7u
-        Z/HYcrWdxaNvyypGj+M3tjN5fN4kF8AVlW2TkZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhr
-        aGlhrqSQl5ibaqvk4hOg65aZA/SNkkJZYk4pUCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafA
-        skCvODG3uDQvXS85P9fK0MDAyBSoMCE748Dcf4wFSwIrHhyZw97AeN6hi5GTQ0LAROLVn1OM
-        XYxcHEICOxglTv57ywqSEBL4xCix+pkWhP2NUeL7Z3uYhlkzZzBBNOxllNiy6jGU8x6oYe5U
-        9i5GDg5hATuJnTedQeIiApOYJSZsfsAI0s0scItR4vV+NhCbTUBLYv+LG2A2v4CixNUfj8Fq
-        eIF6m/88BbuCRUBV4u/VXjBbVCBM4uS2FqgaQYmTM5+wgNicAr4Si9acYoKYLy5x68l8KFte
-        YvvbOcwgR0gI3GKXONu3gxHiBReJvmc/2SFsYYlXx7dA2VISn9/tZYOwqyVWnjzCBtHcAfTm
-        /gusEAljif1LJzOBfMksoCmxfpc+RFhRYufvuVBP8km8+9rDClIiIcAr0dEmBFGiLHH5wV0m
-        CFtSYnF7J9sERqVZSN6ZheSFWUhemIWwbAEjyypGsdSC4tz01GLDAmPkyN7ECE7oWuY7GDec
-        8znEKMDBqMTDW1D2PVaINbGsuDL3EKMEB7OSCO8OBaAQb0piZVVqUX58UWlOavEhRlNgaE9k
-        lhJNzgdmm7ySeENTI2NjYwsTQzNTQ0MlcV6OHxdjhQTSE0tSs1NTC1KLYPqYODilGhj1Zm5g
-        znjyTvFFnMieFx3dM7WnRoe0rdsZ1Ln3Q46eYofZ8lU/a8wWiuy59T7mzXaJJ0+cY89utTgs
-        uCyMm3WSwPu1u5LVfy9uZjvuVbDz0pvvukIzePNuTg2pK7L4WGN1b45b2JqLQd6z+szWhvhv
-        +ri976PGxbIDSw4sbqytZ0/OfsHg0DJFiaU4I9FQi7moOBEAtS84y/4DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBIsWRmVeSWpSXmKPExsWy7bCSvO6M5T9iDe7dYbPYvv4Fq8X8I+dY
-        Lb7d+c1kcbbpDbvFpsfXWC0u75rDZnG5+SKjxefeI4wWS69fZLJoajG2uN24gs3izY+zTBZn
-        Tl9itWjde4Td4t+1jSwW0+8KWWz86uEg6LFm3hpGj52z7rJ7bFrVyeZx59oeNo/NS+o9Wk7u
-        Z/HYcrWdxaNvyypGj+M3tjN5fN4kF8AVxWWTkpqTWZZapG+XwJVxYO4/xoIlgRUPjsxhb2A8
-        79DFyMkhIWAiMWvmDKYuRi4OIYHdjBLvf+5ngUhISky7eJS5i5EDyBaWOHy4GKLmLaPE/M59
-        LCBxYQE7iZ03nUHiIgLTmCWe/nvNBuIwC9xilNjUfIQdouMxo8TDKX+YQaayCWhJ7H9xgw3E
-        5hdQlLj64zEjiM0LNKn5z1NWEJtFQFXi79VeMFtUIExi55LHTBA1ghInZz4Bu45TwFdi0ZpT
-        YHFmAXWJP/MuMUPY4hK3nsyHistLbH87h3kCo/AsJO2zkLTMQtIyC0nLAkaWVYySqQXFuem5
-        xYYFRnmp5XrFibnFpXnpesn5uZsYwfGtpbWD8cSJ+EOMAhyMSjy8EiXfY4VYE8uKK3MPMUpw
-        MCuJ8O5QAArxpiRWVqUW5ccXleakFh9ilOZgURLnlc8/FikkkJ5YkpqdmlqQWgSTZeLglGpg
-        ZJnUpy789+KDtT+NV+ZPUpJZcv5huszZaq9tXp3xDkFfZs1jrzSdbzdVuZl5pkurwuWrnVYu
-        jF9P/lw12+pMYHq3Yfolq4frzs1YeioiM+zkn8iFy5tyRTdus9wv+unSJ+dJp1i2hRs8qjvD
-        0bcoYae74UHN0xMs7vsYTV0Vnn9fuerq14QLr5RYijMSDbWYi4oTAexo4iTrAgAA
-X-CMS-MailID: 20191217100200epcas1p2dd8a436ffe11e247299fa425f99e7336
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191126115136epcas5p241f7e64102dab29530370fb5e7f9c6fc
-References: <1574769046-28449-1-git-send-email-andrew-sh.cheng@mediatek.com>
-        <CGME20191126115136epcas5p241f7e64102dab29530370fb5e7f9c6fc@epcas5p2.samsung.com>
-        <1574769046-28449-4-git-send-email-andrew-sh.cheng@mediatek.com>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [94.69.234.123]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: beefb638-4ef7-4143-c4f3-08d782d8a2fc
+x-ms-traffictypediagnostic: VI1PR0402MB3341:|VI1PR0402MB3341:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB33418F6E399799677111324798500@VI1PR0402MB3341.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(376002)(346002)(39860400002)(396003)(199004)(189003)(66556008)(64756008)(54906003)(66446008)(110136005)(76116006)(7696005)(186003)(316002)(91956017)(86362001)(33656002)(8936002)(81156014)(53546011)(4326008)(26005)(6506007)(558084003)(66946007)(81166006)(8676002)(52536014)(7416002)(2906002)(66476007)(478600001)(55016002)(9686003)(71200400001)(44832011)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3341;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6dNRRyyS8yfCcSgWBdIwXK6HEV6yGiio6v3VSorbGgHC8JP5v3aAAQH5OpOxL927mD+JCICsPlhd7L3qJIgCVvOCob5x4qjv8AeI+0qH7zenaTjvdfIEvTyElov3h2vknXhRta7eDoOuJhraj7sLx18wzLJn7WkrataLfbHGt4dh30QmcsH47Jscw1gmwYIgoXOp4paNfc66WTyLgM7k/9MMkvsrfAhLX1IcB0YQYjKpj1GgaYreZqP7I5vNL1TK4+f56b9erMQt4/6d24kStZzXSZ0KdQbvSNhjiGfJgqsCLyUDR8mmjICeAvb8MVR7AHrOyjMY6GbHmPo1d8/Fe3e2o9a8pfS2wft092MjYmAZEOQFme+DCtYa0/nRN7OAn72jyff5LBlc8E4T8IXehncj+zljmbMYsRzPqYNbLbY1JSwZQZgpZ/BYZVoT7wF0
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: beefb638-4ef7-4143-c4f3-08d782d8a2fc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 10:05:25.3556
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tv1rK74cnXYBfUnvN5ibtJGi0le/t8RcscAW+x/oXyhza8oRMIkhaCMKqGzgpUyT4P/McY/MAOhXKUroZ5nc+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3341
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-"mtk_cci_vmon" governor looks like the devfreq passive governor.
-But, the existing devfreq passive governor depend on the other devfreq device.
-"mtk_cci_vmon" governor depend on the regulator with regulator notifier.
-
-I think that it is better to extend the passive governor
-in order to support the regulator notifier.
-It is possible because passive governor already used
-the devfreq notifier. 
-
-Previously, the patch[1] tried to add the cpu based scaling to passive governor.
-[1] https://lore.kernel.org/patchwork/patch/1101049/
-- [RFC,v2] PM / devfreq: Add cpu based scaling support to passive_governor
-
-Regards,
-Chanwoo Choi
-
-On 11/26/19 8:50 PM, Andrew-sh.Cheng wrote:
-> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-> 
-> This adds a devfreq driver for the Cache Coherent Interconnect (CCI)
-> of the Mediatek MT8183.
-> 
-> On the MT8183 the CCI is supplied by the same regulator as the LITTLE
-> cores. The driver is notified when the regulator voltage changes
-> (driven by cpufreq) and adjusts the CCI frequency to the maximum
-> possible value.
-> 
-> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> ---
->  drivers/devfreq/Kconfig              |  10 ++
->  drivers/devfreq/Makefile             |   1 +
->  drivers/devfreq/mt8183-cci-devfreq.c | 247 +++++++++++++++++++++++++++++++++++
->  3 files changed, 258 insertions(+)
->  create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
-> 
-> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> index defe1d438710..76bc42657787 100644
-> --- a/drivers/devfreq/Kconfig
-> +++ b/drivers/devfreq/Kconfig
-> @@ -92,6 +92,16 @@ config ARM_EXYNOS_BUS_DEVFREQ
->  	  and adjusts the operating frequencies and voltages with OPP support.
->  	  This does not yet operate with optimal voltages.
->  
-> +config ARM_MT8183_CCI_DEVFREQ
-> +	tristate "MT8183 CCI DEVFREQ Driver"
-> +	depends on ARM_MEDIATEK_CPUFREQ
-> +	help
-> +		This adds a devfreq driver for Cache Coherent Interconnect
-> +		of Mediatek MT8183, which is shared the same regulator
-> +		with cpu cluster.
-> +		It can track buck voltage and update a proper cci frequency.
-> +		Use notification to get regulator status.
-> +
->  config ARM_TEGRA_DEVFREQ
->  	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
->  	depends on ARCH_TEGRA_3x_SOC || ARCH_TEGRA_114_SOC || \
-> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
-> index 338ae8440db6..1fa05e39e4ff 100644
-> --- a/drivers/devfreq/Makefile
-> +++ b/drivers/devfreq/Makefile
-> @@ -9,6 +9,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
->  
->  # DEVFREQ Drivers
->  obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
-> +obj-$(CONFIG_ARM_MT8183_CCI_DEVFREQ)	+= mt8183-cci-devfreq.o
->  obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
->  obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra30-devfreq.o
->  obj-$(CONFIG_ARM_TEGRA20_DEVFREQ)	+= tegra20-devfreq.o
-> diff --git a/drivers/devfreq/mt8183-cci-devfreq.c b/drivers/devfreq/mt8183-cci-devfreq.c
-> new file mode 100644
-> index 000000000000..818a167c442f
-> --- /dev/null
-> +++ b/drivers/devfreq/mt8183-cci-devfreq.c
-> @@ -0,0 +1,247 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> +
-> + * Author: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/devfreq.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +#include "governor.h"
-> +
-> +struct cci_devfreq {
-> +	struct devfreq *devfreq;
-> +	struct regulator *proc_reg;
-> +	unsigned long proc_reg_uV;																																																																																															
-> +	struct clk *cci_clk;
-> +	struct notifier_block nb;
-> +};
-> +
-> +static int cci_devfreq_regulator_notifier(struct notifier_block *nb,
-> +					  unsigned long val, void *data)
-> +{
-> +	int ret;
-> +	struct cci_devfreq *cci_df =
-> +		container_of(nb, struct cci_devfreq, nb);
-> +
-> +	/* deal with reduce frequency */
-> +	if (val & REGULATOR_EVENT_PRE_VOLTAGE_CHANGE) {
-> +		struct pre_voltage_change_data *pvc_data = data;
-> +
-> +		if (pvc_data->min_uV < pvc_data->old_uV) {
-> +			cci_df->proc_reg_uV =
-> +				(unsigned long)(pvc_data->min_uV);
-> +			mutex_lock(&cci_df->devfreq->lock);
-> +			ret = update_devfreq(cci_df->devfreq);
-> +			if (ret)
-> +				pr_err("Fail to reduce cci frequency: %d\n",
-> +				       ret);
-> +			mutex_unlock(&cci_df->devfreq->lock);
-> +		}
-> +	} else if ((val & REGULATOR_EVENT_ABORT_VOLTAGE_CHANGE) &&
-> +	    ((unsigned long)data > cci_df->proc_reg_uV)) {
-> +		cci_df->proc_reg_uV = (unsigned long)data;
-> +		mutex_lock(&cci_df->devfreq->lock);
-> +		ret = update_devfreq(cci_df->devfreq);
-> +		if (ret)
-> +			pr_err("Fail to raise cci frequency back: %d\n", ret);
-> +		mutex_unlock(&cci_df->devfreq->lock);
-> +	} else if ((val & REGULATOR_EVENT_VOLTAGE_CHANGE) &&
-> +	    (cci_df->proc_reg_uV < (unsigned long)data)) {
-> +		/* deal with increase frequency */
-> +		cci_df->proc_reg_uV = (unsigned long)data;
-> +		mutex_lock(&cci_df->devfreq->lock);
-> +		ret = update_devfreq(cci_df->devfreq);
-> +		if (ret)
-> +			pr_err("Fail to raise cci frequency: %d\n", ret);
-> +		mutex_unlock(&cci_df->devfreq->lock);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_cci_governor_get_target(struct devfreq *devfreq,
-> +				       unsigned long *freq)
-> +{
-> +	struct cci_devfreq *cci_df;
-> +	struct dev_pm_opp *opp;
-> +
-> +	cci_df = dev_get_drvdata(devfreq->dev.parent);
-> +
-> +	/* find available frequency */
-> +	opp = dev_pm_opp_find_freq_ceil_by_volt(devfreq->dev.parent,
-> +						cci_df->proc_reg_uV);
-> +	*freq = dev_pm_opp_get_freq(opp);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_cci_governor_event_handler(struct devfreq *devfreq,
-> +					  unsigned int event, void *data)
-> +{
-> +	int ret;
-> +	struct cci_devfreq *cci_df;
-> +	struct notifier_block *nb;
-> +
-> +	cci_df = dev_get_drvdata(devfreq->dev.parent);
-> +	nb = &cci_df->nb;
-> +
-> +	switch (event) {
-> +	case DEVFREQ_GOV_START:
-> +	case DEVFREQ_GOV_RESUME:
-> +		nb->notifier_call = cci_devfreq_regulator_notifier;
-> +		ret = regulator_register_notifier(cci_df->proc_reg,
-> +						  nb);
-> +		if (ret)
-> +			pr_err("%s: failed to add governor: %d\n", __func__,
-> +			       ret);
-> +		break;
-> +
-> +	case DEVFREQ_GOV_STOP:
-> +	case DEVFREQ_GOV_SUSPEND:
-> +		ret = regulator_unregister_notifier(cci_df->proc_reg,
-> +						    nb);
-> +		if (ret)
-> +			pr_err("%s: failed to add governor: %d\n", __func__,
-> +			       ret);
-> +		break;
-> +
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct devfreq_governor mtk_cci_devfreq_governor = {
-> +	.name = "mtk_cci_vmon",
-> +	.get_target_freq = mtk_cci_governor_get_target,
-> +	.event_handler = mtk_cci_governor_event_handler,
-> +	.immutable = true
-> +};
-> +
-> +static int mtk_cci_devfreq_target(struct device *dev, unsigned long *freq,
-> +				  u32 flags)
-> +{
-> +	int ret;
-> +	struct cci_devfreq *cci_df = dev_get_drvdata(dev);
-> +
-> +	if (!cci_df)
-> +		return -EINVAL;
-> +
-> +	ret = clk_set_rate(cci_df->cci_clk, *freq);
-> +	if (ret) {
-> +		pr_err("%s: failed cci to set rate: %d\n", __func__,
-> +		       ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct devfreq_dev_profile cci_devfreq_profile = {
-> +	.target = mtk_cci_devfreq_target,
-> +};
-> +
-> +static int mtk_cci_devfreq_probe(struct platform_device *pdev)
-> +{
-> +	struct device *cci_dev = &pdev->dev;
-> +	struct cci_devfreq *cci_df;
-> +	int ret;
-> +
-> +	cci_df = devm_kzalloc(cci_dev, sizeof(*cci_df), GFP_KERNEL);
-> +	if (!cci_df)
-> +		return -ENOMEM;
-> +
-> +	cci_df->cci_clk = devm_clk_get(cci_dev, "cci_clock");
-> +	ret = PTR_ERR_OR_ZERO(cci_df->cci_clk);
-> +	if (ret) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(cci_dev, "failed to get clock for CCI: %d\n",
-> +				ret);
-> +		return ret;
-> +	}
-> +	cci_df->proc_reg = devm_regulator_get_optional(cci_dev, "proc");
-> +	ret = PTR_ERR_OR_ZERO(cci_df->proc_reg);
-> +	if (ret) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(cci_dev, "failed to get regulator for CCI: %d\n",
-> +				ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = dev_pm_opp_of_add_table(cci_dev);
-> +	if (ret) {
-> +		dev_err(cci_dev, "Fail to init CCI OPP table: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, cci_df);
-> +
-> +	cci_df->devfreq = devm_devfreq_add_device(cci_dev,
-> +						  &cci_devfreq_profile,
-> +						  "mtk_cci_vmon",
-> +						  NULL);
-> +	if (IS_ERR(cci_df->devfreq)) {
-> +		ret = PTR_ERR(cci_df->devfreq);
-> +		dev_err(cci_dev, "cannot create cci devfreq device:%d\n", ret);
-> +		dev_pm_opp_of_remove_table(cci_dev);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const __maybe_unused struct of_device_id
-> +	mediatek_cci_devfreq_of_match[] = {
-> +	{ .compatible = "mediatek,mt8183-cci" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, mediatek_cci_devfreq_of_match);
-> +
-> +static struct platform_driver cci_devfreq_driver = {
-> +	.probe	= mtk_cci_devfreq_probe,
-> +	.driver = {
-> +		.name = "mediatek-cci-devfreq",
-> +		.of_match_table = of_match_ptr(mediatek_cci_devfreq_of_match),
-> +	},
-> +};
-> +
-> +static int __init mtk_cci_devfreq_init(void)
-> +{
-> +	int ret;
-> +
-> +	ret = devfreq_add_governor(&mtk_cci_devfreq_governor);
-> +	if (ret) {
-> +		pr_err("%s: failed to add governor: %d\n", __func__, ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = platform_driver_register(&cci_devfreq_driver);
-> +	if (ret)
-> +		devfreq_remove_governor(&mtk_cci_devfreq_governor);
-> +
-> +	return ret;
-> +}
-> +module_init(mtk_cci_devfreq_init)
-
-Use module_platform_driver
-
-> +
-> +static void __exit mtk_cci_devfreq_exit(void)
-> +{
-> +	int ret;
-> +
-> +	ret = devfreq_remove_governor(&mtk_cci_devfreq_governor);
-> +	if (ret)
-> +		pr_err("%s: failed to remove governor: %d\n", __func__, ret);
-> +
-> +	platform_driver_unregister(&cci_devfreq_driver);
-> +}
-> +module_exit(mtk_cci_devfreq_exit)
-> +
-> +MODULE_DESCRIPTION("Mediatek CCI devfreq driver");
-> +MODULE_AUTHOR("Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>");
-> +MODULE_LICENSE("GPL v2");
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+On 12/13/2019 5:39 PM, Adam Ford wrote:=0A=
+> The i.MX8M Mini uses the same crypto engine as the i.MX8MQ, but=0A=
+> the driver is restricting the check to just the i.MX8MQ.=0A=
+> =0A=
+> This patch expands the check for either i.MX8MQ or i.MX8MM.=0A=
+> =0A=
+> Signed-off-by: Adam Ford <aford173@gmail.com>=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
