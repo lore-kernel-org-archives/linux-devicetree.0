@@ -2,162 +2,178 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E43C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3854EC2D0D1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A62E62146E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E91A2064B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:05:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vxq3JLcv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfLQLEF (ORCPT
+        id S1726731AbfLQLFc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:04:05 -0500
-Received: from foss.arm.com ([217.140.110.172]:33176 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbfLQLEF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:04:05 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0095031B;
-        Tue, 17 Dec 2019 03:04:04 -0800 (PST)
-Received: from [10.37.12.145] (unknown [10.37.12.145])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F8933F6CF;
-        Tue, 17 Dec 2019 03:04:00 -0800 (PST)
-Subject: Re: [PATCH 7/9] memory: samsung: exynos5422-dmc: Replace deprecated
- 'devfreq-events' property
-To:     Chanwoo Choi <cw00.choi@samsung.com>, krzk@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        leonard.crestez@nxp.com
-Cc:     a.swigon@samsung.com, m.szyprowski@samsung.com, kgene@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-References: <20191217055738.28445-1-cw00.choi@samsung.com>
- <CGME20191217055106epcas1p2c43a45e34983c1b3e60cc6fd842dd33e@epcas1p2.samsung.com>
- <20191217055738.28445-8-cw00.choi@samsung.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <500aaeb0-85ca-c1f5-2f30-a7b1e95810b6@arm.com>
-Date:   Tue, 17 Dec 2019 11:03:58 +0000
+        Tue, 17 Dec 2019 06:05:32 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56242 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726383AbfLQLFc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 06:05:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576580731;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mm4iGWCY3iczUepBnQaYVu5axa9a4WU8aq4/kTqrKKs=;
+        b=Vxq3JLcvyrHv179JFSawH+WNUJXUvgw+rYYRyOb4Ax+fuUiM2UaP/tLAWENzn0KO/0JEo3
+        cE0tqD6drrxFOuml9TQyGBhn/77+qF10N+2pIFv9Wbiju+OoMBzyFigma/1WwAM2zMLNfK
+        kh2kzHRuEa/85Eqsfpwu0se7XXhuXso=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-177-UfeWOGhgMNO_hNvcjVNqkQ-1; Tue, 17 Dec 2019 06:05:28 -0500
+X-MC-Unique: UfeWOGhgMNO_hNvcjVNqkQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A40710054E3;
+        Tue, 17 Dec 2019 11:05:25 +0000 (UTC)
+Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 682B260BE0;
+        Tue, 17 Dec 2019 11:05:20 +0000 (UTC)
+Subject: Re: [PATCH v3 03/13] iommu/arm-smmu-v3: Support platform SSID
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+References: <20191209180514.272727-1-jean-philippe@linaro.org>
+ <20191209180514.272727-4-jean-philippe@linaro.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <e5b9a017-585a-5425-77bd-be40b86010e6@redhat.com>
+Date:   Tue, 17 Dec 2019 12:05:18 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20191217055738.28445-8-cw00.choi@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191209180514.272727-4-jean-philippe@linaro.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+Hi Jean,
 
-On 12/17/19 5:57 AM, Chanwoo Choi wrote:
-> In order to remove the deprecated 'devfreq-events' property, replace with
-> new 'exynos,ppmu-device' property in order to get the devfreq-event device
-> in devicetree file instead of 'devfreq-events' property. But, to guarantee
-> the backward-compatibility, keep the support 'devfreq-events' property.
+On 12/9/19 7:05 PM, Jean-Philippe Brucker wrote:
+> For platform devices that support SubstreamID (SSID), firmware provides
+> the number of supported SSID bits. Restrict it to what the SMMU supports
+> and cache it into master->ssid_bits, which will also be used for PCI
+> PASID.
 > 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 > ---
->   .../memory-controllers/exynos5422-dmc.txt     |  6 ++--
->   drivers/memory/samsung/exynos5422-dmc.c       | 29 +++++++++++++++----
->   2 files changed, 26 insertions(+), 9 deletions(-)
+>  drivers/iommu/arm-smmu-v3.c | 13 +++++++++++++
+>  drivers/iommu/of_iommu.c    |  6 +++++-
+>  include/linux/iommu.h       |  2 ++
+>  3 files changed, 20 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> index 02e4a1f862f1..1e1b3702f045 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> @@ -17,14 +17,14 @@ Required properties for DMC device for Exynos5422:
->   - clock-names : should include "fout_spll", "mout_sclk_spll", "ff_dout_spll2",
->     "fout_bpll", "mout_bpll", "sclk_bpll", "mout_mx_mspll_ccore",
->     "mout_mclk_cdrex"  entries
-> -- devfreq-events : phandles for PPMU devices connected to this DMC.
-> +- exynos,ppmu-device : phandles for PPMU devices connected to this DMC.
->   - vdd-supply : phandle for voltage regulator which is connected.
->   - reg : registers of two CDREX controllers.
->   - operating-points-v2 : phandle for OPPs described in v2 definition.
->   - device-handle : phandle of the connected DRAM memory device. For more
->   	information please refer to documentation file:
->   	Documentation/devicetree/bindings/ddr/lpddr3.txt
-> -- devfreq-events : phandles of the PPMU events used by the controller.
-> +- exynos,ppmu-device : phandles of the PPMU events used by the controller.
->   - samsung,syscon-clk : phandle of the clock register set used by the controller,
->   	these registers are used for enabling a 'pause' feature and are not
->   	exposed by clock framework but they must be used in a safe way.
-> @@ -73,7 +73,7 @@ Example:
->   			      "mout_mx_mspll_ccore",
->   			      "mout_mclk_cdrex";
->   		operating-points-v2 = <&dmc_opp_table>;
-> -		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
-> +		exynos,ppmu-device = <&ppmu_event3_dmc0_0>, <&ppmu_event3_dmc0_1>,
->   				 <&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
->   		device-handle = <&samsung_K3QF2F20DB>;
->   		vdd-supply = <&buck1_reg>;
-> diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-> index c3195111d646..96593f37a478 100644
-> --- a/drivers/memory/samsung/exynos5422-dmc.c
-> +++ b/drivers/memory/samsung/exynos5422-dmc.c
-> @@ -1270,10 +1270,17 @@ static int exynos5_dmc_init_clks(struct exynos5_dmc *dmc)
->   static struct devfreq_event_dev *get_edev_by_node(struct device_node *np,
->   							int index)
->   {
-> -	struct device_node *node = of_parse_phandle(np, "devfreq-events",
-> +	struct device_node *node = of_parse_phandle(np, "exynos,ppmu-device",
->   							index);
-> -	if (!node)
-> -		return ERR_PTR(-ENODEV);
-> +	if (!node) {
-> +		 /*
-> +		  * Check the deprecated 'devfreq-events' property
-> +		  * to support backward-compatibility.
-> +		 */
-> +		node = of_parse_phandle(np, "devfreq-events", index);
-> +		if (!node)
-> +			return ERR_PTR(-ENODEV);
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index d4e8b7f8d9f4..837b4283b4dc 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -292,6 +292,12 @@
+>  
+>  #define CTXDESC_CD_1_TTB0_MASK		GENMASK_ULL(51, 4)
+>  
+> +/*
+> + * When the SMMU only supports linear context descriptor tables, pick a
+> + * reasonable size limit (64kB).
+> + */
+> +#define CTXDESC_LINEAR_CDMAX		ilog2(SZ_64K / (CTXDESC_CD_DWORDS << 3))
+> +
+>  /* Convert between AArch64 (CPU) TCR format and SMMU CD format */
+>  #define ARM_SMMU_TCR2CD(tcr, fld)	FIELD_PREP(CTXDESC_CD_0_TCR_##fld, \
+>  					FIELD_GET(ARM64_TCR_##fld, tcr))
+> @@ -638,6 +644,7 @@ struct arm_smmu_master {
+>  	u32				*sids;
+>  	unsigned int			num_sids;
+>  	bool				ats_enabled;
+> +	unsigned int			ssid_bits;
+>  };
+>  
+>  /* SMMU private data for an IOMMU domain */
+> @@ -2571,6 +2578,12 @@ static int arm_smmu_add_device(struct device *dev)
+>  		}
+>  	}
+>  
+> +	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
+> +
+> +	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB))
+> +		master->ssid_bits = min_t(u8, master->ssid_bits,
+> +					  CTXDESC_LINEAR_CDMAX);
+> +
+>  	group = iommu_group_get_for_dev(dev);
+>  	if (!IS_ERR(group)) {
+>  		iommu_group_put(group);
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index 026ad2b29dcd..b3ccb2f7f1c7 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -196,8 +196,12 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+>  			if (err)
+>  				break;
+>  		}
+> -	}
+>  
+> +		fwspec = dev_iommu_fwspec_get(dev);
+> +		if (!err && fwspec)
+> +			of_property_read_u32(master_np, "pasid-num-bits",
+> +					     &fwspec->num_pasid_bits);
 > +	}
->   	return devfreq_event_get_edev_by_node(node);
->   }
->   
-> @@ -1292,10 +1299,20 @@ static int exynos5_performance_counters_init(struct exynos5_dmc *dmc)
->   	int ret, i;
->   
->   	dmc->num_counters = of_property_count_elems_of_size(dmc->dev->of_node,
-> -					"devfreq-events", sizeof(u32));
-> +					"exynos,ppmu-device", sizeof(u32));
->   	if (dmc->num_counters < 0) {
-> -		dev_err(dmc->dev, "could not get devfreq-event counters\n");
-> -		return dmc->num_counters;
-> +		 /*
-> +		  * Check the deprecated 'devfreq-events' property
-> +		  * to support backward-compatibility.
-> +		 */
-> +		dmc->num_counters = of_property_count_elems_of_size(
-> +					dmc->dev->of_node,
-> +					"devfreq-events", sizeof(u32));
-> +		if (dmc->num_counters < 0) {
-> +			dev_err(dmc->dev,
-> +				"could not get devfreq-event counters\n");
-> +			return dmc->num_counters;
-> +		}
->   	}
->   
->   	counters_size = sizeof(struct devfreq_event_dev) * dmc->num_counters;
+This patch dedicates to platform devices however I fail to understand,
+at that stage, how/when do you retrieve/store the same max capability
+for PCI devices?
+>  
+>  	/*
+>  	 * Two success conditions can be represented by non-negative err here:
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 3a113c5d7394..bd46775c3329 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -581,6 +581,7 @@ struct iommu_group *fsl_mc_device_group(struct device *dev);
+>   * @ops: ops for this device's IOMMU
+>   * @iommu_fwnode: firmware handle for this device's IOMMU
+>   * @iommu_priv: IOMMU driver private data for this device
+> + * @num_pasid_bits: number of PASID bits supported by this device
+>   * @num_ids: number of associated device IDs
+>   * @ids: IDs which this device may present to the IOMMU
+>   */
+> @@ -589,6 +590,7 @@ struct iommu_fwspec {
+>  	struct fwnode_handle	*iommu_fwnode;
+>  	void			*iommu_priv;
+>  	u32			flags;
+> +	u32			num_pasid_bits;
+>  	unsigned int		num_ids;
+>  	u32			ids[1];
+>  };
 > 
+Besides,
 
-Looks good to me. The fallback with backward-compatibility is a good
-idea in my opinion. Thank you for the change and feel free to and my:
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+Thanks
+
+Eric
 
 
-Regarding the whole patch set, for the first glance it looks reasonable
-and good. AIRC some developers were arguing for the "devfreq-events"
-entry in DT. Now it should be fine. I will spend more time today for
-reviewing the whole patch set.
-
-Regards,
-Lukasz
