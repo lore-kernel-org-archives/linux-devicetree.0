@@ -2,185 +2,162 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05D8C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E43C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC052082E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:03:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="I/yr/j6R"
+	by mail.kernel.org (Postfix) with ESMTP id A62E62146E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725940AbfLQLDF (ORCPT
+        id S1726487AbfLQLEF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:03:05 -0500
-Received: from mail-eopbgr1400109.outbound.protection.outlook.com ([40.107.140.109]:9683
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725870AbfLQLDE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:03:04 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IISWOdeav7TrWg8Q4yVffqp44x8bY/C48xdtEALrdsRTz8A9sBqlGpf6aLzfjsUkhY8vjJq+ZVqa24TNa0+tbVGKnqA+7yzuaaiGZXltiwFuln0GY3K9nLl/ottjyzrhXEFFHaLVJZH90vw1IwDeormJMA7Q6gtH3aiQTADLXiGOwoQez5O+VelWs/8l+OLAkHsDsmLM/giFgycrBOTJyNrLn8CsOoM8MKRPL2WGh8kY9HdUJ0KUU+8Lt7Zcx9lpO70WFP7IZ8NsiUphcpEJ7UYEPZwMGmifuhuOlxYXLAeU+qiFAbkDniEqn0fyjwZcWSZvbRVnrIiJOOasxUqKuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9IBqzniADRAIE00mLm0EwgMRhysyu7ZgXrh89yWWtYk=;
- b=NHkbUiO0bffGJ/I9pQWVa5l/aqmGMdKm1cU+4dwFayT1liadj+SCrg1tWOzi6w1CzoL8dEPhroGn1IAAkOIgBakpTH/DYQWkqiuKuiuTk0bWjJZvc5gYBqAaAg+vEDmB8Buts/voGZF0Kwj5yEhbka5oyOsvmDTsEfroR7yDx1mrQ2/HJqhJZ8Fz8TtDzyOFVzTGqe9MiDpGXso4DSeLIniCs5De2p72NCC85DcM/9ksm0JVoFfcJtJbjNQif+9qZciYnmx8uxF+30exM4WinZPWhIV3LhUCYl5RBZ2un1iV+wPpUGTCUDYIbUNPaVMkmHvplVDZ+YN9Q9FEBZ/smA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9IBqzniADRAIE00mLm0EwgMRhysyu7ZgXrh89yWWtYk=;
- b=I/yr/j6RHcVYl813sVdmnASsrxpFAoOh8ay6c1g9oTd1Y+bitIQ4z1ZhxwDpmgiYd4pOkUde8sgZsiq+6qD3i/1J5JTLXIlcopWneGOMV9f6V7lw5Fkj4gnWcDAVIHyOq5+A1Vl21hUVi2BOuuSJMHMhWH6GPplEELbvGw3Rozs=
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
- TY1PR01MB1594.jpnprd01.prod.outlook.com (52.133.161.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.19; Tue, 17 Dec 2019 11:03:00 +0000
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::5166:5e51:90f5:3ee1]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::5166:5e51:90f5:3ee1%7]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
- 11:03:00 +0000
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Peter Rosin <peda@axentia.se>
-Subject: RE: [PATCH v4 06/13] drm/bridge: lvds-codec: Add "lvds-decoder"
- support
-Thread-Topic: [PATCH v4 06/13] drm/bridge: lvds-codec: Add "lvds-decoder"
- support
-Thread-Index: AQHVmjpQshhfnt50Ik69GSb05e3v8ae4fAYAgAXgh5A=
-Date:   Tue, 17 Dec 2019 11:02:59 +0000
-Message-ID: <TY1PR01MB1770DEDFA6050EA77AA218F8C0500@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1573660292-10629-7-git-send-email-fabrizio.castro@bp.renesas.com>
- <20191213171038.GH4860@pendragon.ideasonboard.com>
-In-Reply-To: <20191213171038.GH4860@pendragon.ideasonboard.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b1000ea8-992c-4c9d-d552-08d782e0ae26
-x-ms-traffictypediagnostic: TY1PR01MB1594:|TY1PR01MB1594:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TY1PR01MB15949089C9109DDAC0E0F05BC0500@TY1PR01MB1594.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02543CD7CD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(136003)(366004)(346002)(376002)(189003)(199004)(55016002)(6916009)(8676002)(66446008)(64756008)(66556008)(66476007)(316002)(66946007)(8936002)(4326008)(52536014)(26005)(81166006)(81156014)(33656002)(86362001)(71200400001)(186003)(2906002)(6506007)(53546011)(7696005)(44832011)(5660300002)(54906003)(76116006)(9686003)(7416002)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1594;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: d5iYjd3unIiRUHTsF6wSYc1O0A/5AN+kwedpTVl8IOHX9/wN1dY7hJpL4TBxznlSbRoS+vA/wxj1XbJa4kCvQrzEdsuUFg9/fXwEZ3dYo9W5XzohxS8RgPKpJDzw0UCQFZ8FfOchdAiBIlQCxEVEm9dSss4c7nSP7hGcgPH1tJ4AoVR4fWeeN27ivt2HGQ9VCFe1INvi0/h778Z60iZw8OpfUqkH2ovQ5MpHYZMPkOUahn0CXp363JnRQskWvYpP42XSZ4gym7N7ueafEb/r+wn911+TDN9Zij6VwGCVMvEduxVybhdXywcEM4ecBKaBjcohJgXdPSWUlbu6lm+yULwtQEIIXvga02pplctJC2JhU4G44AEu3R8vOjE8pNfc1xMNpQ8SGftMWP4ibV6lHui7oLdnAGOIZx28FgVhKGI9ZnYuNn060c/6/lZeaYQc
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 17 Dec 2019 06:04:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:33176 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbfLQLEF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 06:04:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0095031B;
+        Tue, 17 Dec 2019 03:04:04 -0800 (PST)
+Received: from [10.37.12.145] (unknown [10.37.12.145])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F8933F6CF;
+        Tue, 17 Dec 2019 03:04:00 -0800 (PST)
+Subject: Re: [PATCH 7/9] memory: samsung: exynos5422-dmc: Replace deprecated
+ 'devfreq-events' property
+To:     Chanwoo Choi <cw00.choi@samsung.com>, krzk@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        leonard.crestez@nxp.com
+Cc:     a.swigon@samsung.com, m.szyprowski@samsung.com, kgene@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+References: <20191217055738.28445-1-cw00.choi@samsung.com>
+ <CGME20191217055106epcas1p2c43a45e34983c1b3e60cc6fd842dd33e@epcas1p2.samsung.com>
+ <20191217055738.28445-8-cw00.choi@samsung.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <500aaeb0-85ca-c1f5-2f30-a7b1e95810b6@arm.com>
+Date:   Tue, 17 Dec 2019 11:03:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1000ea8-992c-4c9d-d552-08d782e0ae26
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 11:02:59.8042
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aQOQHxoYO3LoYiyYlXIDplH5RBiMuckX2ugRYwnjZLNAtAHQ+eDwrtSG1Fyrlie78y+Uozr15GZAXp3wvWsS/6o3RFDa37aA8pd0rMPJ+V8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1594
+In-Reply-To: <20191217055738.28445-8-cw00.choi@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB5b3VyIGZlZWRiYWNrIQ0KDQo+IEZyb206IExh
-dXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4NCj4gU2Vu
-dDogMTMgRGVjZW1iZXIgMjAxOSAxNzoxMQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0IDA2LzEz
-XSBkcm0vYnJpZGdlOiBsdmRzLWNvZGVjOiBBZGQgImx2ZHMtZGVjb2RlciIgc3VwcG9ydA0KPiAN
-Cj4gSGkgRmFicml6aW8sDQo+IA0KPiBPbiBXZWQsIE5vdiAxMywgMjAxOSBhdCAwMzo1MToyNVBN
-ICswMDAwLCBGYWJyaXppbyBDYXN0cm8gd3JvdGU6DQo+ID4gQWRkIHN1cHBvcnQgZm9yIHRyYW5z
-cGFyZW50IExWRFMgZGVjb2RlcnMgYnkgYWRkaW5nIGEgbmV3DQo+ID4gY29tcGF0aWJsZSBzdHJp
-bmcgKCJsdmRzLWRlY29kZXIiKSB0byB0aGUgZHJpdmVyLg0KPiA+IFRoaXMgcGF0Y2ggYWxzbyBh
-ZGRzIG1lbWJlciBjb25uZWN0b3JfdHlwZSB0byBzdHJ1Y3QgbHZkc19jb2RlYywNCj4gPiBhbmQg
-dGhhdCdzIGJlY2F1c2UgTFZEUyBkZWNvZGVycyBoYXZlIGEgZGlmZmVyZW50IGNvbm5lY3RvciB0
-eXBlDQo+ID4gZnJvbSBMVkRTIGVuY29kZXJzLiBXZSBmaWxsIHRoaXMgbmV3IG1lbWJlciB1cCB3
-aXRoIHRoZSBkYXRhDQo+ID4gbWF0Y2hpbmcgdGhlIGNvbXBhdGlibGUgc3RyaW5nLg0KPiA+DQo+
-ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVu
-ZXNhcy5jb20+DQo+ID4NCj4gPiAtLS0NCj4gPiB2My0+djQ6DQo+ID4gKiBOZXcgcGF0Y2gNCj4g
-PiAtLS0NCj4gPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWNvZGVjLmMgfCAxOSArKysr
-KysrKysrKysrKysrLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspLCAz
-IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlk
-Z2UvbHZkcy1jb2RlYy5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWNvZGVjLmMNCj4g
-PiBpbmRleCBiNTgwMWEyLi5jMzJlMTI1IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9icmlkZ2UvbHZkcy1jb2RlYy5jDQo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9s
-dmRzLWNvZGVjLmMNCj4gPiBAQCAtNyw2ICs3LDcgQEANCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2dw
-aW8vY29uc3VtZXIuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ICAjaW5j
-bHVkZSA8bGludXgvb2YuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPg0KPiA+
-ICAjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRm
-b3JtX2RldmljZS5oPg0KPiA+DQo+ID4gQEAgLTE3LDYgKzE4LDcgQEAgc3RydWN0IGx2ZHNfY29k
-ZWMgew0KPiA+ICAJc3RydWN0IGRybV9icmlkZ2UgYnJpZGdlOw0KPiA+ICAJc3RydWN0IGRybV9i
-cmlkZ2UgKnBhbmVsX2JyaWRnZTsNCj4gPiAgCXN0cnVjdCBncGlvX2Rlc2MgKnBvd2VyZG93bl9n
-cGlvOw0KPiA+ICsJdTMyIGNvbm5lY3Rvcl90eXBlOw0KPiA+ICB9Ow0KPiA+DQo+ID4gIHN0YXRp
-YyBpbnQgbHZkc19jb2RlY19hdHRhY2goc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkNCj4gPiBA
-QCAtNjUsNiArNjcsNyBAQCBzdGF0aWMgaW50IGx2ZHNfY29kZWNfcHJvYmUoc3RydWN0IHBsYXRm
-b3JtX2RldmljZSAqcGRldikNCj4gPiAgCWlmICghbHZkc19jb2RlYykNCj4gPiAgCQlyZXR1cm4g
-LUVOT01FTTsNCj4gPg0KPiA+ICsJbHZkc19jb2RlYy0+Y29ubmVjdG9yX3R5cGUgPSAodTMyKW9m
-X2RldmljZV9nZXRfbWF0Y2hfZGF0YSgmcGRldi0+ZGV2KTsNCj4gDQo+IEknbSBub3cgZ2V0dGlu
-ZyBhIGNvbXBpbGF0aW9uIGZhaWx1cmUgaGVyZToNCj4gDQo+IGRyaXZlcnMvZ3B1L2RybS9icmlk
-Z2UvbHZkcy1jb2RlYy5jOiBJbiBmdW5jdGlvbiDigJhsdmRzX2NvZGVjX3Byb2Jl4oCZOg0KPiBk
-cml2ZXJzL2dwdS9kcm0vYnJpZGdlL2x2ZHMtY29kZWMuYzo2ODozMTogZXJyb3I6IGNhc3QgZnJv
-bSBwb2ludGVyIHRvIGludGVnZXIgb2YgZGlmZmVyZW50IHNpemUgWy1XZXJyb3I9cG9pbnRlci10
-by1pbnQtY2FzdF0NCj4gICBsdmRzX2NvZGVjLT5jb25uZWN0b3JfdHlwZSA9ICh1MzIpb2ZfZGV2
-aWNlX2dldF9tYXRjaF9kYXRhKCZwZGV2LT5kZXYpOw0KPiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgXg0KPiANCj4gVGhlIGZpeCBzaG91bGQgYmUgc2ltcGxlOg0KPiANCj4gCWx2ZHNf
-Y29kZWMtPmNvbm5lY3Rvcl90eXBlID0gKHVpbnRwdHJfdClvZl9kZXZpY2VfZ2V0X21hdGNoX2Rh
-dGEoZGV2KTsNCj4gDQo+IEknbSBib3RoZXJlZCBieSB0aGUgZmFjdCB0aGF0IEkndmUgY29tcGls
-ZWQgdGhpcyBiZWZvcmUgd2l0aG91dCBhbnkNCj4gaXNzdWUsIHNvIHRoaXMgcmVhbGx5IHB1enps
-ZXMgbWUuIERvIHlvdSBnZXQgdGhlIHNhbWUgd2FybmluZyA/DQoNClRoZSB3YXJuaW5nIGFwcGVh
-cnMgd2hlbiBjb21waWxpbmcgZm9yIGFybTY0LCB1bmRlcnN0YW5kYWJseSBzby4NCldlIG11c3Qg
-aGF2ZSBjb21waWxlZCB0aGlzIGZvciBhcm0gb25seSB0aGUgZmlyc3QgdGltZSBhcm91bmQuDQoN
-CkkgdGhpbmsgdGhlIHJpZ2h0IHdheSB0byBzb2x2ZSB0aGlzIGlzIHRvIGVpdGhlciBjYXN0IHRv
-ICh1MzIpKHVpbnRwdHJfdCkgb3IgKHUzMikodW5zaWduZWQgbG9uZykuDQoNCldoYXQncyB5b3Vy
-IHByZWZlcmVuY2U/DQoNClRoYW5rcywNCkZhYg0KDQo+IA0KPiA+ICAJbHZkc19jb2RlYy0+cG93
-ZXJkb3duX2dwaW8gPSBkZXZtX2dwaW9kX2dldF9vcHRpb25hbChkZXYsICJwb3dlcmRvd24iLA0K
-PiA+ICAJCQkJCQkJICAgICBHUElPRF9PVVRfSElHSCk7DQo+ID4gIAlpZiAoSVNfRVJSKGx2ZHNf
-Y29kZWMtPnBvd2VyZG93bl9ncGlvKSkgew0KPiA+IEBAIC0xMDUsNyArMTA4LDcgQEAgc3RhdGlj
-IGludCBsdmRzX2NvZGVjX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4N
-Cj4gPiAgCWx2ZHNfY29kZWMtPnBhbmVsX2JyaWRnZSA9DQo+ID4gIAkJZGV2bV9kcm1fcGFuZWxf
-YnJpZGdlX2FkZF90eXBlZChkZXYsIHBhbmVsLA0KPiA+IC0JCQkJCQlEUk1fTU9ERV9DT05ORUNU
-T1JfTFZEUyk7DQo+ID4gKwkJCQkJCWx2ZHNfY29kZWMtPmNvbm5lY3Rvcl90eXBlKTsNCj4gPiAg
-CWlmIChJU19FUlIobHZkc19jb2RlYy0+cGFuZWxfYnJpZGdlKSkNCj4gPiAgCQlyZXR1cm4gUFRS
-X0VSUihsdmRzX2NvZGVjLT5wYW5lbF9icmlkZ2UpOw0KPiA+DQo+ID4gQEAgLTEzMyw4ICsxMzYs
-MTggQEAgc3RhdGljIGludCBsdmRzX2NvZGVjX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2KQ0KPiA+ICB9DQo+ID4NCj4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2Vf
-aWQgbHZkc19jb2RlY19tYXRjaFtdID0gew0KPiA+IC0JeyAuY29tcGF0aWJsZSA9ICJsdmRzLWVu
-Y29kZXIiIH0sDQo+ID4gLQl7IC5jb21wYXRpYmxlID0gInRoaW5lLHRoYzYzbHZkbTgzZCIgfSwN
-Cj4gPiArCXsNCj4gPiArCQkuY29tcGF0aWJsZSA9ICJsdmRzLWRlY29kZXIiLA0KPiA+ICsJCS5k
-YXRhID0gKHZvaWQgKilEUk1fTU9ERV9DT05ORUNUT1JfRFBJLA0KPiA+ICsJfSwNCj4gPiArCXsN
-Cj4gPiArCQkuY29tcGF0aWJsZSA9ICJsdmRzLWVuY29kZXIiLA0KPiA+ICsJCS5kYXRhID0gKHZv
-aWQgKilEUk1fTU9ERV9DT05ORUNUT1JfTFZEUywNCj4gPiArCX0sDQo+ID4gKwl7DQo+ID4gKwkJ
-LmNvbXBhdGlibGUgPSAidGhpbmUsdGhjNjNsdmRtODNkIiwNCj4gPiArCQkuZGF0YSA9ICh2b2lk
-ICopRFJNX01PREVfQ09OTkVDVE9SX0xWRFMsDQo+ID4gKwl9LA0KPiA+ICAJe30sDQo+ID4gIH07
-DQo+ID4gIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGx2ZHNfY29kZWNfbWF0Y2gpOw0KPiANCj4g
-LS0NCj4gUmVnYXJkcywNCj4gDQo+IExhdXJlbnQgUGluY2hhcnQNCg==
+Hi Chanwoo,
+
+On 12/17/19 5:57 AM, Chanwoo Choi wrote:
+> In order to remove the deprecated 'devfreq-events' property, replace with
+> new 'exynos,ppmu-device' property in order to get the devfreq-event device
+> in devicetree file instead of 'devfreq-events' property. But, to guarantee
+> the backward-compatibility, keep the support 'devfreq-events' property.
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>   .../memory-controllers/exynos5422-dmc.txt     |  6 ++--
+>   drivers/memory/samsung/exynos5422-dmc.c       | 29 +++++++++++++++----
+>   2 files changed, 26 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> index 02e4a1f862f1..1e1b3702f045 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> @@ -17,14 +17,14 @@ Required properties for DMC device for Exynos5422:
+>   - clock-names : should include "fout_spll", "mout_sclk_spll", "ff_dout_spll2",
+>     "fout_bpll", "mout_bpll", "sclk_bpll", "mout_mx_mspll_ccore",
+>     "mout_mclk_cdrex"  entries
+> -- devfreq-events : phandles for PPMU devices connected to this DMC.
+> +- exynos,ppmu-device : phandles for PPMU devices connected to this DMC.
+>   - vdd-supply : phandle for voltage regulator which is connected.
+>   - reg : registers of two CDREX controllers.
+>   - operating-points-v2 : phandle for OPPs described in v2 definition.
+>   - device-handle : phandle of the connected DRAM memory device. For more
+>   	information please refer to documentation file:
+>   	Documentation/devicetree/bindings/ddr/lpddr3.txt
+> -- devfreq-events : phandles of the PPMU events used by the controller.
+> +- exynos,ppmu-device : phandles of the PPMU events used by the controller.
+>   - samsung,syscon-clk : phandle of the clock register set used by the controller,
+>   	these registers are used for enabling a 'pause' feature and are not
+>   	exposed by clock framework but they must be used in a safe way.
+> @@ -73,7 +73,7 @@ Example:
+>   			      "mout_mx_mspll_ccore",
+>   			      "mout_mclk_cdrex";
+>   		operating-points-v2 = <&dmc_opp_table>;
+> -		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
+> +		exynos,ppmu-device = <&ppmu_event3_dmc0_0>, <&ppmu_event3_dmc0_1>,
+>   				 <&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+>   		device-handle = <&samsung_K3QF2F20DB>;
+>   		vdd-supply = <&buck1_reg>;
+> diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
+> index c3195111d646..96593f37a478 100644
+> --- a/drivers/memory/samsung/exynos5422-dmc.c
+> +++ b/drivers/memory/samsung/exynos5422-dmc.c
+> @@ -1270,10 +1270,17 @@ static int exynos5_dmc_init_clks(struct exynos5_dmc *dmc)
+>   static struct devfreq_event_dev *get_edev_by_node(struct device_node *np,
+>   							int index)
+>   {
+> -	struct device_node *node = of_parse_phandle(np, "devfreq-events",
+> +	struct device_node *node = of_parse_phandle(np, "exynos,ppmu-device",
+>   							index);
+> -	if (!node)
+> -		return ERR_PTR(-ENODEV);
+> +	if (!node) {
+> +		 /*
+> +		  * Check the deprecated 'devfreq-events' property
+> +		  * to support backward-compatibility.
+> +		 */
+> +		node = of_parse_phandle(np, "devfreq-events", index);
+> +		if (!node)
+> +			return ERR_PTR(-ENODEV);
+> +	}
+>   	return devfreq_event_get_edev_by_node(node);
+>   }
+>   
+> @@ -1292,10 +1299,20 @@ static int exynos5_performance_counters_init(struct exynos5_dmc *dmc)
+>   	int ret, i;
+>   
+>   	dmc->num_counters = of_property_count_elems_of_size(dmc->dev->of_node,
+> -					"devfreq-events", sizeof(u32));
+> +					"exynos,ppmu-device", sizeof(u32));
+>   	if (dmc->num_counters < 0) {
+> -		dev_err(dmc->dev, "could not get devfreq-event counters\n");
+> -		return dmc->num_counters;
+> +		 /*
+> +		  * Check the deprecated 'devfreq-events' property
+> +		  * to support backward-compatibility.
+> +		 */
+> +		dmc->num_counters = of_property_count_elems_of_size(
+> +					dmc->dev->of_node,
+> +					"devfreq-events", sizeof(u32));
+> +		if (dmc->num_counters < 0) {
+> +			dev_err(dmc->dev,
+> +				"could not get devfreq-event counters\n");
+> +			return dmc->num_counters;
+> +		}
+>   	}
+>   
+>   	counters_size = sizeof(struct devfreq_event_dev) * dmc->num_counters;
+> 
+
+Looks good to me. The fallback with backward-compatibility is a good
+idea in my opinion. Thank you for the change and feel free to and my:
+
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+
+
+Regarding the whole patch set, for the first glance it looks reasonable
+and good. AIRC some developers were arguing for the "devfreq-events"
+entry in DT. Now it should be fine. I will spend more time today for
+reviewing the whole patch set.
+
+Regards,
+Lukasz
