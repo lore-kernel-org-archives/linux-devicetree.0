@@ -2,97 +2,89 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFD0C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 18:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7773CC2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 18:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD1120733
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 18:07:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="H3XAcSRj"
+	by mail.kernel.org (Postfix) with ESMTP id 4E95A21739
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 18:17:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbfLQSHO (ORCPT
+        id S1726859AbfLQSRa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:07:14 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.121]:21044 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfLQSHO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 13:07:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576606032;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=FOKRqZKiYN4ZS+sSz57FNY4af5eAANqrgGGZiRiCefI=;
-        b=H3XAcSRjWVb5vcnJwTI4gPP3g2d6klTAeL4GRUZWKoop/m+Z91ZRu+9vYxlJ2IJZ/b
-        is3Rp3wYNf+0wxDeOrS3BSUYc1qwTAFZt6wPRGVxqvd8P9HVPRv6narrfCH1e6SeM/yz
-        VfHydbSkx61AJ2pwZV3218oMMH9w3mfugnEjk8Reci49cP0WmoPYTif4wBClgTiLOcbV
-        kKeYijn/xfl9X4vdobixpY+m+cwKWa7tRD8z+AAi5QSLkVKthd4QaRtVDgKB6Ob2+jVF
-        ASAew8XGpqH3/loNilIDvl5V2hdoWxodsUj01f9g3uk1CJiLYJj02wKu0X7Zkq2khbnP
-        u+3A==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH5Hd8HaSCa"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.0.7 DYNA|AUTH)
-        with ESMTPSA id q020e2vBHI722eT
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 17 Dec 2019 19:07:02 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: [PATCH v2 1/2] DTS: bindings: wl1251: mark ti,power-gpio as optional
-Date:   Tue, 17 Dec 2019 19:06:59 +0100
-Message-Id: <de42cdd5c5d2c46978c15cd2f27b49fa144ae6a7.1576606020.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1576606020.git.hns@goldelico.com>
-References: <cover.1576606020.git.hns@goldelico.com>
+        Tue, 17 Dec 2019 13:17:30 -0500
+Received: from mail.bugwerft.de ([46.23.86.59]:41202 "EHLO mail.bugwerft.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726722AbfLQSRa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 13:17:30 -0500
+Received: from [192.168.178.106] (pD95EF574.dip0.t-ipconnect.de [217.94.245.116])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 6E681281A97;
+        Tue, 17 Dec 2019 18:11:03 +0000 (UTC)
+Subject: Re: [PATCH 07/10] i2c: Add driver for AD242x bus controller
+To:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
+        pascal.huerst@gmail.com
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-9-daniel@zonque.org>
+ <64adf5d7-754a-f1da-aa9b-11579c5a2780@lucaceresoli.net>
+ <20191212163315.GA3932@kunai>
+ <482316ef-775a-cb7b-015e-e00463503e6b@zonque.org>
+ <4f2e1332-eac3-e54d-5de8-b84a76cb1a34@lucaceresoli.net>
+From:   Daniel Mack <daniel@zonque.org>
+Message-ID: <a55f7642-3ea1-e762-b5fc-8ff10b83ccc7@zonque.org>
+Date:   Tue, 17 Dec 2019 19:17:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4f2e1332-eac3-e54d-5de8-b84a76cb1a34@lucaceresoli.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It is now only useful for SPI interface.
-Power control of SDIO mode is done through mmc core.
+Hi Luca,
 
-Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On 12/17/19 9:35 AM, Luca Ceresoli wrote:
+> On 15/12/19 21:27, Daniel Mack wrote:
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-index f38950560982..88fd28d15eac 100644
---- a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-@@ -9,11 +9,12 @@ Required properties:
- - spi-max-frequency : Maximum SPI clocking speed of device in Hz
- - interrupts :        Should contain interrupt line
- - vio-supply :        phandle to regulator providing VIO
--- ti,power-gpio :     GPIO connected to chip's PMEN pin
- 
- Optional properties:
- - ti,wl1251-has-eeprom : boolean, the wl1251 has an eeprom connected, which
-                          provides configuration data (calibration, MAC, ...)
-+- ti,power-gpio :	 GPIO connected to chip's PMEN pin if operated in
-+			 SPI mode
- - Please consult Documentation/devicetree/bindings/spi/spi-bus.txt
-   for optional SPI connection related properties,
- 
--- 
-2.23.0
+>> The a2b code has to tell the 'master node' the final destination of the
+>> payload by programming registers on its primary i2c address, and then
+>> forwards the messages to its secondary i2c address. The layout of the
+>> messages don't change, and neither do the flags; i2c messages are being
+>> sent as i2c messages, except their addresses are changed, a bit like NAT
+>> in networking. That procedure is described on page 3-4 of the TRM,
+>> "Remote Peripheral I2C Accesses".
+>>
+>> The 'real' i2c master that handles the hardware bus is responsible for
+>> adding start conditions, and as the messages as such are untouched, I
+>> believe it should do the right thing. The code in my xfer functions
+>> merely suppresses reprogramming remote addresses by remembering the last
+>> one that was used, but that is independent of the start conditions on
+>> the wire.
+> 
+> My concern is not about the start condition, it's about the *repeated*
+> start condition.
+> 
+> The first question is whether the A2B chips can do it. What if the host
+> processor sets a slave chip address and then issues two messages
+> separated by a repeated start condition? Will the slave transceiver emit
+> a repeated start condition too?
 
+Ah, alright. Thanks for taking the time to explain. I'll have to do some 
+measurements with a hardware analyzer. Will revisit this then, and 
+either provide an implementation that handles such cases correctly, or a 
+comment to explain that the hardware can't do it.
+
+
+Best regards,
+Daniel
