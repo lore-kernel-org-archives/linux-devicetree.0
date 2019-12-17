@@ -2,255 +2,210 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A26C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82656C2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6E2206A5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:29:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tc/PfHiq"
+	by mail.kernel.org (Postfix) with ESMTP id 5947A20716
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfLQJ3m (ORCPT
+        id S1726709AbfLQJkB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:29:42 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37731 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfLQJ3m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 04:29:42 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w15so10501506wru.4
-        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 01:29:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=alzctH88nkGm93shdXD815TJhUtkbcFmRm1xB1d3sFA=;
-        b=tc/PfHiqx1g9OhIykMghdMOuoCxnyJdDyPEmSV0knr75jcrkVRJZfKmHAYXm0FBKDs
-         UYcH2/HU30rCIORaulUyRPU2g20qK1XerGUoLQvh5R/AVgf6VVEscmumSNrBSMV2Qa3h
-         ra0DnMItw09nmDb4xque4pdDav7HoQeaCKg7vpm/fsrICZonkm40JYK5j0VJ6ROlMzTD
-         6ow4dYP5+wQH/Q3bqg5XlisumxdsJXmQU5VlttKhl7EA0dbEVuzAeDyGnQVIBHfvwqhG
-         OhKCA5abYNyJxzr33sL7Z2jL1BOIUcPqfFWI3maLedUfMIYXp9Vi1jawxUDhzqA0CaKQ
-         +riw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version:content-transfer-encoding;
-        bh=alzctH88nkGm93shdXD815TJhUtkbcFmRm1xB1d3sFA=;
-        b=MWbLsw65oT14EILKXy8QyH6dJmJwxwpOIgORMt0Dx5+xUMQBVSmd5eoLRqlAchs7Jc
-         cVQJkhHDxvE3SHqab/gWs5E1t4Hl6KpeHkbIJGMC37U6nqh0WjGpyCJHC7U0YX0Al7uu
-         iBgWTnfe4JCEABlT0KXuvo6SPC4WJ5k2WsgEvMph0OApb0vTINIriA6Fw6t6dkZe1fYK
-         mhusZMhw94PM67M2Ayxpu0PZ+LWxnQeS6/N1CkLzAk6jymNzJO/62JFDjiIEPjg0sJWF
-         nq61bSTZCSgEM5wCsRhjuvzqk8nCyJ9GOgcHRe8PyLeTLRwtslDpHX1p0Ve483ekcu66
-         uaTQ==
-X-Gm-Message-State: APjAAAVF23Y08x4VP28hC0lQUh2pnLz7kCAp7NF2qU8MQE/YFj3EK5NI
-        v9OELXiyDevT1xaEfBwMskIT6Q==
-X-Google-Smtp-Source: APXvYqy/DS/azJ653mUdjjacLdbuxYCf410YHUG5mlvieCYQz0Ahh9MbX5t88z0FLKKawrQe+Eanww==
-X-Received: by 2002:a5d:6349:: with SMTP id b9mr37238202wrw.346.1576574979348;
-        Tue, 17 Dec 2019 01:29:39 -0800 (PST)
-Received: from localhost (uluru.liltaz.com. [163.172.81.188])
-        by smtp.gmail.com with ESMTPSA id q8sm2258746wmq.3.2019.12.17.01.29.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 01:29:38 -0800 (PST)
-References: <20191206074052.15557-1-jian.hu@amlogic.com> <20191206074052.15557-3-jian.hu@amlogic.com> <1j8snhluhg.fsf@starbuckisacylon.baylibre.com> <741284be-2ae8-1102-22bc-c510e822c883@amlogic.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Jian Hu <jian.hu@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        "Martin Blumenstingl" <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 2/6] clk: meson: add support for A1 PLL clock ops
-In-reply-to: <741284be-2ae8-1102-22bc-c510e822c883@amlogic.com>
-Date:   Tue, 17 Dec 2019 10:29:37 +0100
-Message-ID: <1jk16vb8qm.fsf@starbuckisacylon.baylibre.com>
+        Tue, 17 Dec 2019 04:40:01 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:51374 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfLQJkB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 04:40:01 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-21-5df8a26d82b6
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 52.A5.08102.D62A8FD5; Tue, 17 Dec 2019 10:39:57 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Tue, 17 Dec 2019 10:39:52 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v6 05/15] mfd: bd71828: Support ROHM BD71828 PMIC - core
+Thread-Topic: [PATCH v6 05/15] mfd: bd71828: Support ROHM BD71828 PMIC - core
+Thread-Index: AQHVsAdUq9cAZXeTxE+pdQm1dVrUwKe87/aAgAEbEgA=
+Date:   Tue, 17 Dec 2019 09:39:51 +0000
+Message-ID: <5593db6b3328c0a1a7069d839f5c777b4b3822b6.camel@fi.rohmeurope.com>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+         <252de5646fedfec7c575269843a47091fe199c79.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+         <20191216164641.GC18955@dell>
+In-Reply-To: <20191216164641.GC18955@dell>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5BDD41CC073047438B16BC7322087B90@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0wbZRjHee+udwfjlqMU+9oJ0VvMZIubGDPfGaaLwexMdC7xR6KG4E1O
+        SqQtuba64Y9gGEygIWN0GivlZ9EJFbZjuMlAlqYwVtwMymjHD00dY4IbBMTCYDJ7lA3+er95
+        vu/n+T5v8rw0rpYpHZ1ttIiSUcjhyBji/Ikl+XFD3UL6E5M2HXL1X6HQkalvKPTfsR4KzTl9
+        BDoeHCPR2PkjAFV7L6tQad9pFSqobyHRcNtJAv3xbzdAoYHPMWS/8y2GZmy/q1BtkYtArdV3
+        APqtvZJEbTebAeppGiBRg78fQ5UNvQSani3GUL/vBXTcN0WhUV83iQr6Azgq7PRSaHnwFIHK
+        Lu/dk8i7q9yAX1o8BvjpQCHFV7k/4n90jFK83FhM8iODHSTf5XRTfH1ZhYoP/VxO8OO1LQR/
+        IXAG47+suo3xLTYv4E80zVP8P3LSfvatDakHBMsHr2ZnGXc8+84Gvc11Q5U7lHawaGgEzwcL
+        z5eAaBqyT8EZ2zAoATG0mr0C4PdjhZhiqNleAAfmHigBNE2yqbDkKqWUNWwKdPVeJxSNszU0
+        LO9gFTaKlXF4ZnlEpRjx7Evw0vXRVeBlWOlvxSL6GXhzeBpXNME+Coua3St3GHYf/Lumh4wM
+        4QWw73DFChDNboVdFW0rTQGbCIvzp7BIshbK4/OqyAtY6Or4BY/oBDhxbXm1zsHO20FCeQDO
+        JsOW9h0RdA9cWvaQEf0ItJcGV2eIgxe/GiOOAq1jXYJjjXasox3raMc6ugaoGgE0CNk5WYJF
+        TNkuidbtkklvCB/vmgwyiOzg3Flw1/OiB2A08IAHaYxLYGL3LqSrNx4wZR7SC2Z9hmTNEc0e
+        AGmc0zBnH55PVzOZwqE8UTLdszbRBKdltgTL09WskvW+KOaK0j33IZrmIJNcG24aJ4lZ4sH3
+        snMsazZGRyvNY3Qas2jMFCXBatFnKLuSYQ4vi2LFhnM31oRxxpwrGMLVCOoD2+ijE846nPY6
+        G+pwNWE0GUWdltmmJLHKVb3VeD9oEmhpwMUzuxU3NvwR7/eZDEdg4Ygn94WUCIuwZunyQfvV
+        am1X3i5/89u3mAvuppm8gP9u2Wnvub8ak3dH7frCz3GfBd7Y2R069+ZQmnV802Kns0C+tv+7
+        U3Nph3c+V1r2Ot86fPGTkx/an076+Gt5S9wr3tkfoip7P91c3qepT7SbFn9N2uwI0rM3Jh7z
+        vXarLcaeUZhqaUwYDP2pufRTxSCI5wizXkjZiktm4X+fgVNhRQQAAA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On Tue 17 Dec 2019 at 09:41, Jian Hu <jian.hu@amlogic.com> wrote:
-
-> On 2019/12/12 18:16, Jerome Brunet wrote:
->>
->> On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
->>
->>> The A1 PLL design is different with previous SoCs. The PLL
->>> internal analog modules Power-on sequence is different
->>> with previous, and thus requires a strict register sequence to
->>> enable the PLL.
->>>
->>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->>> ---
->>>   drivers/clk/meson/clk-pll.c | 21 +++++++++++++++++++++
->>>   drivers/clk/meson/clk-pll.h |  1 +
->>>   drivers/clk/meson/parm.h    |  1 +
->>>   3 files changed, 23 insertions(+)
->>>
->>> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
->>> index ddb1e5634739..4aff31a51589 100644
->>> --- a/drivers/clk/meson/clk-pll.c
->>> +++ b/drivers/clk/meson/clk-pll.c
->>> @@ -318,6 +318,23 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
->>>   	struct clk_regmap *clk =3D to_clk_regmap(hw);
->>>   	struct meson_clk_pll_data *pll =3D meson_clk_pll_data(clk);
->>>   +	/*
->>> +	 * The A1 design is different with previous SoCs.The PLL
->>> +	 * internal analog modules Power-on sequence is different with
->>> +	 * previous, and thus requires a strict register sequence to
->>> +	 * enable the PLL.
->>
->> The code does something more, not completly different. This comment is
->> not aligned with what the code does
-> ok, I will correct the comment.
->>
->>> +	 */
->>> +	if (MESON_PARM_APPLICABLE(&pll->current_en)) {
->>> +		/* Enable the pll */
->>> +		meson_parm_write(clk->map, &pll->en, 1);
->>> +		udelay(10);
->>> +		/* Enable the pll self-adaption module current */
->>> +		meson_parm_write(clk->map, &pll->current_en, 1);
->>> +		udelay(40);
->>> +		meson_parm_write(clk->map, &pll->rst, 1);
->>> +		meson_parm_write(clk->map, &pll->rst, 0);
->>
->> Here you enable the PLL and self adaptation module then reset the PLL.
->> However:
->> #1 when you enter this function, the PLL should already by in reset
->> and disabled
->> #2 the code after that will reset the PLL again
-> For A1 PLLs, There is no reset bit, It will not reset the PLL.
-> And in V2, you mentioned PARM 'rst' can be used for one toggling, And 'rs=
-t'
-> is used for BIT(6) in CTRL2.
->
-
-oh my ! What is it then ? Why do you need to toggle it ? What does is do ?
-
-> Quote V2 the HIFI PLL init_regs definition=EF=BC=9A
->
->
-> +static const struct reg_sequence a1_hifi_init_regs[] =3D {
-> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL1, .def =3D 0x01800000 },
-> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL2, .def =3D 0x00001100 },
-> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL3, .def =3D 0x100a1100 },
-> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL4, .def =3D 0x00302000 },
-> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL0, .def =3D 0x01f18440 },
-> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL0, .def =3D 0x11f18440, .delay_us =3D 10=
- },
-> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL0, .def =3D 0x15f18440, .delay_us =3D 40=
- },
-> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL2, .def =3D 0x00001140 },
-> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL2, .def =3D 0x00001100 },
-> +};
->
-> So maybe another new PARM should be defined to avoid the ambiguity.
-> What do you think about it?
-
-This is not the point of my comment Jian !
-
-I'm assuming here that you have tested your v4 before sending and that
-it work (hopefully)
-
-The fact is that with this code, when disabled the bit behind rst
-(whatever it is) is set. So when you get to enable the bit is already set.
-The code you sent does the same as the snip I gave you in the reply.
-
-Now, if your PLL is THAT different, maybe it would be best if you could
-clearly explain how it works, what bit should be set and why. Then we
-will be able to figure out how the driver has to be restructured.
-
->
->>
->> So if what you submited works, inserting the following should accomplish
->> the same thing:
->>
->> ---8<---
->> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
->> index 489092dde3a6..9b38df0a7682 100644
->> --- a/drivers/clk/meson/clk-pll.c
->> +++ b/drivers/clk/meson/clk-pll.c
->> @@ -330,6 +330,13 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
->>          /* Enable the pll */
->>          meson_parm_write(clk->map, &pll->en, 1);
->>
->> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
->> +               udelay(10);
->> +               /* Enable the pll self-adaption module current */
->> +               meson_parm_write(clk->map, &pll->current_en, 1);
->> +               udelay(40);
->> +       }
->> +
->>          /* Take the pll out reset */
->>          meson_parm_write(clk->map, &pll->rst, 0);
->> --->8---
->>
->>
->>
->>
->>> +	}
->>> +
->>>   	/* do nothing if the PLL is already enabled */
->>>   	if (clk_hw_is_enabled(hw))
->>>   		return 0;
->>
->> In any case, nothing should be done on the clock before this check
->> otherwise you might just break the clock
->>
-> OK, I will put the enabled check ahead.
->>> @@ -347,6 +364,10 @@ static void meson_clk_pll_disable(struct clk_hw *h=
-w)
->>>     	/* Disable the pll */
->>>   	meson_parm_write(clk->map, &pll->en, 0);
->>> +
->>> +	/* Disable PLL internal self-adaption module current */
->>> +	if (MESON_PARM_APPLICABLE(&pll->current_en))
->>> +		meson_parm_write(clk->map, &pll->current_en, 0);
->>>   }
->>>     static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long
->>> rate,
->>> diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
->>> index 367efd0f6410..30f039242a65 100644
->>> --- a/drivers/clk/meson/clk-pll.h
->>> +++ b/drivers/clk/meson/clk-pll.h
->>> @@ -36,6 +36,7 @@ struct meson_clk_pll_data {
->>>   	struct parm frac;
->>>   	struct parm l;
->>>   	struct parm rst;
->>> +	struct parm current_en;
->>>   	const struct reg_sequence *init_regs;
->>>   	unsigned int init_count;
->>>   	const struct pll_params_table *table;
->>> diff --git a/drivers/clk/meson/parm.h b/drivers/clk/meson/parm.h
->>> index 3c9ef1b505ce..c53fb26577e3 100644
->>> --- a/drivers/clk/meson/parm.h
->>> +++ b/drivers/clk/meson/parm.h
->>> @@ -20,6 +20,7 @@
->>>   	(((reg) & CLRPMASK(width, shift)) | ((val) << (shift)))
->>>     #define MESON_PARM_APPLICABLE(p)		(!!((p)->width))
->>> +#define MESON_PARM_CURRENT(p)			(!!((p)->width))
->>
->> Why do we need that ?
-> OK, I will remove it ,and use 'MESON_PARM_APPLICABLE' instead
->>
->>>     struct parm {
->>>   	u16	reg_off;
->>
->> .
->>
-
+SGVsbG8gTGVlLA0KDQpPbiBNb24sIDIwMTktMTItMTYgYXQgMTY6NDYgKzAwMDAsIExlZSBKb25l
+cyB3cm90ZToNCj4gT24gV2VkLCAxMSBEZWMgMjAxOSwgTWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0K
+PiANCj4gPiBCRDcxODI4R1cgaXMgYSBzaW5nbGUtY2hpcCBwb3dlciBtYW5hZ2VtZW50IElDIGZv
+ciBiYXR0ZXJ5LXBvd2VyZWQNCj4gPiBwb3J0YWJsZQ0KPiA+IGRldmljZXMuIFRoZSBJQyBpbnRl
+Z3JhdGVzIDcgYnVjayBjb252ZXJ0ZXJzLCA3IExET3MsIGFuZCBhIDE1MDAgbUENCj4gPiBzaW5n
+bGUtY2VsbCBsaW5lYXIgY2hhcmdlci4gQWxzbyBpbmNsdWRlZCBpcyBhIENvdWxvbWIgY291bnRl
+ciwgYQ0KPiA+IHJlYWwtdGltZQ0KPiA+IGNsb2NrIChSVEMpLCAzIEdQTy9yZWd1bGF0b3IgY29u
+dHJvbCBwaW5zLCBIQUxMIGlucHV0IGFuZCBhIDMyLjc2OA0KPiA+IGtIeg0KPiA+IGNsb2NrIGdh
+dGUuDQo+ID4gDQo+ID4gQWRkIE1GRCBjb3JlIGRyaXZlciBwcm92aWRpbmcgaW50ZXJydXB0IGNv
+bnRyb2xsZXIgZmFjaWxpdGllcyBhbmQNCj4gPiBpMmMNCj4gPiBhY2Nlc3MgdG8gc3ViIGRldmlj
+ZSBkcml2ZXJzLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hdHRpIFZhaXR0aW5lbiA8bWF0
+dGkudmFpdHRpbmVuQGZpLnJvaG1ldXJvcGUuY29tPg0KPiA+IC0tLQ0KPiA+IA0KPiA+IENoYW5n
+ZXMgc2luY2UgdjU6DQo+ID4gLSBObyBjaGFuZ2VzDQo+ID4gDQo+ID4gIGRyaXZlcnMvbWZkL0tj
+b25maWcgICAgICAgICAgICAgIHwgIDE1ICsrDQo+ID4gIGRyaXZlcnMvbWZkL01ha2VmaWxlICAg
+ICAgICAgICAgIHwgICAyICstDQo+ID4gIGRyaXZlcnMvbWZkL3JvaG0tYmQ3MTgyOC5jICAgICAg
+IHwgMzE5ICsrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIGluY2x1ZGUvbGludXgvbWZkL3Jv
+aG0tYmQ3MTgyOC5oIHwgNDI1DQo+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0K
+PiA+ICBpbmNsdWRlL2xpbnV4L21mZC9yb2htLWdlbmVyaWMuaCB8ICAgMSArDQo+ID4gIDUgZmls
+ZXMgY2hhbmdlZCwgNzYxIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPiAgY3JlYXRl
+IG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWZkL3JvaG0tYmQ3MTgyOC5jDQo+ID4gIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBpbmNsdWRlL2xpbnV4L21mZC9yb2htLWJkNzE4MjguaA0KPiANCj4gQ291cGxlIG9m
+IHNtYWxsIG5pdHMuICBPbmNlIGZpeGVkLCBwbGVhc2UgYXBwbHkgbXk6DQo+IA0KPiBGb3IgbXkg
+b3duIHJlZmVyZW5jZToNCj4gICBBY2tlZC1mb3ItTUZELWJ5OiBMZWUgSm9uZXMgPGxlZS5qb25l
+c0BsaW5hcm8ub3JnPg0KPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvS2NvbmZpZyBi
+L2RyaXZlcnMvbWZkL0tjb25maWcNCj4gPiBpbmRleCA0MjA5MDA4NTIxNjYuLmMzYzk0MzJlZjUx
+YyAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL21mZC9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVy
+cy9tZmQvS2NvbmZpZw0KPiA+IEBAIC0xOTA2LDYgKzE5MDYsMjEgQEAgY29uZmlnIE1GRF9ST0hN
+X0JENzA1MjgNCj4gPiAgCSAgMTAgYml0cyBTQVIgQURDIGZvciBiYXR0ZXJ5IHRlbXBlcmF0dXJl
+IG1vbml0b3IgYW5kIDFTDQo+ID4gYmF0dGVyeQ0KPiA+ICAJICBjaGFyZ2VyLg0KPiA+ICANCj4g
+PiArY29uZmlnIE1GRF9ST0hNX0JENzE4MjgNCj4gPiArCXRyaXN0YXRlICJST0hNIEJENzE4Mjgg
+UG93ZXIgTWFuYWdlbWVudCBJQyINCj4gPiArCWRlcGVuZHMgb24gSTJDPXkNCj4gPiArCWRlcGVu
+ZHMgb24gT0YNCj4gPiArCXNlbGVjdCBSRUdNQVBfSTJDDQo+ID4gKwlzZWxlY3QgUkVHTUFQX0lS
+UQ0KPiA+ICsJc2VsZWN0IE1GRF9DT1JFDQo+ID4gKwloZWxwDQo+ID4gKwkgIFNlbGVjdCB0aGlz
+IG9wdGlvbiB0byBnZXQgc3VwcG9ydCBmb3IgdGhlIFJPSE0gQkQ3MTgyOCBQb3dlcg0KPiA+ICsJ
+ICBNYW5hZ2VtZW50IElDLiBCRDcxODI4R1cgaXMgYSBzaW5nbGUtY2hpcCBwb3dlciBtYW5hZ2Vt
+ZW50IElDDQo+ID4gZm9yDQo+ID4gKwkgIGJhdHRlcnktcG93ZXJlZCBwb3J0YWJsZSBkZXZpY2Vz
+LiBUaGUgSUMgaW50ZWdyYXRlcyA3IGJ1Y2sNCj4gPiArCSAgY29udmVydGVycywgNyBMRE9zLCBh
+bmQgYSAxNTAwIG1BIHNpbmdsZS1jZWxsIGxpbmVhciBjaGFyZ2VyLg0KPiA+ICsJICBBbHNvIGlu
+Y2x1ZGVkIGlzIGEgQ291bG9tYiBjb3VudGVyLCBhIHJlYWwtdGltZSBjbG9jayAoUlRDKSwNCj4g
+PiBhbmQNCj4gPiArCSAgYSAzMi43Njgga0h6IGNsb2NrIGdhdGUuDQo+ID4gKw0KPiA+ICBjb25m
+aWcgTUZEX1NUTTMyX0xQVElNRVINCj4gPiAgCXRyaXN0YXRlICJTdXBwb3J0IGZvciBTVE0zMiBM
+b3ctUG93ZXIgVGltZXIiDQo+ID4gIAlkZXBlbmRzIG9uIChBUkNIX1NUTTMyICYmIE9GKSB8fCBD
+T01QSUxFX1RFU1QNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvTWFrZWZpbGUgYi9kcml2
+ZXJzL21mZC9NYWtlZmlsZQ0KPiA+IGluZGV4IGFlZDk5ZjA4NzM5Zi4uY2EyZDU1YzY3OWM1IDEw
+MDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWZkL01ha2VmaWxlDQo+ID4gKysrIGIvZHJpdmVycy9t
+ZmQvTWFrZWZpbGUNCj4gPiBAQCAtMjUyLDYgKzI1Miw2IEBAIG9iai0kKENPTkZJR19NRkRfTVhT
+X0xSQURDKSAgICAgKz0gbXhzLWxyYWRjLm8NCj4gPiAgb2JqLSQoQ09ORklHX01GRF9TQzI3WFhf
+UE1JQykJKz0gc3ByZC1zYzI3eHgtc3BpLm8NCj4gPiAgb2JqLSQoQ09ORklHX1JBVkVfU1BfQ09S
+RSkJKz0gcmF2ZS1zcC5vDQo+ID4gIG9iai0kKENPTkZJR19NRkRfUk9ITV9CRDcwNTI4KQkrPSBy
+b2htLWJkNzA1Mjgubw0KPiA+ICtvYmotJChDT05GSUdfTUZEX1JPSE1fQkQ3MTgyOCkJKz0gcm9o
+bS1iZDcxODI4Lm8NCj4gPiAgb2JqLSQoQ09ORklHX01GRF9ST0hNX0JENzE4WFgpCSs9IHJvaG0t
+YmQ3MTh4Ny5vDQo+ID4gIG9iai0kKENPTkZJR19NRkRfU1RNRlgpIAkrPSBzdG1meC5vDQo+ID4g
+LQ0KPiANCj4gTml0OiBUaGlzIGlzIGFuIHVucmVsYXRlZCBjaGFuZ2UgYW5kIHNob3VsZCBub3Qg
+cmVhbGx5IGJlIGluIHRoaXMNCj4gcGF0Y2guDQoNCk9rLiBXaWxsIGdldCByaWQgb2YgaXQuDQoN
+Cj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL3JvaG0tYmQ3MTgyOC5jIGIvZHJpdmVy
+cy9tZmQvcm9obS0NCj4gPiBiZDcxODI4LmMNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+
+IGluZGV4IDAwMDAwMDAwMDAwMC4uN2Y0NDVkNjk5ZmQ5DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+
+ICsrKyBiL2RyaXZlcnMvbWZkL3JvaG0tYmQ3MTgyOC5jDQo+ID4gQEAgLTAsMCArMSwzMTkgQEAN
+Cj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQ0KPiA+ICsvLw0K
+PiA+ICsvLyBDb3B5cmlnaHQgKEMpIDIwMTkgUk9ITSBTZW1pY29uZHVjdG9ycw0KPiA+ICsvLw0K
+PiA+ICsvLyBST0hNIEJENzE4MjggUE1JQyBkcml2ZXINCj4gPiArDQoNCi8vc25pcA0KDQo+ID4g
+Kw0KPiA+ICtzdGF0aWMgc3RydWN0IGkyY19kcml2ZXIgYmQ3MTgyOF9kcnYgPSB7DQo+ID4gKwku
+ZHJpdmVyID0gew0KPiA+ICsJCS5uYW1lID0gInJvaG0tYmQ3MTgyOCIsDQo+ID4gKwkJLm9mX21h
+dGNoX3RhYmxlID0gYmQ3MTgyOF9vZl9tYXRjaCwNCj4gPiArCX0sDQo+ID4gKwkucHJvYmVfbmV3
+ID0gJmJkNzE4MjhfaTJjX3Byb2JlLA0KPiA+ICt9Ow0KPiA+ICsNCj4gDQo+IE5pdDogWW91IGNh
+biByZW1vdmUgdGhpcyBsaW5lLg0KDQpXaWxsIGRvLg0KDQo+IA0KPiA+ICttb2R1bGVfaTJjX2Ry
+aXZlcihiZDcxODI4X2Rydik7DQo+ID4gKw0KPiA+ICtNT0RVTEVfQVVUSE9SKCJNYXR0aSBWYWl0
+dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4NCj4gPiAiKTsNCj4gPiAr
+TU9EVUxFX0RFU0NSSVBUSU9OKCJST0hNIEJENzE4MjggUG93ZXIgTWFuYWdlbWVudCBJQyBkcml2
+ZXIiKTsNCj4gPiArTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOw0KPiANCj4gVGhpcyBkb2VzIG5vdCBt
+YXRjaCB0aGUgaGVhZGVyLg0KDQpIb3cgaXMgdGhhdD8gVGhpcyBpcyB3aGF0IGlzIHN0YXRlZCBp
+biBtb2R1bGUuaCBmb3IgdGhlIA0KTU9EVUxFX0xJQ0VOU0U6DQoNCi8qDQogKiBUaGUgZm9sbG93
+aW5nIGxpY2Vuc2UgaWRlbnRzIGFyZSBjdXJyZW50bHkgYWNjZXB0ZWQgYXMgaW5kaWNhdGluZw0K
+ZnJlZQ0KICogc29mdHdhcmUgbW9kdWxlcw0KICoNCiAqCSJHUEwiCQkJCVtHTlUgUHVibGljIExp
+Y2Vuc2UgdjJdDQogKgkiR1BMIHYyIgkJCVtHTlUgUHVibGljIExpY2Vuc2UgdjJdDQogKgkiR1BM
+IGFuZCBhZGRpdGlvbmFsIHJpZ2h0cyIJW0dOVSBQdWJsaWMgTGljZW5zZSB2MiByaWdodHMNCmFu
+ZCBtb3JlXQ0KICoJIkR1YWwgQlNEL0dQTCIJCQlbR05VIFB1YmxpYyBMaWNlbnNlIHYyDQogKgkJ
+CQkJIG9yIEJTRCBsaWNlbnNlIGNob2ljZV0NCiAqCSJEdWFsIE1JVC9HUEwiCQkJW0dOVSBQdWJs
+aWMgTGljZW5zZSB2Mg0KICoJCQkJCSBvciBNSVQgbGljZW5zZSBjaG9pY2VdDQogKgkiRHVhbCBN
+UEwvR1BMIgkJCVtHTlUgUHVibGljIExpY2Vuc2UgdjINCiAqCQkJCQkgb3IgTW96aWxsYSBsaWNl
+bnNlIGNob2ljZV0NCiAqDQogKiBUaGUgZm9sbG93aW5nIG90aGVyIGlkZW50cyBhcmUgYXZhaWxh
+YmxlDQogKg0KICoJIlByb3ByaWV0YXJ5IgkJCVtOb24gZnJlZSBwcm9kdWN0c10NCiAqDQogKiBC
+b3RoICJHUEwgdjIiIGFuZCAiR1BMIiAodGhlIGxhdHRlciBhbHNvIGluIGR1YWwgbGljZW5zZWQg
+c3RyaW5ncykNCmFyZQ0KICogbWVyZWx5IHN0YXRpbmcgdGhhdCB0aGUgbW9kdWxlIGlzIGxpY2Vu
+c2VkIHVuZGVyIHRoZSBHUEwgdjIsIGJ1dCBhcmUNCm5vdA0KICogdGVsbGluZyB3aGV0aGVyICJH
+UEwgdjIgb25seSIgb3IgIkdQTCB2MiBvciBsYXRlciIuIFRoZSByZWFzb24gd2h5DQp0aGVyZQ0K
+ICogYXJlIHR3byB2YXJpYW50cyBpcyBhIGhpc3RvcmljIGFuZCBmYWlsZWQgYXR0ZW1wdCB0byBj
+b252ZXkgbW9yZQ0KICogaW5mb3JtYXRpb24gaW4gdGhlIE1PRFVMRV9MSUNFTlNFIHN0cmluZy4g
+Rm9yIG1vZHVsZSBsb2FkaW5nIHRoZQ0KICogIm9ubHkvb3IgbGF0ZXIiIGRpc3RpbmN0aW9uIGlz
+IGNvbXBsZXRlbHkgaXJyZWxldmFudCBhbmQgZG9lcw0KbmVpdGhlcg0KICogcmVwbGFjZSB0aGUg
+cHJvcGVyIGxpY2Vuc2UgaWRlbnRpZmllcnMgaW4gdGhlIGNvcnJlc3BvbmRpbmcgc291cmNlDQpm
+aWxlDQogKiBub3IgYW1lbmRzIHRoZW0gaW4gYW55IHdheS4gVGhlIHNvbGUgcHVycG9zZSBpcyB0
+byBtYWtlIHRoZQ0KICogJ1Byb3ByaWV0YXJ5JyBmbGFnZ2luZyB3b3JrIGFuZCB0byByZWZ1c2Ug
+dG8gYmluZCBzeW1ib2xzIHdoaWNoIGFyZQ0KICogZXhwb3J0ZWQgd2l0aCBFWFBPUlRfU1lNQk9M
+X0dQTCB3aGVuIGEgbm9uIGZyZWUgbW9kdWxlIGlzIGxvYWRlZC4NCiAqDQogKiBJbiB0aGUgc2Ft
+ZSB3YXkgIkJTRCIgaXMgbm90IGEgY2xlYXIgbGljZW5zZSBpbmZvcm1hdGlvbi4gSXQgbWVyZWx5
+DQogKiBzdGF0ZXMsIHRoYXQgdGhlIG1vZHVsZSBpcyBsaWNlbnNlZCB1bmRlciBvbmUgb2YgdGhl
+IGNvbXBhdGlibGUgQlNEDQogKiBsaWNlbnNlIHZhcmlhbnRzLiBUaGUgZGV0YWlsZWQgYW5kIGNv
+cnJlY3QgbGljZW5zZSBpbmZvcm1hdGlvbiBpcw0KYWdhaW4NCiAqIHRvIGJlIGZvdW5kIGluIHRo
+ZSBjb3JyZXNwb25kaW5nIHNvdXJjZSBmaWxlcy4NCiAqDQogKiBUaGVyZSBhcmUgZHVhbCBsaWNl
+bnNlZCBjb21wb25lbnRzLCBidXQgd2hlbiBydW5uaW5nIHdpdGggTGludXggaXQNCmlzIHRoZQ0K
+ICogR1BMIHRoYXQgaXMgcmVsZXZhbnQgc28gdGhpcyBpcyBhIG5vbiBpc3N1ZS4gU2ltaWxhcmx5
+IExHUEwgbGlua2VkDQp3aXRoIEdQTA0KICogaXMgYSBHUEwgY29tYmluZWQgd29yay4NCiAqDQog
+KiBUaGlzIGV4aXN0cyBmb3Igc2V2ZXJhbCByZWFzb25zDQogKiAxLglTbyBtb2RpbmZvIGNhbiBz
+aG93IGxpY2Vuc2UgaW5mbyBmb3IgdXNlcnMgd2FudGluZyB0byB2ZXQgdGhlaXINCnNldHVwDQog
+KglpcyBmcmVlDQogKiAyLglTbyB0aGUgY29tbXVuaXR5IGNhbiBpZ25vcmUgYnVnIHJlcG9ydHMg
+aW5jbHVkaW5nIHByb3ByaWV0YXJ5DQptb2R1bGVzDQogKiAzLglTbyB2ZW5kb3JzIGNhbiBkbyBs
+aWtld2lzZSBiYXNlZCBvbiB0aGVpciBvd24gcG9saWNpZXMNCiAqLw0KI2RlZmluZSBNT0RVTEVf
+TElDRU5TRShfbGljZW5zZSkgTU9EVUxFX0lORk8obGljZW5zZSwgX2xpY2Vuc2UpDQoNCkkgaGF2
+ZSBubyBvYmplY3Rpb25zIG9uIGNoYW5naW5nIHRoZSBsaWNlbnNlIGlmIG5lZWRlZCBidXQgY2Fu
+IHlvdQ0KcGxlYXNlIHRlbGwgbWUgd2hhdCBpcyBPayBjb21ib3MgdGhlbiAtIEkgYW0gaGF2aW5n
+IGhhcmQgdGltZSB3aGVuDQp0cnlpbmcgdG8gc2VsZWN0IGxpY2Vuc2VzIHdoaWNoIGFyZSBhY2Nl
+cHRhYmxlIGZvciBhbGwuDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0K
