@@ -2,178 +2,164 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AB4C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C6CC2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB74421D7D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:28:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="hzl3RxcC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Pj8zWa8S"
+	by mail.kernel.org (Postfix) with ESMTP id 4F4C824655
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:30:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbfLQO2Z (ORCPT
+        id S1729124AbfLQOaa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:28:25 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:47027 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728801AbfLQO2Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:28:25 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 07CD61EAE;
-        Tue, 17 Dec 2019 09:28:24 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 17 Dec 2019 09:28:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=o7MJ2oxooSAZLrE4IgKBFIHl/Fq
-        uvlsScI7dDq2S0Lo=; b=hzl3RxcCTOf/6vakmast5z/ssSN6fGEGQslELZEROQ3
-        Frk7iXOG9tka5Q9WYrFjC/s8fkuSuROpKxvkLx9TkuD5AA15EFHmVBNUFH4nC7KO
-        czKIYqDJ2IfAm2CD5mEzM2hw0F9A35p63gDQUDV7MC+ms9U9Ja13sXsvttjKpy0G
-        mpcZ/WgegUv4YSjDtIcpHYFwCUyqWvprtkA/bOCzwqx4fh0VGv3Dwdir50dq2ScV
-        kvntqKv26XwNpqLNCm+TJ+ZsfdrKqv2ZJd3q7B4+vFXuBRb3jsgzFbuQdJFmv5je
-        +dCwtpPwEmYgBLmiRxUZemO1gqL1JcREZyFU8/Kevrw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=o7MJ2o
-        xooSAZLrE4IgKBFIHl/FquvlsScI7dDq2S0Lo=; b=Pj8zWa8SuQBOs6JWhrGdUr
-        w5dAZH6vBwr25rTvG16U+YHnDjv6UhrVdGT7wvlHKzLbuZHb41bwqZMlxBw1sbQO
-        KqIZrUUfSJC53mtKc85UqL3vw3YLIP9qFEFMgTHiTJKgCtbu+guYOiTyKBMUq3PE
-        Tpo4ZrxZ1YwrbTomSpOx+jfMJ9slBwWc3nfl+OQdar6R8ZdqgMsbxkry+rLjNTer
-        1Iax9QpBMSlGZq/KKF6cUC81qSIrvlWH4nQKjMkiSEZTqe9N15FjvQ7LJAp+nwyL
-        CxZYQZZnLzGVRQh8VE/3P431BVGieKHdTEfT08sdqmJPtxLbWecRYPuNU6YklynQ
-        ==
-X-ME-Sender: <xms:B-b4XaxYogkGZ-VkhbmZAG8ZW-NeQdkGcAS8s1TZJWAEIkLrLEMZrQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtjedgieegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggv
-    rhhnohdrthgvtghhnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:B-b4XXUAC8RJFDB70axFrRUjezaNbOEDUp4OeYRUgBeVlokkhlNd3g>
-    <xmx:B-b4XfQkfHMZglJ4EjBq084hYFss1JXRAvMRoQ_r3bCpqSiYZXp04w>
-    <xmx:B-b4XeM52bBJz35B3keMx4xLX-ahcscnJRrJlGeUlMda_qbJwUo1Qw>
-    <xmx:COb4XYoVYHxDAt4SzjQwApM83lGLo5BlzAgc4Dj9NSlurRM0FrE-Nw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 922EA80066;
-        Tue, 17 Dec 2019 09:28:22 -0500 (EST)
-Date:   Tue, 17 Dec 2019 15:28:21 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        drinkcat@chromium.org, Jitao Shi <jitao.shi@mediatek.com>,
-        Ulrich Hecht <uli@fpond.eu>, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        matthias.bgg@gmail.com, Collabora Kernel ML <kernel@collabora.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v21 1/2] Documentation: bridge: Add documentation for
- ps8640 DT properties
-Message-ID: <20191217142821.xitumpvfg52heb4t@gilmour.lan>
-References: <20191216135834.27775-1-enric.balletbo@collabora.com>
- <20191216135834.27775-2-enric.balletbo@collabora.com>
+        Tue, 17 Dec 2019 09:30:30 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:53164 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728896AbfLQOaa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 09:30:30 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id D977A3C00BB;
+        Tue, 17 Dec 2019 15:30:26 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3Vhf28cP6kOK; Tue, 17 Dec 2019 15:30:21 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id CEA7B3C057F;
+        Tue, 17 Dec 2019 15:30:21 +0100 (CET)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 17 Dec
+ 2019 15:30:21 +0100
+Date:   Tue, 17 Dec 2019 15:30:21 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Magnus Damm <magnus.damm@gmail.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v2 6/6] arm64: dts: renesas: r8a77961: Add SDHI nodes
+Message-ID: <20191217143021.GE27250@vmlxhi-102.adit-jv.com>
+References: <20191216124740.16647-1-geert+renesas@glider.be>
+ <20191216124740.16647-7-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20191216135834.27775-2-enric.balletbo@collabora.com>
+In-Reply-To: <20191216124740.16647-7-geert+renesas@glider.be>
+X-Originating-IP: [10.72.93.66]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 02:58:33PM +0100, Enric Balletbo i Serra wrote:
-> From: Jitao Shi <jitao.shi@mediatek.com>
->
-> Add documentation for DT properties supported by
-> ps8640 DSI-eDP converter.
->
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Signed-off-by: Ulrich Hecht <uli@fpond.eu>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Hi Geert,
+
+On Mon, Dec 16, 2019 at 01:47:40PM +0100, Geert Uytterhoeven wrote:
+> Add device nodes for the SDHI Interfaces on the Renesas R-Car M3-W+
+> (r8a77961) SoC.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->
-> Changes in v21: None
-> Changes in v19: None
-> Changes in v18: None
-> Changes in v17: None
-> Changes in v16: None
-> Changes in v15: None
-> Changes in v14: None
-> Changes in v13: None
-> Changes in v12: None
-> Changes in v11: None
->
->  .../bindings/display/bridge/ps8640.txt        | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.txt
->
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ps8640.txt b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
-> new file mode 100644
-> index 000000000000..7b13f92f7359
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
-> @@ -0,0 +1,44 @@
-> +ps8640-bridge bindings
-> +
-> +Required properties:
-> +	- compatible: "parade,ps8640"
-> +	- reg: first page address of the bridge.
-> +	- sleep-gpios: OF device-tree gpio specification for PD pin.
-> +	- reset-gpios: OF device-tree gpio specification for reset pin.
-> +	- vdd12-supply: OF device-tree regulator specification for 1.2V power.
-> +	- vdd33-supply: OF device-tree regulator specification for 3.3V power.
-> +	- ports: The device node can contain video interface port nodes per
-> +		 the video-interfaces bind[1]. For port@0,set the reg = <0> as
-> +		 ps8640 dsi in and port@1,set the reg = <1> as ps8640 eDP out.
-> +
-> +Optional properties:
-> +	- mode-sel-gpios: OF device-tree gpio specification for mode-sel pin.
-> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +	edp-bridge@18 {
-> +		compatible = "parade,ps8640";
-> +		reg = <0x18>;
-> +		sleep-gpios = <&pio 116 GPIO_ACTIVE_LOW>;
-> +		reset-gpios = <&pio 115 GPIO_ACTIVE_LOW>;
-> +		mode-sel-gpios = <&pio 92 GPIO_ACTIVE_HIGH>;
-> +		vdd12-supply = <&ps8640_fixed_1v2>;
-> +		vdd33-supply = <&mt6397_vgp2_reg>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			port@0 {
-> +				reg = <0>;
-> +				ps8640_in: endpoint {
-> +					remote-endpoint = <&dsi0_out>;
-> +				};
-> +			};
-> +			port@1 {
-> +				reg = <1>;
-> +				ps8640_out: endpoint {
-> +					remote-endpoint = <&panel_in>;
-> +				};
-> +			};
-> +		};
-> +	};
+> v2:
+>   - No changes.
+> 
+> Test procedure (eMMC):
+>   1. "hd /dev/mmcblk0boot1".
+> ---
+>  arch/arm64/boot/dts/renesas/r8a77961.dtsi | 39 +++++++++++++++++++++--
+>  1 file changed, 36 insertions(+), 3 deletions(-)
 
-It's not really fair to ask this after the rough history of this
-patchset apparently, but bindings should be submitted in the YAML
-format now.
+Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-This wouldn't be nice to stop it from going in just because of this,
-so can you send a subsequent patch fixing this?
+[Unrelated to this patch/series] Building the kernel image on your
+topic/r8a77961-extra-v2 branch and booting the M3-W+ Salvator-XS target
+from MMC, I get a panic [1]. Fortunately, this is already fixed by
+7de7de7ca0ae0f ("Fix root mounting with no mount options")
 
-Thanks!
-Maxime
+[1] panic booting from SD card (KASAN=y)
+[    8.825749] Waiting for root device /dev/mmcblk1p2...
+[    8.909815] mmc1: new ultra high speed SDR104 SDHC card at address aaaa
+[    8.936963] mmcblk1: mmc1:aaaa SL32G 29.7 GiB 
+[    8.997913]  mmcblk1: p1 p2 p3 < p5 p6 p7 >
+[    9.067410] ==================================================================
+[    9.075652] BUG: KASAN: null-ptr-deref in strncpy+0x4c/0x6c
+[    9.081862] Read of size 1 at addr 0000000000000000 by task swapper/0/1
+[    9.089185] 
+[    9.090944] CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc2+ #2
+[    9.097890] Hardware name: Renesas Salvator-X 2nd version board based on r8a77961 (DT)
+[    9.106652] Call trace:
+[    9.109458]  dump_backtrace+0x0/0x244
+[    9.113574]  show_stack+0x1c/0x24
+[    9.117316]  dump_stack+0xe4/0x140
+[    9.121155]  __kasan_report+0x1b0/0x1c8
+[    9.125458]  kasan_report+0xc/0x14
+[    9.129289]  __asan_load1+0x34/0x60
+[    9.133216]  strncpy+0x4c/0x6c
+[    9.136681]  do_mount_root+0x7c/0x150
+[    9.140797]  mount_block_root+0x1c4/0x304
+[    9.145293]  mount_root+0x17c/0x1bc
+[    9.149222]  prepare_namespace+0x150/0x160
+[    9.153812]  kernel_init_freeable+0x3b8/0x434
+[    9.158686]  kernel_init+0x18/0x130
+[    9.162617]  ret_from_fork+0x10/0x18
+[    9.166630] ==================================================================
+[    9.174629] Disabling lock debugging due to kernel taint
+[    9.180510] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+[    9.189491] Mem abort info:
+[    9.192387]   ESR = 0x96000004
+[    9.195554]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    9.200989]   SET = 0, FnV = 0
+[    9.204145]   EA = 0, S1PTW = 0
+[    9.207394] Data abort info:
+[    9.210374]   ISV = 0, ISS = 0x00000004
+[    9.214318]   CM = 0, WnR = 0
+[    9.217393] [0000000000000000] user address but active_mm is swapper
+[    9.223892] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+[    9.229535] Modules linked in:
+[    9.232646] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B             5.5.0-rc2+ #2
+[    9.240391] Hardware name: Renesas Salvator-X 2nd version board based on r8a77961 (DT)
+[    9.248402] pstate: 60000005 (nZCv daif -PAN -UAO)
+[    9.253260] pc : strncpy+0x4c/0x6c
+[    9.256711] lr : strncpy+0x4c/0x6c
+[    9.260158] sp : ffff000675b57b80
+[    9.263518] x29: ffff000675b57b80 x28: ffff00066ebc7005 
+[    9.268900] x27: 0000000000000008 x26: ffffa000112adf30 
+[    9.274282] x25: fffffe00199af1c0 x24: ffffa00010c31ba0 
+[    9.279664] x23: ffff00066e418fff x22: ffff00066ebc7000 
+[    9.285046] x21: ffff00066e418000 x20: 0000000000000000 
+[    9.290428] x19: ffff00066e418000 x18: 0000000000000000 
+[    9.295809] x17: 00000000000014a0 x16: 0000000000001540 
+[    9.301190] x15: 0000000000001498 x14: 0000000000001480 
+[    9.306570] x13: 0000000000001488 x12: ffff8000ceb6af0e 
+[    9.311952] x11: 1fffe000ceb6af0e x10: 0000000000001710 
+[    9.317334] x9 : ffffa00010c17f3c x8 : ffff000675b57877 
+[    9.322715] x7 : ffff8000ceb6af0f x6 : ffff8000ceb6af0f 
+[    9.328097] x5 : dfffa00000000000 x4 : ffff000675b48000 
+[    9.333478] x3 : ffffa00010c12678 x2 : 0000000000000007 
+[    9.338859] x1 : ac027d2c81180b00 x0 : 0000000000000000 
+[    9.344240] Call trace:
+[    9.346729]  strncpy+0x4c/0x6c
+[    9.349832]  do_mount_root+0x7c/0x150
+[    9.353546]  mount_block_root+0x1c4/0x304
+[    9.357611]  mount_root+0x17c/0x1bc
+[    9.361150]  prepare_namespace+0x150/0x160
+[    9.365303]  kernel_init_freeable+0x3b8/0x434
+[    9.369718]  kernel_init+0x18/0x130
+[    9.373258]  ret_from_fork+0x10/0x18
+[    9.376893] Code: a8c47bfd d65f03c0 aa1403e0 97dc44f6 (39400296) 
+[    9.383067] ---[ end trace 73d9c2c2bc9e939b ]---
+[    9.387965] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+[    9.395737] SMP: stopping secondary CPUs
+[    9.399731] Kernel Offset: disabled
+[    9.403268] CPU features: 0x10002,21006004
+[    9.407415] Memory Limit: none
+[    9.410545] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
+
+-- 
+Best Regards,
+Eugeniu
