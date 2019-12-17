@@ -2,58 +2,254 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D93C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562B1C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0568420665
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141D6207FF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 11:51:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cH2Sj15E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfLQLnH (ORCPT
+        id S1726612AbfLQLvd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:43:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:34038 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727621AbfLQLnA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:43:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B66E831B;
-        Tue, 17 Dec 2019 03:42:59 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8082C3F6CF;
-        Tue, 17 Dec 2019 03:42:58 -0800 (PST)
-Subject: Re: [PATCH v6 10/15] dt-bindings: qcom: Add CTI options for qcom
- msm8916
-To:     Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        devicetree@vger.kernel.org
-Cc:     mathieu.poirier@linaro.org, robh+dt@kernel.org,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, agross@kernel.org
-References: <20191211230902.5414-1-mike.leach@linaro.org>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <12030924-d647-7c1b-bcc2-b3e5a2955722@arm.com>
-Date:   Tue, 17 Dec 2019 11:42:57 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Dec 2019 06:51:33 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:47057 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfLQLvd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 06:51:33 -0500
+Received: by mail-qv1-f66.google.com with SMTP id t9so4025590qvh.13
+        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 03:51:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oi9xvPNEvGFQjaDr1w2z3j1TBoDV1Q0xprMzW/vT4S0=;
+        b=cH2Sj15E/LSvtF9YoKRvRYPwHu9uz5qJOthzgg3IUNTkIhOMXJJs8sFkUOylcorygB
+         PcRyqtphRppLZl/bK3smG9IZ4kYPVXa+8W8DkOhi+rPEYyU8RDH7dA5LOCsVxMg4jS4T
+         rs+1g25mQQijHDng9iq/E43rNLaxVAptGRQXm+Y09CtqdhUdHpLP6okf7C0JsqyiBkSN
+         FcXKx1or6f3M5VTksEC+i1+UTvzzop14uRLBdhxfdcJeNtf9Aff/6c1ffXR11atG4FFv
+         2cbTdvD3/QDyWxtHHY9MhCDh33mNSuDxUat4vfObWsmHxNpGEp6lAbWfYd6pYQ4BCm9p
+         XlSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oi9xvPNEvGFQjaDr1w2z3j1TBoDV1Q0xprMzW/vT4S0=;
+        b=rFdgFRiQOz8xIUihmb3B+GLwQE5cPdT8NVxtqdsBrNV40leIb2uXjLOori1ejVGbSa
+         JbysJRKlHNPvDoJrrp01IOZG3V73OwK4wc+W98iqZkuM06rMfbMZZ5YYQ9AQyPWJWAmF
+         3DnMuBzE/neQ4HNhNqmlNye3S+VskbqpFJDpT0tJCxhkxZxz0fNibQ/chqmKzJZ7nNi0
+         TlYadvkTD1Tb1yIEcsvwPuOjI5Se6iNtZd+QNwRNXWTADAdxxkMQc/hBoJ6SILfM70oe
+         P5Oi/3KBxrQDZh3zynPLA8HiXK+4AYVWFdlmKTbietyDiFJICkao5QoBMXYfCt/0y/6i
+         Vuyw==
+X-Gm-Message-State: APjAAAU3ifsfgKX8Qy7klxJ8v5MyshBl5PMWzy5UFpOot1r/OojxaHA/
+        r4vcEwQNNQnBaJ26PhXNrfP590u7BUVYGJ0VNq7YWg==
+X-Google-Smtp-Source: APXvYqwHRSiaSFbta4r4BYriNhMtq3MF2AP/U8F2tCXJkolfLdek9I89pOQ/Q8BahmR11fS81EHdagf+Ye+5xHK8rFQ=
+X-Received: by 2002:a0c:9ad6:: with SMTP id k22mr4037747qvf.154.1576583491280;
+ Tue, 17 Dec 2019 03:51:31 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191211230902.5414-1-mike.leach@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191211230717.4879-1-mike.leach@linaro.org> <CANLsYkzVcTYutoYt5DWiOxyB8m3kCZVPHpTJPPe7YN=OoKtj1g@mail.gmail.com>
+In-Reply-To: <CANLsYkzVcTYutoYt5DWiOxyB8m3kCZVPHpTJPPe7YN=OoKtj1g@mail.gmail.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Tue, 17 Dec 2019 11:51:20 +0000
+Message-ID: <CAJ9a7VgiVGx4gsrGOUXSzSRixbgMauhtpQJfHd+aYifR43faGA@mail.gmail.com>
+Subject: Re: [PATCH v6 00/15] CoreSight CTI Driver
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        devicetree@vger.kernel.org,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andy Gross <agross@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/12/2019 23:09, Mike Leach wrote:
-> Adds system and CPU bound CTI definitions for Qualcom msm8916 platform
-> (Dragonboard DB410C).
-> System CTIs 2-11 are omitted as no information available at present.
-> 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+Hi Mathieu,
 
-Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+On Mon, 16 Dec 2019 at 21:22, Mathieu Poirier
+<mathieu.poirier@linaro.org> wrote:
+>
+> On Wed, 11 Dec 2019 at 16:07, Mike Leach <mike.leach@linaro.org> wrote:
+> >
+> > CTIs are defined in the device tree and associated with other CoreSight
+> > devices. The core CoreSight code has been modified to enable the registration
+> > of the CTI devices on the same bus as the other CoreSight components,
+> > but as these are not actually trace generation / capture devices, they
+> > are not part of the Coresight path when generating trace.
+> >
+> > However, the definition of the standard CoreSight device has been extended
+> > to include a reference to an associated CTI device, and the enable / disable
+> > trace path operations will auto enable/disable any associated CTI devices at
+> > the same time.
+> >
+> > Programming is at present via sysfs - a full API is provided to utilise the
+> > hardware capabilities. As CTI devices are unprogrammed by default, the auto
+> > enable describe above will have no effect until explicit programming takes
+> > place.
+> >
+> > A set of device tree bindings specific to the CTI topology has been defined.
+> > The driver accesses these in a platform agnostic manner, so ACPI bindings
+> > can be added later, once they have been agreed and defined for the CTI device.
+> >
+> > Documentation has been updated to describe both the CTI hardware, its use and
+> > programming in sysfs, and the new dts bindings required.
+> >
+> > Tested on DB410 board and Juno board, against the Linux 5.5-rc1 tree.
+> >
+> > Changes since v5:
+> > 1) Fixed up device tree .yaml file. Using extra compatible string for
+> > v8 architecture CTI connections.
+> > 2) Ensure association code respects coresight mutex when setting cross
+> > referenced pointers. Add in shutdown code.
+> > 3) Multiple minor code fixes & rationalisation.
+> >
+> > Changes since v4:
+> > Multiple changes following feedback from Mathieu, Leo and Suzuki.
+> > 1) Dropped RFC tag - wider distribution
+> > 2) CTI bindings definition now presented as a .yaml file - tested with
+> > with 'dt-doc-validate' from devicetree.org/dt-schema project and in kernel
+> > build tree with 'make dtbs_check' per kernel docs.
+> > 3) Sysfs links to other CoreSight devices moved out of this set into
+> > a following set that deals with all CoreSight devices & sysfs links.
+> > 4) Documentation in .rst format and new directory following patchset in [1].
+> > Extended example provided in docs.
+> > 5) Rationalised devicetree of_ specifics to use generic fwnode functions
+> > where possible to enable easier addition of ACPI support later.
+> > 6) Other minor changes as requested in feedback from last patchset.
+> >
+> > Changes since v3:
+> > 1) After discussion on CS mailing list, each CTI connection has a triggers<N>
+> >    sysfs directory with name and trigger signals listed for the connection.
+> > 2) Initial code for creating sysfs links between CoreSight components is
+> >   introduced and implementation for CTI provided. This allows exploration
+> >   of the CoreSight topology within the sysfs infrastructure. Patches for
+> >   links between other CoreSight components to follow.
+> > 3) Power management - CPU hotplug and idle omitted from this set as ongoing
+> >    developments may define required direction. Additional patch set to follow.
+> > 4) Multiple fixes applied as requested by reviewers esp. Matthieu, Suzuki
+> >    and Leo.
+> >
+> > Changes since v2:
+> > Updates to allow for new features on coresight/next and feedback from
+> > Mathieu and Leo.
+> >
+> > 1) Rebase and restructuring to apply on top of ACPI support patch set,
+> > currently on coresight/next. of_coresight_cti has been renamed to
+> > coresight-cti-platform and device tree bindings added to this but accessed
+> > in a platform agnostic manner using fwnode for later ACPI support
+> > to be added.
+> > 2) Split the sysfs patch info a series of functional patches.
+> > 3) Revised the refcount and enabling support.
+> > 4) Adopted the generic naming protocol - CTIs are either cti_cpuN or
+> > cti_sysM
+> > 5) Various minor presentation /checkpatch issues highlighted in feedback.
+> > 6) revised CPU hotplug to cover missing cases needed by ETM.
+> >
+> > Changes since v1:
+> > 1) Significant restructuring of the source code. Adds cti-sysfs file and
+> > cti device tree file. Patches add per feature rather than per source
+> > file.
+> > 2) CPU type power event handling for hotplug moved to CoreSight core,
+> > with generic registration interface provided for all CPU bound CS devices
+> > to use.
+> > 3) CTI signal interconnection details in sysfs now generated dynamically
+> > from connection lists in driver. This to fix issue with multi-line sysfs
+> > output in previous version.
+> > 4) Full device tree bindings for DB410 and Juno provided (to the extent
+> > that CTI information is available).
+> > 5) AMBA driver update for UCI IDs are now upstream so no longer included
+> > in this set.
+> >
+> > Mike Leach (15):
+> >   coresight: cti: Initial CoreSight CTI Driver
+> >   coresight: cti: Add sysfs coresight mgmt reg access.
+> >   coresight: cti: Add sysfs access to program function regs
+> >   coresight: cti: Add sysfs trigger / channel programming API
+> >   dt-bindings: arm: Adds CoreSight CTI hardware definitions.
+> >   coresight: cti: Add device tree support for v8 arch CTI
+> >   coresight: cti: Add device tree support for custom CTI.
+> >   coresight: cti: Enable CTI associated with devices.
+> >   coresight: cti: Add connection information to sysfs
+> >   dt-bindings: qcom: Add CTI options for qcom msm8916
+> >   dt-bindings: arm: Juno platform - add CTI entries to device tree.
+> >   dt-bindings: hisilicon: Add CTI bindings for hi-6220
+> >   docs: coresight: Update documentation for CoreSight to cover CTI.
+> >   docs: sysfs: coresight: Add sysfs ABI documentation for CTI
+> >   Update MAINTAINERS to add reviewer for CoreSight.
+> >
+>
+> All that needs to be sorted out in this set are the comments made by
+> Maxime.  When you do address those please only resend that patch.
+> Since Maxime's comments are related to yaml syntax rather than the
+> bindings themselves, I have added your set to my next tree so that it
+> can soak in linux-next over the next few weeks.
+>
+
+As a result of the changes requested by Maxime - there are necessary
+changes to the .dts for the juno bindings as well as the .yaml file -
+juno bindings need to respect the requirement for reg = <> entries in
+the trig-conns@ child nodes.
+
+These changes are still limited to devicetree so I will post just
+these two patches next time.
+
+Regards
+
+Mike
+
+> Thanks,
+> Mathieu
+>
+> >  .../testing/sysfs-bus-coresight-devices-cti   |  221 ++++
+> >  .../bindings/arm/coresight-cti.yaml           |  303 +++++
+> >  .../devicetree/bindings/arm/coresight.txt     |    7 +
+> >  .../trace/coresight/coresight-ect.rst         |  211 +++
+> >  Documentation/trace/coresight/coresight.rst   |   13 +
+> >  MAINTAINERS                                   |    3 +
+> >  arch/arm64/boot/dts/arm/juno-base.dtsi        |  149 ++-
+> >  arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi     |   31 +-
+> >  arch/arm64/boot/dts/arm/juno-r1.dts           |   25 +
+> >  arch/arm64/boot/dts/arm/juno-r2.dts           |   25 +
+> >  arch/arm64/boot/dts/arm/juno.dts              |   25 +
+> >  .../boot/dts/hisilicon/hi6220-coresight.dtsi  |  130 +-
+> >  arch/arm64/boot/dts/qcom/msm8916.dtsi         |   85 +-
+> >  drivers/hwtracing/coresight/Kconfig           |   21 +
+> >  drivers/hwtracing/coresight/Makefile          |    3 +
+> >  .../coresight/coresight-cti-platform.c        |  485 +++++++
+> >  .../hwtracing/coresight/coresight-cti-sysfs.c | 1175 +++++++++++++++++
+> >  drivers/hwtracing/coresight/coresight-cti.c   |  748 +++++++++++
+> >  drivers/hwtracing/coresight/coresight-cti.h   |  235 ++++
+> >  .../hwtracing/coresight/coresight-platform.c  |   21 +
+> >  drivers/hwtracing/coresight/coresight-priv.h  |   15 +
+> >  drivers/hwtracing/coresight/coresight.c       |   86 +-
+> >  include/dt-bindings/arm/coresight-cti-dt.h    |   37 +
+> >  include/linux/coresight.h                     |   27 +
+> >  24 files changed, 4050 insertions(+), 31 deletions(-)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
+> >  create mode 100644 Documentation/devicetree/bindings/arm/coresight-cti.yaml
+> >  create mode 100644 Documentation/trace/coresight/coresight-ect.rst
+> >  create mode 100644 drivers/hwtracing/coresight/coresight-cti-platform.c
+> >  create mode 100644 drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> >  create mode 100644 drivers/hwtracing/coresight/coresight-cti.c
+> >  create mode 100644 drivers/hwtracing/coresight/coresight-cti.h
+> >  create mode 100644 include/dt-bindings/arm/coresight-cti-dt.h
+> >
+> > --
+> > 2.17.1
+> >
+
+
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
