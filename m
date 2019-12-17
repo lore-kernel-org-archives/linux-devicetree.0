@@ -2,194 +2,139 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E327C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9670C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0962146E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:56:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EQ9/fKgC"
+	by mail.kernel.org (Postfix) with ESMTP id 9D56321D7D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576587516;
+	bh=qyUt/davjLvtK3mavReoj0jtmhbwGyLG7WloreATmv0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IyR9+I5oQNefTztW+kxzQ94HoTf+R2f59FMZLYXQ+AsTNN7VsPAVYxNj579/WX9LH
+	 CMTByQruzgZxjl/ef5Jg45a+MQQBMq4rS5vCWabiGncHOSsFZ1dk3BtNuNoRpolq17
+	 jEnnnBU86ruT5LREJ00Easa578rYlsdc+qX29Wtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbfLQM4V (ORCPT
+        id S1726164AbfLQM6f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:56:21 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:60072 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfLQM4V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 07:56:21 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHCuCMN064150;
-        Tue, 17 Dec 2019 06:56:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576587372;
-        bh=1qUgNe6rvXdvP9mRolqQkKsWnzN3nvAWiLVZf6TRI+U=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=EQ9/fKgC2hOFL44pXoYPkcccs5aBLXdamoRU3yB3PAxwLUXG6lzfflUhe7mompcKg
-         22GahX2PuIopZgqtYC/tYJTrc72KuVWjh4QtV9E85/Yeq86PFwyE274S7tDdIFUNAW
-         xdtoSS+7OgiQfOTtg0IKhTOfwrsF3jlXwz3iqw9o=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHCuCNP062296
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Dec 2019 06:56:12 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Dec 2019 06:56:11 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Dec 2019 06:56:11 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHCuBvg129742;
-        Tue, 17 Dec 2019 06:56:11 -0600
-Subject: Re: [PATCH 2/2] leds: lm3692x: Allow to set ovp and brigthness mode
-To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <cover.1576499103.git.agx@sigxcpu.org>
- <9c87a17aefbf758d58f199f7046114ee7505a1fa.1576499103.git.agx@sigxcpu.org>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <3d66b07d-b4c5-43e6-4378-d63cc84b8d43@ti.com>
-Date:   Tue, 17 Dec 2019 06:53:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Dec 2019 07:58:35 -0500
+Received: from foss.arm.com ([217.140.110.172]:36344 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726141AbfLQM6f (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:58:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B54A331B;
+        Tue, 17 Dec 2019 04:58:34 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34EF33F719;
+        Tue, 17 Dec 2019 04:58:33 -0800 (PST)
+Date:   Tue, 17 Dec 2019 12:58:32 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191217125832.GF4755@sirena.org.uk>
+References: <20191204134631.GT1998@sirena.org.uk>
+ <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+ <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+ <20191212161019.GF4310@sirena.org.uk>
+ <20191212162152.5uu3feacduetysq7@pengutronix.de>
+ <20191212165124.GJ4310@sirena.org.uk>
+ <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+ <20191216114454.GB4161@sirena.org.uk>
+ <20191217073533.GC31182@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <9c87a17aefbf758d58f199f7046114ee7505a1fa.1576499103.git.agx@sigxcpu.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="0hHDr/TIsw4o3iPK"
+Content-Disposition: inline
+In-Reply-To: <20191217073533.GC31182@pengutronix.de>
+X-Cookie: Thufir's a Harkonnen now.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Guido
 
-On 12/16/19 6:28 AM, Guido Günther wrote:
-> Overvoltage protection and brightness mode are currently hardcoded
-> as disabled in the driver. Make these configurable via DT.
+--0hHDr/TIsw4o3iPK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Can we split these up to two separate patch series?
+On Tue, Dec 17, 2019 at 08:35:33AM +0100, Marco Felsch wrote:
+> On 19-12-16 11:44, Mark Brown wrote:
 
-We are adding 2 separate features and if something is incorrect with one 
-of the changes it is a bit hard to debug.
+> > What I'm saying is that I think the binding needs to explicitly talk
+> > about that since at the minute it's really confusing reading it as it
+> > is, it sounds very much like it's trying to override that in a chip
+> > specific fashion as using gpiolib and the GPIO bindings for pinmuxing is
+> > really quite unusual.
 
->
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> ---
->   drivers/leds/leds-lm3692x.c | 43 +++++++++++++++++++++++++++++++------
->   1 file changed, 37 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-> index 8b408102e138..2c084b333628 100644
-> --- a/drivers/leds/leds-lm3692x.c
-> +++ b/drivers/leds/leds-lm3692x.c
-> @@ -114,6 +114,7 @@ struct lm3692x_led {
->   	struct regulator *regulator;
->   	int led_enable;
->   	int model_id;
-> +	u8 boost_ctrl, brightness_ctrl;
->   };
->   
->   static const struct reg_default lm3692x_reg_defs[] = {
-> @@ -249,10 +250,7 @@ static int lm3692x_init(struct lm3692x_led *led)
->   	if (ret)
->   		goto out;
->   
-> -	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL,
-> -			LM3692X_BOOST_SW_1MHZ |
-> -			LM3692X_BOOST_SW_NO_SHIFT |
-> -			LM3692X_OCP_PROT_1_5A);
-> +	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL, led->boost_ctrl);
->   	if (ret)
->   		goto out;
+> Hm.. I still think that we don't mux the pin to some special function.
+> It is still a gpio input pin and if we don't request the pin we could
+> read the input from user-space too and get a 'valid' value. Muxing would
+> happen if we change the pad to so called _alternate_ function. Anyway,
+> lets find a binding description:
 
-regmap_update_bits
+I don't think any of this makes much difference from a user point of
+view.
 
+> IMHO this is very descriptive and needs no update.
 
->   
-> @@ -268,8 +266,7 @@ static int lm3692x_init(struct lm3692x_led *led)
->   	if (ret)
->   		goto out;
->   
-> -	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL,
-> -			LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN);
-> +	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL, led->brightness_ctrl);
->   	if (ret)
->   		goto out;
-regmap_update_bits
->   
-> @@ -326,6 +323,8 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
->   {
->   	struct fwnode_handle *child = NULL;
->   	struct led_init_data init_data = {};
-> +	u32 ovp = 0;
-> +	bool exp_mode;
->   	int ret;
->   
->   	led->enable_gpio = devm_gpiod_get_optional(&led->client->dev,
-> @@ -350,6 +349,38 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
->   		led->regulator = NULL;
->   	}
->   
-> +	led->boost_ctrl = LM3692X_BOOST_SW_1MHZ |
-> +		LM3692X_BOOST_SW_NO_SHIFT |
-> +		LM3692X_OCP_PROT_1_5A;
-Make this a #define and then it can be reused as a mask for 
-regmap_update_bits
-> +	ret = device_property_read_u32(&led->client->dev,
-> +				       "ti,overvoltage-volts", &ovp);
-> +	if (!ret) {
+> description:
+>  - A GPIO reference to a local general purpose input, [1] calls it GPI.
+>    The DA9062 regulators can select between voltage-a/-b settings.
+>    Each regulator has a VBUCK*_GPI or VLDO*_GPI input to determine the
+>    active setting. In front of the VBUCK*_GPI/VLDO*_GPI input is a mux
+>    to select between different signal sources, valid sources are: the
+>    internal sequencer, GPI1, GPI2 and GPI3. See [1] table 63 for more
+>    information. Most the time the internal sequencer is fine but
+>    sometimes it is necessary to use the signal from the DA9062 GPI
+>    pads. This binding covers the second use case.
+>    Attention: Sharing the same GPI for other purposes or across multiple
+>    regulators is possible but the polarity setting must equal.
 
-if (ret)
+This doesn't say anything about how the GPIO input is expected to be
+controlled, for voltage setting any runtime control would need to be
+done by the driver and it sounds like that's all that can be controlled.
+The way this reads I'd expect one use of this to be for fast voltage
+setting for example (you could even combine that with suspend sequencing
+using the internal sequencer if you mux back to the sequencer during
+suspend).
 
-     set boost_ctrl to default value since the default is not 0
+--0hHDr/TIsw4o3iPK
+Content-Type: application/pgp-signature; name="signature.asc"
 
-led->boost_ctrl |= LM3692X_OVP_29V;
+-----BEGIN PGP SIGNATURE-----
 
-else
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl340PcACgkQJNaLcl1U
+h9BQJwf/ZRW2Sc0sN6zR4aGO1ekytPGFqpZCQbZG5T5CX9CTgmD+QldwXmP9gB0A
+fAa98/pWCJQHoEVQQxbrVMEpfoFKUTONO5xv+/jA8lq5MTxo9/s9U4mZcVulaCEk
+uiWXoDvSF6LrgQvsJpkFooRbdrUDHxwF73qd+qfxGkDknsayb7XPPt1O2AWzLFCN
+dezSJXFa8Xw+qa+y3H6r1W9+siNEIGYp2qjNlUWFtltrZav2ys2TxITxYXlQundv
+9iX5+AIzFWeAMsMdoMp17Q49QWW5bYCQ4p3d3M8jtRvGN7LpZflN79S4sWYEuhQe
+XYgXLKaDfjer7VeQkopSdft+oAo3Pg==
+=iy8V
+-----END PGP SIGNATURE-----
 
-      do case
-
-> +		switch (ovp) {
-> +		case 0:
-> +			break;
-> +		case 22:
-If the value is 21v why is this case 22?  DT binding says 21 is the 
-first value
-> +			led->boost_ctrl |= LM3692X_OVP_21V;
-> +			break;
-> +		case 25:
-> +			led->boost_ctrl |= LM3692X_OVP_25V;
-> +			break;
-> +		case 29:
-> +			led->boost_ctrl |= LM3692X_OVP_29V;
-> +			break;
-> +		default:
-> +			dev_err(&led->client->dev, "Invalid OVP %d\n", ovp);
-> +			return -EINVAL;
-> +		}
-> +	}
-> +	dev_dbg(&led->client->dev, "OVP: %dV", ovp);
-> +
-extra debug statement
-> +	led->brightness_ctrl = LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN;
-Same comment as before on the #define
-> +	exp_mode = device_property_read_bool(&led->client->dev,
-> +				     "ti,brightness-mapping-exponential");
-> +	dev_dbg(&led->client->dev, "Exponential brightness: %d", exp_mode);
-
-extra debug statement
-
-Dan
-
-
+--0hHDr/TIsw4o3iPK--
