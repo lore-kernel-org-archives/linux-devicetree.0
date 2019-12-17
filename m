@@ -2,31 +2,31 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7327AC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 07:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D89C2D0C5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 07:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 438232082E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 07:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AECD21775
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 07:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbfLQHYD (ORCPT
+        id S1728064AbfLQHYE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 02:24:03 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47441 "EHLO
+        Tue, 17 Dec 2019 02:24:04 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56093 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbfLQHXj (ORCPT
+        with ESMTP id S1727742AbfLQHXj (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 02:23:39 -0500
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1ih7Cd-0002Xo-M1; Tue, 17 Dec 2019 08:23:31 +0100
+        id 1ih7Cd-0002Xl-M1; Tue, 17 Dec 2019 08:23:31 +0100
 Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1ih7CZ-00016x-3t; Tue, 17 Dec 2019 08:23:27 +0100
+        id 1ih7CY-00016M-Uu; Tue, 17 Dec 2019 08:23:26 +0100
 From:   Oleksij Rempel <o.rempel@pengutronix.de>
 To:     Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -42,12 +42,10 @@ Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
         "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v6 4/5] net: dsa: add support for Atheros AR9331 TAG format
-Date:   Tue, 17 Dec 2019 08:23:24 +0100
-Message-Id: <20191217072325.4177-5-o.rempel@pengutronix.de>
+Subject: [PATCH v6 0/5] add dsa switch support for ar9331
+Date:   Tue, 17 Dec 2019 08:23:20 +0100
+Message-Id: <20191217072325.4177-1-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191217072325.4177-1-o.rempel@pengutronix.de>
-References: <20191217072325.4177-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
@@ -59,170 +57,73 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for tag format used in Atheros AR9331 built-in switch.
+changes v6:
+- rebase against net-next
 
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- include/net/dsa.h    |  2 +
- net/dsa/Kconfig      |  6 +++
- net/dsa/Makefile     |  1 +
- net/dsa/tag_ar9331.c | 96 ++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 105 insertions(+)
+changes v5:
+- remote support for port5. The effort of using this port is
+  questionable. Currently, it is better to not use it at all, then
+  adding buggy support.
+- remove port enable call back. There is nothing what we actually need
+  to enable.
+- rebase it against v5.5-rc1 
+
+changes v4:
+- ag71xx: ag71xx_mac_validate fix always false comparison (&& -> ||)
+- tag_ar9331: use skb_pull_rcsum() instead of skb_pull().
+- tag_ar9331: drop skb_set_mac_header()
+
+changes v3:
+- ag71xx: ag71xx_mac_config: ignore MLO_AN_INBAND mode. It is not
+  supported by HW and SW.
+- ag71xx: ag71xx_mac_validate: return all supported bits on
+  PHY_INTERFACE_MODE_NA
+
+changes v2:
+- move Atheros AR9331 TAG format to separate patch
+- use netdev_warn_once in the tag driver to reduce potential message spam
+- typo fixes
+- reorder tag driver alphabetically 
+- configure switch to maximal frame size
+- use mdiobus_read/write
+- fail if mdio sub node is not found
+- add comment for post reset state
+- remove deprecated comment about device id
+- remove phy-handle option for node with fixed-link
+- ag71xx: set 1G support only for GMII mode
+
+This patch series provides dsa switch support for Atheros ar9331 WiSoC.
+As side effect ag71xx needed to be ported to phylink to make the switch
+driver (as well phylink based) work properly.
+
+Oleksij Rempel (5):
+  net: ag71xx: port to phylink
+  dt-bindings: net: dsa: qca,ar9331 switch documentation
+  MIPS: ath79: ar9331: add ar9331-switch node
+  net: dsa: add support for Atheros AR9331 TAG format
+  net: dsa: add support for Atheros AR9331 built-in switch
+
+ .../devicetree/bindings/net/dsa/ar9331.txt    | 148 ++++
+ arch/mips/boot/dts/qca/ar9331.dtsi            | 119 ++-
+ arch/mips/boot/dts/qca/ar9331_dpt_module.dts  |  13 +
+ drivers/net/dsa/Kconfig                       |   2 +
+ drivers/net/dsa/Makefile                      |   1 +
+ drivers/net/dsa/qca/Kconfig                   |  11 +
+ drivers/net/dsa/qca/Makefile                  |   2 +
+ drivers/net/dsa/qca/ar9331.c                  | 817 ++++++++++++++++++
+ drivers/net/ethernet/atheros/Kconfig          |   2 +-
+ drivers/net/ethernet/atheros/ag71xx.c         | 147 ++--
+ include/net/dsa.h                             |   2 +
+ net/dsa/Kconfig                               |   6 +
+ net/dsa/Makefile                              |   1 +
+ net/dsa/tag_ar9331.c                          |  96 ++
+ 14 files changed, 1307 insertions(+), 60 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/ar9331.txt
+ create mode 100644 drivers/net/dsa/qca/Kconfig
+ create mode 100644 drivers/net/dsa/qca/Makefile
+ create mode 100644 drivers/net/dsa/qca/ar9331.c
  create mode 100644 net/dsa/tag_ar9331.c
 
-diff --git a/include/net/dsa.h b/include/net/dsa.h
-index 6767dc3f66c0..da5578db228e 100644
---- a/include/net/dsa.h
-+++ b/include/net/dsa.h
-@@ -43,6 +43,7 @@ struct phylink_link_state;
- #define DSA_TAG_PROTO_SJA1105_VALUE		13
- #define DSA_TAG_PROTO_KSZ8795_VALUE		14
- #define DSA_TAG_PROTO_OCELOT_VALUE		15
-+#define DSA_TAG_PROTO_AR9331_VALUE		16
- 
- enum dsa_tag_protocol {
- 	DSA_TAG_PROTO_NONE		= DSA_TAG_PROTO_NONE_VALUE,
-@@ -61,6 +62,7 @@ enum dsa_tag_protocol {
- 	DSA_TAG_PROTO_SJA1105		= DSA_TAG_PROTO_SJA1105_VALUE,
- 	DSA_TAG_PROTO_KSZ8795		= DSA_TAG_PROTO_KSZ8795_VALUE,
- 	DSA_TAG_PROTO_OCELOT		= DSA_TAG_PROTO_OCELOT_VALUE,
-+	DSA_TAG_PROTO_AR9331		= DSA_TAG_PROTO_AR9331_VALUE,
- };
- 
- struct packet_type;
-diff --git a/net/dsa/Kconfig b/net/dsa/Kconfig
-index 1e6c3cac11e6..92663dcb3aa2 100644
---- a/net/dsa/Kconfig
-+++ b/net/dsa/Kconfig
-@@ -29,6 +29,12 @@ config NET_DSA_TAG_8021Q
- 
- 	  Drivers which use these helpers should select this as dependency.
- 
-+config NET_DSA_TAG_AR9331
-+	tristate "Tag driver for Atheros AR9331 SoC with built-in switch"
-+	help
-+	  Say Y or M if you want to enable support for tagging frames for
-+	  the Atheros AR9331 SoC with built-in switch.
-+
- config NET_DSA_TAG_BRCM_COMMON
- 	tristate
- 	default n
-diff --git a/net/dsa/Makefile b/net/dsa/Makefile
-index 9a482c38bdb1..108486cfdeef 100644
---- a/net/dsa/Makefile
-+++ b/net/dsa/Makefile
-@@ -5,6 +5,7 @@ dsa_core-y += dsa.o dsa2.o master.o port.o slave.o switch.o
- 
- # tagging formats
- obj-$(CONFIG_NET_DSA_TAG_8021Q) += tag_8021q.o
-+obj-$(CONFIG_NET_DSA_TAG_AR9331) += tag_ar9331.o
- obj-$(CONFIG_NET_DSA_TAG_BRCM_COMMON) += tag_brcm.o
- obj-$(CONFIG_NET_DSA_TAG_DSA) += tag_dsa.o
- obj-$(CONFIG_NET_DSA_TAG_EDSA) += tag_edsa.o
-diff --git a/net/dsa/tag_ar9331.c b/net/dsa/tag_ar9331.c
-new file mode 100644
-index 000000000000..466ffa92a474
---- /dev/null
-+++ b/net/dsa/tag_ar9331.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
-+ */
-+
-+
-+#include <linux/bitfield.h>
-+#include <linux/etherdevice.h>
-+
-+#include "dsa_priv.h"
-+
-+#define AR9331_HDR_LEN			2
-+#define AR9331_HDR_VERSION		1
-+
-+#define AR9331_HDR_VERSION_MASK		GENMASK(15, 14)
-+#define AR9331_HDR_PRIORITY_MASK	GENMASK(13, 12)
-+#define AR9331_HDR_TYPE_MASK		GENMASK(10, 8)
-+#define AR9331_HDR_BROADCAST		BIT(7)
-+#define AR9331_HDR_FROM_CPU		BIT(6)
-+/* AR9331_HDR_RESERVED - not used or may be version field.
-+ * According to the AR8216 doc it should 0b10. On AR9331 it is 0b11 on RX path
-+ * and should be set to 0b11 to make it work.
-+ */
-+#define AR9331_HDR_RESERVED_MASK	GENMASK(5, 4)
-+#define AR9331_HDR_PORT_NUM_MASK	GENMASK(3, 0)
-+
-+static struct sk_buff *ar9331_tag_xmit(struct sk_buff *skb,
-+				       struct net_device *dev)
-+{
-+	struct dsa_port *dp = dsa_slave_to_port(dev);
-+	__le16 *phdr;
-+	u16 hdr;
-+
-+	if (skb_cow_head(skb, 0) < 0)
-+		return NULL;
-+
-+	phdr = skb_push(skb, AR9331_HDR_LEN);
-+
-+	hdr = FIELD_PREP(AR9331_HDR_VERSION_MASK, AR9331_HDR_VERSION);
-+	hdr |= AR9331_HDR_FROM_CPU | dp->index;
-+	/* 0b10 for AR8216 and 0b11 for AR9331 */
-+	hdr |= AR9331_HDR_RESERVED_MASK;
-+
-+	phdr[0] = cpu_to_le16(hdr);
-+
-+	return skb;
-+}
-+
-+static struct sk_buff *ar9331_tag_rcv(struct sk_buff *skb,
-+				      struct net_device *ndev,
-+				      struct packet_type *pt)
-+{
-+	u8 ver, port;
-+	u16 hdr;
-+
-+	if (unlikely(!pskb_may_pull(skb, AR9331_HDR_LEN)))
-+		return NULL;
-+
-+	hdr = le16_to_cpu(*(__le16 *)skb_mac_header(skb));
-+
-+	ver = FIELD_GET(AR9331_HDR_VERSION_MASK, hdr);
-+	if (unlikely(ver != AR9331_HDR_VERSION)) {
-+		netdev_warn_once(ndev, "%s:%i wrong header version 0x%2x\n",
-+				 __func__, __LINE__, hdr);
-+		return NULL;
-+	}
-+
-+	if (unlikely(hdr & AR9331_HDR_FROM_CPU)) {
-+		netdev_warn_once(ndev, "%s:%i packet should not be from cpu 0x%2x\n",
-+				 __func__, __LINE__, hdr);
-+		return NULL;
-+	}
-+
-+	skb_pull_rcsum(skb, AR9331_HDR_LEN);
-+
-+	/* Get source port information */
-+	port = FIELD_GET(AR9331_HDR_PORT_NUM_MASK, hdr);
-+
-+	skb->dev = dsa_master_find_slave(ndev, 0, port);
-+	if (!skb->dev)
-+		return NULL;
-+
-+	return skb;
-+}
-+
-+static const struct dsa_device_ops ar9331_netdev_ops = {
-+	.name	= "ar9331",
-+	.proto	= DSA_TAG_PROTO_AR9331,
-+	.xmit	= ar9331_tag_xmit,
-+	.rcv	= ar9331_tag_rcv,
-+	.overhead = AR9331_HDR_LEN,
-+};
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_AR9331);
-+module_dsa_tag_driver(ar9331_netdev_ops);
 -- 
 2.24.0
 
