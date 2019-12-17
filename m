@@ -2,153 +2,160 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767E4C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 22:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8535AC2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 23:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5552A218AC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 22:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5947F2465E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 23:09:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uKqu4kY5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbfLQWxf convert rfc822-to-8bit (ORCPT
+        id S1726470AbfLQXJJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 17:53:35 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:48316 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbfLQWxe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 17:53:34 -0500
-Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1ihLiZ-0001PQ-VJ; Tue, 17 Dec 2019 23:53:27 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     dri-devel@lists.freedesktop.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        thierry.reding@gmail.com, sam@ravnborg.org
-Subject: Re: [PATCH v3 2/3] dt-bindings: display: panel: Add binding document for Xinpeng XPP055C272
-Date:   Tue, 17 Dec 2019 23:53:27 +0100
-Message-ID: <2955240.JQMRd6mdPG@diego>
-In-Reply-To: <20191217160122.psxwdd6accn7soed@gilmour.lan>
-References: <20191217140703.23867-1-heiko@sntech.de> <1823876.MjdJyG0ANN@diego> <20191217160122.psxwdd6accn7soed@gilmour.lan>
+        Tue, 17 Dec 2019 18:09:09 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:56894 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbfLQXJJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 18:09:09 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BF9249BF;
+        Wed, 18 Dec 2019 00:09:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1576624147;
+        bh=aROGuM/kUggA/FWpJUywkaxAs+n5HHISQN39ygHEdPs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uKqu4kY5Vt+pYye0eoiVFFfEN4l0Obt2Fr2rE+ROzwighCuJ8MeENMf+G7FjbLtl5
+         sTyUB5kDir5Zu8lj5JpjiXq0nxi2R+n7SjQgCkurqEOHtml2cMQv3P2uTvjWXTF/Tu
+         PHcrAlPyIjocMoz0Y8M+zua1mslTyl0t/OTH6xLc=
+Date:   Wed, 18 Dec 2019 01:08:56 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v4 06/13] drm/bridge: lvds-codec: Add "lvds-decoder"
+ support
+Message-ID: <20191217230856.GE4874@pendragon.ideasonboard.com>
+References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1573660292-10629-7-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20191213171038.GH4860@pendragon.ideasonboard.com>
+ <TY1PR01MB1770DEDFA6050EA77AA218F8C0500@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <CAMuHMdUE0O9_8g02f2ABiV8SSMXNJB9S9e89p0OJKnTvx8MO9g@mail.gmail.com>
+ <TY1PR01MB17705FC08F72875484DF2208C0500@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <CAMuHMdVqHekyeOaHwpFyG5buNZp-XmvGizqZ=Gbg40_=NL+s2A@mail.gmail.com>
+ <20191217135414.GA4741@pendragon.ideasonboard.com>
+ <TY1PR01MB177059B563B0F29E5A4E424BC0500@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <TY1PR01MB177059B563B0F29E5A4E424BC0500@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-Am Dienstag, 17. Dezember 2019, 17:01:22 CET schrieb Maxime Ripard:
-> On Tue, Dec 17, 2019 at 04:08:49PM +0100, Heiko St�bner wrote:
-> > Am Dienstag, 17. Dezember 2019, 15:24:46 CET schrieb Maxime Ripard:
-> > > Hi,
-> > >
-> > > On Tue, Dec 17, 2019 at 03:07:02PM +0100, Heiko Stuebner wrote:
-> > > > From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> > > >
-> > > > The XPP055C272 is a 5.5" 720x1280 DSI display.
-> > > >
-> > > > changes in v2:
-> > > > - add size info into binding title (Sam)
-> > > > - add more required properties (Sam)
-> > > >
-> > > > Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> > > > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> > > > ---
-> > > >  .../display/panel/xinpeng,xpp055c272.yaml     | 48 +++++++++++++++++++
-> > > >  1 file changed, 48 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml b/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..2d0fc97d735c
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
-> > > > @@ -0,0 +1,48 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/display/panel/sony,acx424akp.yaml#
-> > >
-> > > The ID doesn't match the file name.
-> > >
-> > > Did you run dt_bindings_check?
-> >
-> > Thanks for that pointer ... I did run dtbs_check on the binding and was
-> > sooo happy to not find any panel errors in the pages of other dt errors
-> > but till now didn't realize that there's also a dtbinding_check.
+On Tue, Dec 17, 2019 at 10:06:14PM +0000, Fabrizio Castro wrote:
+> On 17 December 2019 13:54, Laurent Pinchart wrote:
+> > On Tue, Dec 17, 2019 at 01:38:51PM +0100, Geert Uytterhoeven wrote:
+> >> On Tue, Dec 17, 2019 at 1:31 PM Fabrizio Castro wrote:
+> >>> On 17 December 2019 12:21, Geert Uytterhoeven wrote:
+> >>>> On Tue, Dec 17, 2019 at 12:03 PM Fabrizio Castro wrote:
+> >>>>> On 13 December 2019 17:11, Laurent Pinchart wrote:
+> >>>>>> On Wed, Nov 13, 2019 at 03:51:25PM +0000, Fabrizio Castro wrote:
+> >>>>>>> Add support for transparent LVDS decoders by adding a new
+> >>>>>>> compatible string ("lvds-decoder") to the driver.
+> >>>>>>> This patch also adds member connector_type to struct lvds_codec,
+> >>>>>>> and that's because LVDS decoders have a different connector type
+> >>>>>>> from LVDS encoders. We fill this new member up with the data
+> >>>>>>> matching the compatible string.
+> >>>>>>>
+> >>>>>>> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> >>>>>>>
+> >>>>>>> --- a/drivers/gpu/drm/bridge/lvds-codec.c
+> >>>>>>> +++ b/drivers/gpu/drm/bridge/lvds-codec.c
+> >>>>>>>
+> >>>>>>> @@ -65,6 +67,7 @@ static int lvds_codec_probe(struct platform_device *pdev)
+> >>>>>>>     if (!lvds_codec)
+> >>>>>>>             return -ENOMEM;
+> >>>>>>>
+> >>>>>>> +   lvds_codec->connector_type = (u32)of_device_get_match_data(&pdev->dev);
+> >>>>>>
+> >>>>>> I'm now getting a compilation failure here:
+> >>>>>>
+> >>>>>> drivers/gpu/drm/bridge/lvds-codec.c: In function ‘lvds_codec_probe’:
+> >>>>>> drivers/gpu/drm/bridge/lvds-codec.c:68:31: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
+> >>>>>>   lvds_codec->connector_type = (u32)of_device_get_match_data(&pdev->dev);
+> >>>>>>                                ^
+> >>>>>>
+> >>>>>> The fix should be simple:
+> >>>>>>
+> >>>>>>       lvds_codec->connector_type = (uintptr_t)of_device_get_match_data(dev);
+> >>>>>>
+> >>>>>> I'm bothered by the fact that I've compiled this before without any
+> >>>>>> issue, so this really puzzles me. Do you get the same warning ?
+> >>>>>
+> >>>>> The warning appears when compiling for arm64, understandably so.
+> >>>>> We must have compiled this for arm only the first time around.
+> >>>>>
+> >>>>> I think the right way to solve this is to either cast to (u32)(uintptr_t) or (u32)(unsigned long).
+> >>>>
+> >>>> Just casting to uintptr_t should be sufficient.
+> >>>
+> >>> It should be sufficient for the compiler, but I have seen examples where people
+> >>> preferred to be explicit, like in:
+> >>> drivers/mailbox/mtk-cmdq-mailbox.c
+> >>> drivers/leds/leds-pm8058.c
+> >>>
+> >>> Since the kernel is increasing its tightness with respect to warnings, I personally prefer
+> >>> (u32)(uintptr_t), even though not strictly necessary, but I am fine with (uintptr_t) if you
+> >>> don't like (u32)(uintptr_t).
+> >>
+> >> It depends. I try to have as few casts as possible ("casts are evil").
+> >>
+> >> While adding the extra (u32) cast makes it clearer that the intended
+> >> result is a u32 (for now), it will cause silent truncation on 64-bit if
+> >> connector_type is ever enlarged to unsigned long, and larger values are
+> >> used.
+> >>
+> >> In this particular case this is unlikely, though, as unsigned long would
+> >> still be 32-bit on 32-bit platforms, so the larger values cannot be
+> >> used.
+> > 
+> > I also try to add as few casts as possible, so (uintptr_t) would be my
+> > preference.
+> > 
+> > Fabrizio, could you submit a new version of this patch with the problem
+> > fixed (and with the casts you decide to use, but using uintptr_t instead
+> > of unsigned long in any case) ?
 > 
-> dt_bindings_check is a sanity check on the bindings
-> themselves. dtbs_check is using those bindings to check the device
-> trees.
-> 
-> dtbs_check used to have a dependency on dt_bindings_check, but it got
-> removed recently.
-> 
-> Maxime
-> 
-> >
-> > Will keep that in mind for future bindings  - and of course fix things
-> > in the next version.
-> >
-> >
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Xinpeng XPP055C272 5.5in 720x1280 DSI panel
-> > > > +
-> > > > +maintainers:
-> > > > +  - Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> > > > +
-> > > > +allOf:
-> > > > +  - $ref: panel-common.yaml#
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    const: xinpeng,xpp055c272
-> > > > +  reg: true
-> > > > +  backlight: true
-> > > > +  port: true
-> > >
-> > > What is the port supposed to be doing?
-> >
-> > Hooking the display up to the dsi controller. But you're right,
-> > works without port as well with these single-dsi displays.
-> >
-> > I just remember needing one for the Gru-Scarlet display that needed
-> > to connect to two dsi controllers.
-> >
-> > So I'll drop the port node here and from my board devicetree.
-> 
-> It's not really what I meant though :)
-> 
-> If it's needed then we should definitely have it, but we should
-> document our expectations here: is it the input port ? output? in
-> which case do we want to use it since it's optional, etc.
+> Will send a new version tomorrow with (uintptr_t)
 
-The port was actually unnecessary. As far as I understand dsi stuff,
-the common case is the panel as subnode of the dsi controller and
-the controller then finding the display itself automatically.
+Done as v4.1 :-)
 
-If you look at
-	"drm/bridge/synopsys: dsi: use mipi_dsi_device to find panel or bridge" [0]
-I just sent, you'll see that the dw-mipi-dsi used drm_of_find_panel_or_bridge
-to find its panel/bridge thus requiring port connections in all cases where
-it had the dsi-device available already, so wouldn't need to use ports for it.
+-- 
+Regards,
 
-Or I'm completely wrong and port usage is better, we'll see :-D
-
-
-Heiko
-
-
-[0] https://patchwork.freedesktop.org/patch/345666/
-
-
+Laurent Pinchart
