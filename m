@@ -2,116 +2,266 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FCAC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9CFC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCDB2146E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E58207FF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:25:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="00CE2ysv"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FgLEfejj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfLQJXH (ORCPT
+        id S1727209AbfLQJZp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:23:07 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:12634 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726708AbfLQJXH (ORCPT
+        Tue, 17 Dec 2019 04:25:45 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:15181 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727127AbfLQJZp (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 04:23:07 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBH9I2xu021244;
-        Tue, 17 Dec 2019 10:22:57 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=li5jTmOrL8ac5KRD157xhCy6Bk2QBacNcgnf1zwb4C0=;
- b=00CE2ysvBnlhcCa4k5rQyxQJMwt53Lk9i5wb0h8lRtHl1TduUomGXTZw5GFcSVC5UCHA
- jx8DcGsso7Vp0JT9K7Cz7hYHiqFlom+VobOGuxBoQSWElEymqtNYTdTVWJlW3oIySFt0
- 8c+8rDNjJ7/Oo/Cx27ksWKpuZVMSbmP54m08Dg5FdMnjWAzgiF/w5kvRoq5mGspkvCOg
- 6Jmg60QlS7TUV+CPTAZK9HC/nSTHRPeahn6hgMOAILYmy2v20D1koRWkvE0/BouqinA8
- r4l3vNIKufxDOKStwIHzuGXPTj8ELdGQ+xrAM1vaHPazxuBKye7naMUZtCGkJFEuYMH7 kg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wvp36x09y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Dec 2019 10:22:57 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 233AD100034;
-        Tue, 17 Dec 2019 10:22:57 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 16CB72A64E4;
-        Tue, 17 Dec 2019 10:22:57 +0100 (CET)
-Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 17 Dec 2019 10:22:56
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 6/6] ARM: dts: stm32: fix dma controller node name on stm32mp157c
-Date:   Tue, 17 Dec 2019 10:22:01 +0100
-Message-ID: <20191217092201.20022-7-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20191217092201.20022-1-benjamin.gaignard@st.com>
-References: <20191217092201.20022-1-benjamin.gaignard@st.com>
+        Tue, 17 Dec 2019 04:25:45 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576574744; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=SznHY6tqtOpVDZ62HlJkzg75oAx7s1L7CUOTYTLlJEQ=; b=FgLEfejjqYe8EraDIGx0odPnQXsBM3elCc0Od7TLe2Ue+yw+MJyottL6ugnTBMHrqbY63A/V
+ F2WBcgy9meZog3L6moccMCgAi9fk6qeVtjiPWPM3OqaWW2CxRygTQd+wp+YcALno6+mqgeE+
+ yh1Vr0SIDtcftZBV71Z23D33rS4=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df89f18.7fa5a19b3490-smtp-out-n02;
+ Tue, 17 Dec 2019 09:25:44 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DA8B1C433A2; Tue, 17 Dec 2019 09:25:42 +0000 (UTC)
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8DC88C43383;
+        Tue, 17 Dec 2019 09:25:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8DC88C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: sm8150: Add ADSP, CDSP, MPSS and SLPI remoteprocs
+Date:   Tue, 17 Dec 2019 14:55:03 +0530
+Message-Id: <20191217092503.10699-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-17_01:2019-12-16,2019-12-16 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Modify dma controller nodes name to fit with the standard naming.
+Add ADSP, CDSP, MPSS and SLPI device tree nodes for SM8150 SoC.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- arch/arm/boot/dts/stm32mp157c.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/qcom/sm8150-mtp.dts |  12 +++
+ arch/arm64/boot/dts/qcom/sm8150.dtsi    | 138 ++++++++++++++++++++++++
+ 2 files changed, 150 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 9b11654a0a39..8fac522b1bc9 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -949,7 +949,7 @@
- 			status = "disabled";
+diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+index d6837d7fa2f18..c00dd3d2b6cc4 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+@@ -366,6 +366,18 @@
+ 	};
+ };
+ 
++&remoteproc_adsp {
++	status = "okay";
++};
++
++&remoteproc_cdsp {
++	status = "okay";
++};
++
++&remoteproc_slpi {
++	status = "okay";
++};
++
+ &tlmm {
+ 	gpio-reserved-ranges = <0 4>, <126 4>;
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+index 06f04e4c3a7cf..694be3c001a68 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/power/qcom-aoss-qmp.h>
+ #include <dt-bindings/power/qcom-rpmpd.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
+@@ -494,6 +495,41 @@
+ 			reg = <0x0 0x01f40000 0x0 0x40000>;
  		};
  
--		dma1: dma@48000000 {
-+		dma1: dma-controller@48000000 {
- 			compatible = "st,stm32-dma";
- 			reg = <0x48000000 0x400>;
- 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-@@ -966,7 +966,7 @@
- 			dma-requests = <8>;
++		remoteproc_slpi: remoteproc@2400000 {
++			compatible = "qcom,sm8150-slpi-pas";
++			reg = <0x0 0x02400000 0x0 0x4040>;
++
++			interrupts-extended = <&intc GIC_SPI 494 IRQ_TYPE_EDGE_RISING>,
++					      <&slpi_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++					      <&slpi_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
++					      <&slpi_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
++					      <&slpi_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "wdog", "fatal", "ready",
++					  "handover", "stop-ack";
++
++			clocks = <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "xo";
++
++			power-domains = <&aoss_qmp AOSS_QMP_LS_SLPI>,
++					<&rpmhpd SM8150_LCX>,
++					<&rpmhpd SM8150_LMX>;
++			power-domain-names = "load_state", "lcx", "lmx";
++
++			memory-region = <&slpi_mem>;
++
++			qcom,smem-states = <&slpi_smp2p_out 0>;
++			qcom,smem-state-names = "stop";
++
++			status = "disabled";
++
++			glink-edge {
++				interrupts = <GIC_SPI 170 IRQ_TYPE_EDGE_RISING>;
++				label = "dsps";
++				qcom,remote-pid = <3>;
++				mboxes = <&apss_shared 24>;
++			};
++		};
++
+ 		tlmm: pinctrl@3100000 {
+ 			compatible = "qcom,sm8150-pinctrl";
+ 			reg = <0x0 0x03100000 0x0 0x300000>,
+@@ -509,6 +545,74 @@
+ 			#interrupt-cells = <2>;
  		};
  
--		dma2: dma@48001000 {
-+		dma2: dma-controller@48001000 {
- 			compatible = "st,stm32-dma";
- 			reg = <0x48001000 0x400>;
- 			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-@@ -1248,7 +1248,7 @@
- 			status = "disabled";
++		remoteproc_mpss: remoteproc@4080000 {
++			compatible = "qcom,sm8150-mpss-pas";
++			reg = <0x0 0x04080000 0x0 0x4040>;
++
++			interrupts-extended = <&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
++					      <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++					      <&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
++					      <&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
++					      <&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
++					      <&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "wdog", "fatal", "ready", "handover",
++					  "stop-ack", "shutdown-ack";
++
++			clocks = <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "xo";
++
++			power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
++					<&rpmhpd SM8150_CX>,
++					<&rpmhpd SM8150_MSS>;
++			power-domain-names = "load_state", "cx", "mss";
++
++			memory-region = <&mpss_mem>;
++
++			qcom,smem-states = <&modem_smp2p_out 0>;
++			qcom,smem-state-names = "stop";
++
++			glink-edge {
++				interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
++				label = "modem";
++				qcom,remote-pid = <1>;
++				mboxes = <&apss_shared 12>;
++			};
++		};
++
++		remoteproc_cdsp: remoteproc@8300000 {
++			compatible = "qcom,sm8150-cdsp-pas";
++			reg = <0x0 0x08300000 0x0 0x4040>;
++
++			interrupts-extended = <&intc GIC_SPI 578 IRQ_TYPE_EDGE_RISING>,
++					      <&cdsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++					      <&cdsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
++					      <&cdsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
++					      <&cdsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "wdog", "fatal", "ready",
++					  "handover", "stop-ack";
++
++			clocks = <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "xo";
++
++			power-domains = <&aoss_qmp AOSS_QMP_LS_CDSP>,
++					<&rpmhpd SM8150_CX>;
++			power-domain-names = "load_state", "cx";
++
++			memory-region = <&cdsp_mem>;
++
++			qcom,smem-states = <&cdsp_smp2p_out 0>;
++			qcom,smem-state-names = "stop";
++
++			status = "disabled";
++
++			glink-edge {
++				interrupts = <GIC_SPI 574 IRQ_TYPE_EDGE_RISING>;
++				label = "cdsp";
++				qcom,remote-pid = <5>;
++				mboxes = <&apss_shared 4>;
++			};
++		};
++
+ 		aoss_qmp: power-controller@c300000 {
+ 			compatible = "qcom,sm8150-aoss-qmp";
+ 			reg = <0x0 0x0c300000 0x0 0x100000>;
+@@ -538,6 +642,40 @@
+ 			cell-index = <0>;
  		};
  
--		mdma1: dma@58000000 {
-+		mdma1: dma-controller@58000000 {
- 			compatible = "st,stm32h7-mdma";
- 			reg = <0x58000000 0x1000>;
- 			interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++		remoteproc_adsp: remoteproc@17300000 {
++			compatible = "qcom,sm8150-adsp-pas";
++			reg = <0x0 0x17300000 0x0 0x4040>;
++
++			interrupts-extended = <&intc GIC_SPI 162 IRQ_TYPE_EDGE_RISING>,
++					      <&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++					      <&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
++					      <&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
++					      <&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "wdog", "fatal", "ready",
++					  "handover", "stop-ack";
++
++			clocks = <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "xo";
++
++			power-domains = <&aoss_qmp AOSS_QMP_LS_LPASS>,
++					<&rpmhpd SM8150_CX>;
++			power-domain-names = "load_state", "cx";
++
++			memory-region = <&adsp_mem>;
++
++			qcom,smem-states = <&adsp_smp2p_out 0>;
++			qcom,smem-state-names = "stop";
++
++			status = "disabled";
++
++			glink-edge {
++				interrupts = <GIC_SPI 156 IRQ_TYPE_EDGE_RISING>;
++				label = "lpass";
++				qcom,remote-pid = <2>;
++				mboxes = <&apss_shared 8>;
++			};
++		};
++
+ 		intc: interrupt-controller@17a00000 {
+ 			compatible = "arm,gic-v3";
+ 			interrupt-controller;
 -- 
-2.15.0
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
