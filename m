@@ -2,174 +2,188 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61849C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 05:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A2DC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 05:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B84320733
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 05:51:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="feSl2LeY"
+	by mail.kernel.org (Postfix) with ESMTP id 5257620733
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 05:51:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbfLQFvw (ORCPT
+        id S1727472AbfLQFv5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 00:51:52 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:15189 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727683AbfLQFvM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 00:51:12 -0500
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191217055109epoutp048b10c5b1ea0372987e06eafc576bf754~hEqrOzWkm0680406804epoutp04e
-        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 05:51:09 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191217055109epoutp048b10c5b1ea0372987e06eafc576bf754~hEqrOzWkm0680406804epoutp04e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576561869;
-        bh=8KCqrRiUEVLa3021FF4CS5+nZP/tWBbnEr5rHbveB7c=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=feSl2LeYSKIJz2vnNOgg+fCucOp2aP4P9huSrsEQBoXjlmGy8lVVJ0fjTsIPThBZE
-         4Z1pfbn++btNOwlPpRhEb1xsc2Or/LRBGJIs5JCpNkUK4hF5STm5+l3nTd2n1sMePF
-         ab8uoaF7HHQJC11merFhlx/naXuIsLwdwP1tgbTo=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191217055108epcas1p1218b944d39a70168aff3d834376885e4~hEqqmUrkv2681226812epcas1p1q;
-        Tue, 17 Dec 2019 05:51:08 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47cS1P6jsDzMqYks; Tue, 17 Dec
-        2019 05:51:05 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        36.C7.48498.9CC68FD5; Tue, 17 Dec 2019 14:51:05 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191217055105epcas1p365e306f27fd53852b793155c929ee634~hEqnhLQga1365213652epcas1p3m;
-        Tue, 17 Dec 2019 05:51:05 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191217055105epsmtrp27b2b1099645bc64a87516a9a1d1703dc~hEqngVJu31905819058epsmtrp27;
-        Tue, 17 Dec 2019 05:51:05 +0000 (GMT)
-X-AuditID: b6c32a36-a3dff7000001bd72-50-5df86cc990b4
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E9.7E.06569.9CC68FD5; Tue, 17 Dec 2019 14:51:05 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191217055105epsmtip1b7ee68403bfad60ee2748cfe982f1131~hEqnUMcXt3103131031epsmtip1Z;
-        Tue, 17 Dec 2019 05:51:05 +0000 (GMT)
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        heiko@sntech.de, leonard.crestez@nxp.com, lukasz.luba@arm.com
-Cc:     a.swigon@samsung.com, m.szyprowski@samsung.com, kgene@kernel.org,
-        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH 0/9] PM / devfreq: Remove deprecated 'devfreq' and
- 'devfreq-events' properties
-Date:   Tue, 17 Dec 2019 14:57:29 +0900
-Message-Id: <20191217055738.28445-1-cw00.choi@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjuO2fn7BSuDrPLl1GtI0UK6o46/ZSUKI2V/hBCAmnZYTs4cbd2
-        5rpSanZRspsFpWmZiZfKdI1ckS10IUVpppUZpmVROBNNraCgNk9R/57nfZ7nffne76VweQUZ
-        RGWbbLzVxBkYco7kVnuIMuyh4btG6e2IRYOVhwB6OfWRQBc9nQT69c5LoBPDXhx1dTVJ0ZOC
-        USmqG5ggkGP4BYF67lwg0WSJB6AvQ79wdK7rHoaqCgql6LpnQIpqXnZj6HV+HYkOtXqka+Xq
-        a5XXgNrRUESqb145oG4ec2Hq484GoG55UYmrJx3L0qQZOWv0PKfjrQrepDXrsk1ZCUzK5sz1
-        maoYJRvGxqFYRmHijHwCk5SaFrYh2+B7BqOwc4ZcXymNEwQmInGN1Zxr4xV6s2BLYHiLzmCJ
-        s4QLnFHINWWFa83GeFapjFT5jNtz9IPlVZjlBNw18mCSzAO98mIwm4J0NHzsrQTFYA4lp10A
-        dleMEiL5AmDZwUZSJF8B7B1xYn8jl8reSEShFcDPZz9hIpkCsK30sMTvIulQ6P7UR/rxfHo/
-        vNjumjHh9CsM3n3WT/iFQHo7/NlxeiYgoVfCluZx4McyOh4+GmwE4rjl8GrTfdwfhvRHErYP
-        tfgEykeS4NR4uugJhCMdTqmIg+DkWCsp4r2w/qGHFLNHAXS6nxKiEAXdNaWYvw9Oh8AbdyLE
-        8gp4+0fFzFycngvHpo8R4igZPHr4z8KCYc/QwJ9NLIbVR4pI0aKG/cM5/rKc1sD3E4+wk2Bp
-        2b/+lwBoAAt5i2DM4gXWEvn/LznAzGmGxrjA5c7UNkBTgAmQWezfNHKCswu7jW0AUjgzX+ZS
-        +EoyHbd7D281Z1pzDbzQBlS+3Z3CgxZozb5DN9kyWVVkVFQUimZjVCzLLJJR37s1cjqLs/E5
-        PG/hrX9zGDU7KA9E8/YMY9/Wqr6A6jOO1GfHUgpLpatbX5cnJ2ZHBmt76ULdpqTYVM1Eb+ee
-        6RL3krnF294KG3d0ro119yRjtSUcmWwPnDiftqy51qtch0ZTirbM+1Afh83aX/r8p3ajJl3S
-        LDn57sN1/ai+ydkfIDy15zN3962aDh9ZELFzfF3iFCMR9BwbilsF7jdnY8IWsAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsWy7bCSnO7JnB+xBkfeiVjcn9fKaHH9y3NW
-        i/lHzrFa/H/0mtWi//FrZovz5zewW5xtesNuseLuR1aLTY+vsVpc3jWHzeJz7xFGi08P/jNb
-        zDi/j8liYVMLu8XaI3fZLZZev8hkcbtxBZtF694j7A5CHmvmrWH02LSqk81j85J6j43vdjB5
-        9G1Zxeix/do8Zo/Pm+QC2KO4bFJSczLLUov07RK4Mu7PXshU0C9R8eroZ7YGxitCXYycHBIC
-        JhILZt1j6WLk4hAS2M0ocfTUFFaIhKTEtItHmbsYOYBsYYnDh4shaj4xSrxbOA2shk1AS2L/
-        ixtsILaIQBujxJLvciA2s8BzJol9XWYgtrBAnETrqtOMIDaLgKrE9o0fwGxeASuJU/fXMULs
-        kpdYveEA8wRGngWMDKsYJVMLinPTc4sNC4zyUsv1ihNzi0vz0vWS83M3MYKDWEtrB+OJE/GH
-        GAU4GJV4eCVKvscKsSaWFVfmHmKU4GBWEuHdoQAU4k1JrKxKLcqPLyrNSS0+xCjNwaIkziuf
-        fyxSSCA9sSQ1OzW1ILUIJsvEwSnVwGgZ+XOS5/TFibt2n2neM2N2oOZPpr+py+5+eGw7+93S
-        zryYHyavv0zbMpdpb5DRueCCVmddq8L7lzw4SwVtsjJvcBhq73w5vXdR126W2b8yDjq0XH74
-        ov7CrJ+TtW96V9redl3BbPu+9/N7p/PxsnXC6h4S7/+oet+oCQyb+kZYsWpZQWT57WAlluKM
-        REMt5qLiRAABxhNSXgIAAA==
-X-CMS-MailID: 20191217055105epcas1p365e306f27fd53852b793155c929ee634
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191217055105epcas1p365e306f27fd53852b793155c929ee634
-References: <CGME20191217055105epcas1p365e306f27fd53852b793155c929ee634@epcas1p3.samsung.com>
+        Tue, 17 Dec 2019 00:51:57 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50918 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727175AbfLQFv5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 00:51:57 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBH5l124033318;
+        Tue, 17 Dec 2019 00:51:43 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwe610081-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Dec 2019 00:51:42 -0500
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBH5mGXG036212;
+        Tue, 17 Dec 2019 00:51:42 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwe61007s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Dec 2019 00:51:42 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBH5nr99028635;
+        Tue, 17 Dec 2019 05:51:41 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma04dal.us.ibm.com with ESMTP id 2wvqc6g06u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Dec 2019 05:51:41 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBH5peF937093712
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Dec 2019 05:51:40 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C3E5AAC059;
+        Tue, 17 Dec 2019 05:51:40 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 13E10AC060;
+        Tue, 17 Dec 2019 05:51:40 +0000 (GMT)
+Received: from [9.70.82.143] (unknown [9.70.82.143])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 17 Dec 2019 05:51:39 +0000 (GMT)
+Subject: [PATCH V3 03/13] powerpc/vas: Read interrupts and vas-port device
+ tree properties
+From:   Haren Myneni <haren@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     hch@infradead.org, devicetree@vger.kernel.org, mikey@neuling.org,
+        herbert@gondor.apana.org.au, npiggin@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, sukadev@linux.vnet.ibm.com
+In-Reply-To: <1576561080.16318.6531.camel@hbabu-laptop>
+References: <1576561080.16318.6531.camel@hbabu-laptop>
+Content-Type: text/plain; charset="UTF-8"
+Date:   Mon, 16 Dec 2019 21:49:48 -0800
+Message-ID: <1576561788.16318.6534.camel@hbabu-laptop>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.28.3 
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-17_01:2019-12-16,2019-12-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ impostorscore=0 suspectscore=3 adultscore=0 bulkscore=0 mlxlogscore=999
+ clxscore=1015 priorityscore=1501 spamscore=0 mlxscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912170052
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The devfreq and devfreq-event subsystem provided the following two properties:
-- Provide 'devfreq' property in order to get the parent devfreq device
-  by devfreq_get_devfreq_by_phandle() if devfreq device use passive governor.
-- Provide 'devfreq-events' property in order to get the devfreq-event device
-  by devfreq_event_get_edev_by_phandle().
 
-But, two properties name is not proper expressing the h/w
-and 'devfreq' word is name of linux subsystem intead of any h/w name.
+Read interrupts and vas-port device tree properties per each VAS
+instance. NX generates an interrupt when it sees page fault on the
+request buffer. Interrupts property is used to setup IRQ for handing
+the fault and set port value for each user space send window.
 
-Hand over the rights for deciding the property name for getting
-the devfreq/devfreq-event device on devicetree, to each devfreq driver.
+Signed-off-by: Haren Myneni <haren@us.ibm.com>
+---
+ arch/powerpc/platforms/powernv/vas.c | 40 ++++++++++++++++++++++++++++--------
+ arch/powerpc/platforms/powernv/vas.h |  2 ++
+ 2 files changed, 34 insertions(+), 8 deletions(-)
 
-So, replace 'devfreq' and 'devfreq-events' property with following property
-name according to each devfreq driver:
---------------------------------------------------------------------
-Old property  | New propert        | Device driver name            |
---------------------------------------------------------------------
-devfreq       | exynos,parent-bus  | exynos-bus.c                  |
-              |                    |                               |
-devfreq-events| exynos,ppmu-device | exynos-bus.c, exynos5422-dmc.c|
-              | rockchip,dfi-device| rk3399_dmc.c                  |
---------------------------------------------------------------------
-
-Chanwoo Choi (8):
-  PM / devfreq: Remove devfreq_get_devfreq_by_phandle function
-  PM / devfreq: event: Add devfreq_event_get_edev_by_node function
-  PM / devfreq: exynos-bus: Replace deprecated 'devfreq' property
-  PM / devfreq: exynos-bus: Replace deprecated 'devfreq-events' property
-  PM / devfreq: rk3399_dmc: Replace deprecated 'devfreq-events' property
-  memory: samsung: exynos5422-dmc: Replace deprecated 'devfreq-events' property
-  ARM: dts: exynos: Replace deprecated property for Exynos bus and DMC
-  arm64: dts: exynos: Replace deprecated property for Exynos bus
-
-Leonard Crestez (1):
-  PM / devfreq: Add devfreq_get_devfreq_by_node function
-
- .../bindings/devfreq/exynos-bus.txt           | 22 +++----
- .../bindings/devfreq/rk3399_dmc.txt           |  4 +-
- .../memory-controllers/exynos5422-dmc.txt     |  6 +-
- arch/arm/boot/dts/exynos3250-monk.dts         |  2 +-
- arch/arm/boot/dts/exynos3250-rinato.dts       | 18 +++---
- .../boot/dts/exynos4412-itop-scp-core.dtsi    | 16 ++---
- arch/arm/boot/dts/exynos4412-midas.dtsi       | 18 +++---
- .../boot/dts/exynos4412-odroid-common.dtsi    | 18 +++---
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 34 +++++------
- .../dts/exynos/exynos5433-tm2-common.dtsi     | 20 +++----
- drivers/devfreq/devfreq-event.c               | 53 +++--------------
- drivers/devfreq/devfreq.c                     | 25 +++-----
- drivers/devfreq/exynos-bus.c                  | 58 ++++++++++++++++---
- drivers/devfreq/rk3399_dmc.c                  | 16 ++++-
- drivers/memory/samsung/exynos5422-dmc.c       | 37 ++++++++++--
- include/linux/devfreq-event.h                 | 14 ++---
- include/linux/devfreq.h                       |  6 +-
- 17 files changed, 197 insertions(+), 170 deletions(-)
-
+diff --git a/arch/powerpc/platforms/powernv/vas.c b/arch/powerpc/platforms/powernv/vas.c
+index ed9cc6d..40d8213 100644
+--- a/arch/powerpc/platforms/powernv/vas.c
++++ b/arch/powerpc/platforms/powernv/vas.c
+@@ -25,10 +25,11 @@
+ 
+ static int init_vas_instance(struct platform_device *pdev)
+ {
+-	int rc, cpu, vasid;
+-	struct resource *res;
+-	struct vas_instance *vinst;
+ 	struct device_node *dn = pdev->dev.of_node;
++	int rc, cpu, vasid, nresources = 5;
++	struct vas_instance *vinst;
++	struct resource *res;
++	uint64_t port;
+ 
+ 	rc = of_property_read_u32(dn, "ibm,vas-id", &vasid);
+ 	if (rc) {
+@@ -36,7 +37,18 @@ static int init_vas_instance(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
+-	if (pdev->num_resources != 4) {
++	rc = of_property_read_u64(dn, "ibm,vas-port", &port);
++	if (rc) {
++		pr_err("No ibm,vas-port property for %s?\n", pdev->name);
++		/* No interrupts property */
++		nresources = 4;
++	}
++
++	/*
++	 * interrupts property is available with 'ibm,vas-port' property.
++	 * 4 Resources and 1 IRQ if interrupts property is available.
++	 */
++	if (pdev->num_resources != nresources) {
+ 		pr_err("Unexpected DT configuration for [%s, %d]\n",
+ 				pdev->name, vasid);
+ 		return -ENODEV;
+@@ -51,6 +63,7 @@ static int init_vas_instance(struct platform_device *pdev)
+ 	mutex_init(&vinst->mutex);
+ 	vinst->vas_id = vasid;
+ 	vinst->pdev = pdev;
++	vinst->irq_port = port;
+ 
+ 	res = &pdev->resource[0];
+ 	vinst->hvwc_bar_start = res->start;
+@@ -66,12 +79,23 @@ static int init_vas_instance(struct platform_device *pdev)
+ 		pr_err("Bad 'paste_win_id_shift' in DT, %llx\n", res->end);
+ 		goto free_vinst;
+ 	}
+-
+ 	vinst->paste_win_id_shift = 63 - res->end;
+ 
+-	pr_devel("Initialized instance [%s, %d], paste_base 0x%llx, "
+-			"paste_win_id_shift 0x%llx\n", pdev->name, vasid,
+-			vinst->paste_base_addr, vinst->paste_win_id_shift);
++	/* interrupts property */
++	if (pdev->num_resources == 5) {
++		res = &pdev->resource[4];
++		vinst->virq = res->start;
++		if (vinst->virq <= 0) {
++			pr_err("IRQ resource is not available for [%s, %d]\n",
++				pdev->name, vasid);
++			vinst->virq = 0;
++		}
++	}
++
++	pr_devel("Initialized instance [%s, %d] paste_base 0x%llx paste_win_id_shift 0x%llx IRQ %d Port 0x%llx\n",
++			pdev->name, vasid, vinst->paste_base_addr,
++			vinst->paste_win_id_shift, vinst->virq,
++			vinst->irq_port);
+ 
+ 	for_each_possible_cpu(cpu) {
+ 		if (cpu_to_chip_id(cpu) == of_get_ibm_chip_id(dn))
+diff --git a/arch/powerpc/platforms/powernv/vas.h b/arch/powerpc/platforms/powernv/vas.h
+index 5574aec..598608b 100644
+--- a/arch/powerpc/platforms/powernv/vas.h
++++ b/arch/powerpc/platforms/powernv/vas.h
+@@ -313,6 +313,8 @@ struct vas_instance {
+ 	u64 paste_base_addr;
+ 	u64 paste_win_id_shift;
+ 
++	u64 irq_port;
++	int virq;
+ 	struct mutex mutex;
+ 	struct vas_window *rxwin[VAS_COP_TYPE_MAX];
+ 	struct vas_window *windows[VAS_WINDOWS_PER_CHIP];
 -- 
-2.17.1
+1.8.3.1
+
+
 
