@@ -7,86 +7,94 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3233DC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 23:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7D1C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 23:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034CE2176D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 23:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230D220729
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 23:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576626543;
-	bh=bfLq0zjiMQPFWm4rp7k31jTDtIZZHlaC17DpzM/tp9k=;
+	s=default; t=1576627063;
+	bh=4kM/XsUhLL2+dNqksF8HGdJ9E8Ey1WuF0J6cd05XiMw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PQY7Bqsuzyvvz09AJ4NuTyDTkT+ZptJMa7qeyhRI9bNFluwwkpdyUxPB/HgQJThfj
-	 4ydVfSCYJtjspDpAnUhBIGb9spjt7r+ecbgbDu4P6ZzT9s6ZwAXO+3qe1ZQPJ7xQL4
-	 LJRLBtM7mkb8B7QbrT2WehPWM0pa3jwi+H35sJGM=
+	b=KGgV+3+DdOLUEPukSnd6NHlxONcLl0j0EDRvcWHNwlHmCF3eAc8TtL3ZTeEiwaQz4
+	 XDY9AM+cQpSl1bwfwPD1hxtGIwC2ITUSqveZQuoZFVr+RLJiWA1cMZzWkvuXcSTnGY
+	 0OdaRhEl8PZGCKzTSVF7CYtBh97XJWfo77O9ixJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbfLQXtC (ORCPT
+        id S1726454AbfLQX5j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 18:49:02 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42931 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbfLQXtC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 18:49:02 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so52499otd.9;
-        Tue, 17 Dec 2019 15:49:01 -0800 (PST)
+        Tue, 17 Dec 2019 18:57:39 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33235 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfLQX5i (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 18:57:38 -0500
+Received: by mail-ot1-f66.google.com with SMTP id b18so115739otp.0;
+        Tue, 17 Dec 2019 15:57:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jlg2ki2yobPLE5+Iz6CrZ9HDHot4jm6bFyP7eLrU3qQ=;
-        b=FqvyGhL7of1GOVREgL/8ejZuNuqIPJTFRMX4xCIXw0we4NM053Q0qZ/np3717xs+EL
-         pY7iBu+ixQtSX5z0w2J1BetHrLbHLkU+0umS7KUm4+5OobkgS4SwMy0LVzdagLOYawao
-         AFJTZqWXraRvn+1+irNhBVGS7UejBbAuZdnzXkPRgmSeWgTO6+pjz72frMz5OAYtFDRU
-         Ajlv1RpcfNGJTTQwL8hIqwohgTiHOYBf0BplwEQL7oKOM9thAZUnKF1MF8+TNicYg1bY
-         LaOi7KkrQPS398/1QA8QXgX9wjI9FQOghBCkFsW+s/jQiBwy/2DywbTF+ICZBiBsZ2Qw
-         0I9Q==
-X-Gm-Message-State: APjAAAX/Hat2pBn9/dxEWIKqMfd0Tm1mR3kC+AwJq9LSb8qg9cL/I5B3
-        uCGVqmDzeefm7fjxoNcjRQ==
-X-Google-Smtp-Source: APXvYqw+ktR6zmWC15DCzXWZThyq8OS0sep09XrYuNDJkj8QrlsDYGIEMrNnc9m27AMPyfWoF5gKSw==
-X-Received: by 2002:a05:6830:22e2:: with SMTP id t2mr81055otc.129.1576626541083;
-        Tue, 17 Dec 2019 15:49:01 -0800 (PST)
+        bh=E/Jh0gEjrB4l4YoPQEAqdMSsYPuhulVXEcBxp+hlji8=;
+        b=UMU0Ead/Cxco7nOOQalTKmVG2LoInDYvBgleOGNAhW3VJrW8xvDnLdzjXfOustMvFm
+         tIqtTNY5V3Ln1QP2g8mNesKnQjWecev3DYZw56XWJaSeF2fCrnX+EImK7oCud4mgoW4g
+         oekfzdU1qylV8WEW4NELWmyq2ycHSjKEJhQK4obYR49+1+v38rUjk4ZkSX1+ABwCFyWO
+         CAP1acMqETkCKMepp+JaSNuCIqbEOl11RhyOrOnBFf615ayjemh8BejvS/BFMqq4bynw
+         QFDdEfqkjtwLkLzrOgK0czKIjzQfuLVk984TJIW+Q47eG1WCk4nQ6iFg3rh8KyOAUznb
+         gULw==
+X-Gm-Message-State: APjAAAVmndX1FMgEhQ6YbRMYAtBWqRmuHRHvrDGm9SvNyRMekdUSpLwq
+        6QQyAClj54Dg16vO6AGoZg==
+X-Google-Smtp-Source: APXvYqzmn8JDS5mvDHSpuGCBOrZ4cPvFj6ziPOM02alJJJusCEI9xOeuXQl0jITxSGcWJaouCznyQA==
+X-Received: by 2002:a05:6830:1bf2:: with SMTP id k18mr128163otb.36.1576627057677;
+        Tue, 17 Dec 2019 15:57:37 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g8sm116989otq.19.2019.12.17.15.49.00
+        by smtp.gmail.com with ESMTPSA id e21sm169865oib.16.2019.12.17.15.57.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 15:49:00 -0800 (PST)
-Date:   Tue, 17 Dec 2019 17:49:00 -0600
+        Tue, 17 Dec 2019 15:57:37 -0800 (PST)
+Date:   Tue, 17 Dec 2019 17:57:36 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        alexandre.torgue@st.com, linux-spi@vger.kernel.org,
         devicetree@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH v2] dt-bindings: stm32: convert mlahb to json-schema
-Message-ID: <20191217234900.GA429@bogus>
-References: <20191217082415.14844-1-arnaud.pouliquen@st.com>
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Erwan Leray <erwan.leray@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: Re: [PATCH v2] dt-bindings: spi: Convert stm32 spi bindings to
+ json-schema
+Message-ID: <20191217235736.GA17096@bogus>
+References: <20191217090715.13334-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191217082415.14844-1-arnaud.pouliquen@st.com>
+In-Reply-To: <20191217090715.13334-1-benjamin.gaignard@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 17 Dec 2019 09:24:15 +0100, Arnaud Pouliquen wrote:
-> Convert the ML-AHB bus bindings to DT schema format using json-schema
+On Tue, 17 Dec 2019 10:07:15 +0100, Benjamin Gaignard wrote:
+> Convert the STM32 spi binding to DT schema format using json-schema
 > 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> CC: Erwan Leray <erwan.leray@st.com>
+> CC: Fabrice Gasnier <fabrice.gasnier@st.com>
+> CC: Amelie Delaunay <amelie.delaunay@st.com>
 > ---
-> V2: Add "ranges" property as mandatory
-> ---
->  .../devicetree/bindings/arm/stm32/mlahb.txt   | 37 ----------
->  .../bindings/arm/stm32/st,mlahb.yaml          | 70 +++++++++++++++++++
->  2 files changed, 70 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml
+> changes in version 2:
+> - fix typo in if block (compatible + contains)
+>   The boths typos weren't detected by checkpatch.
+> - remove type for st,spi-midi-ns property but not add upper limit
+>   because the driver compute a delay (expressed in SPI clock cycles periods)
+>   from this value (expressed in nanoseconds) and all that depends of the SPI
+>   bus clock.
+>  .../devicetree/bindings/spi/spi-stm32.txt          |  62 ------------
+>  .../devicetree/bindings/spi/st,stm32-spi.yaml      | 105 +++++++++++++++++++++
+>  2 files changed, 105 insertions(+), 62 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
 > 
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
