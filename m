@@ -2,229 +2,115 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F3EC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 00:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 504FBC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 00:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C22C22465E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 00:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 265EC2176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 00:11:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="LlZOOR9c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfLQAJH (ORCPT
+        id S1727140AbfLQAL0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:09:07 -0500
-Received: from mga14.intel.com ([192.55.52.115]:28706 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727569AbfLQAJH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:09:07 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 15:31:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,323,1571727600"; 
-   d="scan'208";a="205279892"
-Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.147]) ([10.7.153.147])
-  by orsmga007.jf.intel.com with ESMTP; 16 Dec 2019 15:31:03 -0800
-Subject: Re: [PATCH v11 14/14] hwmon: Add PECI dimmtemp driver
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
+        Mon, 16 Dec 2019 19:11:26 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34982 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727198AbfLQALZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 19:11:25 -0500
+Received: by mail-lj1-f195.google.com with SMTP id j6so8837670lja.2
+        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 16:11:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=mgdbNsb2U5szXT98Luh3Bo8MJcnyi91BccDx4009UHE=;
+        b=LlZOOR9cNxBNM4lljL4PWV6m5lhlUA0UqAWkEVPbwfbEurMkEFzYiOEaHfO91gU2uI
+         xjMktLJxGyZ4PgLHjTRIs4URVbpg8C8ESOjdF7giaahBuCRVv3HHk/O9535icb2WfNS1
+         yCGYfmHyCrDjp0q29VuuicGEtKv5yiGXHJOIizZUdjP2HX+V16JiPug8AOgXQTf6iPvc
+         CmFlTKqqwiL7fsQGFz5zUB7sjhFX+Ssi9INqeKv1/ueEJAgg53AHWSlHZG1QnSZzN23V
+         CVVUlGhcikgB6I9qGI6Ofr4F3nFd5fikCeXS/oqGSpTe0GG2MEYK7DgOhD6CMVSe53lb
+         vKLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=mgdbNsb2U5szXT98Luh3Bo8MJcnyi91BccDx4009UHE=;
+        b=RBhIhD5OyG3PfLgwz4pSILUJBbeJ0hMTZxtF8Ri/FxgslCbg4LRxK68Q1Fso04mI2f
+         zOe1sLHjgwHnKz9TGEHyjJJUaml1WjZXgJzogKY5Bml6NQlRUTtSsK9LQjbwZkZ0pkY6
+         2456A+CnadE4nLdP1jX/l/s4kpSM7hfTXvfnYDL2vM++a6VEPaz1UCIzvII4H/Ju9CY1
+         6XkYW8pXOXPP4ARSRRZ4Ip6GC6tnH6f90QbOTZLpyooLO0cLhgqHq7lEerXKK+EWMPBy
+         GGhAnY5SRq4AZm2DD7loXMBsxW/qoeLSVk9GP8tmtYLMS6nhM18ecbaEVVUJS+wCGhQf
+         1n9A==
+X-Gm-Message-State: APjAAAUzfLb9+hEkS+IA7mE37OuLMKfW9illGhzg1mBPxugkwfYC1Zqu
+        SyWzrKeTZJNkM37Z8HWOr28e2w==
+X-Google-Smtp-Source: APXvYqz3Im0Fgkkiyr2JZbkmyo8my7bPlxXPgPfqc89lQKgQjaIKkN27ALt6zcR5Szea7m3ErnAVNg==
+X-Received: by 2002:a2e:b60d:: with SMTP id r13mr1257632ljn.40.1576541483323;
+        Mon, 16 Dec 2019 16:11:23 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id u25sm9853720lfk.46.2019.12.16.16.11.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 16:11:22 -0800 (PST)
+Date:   Mon, 16 Dec 2019 16:11:14 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>,
-        Tomohiro Kusumi <kusumi.tomohiro@gmail.com>,
-        "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>,
-        Frederic Barrat <fbarrat@linux.vnet.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        David Kershner <david.kershner@unisys.com>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Sagar Dharia <sdharia@codeaurora.org>,
-        Johan Hovold <johan@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        openbmc@lists.ozlabs.org, Alan Cox <alan@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jason M Biils <jason.m.bills@linux.intel.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Stef van Os <stef.van.os@prodrive-technologies.com>
-References: <20191211194624.2872-1-jae.hyun.yoo@linux.intel.com>
- <20191211194624.2872-15-jae.hyun.yoo@linux.intel.com>
- <d75aaad9-ae07-feeb-966a-899ecfe9d4b3@roeck-us.net>
- <5ed9f292-e024-ffda-a1a8-870ba0f05c58@linux.intel.com>
- <20191216212120.GA12089@roeck-us.net>
- <c6ccb0ff-c0b4-86b2-1768-ba63713034a4@linux.intel.com>
- <20191216232720.GA17398@roeck-us.net>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <465ac2d4-c508-0e6d-93e8-e8d5c36b05d7@linux.intel.com>
-Date:   Mon, 16 Dec 2019 15:31:03 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Willem de Bruijn <willemb@google.com>,
+        Wingman Kwok <w-kwok2@ti.com>
+Subject: Re: [PATCH V6 net-next 11/11] ptp: Add a driver for InES time
+ stamping IP core.
+Message-ID: <20191216161114.3604d45d@cakuba.netronome.com>
+In-Reply-To: <33afc113fa0b301d289522971c83dbbf0d36c8ba.1576511937.git.richardcochran@gmail.com>
+References: <cover.1576511937.git.richardcochran@gmail.com>
+        <33afc113fa0b301d289522971c83dbbf0d36c8ba.1576511937.git.richardcochran@gmail.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <20191216232720.GA17398@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/16/2019 3:27 PM, Guenter Roeck wrote:
-> On Mon, Dec 16, 2019 at 02:17:34PM -0800, Jae Hyun Yoo wrote:
->> [...]
->>
->>>>>> +static int get_dimm_temp(struct peci_dimmtemp *priv, int dimm_no)
->>>>>> +{
->>>>>> +    int dimm_order = dimm_no % priv->gen_info->dimm_idx_max;
->>>>>> +    int chan_rank = dimm_no / priv->gen_info->dimm_idx_max;
->>>>>> +    struct peci_rd_pci_cfg_local_msg rp_msg;
->>>>>> +    u8  cfg_data[4];
->>>>>> +    int ret;
->>>>>> +
->>>>>> +    if (!peci_sensor_need_update(&priv->temp[dimm_no]))
->>>>>> +        return 0;
->>>>>> +
->>>>>> +    ret = read_ddr_dimm_temp_config(priv, chan_rank, cfg_data);
->>>>>> +    if (ret)
->>>>>> +        return ret;
->>>>>> +
->>>>>> +    priv->temp[dimm_no].value = cfg_data[dimm_order] * 1000;
->>>>>> +
->>>>>> +    switch (priv->gen_info->model) {
->>>>>> +    case INTEL_FAM6_SKYLAKE_X:
->>>>>> +        rp_msg.addr = priv->mgr->client->addr;
->>>>>> +        rp_msg.bus = 2;
->>>>>> +        /*
->>>>>> +         * Device 10, Function 2: IMC 0 channel 0 -> rank 0
->>>>>> +         * Device 10, Function 6: IMC 0 channel 1 -> rank 1
->>>>>> +         * Device 11, Function 2: IMC 0 channel 2 -> rank 2
->>>>>> +         * Device 12, Function 2: IMC 1 channel 0 -> rank 3
->>>>>> +         * Device 12, Function 6: IMC 1 channel 1 -> rank 4
->>>>>> +         * Device 13, Function 2: IMC 1 channel 2 -> rank 5
->>>>>> +         */
->>>>>> +        rp_msg.device = 10 + chan_rank / 3 * 2 +
->>>>>> +                 (chan_rank % 3 == 2 ? 1 : 0);
->>>>>> +        rp_msg.function = chan_rank % 3 == 1 ? 6 : 2;
->>>>>> +        rp_msg.reg = 0x120 + dimm_order * 4;
->>>>>> +        rp_msg.rx_len = 4;
->>>>>> +
->>>>>> +        ret = peci_command(priv->mgr->client->adapter,
->>>>>> +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
->>>>>> +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
->>>>>> +            ret = -EAGAIN;
->>>>>> +        if (ret)
->>>>>> +            return ret;
->>>>>> +
->>>>>> +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
->>>>>> +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
->>>>>> +        break;
->>>>>> +    case INTEL_FAM6_SKYLAKE_XD:
->>>>>> +        rp_msg.addr = priv->mgr->client->addr;
->>>>>> +        rp_msg.bus = 2;
->>>>>> +        /*
->>>>>> +         * Device 10, Function 2: IMC 0 channel 0 -> rank 0
->>>>>> +         * Device 10, Function 6: IMC 0 channel 1 -> rank 1
->>>>>> +         * Device 12, Function 2: IMC 1 channel 0 -> rank 2
->>>>>> +         * Device 12, Function 6: IMC 1 channel 1 -> rank 3
->>>>>> +         */
->>>>>> +        rp_msg.device = 10 + chan_rank / 2 * 2;
->>>>>> +        rp_msg.function = (chan_rank % 2) ? 6 : 2;
->>>>>> +        rp_msg.reg = 0x120 + dimm_order * 4;
->>>>>> +        rp_msg.rx_len = 4;
->>>>>> +
->>>>>> +        ret = peci_command(priv->mgr->client->adapter,
->>>>>> +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
->>>>>> +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
->>>>>> +            ret = -EAGAIN;
->>>>>> +        if (ret)
->>>>>> +            return ret;
->>>>>> +
->>>>>> +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
->>>>>> +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
->>>>>> +        break;
->>>>>> +    case INTEL_FAM6_HASWELL_X:
->>>>>> +    case INTEL_FAM6_BROADWELL_X:
->>>>>> +        rp_msg.addr = priv->mgr->client->addr;
->>>>>> +        rp_msg.bus = 1;
->>>>>> +        /*
->>>>>> +         * Device 20, Function 0: IMC 0 channel 0 -> rank 0
->>>>>> +         * Device 20, Function 1: IMC 0 channel 1 -> rank 1
->>>>>> +         * Device 21, Function 0: IMC 0 channel 2 -> rank 2
->>>>>> +         * Device 21, Function 1: IMC 0 channel 3 -> rank 3
->>>>>> +         * Device 23, Function 0: IMC 1 channel 0 -> rank 4
->>>>>> +         * Device 23, Function 1: IMC 1 channel 1 -> rank 5
->>>>>> +         * Device 24, Function 0: IMC 1 channel 2 -> rank 6
->>>>>> +         * Device 24, Function 1: IMC 1 channel 3 -> rank 7
->>>>>> +         */
->>>>>> +        rp_msg.device = 20 + chan_rank / 2 + chan_rank / 4;
->>>>>> +        rp_msg.function = chan_rank % 2;
->>>>>> +        rp_msg.reg = 0x120 + dimm_order * 4;
->>>>>> +        rp_msg.rx_len = 4;
->>>>>> +
->>>>>> +        ret = peci_command(priv->mgr->client->adapter,
->>>>>> +                   PECI_CMD_RD_PCI_CFG_LOCAL, &rp_msg);
->>>>>> +        if (rp_msg.cc != PECI_DEV_CC_SUCCESS)
->>>>>> +            ret = -EAGAIN;
->>>>>> +        if (ret)
->>>>>> +            return ret;
->>>>>> +
->>>>>> +        priv->temp_max[dimm_no] = rp_msg.pci_config[1] * 1000;
->>>>>> +        priv->temp_crit[dimm_no] = rp_msg.pci_config[2] * 1000;
->>>>>> +        break;
->>>>>> +    default:
->>>>>> +        return -EOPNOTSUPP;
->>>>>
->>>>> It looks like the sensors are created even on unsupported platforms,
->>>>> which would generate error messages whenever someone tries to read
->>>>> the attributes.
->>>>>
->>>>> There should be some code early on checking this, and the driver
->>>>> should not even instantiate if the CPU model is not supported.
->>>>
->>>> Actually, this 'default' case will not be happened because this driver
->>>> will be registered only when the CPU model is supported. The CPU model
->>>> checking code is in 'intel-peci-client.c' which is [11/14] of this
->>>> patch set.
->>>>
->>>
->>> That again assumes that both drivers will be modified in sync in the future.
->>> We can not make that assumption.
->>
->> As you said, both drivers must be modified in sync in the future because
->> each Intel CPU family uses different way of reading DIMM temperature.
->> In case if supported CPU checking code updated without making sync with
->> it, this driver will return the error.
->>
-> 
-> ... and in that situation the driver should not instantiate in the
-> first place. Its probe function should return -ENODEV.
+On Mon, 16 Dec 2019 08:13:26 -0800, Richard Cochran wrote:
+> +	clkid = (u64 *)(data + offset + OFF_PTP_CLOCK_ID);
+> +	portn = (u16 *)(data + offset + OFF_PTP_PORT_NUM);
+> +	seqid = (u16 *)(data + offset + OFF_PTP_SEQUENCE_ID);
 
-Got the point. I'll add the checking code even in this driver module
-too.
+These should perhaps be __be types?
 
-Thanks a lot!
+Looks like there is a few other sparse warnings in ptp_ines.c, would
+you mind addressing those?
 
--Jae
+> +	if (tag_to_msgtype(ts->tag & 0x7) != (*msgtype & 0xf)) {
+> +		pr_debug("msgtype mismatch ts %hhu != skb %hhu\n",
+> +			 tag_to_msgtype(ts->tag & 0x7), *msgtype & 0xf);
+> +		return false;
+> +	}
+> +	if (cpu_to_be64(ts->clkid) != *clkid) {
+> +		pr_debug("clkid mismatch ts %llx != skb %llx\n",
+> +			 cpu_to_be64(ts->clkid), *clkid);
+> +		return false;
+> +	}
+> +	if (ts->portnum != ntohs(*portn)) {
+> +		pr_debug("portn mismatch ts %hu != skb %hu\n",
+> +			 ts->portnum, ntohs(*portn));
+> +		return false;
+> +	}
+> +	if (ts->seqid != ntohs(*seqid)) {
+> +		pr_debug("seqid mismatch ts %hu != skb %hu\n",
+> +			 ts->seqid, ntohs(*seqid));
+> +		return false;
+> +	}
+
