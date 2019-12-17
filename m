@@ -2,129 +2,222 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E887C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 17:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD141C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 17:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 118B62465E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 17:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96A8D2465E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 17:45:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WzgiU9HD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FxKV2Ad+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfLQRYb (ORCPT
+        id S1727655AbfLQRpT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 12:24:31 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34680 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726722AbfLQRYb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 12:24:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576603470;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=z9EWxVih18eWOWqVZH496crr0Ey2713iPaECnfpP2vE=;
-        b=WzgiU9HD/0RIy1KMYHbppXdRk6cUoxVgmi9ADIbNXvDuhlaFrhZY/lDaAocBIR/hzYsYXY
-        QaiEOkGBdc1Ur9Mq9bBg+Kp0rE81nJwX3KoTmbC4WRH41qMg0RBwjteAjyiYh3HSXyJylv
-        a9FLNw8SS2hJgMuuZRK1jd5W2qfJU08=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-117-rLIk8wDJP16gfQOgon_8HA-1; Tue, 17 Dec 2019 12:24:26 -0500
-X-MC-Unique: rLIk8wDJP16gfQOgon_8HA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 42E7E8017DF;
-        Tue, 17 Dec 2019 17:24:24 +0000 (UTC)
-Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 12510620A7;
-        Tue, 17 Dec 2019 17:24:19 +0000 (UTC)
-Subject: Re: [PATCH v3 09/13] iommu/arm-smmu-v3: Handle failure of
- arm_smmu_write_ctx_desc()
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-References: <20191209180514.272727-1-jean-philippe@linaro.org>
- <20191209180514.272727-10-jean-philippe@linaro.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <bff90d55-4f81-aa60-2341-9fb467cfdd59@redhat.com>
-Date:   Tue, 17 Dec 2019 18:24:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 17 Dec 2019 12:45:19 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35985 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727567AbfLQRpT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 12:45:19 -0500
+Received: by mail-io1-f68.google.com with SMTP id r13so1709212ioa.3
+        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 09:45:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K++e5QOhyphAxpqqtvJTK/6MhPRY4wAHe5pP45LXjzM=;
+        b=FxKV2Ad+DXwOEcA4A7bwirIMji+gxfaDm21MtuQYFag6aDszB62r6Bc3K1Cx3dfH8T
+         0oBiM0DkCTMj1QEGmpca17104EuOb0G/UKL5WwqziTeD/Hu7h0reJl9quTCbUa08Tb3o
+         opbAtbWUFmu8BCgb6kkQCTDDHhBH2AdsTJ6nY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K++e5QOhyphAxpqqtvJTK/6MhPRY4wAHe5pP45LXjzM=;
+        b=navcSMQSR+JW8sDv4BsVJDDGIUs5+aUIGgmdjdYWEbOxza6i9I1EVYULA88zLMK1Y5
+         2sNTCw7p+wiw8ZLMA5s0GEHl33wO8hGqOh0CIEsQtqqpuQYciTc1vmj9QuSCIuaUUffb
+         xM8ShCqDiMvJgHHLVoovX8V/nWvJPO4TEVztCUGIscGAbcvMBypvgZEyevozQlROGzQo
+         jhNLsvTmBtsYxo0/NAJTlmpph0DAEeQa9lX8DqGUYFMwSfhsq7KqC0FuuvqCh2fc6ecZ
+         6AZGwCPwQg37cLooQ+R/aNMSnOVNTZxpogOxe+L3TD7IprIEJ8lYPs8SvyOJ+V2H3Ll1
+         H8EA==
+X-Gm-Message-State: APjAAAUoN+9PpWYVYZChI2ePp3QcuUV+v3bajB9VBjdaKqTWJXUIyhfU
+        iQG0fc9+1MEeAj3imRY6ddYVCgOg5sU=
+X-Google-Smtp-Source: APXvYqyduK/pCkdCXX6D2sZFJ290FfcvyKdPjEWe6EQ9htVIobPhBee2A4uaA7GoN0jGgfp5eBs3rQ==
+X-Received: by 2002:a05:6638:950:: with SMTP id f16mr18021844jad.107.1576604717756;
+        Tue, 17 Dec 2019 09:45:17 -0800 (PST)
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com. [209.85.166.182])
+        by smtp.gmail.com with ESMTPSA id k26sm5267614iob.25.2019.12.17.09.45.16
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 09:45:16 -0800 (PST)
+Received: by mail-il1-f182.google.com with SMTP id x5so6102172ila.6
+        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 09:45:16 -0800 (PST)
+X-Received: by 2002:a92:911b:: with SMTP id t27mr17776689ild.142.1576604716025;
+ Tue, 17 Dec 2019 09:45:16 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191209180514.272727-10-jean-philippe@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20191217005424.226858-1-swboyd@chromium.org>
+In-Reply-To: <20191217005424.226858-1-swboyd@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 17 Dec 2019 09:45:02 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UQAgd2R=ykTCnBZuOvFFKoWu4o-3Rq=GEdrc1KKSi9cQ@mail.gmail.com>
+Message-ID: <CAD=FV=UQAgd2R=ykTCnBZuOvFFKoWu4o-3Rq=GEdrc1KKSi9cQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: tpm: Convert cr50 binding to YAML
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Rob Herring <robh@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Andrey Pronin <apronin@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jean,
+Hi,
 
-On 12/9/19 7:05 PM, Jean-Philippe Brucker wrote:
-> Second-level context descriptor tables will be allocated lazily in
-> arm_smmu_write_ctx_desc(). Help with handling allocation failure by
-> moving the CD write into arm_smmu_domain_finalise_s1().
-
-nit: would rather change the title to something like "Prepare for
-arm_smmu_write_ctx_desc() failure"
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-
-Thanks
-
-Eric
-
+On Mon, Dec 16, 2019 at 4:54 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> This allows us to validate the dt binding to the implementation. Add the
+> interrupt property too, because that's required but nobody noticed when
+> the non-YAML binding was introduced.
+>
+> Cc: Andrey Pronin <apronin@chromium.org>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  drivers/iommu/arm-smmu-v3.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index f260abadde6d..fc5119f34187 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -2301,8 +2301,15 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
->  	cfg->cd.ttbr	= pgtbl_cfg->arm_lpae_s1_cfg.ttbr[0];
->  	cfg->cd.tcr	= pgtbl_cfg->arm_lpae_s1_cfg.tcr;
->  	cfg->cd.mair	= pgtbl_cfg->arm_lpae_s1_cfg.mair;
-> +
-> +	ret = arm_smmu_write_ctx_desc(smmu_domain, 0, &cfg->cd);
-> +	if (ret)
-> +		goto out_free_tables;
-> +
->  	return 0;
->  
-> +out_free_tables:
-> +	arm_smmu_free_cd_tables(smmu_domain);
->  out_free_asid:
->  	arm_smmu_bitmap_free(smmu->asid_map, asid);
->  	return ret;
-> @@ -2569,10 +2576,6 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
->  	if (smmu_domain->stage != ARM_SMMU_DOMAIN_BYPASS)
->  		master->ats_enabled = arm_smmu_ats_supported(master);
->  
-> -	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1)
-> -		arm_smmu_write_ctx_desc(smmu_domain, 0,
-> -					&smmu_domain->s1_cfg.cd);
+>  .../bindings/security/tpm/google,cr50.txt     | 19 -------
+>  .../bindings/security/tpm/google,cr50.yaml    | 52 +++++++++++++++++++
+>  2 files changed, 52 insertions(+), 19 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+>  create mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.txt b/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+> deleted file mode 100644
+> index cd69c2efdd37..000000000000
+> --- a/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+> +++ /dev/null
+> @@ -1,19 +0,0 @@
+> -* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
 > -
->  	arm_smmu_install_ste_for_dev(master);
->  
->  	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
-> 
+> -H1 Secure Microcontroller running Cr50 firmware provides several
+> -functions, including TPM-like functionality. It communicates over
+> -SPI using the FIFO protocol described in the PTP Spec, section 6.
+> -
+> -Required properties:
+> -- compatible: Should be "google,cr50".
+> -- spi-max-frequency: Maximum SPI frequency.
+> -
+> -Example:
+> -
+> -&spi0 {
+> -       tpm@0 {
+> -               compatible = "google,cr50";
+> -               reg = <0>;
+> -               spi-max-frequency = <800000>;
+> -       };
+> -};
+> diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml b/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
+> new file mode 100644
+> index 000000000000..8bfff0e757af
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
+> @@ -0,0 +1,52 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/tpm/google,cr50.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: H1 Secure Microcontroller with Cr50 Firmware on SPI Bus
+> +
+> +description:
+> +  H1 Secure Microcontroller running Cr50 firmware provides several functions,
+> +  including TPM-like functionality. It communicates over SPI using the FIFO
+> +  protocol described in the PTP Spec, section 6.
+> +
+> +maintainers:
+> +  - Andrey Pronin <apronin@chromium.org>
 
+Does Andrey agree to be the maintainer here?
+
+
+I'd like to see if we can delete most of what you've written here.
+Specifically in "spi/spi-controller.yaml" you can see a really nice
+description of what SPI devices ought to look like.  Can we just
+reference that?  To do that I _think_ we actually need to break that
+description into a separate YAML file and then include it from there
+and here.  Maybe someone on the list can confirm or we can just post
+some patches for that?
+
+
+> +properties:
+> +  compatible:
+> +    const: google,cr50
+> +
+> +  reg:
+> +    maxItems: 1
+
+I'm curious if you need a minItems here.  ...and if we don't somehow
+include it, should we follow 'spi-controller.yaml' and treat this like
+an int?
+
+
+> +  spi-max-frequency:
+> +    maxItems: 1
+
+This is not an array type.  Why do you need maxItems?  Should treat
+like an int?  Do we have any ranges of sane values we can put here?
+I'm sure that there is a maximum that Cr50 can talk at.
+
+
+> +  interrupts:
+> +    maxItems: 1
+
+I'm curious if you need a minItems here.
+
+...also: should we be trying to validate the flags at all?  AKA that
+Cr50 expects a rising edge interrupt?
+
+
+> +required:
+> +  - compatible
+> +  - reg
+> +  - spi-max-frequency
+
+Technically spi-max-frequency might not be required (the SPI binding
+doesn't list it as such), but I guess it was before...
+
+
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    spi {
+> +      #address-cells = <0x1>;
+> +      #size-cells = <0x0>;
+> +      tpm@0 {
+> +          compatible = "google,cr50";
+> +          reg = <0>;
+> +          spi-max-frequency = <800000>;
+> +          interrupts = <50 IRQ_TYPE_EDGE_RISING>;
+
+I would tend to prefer seeing the interrupt parent in the example
+since it's pretty likely that the GPIO controller isn't the overall
+parent and likely that our interrupt is a GPIO.  I'm not sure the
+convention, though.
+
+
+> +      };
+> +    };
+> +
+> +...
+
+Is the "..." important here?  I guess this is only if you're trying to
+jam two bindings into the same file, but I could be wrong.  I guess a
+bunch of arm ones owned by Rob have it at the end (though the example
+doesn't?), so maybe it's right?
