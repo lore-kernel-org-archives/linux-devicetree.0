@@ -2,127 +2,153 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3592EC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 22:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767E4C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 22:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07350205ED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 22:52:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Hl2Y8hGQ"
+	by mail.kernel.org (Postfix) with ESMTP id 5552A218AC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 22:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725886AbfLQWwB (ORCPT
+        id S1725975AbfLQWxf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 17:52:01 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38996 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfLQWwA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 17:52:00 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 77so15571184oty.6
-        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 14:51:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bgj6GFgx8VThztK4Gu3+BzeDA/NznFDz/pSO11pXhjg=;
-        b=Hl2Y8hGQ+0lrr5/hQEqaf+/gbjNx2pyfaxEIghm4QuR3Hf/M3f7QA527VoNpOkY9fo
-         4kv2KeUY085H4H0ll6Hu44CmNk5yWK9kQ6RaeIBkekZDmxTOGIMcXisQhW3IJk9o47XG
-         1ieCEaj2RGguaP15oOZ0sl1hYp4v9vJyI3dgw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bgj6GFgx8VThztK4Gu3+BzeDA/NznFDz/pSO11pXhjg=;
-        b=Ldr9NTjuc9GdgVbluD988baMf04z6PCOvwxJ+0yVwVGN6ekaVoD9DXCr0CjPHvGf93
-         Aoo3lVfEM3T3DGtNwbKw3DH7BkiCMjIylviYH7gdp8hmMfifBoQDRMQDVGUjyDqXYCFz
-         tTFX+IwHh0tNtboOduCMrJB6pv03RPR1ulzAxPmIRQRaU7sf4zLKdYP1ZxGlwy2fSDnC
-         MGcE4oBSQgMdPcUmLpeuc2sQYDyqYN9wQINTNR/4vHUaeHpZiR1xiinssEmJ7KKzhX8f
-         FNyXg463FjqIfdGu6/pSBRD+wP9oZpMc5bABa2g2DycvafcRM9uAWB8Wu6LF1HWxKHXY
-         5Feg==
-X-Gm-Message-State: APjAAAXyaks/WXBD5DKWow2Xme/0YMnkuCjjGWOcJggtQu75EBVAuX9T
-        Ner1X2taolCJAekQdzYXaW1fpyr4I1+vf7T1TH4MRQ==
-X-Google-Smtp-Source: APXvYqx+R5wFvTkSiUO0y6MYgmRmL50Cn5ck4GRTtls7IdGYcsg8QD5heARFegvJ+0lTn3tHAVoDp2cT7t3IUAtvC8o=
-X-Received: by 2002:a05:6830:1415:: with SMTP id v21mr41903346otp.188.1576623118725;
- Tue, 17 Dec 2019 14:51:58 -0800 (PST)
+        Tue, 17 Dec 2019 17:53:35 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:48316 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbfLQWxe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 17:53:34 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ihLiZ-0001PQ-VJ; Tue, 17 Dec 2019 23:53:27 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     dri-devel@lists.freedesktop.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        thierry.reding@gmail.com, sam@ravnborg.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: display: panel: Add binding document for Xinpeng XPP055C272
+Date:   Tue, 17 Dec 2019 23:53:27 +0100
+Message-ID: <2955240.JQMRd6mdPG@diego>
+In-Reply-To: <20191217160122.psxwdd6accn7soed@gilmour.lan>
+References: <20191217140703.23867-1-heiko@sntech.de> <1823876.MjdJyG0ANN@diego> <20191217160122.psxwdd6accn7soed@gilmour.lan>
 MIME-Version: 1.0
-References: <f947d821-8e67-dcc7-d753-5b04d099792d@gmail.com>
-In-Reply-To: <f947d821-8e67-dcc7-d753-5b04d099792d@gmail.com>
-From:   Yuqing Shen <yuqing.shen@broadcom.com>
-Date:   Tue, 17 Dec 2019 15:51:47 -0700
-Message-ID: <CALqpNLdtWdrQKyH2DEcnW6vq_pwAEcsve=id0sysddNTE6hVpg@mail.gmail.com>
-Subject: Re: [PATCH v7 1/2] dt-bindings: edac: arm-dmc520.txt
-To:     Shiping Ji <shiping.linux@gmail.com>
-Cc:     bp@alien8.de, james.morse@arm.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mchehab@kernel.org,
-        linux-edac@vger.kernel.org, sashal@kernel.org,
-        Hang Li <hangl@microsoft.com>, lewan@microsoft.com,
-        ruizhao@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>, shji@microsoft.com,
-        wangglei@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Shiping
-This commit looks good to me.
-Yuqing
+Hi Maxime,
 
-On Sun, Nov 17, 2019 at 7:10 PM Shiping Ji <shiping.linux@gmail.com> wrote:
->
-> This is the device tree bindings for new EDAC driver dmc520_edac.c.
->
-> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
-> Reviewed-by: James Morse <james.morse@arm.com>
-> Reviewed-by: Yuqing Shen <yuqing.shen@broadcom.com>
->  Tested-by: Yuqing Shen <yuqing.shen@broadcom.com>
-> ---
->      Changes in v7:
->          - Added arm prefix to the interrupt-config property
->
-> ---
->  .../devicetree/bindings/edac/arm-dmc520.txt   | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
->
-> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
-> new file mode 100644
-> index 000000000000..476cf8b76f2a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
-> @@ -0,0 +1,26 @@
-> +* ARM DMC-520 EDAC node
-> +
-> +Required properties:
-> +- compatible  : "brcm,dmc-520", "arm,dmc-520".
-> +- reg   : Address range of the DMC-520 registers.
-> +- interrupts  : DMC-520 interrupt numbers. The example below specifies
-> +     two interrupt lines for dram_ecc_errc_int and
-> +     dram_ecc_errd_int.
-> +- arm,interrupt-config : This is an array of interrupt masks. For each of the
-> +     above interrupt line, add one interrupt mask element to
-> +     it. That is, there is a 1:1 mapping from each interrupt
-> +     line to an interrupt mask. An interrupt mask can represent
-> +     multiple interrupts being enabled. Refer to interrupt_control
-> +     register in DMC-520 TRM for interrupt mapping. In the example
-> +     below, the interrupt configuration enables dram_ecc_errc_int
-> +     and dram_ecc_errd_int. And each interrupt is connected to
-> +     a separate interrupt line.
-> +
-> +Example:
-> +
-> +dmc0: dmc@200000 {
-> + compatible = "brcm,dmc-520", "arm,dmc-520";
-> + reg = <0x200000 0x80000>;
-> + interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
-> + arm,interrupt-config = <0x4>, <0x8>;
-> +};
-> --
-> 2.17.1
->
+Am Dienstag, 17. Dezember 2019, 17:01:22 CET schrieb Maxime Ripard:
+> On Tue, Dec 17, 2019 at 04:08:49PM +0100, Heiko Stübner wrote:
+> > Am Dienstag, 17. Dezember 2019, 15:24:46 CET schrieb Maxime Ripard:
+> > > Hi,
+> > >
+> > > On Tue, Dec 17, 2019 at 03:07:02PM +0100, Heiko Stuebner wrote:
+> > > > From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> > > >
+> > > > The XPP055C272 is a 5.5" 720x1280 DSI display.
+> > > >
+> > > > changes in v2:
+> > > > - add size info into binding title (Sam)
+> > > > - add more required properties (Sam)
+> > > >
+> > > > Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> > > > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> > > > ---
+> > > >  .../display/panel/xinpeng,xpp055c272.yaml     | 48 +++++++++++++++++++
+> > > >  1 file changed, 48 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml b/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..2d0fc97d735c
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
+> > > > @@ -0,0 +1,48 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/display/panel/sony,acx424akp.yaml#
+> > >
+> > > The ID doesn't match the file name.
+> > >
+> > > Did you run dt_bindings_check?
+> >
+> > Thanks for that pointer ... I did run dtbs_check on the binding and was
+> > sooo happy to not find any panel errors in the pages of other dt errors
+> > but till now didn't realize that there's also a dtbinding_check.
+> 
+> dt_bindings_check is a sanity check on the bindings
+> themselves. dtbs_check is using those bindings to check the device
+> trees.
+> 
+> dtbs_check used to have a dependency on dt_bindings_check, but it got
+> removed recently.
+> 
+> Maxime
+> 
+> >
+> > Will keep that in mind for future bindings  - and of course fix things
+> > in the next version.
+> >
+> >
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Xinpeng XPP055C272 5.5in 720x1280 DSI panel
+> > > > +
+> > > > +maintainers:
+> > > > +  - Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> > > > +
+> > > > +allOf:
+> > > > +  - $ref: panel-common.yaml#
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: xinpeng,xpp055c272
+> > > > +  reg: true
+> > > > +  backlight: true
+> > > > +  port: true
+> > >
+> > > What is the port supposed to be doing?
+> >
+> > Hooking the display up to the dsi controller. But you're right,
+> > works without port as well with these single-dsi displays.
+> >
+> > I just remember needing one for the Gru-Scarlet display that needed
+> > to connect to two dsi controllers.
+> >
+> > So I'll drop the port node here and from my board devicetree.
+> 
+> It's not really what I meant though :)
+> 
+> If it's needed then we should definitely have it, but we should
+> document our expectations here: is it the input port ? output? in
+> which case do we want to use it since it's optional, etc.
+
+The port was actually unnecessary. As far as I understand dsi stuff,
+the common case is the panel as subnode of the dsi controller and
+the controller then finding the display itself automatically.
+
+If you look at
+	"drm/bridge/synopsys: dsi: use mipi_dsi_device to find panel or bridge" [0]
+I just sent, you'll see that the dw-mipi-dsi used drm_of_find_panel_or_bridge
+to find its panel/bridge thus requiring port connections in all cases where
+it had the dsi-device available already, so wouldn't need to use ports for it.
+
+Or I'm completely wrong and port usage is better, we'll see :-D
+
+
+Heiko
+
+
+[0] https://patchwork.freedesktop.org/patch/345666/
+
+
