@@ -2,136 +2,513 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C35C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 05:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7395AC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 05:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C135621775
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 05:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA612072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 05:51:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XIJYdB/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfLQFv2 (ORCPT
+        id S1727869AbfLQFv2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Tue, 17 Dec 2019 00:51:28 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29460 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727953AbfLQFv1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 00:51:27 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBH5l4Q5003684;
-        Tue, 17 Dec 2019 00:51:10 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwe3p6bjw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Dec 2019 00:51:10 -0500
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBH5mPt1006822;
-        Tue, 17 Dec 2019 00:51:10 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwe3p6bjh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Dec 2019 00:51:10 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBH5nstw007646;
-        Tue, 17 Dec 2019 05:51:08 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma03wdc.us.ibm.com with ESMTP id 2wvqc69mgk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Dec 2019 05:51:08 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBH5p8rU34865530
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Dec 2019 05:51:08 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 799B6B2066;
-        Tue, 17 Dec 2019 05:51:08 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF59AB2065;
-        Tue, 17 Dec 2019 05:51:07 +0000 (GMT)
-Received: from [9.70.82.143] (unknown [9.70.82.143])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Dec 2019 05:51:07 +0000 (GMT)
-Subject: [PATCH V3 02/13] powerpc/vas: Define nx_fault_stamp in
- coprocessor_request_block
-From:   Haren Myneni <haren@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     hch@infradead.org, devicetree@vger.kernel.org, mikey@neuling.org,
-        herbert@gondor.apana.org.au, npiggin@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, sukadev@linux.vnet.ibm.com
-In-Reply-To: <1576561080.16318.6531.camel@hbabu-laptop>
-References: <1576561080.16318.6531.camel@hbabu-laptop>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Mon, 16 Dec 2019 21:49:15 -0800
-Message-ID: <1576561755.16318.6533.camel@hbabu-laptop>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.28.3 
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-17_01:2019-12-16,2019-12-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 mlxlogscore=770 impostorscore=0 phishscore=0
- adultscore=0 bulkscore=0 clxscore=1015 suspectscore=1 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912170052
+Received: from mailout3.samsung.com ([203.254.224.33]:31636 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727868AbfLQFvQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 00:51:16 -0500
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191217055112epoutp0384e9f15fbb8eaf89c6878cd6b6e2d675~hEqt8IGZM0703307033epoutp03s
+        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 05:51:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191217055112epoutp0384e9f15fbb8eaf89c6878cd6b6e2d675~hEqt8IGZM0703307033epoutp03s
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576561872;
+        bh=eX43I+qUocUpECabhW06ewcSAYF+DXL//QhEerlGfJ0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XIJYdB/PZKu2hX93mgGv19r1D+NLLpBh1QO4eIa6gavIqvRW5T5rw6z4kvBsUA0LJ
+         Gk6rqcyNJo9P622HkmhA1cMoJwaAETcsaFNwEOFUONBxX37F8y3NQSVLjUhCx/98Kx
+         aiWG2eBD02jq9aZjvjaYOn9c+J+zwBfG5meQABL8=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191217055111epcas1p284005aa7c5a889f3a27912cf18147b55~hEqtcedDZ1712517125epcas1p2G;
+        Tue, 17 Dec 2019 05:51:11 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.156]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 47cS1R3ktKzMqYkm; Tue, 17 Dec
+        2019 05:51:07 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AC.0D.51241.BCC68FD5; Tue, 17 Dec 2019 14:51:07 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20191217055106epcas1p4c0f65bec74e53b38d95e984e146bf8b6~hEqou9Q4M2005920059epcas1p4q;
+        Tue, 17 Dec 2019 05:51:06 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191217055106epsmtrp1596427e0e0cc9d280a8cb4b2f0601480~hEqouDwvN3020530205epsmtrp1D;
+        Tue, 17 Dec 2019 05:51:06 +0000 (GMT)
+X-AuditID: b6c32a39-14bff7000001c829-4c-5df86ccb8eb8
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        50.8E.06569.ACC68FD5; Tue, 17 Dec 2019 14:51:06 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191217055106epsmtip159a0b039960390042e3c2e02ec18ad38~hEqodSZ_D0093400934epsmtip1i;
+        Tue, 17 Dec 2019 05:51:06 +0000 (GMT)
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+To:     krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        heiko@sntech.de, leonard.crestez@nxp.com, lukasz.luba@arm.com
+Cc:     a.swigon@samsung.com, m.szyprowski@samsung.com, kgene@kernel.org,
+        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH 8/9] ARM: dts: exynos: Replace deprecated property for
+ Exynos bus and DMC
+Date:   Tue, 17 Dec 2019 14:57:37 +0900
+Message-Id: <20191217055738.28445-9-cw00.choi@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191217055738.28445-1-cw00.choi@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFJsWRmVeSWpSXmKPExsWy7bCmvu7pnB+xBnPmyFrcn9fKaHH9y3NW
+        i/lHzrFa/H/0mtWi//FrZovz5zewW5xtesNuseLuR1aLTY+vsVpc3jWHzeJz7xFGi08P/jNb
+        zDi/j8liYVMLu8XaI3fZLZZev8hkcbtxBZtF694j7A5CHmvmrWH02LSqk81j85J6j43vdjB5
+        9G1Zxeix/do8Zo/Pm+QC2KOybTJSE1NSixRS85LzUzLz0m2VvIPjneNNzQwMdQ0tLcyVFPIS
+        c1NtlVx8AnTdMnOA3lBSKEvMKQUKBSQWFyvp29kU5ZeWpCpk5BeX2CqlFqTkFFgW6BUn5haX
+        5qXrJefnWhkaGBiZAhUmZGfsnTaXteCaR8W3czdYGxhvW3UxcnJICJhIXF79hrGLkYtDSGAH
+        o8S3KTuZQBJCAp8YJdofGkIkvjFK9Py9yAzT8fnHIXaIxF5Gieldd1ghnC+MEpufzmMBqWIT
+        0JLY/+IGG4gtIlAnMf/wDiaQImaBm0wSey7dYgVJCAtES6yZ+ZsRxGYRUJX4vaoJLM4rYCWx
+        pmkSI8Q6eYnVGw6AreYUsJZ4vu012CAJgf9sEn1nTkMVuUisXNfNBGELS7w6voUdwpaSeNnf
+        BmVXS6w8eYQNormDUWLL/gusEAljif1LJwM1cwCdpymxfpc+RFhRYufvuWDzmQX4JN597WEF
+        KZEQ4JXoaBOCKFGWuPzgLtRaSYnF7Z1sELaHxKxZs6Dh2Mco8WuH/gRGuVkICxYwMq5iFEst
+        KM5NTy02LDBFjrJNjOB0qmW5g/HYOZ9DjAIcjEo8vBIl32OFWBPLiitzDzFKcDArifDuUAAK
+        8aYkVlalFuXHF5XmpBYfYjQFhuREZinR5Hxgqs8riTc0NTI2NrYwMTQzNTRUEufl+HExVkgg
+        PbEkNTs1tSC1CKaPiYNTqoExiGPDhC6N/MMKfWGVcrxruabNPl065crW7orGCc97Ll/3td3T
+        8Vv//cJ4PinDW7sd30qrMFVYbpjnct5x+1XGtbeiZ21c7cDOJe6o0p5UIf7F/52DxU3uKpWX
+        0c7zd9Z6qV59M19wqV3OaTsztWdhCzZ3VIburTWUUGXXmbi71va+xMO3E24qsRRnJBpqMRcV
+        JwIAmnE7Db0DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsWy7bCSnO6pnB+xBrc+K1ncn9fKaHH9y3NW
+        i/lHzrFa/H/0mtWi//FrZovz5zewW5xtesNuseLuR1aLTY+vsVpc3jWHzeJz7xFGi08P/jNb
+        zDi/j8liYVMLu8XaI3fZLZZev8hkcbtxBZtF694j7A5CHmvmrWH02LSqk81j85J6j43vdjB5
+        9G1Zxeix/do8Zo/Pm+QC2KO4bFJSczLLUov07RK4MvZOm8tacM2j4tu5G6wNjLetuhg5OSQE
+        TCQ+/zjE3sXIxSEksJtR4uu+eSwQCUmJaRePMncxcgDZwhKHDxdD1HxilPh4diY7SA2bgJbE
+        /hc32EBsEYE2Rokl3+VAbGaB50wS+7rMQGxhgUiJS6f/gNWzCKhK/F7VxApi8wpYSaxpmsQI
+        sUteYvWGA8wgNqeAtcTzba+ZQGwhoJqfU5+xTmDkW8DIsIpRMrWgODc9t9iwwCgvtVyvODG3
+        uDQvXS85P3cTIzjotbR2MJ44EX+IUYCDUYmHV6Lke6wQa2JZcWXuIUYJDmYlEd4dCkAh3pTE
+        yqrUovz4otKc1OJDjNIcLErivPL5xyKFBNITS1KzU1MLUotgskwcnFINjNOX+Sxn/seWedUs
+        P5iTt/JAdrOLhrak+87omZvF8gx63DqjKqPu7myUeV7zYsnnqb8aePu1Y08FSL44ekvqZqAf
+        94GXv65Lvr7wlF++LOJn1cFy4R2ZPjd2ShzQeNYwLaHO9YfyNfck89mTiydW1xzalTSjrfr8
+        xU/RPWc+e6yZnizakNB0SomlOCPRUIu5qDgRAIb3PhJ2AgAA
+X-CMS-MailID: 20191217055106epcas1p4c0f65bec74e53b38d95e984e146bf8b6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191217055106epcas1p4c0f65bec74e53b38d95e984e146bf8b6
+References: <20191217055738.28445-1-cw00.choi@samsung.com>
+        <CGME20191217055106epcas1p4c0f65bec74e53b38d95e984e146bf8b6@epcas1p4.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Replace the property related to devfreq and devfreq-event device
+to remove the deprecated property name.
+- Replace 'devfreq' with 'exynos,parent-bus' property
+  for getting the parent devfreq device of exynos-bus.
+- Replace 'devfreq-events' with 'exynos,ppmu-device' property
+  for getting the devfreq-event device to monitor bus utilization.
 
-Kernel sets fault address and status in CRB for NX page fault on user
-space address after processing page fault. User space gets the signal
-and handles the fault mentioned in CRB by bringing the page in to
-memory and send NX request again.
-
-Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Signed-off-by: Haren Myneni <haren@us.ibm.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 ---
- arch/powerpc/include/asm/icswx.h | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos3250-monk.dts         |  2 +-
+ arch/arm/boot/dts/exynos3250-rinato.dts       | 18 +++++-----
+ .../boot/dts/exynos4412-itop-scp-core.dtsi    | 16 ++++-----
+ arch/arm/boot/dts/exynos4412-midas.dtsi       | 18 +++++-----
+ .../boot/dts/exynos4412-odroid-common.dtsi    | 18 +++++-----
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 34 +++++++++----------
+ 6 files changed, 53 insertions(+), 53 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/icswx.h b/arch/powerpc/include/asm/icswx.h
-index 9872f85..b233d1e 100644
---- a/arch/powerpc/include/asm/icswx.h
-+++ b/arch/powerpc/include/asm/icswx.h
-@@ -108,6 +108,17 @@ struct data_descriptor_entry {
- 	__be64 address;
- } __packed __aligned(DDE_ALIGN);
+diff --git a/arch/arm/boot/dts/exynos3250-monk.dts b/arch/arm/boot/dts/exynos3250-monk.dts
+index 248bd372fe70..c6b1fcd4ba97 100644
+--- a/arch/arm/boot/dts/exynos3250-monk.dts
++++ b/arch/arm/boot/dts/exynos3250-monk.dts
+@@ -158,7 +158,7 @@
+ };
  
-+/* 4.3.2 NX-stamped Fault CRB */
-+
-+#define NX_STAMP_ALIGN          (0x10)
-+
-+struct nx_fault_stamp {
-+	__be64 fault_storage_addr;
-+	__be16 reserved;
-+	__u8   flags;
-+	__u8   fault_status;
-+	__be32 pswid;
-+} __packed __aligned(NX_STAMP_ALIGN);
+ &bus_dmc {
+-	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
++	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
+ 	vdd-supply = <&buck1_reg>;
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
+index 86c26a4edfd7..7ad80354d8df 100644
+--- a/arch/arm/boot/dts/exynos3250-rinato.dts
++++ b/arch/arm/boot/dts/exynos3250-rinato.dts
+@@ -153,49 +153,49 @@
+ };
  
- /* Chapter 6.5.2 Coprocessor-Request Block (CRB) */
+ &bus_dmc {
+-	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
++	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
+ 	vdd-supply = <&buck1_reg>;
+ 	status = "okay";
+ };
  
-@@ -135,7 +146,12 @@ struct coprocessor_request_block {
+ &bus_leftbus {
+-	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
++	exynos,ppmu-device = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
+ 	vdd-supply = <&buck3_reg>;
+ 	status = "okay";
+ };
  
- 	struct coprocessor_completion_block ccb;
+ &bus_rightbus {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
  
--	u8 reserved[48];
-+	union {
-+		struct nx_fault_stamp nx;
-+		u8 reserved[16];
-+	} stamp;
-+
-+	u8 reserved[32];
+ &bus_lcd0 {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
  
- 	struct coprocessor_status_block csb;
- } __packed __aligned(CRB_ALIGN);
+ &bus_fsys {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_mcuisp {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_isp {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_peril {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_mfc {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi b/arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
+index dfceb155b3a7..e275a52eb0d3 100644
+--- a/arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
++++ b/arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
+@@ -70,44 +70,44 @@
+ };
+ 
+ &bus_dmc {
+-	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
++	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
+ 	vdd-supply = <&buck1_reg>;
+ 	status = "okay";
+ };
+ 
+ &bus_acp {
+-	devfreq = <&bus_dmc>;
++	exynos,parent-bus = <&bus_dmc>;
+ 	status = "okay";
+ };
+ 
+ &bus_c2c {
+-	devfreq = <&bus_dmc>;
++	exynos,parent-bus = <&bus_dmc>;
+ 	status = "okay";
+ };
+ 
+ &bus_leftbus {
+-	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
++	exynos,ppmu-device = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
+ 	vdd-supply = <&buck3_reg>;
+ 	status = "okay";
+ };
+ 
+ &bus_rightbus {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_fsys {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_peri {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_mfc {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/exynos4412-midas.dtsi b/arch/arm/boot/dts/exynos4412-midas.dtsi
+index 83be3a797411..1869eed05167 100644
+--- a/arch/arm/boot/dts/exynos4412-midas.dtsi
++++ b/arch/arm/boot/dts/exynos4412-midas.dtsi
+@@ -288,49 +288,49 @@
+ };
+ 
+ &bus_dmc {
+-	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
++	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
+ 	vdd-supply = <&buck1_reg>;
+ 	status = "okay";
+ };
+ 
+ &bus_acp {
+-	devfreq = <&bus_dmc>;
++	exynos,parent-bus = <&bus_dmc>;
+ 	status = "okay";
+ };
+ 
+ &bus_c2c {
+-	devfreq = <&bus_dmc>;
++	exynos,parent-bus = <&bus_dmc>;
+ 	status = "okay";
+ };
+ 
+ &bus_leftbus {
+-	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
++	exynos,ppmu-device = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
+ 	vdd-supply = <&buck3_reg>;
+ 	status = "okay";
+ };
+ 
+ &bus_rightbus {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_display {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_fsys {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_peri {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_mfc {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+index ea55f377d17c..bb5a7cbcc308 100644
+--- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
++++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+@@ -88,49 +88,49 @@
+ };
+ 
+ &bus_dmc {
+-	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
++	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
+ 	vdd-supply = <&buck1_reg>;
+ 	status = "okay";
+ };
+ 
+ &bus_acp {
+-	devfreq = <&bus_dmc>;
++	exynos,parent-bus = <&bus_dmc>;
+ 	status = "okay";
+ };
+ 
+ &bus_c2c {
+-	devfreq = <&bus_dmc>;
++	exynos,parent-bus = <&bus_dmc>;
+ 	status = "okay";
+ };
+ 
+ &bus_leftbus {
+-	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
++	exynos,ppmu-device = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
+ 	vdd-supply = <&buck3_reg>;
+ 	status = "okay";
+ };
+ 
+ &bus_rightbus {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_display {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_fsys {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_peri {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+ &bus_mfc {
+-	devfreq = <&bus_leftbus>;
++	exynos,parent-bus = <&bus_leftbus>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+index 059fa32d1a8f..8510e2787a9c 100644
+--- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+@@ -134,7 +134,7 @@
+ };
+ 
+ &bus_wcore {
+-	devfreq-events = <&nocp_mem0_0>, <&nocp_mem0_1>,
++	exynos,ppmu-device = <&nocp_mem0_0>, <&nocp_mem0_1>,
+ 			<&nocp_mem1_0>, <&nocp_mem1_1>;
+ 	vdd-supply = <&buck3_reg>;
+ 	exynos,saturation-ratio = <100>;
+@@ -142,77 +142,77 @@
+ };
+ 
+ &bus_noc {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+ &bus_fsys_apb {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+ &bus_fsys {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+ &bus_fsys2 {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+ &bus_mfc {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+ &bus_gen {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+ &bus_peri {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+ &bus_g2d {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+ &bus_g2d_acp {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+ &bus_jpeg {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+ &bus_jpeg_apb {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+ &bus_disp1_fimd {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+ &bus_disp1 {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+ &bus_gscl_scaler {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+ &bus_mscl {
+-	devfreq = <&bus_wcore>;
++	exynos,parent-bus = <&bus_wcore>;
+ 	status = "okay";
+ };
+ 
+@@ -225,7 +225,7 @@
+ };
+ 
+ &dmc {
+-	devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
++	exynos,ppmu-device = <&ppmu_event3_dmc0_0>, <&ppmu_event3_dmc0_1>,
+ 			<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+ 	device-handle = <&samsung_K3QF2F20DB>;
+ 	operating-points-v2 = <&dmc_opp_table>;
 -- 
-1.8.3.1
-
-
+2.17.1
 
