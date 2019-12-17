@@ -2,115 +2,86 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B70C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 06:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C872C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 06:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 396AB21739
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 06:33:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CWsihZkN"
+	by mail.kernel.org (Postfix) with ESMTP id F1CD421739
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 06:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbfLQGdT (ORCPT
+        id S1726609AbfLQGkN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 01:33:19 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45832 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfLQGdT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 01:33:19 -0500
-Received: by mail-io1-f67.google.com with SMTP id i11so6644065ioi.12
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 22:33:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j8qQazTeYPQdPoVme7emjZiiaLOYVtOqidRg7IlHaTY=;
-        b=CWsihZkNVNtPq/SN/NKHowVe5xKMAb4uOARJ+QvJIEf7JBDokni7tWRn9l9BumYAsn
-         ixCxWlJo0IpiZ/5CjEdOds3HI9rdCTvBKSWoHXOmoQNpHIo2DNEzNKU/HWo+7mzq75tG
-         fIvD9gSKO/dEvrlQ047bpMw3pWUXF2S6q6vWo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j8qQazTeYPQdPoVme7emjZiiaLOYVtOqidRg7IlHaTY=;
-        b=DBJGzlK0rBH96MJ7mHVFPY6wan1zfLIN+5fQeZa0FHNZgg9MX+JnvoiUafRcUABCPv
-         omqOrAuEJeVTnMm2fykeWedfLZ2dWYwExsoeKxXOG2ruOZasIT7Lcmjq4W7JPdKhPdZk
-         jpbBTwrINlJ14hzFGQoSwl54XXGAETnURYfENlWV5tBiIEKTvClbzRN4YQIPOq2c0lWF
-         EZG/4JBRjdoGjyj+3H9lkzJNgtT3FxP6V27PByMtyIladm83yPbGV97HjMQyvbz1rWfR
-         QYx6uRcGRzKmfrh2HYkkfcUBF98DNYgehQ+G8tLGDT4MavRyf7ID4a1Sxfe0nMDTBP8y
-         ZepQ==
-X-Gm-Message-State: APjAAAU8ZzgbN5MsBXF7cXAEFGouTxDmB5rU5DCzg5wEsNprNF+gFzWW
-        myh1GpbUoAUq2jBYHHoCOLZaHAgGpaU=
-X-Google-Smtp-Source: APXvYqyn2ulpfTVj2KtWhCewkz0rdlwjXS+2uxM737n2t62iTz1xIlslsPNspUp4lWLZmzdr4TTzjg==
-X-Received: by 2002:a05:6638:2b6:: with SMTP id d22mr2017582jaq.59.1576564398751;
-        Mon, 16 Dec 2019 22:33:18 -0800 (PST)
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com. [209.85.166.171])
-        by smtp.gmail.com with ESMTPSA id q9sm4892479iod.79.2019.12.16.22.33.18
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 22:33:18 -0800 (PST)
-Received: by mail-il1-f171.google.com with SMTP id c4so3070418ilo.7
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 22:33:18 -0800 (PST)
-X-Received: by 2002:a92:da44:: with SMTP id p4mr4502564ilq.168.1576564061839;
- Mon, 16 Dec 2019 22:27:41 -0800 (PST)
+        Tue, 17 Dec 2019 01:40:13 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48571 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfLQGkN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 01:40:13 -0500
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ih6Wg-0006mX-3m; Tue, 17 Dec 2019 07:40:10 +0100
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ih6Wf-0001MH-Gn; Tue, 17 Dec 2019 07:40:09 +0100
+Date:   Tue, 17 Dec 2019 07:40:09 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [RESEND PATCH v3 3/3] pinctrl: da9062: add driver support
+Message-ID: <20191217064009.GB31182@pengutronix.de>
+References: <20191212160413.15232-1-m.felsch@pengutronix.de>
+ <20191212160413.15232-4-m.felsch@pengutronix.de>
+ <AM5PR1001MB0994E2D72A95E4AC4796F80A80550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191216074734.ctjxx6rqtj6mt2dw@pengutronix.de>
+ <CACRpkdbZ67jp64oMS0Q=aDuo18i_fT22grST0qSVjk_9EV=4hw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191212193544.80640-1-dianders@chromium.org> <20191212113540.2.Ibad7d3b0bea02957e89047942c61cc6c0aa61715@changeid>
- <5df2b77e.1c69fb81.15e56.4084@mx.google.com>
-In-Reply-To: <5df2b77e.1c69fb81.15e56.4084@mx.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 16 Dec 2019 22:27:28 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=WoNV26QYgADR1u-Fs00mitV9hYwHxt-rCP1agpEoa=pw@mail.gmail.com>
-Message-ID: <CAD=FV=WoNV26QYgADR1u-Fs00mitV9hYwHxt-rCP1agpEoa=pw@mail.gmail.com>
-Subject: Re: [PATCH 2/7] arm64: dts: qcom: sc7180: Rename gic-its node to msi-controller
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kiran Gunda <kgunda@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbZ67jp64oMS0Q=aDuo18i_fT22grST0qSVjk_9EV=4hw@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:38:49 up 109 days, 18:52, 74 users,  load average: 0.32, 0.49,
+ 0.49
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On 19-12-16 11:33, Linus Walleij wrote:
+> On Mon, Dec 16, 2019 at 8:47 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> 
+> > Nice catch, Linus is it okay to add this as follow up patch? The current
+> > patch isn't wrong without the 'PIN_CONFIG_BIAS_DISABLE' case.
+> 
+> No strong opinion on that as long as the result is running code.
 
-On Thu, Dec 12, 2019 at 1:56 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Douglas Anderson (2019-12-12 11:35:38)
-> > Running `make dtbs_check` yells:
-> >
-> >   arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml: interrupt-controller@17a00000: gic-its@17a40000: False schema
-> >
-> > From "arm,gic-v3.yaml" we can grok that this is explained by the
-> > comment "msi-controller is preferred".  Switch to the preferred name
-> > so that dtbs_check stops yelling.
-> >
-> > Fixes: 90db71e48070 ("arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc")
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
->
-> This problem is also in sdm845 and probably others.
+Of course the code is running and was tested. Just didn't covered this
+use case.
 
-Patch to fix sdm845 is at:
+Adam is this okay with you?
 
-https://lore.kernel.org/r/20191216222021.1.I684f124a05a1c3f0b113c8d06d5f9da5d69b801e@changeid
+Regards,
+  Marco
 
-That was the only instance I could find from a grep of arm64/qcom.
-
--Doug
+> Yours,
+> Linus Walleij
+> 
