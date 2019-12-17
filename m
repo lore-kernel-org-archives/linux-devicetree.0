@@ -2,127 +2,101 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B80CC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 16:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0F7C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 17:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F93021D7D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 16:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0936C2467E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 17:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pddLphAJ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ldwTZP2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbfLQQtS (ORCPT
+        id S1726859AbfLQREZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:49:18 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33549 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727906AbfLQQtS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 11:49:18 -0500
-Received: by mail-pf1-f193.google.com with SMTP id z16so999222pfk.0;
-        Tue, 17 Dec 2019 08:49:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=c+0J8KwQQeRuaM0/21WPpczUIiJr6lCFaHz9z1AF2s8=;
-        b=pddLphAJBcIIBLslZ9h+JTPt+SkfjTZow7WNG6X0ADMQlld/RUiJRaX/dFqIFJzcBZ
-         PAt5dkaRQU7a6U4DXtwGaQj1+ZQe/iGOqIAPnMPARVhBHj+indcmx/nogWjqZ7AOcTur
-         f1KfICXa4euYmnyYQejDMPn5TMVYdNEloJr4Gn/QAK9TYjo6D0wr42S4/Dxkr7P+T4RE
-         fQjdBKNPXo75EwtssWlAFucTRmVhKnsTTq8W1PHzO7BbfVUNM+BTbC1DMNhHuMAgF35K
-         3UcbY5MEFET98lX4CU5O4OznYXIyadF+TU/EVFHVXM0Jyh4AQ7Q8H7YRlbH71B5Yc/jf
-         RtqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=c+0J8KwQQeRuaM0/21WPpczUIiJr6lCFaHz9z1AF2s8=;
-        b=sGx18dytXjfzuuXowWagOLcPXBdbR+QQ0bfixmWZvaJohxPGTawvOfiEIC72UIxHNM
-         48SiFpfEecwspRffYYFFJbcUM2NuC+9+95LZEOHCzC1uWqiDnX3YcXyavYjjFPQixmoP
-         7TRb5oER35BJzrabs808uKiPI1vrwlZnSpQURBMVzA8cEx4jGV1oNUoZAwvUoW8vdYMY
-         4R4CxOpIhHadp1sgeuPHXC950eyh5f2dWa9uyFTh1HL3nYNo5PnivQGCPCnwoXdWD1Ej
-         KdHN8qlRgg4m9vWf63djsqHXj1qvW58tfDDWsLD5600duPAOVoOXJ9a1NO3/B5DW03gL
-         fVGA==
-X-Gm-Message-State: APjAAAVbzpXgoTSX9yhTxJsXJJbEkueHJrRy69hzsMfxyRA/ukQdlfS4
-        LbPPSb+DDd2oBrn0zMnV3SE=
-X-Google-Smtp-Source: APXvYqwPNblKB6jCfvdk0xiso7sa19pFtP/TOqPYUHZ3/chICtapazOZN0Xb+HEvHL9ZrXBwXTJoXg==
-X-Received: by 2002:a62:7541:: with SMTP id q62mr23158444pfc.256.1576601357697;
-        Tue, 17 Dec 2019 08:49:17 -0800 (PST)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id z19sm26356872pfn.49.2019.12.17.08.49.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 08:49:17 -0800 (PST)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org
-Cc:     andy.gross@linaro.org, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] clk: qcom: Add missing msm8998 gcc_bimc_gfx_clk
-Date:   Tue, 17 Dec 2019 08:49:13 -0800
-Message-Id: <20191217164913.4783-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 17 Dec 2019 12:04:25 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49488 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfLQREZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 12:04:25 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHH4G98059831;
+        Tue, 17 Dec 2019 11:04:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576602256;
+        bh=c5aNDJdm202QVz/ei0pWBemlPhzJ5FDI2ojZ/hTof/o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ldwTZP2cZVtzeLKa5fQRMrGwhb6feqtwReIfenzbmy3hJD6PwxgDbf31IH1a4daAm
+         MPmbDOcKX/gwjUb9z4sivTnO/cRw+dujLC658BTWxRMaaADnTVDiAD1ISgcHEBlWH+
+         3syxJb63H6OrRvq5fCJTWNlXewsYk9jJJCa7G7qo=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHH4F5f018559;
+        Tue, 17 Dec 2019 11:04:15 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 11:04:15 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 11:04:15 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHH4F6D060212;
+        Tue, 17 Dec 2019 11:04:15 -0600
+Subject: Re: [PATCH 2/2] leds: lm3692x: Allow to set ovp and brigthness mode
+To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>
+CC:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <cover.1576499103.git.agx@sigxcpu.org>
+ <9c87a17aefbf758d58f199f7046114ee7505a1fa.1576499103.git.agx@sigxcpu.org>
+ <3d66b07d-b4c5-43e6-4378-d63cc84b8d43@ti.com>
+ <20191217154059.GA3929@bogon.m.sigxcpu.org>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <1c233937-5d99-bd9d-b8ac-290fca8305d5@ti.com>
+Date:   Tue, 17 Dec 2019 11:01:49 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191217154059.GA3929@bogon.m.sigxcpu.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-gcc_bimc_gfx_clk is a required clock for booting the GPU and GPU SMMU.
+Guido
 
-Fixes: 4807c71cc688 (arm64: dts: Add msm8998 SoC and MTP board support)
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/clk/qcom/gcc-msm8998.c               | 14 ++++++++++++++
- include/dt-bindings/clock/qcom,gcc-msm8998.h |  1 +
- 2 files changed, 15 insertions(+)
+On 12/17/19 9:40 AM, Guido Günther wrote:
+> Hi Dan,
+> On Tue, Dec 17, 2019 at 06:53:45AM -0600, Dan Murphy wrote:
+>> Guido
+>>
+>> On 12/16/19 6:28 AM, Guido Günther wrote:
+>>> Overvoltage protection and brightness mode are currently hardcoded
+>>> as disabled in the driver. Make these configurable via DT.
+>> Can we split these up to two separate patch series?
+> Sure, should the binding doc updates be split as well?
 
-diff --git a/drivers/clk/qcom/gcc-msm8998.c b/drivers/clk/qcom/gcc-msm8998.c
-index cf31b5d03270..df1d7056436c 100644
---- a/drivers/clk/qcom/gcc-msm8998.c
-+++ b/drivers/clk/qcom/gcc-msm8998.c
-@@ -1996,6 +1996,19 @@ static struct clk_branch gcc_gp3_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_bimc_gfx_clk = {
-+	.halt_reg = 0x46040,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x46040,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_bimc_gfx_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_gpu_bimc_gfx_clk = {
- 	.halt_reg = 0x71010,
- 	.halt_check = BRANCH_HALT,
-@@ -2810,6 +2823,7 @@ static struct clk_regmap *gcc_msm8998_clocks[] = {
- 	[GCC_GP1_CLK] = &gcc_gp1_clk.clkr,
- 	[GCC_GP2_CLK] = &gcc_gp2_clk.clkr,
- 	[GCC_GP3_CLK] = &gcc_gp3_clk.clkr,
-+	[GCC_BIMC_GFX_CLK] = &gcc_bimc_gfx_clk.clkr,
- 	[GCC_GPU_BIMC_GFX_CLK] = &gcc_gpu_bimc_gfx_clk.clkr,
- 	[GCC_GPU_BIMC_GFX_SRC_CLK] = &gcc_gpu_bimc_gfx_src_clk.clkr,
- 	[GCC_GPU_CFG_AHB_CLK] = &gcc_gpu_cfg_ahb_clk.clkr,
-diff --git a/include/dt-bindings/clock/qcom,gcc-msm8998.h b/include/dt-bindings/clock/qcom,gcc-msm8998.h
-index de1d8a1f5966..63e02dc32a0b 100644
---- a/include/dt-bindings/clock/qcom,gcc-msm8998.h
-+++ b/include/dt-bindings/clock/qcom,gcc-msm8998.h
-@@ -182,6 +182,7 @@
- #define GCC_MSS_GPLL0_DIV_CLK_SRC				173
- #define GCC_MSS_SNOC_AXI_CLK					174
- #define GCC_MSS_MNOC_BIMC_AXI_CLK				175
-+#define GCC_BIMC_GFX_CLK					176
- 
- #define PCIE_0_GDSC						0
- #define UFS_GDSC						1
--- 
-2.17.1
+Yes.
+
+<snip>
+>> extra debug statement
+> They're not extra but meant to ease debugging the driver long therm but
+> i can drop these if that's not wanted. The rest makes a lot of sense.
+> Thanks a lot for having a look so promptly!
+
+Yes please remove those we don't need extra noise in the log.
+
+If someone wants to debug this then they can add the statements themselves
+
+Dan
 
