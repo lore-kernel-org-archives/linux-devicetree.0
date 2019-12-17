@@ -2,138 +2,128 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA483C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 00:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D542CC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 00:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4D22072D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 00:19:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jVLsVcL+"
+	by mail.kernel.org (Postfix) with ESMTP id B046A2072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 00:19:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbfLQATj (ORCPT
+        id S1727604AbfLQATo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:19:39 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44007 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727317AbfLQATi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Dec 2019 19:19:38 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k197so4638785pga.10
-        for <devicetree@vger.kernel.org>; Mon, 16 Dec 2019 16:19:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kSRMyRpGvN3O6oC2QK8ni8ozT+CBlR4DXsbN2O0RLUk=;
-        b=jVLsVcL+tDd05VMnMqEWC/RH3jR0TeoTexR/4Jp2JrT+81wvxprdmBRSkjDT0WzRj0
-         FzbLjkNZd3Rn4xsNLWoTL1V6hMYsyhe8B4EiSzpCNe15QVAkXANDcy9S92SWBOJJnf92
-         vQsJn/wV4V4vE061RMljzuH4Nmq8rsIDc3HLVZwjKoEU+9tEivqbB4gPHd9iQXjsyZ/7
-         XsRLQhIeddKOKft6IbM9eT1jU4E+WOBAOE0ATVQzW8TgBy6XqNzk2p8UIlgXi//DO6wb
-         u3D9XdBLWkWpqS6xcgzVtZIvL0RVVVNdBlzeamMC/kzKBNxSDTJVLWQ6nXxCjR2VqJjA
-         N/bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kSRMyRpGvN3O6oC2QK8ni8ozT+CBlR4DXsbN2O0RLUk=;
-        b=rXPmWkQmqhR59pOFrFAgjPlSw4IWlzuSPljtw77A6ytdvEqtmaXZ7FGI8y87Ntuqp+
-         GiqW2zXHJl22oh5v6m6I4f0KNsromFyS7tEZPpmdPZ5e5FPRXDe9CTTHdIUqTqJtQOIs
-         oTAvRZ5d2Z7DxdIzEgLUWookpyQzeiWzJR/fgAJ7MZH3wP3dLwA5HRZBcmXo1l7gbzMI
-         Ul4VMau8WWbzc8aJSe7GPcKzfkHXV0Fk67wN6Kg5X82t+q7BXToLAXZ2orExaz6DbyWT
-         +tKRo6HbN1LSadJDFiOfNZ2qIqP4c5IIYpgAiUpMieRRT5hIbfvlghuUYlwY8Sq4CAF1
-         t2kw==
-X-Gm-Message-State: APjAAAU3tkmIfIJ5PYi5yIp9PSuLRdz7hezRFWv8zKxm6G8v2gGOzi09
-        BT7olM3IHJ+uZdKJwWbOZ3W2Tg==
-X-Google-Smtp-Source: APXvYqzGZHGPHjW1ue1HrbvnzOPYObbsplWRfg2TIsKHZ0VTBST/SlVCZt6iaZb64cWODmXhxvakmQ==
-X-Received: by 2002:a62:2ad5:: with SMTP id q204mr7061373pfq.33.1576541977891;
-        Mon, 16 Dec 2019 16:19:37 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d38sm21816480pgd.59.2019.12.16.16.19.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 16:19:36 -0800 (PST)
-Date:   Mon, 16 Dec 2019 16:19:34 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     jhugo@codeaurora.org, robh+dt@kernel.org, jonathan@marek.ca,
-        ohad@wizery.com, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        agross@kernel.org
-Subject: Re: [PATCH 16/16] arm64: dts: qcom: sm8150: Add ADSP, CDSP, MPSS and
- SLPI remoteprocs
-Message-ID: <20191217001934.GT3143381@builder>
-References: <20191118214250.14002-1-sibis@codeaurora.org>
- <0101016e80794e1d-7c9ce825-6ba5-479e-bc98-f5d56ce6933f-000000@us-west-2.amazonses.com>
+        Mon, 16 Dec 2019 19:19:44 -0500
+Received: from muru.com ([72.249.23.125]:48596 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726794AbfLQATo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Dec 2019 19:19:44 -0500
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 2B888810D;
+        Tue, 17 Dec 2019 00:20:22 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH 00/14] Remove legacy sdma code for dt booting omaps
+Date:   Mon, 16 Dec 2019 16:19:11 -0800
+Message-Id: <20191217001925.44558-1-tony@atomide.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016e80794e1d-7c9ce825-6ba5-479e-bc98-f5d56ce6933f-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 18 Nov 13:44 PST 2019, Sibi Sankar wrote:
+Hi all,
 
-> Add ADSP, CDSP, MPSS and SLPI device tree nodes for SM8150 SoC.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sm8150-mtp.dts |  12 +++
->  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 135 ++++++++++++++++++++++++
->  2 files changed, 147 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-> index aa5de42fcae45..4d9bb8145dbba 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-> @@ -348,6 +348,18 @@
->  	};
->  };
->  
-> +&adsp_pas {
-> +	status = "okay";
-> +};
-> +
-> +&cdsp_pas {
-> +	status = "okay";
-> +};
-> +
-> +&slpi_pas {
-> +	status = "okay";
-> +};
-> +
->  &qupv3_id_1 {
->  	status = "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> index 98a96fd1d6117..58f4ce95bd966 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> @@ -5,6 +5,8 @@
->   */
->  
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/qcom,gcc-sm8150.h>
-> +#include <dt-bindings/power/qcom-aoss-qmp.h>
->  #include <dt-bindings/power/qcom-rpmpd.h>
->  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->  #include <dt-bindings/clock/qcom,rpmh.h>
-> @@ -278,6 +280,139 @@
->  		};
->  	};
->  
-> +	adsp_pas: remoteproc-adsp {
+This series finally removes the legacy sdma code for omaps booting with
+devicetree. The legacy sdma code is still left for omap1, but makes
+further work a bit easier.
 
-Please move this in under /soc, name it "remoteproc" and slap a reg = <>
-on it. Even if qcom,*-pas doesn't use the information I find it look
-better in the DT and it becomes more consistent between PAS and non-PAS
-targets.
+We do the removal of legacy sdma code with the following steps:
+
+- Prepare for platform data removal by probing sdma with device tree
+  data for the interconnect target module
+
+- Drop unused code and legacy interrupt code for omap2 and later
+
+- Update dmaengine driver to use device tree match data and add
+  missing features
+
+- Allocate logical channels directly in the dmaengine driver
+
+- Drop legacy platform init and data
+
+The patches are against v5.5-rc1, and need the following fixes:
+
+2c81f0f6d3f5 ("bus: ti-sysc: Fix iterating over clocks")
+e709ed70d122 ("bus: ti-sysc: Fix missing reset delay handling")
+93c60483b5fe ("bus: ti-sysc: Fix missing force mstandby quirk handling")
+90bdfa0b05e3 ("ARM: OMAP2+: Fix ti_sysc_find_one_clockdomain to check for to_clk_hw_omap")
+
+To make testing easier, I've also pushed out a testing branch at [0][1].
 
 Regards,
-Bjorn
+
+Tony
+
+
+[0] git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git omap-for-v5.6/sdma-testing
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v5.6/sdma-testing
+
+
+Tony Lindgren (14):
+  ARM: dts: Add generic compatible for omap sdma instances
+  ARM: dts: Configure interconnect target module for omap2 sdma
+  ARM: dts: Configure interconnect target module for omap3 sdma
+  ARM: OMAP2+: Drop unused sdma functions
+  ARM: OMAP2+: Drop sdma interrupt handling for mach-omap2
+  ARM: OMAP2+: Configure sdma capabilities directly
+  ARM: OMAP2+: Configure dma_plat_info directly and drop dma_dev_attr
+  dmaengine: ti: omap-dma: Add device tree match data and use it for
+    cpu_pm
+  dmaengine: ti: omap-dma: Configure global priority register directly
+  dmaengine: ti: omap-dma: Pass sdma auxdata to driver and use it
+  dmaengine: ti: omap-dma: Allocate channels directly
+  dmaengine: ti: omap-dma: Use cpu notifier to block idle for omap2
+  ARM: OMAP2+: Drop legacy init for sdma
+  ARM: OMAP2+: Drop legacy platform data for sdma
+
+ arch/arm/boot/dts/dra7-l4.dtsi                |   3 +-
+ arch/arm/boot/dts/omap2.dtsi                  |  43 +-
+ arch/arm/boot/dts/omap2430.dtsi               |   4 +
+ arch/arm/boot/dts/omap3-n900.dts              |   5 +
+ arch/arm/boot/dts/omap3.dtsi                  |  46 +-
+ arch/arm/boot/dts/omap36xx.dtsi               |   4 +
+ arch/arm/boot/dts/omap4-l4.dtsi               |   3 +-
+ arch/arm/boot/dts/omap5-l4.dtsi               |   3 +-
+ arch/arm/mach-omap2/common.h                  |   3 +
+ arch/arm/mach-omap2/dma.c                     | 119 +----
+ arch/arm/mach-omap2/omap_device.c             | 170 -------
+ arch/arm/mach-omap2/omap_device.h             |   4 -
+ arch/arm/mach-omap2/omap_hwmod_2420_data.c    |  34 --
+ arch/arm/mach-omap2/omap_hwmod_2430_data.c    |  34 --
+ .../mach-omap2/omap_hwmod_2xxx_ipblock_data.c |  18 -
+ arch/arm/mach-omap2/omap_hwmod_3xxx_data.c    |  61 ---
+ arch/arm/mach-omap2/omap_hwmod_44xx_data.c    |  69 ---
+ arch/arm/mach-omap2/omap_hwmod_54xx_data.c    |  61 ---
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c     |  61 ---
+ arch/arm/mach-omap2/omap_hwmod_common_data.h  |   1 -
+ arch/arm/mach-omap2/pdata-quirks.c            |   1 +
+ arch/arm/mach-omap2/pm24xx.c                  |  22 +-
+ arch/arm/mach-omap2/pm34xx.c                  |   5 -
+ arch/arm/plat-omap/dma.c                      | 471 +-----------------
+ drivers/dma/ti/omap-dma.c                     | 288 ++++++++++-
+ include/linux/omap-dma.h                      |  18 -
+ 26 files changed, 391 insertions(+), 1160 deletions(-)
+
+-- 
+2.24.1
