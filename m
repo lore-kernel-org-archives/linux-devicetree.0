@@ -2,144 +2,91 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25984C2D0D2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFF4C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDBFB21775
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:17:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p1fpn1wo"
+	by mail.kernel.org (Postfix) with ESMTP id 02C9B2176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 12:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbfLQMRB (ORCPT
+        id S1727487AbfLQMUA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:17:01 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36233 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfLQMRB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 07:17:01 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so2910250wma.1
-        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 04:16:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uvkcmzWWNz9+vvDl5lj9jSidtFGQN7sTpNsfRZj6iOc=;
-        b=p1fpn1woHPX0xistfLZ2FIMnrxMkOwvBnFdqRaqUrUsBTdUGddlqaXaKDbVYA58saV
-         zl4sFWG3x9FKyHmdSfAgHZmnMHwYTOqFKWgXE7npDUO++TaANqqJR5flItwqSW3BVsk+
-         NIb49F2bDT/Zgn7DjYYgTL90X/8JXIZE3IfTXG7sgltuT/ypstmEu8TPxCZ7ol/6jaYm
-         /pubBnp85lw3s0/l89Ume7f/ZrdoXf6EKE7r1fHAzSaDdTm/A8qV5wbjuYb27WgyUSNo
-         yXR3QckcV4o3dfR3LiTUfkvLb93D0WfClTushCMklkeaH2kulnoQlxiJhckYwASPk+6+
-         C2Cg==
+        Tue, 17 Dec 2019 07:20:00 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41292 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726933AbfLQMUA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 07:20:00 -0500
+Received: by mail-ot1-f66.google.com with SMTP id r27so13524842otc.8;
+        Tue, 17 Dec 2019 04:19:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uvkcmzWWNz9+vvDl5lj9jSidtFGQN7sTpNsfRZj6iOc=;
-        b=UIv7NhSKWafAGgbhdgSskZJ2npYSFplZqWlFSL+UOOLBxjn5HFGELBlnElFs0Yak1G
-         NKmmsXLRstrgiB37cNHYE518D42ovkVME3d2gSGGTrgm9VGc5dk06aD0QBO7lkSwMKuU
-         rB1aZDCO2QeUtrsG/iFhDFVIDzhxOtW2Scu8AND3af3RznttaDewinCSlACLDNrx+fD+
-         oykzI5dJCl8ryL1J8A+Z3wgiJetR2cDULyd8MlIhVWayAq5fbpVt8+K0zqpT81bcESrK
-         bmXjkjT/RPK1QbOzcKvWk9x6DdwdNNieoqLgNH1tevst2uRDG5S0IeeZr/a3JxeQx7Ss
-         mkhg==
-X-Gm-Message-State: APjAAAVkeS+Oifd/0cPvfkt5GqR2QorSgVP7sMMRu9kq6OuEWmnqWDKM
-        HAUgOPoYTSgF0LP9UZdO2sL89Q==
-X-Google-Smtp-Source: APXvYqy0Y+iBxxIqL2VTzMcQpKB1C0uzPqguqaHBeN0RjsFa/n7TfiB/n92Yqnot3rrj/anxAG05Wg==
-X-Received: by 2002:a1c:7508:: with SMTP id o8mr5038469wmc.74.1576585019035;
-        Tue, 17 Dec 2019 04:16:59 -0800 (PST)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id f1sm25087270wru.6.2019.12.17.04.16.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 04:16:58 -0800 (PST)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     robh@kernel.org, broonie@kernel.org, lee.jones@linaro.org,
-        linus.walleij@linaro.org
-Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        linux-gpio@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v5 00/11] ASoC: Add support to WCD9340/WCD9341 codec
-Date:   Tue, 17 Dec 2019 12:16:31 +0000
-Message-Id: <20191217121642.28534-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0U15JxqTWohe4GLhfwPMbmA9156s0i20ALyMdM/t43M=;
+        b=PZfd/VIm/ZEAeC1vT5QTgtadoAH3VARjb5G1wyCu899S00I3QqpUmuUew7wtxuMEzs
+         KGqcgQXwhCgTbt9Sqi/mUQkhfRLwjewTaL7Bsq7AfePOsznz6A8Hqm/l2sm7EVmEy/d4
+         WdyCzeevQHnt9kO1lGe8X2oZNzsE+UHK6LULMFlALKSmk+CxpzGhNjJPclTpBILG1j8I
+         KdUSBTwYQl+R4hOwMKXF2yMLN/96SW5G5T8Nyft3VaMwhfN12bE1PAgMM87ZBcRfMBFJ
+         4SHHYg8EBBSCxIhu75hBs/PaEOiCU62SuPIi98gzwEffIhyToX4+KKAd3YXCnZ+6/j3a
+         bpuQ==
+X-Gm-Message-State: APjAAAXxlggpS+MZ7RDHPkb2aX28/n3ET8H6BZG7kHqOJ/vawBHczPo6
+        E+tPuw+4Us2IKbPcEdV37SN+AiN8Hx+XH49Z68ZcWg==
+X-Google-Smtp-Source: APXvYqwkdCwHahSuzYZ+Y81qKjRN63MiahQdOtK75IEiAYkiWMv9UXYUX0fqo59WGI8tjtR25Z+A2O3DlS1vzMShzgI=
+X-Received: by 2002:a9d:2073:: with SMTP id n106mr37395735ota.145.1576585199481;
+ Tue, 17 Dec 2019 04:19:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191216124740.16647-1-geert+renesas@glider.be> <20191217120116.GA11814@vmlxhi-102.adit-jv.com>
+In-Reply-To: <20191217120116.GA11814@vmlxhi-102.adit-jv.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 17 Dec 2019 13:19:48 +0100
+Message-ID: <CAMuHMdXoKN0X+pukArrnfeSs9vaF20sW2zaf=v7UX2WD6w4G-w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] arm64: dts: renesas: r8a77961: Add more device nodes
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patchset adds support to Qualcomm WCD9340/WCD9341 Codec which
-is a standalone Hi-Fi audio codec IC.
-This codec supports both I2S/I2C and SLIMbus audio interfaces.
-On slimbus interface it supports two data lanes; 16 Tx ports
-and 8 Rx ports. It has Five DACs and seven dedicated interpolators,
-Multibutton headset control (MBHC), Active noise cancellation,
-Sidetone paths, MAD (mic activity detection) and codec processing engine.
-It supports Class-H differential earpiece out and stereo single
-ended headphones out.
+Hi Eugeniu,
 
-This codec also has integrated SoundWire controller.
-Patchset for this is already sent for review at
-https://patchwork.kernel.org/cover/11185769/
-    
-This patchset has been tested on SDM845 based DragonBoard DB845c and
-Lenovo Yoga C630 laptop with WSA881x smart speaker amplifiers via
-soundwire and 4 DMICs.
+On Tue, Dec 17, 2019 at 1:01 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> On Mon, Dec 16, 2019 at 01:47:34PM +0100, Geert Uytterhoeven wrote:
+> > This patch series broadens support for the R-Car M3-W+ (aka R-Car M3-W
+> > ES3.0) Soc (R8A77961), by adding more device nodes to its DT source
+> > file, up to what can be tested reasonably using remote access.
+> > For your convenience, it is available in the topic/r8a77961-v2 branch of
+> > my renesas-drivers git repository at
+> > git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
+>
+> I only see below r8a77961.dtsi commit on topic/r8a77961-v2:
+> 8e4529f2ac8293 ("arm64: dts: renesas: Add Renesas R8A77961 SoC support")
 
-gpio controller patch does not have any link dependency, it can go by its own.
+Oops.
 
-Most of the code in this driver is rework of Qualcomm downstream drivers
-used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
+> It looks like the patches are from one of below branches?
+>  - topic/r8a77961-extra-v2
 
-Thanks,
-srini
+Yes, that's the right branch.
+Sorry for the confusion.
 
-Changes since v4:
- - updated microvolt bindings as suggested by Rob.
- - slimbus optional property patch already applied.
+Gr{oetje,eeting}s,
 
-Srinivas Kandagatla (11):
-  ASoC: dt-bindings: add dt bindings for WCD9340/WCD9341 audio codec
-  mfd: wcd934x: add support to wcd9340/wcd9341 codec
-  ASoC: wcd934x: add support to wcd9340/wcd9341 codec
-  ASoC: wcd934x: add basic controls
-  ASoC: wcd934x: add playback dapm widgets
-  ASoC: wcd934x: add capture dapm widgets
-  ASoC: wcd934x: add audio routings
-  dt-bindings: gpio: wcd934x: Add bindings for gpio
-  gpio: wcd934x: Add support to wcd934x gpio controller
-  ASoC: qcom: dt-bindings: Add compatible for DB845c and Lenovo Yoga
-  ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
-
- .../bindings/gpio/qcom,wcd934x-gpio.yaml      |   47 +
- .../devicetree/bindings/sound/qcom,sdm845.txt |    5 +-
- .../bindings/sound/qcom,wcd934x.yaml          |  175 +
- drivers/gpio/Kconfig                          |    8 +
- drivers/gpio/Makefile                         |    1 +
- drivers/gpio/gpio-wcd934x.c                   |  104 +
- drivers/mfd/Kconfig                           |   12 +
- drivers/mfd/Makefile                          |    1 +
- drivers/mfd/wcd934x.c                         |  306 +
- include/linux/mfd/wcd934x/registers.h         |  531 ++
- include/linux/mfd/wcd934x/wcd934x.h           |   31 +
- sound/soc/codecs/Kconfig                      |   10 +
- sound/soc/codecs/Makefile                     |    2 +
- sound/soc/codecs/wcd934x.c                    | 5084 +++++++++++++++++
- sound/soc/qcom/sdm845.c                       |   86 +-
- 15 files changed, 6401 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
- create mode 100644 drivers/gpio/gpio-wcd934x.c
- create mode 100644 drivers/mfd/wcd934x.c
- create mode 100644 include/linux/mfd/wcd934x/registers.h
- create mode 100644 include/linux/mfd/wcd934x/wcd934x.h
- create mode 100644 sound/soc/codecs/wcd934x.c
+                        Geert
 
 -- 
-2.21.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
