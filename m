@@ -2,170 +2,178 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FC1C2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AB4C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62C124655
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB74421D7D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 14:28:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nDOQqhZN"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="hzl3RxcC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Pj8zWa8S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbfLQOZl (ORCPT
+        id S1728903AbfLQO2Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:25:41 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54859 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729023AbfLQOZk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 09:25:40 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b19so3115469wmj.4
-        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 06:25:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=6kERw8dQIBACWsW0c+lQf/JA1vmIIx6c9Yg7JLLE81M=;
-        b=nDOQqhZNRhoqSIT9ygYhf6sYksvjQo/V0MI0iG8xAI89/NE0iO63AgxOdrYKa917lh
-         cV57WmnloRdU8ZjuMMbUdWOmp2MgBXI2WEQ5WqGnLOoJOFyKMPsabxDfUcaNKPAPeiM2
-         zv4czVKjcJqiWovFGXwRRlP2dVy0h+1BS1p9/h4xdRTva3rVoO1B1OcPZ/XgmnA+sJ40
-         vWKeXt+JEwXo0VccppBW2PHy+gJw6MXFYRlbIzyrMoKTbuZ7A7Y74SobzBvgiX6bUQpV
-         WikCepIxqMQ9K/Ngfgj9jIUxHUgZNtMRIlArBYGinPF/qsIGu7SOJYhQd1ZXTxJwZQUR
-         5tkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=6kERw8dQIBACWsW0c+lQf/JA1vmIIx6c9Yg7JLLE81M=;
-        b=n5K+Cy6O568lMk47+cYDMDr3gwGwSgFJa19q02KA0J9joHg4lfFsio1FVpUpO7m2jc
-         KabyuAFH4wiEAmn7q8kCtfgPYIgAmHc/0tcmstTR7AuXnM335OUJ9YlTrCW+X5azvnuU
-         6su1Jjbj4vpLKk0Jf/EYi6UFTe+sOLHqWk3rY0EJipWJmiMez4rEC+8KCMRmgA99hwKr
-         vS4gc6pJE1lDNslML3k6xAmRAi92BfKf1ACN6c+iD8MSgN5s2cMgGhnGL5X2f3+7AWgL
-         J3U0u815pv2wn1yZ63MY7CXMFiDO6mhwe7L+McAEz3pJi+gh7gJFzz9sRb2POHzk6/Im
-         FM/A==
-X-Gm-Message-State: APjAAAUPNK6BGpcNsm4jf6B45XwbD+K7NV/PWC998wOFS+6nl+O/md3R
-        EXqse3b3r9dB0ipyaUw3Mr27rg==
-X-Google-Smtp-Source: APXvYqxwCwi38Wr5D9A/L2wvMeZPSaKLDoI2uWPVSQnU9lhUcxlxXv46EcbtmUS5uruundfigIgz8w==
-X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr5654182wml.138.1576592738272;
-        Tue, 17 Dec 2019 06:25:38 -0800 (PST)
-Received: from dell ([2.27.35.132])
-        by smtp.gmail.com with ESMTPSA id s65sm3189680wmf.48.2019.12.17.06.25.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 06:25:37 -0800 (PST)
-Date:   Tue, 17 Dec 2019 14:25:37 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>
-Subject: Re: [PATCH v6 05/15] mfd: bd71828: Support ROHM BD71828 PMIC - core
-Message-ID: <20191217142537.GN18955@dell>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <252de5646fedfec7c575269843a47091fe199c79.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <20191216164641.GC18955@dell>
- <5593db6b3328c0a1a7069d839f5c777b4b3822b6.camel@fi.rohmeurope.com>
- <20191217135430.GM18955@dell>
- <20191217140810.GD3489463@kroah.com>
+        Tue, 17 Dec 2019 09:28:25 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:47027 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728801AbfLQO2Z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:28:25 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 07CD61EAE;
+        Tue, 17 Dec 2019 09:28:24 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 17 Dec 2019 09:28:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=o7MJ2oxooSAZLrE4IgKBFIHl/Fq
+        uvlsScI7dDq2S0Lo=; b=hzl3RxcCTOf/6vakmast5z/ssSN6fGEGQslELZEROQ3
+        Frk7iXOG9tka5Q9WYrFjC/s8fkuSuROpKxvkLx9TkuD5AA15EFHmVBNUFH4nC7KO
+        czKIYqDJ2IfAm2CD5mEzM2hw0F9A35p63gDQUDV7MC+ms9U9Ja13sXsvttjKpy0G
+        mpcZ/WgegUv4YSjDtIcpHYFwCUyqWvprtkA/bOCzwqx4fh0VGv3Dwdir50dq2ScV
+        kvntqKv26XwNpqLNCm+TJ+ZsfdrKqv2ZJd3q7B4+vFXuBRb3jsgzFbuQdJFmv5je
+        +dCwtpPwEmYgBLmiRxUZemO1gqL1JcREZyFU8/Kevrw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=o7MJ2o
+        xooSAZLrE4IgKBFIHl/FquvlsScI7dDq2S0Lo=; b=Pj8zWa8SuQBOs6JWhrGdUr
+        w5dAZH6vBwr25rTvG16U+YHnDjv6UhrVdGT7wvlHKzLbuZHb41bwqZMlxBw1sbQO
+        KqIZrUUfSJC53mtKc85UqL3vw3YLIP9qFEFMgTHiTJKgCtbu+guYOiTyKBMUq3PE
+        Tpo4ZrxZ1YwrbTomSpOx+jfMJ9slBwWc3nfl+OQdar6R8ZdqgMsbxkry+rLjNTer
+        1Iax9QpBMSlGZq/KKF6cUC81qSIrvlWH4nQKjMkiSEZTqe9N15FjvQ7LJAp+nwyL
+        CxZYQZZnLzGVRQh8VE/3P431BVGieKHdTEfT08sdqmJPtxLbWecRYPuNU6YklynQ
+        ==
+X-ME-Sender: <xms:B-b4XaxYogkGZ-VkhbmZAG8ZW-NeQdkGcAS8s1TZJWAEIkLrLEMZrQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtjedgieegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggv
+    rhhnohdrthgvtghhnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:B-b4XXUAC8RJFDB70axFrRUjezaNbOEDUp4OeYRUgBeVlokkhlNd3g>
+    <xmx:B-b4XfQkfHMZglJ4EjBq084hYFss1JXRAvMRoQ_r3bCpqSiYZXp04w>
+    <xmx:B-b4XeM52bBJz35B3keMx4xLX-ahcscnJRrJlGeUlMda_qbJwUo1Qw>
+    <xmx:COb4XYoVYHxDAt4SzjQwApM83lGLo5BlzAgc4Dj9NSlurRM0FrE-Nw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 922EA80066;
+        Tue, 17 Dec 2019 09:28:22 -0500 (EST)
+Date:   Tue, 17 Dec 2019 15:28:21 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        drinkcat@chromium.org, Jitao Shi <jitao.shi@mediatek.com>,
+        Ulrich Hecht <uli@fpond.eu>, David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
+        matthias.bgg@gmail.com, Collabora Kernel ML <kernel@collabora.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v21 1/2] Documentation: bridge: Add documentation for
+ ps8640 DT properties
+Message-ID: <20191217142821.xitumpvfg52heb4t@gilmour.lan>
+References: <20191216135834.27775-1-enric.balletbo@collabora.com>
+ <20191216135834.27775-2-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191217140810.GD3489463@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191216135834.27775-2-enric.balletbo@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 17 Dec 2019, gregkh@linuxfoundation.org wrote:
-> On Tue, Dec 17, 2019 at 01:54:30PM +0000, Lee Jones wrote:
-> > On Tue, 17 Dec 2019, Vaittinen, Matti wrote:
-> > > On Mon, 2019-12-16 at 16:46 +0000, Lee Jones wrote:
-> > > > On Wed, 11 Dec 2019, Matti Vaittinen wrote:
-> > > > 
-> > > > > BD71828GW is a single-chip power management IC for battery-powered
-> > > > > portable
-> > > > > devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA
-> > > > > single-cell linear charger. Also included is a Coulomb counter, a
-> > > > > real-time
-> > > > > clock (RTC), 3 GPO/regulator control pins, HALL input and a 32.768
-> > > > > kHz
-> > > > > clock gate.
-> > > > > 
-> > > > > Add MFD core driver providing interrupt controller facilities and
-> > > > > i2c
-> > > > > access to sub device drivers.
-> > > > > 
-> > > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > > > ---
-> > > > > 
-> > > > > Changes since v5:
-> > > > > - No changes
-> > > > > 
-> > > > >  drivers/mfd/Kconfig              |  15 ++
-> > > > >  drivers/mfd/Makefile             |   2 +-
-> > > > >  drivers/mfd/rohm-bd71828.c       | 319 +++++++++++++++++++++++
-> > > > >  include/linux/mfd/rohm-bd71828.h | 425
-> > > > > +++++++++++++++++++++++++++++++
-> > > > >  include/linux/mfd/rohm-generic.h |   1 +
-> > > > >  5 files changed, 761 insertions(+), 1 deletion(-)
-> > > > >  create mode 100644 drivers/mfd/rohm-bd71828.c
-> > > > >  create mode 100644 include/linux/mfd/rohm-bd71828.h
+On Mon, Dec 16, 2019 at 02:58:33PM +0100, Enric Balletbo i Serra wrote:
+> From: Jitao Shi <jitao.shi@mediatek.com>
+>
+> Add documentation for DT properties supported by
+> ps8640 DSI-eDP converter.
+>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Ulrich Hecht <uli@fpond.eu>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+>
+> Changes in v21: None
+> Changes in v19: None
+> Changes in v18: None
+> Changes in v17: None
+> Changes in v16: None
+> Changes in v15: None
+> Changes in v14: None
+> Changes in v13: None
+> Changes in v12: None
+> Changes in v11: None
+>
+>  .../bindings/display/bridge/ps8640.txt        | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.txt
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ps8640.txt b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
+> new file mode 100644
+> index 000000000000..7b13f92f7359
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
+> @@ -0,0 +1,44 @@
+> +ps8640-bridge bindings
+> +
+> +Required properties:
+> +	- compatible: "parade,ps8640"
+> +	- reg: first page address of the bridge.
+> +	- sleep-gpios: OF device-tree gpio specification for PD pin.
+> +	- reset-gpios: OF device-tree gpio specification for reset pin.
+> +	- vdd12-supply: OF device-tree regulator specification for 1.2V power.
+> +	- vdd33-supply: OF device-tree regulator specification for 3.3V power.
+> +	- ports: The device node can contain video interface port nodes per
+> +		 the video-interfaces bind[1]. For port@0,set the reg = <0> as
+> +		 ps8640 dsi in and port@1,set the reg = <1> as ps8640 eDP out.
+> +
+> +Optional properties:
+> +	- mode-sel-gpios: OF device-tree gpio specification for mode-sel pin.
+> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +Example:
+> +	edp-bridge@18 {
+> +		compatible = "parade,ps8640";
+> +		reg = <0x18>;
+> +		sleep-gpios = <&pio 116 GPIO_ACTIVE_LOW>;
+> +		reset-gpios = <&pio 115 GPIO_ACTIVE_LOW>;
+> +		mode-sel-gpios = <&pio 92 GPIO_ACTIVE_HIGH>;
+> +		vdd12-supply = <&ps8640_fixed_1v2>;
+> +		vdd33-supply = <&mt6397_vgp2_reg>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			port@0 {
+> +				reg = <0>;
+> +				ps8640_in: endpoint {
+> +					remote-endpoint = <&dsi0_out>;
+> +				};
+> +			};
+> +			port@1 {
+> +				reg = <1>;
+> +				ps8640_out: endpoint {
+> +					remote-endpoint = <&panel_in>;
+> +				};
+> +			};
+> +		};
+> +	};
 
-[...]
-> > 
-> > If you have this in your header:
-> > 
-> >   GPL-2.0-only
-> > 
-> > Your MODULE tags should read:
-> > 
-> > MODULE_LICENSE("GPL v2");
-> 
-> Nope, as per module.h, which is quoted here, either:
-> 	MODULE_LICENSE("GPL");
-> or:
-> 	MODULE_LICENSE("GPL v2");
-> mean the exact same thing.
+It's not really fair to ask this after the rough history of this
+patchset apparently, but bindings should be submitted in the YAML
+format now.
 
-Interesting.  I always took a non-specified version to mean:
+This wouldn't be nice to stop it from going in just because of this,
+so can you send a subsequent patch fixing this?
 
-  "... and any other future version of the licence"
-
-Educated, thanks!
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks!
+Maxime
