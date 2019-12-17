@@ -2,96 +2,108 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DA8C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 20:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B706DC2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 20:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0083A21D7D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 20:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A91B21582
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 20:38:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SWfYOp7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfLQU0r convert rfc822-to-8bit (ORCPT
+        id S1727576AbfLQUiZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:26:47 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33184 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727437AbfLQU0r (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 15:26:47 -0500
-Received: by mail-ot1-f65.google.com with SMTP id b18so6575069otp.0;
-        Tue, 17 Dec 2019 12:26:46 -0800 (PST)
+        Tue, 17 Dec 2019 15:38:25 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45991 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727972AbfLQUiZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 15:38:25 -0500
+Received: by mail-il1-f195.google.com with SMTP id p8so9533844iln.12
+        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 12:38:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Bf4DW07ux663sZ7zB+kziR4YNNMjqy9A2bO2qaVQs7c=;
+        b=SWfYOp7v2Gbzvj0oex2xBcjnDjxUg4jBwLcNA8Lj7Y20hF7uJS8Z+wqqD+6oKZME9U
+         3p6Hh+fBlmoE58Y8glJzGHG3nV2ShrZXJI8oFnXr40yYSDt+Y/Yu67GPHgbuOPgKcRLa
+         F3Wu2wWaSCDep6oSq/EtkLx/PZFaVr9IF38mE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=f3gn/oPr6CxFsDIcXTI6Rn3BNMNX8Zy6VkrjtLwd+wI=;
-        b=pV/IB7+bw1Wuym2T70mnEnQawUKEjDgF6GyaviKPb1UvNL7GPI2055MXp1f18PmHRG
-         M8YDAuBGqScy3FSKJyWE7K8kUpIasuXAFVFRYH4PfqCOK9BvFxGMsGB5r85cxZx3fREc
-         LOrZDGIDjEH3wGYr+20NUnMjfCvNKZ239axIly3HQ0QGnXXmw7yWdAuImen1VKPvutLq
-         Jt2bTyUvBuFG/bPddVmKkZvi8Z8T/qKL2lBAYq7w7pZ7lEYN6rs+L02PC0b22QWL0Ovm
-         tkDUxv5hKS2RNYVwikuJuxkLdmxIsgReUYSJtWd5tfNVFTDH5uO6dL2TW+0K7pGcaMJt
-         6O9w==
-X-Gm-Message-State: APjAAAUQIE2Jrcz7XxvHsxREGaY3b9YQNhUSFAJrHkiZ1YAD9Skqgntl
-        mowaSVMxldJL5/jYGPySySQ/SSU33iz0HG3ct4M=
-X-Google-Smtp-Source: APXvYqw4ewhq5K6U9XDjyTAdZX/UY2Fmz1YMPelz213yxmeZOuT6WiuiWSkZYJjY12spRU3p5UX/09gTIseqYiaY7o0=
-X-Received: by 2002:a05:6830:18e2:: with SMTP id d2mr9920053otf.107.1576614406335;
- Tue, 17 Dec 2019 12:26:46 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=Bf4DW07ux663sZ7zB+kziR4YNNMjqy9A2bO2qaVQs7c=;
+        b=bcr2i6N38U8i/IfOrEm2XGQ75Pfya0OJEc/igBuRfcdSO7Nm097uI3mx+xYr9RXvu1
+         haSHny2j3S/YOCTwe5F1lVz61uvgpCKeXnoLL+ToIBaDa9iLPaApsDGrR59qqyonnOTg
+         L5GNnPUBZ56jf0euIXk7WzCXap/5VI5+kKOXZvHiXn0ipDyX/z77jd0JS3PYZ/2pwUeE
+         0EdR2l5+jPwkw06LLV52IYfieFtIzNvpTNTeOJfLMHg5INbzd+zWeHbcEBdDLm9lf48M
+         quiSgqHKdS+WszLKVjviLg7Q2GZ22Iz3xcjyfWSJBdnPS8331cXNaKPMBM1ipAdEysGF
+         OSPA==
+X-Gm-Message-State: APjAAAWHCsjHm0kkKfDKQe+CCa8kk8Hl/Y/RreyV1ku/J7IKmpZuROk2
+        6v2Fc3cvAHHZbgKlRgsPcDRnEv+PUFM=
+X-Google-Smtp-Source: APXvYqzEEkIciz8aISjAoGk9a2L2yQQMsvZggg8UyqrVThbzDdO00GteRAPfkestGWorwDd0rjguPA==
+X-Received: by 2002:a92:b744:: with SMTP id c4mr17533976ilm.34.1576615103962;
+        Tue, 17 Dec 2019 12:38:23 -0800 (PST)
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com. [209.85.166.174])
+        by smtp.gmail.com with ESMTPSA id 141sm793560ile.44.2019.12.17.12.38.22
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 12:38:22 -0800 (PST)
+Received: by mail-il1-f174.google.com with SMTP id s15so6492675iln.1
+        for <devicetree@vger.kernel.org>; Tue, 17 Dec 2019 12:38:22 -0800 (PST)
+X-Received: by 2002:a92:ca90:: with SMTP id t16mr4548825ilo.218.1576615101966;
+ Tue, 17 Dec 2019 12:38:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com> <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com> <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <590840ce-a250-2512-3d04-c2420d83f7da@cogentembedded.com> <TY1PR01MB1562B9EB96818DCA507079808A510@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <bb630141-021c-5618-f266-b98b29956fa8@cogentembedded.com>
-In-Reply-To: <bb630141-021c-5618-f266-b98b29956fa8@cogentembedded.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 17 Dec 2019 21:26:35 +0100
-Message-ID: <CAMuHMdUBEnM3SPkK4o8jSPnKMpcbx1EJs4p5PvhC1cGcWpqYAQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     Chris Brandt <Chris.Brandt@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
+References: <1572419178-5750-1-git-send-email-mkshah@codeaurora.org> <1572419178-5750-3-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <1572419178-5750-3-git-send-email-mkshah@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 17 Dec 2019 12:38:09 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=Wkte6aEy_dbNDBgAFimJd6kRPXN1v05K94qoVOaHiCzQ@mail.gmail.com>
+Message-ID: <CAD=FV=Wkte6aEy_dbNDBgAFimJd6kRPXN1v05K94qoVOaHiCzQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc7180: Add wakeup parent for TLMM
+To:     Maulik Shah <mkshah@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        LinusW <linus.walleij@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sergei,
+Bjorn / Andy,
 
-On Tue, Dec 17, 2019 at 8:30 PM Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 12/17/2019 01:21 AM, Chris Brandt wrote:
-> >>> As a side note, there is another HW block in Renesas that does the same
-> >>> thing as the SPI-BSC that they use in the MCU devices. That one they
-> >>
-> >>    MCU?
-> > Yup.
-> >   But...it has no significance to this discussion though :)
+On Wed, Oct 30, 2019 at 12:07 AM Maulik Shah <mkshah@codeaurora.org> wrote:
 >
->    But what does the acronym mean?
+> Specify wakeup parent irqchip for sc7180 TLMM.
+>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 
-Микроконтро́ллер (англ. Micro Controller Unit, MCU)
+I see that Linus W. applied patch #1:
 
-Gr{oetje,eeting}s,
+https://lore.kernel.org/r/CACRpkdY9ETQRHn7x2D2XVLZ810Uo1cPQxMBqTy5LnrORRNjTVw@mail.gmail.com
 
-                        Geert
+...so I think this patch is ready to go.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+FWIW, feel free to add:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
