@@ -2,210 +2,207 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475B2C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1032FC43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09705207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC9D920733
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 09:54:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x3rJkdm+"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="kMYECdzJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfLQJx6 (ORCPT
+        id S1726824AbfLQJyF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:53:58 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57748 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbfLQJx6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 04:53:58 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBH9rMam036474;
-        Tue, 17 Dec 2019 03:53:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576576402;
-        bh=sjC9P+5EGLfEaiANywJJax5JS2fNv1hugy8emXNG8es=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=x3rJkdm+BWQfvIbzJ1oVnL+WizxYrcddeo8dddy3pHYLbip8uDL+Qe6mOoFryyQlv
-         oihaMycMv9T6MEr0528rlcSAqsA7Gdzkh3DxqqEAVgbV3iu5yodw6d3HQ/SVlIE5D7
-         rYbqsjj0WX5gYj9PwV9DGL4l8zuTJlmaUyCClj0k=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBH9rMIa009450
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Dec 2019 03:53:22 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Dec 2019 03:53:21 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Dec 2019 03:53:21 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBH9rJn7073216;
-        Tue, 17 Dec 2019 03:53:19 -0600
-Subject: Re: [PATCH 00/14] Remove legacy sdma code for dt booting omaps
-To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
-CC:     Vinod Koul <vinod.koul@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Vinod Koul <vkoul@kernel.org>, <devicetree@vger.kernel.org>
-References: <20191217001925.44558-1-tony@atomide.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <a62d8087-afad-fd04-bfe2-79ce6ea08ffe@ti.com>
-Date:   Tue, 17 Dec 2019 11:53:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191217001925.44558-1-tony@atomide.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 17 Dec 2019 04:54:05 -0500
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.114]:48314 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726700AbfLQJyF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 04:54:05 -0500
+Received: from [85.158.142.204] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-b.eu-central-1.aws.symcld.net id 29/F0-12313-2B5A8FD5; Tue, 17 Dec 2019 09:53:54 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1WTfUwTZxzHeXrXu4NQdhQMDwx0doNMZwtsGI8
+  /lJlscmSZMWYvxIhwhRttBqVcSwozCw7GhiCWTVTE8VIpbsImrnREKmQJK4ySQBXGSxgTgTLD
+  23SIDsPL1uOK2/77/J7vN7/n+/zyewhE+iUeQrC5epbTMBkyzAdVRYpj5ZaGlaSo39cJyjZIU
+  MvVvSh1ftKFUbX2fjG16lxHqMbzbSg18bgLUE9+KRZRFWtfiyjL9LCYKmzqR6iW2jVADdq+wq
+  iHtiGEKuqw468/Rw99bsPpB6NFON1W9RtO3/mzG6Etjacxeny4HaNbzPm0s9IEaON6FP3Isv2
+  IzzGxWqPMyk0Rq9oKfxRpL0lyV0dKsVNgybsEeBOAbEBg69XgEuDj5m4U1k/ZRELRAuBq2VOM
+  L1CyB4Hf3p4V84WUvCCCiyODnsIFYMnMNcA3w0gKnuu5h/EcSCbDn6v7EN6EkJUYbO4aFvFCA
+  JkGb3YW4CWAcJtY+HgjQvAb4A/tDpxnlAyHI0NPN+0SkoFlUz8B4bJ+FJ6+N74peJMx0DowIx
+  ZeEQaXP2lCeEbIIDjmqt30QJKE5nYnIvA2ODu94fGz0FEwCoTzPbBvxOVhGayptns4DA7UlgI
+  +JyTfhi3T+Vt264pTLDAFzaVFqGB5CW505gnHWliztOhJEAFHF4o9CULhr5XFm3OD5Dco7DGP
+  4eUgsuo/qQXeA+tuLWECvwKvmuaRqs1R+EPHJRdaB9BGQCk5dbpKn8moM+TRUVHy6OjX5Pvks
+  TEK5iO5UsHmyFNZjZ5j3KKCMegUurzM1Iw0hYbVW4B7PdOy8RM3QdnSoqITBBMi2TaJb/xKkt
+  RPmZWWp2J0qmQuJ4PVdYJQgpBBSaHJrflzbDqb+4E6w73kWzIkfGWBkuPuNZdKdFomU6dOF6R
+  eICfKZ6uvIFJUk6VhQ4IkBrPbRPImVY7mWYutrzIAwkICJMDLy0vqq2W5TLX+//ocCCKALECy
+  j+/iq9bon9005w4hcod49fATPoSe+VcKOSUy+ZZMdVBBl+3X42dq7jceTI7u/yPYsm4NnGgOH
+  sC3f4bhqeH1yvZ1Y4ct/C/z2dMG44NPpzL3LyyE3o+0ftd98s1H755d1k4OXrDWV6QkVA4lER
+  tv3NCccB3dsd8Pnz+494xdf+To7dn03cvamEPinX+XS8ZbjvfdqT92zb/iulPXQH7/cp1f3mB
+  EhdeB+DBHL2dcPNRFvxVwo2M4Ob4vkQto7eSaxjnmi3NGQ/OtK3JjyoumvXcvP3QUTLeewR2J
+  HzryP3a+Y0iolBmyI7oPd8RNN8TNx45tKN+72EsdSIszDex6v/vkWkPcaq797pR1csdYzQuJF
+  +UJu6Tzz2dPiOZiZahOxUTvRjgd8w9PtudTpQQAAA==
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-20.tower-249.messagelabs.com!1576576433!573952!1
+X-Originating-IP: [104.47.5.57]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.22; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 22593 invoked from network); 17 Dec 2019 09:53:54 -0000
+Received: from mail-he1eur02lp2057.outbound.protection.outlook.com (HELO EUR02-HE1-obe.outbound.protection.outlook.com) (104.47.5.57)
+  by server-20.tower-249.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 17 Dec 2019 09:53:54 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I91VfgZEwvXXhx/1l2czFYCCmXfouonfxoPt6TW7iQBSJe83/gytchzVyVJVfmVWgFOXGp0kg5hn9bKbAN8rG5dGeV/As9MbSZYxy9ucbhrcycXw+a/f1byT6keGr/r5WcRwNcAOaSp35d1G71d3uSOizg831edG6v7AMaAdwqGP4Rw8hnNH5rCQPWiUqFWMmVrvxbeUjyk8WACBFRLwzrwxrdU2blsTmkYghybyPT/Q+YH4QOQaTVzoznLIJTbbNSHcUHMnbvc8fGpTJqZ4C54jlPIf786dUCQLTMspcBLAwXN4VXkNrbUCaMqZ3RdD3u6lMSIFjodSwSGmnlBl0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KfNb7A+2/4ZJNHnIn/aMJcXPVEwbv0Q2QZIPIo1TIOI=;
+ b=SH1AyuoRzw1HmjuBbMMAO9MTTleXLK4fXpz8xvX3IeTMkKwRGTpEgTY5yxauxdBMN5XVIa2IAwpcA3jt8itxdHPU+gxu3r6vek1kJOU21adb2xDckTTz/BcbhHoVpxsDKcnQaMOuDWs9DV9ZVSGn7SytQoo24zQ5EgRc7x7vGsaNTtCxkDXpTe/hb58XGimn7BJNMBmADF1Y0hxb+BAxJPj/t5tc0yOq1TM+xp2YWLn90eV996/372mYlsExylCOyv1xYJdsHZqU12mhKyjSETq5C1N+yIbVs0L605mnH0CtMsiSL4XoodeLofyyb1mgB8GcZzq1WfYLmtkHKNus2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KfNb7A+2/4ZJNHnIn/aMJcXPVEwbv0Q2QZIPIo1TIOI=;
+ b=kMYECdzJL4oV2TDdF6BejVst/9wP7DSNEtgwB4u81hXD0mWVORkQZ2vSdCVMolT7OclLKvk7A83GDXaSKqAkQSb6goSGMWxxT0uhchRkH/JgLvuTu8D7xRS7vi8rxJlkV1cM5uEuv9Xt8KMcS7ourKv89r5MZjA6+VcLplqSrZM=
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
+ AM5PR1001MB1122.EURPRD10.PROD.OUTLOOK.COM (10.169.148.149) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.13; Tue, 17 Dec 2019 09:53:52 +0000
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ed23:3ca0:97ef:c868]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ed23:3ca0:97ef:c868%10]) with mapi id 15.20.2538.019; Tue, 17 Dec
+ 2019 09:53:52 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+CC:     Mark Brown <broonie@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Thread-Topic: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Thread-Index: AQHVptoKIWnW5XGNx0qiesHaa7KQWaeqBMOAgAkpmQCAAfp+EIAAFOMAgAGB2oCAAAM8gIAACD8AgAXEVoCAAH+D4IABFEIAgAANuAA=
+Date:   Tue, 17 Dec 2019 09:53:52 +0000
+Message-ID: <AM5PR1001MB099460B2D291644F088707BA80500@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <20191129172537.31410-4-m.felsch@pengutronix.de>
+ <20191204134631.GT1998@sirena.org.uk>
+ <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+ <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+ <20191212161019.GF4310@sirena.org.uk>
+ <20191212162152.5uu3feacduetysq7@pengutronix.de>
+ <20191212165124.GJ4310@sirena.org.uk>
+ <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+ <AM5PR1001MB09941005A47B603805D3C53280510@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191217090034.GD31182@pengutronix.de>
+In-Reply-To: <20191217090034.GD31182@pengutronix.de>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.228]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b66e2d2a-503a-4aaa-45a7-08d782d70618
+x-ms-traffictypediagnostic: AM5PR1001MB1122:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR1001MB1122FB156EF775A126EE7247A7500@AM5PR1001MB1122.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(376002)(39860400002)(396003)(346002)(189003)(199004)(76116006)(52536014)(8676002)(26005)(66476007)(66946007)(66446008)(9686003)(478600001)(5660300002)(2906002)(64756008)(66556008)(71200400001)(55016002)(81166006)(81156014)(53546011)(86362001)(8936002)(55236004)(33656002)(186003)(316002)(7416002)(54906003)(110136005)(6506007)(4326008)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1122;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +5mpsqdmyUmUGkZmsr2STz7eBRoHDbZAYOoUeh7lJSWGgGm/kV0sA9RSbHiMEKx0nVjH+BKwXR90R3Ck/TVOoB4xvGVcNvrnXd6ndLCaMt52qgvZlSUqniQnYOdCio72wWw7OYlTVl8jUxWu4M0sKJYnz903WVLQObpJHSJlSqOS+0EMF7UEGhG+e8DY4KBZW/cuuDJqIsW5KRHHpphjBkQhVIs0rYwVMDOyZHOGE7wLRrEPaw19z/wCZJn6XI4IQVeRB8DKPVZuGGbTKuVpe+PHXYhnHOLfoF30yt94II+8x5P7/XOLduy8UahizV9pGxU0lIPoPN/OQ10q3FEWhKrJTq7/zffNODXxm3+5d/LnVzpnNY1kgdPUmv80j9MZ0JPafBskEMnZxiaCHFu+8ffcitxUBUIB7J1yPohp1i9d8221XeNqB3kZQKqs8WD9
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b66e2d2a-503a-4aaa-45a7-08d782d70618
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 09:53:52.6478
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WEPmqqguBtm5njHjaZ7awPVHovhDxv8O0tXmZ1fbexWSKwj2IGimNBWhMsUtK/+avwK0Xb+knAVGvtRHbpGWYXzsED7hg9Nwvwccjv/ofMU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1122
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tony,
+On 17 December 2019 09:01, Marco Felsch wrote:
 
-On 17/12/2019 2.19, Tony Lindgren wrote:
-> Hi all,
-> 
-> This series finally removes the legacy sdma code for omaps booting with
-> devicetree. The legacy sdma code is still left for omap1, but makes
-> further work a bit easier.
-> 
-> We do the removal of legacy sdma code with the following steps:
-> 
-> - Prepare for platform data removal by probing sdma with device tree
->   data for the interconnect target module
-> 
-> - Drop unused code and legacy interrupt code for omap2 and later
-> 
-> - Update dmaengine driver to use device tree match data and add
->   missing features
-> 
-> - Allocate logical channels directly in the dmaengine driver
-> 
-> - Drop legacy platform init and data
+> > > The enabel control signal is always available, please check [1] table
+> > > 63. There is a mux in front of the enable pin so:
+> > >
+> > >              +-------------
+> > >  Seq. |\     |   Regulator
+> > >  GPI1 | \    |
+> > >  GPI2 | | -- > Enable
+> > >  GPI3 | /    |
+> > >       |/     .
+> > >              .
+> > >              .
+> > >
+> > > Adam please correct me if this is wrong.
+> >
+> > Yes the register can always be configured regardless of the associated =
+pin
+> > configuration, but if say GPIO1 was configured as a GPO but a regulator=
+ was
+> > configured to use GPIO1 as its GPI control mechanism, the output signal=
+ from
+> > GPIO1 would be ignored, the sequencer control would not have any effect=
+ and
+> > you're simply left with manual I2C control. Really we shouldn't be gett=
+ing into
+> > that situation though. If a GPIO is to be used as a regulator control s=
+ignal
+> > then it should be marked as such and I don't think we should be able to=
+ use that
+> > pin for anything other than regulator control.
+>=20
+> I see, so we have to guarantee that the requested gpio is configured as
+> input. This can be done by:
 
-Thanks for doing this!
-First things first:
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+This is one of the reasons I thought this was better suited to being done i=
+n the
+pinctrl/pinmux side. If you configure the GPIO as for regulator control the=
+n
+the code can automatically configure the GPIO for input. That doesn't then =
+need
+to be in the regulator driver.
 
-But I was only able to test it with CPU_IDLE=n otherwise (even w/o this series)
-I got a flood of (PandaBoard-ES):
+But yes we wouldn't really want to configure a regulator to be controlled v=
+ia a
+GPI when it's configured as a GPO as it makes no sense.
 
-[  315.995819] ------------[ cut here ]------------
-[  316.000457] WARNING: CPU: 0 PID: 0 at drivers/bus/omap_l3_noc.c:141 l3_interrupt_handler+0x264/0x384
-[  316.009613] 44000000.ocp:L3 Standard Error: MASTER USBHOSTHS TARGET ABE (Read Link): At Address: 0x00000000 : Data Access in User mode during Functional access
-[  316.023925] Modules linked in:
-[  316.027008] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W         5.5.0-rc1-00016-g239582d9ad0c #1078
-[  316.036590] Hardware name: Generic OMAP4 (Flattened Device Tree)
-[  316.042633] [<c01105ac>] (unwind_backtrace) from [<c010b81c>] (show_stack+0x10/0x14)
-[  316.050415] [<c010b81c>] (show_stack) from [<c092dbf4>] (dump_stack+0xc0/0xdc)
-[  316.057678] [<c092dbf4>] (dump_stack) from [<c01366b0>] (__warn+0xa8/0xd4)
-[  316.064575] [<c01366b0>] (__warn) from [<c0136770>] (warn_slowpath_fmt+0x94/0xbc)
-[  316.072204] [<c0136770>] (warn_slowpath_fmt) from [<c04b27c4>] (l3_interrupt_handler+0x264/0x384)
-[  316.081176] [<c04b27c4>] (l3_interrupt_handler) from [<c018b420>] (__handle_irq_event_percpu+0x3c/0x128)
-[  316.090698] [<c018b420>] (__handle_irq_event_percpu) from [<c018b53c>] (handle_irq_event_percpu+0x30/0x84)
-[  316.100433] [<c018b53c>] (handle_irq_event_percpu) from [<c018b5c8>] (handle_irq_event+0x38/0x5c)
-[  316.109344] [<c018b5c8>] (handle_irq_event) from [<c018fdec>] (handle_fasteoi_irq+0xc8/0x180)
-[  316.117889] [<c018fdec>] (handle_fasteoi_irq) from [<c018a674>] (generic_handle_irq+0x20/0x34)
-[  316.127197] [<c018a674>] (generic_handle_irq) from [<c018ac44>] (__handle_domain_irq+0x64/0xdc)
-[  316.135955] [<c018ac44>] (__handle_domain_irq) from [<c04b0c44>] (gic_handle_irq+0x40/0x84)
-[  316.144317] [<c04b0c44>] (gic_handle_irq) from [<c0101aac>] (__irq_svc+0x6c/0xa8)
-[  316.151855] Exception stack(0xc0f01e10 to 0xc0f01e58)
-[  316.157348] 1e00:                                     ffffabcf 2e645000 00000000 c0e64040
-[  316.166107] 1e20: 00000082 c0e63ffc c0f052c0 c0f00000 00000001 ee80c000 c0f052c0 c0fa19c4
-[  316.174316] 1e40: 00000000 c0f01e60 c013bc44 c0102278 60000153 ffffffff
-[  316.181121] [<c0101aac>] (__irq_svc) from [<c0102278>] (__do_softirq+0x78/0x280)
-[  316.188568] [<c0102278>] (__do_softirq) from [<c013bc44>] (irq_exit+0xa8/0xec)
-[  316.195831] [<c013bc44>] (irq_exit) from [<c018ac4c>] (__handle_domain_irq+0x6c/0xdc)
-[  316.203674] [<c018ac4c>] (__handle_domain_irq) from [<c04b0c44>] (gic_handle_irq+0x40/0x84)
-[  316.213134] [<c04b0c44>] (gic_handle_irq) from [<c0101aac>] (__irq_svc+0x6c/0xa8)
-[  316.221130] Exception stack(0xc0f01ee8 to 0xc0f01f30)
-[  316.226196] 1ee0:                   00000000 00000000 00010001 ffffffff eef01580 00000002
-[  316.234405] 1f00: ef4a8678 c0f0b750 c0f05124 eef0158c c0f05244 c0fa19c4 00000010 c0f01f38
-[  316.242645] 1f20: ef4a86e8 c0773734 60000153 ffffffff
-[  316.247711] [<c0101aac>] (__irq_svc) from [<c0773734>] (cpuidle_enter_state_coupled+0x2e4/0x428)
-[  316.256530] [<c0773734>] (cpuidle_enter_state_coupled) from [<c0770be8>] (cpuidle_enter+0x44/0x5c)
-[  316.265533] [<c0770be8>] (cpuidle_enter) from [<c0163818>] (do_idle+0x1d8/0x2a4)
-[  316.272949] [<c0163818>] (do_idle) from [<c0163bc0>] (cpu_startup_entry+0x18/0x20)
-[  316.280578] [<c0163bc0>] (cpu_startup_entry) from [<c0e00d04>] (start_kernel+0x3d0/0x46c)
-[  316.288787] ---[ end trace be4a25d25ab32771 ]---
-
-- Péter
-
-> The patches are against v5.5-rc1, and need the following fixes:
-> 
-> 2c81f0f6d3f5 ("bus: ti-sysc: Fix iterating over clocks")
-> e709ed70d122 ("bus: ti-sysc: Fix missing reset delay handling")
-> 93c60483b5fe ("bus: ti-sysc: Fix missing force mstandby quirk handling")
-> 90bdfa0b05e3 ("ARM: OMAP2+: Fix ti_sysc_find_one_clockdomain to check for to_clk_hw_omap")
-> 
-> To make testing easier, I've also pushed out a testing branch at [0][1].
-> 
+>=20
+>   if (gpi->flags & FLAG_IS_OUT)
+>   	return -EINVAL;
+>=20
 > Regards,
-> 
-> Tony
-> 
-> 
-> [0] git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git omap-for-v5.6/sdma-testing
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v5.6/sdma-testing
-> 
-> 
-> Tony Lindgren (14):
->   ARM: dts: Add generic compatible for omap sdma instances
->   ARM: dts: Configure interconnect target module for omap2 sdma
->   ARM: dts: Configure interconnect target module for omap3 sdma
->   ARM: OMAP2+: Drop unused sdma functions
->   ARM: OMAP2+: Drop sdma interrupt handling for mach-omap2
->   ARM: OMAP2+: Configure sdma capabilities directly
->   ARM: OMAP2+: Configure dma_plat_info directly and drop dma_dev_attr
->   dmaengine: ti: omap-dma: Add device tree match data and use it for
->     cpu_pm
->   dmaengine: ti: omap-dma: Configure global priority register directly
->   dmaengine: ti: omap-dma: Pass sdma auxdata to driver and use it
->   dmaengine: ti: omap-dma: Allocate channels directly
->   dmaengine: ti: omap-dma: Use cpu notifier to block idle for omap2
->   ARM: OMAP2+: Drop legacy init for sdma
->   ARM: OMAP2+: Drop legacy platform data for sdma
-> 
->  arch/arm/boot/dts/dra7-l4.dtsi                |   3 +-
->  arch/arm/boot/dts/omap2.dtsi                  |  43 +-
->  arch/arm/boot/dts/omap2430.dtsi               |   4 +
->  arch/arm/boot/dts/omap3-n900.dts              |   5 +
->  arch/arm/boot/dts/omap3.dtsi                  |  46 +-
->  arch/arm/boot/dts/omap36xx.dtsi               |   4 +
->  arch/arm/boot/dts/omap4-l4.dtsi               |   3 +-
->  arch/arm/boot/dts/omap5-l4.dtsi               |   3 +-
->  arch/arm/mach-omap2/common.h                  |   3 +
->  arch/arm/mach-omap2/dma.c                     | 119 +----
->  arch/arm/mach-omap2/omap_device.c             | 170 -------
->  arch/arm/mach-omap2/omap_device.h             |   4 -
->  arch/arm/mach-omap2/omap_hwmod_2420_data.c    |  34 --
->  arch/arm/mach-omap2/omap_hwmod_2430_data.c    |  34 --
->  .../mach-omap2/omap_hwmod_2xxx_ipblock_data.c |  18 -
->  arch/arm/mach-omap2/omap_hwmod_3xxx_data.c    |  61 ---
->  arch/arm/mach-omap2/omap_hwmod_44xx_data.c    |  69 ---
->  arch/arm/mach-omap2/omap_hwmod_54xx_data.c    |  61 ---
->  arch/arm/mach-omap2/omap_hwmod_7xx_data.c     |  61 ---
->  arch/arm/mach-omap2/omap_hwmod_common_data.h  |   1 -
->  arch/arm/mach-omap2/pdata-quirks.c            |   1 +
->  arch/arm/mach-omap2/pm24xx.c                  |  22 +-
->  arch/arm/mach-omap2/pm34xx.c                  |   5 -
->  arch/arm/plat-omap/dma.c                      | 471 +-----------------
->  drivers/dma/ti/omap-dma.c                     | 288 ++++++++++-
->  include/linux/omap-dma.h                      |  18 -
->  26 files changed, 391 insertions(+), 1160 deletions(-)
-> 
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>   Marco
