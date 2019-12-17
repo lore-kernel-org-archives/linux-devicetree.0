@@ -2,151 +2,96 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE49FC43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 20:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DA8C2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 20:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B011720716
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 20:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="p+NoUpLu"
+	by mail.kernel.org (Postfix) with ESMTP id 0083A21D7D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 20:26:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfLQUEN (ORCPT
+        id S1727908AbfLQU0r convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:04:13 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2751 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfLQUEN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 15:04:13 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df9349f0001>; Tue, 17 Dec 2019 12:03:43 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 17 Dec 2019 12:04:11 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 17 Dec 2019 12:04:11 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 17 Dec
- 2019 20:04:11 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 17 Dec 2019 20:04:11 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.174.101]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5df934ba0004>; Tue, 17 Dec 2019 12:04:11 -0800
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <gregkh@linuxfoundation.org>,
-        <sboyd@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 01/19] dt-bindings: clock: tegra: Change CLK_M_DIV to OSC_DIV clocks
-Date:   Tue, 17 Dec 2019 12:03:48 -0800
-Message-ID: <1576613046-17159-2-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
-References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 17 Dec 2019 15:26:47 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33184 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727437AbfLQU0r (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 15:26:47 -0500
+Received: by mail-ot1-f65.google.com with SMTP id b18so6575069otp.0;
+        Tue, 17 Dec 2019 12:26:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=f3gn/oPr6CxFsDIcXTI6Rn3BNMNX8Zy6VkrjtLwd+wI=;
+        b=pV/IB7+bw1Wuym2T70mnEnQawUKEjDgF6GyaviKPb1UvNL7GPI2055MXp1f18PmHRG
+         M8YDAuBGqScy3FSKJyWE7K8kUpIasuXAFVFRYH4PfqCOK9BvFxGMsGB5r85cxZx3fREc
+         LOrZDGIDjEH3wGYr+20NUnMjfCvNKZ239axIly3HQ0QGnXXmw7yWdAuImen1VKPvutLq
+         Jt2bTyUvBuFG/bPddVmKkZvi8Z8T/qKL2lBAYq7w7pZ7lEYN6rs+L02PC0b22QWL0Ovm
+         tkDUxv5hKS2RNYVwikuJuxkLdmxIsgReUYSJtWd5tfNVFTDH5uO6dL2TW+0K7pGcaMJt
+         6O9w==
+X-Gm-Message-State: APjAAAUQIE2Jrcz7XxvHsxREGaY3b9YQNhUSFAJrHkiZ1YAD9Skqgntl
+        mowaSVMxldJL5/jYGPySySQ/SSU33iz0HG3ct4M=
+X-Google-Smtp-Source: APXvYqw4ewhq5K6U9XDjyTAdZX/UY2Fmz1YMPelz213yxmeZOuT6WiuiWSkZYJjY12spRU3p5UX/09gTIseqYiaY7o0=
+X-Received: by 2002:a05:6830:18e2:: with SMTP id d2mr9920053otf.107.1576614406335;
+ Tue, 17 Dec 2019 12:26:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576613023; bh=boB5dWrzB7K/fO5nQQLi9ejW3crjRKXkywFBAFroObw=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=p+NoUpLuurXZjNxihmr9I7sy+Rv8KMAE1dCgUbjxr27LAYIkYsDFGzPDZznE1g1/k
-         6uypX7eBY7kZXQq9fK3LxWxpwrBFVKrpHRos73u7LqrJGuH+7Jod4g4+UvstMFiVFy
-         fWLWxrlTLe5VSQQhrj95AIyOW4SlBTwaYWy+q6z3mUUkSmTvhtONeJCv5vsaKaN10Z
-         TZquUcgzkEH/CUGXQ+x+w6ykn5okCQfxjxySNHT+sC42ECi9+rBvceAbTI8R2Q7FFn
-         C6u9weBUQePkkP7qXWdynS9mii/v60DG6rQC8KAF5qrPTOGRl1LByBBIpTdkgs9bm3
-         FIZAR7JUntd2A==
+References: <20191206134202.18784-1-chris.brandt@renesas.com>
+ <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com> <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com> <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <590840ce-a250-2512-3d04-c2420d83f7da@cogentembedded.com> <TY1PR01MB1562B9EB96818DCA507079808A510@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <bb630141-021c-5618-f266-b98b29956fa8@cogentembedded.com>
+In-Reply-To: <bb630141-021c-5618-f266-b98b29956fa8@cogentembedded.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 17 Dec 2019 21:26:35 +0100
+Message-ID: <CAMuHMdUBEnM3SPkK4o8jSPnKMpcbx1EJs4p5PvhC1cGcWpqYAQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     Chris Brandt <Chris.Brandt@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tegra has no CLK_M_DIV2 and CLK_M_DIV4 clocks and instead it has
-OSC_DIV2 and OSC_DIV4 clocks from OSC pads.
+Hi Sergei,
 
-This patch changes CLK_M_DIV2 and CLK_M_DIV4 clock ids to OSC_DIV2
-and OSC_DIV4 clock ids for Tegra30 through Tegra210.
+On Tue, Dec 17, 2019 at 8:30 PM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> On 12/17/2019 01:21 AM, Chris Brandt wrote:
+> >>> As a side note, there is another HW block in Renesas that does the same
+> >>> thing as the SPI-BSC that they use in the MCU devices. That one they
+> >>
+> >>    MCU?
+> > Yup.
+> >   But...it has no significance to this discussion though :)
+>
+>    But what does the acronym mean?
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- include/dt-bindings/clock/tegra114-car.h        | 4 ++--
- include/dt-bindings/clock/tegra124-car-common.h | 4 ++--
- include/dt-bindings/clock/tegra210-car.h        | 4 ++--
- include/dt-bindings/clock/tegra30-car.h         | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+Микроконтро́ллер (англ. Micro Controller Unit, MCU)
 
-diff --git a/include/dt-bindings/clock/tegra114-car.h b/include/dt-bindings/clock/tegra114-car.h
-index bb5c2c999c05..f4880959b094 100644
---- a/include/dt-bindings/clock/tegra114-car.h
-+++ b/include/dt-bindings/clock/tegra114-car.h
-@@ -226,8 +226,8 @@
- #define TEGRA114_CLK_FUSE_BURN 199
- #define TEGRA114_CLK_CLK_32K 200
- #define TEGRA114_CLK_CLK_M 201
--#define TEGRA114_CLK_CLK_M_DIV2 202
--#define TEGRA114_CLK_CLK_M_DIV4 203
-+#define TEGRA114_CLK_OSC_DIV2 202
-+#define TEGRA114_CLK_OSC_DIV4 203
- #define TEGRA114_CLK_PLL_REF 204
- #define TEGRA114_CLK_PLL_C 205
- #define TEGRA114_CLK_PLL_C_OUT1 206
-diff --git a/include/dt-bindings/clock/tegra124-car-common.h b/include/dt-bindings/clock/tegra124-car-common.h
-index 0c4f5be0a742..e7e601a88d3d 100644
---- a/include/dt-bindings/clock/tegra124-car-common.h
-+++ b/include/dt-bindings/clock/tegra124-car-common.h
-@@ -225,8 +225,8 @@
- #define TEGRA124_CLK_FUSE_BURN 199
- #define TEGRA124_CLK_CLK_32K 200
- #define TEGRA124_CLK_CLK_M 201
--#define TEGRA124_CLK_CLK_M_DIV2 202
--#define TEGRA124_CLK_CLK_M_DIV4 203
-+#define TEGRA124_CLK_OSC_DIV2 202
-+#define TEGRA124_CLK_OSC_DIV4 203
- #define TEGRA124_CLK_PLL_REF 204
- #define TEGRA124_CLK_PLL_C 205
- #define TEGRA124_CLK_PLL_C_OUT1 206
-diff --git a/include/dt-bindings/clock/tegra210-car.h b/include/dt-bindings/clock/tegra210-car.h
-index 44f60623f99b..6f65c14bf013 100644
---- a/include/dt-bindings/clock/tegra210-car.h
-+++ b/include/dt-bindings/clock/tegra210-car.h
-@@ -260,8 +260,8 @@
- #define TEGRA210_CLK_FUSE_BURN 231
- #define TEGRA210_CLK_CLK_32K 232
- #define TEGRA210_CLK_CLK_M 233
--#define TEGRA210_CLK_CLK_M_DIV2 234
--#define TEGRA210_CLK_CLK_M_DIV4 235
-+#define TEGRA210_CLK_OSC_DIV2 234
-+#define TEGRA210_CLK_OSC_DIV4 235
- #define TEGRA210_CLK_PLL_REF 236
- #define TEGRA210_CLK_PLL_C 237
- #define TEGRA210_CLK_PLL_C_OUT1 238
-diff --git a/include/dt-bindings/clock/tegra30-car.h b/include/dt-bindings/clock/tegra30-car.h
-index 3c90f1535551..907a8a04c280 100644
---- a/include/dt-bindings/clock/tegra30-car.h
-+++ b/include/dt-bindings/clock/tegra30-car.h
-@@ -194,8 +194,8 @@
- #define TEGRA30_CLK_TVO 169
- #define TEGRA30_CLK_CLK_32K 170
- #define TEGRA30_CLK_CLK_M 171
--#define TEGRA30_CLK_CLK_M_DIV2 172
--#define TEGRA30_CLK_CLK_M_DIV4 173
-+#define TEGRA30_CLK_OSC_DIV2 172
-+#define TEGRA30_CLK_OSC_DIV4 173
- #define TEGRA30_CLK_PLL_REF 174
- #define TEGRA30_CLK_PLL_C 175
- #define TEGRA30_CLK_PLL_C_OUT1 176
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
