@@ -2,123 +2,98 @@ Return-Path: <SRS0=r3bb=2H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAF5C43603
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 10:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC832C43603
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 10:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6070C207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 10:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93EBB206B7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Dec 2019 10:15:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jV/Myl5v"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u2nK1G05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfLQKLz (ORCPT
+        id S1727431AbfLQKPM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:11:55 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:14207 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727262AbfLQKLy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:11:54 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576577513; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=r90I13kSoefNFl8RNN/BDOH31yaeXpjEEpvv+Q+aZmI=;
- b=jV/Myl5vBDm+gwcC+SrGr9GaKBFz5pXduxW8vi/v5iEzbqoleE6ydGd2fhuNvg3oj/pQulRL
- labTP0dyKs8UZIid9KvuzePmGUq/0ZvEVVqXaxna5a+vIE9KfD42qFZPfpvQgMLNeQ8RUETP
- LE0ild2cVZKJsZ/PVUU3j5vJx1Y=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df8a9e2.7fa583cba8b8-smtp-out-n02;
- Tue, 17 Dec 2019 10:11:46 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E2885C4479C; Tue, 17 Dec 2019 10:11:44 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3CBACC43383;
-        Tue, 17 Dec 2019 10:11:44 +0000 (UTC)
+        Tue, 17 Dec 2019 05:15:12 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60404 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbfLQKPM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 05:15:12 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHAEtIk044796;
+        Tue, 17 Dec 2019 04:14:55 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576577695;
+        bh=2QUGTYgZ96oe/K1GDPMSjyUVLllRvww4faZITebRAmY=;
+        h=From:To:CC:Subject:Date;
+        b=u2nK1G05tJD0nmcLRsprCWm/zdzeygjICZZlsxP0WdqtnK06K9bRVzU2YlRMeuSc7
+         KjYQV9/xa5TDiem5+6XsL+E/J0Y+Xv4gUTkTUnhtOrzrYJwr6+wTj4cSQ+AV51CrMn
+         KfTaW3zG4v5Kp6ukXMM0uKr9tOBrheX6IdgaYHeQ=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHAEt7w042307
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Dec 2019 04:14:55 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 04:14:54 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 04:14:54 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHAEp6M086932;
+        Tue, 17 Dec 2019 04:14:51 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
+        <narmstrong@baylibre.com>
+CC:     <tomi.valkeinen@ti.com>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@siol.net>
+Subject: [PATCH 0/2] drm/bridge: Support for Toshiba tc358768 RGB to DSI bridge
+Date:   Tue, 17 Dec 2019 12:15:04 +0200
+Message-ID: <20191217101506.18910-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 17 Dec 2019 15:41:44 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     bjorn.andersson@linaro.org, rnayak@codeaurora.org,
-        robh+dt@kernel.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        dianders@chromium.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: power: rpmpd: Convert rpmpd bindings to
- yaml
-In-Reply-To: <5df7dc77.1c69fb81.9e37f.16a5@mx.google.com>
-References: <20191216115531.17573-1-sibis@codeaurora.org>
- <20191216115531.17573-2-sibis@codeaurora.org>
- <5df7dc77.1c69fb81.9e37f.16a5@mx.google.com>
-Message-ID: <51f73b85b2a9a9f3d72f2776617be9c9@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-12-17 01:05, Stephen Boyd wrote:
-> Quoting Sibi Sankar (2019-12-16 03:55:30)
->> Convert RPM/RPMH power-domain bindings to yaml.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> 
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> 
-> One nitpick below!
-> 
->> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml 
->> b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
->> new file mode 100644
->> index 0000000000000..4aebf024e4427
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
->> @@ -0,0 +1,170 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/power/qcom,rpmpd.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm RPM/RPMh Power domains
->> +
->> +maintainers:
->> +  - Rajendra Nayak <rnayak@codeaurora.org>
->> +
->> +description:
->> +  For RPM/RPMh Power domains, we communicate a performance state to 
->> RPM/RPMh
->> +  which then translates it into a corresponding voltage on a rail
-> 
-> Add a full-stop here to make it a true sentence?
+Hi,
 
-sure I'll re-spin it
+TC358768 is a parallel RGB to MIPI DSI bridge.
 
-> 
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - qcom,msm8976-rpmpd
->> +      - qcom,msm8996-rpmpd
->> +      - qcom,msm8998-rpmpd
->> +      - qcom,qcs404-rpmpd
->> +      - qcom,sc7180-rpmhpd
->> +      - qcom,sdm845-rpmhpd
->> +      - qcom,sm8150-rpmhpd
->> +
+The initial driver supports MIPI_DSI_MODE_VIDEO, MIPI_DSI_FMT_RGB888 and
+only write is implemented for mipi_dsi_host_ops.transfer due to lack of hardware
+where other modes can be tested.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (2):
+  dt-bindings: display: bridge: Add documentation for Toshiba tc358768
+  drm/bridge: Add tc358768 driver
+
+ .../display/bridge/toshiba,tc358768.yaml      | 158 +++
+ drivers/gpu/drm/bridge/Kconfig                |  10 +
+ drivers/gpu/drm/bridge/Makefile               |   1 +
+ drivers/gpu/drm/bridge/tc358768.c             | 963 ++++++++++++++++++
+ 4 files changed, 1132 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+ create mode 100644 drivers/gpu/drm/bridge/tc358768.c
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
