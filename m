@@ -2,142 +2,235 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835EDC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEB3C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2EE24676
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98AB324672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:20:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="WH4g48sA"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nT0CjEqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfLRPQj (ORCPT
+        id S1727215AbfLRPUI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:16:39 -0500
-Received: from mail-eopbgr1400131.outbound.protection.outlook.com ([40.107.140.131]:51664
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726980AbfLRPQi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:16:38 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gOUSAdIQ+Scqf/rv38S2GgODGavT2YdyMDhe6MVEUiVGqpHAHWJg0UG/O0TZRCqeb72x0+vNTb6cb/iFPd/kMSd7eoii12WGY4lniq4LXwo1IRSlEzpsq5WaBUpOcjQ64s2SPIKf+WwONdVdDPpMxGaLhX6TNYysUAYrXRvOr4Uyrxrx1Vig8oRmZA1PVF/+JxIH2LsIUotR5UbuGKQQE0XEbB81dSmeaZHNAupfbnvnlO1q1NjGvH1v3IlNkHzC7QD5mJ0WV0Dc+pTJlj328vYU+MibagSdH1sIX3xiwals4lRZIeURYikH0bcmhxB3h5h5vVvRR7rwnl4uBheHTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M7FjcdGIK3UiRJfhon7B+8hQG+7+14ZYiCK8wBYSczI=;
- b=SDwiLirJ/1p4B20WFfeQmWzjVimuMdor2+NGTbvcRgIxxJP0G0FVfNUQ9G+t2xYm8lx7W5boWXl0oZO2F7BJFqRXkHSA39E+d27E2vhfPgKUj5S4CnNf59aoQMihSmiuLB8/bDg5WcHZkJONI4/Y7Mz0daf2mfpYE9jPDCIM6Weo3WUG6GnP0aTxT1OHgLsxBEPbPaZYOg23hS+K0dFrir3ZOfeaYEs2Xd/DpKc3rBqdtC1bRpn0dI6F9K1G0N8sAZySKuW9BehCfb5CJWYu+gSvGBs+MewWRn6C0wcs1G0st4m5P3lYI7H4buoPjDNmxkXANlXu3OnY5oep7sf4FQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M7FjcdGIK3UiRJfhon7B+8hQG+7+14ZYiCK8wBYSczI=;
- b=WH4g48sAdFRx1IcxL1rAHYIeGXG3N0ziXjuSaraMSjHZ860eiuqrfsWua/Qn7kDeFCEAI2f8EZ9AjFcTZLSBs2ovpLpWHxxfIiQuuv8Ds1+oAUF5bvs046BR9Dp28G9lyShYR7RFa+NwfrOJspbZfYjUtGMCtKus6QMrYfeBnuA=
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
- TY1PR01MB1753.jpnprd01.prod.outlook.com (52.133.160.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.18; Wed, 18 Dec 2019 15:16:35 +0000
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::5166:5e51:90f5:3ee1]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::5166:5e51:90f5:3ee1%7]) with mapi id 15.20.2559.012; Wed, 18 Dec 2019
- 15:16:35 +0000
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: RE: [PATCH net-next v2 2/3] dt-bindings: can: rcar_canfd: document
- r8a774b1 support
-Thread-Topic: [PATCH net-next v2 2/3] dt-bindings: can: rcar_canfd: document
- r8a774b1 support
-Thread-Index: AQHVf3atPhucSvZbD0uUdhLVXtS2T6dadmyAgGX20DA=
-Date:   Wed, 18 Dec 2019 15:16:35 +0000
-Message-ID: <TY1PR01MB17703B32045654CB46C2FC8BC0530@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1570717560-7431-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1570717560-7431-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <20191014181035.GA2613@bogus>
-In-Reply-To: <20191014181035.GA2613@bogus>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5b2fccc8-ba94-4ff1-5e3e-08d783cd4579
-x-ms-traffictypediagnostic: TY1PR01MB1753:|TY1PR01MB1753:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TY1PR01MB1753D21403AD20E5A2950791C0530@TY1PR01MB1753.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0255DF69B9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(366004)(39860400002)(136003)(396003)(189003)(199004)(7416002)(53546011)(6506007)(7696005)(2906002)(33656002)(4326008)(316002)(478600001)(5660300002)(26005)(52536014)(4744005)(54906003)(71200400001)(76116006)(81166006)(6916009)(86362001)(81156014)(44832011)(186003)(64756008)(66556008)(66476007)(66446008)(8676002)(8936002)(55016002)(9686003)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1753;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nGN6cFuFTs9MkiXxwUnPJQGO2lhvNzodiqIm33HzNIcYfGkLSe8lxn5U6AuJOS9SGWEIHiN6i+PiEU4BMj3McR2krhPlVZzBqLEMfpJw8r6qfmWRBACfWswExJ9d3F1xTwZu4ZmTNEqZanjOmIsTi2imAPs97DX4wuUFEDRG0G7RMR4uDSy2/nTIueLQwRrmSw1JA4J3tnsnjxWjg/PuydAePJHXCb885/5C5XwwkxOByiuiCbfNDIahwwNYPev6yYXZgou/MgrxpJifHK7AxAm6PcEpYQ41fOCxaT5lyIS7tLeaVN6Kmct0iANdzLcuZ1nhg93/+fx4w3X1GBc0gD2ynTip4IU6YEwjtMhjliWZEwbG7ug9QHQ1pd1XJ8hmRH6zEKd+edKkwDXFUDnyEA3LiJ7GyCdIVS7KIEmsRi9jUINz3Qd1oe6gFDMpXU50
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 Dec 2019 10:20:08 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:3856 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726921AbfLRPUH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:20:07 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIFISIS017156;
+        Wed, 18 Dec 2019 16:19:48 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=WneSex7HLvk1knfWmC+iWo4b9iXA1aE+DZZb+Ph0YE0=;
+ b=nT0CjEqdbNCGAEn8ad4RksgAUyfA4q5u1qVfyaiaiXV9YAkDPApm47cmN8PUcWYpBm1q
+ BWx03o7gK2FmI3+EChRlvi70Ru79DJ0pC4LcIsPRC+mLP1qFHl7DamP0vYxAJPZGmlxh
+ M7y8vhoZ2QYT04uUbKyO0OMoasjPP6CdO5f/ESlebwgjAszJNvHFhIm/lANHzilnj83W
+ R93vTVwKKxBeflkxarvyBuwcQe3KP5gD9g8x0RD2wdV6/bZhODqMaYh3onmq6M1/HgC0
+ 5IvTstSQBVlMWFuilPsYv/xfW3m1+w8Gs1mVUlxliu6azrck1/SbHzpNEZ0fdvGjzOQo Cw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wvpd1n0dd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 16:19:48 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 22D8C100038;
+        Wed, 18 Dec 2019 16:19:44 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0E9792B220D;
+        Wed, 18 Dec 2019 16:19:44 +0100 (CET)
+Received: from lmecxl0923.lme.st.com (10.75.127.49) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
+ 2019 16:19:42 +0100
+Subject: Re: [PATCH V2] mmc: mmci: add threaded irq to abort DPSM of
+ non-functional state
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20191211133934.16932-1-ludovic.Barre@st.com>
+ <CAPDyKFpoqEXO1JvjF=0hX97PiwP=2c1eWORsacb8QvZM=1Tvjw@mail.gmail.com>
+From:   Ludovic BARRE <ludovic.barre@st.com>
+Message-ID: <7019a4b8-e7a4-0e3a-4c42-0d46c80e5126@st.com>
+Date:   Wed, 18 Dec 2019 16:19:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b2fccc8-ba94-4ff1-5e3e-08d783cd4579
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 15:16:35.1701
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Oiy8uuAfWfrb7CUpEJwsKzyZ9x1JYDfp4chQq8lSs7kfdNe6LVbqandUx9cY0z334QKdQSBkzNDeVDt7/vCtatHaKC1NdM6mNYgMCJ+yOuk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1753
+In-Reply-To: <CAPDyKFpoqEXO1JvjF=0hX97PiwP=2c1eWORsacb8QvZM=1Tvjw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-18_04:2019-12-17,2019-12-18 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+hi ulf
 
-Do you think you can take this patch?
+Le 12/18/19 à 3:01 PM, Ulf Hansson a écrit :
+> On Wed, 11 Dec 2019 at 14:40, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> If datatimeout occurs on R1B request, the Data Path State Machine stays
+>> in busy and is non-functional. Only a reset aborts the DPSM.
+>>
+>> Like a reset must be outside of critical section, this patch adds
+>> threaded irq function to release state machine. In this case,
+>> the mmc_request_done is called at the end of threaded irq and
+>> skipped into irq handler.
+>>
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> 
+> Applied for next, thanks!
+> 
+> I took the liberty of doing some minor updates (changelog/comment),
+> please have a look and let me know if there is something you want me
+> to change.
+> 
 
-Thanks,
-Fab
+I read the modifications (changelog and comment function),
+and it's ok for me.
 
-> From: linux-renesas-soc-owner@vger.kernel.org <linux-renesas-soc-owner@vg=
-er.kernel.org> On Behalf Of Rob Herring
-> Sent: 14 October 2019 19:11
-> Subject: Re: [PATCH net-next v2 2/3] dt-bindings: can: rcar_canfd: docume=
-nt r8a774b1 support
->=20
-> On Thu, 10 Oct 2019 15:25:59 +0100, Fabrizio Castro wrote:
-> > Document the support for rcar_canfd on R8A774B1 SoC devices.
-> >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > v1->v2:
-> > * Added the R8A774B1 to the clock paragraph according to Geert's commen=
-t
-> >
-> >  Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
->=20
-> Acked-by: Rob Herring <robh@kernel.org>
+thanks
+Ludo
+
+> And again, apologize for the delays!
+> 
+> Kind regards
+> Uffe
+> 
+> 
+>> ---
+>> change V2:
+>>   -check IRQ_WAKE_THREAD only in mmci_cmd_irq error part,
+>>    to avoid this test in mmci_request_end.
+>>
+>> ---
+>>   drivers/mmc/host/mmci.c | 46 +++++++++++++++++++++++++++++++++++------
+>>   drivers/mmc/host/mmci.h |  1 +
+>>   2 files changed, 41 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+>> index 40e72c30ea84..2b91757e3e84 100644
+>> --- a/drivers/mmc/host/mmci.c
+>> +++ b/drivers/mmc/host/mmci.c
+>> @@ -1321,6 +1321,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>          } else if (host->variant->busy_timeout && busy_resp &&
+>>                     status & MCI_DATATIMEOUT) {
+>>                  cmd->error = -ETIMEDOUT;
+>> +               host->irq_action = IRQ_WAKE_THREAD;
+>>          } else {
+>>                  cmd->resp[0] = readl(base + MMCIRESPONSE0);
+>>                  cmd->resp[1] = readl(base + MMCIRESPONSE1);
+>> @@ -1339,7 +1340,10 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>                                  return;
+>>                          }
+>>                  }
+>> -               mmci_request_end(host, host->mrq);
+>> +
+>> +               if (host->irq_action != IRQ_WAKE_THREAD)
+>> +                       mmci_request_end(host, host->mrq);
+>> +
+>>          } else if (sbc) {
+>>                  mmci_start_command(host, host->mrq->cmd, 0);
+>>          } else if (!host->variant->datactrl_first &&
+>> @@ -1532,9 +1536,9 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+>>   {
+>>          struct mmci_host *host = dev_id;
+>>          u32 status;
+>> -       int ret = 0;
+>>
+>>          spin_lock(&host->lock);
+>> +       host->irq_action = IRQ_HANDLED;
+>>
+>>          do {
+>>                  status = readl(host->base + MMCISTATUS);
+>> @@ -1574,12 +1578,41 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+>>                  if (host->variant->busy_detect_flag)
+>>                          status &= ~host->variant->busy_detect_flag;
+>>
+>> -               ret = 1;
+>>          } while (status);
+>>
+>>          spin_unlock(&host->lock);
+>>
+>> -       return IRQ_RETVAL(ret);
+>> +       return host->irq_action;
+>> +}
+>> +
+>> +/*
+>> + * mmci_irq_threaded is call if the mmci host need to release state machines
+>> + * before to terminate the request.
+>> + * If datatimeout occurs on R1B request, the Data Path State Machine stays
+>> + * in busy and is non-functional. Only a reset can to abort the DPSM.
+>> + */
+>> +static irqreturn_t mmci_irq_threaded(int irq, void *dev_id)
+>> +{
+>> +       struct mmci_host *host = dev_id;
+>> +       unsigned long flags;
+>> +
+>> +       if (host->rst) {
+>> +               reset_control_assert(host->rst);
+>> +               udelay(2);
+>> +               reset_control_deassert(host->rst);
+>> +       }
+>> +
+>> +       spin_lock_irqsave(&host->lock, flags);
+>> +       writel(host->clk_reg, host->base + MMCICLOCK);
+>> +       writel(host->pwr_reg, host->base + MMCIPOWER);
+>> +       writel(MCI_IRQENABLE | host->variant->start_err,
+>> +              host->base + MMCIMASK0);
+>> +
+>> +       host->irq_action = IRQ_HANDLED;
+>> +       mmci_request_end(host, host->mrq);
+>> +       spin_unlock_irqrestore(&host->lock, flags);
+>> +
+>> +       return host->irq_action;
+>>   }
+>>
+>>   static void mmci_request(struct mmc_host *mmc, struct mmc_request *mrq)
+>> @@ -2071,8 +2104,9 @@ static int mmci_probe(struct amba_device *dev,
+>>                          goto clk_disable;
+>>          }
+>>
+>> -       ret = devm_request_irq(&dev->dev, dev->irq[0], mmci_irq, IRQF_SHARED,
+>> -                       DRIVER_NAME " (cmd)", host);
+>> +       ret = devm_request_threaded_irq(&dev->dev, dev->irq[0], mmci_irq,
+>> +                                       mmci_irq_threaded, IRQF_SHARED,
+>> +                                       DRIVER_NAME " (cmd)", host);
+>>          if (ret)
+>>                  goto clk_disable;
+>>
+>> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+>> index 158e1231aa23..5e63c0596364 100644
+>> --- a/drivers/mmc/host/mmci.h
+>> +++ b/drivers/mmc/host/mmci.h
+>> @@ -412,6 +412,7 @@ struct mmci_host {
+>>
+>>          struct timer_list       timer;
+>>          unsigned int            oldstat;
+>> +       u32                     irq_action;
+>>
+>>          /* pio stuff */
+>>          struct sg_mapping_iter  sg_miter;
+>> --
+>> 2.17.1
+>>
