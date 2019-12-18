@@ -2,212 +2,114 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F3FC2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 22:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE232C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 22:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2E32465E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 22:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8841C218AC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 22:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576706740;
-	bh=ldIzJgBmbf09kDl0vrUqWSLyL7mzcltk5SFmZPKF54E=;
+	s=default; t=1576707193;
+	bh=6YRzJke/nlj6uW1EEasrBWO6/27rQ0U1rP5syHvvVLM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0/1kWJldJVfsRjqQ9gCT0Cz1NKbC5pTfEJ8NqCP4Fr9zinvePLvyZTkeveEW1VJJ5
-	 k1kj1wZ8gWbG79eUmB9xz50G5Yy3AkkPMLuytq9uPZGjgIHKhcJyAW5CGzHYM5ORi5
-	 NKBoHoJ+xQRxRja3g3fy2oyLMC9lPcuSsEeu6Cz0=
+	b=GumYXCN2Xpg0HwN9J+oApUQan7bQOH5e6vIeME/IjwKdU8kPIwlRw2KZN3cKR1LjD
+	 hnPqgtze5ORS4z3e2xr8kX5Yb3nOUVm7OULI+s6lDnzZpsTA0Kil9vS1qg/5KwwMLv
+	 qxjcOAh/qE3eg7aEekq5tb5dA9r8gwWMktwFPSTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfLRWFk (ORCPT
+        id S1726510AbfLRWNN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 17:05:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbfLRWFk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:05:40 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5566C2146E;
-        Wed, 18 Dec 2019 22:05:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576706738;
-        bh=ldIzJgBmbf09kDl0vrUqWSLyL7mzcltk5SFmZPKF54E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eOnk/XK8zgnLRfjYtOHmhQ/VwAVQIkke9ZdYJLxpJxkKL79BUX6niRpkwxPbPm0sp
-         18Zc9XZckw3Xd3IRAuxzrleh//uw6VnVMWod/iNv75MYZU9CbqjjMLZGsHINh/ZuF7
-         Zc+uVEpSp15eckLnUnrn0VV5AtNqFWCS5vGaMQOo=
-Date:   Wed, 18 Dec 2019 23:05:36 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 18 Dec 2019 17:13:13 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38252 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfLRWNN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 17:13:13 -0500
+Received: by mail-ot1-f67.google.com with SMTP id h20so4365493otn.5;
+        Wed, 18 Dec 2019 14:13:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rI3WWPDTG8f4hp6ciK/onj/YhaLhgFmrBxyBXIrJLuc=;
+        b=J2cFl4okTSADjJI2f3fYWHEIhDzjWT64hCA7tvWtj81TCd1/MWkluUwvbY4Oma82Me
+         ydCdmABqX+lh00AJbmpUWDbnCGcyEOgBOjDQAEei1uzRiekrGHAUMrmTyk00zzbbtKtr
+         M+78rdhelVmHDt+ij77O9b6JwUbN2WFiXpkDQ06vWTtcyM/rrjVNee01fKSz3Z8B29gR
+         e7Zx0MstkGesUvtTHdMEB0jfUgWaYv64GvURYBPoRnzi4Dq6MAlvjWU33MKa7pn4qi9y
+         DwTSMIEdwuvNMOP+/S2ET47MQ/BIEPCpfF/7c0V0iNmEUPiSCL9+h/M80+nWNC6i8xyd
+         bluA==
+X-Gm-Message-State: APjAAAU1EoVQTfsB7fQlCujZwDVNEPErH30T71uo5WXOC6PKFbx05XtP
+        NAbR955Dnwqs4jpBcDf7Jg==
+X-Google-Smtp-Source: APXvYqy3Y+DNZas+7C5PREmO+AePBLrmSYGx16wpsRSDrJLuqkNjf2exWPC5RAnKUh8l8Gs4LohMJA==
+X-Received: by 2002:a9d:6b06:: with SMTP id g6mr5045060otp.93.1576707191756;
+        Wed, 18 Dec 2019 14:13:11 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y6sm1279823oti.44.2019.12.18.14.13.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 14:13:11 -0800 (PST)
+Date:   Wed, 18 Dec 2019 16:13:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com
-Subject: Re: [PATCH v13 4/7] drm/sun4i: dsi: Handle bus clock via
- regmap_mmio_attach_clk
-Message-ID: <20191218220536.vwww45yctm5ye3vg@gilmour.lan>
-References: <20191218191017.2895-1-jagan@amarulasolutions.com>
- <20191218191017.2895-5-jagan@amarulasolutions.com>
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-usb@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3
+ bindings
+Message-ID: <20191218221310.GA4624@bogus>
+References: <1576474742-23409-1-git-send-email-sanm@codeaurora.org>
+ <1576474742-23409-2-git-send-email-sanm@codeaurora.org>
+ <CAD=FV=U48gdGHMbQ22M_59t6va2n41Zh1CDTqMJYpLCwiD35Mg@mail.gmail.com>
+ <6d8c979f-daa3-3b40-f29c-cca5a2f8f1c8@codeaurora.org>
+ <CAD=FV=UER4zt=z3XWEzNt5v2oe8V=z6Hb-Wm-2BzuWtuHmYg-A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ofkqbekjy7qwdomr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191218191017.2895-5-jagan@amarulasolutions.com>
+In-Reply-To: <CAD=FV=UER4zt=z3XWEzNt5v2oe8V=z6Hb-Wm-2BzuWtuHmYg-A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Dec 18, 2019 at 10:37:53AM -0800, Doug Anderson wrote:
+> Hi,
+> 
+> On Wed, Dec 18, 2019 at 4:41 AM Sandeep Maheswaram (Temp)
+> <sanm@codeaurora.org> wrote:
+> > +  assigned-clock-rates:
+> > +    description:
+> > +      Should be 19.2MHz (19200000) for MOCK_UTMI_CLK
+> > +      >=125MHz (125000000) for MASTER_CLK in SS mode
+> > +      >=60MHz (60000000) for MASTER_CLK in HS mode
+> > +    maxItems: 2
+> >
+> > You can still express some limits here even if we don't go all out
+> > with the "oneOf".  AKA I think this is better:
+> >
+> > assigned-clock-rates:
+> >   items:
+> >     - const: 19200000
+> >     - minimum: 60000000
+> >       description: >= 60 MHz in HS mode, >= 125 MHz in SS mode
+> >
+> > Facing error when i add as above.
+> > properties:assigned-clock-rates: {'items': [{'const': 19200000}, {'minimum': 60000000}]} is not valid under any of the given schemas
+> > Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/usb/qcom,dwc3.example.dts' failed
 
---ofkqbekjy7qwdomr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Update dtschema and you should get a better error message now.
 
-On Thu, Dec 19, 2019 at 12:40:14AM +0530, Jagan Teki wrote:
-> regmap has special API to enable the controller bus clock while
-> initializing register space, and current driver is using
-> devm_regmap_init_mmio_clk which require to specify bus
-> clk_id argument as "bus"
->
-> But, the usage of clocks are varies between different Allwinner
-> DSI controllers. Clocking in A33 would need bus and mod clocks
-> where as A64 would need only bus clock.
->
-> Since A64 support only single bus clock, it is optional to
-> specify the clock-names on the controller device tree node.
-> So using NULL on clk_id would get the attached clock.
->
-> To support clk_id as "bus" and "NULL" during clock enablement
-> between controllers, this patch add generic code to handle
-> the bus clock using regmap_mmio_attach_clk with associated
-> regmap APIs.
->
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
-> Changes for v13:
-> - update the changes since has_mod_clk is dropped in previous patch
->
->  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 45 +++++++++++++++++++++-----
->  1 file changed, 37 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> index 68b88a3dc4c5..de8955fbeb00 100644
-> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> @@ -1081,6 +1081,7 @@ static const struct component_ops sun6i_dsi_ops = {
->  static int sun6i_dsi_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> +	const char *bus_clk_name = NULL;
->  	struct sun6i_dsi *dsi;
->  	struct resource *res;
->  	void __iomem *base;
-> @@ -1094,6 +1095,10 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
->  	dsi->host.ops = &sun6i_dsi_host_ops;
->  	dsi->host.dev = dev;
->
-> +	if (of_device_is_compatible(dev->of_node,
-> +				    "allwinner,sun6i-a31-mipi-dsi"))
-> +		bus_clk_name = "bus";
-> +
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	base = devm_ioremap_resource(dev, res);
->  	if (IS_ERR(base)) {
-> @@ -1107,25 +1112,36 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
->  		return PTR_ERR(dsi->regulator);
->  	}
->
-> -	dsi->regs = devm_regmap_init_mmio_clk(dev, "bus", base,
-> -					      &sun6i_dsi_regmap_config);
-> -	if (IS_ERR(dsi->regs)) {
-> -		dev_err(dev, "Couldn't create the DSI encoder regmap\n");
-> -		return PTR_ERR(dsi->regs);
-> -	}
-> -
->  	dsi->reset = devm_reset_control_get_shared(dev, NULL);
->  	if (IS_ERR(dsi->reset)) {
->  		dev_err(dev, "Couldn't get our reset line\n");
->  		return PTR_ERR(dsi->reset);
->  	}
->
-> +	dsi->regs = devm_regmap_init_mmio(dev, base, &sun6i_dsi_regmap_config);
-> +	if (IS_ERR(dsi->regs)) {
-> +		dev_err(dev, "Couldn't init regmap\n");
-> +		return PTR_ERR(dsi->regs);
-> +	}
-> +
-> +	dsi->bus_clk = devm_clk_get(dev, bus_clk_name);
-> +	if (IS_ERR(dsi->bus_clk)) {
-> +		dev_err(dev, "Couldn't get the DSI bus clock\n");
-> +		ret = PTR_ERR(dsi->bus_clk);
-> +		goto err_regmap;
-> +	} else {
-> +		ret = regmap_mmio_attach_clk(dsi->regs, dsi->bus_clk);
-> +		if (ret)
-> +			goto err_bus_clk;
-> +	}
-> +
->  	if (of_device_is_compatible(dev->of_node,
->  				    "allwinner,sun6i-a31-mipi-dsi")) {
->  		dsi->mod_clk = devm_clk_get(dev, "mod");
->  		if (IS_ERR(dsi->mod_clk)) {
->  			dev_err(dev, "Couldn't get the DSI mod clock\n");
-> -			return PTR_ERR(dsi->mod_clk);
-> +			ret = PTR_ERR(dsi->mod_clk);
-> +			goto err_attach_clk;
->  		}
->  	}
->
-> @@ -1164,6 +1180,14 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
->  	pm_runtime_disable(dev);
->  err_unprotect_clk:
->  	clk_rate_exclusive_put(dsi->mod_clk);
-> +err_attach_clk:
-> +	if (!IS_ERR(dsi->bus_clk))
-> +		regmap_mmio_detach_clk(dsi->regs);
-> +err_bus_clk:
-> +	if (!IS_ERR(dsi->bus_clk))
-> +		clk_put(dsi->bus_clk);
+I believe the problem is we require both minimum and maximum to be 
+specified or none. Maybe we should relax that, but OTOH I doubt 4GHz is 
+valid.
 
-You still have an unbalanced clk_get / clk_put here
-
-> +err_regmap:
-> +	regmap_exit(dsi->regs);
-
-That's not needed.
-
->  	return ret;
->  }
->
-> @@ -1177,6 +1201,11 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
->  	pm_runtime_disable(dev);
->  	clk_rate_exclusive_put(dsi->mod_clk);
->
-> +	if (!IS_ERR(dsi->bus_clk))
-> +		regmap_mmio_detach_clk(dsi->regs);
-> +
-> +	regmap_exit(dsi->regs);
-
-Same thing here.
-
-Maxime
-
---ofkqbekjy7qwdomr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfqisAAKCRDj7w1vZxhR
-xSXxAQCpUpNnByJdW1d0yIMljpB+8oLISPdwuzQZMmFL+tHsgAD/UXHCqx+a6257
-dO+MJ8jT2PYpOkhHNmnh8i7BPwe2tAE=
-=454c
------END PGP SIGNATURE-----
-
---ofkqbekjy7qwdomr--
+Rob
