@@ -2,113 +2,86 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D46C47409
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 20:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00C5C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 20:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D433A24650
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 20:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A95B227BF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 20:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576701512;
-	bh=BxDWvL0wyUI9P6H5mgx31bfKcvWWUxvFPIg7/bc18mw=;
+	s=default; t=1576701691;
+	bh=xmcsrNtm4B0iE4C4gjYgIxqFom4dxD5Kmz2kteHD8VQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SJmEjVZ183KAk9hTaoHrbRRiAC4dCtcvYTUkphgkcD/3mTwO0i/F1mAijGLRRgy0k
-	 ijqIv/EvzthdmvdjRNfkZ4J/1nq0qBjTEo9VJrArf41eU9/CdybIhyKo8iNvqL1Yfc
-	 MrYmOSw9eA3FqOXw3ijS0s11Gym6zyAVOqpGpqwQ=
+	b=pgb4eCe9Dfpr7zlrrOP3JHtU2hiL4CnKI7HMRUzl0/E5oXo2ZDpXNscn+aK0iFR7J
+	 LmVFX5Qk2S3mwuQ4APqxsxPddOhgZqW63YQfgoSzIBFwi6LCpYvTJz3CqTwovcoXrg
+	 8F1F0FwuRes6DG4x0ObnxLAeyNJ4kVOvtunnkhf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfLRUiU (ORCPT
+        id S1727928AbfLRUl0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:38:20 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33903 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbfLRUiU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 15:38:20 -0500
-Received: by mail-oi1-f194.google.com with SMTP id l136so1890924oig.1;
-        Wed, 18 Dec 2019 12:38:19 -0800 (PST)
+        Wed, 18 Dec 2019 15:41:26 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37100 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfLRUl0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 15:41:26 -0500
+Received: by mail-ot1-f67.google.com with SMTP id k14so4049763otn.4;
+        Wed, 18 Dec 2019 12:41:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hZ9E1NuLuIvtf+WPRqjwV9sUZ6orTffbf5yW67pbe2s=;
-        b=E585jzx3Zv6Wlx+jFwqfOn4RW+GD6f6DtZJ2J8WlGjkowZ5UPuIFQVQI1NarROUnaa
-         Gnd2vNMKT2nPo+iSwd7RZYbLOyTLLj86Sak+a6GTFEUqwJ3oKB4QP/vVR5Dsp7QJ1Oz+
-         Av/Jyen7gqMx4BVr2HYtwqN9aR4U1jhudBgeEtzdrBoy9bg9plo11TBa8Axdpcju6GAu
-         elPAq+/tWIAR0PqOMbvvegMWY/WzjrudBITniuWST8f98yF/fWtaAL7KNV5/g9whHqtz
-         /wKBWnwETqehgdh4WGEk6sHoQyvHwSPMDcWKWsMz6MQ0aPXrfo0T7GdKVYMkVSBmDx/5
-         MMsA==
-X-Gm-Message-State: APjAAAWOBVDdpAfI7KMhdtfH7AU5G+Pytyr7wIN4IU+Ox4ogH9i+FXGv
-        PSie/iWYUpKCT/uW1Jb+PQ==
-X-Google-Smtp-Source: APXvYqxAKp78mrKcfBIIJGi+RshJWSvfi1+AG5ZtMHY8fR0aL5vcNcIROydHyMWaiCPZ0EZmvYFcMQ==
-X-Received: by 2002:aca:dd04:: with SMTP id u4mr1348308oig.94.1576701499476;
-        Wed, 18 Dec 2019 12:38:19 -0800 (PST)
+        bh=vjAWgj8LPRVBBw4YOgmZJNGJyNN6iEbkQXZFrIxWMd0=;
+        b=f/o6m4kkdrseDeko1cTkyQ3A0Er94juvAd+hgIjUj5gyOia3cWFoK8oaRVIkbCdSON
+         um3AcstN7D9XBtPrGe7s9hnrn/G7EEWRDjRXNmLt7geaIHU375vdUTuqA6dI5dJnA9+6
+         oRJWZpLq7j90hA3/qZa8yb7Z7HHJa7/3fR+2JtFOP5r2i0rRPjjCmdsN1ivDQen0wwP8
+         rNfJGF2IKNwCzl6lws75QEzbN2lLHxhJ1+ccPutXRO9NJ/kFQeFWYuEBMZ0EAFHWDogv
+         UyjhJ06xj5PNdlg8DpQei8jL20rVi69KvUiP0ZeBvNulKdnRPW7/50dPeyAgSPbkT8tt
+         JJOw==
+X-Gm-Message-State: APjAAAWn/TkzYR2R6OM1GD9DshP3OPjPBsSj3mo07UAVI+yd1ZQq6y/u
+        /gucl76KxikixfWg1uFT2uSiXhE=
+X-Google-Smtp-Source: APXvYqzQqGo/mhAS3tDmnfbWxDRBX1it8whjpDyON36SIKPZWsEZwe6SklGflwoLOyGplD0lHy7Kkw==
+X-Received: by 2002:a9d:7a88:: with SMTP id l8mr4842838otn.187.1576701685257;
+        Wed, 18 Dec 2019 12:41:25 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s83sm1185529oif.33.2019.12.18.12.38.18
+        by smtp.gmail.com with ESMTPSA id s9sm1180127oic.15.2019.12.18.12.41.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 12:38:18 -0800 (PST)
-Date:   Wed, 18 Dec 2019 14:38:18 -0600
+        Wed, 18 Dec 2019 12:41:24 -0800 (PST)
+Date:   Wed, 18 Dec 2019 14:41:23 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Guillaume La Roque <glaroque@baylibre.com>, marcel@holtmann.org,
-        johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        nsaenzjulienne@suse.de, linux-kernel@vger.kernel.org,
-        khilman@baylibre.com
-Subject: Re: [PATCH v5 1/2] dt-bindings: net: bluetooth: add interrupts
- properties
-Message-ID: <20191218203818.GA8009@bogus>
-References: <20191213150622.14162-1-glaroque@baylibre.com>
- <20191213150622.14162-2-glaroque@baylibre.com>
- <20191213161901.GZ10631@localhost>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     robh@kernel.org, broonie@kernel.org, lee.jones@linaro.org,
+        linus.walleij@linaro.org, vinod.koul@linaro.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
+        bgoswami@codeaurora.org, linux-gpio@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v5 01/11] ASoC: dt-bindings: add dt bindings for
+ WCD9340/WCD9341 audio codec
+Message-ID: <20191218204123.GA18202@bogus>
+References: <20191217121642.28534-1-srinivas.kandagatla@linaro.org>
+ <20191217121642.28534-2-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191213161901.GZ10631@localhost>
+In-Reply-To: <20191217121642.28534-2-srinivas.kandagatla@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 05:19:01PM +0100, Johan Hovold wrote:
-> On Fri, Dec 13, 2019 at 04:06:21PM +0100, Guillaume La Roque wrote:
-> > add interrupts and interrupt-names as optional properties
-> > to support host-wakeup by interrupt properties instead of
-> > host-wakeup-gpios.
-> > 
-> > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> > ---
-> >  Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> > index b5eadee4a9a7..95912d979239 100644
-> > --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> > +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> > @@ -36,7 +36,9 @@ Optional properties:
-> >      - pcm-frame-type: short, long
-> >      - pcm-sync-mode: slave, master
-> >      - pcm-clock-mode: slave, master
-> > -
-> > + - interrupts: must be one, used to wakeup the host processor if
-> > +   gpiod_to_irq function not supported
+On Tue, 17 Dec 2019 12:16:32 +0000, Srinivas Kandagatla wrote:
+> This patch adds bindings for wcd9340/wcd9341 audio codec which can
+> support both SLIMbus and I2S/I2C interface.
 > 
-> This is a Linux implementation detail which therefore doesn't belong in
-> the binding.
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../bindings/sound/qcom,wcd934x.yaml          | 175 ++++++++++++++++++
+>  1 file changed, 175 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
 > 
-> I think the general rule is to prefer interrupts over gpios where we
-> have a choice, but here the current binding already has a
-> host-wakeup-gpios.
-> 
-> Not sure how best to handle that, maybe Rob knows.
 
-Use gpiod_to_irqd().
-
-You can also deprecate the gpio prop, but you have to keep driver 
-support for it. And updating dts files would break old kernels with new 
-dtbs.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
