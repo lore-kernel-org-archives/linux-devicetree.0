@@ -2,126 +2,94 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D04FC2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE2AC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5967120716
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:01:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="Vg78AXxG"
+	by mail.kernel.org (Postfix) with ESMTP id C0F4224650
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:07:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576692441;
+	bh=zFUKM6MBVYmBIkYzY/9B8HkGPuiQRuCZxM4Y4aVu3n8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FzOZHcxtTmNUE5niyEKrJGIpLH3PdzLt8QZEoJZupDYOymTxWj6ftm0zVe5njxLd+
+	 rMI5FTExSFkVArsFf5ZZxY9ZrXWxheTNFRNB0wU+uG31ryZHRlNgPM24ab5qMwsRHj
+	 r2ZziBUmE9SFgsFiQpppmsWyEaxp0l/1XYz7Birc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfLRSBy (ORCPT
+        id S1727180AbfLRSHV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:01:54 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46664 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfLRSBx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 13:01:53 -0500
-Received: by mail-lf1-f67.google.com with SMTP id f15so2321230lfl.13
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 10:01:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wbOw61ub2QZR5UfVl5vQOrD9xSXq72V2Ul/qpCmdZt4=;
-        b=Vg78AXxGe+bexbffzwNcmQHVU3Hl5ShytUl+R7mjL/uWGW7J09LYQYn8RepvoXG1zj
-         JMYePSp2Y2Us6QxSFr8rrAJ1bMeL/gvokggiamGgBF9z8JxUzzp+rU0vNUBMt+kqsXWI
-         SAYQxwwn2dwde+spxXjHYD/BI/VuH2PvqD5GipvTZmFpp/NvFKN7PN+hzxKh2hOPcZqw
-         0G6DWMf4ZF4A374I0Njh6Ln5MJoKl+zzHhjwGfx+XS/sDsmQy3OIVgjvRi5YvgbFNKa7
-         McLXo8zJUVdhUYDOT77u6CBuYYIVYi/OLld+CtoqPU7MMpcRKRR4ysbx7tvxW3aIYtHn
-         9wwQ==
+        Wed, 18 Dec 2019 13:07:21 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34599 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbfLRSHV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 13:07:21 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l136so1565257oig.1;
+        Wed, 18 Dec 2019 10:07:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=wbOw61ub2QZR5UfVl5vQOrD9xSXq72V2Ul/qpCmdZt4=;
-        b=iysmGehf1YNAuHTGip1Hpv+Cyv84YXp6oSMd1ABoPJ0NGqJLl+Ahp6gl46f0UciWm3
-         CmWl9SKWfluhJUxWLD2E/SFCue8v7P9QkHqJmMtfgu2QlMVjJxGlHWwwbdom8oXmvi7q
-         acOBQFbsqlAH1joi/c66OZNDsHmgqUU/rVknIpK4q87epAScar/fsh1fdO3IodZVWL1r
-         S5vjyq1TsryTmb49nO3Jt25phAVTjI9ghbtQOND4ybKKJqX31khyMVVDmi+1PtHHtiFz
-         dmH8jAX/tMc7CAZZtldLXVchn3fWEIbuSMpfRs+tVMc6lSDkpvXkVXOtH6gYMgMSaBjO
-         RR2w==
-X-Gm-Message-State: APjAAAUL7Q4JbyjM08W+478s4/blxnHyJoScIO83EeQMSRzR6v1spJYO
-        pk2R8bYiElvSazz6nNMECGBInA==
-X-Google-Smtp-Source: APXvYqw7yyxFQAXo7vKA2w7ulRNGvCyv56rfhdpT5ejogTv6wRACLm66i8wHVY98PrQ1Yjcn1Hyyvg==
-X-Received: by 2002:a19:e011:: with SMTP id x17mr2462253lfg.59.1576692111923;
-        Wed, 18 Dec 2019 10:01:51 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:48d1:e89a:1bf6:a9f0:1b42:e170])
-        by smtp.gmail.com with ESMTPSA id i13sm1532470ljg.89.2019.12.18.10.01.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Dec 2019 10:01:51 -0800 (PST)
-Subject: Re: [PATCH] clock: renesas: cpg-mssr: Fix the typo
-To:     Biju Das <biju.das@bp.renesas.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-References: <1576667390-29449-1-git-send-email-biju.das@bp.renesas.com>
- <2368e2c8-7f80-ec22-2c9f-4f719ab347dc@cogentembedded.com>
- <OSBPR01MB2103DDF07C530B24DCD2BE4BB8530@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <f22fc0c9-c74c-0d1f-4abd-8969b806b5dd@cogentembedded.com>
-Date:   Wed, 18 Dec 2019 21:01:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4NsV+0i4sLKWS34I+3p5qC+dqlp/B6BNrXIBm9D5E/4=;
+        b=VnhwQGJdzTnR0FEwQdVDEuAOshRrfkJEKEs/vO3qyU5Rt/iwaxK3KGXFokfjziGop+
+         rKXF88R8EA2MCLefs77SapPTgLA5atIxLFg5N4c0Ahi+yJQ0dwuon+/1fisebt/bPSRI
+         OVXPX2T2lpPsb6TvoCO0sR/8kxheb8okEb2ftf17QdMwMEh4IRk6hH6NGoIbuNcThP/Q
+         9S4K0cfYU2cPUfyMpTRc5dASbrBtS4oeJv1nQ7Tt5EspkPbrLsaOm38VneLfqqKwIMTP
+         h0lzlw+n1If8q+vv47jpg/k9apdvxJnxzr5aaYtxXPoA+ckwihugSG60JZDZXA+ivA3G
+         3/wg==
+X-Gm-Message-State: APjAAAXKY6PQGzpnlsWPgTlNO9eILlS5IzG0T3eUNBBIZUgI1DK9hhpn
+        1PhqO033+T9NlyCSJTMkNg==
+X-Google-Smtp-Source: APXvYqxoWVD8AHiJQbQ2N6vogRNydi3o+JC1XPpaw53Kjs5P5sBy4Aso3UY61GCTHHJ/dNNtST7ksw==
+X-Received: by 2002:a05:6808:6cd:: with SMTP id m13mr1194390oih.95.1576692439993;
+        Wed, 18 Dec 2019 10:07:19 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m2sm1021880oim.13.2019.12.18.10.07.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 10:07:19 -0800 (PST)
+Date:   Wed, 18 Dec 2019 12:07:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v6 02/15] dt-bindings: leds: ROHM BD71282 PMIC LED driver
+Message-ID: <20191218180718.GA4978@bogus>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <697ae4380150cbd08a963de0942b8218868d924b.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <OSBPR01MB2103DDF07C530B24DCD2BE4BB8530@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <697ae4380150cbd08a963de0942b8218868d924b.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/18/2019 03:49 PM, Biju Das wrote:
-
->> Subject: Re: [PATCH] clock: renesas: cpg-mssr: Fix the typo
->>
->> On 18.12.2019 14:09, Biju Das wrote:
->>
->>> This patch fixes the typo %s/r8a774a1/r8a774b1/.
->>>
->>> Fixes: 1000393 ("dt-bindings: clock: renesas: cpg-mssr: Document r8a774b1
->>
->>     SHA1 should have at least 12 digits.
->>
-> Ok will do.
+On Wed, 11 Dec 2019 11:36:51 +0200, Matti Vaittinen wrote:
+> Document ROHM BD71828 PMIC LED driver device tree bindings.
 > 
->>> binding")
->>
->>     And never break up the tag lines please.
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
 > 
-> Do you mean ,  do the changes like below and ignore check patch warnings?
-
-   checkpatch.pl doesn't complain to me, even about short SHA1...
-
-> Is it acceptable to everyone?
-
-   I remember e.g. Dave Miller complaining about breaking up the "Fixes:" tag --
-I think it breaks patchwork. Looking at Documentation/process/submitting-patches.rst,
-this format is even codified...
-
-> Fixes: 10003938a0c64c2f0d89 ("dt-bindings: clock: renesas: cpg-mssr: Document r8a774b1 binding")
+> Changes since v5:
+> - Change SPDX to dual lisence
+> - added select: false
+> - replace oneOf + const by enum
 > 
->>> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
->> [...]
+>  .../bindings/leds/rohm,bd71828-leds.yaml      | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
+> 
 
-MBR, Sergei
+Reviewed-by: Rob Herring <robh@kernel.org>
