@@ -2,62 +2,63 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F44C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 06:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9942CC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 06:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C2520716
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 06:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553A4218AC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 06:59:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKEllDJm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDsZ6ehi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfLRGjt (ORCPT
+        id S1725955AbfLRG7s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 01:39:49 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43715 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfLRGjt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 01:39:49 -0500
-Received: by mail-lf1-f67.google.com with SMTP id 9so814187lfq.10;
-        Tue, 17 Dec 2019 22:39:47 -0800 (PST)
+        Wed, 18 Dec 2019 01:59:48 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45112 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfLRG7s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 01:59:48 -0500
+Received: by mail-lj1-f193.google.com with SMTP id j26so845719ljc.12;
+        Tue, 17 Dec 2019 22:59:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0PhahhQ0p/xZg2C/dJvoZ93qDA05w+8cBI6dXssirME=;
-        b=MKEllDJmQY5uQLF0cfhMOWDg0O+QADZWmnKXaO1Ys05qGEme6VnsyV4JgUuGSZHQn2
-         gbo4j/V/T3Cwf1G0LAr00l4uGUCmGLh/fhAAqiNx/g+iNdHnxj+enoRH+lGl70jaXH9z
-         GxLRaSnVyc/62qTZc7sWbSJk3WPBSXYpDlluxn/awFCyKZp75qTYmQIConggFHaj0z3v
-         gVNG5dMtCEJXCXJ66e5x/+5alZiC1BqSF/6BRhY4/6cKNezyK0SUJYontha9priGJSDA
-         FuVPOe3cM5rGgahWbrVbAQiZ1CUqyUQVu97M2wk+AvUFdoj/3X674mIt4uVXyt0/++Tr
-         D+zQ==
+        bh=CmCrYGkB4ZFug6o70e5mM5AN8jxFdIYj78bBkf6cS9E=;
+        b=rDsZ6ehiV/VaCkyEJyidCLuuzIViJSA3fU06nnxchbnNcHLsWg6FC2rbu2cp4g2nCZ
+         GjdMQHKvGXBnvWiXKj1hKGsMMqGjHMiA0HMp0rzkxDuYMtBvcDt1quK0DzEdDnzPgmIZ
+         dH08cWPlt89V0876fScd0Mm8G4m9KL5O8CeLvfn8TwxwEFQ8KYz+SEguLitgvhJapHUf
+         HdME4jEDXQTOIG4X/x3HXBQwNhgg4iqZ0NBINB68g/dotSJdBVK81dNQ2aRPL/0irAGc
+         5ESQPo37s3ez1Td2wk7GcTHZcfP/xofmgHS8DKphXoH4JIvU0Oo7SOvncl2+IOLJ2kj7
+         9M/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=0PhahhQ0p/xZg2C/dJvoZ93qDA05w+8cBI6dXssirME=;
-        b=B3y5alLNqL7P4NVG9qJ5GfJ0NdwBLxQ69vWpgaAfqrIGB2J6XZdLDhBbgs/6uJ5NN0
-         uvc4fZFNOVHE35zJiOtoxZYiZV6PQmzVwwYvr2aJ0u920Vzr+y0LncPThoUyHqIaukdm
-         7DGZdOW3VPX5YOjGewPhPjjPrIffSq2refSLGyURSPrbjYcYp+1tPzenuwYXF6yiCjzc
-         h8hzuiCCF6DL+nlePit4YsD8XUWPZoh5DMFACFEbqiffwbHW8p0/xRaTJUXZXF1urKaK
-         xmqsKEWH6hOEtJZnNiA/Xv5Lb/ZzhsTqDSmqhOdz3BH1Q5pEadcEDbie1KL4wkoFnCN3
-         1HGA==
-X-Gm-Message-State: APjAAAVlr5XJraDrJatAyPuI6Y3El7g+qTYcIqBlCdjnAYworfTBckVu
-        mhBqpz5jQNtlQ5QCG+6u7Fki8yTz
-X-Google-Smtp-Source: APXvYqxBFp0SR1sdaMaqdlgwEdNK7azflimv2FNu0xc+eES+p3/QWxyVnKC3OZu56qkldt+1bugd7g==
-X-Received: by 2002:a19:f716:: with SMTP id z22mr676613lfe.14.1576651186608;
-        Tue, 17 Dec 2019 22:39:46 -0800 (PST)
+        bh=CmCrYGkB4ZFug6o70e5mM5AN8jxFdIYj78bBkf6cS9E=;
+        b=meIIYNZ2kUX2OzNAYmpI6d2qfZCu0Gl+PJnW8Fb3nmx1YfwL0jIvYOsPy8DdK0+/wl
+         kdyjNz1uz0sKftW6IT/ry35W2svXq+f0rHMT16l/XKDZzXPWE4IJH2V7Kxr3vL9DxvHJ
+         XPEXsOUYpB/cnfrSMZuLqHbZENy4t/OCgNz7qxAqY4RZnPmeiqj8Ln1MsXY0z1+HWL4q
+         PMTq8hkPDhtyzPmBnkATLGEFOLTqY87GxoeG2b97/83NwsRlOXvTyyg4JHagDBF19/hK
+         L88895plqb3NTyvdrW+71O0CKH87odrJ8LQqA5hiEFnLFNKf437k3D9IHthApWJHX0qX
+         QISA==
+X-Gm-Message-State: APjAAAW0/wfA4TK3vasSm0QeebkslNCjJpL6QliayddcfBliknjp/r0v
+        jLXe8IYQtIJ9y7+uGUjWOQoj8zlD
+X-Google-Smtp-Source: APXvYqzT48RPafMiESaVyT/lGCGTlQ1gd/eTB1+JM+yWuja4CpotaFHQ4sjej153gQh/Yj/H0wT0Dw==
+X-Received: by 2002:a2e:978d:: with SMTP id y13mr558306lji.103.1576652384997;
+        Tue, 17 Dec 2019 22:59:44 -0800 (PST)
 Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id u24sm479158ljo.77.2019.12.17.22.39.45
+        by smtp.googlemail.com with ESMTPSA id p4sm517158lji.107.2019.12.17.22.59.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 22:39:45 -0800 (PST)
-Subject: Re: [PATCH v4 17/19] ARM: tegra: Update sound node clocks in device
- tree
+        Tue, 17 Dec 2019 22:59:44 -0800 (PST)
+Subject: Re: [PATCH v4 13/19] ASoC: tegra: Add fallback implementation for
+ audio mclk
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
         thierry.reding@gmail.com, jonathanh@nvidia.com,
         mperttunen@nvidia.com, gregkh@linuxfoundation.org,
@@ -68,14 +69,14 @@ Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
         devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
- <1576613046-17159-18-git-send-email-skomatineni@nvidia.com>
+ <1576613046-17159-14-git-send-email-skomatineni@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f76bf618-607a-af87-f652-4117ed050b70@gmail.com>
-Date:   Wed, 18 Dec 2019 09:39:44 +0300
+Message-ID: <e2f96102-33fa-cbe5-f488-666b7b7ffb06@gmail.com>
+Date:   Wed, 18 Dec 2019 09:59:43 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <1576613046-17159-18-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1576613046-17159-14-git-send-email-skomatineni@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -85,21 +86,92 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 17.12.2019 23:04, Sowjanya Komatineni пишет:
-> clk_out_1, clk_out_2, and clk_out_3 are part of Tegra PMC block
-> and are moved from clock driver to pmc driver with pmc as clock
-> provider.
-> DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-> 	t=1576613055; bh=aZWp4sScdv8qprM+UpGS0w1DX7YelR50gFqoThf23X4=;
-> 	h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-> 	 In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-> 	 Content-Type;
-> 	b=p9EmVtuTvJK6owqo0lmnZnAvftCWc6+7Mkp/Ks9y26tKN5c4jU+I+YEAaMWoHuzd+
-> 	 7n0vS98WNMGomj19IUXoaH49IeTgPAlqOkU57IIiL2qEnX3sYNYpl/rCRUIs7vd33t
-> 	 LSn8tQeu9Lz+Yfl8hvXcN3sdxRQOEPDYwzWG+tVy1FCnwouTHSfBhgado2Tx/9cWgi
-> 	 HlSWkzjvodag7mAmZtLCl5P4J+oVEJnpYnjSZKNojqszn8u651ErvnVI/VbhZwQ0G5
-> 	 Yg8kEr8YECPk2L4MXUe8J2YmKtNyZaADOkUhjyxqMjZ2bGrB9RDm5dKNFxkWuEeSpb
-> 	 U3nMi7MNcvBmQ==
+> mclk is from clk_out_1 which is part of Tegra PMC block and pmc clocks
+> are moved to Tegra PMC driver with pmc as clock provider and using pmc
+> clock ids.
+> 
+> New device tree uses clk_out_1 from pmc clock provider.
+> 
+> So, this patch adds implementation for mclk fallback to extern1 when
+> retrieving mclk returns -ENOENT to be backward compatible of new device
+> tree with older kernels.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  sound/soc/tegra/tegra_asoc_utils.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/tegra/tegra_asoc_utils.c b/sound/soc/tegra/tegra_asoc_utils.c
+> index fe9ca8acd0fb..1b88c6043082 100644
+> --- a/sound/soc/tegra/tegra_asoc_utils.c
+> +++ b/sound/soc/tegra/tegra_asoc_utils.c
+> @@ -191,7 +191,16 @@ int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
+>  	data->clk_cdev1 = devm_clk_get(dev, "mclk");
+>  	if (IS_ERR(data->clk_cdev1)) {
+>  		dev_err(data->dev, "Can't retrieve clk cdev1\n");
+> -		return PTR_ERR(data->clk_cdev1);
+> +		if (PTR_ERR(data->clk_cdev1) != -ENOENT)
+> +			return PTR_ERR(data->clk_cdev1);
+> +		/* Fall back to extern1 */
+> +		data->clk_cdev1 = devm_clk_get(dev, "extern1");
+> +		if (IS_ERR(data->clk_cdev1)) {
+> +			dev_err(data->dev, "Can't retrieve clk extern1\n");
+> +			return PTR_ERR(data->clk_cdev1);
+> +		}
+> +
+> +		dev_err(data->dev, "Falling back to extern1\n");
+>  	}
+>  
+>  	/*
+> 
 
-Looks like NVIDIA's mail server has some problems.
+[    1.769091] ------------[ cut here ]------------
+[    1.769249] WARNING: CPU: 2 PID: 1 at drivers/clk/clk.c:954
+clk_core_disable+0xa5/0x1d4
+[    1.769330] clk_out_1 already disabled
+[    1.769459] Modules linked in:
+[    1.769541] CPU: 2 PID: 1 Comm: swapper/0 Not tainted
+5.5.0-rc1-next-20191213-00167-g6b9fbcdac8f3-dirty #266
+[    1.769676] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+[    1.769775] [<c010e4bd>] (unwind_backtrace) from [<c010a0fd>]
+(show_stack+0x11/0x14)
+[    1.769918] [<c010a0fd>] (show_stack) from [<c09a37b1>]
+(dump_stack+0x85/0x94)
+[    1.770061] [<c09a37b1>] (dump_stack) from [<c011f3d1>]
+(__warn+0xc1/0xc4)
+[    1.770144] [<c011f3d1>] (__warn) from [<c011f691>]
+(warn_slowpath_fmt+0x61/0x78)
+[    1.770285] [<c011f691>] (warn_slowpath_fmt) from [<c04a0e7d>]
+(clk_core_disable+0xa5/0x1d4)
+[    1.770427] [<c04a0e7d>] (clk_core_disable) from [<c04a0fc3>]
+(clk_core_disable_lock+0x17/0x20)
+[    1.770516] [<c04a0fc3>] (clk_core_disable_lock) from [<c07792bb>]
+(tegra_asoc_utils_set_rate+0x53/0x208)
+[    1.770662] [<c07792bb>] (tegra_asoc_utils_set_rate) from
+[<c077b8c5>] (tegra_rt5640_probe+0xd5/0x128)
+[    1.770808] [<c077b8c5>] (tegra_rt5640_probe) from [<c0555eb7>]
+(platform_drv_probe+0x33/0x68)
+[    1.770958] [<c0555eb7>] (platform_drv_probe) from [<c055471d>]
+(really_probe+0x14d/0x240)
+[    1.771099] [<c055471d>] (really_probe) from [<c055493f>]
+(driver_probe_device+0x43/0x11c)
+[    1.771187] [<c055493f>] (driver_probe_device) from [<c0554b25>]
+(device_driver_attach+0x3d/0x40)
+[    1.771328] [<c0554b25>] (device_driver_attach) from [<c0554b5f>]
+(__driver_attach+0x37/0x78)
+[    1.771469] [<c0554b5f>] (__driver_attach) from [<c05532fb>]
+(bus_for_each_dev+0x43/0x6c)
+[    1.771609] [<c05532fb>] (bus_for_each_dev) from [<c0553e0f>]
+(bus_add_driver+0xe3/0x148)
+[    1.771692] [<c0553e0f>] (bus_add_driver) from [<c055531d>]
+(driver_register+0x39/0xa0)
+[    1.771833] [<c055531d>] (driver_register) from [<c0102c2f>]
+(do_one_initcall+0x43/0x1bc)
+[    1.771979] [<c0102c2f>] (do_one_initcall) from [<c1000ce5>]
+(kernel_init_freeable+0x121/0x194)
+[    1.772129] [<c1000ce5>] (kernel_init_freeable) from [<c09b40e9>]
+(kernel_init+0xd/0xd0)
+[    1.772215] [<c09b40e9>] (kernel_init) from [<c01010bd>]
+(ret_from_fork+0x11/0x34)
+[    1.772349] Exception stack(0xde907fb0 to 0xde907ff8)
 
-[snip]
