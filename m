@@ -6,19 +6,19 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B200C2D0D2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BE3C2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7C4218AC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D2B21835
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:42:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfLRCmw (ORCPT
+        id S1726633AbfLRCmx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 21:42:52 -0500
+        Tue, 17 Dec 2019 21:42:53 -0500
 Received: from mail-sh.amlogic.com ([58.32.228.43]:34131 "EHLO
         mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbfLRCmv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 21:42:51 -0500
+        with ESMTP id S1726387AbfLRCmw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 21:42:52 -0500
 Received: from droid10.amlogic.com (10.18.11.213) by mail-sh.amlogic.com
  (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 18 Dec 2019
  10:43:24 +0800
@@ -44,9 +44,9 @@ CC:     Hanjie Lin <hanjie.lin@amlogic.com>,
         Jian Hu <jian.hu@amlogic.com>,
         Victor Wan <victor.wan@amlogic.com>,
         Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH v2 1/6] dt-bindings: phy: Add Amlogic A1 USB2 PHY Bindings
-Date:   Wed, 18 Dec 2019 10:42:19 +0800
-Message-ID: <1576636944-196192-2-git-send-email-hanjie.lin@amlogic.com>
+Subject: [PATCH v2 2/6] dt-bindings: usb: dwc3: Add the Amlogic A1 Family DWC3 Glue Bindings
+Date:   Wed, 18 Dec 2019 10:42:20 +0800
+Message-ID: <1576636944-196192-3-git-send-email-hanjie.lin@amlogic.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576636944-196192-1-git-send-email-hanjie.lin@amlogic.com>
 References: <1576636944-196192-1-git-send-email-hanjie.lin@amlogic.com>
@@ -58,78 +58,76 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the Amlogic A1 Family USB2 PHY Bindings
+The Amlogic A1 SoC Family embeds 1 USB Controllers:
+ - a DWC3 IP configured as Host for USB2 and USB3
 
-It supports Host mode only.
+A glue connects the controllers to the USB2 PHY of A1 SoC.
 
 Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
 Signed-off-by: Yue Wang <yue.wang@amlogic.com>
 ---
- .../bindings/phy/amlogic,meson-a1-usb2-phy.yaml    | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
+ .../bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml  | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
-new file mode 100644
-index 00000000..7a66e8a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Amlogic, Inc
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/amlogic,meson-a1-usb2-phy.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Amlogic A1 USB2 PHY
-+
-+maintainers:
+diff --git a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+index 4efb77b..9740027 100644
+--- a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
++++ b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+@@ -9,6 +9,8 @@ title: Amlogic Meson G12A DWC3 USB SoC Controller Glue
+ 
+ maintainers:
+   - Neil Armstrong <narmstrong@baylibre.com>
++  - Hanjie Lin <hanjie.lin@amlogic.com>
 +  - Yue Wang <yue.wang@amlogic.com>
+ 
+ description: |
+   The Amlogic G12A embeds a DWC3 USB IP Core configured for USB2 and USB3
+@@ -22,10 +24,14 @@ description: |
+   The DWC3 Glue controls the PHY routing and power, an interrupt line is
+   connected to the Glue to serve as OTG ID change detection.
+ 
++  The Amlogic A1 embeds a DWC3 USB IP Core configured for USB2 in
++  host-only mode.
 +
-+properties:
-+  compatible:
-+    enum:
-+      - amlogic,meson-a1-usb2-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    items:
-+      - const: phy
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  power-domains:
-+     maxItems: 1
-+     description:
-+       a phandle to respective power domain node as described by generic
-+       PM domain bindings (see power/power_domain.txt for more information).
-+
-+required:
-+  - compatible
-+  - reg
-+  - resets
-+  - reset-names
-+  - "#phy-cells"
-+  - power-domains
-+
-+examples:
+ properties:
+   compatible:
+     enum:
+       - amlogic,meson-g12a-usb-ctrl
++      - amlogic,meson-a1-usb-ctrl
+ 
+   ranges: true
+ 
+@@ -124,4 +130,30 @@ examples:
+               snps,quirk-frame-length-adjustment;
+           };
+     };
 +  - |
-+    usb2_phy0: phy@40000 {
-+      status = "okay";
-+      compatible = "amlogic,a1-usb2-phy";
-+      reg = <0x0 0x40000 0x0 0x2000>;
-+      resets = <&reset RESET_USBPHY>;
-+      reset-names = "phy";
-+      #phy-cells = <0>;
-+      power-domains = <&pwrc PWRC_USB_ID>;
-+    };
++    usb: usb@ffe09000 {
++          status = "okay";
++          compatible = "amlogic,meson-a1-usb-ctrl";
++          reg = <0x0 0xffe09000 0x0 0xa0>;
++          #address-cells = <2>;
++          #size-cells = <2>;
++          ranges;
+ 
++          clocks = <&clkc_periphs CLKID_USB_CTRL>,
++           <&clkc_periphs CLKID_USB_BUS>,
++           <&clkc_periphs CLKID_XTAL_USB_PHY>,
++           <&clkc_periphs CLKID_XTAL_USB_CTRL>;
++          clock-names = "usb_ctrl", "usb_bus", "xtal_usb_phy", "xtal_usb_ctrl";
++          resets = <&reset RESET_USBCTRL>;
++          phys = <&usb2_phy0>;
++          phy-names = "usb2-phy0";
++
++          dwc3: usb@ff400000 {
++                  compatible = "snps,dwc3";
++                  reg = <0x0 0xff400000 0x0 0x100000>;
++                  interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
++                  dr_mode = "host";
++                  snps,dis_u2_susphy_quirk;
++                  snps,quirk-frame-length-adjustment = <0x20>;
++          };
++  };
 -- 
 2.7.4
 
