@@ -2,332 +2,166 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4D1C2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A37C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 839E62465E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:05:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQicO8c7"
+	by mail.kernel.org (Postfix) with ESMTP id 7D1A921582
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:10:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfLRPFm (ORCPT
+        id S1727210AbfLRPK6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:05:42 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41556 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727114AbfLRPFm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 10:05:42 -0500
-Received: by mail-il1-f196.google.com with SMTP id f10so1944636ils.8;
-        Wed, 18 Dec 2019 07:05:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qpZHSL4AcB3kgk21kuMo/J0A9vvDS0nQUGykICvtQMk=;
-        b=MQicO8c7d5xphZrZZ8qnCNARW9qhHC9o4kWtr0VUl8E9+g+eQF3UnZOio3V3ao8TDd
-         2AKj3X0NdxGAlN/pgeFIYb80YRYuGegXeCxhQZibG6bakH9cPX85nONa7BKOdW26TGiN
-         889AdYCS3JC3ng67IjUZ9UDXSSp+rDqW7dh7AB971OaCCLKfgXa/HsAsg2q/HG4WGvyB
-         2JJUmRwOK+rXLXsdMt/MtaQA0C4oiSKdSL6BRuU17xvVHOAQlyUyGCkrxXpRZByFWwbK
-         c7bibNKb6mtc3dijQH5ZYU3IUCP/osO8kiAiYxNgFea8yChvw5SfTZep1oBZWl/oPqAj
-         4dUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qpZHSL4AcB3kgk21kuMo/J0A9vvDS0nQUGykICvtQMk=;
-        b=MYBL6ivIojzJvqcWNtMAiasPZwD9Pjdj0guDltAfKHEGBLkKW5UtnIiv1NJFz49est
-         gMzO+/nKFncPz9VWA+b9+IQd7E+CO9f9Yovb1+1aRKrIEdRsk/z5eicMjmDeUbry6vl8
-         9UgN9R7UIXVSuEKD7HKpw1BEczHESP4XleK8FIxJwImDcvyjLfWdbsQgxEVhcVT1FBM+
-         FL60qXAS3P/ECwjQCObGirnsrmN+es6IVW/CkdVguupaL9axrGqDdyfk5bnSIHlMEo7R
-         Skk/9yCODmG7xeu6uw2rlx3NlJ96wKAkMUbl+CC2IXbkQq9wyEMT0BVUNe+lNPN97yiw
-         XuRA==
-X-Gm-Message-State: APjAAAVTLJDhLJVWQEw42pe1bs+xKn0nyVj0+NB9rgzK41P1E7Orq/PJ
-        lbDVD6xcr95HkPjoo7fcZPwq/CCQpLZ4FkZitEE=
-X-Google-Smtp-Source: APXvYqwHaKfjoBa3UFocF63h9McBZzwgUF6Oc6jihTkaDxCKuPN9zD6Cj8gnO6IZST5sLqu7rvKkOopQEa698xtBTf4=
-X-Received: by 2002:a92:dc91:: with SMTP id c17mr2439267iln.78.1576681540519;
- Wed, 18 Dec 2019 07:05:40 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1574458460.git.leonard.crestez@nxp.com> <CAHCN7xKNwit8ueUO0OkebfYh=4hsL7_+DRWEbn2dEt0H322W4w@mail.gmail.com>
- <VI1PR04MB70231CA0E3C4574211518359EE530@VI1PR04MB7023.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB70231CA0E3C4574211518359EE530@VI1PR04MB7023.eurprd04.prod.outlook.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 18 Dec 2019 09:05:28 -0600
-Message-ID: <CAHCN7xJNy0z2hvWbM3UhLni5ruS+sCLeBH8BKiYexe3Sp=6Q0w@mail.gmail.com>
-Subject: Re: [PATCH v7 0/5] PM / devfreq: Add dynamic scaling for imx8m ddr controller
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Martin Kepplinger <martink@posteo.de>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 Dec 2019 10:10:58 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14242 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726939AbfLRPK5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:10:57 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIErHHx015890;
+        Wed, 18 Dec 2019 10:09:44 -0500
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wyjf8hpb9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 10:09:43 -0500
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBIF4nNw006295;
+        Wed, 18 Dec 2019 15:09:42 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma04wdc.us.ibm.com with ESMTP id 2wvqc6p71t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 15:09:42 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBIF9fOg61538592
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Dec 2019 15:09:41 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2864013604F;
+        Wed, 18 Dec 2019 15:09:41 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 14989136059;
+        Wed, 18 Dec 2019 15:09:40 +0000 (GMT)
+Received: from talon7.ibm.com (unknown [9.41.103.158])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 18 Dec 2019 15:09:39 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, jason@lakedaemon.net, maz@kernel.org,
+        robh+dt@kernel.org, tglx@linutronix.de, joel@jms.id.au,
+        andrew@aj.id.au, eajames@linux.ibm.com
+Subject: [PATCH v3 01/12] dt-bindings: interrupt-controller: Add Aspeed SCU interrupt controller
+Date:   Wed, 18 Dec 2019 09:09:27 -0600
+Message-Id: <1576681778-18737-2-git-send-email-eajames@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1576681778-18737-1-git-send-email-eajames@linux.ibm.com>
+References: <1576681778-18737-1-git-send-email-eajames@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-18_04:2019-12-17,2019-12-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ mlxlogscore=780 lowpriorityscore=0 spamscore=0 mlxscore=0 impostorscore=0
+ adultscore=0 suspectscore=1 bulkscore=0 clxscore=1015 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912180124
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 8:44 AM Leonard Crestez <leonard.crestez@nxp.com> w=
-rote:
->
-> On 18.12.2019 15:35, Adam Ford wrote:
-> > On Fri, Nov 22, 2019 at 3:45 PM Leonard Crestez <leonard.crestez@nxp.co=
-m> wrote:
-> >>
-> >> This adds support for dynamic scaling of the DDR Controller (ddrc)
-> >> present on i.MX8M series chips. Actual frequency switching is
-> >> implemented inside TF-A, this driver wraps the SMC calls and
-> >> synchronizes the clk tree.
-> >>
-> >> DRAM frequency switching requires clock manipulation but during this o=
-peration
-> >> DRAM itself is briefly inaccessible so this operation is performed a S=
-MC call
-> >> to by TF-A which runs from a SRAM area. Upon returning to linux the cl=
-ock tree
-> >> is updated to correspond to hardware configuration.
-> >>
-> >> This is handled via CLK_GET_RATE_NO_CACHE for dividers but muxes are h=
-andled
-> >> manually: the driver will prepare/enable the new parents ahead of swit=
-ching (so
-> >> that the expected roots are enabled) and afterwards it will call clk_s=
-et_parent
-> >> to ensure the parents in clock framework are up-to-date.
-> >>
-> >> This series is useful standalone and roughly similar to devfreq driver=
-s for
-> >> tegra and rockchip.
-> >>
-> >> Running at lower dram rates saves power but can affect the functionali=
-ty of
-> >> other blocks in the chip (display, vpu etc). Support for in-kernel con=
-straints
-> >> will some separately.
-> >>
-> >> This series has no dependencies outside linux-next. The driver depends
-> >> on features from the NXP branch of TF-A and will cleanly fail to probe
-> >> on mainline. There are also plans to upstream dram dvfs in TF-A.
-> >>
-> >> Changes since v6:
-> >> * Replace ARCH_MXC || COMPILE_TEST with ARCH_MXC && HAVE_ARM_SMCCC
-> >> * Collect reviews
-> >> Link to v6: https://eur01.safelinks.protection.outlook.com/?url=3Dhttp=
-s%3A%2F%2Fpatchwork.kernel.org%2Fcover%2F11244283%2F&amp;data=3D02%7C01%7Cl=
-eonard.crestez%40nxp.com%7Cb7adb366b79f4c564c7908d783bf23ae%7C686ea1d3bc2b4=
-c6fa92cd99c5c301635%7C0%7C0%7C637122729275120308&amp;sdata=3DZEZnG6pijjj4MO=
-bC99c6%2BvC8BFEfT1KLVxbJCNocoWw%3D&amp;reserved=3D0
-> >>
-> >> I'd rather not fix COMPILE_TEST with ifdefs for this driver, if anythi=
-ng
-> >> that should be fixed in smccc header. ARCH_MXC doesn't imply SMCCC, it
-> >> also covers some very old chips which don't have it.
-> >>
-> >> Resending full series because that's the standard method.
-> >>
-> >> Changes since v5:
-> >> * Fix a dram_apb/dram_alt mixup in imx8m_ddrc_set_freq
-> >> * Make clk_get_parent_by_index static (kbuild robot)
-> >> * Adjust messages in imx8m_ddrc_set_freq
-> >> * Use a for loop inside imx8m_ddrc_check_opps instead of while
-> >> * More elaborate description in dt-bindings file.
-> >> Link to v5: https://eur01.safelinks.protection.outlook.com/?url=3Dhttp=
-s%3A%2F%2Fpatchwork.kernel.org%2Fcover%2F11240289%2F&amp;data=3D02%7C01%7Cl=
-eonard.crestez%40nxp.com%7Cb7adb366b79f4c564c7908d783bf23ae%7C686ea1d3bc2b4=
-c6fa92cd99c5c301635%7C0%7C0%7C637122729275130306&amp;sdata=3DmMqglPQign%2B6=
-NHgmDYoZ74%2FZeThGI6%2FgNkajo1VaHTI%3D&amp;reserved=3D0
-> >>
-> >> Changes since v4:
-> >> * Restore empty _get_dev_status: testing shows this is *NOT* optional.=
- If
-> >> absent then switching to simple_ondemand governor will trigger an Oops=
-.
-> >> * Keep clk registration on single-line in clk-imx8m* for consistency w=
-ith rest
-> >> of the file.
-> >> * Drop explicit "select PM_OPP"
-> >> * Check for NULL new_dram_core_parent
-> >> * Rename "out_dis_" labels to out_disable_*
-> >> * Use dev_warn on imx8m_ddrc_set_freq error paths after SMC call (wher=
-e
-> >> operation is not abandoned).
-> >> * More elaborate error messages in imx8m_ddrc_target
-> >> * More elaborate checks when fetching clks in imx8m_ddrc_set_freq
-> >> * Rename ddrc nodes to memory-controller@* as per devicetree.org "Gene=
-ric Names
-> >> Recommendation"
-> >> * Defer perf support, it requires perf changes to fetch PMU by DT
-> >> Link to v4: https://eur01.safelinks.protection.outlook.com/?url=3Dhttp=
-s%3A%2F%2Fpatchwork.kernel.org%2Fcover%2F11235685%2F&amp;data=3D02%7C01%7Cl=
-eonard.crestez%40nxp.com%7Cb7adb366b79f4c564c7908d783bf23ae%7C686ea1d3bc2b4=
-c6fa92cd99c5c301635%7C0%7C0%7C637122729275130306&amp;sdata=3DLXG4bo0l7FOttZ=
-IolJE73CK67AAAW72xfx8yq3Vld7o%3D&amp;reserved=3D0
-> >>
-> >> Changes since v3:
-> >> * Rename to imx8m-ddrc. Similar blocks are present on imx7d and imx8qx=
-p/imx8qm
-> >> but soc integration is different.
-> >> * Move dt bindings to /memory-controllers/fsl/
-> >> * Fix dt validation issues
-> >> * Fix imx8mm.dtsi ddrc referencing ddrc_opp_table which is only define=
-d in evk
-> >> * Move opps to child of ddrc device node
-> >> * Only add imx_ddrc_get_dev_status in perf patch.
-> >> * Adjust print messages
-> >> Link to v3: https://eur01.safelinks.protection.outlook.com/?url=3Dhttp=
-s%3A%2F%2Fpatchwork.kernel.org%2Fcover%2F11221935%2F&amp;data=3D02%7C01%7Cl=
-eonard.crestez%40nxp.com%7Cb7adb366b79f4c564c7908d783bf23ae%7C686ea1d3bc2b4=
-c6fa92cd99c5c301635%7C0%7C0%7C637122729275130306&amp;sdata=3D%2FFGddgm7jq87=
-j7tz6gNd%2B7V%2BGX4KF5RaPsnXK2kITdQ%3D&amp;reserved=3D0
-> >>
-> >> Changes since v2:
-> >> * Add support for entire imx8m family including imx8mq B0.
-> >> * Also mark dram PLLs as CLK_GET_RATE_NO_CACHE (required for imx8mq b0=
- low OPP)
-> >> * Explicitly update dram pll rate at the end of imx_ddrc_set_freq.
-> >> * Use do_div in imx-ddrc (kbuild robot)
-> >> * Improve explanations around adding CLK_GET_RATE_NO_CACHE to dram clk=
-s.
-> >> (Stephen Boyd)
-> >> * Handle ddrc devfreq-events earlier for fewer probe defers.
-> >> * Validate DDRC opp tables versus firmware: supported OPPs depend on b=
-oard and
-> >> SOC revision.
-> >> * Move DDRC opp tables to board dts because they can vary based on ram=
- type on
-> >> board.
-> >> * Verify DDRC rate is changed in clk tree and otherwise report an erro=
-r.
-> >> * Change imx_ddrc_freq.rate to be measure in MT/s and round down from =
-HZ in
-> >> imx_ddrc_find_freq instead.
-> >> * Split away from NOC scaling and interconnect support.
-> >> Link to v2: https://eur01.safelinks.protection.outlook.com/?url=3Dhttp=
-s%3A%2F%2Fpatchwork.kernel.org%2Fcover%2F11104113%2F&amp;data=3D02%7C01%7Cl=
-eonard.crestez%40nxp.com%7Cb7adb366b79f4c564c7908d783bf23ae%7C686ea1d3bc2b4=
-c6fa92cd99c5c301635%7C0%7C0%7C637122729275130306&amp;sdata=3D3hh0dR1h4Esc6q=
-o79QQKH%2FkUQjrOUgLANR0PcIz1Pss%3D&amp;reserved=3D0
-> >>
-> >> Changes since v1:
-> >> * bindings: Stop using "contains" for "compatible"
-> >> * bindings: Set "additionalProperties: false" and document missing stu=
-ff.
-> >> * Remove (c) from NXP copyright notice
-> >> * Fix various checkpatch issues
-> >> * Remove unused dram_alt_root clk from imx-ddrc
-> >> Link to v1: https://eur01.safelinks.protection.outlook.com/?url=3Dhttp=
-s%3A%2F%2Fpatchwork.kernel.org%2Fcover%2F11090649%2F&amp;data=3D02%7C01%7Cl=
-eonard.crestez%40nxp.com%7Cb7adb366b79f4c564c7908d783bf23ae%7C686ea1d3bc2b4=
-c6fa92cd99c5c301635%7C0%7C0%7C637122729275130306&amp;sdata=3DHj6NEmoaRHoR%2=
-BQpFoUDdTlybO%2FSTatO2fFo20UGLJf0%3D&amp;reserved=3D0
-> >>
-> >> Leonard Crestez (5):
-> >>    clk: imx8m: Set CLK_GET_RATE_NOCACHE on dram clocks
-> >>    clk: imx: Mark dram pll on 8mm and 8mn with CLK_GET_RATE_NOCACHE
-> >>    dt-bindings: memory: Add bindings for imx8m ddr controller
-> >>    PM / devfreq: Add dynamic scaling for imx8m ddr controller
-> >>    arm64: dts: imx8m: Add ddr controller nodes
-> >>
-> >>   .../memory-controllers/fsl/imx8m-ddrc.yaml    |  72 +++
-> >>   arch/arm64/boot/dts/freescale/imx8mm-evk.dts  |  18 +
-> >>   arch/arm64/boot/dts/freescale/imx8mm.dtsi     |  10 +
-> >>   .../boot/dts/freescale/imx8mn-ddr4-evk.dts    |  18 +
-> >>   arch/arm64/boot/dts/freescale/imx8mn.dtsi     |  10 +
-> >>   arch/arm64/boot/dts/freescale/imx8mq-evk.dts  |  24 +
-> >>   arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  10 +
-> >>   drivers/clk/imx/clk-imx8mm.c                  |  11 +-
-> >>   drivers/clk/imx/clk-imx8mn.c                  |  12 +-
-> >>   drivers/clk/imx/clk-imx8mq.c                  |  12 +-
-> >>   drivers/clk/imx/clk-pll14xx.c                 |   7 +
-> >>   drivers/clk/imx/clk.h                         |   1 +
-> >>   drivers/devfreq/Kconfig                       |   9 +
-> >
-> > Since there is a Kconfig change, should there me a defconfig change?
->
-> Yes, you need to enable CONFIG_ARM_IMX8M_DDRC_DEVFREQ in order to test
-> this. Enabling as "m" should work.
+Document the Aspeed SCU interrupt controller and add an include file
+for the interrupts it provides.
 
-I enabled it as 'm' but I was more curious to know if we should push
-this upstream with the rest of the series.
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ .../aspeed,ast2xxx-scu-ic.txt                 | 23 +++++++++++++++++++
+ MAINTAINERS                                   |  7 ++++++
+ .../interrupt-controller/aspeed-scu-ic.h      | 23 +++++++++++++++++++
+ 3 files changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
+ create mode 100644 include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
 
->
-> >>   drivers/devfreq/Makefile                      |   1 +
-> >>   drivers/devfreq/imx8m-ddrc.c                  | 465 ++++++++++++++++=
-++
-> >>   15 files changed, 670 insertions(+), 10 deletions(-)
-> >>   create mode 100644 Documentation/devicetree/bindings/memory-controll=
-ers/fsl/imx8m-ddrc.yaml
-> >>   create mode 100644 drivers/devfreq/imx8m-ddrc.c
-> >
-> > I applied the whole series against 5.5-rc1 and I am trying to test it.
-> > I know the 4.14 kernel NXP posted on Code Aurora is capable to
-> > lowering the DDRC controller to 25MHz on the 8MM when the video is
-> > off.  Since there is no video support yet for the 8MM, I was expecting
-> > to see the DDRC clock to be at or around 25MHz.
-> >
-> > Using debug FS, I can see the dram core clock is still running at
-> > 750MHz, and measuring power, it shows something consistent with what I
-> > see on the Code Aurora kernel with video turned on and the clock at
-> > 750MHz.
-> >
-> > Is there some way to get the dram_core_clk to drop to 25MHz to see
-> > some power reduction?  The same commands used in the Yocto build don't
-> > apply here since we don't have video.
->
-> Current upstream driver just keeps current frequency by default. Try the
-> following:
->
-> cd /sys/class/devfreq/devices/devfreq0
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
+new file mode 100644
+index 000000000000..251ed44171db
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
+@@ -0,0 +1,23 @@
++Aspeed AST25XX and AST26XX SCU Interrupt Controller
++
++Required Properties:
++ - #interrupt-cells		: must be 1
++ - compatible			: must be "aspeed,ast2500-scu-ic",
++				  "aspeed,ast2600-scu-ic0" or
++				  "aspeed,ast2600-scu-ic1"
++ - interrupts			: interrupt from the parent controller
++ - interrupt-controller		: indicates that the controller receives and
++				  fires new interrupts for child busses
++
++Example:
++
++    syscon@1e6e2000 {
++        ranges = <0 0x1e6e2000 0x1a8>;
++
++        scu_ic: interrupt-controller@18 {
++            #interrupt-cells = <1>;
++            compatible = "aspeed,ast2500-scu-ic";
++            interrupts = <21>;
++            interrupt-controller;
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 39a8c6a49b81..219cd69d871b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2692,6 +2692,13 @@ S:	Maintained
+ F:	drivers/pinctrl/aspeed/
+ F:	Documentation/devicetree/bindings/pinctrl/aspeed,*
+ 
++ASPEED SCU INTERRUPT CONTROLLER DRIVER
++M:	Eddie James <eajames@linux.ibm.com>
++L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
++F:	include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
++
+ ASPEED VIDEO ENGINE DRIVER
+ M:	Eddie James <eajames@linux.ibm.com>
+ L:	linux-media@vger.kernel.org
+diff --git a/include/dt-bindings/interrupt-controller/aspeed-scu-ic.h b/include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
+new file mode 100644
+index 000000000000..f315d5a7f5ee
+--- /dev/null
++++ b/include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++
++#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_ASPEED_SCU_IC_H_
++#define _DT_BINDINGS_INTERRUPT_CONTROLLER_ASPEED_SCU_IC_H_
++
++#define ASPEED_SCU_IC_VGA_CURSOR_CHANGE			0
++#define ASPEED_SCU_IC_VGA_SCRATCH_REG_CHANGE		1
++
++#define ASPEED_AST2500_SCU_IC_PCIE_RESET_LO_TO_HI	2
++#define ASPEED_AST2500_SCU_IC_PCIE_RESET_HI_TO_LO	3
++#define ASPEED_AST2500_SCU_IC_LPC_RESET_LO_TO_HI	4
++#define ASPEED_AST2500_SCU_IC_LPC_RESET_HI_TO_LO	5
++#define ASPEED_AST2500_SCU_IC_ISSUE_MSI			6
++
++#define ASPEED_AST2600_SCU_IC0_PCIE_PERST_LO_TO_HI	2
++#define ASPEED_AST2600_SCU_IC0_PCIE_PERST_HI_TO_LO	3
++#define ASPEED_AST2600_SCU_IC0_PCIE_RCRST_LO_TO_HI	4
++#define ASPEED_AST2600_SCU_IC0_PCIE_RCRST_HI_TO_LO	5
++
++#define ASPEED_AST2600_SCU_IC1_LPC_RESET_LO_TO_HI	0
++#define ASPEED_AST2600_SCU_IC1_LPC_RESET_HI_TO_LO	1
++
++#endif /* _DT_BINDINGS_INTERRUPT_CONTROLLER_ASPEED_SCU_IC_H_ */
+-- 
+2.24.0
 
-can't cd to /sys/class/devfreq/devices/devfreq0: No such file or directory
-
-I did some checking and I found:
-    imx8m-ddrc-devfreq 3d400000.memory-controller: failed to init
-firmware freq info: -19
-
-Was there some prerequisite patches I needed to apply before your series?
-
-I applied them against 5.5-r1, but if there is a better branch
-somewhere, I can try that as well.
-
-adam
-
-> echo userspace > governor
-> echo 25000000 > userspace/set_freq
-> cat /sys/kernel/debug/clk/dram_core_clk/clk_rate
-> echo 750000000 > userspace/set_freq
-> cat /sys/kernel/debug/clk/dram_core_clk/clk_rate
->
-> --
-> Regards,
-> Leonard
