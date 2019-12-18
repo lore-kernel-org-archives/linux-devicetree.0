@@ -2,531 +2,113 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42135C2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 13:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA967C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 13:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18FF72146E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 13:24:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TP/W6hrW"
+	by mail.kernel.org (Postfix) with ESMTP id 83B9A227BF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 13:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfLRNY4 (ORCPT
+        id S1726743AbfLRNdO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:24:56 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44644 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfLRNYA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 08:24:00 -0500
-Received: by mail-lf1-f65.google.com with SMTP id v201so1667453lfa.11
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 05:23:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NVL5+pBVbAL5rpEkMW1hQcPnra9m/vRP70pZvH2RbgM=;
-        b=TP/W6hrWPtyhXCnkJ/M9rO3u+zLh3YW8407ypXPQ0jPTnR218QRgcQEVS8vVPruxsJ
-         b5iwm5Q3gQnNMqIY88TBmzVs2o3mwbIN+y+oXlF7OuTSeTHfB1isqtaI4Ln9XLACWMZm
-         NPzC9Mh4i89TNToP9uCHGuInBM9Ec6CGNNt7ZG/AMWhruQEkhnQgpDzIA1IDfpSVCFuF
-         TmKl2ATKudd2O2B4a3xB+L696oTUIm0K0e2jqliW3KMsB3heYCGcDZzCuA/+e34tMaZX
-         +AmSE8c3El6Pb3H7UGz8qauHmaIKIkkawsaTaYVE9wXgB62Xk/Jyi2ilR2Qki6i9Tvi7
-         ZbQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NVL5+pBVbAL5rpEkMW1hQcPnra9m/vRP70pZvH2RbgM=;
-        b=Dn5PY+QPXSDSKjfKm6UXJzBETqoA3AQC0ErVYpp8t97qjCONx/wlRI8kd4fHFiDR4H
-         AHAMTQDwdy3CGL8aU7L8VsgYUtNZSE+M8mfKrRUQl9OGp3BsUPJpzOd6Qv+q4d4nhs9h
-         FZrQH5bRDgro5Dc6BAgD40PgYZ6VMQNZvNGtVrNb7NRY7vrDPXFQw3ZwT1JCaZ4+Mnoi
-         2QtpFHMBvfwYXkjGg+HSq1KCmwW1Eo9o89/RTNL8mj+INyAGP1qLDx2BYSXLOVBm7pld
-         5MbdbKNRTIpYoeQMI2tHnkHUYMhAMsUNar8DQYhHPg6oLhpSikZDk5SewPzNAK/xJqO/
-         41wg==
-X-Gm-Message-State: APjAAAUTBFQIu+o64lk13S6TE8/IevsENhSUV0VwBTGj2BGLQQpoN37b
-        QSJrmcTQtgDdS2mRMVuCQUOU0Q==
-X-Google-Smtp-Source: APXvYqyEV2zH52TJucpVEAfjbOlJ0yPikw57AriZ+ObO+Ogbx38H64kV+wagfc75Q8ubHSaVt/OKTw==
-X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr1699990lfp.133.1576675436728;
-        Wed, 18 Dec 2019 05:23:56 -0800 (PST)
-Received: from localhost.localdomain ([37.157.136.193])
-        by smtp.gmail.com with ESMTPSA id z7sm1440667lfa.81.2019.12.18.05.23.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 05:23:56 -0800 (PST)
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org,
-        Aniket Masule <amasule@codeaurora.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v2 02/12] media: venus: introduce core selection
-Date:   Wed, 18 Dec 2019 15:22:41 +0200
-Message-Id: <20191218132251.24161-3-stanimir.varbanov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191218132251.24161-1-stanimir.varbanov@linaro.org>
-References: <20191218132251.24161-1-stanimir.varbanov@linaro.org>
+        Wed, 18 Dec 2019 08:33:14 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:58044 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbfLRNdN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 08:33:13 -0500
+X-AuditID: c0a8fbf4-199ff70000001fa6-7b-5dfa2a97b167
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 01.2F.08102.79A2AFD5; Wed, 18 Dec 2019 14:33:11 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Wed, 18 Dec 2019 14:33:05 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>
+Subject: Re: Applied "regulator: bd71828: Basic support for ROHM bd71828
+ PMIC regulators" to the regulator tree
+Thread-Topic: Applied "regulator: bd71828: Basic support for ROHM bd71828
+ PMIC regulators" to the regulator tree
+Thread-Index: AQHVtNcCPO+Kt0OMfE2l+CzrBWADfqe/eY8AgABW2wCAAAR/gA==
+Date:   Wed, 18 Dec 2019 13:33:05 +0000
+Message-ID: <60906cc2c51c726a8d7f4fbfd31deb72489ceb04.camel@fi.rohmeurope.com>
+References: <applied-5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+         <de7424126e285d9bbd21a70945415d78203c2ba7.camel@fi.rohmeurope.com>
+         <20191218131700.GB42175@sirena.org.uk>
+In-Reply-To: <20191218131700.GB42175@sirena.org.uk>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4D3FA5736842F04EAD470EBE9F8DE766@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0wTZxjH895d7w7wtrMivHa6uEs2h0bU6ZI3hhi2ZPGWmc3MbFm2VDzH
+        jevsD7iWRbYsYRomBcYAIcTG1smvNVitVtGNYGwqOtepS7UC4pQ0NEwIgYyhUBDcXW8Kf73P
+        83yf7/N5/nheGte3UQbaZHWIslUwc2QqEfTOBtY3rp0xbhwZfBG1RO5Q6NBYG4Xm6q5SaNId
+        JlBDLE6iePAQQMe6b+pQ5R/ndOhgs59E9zpOE2jg0RWAHkfLMVT/5GcM/VP1QIeOf99CoLPH
+        ngB0u/MoiTpGTwF09USURK29EQwdbb1GoPEJJ4Yi4XdQQ3iMQvfDV0h0MNKHo7KL3RSa7zlD
+        oOqb23NX8T6PD/CzM3WAH+8ro3iP7xv+V9d9ig+0O0n+r54ukr/k9lF8c/VhHf/4ei3BDx33
+        E/xvfRcwvtGTwHh/VTfgvSemKP7fwMs72U/TcvYKjq92mQqsG7btSZNuPP0RK6yh909PnwSl
+        YJKqACk0ZLfAvuAEWQFSaT17B8ByTwOlJdcAbJw+qSQ0TbI5sOJu0pDOrocNM81JA85G02BT
+        9DCuCsvYIvjD2TCuNcmwf26Y0OK34W3PIKHOIdhXYfvpHLXMsO/DA74I0FgDALo7R3WqkMJu
+        hv1tdUkYYFdBZ+kYpsY4mwkDQ1M6bWsWtnT9iWvxcjg8OP9/nYMXE7EkC2ezoL9zg2bNhaNn
+        xnEtfgXWV8YobYel8PcjcaIGZLgWEVwLbtcit2uR27XI/RPQtQNoEUzmAsEhbsqWxeJs2SZZ
+        lOdzmyUAtLub/AU8Db0bAhgNQmAFjXHLGU5KGPUv7LXll0iCXcqTi82iPQQgjXPpzL1yRWPy
+        hZKvRdn2THqJJrhMZk2s1qhnVdY+USwU5WfqSprmIFP/+oxRv1QWC8T9X5jMjgUZo1PU4amG
+        dLtozRdlodgh5an3kWdXDkSVlijch6qdsRcKFqWqWcNgHV0z7G7C6W53axOuJ6w2q2jIZJjX
+        lFZWbZWKrc9BIyCTBtwy5nKWoi5RPt/zOSMKAlMQdFYS4RAWJEMpyPe7gh+sTv8sr3Br9se2
+        +IG5pqH6T8zBjJKp2iMfTmz7aF124u9dlaa7CL25h/zSd+FyRny7rac/ZfNq83vznt27nVtb
+        Z3fs3HGeJApiFqvzEmGAiY7eN7xEyfm3Ho70DnRFT50rGm3bOBi6Vb2yrIozr4gYvVsk7yN7
+        0Xffrsl9wBF2Sdi0Fpftwn8xKXZtOQQAAA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Aniket Masule <amasule@codeaurora.org>
-
-Presently the core (vcodec pipelines) assignment is static. Here we
-introduce dynamic load balancing across the cores depending on the
-current session load. The load on earch core is calculated and core
-with minimum load is assigned to given instance. This will be
-applicable on Venus v4 with more than one vcodec cores.
-
-Signed-off-by: Aniket Masule <amasule@codeaurora.org>
-Co-developed-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- drivers/media/platform/qcom/venus/core.h      |   3 +
- drivers/media/platform/qcom/venus/helpers.c   |  17 +-
- drivers/media/platform/qcom/venus/helpers.h   |   1 -
- .../media/platform/qcom/venus/hfi_helper.h    |   1 +
- .../media/platform/qcom/venus/hfi_parser.h    |   5 +
- .../media/platform/qcom/venus/pm_helpers.c    | 183 ++++++++++++++++--
- .../media/platform/qcom/venus/pm_helpers.h    |  26 +++
- drivers/media/platform/qcom/venus/vdec.c      |  11 +-
- drivers/media/platform/qcom/venus/venc.c      |  10 +-
- 9 files changed, 221 insertions(+), 36 deletions(-)
-
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index c66763e1b8f1..bfbd4a1ba089 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -181,6 +181,8 @@ struct venus_core {
- 	struct delayed_work work;
- 	struct venus_caps caps[MAX_CODEC_NUM];
- 	unsigned int codecs_count;
-+	unsigned int core0_usage_count;
-+	unsigned int core1_usage_count;
- };
- 
- struct vdec_controls {
-@@ -379,6 +381,7 @@ struct venus_inst {
- 	const struct hfi_inst_ops *ops;
- 	u32 session_type;
- 	union hfi_get_property hprop;
-+	unsigned int core_acquired: 1;
- };
- 
- #define IS_V1(core)	((core)->res->hfi_version == HFI_VERSION_1XX)
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index cbeeaf6077e0..043e0d8705a8 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -723,21 +723,6 @@ int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode)
- }
- EXPORT_SYMBOL_GPL(venus_helper_set_work_mode);
- 
--int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage)
--{
--	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
--	struct hfi_videocores_usage_type cu;
--
--	inst->clk_data.core_id = usage;
--	if (!IS_V4(inst->core))
--		return 0;
--
--	cu.video_core_enable_mask = usage;
--
--	return hfi_session_set_property(inst, ptype, &cu);
--}
--EXPORT_SYMBOL_GPL(venus_helper_set_core_usage);
--
- int venus_helper_init_codec_freq_data(struct venus_inst *inst)
- {
- 	const struct codec_freq_data *data;
-@@ -1101,6 +1086,8 @@ void venus_helper_vb2_stop_streaming(struct vb2_queue *q)
- 	else
- 		inst->streamon_cap = 0;
- 
-+	venus_pm_release_core(inst);
-+
- 	mutex_unlock(&inst->lock);
- }
- EXPORT_SYMBOL_GPL(venus_helper_vb2_stop_streaming);
-diff --git a/drivers/media/platform/qcom/venus/helpers.h b/drivers/media/platform/qcom/venus/helpers.h
-index 44b50914cd12..b64875564064 100644
---- a/drivers/media/platform/qcom/venus/helpers.h
-+++ b/drivers/media/platform/qcom/venus/helpers.h
-@@ -34,7 +34,6 @@ int venus_helper_set_output_resolution(struct venus_inst *inst,
- 				       u32 buftype);
- int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode);
- int venus_helper_init_codec_freq_data(struct venus_inst *inst);
--int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage);
- int venus_helper_set_num_bufs(struct venus_inst *inst, unsigned int input_bufs,
- 			      unsigned int output_bufs,
- 			      unsigned int output2_bufs);
-diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
-index b70551e296b7..2a47f6c0a07a 100644
---- a/drivers/media/platform/qcom/venus/hfi_helper.h
-+++ b/drivers/media/platform/qcom/venus/hfi_helper.h
-@@ -550,6 +550,7 @@ struct hfi_bitrate {
- #define HFI_CAPABILITY_LCU_SIZE				0x14
- #define HFI_CAPABILITY_HIER_P_HYBRID_NUM_ENH_LAYERS	0x15
- #define HFI_CAPABILITY_MBS_PER_SECOND_POWERSAVE		0x16
-+#define HFI_CAPABILITY_MAX_VIDEOCORES			0x2b
- 
- struct hfi_capability {
- 	u32 capability_type;
-diff --git a/drivers/media/platform/qcom/venus/hfi_parser.h b/drivers/media/platform/qcom/venus/hfi_parser.h
-index 3e931c747e19..264e6dd2415f 100644
---- a/drivers/media/platform/qcom/venus/hfi_parser.h
-+++ b/drivers/media/platform/qcom/venus/hfi_parser.h
-@@ -107,4 +107,9 @@ static inline u32 frate_step(struct venus_inst *inst)
- 	return cap_step(inst, HFI_CAPABILITY_FRAMERATE);
- }
- 
-+static inline u32 core_num_max(struct venus_inst *inst)
-+{
-+	return cap_max(inst, HFI_CAPABILITY_MAX_VIDEOCORES);
-+}
-+
- #endif
-diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
-index 9531c01f067b..46d9d2fb5e23 100644
---- a/drivers/media/platform/qcom/venus/pm_helpers.c
-+++ b/drivers/media/platform/qcom/venus/pm_helpers.c
-@@ -14,6 +14,7 @@
- #include <media/v4l2-mem2mem.h>
- 
- #include "core.h"
-+#include "hfi_parser.h"
- #include "hfi_venus_io.h"
- #include "pm_helpers.h"
- 
-@@ -480,6 +481,173 @@ static int poweron_coreid(struct venus_core *core, unsigned int coreid_mask)
- 	return 0;
- }
- 
-+static void
-+min_loaded_core(struct venus_inst *inst, u32 *min_coreid, u32 *min_load)
-+{
-+	u32 mbs_per_sec, load, core1_load = 0, core2_load = 0;
-+	u32 cores_max = core_num_max(inst);
-+	struct venus_core *core = inst->core;
-+	struct venus_inst *inst_pos;
-+	unsigned long vpp_freq;
-+	u32 coreid;
-+
-+	mutex_lock(&core->lock);
-+
-+	list_for_each_entry(inst_pos, &core->instances, list) {
-+		if (inst_pos == inst)
-+			continue;
-+		vpp_freq = inst_pos->clk_data.codec_freq_data->vpp_freq;
-+		coreid = inst_pos->clk_data.core_id;
-+
-+		mbs_per_sec = load_per_instance(inst_pos);
-+		load = mbs_per_sec * vpp_freq;
-+
-+		if ((coreid & VIDC_CORE_ID_3) == VIDC_CORE_ID_3) {
-+			core1_load += load / 2;
-+			core2_load += load / 2;
-+		} else if (coreid & VIDC_CORE_ID_1) {
-+			core1_load += load;
-+		} else if (coreid & VIDC_CORE_ID_2) {
-+			core2_load += load;
-+		}
-+	}
-+
-+	*min_coreid = core1_load <= core2_load ?
-+			VIDC_CORE_ID_1 : VIDC_CORE_ID_2;
-+	*min_load = min(core1_load, core2_load);
-+
-+	if (cores_max < VIDC_CORE_ID_2 || core->res->vcodec_num < 2) {
-+		*min_coreid = VIDC_CORE_ID_1;
-+		*min_load = core1_load;
-+	}
-+
-+	mutex_unlock(&core->lock);
-+}
-+
-+static int decide_core(struct venus_inst *inst)
-+{
-+	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
-+	struct venus_core *core = inst->core;
-+	u32 min_coreid, min_load, inst_load;
-+	struct hfi_videocores_usage_type cu;
-+	unsigned long max_freq;
-+
-+	if (legacy_binding) {
-+		if (inst->session_type == VIDC_SESSION_TYPE_DEC)
-+			cu.video_core_enable_mask = VIDC_CORE_ID_1;
-+		else
-+			cu.video_core_enable_mask = VIDC_CORE_ID_2;
-+
-+		goto done;
-+	}
-+
-+	if (inst->clk_data.core_id != VIDC_CORE_ID_DEFAULT)
-+		return 0;
-+
-+	inst_load = load_per_instance(inst);
-+	inst_load *= inst->clk_data.codec_freq_data->vpp_freq;
-+	max_freq = core->res->freq_tbl[0].freq;
-+
-+	min_loaded_core(inst, &min_coreid, &min_load);
-+
-+	if ((inst_load + min_load) > max_freq) {
-+		dev_warn(core->dev, "HW is overloaded, needed: %u max: %lu\n",
-+			 inst_load, max_freq);
-+		return -EINVAL;
-+	}
-+
-+	inst->clk_data.core_id = min_coreid;
-+	cu.video_core_enable_mask = min_coreid;
-+
-+done:
-+	return hfi_session_set_property(inst, ptype, &cu);
-+}
-+
-+static int acquire_core(struct venus_inst *inst)
-+{
-+	struct venus_core *core = inst->core;
-+	unsigned int coreid_mask = 0;
-+
-+	if (inst->core_acquired)
-+		return 0;
-+
-+	inst->core_acquired = true;
-+
-+	if (inst->clk_data.core_id & VIDC_CORE_ID_1) {
-+		if (core->core0_usage_count++)
-+			return 0;
-+
-+		coreid_mask = VIDC_CORE_ID_1;
-+	}
-+
-+	if (inst->clk_data.core_id & VIDC_CORE_ID_2) {
-+		if (core->core1_usage_count++)
-+			return 0;
-+
-+		coreid_mask |= VIDC_CORE_ID_2;
-+	}
-+
-+	return poweron_coreid(core, coreid_mask);
-+}
-+
-+static int release_core(struct venus_inst *inst)
-+{
-+	struct venus_core *core = inst->core;
-+	unsigned int coreid_mask = 0;
-+	int ret;
-+
-+	if (!inst->core_acquired)
-+		return 0;
-+
-+	if (inst->clk_data.core_id & VIDC_CORE_ID_1) {
-+		if (--core->core0_usage_count)
-+			goto done;
-+
-+		coreid_mask = VIDC_CORE_ID_1;
-+	}
-+
-+	if (inst->clk_data.core_id & VIDC_CORE_ID_2) {
-+		if (--core->core1_usage_count)
-+			goto done;
-+
-+		coreid_mask |= VIDC_CORE_ID_2;
-+	}
-+
-+	ret = poweroff_coreid(core, coreid_mask);
-+	if (ret)
-+		return ret;
-+
-+done:
-+	inst->clk_data.core_id = VIDC_CORE_ID_DEFAULT;
-+	inst->core_acquired = false;
-+	return 0;
-+}
-+
-+static int coreid_power_v4(struct venus_inst *inst, int on)
-+{
-+	struct venus_core *core = inst->core;
-+	int ret;
-+
-+	if (legacy_binding)
-+		return 0;
-+
-+	if (on == POWER_ON) {
-+		ret = decide_core(inst);
-+		if (ret)
-+			return ret;
-+
-+		mutex_lock(&core->lock);
-+		ret = acquire_core(inst);
-+		mutex_unlock(&core->lock);
-+	} else {
-+		mutex_lock(&core->lock);
-+		ret = release_core(inst);
-+		mutex_unlock(&core->lock);
-+	}
-+
-+	return ret;
-+}
-+
- static int vdec_get_v4(struct device *dev)
- {
- 	struct venus_core *core = dev_get_drvdata(dev);
-@@ -661,22 +829,12 @@ static void core_put_v4(struct device *dev)
- static int core_power_v4(struct device *dev, int on)
- {
- 	struct venus_core *core = dev_get_drvdata(dev);
--	const unsigned int coreid_mask = VIDC_CORE_ID_1 | VIDC_CORE_ID_2;
- 	int ret = 0;
- 
--	if (on == POWER_ON) {
-+	if (on == POWER_ON)
- 		ret = core_clks_enable(core);
--		if (ret)
--			return ret;
--
--		if (!legacy_binding)
--			ret = poweron_coreid(core, coreid_mask);
--	} else {
--		if (!legacy_binding)
--			ret = poweroff_coreid(core, coreid_mask);
--
-+	else
- 		core_clks_disable(core);
--	}
- 
- 	return ret;
- }
-@@ -786,6 +944,7 @@ static const struct venus_pm_ops pm_ops_v4 = {
- 	.venc_get = venc_get_v4,
- 	.venc_put = venc_put_v4,
- 	.venc_power = venc_power_v4,
-+	.coreid_power = coreid_power_v4,
- 	.load_scale = load_scale_v4,
- };
- 
-diff --git a/drivers/media/platform/qcom/venus/pm_helpers.h b/drivers/media/platform/qcom/venus/pm_helpers.h
-index d98b6dc20740..aa2f6afa2354 100644
---- a/drivers/media/platform/qcom/venus/pm_helpers.h
-+++ b/drivers/media/platform/qcom/venus/pm_helpers.h
-@@ -21,6 +21,8 @@ struct venus_pm_ops {
- 	void (*venc_put)(struct device *dev);
- 	int (*venc_power)(struct device *dev, int on);
- 
-+	int (*coreid_power)(struct venus_inst *inst, int on);
-+
- 	int (*load_scale)(struct venus_inst *inst);
- };
- 
-@@ -36,4 +38,28 @@ static inline int venus_pm_load_scale(struct venus_inst *inst)
- 	return core->pm_ops->load_scale(inst);
- }
- 
-+static inline int venus_pm_acquire_core(struct venus_inst *inst)
-+{
-+	struct venus_core *core = inst->core;
-+	const struct venus_pm_ops *pm_ops = core->pm_ops;
-+	int ret = 0;
-+
-+	if (pm_ops && pm_ops->coreid_power)
-+		ret = pm_ops->coreid_power(inst, POWER_ON);
-+
-+	return ret;
-+}
-+
-+static inline int venus_pm_release_core(struct venus_inst *inst)
-+{
-+	struct venus_core *core = inst->core;
-+	const struct venus_pm_ops *pm_ops = core->pm_ops;
-+	int ret = 0;
-+
-+	if (pm_ops && pm_ops->coreid_power)
-+		ret = pm_ops->coreid_power(inst, POWER_OFF);
-+
-+	return ret;
-+}
-+
- #endif
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index 83ce30516591..7b7a4f3377cf 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -579,10 +579,6 @@ static int vdec_output_conf(struct venus_inst *inst)
- 	if (ret)
- 		return ret;
- 
--	ret = venus_helper_set_core_usage(inst, VIDC_CORE_ID_1);
--	if (ret)
--		return ret;
--
- 	if (core->res->hfi_version == HFI_VERSION_1XX) {
- 		ptype = HFI_PROPERTY_PARAM_VDEC_CONTINUE_DATA_TRANSFER;
- 		ret = hfi_session_set_property(inst, ptype, &en);
-@@ -951,6 +947,10 @@ static int vdec_start_streaming(struct vb2_queue *q, unsigned int count)
- 
- 	mutex_lock(&inst->lock);
- 
-+	ret = venus_pm_acquire_core(inst);
-+	if (ret)
-+		return ret;
-+
- 	if (q->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE)
- 		ret = vdec_start_capture(inst);
- 	else
-@@ -1078,6 +1078,7 @@ static void vdec_session_release(struct venus_inst *inst)
- 
- 	venus_helper_free_dpb_bufs(inst);
- 	venus_pm_load_scale(inst);
-+	venus_pm_release_core(inst);
- 	INIT_LIST_HEAD(&inst->registeredbufs);
- 
- 	mutex_unlock(&inst->lock);
-@@ -1337,6 +1338,8 @@ static int vdec_open(struct file *file)
- 	inst->num_output_bufs = 1;
- 	inst->codec_state = VENUS_DEC_STATE_DEINIT;
- 	inst->buf_count = 0;
-+	inst->clk_data.core_id = VIDC_CORE_ID_DEFAULT;
-+	inst->core_acquired = false;
- 	init_waitqueue_head(&inst->reconf_wait);
- 	venus_helper_init_instance(inst);
- 
-diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-index 5fa1724cb537..4f594fe4b661 100644
---- a/drivers/media/platform/qcom/venus/venc.c
-+++ b/drivers/media/platform/qcom/venus/venc.c
-@@ -656,10 +656,6 @@ static int venc_set_properties(struct venus_inst *inst)
- 	if (ret)
- 		return ret;
- 
--	ret = venus_helper_set_core_usage(inst, VIDC_CORE_ID_2);
--	if (ret)
--		return ret;
--
- 	ptype = HFI_PROPERTY_CONFIG_FRAME_RATE;
- 	frate.buffer_type = HFI_BUFFER_OUTPUT;
- 	frate.framerate = inst->fps * (1 << 16);
-@@ -992,6 +988,10 @@ static int venc_start_streaming(struct vb2_queue *q, unsigned int count)
- 	if (ret)
- 		goto bufs_done;
- 
-+	ret = venus_pm_acquire_core(inst);
-+	if (ret)
-+		goto deinit_sess;
-+
- 	ret = venc_set_properties(inst);
- 	if (ret)
- 		goto deinit_sess;
-@@ -1160,6 +1160,8 @@ static int venc_open(struct file *file)
- 
- 	inst->core = core;
- 	inst->session_type = VIDC_SESSION_TYPE_ENC;
-+	inst->clk_data.core_id = VIDC_CORE_ID_DEFAULT;
-+	inst->core_acquired = false;
- 
- 	venus_helper_init_instance(inst);
- 
--- 
-2.17.1
-
+DQpPbiBXZWQsIDIwMTktMTItMTggYXQgMTM6MTcgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
+IE9uIFdlZCwgRGVjIDE4LCAyMDE5IGF0IDA4OjA2OjA0QU0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0
+dGkgd3JvdGU6DQo+IA0KPiA+IEkgdGhpbmsgeW91IG1pc3NlZCB0aGUgW1BBVENIIHY2IDA4LzE1
+XSByZWd1bGF0b3I6IGJkNzE4eDc6IFNwbGl0DQo+ID4gZHJpdmVyIHRvIGNvbW1vbiBhbmQgYmQ3
+MTh4NyBzcGVjaWZpYyBwYXJ0cw0KPiANCj4gSSBkaWRuJ3QgbWlzcyBpdCwgaXQgd2FzIHF1ZXVl
+ZCBidXQgaXQgZG9lc24ndCBhcHBseS4NCg0KQWxscmlnaHQuIEkgdGhvdWdodCB5b3UgbWlzc2Vk
+IGl0IGFzIHlvdSBhcGxpZWQgdGhlIDkvMTUgYWxyZWFkeS4gSQ0KdGhpbmsgSSBoYWQgdGhlIHY2
+IHdyaXR0ZW4gb24gdG9wIG9mIGxpbnV4IHRhZyB2NS41LXJjMS4NCg0KQW55d2F5cywgSSdsbCBj
+bG9uZSB0aGUgcmVndWxhdG9yIHRyZWUgYW5kIHJlYmFzZSB0aGlzIHBhdGNoIG9uIHRvcCBvZg0K
+Zm9yLTUuNiBoZWFkLiAoSXQnbGwgbWVhbiB0aGVzZSBwYXRjaGVzIGNvbWUgaW4gd3Jvbmcgb3Jk
+ZXIgYXMgdGhlDQphbHJlYWR5IGFwcGxpZWQgMDkgZGVwZW5kcyBvbiBub3QteWV0LWFwcGxpZWQg
+MDggLSBidXQgYXMgd2UgZG9uJ3QgaGF2ZQ0KdGhlIGNvbmZpZyBmb3IgQkQ3MTgyOCBpbi10cmVl
+IHlldCB0aGlzIHdvbid0IG1hdHRlciwgcmlnaHQ/KQ0KDQpUaGFua3MgZm9yIHRha2luZyB0aGlz
+Lg0KDQpCciwNCglNYXR0aQ0K
