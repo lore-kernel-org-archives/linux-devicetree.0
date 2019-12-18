@@ -2,121 +2,219 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAD6C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 12:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A30AC2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 12:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E89F9218AC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 12:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89EB218AC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 12:57:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Gi+Uq8SD"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="SSl8U52f";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gHEDPS3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfLRMta (ORCPT
+        id S1727021AbfLRM5y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:49:30 -0500
-Received: from mail-eopbgr1400118.outbound.protection.outlook.com ([40.107.140.118]:26112
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726707AbfLRMt3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:49:29 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Pf0bubOPXOJLNH2yIqdBQAyS5mNmOy1LlXJR6GYy7sdxa1UvYN6C5D1axuDJ1Qsj5gjZZ37fh8wzpOkhGzhERkLbPxfptifQs5sdjq7XEacWifqQ/YpOGKGhaVqXX8Wx/sfqtTFsdi9ehVPDt8avXZflZNq4GC5SgGFiZD0EXEyRXj7a8N+8QwsCg7dm4aafmmB2DgLzM4JZpKyDBcAPzaHY/XrXGz30Bfb4CVlWKG/XpA8ahkARJwNaa1NrAuFfnaJPdgbB+H1uROvzyE5x/eDq6eGjZ4TQzWTb1DbyuvwXocD9j/5Xt9vHAcNfiqBZpw6VbVK2GLQ8T9o8mvfQYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wgvg/tiDrkwgpIeGNdgdllWdViEu7ByWKLH2dcuPHoU=;
- b=C+Jyus+sg+LQWy75vrppf7y3Asggng64amVCT7y3Qj2/r7SoYN5Kk1oYT2seSMLVgrp453RFoU3JfUB4RVqEo+iCYc3cgH9lxvDPaJwfYYxg1NuZwM0l+Gdq5hXBLEgPP50+AklCzVSi/Zs+ImTMZcR/4QBTkRIr3iYvDPN5A9uGANVHgGlCLNoEmdB9vW7qqwSXm+bAQPllG1vs/M5RmOratmb44R/KuN0dtOeyPE5IpBSqr2w898O8IBfPaEo/HBgd7WOL1NiPkPPAeJPhK0v/eqH8IzeARP51vPBY2kf3OT9jy7qJZxPb5hnXDqGbw9N/WHQaTodN/nebaguGdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wgvg/tiDrkwgpIeGNdgdllWdViEu7ByWKLH2dcuPHoU=;
- b=Gi+Uq8SDIzKDnTZDtERuu7L1zK6ExRwlm/eRir8UCxdiPsxjUjOPLnLasZPRBLWm1U8OsFME99kVNyS4cA0VRZz05DNtv0ndBlLSN4ZVVS31No2yaF0E6F0KcoJt6MJWuEYLryzlYDNbxWUSRnTS+81C2CrWugZv0NwyMZMJghQ=
-Received: from OSBPR01MB2103.jpnprd01.prod.outlook.com (52.134.242.17) by
- OSBPR01MB1606.jpnprd01.prod.outlook.com (52.134.227.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14; Wed, 18 Dec 2019 12:49:24 +0000
-Received: from OSBPR01MB2103.jpnprd01.prod.outlook.com
- ([fe80::38ab:d1f:b0d9:7c5b]) by OSBPR01MB2103.jpnprd01.prod.outlook.com
- ([fe80::38ab:d1f:b0d9:7c5b%6]) with mapi id 15.20.2538.019; Wed, 18 Dec 2019
- 12:49:23 +0000
-From:   Biju Das <biju.das@bp.renesas.com>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Wed, 18 Dec 2019 07:57:54 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:35341 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726858AbfLRM5x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 07:57:53 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 2F00F6CB0;
+        Wed, 18 Dec 2019 07:57:52 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 18 Dec 2019 07:57:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=frvGpADLITedq/sG6F8ewcZ3U6K
+        M9hdUCVrbvmzN2gI=; b=SSl8U52f5KAoi+pLP9eCdIoDHqsojMT+TPEP43X6GQt
+        tjLZtZ5sNWyQ5Y+6sVadQjwodLbeyTkyAUYIkzPsagKhHCJUx7FPfRAIExiPvSYK
+        E6LK0oXPoDlH4mbIwgqVQBVO5bSSjXJ9WdPQCMKtrtG7XthOPeqWt5+iyLI06lAf
+        HSYjLrCQ320fhhCFlTGubhGY18AgGQi9V+QW3qF+lHKAlthjvwGx1JLczSZGE/h6
+        44kkjuB4VGhd8mlGTxOYjBdqoPnypH+/AXojQVkb9fqgypqUfx4VbrSzb8s+kd52
+        cqCylUbHNNfmDMMgB/uB0HrcEq2QedFx2XQuiQVgEhQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=frvGpA
+        DLITedq/sG6F8ewcZ3U6KM9hdUCVrbvmzN2gI=; b=gHEDPS3DOQoyIWF+CI9uhZ
+        4C5q4pCME3HKYCY99OPH6VUMRRGcXmvQrR2H45px9vtj2qoEAtLG8FwKIKtNMZWi
+        orj8/U/30+sPVPc3aSiazVALG9t6R6ety7SKOOySYMxcbmoqNlLrxeyKSQ0P5NEO
+        eFmtPI86/TfRMeampRGWT4q0tQIGoUpNIa4sKjI0Bf75+TqAus2qNv9VQjqNGbQN
+        r9aeqGRaWwEgxm82KRokYSbliLeVCQo7Up85g7CHheYUCOGvfg9m5rO1K2kynmBq
+        V0Z4FkBGCfPFZV+jcOEgQsY+NguyvkL2gSpfd3jrc68niY378N9GajUSah2j1HBw
+        ==
+X-ME-Sender: <xms:TiL6XThp7Xp-qBzFtMENMp_AFajDnec-Es1rsgWInFOVS3b10xhFsQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtledggeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
+    hnpeguvghvihgtvghtrhgvvgdrohhrghdpghhithhhuhgsrdgtohhmpdhhuhdrtghomhen
+    ucfkphepledtrdekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgi
+    himhgvsegtvghrnhhordhtvggthhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:TiL6Xd4iE6xuYSlhXG6sYl-s-q_EqWfiZLcoQT1kv1Gc3IhbmQa9PQ>
+    <xmx:TiL6XcLA9smXakFS_IXH8ko3w9DGYVZPqtfizTqKpbeccXzr19OFpQ>
+    <xmx:TiL6XRi8KDldoGXgKLdeGUU7Xg7J32g59kXC6DQ0x8LWhLlMW0KyFg>
+    <xmx:UCL6XVPLDyYb7At6LBHuEGDVD3Or8j5gPOrxe2YI4-zEDS8CGKhN4w>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6AA4F80063;
+        Wed, 18 Dec 2019 07:57:50 -0500 (EST)
+Date:   Wed, 18 Dec 2019 13:57:48 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jian Hu <jian.hu@amlogic.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH] clock: renesas: cpg-mssr: Fix the typo
-Thread-Topic: [PATCH] clock: renesas: cpg-mssr: Fix the typo
-Thread-Index: AQHVtZP4WRCiPlhUiEGcHNCCSIr9C6e/0foAgAAEm2A=
-Date:   Wed, 18 Dec 2019 12:49:23 +0000
-Message-ID: <OSBPR01MB2103DDF07C530B24DCD2BE4BB8530@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1576667390-29449-1-git-send-email-biju.das@bp.renesas.com>
- <2368e2c8-7f80-ec22-2c9f-4f719ab347dc@cogentembedded.com>
-In-Reply-To: <2368e2c8-7f80-ec22-2c9f-4f719ab347dc@cogentembedded.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biju.das@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 19c79505-7fe1-4107-2083-08d783b8b588
-x-ms-traffictypediagnostic: OSBPR01MB1606:|OSBPR01MB1606:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <OSBPR01MB16069FFB37D493E3C269B023B8530@OSBPR01MB1606.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0255DF69B9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(376002)(136003)(39860400002)(396003)(346002)(189003)(199004)(51914003)(9686003)(44832011)(55016002)(54906003)(316002)(86362001)(110136005)(33656002)(52536014)(478600001)(2906002)(71200400001)(5660300002)(66446008)(4744005)(8676002)(81156014)(7696005)(66946007)(186003)(26005)(64756008)(66556008)(81166006)(53546011)(6506007)(4326008)(7416002)(66476007)(8936002)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB1606;H:OSBPR01MB2103.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WZ8Zh6B02DAXitGv5IOtDqlY1o65prel8wKc54zg/6Kx8S+TewLVBE3NSAKtczllB085N5rPkDs51TohoV1qryFCKBONTLsaLqYdQJA7wwzZJzk1UM4I6u/t2y3ZIXt4Z2ZZVQj4p9jStbIrBBZ+e9aPunYMt/VZlwLrVZFGhNJefnjmJTRTrdlJu1zctoj7vM0pkkNNzGJ45gARp0sLA18bYXggWMc9GdPryygJ6mJGAwBRWM83YRYSqL7S4dgOyfvSDvQM3IiKxJyeUpV4LeTeHO1t3gpXzUUZEiRQ5w7J7Z/DvHeEaHSxNiKVAcfR5xBOcGHat2OYu2J7TIkld1ptFPY6vdvCPZHxaeQrPetfJ+q927Js/ixldQXcmDN2c7afkINP6TI0l0XOn0Fc5v1CupMR27ZHQhB6hbty4dSZrOkPpxgQrgJwSyM5dUOvc8/FtMyfaUFFiWODFzN2jIg9JHIdy/IJ9bONnObcH8zLo4m94qEm0QNOspuhNMoJ
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/6] dt-bindings: clock: meson: add A1 PLL clock
+ controller bindings
+Message-ID: <20191218125748.xacfkuhfabbtivsk@gilmour.lan>
+References: <20191206074052.15557-1-jian.hu@amlogic.com>
+ <20191206074052.15557-2-jian.hu@amlogic.com>
+ <20191213103856.qo7vlnuk4ajz3vq5@gilmour.lan>
+ <ba16b846-1d5f-3d1e-e8e2-420687d11e8a@amlogic.com>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19c79505-7fe1-4107-2083-08d783b8b588
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 12:49:23.3186
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8jx6ngFfoP+t7kxMrbi7ettdLuUYexxU4lMgMqAXJBCyZUtY6wth5oNKeJyG35QT+ibmOW0/zCST1XEXuBcGXQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB1606
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bbp7a3fcwjlmdl47"
+Content-Disposition: inline
+In-Reply-To: <ba16b846-1d5f-3d1e-e8e2-420687d11e8a@amlogic.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgU2VyZ2VpLA0KDQpUaGFua3MgZm9yIHRoZSBmZWVkYmFjay4NCg0KPiBTdWJqZWN0OiBSZTog
-W1BBVENIXSBjbG9jazogcmVuZXNhczogY3BnLW1zc3I6IEZpeCB0aGUgdHlwbw0KPiANCj4gT24g
-MTguMTIuMjAxOSAxNDowOSwgQmlqdSBEYXMgd3JvdGU6DQo+IA0KPiA+IFRoaXMgcGF0Y2ggZml4
-ZXMgdGhlIHR5cG8gJXMvcjhhNzc0YTEvcjhhNzc0YjEvLg0KPiA+DQo+ID4gRml4ZXM6IDEwMDAz
-OTMgKCJkdC1iaW5kaW5nczogY2xvY2s6IHJlbmVzYXM6IGNwZy1tc3NyOiBEb2N1bWVudCByOGE3
-NzRiMQ0KPiANCj4gICAgIFNIQTEgc2hvdWxkIGhhdmUgYXQgbGVhc3QgMTIgZGlnaXRzLg0KPiAN
-Ck9rIHdpbGwgZG8uDQoNCj4gPiBiaW5kaW5nIikNCj4gDQo+ICAgICBBbmQgbmV2ZXIgYnJlYWsg
-dXAgdGhlIHRhZyBsaW5lcyBwbGVhc2UuDQoNCkRvIHlvdSBtZWFuICwgIGRvIHRoZSBjaGFuZ2Vz
-IGxpa2UgYmVsb3cgYW5kIGlnbm9yZSBjaGVjayBwYXRjaCB3YXJuaW5ncz8gSXMgaXQgYWNjZXB0
-YWJsZSB0byBldmVyeW9uZT8NCg0KRml4ZXM6IDEwMDAzOTM4YTBjNjRjMmYwZDg5ICgiZHQtYmlu
-ZGluZ3M6IGNsb2NrOiByZW5lc2FzOiBjcGctbXNzcjogRG9jdW1lbnQgcjhhNzc0YjEgYmluZGlu
-ZyIpDQoNCj4gPiBTaWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5j
-b20+DQo+IFsuLi5dDQo+IA0KPiBNQlIsIFNlcmdlaQ0K
+
+--bbp7a3fcwjlmdl47
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Dec 18, 2019 at 04:00:20PM +0800, Jian Hu wrote:
+> Hi Maxime
+>
+> Thanks for your review
+>
+> On 2019/12/13 18:38, Maxime Ripard wrote:
+> > Hi,
+> >
+> > On Fri, Dec 06, 2019 at 03:40:47PM +0800, Jian Hu wrote:
+> > > Add the documentation to support Amlogic A1 PLL clock driver,
+> > > and add A1 PLL clock controller bindings.
+> > >
+> > > Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> > > ---
+> > >   .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 59 +++++++++++++++++++
+> > >   include/dt-bindings/clock/a1-pll-clkc.h       | 16 +++++
+> > >   2 files changed, 75 insertions(+)
+> > >   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+> > >   create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+> > > new file mode 100644
+> > > index 000000000000..7feeef5abf1b
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+> > > @@ -0,0 +1,59 @@
+> > > +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+> > > +/*
+> > > + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+> > > + */
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: "http://devicetree.org/schemas/clock/amlogic,a1-pll-clkc.yaml#"
+> > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > > +
+> > > +title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
+> > > +
+> > > +maintainers:
+> > > +  - Neil Armstrong <narmstrong@baylibre.com>
+> > > +  - Jerome Brunet <jbrunet@baylibre.com>
+> > > +  - Jian Hu <jian.hu@jian.hu.com>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    - enum:
+> > > +        - amlogic,a1-pll-clkc
+> >
+> > I'm not sure this works, compatible shouldn't contain a list.
+> >
+> I refered to
+> Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml.
+>
+> I have used 'dt-doc-validate' tools to check, it will report something wrong
+> below.
+>
+> properties:compatible: [{'enum': ['amlogic,a1-pll-clkc']}] is not of type
+> 'object', 'boolean'
+>
+> Refer to
+> https://github.com/robherring/dt-schema/blob/master/example-schema.yaml
+>
+> I will change it like this:
+>
+> properties:
+>   compatible:
+>     oneOf:
+>       - enum:
+>          - amlogic,a1-pll-clkc
+>
+> And It has been passed by 'dt-doc-validate' tools.
+>
+> Is it right?
+
+You can simply do
+
+properties:
+  compatible:
+    const: amlogic,a1-pll-clkc
+
+> > You can write this like:
+> > compatible:
+> >    const: amlogic,a1-pll-clkc
+> >
+> > > +  "#clock-cells":
+> > > +    const: 1
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +clocks:
+> > > +  minItems: 2
+> > > +  maxItems: 2
+> >
+> > This is redundant, it will be added automatically by the tools ...
+> If I remove the minItems, it will pass by dt-doc-validate.
+>
+> Would please tell how to use dt-schema to generate automatically it?
+
+You don't have to do anything, it's just done at the tools runtime.
+
+Maxime
+
+--bbp7a3fcwjlmdl47
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfoiTAAKCRDj7w1vZxhR
+xerFAQDOLKhGK6KP3ibCZZanzPijGZZtzYdosl6gUdzpZnNVngD5ASqg8zZV0ayF
+sEdXHgcGOt+HcE9xLntYb/gB3k+t3AY=
+=9Edw
+-----END PGP SIGNATURE-----
+
+--bbp7a3fcwjlmdl47--
