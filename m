@@ -2,87 +2,122 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F69C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5412EC2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C290C21582
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576692901;
-	bh=2vYlIkVsIcKX9Zr8k9KbSq97jYsgj8PKkbMfNtKo3n4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HbsXuXwCVJgz/LuADvS2tnuOXprg3buOpUvnBAjwhA1GivYZ6GP89amoXQSo/4+RL
-	 cT23/hFZM/bAs1z4LfE0NrPQUY8cr0VS/mCG79H3DRUqYkaTOmdeZx9bH3ggxlFdIp
-	 mX3mbgbPJP9IvFOFJ9vlK6WxFy5u+NzP7cE1tOk8=
+	by mail.kernel.org (Postfix) with ESMTP id 2B144227BF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:38:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G5QCuHck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfLRSPB (ORCPT
+        id S1727150AbfLRSiI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:15:01 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42774 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727341AbfLRSPB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 13:15:01 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 66so3531021otd.9;
-        Wed, 18 Dec 2019 10:15:00 -0800 (PST)
+        Wed, 18 Dec 2019 13:38:08 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42616 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbfLRSiI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 13:38:08 -0500
+Received: by mail-io1-f66.google.com with SMTP id n11so1504434iom.9
+        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 10:38:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=If9n9LWtZGwO9cBtHXPSqWrRQWL2H+dGPsSdvZ1Ke3s=;
+        b=G5QCuHckZR+UYBlSuoqYvD3YazGZK1yBYvycKFSY3URC8LIyhCbIuej/Kaaffiq5L4
+         92606OJK+TKfXSAfkh0FiaB3G5jt9UGQshpfDs2q+I944lz3SEdLnkj/Ub0mvoEu5dOO
+         J/Rd18YDRIPIOTc4M8TImCc1kMLL8HN3M2P7g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Joaw7/XAOOveu1GS58tOvSo24yLU2Vq2eez0hj0oxxI=;
-        b=InUP9nsTzmlFIiCN6b86zG4A/PqSGnWE91tsI4HBG8weXa20RWogHEHuFT9aJyg+ZE
-         XYiv20AA3iNiiPXWqzkzBg9wx0DmnNiNToZBmuCD3VbUzomLl5h+1hjVHtWkJyB5frxK
-         iu3wMZTOo59yobdKUuWVgz8msIM7Ls1x0dFjCp4qzCZz5qwTGeSIDEtMJPbnbvb/GMae
-         4RVSaJwf3dU+bi/JzPVNqNTXi4HXM9JweK63VfC+1GF8TfLiClPgV54Hhk5gmC/IRwVY
-         GEjVKLPqsP2xv2BLuYYHFb9l4BL6wpCrJTJOReqWt2xWHdaGag9PqYgi5p8S+NQeaQtz
-         QwGg==
-X-Gm-Message-State: APjAAAWFIJb6O/YL2g3/zlqb1qn4yN/m14/7DbcQkevbqND/vhWcLqfM
-        RiYqBo8+FIsqixrJl13IfQ==
-X-Google-Smtp-Source: APXvYqyoQd/upD6YD3POKyWidARuJplw8nUXBR63avEydvr3JAGmT9UWeuqxABxXovlfVreAUCvwWA==
-X-Received: by 2002:a9d:5e9a:: with SMTP id f26mr3967611otl.307.1576692895673;
-        Wed, 18 Dec 2019 10:14:55 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t196sm802325oie.11.2019.12.18.10.14.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 10:14:55 -0800 (PST)
-Date:   Wed, 18 Dec 2019 12:14:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jiaxin Yu <jiaxin.yu@mediatek.com>
-Cc:     yong.liang@mediatek.com, wim@linux-watchdog.org,
-        linux@roeck-us.net, p.zabel@pengutronix.de, matthias.bgg@gmail.com,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        sboyd@kernel.org, yingjoe.chen@mediatek.com
-Subject: Re: [PATCH v6 1/2] dt-bindings: mediatek: mt8183: Add #reset-cells
-Message-ID: <20191218181454.GA15293@bogus>
-References: <1576081356-18298-1-git-send-email-jiaxin.yu@mediatek.com>
- <1576081356-18298-2-git-send-email-jiaxin.yu@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=If9n9LWtZGwO9cBtHXPSqWrRQWL2H+dGPsSdvZ1Ke3s=;
+        b=j2B5xzVmj+PZK8ZgRY3/chKgAYfM1WCeCNNXhPPuHSKRjrobvaosFhMSRtDwgkwS7G
+         1CpaGj6APtJDS7YVVzorO3EVSjfgPPZxxVTkhzoUaLWqQ54VuBnwNAVVsiVhg2OL6J8C
+         8E73MkkXn14ZlmY8IFBI9xqAXt3BXmjA+zzrgEwHEcMNgJSNCLi7lcsUrhBW1JbUJhOQ
+         CyXdsSA3+GPuzPEgAo/tSmbbWMkGW09XInVWjWpMCCjrGB+C71+05O1thJow04ZTy1tH
+         s8cAvpEBnepR0aay6hGfEHGUkGEBD+AGOuUXlFwHktblngIghy/B/a08lW8hh+RATNTc
+         ZwEA==
+X-Gm-Message-State: APjAAAWBbutvn+a7/eiIxBXZggH+MJtJGrphB43jOdiQDaT2mEPqRdUS
+        z6O1N3mBfXCyotsNJW6QIg+VXdLC1Gc=
+X-Google-Smtp-Source: APXvYqwkoLLFfN/ZsEkZNbGZXPiarPzkSaQ4sU3qF1QRbDIL0u371NLCLQ6Hf87+e25oOr4Ir1xOVA==
+X-Received: by 2002:a05:6602:2559:: with SMTP id j25mr647448ioe.263.1576694287172;
+        Wed, 18 Dec 2019 10:38:07 -0800 (PST)
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com. [209.85.166.42])
+        by smtp.gmail.com with ESMTPSA id s5sm899982ilc.73.2019.12.18.10.38.05
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Dec 2019 10:38:05 -0800 (PST)
+Received: by mail-io1-f42.google.com with SMTP id t26so3004313ioi.13
+        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 10:38:05 -0800 (PST)
+X-Received: by 2002:a6b:b941:: with SMTP id j62mr2902869iof.168.1576694284957;
+ Wed, 18 Dec 2019 10:38:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576081356-18298-2-git-send-email-jiaxin.yu@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1576474742-23409-1-git-send-email-sanm@codeaurora.org>
+ <1576474742-23409-2-git-send-email-sanm@codeaurora.org> <CAD=FV=U48gdGHMbQ22M_59t6va2n41Zh1CDTqMJYpLCwiD35Mg@mail.gmail.com>
+ <6d8c979f-daa3-3b40-f29c-cca5a2f8f1c8@codeaurora.org>
+In-Reply-To: <6d8c979f-daa3-3b40-f29c-cca5a2f8f1c8@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 18 Dec 2019 10:37:53 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UER4zt=z3XWEzNt5v2oe8V=z6Hb-Wm-2BzuWtuHmYg-A@mail.gmail.com>
+Message-ID: <CAD=FV=UER4zt=z3XWEzNt5v2oe8V=z6Hb-Wm-2BzuWtuHmYg-A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings
+To:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-usb@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Manu Gautam <mgautam@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 12 Dec 2019 00:22:35 +0800, Jiaxin Yu wrote:
-> From: "yong.liang" <yong.liang@mediatek.com>
-> 
-> Add #reset-cells property and update example
-> 
-> Signed-off-by: yong.liang <yong.liang@mediatek.com>
-> ---
->  .../devicetree/bindings/watchdog/mtk-wdt.txt  | 10 ++++++---
->  .../reset-controller/mt2712-resets.h          | 22 +++++++++++++++++++
->  .../reset-controller/mt8183-resets.h          | 17 ++++++++++++++
->  3 files changed, 46 insertions(+), 3 deletions(-)
->  create mode 100644 include/dt-bindings/reset-controller/mt2712-resets.h
-> 
+Hi,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Wed, Dec 18, 2019 at 4:41 AM Sandeep Maheswaram (Temp)
+<sanm@codeaurora.org> wrote:
+> +  assigned-clock-rates:
+> +    description:
+> +      Should be 19.2MHz (19200000) for MOCK_UTMI_CLK
+> +      >=125MHz (125000000) for MASTER_CLK in SS mode
+> +      >=60MHz (60000000) for MASTER_CLK in HS mode
+> +    maxItems: 2
+>
+> You can still express some limits here even if we don't go all out
+> with the "oneOf".  AKA I think this is better:
+>
+> assigned-clock-rates:
+>   items:
+>     - const: 19200000
+>     - minimum: 60000000
+>       description: >= 60 MHz in HS mode, >= 125 MHz in SS mode
+>
+> Facing error when i add as above.
+> properties:assigned-clock-rates: {'items': [{'const': 19200000}, {'minimum': 60000000}]} is not valid under any of the given schemas
+> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/usb/qcom,dwc3.example.dts' failed
+
+I couldn't figure it out either.  ...but at least this seemed to work
+and is slightly better than what you have:
+
+  assigned-clock-rates:
+    items:
+      - description: Must be 19.2MHz (19200000)
+      - description: Must be >= 60 MHz in HS mode, >= 125 MHz in SS mode
+
+So I'd say go with that.
+
+
+-Doug
