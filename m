@@ -2,388 +2,283 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E82C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 19:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1AAC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 19:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC56227BF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 19:49:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Qb7QzufS"
+	by mail.kernel.org (Postfix) with ESMTP id C91E92082E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 19:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576699028;
+	bh=hsGVSDmHbY1DWWyuMtif+daCJjB+w7HogNzj7wAMcaA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bSwZAnAf9PyoQLaIh4eaqp3bV3C7esam/mnPgLD68r6D4XjZJtmU4cG8/QgWFEfpB
+	 6UebrE6SfuU9NfFXxkYSaMNttLHIJZqO6rwSyrCCpnQS+eeqFJOgxs3qwV8mZfNyM7
+	 qCmkbvlGXv4tDhDntKPJYcK2cZsUqACdI3z0eR/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfLRTtz (ORCPT
+        id S1727497AbfLRT5I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 14:49:55 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:36093 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfLRTtz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 14:49:55 -0500
-Received: by mail-il1-f194.google.com with SMTP id b15so2738313iln.3
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 11:49:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D9XwghzJGJClOKGtXmrV+GeppqrxrwsjgYwMEk21AdA=;
-        b=Qb7QzufSW6yFp2/WPvKEXu37/g4K6DSsjdmhZkDc02nZH89rhMohYcZuBvEDa0zzmf
-         VLZHbn5ck1a6YFt6PPclAR/XxkSd6o7SXDQNWuz8INspjNSW8W1/FUtuCRU3kX6KlIXq
-         oWSDqkBG1IeJ32T5Kox7Xayi1guwGJzFlytgE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D9XwghzJGJClOKGtXmrV+GeppqrxrwsjgYwMEk21AdA=;
-        b=GMcGG0AbLPKo+xJCSp+34fXFVlOsnTgltgrUzRMoKxjiQQ0Ijtl9XNgYHUcc8rh/SP
-         V+nKMoQf2+1CI6VzBQvzZp6/n1zIH903C1tf9vTCqAEDwPg4aSRxl+x6Q6qjDR70RbCa
-         dWIdIjPFxpnyqaMJYl/ofC/9Dw7617H/ULD8ssW1secxjD7Nv8riXcVOT2UYRECZ6NDz
-         FXPo8r7Way3kyAaMQupsZmzXyWdRC9DlD1q3rNitYYUfSHrleUo9q7lG0csumSRKWpTr
-         iDtLjWmemuLn4Ngn5Nid/vhutUS7otqqx+T2sBgIh0LBnIbec7Nd2MXc8YJvkagDJges
-         dy9Q==
-X-Gm-Message-State: APjAAAWiwd64x2NDNwbbimR3nf/IHItcx9OrQPLsVohB/d+O7587C5L3
-        1b30Yse0NiOT8ZZZ6Gqi3VrG9ciFrHN+0snMXNMgIQ==
-X-Google-Smtp-Source: APXvYqxQciXY7zyuQqL2A13B86oOHS27uDnGdlJJMbZNIbK6SfDRvKWok7eA1VjcoE4HHXpvRoehkPkp23yVvCSkKkk=
-X-Received: by 2002:a92:3cd4:: with SMTP id j81mr3671622ilf.77.1576698593613;
- Wed, 18 Dec 2019 11:49:53 -0800 (PST)
+        Wed, 18 Dec 2019 14:57:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726698AbfLRT5I (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 14:57:08 -0500
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A98A72467B;
+        Wed, 18 Dec 2019 19:57:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576699026;
+        bh=hsGVSDmHbY1DWWyuMtif+daCJjB+w7HogNzj7wAMcaA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dLJofwbIWgFEPo3+S8hv7quxnIE+fomk9D9qPZ8ldXM1SNHmGCRh/4O/1hh4/lrG5
+         62OUVSjet62RZ9+lOQFRmoVIVl7c1/fghP6vPTaCrmAW8fRQFTWr2ZdaflfC14Er0B
+         NTV5/18Aa/Ct/IQpn0fEz+3SVNt2f6KqwXeaLZ/0=
+Received: by mail-qv1-f49.google.com with SMTP id m14so1258476qvl.3;
+        Wed, 18 Dec 2019 11:57:06 -0800 (PST)
+X-Gm-Message-State: APjAAAXfJh2SehtoMvf6+br5Qmm74MUYtEOKmeVKKSaNIQAxHJ2jw1Pq
+        iHa5ZAaMSYeN6vfCaXwpUdYgNLVGPiimJvr24w==
+X-Google-Smtp-Source: APXvYqwlJ8PQxngE9bLOMO3xzC/6f1AKYXW3BjatdURrIOtmKFXm8/TbP1aRYGP/3EMq0xkMKSSwIjW5vHD2z4TRgFE=
+X-Received: by 2002:a0c:f68f:: with SMTP id p15mr4018358qvn.79.1576699025700;
+ Wed, 18 Dec 2019 11:57:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20191217080014.11756-1-akash@openedev.com>
-In-Reply-To: <20191217080014.11756-1-akash@openedev.com>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 19 Dec 2019 01:19:42 +0530
-Message-ID: <CAMty3ZC_Hk7=NeWJsCLwx5q2efkSDj3gBCBaT5_jGq8_aW43xA@mail.gmail.com>
-Subject: Re: [V2 1/1 PATCH] arm64: dts: rockchip: add ROCK Pi S DTS support
-To:     Akash Gajjar <akash@openedev.com>
-Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+References: <20191212014233.32799-1-john.stultz@linaro.org>
+ <20191212014233.32799-8-john.stultz@linaro.org> <20191218163738.GA12358@bogus>
+ <CALAqxLU=KPJoPKHP14BWcLYJdBoK8DC5+7hRtqCvE2-HZHWxZA@mail.gmail.com>
+In-Reply-To: <CALAqxLU=KPJoPKHP14BWcLYJdBoK8DC5+7hRtqCvE2-HZHWxZA@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 18 Dec 2019 13:56:53 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+9uSMfpQZxmfJX4Y4R_xwkK413SqNZ3x6XpKpMvWA56Q@mail.gmail.com>
+Message-ID: <CAL_Jsq+9uSMfpQZxmfJX4Y4R_xwkK413SqNZ3x6XpKpMvWA56Q@mail.gmail.com>
+Subject: Re: [PATCH v7 7/8] dt-bindings: misc: Add bindings for HiSilicon usb
+ hub and data role switch functionality on HiKey960
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Tom Cubie <tom@radxa.com>, Robin Murphy <robin.murphy@arm.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>, Nick Xie <nick@khadas.com>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Jagan Teki <jagan@openedev.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Guillaume Gardet <Guillaume.Gardet@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 2:23 PM Akash Gajjar <akash@openedev.com> wrote:
+On Wed, Dec 18, 2019 at 11:21 AM John Stultz <john.stultz@linaro.org> wrote:
 >
-> ROCK Pi S is RK3308 based SBC from radxa.com. ROCK Pi S has a,
-> - 256MB/512MB DDR3 RAM
-> - SD, NAND flash (optional on board 1/2/4/8Gb)
-> - 100MB ethernet, PoE (optional)
-> - Onboard 802.11 b/g/n wifi + Bluetooth 4.0 Module
-> - USB2.0 Type-A HOST x1
-> - USB3.0 Type-C OTG x1
-> - 26-pin expansion header
-> - USB Type-C DC 5V Power Supply
+> On Wed, Dec 18, 2019 at 8:37 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Thu, Dec 12, 2019 at 01:42:32AM +0000, John Stultz wrote:
+> > > From: Yu Chen <chenyu56@huawei.com>
+> > >
+> > > This patch adds binding documentation to support usb hub and usb
+> > > data role switch of Hisilicon HiKey960 Board.
+> > >
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > CC: ShuFan Lee <shufan_lee@richtek.com>
+> > > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > > Cc: Yu Chen <chenyu56@huawei.com>
+> > > Cc: Felipe Balbi <balbi@kernel.org>
+> > > Cc: Hans de Goede <hdegoede@redhat.com>
+> > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > Cc: Jun Li <lijun.kernel@gmail.com>
+> > > Cc: Valentin Schneider <valentin.schneider@arm.com>
+> > > Cc: Guillaume Gardet <Guillaume.Gardet@arm.com>
+> > > Cc: Jack Pham <jackp@codeaurora.org>
+> > > Cc: linux-usb@vger.kernel.org
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> > > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > > ---
+> > > v3: Reworked as usb-role-switch intermediary
+> > >
+> > > v7: Switched over to YAML dt binding description
+> > > ---
+> > >  .../bindings/misc/hisilicon-hikey-usb.yaml    | 85 +++++++++++++++++++
+> > >  1 file changed, 85 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
+> > > new file mode 100644
+> > > index 000000000000..1fc3b198ef73
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
+> > > @@ -0,0 +1,85 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +# Copyright 2019 Linaro Ltd.
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: "http://devicetree.org/schemas/misc/hisilicon-hikey-usb.yaml#"
+> > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > > +
+> > > +title: HiKey960 onboard USB GPIO Hub
+> > > +
+> > > +maintainers:
+> > > +  - John Stultz <john.stultz@linaro.org>
+> > > +
+> > > +description: |
+> > > +  Supports the onboard HiKey960 USB GPIO hub, which acts as a
+> > > +  role-switch intermediary to detect the state of the USB-C
+> > > +  port, to switch the hub into dual-role USB-C or host mode,
+> > > +  which enables the onboard USB-A host ports.
+> >
+> > Honestly I'm torn between whatever works for you because this is pretty
+> > "special" dev board design and it should more accurately match the
+> > hardware design. I think we can do the later and it doesn't really need
+> > anything new.
+> >
+> > > +
+> > > +  Schematics about the hub can be found here:
+> > > +    https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey960/hardware-docs/HiKey960_Schematics.pdf
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    items:
+> > > +      - const: hisilicon,gpio_hubv1
+> >
+> > As a whole this is HiSilicon specific, but really it is not. It's really
+> > just a hub, a mux, and connectors for which we have bindings for. I
+> > think you need to model the actual hub in DT. We have 2 ways already to
+> > describe hubs in DT: a I2C device or USB device.
+> >
+> > AIUI, the board looks something like this:
+> >
+> > ctrl -> mux --> hub -> type-a connector
+> >             +-> type-c connector
+> >
+> > If the hub I2C is not used, then you could do something like this:
+> >
+> > ctrl {
+> >     mux-controls = <&usb_gpio_mux>;
+> >     connector@0 {
+> >         // type C connector binding
+> >     };
+> >     hub@1 {
+> >         // USB device binding
+> >     };
+> > };
 >
-> This patch enables
-> - Console
-> - NAND Flash
-> - SD Card
-> - USB2.0
->
-> Signed-off-by: Akash Gajjar <akash@openedev.com>
-> ---
-> Changes for v2
-> - Use pwm-supply for vdd_core node instead of vi-supply
-> - Add USB2.0 node support
->
->  .../devicetree/bindings/arm/rockchip.yaml     |   5 +
->  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
->  .../boot/dts/rockchip/rk3308-rock-pi-S.dts    | 237 ++++++++++++++++++
->  3 files changed, 243 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3308-rock-pi-S.dts
->
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> index d9847b306b83..48d40c928d45 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> @@ -422,6 +422,11 @@ properties:
->            - const: radxa,rockpi4
->            - const: rockchip,rk3399
->
-> +      - description: Radxa ROCK Pi S
-> +        items:
-> +          - const: radxa,rockpis
-> +          - const: rockchip,rk3308
-> +
->        - description: Radxa Rock2 Square
->          items:
->            - const: radxa,rock2-square
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> index 48fb631d5451..cc9e8c824980 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -2,6 +2,7 @@
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-evb.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-rock-pi-S.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3308-rock-pi-S.dts b/arch/arm64/boot/dts/rockchip/rk3308-rock-pi-S.dts
-> new file mode 100644
-> index 000000000000..0afb24ec1cdf
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3308-rock-pi-S.dts
-> @@ -0,0 +1,237 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Akash Gajjar <akash@openedev.com>
-> + * Copyright (c) 2019 Jagan Teki <jagan@openedev.com>
-> + */
-> +
-> +/dts-v1/;
-> +#include "rk3308.dtsi"
-> +
-> +/ {
-> +       model = "Radxa ROCK Pi S";
-> +       compatible = "radxa,rockpis", "rockchip,rk3308";
-> +
-> +       chosen {
-> +               stdout-path = "serial0:1500000n8";
-> +       };
-> +
-> +       leds {
-> +               compatible = "gpio-leds";
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&green_led_gio>, <&heartbeat_led_gpio>;
-> +
-> +               green-led {
-> +                       label = "rockpis:green:power";
-> +                       gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_HIGH>;
-> +                       linux,default-trigger = "default-on";
-> +                       default-state = "on";
-> +               };
-> +
-> +               blue-led {
-> +                       label = "rockpis:blue:user";
-> +                       gpios = <&gpio0 RK_PA5 GPIO_ACTIVE_HIGH>;
-> +                       default-state = "on";
-> +                       linux,default-trigger = "heartbeat";
-> +               };
-> +       };
-> +
-> +       sdio_pwrseq: sdio-pwrseq {
-> +               compatible = "mmc-pwrseq-simple";
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&wifi_enable_h>;
-> +               reset-gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
-> +       };
-> +
-> +       vcc5v0_sys: vcc5v0-sys {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vcc5v0_sys";
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               regulator-min-microvolt = <5000000>;
-> +               regulator-max-microvolt = <5000000>;
-> +       };
-> +
-> +       vdd_core: vdd-core {
-> +               compatible = "pwm-regulator";
-> +               pwms = <&pwm0 0 5000 1>;
-> +               regulator-name = "vdd_core";
-> +               regulator-min-microvolt = <827000>;
-> +               regulator-max-microvolt = <1340000>;
-> +               regulator-init-microvolt = <1015000>;
-> +               regulator-settling-time-up-us = <250>;
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               pwm-supply = <&vcc5v0_sys>
+> I can't say I totally grok all this, but I'll go digging to try to
+> better understand it.
+> I don't believe there is any I2C involved here, so I'll try the
+> approach you outline above.
 
-Missing semi colon.
+Well, it is there in the schematics.
 
-> +       };
-> +
-> +       vdd_log: vdd-log {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vdd_log";
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               regulator-min-microvolt = <1050000>;
-> +               regulator-max-microvolt = <1050000>;
-> +               vin-supply = <&vcc5v0_sys>;
-> +       };
-> +
-> +       vcc_ddr: vcc-ddr {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vcc_ddr";
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               regulator-min-microvolt = <1500000>;
-> +               regulator-max-microvolt = <1500000>;
-> +               vin-supply = <&vcc5v0_sys>;
-> +       };
-> +
-> +       vcc_1v8: vcc-1v8 {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vcc_1v8";
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               regulator-min-microvolt = <1800000>;
-> +               regulator-max-microvolt = <1800000>;
-> +               vin-supply = <&vcc_io>;
-> +       };
-> +
-> +       vcc_io: vcc-io {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vcc_io";
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +               vin-supply = <&vcc5v0_sys>;
-> +       };
-> +
-> +       vcc5v0_otg: vcc5v0-otg {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vcc5v0_otg";
-> +               regulator-always-on;
-> +               gpio = <&gpio0 RK_PC5 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&otg_vbus_drv>;
-> +               vin-supply = <&vcc5v0_sys>;
-> +       };
-> +};
-> +
-> +&cpu0 {
-> +       cpu-supply = <&vdd_core>;
-> +};
-> +
-> +&emmc {
-> +       bus-width = <4>;
-> +       cap-mmc-highspeed;
-> +       mmc-hs200-1_8v;
-> +       supports-sd;
-> +       disable-wp;
-> +       non-removable;
-> +       num-slots = <1>;
-> +       vin-supply = <&vcc_io>;
-> +       status = "okay";
-> +};
-> +
-> +&i2c1 {
-> +       status = "okay";
-> +};
-> +
-> +&sdmmc {
-> +       bus-width = <4>;
-> +       cap-mmc-highspeed;
-> +       cap-sd-highspeed;
-> +       max-frequeency = <150000000>;
-> +       supports-sd;
-> +       disable-wp;
-> +       num-slots = <1>;
-> +       pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_det &sdmmc_bus4>;
-> +       card-detect-delay = <800>;
-> +       status = "okay";
-> +};
-> +
-> +&spi2 {
-> +       status = "okay";
-> +       max-freq = <10000000>;
-> +};
-> +
-> +&pinctrl {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&rtc_32k>;
-> +
-> +       leds {
-> +               green_led_gio: green-led-gpio {
-> +                       rockchip,pins = <0 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
-> +               };
-> +
-> +               heartbeat_led_gpio: heartbeat-led-gpio {
-> +                       rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
-> +               };
-> +       };
-> +
-> +       usb {
-> +               otg_vbus_drv: otg-vbus-drv {
-> +                       rockchip,pins = <0 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
-> +               };
-> +       };
-> +
-> +       sdio-pwrseq {
-> +               wifi_enable_h: wifi-enable-h {
-> +                       rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +               };
-> +
-> +               wifi_host_wake: wifi-host-wake {
-> +                       rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_down>;
-> +               };
-> +       };
-> +};
-> +
-> +&pwm0 {
-> +       status = "okay";
-> +       pinctrl-0 = <&pwm0_pin_pull_down>;
-> +};
-> +
-> +&saradc {
-> +       vref-supply = <&vcc_1v8>;
-> +       status = "okay";
-> +};
-> +
-> +&sdio {
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +       bus-width = <4>;
-> +       max-frequency = <1000000>;
-> +       cap-sd-highspeed;
-> +       cap-sdio-irq;
-> +       supports-sdio;
-> +       keep-power-in-suspend;
-> +       mmc-pwrseq = <&sdio_pwrseq>;
-> +       non-removable;
-> +       sd-uhs-sdr104;
-> +       status = "okay";
-> +};
-> +
-> +&u2phy {
-> +       status = "okay";
-> +
-> +       u2phy_host: host-port {
-> +               status = "okay";
-> +       };
-> +};
-> +
-> +&uart0 {
-> +       status = "okay";
-> +};
-> +
-> +&uart4 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart4_xfer &uart4_rts &uart4_cts>;
-> +       status = "okay";
-> +};
-> +
-> +&usb_host_ehci {
-> +       status = "okay";
-> +};
-> +
-> +&usb_host_ohci {
-> +       status = "okay";
-> +};
+> > Or if I2C is used and the hub is under the I2C controller:
+> >
+> > ctrl {
+> >     port@0 {
+> >         mux-controls = <&usb_gpio_mux>;
+> >         endpoint@0 { // mux state 0
+> >                 remote-endpoint = <&usb_c_connector_port>;
+> >         };
+> >         endpoint@1 { // mux state 1
+> >                 remote-endpoint = <&usb_hub_port>;
+> >         };
+> > };
+> >
+> > The only new bindings you really need are adding 'mux-controls' to the
+> > USB host controller and the hub binding (we already have a few).
+> >
+> > If the USB2 and USB3 signals come from 2 different host controller
+> > nodes, then I think it will need to look like the 2nd case regardless
+> > of I2C. (It's strange that USB3 was not routed to Type-C connector. Can
+> > you do USB2 on Type-C and USB3 on hub simultaneously? You need USB2 to
+> > enumerate, right?)
+>
+> Yea, it is strange, and I unfortunately don't know why only USB2 was
+> exported to the type-c connector.
+> And to my knowledge, you cannot use both the type-c and hub simultaneously.
+>
+>
+> > > +
+> > > +  typec-vbus-gpios:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > +    description: phandle to the typec-vbus gpio
+> >
+> > This should be modeled as a GPIO regulator, and belongs as part of a
+> > connector node. See bindings/connector/usb-connector.txt.
+> >
+> > > +
+> > > +  otg-switch-gpios:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > +    description: phandle to the otg-switch gpio
+> >
+> > This would be the gpio-mux binding instead.
+> >
+> > > +
+> > > +  hub-vdd33-en-gpios:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > +    description: phandle to the hub 3.3v power enablement gpio
+> >
+> > This should be modeled as a GPIO regulator.
+> >
+> > What about the reset line on the hub?
+>
+> Unknown. I don't have any details on that.
 
-Drop these usb nodes for initial support since these are still not
-available in dsti.
+You might just be getting lucky that it is pulled to the right state.
 
-Also use small S on dts file name.
+
+> > > +  usb-role-switch:
+> > > +    $ref: /schemas/types.yaml#/definitions/flag
+> > > +    description: Support role switch.
+> >
+> > This normally is a controller property. Role switch is foreign to the
+> > hub, so doesn't really belong there for sure.
+>
+> So this part was critical to being able to get role switch
+> notification from the connector and to properly switch modes without
+> adding extra notifier gunk from the previous patch that folks didn't
+> like.
+>
+> Trying to understand further,  your suggestion here is to re-model the
+> binding, as gpio regulators and gpio muxes, and use a usb-connector
+> node to describe them,  but I'm missing how I connect that to the
+> driver implementation I have?
+
+Good question, but that shouldn't really dictate your binding design.
+
+> Is the idea to extend the rt1711h and
+> dwc3 drivers further to support the mux/hub bit (this part is fairly
+> foggy to me), completely removing the need for the misc driver?
+
+I imagine that you need some driver to determine the state of the mux.
+Perhaps a usb-mux driver which is instantiated by the host controller
+driver when it sees a mux-controls property. Sorry, haven't looked at
+the driver side of this at all.
+
+> I did take an attempt at something similar with an earlier iteration
+> of the patch set, where I was trying to move the vbus-gpio as a
+> gpio-regulator to be controlled by the rt1711h/tpcm core, but that
+> approach didn't work properly and Hans suggested I just go back to the
+> approach submitted here:
+>   https://lkml.org/lkml/2019/10/22/42
+
+I don't see why that would matter. If you need to sense the Vbus
+state, then you do need a GPIO typically. But for an enable line, it's
+just another level of abstraction.
+
+Rob
