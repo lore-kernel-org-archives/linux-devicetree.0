@@ -2,284 +2,388 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5411AC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 19:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E82C2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 19:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1638A227BF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 19:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC56227BF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 19:49:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S11HT2eU"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Qb7QzufS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfLRTnc (ORCPT
+        id S1727534AbfLRTtz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 14:43:32 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:43681 "EHLO
+        Wed, 18 Dec 2019 14:49:55 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:36093 "EHLO
         mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726699AbfLRTnc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 14:43:32 -0500
-Received: by mail-il1-f194.google.com with SMTP id v69so2700561ili.10
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 11:43:32 -0800 (PST)
+        with ESMTP id S1726960AbfLRTtz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 14:49:55 -0500
+Received: by mail-il1-f194.google.com with SMTP id b15so2738313iln.3
+        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 11:49:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=amarulasolutions.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Ufzqu5SYStGRmDjFW6F6AuBJEpv9SjyFBEIc9hkxT84=;
-        b=S11HT2eUHvh6PNlKlTpHPZHdyyA7ZFbOnQfOmMSkW3r4g+s3386CSdYkBDEjraYC+C
-         01//sKB8p7le9qAzIs9k8Q+mey74hWohMpW14NcSlZngQodcuohASzfNofHRG7fxcVsN
-         HKcYiNg5dlesgXTkt+vbVXbNfUzHUz1xM3QTg=
+        bh=D9XwghzJGJClOKGtXmrV+GeppqrxrwsjgYwMEk21AdA=;
+        b=Qb7QzufSW6yFp2/WPvKEXu37/g4K6DSsjdmhZkDc02nZH89rhMohYcZuBvEDa0zzmf
+         VLZHbn5ck1a6YFt6PPclAR/XxkSd6o7SXDQNWuz8INspjNSW8W1/FUtuCRU3kX6KlIXq
+         oWSDqkBG1IeJ32T5Kox7Xayi1guwGJzFlytgE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ufzqu5SYStGRmDjFW6F6AuBJEpv9SjyFBEIc9hkxT84=;
-        b=aAt3r0TYO1Q0OjaBiaL0TGsol8cpk6jX1fkOUl7lyUsl+anDrLHVSFC2IlYuCmsIeh
-         0WrQ8A7zEPtM0YYB2/bLs6zc5o50Pffu3VjCJ5FTKi7nwCFV6MWmgODgU4/tN/Rd38Xf
-         NJd3TneWSxRPFNsN0VdPJ35Wpe4D8yvCt2jmO5YlpO2L2savSOCSiLjqa75yQCw+rajS
-         4ExH+xLrHCQ9VoBnEwiWA/XJNRoU4KU9uq/hGsAz4o2V4Kh4L9Vh9fvWl72ikB+uiZGo
-         aDkkMLIa87L/nGcYRE4CZ1QEbRL38+a85TQwCuo/hDq2AwCzspYfd1+g8dXMiSpzgW2W
-         HYKw==
-X-Gm-Message-State: APjAAAXUpZOBxY12Kvldc01A7/Ii2cWRyANcfRPHTHb+tsqd83VfBf9Q
-        Ah0yjfZmZ+fmN0Yl6eRRdsFvqNaOk2I=
-X-Google-Smtp-Source: APXvYqz3sOui4fBliHIlLrSH+upnZfauC+HwMsz2kxAIPHbB8oXRlHX6Phs5UW7KSFW/bbLHuj/wUQ==
-X-Received: by 2002:a92:9c48:: with SMTP id h69mr3179094ili.222.1576698211119;
-        Wed, 18 Dec 2019 11:43:31 -0800 (PST)
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com. [209.85.166.178])
-        by smtp.gmail.com with ESMTPSA id f8sm946427ilf.68.2019.12.18.11.43.30
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Dec 2019 11:43:30 -0800 (PST)
-Received: by mail-il1-f178.google.com with SMTP id z12so2698111iln.11
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 11:43:30 -0800 (PST)
-X-Received: by 2002:a92:cc90:: with SMTP id x16mr3541709ilo.269.1576698209663;
- Wed, 18 Dec 2019 11:43:29 -0800 (PST)
+        bh=D9XwghzJGJClOKGtXmrV+GeppqrxrwsjgYwMEk21AdA=;
+        b=GMcGG0AbLPKo+xJCSp+34fXFVlOsnTgltgrUzRMoKxjiQQ0Ijtl9XNgYHUcc8rh/SP
+         V+nKMoQf2+1CI6VzBQvzZp6/n1zIH903C1tf9vTCqAEDwPg4aSRxl+x6Q6qjDR70RbCa
+         dWIdIjPFxpnyqaMJYl/ofC/9Dw7617H/ULD8ssW1secxjD7Nv8riXcVOT2UYRECZ6NDz
+         FXPo8r7Way3kyAaMQupsZmzXyWdRC9DlD1q3rNitYYUfSHrleUo9q7lG0csumSRKWpTr
+         iDtLjWmemuLn4Ngn5Nid/vhutUS7otqqx+T2sBgIh0LBnIbec7Nd2MXc8YJvkagDJges
+         dy9Q==
+X-Gm-Message-State: APjAAAWiwd64x2NDNwbbimR3nf/IHItcx9OrQPLsVohB/d+O7587C5L3
+        1b30Yse0NiOT8ZZZ6Gqi3VrG9ciFrHN+0snMXNMgIQ==
+X-Google-Smtp-Source: APXvYqxQciXY7zyuQqL2A13B86oOHS27uDnGdlJJMbZNIbK6SfDRvKWok7eA1VjcoE4HHXpvRoehkPkp23yVvCSkKkk=
+X-Received: by 2002:a92:3cd4:: with SMTP id j81mr3671622ilf.77.1576698593613;
+ Wed, 18 Dec 2019 11:49:53 -0800 (PST)
 MIME-Version: 1.0
-References: <1575520881-31458-1-git-send-email-sanm@codeaurora.org> <1575520881-31458-3-git-send-email-sanm@codeaurora.org>
-In-Reply-To: <1575520881-31458-3-git-send-email-sanm@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 18 Dec 2019 11:43:18 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UiPXYMsw=t7Sw7YaEFRxSfgzUXYZA3J1enV8zd+Pa9OA@mail.gmail.com>
-Message-ID: <CAD=FV=UiPXYMsw=t7Sw7YaEFRxSfgzUXYZA3J1enV8zd+Pa9OA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: phy: qcom-qusb2: Convert QUSB2 phy
- bindings to yaml
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <20191217080014.11756-1-akash@openedev.com>
+In-Reply-To: <20191217080014.11756-1-akash@openedev.com>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Thu, 19 Dec 2019 01:19:42 +0530
+Message-ID: <CAMty3ZC_Hk7=NeWJsCLwx5q2efkSDj3gBCBaT5_jGq8_aW43xA@mail.gmail.com>
+Subject: Re: [V2 1/1 PATCH] arm64: dts: rockchip: add ROCK Pi S DTS support
+To:     Akash Gajjar <akash@openedev.com>
+Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
         Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Manu Gautam <mgautam@codeaurora.org>
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Tom Cubie <tom@radxa.com>, Robin Murphy <robin.murphy@arm.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>, Nick Xie <nick@khadas.com>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Jagan Teki <jagan@openedev.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Dec 4, 2019 at 8:43 PM Sandeep Maheswaram <sanm@codeaurora.org> wrote:
+On Tue, Dec 17, 2019 at 2:23 PM Akash Gajjar <akash@openedev.com> wrote:
 >
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml
-
-Hrm.  Probably should have given this same comment on the USB3 yaml
-bindings too, but I think the file name should be:
-
-qcom,qusb2-phy.yaml
-
-Specifically I think that's what Rob H has been requesting elsewhere.
-
-
-
+> ROCK Pi S is RK3308 based SBC from radxa.com. ROCK Pi S has a,
+> - 256MB/512MB DDR3 RAM
+> - SD, NAND flash (optional on board 1/2/4/8Gb)
+> - 100MB ethernet, PoE (optional)
+> - Onboard 802.11 b/g/n wifi + Bluetooth 4.0 Module
+> - USB2.0 Type-A HOST x1
+> - USB3.0 Type-C OTG x1
+> - 26-pin expansion header
+> - USB Type-C DC 5V Power Supply
+>
+> This patch enables
+> - Console
+> - NAND Flash
+> - SD Card
+> - USB2.0
+>
+> Signed-off-by: Akash Gajjar <akash@openedev.com>
+> ---
+> Changes for v2
+> - Use pwm-supply for vdd_core node instead of vi-supply
+> - Add USB2.0 node support
+>
+>  .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  .../boot/dts/rockchip/rk3308-rock-pi-S.dts    | 237 ++++++++++++++++++
+>  3 files changed, 243 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3308-rock-pi-S.dts
+>
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> index d9847b306b83..48d40c928d45 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> @@ -422,6 +422,11 @@ properties:
+>            - const: radxa,rockpi4
+>            - const: rockchip,rk3399
+>
+> +      - description: Radxa ROCK Pi S
+> +        items:
+> +          - const: radxa,rockpis
+> +          - const: rockchip,rk3308
+> +
+>        - description: Radxa Rock2 Square
+>          items:
+>            - const: radxa,rock2-square
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index 48fb631d5451..cc9e8c824980 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -2,6 +2,7 @@
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-evb.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-rock-pi-S.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3308-rock-pi-S.dts b/arch/arm64/boot/dts/rockchip/rk3308-rock-pi-S.dts
 > new file mode 100644
-> index 0000000..3ef94bc
+> index 000000000000..0afb24ec1cdf
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml
-> @@ -0,0 +1,129 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +++ b/arch/arm64/boot/dts/rockchip/rk3308-rock-pi-S.dts
+> @@ -0,0 +1,237 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 Akash Gajjar <akash@openedev.com>
+> + * Copyright (c) 2019 Jagan Teki <jagan@openedev.com>
+> + */
 > +
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/phy/qcom-qusb2-phy.yaml#"
-
-If you change the name to add the comma (as per above), don't forget
-to update your ID.
-
-
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +/dts-v1/;
+> +#include "rk3308.dtsi"
 > +
-> +title: Qualcomm QUSB2 phy controller
+> +/ {
+> +       model = "Radxa ROCK Pi S";
+> +       compatible = "radxa,rockpis", "rockchip,rk3308";
 > +
-> +maintainers:
-> +  - Manu Gautam <mgautam@codeaurora.org>
+> +       chosen {
+> +               stdout-path = "serial0:1500000n8";
+> +       };
 > +
-> +description: |
-
-nit: don't need the "|" unless carriage returns are important.
-
-
-> +  QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
+> +       leds {
+> +               compatible = "gpio-leds";
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&green_led_gio>, <&heartbeat_led_gpio>;
 > +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,msm8996-qusb2-phy
-> +      - qcom,msm8998-qusb2-phy
-> +      - qcom,sdm845-qusb2-phy
+> +               green-led {
+> +                       label = "rockpis:green:power";
+> +                       gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "default-on";
+> +                       default-state = "on";
+> +               };
 > +
-> +  reg:
-> +    description:
-> +        offset and length of the PHY register set.
-
-No description, just maxItems: 1 I think.  This seemed to be what Rob
-H suggested in USB3 bindings with regards to resets where the
-description was just generic [1].
-
-
-> +  "#phy-cells":
-> +    const: 0
+> +               blue-led {
+> +                       label = "rockpis:blue:user";
+> +                       gpios = <&gpio0 RK_PA5 GPIO_ACTIVE_HIGH>;
+> +                       default-state = "on";
+> +                       linux,default-trigger = "heartbeat";
+> +               };
+> +       };
 > +
-> +  clocks:
-> +    maxItems: 3
-> +    description:
-> +        a list of phandles and clock-specifier pairs,
-> +        one for each entry in clock-names.
+> +       sdio_pwrseq: sdio-pwrseq {
+> +               compatible = "mmc-pwrseq-simple";
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&wifi_enable_h>;
+> +               reset-gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
+> +       };
 > +
-> +  clock-names:
-> +    items:
-> +      - const: cfg_ahb #phy config clock
-> +      - const: ref #19.2 MHz ref clk
-> +      - const: iface #phy interface clock (Optional)
-
-Please take the same type of feedback you got for the USB3 bindings
-with regards to clocks / clock-names.
-
-
-> +  vdda-pll-supply:
-> +     description:
-> +       Phandle to 1.8V regulator supply to PHY refclk pll block.
+> +       vcc5v0_sys: vcc5v0-sys {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "vcc5v0_sys";
+> +               regulator-always-on;
+> +               regulator-boot-on;
+> +               regulator-min-microvolt = <5000000>;
+> +               regulator-max-microvolt = <5000000>;
+> +       };
 > +
-> +  vdda-phy-dpdm-supply:
-> +     description:
-> +       Phandle to 3.1V regulator supply to Dp/Dm port signals.
+> +       vdd_core: vdd-core {
+> +               compatible = "pwm-regulator";
+> +               pwms = <&pwm0 0 5000 1>;
+> +               regulator-name = "vdd_core";
+> +               regulator-min-microvolt = <827000>;
+> +               regulator-max-microvolt = <1340000>;
+> +               regulator-init-microvolt = <1015000>;
+> +               regulator-settling-time-up-us = <250>;
+> +               regulator-always-on;
+> +               regulator-boot-on;
+> +               pwm-supply = <&vcc5v0_sys>
+
+Missing semi colon.
+
+> +       };
 > +
-> +  resets:
-> +    description:
-> +       Phandle to reset to phy block.
-
-No description, just maxItems: 1 I think [1].
-
-
-> +  nvmem-cells:
-> +    description:
-> +        Phandle to nvmem cell that contains 'HS Tx trim'
-> +        tuning parameter value for qusb2 phy.
-
-Add maxItems: 1 ?
-
-
-> +  qcom,tcsr-syscon:
-> +    description:
-> +        Phandle to TCSR syscon register region.
-> +    $ref: /schemas/types.yaml#/definitions/cell
+> +       vdd_log: vdd-log {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "vdd_log";
+> +               regulator-always-on;
+> +               regulator-boot-on;
+> +               regulator-min-microvolt = <1050000>;
+> +               regulator-max-microvolt = <1050000>;
+> +               vin-supply = <&vcc5v0_sys>;
+> +       };
 > +
-> +  qcom,imp-res-offset-value:
-> +    description:
-> +        It is a 6 bit value that specifies offset to be
-> +        added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
-> +        tuning parameter that may vary for different boards of same SOC.
-> +        This property is applicable to only QUSB2 v2 PHY (sdm845).
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 0
-maximum: 63
-
-...and, I think:
-default: 0
-
-
-> +  qcom,hstx-trim-value:
-> +    description:
-> +        It is a 4 bit value that specifies tuning for HSTX
-> +        output current.
-> +        Possible range is - 15mA to 24mA (stepsize of 600 uA).
-> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
-> +        This property is applicable to only QUSB2 v2 PHY (sdm845).
-> +        Default value is 22.2mA for sdm845.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 0
-maximum: 15
-default: 3
-
-
-> +  qcom,preemphasis-level:
-> +    description:
-> +        It is a 2 bit value that specifies pre-emphasis level.
-> +        Possible range is 0 to 15% (stepsize of 5%).
-> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
-> +        This property is applicable to only QUSB2 v2 PHY (sdm845).
-> +        Default value is 10% for sdm845.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 0
-maximum: 3
-default: 2
-
-
-> +  qcom,preemphasis-width:
-> +    description:
-> +        It is a 1 bit value that specifies how long the HSTX
-> +        pre-emphasis (specified using qcom,preemphasis-level) must be in
-> +        effect. Duration could be half-bit of full-bit.
-> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
-> +        This property is applicable to only QUSB2 v2 PHY (sdm845).
-> +        Default value is full-bit width for sdm845.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 0
-maximum: 1
-default: 0
-
-
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#phy-cells"
-> +  - clocks
-> +  - clock-names
-> +  - vdda-pll-supply
-> +  - vdda-phy-dpdm-supply
-> +  - resets
+> +       vcc_ddr: vcc-ddr {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "vcc_ddr";
+> +               regulator-always-on;
+> +               regulator-boot-on;
+> +               regulator-min-microvolt = <1500000>;
+> +               regulator-max-microvolt = <1500000>;
+> +               vin-supply = <&vcc5v0_sys>;
+> +       };
 > +
+> +       vcc_1v8: vcc-1v8 {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "vcc_1v8";
+> +               regulator-always-on;
+> +               regulator-boot-on;
+> +               regulator-min-microvolt = <1800000>;
+> +               regulator-max-microvolt = <1800000>;
+> +               vin-supply = <&vcc_io>;
+> +       };
 > +
-> +examples:
-> +  - |
-
-#include <dt-bindings/clock/qcom,gcc-msm8996.h>
-
-
-> +    hsusb_phy: phy@7411000 {
-> +        compatible = "qcom,msm8996-qusb2-phy";
-> +        reg = <0x7411000 0x180>;
-> +        #phy-cells = <0>;
+> +       vcc_io: vcc-io {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "vcc_io";
+> +               regulator-always-on;
+> +               regulator-boot-on;
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+> +               vin-supply = <&vcc5v0_sys>;
+> +       };
 > +
-> +        clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-> +                <&gcc GCC_RX1_USB2_CLKREF_CLK>,
+> +       vcc5v0_otg: vcc5v0-otg {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "vcc5v0_otg";
+> +               regulator-always-on;
+> +               gpio = <&gpio0 RK_PC5 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&otg_vbus_drv>;
+> +               vin-supply = <&vcc5v0_sys>;
+> +       };
+> +};
+> +
+> +&cpu0 {
+> +       cpu-supply = <&vdd_core>;
+> +};
+> +
+> +&emmc {
+> +       bus-width = <4>;
+> +       cap-mmc-highspeed;
+> +       mmc-hs200-1_8v;
+> +       supports-sd;
+> +       disable-wp;
+> +       non-removable;
+> +       num-slots = <1>;
+> +       vin-supply = <&vcc_io>;
+> +       status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +       status = "okay";
+> +};
+> +
+> +&sdmmc {
+> +       bus-width = <4>;
+> +       cap-mmc-highspeed;
+> +       cap-sd-highspeed;
+> +       max-frequeency = <150000000>;
+> +       supports-sd;
+> +       disable-wp;
+> +       num-slots = <1>;
+> +       pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_det &sdmmc_bus4>;
+> +       card-detect-delay = <800>;
+> +       status = "okay";
+> +};
+> +
+> +&spi2 {
+> +       status = "okay";
+> +       max-freq = <10000000>;
+> +};
+> +
+> +&pinctrl {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&rtc_32k>;
+> +
+> +       leds {
+> +               green_led_gio: green-led-gpio {
+> +                       rockchip,pins = <0 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
+> +               };
+> +
+> +               heartbeat_led_gpio: heartbeat-led-gpio {
+> +                       rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
+> +               };
+> +       };
+> +
+> +       usb {
+> +               otg_vbus_drv: otg-vbus-drv {
+> +                       rockchip,pins = <0 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
+> +               };
+> +       };
+> +
+> +       sdio-pwrseq {
+> +               wifi_enable_h: wifi-enable-h {
+> +                       rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+> +               };
+> +
+> +               wifi_host_wake: wifi-host-wake {
+> +                       rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_down>;
+> +               };
+> +       };
+> +};
+> +
+> +&pwm0 {
+> +       status = "okay";
+> +       pinctrl-0 = <&pwm0_pin_pull_down>;
+> +};
+> +
+> +&saradc {
+> +       vref-supply = <&vcc_1v8>;
+> +       status = "okay";
+> +};
+> +
+> +&sdio {
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +       bus-width = <4>;
+> +       max-frequency = <1000000>;
+> +       cap-sd-highspeed;
+> +       cap-sdio-irq;
+> +       supports-sdio;
+> +       keep-power-in-suspend;
+> +       mmc-pwrseq = <&sdio_pwrseq>;
+> +       non-removable;
+> +       sd-uhs-sdr104;
+> +       status = "okay";
+> +};
+> +
+> +&u2phy {
+> +       status = "okay";
+> +
+> +       u2phy_host: host-port {
+> +               status = "okay";
+> +       };
+> +};
+> +
+> +&uart0 {
+> +       status = "okay";
+> +};
+> +
+> +&uart4 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&uart4_xfer &uart4_rts &uart4_cts>;
+> +       status = "okay";
+> +};
+> +
+> +&usb_host_ehci {
+> +       status = "okay";
+> +};
+> +
+> +&usb_host_ohci {
+> +       status = "okay";
+> +};
 
-The comma at the end is a syntax error.
+Drop these usb nodes for initial support since these are still not
+available in dsti.
 
-make dt_binding_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml
-
-[1] https://lore.kernel.org/r/20191213212313.GA21092@bogus
-
-
--Doug
+Also use small S on dts file name.
