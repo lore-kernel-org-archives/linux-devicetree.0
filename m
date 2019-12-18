@@ -2,133 +2,170 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 115E6C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65068C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E18862176D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35A4D2176D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:18:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEJ84Ho9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbfLRXPt (ORCPT
+        id S1726609AbfLRXSt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:15:49 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54270 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726518AbfLRXPt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 18:15:49 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIMwow0047568;
-        Wed, 18 Dec 2019 18:15:28 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wyq5qkt8b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Dec 2019 18:15:28 -0500
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBIN3GI8059370;
-        Wed, 18 Dec 2019 18:15:28 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wyq5qkt81-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Dec 2019 18:15:28 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBINDRqj026859;
-        Wed, 18 Dec 2019 23:15:27 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma02dal.us.ibm.com with ESMTP id 2wvqc73udb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Dec 2019 23:15:27 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBINFPeE50790812
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Dec 2019 23:15:25 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D37EF6A04D;
-        Wed, 18 Dec 2019 23:15:25 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4607A6A04F;
-        Wed, 18 Dec 2019 23:15:25 +0000 (GMT)
-Received: from [9.70.82.143] (unknown [9.70.82.143])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 18 Dec 2019 23:15:25 +0000 (GMT)
-Subject: Re: [PATCH V3 01/13] powerpc/vas: Describe vas-port and interrupts
- properties
-From:   Haren Myneni <haren@linux.ibm.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     mpe@ellerman.id.au, hch@infradead.org, devicetree@vger.kernel.org,
-        mikey@neuling.org, herbert@gondor.apana.org.au, npiggin@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, sukadev@linux.vnet.ibm.com
-In-Reply-To: <20191218221808.GA20302@bogus>
-References: <1576561080.16318.6531.camel@hbabu-laptop>
-         <1576561720.16318.6532.camel@hbabu-laptop>  <20191218221808.GA20302@bogus>
+        Wed, 18 Dec 2019 18:18:49 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40853 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfLRXSt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 18:18:49 -0500
+Received: by mail-qk1-f195.google.com with SMTP id c17so3083507qkg.7;
+        Wed, 18 Dec 2019 15:18:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nuyhYd8ECto87m9FuniOXYcBUixqQrUKuyD3AyEWA+A=;
+        b=QEJ84Ho9x2u+RDV0L3fVLJ/07KGc8v4ji6189tqfgBzY4T9Zch4GF0ICOVmQiedFkK
+         gO4tHFmI5AKY1yHkS5HmwQYH5w099hrSeCmDSLxdHK49ZwJao7LsADt7eFeAk/l3l3Lx
+         vhmh1Z55xZ84AoRvPI0kPvYKhWj8/DEvynF8GDGjLZ28A7MxDzE5QZqE8bB348T9Imec
+         VnKMOX6inmmxlz1s98+0hVZIcvQEJGNBImQ2V453cN632C6Nk8Vlvesscm4QA8Qmo1aG
+         s935HuQHKFwUR6y/qra3A6ib1CF+reB133B+j1W732GGg527pTNwiD0EPZtT4A/ENTwb
+         HI4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nuyhYd8ECto87m9FuniOXYcBUixqQrUKuyD3AyEWA+A=;
+        b=AdbTIV/My4gq9e6F6I+H3/AK4Ibxnw9ITKL/pBYe+shdJV5b4/8GqWvVp90vRgNXHi
+         RZ5A5oZ77y6Kkk2o71jos+SJhomS89dMPyKt6LJMET2S0l3eqcLuQZXauVRdplrKgKPq
+         a1llnLSM5Sts8KgfKzb+vWBV5tAZ5Jc2k9bN+aa4BM/pgykzP+AqotlRXWvfklnBGRNB
+         7tB9ebXgcVorsNOIFWhC0LVRqLFjNwwcOzSUwDLjSLBov10Jd+rIE/Y1kswxVqG4QVX3
+         w9D4wslkO5QnJwfMsBL//PfFBM48XaWW+o+sJOFdzPLmYs+vcjnUpJp0Mmm9HqSgJVD+
+         epdg==
+X-Gm-Message-State: APjAAAXb+m//97Z1QyMra/nVsovHQNu91tak3TeMs4obMPoEf1pMJ2PS
+        iYeCQd3nNWRChlunPDpgHch34WklXSjHc8kXX38=
+X-Google-Smtp-Source: APXvYqxmCgCcV71Y46Kd1h7x1kMPtfJ8a/HJjus1Y1SOXueUfBb+NFUsWJq8OEdBjSxCnnR0qVG1fuTHKRUTczc2+cE=
+X-Received: by 2002:a37:5d0:: with SMTP id 199mr5281279qkf.131.1576711128403;
+ Wed, 18 Dec 2019 15:18:48 -0800 (PST)
+MIME-Version: 1.0
+References: <20191218042121.1471954-1-anarsoul@gmail.com> <20191218042121.1471954-7-anarsoul@gmail.com>
+ <CAGb2v65Qv6_KQ_MPg0u37P+o5gnnQWhbifOrY6g5FiWvnadmiw@mail.gmail.com>
+In-Reply-To: <CAGb2v65Qv6_KQ_MPg0u37P+o5gnnQWhbifOrY6g5FiWvnadmiw@mail.gmail.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Wed, 18 Dec 2019 15:18:51 -0800
+Message-ID: <CA+E=qVdKwkUSsG9WA_4x5QntaOxQqfH1eZQ7TEeUrM_3W5mqTg@mail.gmail.com>
+Subject: Re: [PATCH v7 6/7] arm64: dts: allwinner: h6: Add thermal sensor and
+ thermal zones
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Date:   Wed, 18 Dec 2019 15:15:22 -0800
-Message-ID: <1576710922.12797.13.camel@hbabu-laptop>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.28.3 
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-18_08:2019-12-17,2019-12-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- adultscore=0 suspectscore=0 bulkscore=0 impostorscore=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1011 phishscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912180172
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 2019-12-18 at 16:18 -0600, Rob Herring wrote:
-> On Mon, Dec 16, 2019 at 09:48:40PM -0800, Haren Myneni wrote:
-> > 
-> 
-> Commit message?
-> 
-> > Signed-off-by: Haren Myneni <haren@us.ibm.com>
-> 
-> Your author and S-o-b emails don't match.
-
-Thanks, Oliver suggested IRQ assign in the kernel instead of skiboot. In
-this case, we may not need this patch. 
-> 
+On Tue, Dec 17, 2019 at 8:32 PM Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> On Wed, Dec 18, 2019 at 12:22 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+> >
+> > From: Ondrej Jirman <megous@megous.com>
+> >
+> > There are two sensors, one for CPU, one for GPU.
+> >
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 > > ---
-> >  Documentation/devicetree/bindings/powerpc/ibm,vas.txt | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/powerpc/ibm,vas.txt b/Documentation/devicetree/bindings/powerpc/ibm,vas.txt
-> > index bf11d2f..12de08b 100644
-> > --- a/Documentation/devicetree/bindings/powerpc/ibm,vas.txt
-> > +++ b/Documentation/devicetree/bindings/powerpc/ibm,vas.txt
-> > @@ -11,6 +11,8 @@ Required properties:
-> >    window context start and length, OS/User window context start and length,
-> >    "Paste address" start and length, "Paste window id" start bit and number
-> >    of bits)
-> > +- ibm,vas-port : Port address for the interrupt.
-> 
-> 64-bit?
-> 
-> > +- interrupts: IRQ value for each VAS instance and level.
-> >  
-> >  Example:
-> >  
-> > @@ -18,5 +20,8 @@ Example:
-> >  		compatible = "ibm,vas", "ibm,power9-vas";
-> >  		reg = <0x6019100000000 0x2000000 0x6019000000000 0x100000000 0x8000000000000 0x100000000 0x20 0x10>;
-> >  		name = "vas";
-> > +		interrupts = <0x1f 0>;
-> > +		interrupt-parent = <&mpic>;
-> >  		ibm,vas-id = <0x1>;
-> > +		ibm,vas-port = <0x6010001000000>;
-> >  	};
-> > -- 
-> > 1.8.3.1
-> > 
-> > 
-> > 
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 33 ++++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > index 29824081b43b..cdcb1a36301a 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > @@ -11,6 +11,7 @@
+> >  #include <dt-bindings/reset/sun50i-h6-ccu.h>
+> >  #include <dt-bindings/reset/sun50i-h6-r-ccu.h>
+> >  #include <dt-bindings/reset/sun8i-de2.h>
+> > +#include <dt-bindings/thermal/thermal.h>
+> >
+> >  / {
+> >         interrupt-parent = <&gic>;
+> > @@ -233,6 +234,12 @@ dma: dma-controller@3002000 {
+> >                 sid: efuse@3006000 {
+> >                         compatible = "allwinner,sun50i-h6-sid";
+> >                         reg = <0x03006000 0x400>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <1>;
+> > +
+> > +                       ths_calibration: thermal-sensor-calibration@14 {
+> > +                               reg = <0x14 0x6>;
+>
+> Nit: my preference is to use words as the smallest increment, so this
+> would have a size of 8 instead of 6. Same goes for the A64 dts.
+>
+> AFAICT this doesn't impact the driver in any way.
 
+H6 has only 2 sensors, so it should be 4. That's my overlook, I'll
+change it to 4 for H6 and to 8 for A64.
 
+>
+> ChenYu
+>
+>
+> > +                       };
+> >                 };
+> >
+> >                 watchdog: watchdog@30090a0 {
+> > @@ -856,5 +863,31 @@ r_i2c: i2c@7081400 {
+> >                         #address-cells = <1>;
+> >                         #size-cells = <0>;
+> >                 };
+> > +
+> > +               ths: thermal-sensor@5070400 {
+> > +                       compatible = "allwinner,sun50i-h6-ths";
+> > +                       reg = <0x05070400 0x100>;
+> > +                       interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&ccu CLK_BUS_THS>;
+> > +                       clock-names = "bus";
+> > +                       resets = <&ccu RST_BUS_THS>;
+> > +                       nvmem-cells = <&ths_calibration>;
+> > +                       nvmem-cell-names = "calibration";
+> > +                       #thermal-sensor-cells = <1>;
+> > +               };
+> > +       };
+> > +
+> > +       thermal-zones {
+> > +               cpu-thermal {
+> > +                       polling-delay-passive = <0>;
+> > +                       polling-delay = <0>;
+> > +                       thermal-sensors = <&ths 0>;
+> > +               };
+> > +
+> > +               gpu-thermal {
+> > +                       polling-delay-passive = <0>;
+> > +                       polling-delay = <0>;
+> > +                       thermal-sensors = <&ths 1>;
+> > +               };
+> >         };
+> >  };
+> > --
+> > 2.24.1
+> >
