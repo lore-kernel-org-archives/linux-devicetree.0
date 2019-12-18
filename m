@@ -2,179 +2,113 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FE6C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 20:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D46C47409
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 20:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF8821582
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 20:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D433A24650
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 20:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576701247;
-	bh=BHun8mmSUnItGkWZ0EivT9F79oixcfH4VjoIaLRkFgk=;
+	s=default; t=1576701512;
+	bh=BxDWvL0wyUI9P6H5mgx31bfKcvWWUxvFPIg7/bc18mw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N/I0B429suhT0cBDIJpufdOXSBcDG4VyeSAEHZ7+XFkUEpz1HW/zRVyROZsqMUsD8
-	 smByPazJLG1DRMh0DLjJBkK4aNIq/oOhkmXqhHZpwJWeIx860WPAy0Y7DFA6ZuNlNK
-	 nGoSj3pty4iB1hBB3e1rRC7WHmveHjAVuOcT2NME=
+	b=SJmEjVZ183KAk9hTaoHrbRRiAC4dCtcvYTUkphgkcD/3mTwO0i/F1mAijGLRRgy0k
+	 ijqIv/EvzthdmvdjRNfkZ4J/1nq0qBjTEo9VJrArf41eU9/CdybIhyKo8iNvqL1Yfc
+	 MrYmOSw9eA3FqOXw3ijS0s11Gym6zyAVOqpGpqwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfLRUeG (ORCPT
+        id S1726594AbfLRUiU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:34:06 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41045 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfLRUeG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 15:34:06 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r27so4016835otc.8;
-        Wed, 18 Dec 2019 12:34:05 -0800 (PST)
+        Wed, 18 Dec 2019 15:38:20 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33903 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfLRUiU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 15:38:20 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l136so1890924oig.1;
+        Wed, 18 Dec 2019 12:38:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=F/E8A+1Ejaf5X51OroqwzDdI/kh4qPtQG6sI+b5/ucQ=;
-        b=KHbDT4LHG4gq95Lt0Sh8FSMcyNBcflMbuFfblWwGfM1bSBG0cOrXvIuPjErT5JAw27
-         GMw1/0H38n6Db5806e5ZZNroZor0lSd/tXF+bX07k+s0mIsWqyrnkfloO7Q3ViE341PL
-         /hqgS4Z3Pm45po/sG7M6LDDfYAvLpz0oFOzt0Qgn3DJ2N5ByFBPi26TPR+qpoVGiMzXu
-         FTRQb1K9h4NTI5JdwUoyQWhojGCO5GOhj9j+DojkCOuLMzZ8PDBMXOUkyaIsBOS5d/GO
-         BVNI3BF7urvXuY0HsfICLbclQthukawenb8ptq4KSzsxSEnGGVxywLbQ5Rva/oWTd/JY
-         Lc+g==
-X-Gm-Message-State: APjAAAXfu0rYvBYQvFUIerOvS8o1hAPpoWWHtIXAxsnKJBQA466GZi0I
-        iiLyrJ4MwI02U6ivkvhk7g==
-X-Google-Smtp-Source: APXvYqzuX/bUGktSf48gje5dDS5VMPiozApAjRV8yxUKvFqiGyVOtl2EyZFUSO8wCq3HcPH4iRrETw==
-X-Received: by 2002:a9d:7a8a:: with SMTP id l10mr4794909otn.309.1576701245408;
-        Wed, 18 Dec 2019 12:34:05 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hZ9E1NuLuIvtf+WPRqjwV9sUZ6orTffbf5yW67pbe2s=;
+        b=E585jzx3Zv6Wlx+jFwqfOn4RW+GD6f6DtZJ2J8WlGjkowZ5UPuIFQVQI1NarROUnaa
+         Gnd2vNMKT2nPo+iSwd7RZYbLOyTLLj86Sak+a6GTFEUqwJ3oKB4QP/vVR5Dsp7QJ1Oz+
+         Av/Jyen7gqMx4BVr2HYtwqN9aR4U1jhudBgeEtzdrBoy9bg9plo11TBa8Axdpcju6GAu
+         elPAq+/tWIAR0PqOMbvvegMWY/WzjrudBITniuWST8f98yF/fWtaAL7KNV5/g9whHqtz
+         /wKBWnwETqehgdh4WGEk6sHoQyvHwSPMDcWKWsMz6MQ0aPXrfo0T7GdKVYMkVSBmDx/5
+         MMsA==
+X-Gm-Message-State: APjAAAWOBVDdpAfI7KMhdtfH7AU5G+Pytyr7wIN4IU+Ox4ogH9i+FXGv
+        PSie/iWYUpKCT/uW1Jb+PQ==
+X-Google-Smtp-Source: APXvYqxAKp78mrKcfBIIJGi+RshJWSvfi1+AG5ZtMHY8fR0aL5vcNcIROydHyMWaiCPZ0EZmvYFcMQ==
+X-Received: by 2002:aca:dd04:: with SMTP id u4mr1348308oig.94.1576701499476;
+        Wed, 18 Dec 2019 12:38:19 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m2sm1164119oim.13.2019.12.18.12.34.04
+        by smtp.gmail.com with ESMTPSA id s83sm1185529oif.33.2019.12.18.12.38.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 12:34:04 -0800 (PST)
-Date:   Wed, 18 Dec 2019 14:34:04 -0600
+        Wed, 18 Dec 2019 12:38:18 -0800 (PST)
+Date:   Wed, 18 Dec 2019 14:38:18 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Xingyu Chen <xingyu.chen@amlogic.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v5 2/4] dt-bindings: watchdog: add new binding for meson
- secure watchdog
-Message-ID: <20191218203404.GA2451@bogus>
-References: <1576153187-28378-1-git-send-email-xingyu.chen@amlogic.com>
- <1576153187-28378-3-git-send-email-xingyu.chen@amlogic.com>
- <CAFBinCBHLqgPExPsVaSWdSOr0Oj-jeYa4Z82U-pJ=fS+D1wGnA@mail.gmail.com>
- <f7b0afe7-e317-2422-de7e-878837f9f238@amlogic.com>
- <a8f5ab1d-264c-5b2c-e72b-3774b9f44c22@roeck-us.net>
- <1da513d7-20e1-726a-dcc4-952cbfbbe63a@amlogic.com>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Guillaume La Roque <glaroque@baylibre.com>, marcel@holtmann.org,
+        johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        nsaenzjulienne@suse.de, linux-kernel@vger.kernel.org,
+        khilman@baylibre.com
+Subject: Re: [PATCH v5 1/2] dt-bindings: net: bluetooth: add interrupts
+ properties
+Message-ID: <20191218203818.GA8009@bogus>
+References: <20191213150622.14162-1-glaroque@baylibre.com>
+ <20191213150622.14162-2-glaroque@baylibre.com>
+ <20191213161901.GZ10631@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1da513d7-20e1-726a-dcc4-952cbfbbe63a@amlogic.com>
+In-Reply-To: <20191213161901.GZ10631@localhost>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 03:37:49PM +0800, Xingyu Chen wrote:
-> Hi, Guenter Martin
-> 
-> On 2019/12/16 21:30, Guenter Roeck wrote:
-> > On 12/15/19 10:03 PM, Xingyu Chen wrote:
-> > > Hi, Martin
-> > > 
-> > > Sorry for the late reply.
-> > > 
-> > > On 2019/12/13 4:05, Martin Blumenstingl wrote:
-> > > > Hi Xingyu and Rob,
-> > > > 
-> > > > On Thu, Dec 12, 2019 at 1:20 PM Xingyu Chen
-> > > > <xingyu.chen@amlogic.com> wrote:
-> > > > [...]
-> > > > > +examples:
-> > > > > +  - |
-> > > > > +    watchdog {
-> > > > > +          compatible = "amlogic,meson-sec-wdt";
-> > > > > +          timeout-sec = <60>;
-> > > > > +    };
-> > > > in v3 of this patch Rob commented that there shouldn't be an OF node
-> > > > if there are no additional properties
-> > > > with timeout-sec there's now an additional property so my
-> > > > understanding is that it's fine to have an OF node
-> > > Your understanding is correct.
-> > > > 
-> > > > what I don't understand yet is where this node should be placed.
-> > > > is it supposed to be a child node of the secure monitor node (for
-> > > > which we already have a binding here:
-> > > > Documentation/devicetree/bindings/firmware/meson/meson_sm.txt) or
-> > > > where else would we place it inside the .dts?
-> > > IMO,  Although the watchdog node need to reference the meson_sm
-> > > node, there is no
-> > > bus-like dependencies between the devices which the two nodes
-> > > corresponding to.
-> > > so i think that the watchdog node as child node of meson_sm maybe
-> > > not appropriate.
+On Fri, Dec 13, 2019 at 05:19:01PM +0100, Johan Hovold wrote:
+> On Fri, Dec 13, 2019 at 04:06:21PM +0100, Guillaume La Roque wrote:
+> > add interrupts and interrupt-names as optional properties
+> > to support host-wakeup by interrupt properties instead of
+> > host-wakeup-gpios.
 > > 
-> > The watchdog driver needs the meson SM's dt node, and it depends on the
-> > existence
-> > of that node. That seems enough of a relationship to warrant having it
-> > as child note.
-> Thanks for your reply, if i take the wdt node as child of secure monitor
-> (sm), how should
-> i register or find the wdt device ?
-> 
-> I only think of the following three methods :
-> 1). update the sm driver，and scan&register wdt device when the sm driver
-> probes(It is like i2c), but there
-> are too many changes involved.
-
-Just add of_platform_default_populate() call and clean-up calls. That's 
-not what I'd call 'too many changes'.
-
- 
-> 2). add "simple-bus" key string to compatible of sm node, and it will make
-> the child node is registered as
-> platform device, but it seems that the key string is not match current
-> scene.
-
-You previously said it's not a bus...
-
-> 
-> secure-monitor {
->     compatible = "amlogic,meson-gxbb-sm",  "simple-bus";
-> 
->     watchdog {
->         compatible = "amlogic,meson-sec-wdt";
->         timeout-sec = <60>;
->     }
-> }
-> 
-> 3).  don't register device, and find directly the watchdog node by using the
-> of_* API in watchdog
-> driver (Eg: linux-4.x/drivers/tee/optee/core.c)
-> 
-> secure-monitor {
->     compatible = "amlogic,meson-gxbb-sm";
-> 
->     watchdog {
->         compatible = "amlogic,meson-sec-wdt";
->         timeout-sec = <60>;
->     }
-> }
-> 
-> The method 3 looks better for me, do you have a better suggestion ? Thanks
-> 
-> BR
+> > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> > ---
+> >  Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
 > > 
-> > Guenter
-> > 
-> > .
-> > 
+> > diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > index b5eadee4a9a7..95912d979239 100644
+> > --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > @@ -36,7 +36,9 @@ Optional properties:
+> >      - pcm-frame-type: short, long
+> >      - pcm-sync-mode: slave, master
+> >      - pcm-clock-mode: slave, master
+> > -
+> > + - interrupts: must be one, used to wakeup the host processor if
+> > +   gpiod_to_irq function not supported
+> 
+> This is a Linux implementation detail which therefore doesn't belong in
+> the binding.
+> 
+> I think the general rule is to prefer interrupts over gpios where we
+> have a choice, but here the current binding already has a
+> host-wakeup-gpios.
+> 
+> Not sure how best to handle that, maybe Rob knows.
+
+Use gpiod_to_irqd().
+
+You can also deprecate the gpio prop, but you have to keep driver 
+support for it. And updating dts files would break old kernels with new 
+dtbs.
+
+Rob
