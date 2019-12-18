@@ -2,170 +2,272 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65068C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AD7C2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A4D2176D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:18:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEJ84Ho9"
+	by mail.kernel.org (Postfix) with ESMTP id 40AA12465E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbfLRXSt (ORCPT
+        id S1726616AbfLRXWD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:18:49 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40853 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLRXSt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 18:18:49 -0500
-Received: by mail-qk1-f195.google.com with SMTP id c17so3083507qkg.7;
-        Wed, 18 Dec 2019 15:18:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nuyhYd8ECto87m9FuniOXYcBUixqQrUKuyD3AyEWA+A=;
-        b=QEJ84Ho9x2u+RDV0L3fVLJ/07KGc8v4ji6189tqfgBzY4T9Zch4GF0ICOVmQiedFkK
-         gO4tHFmI5AKY1yHkS5HmwQYH5w099hrSeCmDSLxdHK49ZwJao7LsADt7eFeAk/l3l3Lx
-         vhmh1Z55xZ84AoRvPI0kPvYKhWj8/DEvynF8GDGjLZ28A7MxDzE5QZqE8bB348T9Imec
-         VnKMOX6inmmxlz1s98+0hVZIcvQEJGNBImQ2V453cN632C6Nk8Vlvesscm4QA8Qmo1aG
-         s935HuQHKFwUR6y/qra3A6ib1CF+reB133B+j1W732GGg527pTNwiD0EPZtT4A/ENTwb
-         HI4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nuyhYd8ECto87m9FuniOXYcBUixqQrUKuyD3AyEWA+A=;
-        b=AdbTIV/My4gq9e6F6I+H3/AK4Ibxnw9ITKL/pBYe+shdJV5b4/8GqWvVp90vRgNXHi
-         RZ5A5oZ77y6Kkk2o71jos+SJhomS89dMPyKt6LJMET2S0l3eqcLuQZXauVRdplrKgKPq
-         a1llnLSM5Sts8KgfKzb+vWBV5tAZ5Jc2k9bN+aa4BM/pgykzP+AqotlRXWvfklnBGRNB
-         7tB9ebXgcVorsNOIFWhC0LVRqLFjNwwcOzSUwDLjSLBov10Jd+rIE/Y1kswxVqG4QVX3
-         w9D4wslkO5QnJwfMsBL//PfFBM48XaWW+o+sJOFdzPLmYs+vcjnUpJp0Mmm9HqSgJVD+
-         epdg==
-X-Gm-Message-State: APjAAAXb+m//97Z1QyMra/nVsovHQNu91tak3TeMs4obMPoEf1pMJ2PS
-        iYeCQd3nNWRChlunPDpgHch34WklXSjHc8kXX38=
-X-Google-Smtp-Source: APXvYqxmCgCcV71Y46Kd1h7x1kMPtfJ8a/HJjus1Y1SOXueUfBb+NFUsWJq8OEdBjSxCnnR0qVG1fuTHKRUTczc2+cE=
-X-Received: by 2002:a37:5d0:: with SMTP id 199mr5281279qkf.131.1576711128403;
- Wed, 18 Dec 2019 15:18:48 -0800 (PST)
-MIME-Version: 1.0
-References: <20191218042121.1471954-1-anarsoul@gmail.com> <20191218042121.1471954-7-anarsoul@gmail.com>
- <CAGb2v65Qv6_KQ_MPg0u37P+o5gnnQWhbifOrY6g5FiWvnadmiw@mail.gmail.com>
-In-Reply-To: <CAGb2v65Qv6_KQ_MPg0u37P+o5gnnQWhbifOrY6g5FiWvnadmiw@mail.gmail.com>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Wed, 18 Dec 2019 15:18:51 -0800
-Message-ID: <CA+E=qVdKwkUSsG9WA_4x5QntaOxQqfH1eZQ7TEeUrM_3W5mqTg@mail.gmail.com>
-Subject: Re: [PATCH v7 6/7] arm64: dts: allwinner: h6: Add thermal sensor and
- thermal zones
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 18 Dec 2019 18:22:03 -0500
+Received: from mga12.intel.com ([192.55.52.136]:51739 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726569AbfLRXWD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 18:22:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 15:22:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
+   d="scan'208";a="365889145"
+Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.143]) ([10.7.153.143])
+  by orsmga004.jf.intel.com with ESMTP; 18 Dec 2019 15:21:56 -0800
+Subject: Re: [PATCH v11 04/14] dt-bindings: Add bindings document of Aspeed
+ PECI adapter
+To:     Rob Herring <robh@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>,
+        Tomohiro Kusumi <kusumi.tomohiro@gmail.com>,
+        "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>,
+        Frederic Barrat <fbarrat@linux.vnet.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        David Kershner <david.kershner@unisys.com>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Sagar Dharia <sdharia@codeaurora.org>,
+        Johan Hovold <johan@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juergen Gross <jgross@suse.com>,
+        Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        openbmc@lists.ozlabs.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Jason M Biils <jason.m.bills@linux.intel.com>,
+        Milton Miller II <miltonm@us.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Ryan Chen <ryan_chen@aspeedtech.com>
+References: <20191211194624.2872-1-jae.hyun.yoo@linux.intel.com>
+ <20191211194624.2872-5-jae.hyun.yoo@linux.intel.com>
+ <20191218025702.GA18998@bogus>
+From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Message-ID: <c203251d-125a-0d41-927d-0ce237622f71@linux.intel.com>
+Date:   Wed, 18 Dec 2019 15:21:56 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191218025702.GA18998@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 8:32 PM Chen-Yu Tsai <wens@csie.org> wrote:
->
-> On Wed, Dec 18, 2019 at 12:22 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
-> >
-> > From: Ondrej Jirman <megous@megous.com>
-> >
-> > There are two sensors, one for CPU, one for GPU.
-> >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 33 ++++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > index 29824081b43b..cdcb1a36301a 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -11,6 +11,7 @@
-> >  #include <dt-bindings/reset/sun50i-h6-ccu.h>
-> >  #include <dt-bindings/reset/sun50i-h6-r-ccu.h>
-> >  #include <dt-bindings/reset/sun8i-de2.h>
-> > +#include <dt-bindings/thermal/thermal.h>
-> >
-> >  / {
-> >         interrupt-parent = <&gic>;
-> > @@ -233,6 +234,12 @@ dma: dma-controller@3002000 {
-> >                 sid: efuse@3006000 {
-> >                         compatible = "allwinner,sun50i-h6-sid";
-> >                         reg = <0x03006000 0x400>;
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <1>;
-> > +
-> > +                       ths_calibration: thermal-sensor-calibration@14 {
-> > +                               reg = <0x14 0x6>;
->
-> Nit: my preference is to use words as the smallest increment, so this
-> would have a size of 8 instead of 6. Same goes for the A64 dts.
->
-> AFAICT this doesn't impact the driver in any way.
+Hi Rob,
 
-H6 has only 2 sensors, so it should be 4. That's my overlook, I'll
-change it to 4 for H6 and to 8 for A64.
+On 12/17/2019 6:57 PM, Rob Herring wrote:
+> On Wed, Dec 11, 2019 at 11:46:14AM -0800, Jae Hyun Yoo wrote:
+>> This commit adds bindings document of Aspeed PECI adapter for ASPEED
+>> AST24xx/25xx/26xx SoCs.
+>>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Joel Stanley <joel@jms.id.au>
+>> Cc: Andrew Jeffery <andrew@aj.id.au>
+>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
+>> Cc: Milton Miller II <miltonm@us.ibm.com>
+>> Cc: Pavel Machek <pavel@ucw.cz>
+>> Cc: Robin Murphy <robin.murphy@arm.com>
+>> Cc: Ryan Chen <ryan_chen@aspeedtech.com>
+>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+>> ---
+>> Changes since v10:
+>> - Changed documents format to DT schema format so I dropped all review tags.
+>>    Please review it again.
+>>
+>>   .../devicetree/bindings/peci/peci-aspeed.yaml | 124 ++++++++++++++++++
+>>   1 file changed, 124 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/peci/peci-aspeed.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/peci/peci-aspeed.yaml b/Documentation/devicetree/bindings/peci/peci-aspeed.yaml
+>> new file mode 100644
+>> index 000000000000..0f5c2993fe9b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/peci/peci-aspeed.yaml
+>> @@ -0,0 +1,124 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/peci/peci-aspeed.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Aspeed PECI Bus Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - aspeed,ast2400-peci
+>> +      - aspeed,ast2500-peci
+>> +      - aspeed,ast2600-peci
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+> 
+>> +  "#address-cells":
+>> +    # Required to define a client address.
+>> +    const: 1
+>> +
+>> +  "#size-cells":
+>> +    # Required to define a client address.
+>> +    const: 0
+> 
+> These 2 can be defined by the bus schema.
 
->
-> ChenYu
->
->
-> > +                       };
-> >                 };
-> >
-> >                 watchdog: watchdog@30090a0 {
-> > @@ -856,5 +863,31 @@ r_i2c: i2c@7081400 {
-> >                         #address-cells = <1>;
-> >                         #size-cells = <0>;
-> >                 };
-> > +
-> > +               ths: thermal-sensor@5070400 {
-> > +                       compatible = "allwinner,sun50i-h6-ths";
-> > +                       reg = <0x05070400 0x100>;
-> > +                       interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       clocks = <&ccu CLK_BUS_THS>;
-> > +                       clock-names = "bus";
-> > +                       resets = <&ccu RST_BUS_THS>;
-> > +                       nvmem-cells = <&ths_calibration>;
-> > +                       nvmem-cell-names = "calibration";
-> > +                       #thermal-sensor-cells = <1>;
-> > +               };
-> > +       };
-> > +
-> > +       thermal-zones {
-> > +               cpu-thermal {
-> > +                       polling-delay-passive = <0>;
-> > +                       polling-delay = <0>;
-> > +                       thermal-sensors = <&ths 0>;
-> > +               };
-> > +
-> > +               gpu-thermal {
-> > +                       polling-delay-passive = <0>;
-> > +                       polling-delay = <0>;
-> > +                       thermal-sensors = <&ths 1>;
-> > +               };
-> >         };
-> >  };
-> > --
-> > 2.24.1
-> >
+I see. I'll add these to peci-bus schema.
+
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    description: |
+> 
+> You can drop the '|' if there's no formatting to preserve.
+
+Will check this for all bindings in this patch set.
+
+>> +      Clock source for PECI controller. Should reference the external
+>> +      oscillator clock.
+>> +    maxItems: 1
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  clock-frequency:
+>> +    # Operation frequency of PECI controller in units of Hz.
+>> +    minimum: 187500
+>> +    maximum: 24000000
+>> +
+>> +  msg-timing:
+>> +    description: |
+>> +      Message timing negotiation period. This value will determine the period
+>> +      of message timing negotiation to be issued by PECI controller. The unit
+>> +      of the programmed value is four times of PECI clock period.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +      - minimum: 0
+>> +        maximum: 255
+>> +        default: 1
+>> +
+>> +  addr-timing:
+>> +    description: |
+>> +      Address timing negotiation period. This value will determine the period
+>> +      of address timing negotiation to be issued by PECI controller. The unit
+>> +      of the programmed value is four times of PECI clock period.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +      - minimum: 0
+>> +        maximum: 255
+>> +        default: 1
+>> +
+>> +  rd-sampling-point:
+>> +    description: |
+>> +      Read sampling point selection. The whole period of a bit time will be
+>> +      divided into 16 time frames. This value will determine the time frame
+>> +      in which the controller will sample PECI signal for data read back.
+>> +      Usually in the middle of a bit time is the best.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +      - minimum: 0
+>> +        maximum: 15
+>> +        default: 8
+>> +
+>> +  cmd-timeout-ms:
+>> +    # Command timeout in units of ms.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +      - minimum: 1
+>> +        maximum: 60000
+>> +        default: 1000
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - "#address-cells"
+>> +  - "#size-cells"
+>> +  - interrupts
+>> +  - clocks
+>> +  - resets
+>> +  - clock-frequency
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    #include <dt-bindings/clock/ast2600-clock.h>
+>> +    peci: bus@1e78b000 {
+>> +        compatible = "simple-bus";
+>> +        #address-cells = <1>;
+>> +        #size-cells = <1>;
+>> +        ranges = <0x0 0x1e78b000 0x60>;
+> 
+> You can drop this node in the examples.
+
+I see. Will drop the parent node in this example.
+
+Thanks a lot for your review!
+
+-Jae
+
+>> +
+>> +        peci0: peci-bus@0 {
+>> +            compatible = "aspeed,ast2600-peci";
+>> +            reg = <0x0 0x100>;
+>> +            #address-cells = <1>;
+>> +            #size-cells = <0>;
+>> +            interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+>> +            clocks = <&syscon ASPEED_CLK_GATE_REF0CLK>;
+>> +            resets = <&syscon ASPEED_RESET_PECI>;
+>> +            clock-frequency = <24000000>;
+>> +            msg-timing = <1>;
+>> +            addr-timing = <1>;
+>> +            rd-sampling-point = <8>;
+>> +            cmd-timeout-ms = <1000>;
+>> +        };
+>> +    };
+>> +...
+>> -- 
+>> 2.17.1
+>>
+> 
