@@ -2,30 +2,29 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6439CC2D0BF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAE6C2D0D2
 	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 16:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A04F24650
+	by mail.kernel.org (Postfix) with ESMTP id 9A6D724676
 	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 16:26:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="XQagWMFp"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="qjM3J37K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfLRQYG (ORCPT
+        id S1727437AbfLRQYC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:24:06 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:27743 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfLRQYF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 11:24:05 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+        Wed, 18 Dec 2019 11:24:02 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:32906 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726985AbfLRQYC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 11:24:02 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
   Eugen.Hristev@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
   envelope-from="Eugen.Hristev@microchip.com";
   x-sender="Eugen.Hristev@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -33,38 +32,38 @@ Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
   a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
   include:servers.mcsv.net include:mktomail.com
   include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
   envelope-from="Eugen.Hristev@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: fKogZKkZGN2LeBqOmQklDURmD7Nxas8Ukg8RhT5qU/m1hl5ZFOKV0Ne14RXtFjWhBA8VG9UMvy
- hFF3xvBf84db/EdmKkFDNw3R4lFrPWSBEn71/7npuBuQBl7QM4EzaYqvtSL8yZzP1IBNWgh9wQ
- /rs5tLXxYJuBXdoNCVG7xfSEFRmUIGM+3ykk7ITu4rjFosDFwp2e+ue8q1DAV3Y4mw0mFrunWu
- /zsmYYAgLmjY/2b2LvVkCnDxB5/T9cCdVpmL0ejjHs8lVlwqOfnwX3Cni3DwGPiCRcTeMtVw0c
- 1eg=
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: Pj4dhcNBKEnadabKBkLJr6CQTYxW7OjkSOB1cANzjHJsAmlKJ9Qpl88AoCoae1+piF1VYbw+0X
+ Y4Sf+mm81IdiJyAHK2PhBPQ0N2hZCX2Rs2t1EMtI8k6PWA/IaqcD79ries6v8Knu6eSdMvybm1
+ 2+4EXdqc+hZpEqWqnXByMR3PGDoC+L5LrCpcHTes2cVQO4jmEcCMEhOwIvv/YYHa1mss21kxsC
+ i7NEYtCwznZo11l6rUF5kJjCQCg1LExMY64ewX5wuoAZniwqFAvalTMZ5YAAa5djiUW6xvr5px
+ xB0=
 X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="58200035"
+   d="scan'208";a="59426779"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Dec 2019 09:24:04 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Dec 2019 09:24:01 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 18 Dec 2019 09:24:02 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ 15.1.1713.5; Wed, 18 Dec 2019 09:23:58 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Wed, 18 Dec 2019 09:24:06 -0700
+ Transport; Wed, 18 Dec 2019 09:23:58 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PyRe8T409vT+nswIuZTXL1AtevXCETMoSkMNIzAicpKLwF+lcpU9skLCAyc+Z53B9ZYQNbQ/6maDGf0Pph2xyPLh1ls60tHlBPkypS+dGa7kmVTZeKlYvxPp4Gqc27w5F8A2D7IrONvWwhAhoK0mq/RCrx6/6/cvoNKj03GuTYa1bftrqt743XgADzE6oOe8tkW4SPYUxsI7zvVvjVXp7ptK6/PEMKwiSoSBnVSU4bk6hJoPt6h1FBfcgW0pn9YfjDL18dB3bN5+tD8sw+nv22A0lzpCH2xfnCt31SP2mjw/RpiR5iF0hSKW5qW1hJIry5YXn9tmZmzHx2r2Kp9VpQ==
+ b=RP/A+6l5W3Si9Lm4L+KmNhsrAiSJXA+PT0Z8jcibzEp4djtcW5QrovElkDbX6V9GM3VCHbxWnmHgAk1HKMevCNKB6rH31L/S57KIYtEAG6IbGKh1mytEXEe/NBn1jEJ1HvsSbg3WifV/2UPR2ewn+M+WLOkUJFA4OTgw3ao5lNm/ZMkKoodJ70Y01SUvPjmbQXOuwM1in1PKdZExyjmJiA44vlol1P9bTHt6uAeDnP6N6jTDDfNeShgpYJEo4S3eGwSJ4i2y14JP26sxDC0X1OH9DWloFZS6RPJ/PHIfeUlf3NJiPabjkkL/+J6wIl28kJ5tw62C69pPffB7IVZ78g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FVVpupUKHMcVEMlJDeBxmxYOFsVo4OQlonFFmWJl410=;
- b=GOYY9bTiq46CWWe+q5EQJlIHDUDqSr8y3WB9+mnfY62r1xRx/OR/iCSha9pv9gcEVGn5zRl5vwEsunSPLNwD28Ge9fEOknMhwLFZgP6WLNQAq6V4uTLqYy5x9G/wF1lnF3W0OL8lqwYhwbO8JUQ97abLBUhxlnFljOTMmLgp7XW3RcaqDBWjnS07vV2VfhKEmlDa8I1iC4Lpug/lLhPnyNhIFBrtJucadtUebks7lIZYCQk8A6QL4FBEt4lGs/qkN+jv+3/154H7qtnO1VzFYsF6aoo5fli9X+bdWEocJ94DjDBtdUpMvwdFowzoQxPa/Cnwn/QiSe6tNKFOlEqObA==
+ bh=nkbxb1EvYc7ZEC/RY7x0LhCxXUt8pumOzfafB8ahW5s=;
+ b=dGc1194ZqhltYd2KaGUyBmQDF0XeAV/R8A78XHcVWes0zFS69Si1ZEBD7qMke5cMHyyMdhF29y23DJM/x8bClqwchvhYzgYB4rwESiLW60UmSGOkPutQkj8CC/+Sli3HqQz+b+ERL00z50jHVRMR6i1BVveD08AzzAFBwZyElc6fGXG61e1vloxHszNvy9zoCK2QwBpxkJ5bnrQR0yyD3gaCAL6PDpamRdTKamuSfihXpDTiSEafmkQjlakbLdtUhmJi6yY/6KoyE0DZZTNujEL5AEJodNhCw6nnBYVB4GouuCbTIMl4ubDiAjUtr30KTt8xksqPW665J4ePhud8TQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microchip.com; dmarc=pass action=none
  header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
@@ -72,16 +71,16 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=microchiptechnology.onmicrosoft.com;
  s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FVVpupUKHMcVEMlJDeBxmxYOFsVo4OQlonFFmWJl410=;
- b=XQagWMFpAAihScx4mlA7IjN0qPPUVRHt3Mo15mJ2BsnBEOb8zWaOOkJjOsqopCt2G5f0gQ2h1ElzWp8QkP4garTR5MLs0WR04zsgwwwavJZ6hKp5lvgxLm3YQrY9pqQG2iYidOOKx8wCHWkVIWjMUQZYAS71srjaRx9YurItpd8=
+ bh=nkbxb1EvYc7ZEC/RY7x0LhCxXUt8pumOzfafB8ahW5s=;
+ b=qjM3J37Kkb62vMVODHhSHORGb1h9sckkp+O/puCV4dOd7WO6/ISJrO5QB+kPiI5aVyjhQPuktrW1R5bhIir8CKFfA15RExTFlG2WuI2BP36Qy0XgtVlLGKDVTMMnErgyrf8f2ARfQKiImkMN/07BOmEsJr8V6IvESGhDzsVmJAs=
 Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB1769.namprd11.prod.outlook.com (10.175.87.19) with Microsoft SMTP
+ DM5PR11MB1913.namprd11.prod.outlook.com (10.175.87.148) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.19; Wed, 18 Dec 2019 16:24:01 +0000
+ 15.20.2559.14; Wed, 18 Dec 2019 16:23:58 +0000
 Received: from DM5PR11MB1242.namprd11.prod.outlook.com
  ([fe80::9039:e0e8:9032:20c1]) by DM5PR11MB1242.namprd11.prod.outlook.com
  ([fe80::9039:e0e8:9032:20c1%12]) with mapi id 15.20.2559.012; Wed, 18 Dec
- 2019 16:24:01 +0000
+ 2019 16:23:58 +0000
 From:   <Eugen.Hristev@microchip.com>
 To:     <jic23@kernel.org>, <robh+dt@kernel.org>,
         <alexandre.belloni@bootlin.com>
@@ -91,15 +90,11 @@ CC:     <Nicolas.Ferre@microchip.com>, <linux-iio@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
         <a.zummo@towertech.it>, <Ludovic.Desroches@microchip.com>,
         <Eugen.Hristev@microchip.com>
-Subject: [PATCH 03/10] dt-bindings: iio: trigger: at91-rtc-trigger: add
- bindings
-Thread-Topic: [PATCH 03/10] dt-bindings: iio: trigger: at91-rtc-trigger: add
- bindings
-Thread-Index: AQHVtb+NaJqoAh7pvkOjOkr/UgCULg==
-Date:   Wed, 18 Dec 2019 16:23:59 +0000
-Message-ID: <1576686157-11939-4-git-send-email-eugen.hristev@microchip.com>
-References: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
-In-Reply-To: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
+Subject: [PATCH 00/10] Enhancements to at91-sama5d2_adc and rtc trigger
+Thread-Topic: [PATCH 00/10] Enhancements to at91-sama5d2_adc and rtc trigger
+Thread-Index: AQHVtb+MrR5owibMB0+1LePacD8d5g==
+Date:   Wed, 18 Dec 2019 16:23:57 +0000
+Message-ID: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
 Accept-Language: en-US, ro-RO
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -107,29 +102,29 @@ X-MS-TNEF-Correlator:
 x-mailer: git-send-email 2.7.4
 x-originating-ip: [94.177.32.156]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 05dbfc0d-742c-4a2c-3c75-08d783d6b0e1
-x-ms-traffictypediagnostic: DM5PR11MB1769:
+x-ms-office365-filtering-correlation-id: 80a705b2-8144-4f9d-da0c-08d783d6af27
+x-ms-traffictypediagnostic: DM5PR11MB1913:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB1769FCC29B12D03C406740AFE8530@DM5PR11MB1769.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-microsoft-antispam-prvs: <DM5PR11MB1913D99BDE223D6267EBE2A1E8530@DM5PR11MB1913.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 0255DF69B9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39860400002)(136003)(346002)(376002)(199004)(189003)(66476007)(66946007)(66446008)(76116006)(91956017)(2616005)(64756008)(66556008)(86362001)(966005)(186003)(316002)(110136005)(8676002)(54906003)(8936002)(71200400001)(81166006)(478600001)(2906002)(6512007)(26005)(81156014)(36756003)(4326008)(6506007)(5660300002)(6486002)(107886003)(562404015);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1769;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(346002)(376002)(136003)(396003)(199004)(189003)(2616005)(66556008)(316002)(107886003)(8676002)(71200400001)(8936002)(66476007)(26005)(6506007)(2906002)(64756008)(66446008)(66946007)(81156014)(76116006)(81166006)(5660300002)(478600001)(36756003)(54906003)(186003)(4326008)(86362001)(6512007)(110136005)(91956017)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1913;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microchip.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BrukAJWux2FigqaecMF4sE8v/wrwsDRO36zajMIItx/8QsifCNPsdU4UoeivuvIEAhjrrN9hR24p61pv+OIYG5Ke5UhAwHmS/j+fMKOFqynGsVAMqYSTeHVTluJjiNgDNNPhExlmlKCdOYbYFg9vL1UBCGtZAYwNnDVVnqp+Q50DMY7vlf1+rB6nLjzpi/bAZiObwMvJO9ibm/1fuEX2EB9tdVz5vFbM1NXPlr3w12Q3bL1B49+HsvW8HAyvNpN5Z14Q+gpvVEIAS0N8DrvqdgxMzspe9uTxDXku6iCnrRz5MPukhHNWVABtcw2KDZ2sWcUnbzv4UysFoHzKqF8juJQAz/4JTcBPpAKJ8CL5EvAtpmxgbNxrDFDvJsC5ZtLerzKp1PHHPvgI8c/uVQSnepUsfzIMDyOvRytvuPmu4Ce6PuOtHzRkCcjFlhbcaDIssvyM4ooTQ2Dwn2IQkF+YJuHj9/SsVIh61aNKgZkPAXswhlYKftG4Qx7lnaDLJLDSkMfI/xS2rTNTSnYOF0H8dQ==
+x-microsoft-antispam-message-info: kMd3B5gmnN3fqJ49NdX1qCNxxpFCfRvTH3vsBDAA/WJ5z1sPhFvaE3/tCGahu8HSlHRvkchL0BU7x8YeqVNSsGBGd3+U6b63590fTylC5TYLlI/jEsU0GWZ6IbISKy8R115RX3Mb1d8bJn742UD6BlB14vqS1rutCrA8i/O8Wj+T0rUkuMKVfXAbYDCCzsQTc0T+eGBdspDlta0sKoE4hkBJb7rvWXK8OvVM/jzM0Gm8SLWr4WmAlXI0wpRJMc1sElDpgh8oUuvB1z5MQqm0jBEISCgTLSChI2oAJZSUn0do6esVxWrx0F/9WKXc3OmPyJeuZBDyFL1NXY1sE5G4nVvkmw7Y3wcx6e8kkXXpvETL4C13MThm4TMQwEeCE7R9aOoA70XELPtaqI4SuykZ/ZsZ4S5qA5euXUoHsB9ZTfhFZdhdzxvAgCpxAYu46g1M
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05dbfc0d-742c-4a2c-3c75-08d783d6b0e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 16:23:59.8381
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80a705b2-8144-4f9d-da0c-08d783d6af27
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 16:23:57.9030
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qGxd2A/B9HsdDBDrb864ZQOq8Jha3kmxqpwwy7e6qkth4N5Iel+ywdCai6BNXoeoJsIhjmx/kV9j37G6vG3tWB4wGyyvPJKxOMDicc6Dxik=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1769
+X-MS-Exchange-CrossTenant-userprincipalname: lxzwzGRzhd5qNdDoHeVBwY42NsFXqV+qYWTyiux1yXFaof4+LjpdIqkE+/SbGLLECTcfTW7rk1XzoufHgkHvDQB5GnpPGwWpN1jVjPbaTFw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1913
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -137,71 +132,98 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Eugen Hristev <eugen.hristev@microchip.com>
 
-Add bindings for AT91 RTC ADC Trigger hardware node.
+This series includes support for having the Real Time Clock trigger
+capability for the Analog to Digital Converter in sama5d2-based SoCs
+(RTC ADC Trigger)
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- .../bindings/iio/trigger/at91-rtc-trigger.yaml     | 44 ++++++++++++++++++=
-++++
- 1 file changed, 44 insertions(+)
+The first patch of the series has been already submitted on the iio mailing=
+ list
+as
+[PATCH] iio: adc: at91-sama5d2_adc: update for other trigger usage
+But I also include here for reference since the other commits on the driver
+use this as a base commit.
+
+In short, the RTC block can trigger the ADC block to perform a conversion.
+To solve this, I created a driver named rtc-adc-trigger that shares the
+register map with the RTC. It's done in devicetree as a subnode.
+This driver will register a separate trigger inside the iio subsystem.
+This trigger can then be associated to the ADC driver (sysfs current_trigge=
+r).
+However, this is not enough. The ADC has to be aware that it;s being
+triggered by the RTC (TRGMOD and TRGSEL). So, this hardware link between
+the two IPs has been described as a phandle reference in the ADC node to th=
+e
+RTC trigger node.
+At runtime (trigger selection), the ADC will check if the assigned trigger
+is the RTC one given by the phandle link. If so, it will configure
+accordingly.
+The RTC trigger driver will also register to sysfs two attributes for
+selecting the desired trigger frequency.
+One attribute is RO : list of possible frequencies.
+Another attribute is RW: current set frequency.
+
+To achieve all this, had to make a small patch on the RTC to populate
+child nodes platform data to probe them.
+
+Fixed other issues with the adc driver: unfinished conversions on IRQ in
+triggered mode, and differential channels missing configurations in
+triggered mode.
+
+For exercising this, created DT patches for sama5d2/sama5d2_xplained.
+
+Here is a sample of how it works in sysfs:
+
+ # cat /sys/bus/iio/devices/trigger0/trigger_frequency_hz
+ 1
+ # echo 1 > /sys/bus/iio/devices/iio:device0/scan_elements/in_voltage4_en
+ # cat /sys/bus/iio/devices/
+ iio:device0/        iio_sysfs_trigger/  trigger0/           trigger1/
+ # cat /sys/bus/iio/devices/trigger0/name
+ f80480b0.at91_rtc_adc
+ # iio_generic_buffer -n fc030000.adc -t f80480b0.at91_rtc_adc -c 5
+ iio device number being used is 0
+ iio trigger number being used is 0
+ /sys/bus/iio/devices/iio:device0 f80480b0.at91_rtc_adc
+ 3298.388672
+ 3294.360352
+ 3291.943359
+ 3294.360352
+ 3291.943359
+
+
+Future work:
+In the future the node would have to be enabled for other sama5d2 based
+boards as well, and MAINTAINERS to be updated if this driver is accepted.
+
+
+Eugen Hristev (10):
+  iio: adc: at91-sama5d2_adc: update for other trigger usage
+  dt-bindings: iio: adc: at91-sama5d2: add rtc-trigger optional property
+  dt-bindings: iio: trigger: at91-rtc-trigger: add bindings
+  rtc: at91rm9200: use of_platform_populate as return value
+  iio: trigger: at91-rtc-trigger: introduce at91 rtc adc trigger driver
+  iio: adc: at91-sama5d2_adc: handle unfinished conversions
+  iio: adc: at91-sama5d2_adc: fix differential channels in triggered
+    mode
+  iio: adc: at91-sama5d2_adc: implement RTC triggering
+  ARM: dts: at91: sama5d2: add rtc_adc_trigger node
+  ARM: dts: at91: sama5d2_xplained: enable rtc_adc_trigger
+
+ .../bindings/iio/adc/at91-sama5d2_adc.txt          |   4 +
+ .../bindings/iio/trigger/at91-rtc-trigger.yaml     |  44 +++
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts        |   4 +
+ arch/arm/boot/dts/sama5d2.dtsi                     |  11 +
+ drivers/iio/adc/at91-sama5d2_adc.c                 | 336 ++++++++++++++++-=
+----
+ drivers/iio/trigger/Kconfig                        |  10 +
+ drivers/iio/trigger/Makefile                       |   1 +
+ drivers/iio/trigger/at91-rtc-trigger.c             | 213 +++++++++++++
+ drivers/rtc/rtc-at91rm9200.c                       |   2 +-
+ 9 files changed, 543 insertions(+), 82 deletions(-)
  create mode 040000 Documentation/devicetree/bindings/iio/trigger
  create mode 100644 Documentation/devicetree/bindings/iio/trigger/at91-rtc-=
 trigger.yaml
+ create mode 100644 drivers/iio/trigger/at91-rtc-trigger.c
 
-diff --git a/Documentation/devicetree/bindings/iio/trigger/at91-rtc-trigger=
-.yaml b/Documentation/devicetree/bindings/iio/trigger/at91-rtc-trigger.yaml
-new file mode 100644
-index 0000000..c8c5886
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/trigger/at91-rtc-trigger.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright 2019 Eugen Hristev <eugen.hristev@gmail.com>
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/bindings/iio/trigger/microchip,rtc-adc=
--trigger.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Microchip AT91 RTC ADC Trigger (Real Time Clock to Analog to Digita=
-l Converter)
-+
-+maintainers:
-+  - Eugen Hristev <eugen.hristev@microchip.com>
-+
-+description: |
-+  Bindings for the Microchip AT91 RTC ADC Trigger.
-+  The Real Time Clock block inside AT91 SoCs can be connected with a direc=
-t
-+  hardware line to the ADC. This line can be raised at a specific time
-+  interval in order to trigger the ADC to perform conversions.
-+  Datasheet can be found here: http://ww1.microchip.com/downloads/en/devic=
-edoc/ds60001476b.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - microchip,rtc-adc-trigger
-+
-+  reg:
-+    description: |
-+      Register map address (start address, size).
-+    maxItems: 2
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    {
-+      #address_cells =3D <1>;
-+      #size-cells =3D <1>;
-+
-+      rtc_adc_trigger: rtc-adc-trigger {
-+        reg =3D <0x0 0x10>;
-+        compatible =3D "microchip,rtc-adc-trigger";
-+      };
-+    };
 --=20
 2.7.4
