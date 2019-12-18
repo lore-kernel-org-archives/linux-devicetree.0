@@ -2,158 +2,237 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79031C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 14:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F121C2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 14:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E30D21582
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 14:38:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="knd9bEo5"
+	by mail.kernel.org (Postfix) with ESMTP id 634452467E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 14:42:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576680130;
+	bh=XAHtcB/xfSIUB2s3mlEQp7fM2NwWkhZ3oMuOgtCrr0U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Vut8WaJGgANHxFzUwhTHCZc3UYIt7Jj0rOq8IiwVLCgth7ZFhI0umK/y0Mfoal+Tc
+	 SXGJ95p6vzDXl7xYVZyPB/0S7P7Dv5BXlcMMxpbr8PK2QwJWQbct6aBz3achPYW9Dv
+	 W0zKxq9ncvg7Mdu5mISKKGNvost57hbHPwpGaUOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfLROiY (ORCPT
+        id S1727135AbfLROmJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:38:24 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52988 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfLROiY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 09:38:24 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p9so2090745wmc.2
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 06:38:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=yy+FADW4iN0jE8T/SzaOGxnR0Z3+644d/IF/P/DHgTU=;
-        b=knd9bEo54IjnlbaVOJER2OLdn6+y5Xc0Iry1HEq9yXFxd5ogXjT5pKLCMCn+1mQMyh
-         Tsu+/Wc9YPq+P8wTYu34bUPTTd3rLBET6V881DECDUQMF7WoDcOWl0pmbY67/zioVjGa
-         n42pjdY6VFkcb9jXxvodDzr+xo0tnE313O8qeKEwwDAqo/lIhmL9xI3KR2GsOGD6xIuM
-         y2n80rYTrHDmfzfMMH6kxBF9dcBkooJL7KlG1CdiedmTPP8UGA3hNt4ON44jnxhOXDSC
-         PI4zRgIReH6OLNDVEpAk5DjfyYsUzGVapmGzSga7z0jxP+qdJyCHDxRmPAS27ejPd5eS
-         X9mg==
+        Wed, 18 Dec 2019 09:42:09 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37707 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbfLROmJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 09:42:09 -0500
+Received: by mail-ot1-f65.google.com with SMTP id k14so2771419otn.4;
+        Wed, 18 Dec 2019 06:42:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=yy+FADW4iN0jE8T/SzaOGxnR0Z3+644d/IF/P/DHgTU=;
-        b=MiWqGJHpyxoTTK3+5lyIFFftwi80VzsWVsuiSRtAzL5hY6A+UXB+bzsdgeFNbvGxd0
-         L2hI1ZnfL34FRnZjrM+QVNjk4sZHuYEiCi/5JCzppLNzit7ym+zCqHBr1TIZORpsfBjj
-         vejTOcxk3Zguyq+EMpZKKDF1I0ZPGRgHFFIARtHsWI/nrz2FyfQOHEzBURJ6CmveGN9E
-         lx9BrMw7DEosmFfMu0X2+I1XhSQ6DHnxTpxUPblAYQgDY6kv1e+ElW2y64AqxsjlmfEF
-         CFTaJHiA4foKxTGpSNuWnCSMY3SrpyTZnq7r1u4RkBN7DOMpMl0M45BrRHYdhr252PUg
-         x+Zg==
-X-Gm-Message-State: APjAAAVxgxsz7ao/Ap+spx3C04hraH02L66rGbhcw46TUnUjFDi9Fl/3
-        vfmIPyUSMCf9oa+lYbTZQP4HOlKiC2Ec1A==
-X-Google-Smtp-Source: APXvYqxsUceJIcjVgPuOiVZLqMGfVJHnlpAce65+tvQaqB2uenr+OBD0uttpplrmZoEsigBKvcaQ7g==
-X-Received: by 2002:a1c:a404:: with SMTP id n4mr3376304wme.109.1576679901002;
-        Wed, 18 Dec 2019 06:38:21 -0800 (PST)
-Received: from [10.2.4.229] (lfbn-nic-1-505-157.w90-116.abo.wanadoo.fr. [90.116.92.157])
-        by smtp.gmail.com with ESMTPSA id m126sm2686706wmf.7.2019.12.18.06.38.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Dec 2019 06:38:20 -0800 (PST)
-Subject: Re: [PATCH] dt-bindings: usb: amlogic, meson-g12a-usb-ctrl: fix clock
- names
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, khilman@baylibre.com
-Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191218142613.13683-1-benjamin.gaignard@st.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <675bc964-8dfc-fd89-7f03-af5a83ab3b3c@baylibre.com>
-Date:   Wed, 18 Dec 2019 15:38:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gwW7OiM+WjSZ4UZ1VJQamoPYCMV0Usyl4Dcq40hWMN4=;
+        b=Pe1ZcEUeuvNgRAlA/WFlAfSd99u7ucXPQwlHvGdsGoawzUtX7SIJ/ejhnlJcSXniNP
+         TKhigv8eWzFRjm8QzKhsQEVGICW/N5MO6tj45Rg5EpIoA2oJLCM0SsR6BE9CVr2l4HWP
+         4CFTr8y/jG2sC5q03tMFMZu3bwzUImIbSxH7EtQbexVBwBFGCB/BYUHAzljsqsB7/twP
+         eECNnbTOdtfBkj+w7/xU/6AhUihbtMivaM0lbVLVQnkeWbuFpwFpNFcTm1XDwF+tRY96
+         ABIR3C7oVr8/a3XMzh+cckh6S1plnLSNWAQCCLTXWZ9LQcRYpvqUBhNqkpXob/T4ewaz
+         2IJA==
+X-Gm-Message-State: APjAAAUtRdckG0pjaFDeR0o5bX0qmnExiGJYKO7tK8hrQrthEraZ6ZOJ
+        WoInZUrj4sTyPyKfzcmLTQ==
+X-Google-Smtp-Source: APXvYqwp0BEH7qea/GKGyW/LOejvqTbdWK+z/qoZkQL0jYWPDg6Ufh1KKYai1of0WRYU42rRzsqYxQ==
+X-Received: by 2002:a05:6830:1d59:: with SMTP id p25mr3090159oth.308.1576680128293;
+        Wed, 18 Dec 2019 06:42:08 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u18sm846613otq.26.2019.12.18.06.42.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 06:42:07 -0800 (PST)
+Date:   Wed, 18 Dec 2019 08:42:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>,
+        Tomohiro Kusumi <kusumi.tomohiro@gmail.com>,
+        "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>,
+        Frederic Barrat <fbarrat@linux.vnet.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        David Kershner <david.kershner@unisys.com>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Sagar Dharia <sdharia@codeaurora.org>,
+        Johan Hovold <johan@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juergen Gross <jgross@suse.com>,
+        Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        openbmc@lists.ozlabs.org
+Subject: Re: [PATCH v11 07/14] dt-bindings: peci: add NPCM PECI documentation
+Message-ID: <20191218144206.GA26118@bogus>
+References: <20191211194624.2872-1-jae.hyun.yoo@linux.intel.com>
+ <20191211194624.2872-8-jae.hyun.yoo@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191218142613.13683-1-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211194624.2872-8-jae.hyun.yoo@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 18/12/2019 15:26, Benjamin Gaignard wrote:
-> dwc2 bindings require clock-names to be "otg".
-> Fix the example in amlogic,meson-g12a-usb-ctrl to follow this requirement.
+On Wed, Dec 11, 2019 at 11:46:17AM -0800, Jae Hyun Yoo wrote:
+> From: Tomer Maimon <tmaimon77@gmail.com>
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM Platform Environment Control Interface(PECI).
+> 
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 > ---
->  Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Changes since v10:
+> - Newly added in v11.
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-> index 4efb77b653ab..267fce165994 100644
-> --- a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-> +++ b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-> @@ -107,7 +107,7 @@ examples:
->                reg = <0xff400000 0x40000>;
->                interrupts = <31>;
->                clocks = <&clkc_usb1>;
-> -              clock-names = "ddr";
-> +              clock-names = "otg";
->                phys = <&usb2_phy1>;
->                dr_mode = "peripheral";
->                g-rx-fifo-size = <192>;
+>  .../devicetree/bindings/peci/peci-npcm.yaml   | 102 ++++++++++++++++++
+>  1 file changed, 102 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/peci/peci-npcm.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/peci/peci-npcm.yaml b/Documentation/devicetree/bindings/peci/peci-npcm.yaml
+> new file mode 100644
+> index 000000000000..bcd5626e68e7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/peci/peci-npcm.yaml
+> @@ -0,0 +1,102 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/peci/peci-npcm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Nuvoton NPCM PECI Bus Device Tree Bindings
+> +
+> +maintainers:
+> +  - Tomer Maimon <tmaimon77@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: nuvoton,npcm750-peci # for the NPCM7XX BMC.
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    # Required to define a client address.
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    # Required to define a client address.
+> +    const: 0
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    # PECI reference clock.
+> +    maxItems: 1
+> +
+> +  cmd-timeout-ms:
+> +    # Command timeout in units of ms.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+You can drop this as standard units already have a type.
+
+> +      - minimum: 1
+> +        maximum: 60000
+> +        default: 1000
+> +
+> +  pull-down:
+> +    description: |
+> +      Defines the PECI I/O internal pull down operation.
+> +        0: pull down always enable
+> +        1: pull down only during transactions.
+> +        2: pull down always disable.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +        maximum: 2
+> +        default: 0
+> +
+> +  host-neg-bit-rate:
+> +    description: |
+> +      Define host negotiation bit rate divider.
+> +      the host negotiation bit rate calculate with formula:
+> +      clock frequency[Hz] / [4 x {host-neg-bit-rate + 1}]
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 7
+> +        maximum: 31
+> +        default: 15
+> +
+> +  high-volt-range:
+> +    description: |
+> +      Adapts PECI I/O interface to voltage range.
+> +        0: PECI I/O interface voltage range of 0.8-1.06V (default)
+> +        1: PECI I/O interface voltage range of 0.95-1.26V
+> +    type: boolean
+
+These last 4 properties are vendor specific or PECI common. For the 
+former, needs a vendor prefix. For the latter, needs to be moved to 
+common location.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - interrupts
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/nuvoton,npcm7xx-clock.h>
+> +    peci: bus@100000 {
+> +        compatible = "simple-bus";
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        ranges = <0x0 0x100000 0x200>;
+> +
+> +        peci0: peci-bus@0 {
+> +            compatible = "nuvoton,npcm750-peci";
+> +            reg = <0x0 0x200>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+> +            clocks = <&clk NPCM7XX_CLK_APB3>;
+> +            cmd-timeout-ms = <1000>;
+> +            pull-down = <0>;
+> +            host-neg-bit-rate = <15>;
+> +        };
+> +    };
+> +...
+> -- 
+> 2.17.1
+> 
