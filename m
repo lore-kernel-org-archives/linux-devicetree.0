@@ -2,98 +2,101 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9619BC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 09:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D374C2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 09:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B0F218AC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 09:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C99227BF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 09:49:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725955AbfLRJrl (ORCPT
+        id S1726591AbfLRJtl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:47:41 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:57182 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfLRJrl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 04:47:41 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1ihVvd-0005Rx-IR; Wed, 18 Dec 2019 10:47:37 +0100
-Date:   Wed, 18 Dec 2019 10:47:37 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>
-Subject: Re: [PATCH] of: Rework and simplify phandle cache to use a fixed size
-Message-ID: <20191218094737.tqq5oeajfgvds6n5@linutronix.de>
-References: <20191211232345.24810-1-robh@kernel.org>
- <CAL_JsqKfV-4mx_uidUupQJT4qfq+y+qx1=S=Du-Qsaweh4CPUQ@mail.gmail.com>
- <20191212130539.loxpr2hbfcodh4gz@linutronix.de>
- <CAL_JsqJgi+Rd1jiBiTcbuoiZUnpahdNfbAQNkbPH4LEM1Cs09A@mail.gmail.com>
+        Wed, 18 Dec 2019 04:49:41 -0500
+Received: from mail.bugwerft.de ([46.23.86.59]:46468 "EHLO mail.bugwerft.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbfLRJtl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:49:41 -0500
+Received: from [10.10.222.226] (unknown [194.162.236.226])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 056A6281DF4;
+        Wed, 18 Dec 2019 09:43:13 +0000 (UTC)
+Subject: Re: [alsa-devel] [PATCH 10/10] ASoC: Add codec component for AD242x
+ nodes
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc:     lars@metafoo.de, sboyd@kernel.org, mturquette@baylibre.com,
+        robh+dt@kernel.org, broonie@kernel.org, pascal.huerst@gmail.com,
+        lee.jones@linaro.org
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-12-daniel@zonque.org>
+ <0565e5cd-9a6e-db65-0632-0bc1aa1d79db@linux.intel.com>
+From:   Daniel Mack <daniel@zonque.org>
+Message-ID: <35e7e6e7-7c70-785c-bdf3-79089134699e@zonque.org>
+Date:   Wed, 18 Dec 2019 10:49:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <0565e5cd-9a6e-db65-0632-0bc1aa1d79db@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJgi+Rd1jiBiTcbuoiZUnpahdNfbAQNkbPH4LEM1Cs09A@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-12-12 13:28:26 [-0600], Rob Herring wrote:
-> On Thu, Dec 12, 2019 at 7:05 AM Sebastian Andrzej Siewior
-> <bigeasy@linutronix.de> wrote:
-> >
-> > On 2019-12-11 17:48:54 [-0600], Rob Herring wrote:
-> > > > -       if (phandle_cache) {
-> > > > -               if (phandle_cache[masked_handle] &&
-> > > > -                   handle == phandle_cache[masked_handle]->phandle)
-> > > > -                       np = phandle_cache[masked_handle];
-> > > > -               if (np && of_node_check_flag(np, OF_DETACHED)) {
-> > > > -                       WARN_ON(1); /* did not uncache np on node removal */
-> > > > -                       of_node_put(np);
-> > > > -                       phandle_cache[masked_handle] = NULL;
-> > > > -                       np = NULL;
-> > > > -               }
-> > > > +       if (phandle_cache[handle_hash] &&
-> > > > +           handle == phandle_cache[handle_hash]->phandle)
-> > > > +               np = phandle_cache[handle_hash];
-> > > > +       if (np && of_node_check_flag(np, OF_DETACHED)) {
-> > > > +               WARN_ON(1); /* did not uncache np on node removal */
-> > >
-> > > BTW, I don't think this check is even valid. If we failed to detach
-> > > and remove the node from the cache, then we could be accessing np
-> > > after freeing it.
-> >
-> > this is kmalloc()ed memory which is always valid. If the memory is
-> > already re-used then
-> >         handle == phandle_cache[handle_hash]->phandle
-> >
-> > will fail (the check, not the memory access itself).
+Hi,
+
+On 12/17/19 8:28 PM, Pierre-Louis Bossart wrote:
+> On 12/9/19 12:35 PM, Daniel Mack wrote:
+
+>> +    if (!ad242x_node_is_master(priv->node) &&
+>> +       ((format & SND_SOC_DAIFMT_MASTER_MASK) !=
+>> SND_SOC_DAIFMT_CBM_CFM)) {
+>> +        dev_err(component->dev, "slave node must be clock master\n");
+>> +        return -EINVAL;
+>> +    }
 > 
-> There's a 1 in 2^32 chance it won't.
+> It was my understanding that the master node provides the clock to the
+> bus, so not sure how it could be a clock slave, and conversely how a
+> slave node could provide a clock to the bus?
 
-:)
+The slave nodes receive the A2B clock from the master node and then
+produce digital audio output that is sent to other components such as
+codecs. Hence, in ASoC terms, they are the clock master.
 
-> > If the check
-> > remains valid then you can hope for the OF_DETACHED flag to trigger the
-> > warning.
+Likewise, as the master node is receiving its clock from other
+components, it has to be a clock slave in the audio network.
+
+Does that make sense?
+
+>> +    switch (params_format(params)) {
+>> +    case SNDRV_PCM_FORMAT_S16_LE:
+>> +        if (priv->node->tdm_slot_size != 16)
+>> +            return -EINVAL;
+>> +        break;
+>> +    case SNDRV_PCM_FORMAT_S32_LE:
+>> +        if (priv->node->tdm_slot_size != 32)
+>> +            return -EINVAL;
+>> +        break;
+>> +    default:
+>> +        return -EINVAL;
+>> +    }
 > 
-> Keyword is hope.
+> how does this work for PDM data?
 > 
-> To look at it another way. Do we need this check? It is in the "fast
-> path". There's a single location where we set OF_DETACHED and the
-> cache entry is removed at the same time. Also, if we do free the
-> node's memory, it also checks for OF_DETACHED. Previously, a free
-> wouldn't happen because we incremented the ref count on nodes in the
-> cache.
+> is the PDM data packed into a regular TDM slot?
 
-So get rid of it then. It is just __of_detach_node() that removes it.
+Yes. But I admit this needs some more testing. We're still working on
+the hardware that uses this. I'll revisit this.
 
-> Rob
+And I'll also add a lot more comments all over the place, as also
+requested by Lee.
 
-Sebastian
+
+Thanks,
+Daniel
