@@ -2,104 +2,126 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE312C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D04FC2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB20E2465E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5967120716
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:01:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbJDb6Hn"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="Vg78AXxG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbfLRRxk (ORCPT
+        id S1727175AbfLRSBy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:53:40 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41857 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727162AbfLRRxj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 12:53:39 -0500
-Received: by mail-lf1-f65.google.com with SMTP id m30so2329255lfp.8;
-        Wed, 18 Dec 2019 09:53:37 -0800 (PST)
+        Wed, 18 Dec 2019 13:01:54 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46664 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbfLRSBx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 13:01:53 -0500
+Received: by mail-lf1-f67.google.com with SMTP id f15so2321230lfl.13
+        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 10:01:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WvdNzD5IHBhEmZtEDEpQOxOvOd8cBVmNkzSmjr/+b7c=;
-        b=CbJDb6Hn1Xp6w0jO0TzCZ7qQo4TJSbPb4WqlWBJ4UmRISdwW29CWw4D5ysJQOiU3B1
-         hBArmBN3yO5tI/6jmKE4wrVJx/sKbV2fLyYqQHPjEEijKBC3Gi/nJAC3APUZGuokLVIx
-         YIH6ubAyj0VAqgy/pX2TeEb4uF+rmO2btd5wsjP70fzG5WioLXj3a1zML/r82DIxrwx2
-         xrjmBrLzSXyHVn3zAzjv2+bYijuykLabhDrrSQdaZFQQWjIUjyPw152w9Iq6LJ382XHV
-         IT/e4vRuxhmn60asv4P1IbMOBC16UiuZ01xe5ux00YkC4kFw5bwGht9QjeiDc5uEANTL
-         hr4Q==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wbOw61ub2QZR5UfVl5vQOrD9xSXq72V2Ul/qpCmdZt4=;
+        b=Vg78AXxGe+bexbffzwNcmQHVU3Hl5ShytUl+R7mjL/uWGW7J09LYQYn8RepvoXG1zj
+         JMYePSp2Y2Us6QxSFr8rrAJ1bMeL/gvokggiamGgBF9z8JxUzzp+rU0vNUBMt+kqsXWI
+         SAYQxwwn2dwde+spxXjHYD/BI/VuH2PvqD5GipvTZmFpp/NvFKN7PN+hzxKh2hOPcZqw
+         0G6DWMf4ZF4A374I0Njh6Ln5MJoKl+zzHhjwGfx+XS/sDsmQy3OIVgjvRi5YvgbFNKa7
+         McLXo8zJUVdhUYDOT77u6CBuYYIVYi/OLld+CtoqPU7MMpcRKRR4ysbx7tvxW3aIYtHn
+         9wwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WvdNzD5IHBhEmZtEDEpQOxOvOd8cBVmNkzSmjr/+b7c=;
-        b=KeTV9nmpP1NCFdaQ8GqfbwVyqjNgv3qYxftSVuJ6CDphvnuVKanSQgVw8aubtVeNGM
-         oGHMBiEAhYFQ81thV5h8JHlwu6UeZj9voqvZFkxKZ7nhnWqxFjw0/x+N4XAiA1GMLUw4
-         PeWgJlIZcKWC+47a563hZzPGcezDjdBghXbrPRSov5rTGYZ/7jN2Fa9bcasGj6pGbCSN
-         d9NGBKZnk+PVkTXeZZxuE6pBac50IrI4TcBe9gU+OpG/M4YqoN2y0iogbVqKj/muvyvw
-         JSST0yVlhCGObMZ4c3gUw+GhSHjFLpCsvdEKgPHJ0E9y3cvv+gDU3hmWlhd60OcVm4/S
-         INOg==
-X-Gm-Message-State: APjAAAWyKuL3Pd8ASoYtLcs12RYLBjlUPq8msyoPrXozVVZaACBbayJf
-        2DMJdkCDfeDh/lgMDiX78fg=
-X-Google-Smtp-Source: APXvYqynJ6OZr0C28qKxtkM6gS+TYuGP4lP73cGe9dthwwy9gNHH0PupidBT9cZKFndV3I4FL5QHDA==
-X-Received: by 2002:ac2:52a3:: with SMTP id r3mr2582822lfm.189.1576691617069;
-        Wed, 18 Dec 2019 09:53:37 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id n14sm1530480lfe.5.2019.12.18.09.53.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 09:53:36 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Felipe Balbi <balbi@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/4] dt-binding: usb: ci-hdrc-usb2: Document NVIDIA Tegra support
-Date:   Wed, 18 Dec 2019 20:53:10 +0300
-Message-Id: <20191218175313.16235-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191218175313.16235-1-digetx@gmail.com>
-References: <20191218175313.16235-1-digetx@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=wbOw61ub2QZR5UfVl5vQOrD9xSXq72V2Ul/qpCmdZt4=;
+        b=iysmGehf1YNAuHTGip1Hpv+Cyv84YXp6oSMd1ABoPJ0NGqJLl+Ahp6gl46f0UciWm3
+         CmWl9SKWfluhJUxWLD2E/SFCue8v7P9QkHqJmMtfgu2QlMVjJxGlHWwwbdom8oXmvi7q
+         acOBQFbsqlAH1joi/c66OZNDsHmgqUU/rVknIpK4q87epAScar/fsh1fdO3IodZVWL1r
+         S5vjyq1TsryTmb49nO3Jt25phAVTjI9ghbtQOND4ybKKJqX31khyMVVDmi+1PtHHtiFz
+         dmH8jAX/tMc7CAZZtldLXVchn3fWEIbuSMpfRs+tVMc6lSDkpvXkVXOtH6gYMgMSaBjO
+         RR2w==
+X-Gm-Message-State: APjAAAUL7Q4JbyjM08W+478s4/blxnHyJoScIO83EeQMSRzR6v1spJYO
+        pk2R8bYiElvSazz6nNMECGBInA==
+X-Google-Smtp-Source: APXvYqw7yyxFQAXo7vKA2w7ulRNGvCyv56rfhdpT5ejogTv6wRACLm66i8wHVY98PrQ1Yjcn1Hyyvg==
+X-Received: by 2002:a19:e011:: with SMTP id x17mr2462253lfg.59.1576692111923;
+        Wed, 18 Dec 2019 10:01:51 -0800 (PST)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:48d1:e89a:1bf6:a9f0:1b42:e170])
+        by smtp.gmail.com with ESMTPSA id i13sm1532470ljg.89.2019.12.18.10.01.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Dec 2019 10:01:51 -0800 (PST)
+Subject: Re: [PATCH] clock: renesas: cpg-mssr: Fix the typo
+To:     Biju Das <biju.das@bp.renesas.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+References: <1576667390-29449-1-git-send-email-biju.das@bp.renesas.com>
+ <2368e2c8-7f80-ec22-2c9f-4f719ab347dc@cogentembedded.com>
+ <OSBPR01MB2103DDF07C530B24DCD2BE4BB8530@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <f22fc0c9-c74c-0d1f-4abd-8969b806b5dd@cogentembedded.com>
+Date:   Wed, 18 Dec 2019 21:01:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <OSBPR01MB2103DDF07C530B24DCD2BE4BB8530@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-NVIDIA Tegra SoCs use ChipIdea silicon IP for the USB controllers.
+On 12/18/2019 03:49 PM, Biju Das wrote:
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+>> Subject: Re: [PATCH] clock: renesas: cpg-mssr: Fix the typo
+>>
+>> On 18.12.2019 14:09, Biju Das wrote:
+>>
+>>> This patch fixes the typo %s/r8a774a1/r8a774b1/.
+>>>
+>>> Fixes: 1000393 ("dt-bindings: clock: renesas: cpg-mssr: Document r8a774b1
+>>
+>>     SHA1 should have at least 12 digits.
+>>
+> Ok will do.
+> 
+>>> binding")
+>>
+>>     And never break up the tag lines please.
+> 
+> Do you mean ,  do the changes like below and ignore check patch warnings?
 
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-index cfc9f40ab641..51376cbe5f3d 100644
---- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-@@ -15,6 +15,10 @@ Required properties:
- 	"qcom,ci-hdrc"
- 	"chipidea,usb2"
- 	"xlnx,zynq-usb-2.20a"
-+	"nvidia,tegra20-udc"
-+	"nvidia,tegra30-udc"
-+	"nvidia,tegra114-udc"
-+	"nvidia,tegra124-udc"
- - reg: base address and length of the registers
- - interrupts: interrupt for the USB controller
- 
--- 
-2.24.0
+   checkpatch.pl doesn't complain to me, even about short SHA1...
 
+> Is it acceptable to everyone?
+
+   I remember e.g. Dave Miller complaining about breaking up the "Fixes:" tag --
+I think it breaks patchwork. Looking at Documentation/process/submitting-patches.rst,
+this format is even codified...
+
+> Fixes: 10003938a0c64c2f0d89 ("dt-bindings: clock: renesas: cpg-mssr: Document r8a774b1 binding")
+> 
+>>> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+>> [...]
+
+MBR, Sergei
