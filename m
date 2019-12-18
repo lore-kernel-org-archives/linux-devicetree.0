@@ -2,146 +2,165 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE35C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 19:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AABC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 19:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33E0821D7D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 19:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C2921D7D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 19:10:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XIcQqioy"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="S86ZB6KZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfLRTJq (ORCPT
+        id S1727577AbfLRTK3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 14:09:46 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37985 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727297AbfLRTJq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 14:09:46 -0500
-Received: by mail-io1-f67.google.com with SMTP id v3so3145447ioj.5
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 11:09:46 -0800 (PST)
+        Wed, 18 Dec 2019 14:10:29 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33936 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727185AbfLRTK3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 14:10:29 -0500
+Received: by mail-pl1-f196.google.com with SMTP id x17so1406101pln.1
+        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 11:10:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MjSvp3Dx9u84GVaJpyyyeaGaP0H57BE7CyJr7SSOs5g=;
-        b=XIcQqioy8tqWx8jv9ksRQ/fgieMfgKKKIp3ywAYh1a58vOSB2qEGoad6XCSce9DM6h
-         EsI2IIF0ChjDxU/kKx/iDhsOw1cGnGjRLQYgj9YjFXigW2y1f4KshZQZ6ZfqF1Njpqcv
-         lQfSIyPvo9TnNkabONpQoAmrkQZmQBPcm9K0U=
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EuBd5H0Egt+eDY+fK/iuV4fphB2qstxtMKk6PdK6o5A=;
+        b=S86ZB6KZWjzBWNer4WPm2X1LwRziSTHVHOQAcHfs+JFNZIdFhkw7JLb807hllDCYEy
+         Hu6MigRzR6kEQQW6ZcMElMamn2hUOuhvHGRSY3E3rVhsd/AdBI32u9lqJJRK1y71MuQp
+         ncwlCQBEFnBNd45zE4nJPZMklK8i2yW5fNy4s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MjSvp3Dx9u84GVaJpyyyeaGaP0H57BE7CyJr7SSOs5g=;
-        b=g4NAUgEJrjt6L/tGX5qPINz01qq8AOJI+mr7q/kclf5omjUS+PAQyUU2FWpKeRB+tq
-         M4zbtXhgNKR8kTrhwQvhUk6vOsUtpmfDqCbw0gGbNFTeeupc5scgVSdxTEaART2/tTcs
-         GgsTjZfiFfI2yi8CsFQ+9tSfhpXXJssYxa1u7VdV2aXlQVu7HeRcatxpNNM3SWwXc3aK
-         wXk0Vj7jNVui3XuHnvRbRnkc9EcyALFM9ZVpDab7CQFT57xDvi5+X21oCsHAB+RZs5o+
-         +IkoQBqF53LH7RT9A020vk7YzFYpJuwUgIWow0PjxG0zjq78VZa9sLNQ9xgIt9r4P1vN
-         Dx0w==
-X-Gm-Message-State: APjAAAVVHSPYflvScl7nKbm5SgtAYeaIJaBdskdm2kBkCAgcHskyJJkg
-        lx71fDQ19eY0w2rIVyEGondGKtUOaMM=
-X-Google-Smtp-Source: APXvYqxJB5XdjtbXNHTtHdqkZS/sPsHhhWYEVWFBenXdh3J8JzJkxFknGPxHCDkHf/OoPYgd2oZBBg==
-X-Received: by 2002:a5d:8d10:: with SMTP id p16mr2746337ioj.21.1576696184360;
-        Wed, 18 Dec 2019 11:09:44 -0800 (PST)
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com. [209.85.166.182])
-        by smtp.gmail.com with ESMTPSA id r14sm945029ilg.59.2019.12.18.11.09.42
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Dec 2019 11:09:43 -0800 (PST)
-Received: by mail-il1-f182.google.com with SMTP id t17so2600137ilm.13
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 11:09:42 -0800 (PST)
-X-Received: by 2002:a92:1547:: with SMTP id v68mr3226767ilk.58.1576696182341;
- Wed, 18 Dec 2019 11:09:42 -0800 (PST)
-MIME-Version: 1.0
-References: <1575520881-31458-1-git-send-email-sanm@codeaurora.org> <1575520881-31458-4-git-send-email-sanm@codeaurora.org>
-In-Reply-To: <1575520881-31458-4-git-send-email-sanm@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 18 Dec 2019 11:09:31 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=V7SEqLWQh29eHh=a5q6Q2_bWwhMViyhFvWwGQN1p7fjw@mail.gmail.com>
-Message-ID: <CAD=FV=V7SEqLWQh29eHh=a5q6Q2_bWwhMViyhFvWwGQN1p7fjw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: phy: qcom-qusb2: Add SC7180 QUSB2 phy support
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EuBd5H0Egt+eDY+fK/iuV4fphB2qstxtMKk6PdK6o5A=;
+        b=J30aOg3WbOzTaPaibPcePua9wYLqR9RbkS8OiPTddZxKWMQZdAJiOc6Rd+hKTZGn2x
+         y/HgpMBs7MzF7rHDIow0Z3jffpV1MEqlTGVlnD53ud9sDsKKm44WWilv3RRWolDZJcz4
+         iHp0qYk4u6or/bWWJkwju6LmznWXryFXm3Lk9YDpl8AGlgbrat6YgxnWZ82ROSvsk2jO
+         Jsa75YKWmeGuZZy8EKfIIaWqjNF2M9ZIopT8viJ175IVuUpiDC8j+xQ36Fr5ntfJmYi2
+         80NUiIxOEbyzx4Pz67y3YEe5n+Q0DpgCfS7m1QpltJr8MZ3ACi6YlmEpqQkQP+ZXYK5W
+         XQkg==
+X-Gm-Message-State: APjAAAV2OkRTi6/wcyelUEI4fo2FeT3Vd/V4w2rDQ0fYG7tS/LF+2QlA
+        oF+xQZ5OZHXOl+uM1LyCLKTdqg==
+X-Google-Smtp-Source: APXvYqwU8uLra6sgkg2kZFnCJdBPd9PVO3B5cEcqJKnQ6ikq51O0B+PtJzugqG3VZX2O+nw+6dGAJQ==
+X-Received: by 2002:a17:90a:e389:: with SMTP id b9mr4642793pjz.7.1576696227877;
+        Wed, 18 Dec 2019 11:10:27 -0800 (PST)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:78ea:e014:edb4:e862])
+        by smtp.gmail.com with ESMTPSA id q7sm3745855pjd.3.2019.12.18.11.10.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 11:10:27 -0800 (PST)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Manu Gautam <mgautam@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v13 0/7] drm/sun4i: Allwinner A64 MIPI-DSI support
+Date:   Thu, 19 Dec 2019 00:40:10 +0530
+Message-Id: <20191218191017.2895-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+This is v13 version for Allwinner A64 MIPI-DSI support
+and here is the previous version set[1]
 
-On Wed, Dec 4, 2019 at 8:43 PM Sandeep Maheswaram <sanm@codeaurora.org> wrote:
->
-> Add QUSB2 phy entries for SC7180 in device tree bindings.
->
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml
-> index 3ef94bc..5eff9016 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml
-> @@ -18,6 +18,7 @@ properties:
->      enum:
->        - qcom,msm8996-qusb2-phy
->        - qcom,msm8998-qusb2-phy
-> +      - qcom,sc7180-qusb2-phy
->        - qcom,sdm845-qusb2-phy
+Changes for v13:
+- update dt-bindings for A64
+- drop has_mod_clk variant
+- use regmap bus clock properly
+Changes for v12:
+- use enum insted of oneOf+const
+- handle bus clock using regmap attach clk
+- tested on A64, A33 boards.
+Changes for v11:
+- fix dt-bindings for dphy
+- fix dt-bindings for dsi controller
+- add bus clock handling code
+- tested on A64, A33 boards.
+Changes for v10:
+- updated dt-bindings as per .yaml format
+- rebased on drm-misc/for-linux-next
+Changes for v9:
+- moved dsi fixes in separate series on top of A33
+- rebase on linux-next
+Changes for v8:
+- rebased on drm-misc change along with linux-next
+- reworked video start delay patch
+- tested on 4 different dsi panels
+- reworked commit messages
+Changes for v7:
+- moved vcc-dsi binding to required filed.
+- drop quotes on fallback dphy bindings.
+- drop min_rate clock pll-mipi patches.
+- introduce dclk divider computation as like A64 BSP.
+- add A64 DSI quark patches.
+- fixed A64 DSI pipeline.
+- add proper commit messages.
+- collect Merlijn Wajer Tested-by credits.
+Changes for v6:
+- dropped unneeded changes, patches
+- fixed all burst mode patches as per previous version comments
+- rebase on master
+- update proper commit message
+- dropped unneeded comments
+- order the patches that make review easy
+Changes for v5:
+- collect Rob, Acked-by
+- droped "Fix VBP size calculation" patch
+- updated vblk timing calculation.
+- droped techstar, bananapi dsi panel drivers which may require
+  bridge or other setup. it's under discussion.
+Changes for v4:
+- droppoed untested CCU_FEATURE_FIXED_POSTDIV check code in
+  nkm min, max rate patches
+- create two patches for "Add Allwinner A64 MIPI DSI support"
+  one for has_mod_clk quirk and other one for A64 support
+- use existing driver code construct for hblk computation
+- dropped "Increase hfp packet overhead" patch [2], though BSP added
+  this but we have no issues as of now.
+  (no issues on panel side w/o this change)
+- create separate function for vblk computation 
+- enable vcc-dsi regulator in dsi_runtime_resume
+- collect Rob, Acked-by
+- update MAINTAINERS file for panel drivers
+- cleanup commit messages
+- fixed checkpatch warnings/errors
 
-I would propose that we add generic PHY v2 tagging here, like this:
+[1] https://patchwork.freedesktop.org/series/70361/
 
-properties:
-  compatible:
-    anyOf:
-      - items:
-        - const: qcom,msm8996-qusb2-phy
-      - items:
-        - const: qcom,msm8998-qusb2-phy
-      - items:
-        # Suggested to also add "qcom,qusb2-v2-phy" as below.
-        - const: qcom,sdm845-qusb2-phy
-      - items:
-        - enum:
-          - qcom,sc7180-qusb2-phy
-          - qcom,sdm845-qusb2-phy
-        - const: qcom,qusb2-v2-phy
+Any inputs?
+Jagan.
 
-Given that this PHY has a fairly linear versioning within Qualcomm
-(right?) this should make sense and should make code / adding new
-device trees easier.  This is probably better than what I suggested in
-the driver review [1] where I suggested that the compatible for sc7180
-should be:
+Jagan Teki (7):
+  dt-bindings: sun6i-dsi: Document A64 MIPI-DSI controller
+  dt-bindings: sun6i-dsi: Add A64 DPHY compatible (w/ A31 fallback)
+  drm/sun4i: dsi: Get the mod clock for A31
+  drm/sun4i: dsi: Handle bus clock via regmap_mmio_attach_clk
+  drm/sun4i: dsi: Add Allwinner A64 MIPI DSI support
+  arm64: dts: allwinner: a64: Add MIPI DSI pipeline
+  [DO NOT MERGE] arm64: dts: allwinner: bananapi-m64: Enable Bananapi S070WV20-CT16 DSI
+    panel
 
-  compatible: "qcom,sc7180-qusb2-phy", "qcom,sdm845-qusb2-phy"
+ .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 33 ++++++++++-
+ .../phy/allwinner,sun6i-a31-mipi-dphy.yaml    |  6 +-
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 31 +++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 37 +++++++++++++
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c        | 55 +++++++++++++++----
+ 5 files changed, 148 insertions(+), 14 deletions(-)
 
+-- 
+2.18.0.321.gffc6fa0e3
 
->    reg:
-> @@ -66,7 +67,7 @@ properties:
->          It is a 6 bit value that specifies offset to be
->          added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
->          tuning parameter that may vary for different boards of same SOC.
-> -        This property is applicable to only QUSB2 v2 PHY (sdm845).
-> +        This property is applicable to only QUSB2 v2 PHY (sc7180, sdm845).
-
-If you add my tagging, change this and other similar to just remove sdm845.
-
-
-[1] https://lore.kernel.org/r/CAD=FV=W_z=_j==DSFbtCmTihmSyRtH85VnKpw03E=gATcqJx2Q@mail.gmail.com
-
--Doug
