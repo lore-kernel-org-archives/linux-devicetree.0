@@ -2,218 +2,93 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43595C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 21:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F34C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 21:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D03924672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 21:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380EB227BF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 21:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576703768;
-	bh=JAhpmKdY0BCS7MWOvYPyHGXWF3fuQ13HP/Op0t3lcI8=;
+	s=default; t=1576703950;
+	bh=tNuO5VIlpdVijPzbEAZ1AVFcDnTW/8xm/i11h4kishI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MI5Vv15bA/MmgG0sH/MvsE99ihoqpeHfgehBqDIHgX7nHQwtOjr9IWQG1PHdPZ01a
-	 xBzuogSZPSGckRLxOdiyblVMidAOBfg9Eb4DBcWB8MC2M2A6/04B4gyUY6JAMh/3Hd
-	 9omo4+NlGo7vZLSAvRtj6IgL1CNokpo00WJ1xo0w=
+	b=s8ZbXlJiNSCnRevn5bOOjpoEbTkETRtSr0D2WhyMiSwXeUDDI5JMxG/h+/kqcZ/24
+	 C4Eb6WHe1MVuctIMWZRIkKhtqP6YmVKnUSoRhJwCvS30W1jOc+sReDPltukfTC3zon
+	 1zxvOoTyIwx/zkPHxpBJgm3b/tCCbOpfv0k1dgAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbfLRVQE (ORCPT
+        id S1726561AbfLRVTG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:16:04 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38848 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfLRVQE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 16:16:04 -0500
-Received: by mail-ot1-f67.google.com with SMTP id h20so4180664otn.5;
-        Wed, 18 Dec 2019 13:16:03 -0800 (PST)
+        Wed, 18 Dec 2019 16:19:06 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46693 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbfLRVTG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 16:19:06 -0500
+Received: by mail-ot1-f68.google.com with SMTP id c22so4149023otj.13;
+        Wed, 18 Dec 2019 13:19:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VfRpHq+kS/2gCphHVcGTyf5xHe3uvLTiFdpuwlwHK/I=;
-        b=aVfK+sdGJEctKueujyLknlYnApVTuFuUYb+5WkaodXSoACDUjBnMk0BdJrbLwtWS7J
-         ttd2IzZe3LFfPskRc0K5/ylhXJD5vNWNoVvDcTI6RM+pCsl7AOtNeQvCMeI41c1oEz57
-         6s1YbvyFcymLEoVSeHRq8Cfb9WgU5Y9YtCJt//37DqL9Ffvd69k0Xx7R10+e1tC9atZy
-         ng7enARzIcgWeWl4HGVOHB8ZHaIRj04gs4et5gUlfGnS1ZgBhOVvKuwLMvPoeUJhWRvH
-         ohj6+LBiIzPoEhUkpTpFNcZe9lAqQroHB1cTk301kDobeIjW5q0+e1FRbyQb+GFg+rlA
-         S9kQ==
-X-Gm-Message-State: APjAAAVMfwb0I7VVOb0dxlhNO6U7RWQ0COsW7M0I5lc9cDlbaH68egxf
-        OoyUk2gS71nuKi1M0zVp7g==
-X-Google-Smtp-Source: APXvYqxbO7jTCnsX1zsL+WZp6+wZtSheMGnt7JACGcjSdKYJsIBRWBi5EqsXahLBqZf8vvk48VBQaA==
-X-Received: by 2002:a9d:784b:: with SMTP id c11mr4658325otm.246.1576703762925;
-        Wed, 18 Dec 2019 13:16:02 -0800 (PST)
+        bh=e6i3yUht6VZmzoNOaX8eJ66QZuEfJp5v9+9UU4ybVpg=;
+        b=BPiuavSXWe2kkeIpA4Bc5/BUB8/HWp4zgbdZeJ6ffG45ttU+s13h1uuN1CzL6eCXqm
+         2cvPxG9WYeHjs538jQqoCKlVRowPfOxPLi/FwWYX17voSYOer0+LwHZbzeFMHx9j9dIn
+         cKLUmsA7RwE5eaohUG8uxMkfZIpDE9RS3hghUa0wvK1+l2oo33Knha5HhTpMKJZoRDlr
+         xJzuVGu1z2eoZeYZ+i40BSqeGRypZ6UtNosbeD+ZN0SfVcPVqtuSTkVJWw9/AY3CfL14
+         74d9F/vuw2/RvDRnc52w8iCRJA71oBzwRdRlf+P+WRFh7j7SYTMLtT3cmOIgVFEOhuF1
+         aLfg==
+X-Gm-Message-State: APjAAAU7RO2nqtdgyo7BmaKWgKGtEwwA8zLNGIj8l4XfOIk8eVDHjJX0
+        H4Rnftsuk03YEgRhoJVJ5A==
+X-Google-Smtp-Source: APXvYqzcLzQJCSqsqQnYBN6UNLLQYWI1bzp7P0CM3jCsgq3QyEd+dWVqTYn65T8XaPEUnMSXxRmxFQ==
+X-Received: by 2002:a05:6830:22ee:: with SMTP id t14mr4677757otc.236.1576703945628;
+        Wed, 18 Dec 2019 13:19:05 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q5sm1216343oia.21.2019.12.18.13.16.02
+        by smtp.gmail.com with ESMTPSA id z21sm1231040oto.52.2019.12.18.13.19.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 13:16:02 -0800 (PST)
-Date:   Wed, 18 Dec 2019 15:16:01 -0600
+        Wed, 18 Dec 2019 13:19:04 -0800 (PST)
+Date:   Wed, 18 Dec 2019 15:19:04 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org
-Subject: Re: [PATCH v4 1/8] dt-bindings: add img,pvrsgx.yaml for Imagination
- GPUs
-Message-ID: <20191218211601.GA11411@bogus>
-References: <cover.1576605726.git.hns@goldelico.com>
- <aedc895985d966cf709d153d5b0bed07f59bdcfd.1576605726.git.hns@goldelico.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     skomatineni@nvidia.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, digetx@gmail.com, mperttunen@nvidia.com,
+        gregkh@linuxfoundation.org, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        spujar@nvidia.com, josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 01/19] dt-bindings: clock: tegra: Change CLK_M_DIV to
+ OSC_DIV clocks
+Message-ID: <20191218211904.GA5303@bogus>
+References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
+ <1576613046-17159-2-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aedc895985d966cf709d153d5b0bed07f59bdcfd.1576605726.git.hns@goldelico.com>
+In-Reply-To: <1576613046-17159-2-git-send-email-skomatineni@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 07:01:59PM +0100, H. Nikolaus Schaller wrote:
-> The Imagination PVR/SGX GPU is part of several SoC from
-> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo
-> and others.
+On Tue, 17 Dec 2019 12:03:48 -0800, Sowjanya Komatineni wrote:
+> Tegra has no CLK_M_DIV2 and CLK_M_DIV4 clocks and instead it has
+> OSC_DIV2 and OSC_DIV4 clocks from OSC pads.
 > 
-> With this binding, we describe how the SGX processor is
-> interfaced to the SoC (registers, interrupt etc.).
+> This patch changes CLK_M_DIV2 and CLK_M_DIV4 clock ids to OSC_DIV2
+> and OSC_DIV4 clock ids for Tegra30 through Tegra210.
 > 
-> In most cases, Clock, Reset and power management is handled
-> by a parent node or elsewhere.
-> 
-> Tested by make dt_binding_check dtbs_check
-
-I'm surprised that worked... (Not for long if it did).
-
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 80 +++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+>  include/dt-bindings/clock/tegra114-car.h        | 4 ++--
+>  include/dt-bindings/clock/tegra124-car-common.h | 4 ++--
+>  include/dt-bindings/clock/tegra210-car.h        | 4 ++--
+>  include/dt-bindings/clock/tegra30-car.h         | 4 ++--
+>  4 files changed, 8 insertions(+), 8 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> new file mode 100644
-> index 000000000000..44799774e34d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> @@ -0,0 +1,80 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Imagination PVR/SGX GPU
-> +
-> +maintainers:
-> +  - H. Nikolaus Schaller <hns@goldelico.com>
-> +
-> +description: |+
-> +  This binding describes the Imagination SGX5 series of 3D accelerators which
-> +  are found in several different SoC like TI OMAP, Sitara, Ingenic JZ4780,
-> +  Allwinner A83, and Intel Poulsbo and CedarView and more.
-> +
-> +  For an almost complete list see: https://en.wikipedia.org/wiki/PowerVR#Implementations
-> +  
-> +  Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently covered by
-> +  this binding but the extension of the pattern is straightforward.
-> +  
-> +  The SGX node is usually a child node of some DT node belonging to the SoC
-> +  which handles clocks, reset and general address space mapping of the SGX
-> +  register area.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +    # Example: BeagleBoard A/B/C, OpenPandora 600MHz
-> +      - ti,omap3-sgx530-121, img,sgx530-121, img,sgx530
 
-Didn't I comment before this is not valid. You are defining the 
-compatible string is: 'ti,omap3-sgx530-121, img,sgx530-121, img,sgx530'
-
-You need:
-
-compatible:
-  oneOf:
-    - description: BeagleBoard A/B/C, OpenPandora 600MHz
-      items:
-        - const: ti,omap3-sgx530-121
-        - const: img,sgx530-121
-        - const: img,sgx530
-
-And so on for each of the rest.
-
-> +    # Example: BeagleBoard XM, GTA04, OpenPandora 1GHz
-> +      - ti,omap3-sgx530-125, img,sgx530-125, img,sgx530
-> +    # Example: BeagleBone Black
-> +      - ti,am3352-sgx530-125, img,sgx530-125, img,sgx530
-
-These 2 could be combined using 'enum' for the first item. Basically, 
-you can group ones where the last 2 strings are the same.
-
-> +    # Example: Pandaboard, Pandaboard ES
-> +      - ti,omap4-sgx540-120, img,sgx540-120, img,sgx540
-> +      - ti,omap4-sgx544-112, img,sgx544-112, img,sgx544
-> +    # Example: OMAP5 UEVM, Pyra Handheld
-> +      - ti,omap5-sgx544-116, img,sgx544-116, img,sgx544
-> +      - ti,dra7-sgx544-116, img,sgx544-116, img,sgx544
-> +    # Example: CI20
-> +      - ingenic,jz4780-sgx540-120, img,sgx540-120, img,sgx540
-> +    # the following entries are not validated with real hardware
-
-What am I supposed to do with that? You're just defining some strings. 
-If you're not sure they are okay, then don't define them.
-
-> +    # more TI SoC
-> +      - ti,am3517-sgx530-125, img,sgx530-125, img,sgx530
-> +      - ti,am4-sgx530-125, img,sgx530-125, img,sgx530
-> +      - ti,ti81xx-sgx530-125, img,sgx530-125, img,sgx530
-> +    # Example: Banana-Pi-M3 (Allwinner A83T)
-> +      - allwinner,sun8i-a83t-sgx544-116, img,sgx544-116, img,sgx544
-> +    # Example: Atom Z5xx
-> +      - intel,poulsbo-gma500-sgx535, img,sgx535-116, img,sgx535
-> +    # Example: Atom Z24xx
-> +      - intel,medfield-gma-sgx540, img,sgx540-116, img,sgx540
-> +    # Example: Atom N2600, D2500
-> +      - intel,cedarview-gma3600-sgx545, img,sgx545-116, img,sgx545
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |+
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    gpu@fe00 {
-> +      compatible = "ti,omap-omap5-sgx544-116", "img,sgx544-116", "img,sgx544", "img,sgx5";
-
-Doesn't match the schema.
-
-> +      reg = <0xfe00 0x200>;
-> +      interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> +
-> +...
-> -- 
-> 2.23.0
-> 
+Acked-by: Rob Herring <robh@kernel.org>
