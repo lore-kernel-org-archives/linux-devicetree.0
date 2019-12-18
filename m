@@ -4,83 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D29C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE550C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72C9218AC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69998227BF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576712472;
-	bh=jai2rqUZrCTqhBrKP68xPvcnxMKbNpTyIVcyiDtJMiQ=;
+	s=default; t=1576712506;
+	bh=eXWlhkrQrotPD71W75jdLPA7h/oMnbcNPhtrdL3wm8w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s10N7Qk4RDfbcvWqyyRAa1P5HB009yMkKI+mz10zEV5SBn9Je1HAdexHutQoXThC9
-	 pjYWhCQpXXRf+dyCd28FCu5zJ1oQN+V4raKyxg5hgXnMNLIwTidZIaJNiD6ziv7/Jq
-	 4GHn11a1vRaXXAnYH740lXmmaTrip0gKVYiIvGMA=
+	b=yEUQ7UD46zzyhYKFHQ0mJ6GhQGCQZ7YwIImxOts4RZrcRzx7VX71JhidX4pLgQFa1
+	 4bGk9eg5t/0s9wQggT5wNu2BaJXueQOgjG53+atscZXDrWR1RBtwgYevIb27oqtGef
+	 ejzf35NxDgKa2OpsOdTwnUVXTmuwkfTGMF8yXcos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfLRXlM (ORCPT
+        id S1726571AbfLRXlq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:41:12 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45073 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfLRXlM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 18:41:12 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 59so4581102otp.12;
-        Wed, 18 Dec 2019 15:41:11 -0800 (PST)
+        Wed, 18 Dec 2019 18:41:46 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42836 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfLRXlp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 18:41:45 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 66so4591104otd.9;
+        Wed, 18 Dec 2019 15:41:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PqNQdT+O/1YRrinbHmkyRkVJ9xQOa2a5HYYY4UY1clA=;
-        b=fiqPcggxY1n9FoyOOtiZHcuTkPbQj7kRopZFBIWQpHGFNWbAPTX9kYiEumu4uxk+lH
-         7SjInjKN+4ifAf37CFHK+yMEGkReOaumHS8kIhKiblMd7Fu/61ESYUpMm1G/6GS7V1dY
-         yU1/4NtZ2boWgLHOk5BXFELge6Z633FYhc2kyF1DoIH1RqaGJxop54H6MtU8rLAoOErT
-         +baMx1zdC3Df16XnnmgzGev9wxfh7DcgOWe/v2XM317TIafJuFYGKLmeWE7CFnUFIDNJ
-         lsLvy64jHSIMmMer3NEV1b1sblA2IotuRpGfbiT9houpWZ4g8InuzB9bjiHaEO9rsFF1
-         vcUw==
-X-Gm-Message-State: APjAAAVmEuiu6WBJALXhH9J2TMaxupAoEtGyqMXie/NGVL37WHhDfFF7
-        0Vw3Q3jt+bup82zx979iDu8hzJZwPA==
-X-Google-Smtp-Source: APXvYqxawIpRR6wk47UcEySc6FtBzz5GLBmbX307VrrvU52uxWgNd7YfH08bCuUSIuY50dnoIHp4PA==
-X-Received: by 2002:a05:6830:184:: with SMTP id q4mr5527840ota.52.1576712471373;
-        Wed, 18 Dec 2019 15:41:11 -0800 (PST)
+        bh=R29Btnzag73VkeWSdz4euQtuxJFOTMdR3dZXl1nXjuI=;
+        b=OpQefdOsR2Mu0IX1E5nCyTWzp5WWfFk6FEhYa6g5AknvZudkYbgIAqHDhu9hQ+gFej
+         0WCvGlXEeAZoiQtntHZ2TCSn1eHMQULX+HiNMn4qRJ0WTEiNoFan5jZfZfJxnQnjl1tB
+         m9E1LLRC5hHVEa7JcfvP/IAiElSATEN4BY/Q/mnzsxuADYZcqsQYJMFZxs+TRaUFke3d
+         cXNbWg7JeaUZV/jnWWcs7iXTCkoNP40IxSjoW/jb3F9Q0zP0O+xH+DmH/eZSUaIZJ686
+         nXVcpSudaXjpZaF+7o0wulwxvZ3tZ+muK1pOjI06+jXxtWZ5MwRpY/Z0rWmYCi1svxkF
+         WqcQ==
+X-Gm-Message-State: APjAAAU7IlKeeRtm00c/Sy+47UAVKQOsTzjzyruE9EinEbBg+JFqzrMA
+        AHxNf1x8XUcoQ1aLs6cnp3y956q9LQ==
+X-Google-Smtp-Source: APXvYqxT21uP5Hd4ruqKQC1yFjEgpvgeZ8PPRxzwneE1wkiyWFUxWmXFpMHBXDmzot1rNAsfdwbojg==
+X-Received: by 2002:a9d:7a88:: with SMTP id l8mr5673731otn.187.1576712504917;
+        Wed, 18 Dec 2019 15:41:44 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n17sm1388954otq.46.2019.12.18.15.41.10
+        by smtp.gmail.com with ESMTPSA id q1sm1455743otr.40.2019.12.18.15.41.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 15:41:11 -0800 (PST)
-Date:   Wed, 18 Dec 2019 17:41:10 -0600
+        Wed, 18 Dec 2019 15:41:44 -0800 (PST)
+Date:   Wed, 18 Dec 2019 17:41:43 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH] dt-bindings: watchdog: renesas-wdt: Document r8a77961
- support
-Message-ID: <20191218234110.GA14757@bogus>
-References: <20191205134751.6928-1-geert+renesas@glider.be>
+        Marcel Holtmann <marcel@holtmann.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        devicetree@vger.kernel.org, Rocky Liao <rjliao@codeaurora.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Harish Bandi <c-hbandi@codeaurora.org>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: Re: [PATCH] dt-bindings: net: bluetooth: Add compatible string for
+ WCN3991
+Message-ID: <20191218234143.GA15666@bogus>
+References: <20191205122241.1.I6c86a40ce133428b6fab21f24f6ff6fec7e74e62@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191205134751.6928-1-geert+renesas@glider.be>
+In-Reply-To: <20191205122241.1.I6c86a40ce133428b6fab21f24f6ff6fec7e74e62@changeid>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu,  5 Dec 2019 14:47:51 +0100, Geert Uytterhoeven wrote:
-> Document support for the Watchdog Timer in the Renesas R-Car M3-W+
-> (R8A77961) SoC.
+On Thu,  5 Dec 2019 12:22:59 -0800, Matthias Kaehlcke wrote:
+> Commit 7d250a062f75 ("Bluetooth: hci_qca: Add support for Qualcomm
+> Bluetooth SoC WCN3991") added the compatible string 'qcom,wcn3991-bt'
+> to the Qualcomm Bluetooth driver, however the string is not listed
+> in the binding. Add the 'qcom,wcn3991-bt' to the supported compatible
+> strings.
 > 
-> No driver update is needed.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
->  Documentation/devicetree/bindings/watchdog/renesas,wdt.txt | 1 +
+> 
+>  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 1 +
 >  1 file changed, 1 insertion(+)
 > 
 
