@@ -2,288 +2,276 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE8DC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3DAC2D0BF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF2D921582
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:53:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dqC+52ko"
+	by mail.kernel.org (Postfix) with ESMTP id E8C5621775
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576637826;
+	bh=e0LQF0690GEbbzak/OIhEet/HIbXA9Glfc3oGPIlvrU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F4CIhdzODGS5WMRTbL1WY4HBax6L1y6/kTBYn6UTtEK0hxdJ5+2ad73FGRgrk3lm2
+	 G8oGjZsefVnIJXDWOv1j2+qyMLrFa2aANUn6o3nWTgOZ89sm7ZxK5scR5rmOLkVniB
+	 5RETojDpKpR2YKcm3ANUq0vOhrdYDhovg0Gpj7mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfLRCxH (ORCPT
+        id S1726716AbfLRC5E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 21:53:07 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:25232 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfLRCxG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 21:53:06 -0500
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191218025303epoutp027f0d17a13edc5011ab001e246d8ea228~hV4dOizQn1344513445epoutp02r
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 02:53:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191218025303epoutp027f0d17a13edc5011ab001e246d8ea228~hV4dOizQn1344513445epoutp02r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576637583;
-        bh=c+4b2JtjeOV7nV7TSHhA4nxZS2ZGNLBNR1j7Lbe1LRw=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=dqC+52kofAWJcAYS1g2tq7yEXraGF0LP7Z6j1c3Y4qQgz6oQIpdN3jZ9jiBD763sq
-         hMhfTqB0zGAJwxJVHGupK56O4u3go+TYDBhKYRRWEb+VsFy+KYSzEhHonH072sv+Rf
-         twboYpc4XJ32EYVakVi3LIV0Z5CP2qt/bab8oOl0=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191218025302epcas1p204aea3ef06bd51a22d6f2256d961881c~hV4cMIn4Z0169501695epcas1p2U;
-        Wed, 18 Dec 2019 02:53:02 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47d01Q411PzMqYkb; Wed, 18 Dec
-        2019 02:52:58 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B6.81.52419.A8499FD5; Wed, 18 Dec 2019 11:52:58 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191218025257epcas1p2f0f98db75a84ad49afa7991914692811~hV4Xz1wnc0169101691epcas1p2V;
-        Wed, 18 Dec 2019 02:52:57 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191218025257epsmtrp2e27711cbc5521e5eb8d548d544559c5d~hV4Xy9fB10080900809epsmtrp29;
-        Wed, 18 Dec 2019 02:52:57 +0000 (GMT)
-X-AuditID: b6c32a37-59fff7000001ccc3-c2-5df9948a59e8
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7D.7F.10238.98499FD5; Wed, 18 Dec 2019 11:52:57 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191218025257epsmtip1ff3f36f46894ece64fb7700aeb9cc6a7~hV4XhoMv33109831098epsmtip1v;
-        Wed, 18 Dec 2019 02:52:57 +0000 (GMT)
-Subject: Re: [PATCH 2/9] PM / devfreq: Remove devfreq_get_devfreq_by_phandle
- function
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "lukasz.luba@arm.com" <lukasz.luba@arm.com>,
-        "a.swigon@samsung.com" <a.swigon@samsung.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "kgene@kernel.org" <kgene@kernel.org>,
-        "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>,
-        "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <1967cf03-d1e8-8197-c767-3c8d5f403708@samsung.com>
-Date:   Wed, 18 Dec 2019 11:59:31 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Tue, 17 Dec 2019 21:57:04 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46948 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbfLRC5E (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 21:57:04 -0500
+Received: by mail-ot1-f65.google.com with SMTP id c22so476586otj.13;
+        Tue, 17 Dec 2019 18:57:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HnATBlbL+eZiW12mo0hwrch2CUsppmWX32lWHiTL+YQ=;
+        b=Jgo1huTigPUR1AY/o/D0YacwMxw9gZ3Xjv7awgDj+C1WK3QqalQcyN89hZaeOuhwcG
+         xYG2UBlu6FwAtxf9PKJYodGyVFKfebHLpkXXNV64eoumg/Av3gcq2DBc6Apdc3quSAfp
+         dp38X0iYGS+b/7jUzDQkwHmFmEuKWKomdfF2msQnflJE75QVpxu6lHoiYm30hJeOYW0O
+         c9XCQccYUmkDNEcdQma4WfI55doAYIgwQeLPi31PEYbQLp2kGb07TJz411065evzNR2P
+         8jh2gZlxtVH5cbDh5gU5H/AgPgtrbYD48VxD60MOzH9bcMPvC7Qsqce0lvq4ogTb7rs3
+         idlg==
+X-Gm-Message-State: APjAAAX8wXm8nI2rOgxMJQFoDl98QjbPtv2tN/eKO6tStvZ3rbNpz57v
+        IqqgKQs3UKNgHeX+iMrtqA==
+X-Google-Smtp-Source: APXvYqyihxi8JukdWSv/sqB94AVfuF+A3sZ6QOp7w2twJ4p+CCqPcHedgqwNmZ40BJJHYASG2nIe0Q==
+X-Received: by 2002:a05:6830:20c6:: with SMTP id z6mr43585otq.272.1576637823440;
+        Tue, 17 Dec 2019 18:57:03 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z21sm288506oto.52.2019.12.17.18.57.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 18:57:02 -0800 (PST)
+Date:   Tue, 17 Dec 2019 20:57:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>,
+        Tomohiro Kusumi <kusumi.tomohiro@gmail.com>,
+        "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>,
+        Frederic Barrat <fbarrat@linux.vnet.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        David Kershner <david.kershner@unisys.com>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Sagar Dharia <sdharia@codeaurora.org>,
+        Johan Hovold <johan@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juergen Gross <jgross@suse.com>,
+        Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        openbmc@lists.ozlabs.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Jason M Biils <jason.m.bills@linux.intel.com>,
+        Milton Miller II <miltonm@us.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Ryan Chen <ryan_chen@aspeedtech.com>
+Subject: Re: [PATCH v11 04/14] dt-bindings: Add bindings document of Aspeed
+ PECI adapter
+Message-ID: <20191218025702.GA18998@bogus>
+References: <20191211194624.2872-1-jae.hyun.yoo@linux.intel.com>
+ <20191211194624.2872-5-jae.hyun.yoo@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <VI1PR04MB70231FA16F12ACA3A3C01772EE500@VI1PR04MB7023.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAJsWRmVeSWpSXmKPExsWy7bCmnm7XlJ+xBjM65Szuz2tltJh/5Byr
-        xf9Hr1kt+h+/ZrY4f34Du8XZpjfsFivufmS12PT4GqvF5V1z2Cw+9x5htPj04D+zxYzz+5gs
-        Fja1sFusPXKX3WLp9YtMFrcbV7BZtO49wu4g6LFm3hpGj02rOtk8Ni+p99j4bgeTR9+WVYwe
-        26/NY/b4vEkugD0q2yYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnF
-        J0DXLTMH6AMlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToFlgV5xYm5xaV66XnJ+
-        rpWhgYGRKVBhQnbGzQOzmQtOqFfM+L2evYFxpUIXIyeHhICJxPGJm5m7GLk4hAR2MEo8ePKI
-        HcL5xCjxc8N0FgjnG6PEksONjDAtq3p+MUIk9jJKnPk+kQ3Cec8o8f3ROyaQKmGBcInnC1aC
-        2SIC9RLz1kxmBbGZBdawSfz9UAtiswloSex/cYMNxOYXUJS4+uMx2AZeATuJ399awOIsAqoS
-        U+4dB5sjKhAmcXJbC1SNoMTJmU9YQGxOgViJzRf3MUHMF5e49WQ+lC0vsf3tHLDnJATOsUvc
-        /bQGyOEAclwkHrywgPhGWOLV8S3sELaUxOd3e9kg7GqJlSePsEH0djBKbNl/gRUiYSyxf+lk
-        JpA5zAKaEut36UOEFSV2/p7LCLGXT+Ld1x5WiFW8Eh1tQhAlyhKXH9xlgrAlJRa3d7JNYFSa
-        heSbWUg+mIXkg1kIyxYwsqxiFEstKM5NTy02LDBGju1NjODUrWW+g3HDOZ9DjAIcjEo8vAYM
-        P2OFWBPLiitzDzFKcDArifDe7gAK8aYkVlalFuXHF5XmpBYfYjQFBvZEZinR5HxgXskriTc0
-        NTI2NrYwMTQzNTRUEufl+HExVkggPbEkNTs1tSC1CKaPiYNTqoHR0bTQ/Px2U5UtJXFHrjpm
-        azw79fjR5E1lYbwP09Y5N18w0j3dK7JiTWTi+4p98p/PPMgxrcz6GPOKa9OK4NXb7sj6vD/3
-        YO3DU15+qo+/LahZ3GLJv+vHsucxcpLSb3v2+oXHveYtZv6xhdnelynHNfyM/J30BgWZ/Gff
-        GOe+5d/Lyn7rgrKyEktxRqKhFnNRcSIAq+X5GPMDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsWy7bCSnG7nlJ+xBnt/CVncn9fKaDH/yDlW
-        i/+PXrNa9D9+zWxx/vwGdouzTW/YLVbc/chqsenxNVaLy7vmsFl87j3CaPHpwX9mixnn9zFZ
-        LGxqYbdYe+Quu8XS6xeZLG43rmCzaN17hN1B0GPNvDWMHptWdbJ5bF5S77Hx3Q4mj74tqxg9
-        tl+bx+zxeZNcAHsUl01Kak5mWWqRvl0CV8bNA7OZC06oV8z4vZ69gXGlQhcjJ4eEgInEqp5f
-        jF2MXBxCArsZJbYfnsQOkZCUmHbxKHMXIweQLSxx+HAxSFhI4C2jxNyX8iC2sEC4xPMFK5lA
-        ekUEGhklnkz/wQ7iMAtsYJPY8+Q+G8TUSUwSN9fNYANpYRPQktj/4gaYzS+gKHH1x2NGEJtX
-        wE7i97cWsDiLgKrElHvHmUBsUYEwiZ1LHjNB1AhKnJz5hAXE5hSIldh8cR9YnFlAXeLPvEvM
-        ELa4xK0n86Hi8hLb385hnsAoPAtJ+ywkLbOQtMxC0rKAkWUVo2RqQXFuem6xYYFhXmq5XnFi
-        bnFpXrpecn7uJkZwHGtp7mC8vCT+EKMAB6MSD68Bw89YIdbEsuLK3EOMEhzMSiK8tzuAQrwp
-        iZVVqUX58UWlOanFhxilOViUxHmf5h2LFBJITyxJzU5NLUgtgskycXBKNTAWSnVo6GrpXX8w
-        bbrrv8N2F14U3F9Qmll84/BZi0WLFN6nSFm56V8T9ru/fN+mOIHqN92dDzpnPfRsKF214W3D
-        g0blwvT7gcHPY+Yt0M+VsNoh7t+zSs4qqvqOxqe3PKVTPhyVuMnbZS1xksFs4VeTz2d91x8T
-        MDoq6Fn3pa5c5cSteOmnrNuUWIozEg21mIuKEwE2T4ya3wIAAA==
-X-CMS-MailID: 20191218025257epcas1p2f0f98db75a84ad49afa7991914692811
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191217055105epcas1p2d2930402a559e381a7854f515a683d15
-References: <20191217055738.28445-1-cw00.choi@samsung.com>
-        <CGME20191217055105epcas1p2d2930402a559e381a7854f515a683d15@epcas1p2.samsung.com>
-        <20191217055738.28445-3-cw00.choi@samsung.com>
-        <VI1PR04MB70231FA16F12ACA3A3C01772EE500@VI1PR04MB7023.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211194624.2872-5-jae.hyun.yoo@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/17/19 11:33 PM, Leonard Crestez wrote:
-> On 17.12.2019 07:51, Chanwoo Choi wrote:
->> Previously, devfreq core support 'devfreq' property in order to get
->> the devfreq device by phandle. But, 'devfreq' property name is not proper
->> on devicetree binding because this name doesn't mean the any h/w attribute.
->>
->> The devfreq core hand over the right to decide the property name
->> for getting the devfreq device on devicetree. Each devfreq driver
->> will decide the property name on devicetree binding and then get
->> the devfreq device by using devfreq_get_devfreq_by_node().
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->>   drivers/devfreq/devfreq.c    | 35 -----------------------------------
->>   drivers/devfreq/exynos-bus.c | 14 ++++++++++++--
->>   include/linux/devfreq.h      |  8 --------
->>   3 files changed, 12 insertions(+), 45 deletions(-)
->>
->> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->> index cb8ca81c8973..c3d3c7c802a0 100644
->> --- a/drivers/devfreq/devfreq.c
->> +++ b/drivers/devfreq/devfreq.c
->> @@ -991,48 +991,13 @@ struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
->>   
->>   	return ERR_PTR(-ENODEV);
->>   }
->> -
->> -/*
->> - * devfreq_get_devfreq_by_phandle - Get the devfreq device from devicetree
->> - * @dev - instance to the given device
->> - * @index - index into list of devfreq
->> - *
->> - * return the instance of devfreq device
->> - */
->> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
->> -{
->> -	struct device_node *node;
->> -	struct devfreq *devfreq;
->> -
->> -	if (!dev)
->> -		return ERR_PTR(-EINVAL);
->> -
->> -	if (!dev->of_node)
->> -		return ERR_PTR(-EINVAL);
->> -
->> -	node = of_parse_phandle(dev->of_node, "devfreq", index);
->> -	if (!node)
->> -		return ERR_PTR(-ENODEV);
->> -
->> -	devfreq = devfreq_get_devfreq_by_node(node);
->> -	of_node_put(node);
->> -
->> -	return devfreq;
->> -}
->> -
->>   #else
->>   struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
->>   {
->>   	return ERR_PTR(-ENODEV);
->>   }
->> -
->> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
->> -{
->> -	return ERR_PTR(-ENODEV);
->> -}
->>   #endif /* CONFIG_OF */
->>   EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_node);
->> -EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_phandle);
->>   
->>   /**
->>    * devm_devfreq_remove_device() - Resource-managed devfreq_remove_device()
->> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
->> index 7f5917d59072..9aac2db956d5 100644
->> --- a/drivers/devfreq/exynos-bus.c
->> +++ b/drivers/devfreq/exynos-bus.c
->> @@ -146,6 +146,16 @@ static int exynos_bus_get_dev_status(struct device *dev,
->>   	return ret;
->>   }
->>   
->> +static struct devfreq *get_parent_devfreq_by_node(struct device_node *np)
->> +{
->> +	struct device_node *node = of_parse_phandle(np, "devfreq", 0);
->> +
->> +	if (!node)
->> +		return ERR_PTR(-ENODEV);
->> +
->> +	return devfreq_get_devfreq_by_node(node);
->> +}
+On Wed, Dec 11, 2019 at 11:46:14AM -0800, Jae Hyun Yoo wrote:
+> This commit adds bindings document of Aspeed PECI adapter for ASPEED
+> AST24xx/25xx/26xx SoCs.
 > 
-> The _by_node suffix here is confusing because it actually fetches a 
-> property of the node unlike devfreq_get_devfreq_by_node. Maybe call this 
-> get_parent_devfreq_from_node?
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Joel Stanley <joel@jms.id.au>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
+> Cc: Milton Miller II <miltonm@us.ibm.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Ryan Chen <ryan_chen@aspeedtech.com>
+> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+> ---
+> Changes since v10:
+> - Changed documents format to DT schema format so I dropped all review tags.
+>   Please review it again.
 > 
-> Since it's a static function it could just be called get_parent_devfreq?
+>  .../devicetree/bindings/peci/peci-aspeed.yaml | 124 ++++++++++++++++++
+>  1 file changed, 124 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/peci/peci-aspeed.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/peci/peci-aspeed.yaml b/Documentation/devicetree/bindings/peci/peci-aspeed.yaml
+> new file mode 100644
+> index 000000000000..0f5c2993fe9b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/peci/peci-aspeed.yaml
+> @@ -0,0 +1,124 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/peci/peci-aspeed.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Aspeed PECI Bus Device Tree Bindings
+> +
+> +maintainers:
+> +  - Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - aspeed,ast2400-peci
+> +      - aspeed,ast2500-peci
+> +      - aspeed,ast2600-peci
+> +
+> +  reg:
+> +    maxItems: 1
+> +
 
-OK.
+> +  "#address-cells":
+> +    # Required to define a client address.
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    # Required to define a client address.
+> +    const: 0
 
-> 
->> +
->>   static void exynos_bus_exit(struct device *dev)
->>   {
->>   	struct exynos_bus *bus = dev_get_drvdata(dev);
->> @@ -353,8 +363,8 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
->>   	profile->exit = exynos_bus_passive_exit;
->>   
->>   	/* Get the instance of parent devfreq device */
->> -	parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
->> -	if (IS_ERR(parent_devfreq))
->> +	parent_devfreq = get_parent_devfreq_by_node(dev->of_node);
->> +	if (IS_ERR(parent_devfreq)) {
->>   		return -EPROBE_DEFER;
->>   
->>   	passive_data = devm_kzalloc(dev, sizeof(*passive_data), GFP_KERNEL);
->> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
->> index e3633ae43349..3ed96426302e 100644
->> --- a/include/linux/devfreq.h
->> +++ b/include/linux/devfreq.h
->> @@ -254,8 +254,6 @@ extern void devm_devfreq_unregister_notifier(struct device *dev,
->>   				struct notifier_block *nb,
->>   				unsigned int list);
->>   extern struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node);
->> -extern struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
->> -						int index);
->>   
->>   #if IS_ENABLED(CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND)
->>   /**
->> @@ -413,12 +411,6 @@ struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
->>   	return ERR_PTR(-ENODEV);
->>   }
->>   
->> -static inline struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
->> -							int index)
->> -{
->> -	return ERR_PTR(-ENODEV);
->> -}
->> -
->>   static inline int devfreq_update_stats(struct devfreq *df)
->>   {
->>   	return -EINVAL;
->>
-> 
-> 
-> 
+These 2 can be defined by the bus schema.
 
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: |
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+You can drop the '|' if there's no formatting to preserve.
+
+> +      Clock source for PECI controller. Should reference the external
+> +      oscillator clock.
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  clock-frequency:
+> +    # Operation frequency of PECI controller in units of Hz.
+> +    minimum: 187500
+> +    maximum: 24000000
+> +
+> +  msg-timing:
+> +    description: |
+> +      Message timing negotiation period. This value will determine the period
+> +      of message timing negotiation to be issued by PECI controller. The unit
+> +      of the programmed value is four times of PECI clock period.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +        maximum: 255
+> +        default: 1
+> +
+> +  addr-timing:
+> +    description: |
+> +      Address timing negotiation period. This value will determine the period
+> +      of address timing negotiation to be issued by PECI controller. The unit
+> +      of the programmed value is four times of PECI clock period.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +        maximum: 255
+> +        default: 1
+> +
+> +  rd-sampling-point:
+> +    description: |
+> +      Read sampling point selection. The whole period of a bit time will be
+> +      divided into 16 time frames. This value will determine the time frame
+> +      in which the controller will sample PECI signal for data read back.
+> +      Usually in the middle of a bit time is the best.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +        maximum: 15
+> +        default: 8
+> +
+> +  cmd-timeout-ms:
+> +    # Command timeout in units of ms.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 1
+> +        maximum: 60000
+> +        default: 1000
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - interrupts
+> +  - clocks
+> +  - resets
+> +  - clock-frequency
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/ast2600-clock.h>
+> +    peci: bus@1e78b000 {
+> +        compatible = "simple-bus";
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        ranges = <0x0 0x1e78b000 0x60>;
+
+You can drop this node in the examples.
+
+> +
+> +        peci0: peci-bus@0 {
+> +            compatible = "aspeed,ast2600-peci";
+> +            reg = <0x0 0x100>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+> +            clocks = <&syscon ASPEED_CLK_GATE_REF0CLK>;
+> +            resets = <&syscon ASPEED_RESET_PECI>;
+> +            clock-frequency = <24000000>;
+> +            msg-timing = <1>;
+> +            addr-timing = <1>;
+> +            rd-sampling-point = <8>;
+> +            cmd-timeout-ms = <1000>;
+> +        };
+> +    };
+> +...
+> -- 
+> 2.17.1
+> 
