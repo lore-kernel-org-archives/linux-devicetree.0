@@ -2,98 +2,74 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9245AC2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 16:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B332C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 16:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 666022072B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 16:06:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C1i8TT0B"
+	by mail.kernel.org (Postfix) with ESMTP id E91612176D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 16:07:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfLRQG5 (ORCPT
+        id S1727345AbfLRQHS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:06:57 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33840 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727610AbfLRQG5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 11:06:57 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t2so2912327wrr.1
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 08:06:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ilGmQzgVpyz5+GgzhiMi4TnzxPgEeCNgmk38TMF+kZE=;
-        b=C1i8TT0BKaZyqPij7EJiWtjjPH+4RB1V0a/wUUSe/JhD9Oslbx/1Q6XBpUW4q/UXah
-         aoe7twq2cCcWk0bOOJ8Gb45nCWzluMIaHz3zLYW62oA0JAIGE4LCdpdOofh0hHYbNncr
-         7MRGFnhVHQ4QYKCyBPZDcJ+yuntrIOsJELzFkUuNbHJ5GH97ieyD4Hx/gV1FrVok8xPE
-         jNC4iIRl7+jgHUADTihavmD3bgyz/hMLa6NPMD4z0NlctNZH0ccJcgj2fU8QyAbECLao
-         R/3/iPqI0xBufIyVNwBG7j7oOgv1rd4/DaFeC9pHElsyRmZy3qcm5xpPdim14xbF4VWO
-         YKKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ilGmQzgVpyz5+GgzhiMi4TnzxPgEeCNgmk38TMF+kZE=;
-        b=Rcx5BObb3OoUHE8TEC+UgS4gWTiy27Zvq+r8C6VOgNxEIwbnTNKFn6Dzs6DVY4FK2G
-         TjXIS/KyMbc2aJ3OVgD2qJqqEoYsbacs103QB7Nfn6ymuJHDXUOgwDBGbDny1WdVUSLN
-         3qtj65nybM3MWsDn2aZ4gizDlE3hWZTmUIq929ZHClA8elPud+qTfj+m4KtEFq54TFjj
-         HDmuLjQ/GntWdlCLAuWS3MzdyPmNoserKAfMDa8GIlun1+P0Dy0JtP3lLumm6n1Kq/b4
-         FlIKc/v6OruggQCq2OXD/eaSUCycjfLFt61H3WYAwgPX2WHDDFY8NYYZ7u/k/tyjNJut
-         yoOw==
-X-Gm-Message-State: APjAAAUO5AX7azsRYNwIQRfbhbi7h3PtAdZ13/OiQpk6Ae/jsiB5/sNY
-        gq05NRbPhcf/Q9uMuyT4cbNVkw==
-X-Google-Smtp-Source: APXvYqzlJfnzBPNvhgPh9GCf337cLxDV4nJ7SDFk/WvYc0UpuKM/kTPeUg6Rln8M6dK6UBAz2n6nYw==
-X-Received: by 2002:a5d:4dc9:: with SMTP id f9mr3435991wru.297.1576685214969;
-        Wed, 18 Dec 2019 08:06:54 -0800 (PST)
-Received: from myrica (adsl-84-227-176-239.adslplus.ch. [84.227.176.239])
-        by smtp.gmail.com with ESMTPSA id d14sm3236857wru.9.2019.12.18.08.06.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 08:06:54 -0800 (PST)
-Date:   Wed, 18 Dec 2019 17:06:49 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-Subject: Re: [PATCH v3 03/13] iommu/arm-smmu-v3: Support platform SSID
-Message-ID: <20191218160649.GE2371701@myrica>
-References: <20191209180514.272727-1-jean-philippe@linaro.org>
- <20191209180514.272727-4-jean-philippe@linaro.org>
- <06c57de4-cfca-f95f-ac06-ab6f49a028a3@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <06c57de4-cfca-f95f-ac06-ab6f49a028a3@redhat.com>
+        Wed, 18 Dec 2019 11:07:18 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:19917 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727533AbfLRQHS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:07:18 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 18 Dec 2019 21:36:17 +0530
+Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 18 Dec 2019 21:35:49 +0530
+Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
+        id 63DAE3C4E; Wed, 18 Dec 2019 21:35:47 +0530 (IST)
+From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+To:     gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, david.brown@linaro.org,
+        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
+        robh+dt@kernel.org, sricharan@codeaurora.org,
+        nprakash@codeaurora.org
+Subject: [PATCH V4 06/10] dt-bindings: clock: qcom: Add reset for WCSSAON
+Date:   Wed, 18 Dec 2019 21:35:42 +0530
+Message-Id: <1576685146-17135-7-git-send-email-gokulsri@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1576685146-17135-1-git-send-email-gokulsri@codeaurora.org>
+References: <1576685146-17135-1-git-send-email-gokulsri@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 11:17:40AM +0100, Auger Eric wrote:
-> Hi Jean,
-> 
-> On 12/9/19 7:05 PM, Jean-Philippe Brucker wrote:
-> > For platform devices that support SubstreamID (SSID), firmware provides
-> > the number of supported SSID bits. Restrict it to what the SMMU supports
-> > and cache it into master->ssid_bits, which will also be used for PCI
-> > PASID.
-> > 
-> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> the title of the patch does not really explain what it actually does. At
-> this stage we are far from supporting SSIDs ;-) Same for 04?
+Add binding for WCSSAON reset required for Q6v5 reset on IPQ8074 SoC.
 
-Alright I'll make this "Parse PASID devicetree property of platform
-devices" and "Parse SSID property of named component node"
+Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+---
+changes since v1: none
+---
+ include/dt-bindings/clock/qcom,gcc-ipq8074.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks,
-Jean
+diff --git a/include/dt-bindings/clock/qcom,gcc-ipq8074.h b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
+index 4de4811..04e1f57 100644
+--- a/include/dt-bindings/clock/qcom,gcc-ipq8074.h
++++ b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
+@@ -362,5 +362,6 @@
+ #define GCC_PCIE1_AXI_SLAVE_ARES		128
+ #define GCC_PCIE1_AHB_ARES			129
+ #define GCC_PCIE1_AXI_MASTER_STICKY_ARES	130
++#define GCC_WCSSAON_RESET			131
+ 
+ #endif
+-- 
+1.9.1
+
