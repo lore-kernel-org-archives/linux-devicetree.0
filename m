@@ -2,137 +2,109 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B7DC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C586C2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EECCC218AC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:24:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="KiZx8uNr"
+	by mail.kernel.org (Postfix) with ESMTP id E9F2E218AC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:27:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576690055;
+	bh=CQsdge4NCxqpLjoNvbR0B5NKYDWJiCmYgei2y6A1s8s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NzHsKL2aQyBVfrsIdfP2RYnzqmp0HzcBxqOnk3oCY0a7OnvPCFJXET9MCZikRoHHx
+	 xkYSco4HKawc6YzBAsIaKjpqkBaF5SM/N7V8fhDOmB3wfcVXtsySn8dj1umk5EIyPB
+	 1kpYSgxya3uKezQT73KUBtmmtAD/+5juH9f2b8QA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbfLRRYm (ORCPT
+        id S1727162AbfLRR1a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:24:42 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40628 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727225AbfLRRYe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 12:24:34 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so2793699wmi.5
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 09:24:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ed5DlqEWvxMQUQebFWG7u2PHMS/9BBAGCyGgvqZnXFo=;
-        b=KiZx8uNrDxyr1CKrK3b3Awr2DIit9WJR7AcPGhvWh+Ke9RMBBmd6WxOoHo+tvd/q/U
-         Vd88yOfuR+PmI8SIyl1Rq1yi0jopIL3Co9YOI4tOZ1xevV68SYk/Hv+F+zMeal3Dud7u
-         FQE7uWelTZ2p/qj9Egevpr/DMohozAfSke97hCvCLczo8NzvXK0u2EilAijqxpLG5xOx
-         yrKwR331SHgQhKO8GJEXHNt0szTAsSQKs3f+xhkQkJ9vEbdSfnFhF0E2u5uiUq4HXoHj
-         a/5wUgK4r4F+MYvViijY3zW4dVF3vo75atXvOjboq7yx41hWoqaC4peqLJC5a41rRCb/
-         5XeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ed5DlqEWvxMQUQebFWG7u2PHMS/9BBAGCyGgvqZnXFo=;
-        b=Cn9c2D85rJxWYPiupwyE0goPgi4CY58oo/R3pzzc9my5HGM8qn57OixtzhT/O+0V4D
-         pBIjuAucJLgBfFLi9e2vtNoblsLWWRWX2aMNy+IoZtLgd30nlngCtGPGH28PDox2i6nK
-         g0IMbF7a8inbwoBjFzceBQfOGFjdTWLUX+uRx/AnZTeSA8XBhykTbzf8z6+loyvVSKV2
-         +R+cZdg1NJ0BCVvT6tHv6WUUB6f8i2mZzpNcIgPyc3Gnse8U3z84IRLK97N4jIiQJ+Qi
-         0cIiAJcCc/ioeXqCRfkUwOgXo2bOdkdXlZYhoWhDVrXflF3kDUvVxytMqh1ME9BhxY69
-         JsZg==
-X-Gm-Message-State: APjAAAWFnXnLh3LP4xjsOcGIH6kzseDLQubg9aKhCJ8W1YF59qGC/mgy
-        uU7DQKN2UFGdm/SSBzP0j9Y+VI9xgdg=
-X-Google-Smtp-Source: APXvYqz1xXfHwFgFh5QLFX88XE5XgeTWKeWYDflM/DWqS6617x+CfPOPUBBnnPnD6LnKcIJMUh8fWA==
-X-Received: by 2002:a1c:9814:: with SMTP id a20mr4437299wme.94.1576689872845;
-        Wed, 18 Dec 2019 09:24:32 -0800 (PST)
-Received: from localhost.localdomain (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.googlemail.com with ESMTPSA id 4sm2883231wmg.22.2019.12.18.09.24.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 09:24:32 -0800 (PST)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 4/4] ASoC: meson: axg-fifo: relax period size constraints
-Date:   Wed, 18 Dec 2019 18:24:20 +0100
-Message-Id: <20191218172420.1199117-5-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191218172420.1199117-1-jbrunet@baylibre.com>
-References: <20191218172420.1199117-1-jbrunet@baylibre.com>
+        Wed, 18 Dec 2019 12:27:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:54920 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727089AbfLRR1a (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 12:27:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EB9F1FB;
+        Wed, 18 Dec 2019 09:27:29 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0E2D3F67D;
+        Wed, 18 Dec 2019 09:27:28 -0800 (PST)
+Date:   Wed, 18 Dec 2019 17:27:27 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v6 08/15] regulator: bd718x7: Split driver to common and
+ bd718x7 specific parts
+Message-ID: <20191218172727.GL3219@sirena.org.uk>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <fea73fd89f0db81fac30eba3b523c2232c401eae.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7l042bGvurpep9Wg"
+Content-Disposition: inline
+In-Reply-To: <fea73fd89f0db81fac30eba3b523c2232c401eae.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+X-Cookie: Power is poison.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now that the fifo depths and thresholds are properly in the axg-fifo
-driver, we can relax the constraints on period. As long as the period is a
-multiple of the fifo burst size (8 bytes) things should be OK.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/meson/axg-fifo.c | 8 ++++----
- sound/soc/meson/axg-fifo.h | 2 --
- 2 files changed, 4 insertions(+), 6 deletions(-)
+--7l042bGvurpep9Wg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/sound/soc/meson/axg-fifo.c b/sound/soc/meson/axg-fifo.c
-index c2742a02d866..c12b0d5e8ebf 100644
---- a/sound/soc/meson/axg-fifo.c
-+++ b/sound/soc/meson/axg-fifo.c
-@@ -34,7 +34,7 @@ static struct snd_pcm_hardware axg_fifo_hw = {
- 	.rate_max = 192000,
- 	.channels_min = 1,
- 	.channels_max = AXG_FIFO_CH_MAX,
--	.period_bytes_min = AXG_FIFO_MIN_DEPTH,
-+	.period_bytes_min = AXG_FIFO_BURST,
- 	.period_bytes_max = UINT_MAX,
- 	.periods_min = 2,
- 	.periods_max = UINT_MAX,
-@@ -227,17 +227,17 @@ int axg_fifo_pcm_open(struct snd_soc_component *component,
- 
- 	/*
- 	 * Make sure the buffer and period size are multiple of the FIFO
--	 * minimum depth size
-+	 * burst
- 	 */
- 	ret = snd_pcm_hw_constraint_step(ss->runtime, 0,
- 					 SNDRV_PCM_HW_PARAM_BUFFER_BYTES,
--					 AXG_FIFO_MIN_DEPTH);
-+					 AXG_FIFO_BURST);
- 	if (ret)
- 		return ret;
- 
- 	ret = snd_pcm_hw_constraint_step(ss->runtime, 0,
- 					 SNDRV_PCM_HW_PARAM_PERIOD_BYTES,
--					 AXG_FIFO_MIN_DEPTH);
-+					 AXG_FIFO_BURST);
- 	if (ret)
- 		return ret;
- 
-diff --git a/sound/soc/meson/axg-fifo.h b/sound/soc/meson/axg-fifo.h
-index 521b54e98fd3..b63acd723c87 100644
---- a/sound/soc/meson/axg-fifo.h
-+++ b/sound/soc/meson/axg-fifo.h
-@@ -31,8 +31,6 @@ struct snd_soc_pcm_runtime;
- 					 SNDRV_PCM_FMTBIT_IEC958_SUBFRAME_LE)
- 
- #define AXG_FIFO_BURST			8
--#define AXG_FIFO_MIN_CNT		64
--#define AXG_FIFO_MIN_DEPTH		(AXG_FIFO_BURST * AXG_FIFO_MIN_CNT)
- 
- #define FIFO_INT_ADDR_FINISH		BIT(0)
- #define FIFO_INT_ADDR_INT		BIT(1)
--- 
-2.23.0
+On Wed, Dec 11, 2019 at 11:44:51AM +0200, Matti Vaittinen wrote:
+> Few ROHM PMICs allow setting the voltage states for different system states
+> like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC specific
+> mechanisms. bd718x7 driver implemented device-tree parsing functions for
+> these state specific voltages. The parsing functions can be re-used by
+> other ROHM chip drivers like bd71828. Split the generic functions from
+> bd718x7-regulator.c to rohm-regulator.c and export them for other modules
+> to use.
 
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--7l042bGvurpep9Wg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl36YX4ACgkQJNaLcl1U
+h9AI5Qf8DyMoeOZZ3b1i5ellMm0RDOYSYPZHH/HbNVc9POUCUqAmocPri1eOtfK7
+oEitUxGtbX9FohXmvBoVgR4+FqSitzPP3tnkOYXGpMUhnor0LT44YCFRfay6Plc9
+uxAsYj8nzSfu/yvOfDMlX2iRMS1zkERyxbCc5ug7/7GF6kM/+zsrctS2mzd7wbJc
+GY4PCC70UuCLim+qts5yQ1lFAtgkn0tg2Xn7O70bWyte5EjA/GZE12cz4ol2yHxr
+AygfcwT1YPBkyrtT2ydvn1kRa2LJjO9mc/PVMZSTS6b3yh+gm50nybfNvQMh1l7Q
+a7CveVrWl7/1JJtHwRbW5hT+tH+CKQ==
+=PWlS
+-----END PGP SIGNATURE-----
+
+--7l042bGvurpep9Wg--
