@@ -2,91 +2,228 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7E2C2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 08:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E595C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 847FE21D7D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 08:00:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RPUI1b+a"
+	by mail.kernel.org (Postfix) with ESMTP id 275222072B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbfLRIAN (ORCPT
+        id S1726787AbfLRICa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 03:00:13 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:41727 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725797AbfLRIAM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 03:00:12 -0500
-X-UUID: ac71a844ec244869b2a8472310dabc50-20191218
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=aNiLrGJZwK0lvEyneiSTQQEeAe5Qvk/0jbjSDQ3VN2c=;
-        b=RPUI1b+aKYkqYxlxBVt65fXuDdhXfdF/maf7zJ6L0bciqcu7iis8vuM2Ih7e+vA7WboexmR9qy0/ysYZMLx63ZoYn3PISoparTcxqqGjXgGAqBOPW/j4rpYPRayXKuLjBK8w59SdXXg3UmnK3seFdvqYH13lvU+XNPvF31FgJ80=;
-X-UUID: ac71a844ec244869b2a8472310dabc50-20191218
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <dennis-yc.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1564332786; Wed, 18 Dec 2019 16:00:07 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 18 Dec 2019 15:59:48 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 18 Dec 2019 15:59:38 +0800
-Message-ID: <1576656006.5933.3.camel@mtkswgap22>
-Subject: Re: [PATCH v2 06/14] soc: mediatek: cmdq: return send msg error code
-From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Wed, 18 Dec 2019 16:00:06 +0800
-In-Reply-To: <1575604966.6151.1.camel@mtksdaap41>
-References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574819937-6246-8-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1575604966.6151.1.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 18 Dec 2019 03:02:30 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40809 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbfLRIC2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 03:02:28 -0500
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1ihUHj-0004ej-JI; Wed, 18 Dec 2019 09:02:19 +0100
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1ihUHg-0000Zn-Ds; Wed, 18 Dec 2019 09:02:16 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+Subject: [PATCH v7 1/4] dt-bindings: net: dsa: qca,ar9331 switch documentation
+Date:   Wed, 18 Dec 2019 09:02:12 +0100
+Message-Id: <20191218080215.2151-2-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191218080215.2151-1-o.rempel@pengutronix.de>
+References: <20191218080215.2151-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQmliYnksDQoNCk9uIEZyaSwgMjAxOS0xMi0wNiBhdCAxMjowMiArMDgwMCwgQmliYnkgSHNp
-ZWggd3JvdGU6DQo+IE9uIFdlZCwgMjAxOS0xMS0yNyBhdCAwOTo1OCArMDgwMCwgRGVubmlzIFlD
-IEhzaWVoIHdyb3RlOg0KPiA+IFJldHVybiBlcnJvciBjb2RlIHRvIGNsaWVudCBpZiBzZW5kIG1l
-c3NhZ2UgZmFpbCwNCj4gPiBzbyB0aGF0IGNsaWVudCBoYXMgY2hhbmNlIHRvIGVycm9yIGhhbmRs
-aW5nLg0KPiA+IA0KPiBUaGlzIHBhdGNoZXMgc2VlbXMgbGlrZSBhIGZpeCBwYXRjaC4NCj4gUGxl
-YXNlIGFkZCBmaXhlcywgdGhhbmtzLg0KPiANCj4gQmliYnkNCg0KRG8geW91IG1lYW4gYWRkICpm
-aXhlcyogaW4gdGl0bGU/DQpIb3cgYWJvdXQgKmZpeGVzIGZsdXNoIGFzeW5jIGZ1bmN0aW9uIHJl
-dHVybiBlcnJvciB3aGVuIHNlbmQgZmFpbCogPw0KDQoNClJlZ2FyZHMsDQpEZW5uaXMNCg0KPiA+
-IFNpZ25lZC1vZmYtYnk6IERlbm5pcyBZQyBIc2llaCA8ZGVubmlzLXljLmhzaWVoQG1lZGlhdGVr
-LmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVy
-LmMgfCA0ICsrLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxl
-dGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRr
-LWNtZHEtaGVscGVyLmMgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0K
-PiA+IGluZGV4IDI3NGY2ZjMxMWQwNS4uODQyMWI0MDkwMzA0IDEwMDY0NA0KPiA+IC0tLSBhL2Ry
-aXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gKysrIGIvZHJpdmVycy9z
-b2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gPiBAQCAtMzUzLDExICszNTMsMTEgQEAg
-aW50IGNtZHFfcGt0X2ZsdXNoX2FzeW5jKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCBjbWRxX2FzeW5j
-X2ZsdXNoX2NiIGNiLA0KPiA+ICAJCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmNsaWVudC0+bG9j
-aywgZmxhZ3MpOw0KPiA+ICAJfQ0KPiA+ICANCj4gPiAtCW1ib3hfc2VuZF9tZXNzYWdlKGNsaWVu
-dC0+Y2hhbiwgcGt0KTsNCj4gPiArCWVyciA9IG1ib3hfc2VuZF9tZXNzYWdlKGNsaWVudC0+Y2hh
-biwgcGt0KTsNCj4gPiAgCS8qIFdlIGNhbiBzZW5kIG5leHQgcGFja2V0IGltbWVkaWF0ZWx5LCBz
-byBqdXN0IGNhbGwgdHhkb25lLiAqLw0KPiA+ICAJbWJveF9jbGllbnRfdHhkb25lKGNsaWVudC0+
-Y2hhbiwgMCk7DQo+ID4gIA0KPiA+IC0JcmV0dXJuIDA7DQo+ID4gKwlyZXR1cm4gZXJyOw0KPiA+
-ICB9DQo+ID4gIEVYUE9SVF9TWU1CT0woY21kcV9wa3RfZmx1c2hfYXN5bmMpOw0KPiA+ICANCj4g
-DQo+IA0KDQo=
+Atheros AR9331 has built-in 5 port switch. The switch can be configured
+to use all 5 or 4 ports. One of built-in PHYs can be used by first built-in
+ethernet controller or to be used directly by the switch over second ethernet
+controller.
+
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ .../devicetree/bindings/net/dsa/ar9331.txt    | 148 ++++++++++++++++++
+ 1 file changed, 148 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/ar9331.txt
+
+diff --git a/Documentation/devicetree/bindings/net/dsa/ar9331.txt b/Documentation/devicetree/bindings/net/dsa/ar9331.txt
+new file mode 100644
+index 000000000000..3d7b346c029a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/dsa/ar9331.txt
+@@ -0,0 +1,148 @@
++Atheros AR9331 built-in switch
++=============================
++
++It is a switch built-in to Atheros AR9331 WiSoC and addressable over internal
++MDIO bus. All PHYs are built-in as well.
++
++Required properties:
++
++ - compatible: should be: "qca,ar9331-switch" 
++ - reg: Address on the MII bus for the switch.
++ - resets : Must contain an entry for each entry in reset-names.
++ - reset-names : Must include the following entries: "switch"
++ - interrupt-parent: Phandle to the parent interrupt controller
++ - interrupts: IRQ line for the switch
++ - interrupt-controller: Indicates the switch is itself an interrupt
++   controller. This is used for the PHY interrupts.
++ - #interrupt-cells: must be 1
++ - mdio: Container of PHY and devices on the switches MDIO bus.
++
++See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list of additional
++required and optional properties.
++Examples:
++
++eth0: ethernet@19000000 {
++	compatible = "qca,ar9330-eth";
++	reg = <0x19000000 0x200>;
++	interrupts = <4>;
++
++	resets = <&rst 9>, <&rst 22>;
++	reset-names = "mac", "mdio";
++	clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_AHB>;
++	clock-names = "eth", "mdio";
++
++	phy-mode = "mii";
++	phy-handle = <&phy_port4>;
++};
++
++eth1: ethernet@1a000000 {
++	compatible = "qca,ar9330-eth";
++	reg = <0x1a000000 0x200>;
++	interrupts = <5>;
++	resets = <&rst 13>, <&rst 23>;
++	reset-names = "mac", "mdio";
++	clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_AHB>;
++	clock-names = "eth", "mdio";
++
++	phy-mode = "gmii";
++
++	fixed-link {
++		speed = <1000>;
++		full-duplex;
++	};
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		switch10: switch@10 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			compatible = "qca,ar9331-switch";
++			reg = <0x10>;
++			resets = <&rst 8>;
++			reset-names = "switch";
++
++			interrupt-parent = <&miscintc>;
++			interrupts = <12>;
++
++			interrupt-controller;
++			#interrupt-cells = <1>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				switch_port0: port@0 {
++					reg = <0x0>;
++					label = "cpu";
++					ethernet = <&eth1>;
++
++					phy-mode = "gmii";
++
++					fixed-link {
++						speed = <1000>;
++						full-duplex;
++					};
++				};
++
++				switch_port1: port@1 {
++					reg = <0x1>;
++					phy-handle = <&phy_port0>;
++					phy-mode = "internal";
++				};
++
++				switch_port2: port@2 {
++					reg = <0x2>;
++					phy-handle = <&phy_port1>;
++					phy-mode = "internal";
++				};
++
++				switch_port3: port@3 {
++					reg = <0x3>;
++					phy-handle = <&phy_port2>;
++					phy-mode = "internal";
++				};
++
++				switch_port4: port@4 {
++					reg = <0x4>;
++					phy-handle = <&phy_port3>;
++					phy-mode = "internal";
++				};
++			};
++
++			mdio {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				interrupt-parent = <&switch10>;
++
++				phy_port0: phy@0 {
++					reg = <0x0>;
++					interrupts = <0>;
++				};
++
++				phy_port1: phy@1 {
++					reg = <0x1>;
++					interrupts = <0>;
++				};
++
++				phy_port2: phy@2 {
++					reg = <0x2>;
++					interrupts = <0>;
++				};
++
++				phy_port3: phy@3 {
++					reg = <0x3>;
++					interrupts = <0>;
++				};
++
++				phy_port4: phy@4 {
++					reg = <0x4>;
++					interrupts = <0>;
++				};
++			};
++		};
++	};
++};
+-- 
+2.24.0
 
