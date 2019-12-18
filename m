@@ -4,299 +4,170 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F22C2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 10:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65D0C47409
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 10:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC7E227BF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 10:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0FB2176D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 10:17:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="p5MfTccR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D4bUYAMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfLRKRl (ORCPT
+        id S1726840AbfLRKRy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 05:17:41 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:36378 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726787AbfLRKRk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 05:17:40 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191218101738euoutp026ede39e8204ae1feaac96bdcbe18dfbb~hb8o1dsar0574505745euoutp02A
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 10:17:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191218101738euoutp026ede39e8204ae1feaac96bdcbe18dfbb~hb8o1dsar0574505745euoutp02A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576664258;
-        bh=bwThtk0xrgCsolgLeuyMVr0819OsND3qMnr6RqwdLMI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=p5MfTccR7x2zDiVthDlRg0OA59ALTtVDv/9uyDrQ9mgRbJAuR6jkp2Kk5VOqn5D5F
-         FBXKEcXBbOrlb4mcfs9w7M0g7WC3GeTk6U8WXP3KsX/UOuby1YnorMw63Qn3T5jGuS
-         dFZglzpM+DMU13wmLJCksvvfTBk7cKOf7h22fj6s=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191218101738eucas1p2100dfedc2594bf3efb8d9e38a2824564~hb8oejBVD2968829688eucas1p28;
-        Wed, 18 Dec 2019 10:17:38 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 01.33.61286.2CCF9FD5; Wed, 18
-        Dec 2019 10:17:38 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191218101738eucas1p1b3abcd2bb6c825e6fb27b77df48d0100~hb8oIAUqA2842828428eucas1p1-;
-        Wed, 18 Dec 2019 10:17:38 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191218101738eusmtrp139b535987309e190528b9eb39679ce25~hb8oHBlKA2290422904eusmtrp1p;
-        Wed, 18 Dec 2019 10:17:38 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-2a-5df9fcc2122a
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 3C.DC.07950.1CCF9FD5; Wed, 18
-        Dec 2019 10:17:37 +0000 (GMT)
-Received: from AMDC3555 (unknown [106.120.51.67]) by eusmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20191218101737eusmtip17fd69f11846ed085ae840ddc8c972528~hb8nc9z0T0982809828eusmtip1q;
-        Wed, 18 Dec 2019 10:17:37 +0000 (GMT)
-Message-ID: <2008dca684ccb1dd740e6e6b88e56727d0d1c435.camel@samsung.com>
-Subject: Re: [RFC PATCH v2 08/11] arm: dts: exynos: Add parents and
- #interconnect-cells to Exynos4412
-From:   Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     myungjoo.ham@samsung.com, inki.dae@samsung.com,
-        sw0312.kim@samsung.com, georgi.djakov@linaro.org,
-        leonard.crestez@nxp.com, m.szyprowski@samsung.com,
-        b.zolnierkie@samsung.com, krzk@kernel.org
-Date:   Wed, 18 Dec 2019 11:17:36 +0100
-In-Reply-To: <eecc5d38-f6ab-b1ea-1a08-0afb2dcddbef@samsung.com>
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUhUYRSG++Yucx0a/RzDOWgYTavSotSPT6zMCLmBRRBBBKZjXibJUZnr
-        UhK4JKKWYmppJhQtJlaok5pjKzYmmSaZ2NRoVqaSoeZWjWXm7Rr17znvOe9Z4HCUpo3x4KJi
-        4gVTjD5ax6ro+ieO5+ubfjpCfX/kupOakiqGvJoaYshF63OGdE2PsaT4vpklBX35NOnoqFaS
-        it5xhpj7uxnysrGMJZO5VkRKOh4oyC1rr5LY0ypYUlL4id3uwpsrs1m+p/sey/edalHwt6+m
-        8DWjDQo+r7YS8ZNmr73Kg6otkUJ0VKJg2rgtXHXk2t1bbNw732P2dAubil6vzEFOHODNcMU2
-        QOcgFafBFQg6782wcjCFIG3q80JmEsGs4xT6a2l9+JaSWIOvI2ht95WLBhFUT0zTUkKNeWie
-        nPljcMMGeJU9oZCYxYHQbv+qkAxL8CiCjw+/UFJA4ScI7vc4/rhpvAoq31jm3RznNO9oHPaX
-        J6+DkdY8WpLV2BVmG9wkmcLL4GTdBUouGVeCpYjIvBP6bd2MzG4w3FKrlHkpPCs8TcsswoCl
-        j5FWAJyKwFxuXWgUAI9bXjDSLAp7Q1XjRlkOgsybxUpJBuwMthFXeQVnKKgvpmRZDVmZGhl1
-        0HjeWTYCpN/oXujNw3R2myIfLS/9d0rpf6eU/pt6CVGVSCskiEaDIPrFCEkbRL1RTIgxbDgc
-        azSj+R979qtlogFNd0Y0Icwh3WK17yJHqIbRJ4rHjU0IOEq3RG3PmpfUkfrjyYIpNsyUEC2I
-        TciTo3Va9abLn0I12KCPF44KQpxg+ptVcE4eqWh1lEW7ddzf4b42Ir/9TlpXPeudnNwTGGz3
-        /uDZY7i55vJ+5eCJtqFvqt1J+/Jc8aGA2NQk0h6eUp5eu+J9c1hNRHhpK6LOuZwJnRujI4ML
-        8dlHc8bv2qKqwAfFwSHjL4+eu8T5dBKvrh0CVaa1HXganBG0p8gYbdtVN+ESkmHV0eIRvZ8P
-        ZRL1vwHzZKQfXwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsVy+t/xu7oH//yMNbi/y8pi44z1rBbXvzxn
-        tZh/5ByrxZWv79kspu/dxGYx6f4EFovz5zewW6y4+5HVYtPja6wWl3fNYbP43HuE0WLG+X1M
-        FmuP3GW3uN24gs1ixuSXbA78HptWdbJ53Lm2h83jfvdxJo/NS+o9Nr7bweTRt2UVo8fnTXIB
-        7FF6NkX5pSWpChn5xSW2StGGFkZ6hpYWekYmlnqGxuaxVkamSvp2NimpOZllqUX6dgl6GUt3
-        r2UreGBQcbtpJ1sD402VLkZODgkBE4lT++8xdzFycQgJLGWUWDbhGDtEQkLi4/obrBC2sMSf
-        a11sEEVPGCU+nroIluAV8JA4+vkXI4gtLJAucb3zExOIzSZgL3H29jcmkAYRgfeMEh+2v2MH
-        cZgFTjBK7Lz2nA2kikVAVWLVrZ1A3RwcnEAdu15ZQmxYySSx4kQfM0gNs4CmROv231An6Ui8
-        PdXHAlLPKyAo8XeHMESJvETz1tnMExgFZyHpmIVQNQtJ1QJG5lWMIqmlxbnpucVGesWJucWl
-        eel6yfm5mxiBcbrt2M8tOxi73gUfYhTgYFTi4b3x90esEGtiWXFl7iFGCQ5mJRHe2x0/Y4V4
-        UxIrq1KL8uOLSnNSiw8xmgK9M5FZSjQ5H5hC8kriDU0NzS0sDc2NzY3NLJTEeTsEDsYICaQn
-        lqRmp6YWpBbB9DFxcEo1MKbWbxbuPFLAMentsYdGCiocjuIzXpkWSbplsJxhnWSk3bX9oZVM
-        yssVR7XeJ/zoKnyQnnDG1aZPQ9nyTe+OOJXDRYmX+qecObBJrMT6+TupL2dWVXKaGzdx7ll7
-        dkUl4/fjHxgncWzfIbNwzx0XzzNT/m/QWdt3pDx5f+i7LGWb+83qcxJSwpRYijMSDbWYi4oT
-        AUu4vzbpAgAA
-X-CMS-MailID: 20191218101738eucas1p1b3abcd2bb6c825e6fb27b77df48d0100
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190919142329eucas1p299762f99dd55a5d625633ceec84219f9
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190919142329eucas1p299762f99dd55a5d625633ceec84219f9
-References: <20190919142236.4071-1-a.swigon@samsung.com>
-        <CGME20190919142329eucas1p299762f99dd55a5d625633ceec84219f9@eucas1p2.samsung.com>
-        <20190919142236.4071-9-a.swigon@samsung.com>
-        <693e250d-9656-df67-9685-188020b43542@samsung.com>
-        <eecc5d38-f6ab-b1ea-1a08-0afb2dcddbef@samsung.com>
+        Wed, 18 Dec 2019 05:17:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43741 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726545AbfLRKRx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 05:17:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576664271;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ak6ATDFUqAlrkDJyAcSn/Y2cYfzHlLjmCX8QIyVg8Ig=;
+        b=D4bUYAMrwlk9fyRoEI6HrHN9uvjx8+iF5p3TixAXyE7hn9rOmF6zMjRYuTIgj/5zH0kqD/
+        ti2Iul/gNSEuJjhUKatkWYg1NicFRi4nOrml1DAsJzTKY82aCwQ0NCTakprGOajoFo0aw9
+        LoDbOEDYWDNgZDjoZRalyHiYFz6E1/8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-270-lTO4kAjwMJqiIHHZkW6rbQ-1; Wed, 18 Dec 2019 05:17:48 -0500
+X-MC-Unique: lTO4kAjwMJqiIHHZkW6rbQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 166DEDB22;
+        Wed, 18 Dec 2019 10:17:46 +0000 (UTC)
+Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E974E68882;
+        Wed, 18 Dec 2019 10:17:41 +0000 (UTC)
+Subject: Re: [PATCH v3 03/13] iommu/arm-smmu-v3: Support platform SSID
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+References: <20191209180514.272727-1-jean-philippe@linaro.org>
+ <20191209180514.272727-4-jean-philippe@linaro.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <06c57de4-cfca-f95f-ac06-ab6f49a028a3@redhat.com>
+Date:   Wed, 18 Dec 2019 11:17:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20191209180514.272727-4-jean-philippe@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Jean,
 
-On Mon, 2019-12-16 at 11:59 +0900, Chanwoo Choi wrote:
-> Hi,
+On 12/9/19 7:05 PM, Jean-Philippe Brucker wrote:
+> For platform devices that support SubstreamID (SSID), firmware provides
+> the number of supported SSID bits. Restrict it to what the SMMU supports
+> and cache it into master->ssid_bits, which will also be used for PCI
+> PASID.
 > 
-> On 12/16/19 9:51 AM, Chanwoo Choi wrote:
-> > On 9/19/19 11:22 PM, Artur Świgoń wrote:
-> > > From: Artur Świgoń <a.swigon@partner.samsung.com>
-> > > 
-> > > This patch adds two fields to the Exynos4412 DTS:
-> > >   - parent: to declare connections between nodes that are not in a
-> > >     parent-child relation in devfreq;
-> > >   - #interconnect-cells: required by the interconnect framework.
-> > > 
-> > > Please note that #interconnect-cells is always zero and node IDs are not
-> > > hardcoded anywhere. The above-mentioned parent-child relation in devfreq
-> > > means that there is a shared power line ('devfreq' property). The 'parent'
-> > > property only signifies an interconnect connection.
-> > > 
-> > > Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
-> > > ---
-> > >  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 1 +
-> > >  arch/arm/boot/dts/exynos4412.dtsi               | 9 +++++++++
-> > >  2 files changed, 10 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > > index ea55f377d17c..bdd61ae86103 100644
-> > > --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > > +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > > @@ -106,6 +106,7 @@
-> > >  &bus_leftbus {
-> > >  	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
-> > >  	vdd-supply = <&buck3_reg>;
-> > > +	parent = <&bus_dmc>;
-> > 
-> > As I mentioned on other reply,
-> > I'm not sure to use the specific 'parent' property to make
-> > the connection between buses. If possible, you better to
-> > use the standard way like OF graph. Except for making
-> > the connection between buses by 'parent' property,
-> > looks good to me.
-> 
-> I tried to think it continuously. I withdraw the my opinion
-> using OF graph. If you make the property name like the following
-> example, it is possible for exynos.
-> - exynos,interconnect-parent-node = <&bus_dmc>; or other proper name.
-> 
-> Regardless of existing 'devfreq' property, I think you better to
-> make the connection between buses for only interconnect as following
-> example: This make it possible user can draw the correct tree by tracking
-> the 'exynos,interconnect-parent-node' value.
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+the title of the patch does not really explain what it actually does. At
+this stage we are far from supporting SSIDs ;-) Same for 04?
 
-OK, for v3 I will add 'exynos,interconnect-parent-node' to bus_dmc,
-bus_leftbus and bus_display as you suggested below and change the code
-so that the 'devfreq' (or the upcoming 'exynos,parent-bus') property is
-not taken into account.
+Thanks
 
-> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> index ea55f377d17c..53f87f46e161 100644
-> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> @@ -90,6 +90,7 @@
->  &bus_dmc {
->         devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
->         vdd-supply = <&buck1_reg>;
-> +       #interconnect-cells = <0>;
->         status = "okay";
+Eric
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 13 +++++++++++++
+>  drivers/iommu/of_iommu.c    |  6 +++++-
+>  include/linux/iommu.h       |  2 ++
+>  3 files changed, 20 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index d4e8b7f8d9f4..837b4283b4dc 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -292,6 +292,12 @@
+>  
+>  #define CTXDESC_CD_1_TTB0_MASK		GENMASK_ULL(51, 4)
+>  
+> +/*
+> + * When the SMMU only supports linear context descriptor tables, pick a
+> + * reasonable size limit (64kB).
+> + */
+> +#define CTXDESC_LINEAR_CDMAX		ilog2(SZ_64K / (CTXDESC_CD_DWORDS << 3))
+> +
+>  /* Convert between AArch64 (CPU) TCR format and SMMU CD format */
+>  #define ARM_SMMU_TCR2CD(tcr, fld)	FIELD_PREP(CTXDESC_CD_0_TCR_##fld, \
+>  					FIELD_GET(ARM64_TCR_##fld, tcr))
+> @@ -638,6 +644,7 @@ struct arm_smmu_master {
+>  	u32				*sids;
+>  	unsigned int			num_sids;
+>  	bool				ats_enabled;
+> +	unsigned int			ssid_bits;
 >  };
 >  
-> @@ -106,6 +107,8 @@
->  &bus_leftbus {
->         devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
->         vdd-supply = <&buck3_reg>;
-> +       exynos,interconnect-parent-node = <&bus_dmc>;
-> +       #interconnect-cells = <0>;
->         status = "okay";
->  };
+>  /* SMMU private data for an IOMMU domain */
+> @@ -2571,6 +2578,12 @@ static int arm_smmu_add_device(struct device *dev)
+>  		}
+>  	}
 >  
-> @@ -116,6 +119,8 @@
+> +	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
+> +
+> +	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB))
+> +		master->ssid_bits = min_t(u8, master->ssid_bits,
+> +					  CTXDESC_LINEAR_CDMAX);
+> +
+>  	group = iommu_group_get_for_dev(dev);
+>  	if (!IS_ERR(group)) {
+>  		iommu_group_put(group);
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index 026ad2b29dcd..b3ccb2f7f1c7 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -196,8 +196,12 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+>  			if (err)
+>  				break;
+>  		}
+> -	}
 >  
->  &bus_display {
->         devfreq = <&bus_leftbus>;
-> +       exynos,interconnect-parent-node = <&bus_leftbus>;
-> +       #interconnect-cells = <0>;
->         status = "okay";
+> +		fwspec = dev_iommu_fwspec_get(dev);
+> +		if (!err && fwspec)
+> +			of_property_read_u32(master_np, "pasid-num-bits",
+> +					     &fwspec->num_pasid_bits);
+> +	}
+>  
+>  	/*
+>  	 * Two success conditions can be represented by non-negative err here:
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 3a113c5d7394..bd46775c3329 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -581,6 +581,7 @@ struct iommu_group *fsl_mc_device_group(struct device *dev);
+>   * @ops: ops for this device's IOMMU
+>   * @iommu_fwnode: firmware handle for this device's IOMMU
+>   * @iommu_priv: IOMMU driver private data for this device
+> + * @num_pasid_bits: number of PASID bits supported by this device
+>   * @num_ids: number of associated device IDs
+>   * @ids: IDs which this device may present to the IOMMU
+>   */
+> @@ -589,6 +590,7 @@ struct iommu_fwspec {
+>  	struct fwnode_handle	*iommu_fwnode;
+>  	void			*iommu_priv;
+>  	u32			flags;
+> +	u32			num_pasid_bits;
+>  	unsigned int		num_ids;
+>  	u32			ids[1];
 >  };
 > 
-> 
-> > 
-> > 
-> > >  	status = "okay";
-> > >  };
-> > >  
-> > > diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-> > > index d20db2dfe8e2..a70a671acacd 100644
-> > > --- a/arch/arm/boot/dts/exynos4412.dtsi
-> > > +++ b/arch/arm/boot/dts/exynos4412.dtsi
-> > > @@ -390,6 +390,7 @@
-> > >  			clocks = <&clock CLK_DIV_DMC>;
-> > >  			clock-names = "bus";
-> > >  			operating-points-v2 = <&bus_dmc_opp_table>;
-> > > +			#interconnect-cells = <0>;
-> > >  			status = "disabled";
-> > >  		};
-> > >  
-> > > @@ -398,6 +399,7 @@
-> > >  			clocks = <&clock CLK_DIV_ACP>;
-> > >  			clock-names = "bus";
-> > >  			operating-points-v2 = <&bus_acp_opp_table>;
-> > > +			#interconnect-cells = <0>;
-> > >  			status = "disabled";
-> > >  		};
-> > >  
-> > > @@ -406,6 +408,7 @@
-> > >  			clocks = <&clock CLK_DIV_C2C>;
-> > >  			clock-names = "bus";
-> > >  			operating-points-v2 = <&bus_dmc_opp_table>;
-> > > +			#interconnect-cells = <0>;
-> > >  			status = "disabled";
-> > >  		};
-> > >  
-> > > @@ -459,6 +462,7 @@
-> > >  			clocks = <&clock CLK_DIV_GDL>;
-> > >  			clock-names = "bus";
-> > >  			operating-points-v2 = <&bus_leftbus_opp_table>;
-> > > +			#interconnect-cells = <0>;
-> > >  			status = "disabled";
-> > >  		};
-> > >  
-> > > @@ -467,6 +471,7 @@
-> > >  			clocks = <&clock CLK_DIV_GDR>;
-> > >  			clock-names = "bus";
-> > >  			operating-points-v2 = <&bus_leftbus_opp_table>;
-> > > +			#interconnect-cells = <0>;
-> > >  			status = "disabled";
-> > >  		};
-> > >  
-> > > @@ -475,6 +480,7 @@
-> > >  			clocks = <&clock CLK_ACLK160>;
-> > >  			clock-names = "bus";
-> > >  			operating-points-v2 = <&bus_display_opp_table>;
-> > > +			#interconnect-cells = <0>;
-> > >  			status = "disabled";
-> > >  		};
-> > >  
-> > > @@ -483,6 +489,7 @@
-> > >  			clocks = <&clock CLK_ACLK133>;
-> > >  			clock-names = "bus";
-> > >  			operating-points-v2 = <&bus_fsys_opp_table>;
-> > > +			#interconnect-cells = <0>;
-> > >  			status = "disabled";
-> > >  		};
-> > >  
-> > > @@ -491,6 +498,7 @@
-> > >  			clocks = <&clock CLK_ACLK100>;
-> > >  			clock-names = "bus";
-> > >  			operating-points-v2 = <&bus_peri_opp_table>;
-> > > +			#interconnect-cells = <0>;
-> > >  			status = "disabled";
-> > >  		};
-> > >  
-> > > @@ -499,6 +507,7 @@
-> > >  			clocks = <&clock CLK_SCLK_MFC>;
-> > >  			clock-names = "bus";
-> > >  			operating-points-v2 = <&bus_leftbus_opp_table>;
-> > > +			#interconnect-cells = <0>;
-> > >  			status = "disabled";
-> > >  		};
-> > >  
-> > > 
-> > 
-> > 
-> 
-
-Best regards,
--- 
-Artur Świgoń
-Samsung R&D Institute Poland
-Samsung Electronics
-
 
