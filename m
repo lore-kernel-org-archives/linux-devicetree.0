@@ -4,111 +4,194 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CBDC2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 22:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C23C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C04B218AC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 22:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E67CF2465E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576709518;
-	bh=ikIQL3G4qYb8KbWizxcrAUGL1YeXt314hX/pFQ5TyHQ=;
+	s=default; t=1576710282;
+	bh=45HEpsQaodbLeIzLWZeTebdOakvhshmN/JIrCIvrOBo=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=a93BGAmCGA5Qv+2LRShC3JhzzRqFenhV8hOX6EZxl7L9bYbEyq2QJW/FZPW5BDjL5
-	 lR4LSGFNckvqqOwMGygq1zEUymciEv14M6969WfbOfGHR3iSnOhSFp4jk912Jl5Ojm
-	 X9Tg1C2l/8IqYGAhcM4RVIEeG/n8/6UQv8wr3gbE=
+	b=E2Nx5r2D1Ey2wvk648/65q7galOb5REl3n9w6Po5VEsifi/c4LoOqWyJd5KgsjGUn
+	 PJeJVivu1Wdxr3BjtfPlnDitSNNuGv+u/JyiAXEEJrRpmfwjBpCi5T9gx+skRxsvbO
+	 NsTENOK52yEiAy3sHk5C8BPZWCCdRT1TufXwE+Ig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfLRWvy (ORCPT
+        id S1726561AbfLRXEl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 17:51:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37946 "EHLO mail.kernel.org"
+        Wed, 18 Dec 2019 18:04:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfLRWvy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:51:54 -0500
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        id S1726387AbfLRXEl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 18:04:41 -0500
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3019227BF;
-        Wed, 18 Dec 2019 22:51:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 286402465E;
+        Wed, 18 Dec 2019 23:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576709513;
-        bh=ikIQL3G4qYb8KbWizxcrAUGL1YeXt314hX/pFQ5TyHQ=;
+        s=default; t=1576710280;
+        bh=45HEpsQaodbLeIzLWZeTebdOakvhshmN/JIrCIvrOBo=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yN86uhHVuanyGmYlZ2UiRTDBQmIsfbs+GLuq8RIuBgz4ZkAuXKMu7n1HnUZQA6qVM
-         eW5hafPQvno+/8pl5AY+E2dWs6keMM5izYAbYVnjeGdOYED7Hv566k03ufAJHvV9Rx
-         X0HbfvCpxC06YomOX8K/V2NMDugaG/FZDzGy4lRw=
-Received: by mail-qk1-f176.google.com with SMTP id w127so3009782qkb.11;
-        Wed, 18 Dec 2019 14:51:53 -0800 (PST)
-X-Gm-Message-State: APjAAAWZO2XkEQSiX9iz18YhDgMRcDKoz927zn7RvOm1qwfdg3ffQ4w3
-        4CKreDcA1GRTV7ieYFNrVz4odb15KiDZvlwzzg==
-X-Google-Smtp-Source: APXvYqxaQcia+7wj43il7/VAVS2mF5JlbvYF0y3vbSxJME+Yu57ll5wT1N+cqSquqi899qwSawtvom5DUUYmgUmDHto=
-X-Received: by 2002:a37:a70b:: with SMTP id q11mr5145839qke.393.1576709512817;
- Wed, 18 Dec 2019 14:51:52 -0800 (PST)
+        b=1lPq+RnDhwzZ1n2Nbhb1zoeP1ubhK1q1LCpAzxqS/kki98ps317516LWRvOVo9qRP
+         ZO9RqMJQjyc69vyiqJR1OmNOf+nWagvb6eQTbsDwuRW+U+6sR0hOHpPWDCo3Lq4xaw
+         ut5skZ/ftwQqX5RrSEyMl2Lg3aPeOe1yI/MgYIjI=
+Received: by mail-qt1-f169.google.com with SMTP id 38so3344306qtb.13;
+        Wed, 18 Dec 2019 15:04:40 -0800 (PST)
+X-Gm-Message-State: APjAAAUlB/adz6HqLM4CzIwwkZ4ooET1jtx+Nr5r55s4SN7fpZTfs3VW
+        Q4n1F3quBcIzM7BQgmktiSZEFttBSBxOuYsAwQ==
+X-Google-Smtp-Source: APXvYqxOHwJ6E5OVcoiMVSDDC+gN133m0yHx4YjhwS403ykPScEzWD40cqDw4Jl4/Bim36YFYtTqn8b4KIXzWgJS3f8=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr4613283qtg.110.1576710279250;
+ Wed, 18 Dec 2019 15:04:39 -0800 (PST)
 MIME-Version: 1.0
-References: <20191218132251.24161-1-stanimir.varbanov@linaro.org> <20191218132251.24161-7-stanimir.varbanov@linaro.org>
-In-Reply-To: <20191218132251.24161-7-stanimir.varbanov@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 18 Dec 2019 16:51:41 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+1Z72J03tZa9T4DLzR7skFweV8Xe4vBd_QBUktVOekrA@mail.gmail.com>
-Message-ID: <CAL_Jsq+1Z72J03tZa9T4DLzR7skFweV8Xe4vBd_QBUktVOekrA@mail.gmail.com>
-Subject: Re: [PATCH v2 06/12] dt-bindings: media: venus: Convert msm8916 to DT schema
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
+References: <20191218142455.13542-1-benjamin.gaignard@st.com>
+In-Reply-To: <20191218142455.13542-1-benjamin.gaignard@st.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 18 Dec 2019 17:04:27 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLhahGyk67U9zg1uqticD36aRc5TQQUU0aGb3D7KuMTcg@mail.gmail.com>
+Message-ID: <CAL_JsqLhahGyk67U9zg1uqticD36aRc5TQQUU0aGb3D7KuMTcg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: usb: Convert DWC2 bindings to json-schema
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
         devicetree@vger.kernel.org,
-        Vikash Garodia <vgarodia@codeaurora.org>,
-        dikshita@codeaurora.org
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 7:24 AM Stanimir Varbanov
-<stanimir.varbanov@linaro.org> wrote:
+On Wed, Dec 18, 2019 at 8:25 AM Benjamin Gaignard
+<benjamin.gaignard@st.com> wrote:
 >
-> Convert qcom,msm8916-venus Venus binding to DT schema
+> Convert DWC2 bindings to DT schema format using json-schema.
+> DWC2 is widely use but a couple of compatibles and properties
+> (vusb_d-supply,vusb_a-supply) were missing in dwc2.txt, the
+> patch add them.
 >
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  .../bindings/media/qcom,venus-msm8916.yaml    | 115 ++++++++++++++++++
->  1 file changed, 115 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml
+> Notes:
+>  I have put Greg Kroah-Hartman has maintainer of this file
+>  because it was the first entry when calling get_maintainers.pl
+>  on dwc2.txt. All my apologies if that is an incorrect guess,
+>  raise your hands if you know who should be the maintainer(s)
+>  for this file.
 
-Make the filename match the compatible.
+DWC2 driver maintainer? Someone in ST that knows this h/w? Otherwise,
+you can put me if no one else.
 
->
-> diff --git a/Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml b/Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml
+>  Documentation/devicetree/bindings/usb/dwc2.txt  |  64 ---------
+>  Documentation/devicetree/bindings/usb/dwc2.yaml | 178 ++++++++++++++++++++++++
+>  2 files changed, 178 insertions(+), 64 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/usb/dwc2.txt
+>  create mode 100644 Documentation/devicetree/bindings/usb/dwc2.yaml
+
+
+> diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
 > new file mode 100644
-> index 000000000000..f82a8d968202
+> index 000000000000..2c11626e3bc3
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml
-> @@ -0,0 +1,115 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +
+> +++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
+> @@ -0,0 +1,178 @@
+> +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: "http://devicetree.org/schemas/media/qcom,venus-msm8916.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +$id: http://devicetree.org/schemas/usb/dwc2.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Qualcomm Venus video encode and decode accelerators
+> +title: DesignWare HS OTG USB 2.0 controller Bindings
 > +
 > +maintainers:
-> +  - Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> +
-> +description: |
-> +  The Venus IP is a video encode and decode accelerator present
-> +  on Qualcomm platforms
+> +  - Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > +
 > +properties:
 > +  compatible:
-> +    enum:
-> +      - qcom,msm8916-venus
+> +    oneOf:
+> +      - const: brcm,bcm2835-usb
+> +        description: The DWC2 USB controller instance in the BCM2835 SoC
 
-Not likely a 2nd compatible here?, so you can use 'const' instead.
+I think it's a bit easier to read if the description is first.
+Personally, I find the description a bit redundant and would just drop
+it.
 
+> +      - const: hisilicon,hi6220-usb
+> +        description: The DWC2 USB controller instance in the hi6220 SoC
+> +      - items:
+> +          - const: rockchip,rk3066-usb
+> +          - const: snps,dwc2
+> +        description: The DWC2 USB controller instance in the rk3066 Soc
+> +      - items:
+> +          - const: rockchip,px30-usb
+> +          - const: rockchip,rk3066-usb
+> +          - const: snps,dwc2
+> +        description: The DWC2 USB controller instance in the px30 Soc
+> +      - items:
+> +          - const: rockchip,rk3036-usb
+> +          - const: rockchip,rk3066-usb
+> +          - const: snps,dwc2
+> +        description: The DWC2 USB controller instance in the rk3036 Soc
+> +      - items:
+> +          - const: rockchip,rv1108-usb
+> +          - const: rockchip,rk3066-usb
+> +          - const: snps,dwc2
+> +        description: The DWC2 USB controller instance in the rv1108 Soc
+> +      - items:
+> +          - const: rockchip,rk3188-usb
+> +          - const: rockchip,rk3066-usb
+> +          - const: snps,dwc2
+> +        description: The DWC2 USB controller instance in the rk3188 Soc
+> +      - items:
+> +          - const: rockchip,rk3228-usb
+> +          - const: rockchip,rk3066-usb
+> +          - const: snps,dwc2
+> +        description: The DWC2 USB controller instance in the rk3228 Soc
+> +      - items:
+> +          - const: rockchip,rk3288-usb
+> +          - const: rockchip,rk3066-usb
+> +          - const: snps,dwc2
+> +        description: The DWC2 USB controller instance in the rk3288 Soc
+> +      - const: lantiq,arx100-usb
+> +        description: The DWC2 USB controller instance in Lantiq ARX SoCs
+> +      - const: lantiq,xrx200-usb
+> +        description: The DWC2 USB controller instance in Lantiq XRX SoCs
+> +      - items:
+> +          - const: amlogic,meson8-usb
+> +          - const: snps,dwc2
+> +        description: The DWC2 USB controller instance in Amlogic Meson8 SoCs
+> +      - items:
+> +          - const: amlogic,meson8b-usb
+> +          - const: snps,dwc2
+> +        description: The DWC2 USB controller instance in Amlogic Meson8b SoCs
+> +      - const: amlogic,meson-gxbb-usb
+> +        description: The DWC2 USB controller instance in Amlogic S905 SoCs
+> +      - items:
+> +          - const: amlogic,meson-g12a-usb
+> +          - const: snps,dwc2
+> +        description: The DWC2 USB controller instance in Amlogic G12A SoCs
+> +      - const: amcc,dwc-otg
+> +        description: The DWC2 USB controller instance in AMCC Canyonlands 460EX SoCs
+> +      - const: snps,dwc2
+> +        description: generic DWC2 USB controller with default parameters
+> +      - const: st,stm32f4x9-fsotg
+> +        description: The DWC2 USB FS/HS controller instance in STM32F4x9 SoCs configured in FS mode
+> +      - const: st,stm32f4x9-hsotg
+> +        description: The DWC2 USB HS controller instance in STM32F4x9 SoCs configured in HS mode
+> +      - const: st,stm32f7-hsotg
+> +        description: The DWC2 USB HS controller instance in STM32F7 SoCs configured in HS mode
+> +      - items:
+> +          - const: samsung,s3c6400-hsotg
+> +          - const: snps,dwc2
+> +        minItems: 1
+
+This seems like something to fix in dts files rather than work-around.
+Pick whichever one gives fewer errors.
+
+> +        description: The DWC2 USB controller instance in the exynos3250 Soc
 > +
 > +  reg:
 > +    maxItems: 1
@@ -116,103 +199,98 @@ Not likely a 2nd compatible here?, so you can use 'const' instead.
 > +  interrupts:
 > +    maxItems: 1
 > +
-> +  power-domains:
-> +    maxItems: 1
-> +
 > +  clocks:
-> +    maxItems: 3
+> +    maxItems: 1
 > +
 > +  clock-names:
-> +    maxItems: 3
-
-Don't need this. Implied with the length of 'items'.
-
 > +    items:
-> +      - const: core
-> +      - const: iface
-> +      - const: bus
+> +      - const: otg
 > +
-> +  iommus:
+> +  resets:
+> +    items:
+> +     - description: common reset
+> +     - description: ecc reset
 > +    minItems: 1
-> +    maxItems: 20
 > +
-> +  memory-region:
+> +  reset-names:
+> +    items:
+> +     - const: dwc2
+> +     - const: dwc2-ecc
+> +    minItems: 1
+> +
+> +  phys:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+
+Standard prop, can drop.
+
+> +    description: phy provider specifier
+
+That's all 'phys'. Drop.
+
 > +    maxItems: 1
 > +
-> +  video-decoder:
-> +    type: object
+> +  phy-names:
+> +    const: usb2-phy
 > +
-> +    properties:
-> +      compatible:
-> +        const: "venus-decoder"
+> +  vbus-supply:
+> +    description: reference to the VBUS regulator. Depending on the current mode
+> +      this is enabled (in "host" mode") or disabled (in "peripheral" mode). The
+> +      regulator is updated if the controller is configured in "otg" mode and the
+> +      status changes between "host" and "peripheral".
 > +
-> +    required:
-> +      - compatible
-
-       additionalProperties: false
-
+> +  vusb_d-supply:
+> +    description: phandle to voltage regulator of digital section,
 > +
-> +  video-encoder:
-> +    type: object
+> +  vusb_a-supply:
+> +    description: phandle to voltage regulator of analog section.
 > +
-> +    properties:
-> +      compatible:
-> +        const: "venus-encoder"
+> +  dr_mode:
+> +    enum: [host, peripheral, otg]
 > +
-> +    required:
-> +      - compatible
-
-Here too.
-
+> +  g-rx-fifo-size:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: size of rx fifo size in gadget mode.
 > +
-> +  video-firmware:
-> +    type: object
+> +  g-np-tx-fifo-size:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: size of non-periodic tx fifo size in gadget mode.
 > +
-> +    description: |
-> +      Firmware subnode is needed when the platform does not
-> +      have TrustZone.
+> +  g-tx-fifo-size:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
 > +
-> +    properties:
-> +      iommus:
-> +        minItems: 1
+> +  snps,need-phy-for-wake:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: If present indicates that the phy needs to be left on for remote wakeup during suspend.
+> +
+> +  snps,reset-phy-on-wake:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: If present indicates that we need to reset the PHY when we detect a wakeup.
+> +                 This is due to a hardware errata.
 > +
 > +required:
 > +  - compatible
 > +  - reg
 > +  - interrupts
-> +  - power-domains
 > +  - clocks
 > +  - clock-names
-> +  - iommus
-> +  - memory-region
-> +  - video-decoder
-> +  - video-encoder
+> +
+> +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +        #include <dt-bindings/clock/qcom,gcc-msm8916.h>
+> +      usb@101c0000 {
+> +        compatible = "ralink,rt3050-usb, snps,dwc2";
+> +        reg = <0x101c0000 40000>;
+> +        interrupts = <18>;
+> +        clocks = <&usb_otg_ahb_clk>;
+> +        clock-names = "otg";
+> +        phys = <&usbphy>;
+> +        phy-names = "usb2-phy";
+> +        snps,need-phy-for-wake;
+> +      };
 > +
-> +        video-codec@1d00000 {
-> +                compatible = "qcom,msm8916-venus";
-> +                reg = <0x01d00000 0xff000>;
-> +                interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-> +                clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
-> +                        <&gcc GCC_VENUS0_AHB_CLK>,
-> +                        <&gcc GCC_VENUS0_AXI_CLK>;
-> +                clock-names = "core", "iface", "bus";
-> +                power-domains = <&gcc VENUS_GDSC>;
-> +                iommus = <&apps_iommu 5>;
-> +                memory-region = <&venus_mem>;
-> +
-> +                video-decoder {
-> +                        compatible = "venus-decoder";
-> +                };
-> +
-> +                video-encoder {
-> +                        compatible = "venus-encoder";
-> +                };
-> +        };
+> +...
 > --
-> 2.17.1
+> 2.15.0
 >
