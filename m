@@ -2,118 +2,115 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9B8C2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 14:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A45AC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 14:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24332467E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 14:49:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="pTC9JZ6C"
+	by mail.kernel.org (Postfix) with ESMTP id CF92F2146E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 14:54:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576680875;
+	bh=hF6onFKCi6fvT9Sa1rvQf17WOvCUhbvDZsz/AQw1OgA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=itTIjDDD6C/bE5dsd78QgsqjFxL03dW6i9haIDTFRyM9BeMp2lUs4nwlkHjxQApnD
+	 2u9w19nq9/Pgf0c8uSPe+sVOHQaCGOYEoxybsFqJw+hr4z+OPnpBCj2ilsiwO+w0k7
+	 PhSYbCJrb0LRxR5uiInPhIiHxFBJWP+IPOcPX/do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfLROtJ (ORCPT
+        id S1727173AbfLROyf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:49:09 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:46675 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727135AbfLROtC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:49:02 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIEmKDJ016029;
-        Wed, 18 Dec 2019 15:48:52 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=sYclvs3hTaLkH1aPSdNgdAO6bhgIGop8dGr694cnD4I=;
- b=pTC9JZ6Cyw+S37W3ygLPbq+RoMpDWmjqDCHeHelBPnPd3aTIMFoiGyZk6Z6+yjJiKF35
- F+aa5sUao/YmRhzWaCeeWqgAWKVQr/3BrguNkBx3vYzXjEwNaL8xslxTXPCCBVBlZzn5
- QIkTQvmXMKSXFNp10Gge/jZ1PWksN50dAWqQqaqVLDHxOzclr7iFi3Kc6Weg8McLe1mn
- aLMGNz0KJf3J/7SyHBoBgM5xb0767/JuJuoM9xLcT1pBK6ITs6wMCd87OHdvpwzqKWQv
- O0BUN5fvYJg7U2XW+aJyYFF6lGGAX8VDxlMFsj2cOvmxPogA6y6unkozrUWf2Cwj2QX8 dw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wvpd1mv2a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Dec 2019 15:48:52 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3EF70100039;
-        Wed, 18 Dec 2019 15:48:48 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 33E11207547;
-        Wed, 18 Dec 2019 15:48:48 +0100 (CET)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 18 Dec 2019 15:48:47
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2 3/3] ARM: dts: stm32: fix dma controller node name on stm32mp157c
-Date:   Wed, 18 Dec 2019 15:48:44 +0100
-Message-ID: <20191218144844.7481-4-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20191218144844.7481-1-benjamin.gaignard@st.com>
-References: <20191218144844.7481-1-benjamin.gaignard@st.com>
+        Wed, 18 Dec 2019 09:54:35 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36562 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726921AbfLROyf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 09:54:35 -0500
+Received: by mail-ot1-f68.google.com with SMTP id w1so2827101otg.3;
+        Wed, 18 Dec 2019 06:54:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=iY4uXq1SaKZgzob1+2qQOKNlu24qtS6FnzwURWp1h9Q=;
+        b=LyZ6qOu7WjDjt2GGD0Tf848fnrm/8ldqJXRA+Vi7Ugr6Vka4WJdmPCqCPD/YrNSsix
+         UFRWrW3Txj3sKfbdLnmjL3qh0Zbxs8pAxh0c6RpoY95BdDWfQ2OrThr2fr7wqGKflIUu
+         NlYESQfGu+sOLQ3a6gohxvUs99TVP1zwWCoXzGFIqZMkcEsiE0+lV6zJF8fWUuuBiqGu
+         /ofqrkocLJHnDYYe/tGcNf6pH0KDtRNLhA3kE9GTNre3WcrhMJ3tqV1c38Mjf8ljxJ44
+         z9e4MipZJCi7WHcvQETFk/+GM0w2r6euhPUAWOwRLvcMciXc/Rr24mcBqG1jX2iwuxKh
+         ZvZA==
+X-Gm-Message-State: APjAAAWCfUFhw/lgD4VsEugIbRx/cbnFNpWNEy4mj2GqR1X4/fZoFQ2W
+        OW/02cSLYDJIXrF+x2KN4g==
+X-Google-Smtp-Source: APXvYqx9qabUxfrhOzpRQ5TYWNuN1bOUhzm7eE9y9M5Ce9bqK0nKPPoliIG8Vj+5bq2+vHKimuFUig==
+X-Received: by 2002:a05:6830:1c85:: with SMTP id v5mr3183032otf.35.1576680874215;
+        Wed, 18 Dec 2019 06:54:34 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w6sm857669oih.19.2019.12.18.06.54.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 06:54:33 -0800 (PST)
+Date:   Wed, 18 Dec 2019 08:54:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
+        alexandre.belloni@bootlin.com, ralf@linux-mips.org,
+        heiko@sntech.de, icenowy@aosc.io, ak@linux.intel.com,
+        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
+        geert+renesas@glider.be, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, keescook@chromium.org,
+        ebiederm@xmission.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+Subject: Re: [PATCH v8 2/4] dt-bindings: Document yna vendor-prefix.
+Message-ID: <20191218145432.GA11183@bogus>
+References: <1575979363-25956-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1575979363-25956-3-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-18_04:2019-12-17,2019-12-18 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1575979363-25956-3-git-send-email-zhouyanjie@wanyeetech.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Modify dma controller nodes name to fit with the standard naming.
+On Tue, 10 Dec 2019 20:02:41 +0800, =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?=          wrote:
+> The "yna" is an acronym of the "YSH & ATIL".
+> 
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> ---
+> 
+> Notes:
+>     v1->v2:
+>     No change.
+>     
+>     v2->v3:
+>     No change.
+>     
+>     v3->v4:
+>     No change.
+>     
+>     v4->v5:
+>     No change.
+>     
+>     v5->v6:
+>     No change.
+>     
+>     v6->v7:
+>     Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
+>     to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
+>     the old mailbox is in an unstable state.
+>     
+>     v7->v8:
+>     No change.
+> 
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-version 2:
-- rebased on top of stm32-next after DT diversity patches
-  
- arch/arm/boot/dts/stm32mp151.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-index b0f3fa564967..3dd570b10181 100644
---- a/arch/arm/boot/dts/stm32mp151.dtsi
-+++ b/arch/arm/boot/dts/stm32mp151.dtsi
-@@ -947,7 +947,7 @@
- 			};
- 		};
- 
--		dma1: dma@48000000 {
-+		dma1: dma-controller@48000000 {
- 			compatible = "st,stm32-dma";
- 			reg = <0x48000000 0x400>;
- 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-@@ -964,7 +964,7 @@
- 			dma-requests = <8>;
- 		};
- 
--		dma2: dma@48001000 {
-+		dma2: dma-controller@48001000 {
- 			compatible = "st,stm32-dma";
- 			reg = <0x48001000 0x400>;
- 			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-@@ -1275,7 +1275,7 @@
- 			status = "disabled";
- 		};
- 
--		mdma1: dma@58000000 {
-+		mdma1: dma-controller@58000000 {
- 			compatible = "st,stm32h7-mdma";
- 			reg = <0x58000000 0x1000>;
- 			interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.15.0
-
+Acked-by: Rob Herring <robh@kernel.org>
