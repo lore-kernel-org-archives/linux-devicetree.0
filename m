@@ -2,154 +2,223 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6688EC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3ABBC2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C61C21582
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92B024679
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:37:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vYKP2MAY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfLRPY1 (ORCPT
+        id S1726955AbfLRPh1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:24:27 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34472 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbfLRPY1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 10:24:27 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id E696C291739
-Subject: Re: [PATCH v21 1/2] Documentation: bridge: Add documentation for
- ps8640 DT properties
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        drinkcat@chromium.org, Jitao Shi <jitao.shi@mediatek.com>,
-        Ulrich Hecht <uli@fpond.eu>, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        matthias.bgg@gmail.com, Collabora Kernel ML <kernel@collabora.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20191216135834.27775-1-enric.balletbo@collabora.com>
- <20191216135834.27775-2-enric.balletbo@collabora.com>
- <20191217142821.xitumpvfg52heb4t@gilmour.lan>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <da1f3c1b-30b5-7708-9527-7f210e817a31@collabora.com>
-Date:   Wed, 18 Dec 2019 16:24:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 18 Dec 2019 10:37:27 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:36321 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726922AbfLRPh0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 10:37:26 -0500
+Received: by mail-il1-f195.google.com with SMTP id b15so2051381iln.3;
+        Wed, 18 Dec 2019 07:37:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7/0Cx566venUU7dDXePf4MglaNmiGe8WWE6mIv6eA2E=;
+        b=vYKP2MAYqg+oajDl0uayzHdWlss0ZrDkraWsIP54vlUDqpcUxX6oBKbS5uBuhD6cus
+         DoZjwv8EEMKbpVXxUAzYbZyiw+gK1PcYkjrW9OvHduUGwi5Zjh+sDg9qbGIR6WIPeVm5
+         Y51iZWoIQxtjTnldJtdLeZ6IzfRNP+GqzE3TedmVY3O3e/wFp9py5HRCQEG8iIG4aWCe
+         8Yr5bYix+ZYp2H9nVWywx9u0c6KRlCSUBokXBOuf2qzK1MRdCiZTe43hkmp9h9x3ItVm
+         wsNk/wn7AZidxIoICZ5ToBq+u/Y6DghM2CYxKA5aHTXLHf+Cuxxm7E5ZTvG/Uz3kN1PH
+         tgEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7/0Cx566venUU7dDXePf4MglaNmiGe8WWE6mIv6eA2E=;
+        b=g6CbM0mJAQkXgOj5Z0DdgIJUvjzA6EIfubbcPqxiQW+zpWGCerAZXKapBzn3Qpxp4s
+         zXOo4f+iWtSriwN2TXKnsO1XUONFeaBAeZ88kF++wjtV1T102Dyl0v+ShIBCC6YMdH/i
+         lHrCjQVrtZ2mAl5GEarpL1xOGCGoc2uU5U1pDui1HslBXglPPPw4ba3xoBfdISJSf20O
+         b3u2cgYGSHC2EGJZRbWW74w3weyKs2md5SyjEpoD3EQneQ9es9px/P/b37Q5+XZ9EoXA
+         7RXJDGL/ZE57ExC+wR2KlK0KqkccYlmsZpLbHXzfBHmz4xVTGn3o79ROtjqYkKmNw6fB
+         a27Q==
+X-Gm-Message-State: APjAAAXgFONSI186EUW5YiId/krJ1nUf6ESt1dQ03y/Xqmc9KQZKcecH
+        zUL/sKcDXsnLvJ2IGV6oII0ImPWHQsEAKVzr8qQ=
+X-Google-Smtp-Source: APXvYqzZwSwTUOlYM6TsQQNm3QDAI/MmJsqk//isBpzlQCB5QCN/YvtmUYVY/LMiY4AbBPfcqD05jwXVAxK7n1Qryjg=
+X-Received: by 2002:a92:dc91:: with SMTP id c17mr2593518iln.78.1576683445143;
+ Wed, 18 Dec 2019 07:37:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191217142821.xitumpvfg52heb4t@gilmour.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1574458460.git.leonard.crestez@nxp.com> <CAHCN7xKNwit8ueUO0OkebfYh=4hsL7_+DRWEbn2dEt0H322W4w@mail.gmail.com>
+ <VI1PR04MB70231CA0E3C4574211518359EE530@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <CAHCN7xJNy0z2hvWbM3UhLni5ruS+sCLeBH8BKiYexe3Sp=6Q0w@mail.gmail.com> <VI1PR04MB70235951BC137515BDD2FDC7EE530@VI1PR04MB7023.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB70235951BC137515BDD2FDC7EE530@VI1PR04MB7023.eurprd04.prod.outlook.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 18 Dec 2019 09:37:14 -0600
+Message-ID: <CAHCN7xKHJAb8k1A+WC3EUOmgLTx-Kbjw_5EsmwyhDkkOKCsmGQ@mail.gmail.com>
+Subject: Re: [PATCH v7 0/5] PM / devfreq: Add dynamic scaling for imx8m ddr controller
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     Jacky Bai <ping.bai@nxp.com>, Stephen Boyd <sboyd@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Angus Ainslie <angus@akkea.ca>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Martin Kepplinger <martink@posteo.de>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime,
+On Wed, Dec 18, 2019 at 9:16 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+>
+> On 18.12.2019 17:05, Adam Ford wrote:
+> > On Wed, Dec 18, 2019 at 8:44 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+> >>
+> >> On 18.12.2019 15:35, Adam Ford wrote:
+> >>> On Fri, Nov 22, 2019 at 3:45 PM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+> >>>>
+> >>>> This adds support for dynamic scaling of the DDR Controller (ddrc)
+> >>>> present on i.MX8M series chips. Actual frequency switching is
+> >>>> implemented inside TF-A, this driver wraps the SMC calls and
+> >>>> synchronizes the clk tree.
+> >>>>
+> >>>> DRAM frequency switching requires clock manipulation but during this operation
+> >>>> DRAM itself is briefly inaccessible so this operation is performed a SMC call
+> >>>> to by TF-A which runs from a SRAM area. Upon returning to linux the clock tree
+> >>>> is updated to correspond to hardware configuration.
+> >>>>
+> >>>> This is handled via CLK_GET_RATE_NO_CACHE for dividers but muxes are handled
+> >>>> manually: the driver will prepare/enable the new parents ahead of switching (so
+> >>>> that the expected roots are enabled) and afterwards it will call clk_set_parent
+> >>>> to ensure the parents in clock framework are up-to-date.
+> >>>>
+> >>>> This series is useful standalone and roughly similar to devfreq drivers for
+> >>>> tegra and rockchip.
+> >>>>
+> >>>> Running at lower dram rates saves power but can affect the functionality of
+> >>>> other blocks in the chip (display, vpu etc). Support for in-kernel constraints
+> >>>> will some separately.
+> >>>>
+> >>>> This series has no dependencies outside linux-next. The driver depends
+> >>>> on features from the NXP branch of TF-A and will cleanly fail to probe
+> >>>> on mainline. There are also plans to upstream dram dvfs in TF-A.
+> >>>>
+> >>>> Leonard Crestez (5):
+> >>>>     clk: imx8m: Set CLK_GET_RATE_NOCACHE on dram clocks
+> >>>>     clk: imx: Mark dram pll on 8mm and 8mn with CLK_GET_RATE_NOCACHE
+> >>>>     dt-bindings: memory: Add bindings for imx8m ddr controller
+> >>>>     PM / devfreq: Add dynamic scaling for imx8m ddr controller
+> >>>>     arm64: dts: imx8m: Add ddr controller nodes
+> >>>>
+> >>>>    .../memory-controllers/fsl/imx8m-ddrc.yaml    |  72 +++
+> >>>>    arch/arm64/boot/dts/freescale/imx8mm-evk.dts  |  18 +
+> >>>>    arch/arm64/boot/dts/freescale/imx8mm.dtsi     |  10 +
+> >>>>    .../boot/dts/freescale/imx8mn-ddr4-evk.dts    |  18 +
+> >>>>    arch/arm64/boot/dts/freescale/imx8mn.dtsi     |  10 +
+> >>>>    arch/arm64/boot/dts/freescale/imx8mq-evk.dts  |  24 +
+> >>>>    arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  10 +
+> >>>>    drivers/clk/imx/clk-imx8mm.c                  |  11 +-
+> >>>>    drivers/clk/imx/clk-imx8mn.c                  |  12 +-
+> >>>>    drivers/clk/imx/clk-imx8mq.c                  |  12 +-
+> >>>>    drivers/clk/imx/clk-pll14xx.c                 |   7 +
+> >>>>    drivers/clk/imx/clk.h                         |   1 +
+> >>>>    drivers/devfreq/Kconfig                       |   9 +
+> >>>
+> >>> Since there is a Kconfig change, should there me a defconfig change?
+> >>
+> >> Yes, you need to enable CONFIG_ARM_IMX8M_DDRC_DEVFREQ in order to test
+> >> this. Enabling as "m" should work.
+> >
+> > I enabled it as 'm' but I was more curious to know if we should push
+> > this upstream with the rest of the series.
+>
+> I skipped enabling because it's very experimental; maybe after imx
+> interconnect is also enabled?
+>
+> >>>>    drivers/devfreq/Makefile                      |   1 +
+> >>>>    drivers/devfreq/imx8m-ddrc.c                  | 465 ++++++++++++++++++
+> >>>>    15 files changed, 670 insertions(+), 10 deletions(-)
+> >>>>    create mode 100644 Documentation/devicetree/bindings/memory-controllers/fsl/imx8m-ddrc.yaml
+> >>>>    create mode 100644 drivers/devfreq/imx8m-ddrc.c
+> >>>
+> >>> I applied the whole series against 5.5-rc1 and I am trying to test it.
+> >>> I know the 4.14 kernel NXP posted on Code Aurora is capable to
+> >>> lowering the DDRC controller to 25MHz on the 8MM when the video is
+> >>> off.  Since there is no video support yet for the 8MM, I was expecting
+> >>> to see the DDRC clock to be at or around 25MHz.
+> >>>
+> >>> Using debug FS, I can see the dram core clock is still running at
+> >>> 750MHz, and measuring power, it shows something consistent with what I
+> >>> see on the Code Aurora kernel with video turned on and the clock at
+> >>> 750MHz.
+> >>>
+> >>> Is there some way to get the dram_core_clk to drop to 25MHz to see
+> >>> some power reduction?  The same commands used in the Yocto build don't
+> >>> apply here since we don't have video.
+> >>
+> >> Current upstream driver just keeps current frequency by default. Try the
+> >> following:
+> >>
+> >> cd /sys/class/devfreq/devices/devfreq0
+> >
+> > can't cd to /sys/class/devfreq/devices/devfreq0: No such file or directory
+> >
+> > I did some checking and I found:
+> >      imx8m-ddrc-devfreq 3d400000.memory-controller: failed to init
+> > firmware freq info: -19
+> >
+> > Was there some prerequisite patches I needed to apply before your series?
+>
+> You need a recent version of TF-A from nxp ( upstream). Try this:
+>
+> https://source.codeaurora.org/external/imx/imx-atf/log/?h=imx_4.19.35_1.1.0
+>
+> Or this:
+> https://github.com/cdleonard/arm-trusted-firmware/commits/imx_2.0.y_busfreq
+>
+> Support on upstream ATF is not yet available
 
-Thanks for your comment, just preparing another version.
+I cloned your github branch and built it per the instructions in the
+u-boot readme file.
+did a make clean on u-boot, copied the bl31.bin to u-boot and rebuild
+per U-Boot's instructions.
 
-On 17/12/19 15:28, Maxime Ripard wrote:
-> On Mon, Dec 16, 2019 at 02:58:33PM +0100, Enric Balletbo i Serra wrote:
->> From: Jitao Shi <jitao.shi@mediatek.com>
->>
->> Add documentation for DT properties supported by
->> ps8640 DSI-eDP converter.
->>
->> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
->> Signed-off-by: Ulrich Hecht <uli@fpond.eu>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> ---
->>
->> Changes in v21: None
->> Changes in v19: None
->> Changes in v18: None
->> Changes in v17: None
->> Changes in v16: None
->> Changes in v15: None
->> Changes in v14: None
->> Changes in v13: None
->> Changes in v12: None
->> Changes in v11: None
->>
->>  .../bindings/display/bridge/ps8640.txt        | 44 +++++++++++++++++++
->>  1 file changed, 44 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.txt
->>
->> diff --git a/Documentation/devicetree/bindings/display/bridge/ps8640.txt b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
->> new file mode 100644
->> index 000000000000..7b13f92f7359
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
->> @@ -0,0 +1,44 @@
->> +ps8640-bridge bindings
->> +
->> +Required properties:
->> +	- compatible: "parade,ps8640"
->> +	- reg: first page address of the bridge.
->> +	- sleep-gpios: OF device-tree gpio specification for PD pin.
->> +	- reset-gpios: OF device-tree gpio specification for reset pin.
->> +	- vdd12-supply: OF device-tree regulator specification for 1.2V power.
->> +	- vdd33-supply: OF device-tree regulator specification for 3.3V power.
->> +	- ports: The device node can contain video interface port nodes per
->> +		 the video-interfaces bind[1]. For port@0,set the reg = <0> as
->> +		 ps8640 dsi in and port@1,set the reg = <1> as ps8640 eDP out.
->> +
->> +Optional properties:
->> +	- mode-sel-gpios: OF device-tree gpio specification for mode-sel pin.
->> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
->> +
->> +Example:
->> +	edp-bridge@18 {
->> +		compatible = "parade,ps8640";
->> +		reg = <0x18>;
->> +		sleep-gpios = <&pio 116 GPIO_ACTIVE_LOW>;
->> +		reset-gpios = <&pio 115 GPIO_ACTIVE_LOW>;
->> +		mode-sel-gpios = <&pio 92 GPIO_ACTIVE_HIGH>;
->> +		vdd12-supply = <&ps8640_fixed_1v2>;
->> +		vdd33-supply = <&mt6397_vgp2_reg>;
->> +
->> +		ports {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			port@0 {
->> +				reg = <0>;
->> +				ps8640_in: endpoint {
->> +					remote-endpoint = <&dsi0_out>;
->> +				};
->> +			};
->> +			port@1 {
->> +				reg = <1>;
->> +				ps8640_out: endpoint {
->> +					remote-endpoint = <&panel_in>;
->> +				};
->> +			};
->> +		};
->> +	};
-> 
-> It's not really fair to ask this after the rough history of this
-> patchset apparently, but bindings should be submitted in the YAML
-> format now.
-> 
-> This wouldn't be nice to stop it from going in just because of this,
-> so can you send a subsequent patch fixing this?
-> 
+U-Boot booted and Linux booted, but I still get:
 
-I don't mind to use YAML format for next version, in fact, I think is the best.
+   imx8m-ddrc-devfreq 3d400000.memory-controller: failed to init
+firmware freq info: -19
 
-Thanks,
- Enric
+I am still learning the imx8mm platform, so please forgive my ignorance.
 
-
-> Thanks!
-> Maxime
-> 
+adam
+>
+> --
+> Regards,
+> Leonard
