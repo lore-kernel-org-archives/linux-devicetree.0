@@ -2,271 +2,829 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E464DC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C072DC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A938E2064B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79CDB20717
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:23:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="om9dPwAj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VugHm4mh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfLRRVZ (ORCPT
+        id S1727120AbfLRRXw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:21:25 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38038 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbfLRRVW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 12:21:22 -0500
-Received: by mail-oi1-f195.google.com with SMTP id b8so1439562oiy.5
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 09:21:21 -0800 (PST)
+        Wed, 18 Dec 2019 12:23:52 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39917 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfLRRXv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 12:23:51 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 77so3366418oty.6;
+        Wed, 18 Dec 2019 09:23:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qhOjO/1gjiU66/m8Xa5+Rrg7RA8so1GtC0PAJud5ghg=;
-        b=om9dPwAjIU47ga82gy5KKpWBDVfzap35dWTr/XUPxPDlU0FIPA0gef7eEJjUfEO67V
-         rylx2xY1hU7ziHnwS6iVDY1TPgy+YUxJXCFXAHILLXwgp1kjmNEUNX2he+bTOHIs9NPU
-         CEoMjKwIy/542tQba6lQr/s+0piM6M7vYCSlvbhMKyoOneH65NmIYmFEdKSLM6DRfuSt
-         MSVQPWoqJpJZ38kI+GJbmLVNyI8Rf7uMDQPrEcHuO6b11Vjc5vUaTK02U/Fcs8zQjPLs
-         0c9ygZaABIGAOOfO3gIDQS0gGfYe71PnX/vekinxRV3DVP8VT4wyvMjl+hNrGkUkWxV7
-         5M5w==
+        bh=94npEWH3dmDcceK59WhufFCT+/vUOaIleqCp7IJ++7g=;
+        b=VugHm4mhpCHiPM3855IP2yB1kUFJezwS4YXgyhxwssHlbPtuA9QK45OxRgoc51Lkd1
+         0PUwAsbylkXMF8JCrwt8KNg4p1+NOtLOyRFeoNoI+aQWLG2Ta/7hfyvDrYvc0WHXzhh8
+         U1jgTXQuhluSzmOH6XKPMiJKuxeXWxi7hT+y+tFyECMYpQ2Xm5fCfFAy1qwei8kdkOEx
+         ilpTl8ddad2RdHF+qrjiN4IY2jlqqR1pk4u7SwvGuRtuBKpNHPJ9/Qep7KfQtub02wdD
+         D9/OK58V5O52bwWdcU/OLaGcWl/jsVgwCELAMXAUfLzd8nCo4WAYyXzQRUWjeQxWMhlw
+         59+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qhOjO/1gjiU66/m8Xa5+Rrg7RA8so1GtC0PAJud5ghg=;
-        b=RU4mS4HKud9HndiyIenh8lMtkw4I+Ciuma5ebVoS+oBlgyQz3ZLV3jT2gNxjB3UMhq
-         NWMqDFuE7FSpCWCw9q253klkhK78CCMWjzGTcYddlnvoucA5nj2GwHRX0rC6V5ZdUEYt
-         dz98NqJvILKmme8Ocukk6xvPRHJ2KI5PC3biC0HuTwlWtmjDYsy+X+qc43GNWN98ww0f
-         BsTi5oeg9+lXSqKFvPsQBeu7UkOHJ7JR5+aI3m3kcE0wKISp5+YcimSxlPnqXrL8Ip0Q
-         emArZ6fgOzEqwNJaq5LnmPM2CR/KrbvWnGxCEuRicsIYX1HFWBhpnlgPZuecLX+hgGUl
-         JxoA==
-X-Gm-Message-State: APjAAAWxFVgNcmQ7w3hm9h2tZUzH6gInhyO+GzWU7ugL7tnh+yeQ50dh
-        8+GiM+Mv/dOCUKoS069agRin2PXlYss6HLL5LucC5Q==
-X-Google-Smtp-Source: APXvYqy9yB9O2gc/s3TvIPq5EZergrpBAODzTElqm/0+LfSrgIdkX4baam98niE2ZGYKR0djgev3Q1jmksxw8X7Z49o=
-X-Received: by 2002:aca:c551:: with SMTP id v78mr1055611oif.161.1576689680623;
- Wed, 18 Dec 2019 09:21:20 -0800 (PST)
+        bh=94npEWH3dmDcceK59WhufFCT+/vUOaIleqCp7IJ++7g=;
+        b=cnfdxQD1aCAV2MRNJQYcZc1XFnKum8SFiB57KvOzA0tj1moRlyGKVlhB0K7JQLcSob
+         K0GdiRiI/Oq+lsSgSvMXB9jQMuERQ04I3OCgBbl+UlvMh/a+10fMxlpfz3rCytFayXN4
+         4aCh+GOvxAW2XNuNNrU7qWnnRolOIG+bq5g0CDNUThn6IkHy6O3papx+jrVlxUFSJr1q
+         mn49wob1B/uAyf/2LF9R53pz2XEl3HjUbICxUexESw/Uda5aJwV1QRdLymLn4G6ZDskn
+         I6Cx3f9pJci8oTucqLdwuK6l8vAQ32Kdalpb121mPT2Am2gdFHNVr2cL+udiw8Zqqf00
+         RwAw==
+X-Gm-Message-State: APjAAAVMU3mcZYu5EMdrey+U9PP2uO93Hrq8NmjFIyafSt7MgrRePyDK
+        I4oI6tmgg9tz7Ocqp7q6gaYP+xRM6VxWpu9UBOI=
+X-Google-Smtp-Source: APXvYqwdf0+OzRjoBAvgw0SkkUlJuLybektBwFzL0XZW87eIUVdXYkVcbU+xShUjvSa61JLTsKIo8I6ERfl+rG13gyA=
+X-Received: by 2002:a05:6830:16d0:: with SMTP id l16mr3870779otr.176.1576689829337;
+ Wed, 18 Dec 2019 09:23:49 -0800 (PST)
 MIME-Version: 1.0
-References: <20191212014233.32799-1-john.stultz@linaro.org>
- <20191212014233.32799-8-john.stultz@linaro.org> <20191218163738.GA12358@bogus>
-In-Reply-To: <20191218163738.GA12358@bogus>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 18 Dec 2019 09:21:05 -0800
-Message-ID: <CALAqxLU=KPJoPKHP14BWcLYJdBoK8DC5+7hRtqCvE2-HZHWxZA@mail.gmail.com>
-Subject: Re: [PATCH v7 7/8] dt-bindings: misc: Add bindings for HiSilicon usb
- hub and data role switch functionality on HiKey960
-To:     Rob Herring <robh@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191213084748.11210-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <5f363a99-3642-cc1e-52fc-2f866c53344c@ti.com>
+In-Reply-To: <5f363a99-3642-cc1e-52fc-2f866c53344c@ti.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 18 Dec 2019 17:23:21 +0000
+Message-ID: <CA+V-a8vFrA7-4Emw4h0khxptOo9mCXMSrYsyc3Yw1X6ZEaujdw@mail.gmail.com>
+Subject: Re: [v2 2/6] pci: endpoint: add support to handle features of
+ outbound memory
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Guillaume Gardet <Guillaume.Gardet@arm.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 8:37 AM Rob Herring <robh@kernel.org> wrote:
+Hi Kishon,
+
+On Mon, Dec 16, 2019 at 11:34 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
 >
-> On Thu, Dec 12, 2019 at 01:42:32AM +0000, John Stultz wrote:
-> > From: Yu Chen <chenyu56@huawei.com>
+> Hi Prabhakar,
+>
+> On 13/12/19 2:17 pm,  wrote:
+> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > >
-> > This patch adds binding documentation to support usb hub and usb
-> > data role switch of Hisilicon HiKey960 Board.
+> > rcar pcie controller has support to map multiple memory regions
+> > for mapping the outbound memory in local system, this feature
+> > inspires to add support for handling such features in endpoint
+> > framework. similar features exists on other controllers where
+> > outbound regions can be specifically used for low/high priority
+> > transactions, and regions can be flagged and used for allocation
+> > of large/small memory allocations.
+> > This patch adds support to handle such features, where the
+> > properties described for outbound regions are used whenever a
+> > request to memory is made.
 > >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > CC: ShuFan Lee <shufan_lee@richtek.com>
-> > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > Cc: Yu Chen <chenyu56@huawei.com>
-> > Cc: Felipe Balbi <balbi@kernel.org>
-> > Cc: Hans de Goede <hdegoede@redhat.com>
-> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Cc: Jun Li <lijun.kernel@gmail.com>
-> > Cc: Valentin Schneider <valentin.schneider@arm.com>
-> > Cc: Guillaume Gardet <Guillaume.Gardet@arm.com>
-> > Cc: Jack Pham <jackp@codeaurora.org>
-> > Cc: linux-usb@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > > ---
-> > v3: Reworked as usb-role-switch intermediary
+> >   drivers/pci/controller/dwc/pcie-designware-ep.c |  30 ++--
+> >   drivers/pci/controller/pcie-cadence-ep.c        |  11 +-
+> >   drivers/pci/controller/pcie-rockchip-ep.c       |  13 +-
+> >   drivers/pci/endpoint/functions/pci-epf-test.c   |  47 ++++--
+> >   drivers/pci/endpoint/pci-epc-core.c             |   7 +-
+> >   drivers/pci/endpoint/pci-epc-mem.c              | 216 +++++++++++++++++++-----
+> >   include/linux/pci-epc.h                         |  72 ++++++--
+> >   7 files changed, 307 insertions(+), 89 deletions(-)
 > >
-> > v7: Switched over to YAML dt binding description
-> > ---
-> >  .../bindings/misc/hisilicon-hikey-usb.yaml    | 85 +++++++++++++++++++
-> >  1 file changed, 85 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index 3dd2e26..be6aa94 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -195,7 +195,7 @@ static void dw_pcie_ep_unmap_addr(struct pci_epc *epc, u8 func_no,
+> >   }
 > >
-> > diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
-> > new file mode 100644
-> > index 000000000000..1fc3b198ef73
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
-> > @@ -0,0 +1,85 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +# Copyright 2019 Linaro Ltd.
-> > +%YAML 1.2
-> > +---
-> > +$id: "http://devicetree.org/schemas/misc/hisilicon-hikey-usb.yaml#"
-> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> >   static int dw_pcie_ep_map_addr(struct pci_epc *epc, u8 func_no,
+> > -                            phys_addr_t addr,
+> > +                            phys_addr_t addr, int window,
+> >                              u64 pci_addr, size_t size)
+> >   {
+> >       int ret;
+> > @@ -367,6 +367,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+> >       unsigned int aligned_offset;
+> >       u16 msg_ctrl, msg_data;
+> >       u32 msg_addr_lower, msg_addr_upper, reg;
+> > +     int window = PCI_EPC_DEFAULT_WINDOW;
+> >       u64 msg_addr;
+> >       bool has_upper;
+> >       int ret;
+> > @@ -390,11 +391,11 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+> >               reg = ep->msi_cap + PCI_MSI_DATA_32;
+> >               msg_data = dw_pcie_readw_dbi(pci, reg);
+> >       }
+> > -     aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
+> > +     aligned_offset = msg_addr_lower & (epc->mem[window]->page_size - 1);
+> >       msg_addr = ((u64)msg_addr_upper) << 32 |
+> >                       (msg_addr_lower & ~aligned_offset);
+> > -     ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
+> > -                               epc->mem->page_size);
+> > +     ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, window,
+> > +                               msg_addr, epc->mem[window]->page_size);
+> >       if (ret)
+> >               return ret;
+> >
+> > @@ -416,6 +417,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+> >       u32 reg, msg_data, vec_ctrl;
+> >       u64 tbl_addr, msg_addr, reg_u64;
+> >       void __iomem *msix_tbl;
+> > +     int window = PCI_EPC_DEFAULT_WINDOW;
+> >       int ret;
+> >
+> >       reg = ep->msix_cap + PCI_MSIX_TABLE;
+> > @@ -452,8 +454,8 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+> >               return -EPERM;
+> >       }
+> >
+> > -     ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
+> > -                               epc->mem->page_size);
+> > +     ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, window,
+> > +                               msg_addr, epc->mem[window]->page_size);
+> >       if (ret)
+> >               return ret;
+> >
+> > @@ -466,10 +468,11 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+> >
+> >   void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+> >   {
+> > +     int window = PCI_EPC_DEFAULT_WINDOW;
+> >       struct pci_epc *epc = ep->epc;
+> >
+> >       pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
+> > -                           epc->mem->page_size);
+> > +                           epc->mem[window]->page_size);
+> >
+> >       pci_epc_mem_exit(epc);
+> >   }
+> > @@ -499,9 +502,12 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >       u32 reg;
+> >       void *addr;
+> >       u8 hdr_type;
+> > +     int window;
+> >       unsigned int nbars;
+> >       unsigned int offset;
+> >       struct pci_epc *epc;
+> > +     size_t msi_page_size;
+> > +     struct pci_epc_mem_window mem_window;
+> >       struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> >       struct device *dev = pci->dev;
+> >       struct device_node *np = dev->of_node;
+> > @@ -574,15 +580,17 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >       if (ret < 0)
+> >               epc->max_functions = 1;
+> >
+> > -     ret = __pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
+> > -                              ep->page_size);
+> > +     mem_window.phys_base = ep->phys_base;
+> > +     mem_window.size = ep->addr_size;
+> > +     ret = __pci_epc_mem_init(epc, &mem_window, 1, ep->page_size);
+> >       if (ret < 0) {
+> >               dev_err(dev, "Failed to initialize address space\n");
+> >               return ret;
+> >       }
+> >
+> > -     ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
+> > -                                          epc->mem->page_size);
+> > +     msi_page_size = epc->mem[PCI_EPC_DEFAULT_WINDOW]->page_size;
+> > +     ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys, &window,
+> > +                                          msi_page_size, 0x0);
+> >       if (!ep->msi_mem) {
+> >               dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+> >               return -ENOMEM;
+> > diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
+> > index def7820..2410706 100644
+> > --- a/drivers/pci/controller/pcie-cadence-ep.c
+> > +++ b/drivers/pci/controller/pcie-cadence-ep.c
+> > @@ -172,7 +172,7 @@ static void cdns_pcie_ep_clear_bar(struct pci_epc *epc, u8 fn,
+> >   }
+> >
+> >   static int cdns_pcie_ep_map_addr(struct pci_epc *epc, u8 fn, phys_addr_t addr,
+> > -                              u64 pci_addr, size_t size)
+> > +                              int window, u64 pci_addr, size_t size)
+> >   {
+> >       struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+> >       struct cdns_pcie *pcie = &ep->pcie;
+> > @@ -434,12 +434,14 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
+> >   {
+> >       struct device *dev = &pdev->dev;
+> >       struct device_node *np = dev->of_node;
+> > +     struct pci_epc_mem_window mem_window;
+> >       struct cdns_pcie_ep *ep;
+> >       struct cdns_pcie *pcie;
+> >       struct pci_epc *epc;
+> >       struct resource *res;
+> >       int ret;
+> >       int phy_count;
+> > +     int window;
+> >
+> >       ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+> >       if (!ep)
+> > @@ -502,15 +504,16 @@ static int cdns_pcie_ep_probe(struct platform_device *pdev)
+> >       if (of_property_read_u8(np, "max-functions", &epc->max_functions) < 0)
+> >               epc->max_functions = 1;
+> >
+> > -     ret = pci_epc_mem_init(epc, pcie->mem_res->start,
+> > -                            resource_size(pcie->mem_res));
+> > +     mem_window.phys_base = pcie->mem_res->start;
+> > +     mem_window.size = resource_size(pcie->mem_res);
+> > +     ret = pci_epc_mem_init(epc, &mem_window, 1);
+> >       if (ret < 0) {
+> >               dev_err(dev, "failed to initialize the memory space\n");
+> >               goto err_init;
+> >       }
+> >
+> >       ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
+> > -                                               SZ_128K);
+> > +                                               &window, SZ_128K, 0x0);
+> >       if (!ep->irq_cpu_addr) {
+> >               dev_err(dev, "failed to reserve memory space for MSI\n");
+> >               ret = -ENOMEM;
+> > diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> > index d743b0a..828052c 100644
+> > --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> > +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> > @@ -256,8 +256,8 @@ static void rockchip_pcie_ep_clear_bar(struct pci_epc *epc, u8 fn,
+> >   }
+> >
+> >   static int rockchip_pcie_ep_map_addr(struct pci_epc *epc, u8 fn,
+> > -                                  phys_addr_t addr, u64 pci_addr,
+> > -                                  size_t size)
+> > +                                  phys_addr_t addr, int window,
+> > +                                  u64 pci_addr, size_t size)
+> >   {
+> >       struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
+> >       struct rockchip_pcie *pcie = &ep->rockchip;
+> > @@ -562,11 +562,13 @@ static const struct of_device_id rockchip_pcie_ep_of_match[] = {
+> >
+> >   static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+> >   {
+> > +     struct pci_epc_mem_window mem_window;
+> >       struct device *dev = &pdev->dev;
+> >       struct rockchip_pcie_ep *ep;
+> >       struct rockchip_pcie *rockchip;
+> >       struct pci_epc *epc;
+> >       size_t max_regions;
+> > +     int window;
+> >       int err;
+> >
+> >       ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+> > @@ -614,15 +616,16 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+> >       /* Only enable function 0 by default */
+> >       rockchip_pcie_write(rockchip, BIT(0), PCIE_CORE_PHY_FUNC_CFG);
+> >
+> > -     err = pci_epc_mem_init(epc, rockchip->mem_res->start,
+> > -                            resource_size(rockchip->mem_res));
+> > +     mem_window.phys_base = rockchip->mem_res->start;
+> > +     mem_window.size = resource_size(rockchip->mem_res);
+> > +     err = pci_epc_mem_init(epc, &mem_window, 1);
+> >       if (err < 0) {
+> >               dev_err(dev, "failed to initialize the memory space\n");
+> >               goto err_uninit_port;
+> >       }
+> >
+> >       ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
+> > -                                               SZ_128K);
+> > +                                               &window, SZ_128K, 0x0);
+> >       if (!ep->irq_cpu_addr) {
+> >               dev_err(dev, "failed to reserve memory space for MSI\n");
+> >               err = -ENOMEM;
+> > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > index 1cfe368..4768d54 100644
+> > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > @@ -84,8 +84,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+> >       struct pci_epc *epc = epf->epc;
+> >       enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+> >       struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+> > -
+> > -     src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr, reg->size);
+> > +     int window;
 > > +
-> > +title: HiKey960 onboard USB GPIO Hub
+> > +     src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr,
+> > +                                       &window, reg->size,
+> > +                                       PCI_EPC_WINDOW_FLAG_LARGE_ALLOC |
+> > +                                       PCI_EPC_WINDOW_FLAG_SMALL_ALLOC |
+> > +                                       PCI_EPC_WINDOW_FLAG_HIGH_PRI_ALLOC |
+> > +                                       PCI_EPC_WINDOW_FLAG_LOW_PRI_ALLOC);
+> >       if (!src_addr) {
+> >               dev_err(dev, "Failed to allocate source address\n");
+> >               reg->status = STATUS_SRC_ADDR_INVALID;
+> > @@ -93,15 +99,20 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+> >               goto err;
+> >       }
+> >
+> > -     ret = pci_epc_map_addr(epc, epf->func_no, src_phys_addr, reg->src_addr,
+> > -                            reg->size);
+> > +     ret = pci_epc_map_addr(epc, epf->func_no, src_phys_addr, window,
+> > +                            reg->src_addr, reg->size);
+> >       if (ret) {
+> >               dev_err(dev, "Failed to map source address\n");
+> >               reg->status = STATUS_SRC_ADDR_INVALID;
+> >               goto err_src_addr;
+> >       }
+> >
+> > -     dst_addr = pci_epc_mem_alloc_addr(epc, &dst_phys_addr, reg->size);
+> > +     dst_addr = pci_epc_mem_alloc_addr(epc, &dst_phys_addr,
+> > +                                       &window, reg->size,
+> > +                                       PCI_EPC_WINDOW_FLAG_LARGE_ALLOC |
+> > +                                       PCI_EPC_WINDOW_FLAG_SMALL_ALLOC |
+> > +                                       PCI_EPC_WINDOW_FLAG_HIGH_PRI_ALLOC |
+> > +                                       PCI_EPC_WINDOW_FLAG_LOW_PRI_ALLOC);
+> >       if (!dst_addr) {
+> >               dev_err(dev, "Failed to allocate destination address\n");
+> >               reg->status = STATUS_DST_ADDR_INVALID;
+> > @@ -109,8 +120,8 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+> >               goto err_src_map_addr;
+> >       }
+> >
+> > -     ret = pci_epc_map_addr(epc, epf->func_no, dst_phys_addr, reg->dst_addr,
+> > -                            reg->size);
+> > +     ret = pci_epc_map_addr(epc, epf->func_no, dst_phys_addr, window,
+> > +                            reg->dst_addr, reg->size);
+> >       if (ret) {
+> >               dev_err(dev, "Failed to map destination address\n");
+> >               reg->status = STATUS_DST_ADDR_INVALID;
+> > @@ -146,8 +157,13 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+> >       struct pci_epc *epc = epf->epc;
+> >       enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+> >       struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+> > +     int window;
+> >
+> > -     src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+> > +     src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, &window, reg->size,
+> > +                                       PCI_EPC_WINDOW_FLAG_LARGE_ALLOC |
+> > +                                       PCI_EPC_WINDOW_FLAG_SMALL_ALLOC |
+> > +                                       PCI_EPC_WINDOW_FLAG_HIGH_PRI_ALLOC |
+> > +                                       PCI_EPC_WINDOW_FLAG_LOW_PRI_ALLOC);
+> >       if (!src_addr) {
+> >               dev_err(dev, "Failed to allocate address\n");
+> >               reg->status = STATUS_SRC_ADDR_INVALID;
+> > @@ -155,8 +171,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+> >               goto err;
+> >       }
+> >
+> > -     ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->src_addr,
+> > -                            reg->size);
+> > +     ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, window,
+> > +                            reg->src_addr, reg->size);
+> >       if (ret) {
+> >               dev_err(dev, "Failed to map address\n");
+> >               reg->status = STATUS_SRC_ADDR_INVALID;
+> > @@ -193,13 +209,18 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+> >       void __iomem *dst_addr;
+> >       void *buf;
+> >       phys_addr_t phys_addr;
+> > +     int window;
+> >       struct pci_epf *epf = epf_test->epf;
+> >       struct device *dev = &epf->dev;
+> >       struct pci_epc *epc = epf->epc;
+> >       enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+> >       struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+> >
+> > -     dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+> > +     dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, &window, reg->size,
+> > +                                       PCI_EPC_WINDOW_FLAG_LARGE_ALLOC |
+> > +                                       PCI_EPC_WINDOW_FLAG_SMALL_ALLOC |
+> > +                                       PCI_EPC_WINDOW_FLAG_HIGH_PRI_ALLOC |
+> > +                                       PCI_EPC_WINDOW_FLAG_LOW_PRI_ALLOC);
+> >       if (!dst_addr) {
+> >               dev_err(dev, "Failed to allocate address\n");
+> >               reg->status = STATUS_DST_ADDR_INVALID;
+> > @@ -207,8 +228,8 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+> >               goto err;
+> >       }
+> >
+> > -     ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->dst_addr,
+> > -                            reg->size);
+> > +     ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, window,
+> > +                            reg->dst_addr, reg->size);
+> >       if (ret) {
+> >               dev_err(dev, "Failed to map address\n");
+> >               reg->status = STATUS_DST_ADDR_INVALID;
+> > diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> > index 2091508..289c266 100644
+> > --- a/drivers/pci/endpoint/pci-epc-core.c
+> > +++ b/drivers/pci/endpoint/pci-epc-core.c
+> > @@ -358,13 +358,15 @@ EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
+> >    * @epc: the EPC device on which address is allocated
+> >    * @func_no: the endpoint function number in the EPC device
+> >    * @phys_addr: physical address of the local system
+> > + * @window: index to the window region where PCI address will be mapped
+> >    * @pci_addr: PCI address to which the physical address should be mapped
+> >    * @size: the size of the allocation
+> >    *
+> >    * Invoke to map CPU address with PCI address.
+> >    */
+> >   int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
+> > -                  phys_addr_t phys_addr, u64 pci_addr, size_t size)
+> > +                  phys_addr_t phys_addr, int window,
+> > +                  u64 pci_addr, size_t size)
+> >   {
+> >       int ret;
+> >       unsigned long flags;
+> > @@ -376,7 +378,8 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
+> >               return 0;
+> >
+> >       spin_lock_irqsave(&epc->lock, flags);
+> > -     ret = epc->ops->map_addr(epc, func_no, phys_addr, pci_addr, size);
+> > +     ret = epc->ops->map_addr(epc, func_no, phys_addr,
+> > +                              window, pci_addr, size);
+> >       spin_unlock_irqrestore(&epc->lock, flags);
+> >
+> >       return ret;
+> > diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+> > index 2bf8bd1..4b610cd 100644
+> > --- a/drivers/pci/endpoint/pci-epc-mem.c
+> > +++ b/drivers/pci/endpoint/pci-epc-mem.c
+> > @@ -39,56 +39,78 @@ static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
+> >    * __pci_epc_mem_init() - initialize the pci_epc_mem structure
+> >    * @epc: the EPC device that invoked pci_epc_mem_init
+> >    * @phys_base: the physical address of the base
+> > - * @size: the size of the address space
+> > + * @num_windows: number of windows device supports
+> >    * @page_size: size of each page
+> >    *
+> >    * Invoke to initialize the pci_epc_mem structure used by the
+> >    * endpoint functions to allocate mapped PCI address.
+> >    */
+> > -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
+> > -                    size_t page_size)
+> > +int __pci_epc_mem_init(struct pci_epc *epc, struct pci_epc_mem_window *windows,
+> > +                    int num_windows, size_t page_size)
+> >   {
+> > -     int ret;
+> > -     struct pci_epc_mem *mem;
+> > -     unsigned long *bitmap;
+> > +     struct pci_epc_mem *mem = NULL;
+> > +     unsigned long *bitmap = NULL;
+> >       unsigned int page_shift;
+> > -     int pages;
+> >       int bitmap_size;
+> > +     int pages;
+> > +     int ret;
+> > +     int i;
 > > +
-> > +maintainers:
-> > +  - John Stultz <john.stultz@linaro.org>
+> > +     epc->mem_windows = 0;
 > > +
-> > +description: |
-> > +  Supports the onboard HiKey960 USB GPIO hub, which acts as a
-> > +  role-switch intermediary to detect the state of the USB-C
-> > +  port, to switch the hub into dual-role USB-C or host mode,
-> > +  which enables the onboard USB-A host ports.
->
-> Honestly I'm torn between whatever works for you because this is pretty
-> "special" dev board design and it should more accurately match the
-> hardware design. I think we can do the later and it doesn't really need
-> anything new.
->
+> > +     if (!windows)
+> > +             return -EINVAL;
 > > +
-> > +  Schematics about the hub can be found here:
-> > +    https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey960/hardware-docs/HiKey960_Schematics.pdf
+> > +     if (num_windows <= 0)
+> > +             return -EINVAL;
+> >
+> >       if (page_size < PAGE_SIZE)
+> >               page_size = PAGE_SIZE;
+> >
+> >       page_shift = ilog2(page_size);
+> > -     pages = size >> page_shift;
+> > -     bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+> >
+> > -     mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> > -     if (!mem) {
+> > -             ret = -ENOMEM;
+> > -             goto err;
+> > -     }
+> > +     epc->mem = kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
+> > +     if (!epc->mem)
+> > +             return -EINVAL;
+> >
+> > -     bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> > -     if (!bitmap) {
+> > -             ret = -ENOMEM;
+> > -             goto err_mem;
+> > -     }
+> > +     for (i = 0; i < num_windows; i++) {
+> > +             pages = windows[i].phys_base >> page_shift;
+> > +             bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+> >
+> > -     mem->bitmap = bitmap;
+> > -     mem->phys_base = phys_base;
+> > -     mem->page_size = page_size;
+> > -     mem->pages = pages;
+> > -     mem->size = size;
+> > +             mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> > +             if (!mem) {
+> > +                     ret = -ENOMEM;
+> > +                     goto err_mem;
+> > +             }
+> >
+> > -     epc->mem = mem;
+> > +             bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> > +             if (!bitmap) {
+> > +                     ret = -ENOMEM;
+> > +                     goto err_mem;
+> > +             }
 > > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - const: hisilicon,gpio_hubv1
->
-> As a whole this is HiSilicon specific, but really it is not. It's really
-> just a hub, a mux, and connectors for which we have bindings for. I
-> think you need to model the actual hub in DT. We have 2 ways already to
-> describe hubs in DT: a I2C device or USB device.
->
-> AIUI, the board looks something like this:
->
-> ctrl -> mux --> hub -> type-a connector
->             +-> type-c connector
->
-> If the hub I2C is not used, then you could do something like this:
->
-> ctrl {
->     mux-controls = <&usb_gpio_mux>;
->     connector@0 {
->         // type C connector binding
->     };
->     hub@1 {
->         // USB device binding
->     };
-> };
-
-I can't say I totally grok all this, but I'll go digging to try to
-better understand it.
-I don't believe there is any I2C involved here, so I'll try the
-approach you outline above.
-
-
-
-> Or if I2C is used and the hub is under the I2C controller:
->
-> ctrl {
->     port@0 {
->         mux-controls = <&usb_gpio_mux>;
->         endpoint@0 { // mux state 0
->                 remote-endpoint = <&usb_c_connector_port>;
->         };
->         endpoint@1 { // mux state 1
->                 remote-endpoint = <&usb_hub_port>;
->         };
-> };
->
-> The only new bindings you really need are adding 'mux-controls' to the
-> USB host controller and the hub binding (we already have a few).
->
-> If the USB2 and USB3 signals come from 2 different host controller
-> nodes, then I think it will need to look like the 2nd case regardless
-> of I2C. (It's strange that USB3 was not routed to Type-C connector. Can
-> you do USB2 on Type-C and USB3 on hub simultaneously? You need USB2 to
-> enumerate, right?)
-
-Yea, it is strange, and I unfortunately don't know why only USB2 was
-exported to the type-c connector.
-And to my knowledge, you cannot use both the type-c and hub simultaneously.
-
-
+> > +             mem->bitmap = bitmap;
+> > +             mem->window.phys_base = windows[i].phys_base;
+> > +             mem->page_size = page_size;
+> > +             mem->pages = pages;
+> > +             mem->window.size = windows[i].size;
+> > +             mem->window.map_size = 0;
+> > +             mem->window.flags = windows[i].flags;
 > > +
-> > +  typec-vbus-gpios:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: phandle to the typec-vbus gpio
->
-> This should be modeled as a GPIO regulator, and belongs as part of a
-> connector node. See bindings/connector/usb-connector.txt.
->
+> > +             epc->mem[i] = mem;
+> > +     }
+> > +     epc->mem_windows = num_windows;
+> >
+> >       return 0;
+> >
+> >   err_mem:
+> > -     kfree(mem);
+> > +     for (; i >= 0; i--) {
+> > +             kfree(mem->bitmap);
+> > +             kfree(epc->mem[i]);
+> > +     }
+> > +     kfree(epc->mem);
+> >
+> > -err:
+> > -return ret;
+> > +     return ret;
+> >   }
+> >   EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+> >
+> > @@ -101,48 +123,152 @@ EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+> >    */
+> >   void pci_epc_mem_exit(struct pci_epc *epc)
+> >   {
+> > -     struct pci_epc_mem *mem = epc->mem;
+> > +     struct pci_epc_mem *mem;
+> > +     int i;
 > > +
-> > +  otg-switch-gpios:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: phandle to the otg-switch gpio
->
-> This would be the gpio-mux binding instead.
->
+> > +     if (!epc->mem_windows)
+> > +             return;
 > > +
-> > +  hub-vdd33-en-gpios:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: phandle to the hub 3.3v power enablement gpio
->
-> This should be modeled as a GPIO regulator.
->
-> What about the reset line on the hub?
-
-Unknown. I don't have any details on that.
-
-
+> > +     for (i = 0; i <= epc->mem_windows; i--) {
+> > +             mem = epc->mem[i];
+> > +             kfree(mem->bitmap);
+> > +             kfree(epc->mem[i]);
+> > +     }
+> > +     kfree(epc->mem);
+> >
+> >       epc->mem = NULL;
+> > -     kfree(mem->bitmap);
+> > -     kfree(mem);
+> > +     epc->mem_windows = 0;
+> >   }
+> >   EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+> >
+> > +static int pci_epc_find_best_fit_window(struct pci_epc *epc, size_t size,
+> > +                                     u32 flags)
+> > +{
+> > +     size_t window_least_size = 0;
+> > +     int best_fit_window = -1;
+> > +     struct pci_epc_mem *mem;
+> > +     size_t actual_size;
+> > +     size_t avail_size;
+> > +     u32 win_flags;
+> > +     int i;
 > > +
-> > +  usb-role-switch:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: Support role switch.
+> > +     for (i = 0; i < epc->mem_windows; i++) {
+> > +             mem = epc->mem[i];
+> > +             win_flags = mem->window.flags;
+> > +
+> > +             actual_size = ALIGN(size, mem->page_size);
+> > +             avail_size = mem->window.size - mem->window.map_size;
+> > +
+> > +             if (win_flags == 0x0) {
+> > +                     if (best_fit_window == -1) {
+> > +                             if (actual_size <= avail_size) {
+> > +                                     best_fit_window = i;
+> > +                                     window_least_size = mem->window.size;
+> > +                             }
+> > +                     } else {
+> > +                             if (actual_size <= avail_size &&
+> > +                                 mem->window.size < window_least_size) {
+> > +                                     best_fit_window = i;
+> > +                                     window_least_size = mem->window.size;
+> > +                             }
+> > +                     }
+> > +             } else {
+> > +                     if (mem->window.map_size &&
+> > +                         (win_flags | PCI_EPC_WINDOW_FLAG_NON_MULTI_ALLOC))
+> > +                             continue;
+> > +
+> > +                     if (!(win_flags | flags))
+> > +                             continue;
+> > +
+> > +                     if (best_fit_window == -1) {
+> > +                             if (actual_size <= avail_size) {
+> > +                                     best_fit_window = i;
+> > +                                     window_least_size = mem->window.size;
+> > +                             }
+> > +                     } else {
+> > +                             if (actual_size <= avail_size &&
+> > +                                 mem->window.size < window_least_size) {
+> > +                                     best_fit_window = i;
+> > +                                     window_least_size = mem->window.size;
+> > +                             }
+> > +                     }
+> > +             }
+> > +     }
+> > +
+> > +     return best_fit_window;
+> > +}
+> > +
+> >   /**
+> >    * pci_epc_mem_alloc_addr() - allocate memory address from EPC addr space
+> >    * @epc: the EPC device on which memory has to be allocated
+> >    * @phys_addr: populate the allocated physical address here
+> > + * @window: populate the window here which will be used to map PCI address
+> >    * @size: the size of the address space that has to be allocated
+> > + * @flags: look for window as requested in flags
+> >    *
+> >    * Invoke to allocate memory address from the EPC address space. This
+> >    * is usually done to map the remote RC address into the local system.
+> >    */
+> >   void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+> > -                                  phys_addr_t *phys_addr, size_t size)
+> > +                                  phys_addr_t *phys_addr,
+> > +                                  int *window, size_t size, uint32_t flags)
+> >   {
+> > +     int best_fit = PCI_EPC_DEFAULT_WINDOW;
+> > +     void __iomem *virt_addr = NULL;
+> > +     struct pci_epc_mem *mem;
+> > +     unsigned int page_shift;
+> >       int pageno;
+> > -     void __iomem *virt_addr;
+> > -     struct pci_epc_mem *mem = epc->mem;
+> > -     unsigned int page_shift = ilog2(mem->page_size);
+> >       int order;
+> >
+> > +     if (epc->mem_windows <= 0)
+> > +             return NULL;
+> > +
+> > +     if (epc->mem_windows > 1) {
+> > +             best_fit = pci_epc_find_best_fit_window(epc, size, flags);
+> > +             if (best_fit < 0)
+> > +                     return NULL;
+> > +     }
+> > +
+> > +     mem = epc->mem[best_fit];
+> >       size = ALIGN(size, mem->page_size);
+> > +     if (size > (mem->window.size - mem->window.map_size))
+> > +             return NULL;
+> > +     page_shift = ilog2(mem->page_size);
+> >       order = pci_epc_mem_get_order(mem, size);
+> >
+> >       pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
+> >       if (pageno < 0)
+> >               return NULL;
+> >
+> > -     *phys_addr = mem->phys_base + (pageno << page_shift);
+> > +     *phys_addr = mem->window.phys_base + (pageno << page_shift);
+> >       virt_addr = ioremap(*phys_addr, size);
+> > -     if (!virt_addr)
+> > +     if (!virt_addr) {
+> >               bitmap_release_region(mem->bitmap, pageno, order);
+> > +     } else {
+> > +             mem->window.map_size += size;
+> > +             *window = best_fit;
+> > +     }
+> >
+> >       return virt_addr;
+> >   }
+> >   EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
+> >
+> > +static int pci_epc_get_matching_window(struct pci_epc *epc,
+> > +                                    phys_addr_t phys_addr)
+> > +{
+> > +     struct pci_epc_mem *mem;
+> > +     int i;
+> > +
+> > +     for (i = 0; i < epc->mem_windows; i++) {
+> > +             mem = epc->mem[i];
+> > +
+> > +             if (mem->window.phys_base == phys_addr)
+> > +                     return i;
+> > +     }
+> > +
+> > +     return -EINVAL;
+> > +}
+> > +
+> >   /**
+> >    * pci_epc_mem_free_addr() - free the allocated memory address
+> >    * @epc: the EPC device on which memory was allocated
+> > @@ -155,16 +281,26 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
+> >   void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
+> >                          void __iomem *virt_addr, size_t size)
+> >   {
+> > +     struct pci_epc_mem *mem;
+> > +     unsigned int page_shift;
+> > +     int window = 0;
+> >       int pageno;
+> > -     struct pci_epc_mem *mem = epc->mem;
+> > -     unsigned int page_shift = ilog2(mem->page_size);
+> >       int order;
+> >
+> > +     if (epc->mem_windows > 1) {
+> > +             window = pci_epc_get_matching_window(epc, phys_addr);
+> > +             if (window < 0)
+> > +                     return;
+> > +     }
+> > +
+> > +     mem = epc->mem[window];
+> > +     page_shift = ilog2(mem->page_size);
+> >       iounmap(virt_addr);
+> > -     pageno = (phys_addr - mem->phys_base) >> page_shift;
+> > +     pageno = (phys_addr - mem->window.phys_base) >> page_shift;
+> >       size = ALIGN(size, mem->page_size);
+> >       order = pci_epc_mem_get_order(mem, size);
+> >       bitmap_release_region(mem->bitmap, pageno, order);
+> > +     mem->window.map_size -= size;
+> >   }
+> >   EXPORT_SYMBOL_GPL(pci_epc_mem_free_addr);
+> >
+> > diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> > index f641bad..bee6f65 100644
+> > --- a/include/linux/pci-epc.h
+> > +++ b/include/linux/pci-epc.h
+> > @@ -48,7 +48,8 @@ struct pci_epc_ops {
+> >       void    (*clear_bar)(struct pci_epc *epc, u8 func_no,
+> >                            struct pci_epf_bar *epf_bar);
+> >       int     (*map_addr)(struct pci_epc *epc, u8 func_no,
+> > -                         phys_addr_t addr, u64 pci_addr, size_t size);
+> > +                         phys_addr_t addr, int window,
+> > +                         u64 pci_addr, size_t size);
+> >       void    (*unmap_addr)(struct pci_epc *epc, u8 func_no,
+> >                             phys_addr_t addr);
+> >       int     (*set_msi)(struct pci_epc *epc, u8 func_no, u8 interrupts);
+> > @@ -64,17 +65,57 @@ struct pci_epc_ops {
+> >       struct module *owner;
+> >   };
+> >
+> > +#define PCI_EPC_DEFAULT_WINDOW               0
+> > +
+> > +/**
+> > + * enum pci_epc_window_flags - flags info for pci_epc_mem_window
+> > + *
+> > + * This enum defines how the endpoint controller window should be used
+> > + * for allocations.
+> > + *
+> > + * @PCI_EPC_WINDOW_FLAG_MULTI_ALLOC: Indicates multiple chunks of memory can be
+> > + *                                allocated from same window
+> > + * @PCI_EPC_WINDOW_FLAG_NON_MULTI_ALLOC: Indicates only single memory allocation
+> > + *                                    is possible on the window
 >
-> This normally is a controller property. Role switch is foreign to the
-> hub, so doesn't really belong there for sure.
+> Instead of NON_MULTI_ALLOC, we could simply have different page_size for
+> different windows. For a platform that doesn't allow multiple alloc,
+> page size will be equal to the window size.
+>
+I would still prefer this flag and not go with page size = window size
+as we could allocate unnecessary memory
+that might not be used and also the window sizes might be too large.
 
-So this part was critical to being able to get role switch
-notification from the connector and to properly switch modes without
-adding extra notifier gunk from the previous patch that folks didn't
-like.
+> > + * @PCI_EPC_WINDOW_FLAG_LARGE_ALLOC: Window is used for large memory allocation
+> > + * @PCI_EPC_WINDOW_FLAG_SMALL_ALLOC: Window is used for small memory allocation
+> > + * @PCI_EPC_WINDOW_FLAG_HIGH_PRI_ALLOC: Window is used for high priority data
+> > + *                                   transfers
+> > + * @PCI_EPC_WINDOW_FLAG_LOW_PRI_ALLOC: Window is used for low priority data
+> > + *                                  transfers
+>
+> Let's defer adding these flags until a platform actually starts to use this.
+>
+sure will drop the above.
 
-Trying to understand further,  your suggestion here is to re-model the
-binding, as gpio regulators and gpio muxes, and use a usb-connector
-node to describe them,  but I'm missing how I connect that to the
-driver implementation I have? Is the idea to extend the rt1711h and
-dwc3 drivers further to support the mux/hub bit (this part is fairly
-foggy to me), completely removing the need for the misc driver?
+Cheers,
+--Prabhakar
 
-I did take an attempt at something similar with an earlier iteration
-of the patch set, where I was trying to move the vbus-gpio as a
-gpio-regulator to be controlled by the rt1711h/tpcm core, but that
-approach didn't work properly and Hans suggested I just go back to the
-approach submitted here:
-  https://lkml.org/lkml/2019/10/22/42
-
-thanks
--john
+> Thanks
+> Kishon
