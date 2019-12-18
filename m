@@ -2,112 +2,164 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36EAC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E67C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA50E227BF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:39:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cCfmWZGu"
+	by mail.kernel.org (Postfix) with ESMTP id 26D29206D7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfLRSjo (ORCPT
+        id S1726944AbfLRSsR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:39:44 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42825 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfLRSjo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 13:39:44 -0500
-Received: by mail-io1-f67.google.com with SMTP id n11so1509636iom.9
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 10:39:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qS07QetcqHopZvL0SAF8T87/ibXNrIwvAxwHVFARh9I=;
-        b=cCfmWZGu+EkTY9HHCwEPsf8m9ckAewsbfv+DdyQ2mndIWHOIm5cPWNW6KA2eDILRbS
-         Yp1/dohvrHxPAl+V3lkzpybQo/+zHsShotOBU5xVZT9n5tFDQQe3LfkSfaeEXTa1iav5
-         Tw1T5zvpDld+JYMpSOSO8g4Wf2BGB/9CUvAas=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qS07QetcqHopZvL0SAF8T87/ibXNrIwvAxwHVFARh9I=;
-        b=njEMv3DIniY0KmH1cu9fLT0/cmnOyev7VeqMpo+fQfpCUVukEHPvxggI6OuZd2Y1p1
-         v+2XOGebeB/k+LA8Jo18km7PqrCL1ertUc3w0agBr3YNRFiM5Bzk+dbpGF5pgHJNLAbJ
-         +Hz/SGzYvotARJbebJD4k3FJubw6mOVrlvHTFF8tbu9JxIBGAlN70/yJrCQLB4hLTHTl
-         3nldVm+8kKdrOgmGxOL0bGMKQseKsqqXC59fW44eD9/+CHZDdou58KUAWCfsVmDNbpOH
-         PhnwiBqzo9xVhHMC9w0dz18UfZgdQwM2cBeuEYW5l8gedoIVOwCWMMKs5vjI3WSLR8sl
-         izVg==
-X-Gm-Message-State: APjAAAVpy3Giyjukf1JoUVO6H1h098mdhHC/YUCa0DKbkuD4SMzBjpag
-        SRiQYfCGM3o4YDuYfGDy9JmLPJp1QF0=
-X-Google-Smtp-Source: APXvYqxahTYFagiGzORstPasVXz1BJHYmo1WjYVKclh5L1rKB2qJMvCXKW/tbb2gxodA16eqf1Jwzg==
-X-Received: by 2002:a02:ce8a:: with SMTP id y10mr3751540jaq.21.1576694383071;
-        Wed, 18 Dec 2019 10:39:43 -0800 (PST)
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com. [209.85.166.174])
-        by smtp.gmail.com with ESMTPSA id d7sm921992ile.54.2019.12.18.10.39.42
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Dec 2019 10:39:42 -0800 (PST)
-Received: by mail-il1-f174.google.com with SMTP id v69so2540844ili.10
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 10:39:42 -0800 (PST)
-X-Received: by 2002:a92:cc90:: with SMTP id x16mr3278373ilo.269.1576694382002;
- Wed, 18 Dec 2019 10:39:42 -0800 (PST)
-MIME-Version: 1.0
-References: <1576474742-23409-1-git-send-email-sanm@codeaurora.org>
- <1576474742-23409-2-git-send-email-sanm@codeaurora.org> <5df7c855.1c69fb81.44dfc.29c1@mx.google.com>
- <CAD=FV=XA7g87vu_sNhn=z1cfe51c9cUT8MHUHi3PYC7bosb5PA@mail.gmail.com> <e901331b-456c-f3ed-6717-e5bf24778c57@codeaurora.org>
-In-Reply-To: <e901331b-456c-f3ed-6717-e5bf24778c57@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 18 Dec 2019 10:39:30 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=Xg9UTt2xjerkSKiSKSZ3tP2Drqf36Mu5eFiSxmsgj6kw@mail.gmail.com>
-Message-ID: <CAD=FV=Xg9UTt2xjerkSKiSKSZ3tP2Drqf36Mu5eFiSxmsgj6kw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings
-To:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Wed, 18 Dec 2019 13:48:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:57250 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726699AbfLRSsR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 13:48:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8288D1FB;
+        Wed, 18 Dec 2019 10:48:16 -0800 (PST)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D5B93F67D;
+        Wed, 18 Dec 2019 10:48:14 -0800 (PST)
+Date:   Wed, 18 Dec 2019 18:48:09 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-usb@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Manu Gautam <mgautam@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Ondrej Jirman <megous@megous.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v5 8/8] firmware: arm_scpi: Support unidirectional
+ mailbox channels
+Message-ID: <20191218184809.GA14599@bogus>
+References: <20191215042455.51001-1-samuel@sholland.org>
+ <20191215042455.51001-9-samuel@sholland.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191215042455.51001-9-samuel@sholland.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Dec 18, 2019 at 4:48 AM Sandeep Maheswaram (Temp)
-<sanm@codeaurora.org> wrote:
+On Sat, Dec 14, 2019 at 10:24:55PM -0600, Samuel Holland wrote:
+> Some mailbox controllers have only unidirectional channels, so we need a
+> pair of them for each SCPI channel. If a mbox-names property is present,
+> look for "rx" and "tx" mbox channels; otherwise, the existing behavior
+> is preserved, and a single mbox channel is used for each SCPI channel.
 >
-> +  "#address-cells":
-> +    enum: [ 1, 2 ]
+
+I need to look at the bindings again, but I think you must update it.
+
+> Note that since the mailbox framework only supports a single phandle
+> with each name (mbox_request_channel_byname always returns the first
+> one), this new mode only supports a single SCPI channel.
+>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+>  drivers/firmware/arm_scpi.c | 58 +++++++++++++++++++++++++++++--------
+>  1 file changed, 46 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/firmware/arm_scpi.c b/drivers/firmware/arm_scpi.c
+> index a80c331c3a6e..36ff9dd8d0fa 100644
+> --- a/drivers/firmware/arm_scpi.c
+> +++ b/drivers/firmware/arm_scpi.c
+> @@ -231,7 +231,8 @@ struct scpi_xfer {
+>
+>  struct scpi_chan {
+>  	struct mbox_client cl;
+> -	struct mbox_chan *chan;
+> +	struct mbox_chan *rx_chan;
+> +	struct mbox_chan *tx_chan;
+>  	void __iomem *tx_payload;
+>  	void __iomem *rx_payload;
+>  	struct list_head rx_pending;
+> @@ -505,7 +506,7 @@ static int scpi_send_message(u8 idx, void *tx_buf, unsigned int tx_len,
+>  	msg->rx_len = rx_len;
+>  	reinit_completion(&msg->done);
+>
+> -	ret = mbox_send_message(scpi_chan->chan, msg);
+> +	ret = mbox_send_message(scpi_chan->tx_chan, msg);
+>  	if (ret < 0 || !rx_buf)
+>  		goto out;
+>
+> @@ -854,8 +855,13 @@ static void scpi_free_channels(void *data)
+>  	struct scpi_drvinfo *info = data;
+>  	int i;
+>
+> -	for (i = 0; i < info->num_chans; i++)
+> -		mbox_free_channel(info->channels[i].chan);
+> +	for (i = 0; i < info->num_chans; i++) {
+> +		struct scpi_chan *pchan = &info->channels[i];
 > +
-> +  "#size-cells":
-> +    enum: [ 1, 2 ]
->
-> Hm... ok. Interesting.
->
-> Use of enum seems to match 'timer/arm,arch_timer_mmio.yaml'.  ...and
-> sub-device probably uses DMA so IIUC it's important to pass
-> #size-cells of 2 down to it if the parent had it.
->
-> Should i mention this as below?
->
->  "#address-cells":
->     const: 2
->
->   "#size-cells":
->     const: 2
+> +		if (pchan->tx_chan != pchan->rx_chan)
+> +			mbox_free_channel(pchan->tx_chan);
+> +		mbox_free_channel(pchan->rx_chan);
 
-No, keep it like you have unless Rob disagrees.  If the parent is only
-32-bits it should be fine to keep it.
+I think mbox_free_channel handles !chan->cl, so just do unconditionally.
+
+> +	}
+>  }
+>
+>  static int scpi_remove(struct platform_device *pdev)
+> @@ -903,6 +909,7 @@ static int scpi_probe(struct platform_device *pdev)
+>  	struct resource res;
+>  	struct device *dev = &pdev->dev;
+>  	struct device_node *np = dev->of_node;
+> +	bool use_mbox_names = false;
+>
+>  	scpi_info = devm_kzalloc(dev, sizeof(*scpi_info), GFP_KERNEL);
+>  	if (!scpi_info)
+> @@ -916,6 +923,14 @@ static int scpi_probe(struct platform_device *pdev)
+>  		dev_err(dev, "no mboxes property in '%pOF'\n", np);
+>  		return -ENODEV;
+>  	}
+> +	if (of_get_property(dev->of_node, "mbox-names", NULL)) {
+
+So, for this platform, this is required and must fail if it is not found.
+But instead your check here is optional and may end up populating 2
+scpi channels instead of one. I would suggest to make it required and
+fail for it based on some compatible, otherwise you are not checking
+correctly.
+
+Something like:
+        if (of_match_device(blah_blah_of_match, &pdev->dev)) {
+                use_mbox_names = true;
+		count = 1;
+	}
+
+
+> +		use_mbox_names = true;
+> +		if (count != 2) {
+> +			dev_err(dev, "need exactly 2 mboxes with mbox-names\n");
+> +			return -ENODEV;
+> +		}
+> +		count /= 2;
+> +	}
+
+Ah, OK then you must update the binding as it's different usage of mailbox. 
+
+General query, not related to this patch: If you are in process of
+implementing the firmware, I suggest to move to SCMI protocol than this
+one if not too late. This specification is deprecated and no longer
+updated while SCMI is actively developed and maintained. However it has
+slightly different notion of tx and rx and the way the specification
+commands which messages are synchronous and which can be async/delayed.
+
+--
+Regards,
+Sudeep
