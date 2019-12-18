@@ -2,132 +2,91 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA5BC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 20:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E86C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 20:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA1B221582
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 20:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4986B21582
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 20:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576700628;
-	bh=NIrU2g0K1UTwJpgJUfmj8SmhJrlFd+A7kkOJl59tEgo=;
+	s=default; t=1576700694;
+	bh=9SR6g0H//Syq2bmudVcOmhmN9pjZXNP4X9iyCOZ8ORQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vIakZaYNA8MX+yo6MJKoI2mxh1K12ykOklXkY1TCaE/T6LPrVfu4P3MH7ZS/2eOiI
-	 q2SYFr0JhxF4OzoX36lgHrH0zNFPeXEFl7qsQ10Y8PInqLANWu8vK5ZWWiJpJtNHjj
-	 G/nJOyigJ0fDmGuHlCPCvtBmd1kVSiHqqPf6OyDQ=
+	b=PjPnXlyZsnKifSMWI9K0jA9tGW+LVAm0qREWpMToIAkuVlfiXX+0Q/yuOJCzSnqHt
+	 Qz9bzKYhc0+2VWT9ZCw2kz8b92XMeYmgBIiftNusiMlhqExBviAlcXHRKC/6Bm3h1j
+	 K8CBQQWDBwPS67c49vCJUofhvs918sJNigmxLGWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfLRUXs (ORCPT
+        id S1727324AbfLRUYx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:23:48 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:47080 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727422AbfLRUXr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 15:23:47 -0500
-Received: by mail-ot1-f67.google.com with SMTP id c22so3962861otj.13
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 12:23:47 -0800 (PST)
+        Wed, 18 Dec 2019 15:24:53 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38647 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbfLRUYx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 15:24:53 -0500
+Received: by mail-ot1-f68.google.com with SMTP id h20so4007967otn.5;
+        Wed, 18 Dec 2019 12:24:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V4M27G+pEl3yUJbtQ0vcjxtkFqVokmfh8l26CP8uQpc=;
-        b=TI6yPlTnUeGFi3eREyM7++5LnCPG/F/Dc4edtgMVqqpYoFPAKe3imBquV3bQJYumAL
-         fzzXvcMXmtTYne07hNp9PsfmlogXLlPFWa6jkSo1yHRCgZmTvFyOBVVMsAGb32GGVbqw
-         DwttRFRTzHHjL099WVxgMOqBK73jvUPNN8GtU3/x6wlbWVcYRIRLSEW7jtYCMugc94DB
-         w2/nxJ3O8+6h+rGOtG9dIYi4ax/gDyO6rm3DvJ6HSL1XzVIgGATUbiZRW3prD+kyHqmu
-         YnRnPyn31Dgo21m/5F9qF+xdNE4R/kHKW4HbTaZCsCJbrdwLvDogRbsf8sPfrFXCMkbL
-         lYQw==
-X-Gm-Message-State: APjAAAV0aCyEq2tfgVIOcPIYLi9q9SSWP+oN1m2fjkB9NJzo5iuc04rN
-        gPUY/qxu4OPbOd2/LsHwPg==
-X-Google-Smtp-Source: APXvYqwWVSGcbERyxqe72y3zKoDlTj6uKQZX3SkE5ooMSuV5NR5p4D7vbxRzK7qbzq59I91oDVnICQ==
-X-Received: by 2002:a9d:7757:: with SMTP id t23mr4742036otl.315.1576700626882;
-        Wed, 18 Dec 2019 12:23:46 -0800 (PST)
+        bh=SSGYLj+Mktf9A48zPx6thsm+SFOfaeOO9zJCboiaHwQ=;
+        b=mGyViT9mRSK8sYAugJG5ZPXX1gCvyOItJi3utyMxs8TfzyuIhiR+JzYdbyKCD5IRFc
+         n3g+aWYLVzFYANW/NmOJs1WZ7o0jtiFPmc9KzyJB30bttHXf26rXEGuBQq+JYcXggd27
+         nVGIPEkDzgvBF+OJRT9ljZ9cLw8G6rBe4yMhJkBqiInTWoq1SaqeHnf+l/Xvm4OHKABz
+         1OP9PfjMlj5+Nk3jfGbBvgvXtuTsEezIJ9YcftsS6UmPX5baaD8Rt612hiu+vGHOgB5A
+         FSplnra2/lBHt+ZbVfQk4UEfEPkOry2RputSI7Nbz+baHCEtCESdv7a75eqfEWmUzDP2
+         hFzg==
+X-Gm-Message-State: APjAAAWN120J6O03/zD09H+4435Wc77L3zuCh+UgouzhkhcAt20bICyE
+        q2oI+W0DUCvzzJ5khJk7NA==
+X-Google-Smtp-Source: APXvYqyAvyu+vqojCGMlWHsu7M6BiqVhjOowblFzkcGXvLR/TOSZby2Xl2CyBjp+q3mHUj4X2VbL6A==
+X-Received: by 2002:a9d:27c4:: with SMTP id c62mr4702014otb.292.1576700692845;
+        Wed, 18 Dec 2019 12:24:52 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 4sm1221723otu.0.2019.12.18.12.23.46
+        by smtp.gmail.com with ESMTPSA id e39sm1181609ote.73.2019.12.18.12.24.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 12:23:46 -0800 (PST)
-Date:   Wed, 18 Dec 2019 14:23:45 -0600
+        Wed, 18 Dec 2019 12:24:52 -0800 (PST)
+Date:   Wed, 18 Dec 2019 14:24:51 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] dt-bindings: arm: at91: Document Kizboxmini and
- Smartkiz boards binding
-Message-ID: <20191218202345.GA22591@bogus>
-References: <20191209091339.32593-1-kamel.bouhara@bootlin.com>
+To:     allen <allen.chen@ite.com.tw>
+Cc:     Allen Chen <allen.chen@ite.com.tw>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 1/4] dt-bindings: Add vendor prefix for ITE Tech. Inc.
+Message-ID: <20191218202451.GA27315@bogus>
+References: <1575957299-12977-1-git-send-email-allen.chen@ite.com.tw>
+ <1575957299-12977-2-git-send-email-allen.chen@ite.com.tw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191209091339.32593-1-kamel.bouhara@bootlin.com>
+In-Reply-To: <1575957299-12977-2-git-send-email-allen.chen@ite.com.tw>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 10:13:38AM +0100, Kamel Bouhara wrote:
-> Document devicetree's bindings for the Overkiz's Kizbox Mini and
-> Smartkiz boards, based on a SAM9G25 Atmel SoC.
+On Tue, 10 Dec 2019 13:53:39 +0800, allen wrote:
+> ITE Tech. Inc. (abbreviated as ITE ) is a professional fabless IC
+> design house. ITE's core technology includes PC and NB Controller chips,
+> Super I/O, High Speed Serial Interface, Video Codec, Touch Sensing,
+> Surveillance, OFDM, Sensor Fusion, and so on.
 > 
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> more information on: http://www.ite.com.tw/
+> 
+> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
 > ---
-> Changes in v2
-> =============
-> 	- Added Kizboxmini Base board documentation
-> 	- Merged Smartkiz documentation as it is also a sam9g25 based
-> 	board
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Changes in v3
-> =============
-> 	- Made a single items list with all the sam9g25 based boards and
-> 	put description into a comment.
-> 	- Fixed duplicated item in enum list and checked with 'make
-> 	dt_binding_check'
-> 
-> Changes in v4
-> =============
-> 	- Fix missing "-" before items list
-> 
-> Changes in v5
-> =============
-> 	- s/at91-kizboxmini_common.dtsi/at91-kizboxmini-common.dtsi/
-> ---
->  Documentation/devicetree/bindings/arm/atmel-at91.yaml | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-> index 6dd8be401673..8d50915330e8 100644
-> --- a/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-> @@ -35,6 +35,16 @@ properties:
->                - atmel,at91sam9x60
->            - const: atmel,at91sam9
-> 
-> +      - items:
-> +          - enum:
-> +                - overkiz,kizboxmini-base # Overkiz kizbox Mini Base Board
-> +                - overkiz,kizboxmini-mb   # Overkiz kizbox Mini Mother Board
-> +                - overkiz,kizboxmini-rd   # Overkiz kizbox Mini RailDIN
-> +                - overkiz,smartkiz        # Overkiz SmartKiz Board
 
-Should be indented 2 fewer spaces. Otherwise,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +          - const: atmel,at91sam9g25
-> +          - const: atmel,at91sam9x5
-> +          - const: atmel,at91sam9
-> +
->        - items:
->            - enum:
->                - atmel,at91sam9g15
-> --
-> 2.24.0
-> 
+Acked-by: Rob Herring <robh@kernel.org>
