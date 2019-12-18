@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC2AC2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 07:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5148DC2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 07:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB0D2082E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 07:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D22724650
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 07:56:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWBen/oE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tj3Ue8r6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfLRHrt (ORCPT
+        id S1726497AbfLRH4R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 02:47:49 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41735 "EHLO
+        Wed, 18 Dec 2019 02:56:17 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41413 "EHLO
         mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfLRHrt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 02:47:49 -0500
-Received: by mail-lf1-f68.google.com with SMTP id m30so944081lfp.8;
-        Tue, 17 Dec 2019 23:47:47 -0800 (PST)
+        with ESMTP id S1725799AbfLRH4R (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 02:56:17 -0500
+Received: by mail-lf1-f68.google.com with SMTP id m30so960126lfp.8;
+        Tue, 17 Dec 2019 23:56:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nokscQl1JvA6OpV4GvGWn17FH9+5TgQgiHxyucvRXr0=;
-        b=bWBen/oElwkvKXrpTUboVi2P/lSOZPNr9GQmoGYBFqH02T/VyHBuW0TYF/HqUU6KFr
-         tZ4bKYgZjjM8xYfpLzhWJv8MArRkRhUAt/F8CnTN4BP4ldz8pjjS67o6CKxtdIXW2e/M
-         MHpkW7nVTK/dSudcadPaCCQSbCncFLnyl/RsNDFOJC/QPszpFh4HyCb05PK1qdETCQ2F
-         G3vResEu6brZ0JzmnFmNAMec6rG2TcP+JjGOgCzDRNliG7ex4t54ZRWwXJhsZ7PoRnbp
-         h2YF6Lz0Fns/AWZoWcXCSGrqLoPJ+JUB0z0bVkMnNlGf/kwYY/NQAfJqnv0RXvLjWV21
-         DOxQ==
+        bh=Zpm+bbtYAcwWy2Wn6SaFwFyPuVEkpHVCpuc/3F/FRUY=;
+        b=Tj3Ue8r6fMPYf59EIcD9ZFV13au+99m3LBvJqqyrcZlVwQcYSWpCMD8NTdZBI3447i
+         2EWNCpxwlHZYTkF4wx01v8Mt6fFOybeKzXQynBJakPkUnw4XxwPDfGRQ7LsW/Mr4EgF1
+         Hjrzmw0zPk+d5srlvGZGJs0vbhvTrmXyTsCpTOwULQq3liaIRQmNdOIoJK3nNVLO5Yyq
+         M8Y5wTa91AVDqGxFghywXYUM+FCFgrEQzyZEFmP7y+Mdbf7YktH++8A6QwiHx7WUWkpi
+         mfRVCqHYoP1yliiifNOLoxyDBULSXPY8jvE5wqUXziWr1JTczvopwdXKXi1861kodjPt
+         JBcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=nokscQl1JvA6OpV4GvGWn17FH9+5TgQgiHxyucvRXr0=;
-        b=PRQPnqEi1hNcKeNWzlE0UQulOEy6W9r5newPt7FdDoSy04KXo74bzfPYoyhTUCuwtB
-         uk+dBDGqWh9kKKgjmrGfAtY9J/Z6GmVYeF34TWsd/FgdSGdp7/Qe8KZZDWh2DDyvCS2C
-         JJDez85IM3RzTQoua84V64ZNSxkUaPSLTfFwPWos+XDP1PFdQM1FTd0R4HpxGnCa2KB7
-         8hprV1qFzVhJRElMCa1uUIQjL8LFEWnRrd8VrCxynziY/PdJ7w6yWbRvLUhFOLI/zN1v
-         0eZ9dthXVrqERWCCz7x1w3Pc9dSRFvm9U0WPlhmm1XJwkyk0dzBj74azYjis++OlPX4l
-         fGsA==
-X-Gm-Message-State: APjAAAXL1kyIziXeR74Nu4dXKg4zorOanvmJqv9R8Ax8p8E6CAHIDi+h
-        TyaMvPLbSE3cCkdHZaYjs7JlICci
-X-Google-Smtp-Source: APXvYqz+CfkLON/D1NMhSf0doeeLndWcWpkn4yEURwpXpsudJkqOg3yvsKH2956LGtgXteWmd7zQSA==
-X-Received: by 2002:ac2:41c8:: with SMTP id d8mr823048lfi.65.1576655266559;
-        Tue, 17 Dec 2019 23:47:46 -0800 (PST)
+        bh=Zpm+bbtYAcwWy2Wn6SaFwFyPuVEkpHVCpuc/3F/FRUY=;
+        b=O/HsPUNKt/IkRqVHCez+9a55VTDMn9ZZbBqelwLxXTMxQSEB5RC051Ic8obnxhxRta
+         hrDbz1AAV+UfjI+Rz34POKqOzmEb4Sz+1PkGIsCHcu9JNHkITHRF2GzNxQ9xA+eOL9aa
+         jP/jA67fFR8FmkrQNHoaKDO4S6DxhVIFErbO/fEvdXPGM8kenfiOrO0mgJdE0O5dhyHZ
+         bdzoZ5rVyIVRWGFd7mpqZJFV9RXsBaCLpU+d/MlbSrLRm2Av8+IM+0dEuPX3IOooHOGs
+         UKrCXM37a0asjcYuWmQ1ujE1U9yiSFGRS/RmfM9ephS59To5rmIhE/NdInSqXj5lYkKW
+         JfGw==
+X-Gm-Message-State: APjAAAWNpiMKb3SGqXgOuErhkZTvNUsrQnirAa6ZT7yy728hcf41v3/S
+        ivro6UtCb8wjgnprG+udUk6S5gvk
+X-Google-Smtp-Source: APXvYqxMWkYgp88Kq6PpBwqkoYYP30jFZD030byRM5QecwMKflVmZlbheXpLqLsqNu4pV7KXz1x+JA==
+X-Received: by 2002:a19:e011:: with SMTP id x17mr808536lfg.59.1576655773754;
+        Tue, 17 Dec 2019 23:56:13 -0800 (PST)
 Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id a15sm623886lfi.60.2019.12.17.23.47.45
+        by smtp.googlemail.com with ESMTPSA id u20sm620436lju.34.2019.12.17.23.56.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 23:47:46 -0800 (PST)
-Subject: Re: [PATCH v4 17/19] ARM: tegra: Update sound node clocks in device
- tree
+        Tue, 17 Dec 2019 23:56:13 -0800 (PST)
+Subject: Re: [PATCH v4 05/19] dt-bindings: soc: tegra-pmc: Add Tegra PMC clock
+ bindings
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
         thierry.reding@gmail.com, jonathanh@nvidia.com,
         mperttunen@nvidia.com, gregkh@linuxfoundation.org,
@@ -69,14 +69,14 @@ Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
         devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
- <1576613046-17159-18-git-send-email-skomatineni@nvidia.com>
+ <1576613046-17159-6-git-send-email-skomatineni@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3dd0e953-220a-e265-8a12-aa68682aa9f0@gmail.com>
-Date:   Wed, 18 Dec 2019 10:47:44 +0300
+Message-ID: <8cd89182-a430-e9f2-bba7-bad23a7960fd@gmail.com>
+Date:   Wed, 18 Dec 2019 10:56:11 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <1576613046-17159-18-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1576613046-17159-6-git-send-email-skomatineni@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -85,62 +85,117 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-17.12.2019 23:04, Sowjanya Komatineni пишет:
-> clk_out_1, clk_out_2, and clk_out_3 are part of Tegra PMC block
-> and are moved from clock driver to pmc driver with pmc as clock
-> provider.
-> DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-> 	t=1576613055; bh=aZWp4sScdv8qprM+UpGS0w1DX7YelR50gFqoThf23X4=;
-> 	h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-> 	 In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-> 	 Content-Type;
-> 	b=p9EmVtuTvJK6owqo0lmnZnAvftCWc6+7Mkp/Ks9y26tKN5c4jU+I+YEAaMWoHuzd+
-> 	 7n0vS98WNMGomj19IUXoaH49IeTgPAlqOkU57IIiL2qEnX3sYNYpl/rCRUIs7vd33t
-> 	 LSn8tQeu9Lz+Yfl8hvXcN3sdxRQOEPDYwzWG+tVy1FCnwouTHSfBhgado2Tx/9cWgi
-> 	 HlSWkzjvodag7mAmZtLCl5P4J+oVEJnpYnjSZKNojqszn8u651ErvnVI/VbhZwQ0G5
-> 	 Yg8kEr8YECPk2L4MXUe8J2YmKtNyZaADOkUhjyxqMjZ2bGrB9RDm5dKNFxkWuEeSpb
-> 	 U3nMi7MNcvBmQ==
+17.12.2019 23:03, Sowjanya Komatineni пишет:
+> Tegra PMC has 3 clocks clk_out_1, clk_out_2, and clk_out_3.
 > 
-> clk_out_1 is dedicated for audio mclk on Tegra30 through Tegra210.
-> 
-> This patch updates device tree sound node to use clk_out_1 from
-> pmc provider as mclk and uses assigned-clock properties to specify
-> clock parents for clk_out_1 and extern1.
+> This patch documents PMC clock bindings and adds a header defining
+> Tegra PMC clock ids.
 > 
 > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  arch/arm/boot/dts/tegra114-dalmore.dts      | 7 ++++++-
->  arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi | 7 ++++++-
->  arch/arm/boot/dts/tegra124-apalis.dtsi      | 7 ++++++-
->  arch/arm/boot/dts/tegra124-jetson-tk1.dts   | 7 ++++++-
->  arch/arm/boot/dts/tegra124-nyan.dtsi        | 7 ++++++-
->  arch/arm/boot/dts/tegra124-venice2.dts      | 7 ++++++-
->  arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi  | 7 ++++++-
->  arch/arm/boot/dts/tegra30-apalis.dtsi       | 7 ++++++-
->  arch/arm/boot/dts/tegra30-beaver.dts        | 7 ++++++-
->  arch/arm/boot/dts/tegra30-cardhu.dtsi       | 7 ++++++-
->  arch/arm/boot/dts/tegra30-colibri.dtsi      | 7 ++++++-
->  11 files changed, 66 insertions(+), 11 deletions(-)
+>  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 37 +++++++++++++++++++++-
+>  include/dt-bindings/soc/tegra-pmc.h                | 15 +++++++++
+>  2 files changed, 51 insertions(+), 1 deletion(-)
+>  create mode 100644 include/dt-bindings/soc/tegra-pmc.h
 > 
-> diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dts
-> index 97a5c3504bbe..c1914b590f5c 100644
-> --- a/arch/arm/boot/dts/tegra114-dalmore.dts
-> +++ b/arch/arm/boot/dts/tegra114-dalmore.dts
-> @@ -1296,7 +1296,12 @@
+> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+> index cb12f33a247f..80cdcad4ab8c 100644
+> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+> @@ -21,6 +21,10 @@ Required properties:
+>  - clock-names : Must include the following entries:
+>    "pclk" (The Tegra clock of that name),
+>    "clk32k_in" (The 32KHz clock input to Tegra).
+> +- #clock-cells : Should be 1 for Tegra30 and higher.
+> +  In clock consumers, this cell represents the PMC clock ID.
+> +  The assignments may be found in header file
+> +  <dt-bindings/soc/tegra-pmc.h>.
 >  
->  		clocks = <&tegra_car TEGRA114_CLK_PLL_A>,
->  			 <&tegra_car TEGRA114_CLK_PLL_A_OUT0>,
-> -			 <&tegra_car TEGRA114_CLK_EXTERN1>;
-> +			 <&pmc TEGRA_PMC_CLK_OUT_1>;
->  		clock-names = "pll_a", "pll_a_out0", "mclk";
+>  Optional properties:
+>  - nvidia,invert-interrupt : If present, inverts the PMU interrupt signal.
+> @@ -80,11 +84,12 @@ Optional nodes:
+>  Example:
+>  
+>  / SoC dts including file
+> -pmc@7000f400 {
+> +pmc: pmc@7000f400 {
+>  	compatible = "nvidia,tegra20-pmc";
+>  	reg = <0x7000e400 0x400>;
+>  	clocks = <&tegra_car 110>, <&clk32k_in>;
+>  	clock-names = "pclk", "clk32k_in";
+> +	#clock-cells = <1>;
+>  	nvidia,invert-interrupt;
+>  	nvidia,suspend-mode = <1>;
+>  	nvidia,cpu-pwr-good-time = <2000>;
+> @@ -171,6 +176,7 @@ Example:
+>  		reg = <0x0 0x7000e400 0x0 0x400>;
+>  		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
+>  		clock-names = "pclk", "clk32k_in";
+> +		#clock-cells = <1>;
+>  
+>  		powergates {
+>  			pd_audio: aud {
+> @@ -260,6 +266,7 @@ Pad configuration state example:
+>  		reg = <0x0 0x7000e400 0x0 0x400>;
+>  		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
+>  		clock-names = "pclk", "clk32k_in";
+> +		#clock-cells = <1>;
+>  
+>  		...
+>  
+> @@ -298,3 +305,31 @@ Pinctrl client example:
+>  		pinctrl-1 = <&hdmi_on>;
+>  		pinctrl-names = "hdmi-on", "hdmi-off";
+>  	};
 > +
-> +		assigned-clocks = <&tegra_car TEGRA114_CLK_EXTERN1>,
-> +				  <&pmc TEGRA_PMC_CLK_OUT_1>;
+> +== Clock Control ==
+> +
+> +Tegra PMC has 3 clocks clk_1, clk_2 and clk_3. Each of these clocks has
+> +source selection and enable/disable gate.
+> +Parent/source for these clocks can be either of osc, osc_div2, osc_div4,
+> +or extern clock from Tegra CAR module.
+> +
+> +Clock configuration example:
+> +	pmc: pmc@7000e400 {
+> +		compatible = "nvidia,tegra210-pmc";
+> +		reg = <0x0 0x7000e400 0x0 0x400>;
+> +		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
+> +		clock-names = "pclk", "clk32k_in";
+> +		#clock-cells = <1>;
+> +	};
+> +
+> +Clock consumer example:
+> +	i2c@7000c500 {
+> +		cam_sensor {
+> +			...
+> +			clocks = <&pmc TEGRA_PMC_CLK_OUT_3>;
+> +			clock-names = "mclk";
+> +			assigned-clocks = <&pmc TEGRA_PMC_CLK_OUT_3>;
+> +			assigned-clock-parents = <&tegra_car TEGRA210_CLK_EXTERN3>;
+> +			...
+> +		};
+> +	};
+> diff --git a/include/dt-bindings/soc/tegra-pmc.h b/include/dt-bindings/soc/tegra-pmc.h
+> new file mode 100644
+> index 000000000000..f7c866404456
+> --- /dev/null
+> +++ b/include/dt-bindings/soc/tegra-pmc.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2019-2020, NVIDIA CORPORATION.  All rights reserved.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_SOC_TEGRA_PMC_H
+> +#define _DT_BINDINGS_SOC_TEGRA_PMC_H
+> +
+> +#define TEGRA_PMC_CLK_OUT_1		0
+> +#define TEGRA_PMC_CLK_OUT_2		1
+> +#define TEGRA_PMC_CLK_OUT_3		2
+> +
+> +#define TEGRA_PMC_CLK_MAX		3
+> +
+> +#endif	/* _DT_BINDINGS_SOC_TEGRA_PMC_H */
+> 
 
-Won't hurt to add a blank line here, similarly in other places below.
-
-> +		assigned-clock-parents = <&tegra_car TEGRA114_CLK_PLL_A_OUT0>,
-> +					 <&tegra_car TEGRA114_CLK_EXTERN1>;
-
-[snip]
-
+The TXT binding should be removed since you converted it to YAML.
