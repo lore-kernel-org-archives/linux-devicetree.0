@@ -4,315 +4,216 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BC7C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 20:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43595C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 21:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC84218AC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 20:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D03924672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 21:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576702779;
-	bh=uO0fvBA/TQ/FWcNNRJRphlk+aAyco9Mn2xTARpXNSsE=;
+	s=default; t=1576703768;
+	bh=JAhpmKdY0BCS7MWOvYPyHGXWF3fuQ13HP/Op0t3lcI8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NodorazaoRVVtSizSIgOWmDgxSrz0Nmw+x3FhyXRW8zxOtZH5lXOJsMV9iSMPu45d
-	 J5r136CQCSrmHQiUfWQld29LEzmPT4mr4OOyEW99mgmul2Rtt5jy3gP001kpNlwXSS
-	 uv15h9N/63MY4O8+iaDQbY7Vsyj0PmnLosS/Cx5M=
+	b=MI5Vv15bA/MmgG0sH/MvsE99ihoqpeHfgehBqDIHgX7nHQwtOjr9IWQG1PHdPZ01a
+	 xBzuogSZPSGckRLxOdiyblVMidAOBfg9Eb4DBcWB8MC2M2A6/04B4gyUY6JAMh/3Hd
+	 9omo4+NlGo7vZLSAvRtj6IgL1CNokpo00WJ1xo0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfLRU7i (ORCPT
+        id S1726092AbfLRVQE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:59:38 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:32862 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfLRU7h (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 15:59:37 -0500
-Received: by mail-ot1-f66.google.com with SMTP id b18so4144982otp.0;
-        Wed, 18 Dec 2019 12:59:37 -0800 (PST)
+        Wed, 18 Dec 2019 16:16:04 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38848 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfLRVQE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 16:16:04 -0500
+Received: by mail-ot1-f67.google.com with SMTP id h20so4180664otn.5;
+        Wed, 18 Dec 2019 13:16:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EOIM5ohVJuG8WUM6Uv/kRMmOO7OZqxuzI2GR/19vjz4=;
-        b=Tzr3BonCLAZmhMEMXl6+MTt0ld+jUvMkvxs+1E7NqQdopHhuoFbLSSvzTus6zKqX5I
-         OowaHY36+ojWkrFGQSyrdoZL0ow6niD/rm2h83trJDmYfr9/W3UCzGmvfne6rw/87zOT
-         62/KPApAxomYu4sCRkrxx6og4GT6GhqxpCpkPI6/nUm1KGv4+7Ed5wdatkxA45p5Tzt1
-         E85OTZ5a6kAHBKJYh9BsNuCADL2ccUEOoNdyKhR+dtF/Pa+S52mziZ/efEe5HK9vNnzD
-         3Y6vMMSuZVpN7F47oXrkrsRnXUZTcge9V/djF9stVsORrLqfDWh6i6Yy5+B5kBWcVA58
-         kw7A==
-X-Gm-Message-State: APjAAAWRMTM77Z67eCDHVkx6waUbeAYjhHVo3FIOrVOltpnBG5JQWKCv
-        gf6mOZzsbM/T2TjIGuGwWQ==
-X-Google-Smtp-Source: APXvYqwdDGZoTBaty9DPSZdgYwCiElye4wqTApby9V2QTSges2/6Tjk/aNfYOvQ1w6UuiKIOxv/y9A==
-X-Received: by 2002:a05:6830:2361:: with SMTP id r1mr4543788oth.88.1576702777020;
-        Wed, 18 Dec 2019 12:59:37 -0800 (PST)
+        bh=VfRpHq+kS/2gCphHVcGTyf5xHe3uvLTiFdpuwlwHK/I=;
+        b=aVfK+sdGJEctKueujyLknlYnApVTuFuUYb+5WkaodXSoACDUjBnMk0BdJrbLwtWS7J
+         ttd2IzZe3LFfPskRc0K5/ylhXJD5vNWNoVvDcTI6RM+pCsl7AOtNeQvCMeI41c1oEz57
+         6s1YbvyFcymLEoVSeHRq8Cfb9WgU5Y9YtCJt//37DqL9Ffvd69k0Xx7R10+e1tC9atZy
+         ng7enARzIcgWeWl4HGVOHB8ZHaIRj04gs4et5gUlfGnS1ZgBhOVvKuwLMvPoeUJhWRvH
+         ohj6+LBiIzPoEhUkpTpFNcZe9lAqQroHB1cTk301kDobeIjW5q0+e1FRbyQb+GFg+rlA
+         S9kQ==
+X-Gm-Message-State: APjAAAVMfwb0I7VVOb0dxlhNO6U7RWQ0COsW7M0I5lc9cDlbaH68egxf
+        OoyUk2gS71nuKi1M0zVp7g==
+X-Google-Smtp-Source: APXvYqxbO7jTCnsX1zsL+WZp6+wZtSheMGnt7JACGcjSdKYJsIBRWBi5EqsXahLBqZf8vvk48VBQaA==
+X-Received: by 2002:a9d:784b:: with SMTP id c11mr4658325otm.246.1576703762925;
+        Wed, 18 Dec 2019 13:16:02 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n22sm1230679otj.36.2019.12.18.12.59.36
+        by smtp.gmail.com with ESMTPSA id q5sm1216343oia.21.2019.12.18.13.16.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 12:59:36 -0800 (PST)
-Date:   Wed, 18 Dec 2019 14:59:35 -0600
+        Wed, 18 Dec 2019 13:16:02 -0800 (PST)
+Date:   Wed, 18 Dec 2019 15:16:01 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Anil Varughese <aniljoy@cadence.com>,
-        Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 13/14] dt-bindings: phy: Document WIZ (SERDES wrapper)
- bindings
-Message-ID: <20191218205935.GA5162@bogus>
-References: <20191216095712.13266-1-kishon@ti.com>
- <20191216095712.13266-14-kishon@ti.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v4 1/8] dt-bindings: add img,pvrsgx.yaml for Imagination
+ GPUs
+Message-ID: <20191218211601.GA11411@bogus>
+References: <cover.1576605726.git.hns@goldelico.com>
+ <aedc895985d966cf709d153d5b0bed07f59bdcfd.1576605726.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191216095712.13266-14-kishon@ti.com>
+In-Reply-To: <aedc895985d966cf709d153d5b0bed07f59bdcfd.1576605726.git.hns@goldelico.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 03:27:11PM +0530, Kishon Vijay Abraham I wrote:
-> Add DT binding documentation for WIZ (SERDES wrapper). WIZ is *NOT* a
-> PHY but a wrapper used to configure some of the input signals to the
-> SERDES. It is used with both Sierra(16G) and Torrent(10G) serdes.
+On Tue, Dec 17, 2019 at 07:01:59PM +0100, H. Nikolaus Schaller wrote:
+> The Imagination PVR/SGX GPU is part of several SoC from
+> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo
+> and others.
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> [jsarha@ti.com: Add separate compatible for Sierra(16G) and Torrent(10G)
->  SERDES]
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> With this binding, we describe how the SGX processor is
+> interfaced to the SoC (registers, interrupt etc.).
+> 
+> In most cases, Clock, Reset and power management is handled
+> by a parent node or elsewhere.
+> 
+> Tested by make dt_binding_check dtbs_check
+
+I'm surprised that worked... (Not for long if it did).
+
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > ---
->  .../bindings/phy/ti,phy-j721e-wiz.yaml        | 204 ++++++++++++++++++
->  1 file changed, 204 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+>  .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 80 +++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
 > new file mode 100644
-> index 000000000000..fd4204a960a9
+> index 000000000000..44799774e34d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-> @@ -0,0 +1,204 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> @@ -0,0 +1,80 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 > +%YAML 1.2
 > +---
-> +$id: "http://devicetree.org/schemas/phy/ti,phy-j721e-wiz.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: TI J721E WIZ (SERDES Wrapper)
+> +title: Imagination PVR/SGX GPU
 > +
 > +maintainers:
-> +  - Kishon Vijay Abraham I <kishon@ti.com>
+> +  - H. Nikolaus Schaller <hns@goldelico.com>
+> +
+> +description: |+
+> +  This binding describes the Imagination SGX5 series of 3D accelerators which
+> +  are found in several different SoC like TI OMAP, Sitara, Ingenic JZ4780,
+> +  Allwinner A83, and Intel Poulsbo and CedarView and more.
+> +
+> +  For an almost complete list see: https://en.wikipedia.org/wiki/PowerVR#Implementations
+> +  
+> +  Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently covered by
+> +  this binding but the extension of the pattern is straightforward.
+> +  
+> +  The SGX node is usually a child node of some DT node belonging to the SoC
+> +  which handles clocks, reset and general address space mapping of the SGX
+> +  register area.
 > +
 > +properties:
 > +  compatible:
-> +      enum:
-> +          - ti,j721e-wiz-16g
-> +          - ti,j721e-wiz-10g
+> +    enum:
+> +    # Example: BeagleBoard A/B/C, OpenPandora 600MHz
+> +      - ti,omap3-sgx530-121, img,sgx530-121, img,sgx530
 
-Tab size is 2 spaces.
+Didn't I comment before this is not valid. You are defining the 
+compatible string is: 'ti,omap3-sgx530-121, img,sgx530-121, img,sgx530'
 
+You need:
+
+compatible:
+  oneOf:
+    - description: BeagleBoard A/B/C, OpenPandora 600MHz
+      items:
+        - const: ti,omap3-sgx530-121
+        - const: img,sgx530-121
+        - const: img,sgx530
+
+And so on for each of the rest.
+
+> +    # Example: BeagleBoard XM, GTA04, OpenPandora 1GHz
+> +      - ti,omap3-sgx530-125, img,sgx530-125, img,sgx530
+> +    # Example: BeagleBone Black
+> +      - ti,am3352-sgx530-125, img,sgx530-125, img,sgx530
+
+These 2 could be combined using 'enum' for the first item. Basically, 
+you can group ones where the last 2 strings are the same.
+
+> +    # Example: Pandaboard, Pandaboard ES
+> +      - ti,omap4-sgx540-120, img,sgx540-120, img,sgx540
+> +      - ti,omap4-sgx544-112, img,sgx544-112, img,sgx544
+> +    # Example: OMAP5 UEVM, Pyra Handheld
+> +      - ti,omap5-sgx544-116, img,sgx544-116, img,sgx544
+> +      - ti,dra7-sgx544-116, img,sgx544-116, img,sgx544
+> +    # Example: CI20
+> +      - ingenic,jz4780-sgx540-120, img,sgx540-120, img,sgx540
+> +    # the following entries are not validated with real hardware
+
+What am I supposed to do with that? You're just defining some strings. 
+If you're not sure they are okay, then don't define them.
+
+> +    # more TI SoC
+> +      - ti,am3517-sgx530-125, img,sgx530-125, img,sgx530
+> +      - ti,am4-sgx530-125, img,sgx530-125, img,sgx530
+> +      - ti,ti81xx-sgx530-125, img,sgx530-125, img,sgx530
+> +    # Example: Banana-Pi-M3 (Allwinner A83T)
+> +      - allwinner,sun8i-a83t-sgx544-116, img,sgx544-116, img,sgx544
+> +    # Example: Atom Z5xx
+> +      - intel,poulsbo-gma500-sgx535, img,sgx535-116, img,sgx535
+> +    # Example: Atom Z24xx
+> +      - intel,medfield-gma-sgx540, img,sgx540-116, img,sgx540
+> +    # Example: Atom N2600, D2500
+> +      - intel,cedarview-gma3600-sgx545, img,sgx545-116, img,sgx545
 > +
-> +  power-domains:
+> +  reg:
 > +    maxItems: 1
 > +
-> +  clocks:
-> +    maxItems: 3
-> +    description: clock-specifier to represent input to the WIZ
-> +
-> +  clock-names:
-> +    items:
-> +      - const: fck
-> +      - const: core_ref_clk
-> +      - const: ext_ref_clk
-> +
-> +  num-lanes:
-> +    minimum: 1
-> +    maximum: 4
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 1
-> +
-> +  "#reset-cells":
-> +    const: 1
-> +
-> +  ranges: true
-> +
-> +  assigned-clocks:
-> +    maxItems: 2
-> +
-> +  assigned-clock-parents:
-> +    maxItems: 2
-> +
-> +patternProperties:
-> +   "^pll[0|1]-refclk$":
-
-Indentation
-
-> +    type: object
-> +    description: |
-
-Don't need the '|' unless there's formatting or multiple paragraphs.
-
-> +      WIZ node should have subnodes for each of the PLLs present in
-> +      the SERDES.
-> +    properties:
-> +      clocks:
-> +        maxItems: 2
-> +        description: Phandle to clock nodes representing the two inputs to PLL.
-> +
-> +      "#clock-cells":
-> +        const: 0
-> +
-> +      assigned-clocks:
-> +        maxItems: 1
-> +
-> +      assigned-clock-parents:
-> +        maxItems: 1
-> +
-> +    required:
-> +      - clocks
-> +      - "#clock-cells"
-> +      - assigned-clocks
-> +      - assigned-clock-parents
-> +
-> +   "^cmn-refclk1?-dig-div$":
-
-Indentation
-
-> +    type: object
-> +    description: |
-> +      WIZ node should have subnodes for each of the PMA common refclock
-> +      provided by the SERDES.
-> +    properties:
-> +      clocks:
-> +        maxItems: 1
-> +        description: Phandle to the clock node representing the input to the
-> +          divider clock.
-> +
-> +      "#clock-cells":
-> +        const: 0
-> +
-> +    required:
-> +      - clocks
-> +      - "#clock-cells"
-> +
-> +   "^refclk-dig$":
-
-Indentation
-
-> +    type: object
-> +    description: |
-> +      WIZ node should have subnode for refclk_dig to select the reference
-> +      clock source for the reference clock used in the PHY and PMA digital
-> +      logic.
-> +    properties:
-> +      clocks:
-> +        maxItems: 4
-> +        description: Phandle to four clock nodes representing the inputs to
-> +          refclk_dig
-> +
-> +      "#clock-cells":
-> +        const: 0
-> +
-> +      assigned-clocks:
-> +        maxItems: 1
-> +
-> +      assigned-clock-parents:
-> +        maxItems: 1
-> +
-> +    required:
-> +      - clocks
-> +      - "#clock-cells"
-> +      - assigned-clocks
-> +      - assigned-clock-parents
-> +
-> +   "^serdes@[0-9a-f]+$":
-
-...
-
-> +    type: object
-> +    description: |
-> +      WIZ node should have '1' subnode for the SERDES. It could be either
-> +      Sierra SERDES or Torrent SERDES. Sierra SERDES should follow the
-> +      bindings specified in
-> +      Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
-> +      Torrent SERDES should follow the bindings specified in
-> +      Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+> +  interrupts:
+> +    maxItems: 1
 > +
 > +required:
 > +  - compatible
-> +  - power-domains
-> +  - clocks
-> +  - clock-names
-> +  - num-lanes
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - "#reset-cells"
-> +  - ranges
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
 > +
 > +examples:
-> +  - |
-> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +  - |+
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
 > +
-> +    wiz@5000000 {
-> +           compatible = "ti,j721e-wiz-16g";
-> +           #address-cells = <1>;
-> +           #size-cells = <1>;
-> +           power-domains = <&k3_pds 292 TI_SCI_PD_EXCLUSIVE>;
-> +           clocks = <&k3_clks 292 5>, <&k3_clks 292 11>, <&dummy_cmn_refclk>;
-> +           clock-names = "fck", "core_ref_clk", "ext_ref_clk";
-> +           assigned-clocks = <&k3_clks 292 11>, <&k3_clks 292 0>;
-> +           assigned-clock-parents = <&k3_clks 292 15>, <&k3_clks 292 4>;
-> +           num-lanes = <2>;
-> +           #reset-cells = <1>;
-> +           ranges = <0x5000000 0x0 0x5000000 0x10000>;
-> +
-> +           pll0-refclk {
-> +                  clocks = <&k3_clks 293 13>, <&dummy_cmn_refclk>;
-> +                  #clock-cells = <0>;
-> +                  assigned-clocks = <&wiz1_pll0_refclk>;
-> +                  assigned-clock-parents = <&k3_clks 293 13>;
-> +           };
-> +
-> +           pll1-refclk {
-> +                  clocks = <&k3_clks 293 0>, <&dummy_cmn_refclk1>;
-> +                  #clock-cells = <0>;
-> +                  assigned-clocks = <&wiz1_pll1_refclk>;
-> +                  assigned-clock-parents = <&k3_clks 293 0>;
-> +           };
-> +
-> +           cmn-refclk-dig-div {
-> +                  clocks = <&wiz1_refclk_dig>;
-> +                  #clock-cells = <0>;
-> +           };
-> +
-> +           cmn-refclk1-dig-div {
-> +                  clocks = <&wiz1_pll1_refclk>;
-> +                  #clock-cells = <0>;
-> +           };
-> +
-> +           refclk-dig {
-> +                  clocks = <&k3_clks 292 11>, <&k3_clks 292 0>, <&dummy_cmn_refclk>, <&dummy_cmn_refclk1>;
-> +                  #clock-cells = <0>;
-> +                  assigned-clocks = <&wiz0_refclk_dig>;
-> +                  assigned-clock-parents = <&k3_clks 292 11>;
-> +           };
-> +
-> +           serdes@5000000 {
-> +                  compatible = "cdns,ti,sierra-phy-t0";
-> +                  reg-names = "serdes";
-> +                  reg = <0x5000000 0x10000>;
-> +                  #address-cells = <1>;
-> +                  #size-cells = <0>;
-> +                  resets = <&serdes_wiz0 0>;
-> +                  reset-names = "sierra_reset";
-> +                  clocks = <&wiz0_cmn_refclk_dig_div>, <&wiz0_cmn_refclk1_dig_div>;
-> +                  clock-names = "cmn_refclk_dig_div", "cmn_refclk1_dig_div";
-> +           };
+> +    gpu@fe00 {
+> +      compatible = "ti,omap-omap5-sgx544-116", "img,sgx544-116", "img,sgx544", "img,sgx5";
+
+Doesn't match the schema.
+
+> +      reg = <0xfe00 0x200>;
+> +      interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
 > +    };
+> +
+> +...
 > -- 
-> 2.17.1
+> 2.23.0
 > 
