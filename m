@@ -2,111 +2,93 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F710C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F5CC47409
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C27227BF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:00:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ItGxrXOf"
+	by mail.kernel.org (Postfix) with ESMTP id 536052467F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576688539;
+	bh=we2zMDAHiAzaJJ7ie3iIZyPD57spjJwHDGeCFx7sl+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YHNZ1Wcun2zHQGgK0b48VYSt51HTb5cWTxTjH/VCvLYWRw0iKH74Rszbq0ci81Sw2
+	 6pn9JTm6Q28JXebSWPREhFef0hQRvXo1ahebnKukZyWRJ/es+wex5MWSTUVSNisFi6
+	 vxIMiPl5W6CDinjvZIv9D+dGrmVgpvfe0FeNdwJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfLRRAn (ORCPT
+        id S1727328AbfLRRCT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:00:43 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57112 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727173AbfLRRAn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 12:00:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576688442;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dn5SUwiPZ6v5NQ8mtwG6iqV/r/5Gbbs8HrzPzH1EerI=;
-        b=ItGxrXOflq3XyLIwUJF7tFGtxNAtXEZvoJAqtOQ8q+t4Z7s9krV+q06Ts5M9DKXW1CBzPU
-        agL7aGhiuJwVchL9v7JxPXOgWH5wVBcgrqXkEfqei7IugImk2h4LzKrvvEG+ju9FXxeKXT
-        Ncvjlv+uMS2lQ3/c1dvaa/IM9Dcdrpo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-352-9UUkOd8SOmCuHuHDl5aHpg-1; Wed, 18 Dec 2019 12:00:18 -0500
-X-MC-Unique: 9UUkOd8SOmCuHuHDl5aHpg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 797B119586C8;
-        Wed, 18 Dec 2019 17:00:14 +0000 (UTC)
-Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1A81460C18;
-        Wed, 18 Dec 2019 17:00:09 +0000 (UTC)
-Subject: Re: [PATCH v3 08/13] iommu/arm-smmu-v3: Propate ssid_bits
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-References: <20191209180514.272727-1-jean-philippe@linaro.org>
- <20191209180514.272727-9-jean-philippe@linaro.org>
- <466bbc57-79d4-274c-67bc-4ed591da9968@redhat.com>
- <20191218160834.GG2371701@myrica>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <bf66e477-6fea-517e-98b6-123eef625334@redhat.com>
-Date:   Wed, 18 Dec 2019 18:00:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 18 Dec 2019 12:02:19 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42888 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbfLRRCS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 12:02:18 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 66so3270275otd.9;
+        Wed, 18 Dec 2019 09:02:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JaI7AY/5dEsE+PzKKfws1NegVl++uA5oApSBgLNQCls=;
+        b=OPOC6z/S5Kay/I2CleJEl2T6qdDSFYINzJ1M8U814F9vbpbVUGE0uQmQOqyMBFpS/T
+         xHHerFD0RuMjwJaYNH1nYGktEHbHn5lkSyttcq2t+HbRVHoFF9VcG8rII+KlOFw3WHvY
+         ugl9PZ0vA74Qmn4TMX2SyWvwmYwdKRAAS+7U5ZZib4Hfvx9K2xd3QIhqKFxLqXiZx0MQ
+         xvcadG7kFoGxZXN1vAh7VFGuFsCbN1oXn9TzCzjbgxwJXyP0s59aL9SdeYayHt/fl6Yr
+         9isDKD13k/Pem4ql2Y7ra33gQzMeUvsuhE0fihPSb/D3seDB0mtfleGaJ3q2ByEPflhH
+         ryOg==
+X-Gm-Message-State: APjAAAWlFA5NucoR2DGMQCbOZy0JgSqfWCB9ugRgqC4gvUgKIVGzaKqw
+        55MTrcOJiy6GligHShSZpA==
+X-Google-Smtp-Source: APXvYqzOiFGi11lFLhBbyJQ2UV01N4xUjbtoI1m67WTwLSZq6goK5Ks+0SR2sX/w079C4Hu9mqDTmw==
+X-Received: by 2002:a9d:7c8f:: with SMTP id q15mr3730626otn.341.1576688537723;
+        Wed, 18 Dec 2019 09:02:17 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r13sm963542oic.52.2019.12.18.09.02.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 09:02:17 -0800 (PST)
+Date:   Wed, 18 Dec 2019 11:02:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     matthias.bgg@kernel.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
+        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
+        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
+        laurent.pinchart@ideasonboard.com, enric.balletbo@collabora.com,
+        sean.wang@mediatek.com, sean.wang@kernel.org,
+        rdunlap@infradead.org, wens@csie.org, hsinyi@chromium.org,
+        frank-w@public-files.de, drinkcat@chromium.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, mbrugger@suse.com,
+        matthias.bgg@kernel.org
+Subject: Re: [resend PATCH v6 02/12] dt-bindings: mediatek: Add compatible
+ for mt7623
+Message-ID: <20191218170216.GA18152@bogus>
+References: <20191207224740.24536-1-matthias.bgg@kernel.org>
+ <20191207224740.24536-3-matthias.bgg@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191218160834.GG2371701@myrica>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191207224740.24536-3-matthias.bgg@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jean,
-
-On 12/18/19 5:08 PM, Jean-Philippe Brucker wrote:
-> On Tue, Dec 17, 2019 at 06:07:26PM +0100, Auger Eric wrote:
->> Hi Jean,
->>
->> On 12/9/19 7:05 PM, Jean-Philippe Brucker wrote:
->>
->> s/Propate/Propagate in the commit title.
->>> Now that we support substream IDs, initialize s1cdmax with the number of
->>> SSID bits supported by a master and the SMMU.
->>>
->>> Context descriptor tables are allocated once for the first master
->>> attached to a domain. Therefore attaching multiple devices with
->>> different SSID sizes is tricky, and we currently don't support it.
->>>
->>> As a future improvement it would be nice to at least support attaching a
->>> SSID-capable device to a domain that isn't using SSID, by reallocating
->>> the SSID table.
->> Isn't that use case relevant (I mean using both devices in a non SSID
->> use case). For platform devices you can work this around with FW but for
->> PCI devices?
+On Sat,  7 Dec 2019 23:47:30 +0100, matthias.bgg@kernel.org wrote:
+> From: Matthias Brugger <mbrugger@suse.com>
 > 
-> Normally each device gets its own domain. Especially since PASID is a PCI
-> Express capability, I expect them to be properly isolated with ACS, each
-> with its own IOMMU group. So I don't think this is too relevant for the
-> moment, it would be a quirk for a broken system.
-
-OK
-
-Eric
+> MediaTek mt7623 uses the mt2701 binings as fallback.
+> Document this in the binding description.
 > 
-> Thanks,
-> Jean
+> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,disp.txt      | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
+Acked-by: Rob Herring <robh@kernel.org>
