@@ -2,95 +2,217 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B79C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 22:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CBDC2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 22:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D5F21D7D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 22:32:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="LKFB3dzL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qG15kzio"
+	by mail.kernel.org (Postfix) with ESMTP id 8C04B218AC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 22:51:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576709518;
+	bh=ikIQL3G4qYb8KbWizxcrAUGL1YeXt314hX/pFQ5TyHQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=a93BGAmCGA5Qv+2LRShC3JhzzRqFenhV8hOX6EZxl7L9bYbEyq2QJW/FZPW5BDjL5
+	 lR4LSGFNckvqqOwMGygq1zEUymciEv14M6969WfbOfGHR3iSnOhSFp4jk912Jl5Ojm
+	 X9Tg1C2l/8IqYGAhcM4RVIEeG/n8/6UQv8wr3gbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfLRWc7 (ORCPT
+        id S1726690AbfLRWvy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 17:32:59 -0500
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:45035 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726387AbfLRWc7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:32:59 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9A48921AD0;
-        Wed, 18 Dec 2019 17:32:58 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Wed, 18 Dec 2019 17:32:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=KbRgkj4TkHzAHUnUGVVnrmTrRsfMkSe
-        N/TrcHi5KQlg=; b=LKFB3dzLTBhECvq4wBW7ZueCueXtEGOPSsZ2fBPEmscbwZn
-        /6Ikl0ifFWYllxu+LjFInwq0SLVrp/w4WVZBKJrexxmYREH+UHQu6Fe/im8sNqIU
-        c80vlOxC8HqrxiYJ0Yn/vlVTYcvznwTxf0+lD3ulM/1BPURFNxcl5Cml3WspK3Sn
-        Zjvr8XXAxa5s24lNFDcu/C/eTEJzQdiscPkcVOYSE1+ztUScseF1FN5MyijBvtMF
-        NRiJJVu0d1A/yjrh1OV9cLqsy4KzLQ86kVv5Z/dZZp3C5S0AweqONfQ1QDDSZjTO
-        sNheorDaHpObCHQYGAtdEgvxxC0tsCu6/zqfX3g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=KbRgkj
-        4TkHzAHUnUGVVnrmTrRsfMkSeN/TrcHi5KQlg=; b=qG15kzio99DV0br68gOrSj
-        +lPKBUlBiMTKkSGxykb4R90Ym++mw9jiHMFE/LMbQnPoTBUg62kS6o8hvpvyarQw
-        gB86CAHgTr8pRDJL2XH2HFMKYzl+KJimvnai51zeUBkazcExreAuSwQgVlLoCFO9
-        +WkJDYsXv6cuShydMQe8Egw6wQkiNr2hpWCepKnFiB9a3bvonVHPNfX+WZvnCmvr
-        qEO8DgdomGCVwhR7tS/qtRlw8w7rz9+Rol0tYrEmqV7OaoNKG7YNHyuh/22eAhrI
-        aT5vroFofGcR92dr39ugZW/UqzXQILY50MO6b+T4hnfVkcA6By6X6vwBo+46+sJA
-        ==
-X-ME-Sender: <xms:Gan6Xe64RnW4gsCYfFCBO9Gat9Tl2DemPrzOKL_nzmAO_COh0aK6bA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtledgudehlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehn
-    ughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrg
-    hrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushht
-    vghrufhiiigvpedt
-X-ME-Proxy: <xmx:Gan6XZXjmQrnq3qzS9iWotN8ehcCSpUwCIG-bEfgJWs_xTss0YhTVg>
-    <xmx:Gan6XY38D-68WH430VjqlmjVpokqs4kC7V7sCAZzC1jQjiwKKxhL3w>
-    <xmx:Gan6XYMqEOy21nwnJHlB0SZQRRIFes2xsTR7kPGB5EQ8TXe9ni2Kew>
-    <xmx:Gqn6XR1hby6xlc5ihkkrvdcwsJeylpbQe404LUfaLv27iNosmqrKdQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 77DACE00A2; Wed, 18 Dec 2019 17:32:57 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-694-gd5bab98-fmstable-20191218v1
-Mime-Version: 1.0
-Message-Id: <1a43e1cf-e723-40e2-a871-0cfb1b86a164@www.fastmail.com>
-In-Reply-To: <1576681778-18737-4-git-send-email-eajames@linux.ibm.com>
-References: <1576681778-18737-1-git-send-email-eajames@linux.ibm.com>
- <1576681778-18737-4-git-send-email-eajames@linux.ibm.com>
-Date:   Thu, 19 Dec 2019 09:04:41 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Eddie James" <eajames@linux.ibm.com>,
-        linux-aspeed@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, "Jason Cooper" <jason@lakedaemon.net>,
-        "Marc Zyngier" <maz@kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>, tglx@linutronix.de,
-        "Joel Stanley" <joel@jms.id.au>
-Subject: =?UTF-8?Q?Re:_[PATCH_v3_03/12]_ARM:_dts:_aspeed:_ast2500:_Add_SCU_interr?=
- =?UTF-8?Q?upt_controller?=
-Content-Type: text/plain
+        Wed, 18 Dec 2019 17:51:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbfLRWvy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 17:51:54 -0500
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3019227BF;
+        Wed, 18 Dec 2019 22:51:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576709513;
+        bh=ikIQL3G4qYb8KbWizxcrAUGL1YeXt314hX/pFQ5TyHQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yN86uhHVuanyGmYlZ2UiRTDBQmIsfbs+GLuq8RIuBgz4ZkAuXKMu7n1HnUZQA6qVM
+         eW5hafPQvno+/8pl5AY+E2dWs6keMM5izYAbYVnjeGdOYED7Hv566k03ufAJHvV9Rx
+         X0HbfvCpxC06YomOX8K/V2NMDugaG/FZDzGy4lRw=
+Received: by mail-qk1-f176.google.com with SMTP id w127so3009782qkb.11;
+        Wed, 18 Dec 2019 14:51:53 -0800 (PST)
+X-Gm-Message-State: APjAAAWZO2XkEQSiX9iz18YhDgMRcDKoz927zn7RvOm1qwfdg3ffQ4w3
+        4CKreDcA1GRTV7ieYFNrVz4odb15KiDZvlwzzg==
+X-Google-Smtp-Source: APXvYqxaQcia+7wj43il7/VAVS2mF5JlbvYF0y3vbSxJME+Yu57ll5wT1N+cqSquqi899qwSawtvom5DUUYmgUmDHto=
+X-Received: by 2002:a37:a70b:: with SMTP id q11mr5145839qke.393.1576709512817;
+ Wed, 18 Dec 2019 14:51:52 -0800 (PST)
+MIME-Version: 1.0
+References: <20191218132251.24161-1-stanimir.varbanov@linaro.org> <20191218132251.24161-7-stanimir.varbanov@linaro.org>
+In-Reply-To: <20191218132251.24161-7-stanimir.varbanov@linaro.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 18 Dec 2019 16:51:41 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+1Z72J03tZa9T4DLzR7skFweV8Xe4vBd_QBUktVOekrA@mail.gmail.com>
+Message-ID: <CAL_Jsq+1Z72J03tZa9T4DLzR7skFweV8Xe4vBd_QBUktVOekrA@mail.gmail.com>
+Subject: Re: [PATCH v2 06/12] dt-bindings: media: venus: Convert msm8916 to DT schema
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Vikash Garodia <vgarodia@codeaurora.org>,
+        dikshita@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Dec 18, 2019 at 7:24 AM Stanimir Varbanov
+<stanimir.varbanov@linaro.org> wrote:
+>
+> Convert qcom,msm8916-venus Venus binding to DT schema
+>
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+>  .../bindings/media/qcom,venus-msm8916.yaml    | 115 ++++++++++++++++++
+>  1 file changed, 115 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml
 
+Make the filename match the compatible.
 
-On Thu, 19 Dec 2019, at 01:39, Eddie James wrote:
-> Add a node for the interrupt controller provided by the SCU.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>
+> diff --git a/Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml b/Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml
+> new file mode 100644
+> index 000000000000..f82a8d968202
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml
+> @@ -0,0 +1,115 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/media/qcom,venus-msm8916.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm Venus video encode and decode accelerators
+> +
+> +maintainers:
+> +  - Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> +
+> +description: |
+> +  The Venus IP is a video encode and decode accelerator present
+> +  on Qualcomm platforms
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,msm8916-venus
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+Not likely a 2nd compatible here?, so you can use 'const' instead.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 3
+> +
+> +  clock-names:
+> +    maxItems: 3
+
+Don't need this. Implied with the length of 'items'.
+
+> +    items:
+> +      - const: core
+> +      - const: iface
+> +      - const: bus
+> +
+> +  iommus:
+> +    minItems: 1
+> +    maxItems: 20
+> +
+> +  memory-region:
+> +    maxItems: 1
+> +
+> +  video-decoder:
+> +    type: object
+> +
+> +    properties:
+> +      compatible:
+> +        const: "venus-decoder"
+> +
+> +    required:
+> +      - compatible
+
+       additionalProperties: false
+
+> +
+> +  video-encoder:
+> +    type: object
+> +
+> +    properties:
+> +      compatible:
+> +        const: "venus-encoder"
+> +
+> +    required:
+> +      - compatible
+
+Here too.
+
+> +
+> +  video-firmware:
+> +    type: object
+> +
+> +    description: |
+> +      Firmware subnode is needed when the platform does not
+> +      have TrustZone.
+> +
+> +    properties:
+> +      iommus:
+> +        minItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - power-domains
+> +  - clocks
+> +  - clock-names
+> +  - iommus
+> +  - memory-region
+> +  - video-decoder
+> +  - video-encoder
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        #include <dt-bindings/clock/qcom,gcc-msm8916.h>
+> +
+> +        video-codec@1d00000 {
+> +                compatible = "qcom,msm8916-venus";
+> +                reg = <0x01d00000 0xff000>;
+> +                interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+> +                clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
+> +                        <&gcc GCC_VENUS0_AHB_CLK>,
+> +                        <&gcc GCC_VENUS0_AXI_CLK>;
+> +                clock-names = "core", "iface", "bus";
+> +                power-domains = <&gcc VENUS_GDSC>;
+> +                iommus = <&apps_iommu 5>;
+> +                memory-region = <&venus_mem>;
+> +
+> +                video-decoder {
+> +                        compatible = "venus-decoder";
+> +                };
+> +
+> +                video-encoder {
+> +                        compatible = "venus-encoder";
+> +                };
+> +        };
+> --
+> 2.17.1
+>
