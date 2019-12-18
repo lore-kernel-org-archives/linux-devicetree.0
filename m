@@ -2,131 +2,98 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F026AC2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 16:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9245AC2D0D1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 16:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D17322072B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 16:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666022072B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 16:06:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C1i8TT0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfLRQGZ (ORCPT
+        id S1727390AbfLRQG5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:06:25 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:63168 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727328AbfLRQGY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:06:24 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 18 Dec 2019 21:36:17 +0530
-Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 18 Dec 2019 21:35:49 +0530
-Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
-        id 8B5CC3C55; Wed, 18 Dec 2019 21:35:46 +0530 (IST)
-From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-To:     gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, david.brown@linaro.org,
-        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
-        robh+dt@kernel.org, sricharan@codeaurora.org,
-        nprakash@codeaurora.org
-Subject: [PATCH V4 05/10] remoteproc: qcom: Update regmap offsets for halt register
-Date:   Wed, 18 Dec 2019 21:35:41 +0530
-Message-Id: <1576685146-17135-6-git-send-email-gokulsri@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1576685146-17135-1-git-send-email-gokulsri@codeaurora.org>
-References: <1576685146-17135-1-git-send-email-gokulsri@codeaurora.org>
+        Wed, 18 Dec 2019 11:06:57 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33840 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727610AbfLRQG5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 11:06:57 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t2so2912327wrr.1
+        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 08:06:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ilGmQzgVpyz5+GgzhiMi4TnzxPgEeCNgmk38TMF+kZE=;
+        b=C1i8TT0BKaZyqPij7EJiWtjjPH+4RB1V0a/wUUSe/JhD9Oslbx/1Q6XBpUW4q/UXah
+         aoe7twq2cCcWk0bOOJ8Gb45nCWzluMIaHz3zLYW62oA0JAIGE4LCdpdOofh0hHYbNncr
+         7MRGFnhVHQ4QYKCyBPZDcJ+yuntrIOsJELzFkUuNbHJ5GH97ieyD4Hx/gV1FrVok8xPE
+         jNC4iIRl7+jgHUADTihavmD3bgyz/hMLa6NPMD4z0NlctNZH0ccJcgj2fU8QyAbECLao
+         R/3/iPqI0xBufIyVNwBG7j7oOgv1rd4/DaFeC9pHElsyRmZy3qcm5xpPdim14xbF4VWO
+         YKKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ilGmQzgVpyz5+GgzhiMi4TnzxPgEeCNgmk38TMF+kZE=;
+        b=Rcx5BObb3OoUHE8TEC+UgS4gWTiy27Zvq+r8C6VOgNxEIwbnTNKFn6Dzs6DVY4FK2G
+         TjXIS/KyMbc2aJ3OVgD2qJqqEoYsbacs103QB7Nfn6ymuJHDXUOgwDBGbDny1WdVUSLN
+         3qtj65nybM3MWsDn2aZ4gizDlE3hWZTmUIq929ZHClA8elPud+qTfj+m4KtEFq54TFjj
+         HDmuLjQ/GntWdlCLAuWS3MzdyPmNoserKAfMDa8GIlun1+P0Dy0JtP3lLumm6n1Kq/b4
+         FlIKc/v6OruggQCq2OXD/eaSUCycjfLFt61H3WYAwgPX2WHDDFY8NYYZ7u/k/tyjNJut
+         yoOw==
+X-Gm-Message-State: APjAAAUO5AX7azsRYNwIQRfbhbi7h3PtAdZ13/OiQpk6Ae/jsiB5/sNY
+        gq05NRbPhcf/Q9uMuyT4cbNVkw==
+X-Google-Smtp-Source: APXvYqzlJfnzBPNvhgPh9GCf337cLxDV4nJ7SDFk/WvYc0UpuKM/kTPeUg6Rln8M6dK6UBAz2n6nYw==
+X-Received: by 2002:a5d:4dc9:: with SMTP id f9mr3435991wru.297.1576685214969;
+        Wed, 18 Dec 2019 08:06:54 -0800 (PST)
+Received: from myrica (adsl-84-227-176-239.adslplus.ch. [84.227.176.239])
+        by smtp.gmail.com with ESMTPSA id d14sm3236857wru.9.2019.12.18.08.06.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 08:06:54 -0800 (PST)
+Date:   Wed, 18 Dec 2019 17:06:49 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+Subject: Re: [PATCH v3 03/13] iommu/arm-smmu-v3: Support platform SSID
+Message-ID: <20191218160649.GE2371701@myrica>
+References: <20191209180514.272727-1-jean-philippe@linaro.org>
+ <20191209180514.272727-4-jean-philippe@linaro.org>
+ <06c57de4-cfca-f95f-ac06-ab6f49a028a3@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06c57de4-cfca-f95f-ac06-ab6f49a028a3@redhat.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fixed issue in reading halt-regs parameter from device-tree.
+On Wed, Dec 18, 2019 at 11:17:40AM +0100, Auger Eric wrote:
+> Hi Jean,
+> 
+> On 12/9/19 7:05 PM, Jean-Philippe Brucker wrote:
+> > For platform devices that support SubstreamID (SSID), firmware provides
+> > the number of supported SSID bits. Restrict it to what the SMMU supports
+> > and cache it into master->ssid_bits, which will also be used for PCI
+> > PASID.
+> > 
+> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> the title of the patch does not really explain what it actually does. At
+> this stage we are far from supporting SSIDs ;-) Same for 04?
 
-Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
----
-changes since v3:
- - none
-changes since v2:
- - Added a driver data entry to select if bcr reset is required
----
- drivers/remoteproc/qcom_q6v5_wcss.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+Alright I'll make this "Parse PASID devicetree property of platform
+devices" and "Parse SSID property of named component node"
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index 70f7f41..3937ecc 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -86,7 +86,7 @@
- #define TCSR_WCSS_CLK_MASK	0x1F
- #define TCSR_WCSS_CLK_ENABLE	0x14
- 
--#define MAX_HALT_REG		3
-+#define MAX_HALT_REG		4
- 
- #define WCNSS_PAS_ID		6
- 
-@@ -154,6 +154,7 @@ struct wcss_data {
- 	u32 version;
- 	bool aon_reset_required;
- 	bool wcss_q6_reset_required;
-+	bool bcr_reset_required;
- 	const char *ssr_name;
- 	const char *sysmon_name;
- 	int ssctl_id;
-@@ -868,10 +869,13 @@ static int q6v5_wcss_init_reset(struct q6v5_wcss *wcss,
- 		}
- 	}
- 
--	wcss->wcss_q6_bcr_reset = devm_reset_control_get_exclusive(dev, "wcss_q6_bcr_reset");
--	if (IS_ERR(wcss->wcss_q6_bcr_reset)) {
--		dev_err(wcss->dev, "unable to acquire wcss_q6_bcr_reset\n");
--		return PTR_ERR(wcss->wcss_q6_bcr_reset);
-+	if (desc->bcr_reset_required) {
-+		wcss->wcss_q6_bcr_reset = devm_reset_control_get_exclusive(dev,
-+									   "wcss_q6_bcr_reset");
-+		if (IS_ERR(wcss->wcss_q6_bcr_reset)) {
-+			dev_err(wcss->dev, "unable to acquire wcss_q6_bcr_reset\n");
-+			return PTR_ERR(wcss->wcss_q6_bcr_reset);
-+		}
- 	}
- 
- 	return 0;
-@@ -919,9 +923,9 @@ static int q6v5_wcss_init_mmio(struct q6v5_wcss *wcss,
- 		return -EINVAL;
- 	}
- 
--	wcss->halt_q6 = halt_reg[0];
--	wcss->halt_wcss = halt_reg[1];
--	wcss->halt_nc = halt_reg[2];
-+	wcss->halt_q6 = halt_reg[1];
-+	wcss->halt_wcss = halt_reg[2];
-+	wcss->halt_nc = halt_reg[3];
- 
- 	return 0;
- }
-@@ -1166,6 +1170,7 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- 	.crash_reason_smem = WCSS_CRASH_REASON,
- 	.aon_reset_required = true,
- 	.wcss_q6_reset_required = true,
-+	.bcr_reset_required = false,
- 	.ssr_name = "q6wcss",
- 	.ops = &q6v5_wcss_ipq8074_ops,
- 	.requires_force_stop = true,
-@@ -1180,6 +1185,7 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- 	.version = WCSS_QCS404,
- 	.aon_reset_required = false,
- 	.wcss_q6_reset_required = false,
-+	.bcr_reset_required = true,
- 	.ssr_name = "mpss",
- 	.sysmon_name = "wcnss",
- 	.ssctl_id = 0x12,
--- 
-1.9.1
-
+Thanks,
+Jean
