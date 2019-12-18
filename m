@@ -4,551 +4,291 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD0FC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 10:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C72EC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 10:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E73F24686
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 10:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FCFA2465E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 10:11:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iPA66yGU"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pPgl3zBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbfLRKKz (ORCPT
+        id S1726360AbfLRKLO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 05:10:55 -0500
-Received: from mail-eopbgr150081.outbound.protection.outlook.com ([40.107.15.81]:33669
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        Wed, 18 Dec 2019 05:11:14 -0500
+Received: from mail-eopbgr10061.outbound.protection.outlook.com ([40.107.1.61]:10147
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725785AbfLRKKy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 05:10:54 -0500
+        id S1725785AbfLRKLO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 05:11:14 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k6HApREaDlW03sQlL/J5vZof/Ze1CsgeNPvKvMM8IekaYcRI93JjW55nhcRKQBu3f4fR2r7NpFAxWtrF/Tq9f1gVK9v+lynVuP84nt2MT2WO63UNXWYEMBVUHCBZIkSool8SquA1dWQPI/EnulmvlSrKEaXmLMljFLmV1RLxELTw+bjROwv2o9aDsOomAMITl563ZBtVMNQjji6+OvmeaQCGqekATttPxExKpaOI7ZKanGj6pAcVeUTObo8YWj1NEfhr25X7Ru3k7iqlSxICzBEFsJGPD6WsaMFEVBVnC818vwM5g2+p8cZEV2QigWJP/nizgX6qNx3qwOAmMLOIGw==
+ b=RUuRPeb+OZegOo8sgXd2Eea133eiaRquhJMZAqGU89O8BGzAZ3wxHD7Krsh9aGfDVN/rYikprAlbjV6sletkkMQeHzFVHevroujjjUBZo6Fu70hu6LeuhSyYVvLRgd4q4qiV0sfcIX0W/GA4oHtvNbPGo9mE7nhr6fai/Y8swJN53PaYMeUic4jKtx8vmgm4UT00hFfuxtJhvqsLEQ0cmlGBEOBF8qBezCyNm5XcN6OE/hQth7MbqDdvx7xHV3/TOM1sBa2OWdZZ7dXt9ca1IfSDPuhjdqxRYwFsKa7EugYAfB3RmCoJi5lvaiBpxpV7WAqkn2VEsjidGDh8Dsx1WQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E3vZ5VTEfro/5zfF+x14NopQuC0XDBVQ+f6pKW8DLMA=;
- b=nY/fTFKEx93gP1eIY6T8ssdUmSRWICGlu3EEM+is+2vlpwHgNWMtJ9SP/LT0SJRcPSgnfJ+zVd7iZrmgGIzTQ75xk3vra4uagcqqFnqvNqMZQ7WgIpQlcp29aNr1aSvsVqLEE7xB1Ip4/lZVHfdGsb7pbyxumTb3kUtw2wIpvTc5hmRFi2gyzZDEp9DtJuf/dnmUpucXTlCZxN8dHPDxm0OySCclKr2eG07v6W39LokC8JeqJb617kpq3Zh6Mhq44FZxWOzelVZqZT9Sg9tw0kDtjRY9cEmjyqmtCBAZARcQbpd1FS3VH/v0GSq/gNBzcSJd8nevSUH9lcFtS6MWZw==
+ bh=CCMK+2cHZEPhgC/PN/KMZC6hRgD/l4t42bpFpY2+x6I=;
+ b=BTZtArXWl9jlGXFuBkpyjK+Yy///2mvDn0Za3k/VGQBCs0Zb9gNg8r4DQNjPYFt6iBxw0Aen3d32bwAzG4v0vfWVWBJ9n7n0tn2IcHpxexmcifE2rXth3MRDZGymm1NSdN9JI3qF0VSbXPRm9JdmbZaWFOwiUqjWDR9m9NTeNAER8nwTimXqsv6OtEfG3FPLztQEBJtr9YGhNHxn8Le0Fd3aE5p4csV9g5mdUOGHZNBJM5EzJJBO7eb5kwE9c3wQv+nI6pu6/DG3aoHRpt4xe11Ss8U1Ln5ZS2jc98bnax9f1+UMRquIAvju2gQ3NdxSL5q/bcCEt1Slzv3sax0+Ww==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E3vZ5VTEfro/5zfF+x14NopQuC0XDBVQ+f6pKW8DLMA=;
- b=iPA66yGUiNSiqk7svTqYoX1rr9wEh+8oR1bAptMBbwfEpsc6edybHwP39mFv5iX+ZTKdFnPub+AQF48Y3pM5QqEnEaRxUfhywedVRkaZX5jw/XXrHBa5lq5Olk4BrBIYoLDivMbcnK6xMTjiDFoDxjEcedYsdMHujysGJqdW0vc=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB4384.eurprd04.prod.outlook.com (20.177.55.218) with Microsoft SMTP
+ bh=CCMK+2cHZEPhgC/PN/KMZC6hRgD/l4t42bpFpY2+x6I=;
+ b=pPgl3zBYOlGyt1F0qAgpLX/P5hFfhfu+3L3zlVabyO4tulUXqeFedQ1G2KKiQxv05yBNu0Idc+JCprqQ9aQyz18Pn4EQX0eSVOhn8NenkCrn6b0KJv8DAh2YIkbXVQMCjuXoVvo9f5pKt763CIze5Bh5ojT3mq/3gjIla+u/ey4=
+Received: from DB7PR04MB4618.eurprd04.prod.outlook.com (52.135.139.151) by
+ DB7PR04MB5273.eurprd04.prod.outlook.com (20.176.236.93) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14; Wed, 18 Dec 2019 10:10:44 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::2c49:44c8:2c02:68b1]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::2c49:44c8:2c02:68b1%5]) with mapi id 15.20.2559.012; Wed, 18 Dec 2019
- 10:10:44 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+ 15.20.2559.13; Wed, 18 Dec 2019 10:11:04 +0000
+Received: from DB7PR04MB4618.eurprd04.prod.outlook.com
+ ([fe80::b40b:46af:9458:f2df]) by DB7PR04MB4618.eurprd04.prod.outlook.com
+ ([fe80::b40b:46af:9458:f2df%6]) with mapi id 15.20.2538.019; Wed, 18 Dec 2019
+ 10:11:04 +0000
+From:   Joakim Zhang <qiangqing.zhang@nxp.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
         "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
         dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH RFC v6 2/9] PM / devfreq: Add generic imx bus scaling
- driver
-Thread-Topic: [PATCH RFC v6 2/9] PM / devfreq: Add generic imx bus scaling
- driver
-Thread-Index: AQHVmyeZDID07b0oVkajwef04uXjmg==
-Date:   Wed, 18 Dec 2019 10:10:44 +0000
-Message-ID: <VI1PR04MB7023AE8CE3E05FE3E70D1FEEEE530@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1573761527.git.leonard.crestez@nxp.com>
- <CGME20191114201049epcas5p4a24607634af7b31e6a2dbdb4166dd862@epcas5p4.samsung.com>
- <f329e715898a6b9fd0cee707a93fb1e144e31bd4.1573761527.git.leonard.crestez@nxp.com>
- <8734a934-79e2-7445-c3e5-a0bb59afd4a8@samsung.com>
- <047990a5-263d-d447-7f0a-77a99e4b1f63@samsung.com>
- <25e3177f-e2b9-6be4-cfb8-24f87ccba45b@samsung.com>
- <VI1PR04MB702396D09FCED6CBA49B6AE7EE510@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <698357b4-32e7-7f4b-3e67-59f5890f574a@samsung.com>
- <VI1PR04MB7023F0CCD7FAF5EEA74C7873EE500@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <f4267efa-1345-4fab-e6a7-73fca674dd72@samsung.com>
+        <linux-arm-kernel@lists.infradead.org>,
+        Andy Duan <fugang.duan@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 2/3] drivers/irqchip: add NXP INTMUX interrupt
+  multiplexer support
+Thread-Topic: [PATCH 2/3] drivers/irqchip: add NXP INTMUX interrupt
+  multiplexer support
+Thread-Index: AQHVtYbWHDeQ2fMQKk6sJxtOshfnaae/qr2g
+Date:   Wed, 18 Dec 2019 10:11:04 +0000
+Message-ID: <DB7PR04MB461855CB2107ED768D14705DE6530@DB7PR04MB4618.eurprd04.prod.outlook.com>
+References: <1576653615-27954-1-git-send-email-qiangqing.zhang@nxp.com>
+ <1576653615-27954-3-git-send-email-qiangqing.zhang@nxp.com>
+ <b0288de8faab127a096d1e78113ec4cb@www.loen.fr>
+In-Reply-To: <b0288de8faab127a096d1e78113ec4cb@www.loen.fr>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [2a04:241e:500:9200:9d5e:ad7d:41e0:989]
+ smtp.mailfrom=qiangqing.zhang@nxp.com; 
+x-originating-ip: [119.31.174.71]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c599b84c-590f-4f35-9fc5-08d783a28b86
-x-ms-traffictypediagnostic: VI1PR04MB4384:|VI1PR04MB4384:
+x-ms-office365-filtering-correlation-id: f747d027-591b-435e-ba24-08d783a2979e
+x-ms-traffictypediagnostic: DB7PR04MB5273:|DB7PR04MB5273:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB438416867FB3196FC8BAA2ECEE530@VI1PR04MB4384.eurprd04.prod.outlook.com>
+x-microsoft-antispam-prvs: <DB7PR04MB5273BFF73E611E9632FEE827E6530@DB7PR04MB5273.eurprd04.prod.outlook.com>
 x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 0255DF69B9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(136003)(396003)(366004)(189003)(199004)(51444003)(52314003)(55016002)(5660300002)(8676002)(71200400001)(54906003)(8936002)(6506007)(7416002)(53546011)(316002)(81166006)(9686003)(110136005)(30864003)(81156014)(86362001)(66556008)(64756008)(76116006)(66446008)(33656002)(66476007)(91956017)(52536014)(478600001)(44832011)(4326008)(7696005)(186003)(2906002)(66946007)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4384;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(346002)(366004)(136003)(199004)(189003)(13464003)(9686003)(6916009)(8676002)(71200400001)(33656002)(478600001)(53546011)(6506007)(52536014)(316002)(81156014)(2906002)(8936002)(7696005)(7416002)(4326008)(4001150100001)(54906003)(81166006)(26005)(186003)(86362001)(5660300002)(64756008)(66476007)(66556008)(66446008)(66946007)(76116006)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5273;H:DB7PR04MB4618.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: q/leyaFsZQWYDGNYI9A1+V/M8ohVKViKfNJIqqzp4G9KxQQkgPNjoxZtgZ2+ZGqgqNHBnunuOJMWLBzDcfst/Nm9p4WSnUAhRU5KdC3hk3QhQMfggg127BsQrouxaJajwram7ijTAKpGTKJn8+VN6RoWsYCjIiGckpcpFguNRiskIzP4YihhnI2fFCvui7louj5TVEnzAGuFduB2HfcqBfjbfBjp4rhNykn7e1L5gC/4ss+FBF3yfANiXF6NLGkmxqoJXyRUUWFP0R8eEPne6GltDCAez7SpgJEtvfYwM4JkkyVMjBUM9FOlYg8BAfchr1lMor41r1MZx7QwMRiNOKLKExdDfV5RLTImYLfamkVcYcYkMTq3xkFRm4wsuoraH+J85m3XHVxyZToM6DUciAwNwNmBfNcIThqUQ0b3h+Lqh+/hXYdVuGhDTzm8sS4q8NjW2qb32OwzM4d+0Dbhd1UpAtmQaXWA5n9aaMrt+uSrz0pNh5t0d/nyYv3PYWa5JA03A4iFtrtLuDL8WwyJ80aBEwjywLk8h2aHINBp99w=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: m2YkUGje9mb3gHRAtkY1HArfki+P55+PG/oJjzbsRkyuYHPMieDAq/Ot8j5eqKfevOsjgGZKtqzVGg6Jlo+uAhn31LSlZ3BcCcp1FZ8N5vgHiN4j+Gut2Z7d3SAIxjn7YtHFRrAlI7CQSdKzyTsQo2OF/jGYqVxLOs1B5I51ogW8TUMr4nKa8vrtoStjhPRrwLJ6e1Z45UIrIhOg903NQ3MivMkRzVDBfiUk+iMZgK04Dh3GEbgapawROfLpRP5dx99mNZv8lcipsSNRbIICZfz9BA3YyQ4r2acWzkmnPDpdoV8UKbhzvVLBh2eok+j2RArJ7b3s+M9OXi6daQEh9JB2wadTB96vSvutPQsN2sZ+XCa0dMjoUmP8o36pbS7HXWynYCnlr2Lnn8ijwCoTsdZnE9VZzKjBon+WX0PsGCq37WGIOwita2sgW/ZXfekpydSTC4/e41L2I67WL2O5GqxP3O1Oya8xS7FPmXq6Q/r7TRPp7UGKzyXoUsEqFfTo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c599b84c-590f-4f35-9fc5-08d783a28b86
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 10:10:44.3736
+X-MS-Exchange-CrossTenant-Network-Message-Id: f747d027-591b-435e-ba24-08d783a2979e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 10:11:04.6278
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yGkv2H1wHr6DNqfo5VaUPaLg9AKnGmfcBplssF5Cb5ohIfwv+56Ml9FhozzjVtTGQN5W/YJqGRjO4MFGr85uJQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4384
+X-MS-Exchange-CrossTenant-userprincipalname: GKJc/0gJqNbkFSltsDx8bX8wK/NNvF97veJbLgKc39D2WrF1zL1y5CB8R3gBGF3HUSmrh/yLctrMTqNbWsLshQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5273
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 18.12.2019 05:08, Chanwoo Choi wrote:=0A=
-> On 12/18/19 6:05 AM, Leonard Crestez wrote:=0A=
->> On 17.12.2019 02:35, Chanwoo Choi wrote:=0A=
->>> On 12/16/19 11:57 PM, Leonard Crestez wrote:=0A=
->>>> On 16.12.2019 03:00, Chanwoo Choi wrote:=0A=
->>>>> Hi,=0A=
->>>>>=0A=
->>>>> Also, I think that 'devfreq' word is not proper for device driver nam=
-e.=0A=
->>>>> imx-bus.c or imx-noc.c or others to inform the role of this driver of=
- developer.=0A=
->>>>=0A=
->>>> I'll rename to "imx-bus". Calling it "imx-noc" is not appropriate=0A=
->>>> because I also want to use it for PL301 NICs.=0A=
->>>=0A=
->>> OK.=0A=
->>>=0A=
->>>>=0A=
->>>>> And, I have a question.=0A=
->>>>> This driver adds the devfreq device with either passive governor=0A=
->>>>> or userspace governor.=0A=
->>>>>=0A=
->>>>> As I understood, the devfreq device with passive governor=0A=
->>>>> will be operated with imx8m-ddrc.c driver.=0A=
->>>>> But, when is operating with userspace governor?=0A=
->>>>=0A=
->>>> There are multiple scalable buses inside the SOC, for example there's =
-a=0A=
->>>> NIC for display controllers and one for (pci+usb). They can use=0A=
->>>> userspace governor for explicit frequency control.=0A=
->>>>=0A=
->>>>> I think that you better to add the explanation to description=0A=
->>>>> for two scenarios how to operate with interconnect provider=0A=
->>>>> on either passive governor or userspace governor usage case.=0A=
->>>>=0A=
->>>> I'll elaborate the example in bindings.=0A=
->>>=0A=
->>> OK.=0A=
->>>=0A=
->>>>=0A=
->>>>> On 12/13/19 10:51 AM, Chanwoo Choi wrote:=0A=
->>>>>> On 12/13/19 10:30 AM, Chanwoo Choi wrote:=0A=
->>>>>>> Hi,=0A=
->>>>>>>=0A=
->>>>>>> On 11/15/19 5:09 AM, Leonard Crestez wrote:=0A=
->>>>>>>> Add initial support for dynamic frequency switching on pieces of t=
-he imx=0A=
->>>>>>>> interconnect fabric.=0A=
->>>>>>>>=0A=
->>>>>>>> All this driver does is set a clk rate based on an opp table, it d=
-oes=0A=
->>>>>>>> not map register areas.=0A=
->>>>>>>>=0A=
->>>>>>>> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
->>>>>>>> ---=0A=
->>>>>>>>     drivers/devfreq/Kconfig       |   9 ++=0A=
->>>>>>>>     drivers/devfreq/Makefile      |   1 +=0A=
->>>>>>>>     drivers/devfreq/imx-devfreq.c | 150 ++++++++++++++++++++++++++=
-++++++++=0A=
->>>>>>>>     3 files changed, 160 insertions(+)=0A=
->>>>>>>>     create mode 100644 drivers/devfreq/imx-devfreq.c=0A=
->>>>>>>>=0A=
->>>>>>>> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig=0A=
->>>>>>>> index 923a6132e741..fef5ce831e90 100644=0A=
->>>>>>>> --- a/drivers/devfreq/Kconfig=0A=
->>>>>>>> +++ b/drivers/devfreq/Kconfig=0A=
->>>>>>>> @@ -98,10 +98,19 @@ config ARM_IMX8M_DDRC_DEVFREQ=0A=
->>>>>>>>     	select DEVFREQ_GOV_USERSPACE=0A=
->>>>>>>>     	help=0A=
->>>>>>>>     	  This adds the DEVFREQ driver for the i.MX8M DDR Controller.=
- It allows=0A=
->>>>>>>>     	  adjusting DRAM frequency.=0A=
->>>>>>>>     =0A=
->>>>>>>> +config ARM_IMX_DEVFREQ=0A=
->>>>>>>> +	tristate "i.MX Generic DEVFREQ Driver"=0A=
->>>>>>>> +	depends on ARCH_MXC || COMPILE_TEST=0A=
->>>>>>>> +	select DEVFREQ_GOV_PASSIVE=0A=
->>>>>>>> +	select DEVFREQ_GOV_USERSPACE=0A=
->>>>>>>> +	help=0A=
->>>>>>>> +	  This adds the generic DEVFREQ driver for i.MX interconnects. I=
-t=0A=
->>>>>>>> +	  allows adjusting NIC/NOC frequency.=0A=
->>>>>>>> +=0A=
->>>>>>>>     config ARM_TEGRA_DEVFREQ=0A=
->>>>>>>>     	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"=0A=
->>>>>>>>     	depends on ARCH_TEGRA_3x_SOC || ARCH_TEGRA_114_SOC || \=0A=
->>>>>>>>     		ARCH_TEGRA_132_SOC || ARCH_TEGRA_124_SOC || \=0A=
->>>>>>>>     		ARCH_TEGRA_210_SOC || \=0A=
->>>>>>>> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile=
-=0A=
->>>>>>>> index 3eb4d5e6635c..61d0edee16f7 100644=0A=
->>>>>>>> --- a/drivers/devfreq/Makefile=0A=
->>>>>>>> +++ b/drivers/devfreq/Makefile=0A=
->>>>>>>> @@ -8,10 +8,11 @@ obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)	+=3D governo=
-r_userspace.o=0A=
->>>>>>>>     obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+=3D governor_passive.o=0A=
->>>>>>>>     =0A=
->>>>>>>>     # DEVFREQ Drivers=0A=
->>>>>>>>     obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+=3D exynos-bus.o=0A=
->>>>>>>>     obj-$(CONFIG_ARM_IMX8M_DDRC_DEVFREQ)	+=3D imx8m-ddrc.o=0A=
->>>>>>>> +obj-$(CONFIG_ARM_IMX_DEVFREQ)		+=3D imx-devfreq.o=0A=
->>>>>>>>     obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+=3D rk3399_dmc.o=0A=
->>>>>>>>     obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+=3D tegra30-devfreq.o=0A=
->>>>>>>>     obj-$(CONFIG_ARM_TEGRA20_DEVFREQ)	+=3D tegra20-devfreq.o=0A=
->>>>>>>>     =0A=
->>>>>>>>     # DEVFREQ Event Drivers=0A=
->>>>>>>> diff --git a/drivers/devfreq/imx-devfreq.c b/drivers/devfreq/imx-d=
-evfreq.c=0A=
->>>>>>>> new file mode 100644=0A=
->>>>>>>> index 000000000000..620b344e87aa=0A=
->>>>>>>> --- /dev/null=0A=
->>>>>>>> +++ b/drivers/devfreq/imx-devfreq.c=0A=
->>>>>>>> @@ -0,0 +1,150 @@=0A=
->>>>>>>> +// SPDX-License-Identifier: GPL-2.0=0A=
->>>>>>>> +/*=0A=
->>>>>>>> + * Copyright 2019 NXP=0A=
->>>>>>>> + */=0A=
->>>>>>>> +=0A=
->>>>>>>> +#include <linux/clk.h>=0A=
->>>>>>>> +#include <linux/devfreq.h>=0A=
->>>>>>>> +#include <linux/device.h>=0A=
->>>>>>>> +#include <linux/module.h>=0A=
->>>>>>>> +#include <linux/of_device.h>=0A=
->>>>>>>> +#include <linux/pm_opp.h>=0A=
->>>>>>>> +#include <linux/platform_device.h>=0A=
->>>>>>>> +#include <linux/slab.h>=0A=
->>>>>>>> +=0A=
->>>>>>>> +struct imx_devfreq {=0A=
->>>>>>>> +	struct devfreq_dev_profile profile;=0A=
->>>>>>>> +	struct devfreq *devfreq;=0A=
->>>>>>>> +	struct clk *clk;=0A=
->>>>>>>> +	struct devfreq_passive_data passive_data;=0A=
->>>>>>>> +};=0A=
->>>>>>>> +=0A=
->>>>>>>> +static int imx_devfreq_target(struct device *dev,=0A=
->>>>>>>> +			      unsigned long *freq, u32 flags)=0A=
->>>>>>>=0A=
->>>>>>> Don't use space for the indentation. Please use only tab.=0A=
->>>>=0A=
->>>> OK=0A=
->>=0A=
->> The spaces are required in order to align arguments to open paranthesis.=
-=0A=
->> Should I drop that?=0A=
->>=0A=
->> It seems that check_patch.pl and process/coding-style.rst doesn't have a=
-=0A=
->> strong opinion on this; my personal preference is for long argument=0A=
->> lists to just use double indentation.=0A=
-> =0A=
-> Generally, almost patches use the tab for the indentation.=0A=
-> I don't use space for the indentation. If use the tab=0A=
-> for the indentation, it is not harmful for the readability.=0A=
-> =0A=
-> If use the space for the pretty to make the alignment between parameter,=
-=0A=
-> I think it it not good.=0A=
-=0A=
-OK, I'll just use two tabs. This also matches my personal preference.=0A=
-=0A=
->>>>>>>> +{=0A=
->>>>>>>> +	struct imx_devfreq *priv =3D dev_get_drvdata(dev);=0A=
->>>>>>>> +	struct dev_pm_opp *new_opp;=0A=
->>>>>>>> +	unsigned long new_freq;=0A=
->>>>>>>> +	int ret;=0A=
->>>>>>>> +=0A=
->>>>>>>> +	new_opp =3D devfreq_recommended_opp(dev, freq, flags);=0A=
->>>>>>>> +	if (IS_ERR(new_opp)) {=0A=
->>>>>>>> +		ret =3D PTR_ERR(new_opp);=0A=
->>>>>>>> +		dev_err(dev, "failed to get recommended opp: %d\n", ret);=0A=
->>>>>>>> +		return ret;=0A=
->>>>>>>> +	}=0A=
->>>>>>>> +	new_freq =3D dev_pm_opp_get_freq(new_opp);=0A=
->>>>>>>> +	dev_pm_opp_put(new_opp);=0A=
->>>>>>>> +=0A=
->>>>>>>> +	return clk_set_rate(priv->clk, new_freq);=0A=
->>>>>>>> +}=0A=
->>>>>>>> +=0A=
->>>>>>>> +static int imx_devfreq_get_cur_freq(struct device *dev, unsigned =
-long *freq)=0A=
->>>>>>>> +{=0A=
->>>>>>>> +	struct imx_devfreq *priv =3D dev_get_drvdata(dev);=0A=
->>>>>>>> +=0A=
->>>>>>>> +	*freq =3D clk_get_rate(priv->clk);=0A=
->>>>>>>> +=0A=
->>>>>>>> +	return 0;=0A=
->>>>>>>> +}=0A=
->>>>>>>> +=0A=
->>>>>>>> +static int imx_devfreq_get_dev_status(struct device *dev,=0A=
->>>>>>>> +				      struct devfreq_dev_status *stat)=0A=
->>>>>>>=0A=
->>>>>>> ditto. Please use tab for the indentation.=0A=
->>>>>>>=0A=
->>>>>>>> +{=0A=
->>>>>>>> +	struct imx_devfreq *priv =3D dev_get_drvdata(dev);=0A=
->>>>>>>> +=0A=
->>>>>>>> +	stat->busy_time =3D 0;=0A=
->>>>>>>> +	stat->total_time =3D 0;=0A=
->>>>>>>> +	stat->current_frequency =3D clk_get_rate(priv->clk);=0A=
->>>>>>>> +=0A=
->>>>>>>> +	return 0;=0A=
->>>>>>>> +}=0A=
->>>>>>>> +=0A=
->>>>>>>> +static void imx_devfreq_exit(struct device *dev)=0A=
->>>>>>>> +{=0A=
->>>>>>>> +	dev_pm_opp_of_remove_table(dev);=0A=
->>>>>>>> +}=0A=
->>>>>>>> +=0A=
->>>>>>>> +static int imx_devfreq_probe(struct platform_device *pdev)=0A=
->>>>>>>> +{=0A=
->>>>>>>> +	struct device *dev =3D &pdev->dev;=0A=
->>>>>>>> +	struct imx_devfreq *priv;=0A=
->>>>>>>=0A=
->>>>>>> How about changing the variable name 'priv' to 'imx' or 'imx_data'?=
-=0A=
->>>>>>> because it is not easy to catch the role of 'priv' from variable na=
-me.=0A=
->>>>=0A=
->>>> The name "priv" refers to private data of current device: it is short=
-=0A=
->>>> and not ambiguous in this context. I don't think that mentioning "imx"=
-=0A=
->>>> adds any additional useful information.=0A=
->>>>=0A=
->>>> It doesn't seem like there's much of a convention for "local variable=
-=0A=
->>>> containing private data", for example exynos-bus.c uses "struct=0A=
->>>> exynos_bus* bus" internally.=0A=
->>>=0A=
->>> OK. it is nitpick. Keep your style.=0A=
->>>=0A=
->>>>=0A=
->>>>>>>=0A=
->>>>>>>> +	const char *gov =3D DEVFREQ_GOV_USERSPACE;=0A=
->>>>>>>> +	void *govdata =3D NULL;=0A=
->>>>>>>=0A=
->>>>>>> How about changing the variable name 'govdata' to 'gov_data'?=0A=
->>>>>>> - govdata -> gov_data=0A=
->>>>=0A=
->>>> OK=0A=
->>>>=0A=
->>>>>>>> +	int ret;=0A=
->>>>>>>> +=0A=
->>>>>>>> +	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);=0A=
->>>>>>>> +	if (!priv)=0A=
->>>>>>>> +		return -ENOMEM;=0A=
->>>>>>>> +=0A=
->>>>>>>> +	priv->clk =3D devm_clk_get(dev, NULL);=0A=
->>>>>>>=0A=
->>>>>>> nitpick: because the clock-name is not mandatory.=0A=
->>>>>>> Don't need to specify the clock name to inform the role of clock=0A=
->>>>>>> of other developer/user?=0A=
->>>>>>>=0A=
->>>>>>> For example, "ddr", "bus" and so on.=0A=
->>>>=0A=
->>>> I'll call this bus, but I'm not sure it's useful when a single clock i=
-s=0A=
->>>> involved.=0A=
->>>>=0A=
->>>>>> And, this driver doesn't include the 'clk_prepare_enable'.=0A=
->>>>>> how to enable the clock?=0A=
->>>>=0A=
->>>> Clocks are either always on or perhaps controlled by some other=0A=
->>>> peripheral. This driver only provides scaling.=0A=
->>>=0A=
->>> It is not proper use-case of clock. If device driver=0A=
->>> want to control the clock, it have to be enabled on device driver.=0A=
->>=0A=
->>> Even it clock is always, the user don't know the state of clock.=0A=
->>> Also, user can't know what kind of device driver control the clock.=0A=
->>>=0A=
->>> It have to be controlled on this device driver=0A=
->>> before changing the clock frequency.=0A=
->>=0A=
->>   From clock framework perspective prepare/enable and rate bits can be=
-=0A=
->> controlled separately.=0A=
->>=0A=
->> Many peripherals are grouped with their own bus (for example a PL301=0A=
->> NIC) which is normally off and only gets enabled when explicitly=0A=
->> requested by drivers. If this devfreq driver always enabled bus clocks=
-=0A=
->> then it would waste power for no reason.=0A=
-> =0A=
-> You can save the power with following sequence.=0A=
-> You are keeping the following sequence without any problem.=0A=
-> 	clk_prepare_enable()=0A=
-> 	clk_set_rate()=0A=
-> 	clk_disable_unprepare()=0A=
-> =0A=
-> clk API support the reference count for the clock user.=0A=
-> It doesn't affect the any behavior of other device sharing the bus clock=
-=0A=
-> and waste any power-consumption because it will always restore=0A=
-> the reference count after changing the clock rate.=0A=
-=0A=
-But this doesn't serve any purpose?=0A=
-=0A=
-In some cases (depending on clock flags like CLK_SET_RATE_GATE or =0A=
-CLK_SET_RATE_UNGATE flags) the clk_set_rate function can require than =0A=
-clocks are either on or off and otherwise return an error.=0A=
-=0A=
-For imx bus clocks there is no such requirement.=0A=
-=0A=
->> For example a display controller will first enable clocks to allow=0A=
->> access to device registers, then configure a resolution and make a=0A=
->> bandwith request which gets translated a min_freq request. Then when the=
-=0A=
->> display is blanked the entire display bus should be powered off, even if=
-=0A=
->> this makes control registers inaccessible.=0A=
->>=0A=
->> This series only enables scaling for the main NOC which can't be turned=
-=0A=
->> off anyway.=0A=
->>=0A=
->>>>>>>> +	if (IS_ERR(priv->clk)) {=0A=
->>>>>>>> +		ret =3D PTR_ERR(priv->clk);=0A=
->>>>>>>> +		dev_err(dev, "failed to fetch clk: %d\n", ret);=0A=
->>>>>>>> +		return ret;=0A=
->>>>>>>> +	}=0A=
->>>>>>>> +	platform_set_drvdata(pdev, priv);=0A=
->>>>>>>> +=0A=
->>>>>>>> +	ret =3D dev_pm_opp_of_add_table(dev);=0A=
->>>>>>>> +	if (ret < 0) {=0A=
->>>>>>>> +		dev_err(dev, "failed to get OPP table\n");=0A=
->>>>>>>> +		return ret;=0A=
->>>>>>>> +	}=0A=
->>>>>>>> +=0A=
->>>>>>>> +	priv->profile.polling_ms =3D 1000;=0A=
->>>>>>>> +	priv->profile.target =3D imx_devfreq_target;=0A=
->>>>>>>> +	priv->profile.get_dev_status =3D imx_devfreq_get_dev_status;=0A=
->>>>>>>> +	priv->profile.exit =3D imx_devfreq_exit;=0A=
->>>>>>>> +	priv->profile.get_cur_freq =3D imx_devfreq_get_cur_freq;=0A=
->>>>>>>> +	priv->profile.initial_freq =3D clk_get_rate(priv->clk);=0A=
->>>>>>>> +=0A=
->>>>>>>> +	/* Handle passive devfreq parent link */=0A=
->>>>>>>> +	priv->passive_data.parent =3D devfreq_get_devfreq_by_phandle(dev=
-, 0);=0A=
->>>>>>>> +	if (!IS_ERR(priv->passive_data.parent)) {=0A=
->>>>>>>> +		dev_info(dev, "setup passive link to %s\n",=0A=
->>>>>>>> +			 dev_name(priv->passive_data.parent->dev.parent));=0A=
->>>>>>>> +		gov =3D DEVFREQ_GOV_PASSIVE;=0A=
->>>>>>>> +		govdata =3D &priv->passive_data;=0A=
->>>>>>>> +	} else if (priv->passive_data.parent !=3D ERR_PTR(-ENODEV)) {=0A=
->>>>>>>> +		// -ENODEV means no parent: not an error.=0A=
->>>>>>>> +		ret =3D PTR_ERR(priv->passive_data.parent);=0A=
->>>>>>>> +		if (ret !=3D -EPROBE_DEFER)=0A=
->>>>>>>> +			dev_warn(dev, "failed to get initialize passive parent: %d\n",=
-=0A=
->>>>>>>> +				 ret);=0A=
->>>>>>>> +		goto err;=0A=
->>>>>>>> +	}=0A=
->>>>>>>=0A=
->>>>>>> You better to change the exception handling as following: It is mor=
-e simple.=0A=
->>>>>>>=0A=
->>>>>>> 	} else if (PTR_ERR(priv->passive_data.parent) =3D=3D -EPROBE_DEFER=
-)=0A=
->>>>>>> 			|| PTR_ERR(priv->passive_data.parent) =3D=3D -ENODEV) {=0A=
->>>>>>> 		goto err;=0A=
->>>>>>> 	} else {=0A=
->>>>>>> 		ret =3D PTR_ERR(priv->passive_data.parent);=0A=
->>>>>>> 		dev_err(dev, "failed to get initialize passive parent: %d\n", ret=
-);=0A=
->>>>>>> 		goto err;=0A=
->>>>>>> 	}=0A=
->>>>=0A=
->>>> But -ENODEV is not an error, it means no passive parent was found.=0A=
->>>=0A=
->>> OK. just I want to make 'if statement' more simple. This style=0A=
->>> is complicated.=0A=
->>=0A=
->> I can avoid handling EPROBE_DEFER in a nested if.=0A=
-> =0A=
-> Anyway, if you make the exception more simple, I'm ok.=0A=
-> =0A=
->>=0A=
->>>>>>>> +	priv->devfreq =3D devm_devfreq_add_device(dev, &priv->profile,=
-=0A=
->>>>>>>> +						gov, govdata);=0A=
->>>>>>>> +	if (IS_ERR(priv->devfreq)) {=0A=
->>>>>>>> +		ret =3D PTR_ERR(priv->devfreq);=0A=
->>>>>>>> +		dev_err(dev, "failed to add devfreq device: %d\n", ret);=0A=
->>>>>>>> +		goto err;=0A=
->>>>>>>> +	}=0A=
->>>>>>>> +=0A=
->>>>>>>> +	return 0;=0A=
->>>>>>>> +=0A=
->>>>>>>> +err:=0A=
->>>>>>>> +	dev_pm_opp_of_remove_table(dev);=0A=
->>>>>>>> +	return ret;=0A=
->>>>>>>> +}=0A=
->>>>>>>> +=0A=
->>>>>>>> +static const struct of_device_id imx_devfreq_of_match[] =3D {=0A=
->>>>>>>> +	{ .compatible =3D "fsl,imx8m-noc", },=0A=
->>>>>>>> +	{ .compatible =3D "fsl,imx8m-nic", },=0A=
->>>>>>>> +	{ /* sentinel */ },=0A=
->>>>>>>> +};=0A=
->>>>>>>> +MODULE_DEVICE_TABLE(of, imx_devfreq_of_match);=0A=
->>>>>>>> +=0A=
->>>>>>>> +static struct platform_driver imx_devfreq_platdrv =3D {=0A=
->>>>>>>> +	.probe		=3D imx_devfreq_probe,=0A=
->>>>>>>> +	.driver =3D {=0A=
->>>>>>>> +		.name	=3D "imx-devfreq",=0A=
->>>>>>>> +		.of_match_table =3D of_match_ptr(imx_devfreq_of_match),=0A=
->>>>>>>> +	},=0A=
->>>>>>>> +};=0A=
->>>>>>>> +module_platform_driver(imx_devfreq_platdrv);=0A=
->>>>>>>> +=0A=
->>>>>>>> +MODULE_DESCRIPTION("Generic i.MX bus frequency driver");=0A=
->>>>>>>=0A=
->>>>>>> If this driver is for bus frequency, you better to use 'bus' for th=
-e clock-name=0A=
->>>>>>> for the readability.=0A=
->>=0A=
->>=0A=
->>=0A=
->>=0A=
-> =0A=
-> =0A=
-=0A=
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmMgWnluZ2llciA8bWF6
+QGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMTnlubQxMuaciDE45pelIDE3OjM4DQo+IFRvOiBKb2Fr
+aW0gWmhhbmcgPHFpYW5ncWluZy56aGFuZ0BueHAuY29tPg0KPiBDYzogdGdseEBsaW51dHJvbml4
+LmRlOyBqYXNvbkBsYWtlZGFlbW9uLm5ldDsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1
+dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5k
+ZTsgUy5qLg0KPiBXYW5nIDxzaGVuZ2ppdS53YW5nQG54cC5jb20+OyBrZXJuZWxAcGVuZ3V0cm9u
+aXguZGU7DQo+IGZlc3RldmFtQGdtYWlsLmNvbTsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhw
+LmNvbT47DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IEFuZHkg
+RHVhbiA8ZnVnYW5nLmR1YW5AbnhwLmNvbT47DQo+IEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5kb25n
+QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8zXSBkcml2ZXJzL2lycWNoaXA6IGFk
+ZCBOWFAgSU5UTVVYIGludGVycnVwdA0KPiBtdWx0aXBsZXhlciBzdXBwb3J0DQo+IA0KPiBPbiAy
+MDE5LTEyLTE4IDA3OjIwLCBKb2FraW0gWmhhbmcgd3JvdGU6DQo+ID4gRnJvbTogU2hlbmdqaXUg
+V2FuZyA8c2hlbmdqaXUud2FuZ0BueHAuY29tPg0KPiA+DQo+ID4gVGhlIGludG11eCBtb2R1bGUg
+aXMgdXNlZCB0byBvdXRwdXQgaW50ZXJuYWwgaW50ZXJydXB0IGluIHN1YnN5c3RlbSB0bw0KPiA+
+IHN5c3RlbSB3aXRoIDMyLXRvLTggY29uZmlndXJhdGlvbi4gSXQgaGFzIHNldmVyYWwgbXVsdGlw
+bGV4IGNoYW5uZWxzDQo+ID4gZGVwZW5kcyBvbiBzeXN0ZW0uDQo+ID4NCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBTaGVuZ2ppdSBXYW5nIDxzaGVuZ2ppdS53YW5nQG54cC5jb20+DQo+ID4gU2lnbmVkLW9m
+Zi1ieTogSm9ha2ltIFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4g
+PiAgZHJpdmVycy9pcnFjaGlwL2lycS1pbXgtaW50bXV4LmMgfCAyMjANCj4gPiArKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyMjAgaW5zZXJ0aW9u
+cygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9pcnFjaGlwL2lycS1pbXgtaW50
+bXV4LmMNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lycWNoaXAvaXJxLWlteC1pbnRt
+dXguYw0KPiA+IGIvZHJpdmVycy9pcnFjaGlwL2lycS1pbXgtaW50bXV4LmMNCj4gPiBuZXcgZmls
+ZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uZmEyNGI5NjhmMzBiDQo+ID4g
+LS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEtaW14LWludG11eC5j
+DQo+ID4gQEAgLTAsMCArMSwyMjAgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6
+IEdQTC0yLjANCj4gPiArLy8gQ29weXJpZ2h0IDIwMTcgTlhQDQo+ID4gKw0KPiA+ICsjaW5jbHVk
+ZSA8bGludXgvY2xrLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4NCj4gPiAr
+I2luY2x1ZGUgPGxpbnV4L2lycS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvaXJxY2hpcC9jaGFp
+bmVkX2lycS5oPiAjaW5jbHVkZSA8bGludXgvaXJxZG9tYWluLmg+DQo+ID4gKyNpbmNsdWRlIDxs
+aW51eC9rZXJuZWwuaD4gI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPiAjaW5jbHVkZQ0KPiA+ICs8
+bGludXgvb2ZfcGxhdGZvcm0uaD4gI2luY2x1ZGUgPGxpbnV4L3NwaW5sb2NrLmg+DQo+ID4gKw0K
+PiA+ICsjZGVmaW5lIENIQU5DU1IobikJKDB4MCArIDB4NDAgKiBuKQ0KPiA+ICsjZGVmaW5lIENI
+QU5WRUMobikJKDB4NCArIDB4NDAgKiBuKQ0KPiANCj4gVGhlc2UgdHdvIG1hY3JvcyBhcmUgdW51
+c2VkLg0KSGkgTWFyYywNCg0KWWVzLCB3ZSBkZWZpbmVkIHRoZXNlIHR3byBtYWNyb3MgYW5kIGhh
+dmUgbm90IHVzZWQgeWV0LiBJIHdpbGwgcmVtb3ZlIGl0IGZpcnN0bHkgaW4gVjIuDQoNCj4gPiAr
+I2RlZmluZSBDSEFOSUVSKG4pCSgweDEwICsgKDB4NDAgKiBuKSkNCj4gPiArI2RlZmluZSBDSEFO
+SVBSKG4pCSgweDIwICsgKDB4NDAgKiBuKSkNCj4gPiArDQo+ID4gK3N0cnVjdCBpbnRtdXhfaXJx
+Y2hpcF9kYXRhIHsNCj4gPiArCWludCBjaGFuaWR4Ow0KPiA+ICsJaW50IGlycTsNCj4gPiArCXN0
+cnVjdCBpcnFfZG9tYWluICpkb21haW47DQo+ID4gKwl1bnNpZ25lZCBpbnQgaXJxc3RhdDsNCj4g
+DQo+IEl0IHdvdWxkIG1ha2UgdGhpbmdzIGEgYml0IHJlYWRhYmxlIGlmIHlvdSBhbGlnbmVkIHRo
+ZSB2YXJpb3VzIGZpZWxkczoNCj4gDQo+IHN0cnVjdCBpbnRtdXhfaXJxY2hpcF9kYXRhIHsNCj4g
+ICAgICAgICAgaW50ICAgICAgICAgICAgICAgICAgY2hhbmlkeDsNCj4gICAgICAgICAgaW50ICAg
+ICAgICAgICAgICAgICAgaXJxOw0KPiAgICAgICAgICBzdHJ1Y3QgaXJxX2RvbWFpbiAgICAqZG9t
+YWluOw0KPiBbLi4uXQ0KPiB9Ow0KT2ssIEkgd2lsbCBkbyBpdCBpbiBWMi4NCg0KVGhhbmtzLg0K
+DQpCZXN0IFJlZ2FyZHMsDQpKb2FraW0gWmhhbmcNCj4gDQo+ID4gK307DQo+ID4gKw0KPiA+ICtz
+dHJ1Y3QgaW50bXV4X2RhdGEgew0KPiA+ICsJc3BpbmxvY2tfdCBsb2NrOw0KPiA+ICsJc3RydWN0
+IHBsYXRmb3JtX2RldmljZSAqcGRldjsNCj4gPiArCXZvaWQgX19pb21lbSAqcmVnczsNCj4gPiAr
+CXN0cnVjdCBjbGsgKmlwZ19jbGs7DQo+ID4gKwlpbnQgY2hhbm51bTsNCj4gPiArCXN0cnVjdCBp
+bnRtdXhfaXJxY2hpcF9kYXRhIGlycWNoaXBfZGF0YVtdOyB9Ow0KPiA+ICsNCj4gPiArc3RhdGlj
+IHZvaWQgaW14X2ludG11eF9pcnFfbWFzayhzdHJ1Y3QgaXJxX2RhdGEgKmQpIHsNCj4gPiArCXN0
+cnVjdCBpbnRtdXhfaXJxY2hpcF9kYXRhICppcnFjaGlwX2RhdGEgPSBkLT5jaGlwX2RhdGE7DQo+
+ID4gKwl1MzIgaWR4ID0gaXJxY2hpcF9kYXRhLT5jaGFuaWR4Ow0KPiA+ICsJc3RydWN0IGludG11
+eF9kYXRhICppbnRtdXhfZGF0YSA9IGNvbnRhaW5lcl9vZihpcnFjaGlwX2RhdGEsDQo+ID4gKwkJ
+CQlzdHJ1Y3QgaW50bXV4X2RhdGEsIGlycWNoaXBfZGF0YVtpZHhdKTsNCj4gPiArCXZvaWQgX19p
+b21lbSAqcmVnOw0KPiA+ICsJdTMyIHZhbDsNCj4gPiArDQo+ID4gKwlzcGluX2xvY2soJmludG11
+eF9kYXRhLT5sb2NrKTsNCj4gDQo+IFRoaXMgaXMgcmFjeS4geW91IGNvdWxkIHRha2UgYW4gaW50
+ZXJydXB0IHdoaWxlIGV4ZWN1dGluZyBkaXNhYmxlX2lycSgpLCB3aGljaA0KPiBjYWxscyB0aGlz
+LiBJbiB0dXJuLCB0aGUgaW50ZXJydXB0IGhhbmRsZXIgd2lsbCB0cnkgdG8gYWNxdWlyZSB0aGlz
+IGxvY2sgLT4gZGVhZGxvY2suDQo+IA0KPiBQbGVhc2UgdHVybiB0aGlzIGludG8gaXRzIF9pcnFz
+YXZlIHZlcnNpb24uDQo+IA0KPiA+ICsJcmVnID0gaW50bXV4X2RhdGEtPnJlZ3MgKyBDSEFOSUVS
+KGlkeCk7DQo+ID4gKwl2YWwgPSByZWFkbF9yZWxheGVkKHJlZyk7DQo+ID4gKwkvKiBkaXNhYmxl
+IHRoZSBpbnRlcnJ1cHQgc291cmNlIG9mIHRoaXMgY2hhbm5lbCAqLw0KPiA+ICsJdmFsICY9IH4o
+MSA8PCBkLT5od2lycSk7DQo+IA0KPiAgICAgICAgICB2YWwgJj0gfkJJVChkLT5od2lycSk7DQo+
+IA0KPiA+ICsJd3JpdGVsX3JlbGF4ZWQodmFsLCByZWcpOw0KPiA+ICsJc3Bpbl91bmxvY2soJmlu
+dG11eF9kYXRhLT5sb2NrKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgaW14X2lu
+dG11eF9pcnFfdW5tYXNrKHN0cnVjdCBpcnFfZGF0YSAqZCkgew0KPiA+ICsJc3RydWN0IGludG11
+eF9pcnFjaGlwX2RhdGEgKmlycWNoaXBfZGF0YSA9IGQtPmNoaXBfZGF0YTsNCj4gPiArCXUzMiBp
+ZHggPSBpcnFjaGlwX2RhdGEtPmNoYW5pZHg7DQo+ID4gKwlzdHJ1Y3QgaW50bXV4X2RhdGEgKmlu
+dG11eF9kYXRhID0gY29udGFpbmVyX29mKGlycWNoaXBfZGF0YSwNCj4gPiArCQkJCXN0cnVjdCBp
+bnRtdXhfZGF0YSwgaXJxY2hpcF9kYXRhW2lkeF0pOw0KPiA+ICsJdm9pZCBfX2lvbWVtICpyZWc7
+DQo+ID4gKwl1MzIgdmFsOw0KPiA+ICsNCj4gPiArCXNwaW5fbG9jaygmaW50bXV4X2RhdGEtPmxv
+Y2spOw0KPiA+ICsJcmVnID0gaW50bXV4X2RhdGEtPnJlZ3MgKyBDSEFOSUVSKGlkeCk7DQo+ID4g
+Kwl2YWwgPSByZWFkbF9yZWxheGVkKHJlZyk7DQo+ID4gKwkvKiBlbmFibGUgdGhlIGludGVycnVw
+dCBzb3VyY2Ugb2YgdGhpcyBjaGFubmVsICovDQo+ID4gKwl2YWwgfD0gMSA8PCBkLT5od2lycTsN
+Cj4gPiArCXdyaXRlbF9yZWxheGVkKHZhbCwgcmVnKTsNCj4gPiArCXNwaW5fdW5sb2NrKCZpbnRt
+dXhfZGF0YS0+bG9jayk7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgaXJxX2No
+aXAgaW14X2ludG11eF9pcnFfY2hpcCA9IHsNCj4gPiArCS5uYW1lCQk9ICJpbnRtdXgiLA0KPiA+
+ICsJLmlycV9tYXNrCT0gaW14X2ludG11eF9pcnFfbWFzaywNCj4gPiArCS5pcnFfdW5tYXNrCT0g
+aW14X2ludG11eF9pcnFfdW5tYXNrLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGludCBp
+bXhfaW50bXV4X2lycV9tYXAoc3RydWN0IGlycV9kb21haW4gKmgsIHVuc2lnbmVkIGludA0KPiA+
+IGlycSwNCj4gPiArCQkJICAgICAgaXJxX2h3X251bWJlcl90IGh3aXJxKQ0KPiA+ICt7DQo+ID4g
+KwlpcnFfc2V0X3N0YXR1c19mbGFncyhpcnEsIElSUV9MRVZFTCk7DQo+ID4gKwlpcnFfc2V0X2No
+aXBfZGF0YShpcnEsIGgtPmhvc3RfZGF0YSk7DQo+ID4gKwlpcnFfc2V0X2NoaXBfYW5kX2hhbmRs
+ZXIoaXJxLCAmaW14X2ludG11eF9pcnFfY2hpcCwNCj4gPiBoYW5kbGVfbGV2ZWxfaXJxKTsNCj4g
+PiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0
+cnVjdCBpcnFfZG9tYWluX29wcyBpbXhfaW50bXV4X2RvbWFpbl9vcHMgPSB7DQo+ID4gKwkubWFw
+CQk9IGlteF9pbnRtdXhfaXJxX21hcCwNCj4gPiArCS54bGF0ZQkJPSBpcnFfZG9tYWluX3hsYXRl
+X29uZWNlbGwsDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9pZCBpbXhfaW50bXV4X3Vw
+ZGF0ZV9pcnFzdGF0KHN0cnVjdCBpbnRtdXhfaXJxY2hpcF9kYXRhDQo+ID4gKmlycWNoaXBfZGF0
+YSkNCj4gPiArew0KPiA+ICsJaW50IGkgPSBpcnFjaGlwX2RhdGEtPmNoYW5pZHg7DQo+ID4gKwlz
+dHJ1Y3QgaW50bXV4X2RhdGEgKmludG11eF9kYXRhID0gY29udGFpbmVyX29mKGlycWNoaXBfZGF0
+YSwNCj4gPiArCQkJCXN0cnVjdCBpbnRtdXhfZGF0YSwgaXJxY2hpcF9kYXRhW2ldKTsNCj4gPiAr
+DQo+ID4gKwkvKiByZWFkIHRoZSBpbnRlcnJ1cHQgc291cmNlIHBlbmRpbmcgc3RhdHVzIG9mIHRo
+aXMgY2hhbm5lbCAqLw0KPiA+ICsJaXJxY2hpcF9kYXRhLT5pcnFzdGF0ID0gcmVhZGxfcmVsYXhl
+ZChpbnRtdXhfZGF0YS0+cmVncyArDQo+ID4gQ0hBTklQUihpKSk7DQo+IA0KPiBXaHkgZG9lcyBp
+dCBuZWVkIHRvIGJlIHN0b3JlZCBpbnRvIHRoZSBkYXRhIHN0cnVjdHVyZSwgaW5zdGVhZCBvZg0K
+PiBzaW5wbHkgYmVpbmcgcmV0dXJuZWQgYnkgdGhlIGZ1bmN0aW9uPw0KPiANCj4gPiArfQ0KPiA+
+ICsNCj4gPiArc3RhdGljIHZvaWQgaW14X2ludG11eF9pcnFfaGFuZGxlcihzdHJ1Y3QgaXJxX2Rl
+c2MgKmRlc2MpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBpbnRtdXhfaXJxY2hpcF9kYXRhICppcnFj
+aGlwX2RhdGEgPQ0KPiA+IGlycV9kZXNjX2dldF9oYW5kbGVyX2RhdGEoZGVzYyk7DQo+ID4gKwlp
+bnQgcG9zLCB2aXJxOw0KPiA+ICsNCj4gPiArCWNoYWluZWRfaXJxX2VudGVyKGlycV9kZXNjX2dl
+dF9jaGlwKGRlc2MpLCBkZXNjKTsNCj4gPiArDQo+ID4gKwlpbXhfaW50bXV4X3VwZGF0ZV9pcnFz
+dGF0KGlycWNoaXBfZGF0YSk7DQo+ID4gKw0KPiA+ICsJZm9yX2VhY2hfc2V0X2JpdChwb3MsICh1
+bnNpZ25lZCBsb25nICopJmlycWNoaXBfZGF0YS0+aXJxc3RhdCwgMzIpDQo+ID4gew0KPiANCj4g
+VGhpcyBpcyBicm9rZW4gb24gYmlnLWVuZGlhbi4gTmV2ZXIgY2FzdCBhIHNtYWxsZXIgdHlwZSBp
+bnRvIHVuc2lnbmVkDQo+IGxvbmcNCj4gaWYgeW91J3JlIGdvaW5nIHRvIHVzZSBhbnkgb2YgdGhl
+IGJpdCBpdGVyYXRvcnMuDQo+IA0KPiA+ICsJCXZpcnEgPSBpcnFfZmluZF9tYXBwaW5nKGlycWNo
+aXBfZGF0YS0+ZG9tYWluLCBwb3MpOw0KPiA+ICsJCWlmICh2aXJxKQ0KPiA+ICsJCQlnZW5lcmlj
+X2hhbmRsZV9pcnEodmlycSk7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJY2hhaW5lZF9pcnFfZXhp
+dChpcnFfZGVzY19nZXRfY2hpcChkZXNjKSwgZGVzYyk7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0
+YXRpYyBpbnQgaW14X2ludG11eF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0K
+PiA+ICt7DQo+ID4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gcGRldi0+ZGV2Lm9mX25vZGU7
+DQo+ID4gKwlzdHJ1Y3QgaW50bXV4X2RhdGEgKmludG11eF9kYXRhOw0KPiA+ICsJaW50IGNoYW5u
+dW07DQo+ID4gKwlpbnQgaSwgcmV0Ow0KPiA+ICsNCj4gPiArCXJldCA9IG9mX3Byb3BlcnR5X3Jl
+YWRfdTMyKG5wLCAiZnNsLGludG11eF9jaGFucyIsICZjaGFubnVtKTsNCj4gPiArCWlmIChyZXQp
+DQo+ID4gKwkJY2hhbm51bSA9IDE7DQo+ID4gKw0KPiA+ICsJaW50bXV4X2RhdGEgPSBkZXZtX2t6
+YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCppbnRtdXhfZGF0YSkgKw0KPiA+ICsJCQkJICAgY2hh
+bm51bSAqIHNpemVvZihpbnRtdXhfZGF0YS0+aXJxY2hpcF9kYXRhWzBdKSwNCj4gPiArCQkJCSAg
+IEdGUF9LRVJORUwpOw0KPiA+ICsJaWYgKCFpbnRtdXhfZGF0YSkNCj4gPiArCQlyZXR1cm4gLUVO
+T01FTTsNCj4gPiArDQo+ID4gKwlpbnRtdXhfZGF0YS0+cmVncyA9IGRldm1fcGxhdGZvcm1faW9y
+ZW1hcF9yZXNvdXJjZShwZGV2LCAwKTsNCj4gPiArCWlmIChJU19FUlIoaW50bXV4X2RhdGEtPnJl
+Z3MpKSB7DQo+ID4gKwkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGluaXRpYWxpemUg
+cmVnXG4iKTsNCj4gPiArCQlyZXR1cm4gUFRSX0VSUihpbnRtdXhfZGF0YS0+cmVncyk7DQo+ID4g
+Kwl9DQo+ID4gKw0KPiA+ICsJaW50bXV4X2RhdGEtPmlwZ19jbGsgPSBkZXZtX2Nsa19nZXQoJnBk
+ZXYtPmRldiwgImlwZyIpOw0KPiA+ICsJaWYgKElTX0VSUihpbnRtdXhfZGF0YS0+aXBnX2Nsaykp
+IHsNCj4gPiArCQlyZXQgPSBQVFJfRVJSKGludG11eF9kYXRhLT5pcGdfY2xrKTsNCj4gPiArCQlk
+ZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gZ2V0IGlwZyBjbGs6ICVkXG4iLCByZXQpOw0K
+PiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJaW50bXV4X2RhdGEtPmNo
+YW5udW0gPSBjaGFubnVtOw0KPiA+ICsJaW50bXV4X2RhdGEtPnBkZXYgPSBwZGV2Ow0KPiANCj4g
+V2hhdCBpcyB0aGUgcG9pbnQgb2Yga2VlcGluZyB0cmFjayBvZiB0aGlzPyBUaGUgb25seSBpbnN0
+YW5jZSB3aGVyZSB5b3UNCj4gZ28gZnJvbSBNVVggdG8gZGV2aWNlIGlzIGp1c3QgYmVsb3csIGFu
+ZCB5b3UgYWxyZWFkeSBoYXZlIHRoZSBkZXZpY2UNCj4gYXQgaGFuZC4NCj4gDQo+ID4gKwlzcGlu
+X2xvY2tfaW5pdCgmaW50bXV4X2RhdGEtPmxvY2spOw0KPiA+ICsNCj4gPiArCXJldCA9IGNsa19w
+cmVwYXJlX2VuYWJsZShpbnRtdXhfZGF0YS0+aXBnX2Nsayk7DQo+ID4gKwlpZiAocmV0KSB7DQo+
+ID4gKwkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSBpcGcgY2xrOiAlZFxu
+IiwgcmV0KTsNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWZvciAo
+aSA9IDA7IGkgPCBjaGFubnVtOyBpKyspIHsNCj4gPiArCQlpbnRtdXhfZGF0YS0+aXJxY2hpcF9k
+YXRhW2ldLmNoYW5pZHggPSBpOw0KPiA+ICsJCWludG11eF9kYXRhLT5pcnFjaGlwX2RhdGFbaV0u
+aXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2LCBpKTsNCj4gPiArCQlpZiAoaW50bXV4X2RhdGEt
+PmlycWNoaXBfZGF0YVtpXS5pcnEgPD0gMCkgew0KPiA+ICsJCQlkZXZfZXJyKCZwZGV2LT5kZXYs
+ICJmYWlsZWQgdG8gZ2V0IGlycVxuIik7DQo+ID4gKwkJCXJldHVybiAtRU5PREVWOw0KPiA+ICsJ
+CX0NCj4gPiArDQo+ID4gKwkJaW50bXV4X2RhdGEtPmlycWNoaXBfZGF0YVtpXS5kb21haW4gPSBp
+cnFfZG9tYWluX2FkZF9saW5lYXIoDQo+ID4gKwkJCQkJCW5wLA0KPiA+ICsJCQkJCQkzMiwNCj4g
+PiArCQkJCQkJJmlteF9pbnRtdXhfZG9tYWluX29wcywNCj4gPiArCQkJCQkJJmludG11eF9kYXRh
+LT5pcnFjaGlwX2RhdGFbaV0pOw0KPiANCj4gUGxlYXNlIGluZGVudCB0aGlzIGluIGEgcmVhZGFi
+bGUgbWFubmVyLiBJZiB5b3UgbmVlZCBhbiBpbnRlcm1lZGlhdGUNCj4gdmFyaWFibGUsDQo+IHNv
+IGJlIGl0LiBPciBoYXZlIGEgbG9uZyBsaW5lIGlmIHlvdSB3YW50LCBidXQgZG9uJ3Qgd3JpdGUg
+dGhpbmdzIGxpa2UNCj4gdGhpcy4NCj4gDQo+ID4gKwkJaWYgKCFpbnRtdXhfZGF0YS0+aXJxY2hp
+cF9kYXRhW2ldLmRvbWFpbikgew0KPiA+ICsJCQlkZXZfZXJyKCZpbnRtdXhfZGF0YS0+cGRldi0+
+ZGV2LA0KPiA+ICsJCQkJImZhaWxlZCB0byBjcmVhdGUgSVJRIGRvbWFpblxuIik7DQo+ID4gKwkJ
+CXJldHVybiAtRU5PTUVNOw0KPiA+ICsJCX0NCj4gPiArDQo+ID4gKw0KPiAJaXJxX3NldF9jaGFp
+bmVkX2hhbmRsZXJfYW5kX2RhdGEoaW50bXV4X2RhdGEtPmlycWNoaXBfZGF0YVtpXS5pcnEsDQo+
+ID4gKwkJCQkJCSBpbXhfaW50bXV4X2lycV9oYW5kbGVyLA0KPiA+ICsJCQkJCQkgJmludG11eF9k
+YXRhLT5pcnFjaGlwX2RhdGFbaV0pOw0KPiANCj4gU2hvdWxkbid0IHlvdSBpbml0aWFsaXplIHRo
+ZSBIVyB0byBzb21lIHNhbmUgc3RhdGUgaGVyZT8gTGlrZSBoYXZpbmcNCj4gaGF2aW5nIGFsbCBp
+bnRlcnJ1cHRzIG1hc2tlZD8NCj4gDQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcGxhdGZvcm1fc2V0
+X2RydmRhdGEocGRldiwgaW50bXV4X2RhdGEpOw0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+
+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGlteF9pbnRtdXhfcmVtb3ZlKHN0cnVjdCBwbGF0
+Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBpbnRtdXhfZGF0YSAqaW50
+bXV4X2RhdGEgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4gPiArCWludCBpOw0KPiA+
+ICsNCj4gPiArCWZvciAoaSA9IDA7IGkgPCBpbnRtdXhfZGF0YS0+Y2hhbm51bTsgaSsrKSB7DQo+
+ID4gKw0KPiAJaXJxX3NldF9jaGFpbmVkX2hhbmRsZXJfYW5kX2RhdGEoaW50bXV4X2RhdGEtPmly
+cWNoaXBfZGF0YVtpXS5pcnEsDQo+ID4gKwkJCQkJCSBOVUxMLCBOVUxMKTsNCj4gDQo+IFNhbWUg
+dGhpbmcgaGVyZS4gU2hvdWxkbid0IHlvdSBtYWtlIHN1cmUgdGhhdCBubyBpbnRlcnJ1cHQgY2Fu
+IGZpcmUNCj4gYW55bW9yZT8NCj4gDQo+ID4gKw0KPiA+ICsJCWlycV9kb21haW5fcmVtb3ZlKGlu
+dG11eF9kYXRhLT5pcnFjaGlwX2RhdGFbaV0uZG9tYWluKTsNCj4gPiArCX0NCj4gPiArDQo+ID4g
+KwlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBOVUxMKTsNCj4gPiArCWNsa19kaXNhYmxlX3Vu
+cHJlcGFyZShpbnRtdXhfZGF0YS0+aXBnX2Nsayk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+
+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGlteF9p
+bnRtdXhfaWRbXSA9IHsNCj4gPiArCXsgLmNvbXBhdGlibGUgPSAiZnNsLGlteC1pbnRtdXgiLCB9
+LA0KPiA+ICsJeyAvKiBzZW50aW5lbCAqLyB9LA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGlj
+IHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgaW14X2ludG11eF9kcml2ZXIgPSB7DQo+ID4gKwkuZHJp
+dmVyID0gew0KPiA+ICsJCS5uYW1lID0gImlteC1pbnRtdXgiLA0KPiA+ICsJCS5vZl9tYXRjaF90
+YWJsZSA9IGlteF9pbnRtdXhfaWQsDQo+ID4gKwl9LA0KPiA+ICsJLnByb2JlID0gaW14X2ludG11
+eF9wcm9iZSwNCj4gPiArCS5yZW1vdmUgPSBpbXhfaW50bXV4X3JlbW92ZSwNCj4gPiArfTsNCj4g
+PiArYnVpbHRpbl9wbGF0Zm9ybV9kcml2ZXIoaW14X2ludG11eF9kcml2ZXIpOw0KPiANCj4gVGhh
+bmtzLA0KPiANCj4gICAgICAgICAgTS4NCj4gLS0NCj4gSmF6eiBpcyBub3QgZGVhZC4gSXQganVz
+dCBzbWVsbHMgZnVubnkuLi4NCg==
