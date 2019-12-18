@@ -2,67 +2,62 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A865C43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 13:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A638DC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 13:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5730F206D8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 13:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7849D218AC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 13:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576676226;
-	bh=qEFn3Qsp0g4AHYAPF3al3Ud0ly9TuCyq/v5eAU+0fv8=;
+	s=default; t=1576677095;
+	bh=cOh4++xHQIRkDylmr8HwpBOGh6gMnbkUYWlw9NMr8E0=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Zw/9uAJt4asWqTuWvOogrwCuatv4apsSLrmh5vaAKlCX2OeXlgbKHadZ3YHMhRg2T
-	 QyOMijXHqyA8jVIPNzvLr5k/mRdVJ72DUB40/7GXcDY6Agttkdexjx35k2oD9QAo1M
-	 I6bc1AMqbiPW3612TcraGNbN82CZ9uANsY1pJAYQ=
+	b=rkRCbVo9ZuDLgENQuYSnCjS6F+vz10XhzqvCAIIeCfitGro9Cn9wRfAxaD3YfDgLJ
+	 X7tsgcoB/yHnucmkhpbnwf+8kAyRLKpNKp2/oCUgQ8aD4MMMFBLTgl+U+C+wC7A5Mq
+	 qiv3AM4X3Ug8FR0AC0OcuNUPz5dnb8u8di+odz1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfLRNhG (ORCPT
+        id S1726856AbfLRNvf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:37:06 -0500
-Received: from condef-06.nifty.com ([202.248.20.71]:56418 "EHLO
-        condef-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbfLRNhF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 08:37:05 -0500
-Received: from conssluserg-01.nifty.com ([10.126.8.80])by condef-06.nifty.com with ESMTP id xBIDWku1026202
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 22:32:46 +0900
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id xBIDWVF5028366;
-        Wed, 18 Dec 2019 22:32:31 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com xBIDWVF5028366
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576675951;
-        bh=sJfQjaTus20ylQDX0Cy8AyUDwzQ/sDxSwafJAeS0dW8=;
+        Wed, 18 Dec 2019 08:51:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726788AbfLRNve (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 08:51:34 -0500
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17DCD2176D;
+        Wed, 18 Dec 2019 13:51:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576677094;
+        bh=cOh4++xHQIRkDylmr8HwpBOGh6gMnbkUYWlw9NMr8E0=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ewUTghOTNbp6FUijZ0ydQ/7BMXDJn73aICVydSSmw+YQm07OeoDuT2lYBtrSdBGyi
-         TQtz/xQYmIXHblwyPyZIHVHUF8X5Qch8E800CKOWhUDNxhlCeIUZmkW550mYcsEaJK
-         DzmsG+gZOxw7Qmy6AoTpX7ytE7I8lMZEoCUc+ofzvmkRkfeSQIRVT5GdusgFOTEBzX
-         K/uvPxST1wa9Cq6vfJqKALq+1Y8OZ0nYkA3Q0Mp0gzqDsIZ5DrZ2pMrcunX/L/tXij
-         AYnTCeR6N1epefHLhLMxF5xqs45SndDivao8l+kuD+nU/qJJAeGBK4ec0ufVZZ8XRg
-         Vk/iFDLYMGnjg==
-X-Nifty-SrcIP: [209.85.222.45]
-Received: by mail-ua1-f45.google.com with SMTP id v18so623103uaq.7;
-        Wed, 18 Dec 2019 05:32:31 -0800 (PST)
-X-Gm-Message-State: APjAAAW7xBGd/4RwjgGxnbVtwt0shjdsOjAgdsDMNIRMJAyCLw+2SDs/
-        J/+P5dfaecSLc75i+R3xmJpCIx+StDkLgMgLjeY=
-X-Google-Smtp-Source: APXvYqxxjVi8o034BoDDFSeFD+Tm1JEagxh0tvPpKE6k0Q2UpqZUUow1nFHPcAEPvJZa8lDsptDoDHzRcrQ2e3+59BQ=
-X-Received: by 2002:ab0:6418:: with SMTP id x24mr1334768uao.40.1576675950239;
- Wed, 18 Dec 2019 05:32:30 -0800 (PST)
+        b=sYlf50RBdxx+pxhSWD1BvpEtIlsX6urQns7zaXMIv3xLbyRx/IUEycr6XUfkLBDm4
+         SVwTO4PrmoTQUsHzfP/OJpnBQ9oJIh2WhbD72TraHAH624bbR7zGO8cSE/9520FlyZ
+         kGmI83RXUewk7jjQ9e3/Dnp75wuEkhhHDW9E36HM=
+Received: by mail-qk1-f175.google.com with SMTP id z76so1954400qka.2;
+        Wed, 18 Dec 2019 05:51:34 -0800 (PST)
+X-Gm-Message-State: APjAAAUlYPIPBWO8Su5tJtjjs1p4EI9Pn3E24KlwNITO/YP0X3J1fyJL
+        C/7fGMUiQ7x1gV1mlPEZlooBoDwooif1BrSt/A==
+X-Google-Smtp-Source: APXvYqxDR0S+4hI0M7nPfeX5e/U3cc3EvKNt/XOsy1604pvTEaKL7PVpAXykun6zLbhBXsK60cLuDkBNDJumnGDNeao=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr2361206qkl.119.1576677093238;
+ Wed, 18 Dec 2019 05:51:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20191218114625.28438-1-frank-w@public-files.de>
-In-Reply-To: <20191218114625.28438-1-frank-w@public-files.de>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 18 Dec 2019 22:31:53 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARWYE4-4Qp-YfTrrt1YCZ68b28FDoE45cDJkZTqUyXNUw@mail.gmail.com>
-Message-ID: <CAK7LNARWYE4-4Qp-YfTrrt1YCZ68b28FDoE45cDJkZTqUyXNUw@mail.gmail.com>
+References: <20191218114625.28438-1-frank-w@public-files.de> <CAK7LNARWYE4-4Qp-YfTrrt1YCZ68b28FDoE45cDJkZTqUyXNUw@mail.gmail.com>
+In-Reply-To: <CAK7LNARWYE4-4Qp-YfTrrt1YCZ68b28FDoE45cDJkZTqUyXNUw@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 18 Dec 2019 07:51:21 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+we-0c25Hn+eGDTsyTDwKEvs9LWV9QtLX1+8V3DmtFtg@mail.gmail.com>
+Message-ID: <CAL_Jsq+we-0c25Hn+eGDTsyTDwKEvs9LWV9QtLX1+8V3DmtFtg@mail.gmail.com>
 Subject: Re: [PATCH] kbuild: Add DTC_CPP_FLAGS
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>,
         DTML <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -71,50 +66,22 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-(+CC: DT maintainers)
-
-On Wed, Dec 18, 2019 at 8:55 PM Frank Wunderlich
-<frank-w@public-files.de> wrote:
+On Wed, Dec 18, 2019 at 7:37 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> With this Patch we are able to change cpp-preprocessor options
-> (e.g. -D...) for using conditions (#ifdef) in devicetree files
-> and dynamically add include searchpaths
-
-I think this is questionable
-since DT is supposed to describe hardware.
-Does it depends on #ifdef or some external defines?
-
-If you want to add variations,
-you can add a new DTS which includes other DTS(I) files.
-
-
-
+> (+CC: DT maintainers)
 >
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
->  scripts/Makefile.lib | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Wed, Dec 18, 2019 at 8:55 PM Frank Wunderlich
+> <frank-w@public-files.de> wrote:
+> >
+> > With this Patch we are able to change cpp-preprocessor options
+> > (e.g. -D...) for using conditions (#ifdef) in devicetree files
+> > and dynamically add include searchpaths
 >
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 3fa32f83b2d7..c722a6c7786a 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -177,7 +177,7 @@ DTC_INCLUDE    := $(srctree)/scripts/dtc/include-prefixes
->
->  dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
->                  $(addprefix -I,$(DTC_INCLUDE))                          \
-> -                -undef -D__DTS__
-> +                -undef -D__DTS__ $(DTC_CPP_FLAGS)
->
->  # Useful for describing the dependency of composite objects
->  # Usage:
-> --
-> 2.17.1
->
+> I think this is questionable
+> since DT is supposed to describe hardware.
+> Does it depends on #ifdef or some external defines?
 
+NAK. #ifdefs and complex macros in particular are features we don't
+want in dts files.
 
---
-Best Regards
-
-
-Masahiro Yamada
+Rob
