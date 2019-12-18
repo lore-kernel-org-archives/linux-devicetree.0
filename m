@@ -2,117 +2,76 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BBAC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 11:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA2FC2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 11:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA0A24650
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 11:11:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="aaCfR0uO"
+	by mail.kernel.org (Postfix) with ESMTP id 27259227BF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 11:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfLRLLF (ORCPT
+        id S1726710AbfLRLMA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:11:05 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42609 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbfLRLLF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 06:11:05 -0500
-Received: by mail-wr1-f66.google.com with SMTP id q6so1800444wro.9
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 03:11:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IiFtSfDjWGdjcVj/Cig3gW5ylZi2W/jVaaneb1ETE7o=;
-        b=aaCfR0uOJKRxlZ0/X60eJqXxOjxofImtpit3PnZQuo2PmTiNAoDqoqUZ1rnr7eEMyL
-         nyKXD3Wo0nCOQr8TT/Qk1yhUsS3YtZ/AKFs4peQWK+HLYscjC8dUwWuMGoSjCgHgu43c
-         2y1N1rYGSvDo4F9T7VwOtMlQ5DP0whuL3x1A2cO6fipPV/+TDZM6r0mfGyr/MbIE6ygB
-         0lNrgijd7PNF+JcJAfXu8EUUxgNu0zkCRx11SYoAIKVfkuApVrIEE3IzjZZFASZDSkxQ
-         evSXUVQNVQePgtXbCmbeQKr6P0l7FmnxbWSOZTwQuXciYUwu9foOR7sc+39guYR0Jzan
-         atrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IiFtSfDjWGdjcVj/Cig3gW5ylZi2W/jVaaneb1ETE7o=;
-        b=QSEOjqmmdjfvtUu6uqz94IejJLdgCBP1Uagidgg1XJbZByjSyBxodGJmoWLOs14a1R
-         BnQawOFqS7nR9amMefRp0aJDAHr8zADOjNt903b0WnwF1LfFUz8A9NbtWz2C1X+LeraU
-         0MQiwKrKCNpJ+cCi0Vax9U8PRtxlGdfx/7SgtprCvlNbidKRhj/LKgwKSD+E86xNToYg
-         QmnQ4oo4tP5btPkLj9UB4ba2+JKp1NcuIV2PogepTMqxFOyXh+jm3LyfLZvQrAztCIQN
-         a7uX6WfckoCF6ZUiw5XvwhxEwZ5PpPDVubEXHnGYZMnxYRqI/OKWfY7s4aJnSbtrsWqY
-         ojZg==
-X-Gm-Message-State: APjAAAU20Et++LbXB622uEhgHVkpo7Q+SIS0vsHZ91DVzM964fooQv3M
-        /mtrnoW2cDS+F6DOFCG6ASFX7UkimxCR0/ohtpJuNA==
-X-Google-Smtp-Source: APXvYqwv8hPq5nxjZHQ3sCNBeqM/+re1zUes66iqhNu796cSmk/vhcWdcgcKguzrf+023UauKjSE5fCBEw8iKR5QFe8=
-X-Received: by 2002:a5d:6350:: with SMTP id b16mr2245437wrw.132.1576667463555;
- Wed, 18 Dec 2019 03:11:03 -0800 (PST)
-MIME-Version: 1.0
-References: <20191210154157.21930-1-ktouil@baylibre.com> <20191210154157.21930-2-ktouil@baylibre.com>
- <CACRpkdZb6OppcdCcaQ9abdkDJMk4escyyEm1TMB75rRxoN5e2A@mail.gmail.com>
-In-Reply-To: <CACRpkdZb6OppcdCcaQ9abdkDJMk4escyyEm1TMB75rRxoN5e2A@mail.gmail.com>
-From:   Khouloud Touil <ktouil@baylibre.com>
-Date:   Wed, 18 Dec 2019 12:10:52 +0100
-Message-ID: <CALL1Z1xwd5+HeCWWG5DQ8XMph=v=UmpW+P9vG4Lg_vVvzySjiQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wed, 18 Dec 2019 06:12:00 -0500
+Received: from relmlor1.renesas.com ([210.160.252.171]:40168 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726674AbfLRLMA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 06:12:00 -0500
+X-IronPort-AV: E=Sophos;i="5.69,329,1571670000"; 
+   d="scan'208";a="34755017"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 18 Dec 2019 20:11:58 +0900
+Received: from be1yocto.ree.adwin.renesas.com (unknown [172.29.43.62])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id EAB434218BE9;
+        Wed, 18 Dec 2019 20:11:55 +0900 (JST)
+From:   Biju Das <biju.das@bp.renesas.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        baylibre-upstreaming@groups.io,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Biju Das <biju.das@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        Simon Horman <horms@verge.net.au>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH] clock: renesas: cpg-mssr: Fix the typo
+Date:   Wed, 18 Dec 2019 11:09:50 +0000
+Message-Id: <1576667390-29449-1-git-send-email-biju.das@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Le lun. 16 d=C3=A9c. 2019 =C3=A0 09:08, Linus Walleij <linus.walleij@linaro=
-.org> a =C3=A9crit :
->
-> On Tue, Dec 10, 2019 at 4:42 PM Khouloud Touil <ktouil@baylibre.com> wrot=
-e:
->
-> > +  wp-gpios:
-> > +    description:
-> > +      GPIO to which the write-protect pin of the chip is connected.
-> > +      The write-protect GPIO is asserted, when it's driven high
-> > +      (logical '1') to block the write operation. It's deasserted,
-> > +      when it's driven low (logical '0') to allow writing.
-> > +    maxItems: 1
->
-> OK I guess we can't get it less convoluted. This section is consistent.
->
-> >  patternProperties:
-> >    "^.*@[0-9a-f]+$":
-> >      type: object
-> > @@ -66,6 +74,7 @@ examples:
-> >        qfprom: eeprom@700000 {
-> >            #address-cells =3D <1>;
-> >            #size-cells =3D <1>;
-> > +          wp-gpios =3D <&gpio1 3 0>;
->
-> In the example please use the include for GPIO:
->
-> #include <dt-bindings/gpio/gpio.h>
->
-> wp-gpios =3D <&gpio1 3 GPIO_ACTIVE_HIGH>;
->
-> You can just put the #include directive right before the
-> example, it should work fine.
+This patch fixes the typo %s/r8a774a1/r8a774b1/.
 
-Yes sure will fix that.
-Thanks for your reviews.
+Fixes: 1000393 ("dt-bindings: clock: renesas: cpg-mssr: Document r8a774b1
+binding")
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+ Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
-Khouloud
->
-> Yours,
-> Linus Walleij
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+index c7674d0..f4d153f 100644
+--- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+@@ -19,7 +19,7 @@ Required Properties:
+       - "renesas,r8a7745-cpg-mssr" for the r8a7745 SoC (RZ/G1E)
+       - "renesas,r8a77470-cpg-mssr" for the r8a77470 SoC (RZ/G1C)
+       - "renesas,r8a774a1-cpg-mssr" for the r8a774a1 SoC (RZ/G2M)
+-      - "renesas,r8a774b1-cpg-mssr" for the r8a774a1 SoC (RZ/G2N)
++      - "renesas,r8a774b1-cpg-mssr" for the r8a774b1 SoC (RZ/G2N)
+       - "renesas,r8a774c0-cpg-mssr" for the r8a774c0 SoC (RZ/G2E)
+       - "renesas,r8a7790-cpg-mssr" for the r8a7790 SoC (R-Car H2)
+       - "renesas,r8a7791-cpg-mssr" for the r8a7791 SoC (R-Car M2-W)
+-- 
+2.7.4
+
