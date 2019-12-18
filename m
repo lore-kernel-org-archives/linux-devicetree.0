@@ -2,270 +2,94 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B3AC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 22:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4141C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 22:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9889D2465E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 22:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4902146E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 22:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576706441;
-	bh=BHrAQFIGbbIvTg9mW+NwpWTBkboWudvsPo35DCHjyKU=;
+	s=default; t=1576706615;
+	bh=S7gPzhIEX3iN/y2TGhntaaTg3g5jxEpZTnj9EZA0suQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h05BY6Ma+xpYUqqPc2X9fU+6dipZHu/iqU3qsBhUGDaKNcwAODUyE9pUITg9hbHNZ
-	 +F3jbRaHDXk2MSAiM8XasKMiOuuhFg0T7grL0zaQoCbvaLWWQP3R09KAje7so7Ia5S
-	 oF+P5aoqEa+gzXnzrcNmvzotA21rw2HSskvUkrIk=
+	b=bwszMgA94chETUPQaS7nwtichpYi4yggpl9smoZFik1+5WKrS8G70Rmirs90FUQY5
+	 Knkqxgfjx909YzPAzuL1Oy0d49US+Wx/kz1B5RxqMeUqU6v5P+alAfybE1070heRmu
+	 G+79TXD5hcU3BywPOvUdsxSwSzXDev0wbSm12uoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfLRWAl (ORCPT
+        id S1726565AbfLRWDf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 17:00:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726598AbfLRWAk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:00:40 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C43E2146E;
-        Wed, 18 Dec 2019 22:00:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576706439;
-        bh=BHrAQFIGbbIvTg9mW+NwpWTBkboWudvsPo35DCHjyKU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aUiiz0YBKuuTNqGtZUBFxpAtyAvA7wMfZV6DH+GQ/h96SUDYnp49gpjr195CweqU8
-         jR/OTEUynai/TzIMVUvyBnqfuvp4CYlm2PzeJtATAsKDvbY8YeAkhkMIJxjWsgpe+z
-         YWT6uZAFFiGY72eQYemkOy+F2LVxbpBfyKJMQbGE=
-Date:   Wed, 18 Dec 2019 23:00:37 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/7] dt-bindings: thermal: add YAML schema for
- sun8i-thermal driver bindings
-Message-ID: <20191218220037.4g6pzdvrhroaj4qu@gilmour.lan>
-References: <20191218042121.1471954-1-anarsoul@gmail.com>
- <20191218042121.1471954-3-anarsoul@gmail.com>
+        Wed, 18 Dec 2019 17:03:35 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35886 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfLRWDf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 17:03:35 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w1so4336805otg.3;
+        Wed, 18 Dec 2019 14:03:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qCCYItpj+3VsG3DKSCp5gCe88YZojJMWbpQw+wbr1Yw=;
+        b=m1a8r1P9BThRZjKdWvPmFtYMOgxuhDxP1KA0d2bmLS4Ib9GtiG5Tv4c7+MiXpCCXZ3
+         CKfzgOM0l/y0IKz4qd9Ct/EPbZQTQSpk2hTYNLuQ09CZw+Keshol2EJcSbGFid5Ryt8w
+         pwybKVRXz74Q92NZJRzZslM7K7kgDAeg5XlZBtews3oyVMevEEoYjT338eoGtE39J3X0
+         oX/26QgrQdNWZ4zigIoh7vjGp1T5Thlrf5Hv5+Ag76iKWFn9vPxhsNLfFQQk8063qc4V
+         4aSzr7WK8w4xXsM97IXGgqE0eCbOG/OhatxlDDj+xnECGucLhr5S+xZxZivFgE8E2e2N
+         zgRA==
+X-Gm-Message-State: APjAAAUpuWSee0jSk2SMwuh5N1xiXEpWLHeJZ8GAAb0KTxhYFTJqC4iz
+        JpUmynJQpLeYfslHB1CU4Q==
+X-Google-Smtp-Source: APXvYqwkQ1gEbk+bOgm2/fXfvDu4L5fE9n6LUxXNNWIUZdfBZtYFpFr/3T3xbcmVF7Tzj5vHc26FTg==
+X-Received: by 2002:a05:6830:1499:: with SMTP id s25mr4838252otq.223.1576706614162;
+        Wed, 18 Dec 2019 14:03:34 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m2sm1253207oim.13.2019.12.18.14.03.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 14:03:33 -0800 (PST)
+Date:   Wed, 18 Dec 2019 16:03:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        linux-media@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v3 5/7] media: dt-bindings: rockchip: Document RK3399
+ Video Decoder bindings
+Message-ID: <20191218220332.GA3813@bogus>
+References: <20191213125414.90725-1-boris.brezillon@collabora.com>
+ <20191213125414.90725-6-boris.brezillon@collabora.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nfb3broi25z4qfbb"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191218042121.1471954-3-anarsoul@gmail.com>
+In-Reply-To: <20191213125414.90725-6-boris.brezillon@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---nfb3broi25z4qfbb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Tue, Dec 17, 2019 at 08:21:16PM -0800, Vasily Khoruzhick wrote:
-> From: Yangtao Li <tiny.windzz@gmail.com>
->
-> sun8i-thermal driver supports thermal sensor in wide range of Allwinner
-> SoCs. Add YAML schema for its bindings.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+On Fri, 13 Dec 2019 13:54:12 +0100, Boris Brezillon wrote:
+> Document the Rockchip RK3399 Video Decoder bindings.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 > ---
->  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 146 ++++++++++++++++++
->  1 file changed, 146 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
->
-> diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-> new file mode 100644
-> index 000000000000..8768c2450633
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-> @@ -0,0 +1,146 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Yangtao Li <tiny.windzz@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - allwinner,sun8i-a83t-ths
-> +      - allwinner,sun8i-h3-ths
-> +      - allwinner,sun8i-r40-ths
-> +      - allwinner,sun50i-a64-ths
-> +      - allwinner,sun50i-h5-ths
-> +      - allwinner,sun50i-h6-ths
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  nvmem-cells:
-> +    maxItems: 1
-> +    description: Calibration data for thermal sensors
-> +
-> +  nvmem-cell-names:
-> +    const: calibration
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun50i-h6-ths
-> +
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 1
-> +          maxItems: 1
+> Changes in v3:
+> * Fix dtbs_check failures
+> ---
+>  .../bindings/media/rockchip,vdec.yaml         | 71 +++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+> 
 
-When minItems and maxItems are equal, you can only set one, the other
-will be filled automatically.
-
-> +
-> +        clock-names:
-> +          minItems: 1
-> +          maxItems: 1
-> +          items:
-> +            - const: bus
-
-And this can even be just
-
-clock-names:
-  const: bus
-
-> +
-> +    else:
-> +      properties:
-> +        clocks:
-> +          minItems: 1
-> +          maxItems: 2
-> +
-> +        clock-names:
-> +          minItems: 1
-> +          maxItems: 2
-> +          items:
-> +            - const: bus
-> +            - const: mod
-
-I'm not sure why you need the minItems set to 1 here though?
-
-it's always 2 for the !H6 case, right?
-
-if so, then we should even do something like:
-
-properties:
-  ...
-
-  # This is needed because we will need to check both the H6 and !H6
-  # case, and it must validate. So we make sure we match against the
-  # union of both cases.
-  clocks:
-    minItems: 1
-    maxItems: 2
-    items:
-      - description: Bus Clock
-      - description: Module Clock
-
-  # Same story here
-  clock-names:
-    minItems: 1
-    maxItems: 2
-    items:
-      - const: bus
-      - const: mod
-
-allOf:
-  - if:
-    properties:
-      compatible:
-        contains:
-	  const: allwinner,sun50i-h6-ths
-
-    # Here we validate in the H6 case we only have one clock
-    then:
-      properties:
-        clocks:
-	  maxItems: 1
-
-        clock-names:
-	  maxItems: 1
-
-    # and here that in the other case we have two clocks, the names
-    # being validated by the schema above
-    else:
-      properties:
-        clocks:
-	  maxItems: 2
-
-        clock-names:
-	  maxItems: 2
-
-# And now we can set this since all our properties will have been
-# expressed in the upper level schema
-additionalProperties: false
-
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun8i-h3-ths
-> +
-> +    then:
-> +      properties:
-> +        "#thermal-sensor-cells":
-> +          const: 0
-> +
-> +    else:
-> +      properties:
-> +        "#thermal-sensor-cells":
-> +          const: 1
-
-Same thing here, you should have an enum accepting both values in the
-upper schema, the condition here only making further checks. Also, in
-the case where #thermal-sensor-cells is one, then you need to document
-what that argument is.
-
-Thanks!
-Maxime
-
---nfb3broi25z4qfbb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfqhhQAKCRDj7w1vZxhR
-xWvSAQCi6mjrJCTS8SWPU7PcgNEc6pA17UBJm2Xk4XKoLO7m6wD9EPOHRneAtdBr
-BtJRS/RwZk8fGlXI46Xa48uRjngLqw4=
-=F0Nc
------END PGP SIGNATURE-----
-
---nfb3broi25z4qfbb--
+Reviewed-by: Rob Herring <robh@kernel.org>
