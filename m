@@ -2,88 +2,96 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8241CC43603
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66087C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5957721582
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:50:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576691435;
-	bh=zdbUHt5x8PH/epSF7/R3TjGuK6ls0Cr8YzTB4vubwYc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qX9LL/5AU2P56mT2tQpbTPSs8iYzTyMcqfkAGOSndU7Qg8NyWv3jF8jfX4Q1weFpu
-	 GWAfiSkW0NkJNS3dd7ourC4IlJ24AKY2htyMG9san190tFfssCGA+nKixpYXPcaiFl
-	 FiDVTUhuGuctpo0sg3nngLnXa6jGml9WLgEhfpz8=
+	by mail.kernel.org (Postfix) with ESMTP id 3CCA324676
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:53:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ojyAodJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfLRRue (ORCPT
+        id S1727398AbfLRRxi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:50:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:55570 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbfLRRue (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:50:34 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1309B1FB;
-        Wed, 18 Dec 2019 09:50:34 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 856C13F67D;
-        Wed, 18 Dec 2019 09:50:33 -0800 (PST)
-Date:   Wed, 18 Dec 2019 17:50:31 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 2/4] ASoC: meson: axg-fifo: add fifo depth to the
- bindings documentation
-Message-ID: <20191218175031.GM3219@sirena.org.uk>
-References: <20191218172420.1199117-1-jbrunet@baylibre.com>
- <20191218172420.1199117-3-jbrunet@baylibre.com>
+        Wed, 18 Dec 2019 12:53:38 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39742 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727130AbfLRRxi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 12:53:38 -0500
+Received: by mail-lf1-f65.google.com with SMTP id y1so2328543lfb.6;
+        Wed, 18 Dec 2019 09:53:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tANAGAdpU+BFt2vwt7q1SVWW9LOxxvMiToKQfU2dzGY=;
+        b=ojyAodJsS39WwSn2v9z10Ilwua3eGiadQEkWeX95j+itQ849iU+10jsELlgwfvZxvL
+         ilaHyAX00JDOH7L6FEvOsipkdwKtAON35PsYKDFMlX2ZE0Rr2yw65RRtwJcdPFXKuYbI
+         mPhpTZp48pUHRo2qADJN8rVJQyEvcvXfu1Ln4HHOl28n9ldfyN/MDz9vvCfLfR9M7bGn
+         6/8fVzk67IjdvkNw8uWWAsRzrlLnWJ41UUu8m3+RCthdgAOivTu+oLGnlyxK8xW01S32
+         IDsQH4rmIoNc1C4XKkNx8TpVcMU4275JgYjemVI5hLi3d22ykeW3WJT6cXW+h03U1CDq
+         du4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tANAGAdpU+BFt2vwt7q1SVWW9LOxxvMiToKQfU2dzGY=;
+        b=ZgONUXxsnur90jAJpYR2eWmRRQaxx4seYpxqBn4gCHt6VuKTIvS39pE+jPvo/HwjEG
+         PJXhh6Wk0IabLKPSKlILv2Ul8FUDHAVTazrwpcqtPqCLtkSyYKPI7pZu3pKEqL5N5lyZ
+         Sj0bnZw2rJeGD+7AABvVQJEoJB857SNh80Q70pS93IL3EIRpR5agL+Cx4kmINriNe+9W
+         2+ZgL4sR/oLVE6UQczR6c778dp4NPXfYL/zf8s7pZV1DN+O0KB3Aim8Uwmx+6iCkRy2T
+         5QJIXfCmgkLHmnBj6Roi5v8P8Hrj2pI/mmFfOx0StM0N/NCe1l6RifRhuS4wCSSs3Bla
+         Nc1g==
+X-Gm-Message-State: APjAAAXf+8EMYdAzqD80Vt8CvnKXmN+HZUscIcfVIDmawQyh5vzz7KEj
+        0GAsT/GetlpgZdSoRP8pWNb+yliV
+X-Google-Smtp-Source: APXvYqwgJ4OIShl4gWAypmuZ77/QGVn2SFvXdJnirvnhCMOQ+zoxPP+l1VUVnz4DOkM/l0djWNNMQA==
+X-Received: by 2002:ac2:5c4a:: with SMTP id s10mr2553655lfp.88.1576691616167;
+        Wed, 18 Dec 2019 09:53:36 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id n14sm1530480lfe.5.2019.12.18.09.53.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 09:53:35 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Felipe Balbi <balbi@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/4] NVIDIA Tegra USB2 drivers clean up
+Date:   Wed, 18 Dec 2019 20:53:09 +0300
+Message-Id: <20191218175313.16235-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="KSyhVCl2eeZHT0Rn"
-Content-Disposition: inline
-In-Reply-To: <20191218172420.1199117-3-jbrunet@baylibre.com>
-X-Cookie: Power is poison.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hello,
 
---KSyhVCl2eeZHT0Rn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This small patch series brings the NVIDIA Tegra USB2 PHY driver into a better
+shape by refactoring code to match upstream standards, the ChipIdea/Tegra UDC
+driver also gets a minor update. Please review and apply, thanks in advance!
 
-On Wed, Dec 18, 2019 at 06:24:18PM +0100, Jerome Brunet wrote:
+Dmitry Osipenko (4):
+  dt-binding: usb: ci-hdrc-usb2: Document NVIDIA Tegra support
+  usb: phy: tegra: Hook up init/shutdown callbacks
+  usb: phy: tegra: Perform general clean up of the code
+  usb: phy: tegra: Use relaxed versions of readl/writel
 
-> Add a new property with the depth of the fifo in bytes. This is useful
-> since some instance of the fifo, even on the same SoC, may have different
-> depth. The depth is useful is set some parameters of the fifo.
+ .../devicetree/bindings/usb/ci-hdrc-usb2.txt  |   4 +
+ drivers/usb/chipidea/ci_hdrc_tegra.c          |   9 -
+ drivers/usb/phy/phy-tegra-usb.c               | 715 ++++++++++--------
+ 3 files changed, 395 insertions(+), 333 deletions(-)
 
-Can't we figure this out from the compatible strings?  They look SoC
-specific (which is good).  That means we don't need to add new
-properties for each quirk that separates the variants.
+-- 
+2.24.0
 
---KSyhVCl2eeZHT0Rn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl36ZucACgkQJNaLcl1U
-h9DwRAf/XO9oHDzn1VThOJNKz5nrgTjAgtf51hmSYc2qC4bFBEPQmKXHTQJwgxhC
-7Q+4EV0qC+zkHdnDBl9RM5HgwVFirK2Bq106WvVMJizoEWf0D5B2C8vp8vMhCOXA
-yquL9sijTzs79Z2+/wM05/OaaQ+nrKBZpBv6IOGYYkgZ+z4x7Jp8HQ9EhPW25EsU
-am8nea9rtuvWkEDskXQ541gQw38hPicim+pS37hD/BzhTstwLpU7LqnyyFq6O+OE
-ZtatzXOFXvOohYrOK4yGFUnT74rg6wE6shFbq3E4NNwnRtwh9TCCpUjS43JrNOZT
-DJ6vG/tnjzlofd9ok9LwVvNZ2d4xQg==
-=9adF
------END PGP SIGNATURE-----
-
---KSyhVCl2eeZHT0Rn--
