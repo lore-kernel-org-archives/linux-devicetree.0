@@ -2,272 +2,96 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AD7C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D73CC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40AA12465E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D5921582
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 23:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576711449;
+	bh=ELpSmsD1lPtk3Ij3+xXINr0PJWkLmLhnUKZaeIdtJ1Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jBRb/TEQMyMniy1ivNlkGDpxc62VrM9PRVDtutl2qiBSISb78pbJcLSLaDHUzQpJL
+	 DQV/aY2vKrAEZIrht1RyJlXZMTsGrSdfvr9rghpN/qNo7y4kvW2NQVqf5RCtaK1Ppc
+	 kkZCNAEhIiQaSZlE6kilnnN0sl6sv7uXmlZypDhs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfLRXWD (ORCPT
+        id S1726569AbfLRXYJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:22:03 -0500
-Received: from mga12.intel.com ([192.55.52.136]:51739 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbfLRXWD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 18:22:03 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 15:22:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="365889145"
-Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.143]) ([10.7.153.143])
-  by orsmga004.jf.intel.com with ESMTP; 18 Dec 2019 15:21:56 -0800
-Subject: Re: [PATCH v11 04/14] dt-bindings: Add bindings document of Aspeed
- PECI adapter
-To:     Rob Herring <robh@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>,
-        Tomohiro Kusumi <kusumi.tomohiro@gmail.com>,
-        "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>,
-        Frederic Barrat <fbarrat@linux.vnet.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        David Kershner <david.kershner@unisys.com>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Sagar Dharia <sdharia@codeaurora.org>,
-        Johan Hovold <johan@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        openbmc@lists.ozlabs.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Jason M Biils <jason.m.bills@linux.intel.com>,
-        Milton Miller II <miltonm@us.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Ryan Chen <ryan_chen@aspeedtech.com>
-References: <20191211194624.2872-1-jae.hyun.yoo@linux.intel.com>
- <20191211194624.2872-5-jae.hyun.yoo@linux.intel.com>
- <20191218025702.GA18998@bogus>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <c203251d-125a-0d41-927d-0ce237622f71@linux.intel.com>
-Date:   Wed, 18 Dec 2019 15:21:56 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 18 Dec 2019 18:24:09 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36134 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfLRXYI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 18:24:08 -0500
+Received: by mail-ot1-f66.google.com with SMTP id w1so4569060otg.3;
+        Wed, 18 Dec 2019 15:24:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ETUxOpgQ7F0pLVm01ESXed5S9gdzK8r7fuHrkhEgfqk=;
+        b=o5/kvao9waI4YPTxXhoocFJ5jHWlk+Xy7x7zBHoVSNOGea73bgdfahw+oGkHpnhmlm
+         6qoFzJY48EON0Ms9hFirGCYo/60S4LLPw5pZ4TMT4cbWG7+Tcse93tGo+fJATmp/czlp
+         kGc4mNEjMxEZgXQoEzz4GECpS8RBCZnnZAq5o65o37w7oh4hZA/ROdO5++yy3mw9LdJD
+         phMCLbi7PMHlJ2PxAI0do/6Gk6vzbbKhjRuf1V1hu81jUOwK63CzmaC2obQQs0WPIA2a
+         94IRE2y6duLXKcc/7GfPu3JMLn9oRIawmgbFleWmghcIyVmMsBi/Va9ssTQBJhgPrtj5
+         K6yw==
+X-Gm-Message-State: APjAAAX91fSNwq8f5kWzQE0NmDs5UEHCutGYKRXkuviQDoNEXf2rjHHP
+        6TO1Rj5EdHg1hXPfdw21aw==
+X-Google-Smtp-Source: APXvYqyPUOqnsp5Fq28ymg4AaPaisJ5viFWYBbVO4iBHtqnXMTnenHiKbGkM5hdcGBGGYAVNQXwpKQ==
+X-Received: by 2002:a05:6830:1208:: with SMTP id r8mr5372896otp.105.1576711447577;
+        Wed, 18 Dec 2019 15:24:07 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j130sm1339912oia.34.2019.12.18.15.24.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 15:24:06 -0800 (PST)
+Date:   Wed, 18 Dec 2019 17:24:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch V2 02/18] dt-bindings: usb: Add NVIDIA Tegra XUSB device
+ mode controller binding
+Message-ID: <20191218232406.GA19924@bogus>
+References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
+ <1576660591-10383-3-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20191218025702.GA18998@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576660591-10383-3-git-send-email-nkristam@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 12/17/2019 6:57 PM, Rob Herring wrote:
-> On Wed, Dec 11, 2019 at 11:46:14AM -0800, Jae Hyun Yoo wrote:
->> This commit adds bindings document of Aspeed PECI adapter for ASPEED
->> AST24xx/25xx/26xx SoCs.
->>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Joel Stanley <joel@jms.id.au>
->> Cc: Andrew Jeffery <andrew@aj.id.au>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
->> Cc: Milton Miller II <miltonm@us.ibm.com>
->> Cc: Pavel Machek <pavel@ucw.cz>
->> Cc: Robin Murphy <robin.murphy@arm.com>
->> Cc: Ryan Chen <ryan_chen@aspeedtech.com>
->> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->> ---
->> Changes since v10:
->> - Changed documents format to DT schema format so I dropped all review tags.
->>    Please review it again.
->>
->>   .../devicetree/bindings/peci/peci-aspeed.yaml | 124 ++++++++++++++++++
->>   1 file changed, 124 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/peci/peci-aspeed.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/peci/peci-aspeed.yaml b/Documentation/devicetree/bindings/peci/peci-aspeed.yaml
->> new file mode 100644
->> index 000000000000..0f5c2993fe9b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/peci/peci-aspeed.yaml
->> @@ -0,0 +1,124 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/peci/peci-aspeed.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Aspeed PECI Bus Device Tree Bindings
->> +
->> +maintainers:
->> +  - Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - aspeed,ast2400-peci
->> +      - aspeed,ast2500-peci
->> +      - aspeed,ast2600-peci
->> +
->> +  reg:
->> +    maxItems: 1
->> +
+On Wed, Dec 18, 2019 at 02:46:15PM +0530, Nagarjuna Kristam wrote:
+> Add device-tree binding documentation for the XUSB device mode controller
+> present on Tegra210 and Tegra186 SoC. This controller supports the USB 3.0
+> specification.
 > 
->> +  "#address-cells":
->> +    # Required to define a client address.
->> +    const: 1
->> +
->> +  "#size-cells":
->> +    # Required to define a client address.
->> +    const: 0
-> 
-> These 2 can be defined by the bus schema.
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> ---
+> V2:
+>  - used enum instead of oneOf and const.
+>  - Moved reg, reg-names, clocks, clock-names to property section from allOf.
+>  - Limited allOf to min and max items based on soc.
+>  - Updated description for power-domains.
+>  - Added V1 reference
+> ---
+> V1
+>  - This document is yaml version of [1], with difference of usb-role-switch
+>    removal.
+> [1] https://patchwork.kernel.org/patch/11156253/ 
+> ---
+>  .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 190 +++++++++++++++++++++
+>  1 file changed, 190 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml
 
-I see. I'll add these to peci-bus schema.
-
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    description: |
-> 
-> You can drop the '|' if there's no formatting to preserve.
-
-Will check this for all bindings in this patch set.
-
->> +      Clock source for PECI controller. Should reference the external
->> +      oscillator clock.
->> +    maxItems: 1
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  clock-frequency:
->> +    # Operation frequency of PECI controller in units of Hz.
->> +    minimum: 187500
->> +    maximum: 24000000
->> +
->> +  msg-timing:
->> +    description: |
->> +      Message timing negotiation period. This value will determine the period
->> +      of message timing negotiation to be issued by PECI controller. The unit
->> +      of the programmed value is four times of PECI clock period.
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/uint32
->> +      - minimum: 0
->> +        maximum: 255
->> +        default: 1
->> +
->> +  addr-timing:
->> +    description: |
->> +      Address timing negotiation period. This value will determine the period
->> +      of address timing negotiation to be issued by PECI controller. The unit
->> +      of the programmed value is four times of PECI clock period.
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/uint32
->> +      - minimum: 0
->> +        maximum: 255
->> +        default: 1
->> +
->> +  rd-sampling-point:
->> +    description: |
->> +      Read sampling point selection. The whole period of a bit time will be
->> +      divided into 16 time frames. This value will determine the time frame
->> +      in which the controller will sample PECI signal for data read back.
->> +      Usually in the middle of a bit time is the best.
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/uint32
->> +      - minimum: 0
->> +        maximum: 15
->> +        default: 8
->> +
->> +  cmd-timeout-ms:
->> +    # Command timeout in units of ms.
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/uint32
->> +      - minimum: 1
->> +        maximum: 60000
->> +        default: 1000
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - "#address-cells"
->> +  - "#size-cells"
->> +  - interrupts
->> +  - clocks
->> +  - resets
->> +  - clock-frequency
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +    #include <dt-bindings/clock/ast2600-clock.h>
->> +    peci: bus@1e78b000 {
->> +        compatible = "simple-bus";
->> +        #address-cells = <1>;
->> +        #size-cells = <1>;
->> +        ranges = <0x0 0x1e78b000 0x60>;
-> 
-> You can drop this node in the examples.
-
-I see. Will drop the parent node in this example.
-
-Thanks a lot for your review!
-
--Jae
-
->> +
->> +        peci0: peci-bus@0 {
->> +            compatible = "aspeed,ast2600-peci";
->> +            reg = <0x0 0x100>;
->> +            #address-cells = <1>;
->> +            #size-cells = <0>;
->> +            interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
->> +            clocks = <&syscon ASPEED_CLK_GATE_REF0CLK>;
->> +            resets = <&syscon ASPEED_RESET_PECI>;
->> +            clock-frequency = <24000000>;
->> +            msg-timing = <1>;
->> +            addr-timing = <1>;
->> +            rd-sampling-point = <8>;
->> +            cmd-timeout-ms = <1000>;
->> +        };
->> +    };
->> +...
->> -- 
->> 2.17.1
->>
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
