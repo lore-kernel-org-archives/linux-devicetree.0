@@ -2,213 +2,369 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFB0C2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 09:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B70C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 09:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B4E20717
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 09:18:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BmypH3rQ"
+	by mail.kernel.org (Postfix) with ESMTP id 6FB8A227BF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 09:37:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576661878;
+	bh=nCXCKDDoSamGpgoq3jT6RNA6dS1EovruR1AiTxY8nFM=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=f21OfjNBH/7qVcNy5nigP9Xx6fiof5PXA5jg93FNun75O2CPT22fLv4Ymf8XrwAur
+	 CJRrvQJ6+Fb8tkBBuIA6+2QP+jh9hbgf0aF5RXxP9F/MbAr0a5kA8OpuUeRhOciBJK
+	 p5+VqTSaigvrvVNnucL/MrfJne6gRHQdgXGVOP+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfLRJRH (ORCPT
+        id S1726744AbfLRJh5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:17:07 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7998 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbfLRJRH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 04:17:07 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df9ee890000>; Wed, 18 Dec 2019 01:16:57 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 18 Dec 2019 01:17:06 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 18 Dec 2019 01:17:06 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
- 2019 09:17:05 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 18 Dec 2019 09:17:05 +0000
-Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.64.167]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5df9ee8e0004>; Wed, 18 Dec 2019 01:17:05 -0800
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V2 04/18] phy: tegra: xusb: Add usb-phy support
-Date:   Wed, 18 Dec 2019 14:46:17 +0530
-Message-ID: <1576660591-10383-5-git-send-email-nkristam@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
-References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 18 Dec 2019 04:37:57 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:35075 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725785AbfLRJh5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:37:57 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ihVm7-0004Bw-I2; Wed, 18 Dec 2019 10:37:47 +0100
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: Re: [PATCH 2/3] drivers/irqchip: add NXP INTMUX interrupt  multiplexer support
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576660617; bh=c1fS/HfesAEgOY1XyJ1A0jPa5GIhTsNLoVnJZg0VmlE=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=BmypH3rQGlfVhKv9fFxEtFlAdXiO2ZD05YtMSF5cygLr9lyrd6der5gf9r3p7mNnA
-         GhwXdefEVnATnnSrb5stNlxur9njpaBmp5IqkOSw3OZg59Vhcg55mk8vATg/V8yQsG
-         9p2uES2xSKa7MJONrBbmEg72aiKhSs1vLw0k+4xa72LX4FbIso7KjEbvxfVySOfMjV
-         kbU5SVuB2d8AHky9XQvKOuZdzvUHUrHu1AxKAZu2MVHw3Aay19BjOM9LXwdUGusWGX
-         ufUEN7ZkcUZ4O6B+zJtUJBW3qCAV1g0crlp7RVRoeJbkd43GirABEiS9s3tF0WjvLz
-         cYKJLGIEaoVww==
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 18 Dec 2019 09:37:47 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>, <shengjiu.wang@nxp.com>,
+        <kernel@pengutronix.de>, <festevam@gmail.com>, <linux-imx@nxp.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <fugang.duan@nxp.com>,
+        <aisheng.dong@nxp.com>
+In-Reply-To: <1576653615-27954-3-git-send-email-qiangqing.zhang@nxp.com>
+References: <1576653615-27954-1-git-send-email-qiangqing.zhang@nxp.com>
+ <1576653615-27954-3-git-send-email-qiangqing.zhang@nxp.com>
+Message-ID: <b0288de8faab127a096d1e78113ec4cb@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: qiangqing.zhang@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, shengjiu.wang@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fugang.duan@nxp.com, aisheng.dong@nxp.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For USB 2 ports that has usb-role-switch enabled, add usb-phy for
-corresponding USB 2 phy. USB role changes from role switch are then
-updated to corresponding host and device mode drivers via usb-phy notifier
-block.
+On 2019-12-18 07:20, Joakim Zhang wrote:
+> From: Shengjiu Wang <shengjiu.wang@nxp.com>
+>
+> The intmux module is used to output internal interrupt in subsystem
+> to system with 32-to-8 configuration. It has several multiplex
+> channels depends on system.
+>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+> ---
+>  drivers/irqchip/irq-imx-intmux.c | 220 
+> +++++++++++++++++++++++++++++++
+>  1 file changed, 220 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-imx-intmux.c
+>
+> diff --git a/drivers/irqchip/irq-imx-intmux.c
+> b/drivers/irqchip/irq-imx-intmux.c
+> new file mode 100644
+> index 000000000000..fa24b968f30b
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-imx-intmux.c
+> @@ -0,0 +1,220 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright 2017 NXP
+> +
+> +#include <linux/clk.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/spinlock.h>
+> +
+> +#define CHANCSR(n)	(0x0 + 0x40 * n)
+> +#define CHANVEC(n)	(0x4 + 0x40 * n)
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
----
-V2:
- - Added dev_set_drvdata for port->dev.
----
- drivers/phy/tegra/xusb.c | 71 ++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/phy/tegra/xusb.h |  2 ++
- 2 files changed, 73 insertions(+)
+These two macros are unused.
 
-diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-index dc00b42..5bde8f1 100644
---- a/drivers/phy/tegra/xusb.c
-+++ b/drivers/phy/tegra/xusb.c
-@@ -533,6 +533,8 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
- 	if (err < 0)
- 		goto unregister;
- 
-+	dev_set_drvdata(&port->dev, port);
-+
- 	return 0;
- 
- unregister:
-@@ -545,6 +547,8 @@ static void tegra_xusb_port_unregister(struct tegra_xusb_port *port)
- 	if (!IS_ERR_OR_NULL(port->usb_role_sw)) {
- 		of_platform_depopulate(&port->dev);
- 		usb_role_switch_unregister(port->usb_role_sw);
-+		cancel_work_sync(&port->usb_phy_work);
-+		usb_remove_phy(&port->usb_phy);
- 	}
- 	device_unregister(&port->dev);
- }
-@@ -556,16 +560,59 @@ static const char *const modes[] = {
- 	[USB_DR_MODE_OTG] = "otg",
- };
- 
-+static void tegra_xusb_usb_phy_work(struct work_struct *work)
-+{
-+	struct tegra_xusb_port *port = container_of(work,
-+				struct tegra_xusb_port, usb_phy_work);
-+	enum usb_role role = usb_role_switch_get_role(port->usb_role_sw);
-+
-+	dev_dbg(&port->dev, "%s calling notifier for role %d\n", __func__,
-+		role);
-+
-+	atomic_notifier_call_chain(&port->usb_phy.notifier, role,
-+				   &port->usb_phy);
-+}
-+
- static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
- {
-+	struct tegra_xusb_port *port = dev_get_drvdata(dev);
-+
- 	dev_dbg(dev, "%s calling notifier for role is %d\n", __func__, role);
- 
-+	schedule_work(&port->usb_phy_work);
-+
-+	return 0;
-+}
-+
-+static int tegra_xusb_set_peripheral(struct usb_otg *otg,
-+					struct usb_gadget *gadget)
-+{
-+	struct tegra_xusb_port *port = container_of(otg->usb_phy,
-+					struct tegra_xusb_port, usb_phy);
-+
-+	if (gadget != NULL)
-+		schedule_work(&port->usb_phy_work);
-+
-+	return 0;
-+}
-+
-+static int tegra_xusb_set_host(struct usb_otg *otg, struct usb_bus *host)
-+{
-+	struct tegra_xusb_port *port = container_of(otg->usb_phy,
-+					struct tegra_xusb_port, usb_phy);
-+
-+	if (host != NULL)
-+		schedule_work(&port->usb_phy_work);
-+
- 	return 0;
- }
- 
-+
- static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
- {
- 	int err = 0;
-+	struct tegra_xusb_lane *lane = tegra_xusb_find_lane(port->padctl,
-+							"usb2", port->index);
- 	struct usb_role_switch_desc role_sx_desc = {
- 					.set = tegra_xusb_role_sw_set,
- 					.fwnode = dev_fwnode(&port->dev),
-@@ -578,6 +625,30 @@ static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
- 		if (err != EPROBE_DEFER)
- 			dev_err(&port->dev, "Failed to register USB role SW: %d",
- 				err);
-+		return err;
-+	}
-+
-+	INIT_WORK(&port->usb_phy_work, tegra_xusb_usb_phy_work);
-+
-+	port->usb_phy.otg = devm_kzalloc(&port->dev,
-+					 sizeof(struct usb_otg), GFP_KERNEL);
-+	if (!port->usb_phy.otg)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Assign phy dev to usb-phy dev. Host/device drivers can use phy
-+	 * reference to retrieve usb-phy details.
-+	 */
-+	port->usb_phy.dev = &lane->pad->lanes[port->index]->dev;
-+	port->usb_phy.dev->driver = port->padctl->dev->driver;
-+	port->usb_phy.otg->usb_phy = &port->usb_phy;
-+	port->usb_phy.otg->set_peripheral = tegra_xusb_set_peripheral;
-+	port->usb_phy.otg->set_host = tegra_xusb_set_host;
-+
-+	err = usb_add_phy_dev(&port->usb_phy);
-+	if (err < 0) {
-+		dev_err(&port->dev, "Failed to add usbphy: %d\n", err);
-+		return err;
- 	}
- 
- 	/* populate connector entry */
-diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
-index 9f27899..2345657 100644
---- a/drivers/phy/tegra/xusb.h
-+++ b/drivers/phy/tegra/xusb.h
-@@ -268,6 +268,8 @@ struct tegra_xusb_port {
- 	struct device dev;
- 
- 	struct usb_role_switch *usb_role_sw;
-+	struct work_struct usb_phy_work;
-+	struct usb_phy usb_phy;
- 
- 	const struct tegra_xusb_port_ops *ops;
- };
+> +#define CHANIER(n)	(0x10 + (0x40 * n))
+> +#define CHANIPR(n)	(0x20 + (0x40 * n))
+> +
+> +struct intmux_irqchip_data {
+> +	int chanidx;
+> +	int irq;
+> +	struct irq_domain *domain;
+> +	unsigned int irqstat;
+
+It would make things a bit readable if you aligned the various fields:
+
+struct intmux_irqchip_data {
+         int                  chanidx;
+         int                  irq;
+         struct irq_domain    *domain;
+[...]
+};
+
+> +};
+> +
+> +struct intmux_data {
+> +	spinlock_t lock;
+> +	struct platform_device *pdev;
+> +	void __iomem *regs;
+> +	struct clk *ipg_clk;
+> +	int channum;
+> +	struct intmux_irqchip_data irqchip_data[];
+> +};
+> +
+> +static void imx_intmux_irq_mask(struct irq_data *d)
+> +{
+> +	struct intmux_irqchip_data *irqchip_data = d->chip_data;
+> +	u32 idx = irqchip_data->chanidx;
+> +	struct intmux_data *intmux_data = container_of(irqchip_data,
+> +				struct intmux_data, irqchip_data[idx]);
+> +	void __iomem *reg;
+> +	u32 val;
+> +
+> +	spin_lock(&intmux_data->lock);
+
+This is racy. you could take an interrupt while executing 
+disable_irq(),
+which calls this. In turn, the interrupt handler will try to acquire 
+this
+lock -> deadlock.
+
+Please turn this into its _irqsave version.
+
+> +	reg = intmux_data->regs + CHANIER(idx);
+> +	val = readl_relaxed(reg);
+> +	/* disable the interrupt source of this channel */
+> +	val &= ~(1 << d->hwirq);
+
+         val &= ~BIT(d->hwirq);
+
+> +	writel_relaxed(val, reg);
+> +	spin_unlock(&intmux_data->lock);
+> +}
+> +
+> +static void imx_intmux_irq_unmask(struct irq_data *d)
+> +{
+> +	struct intmux_irqchip_data *irqchip_data = d->chip_data;
+> +	u32 idx = irqchip_data->chanidx;
+> +	struct intmux_data *intmux_data = container_of(irqchip_data,
+> +				struct intmux_data, irqchip_data[idx]);
+> +	void __iomem *reg;
+> +	u32 val;
+> +
+> +	spin_lock(&intmux_data->lock);
+> +	reg = intmux_data->regs + CHANIER(idx);
+> +	val = readl_relaxed(reg);
+> +	/* enable the interrupt source of this channel */
+> +	val |= 1 << d->hwirq;
+> +	writel_relaxed(val, reg);
+> +	spin_unlock(&intmux_data->lock);
+> +}
+> +
+> +static struct irq_chip imx_intmux_irq_chip = {
+> +	.name		= "intmux",
+> +	.irq_mask	= imx_intmux_irq_mask,
+> +	.irq_unmask	= imx_intmux_irq_unmask,
+> +};
+> +
+> +static int imx_intmux_irq_map(struct irq_domain *h, unsigned int 
+> irq,
+> +			      irq_hw_number_t hwirq)
+> +{
+> +	irq_set_status_flags(irq, IRQ_LEVEL);
+> +	irq_set_chip_data(irq, h->host_data);
+> +	irq_set_chip_and_handler(irq, &imx_intmux_irq_chip, 
+> handle_level_irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops imx_intmux_domain_ops = {
+> +	.map		= imx_intmux_irq_map,
+> +	.xlate		= irq_domain_xlate_onecell,
+> +};
+> +
+> +static void imx_intmux_update_irqstat(struct intmux_irqchip_data
+> *irqchip_data)
+> +{
+> +	int i = irqchip_data->chanidx;
+> +	struct intmux_data *intmux_data = container_of(irqchip_data,
+> +				struct intmux_data, irqchip_data[i]);
+> +
+> +	/* read the interrupt source pending status of this channel */
+> +	irqchip_data->irqstat = readl_relaxed(intmux_data->regs + 
+> CHANIPR(i));
+
+Why does it need to be stored into the data structure, instead of
+sinply being returned by the function?
+
+> +}
+> +
+> +static void imx_intmux_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct intmux_irqchip_data *irqchip_data = 
+> irq_desc_get_handler_data(desc);
+> +	int pos, virq;
+> +
+> +	chained_irq_enter(irq_desc_get_chip(desc), desc);
+> +
+> +	imx_intmux_update_irqstat(irqchip_data);
+> +
+> +	for_each_set_bit(pos, (unsigned long *)&irqchip_data->irqstat, 32) 
+> {
+
+This is broken on big-endian. Never cast a smaller type into unsigned 
+long
+if you're going to use any of the bit iterators.
+
+> +		virq = irq_find_mapping(irqchip_data->domain, pos);
+> +		if (virq)
+> +			generic_handle_irq(virq);
+> +	}
+> +
+> +	chained_irq_exit(irq_desc_get_chip(desc), desc);
+> +}
+> +
+> +static int imx_intmux_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct intmux_data *intmux_data;
+> +	int channum;
+> +	int i, ret;
+> +
+> +	ret = of_property_read_u32(np, "fsl,intmux_chans", &channum);
+> +	if (ret)
+> +		channum = 1;
+> +
+> +	intmux_data = devm_kzalloc(&pdev->dev, sizeof(*intmux_data) +
+> +				   channum * sizeof(intmux_data->irqchip_data[0]),
+> +				   GFP_KERNEL);
+> +	if (!intmux_data)
+> +		return -ENOMEM;
+> +
+> +	intmux_data->regs = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(intmux_data->regs)) {
+> +		dev_err(&pdev->dev, "failed to initialize reg\n");
+> +		return PTR_ERR(intmux_data->regs);
+> +	}
+> +
+> +	intmux_data->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
+> +	if (IS_ERR(intmux_data->ipg_clk)) {
+> +		ret = PTR_ERR(intmux_data->ipg_clk);
+> +		dev_err(&pdev->dev, "failed to get ipg clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	intmux_data->channum = channum;
+> +	intmux_data->pdev = pdev;
+
+What is the point of keeping track of this? The only instance where you
+go from MUX to device is just below, and you already have the device
+at hand.
+
+> +	spin_lock_init(&intmux_data->lock);
+> +
+> +	ret = clk_prepare_enable(intmux_data->ipg_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to enable ipg clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	for (i = 0; i < channum; i++) {
+> +		intmux_data->irqchip_data[i].chanidx = i;
+> +		intmux_data->irqchip_data[i].irq = platform_get_irq(pdev, i);
+> +		if (intmux_data->irqchip_data[i].irq <= 0) {
+> +			dev_err(&pdev->dev, "failed to get irq\n");
+> +			return -ENODEV;
+> +		}
+> +
+> +		intmux_data->irqchip_data[i].domain = irq_domain_add_linear(
+> +						np,
+> +						32,
+> +						&imx_intmux_domain_ops,
+> +						&intmux_data->irqchip_data[i]);
+
+Please indent this in a readable manner. If you need an intermediate 
+variable,
+so be it. Or have a long line if you want, but don't write things like 
+this.
+
+> +		if (!intmux_data->irqchip_data[i].domain) {
+> +			dev_err(&intmux_data->pdev->dev,
+> +				"failed to create IRQ domain\n");
+> +			return -ENOMEM;
+> +		}
+> +
+> +		irq_set_chained_handler_and_data(intmux_data->irqchip_data[i].irq,
+> +						 imx_intmux_irq_handler,
+> +						 &intmux_data->irqchip_data[i]);
+
+Shouldn't you initialize the HW to some sane state here? Like having
+having all interrupts masked?
+
+> +	}
+> +
+> +	platform_set_drvdata(pdev, intmux_data);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_intmux_remove(struct platform_device *pdev)
+> +{
+> +	struct intmux_data *intmux_data = platform_get_drvdata(pdev);
+> +	int i;
+> +
+> +	for (i = 0; i < intmux_data->channum; i++) {
+> +		irq_set_chained_handler_and_data(intmux_data->irqchip_data[i].irq,
+> +						 NULL, NULL);
+
+Same thing here. Shouldn't you make sure that no interrupt can fire 
+anymore?
+
+> +
+> +		irq_domain_remove(intmux_data->irqchip_data[i].domain);
+> +	}
+> +
+> +	platform_set_drvdata(pdev, NULL);
+> +	clk_disable_unprepare(intmux_data->ipg_clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id imx_intmux_id[] = {
+> +	{ .compatible = "fsl,imx-intmux", },
+> +	{ /* sentinel */ },
+> +};
+> +
+> +static struct platform_driver imx_intmux_driver = {
+> +	.driver = {
+> +		.name = "imx-intmux",
+> +		.of_match_table = imx_intmux_id,
+> +	},
+> +	.probe = imx_intmux_probe,
+> +	.remove = imx_intmux_remove,
+> +};
+> +builtin_platform_driver(imx_intmux_driver);
+
+Thanks,
+
+         M.
 -- 
-2.7.4
-
+Jazz is not dead. It just smells funny...
