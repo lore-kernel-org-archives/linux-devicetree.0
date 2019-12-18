@@ -6,69 +6,49 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C586C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8241CC43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9F2E218AC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5957721582
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 17:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576690055;
-	bh=CQsdge4NCxqpLjoNvbR0B5NKYDWJiCmYgei2y6A1s8s=;
+	s=default; t=1576691435;
+	bh=zdbUHt5x8PH/epSF7/R3TjGuK6ls0Cr8YzTB4vubwYc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NzHsKL2aQyBVfrsIdfP2RYnzqmp0HzcBxqOnk3oCY0a7OnvPCFJXET9MCZikRoHHx
-	 xkYSco4HKawc6YzBAsIaKjpqkBaF5SM/N7V8fhDOmB3wfcVXtsySn8dj1umk5EIyPB
-	 1kpYSgxya3uKezQT73KUBtmmtAD/+5juH9f2b8QA=
+	b=qX9LL/5AU2P56mT2tQpbTPSs8iYzTyMcqfkAGOSndU7Qg8NyWv3jF8jfX4Q1weFpu
+	 GWAfiSkW0NkJNS3dd7ourC4IlJ24AKY2htyMG9san190tFfssCGA+nKixpYXPcaiFl
+	 FiDVTUhuGuctpo0sg3nngLnXa6jGml9WLgEhfpz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfLRR1a (ORCPT
+        id S1726985AbfLRRue (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:27:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:54920 "EHLO foss.arm.com"
+        Wed, 18 Dec 2019 12:50:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:55570 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727089AbfLRR1a (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:27:30 -0500
+        id S1726960AbfLRRue (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 12:50:34 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EB9F1FB;
-        Wed, 18 Dec 2019 09:27:29 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1309B1FB;
+        Wed, 18 Dec 2019 09:50:34 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0E2D3F67D;
-        Wed, 18 Dec 2019 09:27:28 -0800 (PST)
-Date:   Wed, 18 Dec 2019 17:27:27 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 856C13F67D;
+        Wed, 18 Dec 2019 09:50:33 -0800 (PST)
+Date:   Wed, 18 Dec 2019 17:50:31 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v6 08/15] regulator: bd718x7: Split driver to common and
- bd718x7 specific parts
-Message-ID: <20191218172727.GL3219@sirena.org.uk>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <fea73fd89f0db81fac30eba3b523c2232c401eae.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/4] ASoC: meson: axg-fifo: add fifo depth to the
+ bindings documentation
+Message-ID: <20191218175031.GM3219@sirena.org.uk>
+References: <20191218172420.1199117-1-jbrunet@baylibre.com>
+ <20191218172420.1199117-3-jbrunet@baylibre.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7l042bGvurpep9Wg"
+        protocol="application/pgp-signature"; boundary="KSyhVCl2eeZHT0Rn"
 Content-Disposition: inline
-In-Reply-To: <fea73fd89f0db81fac30eba3b523c2232c401eae.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20191218172420.1199117-3-jbrunet@baylibre.com>
 X-Cookie: Power is poison.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
@@ -77,34 +57,33 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---7l042bGvurpep9Wg
+--KSyhVCl2eeZHT0Rn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Dec 11, 2019 at 11:44:51AM +0200, Matti Vaittinen wrote:
-> Few ROHM PMICs allow setting the voltage states for different system states
-> like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC specific
-> mechanisms. bd718x7 driver implemented device-tree parsing functions for
-> these state specific voltages. The parsing functions can be re-used by
-> other ROHM chip drivers like bd71828. Split the generic functions from
-> bd718x7-regulator.c to rohm-regulator.c and export them for other modules
-> to use.
+On Wed, Dec 18, 2019 at 06:24:18PM +0100, Jerome Brunet wrote:
 
-Acked-by: Mark Brown <broonie@kernel.org>
+> Add a new property with the depth of the fifo in bytes. This is useful
+> since some instance of the fifo, even on the same SoC, may have different
+> depth. The depth is useful is set some parameters of the fifo.
 
---7l042bGvurpep9Wg
+Can't we figure this out from the compatible strings?  They look SoC
+specific (which is good).  That means we don't need to add new
+properties for each quirk that separates the variants.
+
+--KSyhVCl2eeZHT0Rn
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl36YX4ACgkQJNaLcl1U
-h9AI5Qf8DyMoeOZZ3b1i5ellMm0RDOYSYPZHH/HbNVc9POUCUqAmocPri1eOtfK7
-oEitUxGtbX9FohXmvBoVgR4+FqSitzPP3tnkOYXGpMUhnor0LT44YCFRfay6Plc9
-uxAsYj8nzSfu/yvOfDMlX2iRMS1zkERyxbCc5ug7/7GF6kM/+zsrctS2mzd7wbJc
-GY4PCC70UuCLim+qts5yQ1lFAtgkn0tg2Xn7O70bWyte5EjA/GZE12cz4ol2yHxr
-AygfcwT1YPBkyrtT2ydvn1kRa2LJjO9mc/PVMZSTS6b3yh+gm50nybfNvQMh1l7Q
-a7CveVrWl7/1JJtHwRbW5hT+tH+CKQ==
-=PWlS
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl36ZucACgkQJNaLcl1U
+h9DwRAf/XO9oHDzn1VThOJNKz5nrgTjAgtf51hmSYc2qC4bFBEPQmKXHTQJwgxhC
+7Q+4EV0qC+zkHdnDBl9RM5HgwVFirK2Bq106WvVMJizoEWf0D5B2C8vp8vMhCOXA
+yquL9sijTzs79Z2+/wM05/OaaQ+nrKBZpBv6IOGYYkgZ+z4x7Jp8HQ9EhPW25EsU
+am8nea9rtuvWkEDskXQ541gQw38hPicim+pS37hD/BzhTstwLpU7LqnyyFq6O+OE
+ZtatzXOFXvOohYrOK4yGFUnT74rg6wE6shFbq3E4NNwnRtwh9TCCpUjS43JrNOZT
+DJ6vG/tnjzlofd9ok9LwVvNZ2d4xQg==
+=9adF
 -----END PGP SIGNATURE-----
 
---7l042bGvurpep9Wg--
+--KSyhVCl2eeZHT0Rn--
