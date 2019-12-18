@@ -2,31 +2,31 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA10C2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413D6C2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0875321D7D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F9721D7D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfLRICb (ORCPT
+        id S1726830AbfLRICb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 18 Dec 2019 03:02:31 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49981 "EHLO
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59277 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbfLRICa (ORCPT
+        with ESMTP id S1726791AbfLRICa (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 03:02:30 -0500
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1ihUHj-0004ei-JI; Wed, 18 Dec 2019 09:02:19 +0100
+        id 1ihUHj-0004ek-JI; Wed, 18 Dec 2019 09:02:19 +0100
 Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1ihUHg-0000Ze-C8; Wed, 18 Dec 2019 09:02:16 +0100
+        id 1ihUHg-0000aB-Fc; Wed, 18 Dec 2019 09:02:16 +0100
 From:   Oleksij Rempel <o.rempel@pengutronix.de>
 To:     Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -42,10 +42,12 @@ Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
         "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v7 0/4] add dsa switch support for ar9331
-Date:   Wed, 18 Dec 2019 09:02:11 +0100
-Message-Id: <20191218080215.2151-1-o.rempel@pengutronix.de>
+Subject: [PATCH v7 2/4] MIPS: ath79: ar9331: add ar9331-switch node
+Date:   Wed, 18 Dec 2019 09:02:13 +0100
+Message-Id: <20191218080215.2151-3-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191218080215.2151-1-o.rempel@pengutronix.de>
+References: <20191218080215.2151-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
@@ -57,74 +59,178 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-changes v6:
-- remove ag71xx changes from this patch set. It needs more work.
-- ar9331: fix register definition and add ASCII art switch documentation.
+Add switch node supported by dsa ar9331 driver.
 
-changes v6:
-- rebase against net-next
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ arch/mips/boot/dts/qca/ar9331.dtsi           | 119 ++++++++++++++++++-
+ arch/mips/boot/dts/qca/ar9331_dpt_module.dts |  13 ++
+ 2 files changed, 131 insertions(+), 1 deletion(-)
 
-changes v5:
-- remote support for port5. The effort of using this port is
-  questionable. Currently, it is better to not use it at all, then
-  adding buggy support.
-- remove port enable call back. There is nothing what we actually need
-  to enable.
-- rebase it against v5.5-rc1 
-
-changes v4:
-- ag71xx: ag71xx_mac_validate fix always false comparison (&& -> ||)
-- tag_ar9331: use skb_pull_rcsum() instead of skb_pull().
-- tag_ar9331: drop skb_set_mac_header()
-
-changes v3:
-- ag71xx: ag71xx_mac_config: ignore MLO_AN_INBAND mode. It is not
-  supported by HW and SW.
-- ag71xx: ag71xx_mac_validate: return all supported bits on
-  PHY_INTERFACE_MODE_NA
-
-changes v2:
-- move Atheros AR9331 TAG format to separate patch
-- use netdev_warn_once in the tag driver to reduce potential message spam
-- typo fixes
-- reorder tag driver alphabetically 
-- configure switch to maximal frame size
-- use mdiobus_read/write
-- fail if mdio sub node is not found
-- add comment for post reset state
-- remove deprecated comment about device id
-- remove phy-handle option for node with fixed-link
-- ag71xx: set 1G support only for GMII mode
-
-This patch series provides dsa switch support for Atheros ar9331 WiSoC.
-As side effect ag71xx needed to be ported to phylink to make the switch
-driver (as well phylink based) work properly.
-
-Oleksij Rempel (4):
-  dt-bindings: net: dsa: qca,ar9331 switch documentation
-  MIPS: ath79: ar9331: add ar9331-switch node
-  net: dsa: add support for Atheros AR9331 TAG format
-  net: dsa: add support for Atheros AR9331 built-in switch
-
- .../devicetree/bindings/net/dsa/ar9331.txt    | 148 +++
- arch/mips/boot/dts/qca/ar9331.dtsi            | 119 ++-
- arch/mips/boot/dts/qca/ar9331_dpt_module.dts  |  13 +
- drivers/net/dsa/Kconfig                       |   2 +
- drivers/net/dsa/Makefile                      |   1 +
- drivers/net/dsa/qca/Kconfig                   |  11 +
- drivers/net/dsa/qca/Makefile                  |   2 +
- drivers/net/dsa/qca/ar9331.c                  | 855 ++++++++++++++++++
- include/net/dsa.h                             |   2 +
- net/dsa/Kconfig                               |   6 +
- net/dsa/Makefile                              |   1 +
- net/dsa/tag_ar9331.c                          |  96 ++
- 12 files changed, 1255 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/ar9331.txt
- create mode 100644 drivers/net/dsa/qca/Kconfig
- create mode 100644 drivers/net/dsa/qca/Makefile
- create mode 100644 drivers/net/dsa/qca/ar9331.c
- create mode 100644 net/dsa/tag_ar9331.c
-
+diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+index 5cfc9d347826..8f5aed760abb 100644
+--- a/arch/mips/boot/dts/qca/ar9331.dtsi
++++ b/arch/mips/boot/dts/qca/ar9331.dtsi
+@@ -126,6 +126,9 @@ eth0: ethernet@19000000 {
+ 			clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_AHB>;
+ 			clock-names = "eth", "mdio";
+ 
++			phy-mode = "mii";
++			phy-handle = <&phy_port4>;
++
+ 			status = "disabled";
+ 		};
+ 
+@@ -133,13 +136,127 @@ eth1: ethernet@1a000000 {
+ 			compatible = "qca,ar9330-eth";
+ 			reg = <0x1a000000 0x200>;
+ 			interrupts = <5>;
+-
+ 			resets = <&rst 13>, <&rst 23>;
+ 			reset-names = "mac", "mdio";
+ 			clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_AHB>;
+ 			clock-names = "eth", "mdio";
+ 
++			phy-mode = "gmii";
++
+ 			status = "disabled";
++
++			fixed-link {
++				speed = <1000>;
++				full-duplex;
++			};
++
++			mdio {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				switch10: switch@10 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					compatible = "qca,ar9331-switch";
++					reg = <0x10>;
++					resets = <&rst 8>;
++					reset-names = "switch";
++
++					interrupt-parent = <&miscintc>;
++					interrupts = <12>;
++
++					interrupt-controller;
++					#interrupt-cells = <1>;
++
++					ports {
++						#address-cells = <1>;
++						#size-cells = <0>;
++
++						switch_port0: port@0 {
++							reg = <0x0>;
++							label = "cpu";
++							ethernet = <&eth1>;
++
++							phy-mode = "gmii";
++
++							fixed-link {
++								speed = <1000>;
++								full-duplex;
++							};
++						};
++
++						switch_port1: port@1 {
++							reg = <0x1>;
++							phy-handle = <&phy_port0>;
++							phy-mode = "internal";
++
++							status = "disabled";
++						};
++
++						switch_port2: port@2 {
++							reg = <0x2>;
++							phy-handle = <&phy_port1>;
++							phy-mode = "internal";
++
++							status = "disabled";
++						};
++
++						switch_port3: port@3 {
++							reg = <0x3>;
++							phy-handle = <&phy_port2>;
++							phy-mode = "internal";
++
++							status = "disabled";
++						};
++
++						switch_port4: port@4 {
++							reg = <0x4>;
++							phy-handle = <&phy_port3>;
++							phy-mode = "internal";
++
++							status = "disabled";
++						};
++					};
++
++					mdio {
++						#address-cells = <1>;
++						#size-cells = <0>;
++
++						interrupt-parent = <&switch10>;
++
++						phy_port0: phy@0 {
++							reg = <0x0>;
++							interrupts = <0>;
++							status = "disabled";
++						};
++
++						phy_port1: phy@1 {
++							reg = <0x1>;
++							interrupts = <0>;
++							status = "disabled";
++						};
++
++						phy_port2: phy@2 {
++							reg = <0x2>;
++							interrupts = <0>;
++							status = "disabled";
++						};
++
++						phy_port3: phy@3 {
++							reg = <0x3>;
++							interrupts = <0>;
++							status = "disabled";
++						};
++
++						phy_port4: phy@4 {
++							reg = <0x4>;
++							interrupts = <0>;
++							status = "disabled";
++						};
++					};
++				};
++			};
+ 		};
+ 
+ 		usb: usb@1b000100 {
+diff --git a/arch/mips/boot/dts/qca/ar9331_dpt_module.dts b/arch/mips/boot/dts/qca/ar9331_dpt_module.dts
+index 77bab823eb3b..0f2b20044834 100644
+--- a/arch/mips/boot/dts/qca/ar9331_dpt_module.dts
++++ b/arch/mips/boot/dts/qca/ar9331_dpt_module.dts
+@@ -84,3 +84,16 @@ &eth0 {
+ &eth1 {
+ 	status = "okay";
+ };
++
++&switch_port1 {
++	label = "lan0";
++	status = "okay";
++};
++
++&phy_port0 {
++	status = "okay";
++};
++
++&phy_port4 {
++	status = "okay";
++};
 -- 
 2.24.0
 
