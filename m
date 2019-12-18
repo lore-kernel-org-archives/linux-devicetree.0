@@ -2,223 +2,129 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3ABBC2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E148AC2D0CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A92B024679
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E0C206CB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 15:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vYKP2MAY"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jqWjyfLG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfLRPh1 (ORCPT
+        id S1727124AbfLRPkP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:37:27 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:36321 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbfLRPh0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 10:37:26 -0500
-Received: by mail-il1-f195.google.com with SMTP id b15so2051381iln.3;
-        Wed, 18 Dec 2019 07:37:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7/0Cx566venUU7dDXePf4MglaNmiGe8WWE6mIv6eA2E=;
-        b=vYKP2MAYqg+oajDl0uayzHdWlss0ZrDkraWsIP54vlUDqpcUxX6oBKbS5uBuhD6cus
-         DoZjwv8EEMKbpVXxUAzYbZyiw+gK1PcYkjrW9OvHduUGwi5Zjh+sDg9qbGIR6WIPeVm5
-         Y51iZWoIQxtjTnldJtdLeZ6IzfRNP+GqzE3TedmVY3O3e/wFp9py5HRCQEG8iIG4aWCe
-         8Yr5bYix+ZYp2H9nVWywx9u0c6KRlCSUBokXBOuf2qzK1MRdCiZTe43hkmp9h9x3ItVm
-         wsNk/wn7AZidxIoICZ5ToBq+u/Y6DghM2CYxKA5aHTXLHf+Cuxxm7E5ZTvG/Uz3kN1PH
-         tgEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7/0Cx566venUU7dDXePf4MglaNmiGe8WWE6mIv6eA2E=;
-        b=g6CbM0mJAQkXgOj5Z0DdgIJUvjzA6EIfubbcPqxiQW+zpWGCerAZXKapBzn3Qpxp4s
-         zXOo4f+iWtSriwN2TXKnsO1XUONFeaBAeZ88kF++wjtV1T102Dyl0v+ShIBCC6YMdH/i
-         lHrCjQVrtZ2mAl5GEarpL1xOGCGoc2uU5U1pDui1HslBXglPPPw4ba3xoBfdISJSf20O
-         b3u2cgYGSHC2EGJZRbWW74w3weyKs2md5SyjEpoD3EQneQ9es9px/P/b37Q5+XZ9EoXA
-         7RXJDGL/ZE57ExC+wR2KlK0KqkccYlmsZpLbHXzfBHmz4xVTGn3o79ROtjqYkKmNw6fB
-         a27Q==
-X-Gm-Message-State: APjAAAXgFONSI186EUW5YiId/krJ1nUf6ESt1dQ03y/Xqmc9KQZKcecH
-        zUL/sKcDXsnLvJ2IGV6oII0ImPWHQsEAKVzr8qQ=
-X-Google-Smtp-Source: APXvYqzZwSwTUOlYM6TsQQNm3QDAI/MmJsqk//isBpzlQCB5QCN/YvtmUYVY/LMiY4AbBPfcqD05jwXVAxK7n1Qryjg=
-X-Received: by 2002:a92:dc91:: with SMTP id c17mr2593518iln.78.1576683445143;
- Wed, 18 Dec 2019 07:37:25 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1574458460.git.leonard.crestez@nxp.com> <CAHCN7xKNwit8ueUO0OkebfYh=4hsL7_+DRWEbn2dEt0H322W4w@mail.gmail.com>
- <VI1PR04MB70231CA0E3C4574211518359EE530@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <CAHCN7xJNy0z2hvWbM3UhLni5ruS+sCLeBH8BKiYexe3Sp=6Q0w@mail.gmail.com> <VI1PR04MB70235951BC137515BDD2FDC7EE530@VI1PR04MB7023.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB70235951BC137515BDD2FDC7EE530@VI1PR04MB7023.eurprd04.prod.outlook.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 18 Dec 2019 09:37:14 -0600
-Message-ID: <CAHCN7xKHJAb8k1A+WC3EUOmgLTx-Kbjw_5EsmwyhDkkOKCsmGQ@mail.gmail.com>
-Subject: Re: [PATCH v7 0/5] PM / devfreq: Add dynamic scaling for imx8m ddr controller
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Jacky Bai <ping.bai@nxp.com>, Stephen Boyd <sboyd@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 18 Dec 2019 10:40:15 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:39214 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfLRPkO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 10:40:14 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBIFdlqg019044;
+        Wed, 18 Dec 2019 09:39:47 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576683588;
+        bh=isrbKoX0G9x5SGR0XS8wE9i8c+JE3gadbxb2pKknm08=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=jqWjyfLGeRvQwwgyrIyyIvTziBUpN2dqqj6Bi1/V1jtOCGUovSziMNs1rjtKnYANl
+         6tp84BGjaIAUgO4cdONFX9lAJPIOErBgldm5agnsqfH4gED+dWDnaVXO+VvYBQGFd/
+         W1AAVeyJHO2FbWB09mgavO/6WOHXq+9d/kUL9aUM=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBIFdldB099895
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 18 Dec 2019 09:39:47 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 18
+ Dec 2019 09:39:47 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 18 Dec 2019 09:39:47 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBIFdl01079424;
+        Wed, 18 Dec 2019 09:39:47 -0600
+Date:   Wed, 18 Dec 2019 09:39:05 -0600
+From:   Bin Liu <b-liu@ti.com>
+To:     <min.guo@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Martin Kepplinger <martink@posteo.de>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        <chunfeng.yun@mediatek.com>, <linux-usb@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <tony@atomide.com>,
+        <hdegoede@redhat.com>
+Subject: Re: [PATCH v9 2/6] arm: dts: mt2701: Add usb2 device nodes
+Message-ID: <20191218153905.GN16429@iaqt7>
+Mail-Followup-To: Bin Liu <b-liu@ti.com>, min.guo@mediatek.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, tony@atomide.com,
+        hdegoede@redhat.com
+References: <20191211015446.11477-1-min.guo@mediatek.com>
+ <20191211015446.11477-3-min.guo@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191211015446.11477-3-min.guo@mediatek.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 9:16 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
->
-> On 18.12.2019 17:05, Adam Ford wrote:
-> > On Wed, Dec 18, 2019 at 8:44 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
-> >>
-> >> On 18.12.2019 15:35, Adam Ford wrote:
-> >>> On Fri, Nov 22, 2019 at 3:45 PM Leonard Crestez <leonard.crestez@nxp.com> wrote:
-> >>>>
-> >>>> This adds support for dynamic scaling of the DDR Controller (ddrc)
-> >>>> present on i.MX8M series chips. Actual frequency switching is
-> >>>> implemented inside TF-A, this driver wraps the SMC calls and
-> >>>> synchronizes the clk tree.
-> >>>>
-> >>>> DRAM frequency switching requires clock manipulation but during this operation
-> >>>> DRAM itself is briefly inaccessible so this operation is performed a SMC call
-> >>>> to by TF-A which runs from a SRAM area. Upon returning to linux the clock tree
-> >>>> is updated to correspond to hardware configuration.
-> >>>>
-> >>>> This is handled via CLK_GET_RATE_NO_CACHE for dividers but muxes are handled
-> >>>> manually: the driver will prepare/enable the new parents ahead of switching (so
-> >>>> that the expected roots are enabled) and afterwards it will call clk_set_parent
-> >>>> to ensure the parents in clock framework are up-to-date.
-> >>>>
-> >>>> This series is useful standalone and roughly similar to devfreq drivers for
-> >>>> tegra and rockchip.
-> >>>>
-> >>>> Running at lower dram rates saves power but can affect the functionality of
-> >>>> other blocks in the chip (display, vpu etc). Support for in-kernel constraints
-> >>>> will some separately.
-> >>>>
-> >>>> This series has no dependencies outside linux-next. The driver depends
-> >>>> on features from the NXP branch of TF-A and will cleanly fail to probe
-> >>>> on mainline. There are also plans to upstream dram dvfs in TF-A.
-> >>>>
-> >>>> Leonard Crestez (5):
-> >>>>     clk: imx8m: Set CLK_GET_RATE_NOCACHE on dram clocks
-> >>>>     clk: imx: Mark dram pll on 8mm and 8mn with CLK_GET_RATE_NOCACHE
-> >>>>     dt-bindings: memory: Add bindings for imx8m ddr controller
-> >>>>     PM / devfreq: Add dynamic scaling for imx8m ddr controller
-> >>>>     arm64: dts: imx8m: Add ddr controller nodes
-> >>>>
-> >>>>    .../memory-controllers/fsl/imx8m-ddrc.yaml    |  72 +++
-> >>>>    arch/arm64/boot/dts/freescale/imx8mm-evk.dts  |  18 +
-> >>>>    arch/arm64/boot/dts/freescale/imx8mm.dtsi     |  10 +
-> >>>>    .../boot/dts/freescale/imx8mn-ddr4-evk.dts    |  18 +
-> >>>>    arch/arm64/boot/dts/freescale/imx8mn.dtsi     |  10 +
-> >>>>    arch/arm64/boot/dts/freescale/imx8mq-evk.dts  |  24 +
-> >>>>    arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  10 +
-> >>>>    drivers/clk/imx/clk-imx8mm.c                  |  11 +-
-> >>>>    drivers/clk/imx/clk-imx8mn.c                  |  12 +-
-> >>>>    drivers/clk/imx/clk-imx8mq.c                  |  12 +-
-> >>>>    drivers/clk/imx/clk-pll14xx.c                 |   7 +
-> >>>>    drivers/clk/imx/clk.h                         |   1 +
-> >>>>    drivers/devfreq/Kconfig                       |   9 +
-> >>>
-> >>> Since there is a Kconfig change, should there me a defconfig change?
-> >>
-> >> Yes, you need to enable CONFIG_ARM_IMX8M_DDRC_DEVFREQ in order to test
-> >> this. Enabling as "m" should work.
-> >
-> > I enabled it as 'm' but I was more curious to know if we should push
-> > this upstream with the rest of the series.
->
-> I skipped enabling because it's very experimental; maybe after imx
-> interconnect is also enabled?
->
-> >>>>    drivers/devfreq/Makefile                      |   1 +
-> >>>>    drivers/devfreq/imx8m-ddrc.c                  | 465 ++++++++++++++++++
-> >>>>    15 files changed, 670 insertions(+), 10 deletions(-)
-> >>>>    create mode 100644 Documentation/devicetree/bindings/memory-controllers/fsl/imx8m-ddrc.yaml
-> >>>>    create mode 100644 drivers/devfreq/imx8m-ddrc.c
-> >>>
-> >>> I applied the whole series against 5.5-rc1 and I am trying to test it.
-> >>> I know the 4.14 kernel NXP posted on Code Aurora is capable to
-> >>> lowering the DDRC controller to 25MHz on the 8MM when the video is
-> >>> off.  Since there is no video support yet for the 8MM, I was expecting
-> >>> to see the DDRC clock to be at or around 25MHz.
-> >>>
-> >>> Using debug FS, I can see the dram core clock is still running at
-> >>> 750MHz, and measuring power, it shows something consistent with what I
-> >>> see on the Code Aurora kernel with video turned on and the clock at
-> >>> 750MHz.
-> >>>
-> >>> Is there some way to get the dram_core_clk to drop to 25MHz to see
-> >>> some power reduction?  The same commands used in the Yocto build don't
-> >>> apply here since we don't have video.
-> >>
-> >> Current upstream driver just keeps current frequency by default. Try the
-> >> following:
-> >>
-> >> cd /sys/class/devfreq/devices/devfreq0
-> >
-> > can't cd to /sys/class/devfreq/devices/devfreq0: No such file or directory
-> >
-> > I did some checking and I found:
-> >      imx8m-ddrc-devfreq 3d400000.memory-controller: failed to init
-> > firmware freq info: -19
-> >
-> > Was there some prerequisite patches I needed to apply before your series?
->
-> You need a recent version of TF-A from nxp ( upstream). Try this:
->
-> https://source.codeaurora.org/external/imx/imx-atf/log/?h=imx_4.19.35_1.1.0
->
-> Or this:
-> https://github.com/cdleonard/arm-trusted-firmware/commits/imx_2.0.y_busfreq
->
-> Support on upstream ATF is not yet available
+Hi Matthias,
 
-I cloned your github branch and built it per the instructions in the
-u-boot readme file.
-did a make clean on u-boot, copied the bl31.bin to u-boot and rebuild
-per U-Boot's instructions.
+On Wed, Dec 11, 2019 at 09:54:42AM +0800, min.guo@mediatek.com wrote:
+> From: Min Guo <min.guo@mediatek.com>
+> 
+> Add musb nodes and usb2 phy nodes for MT2701
+> 
+> Signed-off-by: Min Guo <min.guo@mediatek.com>
+> ---
+> changes in v9:
+> 1. Add usb-role-switch
+> 2. Remove label of usb connector child node
+> 3. Change usb connector child node compatible as "gpio-usb-b-connector", "usb-b-connector";
+> 
+> changes in v8:
+> 1. no changes
+> 
+> changes in v7:
+> 1. Change usb connector child node compatible as "gpio-usb-b-connector" 
+> 
+> changes in v6:
+> 1. Modify usb connector child node
+> 
+> changes in v5:
+> 1. Add usb connector child node
+> 
+> changes in v4:
+> 1. no changes
+> 
+> changes in v3:
+> 1. no changes
+> 
+> changes in v2:
+> 1. Remove phy-names
+> ---
+>  arch/arm/boot/dts/mt2701-evb.dts | 21 ++++++++++++++++++++
+>  arch/arm/boot/dts/mt2701.dtsi    | 33 ++++++++++++++++++++++++++++++++
+>  2 files changed, 54 insertions(+)
 
-U-Boot booted and Linux booted, but I still get:
+Can I have your ACK so I can queue this? or please let me know if you
+want to take it in your tree. Thanks.
 
-   imx8m-ddrc-devfreq 3d400000.memory-controller: failed to init
-firmware freq info: -19
-
-I am still learning the imx8mm platform, so please forgive my ignorance.
-
-adam
->
-> --
-> Regards,
-> Leonard
+-Bin.
