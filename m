@@ -2,227 +2,134 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474D2C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97707C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 08:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 226752072B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 772832465E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 08:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfLRICt (ORCPT
+        id S1725882AbfLRIGN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 03:02:49 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40001 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbfLRICa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 03:02:30 -0500
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1ihUHj-0004el-JI; Wed, 18 Dec 2019 09:02:19 +0100
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1ihUHg-0000aN-HB; Wed, 18 Dec 2019 09:02:16 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v7 3/4] net: dsa: add support for Atheros AR9331 TAG format
-Date:   Wed, 18 Dec 2019 09:02:14 +0100
-Message-Id: <20191218080215.2151-4-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191218080215.2151-1-o.rempel@pengutronix.de>
-References: <20191218080215.2151-1-o.rempel@pengutronix.de>
+        Wed, 18 Dec 2019 03:06:13 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:45684 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfLRIGM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 03:06:12 -0500
+X-AuditID: c0a8fbf4-199ff70000001fa6-bb-5df9ddf133de
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 9E.8C.08102.1FDD9FD5; Wed, 18 Dec 2019 09:06:09 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Wed, 18 Dec 2019 09:06:05 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>
+Subject: Re: Applied "regulator: bd71828: Basic support for ROHM bd71828
+ PMIC regulators" to the regulator tree
+Thread-Topic: Applied "regulator: bd71828: Basic support for ROHM bd71828
+ PMIC regulators" to the regulator tree
+Thread-Index: AQHVtNcCPO+Kt0OMfE2l+CzrBWADfqe/eY8A
+Date:   Wed, 18 Dec 2019 08:06:04 +0000
+Message-ID: <de7424126e285d9bbd21a70945415d78203c2ba7.camel@fi.rohmeurope.com>
+References: <applied-5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <applied-5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9AFCB8A8827600419DE3AEDCAF90D462@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf2wTZRzGfe+ud7dupy9ls68dE20kZBpACIkvBA3/oGdMFgkxUZM6buxY
+        q/0xr51haOLMZGzjh4yuQes62NaNCg0d7VCYMMcsEwvBNLZzMIYum0s2tXP82FIYw7udsP11
+        z73P87yf7x/flyV1rYyBtdhdomQXrEZaS3UH7oVXTA6mTS/G/8jD/niSwbtTbQy+f7CXwbd9
+        MQp7hkZoPNK9G+DD0SsavOdShwZXtoRoPHCqncK/37kA8FSimsD1M0cJPLn3hgY3VfkpHDk8
+        A/CvnQ00PvX3CYB7jydo3PpbnMANrRcpPHGzhsDx2CbsiaUYPBi7QOPKeD+Jd52LMni27ySF
+        9195bWMeH2wMAv7e3YOAn+jfxfCNwY/5M95Bhg8fq6H5631naf4HX5DhW/a7NfzU5TqKH20K
+        UfxP/d8R/KHGNMGH9kYBHzg+zfC3wk+/Cd/N3FAkuD7aYimxr3pla6b5s8hJTelszo7zo89V
+        gI6cWpDBIrgWfRGoI2qBltXBJECXOxKU+nMRIO/pCKgFLEvDDaj2KqMUsuEK5LnbQisZEiYy
+        UVtLFVCMxfBDtC8SI9WQhK7dH6NUvQYFKofnNAWXoSPp1JzmYAGa7uqiFa2DDtTUeWYOkAFL
+        0dXuSULRAOahmorUnCahHoVHpzXq1BD5z/5CqjoHjQ3P/n9uROfSQ5QyMwnzUahzlVrdiIIR
+        NULCZ1H9niFGHWER+vmrEeoAeNK7gOCdb3sXtL0L2t4F7SNAcwwgm2CxlggucfVKSSxbKTnM
+        NvmzzWELA3Xtbp8GD3pe7wEEC3rAUyxhzOGM5rRJ93iRo7jcLDjNhVKZVXT2AMSSxmxuoFr2
+        uGKhfKcoOR5auSxl1HPLh+pMOqiwPhDFUlF66C5hWSPifkzKxUWSWCLu2G6xuuZtgs1QLtca
+        sp2ivViUhDKXuVBZj0KnvB+KlSVz1w8qXGepYJNP1WoMvMAeGPM1k2zU19pM6ii7wy4a9Byt
+        RKESNZfZH4HGgZ4FxsXct9dlN0t+e4/uGZcRhIxYUzClIFzCvGWoANufYMpP/MMn1rqzDDuD
+        pnVb4lLxJ83awET/1rf8BZuWtQdTyJcxcykW9j/40qbn1r/9qfS1qcbgrrAe2pcf7xuv6q0e
+        zj1qec/S9epEvZsEnhu3QunN7S+VfPNGvufzxxLX3m8Y+D761/msd3KTd5Y6/yxvE90v31xX
+        pF3C9P77TNJIOc3C6udJySn8B2u2+V44BAAA
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for tag format used in Atheros AR9331 built-in switch.
-
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- include/net/dsa.h    |  2 +
- net/dsa/Kconfig      |  6 +++
- net/dsa/Makefile     |  1 +
- net/dsa/tag_ar9331.c | 96 ++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 105 insertions(+)
- create mode 100644 net/dsa/tag_ar9331.c
-
-diff --git a/include/net/dsa.h b/include/net/dsa.h
-index 6767dc3f66c0..da5578db228e 100644
---- a/include/net/dsa.h
-+++ b/include/net/dsa.h
-@@ -43,6 +43,7 @@ struct phylink_link_state;
- #define DSA_TAG_PROTO_SJA1105_VALUE		13
- #define DSA_TAG_PROTO_KSZ8795_VALUE		14
- #define DSA_TAG_PROTO_OCELOT_VALUE		15
-+#define DSA_TAG_PROTO_AR9331_VALUE		16
- 
- enum dsa_tag_protocol {
- 	DSA_TAG_PROTO_NONE		= DSA_TAG_PROTO_NONE_VALUE,
-@@ -61,6 +62,7 @@ enum dsa_tag_protocol {
- 	DSA_TAG_PROTO_SJA1105		= DSA_TAG_PROTO_SJA1105_VALUE,
- 	DSA_TAG_PROTO_KSZ8795		= DSA_TAG_PROTO_KSZ8795_VALUE,
- 	DSA_TAG_PROTO_OCELOT		= DSA_TAG_PROTO_OCELOT_VALUE,
-+	DSA_TAG_PROTO_AR9331		= DSA_TAG_PROTO_AR9331_VALUE,
- };
- 
- struct packet_type;
-diff --git a/net/dsa/Kconfig b/net/dsa/Kconfig
-index 1e6c3cac11e6..92663dcb3aa2 100644
---- a/net/dsa/Kconfig
-+++ b/net/dsa/Kconfig
-@@ -29,6 +29,12 @@ config NET_DSA_TAG_8021Q
- 
- 	  Drivers which use these helpers should select this as dependency.
- 
-+config NET_DSA_TAG_AR9331
-+	tristate "Tag driver for Atheros AR9331 SoC with built-in switch"
-+	help
-+	  Say Y or M if you want to enable support for tagging frames for
-+	  the Atheros AR9331 SoC with built-in switch.
-+
- config NET_DSA_TAG_BRCM_COMMON
- 	tristate
- 	default n
-diff --git a/net/dsa/Makefile b/net/dsa/Makefile
-index 9a482c38bdb1..108486cfdeef 100644
---- a/net/dsa/Makefile
-+++ b/net/dsa/Makefile
-@@ -5,6 +5,7 @@ dsa_core-y += dsa.o dsa2.o master.o port.o slave.o switch.o
- 
- # tagging formats
- obj-$(CONFIG_NET_DSA_TAG_8021Q) += tag_8021q.o
-+obj-$(CONFIG_NET_DSA_TAG_AR9331) += tag_ar9331.o
- obj-$(CONFIG_NET_DSA_TAG_BRCM_COMMON) += tag_brcm.o
- obj-$(CONFIG_NET_DSA_TAG_DSA) += tag_dsa.o
- obj-$(CONFIG_NET_DSA_TAG_EDSA) += tag_edsa.o
-diff --git a/net/dsa/tag_ar9331.c b/net/dsa/tag_ar9331.c
-new file mode 100644
-index 000000000000..466ffa92a474
---- /dev/null
-+++ b/net/dsa/tag_ar9331.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
-+ */
-+
-+
-+#include <linux/bitfield.h>
-+#include <linux/etherdevice.h>
-+
-+#include "dsa_priv.h"
-+
-+#define AR9331_HDR_LEN			2
-+#define AR9331_HDR_VERSION		1
-+
-+#define AR9331_HDR_VERSION_MASK		GENMASK(15, 14)
-+#define AR9331_HDR_PRIORITY_MASK	GENMASK(13, 12)
-+#define AR9331_HDR_TYPE_MASK		GENMASK(10, 8)
-+#define AR9331_HDR_BROADCAST		BIT(7)
-+#define AR9331_HDR_FROM_CPU		BIT(6)
-+/* AR9331_HDR_RESERVED - not used or may be version field.
-+ * According to the AR8216 doc it should 0b10. On AR9331 it is 0b11 on RX path
-+ * and should be set to 0b11 to make it work.
-+ */
-+#define AR9331_HDR_RESERVED_MASK	GENMASK(5, 4)
-+#define AR9331_HDR_PORT_NUM_MASK	GENMASK(3, 0)
-+
-+static struct sk_buff *ar9331_tag_xmit(struct sk_buff *skb,
-+				       struct net_device *dev)
-+{
-+	struct dsa_port *dp = dsa_slave_to_port(dev);
-+	__le16 *phdr;
-+	u16 hdr;
-+
-+	if (skb_cow_head(skb, 0) < 0)
-+		return NULL;
-+
-+	phdr = skb_push(skb, AR9331_HDR_LEN);
-+
-+	hdr = FIELD_PREP(AR9331_HDR_VERSION_MASK, AR9331_HDR_VERSION);
-+	hdr |= AR9331_HDR_FROM_CPU | dp->index;
-+	/* 0b10 for AR8216 and 0b11 for AR9331 */
-+	hdr |= AR9331_HDR_RESERVED_MASK;
-+
-+	phdr[0] = cpu_to_le16(hdr);
-+
-+	return skb;
-+}
-+
-+static struct sk_buff *ar9331_tag_rcv(struct sk_buff *skb,
-+				      struct net_device *ndev,
-+				      struct packet_type *pt)
-+{
-+	u8 ver, port;
-+	u16 hdr;
-+
-+	if (unlikely(!pskb_may_pull(skb, AR9331_HDR_LEN)))
-+		return NULL;
-+
-+	hdr = le16_to_cpu(*(__le16 *)skb_mac_header(skb));
-+
-+	ver = FIELD_GET(AR9331_HDR_VERSION_MASK, hdr);
-+	if (unlikely(ver != AR9331_HDR_VERSION)) {
-+		netdev_warn_once(ndev, "%s:%i wrong header version 0x%2x\n",
-+				 __func__, __LINE__, hdr);
-+		return NULL;
-+	}
-+
-+	if (unlikely(hdr & AR9331_HDR_FROM_CPU)) {
-+		netdev_warn_once(ndev, "%s:%i packet should not be from cpu 0x%2x\n",
-+				 __func__, __LINE__, hdr);
-+		return NULL;
-+	}
-+
-+	skb_pull_rcsum(skb, AR9331_HDR_LEN);
-+
-+	/* Get source port information */
-+	port = FIELD_GET(AR9331_HDR_PORT_NUM_MASK, hdr);
-+
-+	skb->dev = dsa_master_find_slave(ndev, 0, port);
-+	if (!skb->dev)
-+		return NULL;
-+
-+	return skb;
-+}
-+
-+static const struct dsa_device_ops ar9331_netdev_ops = {
-+	.name	= "ar9331",
-+	.proto	= DSA_TAG_PROTO_AR9331,
-+	.xmit	= ar9331_tag_xmit,
-+	.rcv	= ar9331_tag_rcv,
-+	.overhead = AR9331_HDR_LEN,
-+};
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_AR9331);
-+module_dsa_tag_driver(ar9331_netdev_ops);
--- 
-2.24.0
-
+SGVsbG8gTWFyaywNCg0KT24gVHVlLCAyMDE5LTEyLTE3IGF0IDEyOjM5ICswMDAwLCBNYXJrIEJy
+b3duIHdyb3RlOg0KPiBUaGUgcGF0Y2gNCj4gDQo+ICAgIHJlZ3VsYXRvcjogYmQ3MTgyODogQmFz
+aWMgc3VwcG9ydCBmb3IgUk9ITSBiZDcxODI4IFBNSUMgcmVndWxhdG9ycw0KPiANCj4gaGFzIGJl
+ZW4gYXBwbGllZCB0byB0aGUgcmVndWxhdG9yIHRyZWUgYXQNCg0KSSB0aGluayB5b3UgbWlzc2Vk
+IHRoZSBbUEFUQ0ggdjYgMDgvMTVdIHJlZ3VsYXRvcjogYmQ3MTh4NzogU3BsaXQNCmRyaXZlciB0
+byBjb21tb24gYW5kIGJkNzE4eDcgc3BlY2lmaWMgcGFydHMNCg0Kd2hpY2ggdG9vayB0aGUgZnVu
+Y3Rpb25zIHBhcnNpbmcgZmV3IHJvaG0gc3BlY2lmaWMgRFQgZW50cmllcyBvdXQgb2YNCmJkNzE4
+eDcgZHJpdmVyIGFuZCBleHBvcnRlZCB0aGVtIGZvciBzaGFyZWQgdXNlLiAoRWcsIGN1cnJlbnRs
+eSB0aGUNCmJkNzE4eDcgYW5kIHRoaXMgYmQ3MTgyOCBkcml2ZXIgdXNlIHNhbWUgcHJvcGVydGll
+cyBhbmQgc2hhcmluZyB0aGUNCnByb3BlcnR5IHBhcnNpbmcgY29kZSBzZWVtcyBiZXR0ZXIgdGhh
+biBkdWJsaWNhdGluZyBpdCkuDQoNCkFueXdheXMsIHRoaXMgcGF0Y2ggYnJlYWtzIHRoZSBjb21w
+aWxhdGlvbiB3L28gUEFUQ0ggdjYgMDgvMTUuDQoNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L3JlZ3VsYXRvci9LY29uZmlnIGIvZHJpdmVycy9yZWd1bGF0b3IvS2NvbmZpZw0KPiBpbmRleCA3
+NGViNWFmNzI5NWYuLjU2NTEyNzQ4YTQ3ZCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9yZWd1bGF0
+b3IvS2NvbmZpZw0KPiArKysgYi9kcml2ZXJzL3JlZ3VsYXRvci9LY29uZmlnDQo+IEBAIC0xOTQs
+NiArMTk0LDE4IEBAIGNvbmZpZyBSRUdVTEFUT1JfQkQ3MDUyOA0KPiAgCSAgVGhpcyBkcml2ZXIg
+Y2FuIGFsc28gYmUgYnVpbHQgYXMgYSBtb2R1bGUuIElmIHNvLCB0aGUgbW9kdWxlDQo+ICAJICB3
+aWxsIGJlIGNhbGxlZCBiZDcwNTI4LXJlZ3VsYXRvci4NCj4gIA0KPiArY29uZmlnIFJFR1VMQVRP
+Ul9CRDcxODI4DQo+ICsJdHJpc3RhdGUgIlJPSE0gQkQ3MTgyOCBQb3dlciBSZWd1bGF0b3IiDQo+
+ICsJZGVwZW5kcyBvbiBNRkRfUk9ITV9CRDcxODI4DQo+ICsJc2VsZWN0IFJFR1VMQVRPUl9ST0hN
+DQoNCkkgdGhpbmsgdGhpcyB3YXMgaW50cm9kdWNlZCBpbiBbUEFUQ0ggdjYgMDgvMTVdDQoNCj4g
+KwloZWxwDQo+ICsJICBUaGlzIGRyaXZlciBzdXBwb3J0cyB2b2x0YWdlIHJlZ3VsYXRvcnMgb24g
+Uk9ITSBCRDcxODI4IFBNSUMuDQo+ICsJICBUaGlzIHdpbGwgZW5hYmxlIHN1cHBvcnQgZm9yIHRo
+ZSBzb2Z0d2FyZSBjb250cm9sbGFibGUgYnVjaw0KPiArCSAgYW5kIExETyByZWd1bGF0b3JzLg0K
+DQovL3NuaXANCg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9yZWd1bGF0b3IvYmQ3MTgyOC1yZWd1
+bGF0b3IuYw0KPiBiL2RyaXZlcnMvcmVndWxhdG9yL2JkNzE4MjgtcmVndWxhdG9yLmMNCg0KLy9z
+bmlwDQoNCj4gKw0KPiArc3RhdGljIGludCBidWNrX3NldF9od19kdnNfbGV2ZWxzKHN0cnVjdCBk
+ZXZpY2Vfbm9kZSAqbnAsDQo+ICsJCQkJICBjb25zdCBzdHJ1Y3QgcmVndWxhdG9yX2Rlc2MgKmRl
+c2MsDQo+ICsJCQkJICBzdHJ1Y3QgcmVndWxhdG9yX2NvbmZpZyAqY2ZnKQ0KPiArew0KPiArCXN0
+cnVjdCBiZDcxODI4X3JlZ3VsYXRvcl9kYXRhICpkYXRhOw0KPiArDQo+ICsJZGF0YSA9IGNvbnRh
+aW5lcl9vZihkZXNjLCBzdHJ1Y3QgYmQ3MTgyOF9yZWd1bGF0b3JfZGF0YSwgZGVzYyk7DQo+ICsN
+Cj4gKwlyZXR1cm4gcm9obV9yZWd1bGF0b3Jfc2V0X2R2c19sZXZlbHMoJmRhdGEtPmR2cywgbnAs
+IGRlc2MsIGNmZy0NCj4gPnJlZ21hcCk7DQoNClNvIHdhcyB0aGlzLg0KDQpEbyB5b3UgdGhpbmsg
+eW91IGNvdWxkIGFsc28gYXBwbHkgdGhlIFtQQVRDSCB2NiAwOC8xNV0gb3IgcGVyaGFwcyBkcm9w
+DQp0aGlzIG9uZSB0byBhdm9pZCBicmVha2luZyB0aGUgY29tcGlsYXRpb24gd2hlbiBNRkRfUk9I
+TV9CRDcxODI4IGNvbmZpZw0Kb3B0aW9uIGlzIGludHJvZHVjZWQ/DQoNCg0KQnIsDQoJTWF0dGkN
+Cg==
