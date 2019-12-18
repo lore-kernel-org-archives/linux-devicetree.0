@@ -2,89 +2,67 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A702C2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 00:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B577C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 00:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4109321835
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 00:01:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576627312;
-	bh=CGs+GJMvzNfe0g0vmpyJaJ16tVcX2qCR7J4dY06iyB4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2IxWXpcT2XJYIUcHKzVrWDIOK9EbIJFlijXnqscawz9WYDD35U+gtKkjBUtDmvw9U
-	 f/2oBB8X1MxZj6oWY1y0W/GKXL5O/EXqNNHw5IHkWi2JG6d0mEbvcLrfad7edAwcj1
-	 HcVBfGe70sw9dUKXrM7xnbxZu2UlT02lONghC7zg=
+	by mail.kernel.org (Postfix) with ESMTP id 3D1B4206D3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 00:57:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbfLRABs (ORCPT
+        id S1726530AbfLRA5R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 19:01:48 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33342 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfLRABs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 19:01:48 -0500
-Received: by mail-oi1-f195.google.com with SMTP id v140so154576oie.0;
-        Tue, 17 Dec 2019 16:01:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JP0u5snGp+xc8yKUTmrKXjEUcHiiNAHT0AftIoZKcgY=;
-        b=BvdAlb7z5/O4XifyFQN8cWZtnIofdVCJXnsVu5nH/l9+CXSvafkzsnEdYx5cK6nKpy
-         HRMSz11H7haKp+057iNP1PGccvSB6wdDUhKlOsC9wCwV4KBj/YCdqhV9iNg4Ce0/9OAx
-         kEDGVNrEEEkVF79KG/A7wnXN33gYi943aBsVZ5ozd6lczZGDxAXU/tC4bb1MktA51JIh
-         jn0JWQPTQFbSJFpEUnwq+5QrEI1kwEJuZE3Yh11nXyuArobbELiicYc9OSf4kbr0I3CX
-         HzjT31gWMJUDkS1QVg/3yR19zBc+md3iTj2C7cFurmz+rv/6cn3liyamSEAXvO6ndyzu
-         /Opg==
-X-Gm-Message-State: APjAAAURSum7r1IUzfwWhDM5rx6UT4eoImdGit6fork7boqyPH3cQkDg
-        0RjiIXaNL9Q1XDlnW5id8g==
-X-Google-Smtp-Source: APXvYqwuKoimb/fkC26Ulk74P68DdyeLLteEpSMqe8rqs1CwILHTcp7X1D54Jd94iGGt4cUdrtCBCg==
-X-Received: by 2002:aca:bb08:: with SMTP id l8mr3144897oif.47.1576627307437;
-        Tue, 17 Dec 2019 16:01:47 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m11sm169161oie.20.2019.12.17.16.01.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 16:01:46 -0800 (PST)
-Date:   Tue, 17 Dec 2019 18:01:46 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
+        Tue, 17 Dec 2019 19:57:17 -0500
+Received: from mx.socionext.com ([202.248.49.38]:11515 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726143AbfLRA5R (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Dec 2019 19:57:17 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 18 Dec 2019 09:57:15 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id DFF06603AB;
+        Wed, 18 Dec 2019 09:57:15 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 18 Dec 2019 09:58:00 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 360311A0006;
+        Wed, 18 Dec 2019 09:57:15 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH 3/6] dt-bindings: dma: Convert stm32 DMAMUX bindings to
- json-schema
-Message-ID: <20191218000146.GA24153@bogus>
-References: <20191217092201.20022-1-benjamin.gaignard@st.com>
- <20191217092201.20022-4-benjamin.gaignard@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217092201.20022-4-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH 0/2] dmaengine: Add UniPhier XDMAC driver
+Date:   Wed, 18 Dec 2019 09:56:58 +0900
+Message-Id: <1576630620-1977-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 17 Dec 2019 10:21:58 +0100, Benjamin Gaignard wrote:
-> Convert the STM32 DMAMUX binding to DT schema format using json-schema
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../devicetree/bindings/dma/st,stm32-dmamux.yaml   | 52 ++++++++++++++
->  .../devicetree/bindings/dma/stm32-dmamux.txt       | 84 ----------------------
->  2 files changed, 52 insertions(+), 84 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/st,stm32-dmamux.yaml
->  delete mode 100644 Documentation/devicetree/bindings/dma/stm32-dmamux.txt
-> 
+Add support for UniPhier external DMA controller (XDMAC), that is implemented
+in Pro4, Pro5, PXs2, LD11, LD20 and PXs3 SoCs.
 
-Applied, thanks.
+Kunihiko Hayashi (2):
+  dt-bindings: dmaengine: Add UniPhier external DMA controller bindings
+  dmaengine: uniphier-xdmac: Add UniPhier external DMA controller driver
 
-Rob
+ .../devicetree/bindings/dma/uniphier-xdmac.txt     |  86 +++
+ drivers/dma/Kconfig                                |  11 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/uniphier-xdmac.c                       | 620 +++++++++++++++++++++
+ 4 files changed, 718 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/uniphier-xdmac.txt
+ create mode 100644 drivers/dma/uniphier-xdmac.c
+
+-- 
+2.7.4
+
