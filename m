@@ -2,87 +2,109 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1855AC2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DE4C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6E9121835
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:38:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576636697;
-	bh=BrCaknHcxsrfAb7oJ5dQ/UvuwVblm8QBKyXHivLAb1o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wRxImyCjkZ0aYuZ6IU1Uu2oFPD1QG86tL4kjvZuiiGC3eHjOqiuD65S5QYz9E94zc
-	 aNad7qL0J9TwIxog+o63ygYW8nnjVNnZoDgndOok8ncX0IN57iy07bV6G9VEoHphI2
-	 EwY4uAyRwDa6l+z9jafqQiEIPXICdjckSBefoiUs=
+	by mail.kernel.org (Postfix) with ESMTP id B654021835
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfLRCiQ (ORCPT
+        id S1726616AbfLRCmu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 21:38:16 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34649 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfLRCiQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 21:38:16 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l136so343782oig.1;
-        Tue, 17 Dec 2019 18:38:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=obJWdgonapo+l8PRn+mHd3xv4tPrAwkC145ThpY8G/c=;
-        b=FYc+KLeJw6R5zMqSPN92yipAgEQN+vjiIesqOlTmzkdfTQ/M1HIGN3OiTJDZ+hWXj7
-         zAr1koHUxvyjyHuw8POkqsQWkPrftGGZ5zZMskh6jR1ZLIUg2TLpfN4Vnsy08QgtPjEe
-         exh/RDMB1rtJQTNX7DnpMnTbb91JAIt64AuodV3Kao6fyWjsr6gkJBjj4tNi69T7fwqV
-         Eh0mTfpJGMEPKtjsu3xrRYiaWSPh7rMLgvWE9gVhR/KKKsyXU9dHezVQwO9Ki3H9BZmG
-         xBEYGjW0cQGl3zSpnFRW8rt0tQzj8Llcat9kPRjoMkS2hagpUvkwX45756sS7Qe0j51a
-         nr2g==
-X-Gm-Message-State: APjAAAVzL5LkG7rnjPMgE8rGZ+xoZCJcWLNM3qP3iokvRPzVZSIeH+1K
-        NTg1vogdQ2jtsViNKJs25g==
-X-Google-Smtp-Source: APXvYqxVpED4be4cHdekfCg6SeeUA1uRfPLf0sUgp4sLwhRNeXTVWDz1+gckrOE+Vv8qcIeflcll9A==
-X-Received: by 2002:aca:568f:: with SMTP id k137mr133252oib.63.1576636695090;
-        Tue, 17 Dec 2019 18:38:15 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s4sm275981otq.56.2019.12.17.18.38.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 18:38:14 -0800 (PST)
-Date:   Tue, 17 Dec 2019 20:38:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     michael.srba@seznam.cz
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] dt-bindings: input/touchscreen: add bindings for
- zinitix
-Message-ID: <20191218023813.GA18525@bogus>
-References: <20191209204629.27243-1-michael.srba@seznam.cz>
- <20191209204629.27243-2-michael.srba@seznam.cz>
+        Tue, 17 Dec 2019 21:42:50 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:34131 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfLRCmu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 21:42:50 -0500
+Received: from droid10.amlogic.com (10.18.11.213) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 18 Dec 2019
+ 10:43:23 +0800
+From:   Hanjie Lin <hanjie.lin@amlogic.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Kevin Hilman <khilman@baylibre.com>
+CC:     Hanjie Lin <hanjie.lin@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: [PATCH v2 0/6] arm64: meson: Add support for USB on Amlogic A1
+Date:   Wed, 18 Dec 2019 10:42:18 +0800
+Message-ID: <1576636944-196192-1-git-send-email-hanjie.lin@amlogic.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209204629.27243-2-michael.srba@seznam.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.18.11.213]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 09:46:29PM +0100, michael.srba@seznam.cz wrote:
-> From: Michael Srba <Michael.Srba@seznam.cz>
-> 
-> This patch adds dts bindings for the zinitix bt541 touchscreen.
-> 
-> Signed-off-by: Michael Srba <Michael.Srba@seznam.cz>
-> ---
->  changes in v2: none
->  changes in v3: document zinitix,mode property
-> 
-> 
->  .../bindings/input/touchscreen/zinitix.txt    | 40 +++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
->  2 files changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/zinitix.txt
+This patchset adds support for USB on Amlogic A1 SoCs.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This patchset is composed with :
+- bindings of the PHY
+- bindings of the USB Control Glue
+- PHY Driver
+- USB Control Glue driver
+- dts of the PHY
+- dts of the USB Controller
+
+The Amlogic A1 USB Complex is composed of :
+- 1 DWC3 USB controller for USB2 Host functionality
+- 1 USB2 PHY for USB2 Host functionality
+
+The USB Control Glue setups the clocks and the reset about DWC3 USB
+controller, and binds to the USB2 PHY. It also configures the 8bit
+UTMI interfaces for the USB2 PHY, including setting USB2 phy mode.
+
+The USB2 PHY driver initializes the phy analog settings, phy PLL 
+setup and phy tuning.
+
+This patchset is based on A1 clock/power domain/reset series at [0].
+
+Changes since v1:[1]
+ - integrate glue and phy drivers into g12a's
+
+[0]
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=185477
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=180055
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=189643
+
+[1] : https://lore.kernel.org/linux-amlogic/1574405757-76184-1-git-send-email-hanjie.lin@amlogic.com/
+
+Hanjie Lin (6):
+  dt-bindings: phy: Add Amlogic A1 USB2 PHY Bindings
+  dt-bindings: usb: dwc3: Add the Amlogic A1 Family DWC3 Glue Bindings
+  phy: amlogic: Add Amlogic A1 USB2 PHY Driver
+  usb: dwc3: Add Amlogic A1 DWC3 glue
+  arm64: dts: meson: a1: Enable USB2 PHY
+  arm64: dts: meson: a1: Enable DWC3 controller
+
+ .../bindings/phy/amlogic,meson-a1-usb2-phy.yaml    |  55 +++++++++++
+ .../bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml  |  32 +++++++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |  44 +++++++++
+ drivers/phy/amlogic/phy-meson-g12a-usb2.c          | 102 +++++++++++++++------
+ drivers/usb/dwc3/dwc3-meson-g12a.c                 |  69 ++++++++++----
+ 5 files changed, 254 insertions(+), 48 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
+
+-- 
+2.7.4
+
