@@ -2,97 +2,104 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E98C2D0BF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35C4C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBAD424679
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:08:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576692495;
-	bh=8QceqfckdODoaPKg6/IkQok3XjM0pu0xRkpfXmk4JBQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LdVRiTuVCnkSTkMwSk7+1hLDRUydqX2wsRaluqGnrJTfp+PKTzXw6BPPGM02Fgs/A
-	 TbVMINDyA+riTfegX+TUwTotribIy96xLVNhb133iEQgBF1kocAziJpG9My1+SCCR5
-	 khLnBApermcKfX4GJ/mfZ3yXglULu+r4XyZQFymc=
+	by mail.kernel.org (Postfix) with ESMTP id 88423218AC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 18:13:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UW4z10ZF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbfLRSIK (ORCPT
+        id S1727180AbfLRSNM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:08:10 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39560 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727725AbfLRSIK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 13:08:10 -0500
-Received: by mail-oi1-f193.google.com with SMTP id a67so1545698oib.6;
-        Wed, 18 Dec 2019 10:08:09 -0800 (PST)
+        Wed, 18 Dec 2019 13:13:12 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42480 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726960AbfLRSNM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 13:13:12 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q6so3297384wro.9
+        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 10:13:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=s6pr6X3YZWixb8igAL5ZzP135162lw6kkNkrAE5nvDY=;
+        b=UW4z10ZFcOooL2c6GdzIvB9hmP5SseKfAI01lmvsAEbvOsrbWRmG8k+UDXtTLgnaM9
+         gm2KqSYCyAOdc4YVMUZe4K319U183tNcXM872/5G0/gAs1i+iaUHQKiMKr747n6P7H1A
+         YHXU6qxJ3oy4K+nWuCo6q0/101Zo9ssfrjX2grmDbtYOxTZkVGyQ+qH6dRHobBqWxa1M
+         nIIVB01E33kFsHgdbAF+OVbVhtPJBpgERrJzzZG7WXk1APl7JNGY2Fp/gqFhtL2W7/LP
+         Z/+75Nq94y6KhsbiFMDLZB1RmH3ScSQQX3cQaFbNa3OaQN7mg5QU2gqXUUQP/vSOqS5w
+         ezMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DFlpwK3AxGJVLFi7l3r97G6DWX/N2u0QA0ZvIo1IjIs=;
-        b=Cy9elW83IRvo8FqtZwlKeNNyEImOWnbMThpJkjADghFFD52K5+ejZQRarbxDvlsQG7
-         RFWkPOQgvgcKFxhlNxPFXIrM+e2ThjU2W9wUII4F1TLuNoyea0ZREOztBPczdXSzfLIP
-         Sk1iQNM4DCxuNo0rY+HRL1pi96aydtDfO0L+7PB+N0P+mpFjEno12dFVqMYnIfljg+54
-         WFOWHDeeVRoSavIFYMrjibUYbR2LxsdJWPT24m16tCVusNJjF7Vc08tPzVnRB8NqmQoJ
-         pjO/k7EnTgemE+d8CxFRlqbymp3N7BkfHzUq3UnslUNLqjPqAxFpT62BKU5NZxCE3qRf
-         dflw==
-X-Gm-Message-State: APjAAAVTHMrFwebaXcQAmjZFciEHXkHfOA0Fs6aheixhRaXM9yzpH7zY
-        /uUF9ATe355JCYklbzfH5g==
-X-Google-Smtp-Source: APXvYqxV3PQgsNKWechNRemE0G3OUmYxE4aKcrp20lSkDN5QSvgGAnJKNyOqxoZGsjHlbI5X+3IITw==
-X-Received: by 2002:a05:6808:3c5:: with SMTP id o5mr1201077oie.142.1576692489561;
-        Wed, 18 Dec 2019 10:08:09 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m2sm1022649oim.13.2019.12.18.10.08.09
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=s6pr6X3YZWixb8igAL5ZzP135162lw6kkNkrAE5nvDY=;
+        b=IcAfCRhN6OiPMVBwgtrp+2J68cm9yaF/KwKjenZxT9R9vJM2IOParsrZLHkMJ/Q8Wt
+         P5KabA1v5nJncxogCowow3S2/ZWRClrkEIxXTzX5OPR7aPEowOX4t/Qv+wT9TXWf+WXB
+         6lvVT0nqHWmcsBVTRQaPiEd7QTgj1Fa0NZwojSeQFhJOlnlR8iR0Trp2Fw94X02t30aa
+         kqtAbcH6mPqJbdeqBoJjSWbvSgp+W5yIpioO8zt/gRduAOeam1kE5ry5FBSG7zBt96tm
+         v9pG5+sQBssjB7W9+T2aBK0/GjS4WDsEX+XkqBx+etsChL8N8E9BMLWZ+gB85ypRAdx+
+         7J2A==
+X-Gm-Message-State: APjAAAUKG92i8xwVS5wFOdQqxOZemRv0VgOt+ofNDHElwBRZzygo2KkK
+        GSJiE97QAwTmdKf6YxJ9ir44tw==
+X-Google-Smtp-Source: APXvYqwzBRl3g+BhMlJHg5Zu4pGS3x1Uk52GVE05baVV87Pi+U0SnH3/RibUeAZUwELOwUZoc+WBQQ==
+X-Received: by 2002:a5d:5273:: with SMTP id l19mr4372382wrc.175.1576692790684;
+        Wed, 18 Dec 2019 10:13:10 -0800 (PST)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id h2sm3396271wrv.66.2019.12.18.10.13.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 10:08:09 -0800 (PST)
-Date:   Wed, 18 Dec 2019 12:08:08 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v6 03/15] dt-bindings: mfd: Document ROHM BD71828 bindings
-Message-ID: <20191218180808.GA6226@bogus>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <c910b9a057e76044291a4d669530ccf19225675f.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 18 Dec 2019 10:13:09 -0800 (PST)
+References: <20191218172420.1199117-1-jbrunet@baylibre.com> <20191218172420.1199117-3-jbrunet@baylibre.com> <20191218175031.GM3219@sirena.org.uk>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/4] ASoC: meson: axg-fifo: add fifo depth to the bindings documentation
+In-reply-to: <20191218175031.GM3219@sirena.org.uk>
+Date:   Wed, 18 Dec 2019 19:13:08 +0100
+Message-ID: <1jimmdbiyz.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c910b9a057e76044291a4d669530ccf19225675f.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 11 Dec 2019 11:37:59 +0200, Matti Vaittinen wrote:
-> ROHM BD71828 Power management IC integrates 7 buck converters, 7 LDOs,
-> a real-time clock (RTC), 3 GPO/regulator control pins, HALL input
-> and a 32.768 kHz clock gate.
-> 
-> Document the dt bindings drivers are using.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
-> Changes since v5:
-> - Remove regulator run-level properties
-> - Change SPDX to dual lisence
-> - remove trivial descriptions
-> 
->  .../bindings/mfd/rohm,bd71828-pmic.yaml       | 193 ++++++++++++++++++
->  1 file changed, 193 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Wed 18 Dec 2019 at 18:50, Mark Brown <broonie@kernel.org> wrote:
+
+> On Wed, Dec 18, 2019 at 06:24:18PM +0100, Jerome Brunet wrote:
+>
+>> Add a new property with the depth of the fifo in bytes. This is useful
+>> since some instance of the fifo, even on the same SoC, may have different
+>> depth. The depth is useful is set some parameters of the fifo.
+>
+> Can't we figure this out from the compatible strings?  They look SoC
+> specific (which is good).  That means we don't need to add new
+> properties for each quirk that separates the variants.
+
+I don't think it would be appropriate in this case:
+
+If I take the example of TODDR fifos on the SM1 SoC;
+All the TODDR fifo on this SoC are compatible with the same driver and use:
+
+compatible = "amlogic,sm1-toddr", "amlogic,axg-toddr";
+
+However instance A on this SoC has a 8192B fifo while instance B, C and D
+have 256B fifo. Same goes for the other SoC and also FRDDR fifos.
+
+To store this difference using compatible I would have to add 1 compatible
+string for each "A" instance of each FRDDR and TODDR of each SoC. At the
+moment this would be 6 more compatible string for something that is really a
+parameter ... This also shows that fifo depth is something the HW
+manufacturer can tweak easily for each instances.
+
+It would not scale which is why I went for a property.
