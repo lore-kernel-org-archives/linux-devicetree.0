@@ -2,121 +2,94 @@ Return-Path: <SRS0=jmN2=2I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CAAC2D0CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D744C43603
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970A021835
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 172A821775
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Dec 2019 02:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576637099;
+	bh=WqrCYjtgM+EiOfuQu7g+tYktoA9PsPkragrcFXo5QKA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C+q5638tL/M5ZWG9J3T6ULxQWF9HxDVcrfTGMjLbi0vebYxhokf5lN0UKYCHowwOt
+	 8ZwpOY9gf0qZ0d8RlHW5atX+AWkkCmlt+Q3sHih7x3QhOLzgjEENNa9Qgukp2LwTxC
+	 XFMGWDmuzXbGWB4vesKDCb3are176jdiv+n+OxIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfLRCnA (ORCPT
+        id S1726539AbfLRCox (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Dec 2019 21:43:00 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:34131 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfLRCnA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 21:43:00 -0500
-Received: from droid10.amlogic.com (10.18.11.213) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 18 Dec 2019
- 10:43:25 +0800
-From:   Hanjie Lin <hanjie.lin@amlogic.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
+        Tue, 17 Dec 2019 21:44:53 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41486 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbfLRCow (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Dec 2019 21:44:52 -0500
+Received: by mail-oi1-f196.google.com with SMTP id i1so326102oie.8;
+        Tue, 17 Dec 2019 18:44:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YWi3K95SEBeRjnRWdOK8Q10pTSn780ACt51k9yfRaVQ=;
+        b=uEM2uJKscLsW4BGK+h1L5KosmppEqpFqhf/nEyRZEazhQQTxrTVkL+x6lE/qePg1RB
+         Ss/6QlSPbg3jXY3Jh/93xYH2VJ0xP2eL/kOSBj8Cr1QbO1uIN+OsB29Cncf60OAhJR6e
+         Ct6Nt6mbYPG/DqdgZMBijlnXJuUAXRV3Q45CEPJPlQETUIPIkmnjFXTfM9r4FgqF1LRD
+         fRM6yFUSA03051I9m4odXihLrd47e78yzXZZ+2fb/7cKtkjirDRXOVe15NPrOVfsHx4n
+         uZRwBLG9kmVtZuz7ym8ZQWtSCZAn+1E6aj773fl2/+zOTGjpMSny/3IEoNDpGij8f7ne
+         Lwcw==
+X-Gm-Message-State: APjAAAXk+X2neKX8ZQ6xCXVVHdeaoX8eU0AfYRUfJ7pO+rm6tIKfwP1f
+        ByHTQqItxNGbdFIQC+JUBQ==
+X-Google-Smtp-Source: APXvYqwbuB7pYmy0hdiMv22z/UrvUpDb35O8l0zgFDaeOBoJW3aVKuVSZpMkhpjI26lPsEtoxw2/jA==
+X-Received: by 2002:aca:2b1a:: with SMTP id i26mr172079oik.64.1576637091733;
+        Tue, 17 Dec 2019 18:44:51 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m7sm286278otl.20.2019.12.17.18.44.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 18:44:51 -0800 (PST)
+Date:   Tue, 17 Dec 2019 20:44:50 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Kevin Hilman <khilman@baylibre.com>
-CC:     Hanjie Lin <hanjie.lin@amlogic.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Carlo Caione <carlo@caione.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH v2 6/6] arm64: dts: meson: a1: Enable DWC3 controller
-Date:   Wed, 18 Dec 2019 10:42:24 +0800
-Message-ID: <1576636944-196192-7-git-send-email-hanjie.lin@amlogic.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576636944-196192-1-git-send-email-hanjie.lin@amlogic.com>
-References: <1576636944-196192-1-git-send-email-hanjie.lin@amlogic.com>
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Subject: Re: [PATCH v2 1/2] DTS: bindings: wl1251: mark ti,power-gpio as
+ optional
+Message-ID: <20191218024450.GA5993@bogus>
+References: <cover.1576606020.git.hns@goldelico.com>
+ <de42cdd5c5d2c46978c15cd2f27b49fa144ae6a7.1576606020.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.18.11.213]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <de42cdd5c5d2c46978c15cd2f27b49fa144ae6a7.1576606020.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable DWC3 controller for Meson A1 SoC.
+On Tue, 17 Dec 2019 19:06:59 +0100, "H. Nikolaus Schaller" wrote:
+> It is now only useful for SPI interface.
+> Power control of SDIO mode is done through mmc core.
+> 
+> Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
 
-Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
-Signed-off-by: Yue Wang <yue.wang@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 33 +++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index bd63374a..76f787d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -7,6 +7,8 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/power/meson-a1-power.h>
- #include <dt-bindings/reset/amlogic,meson-a1-reset.h>
-+#include <dt-bindings/clock/a1-pll-clkc.h>
-+#include <dt-bindings/clock/a1-clkc.h>
- 
- / {
- 	compatible = "amlogic,a1";
-@@ -125,6 +127,37 @@
- 			#interrupt-cells = <3>;
- 			#address-cells = <0>;
- 		};
-+
-+		usb: usb@ffe09000 {
-+			status = "okay";
-+			compatible = "amlogic,meson-a1-usb-ctrl";
-+			reg = <0x0 0xffe09000 0x0 0xa0>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			clocks = <&clkc_periphs CLKID_USB_CTRL>,
-+				 <&clkc_periphs CLKID_USB_BUS>,
-+				 <&clkc_periphs CLKID_XTAL_USB_PHY>,
-+				 <&clkc_periphs CLKID_XTAL_USB_CTRL>;
-+			clock-names = "usb_ctrl", "usb_bus", "xtal_usb_phy",
-+					"xtal_usb_ctrl";
-+			resets = <&reset RESET_USBCTRL>;
-+
-+			dr_mode = "host";
-+
-+			phys = <&usb2_phy1>;
-+			phy-names = "usb2-phy1";
-+
-+			dwc3: usb@ff400000 {
-+				compatible = "snps,dwc3";
-+				reg = <0x0 0xff400000 0x0 0x100000>;
-+				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-+				dr_mode = "host";
-+				snps,dis_u2_susphy_quirk;
-+				snps,quirk-frame-length-adjustment = <0x20>;
-+			};
-+		};
- 	};
- 
- 	timer {
--- 
-2.7.4
-
+If a tag was not added on purpose, please state why and what changed.
