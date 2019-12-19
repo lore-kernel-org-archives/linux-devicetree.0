@@ -2,129 +2,148 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3574C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 11:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A5BC2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 11:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 995C4222C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 11:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A0A2467E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 11:54:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="g9BqwR2T"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y7nKHasE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfLSLwS (ORCPT
+        id S1726895AbfLSLyf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:52:18 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40094 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfLSLwB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 06:52:01 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t14so5295961wmi.5
-        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 03:51:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=tY1YFADtaZKXzMf5Ie7W6ruxIu2Bb0htwIWWuGbAKcM=;
-        b=g9BqwR2T1/I9UWMAVp/ZqXBkfesKLtxfql62Ats6JCmHyrgeqIcvyF5bBUnfb71mMy
-         QP4vUYVPzSIO7PPHg0+ASpHinxdROHkqmPkLRKUTO2aiJ8QMyzo+Mzww2couC1OVe+qS
-         2j1PYVjLW27+L5u+IgU4B0z+DmkQdgGptoWBtL64wPFWXJAkiyS7r3M771dmzoXDnJOp
-         nc/vWUYzH04qcXn3ayS4jzZLRTt5SrbfmBEA3WTISAO29jIaM1ccONkGGpiy9LQ2PzBp
-         7av5v7DTa3eZt2rCQOMMIWGeEqUb4ydb4BqCeAqWFQXQYku29EQGVtKvY95Xt4zqqB1X
-         YJ4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=tY1YFADtaZKXzMf5Ie7W6ruxIu2Bb0htwIWWuGbAKcM=;
-        b=M/+RUoShZEpTAOGcQOPlV3G/P4JhKrpIu4/Is+4wlxtwZmSqub4DJF+DFdDPYL3v0A
-         PTngNWLpXwDPw1Pc6rRCHvmYyHGbbptLq7g1Gg0ZSPuW4UifAtC46xqsxl2p8w8zdghN
-         grgFeChT3r4ugez72qkM66A9f/g2F8dyP2suB5qSLUIljvnskdal1BAHtX4tIQ9XHp+B
-         OLwDr7vwya4fdkGZpZx/UG9LcMRmis8cAg3pGwQVJxIVNZ78Rs0bxgjmCi9QQDuywapW
-         gaoYzFfAvsOSmQt/11FO8XrYCv8Ej4VEi/D5teZFIzsb69Wzg6EDiD2B98p6f22NiZ7z
-         l33w==
-X-Gm-Message-State: APjAAAUzGl/vnbtAyW31tl/HOUYOBYHG/PcT1qxSjXUic+fnaVbyqG64
-        U4WtDYUdPSNzHr+MRtU3/0KhkA==
-X-Google-Smtp-Source: APXvYqzlwjvltFbDap8RdkQ64BKs2O//iQJUD+y6qLqzurI6gy3wxklpvAm+GERYUdoyUdGko4ntpA==
-X-Received: by 2002:a7b:c851:: with SMTP id c17mr9872505wml.71.1576756318833;
-        Thu, 19 Dec 2019 03:51:58 -0800 (PST)
-Received: from localhost.localdomain (i16-les01-ntr-213-44-229-207.sfr.lns.abo.bbox.fr. [213.44.229.207])
-        by smtp.googlemail.com with ESMTPSA id k16sm6489660wru.0.2019.12.19.03.51.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 03:51:58 -0800 (PST)
-From:   Khouloud Touil <ktouil@baylibre.com>
-To:     bgolaszewski@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, srinivas.kandagatla@linaro.org,
-        baylibre-upstreaming@groups.io
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linus.walleij@linaro.org,
-        Khouloud Touil <ktouil@baylibre.com>
-Subject: [PATCH v3 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
-Date:   Thu, 19 Dec 2019 12:51:38 +0100
-Message-Id: <20191219115141.24653-2-ktouil@baylibre.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191219115141.24653-1-ktouil@baylibre.com>
-References: <20191219115141.24653-1-ktouil@baylibre.com>
+        Thu, 19 Dec 2019 06:54:35 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54060 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfLSLyd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 06:54:33 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJBsQ7f094692;
+        Thu, 19 Dec 2019 05:54:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576756466;
+        bh=0wneAsr2dIRQgUOU8O6OrKktT1aM0VMh6k8EH1G2T9g=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Y7nKHasEJ0XxpznpaLYRknLdxcb/F01l1qO5LxRpjmiOVw6au+fi8WVMOUDtSJv9q
+         MJQPniruZNRrVnECnrhvByY91xGTWQwfx16eiu4iP1OTXQ5j03qJFV4H2GRna4sT2W
+         +r2J7HHMI2KErdjfWqrKaBMvFqB/jzCYK93oJoOE=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJBsQ4L001524;
+        Thu, 19 Dec 2019 05:54:26 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 05:54:25 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 05:54:25 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJBsMcp080167;
+        Thu, 19 Dec 2019 05:54:23 -0600
+Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
+ perform only 32-bit accesses
+To:     Andrew Murray <andrew.murray@arm.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-6-kishon@ti.com>
+ <20191216144932.GY24359@e119886-lin.cambridge.arm.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <d1ee4579-a3da-6a73-3516-a6d264f80995@ti.com>
+Date:   Thu, 19 Dec 2019 17:26:05 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191216144932.GY24359@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Several memories have a write-protect pin, that when pulled high, it
-blocks the write operation.
+Hi Andrew,
 
-On some boards, this pin is connected to a GPIO and pulled high by
-default, which forces the user to manually change its state before
-writing.
+On 16/12/19 8:19 pm, Andrew Murray wrote:
+> On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
+>> Certain platforms like TI's J721E allow only 32-bit register accesses.
+> 
+> When I first read this I thought you meant only 32-bit accesses are allowed
+> and not other sizes (such as 64-bit). However the limitation you address
+> here is that the J721E allows only 32-bit *aligned* register accesses.
 
-Instead of modifying all the memory drivers to check this pin, make
-the NVMEM subsystem check if the write-protect GPIO being passed
-through the nvmem_config or defined in the device tree and pull it
-low whenever writing to the memory.
+It's both, it allows only 32-bit aligned accesses and the size should be
+only 32 bits. That's why I always use "readl" in the APIs below.
+> 
+> It would be helpful to make this clearer in the commit message.
+> 
+> You can also shorten the commit subject to 'PCI: cadence: Add read/write
+> accessors for 32-bit aligned accesses' or similar.
+> 
+>> Add read and write accessors to perform only 32-bit accesses in order to
+>> support platfroms like TI's J721E.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/pci/controller/cadence/pcie-cadence.c | 40 +++++++++++++++++++
+>>  drivers/pci/controller/cadence/pcie-cadence.h |  2 +
+>>  2 files changed, 42 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+>> index cd795f6fc1e2..de5b3b06f2d0 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
+>> @@ -7,6 +7,46 @@
+>>  
+>>  #include "pcie-cadence.h"
+>>  
+>> +u32 cdns_pcie_read32(void __iomem *addr, int size)
+> 
+> Given there is already a cdns_pcie_readl in pcie-cadence.h it may help
+> to name this in a way that doesn't cause confusion. Here 32 is perhaps
+> being used to suggest the size of the actual read performed, the
+> maximum size of 'size' or the alignment.
+> 
+> 
+>> +{
+>> +	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
+>> +	unsigned int offset = (unsigned long)addr & 0x3;
+>> +	u32 val = readl(aligned_addr);
+>> +
+>> +	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+>> +		pr_err("Invalid Address in function:%s\n", __func__);
+> 
+> Would this be better as a BUG? Without a BUG this error could get ignored
+> and yet the device may not behave as expected.
 
-Add a new optional property to the device tree binding document, which
-allows to specify the GPIO line to which the write-protect pin is
-connected.
+yeah.
+> 
+> 
+>> +		return 0;
+>> +	}
+>> +
+>> +	if (size > 2)
+>> +		return val;
+> 
+> I think you make the assumption here that if size > 2 then it's 4. It could
+> be 3 (though unlikely) in which case you'd want to fall through to the next
+> line.
 
-Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
----
- Documentation/devicetree/bindings/nvmem/nvmem.yaml | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+This assumption is used elsewhere too (e.g drivers/pci/access.c). I
+generally don't prefer adding handlers for non-occurring error
+scenarios, but If you insist I can fix that.
 
-diff --git a/Documentation/devicetree/bindings/nvmem/nvmem.yaml b/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-index 1c75a059206c..b43c6c65294e 100644
---- a/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-@@ -34,6 +34,14 @@ properties:
-     description:
-       Mark the provider as read only.
- 
-+  wp-gpios:
-+    description:
-+      GPIO to which the write-protect pin of the chip is connected.
-+      The write-protect GPIO is asserted, when it's driven high
-+      (logical '1') to block the write operation. It's deasserted,
-+      when it's driven low (logical '0') to allow writing.
-+    maxItems: 1
-+
- patternProperties:
-   "^.*@[0-9a-f]+$":
-     type: object
-@@ -63,9 +71,12 @@ patternProperties:
- 
- examples:
-   - |
-+      #include <dt-bindings/gpio/gpio.h>
-+
-       qfprom: eeprom@700000 {
-           #address-cells = <1>;
-           #size-cells = <1>;
-+          wp-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
- 
-           /* ... */
- 
--- 
-2.17.1
-
+Thanks
+Kishon
