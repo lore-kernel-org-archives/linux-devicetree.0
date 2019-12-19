@@ -2,441 +2,148 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CEDC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 05:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC0EC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 05:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F2B2072B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 05:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D81EB21582
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 05:50:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JsStQ0rs"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tr/nwbGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLSFph (ORCPT
+        id S1726294AbfLSFuL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 00:45:37 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:58293 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726656AbfLSFpg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 00:45:36 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576734335; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=tnCnEFix25NwmNeB8jNm4S5a3Y2NJxLPXi9l4h6DUw4=; b=JsStQ0rsPF8OuMiGEcm9hzJftpPExWAr9tbUduHP5n+fln2mhXZrVHhPEMTay0lzgvGQxjJB
- cjedxWvJ2s4NS8M/IdWFnZ3dUnOcZD9SJSxhOLvnBA2ULT/udbfIqjYZEH/u+ksGblSKGjg0
- npQOR43sfH73069OZqv/yTOnfW0=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfb0e7b.7f4126afff48-smtp-out-n01;
- Thu, 19 Dec 2019 05:45:31 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 15591C49485; Thu, 19 Dec 2019 05:45:31 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EEEF0C48B2F;
-        Thu, 19 Dec 2019 05:45:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EEEF0C48B2F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org
-Cc:     ohad@wizery.com, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        p.zabel@pengutronix.de, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, agross@kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 2/2] remoteproc: mss: q6v5-mss: Add modem support on SC7180
-Date:   Thu, 19 Dec 2019 11:15:06 +0530
-Message-Id: <20191219054506.20565-3-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20191219054506.20565-1-sibis@codeaurora.org>
-References: <20191219054506.20565-1-sibis@codeaurora.org>
+        Thu, 19 Dec 2019 00:50:11 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:27657 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726173AbfLSFuL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 00:50:11 -0500
+X-UUID: d9f4e966cbe546afb137235b224ce03c-20191219
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Reply-To:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=u/vWTAbZlH4j2bhnD+Ag+oO8onBzT6jpu+qmICQf9Ow=;
+        b=tr/nwbGqcaGoaE72kPiTaqCQU//ZnnqQGCiOssNfBUgW0Tyz6NFJkRL1M+BQrrzKOaYYJx4gm5waoYu+EPRnNhDVYpUwUsJl5jOmYKrOaKg4wQPkAoF9DI+VTbFvne4S0Zh+Z8ybOI3zWsJgIbDayqe1s49Iqx4ef4py+nbJxjU=;
+X-UUID: d9f4e966cbe546afb137235b224ce03c-20191219
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <jungo.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1857245970; Thu, 19 Dec 2019 13:50:07 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 19 Dec 2019 13:49:31 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 19 Dec 2019 13:50:08 +0800
+From:   Jungo Lin <jungo.lin@mediatek.com>
+To:     <tfiga@chromium.org>, <hverkuil-cisco@xs4all.nl>,
+        <laurent.pinchart@ideasonboard.com>, <matthias.bgg@gmail.com>,
+        <mchehab@kernel.org>
+CC:     <linux-media@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <ddavenport@chromium.org>, <robh@kernel.org>,
+        <Sean.Cheng@mediatek.com>, <sj.huang@mediatek.com>,
+        <frederic.chen@mediatek.com>, <Jerry-ch.Chen@mediatek.com>,
+        <frankie.chiu@mediatek.com>, <ryan.yu@mediatek.com>,
+        <Rynn.Wu@mediatek.com>, <yuzhao@chromium.org>,
+        <zwisler@chromium.org>, <shik@chromium.org>,
+        <suleiman@chromium.org>, <jungo.lin@mediatek.com>
+Subject: [v6, 1/5] media: dt-bindings: mt8183: Added camera ISP Pass 1
+Date:   Thu, 19 Dec 2019 13:49:26 +0800
+Message-ID: <20191219054930.29513-2-jungo.lin@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20191219054930.29513-1-jungo.lin@mediatek.com>
+References: <Jungo Lin <jungo.lin@mediatek.com>
+ <20191219054930.29513-1-jungo.lin@mediatek.com>
+Reply-To: Jungo Lin <jungo.lin@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 3424BFE6CB592FD6D869534D12E758F930287C42C4EAF56ABF1438AC5279C5E72000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the out of reset sequence support for modem sub-system on SC7180
-SoCs. It requires access to an additional halt nav register to put
-the modem back into reset.
+VGhpcyBwYXRjaCBhZGRzIERUIGJpbmRpbmcgZG9jdW1lbnQgZm9yIHRoZSBQYXNzIDEgKFAxKSB1
+bml0DQppbiBNZWRpYXRlaydzIGNhbWVyYSBJU1Agc3lzdGVtLiBUaGUgUGFzcyAxIHVuaXQgZ3Jh
+YnMgdGhlIHNlbnNvcg0KZGF0YSBvdXQgZnJvbSB0aGUgc2Vuc29yIGludGVyZmFjZSwgYXBwbGll
+cyBJU1AgaW1hZ2UgZWZmZWN0cw0KZnJvbSB0dW5pbmcgZGF0YSBhbmQgb3V0cHV0cyB0aGUgaW1h
+Z2UgZGF0YSBvciBzdGF0aXN0aWNzIGRhdGEgdG8gRFJBTS4NCg0KUmV2aWV3ZWQtYnk6IFJvYiBI
+ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQpTaWduZWQtb2ZmLWJ5OiBKdW5nbyBMaW4gPGp1bmdv
+LmxpbkBtZWRpYXRlay5jb20+DQotLS0NCkNoYW5nZXMgZnJvbSB2NjoNCiAtIEFkZCBwb3J0IG5v
+ZGUgZGVzY3JpcHRpb24gaW4gdGhlIGR0LWJpbmRpbmcgZG9jdW1lbnQuDQotLS0NCiAuLi4vYmlu
+ZGluZ3MvbWVkaWEvbWVkaWF0ZWssY2FtaXNwLnR4dCAgICAgICAgfCA4MyArKysrKysrKysrKysr
+KysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDgzIGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL21lZGlhdGVrLGNh
+bWlzcC50eHQNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9tZWRpYS9tZWRpYXRlayxjYW1pc3AudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL21lZGlhL21lZGlhdGVrLGNhbWlzcC50eHQNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQpp
+bmRleCAwMDAwMDAwMDAwMDAuLmE4NWYzN2MwYjg3ZA0KLS0tIC9kZXYvbnVsbA0KKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL21lZGlhdGVrLGNhbWlzcC50eHQN
+CkBAIC0wLDAgKzEsODMgQEANCisqIE1lZGlhdGVrIEltYWdlIFNpZ25hbCBQcm9jZXNzb3IgUGFz
+cyAxIChJU1AgUDEpDQorDQorVGhlIFBhc3MgMSB1bml0IG9mIE1lZGlhdGVrJ3MgY2FtZXJhIElT
+UCBzeXN0ZW0gZ3JhYnMgdGhlIHNlbnNvciBkYXRhIG91dA0KK2Zyb20gdGhlIHNlbnNvciBpbnRl
+cmZhY2UsIGFwcGxpZXMgSVNQIGVmZmVjdHMgZnJvbSB0dW5pbmcgZGF0YSBhbmQgb3V0cHV0cw0K
+K3RoZSBpbWFnZSBkYXRhIGFuZCBzdGF0aXN0aWNzIGRhdGEgdG8gRFJBTS4gRnVydGhlcm1vcmUs
+IFBhc3MgMSB1bml0IGhhcw0KK3RoZSBhYmlsaXR5IHRvIG91dHB1dCB0d28gZGlmZmVyZW50IHJl
+c29sdXRpb25zIGZyYW1lcyBhdCB0aGUgc2FtZSB0aW1lIHRvDQoraW5jcmVhc2UgdGhlIHBlcmZv
+cm1hbmNlIG9mIHRoZSBjYW1lcmEgYXBwbGljYXRpb24uDQorDQorUmVxdWlyZWQgcHJvcGVydGll
+czoNCistIGNvbXBhdGlibGU6IE11c3QgYmUgIm1lZGlhdGVrLG10ODE4My1jYW1pc3AiIGZvciBN
+VDgxODMuDQorLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiB0aGUgY2FtZXJhIGZ1bmN0
+aW9uIGJsb2NrIHJlZ2lzdGVyIGFuZA0KKyAgbGVuZ3RoIG9mIG1lbW9yeSBtYXBwZWQgcmVnaW9u
+LiBNdXN0IGNvbnRhaW4gYW4gZW50cnkgZm9yIGVhY2ggZW50cnkNCisgIGluIHJlZy1uYW1lcy4N
+CistIHJlZy1uYW1lczogTXVzdCBpbmNsdWRlIHRoZSBmb2xsb3dpbmcgZW50cmllczoNCisgICJj
+YW1fc3lzIjogQ2FtZXJhIGJhc2UgZnVuY3Rpb24gYmxvY2sNCisgICJjYW1fdW5pIjogQ2FtZXJh
+IFVOSSBmdW5jdGlvbiBibG9jaw0KKyAgImNhbV9hIjogQ2FtZXJhIElTUCBQMSBoYXJkd2FyZSB1
+bml0IEENCisgICJjYW1fYiI6IENhbWVyYSBJU1AgUDEgaGFyZHdhcmUgdW5pdCBCDQorICAiY2Ft
+X2MiOiBDYW1lcmEgSVNQIFAxIGhhcmR3YXJlIHVuaXQgQw0KKy0gaW50ZXJydXB0czogTXVzdCBj
+b250YWluIGFuIGVudHJ5IGZvciBlYWNoIGVudHJ5IGluIGludGVycnVwdC1uYW1lcy4NCistIGlu
+dGVycnVwdC1uYW1lcyA6IE11c3QgaW5jbHVkZSB0aGUgZm9sbG93aW5nIGVudHJpZXM6DQorICAi
+Y2FtX3VuaSI6IENhbWVyYSBVTkkgaW50ZXJydXB0DQorICAiY2FtX2EiOiBDYW1lcmEgdW5pdCBB
+IGludGVycnVwdA0KKyAgImNhbV9iIjogQ2FtZXJhIHVuaXQgQiBpbnRlcnJ1cHQNCisgICJjYW1f
+YyI6IENhbWVyYSB1bml0IEMgaW50ZXJydXB0DQorLSBpb21tdXM6IFNoYWxsIHBvaW50IHRvIHRo
+ZSByZXNwZWN0aXZlIElPTU1VIGJsb2NrIHdpdGggbWFzdGVyIHBvcnQNCisgIGFzIGFyZ3VtZW50
+LCBzZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lvbW11L21lZGlhdGVrLGlv
+bW11LnR4dA0KKyAgZm9yIGRldGFpbHMuDQorLSBjbG9ja3M6IEEgbGlzdCBvZiBwaGFuZGxlIGFu
+ZCBjbG9jayBzcGVjaWZpZXIgcGFpcnMgYXMgbGlzdGVkDQorICBpbiBjbG9jay1uYW1lcyBwcm9w
+ZXJ0eSwgc2VlDQorICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xv
+Y2stYmluZGluZ3MudHh0IGZvciBkZXRhaWxzLg0KKy0gY2xvY2stbmFtZXM6IE11c3QgYmUgImNh
+bXN5c19jYW1fY2dwZG4iIGFuZCAiY2Ftc3lzX2NhbXRnX2NncGRuIi4NCistIG1lZGlhdGVrLGxh
+cmI6IE11c3QgY29udGFpbiB0aGUgbG9jYWwgYXJiaXRlcnMgaW4gdGhlIGN1cnJlbnQgU29Dcywg
+c2VlDQorICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xs
+ZXJzL21lZGlhdGVrLHNtaS1sYXJiLnR4dA0KKyAgZm9yIGRldGFpbHMuDQorLSBwb3dlci1kb21h
+aW5zOiBhIHBoYW5kbGUgdG8gdGhlIHBvd2VyIGRvbWFpbiwgc2VlDQorICBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvcG93ZXJfZG9tYWluLnR4dCBmb3IgZGV0YWlscy4N
+CistIG1lZGlhdGVrLHNjcDogVGhlIG5vZGUgb2Ygc3lzdGVtIGNvbnRyb2wgcHJvY2Vzc29yIChT
+Q1ApLCBzZWUNCisgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZW1vdGVwcm9j
+L210ayxzY3AudHh0IGZvciBkZXRhaWxzLg0KKy0gcG9ydDogY2hpbGQgcG9ydCBub2RlIGNvcnJl
+c3BvbmRpbmcgdG8gdGhlIGRhdGEgaW5wdXQsIGluIGFjY29yZGFuY2Ugd2l0aA0KKyAgdGhlIHZp
+ZGVvIGludGVyZmFjZSBiaW5kaW5ncyBkZWZpbmVkIGluDQorICBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuIFRoZSBwb3J0DQorICBu
+b2RlIG11c3QgY29udGFpbiBhdCBsZWFzdCBvbmUgZW5kcG9pbnQuDQorDQorRXhhbXBsZToNCitT
+b0Mgc3BlY2lmaWMgRFQgZW50cnk6DQorDQorCWNhbWlzcDogY2FtaXNwQDFhMDAwMDAwIHsNCisJ
+CWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLWNhbWlzcCI7DQorCQlyZWcgPSA8MCAweDFh
+MDAwMDAwIDAgMHgxMDAwPiwNCisJCQkJPDAgMHgxYTAwMzAwMCAwIDB4MTAwMD4sDQorCQkJCTww
+IDB4MWEwMDQwMDAgMCAweDIwMDA+LA0KKwkJCQk8MCAweDFhMDA2MDAwIDAgMHgyMDAwPiwNCisJ
+CQkJPDAgMHgxYTAwODAwMCAwIDB4MjAwMD47DQorCQlyZWctbmFtZXMgPSAiY2FtX3N5cyIsDQor
+CQkJCSJjYW1fdW5pIiwNCisJCQkJImNhbV9hIiwNCisJCQkJImNhbV9iIiwNCisJCQkJImNhbV9j
+IjsNCisJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyNTMgSVJRX1RZUEVfTEVWRUxfTE9XPiwNCisJ
+CQkJPEdJQ19TUEkgMjU0IElSUV9UWVBFX0xFVkVMX0xPVz4sDQorCQkJCTxHSUNfU1BJIDI1NSBJ
+UlFfVFlQRV9MRVZFTF9MT1c+LA0KKwkJCQk8R0lDX1NQSSAyNTYgSVJRX1RZUEVfTEVWRUxfTE9X
+PjsNCisJCWludGVycnVwdC1uYW1lcyA9ICJjYW1fdW5pIiwNCisJCQkJImNhbV9hIiwNCisJCQkJ
+ImNhbV9iIiwNCisJCQkJImNhbV9jIjsNCisJCWlvbW11cyA9IDwmaW9tbXUgTTRVX1BPUlRfQ0FN
+X0lNR08+Ow0KKwkJY2xvY2tzID0gPCZjYW1zeXMgQ0xLX0NBTV9DQU0+LA0KKwkJCQk8JmNhbXN5
+cyBDTEtfQ0FNX0NBTVRHPjsNCisJCWNsb2NrLW5hbWVzID0gImNhbXN5c19jYW1fY2dwZG4iLA0K
+KwkJCQkiY2Ftc3lzX2NhbXRnX2NncGRuIjsNCisJCW1lZGlhdGVrLGxhcmIgPSA8JmxhcmIzPiwN
+CisJCQkJPCZsYXJiNj47DQorCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VS
+X0RPTUFJTl9DQU0+Ow0KKwkJbWVkaWF0ZWssc2NwID0gPCZzY3A+Ow0KKw0KKwkJcG9ydCB7DQor
+CQkJY2FtaXNwX2VuZHBvaW50OiBlbmRwb2ludCB7DQorCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwm
+c2VuaW5mX2NhbWlzcF9lbmRwb2ludD47DQorCQkJfTsNCisJCX07DQorCX07DQotLSANCjIuMTgu
+MA0K
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_mss.c | 199 ++++++++++++++++++++++++++++-
- 1 file changed, 198 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index 164fc2a53ef11..51f451311f5fc 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -68,6 +68,9 @@
- #define AXI_HALTREQ_REG			0x0
- #define AXI_HALTACK_REG			0x4
- #define AXI_IDLE_REG			0x8
-+#define NAV_AXI_HALTREQ_BIT		BIT(0)
-+#define NAV_AXI_HALTACK_BIT		BIT(1)
-+#define NAV_AXI_IDLE_BIT		BIT(2)
- 
- #define HALT_ACK_TIMEOUT_MS		100
- 
-@@ -101,9 +104,11 @@
- #define QDSP6SS_ACC_OVERRIDE_VAL		0x20
- 
- /* QDSP6v65 parameters */
-+#define QDSP6SS_CORE_CBCR		0x20
- #define QDSP6SS_SLEEP                   0x3C
- #define QDSP6SS_BOOT_CORE_START         0x400
- #define QDSP6SS_BOOT_CMD                0x404
-+#define QDSP6SS_BOOT_STATUS		0x408
- #define SLEEP_CHECK_MAX_LOOPS           200
- #define BOOT_FSM_TIMEOUT                10000
- 
-@@ -131,6 +136,7 @@ struct rproc_hexagon_res {
- 	int version;
- 	bool need_mem_protection;
- 	bool has_alt_reset;
-+	bool has_halt_nav;
- };
- 
- struct q6v5 {
-@@ -141,9 +147,14 @@ struct q6v5 {
- 	void __iomem *rmb_base;
- 
- 	struct regmap *halt_map;
-+	struct regmap *halt_nav_map;
-+	struct regmap *conn_map;
-+
- 	u32 halt_q6;
- 	u32 halt_modem;
- 	u32 halt_nc;
-+	u32 halt_nav;
-+	u32 conn_box;
- 
- 	struct reset_control *mss_restart;
- 	struct reset_control *pdc_reset;
-@@ -187,6 +198,7 @@ struct q6v5 {
- 	struct qcom_sysmon *sysmon;
- 	bool need_mem_protection;
- 	bool has_alt_reset;
-+	bool has_halt_nav;
- 	int mpss_perm;
- 	int mba_perm;
- 	const char *hexagon_mdt_image;
-@@ -198,6 +210,7 @@ enum {
- 	MSS_MSM8974,
- 	MSS_MSM8996,
- 	MSS_MSM8998,
-+	MSS_SC7180,
- 	MSS_SDM845,
- };
- 
-@@ -396,6 +409,18 @@ static int q6v5_reset_assert(struct q6v5 *qproc)
- 		reset_control_assert(qproc->pdc_reset);
- 		ret = reset_control_reset(qproc->mss_restart);
- 		reset_control_deassert(qproc->pdc_reset);
-+	} else if (qproc->has_halt_nav) {
-+		/* SWAR using CONN_BOX_SPARE_0 for pipeline glitch issue */
-+		reset_control_assert(qproc->pdc_reset);
-+		regmap_update_bits(qproc->conn_map, qproc->conn_box,
-+				   BIT(0), BIT(0));
-+		regmap_update_bits(qproc->halt_nav_map, qproc->halt_nav,
-+				   NAV_AXI_HALTREQ_BIT, 0);
-+		reset_control_assert(qproc->mss_restart);
-+		reset_control_deassert(qproc->pdc_reset);
-+		regmap_update_bits(qproc->conn_map, qproc->conn_box,
-+				   BIT(0), 0);
-+		ret = reset_control_deassert(qproc->mss_restart);
- 	} else {
- 		ret = reset_control_assert(qproc->mss_restart);
- 	}
-@@ -413,6 +438,8 @@ static int q6v5_reset_deassert(struct q6v5 *qproc)
- 		ret = reset_control_reset(qproc->mss_restart);
- 		writel(0, qproc->rmb_base + RMB_MBA_ALT_RESET);
- 		reset_control_deassert(qproc->pdc_reset);
-+	} else if (qproc->has_halt_nav) {
-+		ret = reset_control_reset(qproc->mss_restart);
- 	} else {
- 		ret = reset_control_deassert(qproc->mss_restart);
- 	}
-@@ -499,6 +526,54 @@ static int q6v5proc_reset(struct q6v5 *qproc)
- 			return ret;
- 		}
- 
-+		goto pbl_wait;
-+	} else if (qproc->version == MSS_SC7180) {
-+		val = readl(qproc->reg_base + QDSP6SS_SLEEP);
-+		val |= 0x1;
-+		writel(val, qproc->reg_base + QDSP6SS_SLEEP);
-+
-+		ret = readl_poll_timeout(qproc->reg_base + QDSP6SS_SLEEP,
-+					 val, !(val & BIT(31)), 1,
-+					 SLEEP_CHECK_MAX_LOOPS);
-+		if (ret) {
-+			dev_err(qproc->dev, "QDSP6SS Sleep clock timed out\n");
-+			return -ETIMEDOUT;
-+		}
-+
-+		/* Turn on the XO clock needed for PLL setup */
-+		val = readl(qproc->reg_base + QDSP6SS_XO_CBCR);
-+		val |= 0x1;
-+		writel(val, qproc->reg_base + QDSP6SS_XO_CBCR);
-+
-+		ret = readl_poll_timeout(qproc->reg_base + QDSP6SS_XO_CBCR,
-+					 val, !(val & BIT(31)), 1,
-+					 SLEEP_CHECK_MAX_LOOPS);
-+		if (ret) {
-+			dev_err(qproc->dev, "QDSP6SS XO clock timed out\n");
-+			return -ETIMEDOUT;
-+		}
-+
-+		/* Configure Q6 core CBCR to auto-enable after reset sequence */
-+		val = readl(qproc->reg_base + QDSP6SS_CORE_CBCR);
-+		val |= 0x1;
-+		writel(val, qproc->reg_base + QDSP6SS_CORE_CBCR);
-+
-+		/* De-assert the Q6 stop core signal */
-+		writel(1, qproc->reg_base + QDSP6SS_BOOT_CORE_START);
-+
-+		/* Trigger the boot FSM to start the Q6 out-of-reset sequence */
-+		writel(1, qproc->reg_base + QDSP6SS_BOOT_CMD);
-+
-+		/* Poll the QDSP6SS_BOOT_STATUS for FSM completion */
-+		ret = readl_poll_timeout(qproc->reg_base + QDSP6SS_BOOT_STATUS,
-+					 val, (val & BIT(0)) != 0, 1,
-+					 SLEEP_CHECK_MAX_LOOPS);
-+		if (ret) {
-+			dev_err(qproc->dev, "Boot FSM failed to complete.\n");
-+			/* Reset the modem so that boot FSM is in reset state */
-+			q6v5_reset_deassert(qproc);
-+			return ret;
-+		}
- 		goto pbl_wait;
- 	} else if (qproc->version == MSS_MSM8996 ||
- 		   qproc->version == MSS_MSM8998) {
-@@ -667,6 +742,39 @@ static void q6v5proc_halt_axi_port(struct q6v5 *qproc,
- 	regmap_write(halt_map, offset + AXI_HALTREQ_REG, 0);
- }
- 
-+static void q6v5proc_halt_nav_axi_port(struct q6v5 *qproc,
-+				       struct regmap *halt_map,
-+				       u32 offset)
-+{
-+	unsigned long timeout;
-+	unsigned int val;
-+	int ret;
-+
-+	/* Check if we're already idle */
-+	ret = regmap_read(halt_map, offset, &val);
-+	if (!ret && (val & NAV_AXI_IDLE_BIT))
-+		return;
-+
-+	/* Assert halt request */
-+	regmap_update_bits(halt_map, offset, NAV_AXI_HALTREQ_BIT,
-+			   NAV_AXI_HALTREQ_BIT);
-+
-+	/* Wait for halt ack*/
-+	timeout = jiffies + msecs_to_jiffies(HALT_ACK_TIMEOUT_MS);
-+	for (;;) {
-+		ret = regmap_read(halt_map, offset, &val);
-+		if (ret || (val & NAV_AXI_HALTACK_BIT) ||
-+		    time_after(jiffies, timeout))
-+			break;
-+
-+		udelay(5);
-+	}
-+
-+	ret = regmap_read(halt_map, offset, &val);
-+	if (ret || !(val & NAV_AXI_IDLE_BIT))
-+		dev_err(qproc->dev, "port failed halt\n");
-+}
-+
- static int q6v5_mpss_init_image(struct q6v5 *qproc, const struct firmware *fw)
- {
- 	unsigned long dma_attrs = DMA_ATTR_FORCE_CONTIGUOUS;
-@@ -829,6 +937,9 @@ static int q6v5_mba_load(struct q6v5 *qproc)
- halt_axi_ports:
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_q6);
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_modem);
-+	if (qproc->has_halt_nav)
-+		q6v5proc_halt_nav_axi_port(qproc, qproc->halt_nav_map,
-+					   qproc->halt_nav);
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
- 
- reclaim_mba:
-@@ -876,6 +987,9 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
- 
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_q6);
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_modem);
-+	if (qproc->has_halt_nav)
-+		q6v5proc_halt_nav_axi_port(qproc, qproc->halt_nav_map,
-+					   qproc->halt_nav);
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
- 	if (qproc->version == MSS_MSM8996) {
- 		/*
-@@ -1253,6 +1367,47 @@ static int q6v5_init_mem(struct q6v5 *qproc, struct platform_device *pdev)
- 	qproc->halt_modem = args.args[1];
- 	qproc->halt_nc = args.args[2];
- 
-+	if (qproc->has_halt_nav) {
-+		struct platform_device *nav_pdev;
-+
-+		ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
-+						       "qcom,halt-nav-regs",
-+						       1, 0, &args);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "failed to parse halt-nav-regs\n");
-+			return -EINVAL;
-+		}
-+
-+		nav_pdev = of_find_device_by_node(args.np);
-+		of_node_put(args.np);
-+		if (!nav_pdev) {
-+			dev_err(&pdev->dev, "failed to get mss clock device\n");
-+			return -EPROBE_DEFER;
-+		}
-+
-+		qproc->halt_nav_map = dev_get_regmap(&nav_pdev->dev, NULL);
-+		if (!qproc->halt_nav_map) {
-+			dev_err(&pdev->dev, "failed to get map from device\n");
-+			return -EINVAL;
-+		}
-+		qproc->halt_nav = args.args[0];
-+
-+		ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
-+						       "qcom,halt-nav-regs",
-+						       1, 1, &args);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "failed to parse halt-nav-regs\n");
-+			return -EINVAL;
-+		}
-+
-+		qproc->conn_map = syscon_node_to_regmap(args.np);
-+		of_node_put(args.np);
-+		if (IS_ERR(qproc->conn_map))
-+			return PTR_ERR(qproc->conn_map);
-+
-+		qproc->conn_box = args.args[0];
-+	}
-+
- 	return 0;
- }
- 
-@@ -1327,7 +1482,7 @@ static int q6v5_init_reset(struct q6v5 *qproc)
- 		return PTR_ERR(qproc->mss_restart);
- 	}
- 
--	if (qproc->has_alt_reset) {
-+	if (qproc->has_alt_reset || qproc->has_halt_nav) {
- 		qproc->pdc_reset = devm_reset_control_get_exclusive(qproc->dev,
- 								    "pdc_reset");
- 		if (IS_ERR(qproc->pdc_reset)) {
-@@ -1426,6 +1581,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, qproc);
- 
-+	qproc->has_halt_nav = desc->has_halt_nav;
- 	ret = q6v5_init_mem(qproc, pdev);
- 	if (ret)
- 		goto free_rproc;
-@@ -1549,6 +1705,41 @@ static int q6v5_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct rproc_hexagon_res sc7180_mss = {
-+	.hexagon_mba_image = "mba.mbn",
-+	.proxy_clk_names = (char*[]){
-+		"xo",
-+		NULL
-+	},
-+	.reset_clk_names = (char*[]){
-+		"iface",
-+		"bus",
-+		"snoc_axi",
-+		NULL
-+	},
-+	.active_clk_names = (char*[]){
-+		"mnoc_axi",
-+		"nav",
-+		"mss_nav",
-+		"mss_crypto",
-+		NULL
-+	},
-+	.active_pd_names = (char*[]){
-+		"load_state",
-+		NULL
-+	},
-+	.proxy_pd_names = (char*[]){
-+		"cx",
-+		"mx",
-+		"mss",
-+		NULL
-+	},
-+	.need_mem_protection = true,
-+	.has_alt_reset = false,
-+	.has_halt_nav = true,
-+	.version = MSS_SC7180,
-+};
-+
- static const struct rproc_hexagon_res sdm845_mss = {
- 	.hexagon_mba_image = "mba.mbn",
- 	.proxy_clk_names = (char*[]){
-@@ -1580,6 +1771,7 @@ static const struct rproc_hexagon_res sdm845_mss = {
- 	},
- 	.need_mem_protection = true,
- 	.has_alt_reset = true,
-+	.has_halt_nav = false,
- 	.version = MSS_SDM845,
- };
- 
-@@ -1606,6 +1798,7 @@ static const struct rproc_hexagon_res msm8998_mss = {
- 	},
- 	.need_mem_protection = true,
- 	.has_alt_reset = false,
-+	.has_halt_nav = false,
- 	.version = MSS_MSM8998,
- };
- 
-@@ -1635,6 +1828,7 @@ static const struct rproc_hexagon_res msm8996_mss = {
- 	},
- 	.need_mem_protection = true,
- 	.has_alt_reset = false,
-+	.has_halt_nav = false,
- 	.version = MSS_MSM8996,
- };
- 
-@@ -1667,6 +1861,7 @@ static const struct rproc_hexagon_res msm8916_mss = {
- 	},
- 	.need_mem_protection = false,
- 	.has_alt_reset = false,
-+	.has_halt_nav = false,
- 	.version = MSS_MSM8916,
- };
- 
-@@ -1707,6 +1902,7 @@ static const struct rproc_hexagon_res msm8974_mss = {
- 	},
- 	.need_mem_protection = false,
- 	.has_alt_reset = false,
-+	.has_halt_nav = false,
- 	.version = MSS_MSM8974,
- };
- 
-@@ -1716,6 +1912,7 @@ static const struct of_device_id q6v5_of_match[] = {
- 	{ .compatible = "qcom,msm8974-mss-pil", .data = &msm8974_mss},
- 	{ .compatible = "qcom,msm8996-mss-pil", .data = &msm8996_mss},
- 	{ .compatible = "qcom,msm8998-mss-pil", .data = &msm8998_mss},
-+	{ .compatible = "qcom,sc7180-mss-pil", .data = &sc7180_mss},
- 	{ .compatible = "qcom,sdm845-mss-pil", .data = &sdm845_mss},
- 	{ },
- };
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
