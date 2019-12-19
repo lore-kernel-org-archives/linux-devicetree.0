@@ -2,117 +2,90 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC85C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86699C2D0D1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84E021655
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F20224672
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576798865;
-	bh=qU0AYjQ3Wt/z+EkJGVcRfZu2Rkl4zsRX9qrUSPHANUk=;
+	s=default; t=1576798901;
+	bh=WDbZFckNEvJPr6jCEP4QNOUNi+4mtA5nNZFKyzu2/jE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vZLd36BVaFSkn9j+dyaO5y3wFvg4EXt73DqkBqTx7Qz+oe0suZk3gdRLXP8+mweiP
-	 QhWfaTp0L3rUedd+VdF6WYgh+JS8Vfwgbe2nzIV2VVJVKtKHxVQb8HSrsr8CI0AJTt
-	 JGW8Br/kgTLIQpdkHoGF2weG5xAwYBcnKroJZhFg=
+	b=WdNQbu+Uhj/g3GVUso3nBrc+53W/vLvnoXAu3qJFENvDaqY+A8FTwJnLLUGyycPjO
+	 J6QzVVUDX69j+AF4f8T0PDo3c6WRxmwVmVcHnoShPK2NVyQSEl87ZEtwYZ9tmJ39yp
+	 xNezBGThC9FFDncS17pMk4M7oHaGycrXmVC+5898=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfLSXlE (ORCPT
+        id S1727006AbfLSXlk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:41:04 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40577 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbfLSXlE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 18:41:04 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w21so1583502otj.7;
-        Thu, 19 Dec 2019 15:41:03 -0800 (PST)
+        Thu, 19 Dec 2019 18:41:40 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33716 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbfLSXlk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 18:41:40 -0500
+Received: by mail-ot1-f68.google.com with SMTP id b18so9369742otp.0;
+        Thu, 19 Dec 2019 15:41:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3NfDG7avH+ujpcCBpbFffoQ4me1PnPp49OU9/9ftPuE=;
-        b=QNVJURKqy99mz8SlvQjSgapNbZc3lVtDbzBYq3sINJnpJICcBwEvKVBcy01mTzZEqu
-         fx52bbtwyQTEvfDq0yfOA1ATxGu+uwoooYBvhoAr9RYBsP8BHvFTzT+b6mwD6czx0SRC
-         341jziKyAXFilnNUCysIwg3ToPJpR8zvBat7ZNfAT643ekTB/qImuYlBAtn0Zj8ff1N1
-         80PUdMVMoW87Q22docLQjcwjV23iLURmtBY3hGd9a1Cy2rpeNab6wJEj5Fv9IqyS7sDK
-         0hk+EXnCqMFVb0hbByMdOao6auHaE/ym2UKUleJec79HRy0ajE5/qoQsLYf18G9br9KE
-         wYag==
-X-Gm-Message-State: APjAAAV8ws0Dy4CvU6I1rv8mEe8piHurOAoD1OlQXnFV2zTCctkgPpXi
-        ZRhIssg0bSD8sd0KwcOMAQ==
-X-Google-Smtp-Source: APXvYqzAQ3Wpwz3g5jix2Do+I3Pb2ucPQFPn2hVTxMKOwUBxxicCkn6k6qUaRkAyoO5pODcIC0pAJw==
-X-Received: by 2002:a9d:5c02:: with SMTP id o2mr2095128otk.176.1576798863533;
-        Thu, 19 Dec 2019 15:41:03 -0800 (PST)
+        bh=tuBWf96skjWrgBgsVs1eiTg/OmTbAgb7ulePOSz2Qnw=;
+        b=t7Pn1zrF/O+rbi8qdRYBTy6nROYC1ohU+dua5kLpjcqbqhJ3UygqVr0RdSSMiuJyFp
+         OlVKJrJur/PpSs5UlSkHXxzFsUmQT0OJrYdj2Vv8ODgMWJN2JrfDjLo69ctuu1sqiS2d
+         qEB+5qwRxqjuPmBcTQwWaif9j3c6dX6RjUWQykV1vlKbwq1PD/KQ8Fi7nY67fegzdid5
+         ceyqfWJpXsgYd1fYROz2ZVlSzKDARUL+6yErHWu7taEyUS8gmRu3eusY4FKFHo9z1v8J
+         gEy1gb7tOnzBGv6dHTQspDDLLaePEW19fxKo7fXfvYwHnI2AGiFdboR8WdGf8lcIZ4t+
+         w78Q==
+X-Gm-Message-State: APjAAAXImPdAPFQePoRcFE9XzmFv8kQidx93utwiXovr1/Jxd/Dz/qCg
+        MCvxW9uN9SxEKmjZiyFYBg==
+X-Google-Smtp-Source: APXvYqx+c5pPnClOFiso3xv+CWXNZAeT4mHx+To+J+sLUZ0f72ogS0fPdQJKxDJGcfYcgfzf04IN3A==
+X-Received: by 2002:a05:6830:1608:: with SMTP id g8mr11056854otr.169.1576798899680;
+        Thu, 19 Dec 2019 15:41:39 -0800 (PST)
 Received: from localhost (ip-184-205-174-147.ftwttx.spcsdns.net. [184.205.174.147])
-        by smtp.gmail.com with ESMTPSA id 4sm2767680otu.0.2019.12.19.15.41.02
+        by smtp.gmail.com with ESMTPSA id c12sm2555901oic.27.2019.12.19.15.41.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 15:41:02 -0800 (PST)
-Date:   Thu, 19 Dec 2019 17:41:00 -0600
+        Thu, 19 Dec 2019 15:41:39 -0800 (PST)
+Date:   Thu, 19 Dec 2019 17:41:36 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Adam Ford <aford173@gmail.com>
 Cc:     linux-arm-kernel@lists.infradead.org, peng.fan@nxp.com,
-        ping.bai@nxp.com, Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        ping.bai@nxp.com, Adam Ford <aford173@gmail.com>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 2/7] soc: imx: gpcv2: Update imx8m-power.h to include
- iMX8M Mini
-Message-ID: <20191219234100.GA19269@bogus>
+Subject: Re: [PATCH V2 4/7] dt-bindings: imx-gpcv2: Update bindings to
+ support i.MX8M Mini
+Message-ID: <20191219234136.GA21689@bogus>
 References: <20191213160542.15757-1-aford173@gmail.com>
- <20191213160542.15757-3-aford173@gmail.com>
+ <20191213160542.15757-5-aford173@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191213160542.15757-3-aford173@gmail.com>
+In-Reply-To: <20191213160542.15757-5-aford173@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 10:05:37AM -0600, Adam Ford wrote:
-> In preparation for i.MX8M Mini support in the GPC driver, the
-> include file used by both the device tree and the source needs to
-> have the appropriate references for it.
+On Fri, 13 Dec 2019 10:05:39 -0600, Adam Ford wrote:
+> The with the recent additions to the driver, the GPCv2 driver can
+> support the i.MX8M Mini, but it needs updated 'compatible' entry
+> to use the proper table.
+> 
+> This patch adds the i.MX8MM to the compatible list of devices.
 > 
 > Signed-off-by: Adam Ford <aford173@gmail.com>
 > ---
 > V2:  No Change
 > 
->  include/dt-bindings/power/imx8m-power.h | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/include/dt-bindings/power/imx8m-power.h b/include/dt-bindings/power/imx8m-power.h
-> index 8a513bd9166e..0054bba744b8 100644
-> --- a/include/dt-bindings/power/imx8m-power.h
-> +++ b/include/dt-bindings/power/imx8m-power.h
-> @@ -18,4 +18,18 @@
->  #define IMX8M_POWER_DOMAIN_MIPI_CSI2	9
->  #define IMX8M_POWER_DOMAIN_PCIE2	10
->  
-> +#define IMX8MM_POWER_DOMAIN_MIPI	0
-> +#define IMX8MM_POWER_DOMAIN_PCIE	1
-> +#define IMX8MM_POWER_DOMAIN_USB_OTG1	2
-> +#define IMX8MM_POWER_DOMAIN_USB_OTG2	3
-> +#define IMX8MM_POWER_DOMAIN_DDR1	4
-> +#define IMX8MM_POWER_DOMAIN_GPU2D	5
-> +#define IMX8MM_POWER_DOMAIN_GPU	6
-> +#define IMX8MM_POWER_DOMAIN_VPU	7
-> +#define IMX8MM_POWER_DOMAIN_GPU3D	8
-> +#define IMX8MM_POWER_DOMAIN_DISP	9
-> +#define IMX8MM_POWER_VPU_G1		10
-> +#define IMX8MM_POWER_VPU_G2		11
-> +#define IMX8MM_POWER_VPU_H1		12
 
-Why is _DOMAIN missing from the last 3?
-
-> +
->  #endif
-> -- 
-> 2.20.1
-> 
+Acked-by: Rob Herring <robh@kernel.org>
