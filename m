@@ -2,121 +2,210 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4734FC2D0D2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EB1C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0A92467F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4F02467E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576786053;
-	bh=pSXRgiNj+8+4TVlNY9cNujz3BsgiGPqNaak59V6mcRg=;
+	s=default; t=1576786373;
+	bh=M8QEBQy4eliOtdMGgHLbGzJ/Zrco4EZ0Uy+9WFtCGxQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U8W4HEhGo3q4twRcanof0ec+E1iaAKimuPCOH+cezvG/xRQ4rsdc4YGm8VVaBlZgL
-	 FtY4a+IIsZ8od3aB4yZjSwlhk/JPi/VPdpF1qfNREFBIqDS4ekB+NjqUD4CSr5cuqL
-	 OhUfb4fWIpvb0gezk1IDLgDHDbwV/Aj3iAeHUkBk=
+	b=ODSyeG8dDjKKVysS5Eyd3Ekre100s2xAFdbmGwe4mDcJUmvKQZ84ul6eV91YsF/+L
+	 fC8moGnA+u0MbEG0SgTaOg7SHhk/nFEjwfGTCrl2aOO3depevnls/VYkg/zf9YtZdf
+	 083RdwCc56O6RHU9PPA+KeYyqQtpxRIr8LYTKZG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfLSUHc (ORCPT
+        id S1726908AbfLSUMx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:07:32 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:42581 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbfLSUHb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 15:07:31 -0500
-Received: by mail-yw1-f68.google.com with SMTP id x138so2647906ywd.9;
-        Thu, 19 Dec 2019 12:07:30 -0800 (PST)
+        Thu, 19 Dec 2019 15:12:53 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33148 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbfLSUMx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 15:12:53 -0500
+Received: by mail-ot1-f66.google.com with SMTP id b18so8699376otp.0;
+        Thu, 19 Dec 2019 12:12:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fYs9YV+R6ZChQu7K5kraIQcgs+ufLWziDdpBF76nsa8=;
-        b=LQOxIb2Fjrtoo7RWCQfjlAsPRuEiCIC+VYucUtWXV9VwrCKRV99OnVMpaCu9LZreQY
-         /e+zEPEWKveUlgBGkrGo/eGeoWV/V0KBtdkqPfmdkqbjUix2ofVF/kmq+cMKr8uRssNu
-         8b88h1kwaIBhNYykR2IeuD3bjzotCOgU4oBBBCVk3zwOnMu5WQ4z7Tap2lC6b/gxOxi+
-         GGuxP4QUx04xVFLOnTUMC08di2N0kDFPt77GJL/Fnf/BaQT1APtTEAdSg5AMZe+HDiEe
-         UMKu/ClvP+c/IbXdBx7SVQl/sh1QwxXtaf2Rft0BLRYT5jkTylWm8ilA0Qai9l1T1a1n
-         e8gA==
-X-Gm-Message-State: APjAAAWENh6CVkpbGzMShPBV2M14NqOmrj2Pgvp58uEvWgqcxXdoAubM
-        y5M4POdHinskiQJDDRC7lA==
-X-Google-Smtp-Source: APXvYqwJjv7J5Gr8OJGkc6rGWBTU0vrDBs3+PxtxHOMedvJ+yysUWFZ4i5JnjUAZYg5iPrMMOMquow==
-X-Received: by 2002:a81:3208:: with SMTP id y8mr2497299ywy.231.1576786049885;
-        Thu, 19 Dec 2019 12:07:29 -0800 (PST)
-Received: from localhost ([172.58.139.89])
-        by smtp.gmail.com with ESMTPSA id d199sm2988688ywh.83.2019.12.19.12.07.28
+        bh=yEsnOS+OJlfdn2ya+oI/IM/M4B/BUkejIrhzJ5Fn3Yg=;
+        b=RaVPzQmymmdRu+3fMeli7rbHS0Z/Z708JQJuGFVpxqY0AIWrEfuChc+rImIox3aV0z
+         ioveUd4Wte/Ki4Gg+UFeAqjPIzc1EknXtmg7e24uJTA3DfeglsT5VaNswvdYvRM9UUGb
+         Rf6JGgTJ4yEZtOMW+muS+WM1Z9WH8LNHm8YAuw536A6KInf/Dxro6682qU7gFyWNrZbk
+         2rjkMQSOEfIRYrvXDfKNpwyEi77EZpJB+Wp2mMrlzcUNmaJzRG/Mok2Bdgl3IhnjOvNf
+         0iiNQT5z47UQn5P2hiMCp8Vk8XptYAt3m+Lp11VfWMrxt/DQ4nkwwl30b4sfyzFQYQeq
+         jR4Q==
+X-Gm-Message-State: APjAAAUDLqpdSX7h64kcAJrHxG7shSr4i5EhwYuIoPPPJhIusvPUD6iS
+        eLeO1UcZQMwjIrFLHkkTLQ==
+X-Google-Smtp-Source: APXvYqwNJK+Rd61vCyU7qwkUD4jByn2n3KevwwFyhFxb//LMNfrlX3KQoeago107d1SmGHaGQBaatA==
+X-Received: by 2002:a05:6830:1e5c:: with SMTP id e28mr10927417otj.293.1576786372073;
+        Thu, 19 Dec 2019 12:12:52 -0800 (PST)
+Received: from localhost (ip-184-205-110-29.ftwttx.spcsdns.net. [184.205.110.29])
+        by smtp.gmail.com with ESMTPSA id f1sm2501751otq.4.2019.12.19.12.12.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 12:07:29 -0800 (PST)
-Date:   Thu, 19 Dec 2019 14:07:26 -0600
+        Thu, 19 Dec 2019 12:12:51 -0800 (PST)
+Date:   Thu, 19 Dec 2019 14:12:49 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-mtd@lists.infradead.org, Dinh Nguyen <dinguyen@kernel.org>,
-        Marek Vasut <marex@denx.de>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mtd: rawnand: denali: add reset controlling
-Message-ID: <20191219200154.GA27949@bogus>
-References: <20191210091453.26346-1-yamada.masahiro@socionext.com>
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        mark.rutland@arm.com, orsonzhai@gmail.com, baolin.wang@linaro.org,
+        freeman.liu@unisoc.com, zhang.lyra@gmail.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: thermal: sprd: Add the Spreadtrum
+ thermal documentation
+Message-ID: <20191219201248.GA5109@bogus>
+References: <8d5358a67746b2aff5f6995cabd11d0d7c9e579e.1575978484.git.baolin.wang7@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191210091453.26346-1-yamada.masahiro@socionext.com>
+In-Reply-To: <8d5358a67746b2aff5f6995cabd11d0d7c9e579e.1575978484.git.baolin.wang7@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 10 Dec 2019 18:14:53 +0900, Masahiro Yamada wrote:
-> According to the Denali User's Guide, this IP has two reset signals.
+On Tue, Dec 10, 2019 at 08:07:17PM +0800, Baolin Wang wrote:
+> From: Baolin Wang <baolin.wang@unisoc.com>
 > 
->   rst_n:     reset most of FFs in the controller core
->   reg_rst_n: reset all FFs in the register interface, and in the
->              initialization sequence
+> Add the Spreadtrum thermal documentation.
 > 
-> This commit supports controlling those reset signals, although they
-> might be often tied up together in actual SoC integration.
-> 
-> One thing that should be kept in mind is the automated initialization
-> sequence (a.k.a. 'bootstrap' process) is kicked off when reg_rst_n is
-> deasserted.
-> 
-> When the reset is deasserted, the controller issues a RESET command
-> to the chip select 0, and attempts to read out the chip ID, and further
-> more, ONFI parameters if it is an ONFI-compliant device. Then, the
-> controller sets up the relevant registers based on the detected
-> device parameters.
-> 
-> This process is just redundant for Linux because nand_scan_ident()
-> probes devices and sets up parameters accordingly. Rather, this hardware
-> feature is annoying because it ends up with misdetection due to bugs.
-> 
-> So, commit 0615e7ad5d52 ("mtd: nand: denali: remove Toshiba and Hynix
-> specific fixup code") changed the driver to not rely on it.
-> 
-> However, there is no way to prevent it from running. The IP provides
-> the 'bootstrap_inhibit_init' port to suppress this sequence, but it is
-> usually out of software control, and dependent on SoC implementation.
-> As for the Socionext UniPhier platform, LD4 always enables it. For the
-> later SoCs, the bootstrap sequence runs depending on the boot mode.
-> 
-> I added usleep_range() to make the driver wait until the sequence
-> finishes. Otherwise, the driver would fail to detect the chip due
-> to the race between the driver and hardware-controlled sequence.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 > ---
+> Changes from v1:
+>  - Change to yaml format.
+> ---
+>  .../devicetree/bindings/thermal/sprd-thermal.yaml  |   97 ++++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
 > 
->  .../devicetree/bindings/mtd/denali-nand.txt   |  7 ++++
->  drivers/mtd/nand/raw/denali_dt.c              | 40 ++++++++++++++++++-
->  2 files changed, 46 insertions(+), 1 deletion(-)
-> 
+> diff --git a/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+> new file mode 100644
+> index 0000000..92d208a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+> @@ -0,0 +1,97 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/sprd-thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Spreadtrum thermal sensor controller bindings
+> +
+> +maintainers:
+> +  - Orson Zhai <orsonzhai@gmail.com>
+> +  - Baolin Wang <baolin.wang7@gmail.com>
+> +  - Chunyan Zhang <zhang.lyra@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: sprd,ums512-thermal
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: enable
+> +
+> +  nvmem-cells:
+> +    maxItems: 2
+> +    description:
+> +      Reference to nvmem nodes for the calibration data.
+> +
+> +  nvmem-cells-names:
+> +    maxItems: 2
+> +    items:
+> +      - const: thm_sign_cal
+> +      - const: thm_ratio_cal
+> +
+> +  "#thermal-sensor-cells":
+> +    const: 1
+> +
+> +  child-node:
 
-Acked-by: Rob Herring <robh@kernel.org>
+You need actual child node names. It can be a pattern with 
+patternProperties.
+
+Make sure 'make dt_binding_check' passes.
+
+> +    description: Represent one thermal sensor.
+> +
+> +    properties:
+> +      reg:
+> +        description: Specify the sensor id.
+> +        maxItems: 1
+> +
+> +      nvmem-cells:
+> +        maxItems: 1
+> +        description:
+> +          Reference to an nvmem node for the calibration data.
+> +
+> +      nvmem-cells-names:
+> +        maxItems: 1
+> +        items:
+> +          - const: sen_delta_cal
+
+Can be simplified to
+
+nvmem-cells-names:
+  const: sen_delta_cal
+
+> +
+> +    required:
+> +      - reg
+> +      - nvmem-cells
+> +      - nvmem-cells-names
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - nvmem-cells
+> +  - nvmem-cells-names
+> +  - "#thermal-sensor-cells"
+> +
+> +examples:
+> +  - |
+> +        ap_thm0: thermal@32200000 {
+> +                compatible = "sprd,ums512-thermal";
+> +                reg = <0 0x32200000 0 0x10000>;
+> +                clock-names = "enable";
+> +                clocks = <&aonapb_gate 32>;
+> +                #thermal-sensor-cells = <1>;
+> +                nvmem-cells = <&thm0_sign>, <&thm0_ratio>;
+> +                nvmem-cell-names = "thm_sign_cal", "thm_ratio_cal";
+> +
+> +                prometheus0-sensor@0 {
+> +                        reg = <0>;
+
+This should fail to build. You need #size-cells and #address-cells in 
+the parent.
+
+> +                        nvmem-cells = <&thm0_sen0>;
+> +                        nvmem-cell-names = "sen_delta_cal";
+> +                };
+> +
+> +                ank1-sensor@1 {
+> +                        reg = <1>;
+> +                        nvmem-cells = <&thm0_sen1>;
+> +                        nvmem-cell-names = "sen_delta_cal";
+> +                };
+> +        };
+> +...
+> -- 
+> 1.7.9.5
+> 
