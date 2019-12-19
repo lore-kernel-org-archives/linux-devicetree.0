@@ -2,254 +2,410 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE88C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 08:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5956C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 08:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F4124650
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 08:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8378F24650
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 08:46:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="PFjBmxKf";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Tkn7hI81"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="B///1u4m";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fMFlG8wx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfLSIqA (ORCPT
+        id S1726715AbfLSIq3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:46:00 -0500
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:33527 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726498AbfLSIqA (ORCPT
+        Thu, 19 Dec 2019 03:46:29 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33305 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726652AbfLSIq3 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:46:00 -0500
-X-Greylist: delayed 435 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Dec 2019 03:45:59 EST
+        Thu, 19 Dec 2019 03:46:29 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 7DF5655A;
-        Thu, 19 Dec 2019 03:38:42 -0500 (EST)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 2D5104BD3;
+        Thu, 19 Dec 2019 03:46:27 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 19 Dec 2019 03:38:43 -0500
+  by compute3.internal (MEProxy); Thu, 19 Dec 2019 03:46:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=TOad0CQlAYdFxFSlhlqZROlIaJ/
-        tfvAfV7J03rJuV3Q=; b=PFjBmxKfa17H2ZTT59/2v8Tuz0eCpa/CL4HIfHyZm/d
-        6hrMALmE6EgzF3zpsE9a9J9RjecY3xLPQFGLYKQCf1FA0gdaOT/W1wJls76mRHAu
-        2TYjSH4qDYLR5QZhAt9LZXoOeEDqcSswZ1ix5v2+xJaNNFA9p5TLEovThr8vN0Vu
-        FLRnOkfQAsqTr9tSvi+ZycayfDEMzkRRijh54WkPYXnolnY36HSnTJURbWPFaFpL
-        hrkHLFvlS6sQub+RA+tPy3/0BZE65hdJpK6v7SbRxs7uUb47xYiMA32MBpGjIoSk
-        BqbmbQBdjqrtsVN/z4/PmbCXVPM0ini+weixlyaz6HA==
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=kwIeKSI5y8LRyccmLU4l+PItMC
+        5Ob0B+YfxBbkdxplM=; b=B///1u4mZgsSJV1c4Fsr1RK9D9cR2ZGXCnARMJDYsg
+        7QT9+K7UZo7vihHj65P4F9/wA4hY9zzIDGB5+fmje5dynN9EoesugbdEVeLUkDiJ
+        o/P2bD/3wdjuQE/L3rUs/2B9cOc0xNJ0GFOaYGM4tFBKDDGhB+kojLj45CAZgVFx
+        CU+WlIhK2jEllC3+R65WsocQV4iD38u138mU95LRmDb8lOSeLa9UYeYMKxzN9ZpL
+        1wHEElz5IW7ZNJhv2CcpjiwxrjOoKuC2iTOHD81EGhB4zgz7gJd5lw0Ln8wFDsVF
+        W2x+ctfTRcvPTu7bArNRdMwhj2/K2BqsVAw/jHSEDF4g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=TOad0C
-        QlAYdFxFSlhlqZROlIaJ/tfvAfV7J03rJuV3Q=; b=Tkn7hI81Ko/0UhUmJfjMPu
-        /6vE76xZQIZczWTQqTWmcKvP5UhEaf8R11akfrkoCXUfEZGMIddYgHIIOy446nRD
-        DiAIOE1weHCUmIwWGcKiakxIXC/OyBSJV17LOD902LuYP7TPPCOCRtujqbFkEcsl
-        0JIF+m4P55fieqLr2EWUnPOlNFvZHEvERaAOYZYsot/LtX4H9r8gXpPDTfJvNysw
-        y2VaCQ84jeRbwNxZ4051hGaEPSj4Y6zWMEwiA1X94VJ29VEnahFusHoUYPBBA8ul
-        qJQ7L37rrddIVI+TCGCSVDsO9Yhp7GfOCeG0tBvRvKhrCIv9Cmze5HuJvnPDcv8g
-        ==
-X-ME-Sender: <xms:ETf7XT_fVi9mp99cbDK5Y4NdGH5vmL9ByL9Z0SHriXyj0bBMiRsONA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddutddguddvudcutefuodetggdotefrod
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=kwIeKSI5y8LRyccmL
+        U4l+PItMC5Ob0B+YfxBbkdxplM=; b=fMFlG8wxGxX+CGHfIcSriWyO0sYHu1GZ5
+        1340hE5bb02TVJo/nv/Z+HNQM/Eu5ENqRo2mLq6NUpZrcEOQoNJMyrgh7h67A2BQ
+        yQ/+DOcyOUPMyIvs6+Ed8zumD4+rIQTe6Rh1T6TNeCsn7ONfALo9l5vPVU2dW5eP
+        xAFU02zPrkFj5bbour888yrYmJoBqXTfqBUups/zA/jr7ppA033t2xHbbMf9yUqh
+        6xcsFTtZPTRjmY96AFUL5NyeDZQWzP6htiChS6zthklvxfpsCl55/tWB1rGaCtnj
+        2yVQZ1Pn7jtvt8eRTSS40+M1dLeQvS5dnJOVb5MWBSXagNxbL1TvQ==
+X-ME-Sender: <xms:4jj7XTI3wc1ib4If-8TTG79WzBjR4U9NB46ij0kbFgYdOkAZpNqbKg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddutddguddvvdcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrg
-    hinhepuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecu
-    rfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghhnecuve
-    hluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:ETf7XcGGt3XZBC0ombLEka2yZkOCt_W-9VM_FtxxmwGjWh5guHK__g>
-    <xmx:ETf7XT2zC9qFKJcb9EodmyKLXCxMuwrIouSniOTCHqidqsWkg_SXyQ>
-    <xmx:ETf7XegUNuXPYePuAvW-2-J1sTj5yKWpQvIdmX8Ra_MueDbIPol1Ug>
-    <xmx:Ejf7XfRt_UOS1TcedCPWHf2lVGvSfk2zaWyXr2fSa8uDzF35QxbT37vxZfE>
+    enogevohgrshhtrghlqdfhgeduvddqtddvucdludehtddmnecujfgurhephffvufffkffo
+    ggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgi
+    himhgvsegtvghrnhhordhtvggthheqnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdr
+    ohhrghenucfkphepledtrdekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomh
+    epmhgrgihimhgvsegtvghrnhhordhtvggthhenucevlhhushhtvghrufhiiigvpedu
+X-ME-Proxy: <xmx:4jj7XerD6iiCsZG2r_57QaPz78VqJ8bOqy9IDx2tfojykXJQTLQkcQ>
+    <xmx:4jj7XRy9VWli1bPwjUlwLOq7UU5ENQF7EWGtuMxbOU9FZUKqQfyFfA>
+    <xmx:4jj7Xae26c5Wnesgn6ZHXtqknqMIaSKHRoQn6_ZsEZFUCbiUR2Qw9Q>
+    <xmx:4zj7XdfUdY1gFJlz3ftbJHtjUB6BZ0APXdcV9vLi4BOGi7jL0xWlOA>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 09E3880059;
-        Thu, 19 Dec 2019 03:38:40 -0500 (EST)
-Date:   Thu, 19 Dec 2019 09:38:39 +0100
+        by mail.messagingengine.com (Postfix) with ESMTPA id 11D1380063;
+        Thu, 19 Dec 2019 03:46:25 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jyri Sarha <jsarha@ti.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com,
-        peter.ujfalusi@ti.com, bparrot@ti.com, subhajit_paul@ti.com,
-        praneeth@ti.com, yamonkar@cadence.com, sjakhade@cadence.com,
-        sam@ravnborg.org, robh+dt@kernel.org
-Subject: Re: [PATCH v4 3/5] dt-bindings: display: ti,j721e-dss: Add dt-schema
- yaml binding
-Message-ID: <20191219083839.lmuhxynbbqy4d4hp@gilmour.lan>
-References: <cover.1576704528.git.jsarha@ti.com>
- <89db418c91689beb6e63e0c3c99b39655948b429.1576704528.git.jsarha@ti.com>
+To:     tiny.windzz@gmail.com, vireshk@kernel.org, sboyd@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH] dt-bindings: opp: Convert Allwinner H6 OPP to a schema
+Date:   Thu, 19 Dec 2019 09:46:23 +0100
+Message-Id: <20191219084623.944458-1-maxime@cerno.tech>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yiknogogty4yey3d"
-Content-Disposition: inline
-In-Reply-To: <89db418c91689beb6e63e0c3c99b39655948b429.1576704528.git.jsarha@ti.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The Allwinner H6 SoCs use binning in order to provide binning to
+cpufreq which is supported in Linux, with a matching Device Tree binding.
 
---yiknogogty4yey3d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
 
-Hi,
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ .../allwinner,sun50i-h6-operating-points.yaml | 129 ++++++++++++++
+ .../bindings/opp/sun50i-nvmem-cpufreq.txt     | 167 ------------------
+ 2 files changed, 129 insertions(+), 167 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml
+ delete mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
 
-On Thu, Dec 19, 2019 at 10:23:17AM +0200, Jyri Sarha wrote:
-> Add dt-schema yaml bindig for J721E DSS, J721E version TI Keystone
-> Display SubSystem.
->
-> Version history:
->
-> v2: no change
->
-> v3: - reg-names: "wp" -> "wb"
->     - Add ports node
->     - Add includes to dts example
->     - reindent dts example
->
-> v4: - Add descriptions to reg, clocks, and interrups properties
->     - Remove minItems when its value is the same as maxItems value
->
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> ---
->  .../bindings/display/ti/ti,j721e-dss.yaml     | 209 ++++++++++++++++++
->  1 file changed, 209 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-> new file mode 100644
-> index 000000000000..cd68c4294f9a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-> @@ -0,0 +1,209 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/display/ti/ti,j721e-dss.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Texas Instruments J721E Display Subsystem
-> +
-> +maintainers:
-> +  - Jyri Sarha <jsarha@ti.com>
-> +  - Tomi Valkeinen <tomi.valkeinen@ti.com>
-> +
-> +description: |
-> +  The J721E TI Keystone Display SubSystem with four output ports and
-> +  four video planes. There is two full video planes and two "lite
-> +  planes" without scaling support. The video ports can be connected to
-> +  the SoC's DPI pins or to integrated display bridges on the SoC.
-> +
-> +properties:
-> +  compatible:
-> +    const: ti,j721e-dss
-> +
-> +  reg:
-> +    maxItems: 17
-> +    description: |
-> +      Addresses to each DSS memory region described in the SoC's TRM.
-> +      The reg-names refer to memory regions as follows:
-> +      reg-names: Region Name in TRM:     Description:
-> +      common_m   DSS0_DISPC_0_COMMON_M   DSS Master common register area
-> +      common_s0  DSS0_DISPC_0_COMMON_SO  DSS Shared common register area 0
-> +      common_s1  DSS0_DISPC_0_COMMON_S1  DSS Shared common register area 1
-> +      common_s2  DSS0_DISPC_0_COMMON_S2  DSS Shared common register area 2
-> +      vidl1      DSS0_VIDL1              VIDL1 light video plane 1
-> +      vidl2      DSS0_VIDL2              VIDL2 light video plane 2
-> +      vid1       DSS0_VID1               VID1 video plane 1
-> +      vid2       DSS0_VID2               VID1 video plane 2
-> +      ovr1       DSS0_OVR1               OVR1 overlay manager for vp1
-> +      ovr2       DSS0_OVR2               OVR2 overlay manager for vp2
-> +      ovr3       DSS0_OVR3               OVR1 overlay manager for vp3
-> +      ovr4       DSS0_OVR4               OVR2 overlay manager for vp4
-> +      vp1        DSS0_VP1                VP1 video port 1
-> +      vp2        DSS0_VP2                VP1 video port 2
-> +      vp3        DSS0_VP3                VP1 video port 3
-> +      vp4        DSS0_VP4                VP1 video port 4
-> +      wp         DSS0_WB                 Write Back registers
+diff --git a/Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml b/Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml
+new file mode 100644
+index 000000000000..aef87a33a7c9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml
+@@ -0,0 +1,129 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/opp/allwinner,sun50i-h6-operating-points.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner H6 CPU OPP Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <mripard@kernel.org>
++
++description: |
++  For some SoCs, the CPU frequency subset and voltage value of each
++  OPP varies based on the silicon variant in use. Allwinner Process
++  Voltage Scaling Tables defines the voltage and frequency value based
++  on the speedbin blown in the efuse combination. The
++  sun50i-cpufreq-nvmem driver reads the efuse value from the SoC to
++  provide the OPP framework with required information.
++
++properties:
++  compatible:
++    const: allwinner,sun50i-h6-operating-points
++
++  nvmem-cells:
++    description: |
++      A phandle pointing to a nvmem-cells node representing the efuse
++      registers that has information about the speedbin that is used
++      to select the right frequency/voltage value pair. Please refer
++      the for nvmem-cells bindings
++      Documentation/devicetree/bindings/nvmem/nvmem.txt and also
++      examples below.
++
++required:
++  - compatible
++  - nvmem-cells
++
++patternProperties:
++  "opp-[0-9]+":
++    type: object
++
++    properties:
++      opp-hz: true
++
++    patternProperties:
++      "opp-microvolt-.*": true
++
++    required:
++      - opp-hz
++      - opp-microvolt-speed0
++      - opp-microvolt-speed1
++      - opp-microvolt-speed2
++
++    unevaluatedProperties: false
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    cpu_opp_table: opp-table {
++        compatible = "allwinner,sun50i-h6-operating-points";
++        nvmem-cells = <&speedbin_efuse>;
++        opp-shared;
++
++        opp-480000000 {
++            clock-latency-ns = <244144>; /* 8 32k periods */
++            opp-hz = /bits/ 64 <480000000>;
++
++            opp-microvolt-speed0 = <880000>;
++            opp-microvolt-speed1 = <820000>;
++            opp-microvolt-speed2 = <800000>;
++        };
++
++        opp-720000000 {
++            clock-latency-ns = <244144>; /* 8 32k periods */
++            opp-hz = /bits/ 64 <720000000>;
++
++            opp-microvolt-speed0 = <880000>;
++            opp-microvolt-speed1 = <820000>;
++            opp-microvolt-speed2 = <800000>;
++        };
++
++        opp-816000000 {
++            clock-latency-ns = <244144>; /* 8 32k periods */
++            opp-hz = /bits/ 64 <816000000>;
++
++            opp-microvolt-speed0 = <880000>;
++            opp-microvolt-speed1 = <820000>;
++            opp-microvolt-speed2 = <800000>;
++        };
++
++        opp-888000000 {
++            clock-latency-ns = <244144>; /* 8 32k periods */
++            opp-hz = /bits/ 64 <888000000>;
++
++            opp-microvolt-speed0 = <940000>;
++            opp-microvolt-speed1 = <820000>;
++            opp-microvolt-speed2 = <800000>;
++        };
++
++        opp-1080000000 {
++            clock-latency-ns = <244144>; /* 8 32k periods */
++            opp-hz = /bits/ 64 <1080000000>;
++
++            opp-microvolt-speed0 = <1060000>;
++            opp-microvolt-speed1 = <880000>;
++            opp-microvolt-speed2 = <840000>;
++        };
++
++        opp-1320000000 {
++            clock-latency-ns = <244144>; /* 8 32k periods */
++            opp-hz = /bits/ 64 <1320000000>;
++
++            opp-microvolt-speed0 = <1160000>;
++            opp-microvolt-speed1 = <940000>;
++            opp-microvolt-speed2 = <900000>;
++        };
++
++        opp-1488000000 {
++            clock-latency-ns = <244144>; /* 8 32k periods */
++            opp-hz = /bits/ 64 <1488000000>;
++
++            opp-microvolt-speed0 = <1160000>;
++            opp-microvolt-speed1 = <1000000>;
++            opp-microvolt-speed2 = <960000>;
++        };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+deleted file mode 100644
+index 7deae57a587b..000000000000
+--- a/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
++++ /dev/null
+@@ -1,167 +0,0 @@
+-Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
+-===================================
+-
+-For some SoCs, the CPU frequency subset and voltage value of each OPP
+-varies based on the silicon variant in use. Allwinner Process Voltage
+-Scaling Tables defines the voltage and frequency value based on the
+-speedbin blown in the efuse combination. The sun50i-cpufreq-nvmem driver
+-reads the efuse value from the SoC to provide the OPP framework with
+-required information.
+-
+-Required properties:
+---------------------
+-In 'cpus' nodes:
+-- operating-points-v2: Phandle to the operating-points-v2 table to use.
+-
+-In 'operating-points-v2' table:
+-- compatible: Should be
+-	- 'allwinner,sun50i-h6-operating-points'.
+-- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
+-		efuse registers that has information about the speedbin
+-		that is used to select the right frequency/voltage value
+-		pair. Please refer the for nvmem-cells bindings
+-		Documentation/devicetree/bindings/nvmem/nvmem.txt and
+-		also examples below.
+-
+-In every OPP node:
+-- opp-microvolt-<name>: Voltage in micro Volts.
+-			At runtime, the platform can pick a <name> and
+-			matching opp-microvolt-<name> property.
+-			[See: opp.txt]
+-			HW:		<name>:
+-			sun50i-h6	speed0 speed1 speed2
+-
+-Example 1:
+----------
+-
+-	cpus {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		cpu0: cpu@0 {
+-			compatible = "arm,cortex-a53";
+-			device_type = "cpu";
+-			reg = <0>;
+-			enable-method = "psci";
+-			clocks = <&ccu CLK_CPUX>;
+-			clock-latency-ns = <244144>; /* 8 32k periods */
+-			operating-points-v2 = <&cpu_opp_table>;
+-			#cooling-cells = <2>;
+-		};
+-
+-		cpu1: cpu@1 {
+-			compatible = "arm,cortex-a53";
+-			device_type = "cpu";
+-			reg = <1>;
+-			enable-method = "psci";
+-			clocks = <&ccu CLK_CPUX>;
+-			clock-latency-ns = <244144>; /* 8 32k periods */
+-			operating-points-v2 = <&cpu_opp_table>;
+-			#cooling-cells = <2>;
+-		};
+-
+-		cpu2: cpu@2 {
+-			compatible = "arm,cortex-a53";
+-			device_type = "cpu";
+-			reg = <2>;
+-			enable-method = "psci";
+-			clocks = <&ccu CLK_CPUX>;
+-			clock-latency-ns = <244144>; /* 8 32k periods */
+-			operating-points-v2 = <&cpu_opp_table>;
+-			#cooling-cells = <2>;
+-		};
+-
+-		cpu3: cpu@3 {
+-			compatible = "arm,cortex-a53";
+-			device_type = "cpu";
+-			reg = <3>;
+-			enable-method = "psci";
+-			clocks = <&ccu CLK_CPUX>;
+-			clock-latency-ns = <244144>; /* 8 32k periods */
+-			operating-points-v2 = <&cpu_opp_table>;
+-			#cooling-cells = <2>;
+-		};
+-        };
+-
+-        cpu_opp_table: opp_table {
+-                compatible = "allwinner,sun50i-h6-operating-points";
+-                nvmem-cells = <&speedbin_efuse>;
+-                opp-shared;
+-
+-                opp@480000000 {
+-                        clock-latency-ns = <244144>; /* 8 32k periods */
+-                        opp-hz = /bits/ 64 <480000000>;
+-
+-                        opp-microvolt-speed0 = <880000>;
+-                        opp-microvolt-speed1 = <820000>;
+-                        opp-microvolt-speed2 = <800000>;
+-                };
+-
+-                opp@720000000 {
+-                        clock-latency-ns = <244144>; /* 8 32k periods */
+-                        opp-hz = /bits/ 64 <720000000>;
+-
+-                        opp-microvolt-speed0 = <880000>;
+-                        opp-microvolt-speed1 = <820000>;
+-                        opp-microvolt-speed2 = <800000>;
+-                };
+-
+-                opp@816000000 {
+-                        clock-latency-ns = <244144>; /* 8 32k periods */
+-                        opp-hz = /bits/ 64 <816000000>;
+-
+-                        opp-microvolt-speed0 = <880000>;
+-                        opp-microvolt-speed1 = <820000>;
+-                        opp-microvolt-speed2 = <800000>;
+-                };
+-
+-                opp@888000000 {
+-                        clock-latency-ns = <244144>; /* 8 32k periods */
+-                        opp-hz = /bits/ 64 <888000000>;
+-
+-                        opp-microvolt-speed0 = <940000>;
+-                        opp-microvolt-speed1 = <820000>;
+-                        opp-microvolt-speed2 = <800000>;
+-                };
+-
+-                opp@1080000000 {
+-                        clock-latency-ns = <244144>; /* 8 32k periods */
+-                        opp-hz = /bits/ 64 <1080000000>;
+-
+-                        opp-microvolt-speed0 = <1060000>;
+-                        opp-microvolt-speed1 = <880000>;
+-                        opp-microvolt-speed2 = <840000>;
+-                };
+-
+-                opp@1320000000 {
+-                        clock-latency-ns = <244144>; /* 8 32k periods */
+-                        opp-hz = /bits/ 64 <1320000000>;
+-
+-                        opp-microvolt-speed0 = <1160000>;
+-                        opp-microvolt-speed1 = <940000>;
+-                        opp-microvolt-speed2 = <900000>;
+-                };
+-
+-                opp@1488000000 {
+-                        clock-latency-ns = <244144>; /* 8 32k periods */
+-                        opp-hz = /bits/ 64 <1488000000>;
+-
+-                        opp-microvolt-speed0 = <1160000>;
+-                        opp-microvolt-speed1 = <1000000>;
+-                        opp-microvolt-speed2 = <960000>;
+-                };
+-        };
+-....
+-soc {
+-....
+-	sid: sid@3006000 {
+-		compatible = "allwinner,sun50i-h6-sid";
+-		reg = <0x03006000 0x400>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		....
+-		speedbin_efuse: speed@1c {
+-			reg = <0x1c 4>;
+-		};
+-        };
+-};
+-- 
+2.23.0
 
-I guess it applies to all your schemas in that patch series, but you
-could just do something like
-
-reg:
-  items:
-    - description: DSS Master common register area
-    - description: DSS Shared common register area 0
-    - description: DSS Shared common register area 1
-
-...
-
-That way, you wouldn't have to worry about the maxItems, and you end
-up doing pretty much that already in the description
-
-> +  reg-names:
-> +    items:
-> +      - const: common_m
-> +      - const: common_s0
-> +      - const: common_s1
-> +      - const: common_s2
-> +      - const: vidl1
-> +      - const: vidl2
-> +      - const: vid1
-> +      - const: vid2
-> +      - const: ovr1
-> +      - const: ovr2
-> +      - const: ovr3
-> +      - const: ovr4
-> +      - const: vp1
-> +      - const: vp2
-> +      - const: vp3
-> +      - const: vp4
-> +      - const: wb
-> +
-> +  clocks:
-> +    maxItems: 5
-> +    description:
-> +      phandles to clock nodes for DSS functional clock (fck) and video
-> +      port 1, 2, 3 and 4 pixel clocks (vp1, vp2, vp3, vp4).
-> +
-> +  clock-names:
-> +    items:
-> +      - const: fck
-> +      - const: vp1
-> +      - const: vp2
-> +      - const: vp3
-> +      - const: vp4
-> +
-> +  interrupts:
-> +    maxItems: 4
-> +    description:
-> +      Interrupt descriptions for common irq registers in common_m,
-> +      common_m0, common_m1, and common_m2, sections.
-
-Same story here, but the names don't match interrupt-names. I guess
-describing what those interrupts actually are would be great: you just
-define how the driver calls them, but not what they are actually doing
-or representing.
-
-I'm guessing that would end up in something like that:
-
-interrupts:
-  items:
-    - description: DSS Master interrupt
-    - description: DSS Shared 0 interrupt
-    - description: DSS Shared 1 interrupt
-    - description: DSS Shared 2 interrupt
-
-Maxime
-
---yiknogogty4yey3d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfs3DwAKCRDj7w1vZxhR
-xQiVAP0YWTQKwabkPS0Ih/yZ7kgZaZI/NkawL5OBnikqfkHl/wEA06JzVJW6zmLb
-KdfMCcJtHUIF26iEy6TRIpttWUDgCAI=
-=Rz1N
------END PGP SIGNATURE-----
-
---yiknogogty4yey3d--
