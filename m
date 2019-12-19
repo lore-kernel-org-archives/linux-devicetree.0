@@ -2,104 +2,126 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3528AC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C7DC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F582465E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080292467E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576786711;
-	bh=VfTsqecZvKIY8/EkeY0QCdgukxjkQR0pSQzaOJTupYo=;
+	s=default; t=1576786768;
+	bh=3FSspEqjeV/r3JnSiuDrlylG7Wl9eHwnoKBtJftz4gk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H/MK/CzZ2u4sWbhh2Gsl62yW/+Rh3/inBdtQzDZcsCeKzy66CjB5DUOcjtb6Ux0Ey
-	 D17QEzTyBCFqFiygDrvEUpSazRLrTxn2dBY/Ua0Y1iHGUlUBGw3brAe0Y2DJbEUSk8
-	 uXF91o03ADU1kHgJaf3g+TdYoSPkDAsamhM5nPwM=
+	b=lgRKroU4vIqj7sP8aYMfBXF9LTyCU5ROXnjtN3hHomLtROP2prQfMNhi2RurDEC95
+	 /EtLHY7u6GNP/e6y8OFqEGMsn3+A7qoKqNb9ay7GyF1V+7C0PbTmwmfvBCrnaB+OyP
+	 DX/DPBs6oS4+BySra/qFaryK5MnUskY4IBgmNdeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfLSUSa (ORCPT
+        id S1726967AbfLSUTY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:18:30 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38255 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbfLSUSa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 15:18:30 -0500
-Received: by mail-ot1-f65.google.com with SMTP id d7so4306798otf.5;
-        Thu, 19 Dec 2019 12:18:29 -0800 (PST)
+        Thu, 19 Dec 2019 15:19:24 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39358 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLSUTX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 15:19:23 -0500
+Received: by mail-ed1-f65.google.com with SMTP id t17so6136013eds.6;
+        Thu, 19 Dec 2019 12:19:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tnn2lsnHNQAVXzxC0VXRfV3Skx5Qn0YuUG77RV4e1f4=;
-        b=MlLfQ27jYD8FugMDHYcN6lVL3Lyw96pp6EJiem46n0XFtWcRa0pxTNbH1T3bkZKQeH
-         6PhbyCoA5GPyXPHM1B1j6NxCyOX/V2sAUmCqVYjizAz8/V1Q4sHXNQyNyV7pq4Ps/npU
-         dAPgxdx+elNEDKvqGPNH3TRUn3UT5ho38I18sKvWPvLtnj+JJ/Ho94n/j5Y8x73jF2p6
-         woJi1x+tmKkaoKaDdEJEwbavLF31q5Bjakp1He/WM2qUs69BwJ66qIK5Q+uBPAsGMmN1
-         xoB3DCsrqe9/d+FRg5zHU6AC5t1k/Tby7rveD3CDJlLR9XBbQsX0aOAvYFDaJF9OTS59
-         /G+w==
-X-Gm-Message-State: APjAAAWCafzJ5RyhvlYM2ft5G6yTaf8AmhViM97qpjP1Zm2uHa+Niz03
-        eUCXruTOZrdgEfjAlhvBXzJL5eECiQ==
-X-Google-Smtp-Source: APXvYqxBxkdP8NA5026YrHHwbHcnwnywi8+E25u6N1bsEKhsXXrdXsVbvnP8oXN7PytjtGNp+xBKnw==
-X-Received: by 2002:a9d:784b:: with SMTP id c11mr10277222otm.246.1576786709659;
-        Thu, 19 Dec 2019 12:18:29 -0800 (PST)
-Received: from localhost (ip-184-205-110-29.ftwttx.spcsdns.net. [184.205.110.29])
-        by smtp.gmail.com with ESMTPSA id q1sm2586004otr.40.2019.12.19.12.18.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 12:18:29 -0800 (PST)
-Date:   Thu, 19 Dec 2019 14:18:22 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 1/5] clk: ti: clkctrl: Fix hidden dependency to node name
-Message-ID: <20191219201822.GA19262@bogus>
-References: <20191210172108.38868-1-tony@atomide.com>
- <20191210172108.38868-2-tony@atomide.com>
+        bh=1z6z1Ui8LL1nkwwIvcM2qSFeAknNPztf5Dw5KcO2dK8=;
+        b=sS8NsZJcXcY8TgpHCpIbqW9V5OzarWXytTpQ8I79KR+JDiVB1Q4w0df8fgVfLkZLsP
+         QppebyM5rQLw4qBSyvplYNDscsIFUI7WytzCjfgSNR28svfrltxPY4sMrHe/KtE+gqKc
+         7o2xqq82jbtzbPzYCjvTd1E7C7k8iCwJwG6DuZ6augRV4mTuVT5iOZibGaICkZIk4OVs
+         /duT5SKPDGxCtDrTGp2snC0E4I0dMSi4j/6yeVfQIYdnd3w8Z7pPU0r5PqKoOODUJgKF
+         mBLPBfSlIyvl1WKvxRvYrzo5yl3kK+LEThN94aDmshg+bpNWNRO3soKrVjqgyJ8f1vDK
+         1r7g==
+X-Gm-Message-State: APjAAAVwDJaEYLWKsuFyemHOkK1sW++kXNjjvM+nrEaE6BpHxfVUL5pR
+        1v3dDHwmBIMCvNc+yE31cKo=
+X-Google-Smtp-Source: APXvYqwwejroRBv27RRKI+KjHOuS4q02b2b9jWEyzsgC2C9l3pOef3KwtMfRZqXDwDfmgHuveS0ogQ==
+X-Received: by 2002:a17:906:5606:: with SMTP id f6mr11822819ejq.179.1576786761612;
+        Thu, 19 Dec 2019 12:19:21 -0800 (PST)
+Received: from kozik-lap ([194.230.155.234])
+        by smtp.googlemail.com with ESMTPSA id m2sm626166edp.85.2019.12.19.12.19.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 19 Dec 2019 12:19:20 -0800 (PST)
+Date:   Thu, 19 Dec 2019 21:19:17 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, kgene@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 7/9] memory: samsung: exynos5422-dmc: Replace deprecated
+ 'devfreq-events' property
+Message-ID: <20191219201917.GA21576@kozik-lap>
+References: <20191217055738.28445-1-cw00.choi@samsung.com>
+ <CGME20191217055106epcas1p2c43a45e34983c1b3e60cc6fd842dd33e@epcas1p2.samsung.com>
+ <20191217055738.28445-8-cw00.choi@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191210172108.38868-2-tony@atomide.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191217055738.28445-8-cw00.choi@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 10 Dec 2019 09:21:04 -0800, Tony Lindgren wrote:
-> We currently have a hidden dependency to the device tree node name for
-> the clkctrl clocks. Instead of using standard node name like "clock", we
-> must use "l4-per-clkctrl" type naming so the clock driver can find the
-> associated clock domain. Further, if "clk" is specified for a clock node
-> name, the driver sets TI_CLK_CLKCTRL_COMPAT flag that uses different
-> logic for the clock name based on the parent node name for the all the
-> clkctrl clocks for the SoC.
+On Tue, Dec 17, 2019 at 02:57:36PM +0900, Chanwoo Choi wrote:
+> In order to remove the deprecated 'devfreq-events' property, replace with
+> new 'exynos,ppmu-device' property in order to get the devfreq-event device
+> in devicetree file instead of 'devfreq-events' property. But, to guarantee
+> the backward-compatibility, keep the support 'devfreq-events' property.
 > 
-> If the clock node naming dependency is not understood, the related
-> clockdomain is not found, or a wrong one can get used if a clock manager
-> has multiple clock domains.
-> 
-> As each clkctrl instance represents a single clock domain, let's allow
-> using domain specific compatible names to specify the clock domain.
-> 
-> This simplifies things and removes the hidden dependency to the node
-> name. And then later on, after the node names have been standardized,
-> we can drop the related code for parsing the node names.
-> 
-> Let's also update the binding to use standard "clock" node naming
-> instead of "clk" and add the missing description for reg.
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 > ---
->  .../devicetree/bindings/clock/ti-clkctrl.txt  | 11 ++-
->  drivers/clk/ti/clk.c                          |  4 +-
->  drivers/clk/ti/clkctrl.c                      | 96 ++++++++++++++++---
->  3 files changed, 96 insertions(+), 15 deletions(-)
-> 
+>  .../memory-controllers/exynos5422-dmc.txt     |  6 ++--
+>  drivers/memory/samsung/exynos5422-dmc.c       | 29 +++++++++++++++----
+>  2 files changed, 26 insertions(+), 9 deletions(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+In general looks good for me but I need an ack from Rob.  Patch should
+be also split and sent as one of first in the series (before code).
+
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> index 02e4a1f862f1..1e1b3702f045 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> @@ -17,14 +17,14 @@ Required properties for DMC device for Exynos5422:
+>  - clock-names : should include "fout_spll", "mout_sclk_spll", "ff_dout_spll2",
+>    "fout_bpll", "mout_bpll", "sclk_bpll", "mout_mx_mspll_ccore",
+>    "mout_mclk_cdrex"  entries
+> -- devfreq-events : phandles for PPMU devices connected to this DMC.
+> +- exynos,ppmu-device : phandles for PPMU devices connected to this DMC.
+>  - vdd-supply : phandle for voltage regulator which is connected.
+>  - reg : registers of two CDREX controllers.
+>  - operating-points-v2 : phandle for OPPs described in v2 definition.
+>  - device-handle : phandle of the connected DRAM memory device. For more
+>  	information please refer to documentation file:
+>  	Documentation/devicetree/bindings/ddr/lpddr3.txt
+> -- devfreq-events : phandles of the PPMU events used by the controller.
+> +- exynos,ppmu-device : phandles of the PPMU events used by the controller.
+>  - samsung,syscon-clk : phandle of the clock register set used by the controller,
+>  	these registers are used for enabling a 'pause' feature and are not
+>  	exposed by clock framework but they must be used in a safe way.
+> @@ -73,7 +73,7 @@ Example:
+>  			      "mout_mx_mspll_ccore",
+>  			      "mout_mclk_cdrex";
+>  		operating-points-v2 = <&dmc_opp_table>;
+> -		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
+> +		exynos,ppmu-device = <&ppmu_event3_dmc0_0>, <&ppmu_event3_dmc0_1>,
+>  				 <&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+
+Indentation is broken here.
+
+Best regards,
+Krzysztof
+
