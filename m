@@ -2,238 +2,133 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA65C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FD5C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A90A124672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:01:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576789263;
-	bh=lEN6q3UFnYM5nSy1YeiYxd/7Jk7j0g+TiFsK74eXnLw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KgCU0lw+2MNASqfWQvA0Kw30HUBKt+ngB0f3K5ehQ8dI2rpxe/3QvJY5hO399xJBp
-	 8g1pDuhhiVBfAcTV0yBINhEbl6o+EjMb4zgEpK3CVWy+hqEKlDDSQQbVwVJonY8ZEa
-	 PFVlfALImgQf7b+eUjbAS+HwZGe657FcOX6nFpM4=
+	by mail.kernel.org (Postfix) with ESMTP id EC96724684
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:04:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="c3PM1Xtz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfLSVBD (ORCPT
+        id S1726959AbfLSVEU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:01:03 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43190 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfLSVBD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 16:01:03 -0500
-Received: by mail-ot1-f66.google.com with SMTP id p8so8836419oth.10;
-        Thu, 19 Dec 2019 13:01:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ON8eGjdOxXDNxXRbcSo/zXFn8dAXPmlNBuT1v9QHzVI=;
-        b=gOYZaPMLL6OtfUWfTkipWvfJE0jY/Ruxl1Pt9NbR2GlfgSEgg6VXiPeoFdCKkAZbF0
-         I/pDoW8CebzKqgJajr5TNUMOJiFrPgPVrbraeIORiPYA7YB9qsaKruQuugHXmvVq5b2p
-         9Pv6+CLaLWbMa6QahJkNhHj502ulZPJw0VU/uMFFvOYqS3xBEajXWOKarCwJRD9KuY1K
-         hrVZNBonARBPJfRLipngluLJKezbih+obAAxmXL7OdDzEF8poAUnYWUZl71CeBhk3muI
-         FNKYKJGfxmH6AWQjX/MtUF9BM8j/YoEmFCPINqBZJcQdAMx7lghaVyYHbTEKIFXptdey
-         Lfjw==
-X-Gm-Message-State: APjAAAV065/3zEDH+H6SPsgm0TZOEcoT2z5DEh6TYE6MLW9omT6OC3CX
-        llRA+LBloe9RcXTVK20+LQ==
-X-Google-Smtp-Source: APXvYqymkyfBQbbE6mbUJpRdoEUTa5HJV/Tz+rBwksGN5tWKB0xiojoCFA5+NT3bUfNmrK77J5+/Fg==
-X-Received: by 2002:a9d:760f:: with SMTP id k15mr10786676otl.65.1576789261369;
-        Thu, 19 Dec 2019 13:01:01 -0800 (PST)
-Received: from localhost (ip-184-205-110-29.ftwttx.spcsdns.net. [184.205.110.29])
-        by smtp.gmail.com with ESMTPSA id b81sm2432958oia.0.2019.12.19.13.01.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 13:01:00 -0800 (PST)
-Date:   Thu, 19 Dec 2019 15:00:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, dave.stevenson@raspberrypi.com,
-        peter.griffin@linaro.org
-Subject: Re: [PATCH 1/2] dt-bindings: media: i2c: Add IMX219 CMOS sensor
- binding
-Message-ID: <20191219205934.GA19011@bogus>
-References: <20191211115441.10637-1-andrey.konovalov@linaro.org>
- <20191211115441.10637-2-andrey.konovalov@linaro.org>
+        Thu, 19 Dec 2019 16:04:20 -0500
+Received: from mail-eopbgr1410101.outbound.protection.outlook.com ([40.107.141.101]:33284
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726880AbfLSVET (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 16:04:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V99mcXo4GQY8uWREo1QPSsY3UO5lsBfW+2462Nx8W+hZAst02dccRnetfvze+TAaXa8nGImKWWztla8+eynSt0KDd7uc9kmDXgcyAbbjGp8a5BeGxEa+vGhfB4YYuLA71lyVK8U86/51BXJDR1+u9V9XBRpTO1cN/+du9vJLKf+UQJXiouI/4BFXzUZ5O06mM6WTlPu3awEdNAKsSb4aW9BobIItChXinU742HsRvsME+yZa6sZn9MDvIfLDSrqZShzZss4t07RWxd9k7bIQv/aZsfORW3+jwJzXAZX9Hn6w/GgIxIS/dJJ0XNK9u+tRnL3fUXS3np4kNqt3DVkWsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WHKIes1QBRpa4Z2C5P9EGE4vmvO1oqOWmP4wP0QEPqc=;
+ b=GQUcQVzWyRjGbdfKzsFlKFNTwqHbCw29rjMBxtm8MUSoHXpXEVJUWa68W2OatoSmI4Wc0ZjIW8oKwnLJO+CX5hKhD66a0bXr0zBTpq7nziHt5IWSPoNqV4wzuOG2EUsV1WyOuJYNAdAhgAZjuN3v2ILN5h9Pu5oLFei25iubYc5kY7a/KtvQYwhc1SSQmvG3LfZ/yil/ajqjuvRztlYYo+yZeGwCSdPoRgd18iJYJfIHkmCTZxPLHh/hpGMMDxrnmFxk8TmLEEMpRVvKcz2p4BngJj327eKFUxx+ZcRmQ9hY5noQvWbDWQYvzfn3zDiWSurs5pI5EDotgpIWRCl2MQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WHKIes1QBRpa4Z2C5P9EGE4vmvO1oqOWmP4wP0QEPqc=;
+ b=c3PM1XtzLVrbZeLnBcN7Grh830gLzPq9aaUXRpOtCYl8pJ1Q41Yo1hq0QM8BVf62GVXa6yhV555HAL5ZgJ+4d1R/LYWlqOYKJJzVpTRK/ECqVp9sAuNqV/AGFKgdlqMS6MnRdRfUQ8U0OJmft7yzKBxvMj85L5r9zxMhyn6zkj8=
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
+ TY1PR01MB1786.jpnprd01.prod.outlook.com (52.133.163.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.16; Thu, 19 Dec 2019 21:04:12 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2538.019; Thu, 19 Dec 2019
+ 21:04:12 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: RE: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
+Thread-Topic: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
+Thread-Index: AQHVrDsFo/XrCnZmIE+HK5Vec6rH7qevIW6AgAK0x/CAA35sAIABOkowgAa4UICAABhMQIABaMMAgALzYFCAACk8AIAAH8tA
+Date:   Thu, 19 Dec 2019 21:04:12 +0000
+Message-ID: <TY1PR01MB1562A75F78A7877A733EEFFF8A520@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20191206134202.18784-1-chris.brandt@renesas.com>
+ <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com>
+ <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
+ <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <590840ce-a250-2512-3d04-c2420d83f7da@cogentembedded.com>
+ <TY1PR01MB1562B9EB96818DCA507079808A510@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <bb630141-021c-5618-f266-b98b29956fa8@cogentembedded.com>
+ <TY1PR01MB1562E196AB1C582F186CC74B8A520@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <6f4c5d92-3ca4-2d1d-47c4-cbd52ad428b0@cogentembedded.com>
+In-Reply-To: <6f4c5d92-3ca4-2d1d-47c4-cbd52ad428b0@cogentembedded.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctMTlhMmE1NmMtMjJhMy0xMWVhLWFhNTgtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XDE5YTJhNTZkLTIyYTMtMTFlYS1hYTU4LTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iMTAzNSIgdD0iMTMyMjEyNjMwNTAzOTgzMjM5IiBoPSJqRHpwa0RzR2QwSmdUS1hoV0NZTnVyT0ZSZzg9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [75.60.247.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c895258c-2807-4e4d-877f-08d784c6ffc0
+x-ms-traffictypediagnostic: TY1PR01MB1786:
+x-microsoft-antispam-prvs: <TY1PR01MB17863505BEBF866827415C058A520@TY1PR01MB1786.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0256C18696
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(396003)(376002)(346002)(39860400002)(366004)(189003)(199004)(64756008)(7416002)(66446008)(71200400001)(81166006)(81156014)(2906002)(33656002)(6506007)(8676002)(55016002)(66946007)(5660300002)(186003)(76116006)(9686003)(66556008)(26005)(66476007)(478600001)(8936002)(54906003)(110136005)(7696005)(86362001)(316002)(4744005)(4326008)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1786;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5MY1doASJNXwCbJKLST0rRdyx9XV6/FJbZiZh9fU6H7T0ZkjD0UxLwSx/dc1cwG8hASuxShRcLd8vFJ7J+/PI3VF0RA1PB8P0K1LZrK4uzeVq18qVEIg1o0qzdE1X6LnBU0uGEOGtyJUpxNh8TVCrDQ4qh0SD73QgWi9HNpZWNpQMRO4RoFbPlEcmmF2DkTuMf9uiColxv29+OGz6FPcgboGlw6utG7F7IM279s32OXOsRDslWxBAWyz7CPzt9HqVz/fJoOlghHY5BoqMgW+HAPUQtziW64FikAsDdKB31oiZOUM8t58RfibI01GnGk8bJ3dSwQ+rPM3kcQ2yLk1uNBQ3fGUM789QkSSDmeFvHkWg1RrY2a8t7rniX2RdTSD2eURrI/CxZOuXYEnghP8BCjCJ+kgoGRJI73f39DAkkkM/Fa5x61tNPURBbr9slxj
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211115441.10637-2-andrey.konovalov@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c895258c-2807-4e4d-877f-08d784c6ffc0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Dec 2019 21:04:12.3884
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: e84bpNODD2PAUXDxYPEiJ8948+GuZAH1dfSrXvX8MVDy83WZDW+6fq49+Izhmzh2hLHf5wVQNi5ExcOGXXaZfVI1kyquVJW8V7NSj97rP5c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1786
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 02:54:40PM +0300, Andrey Konovalov wrote:
-> Add YAML device tree binding for IMX219 CMOS image sensor, and
-> the relevant MAINTAINERS entries.
-> 
-> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
-> ---
->  .../devicetree/bindings/media/i2c/imx219.yaml | 112 ++++++++++++++++++
->  MAINTAINERS                                   |   8 ++
->  2 files changed, 120 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/imx219.yaml b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> new file mode 100644
-> index 000000000000..5e4293c21933
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> @@ -0,0 +1,112 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license new bindings:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/imx219.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Sony 1/4.0-Inch 8Mpixel CMOS Digital Image Sensor
-> +
-> +maintainers:
-> +  - Dave Stevenson <dave.stevenson@raspberrypi.com>
-> +
-> +description: |-
-> +  The Sony imx219 is a 1/4.0-inch CMOS active pixel digital image sensor
-> +  with an active array size of 3280H x 2464V. It is programmable through
-> +  I2C interface. The I2C address is fixed to 0x10 as per sensor data sheet.
-> +  Image data is sent through MIPI CSI-2, which is configured as either 2 or
-> +  4 data lanes.
-> +
-> +properties:
-> +  compatible:
-> +    const: sony,imx219
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: xclk
-> +
-> +  VDIG-supply:
-> +    description:
-> +      Digital I/O voltage supply, 1.8 volts
-> +
-> +  VANA-supply:
-> +    description:
-> +      Analog voltage supply, 2.8 volts
-> +
-> +  VDDL-supply:
-> +    description:
-> +      Digital core voltage supply, 1.2 volts
-> +
-> +  xclr-gpios:
-> +    description: |-
-> +      Reference to the GPIO connected to the xclr pin, if any.
-> +      Must be released after all supplies are applied.
-> +      This is an active high signal to the imx219.
-> +
-> +  clock-noncontinuous:
-> +    description: |-
-> +      Presence of this boolean property decides whether the MIPI CSI-2 clock
-> +      is continuous or non-continuous.
-> +
-> +  camera-clk: true
-
-Not a standard prop. Needs a type, description, etc.
-
-> +
-> +  port: true
-> +
-> +  data-lanes:
-> +    description: |-
-> +      Should be <1 2 3 4> for four-lane operation, or <1 2> for two-lane
-> +      operation.
-> +    const: <1 2>
-
-Not valid json-schema. Run 'make dt_binding_check' and fix the errors.
-
-These also go under the 'endpoint' node.
-
-> +  clock-lanes:
-> +    const: <0>
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - VANA-supply
-> +  - VDIG-supply
-> +  - VDDL-supply
-
-port required?
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        imx219: sensor@10 {
-> +            compatible = "sony,imx219";
-> +            reg = <0x10>;
-> +            clocks = <&imx219_clk>;
-> +            clock-names = "xclk";
-> +            VANA-supply = <&imx219_vana>;   /* 2.8v */
-> +            VDIG-supply = <&imx219_vdig>;   /* 1.8v */
-> +            VDDL-supply = <&imx219_vddl>;   /* 1.2v */
-> +
-> +            imx219_clk: camera-clk {
-> +                compatible = "fixed-clock";
-> +                #clock-cells = <0>;
-> +                clock-frequency = <24000000>;
-> +            };
-> +
-> +            port {
-> +                imx219_0: endpoint {
-> +                    remote-endpoint = <&csi1_ep>;
-> +                    clock-lanes = <0>;
-> +                    data-lanes = <1 2>;
-> +                    clock-noncontinuous;
-> +                    bus-type = <4>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 02d5278a4c9a..3baf2954d2f4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15339,6 +15339,14 @@ S:	Maintained
->  F:	drivers/media/i2c/imx214.c
->  F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
->  
-> +SONY IMX219 SENSOR DRIVER
-> +M:	Dave Stevenson <dave.stevenson@raspberrypi.com>
-> +L:	linux-media@vger.kernel.org
-> +T:	git git://linuxtv.org/media_tree.git
-> +S:	Maintained
-> +F:	drivers/media/i2c/imx219.c
-> +F:	Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> +
->  SONY IMX258 SENSOR DRIVER
->  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
->  L:	linux-media@vger.kernel.org
-> -- 
-> 2.17.1
-> 
+T24gVGh1LCBEZWMgMTksIDIwMTksIFNlcmdlaSBTaHR5bHlvdiB3cm90ZToNCj4gICAgQXBwYXJl
+bnRseSB5b3UgaGF2ZSBtaXNzZWQgdGhlIHByZXZpb3VzIFJGQyBpdGVyYXRpb24sIHRoZSBNRkQv
+U1BJIGRyaXZlcnMNCj4gcG9zdGVkDQo+IGF0IGVuZCBvZiBNYXk6DQoNCk9LLCB0aGFua3MuIEkn
+bGwgZ28gZ2V0IHRoZW0uDQpFbmQgb2YgTWF5Li4uLnRoYXQgd2FzIGEgd2hpbGUgYmFjay4NCg0K
+PiAgICBUaGUgTUZEIGRyaXZlciB3YXMgc2hvdCBkb3duIGJ5IExlZSBKb25lcyB3aG8gaGFzIGFk
+dmlzZWQgcGxhY2luZyB0aGUNCj4gY29tbW9uDQo+IGNvZGUgaW50byBkcml2ZXJzL21lbW9yeS8g
+aW5zdGVhZC4uLiBJIGRvbid0IHdhbnQgdG8gcmUtcG9zdCB0aGUgU1BJIGRyaXZlcg0KPiBhcw0K
+PiBJIGhhdmVuJ3QgeWV0IGFkZHJlc3NlZCBhbGwgb2YgTWFyayBCcm93bidzIGNvbW1lbnRzLi4u
+DQoNCkZvciBub3csIEkganVzdCB3YW50IHRvIGNoZWNrIGlmIGZ1bmN0aW9uYWxseSBpdCB3b3Jr
+cyB0aGUgc2FtZSBmb3IgUlovQS4NCg0KPiAgICBQbGVhc2UgdHJ5IHRoZXNlIHBhdGNoZXMsIHRo
+ZXJlJ3MgYSBiaWcgY2hhbmNlIHRoZXknbGwgd29yay4NCg0KSWYgaXQgZG9lcywgdGhhdCB3b3Vs
+ZCBiZSBuaWNlLg0KVGhpcyBIVyBpcyBnb2luZyB0byBiZSBjb250aW51ZWQgdG8gYmUgdXNlZCBp
+biBuZXcgU29Dcy4NCg0KDQo+IEhhdmUgaGFwcHkgaG9saWRheXMhIChPdXJzIGhhcHBlbiBvbiAx
+LzEgYW5kIGxhc3QgdGlsbCAxLzggdGhpcw0KPiB5ZWFyLikNCg0KWW91IHRvbyENCg0KQ2hyaXMN
+Cg0KICAgICAgICAgICAgICoNCiAgICAgICAgICAgIC8uXA0KICAgICAgICAgICAvLi4nXA0KICAg
+ICAgICAgICAvJy4nXA0KICAgICAgICAgIC8uJycuJ1wNCiAgICAgICAgICAvLicuJy5cDQogICAg
+ICAgICAvJy4nJy4nLlwNCiAgICAgICAgIF5eXltfXV5eXg0KDQoNCg==
