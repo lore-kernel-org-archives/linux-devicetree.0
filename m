@@ -2,104 +2,99 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7316DC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 14:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48452C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 14:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476212053B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 14:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AEE520684
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 14:58:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sCqge6Ue"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwdTe8q2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfLSOsv (ORCPT
+        id S1726758AbfLSO6y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:48:51 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:19617 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726767AbfLSOsv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 09:48:51 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576766931; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=3zKPnWBvxLfobydpG1oWipP1FXmPrlABqmI/X79v9lQ=;
- b=sCqge6UeJOw3HZGXDPIJmhBxxBGUar5fZfjo5ydvT+32gX36m49bE7tRmJlt6IAEdrirH9Oe
- M/df4yXVjwjSRpGLuk91YiUx6O0gJmugX8iTKQm1f/VdnlCt/D6lbZAhnouDUKAi0JDioG/d
- qpHqR0WwUAEi3eV5weMl9WIFQb8=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfb8dd0.7fb376be70a0-smtp-out-n03;
- Thu, 19 Dec 2019 14:48:48 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6DD52C00A44; Thu, 19 Dec 2019 14:48:48 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E782CC5383A;
-        Thu, 19 Dec 2019 14:48:47 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 19 Dec 2019 20:18:47 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Trilok Soni <tsoni@codeaurora.org>,
-        Prasad Sodagudi <psodagud@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: edac: Add DT bindings for Kryo EDAC
-In-Reply-To: <CAL_JsqL-uBGy5ekHUZAJB4L1QYoCpnOw-4QPpZraXnsZ49wZ6w@mail.gmail.com>
-References: <cover.1575529553.git.saiprakash.ranjan@codeaurora.org>
- <0101016ed57a3259-eee09e9e-e99a-40f1-ab1c-63e58a42615c-000000@us-west-2.amazonses.com>
- <20191218233714.GA30302@bogus>
- <7469b239edd4beed3e8fefdf02f10ada@codeaurora.org>
- <CAL_JsqL-uBGy5ekHUZAJB4L1QYoCpnOw-4QPpZraXnsZ49wZ6w@mail.gmail.com>
-Message-ID: <86b3a0735df320bc7808930f2bbd0d97@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Thu, 19 Dec 2019 09:58:54 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43406 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726701AbfLSO6y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 09:58:54 -0500
+Received: by mail-wr1-f65.google.com with SMTP id d16so6262862wre.10;
+        Thu, 19 Dec 2019 06:58:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2fgPMrd9C+AKftleHVnn57a7bDx3FxZOsu1zeqIFgxc=;
+        b=NwdTe8q2pdyU/zYMroacZdwZE6vgTCjOSl2QT0WdYpudW0Lz6rSolLyAs+63audr8x
+         t387tewbV0LhJdqe0ekA1EGpv+q4nFCReTGv81arfQH/qRxAj/nv902BHZAfxQSFP5Ag
+         gdZGwrq7X7Tq2YH7d4y6k1HliLLz3kXcnwL74ec7RGddd1Q8/IajfFX162tg/lRj0pzA
+         zdvOirkCCuYf0hrxd19ZhXaBOOd/Lz2WrSkOiO+D9twBYD0fMJR1MwL5JYAvwa6LRZnl
+         nRqm5sNlgIFP2tCHDh42ECss17vc6LmSX/QvQGpkveYX3cwQEf1Jl8lRuMHh7s++tXRL
+         zd7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2fgPMrd9C+AKftleHVnn57a7bDx3FxZOsu1zeqIFgxc=;
+        b=H2U2TfP0Hok4grpdzBEYw4DzhKDL21BdPh7/bRDuwtQtzWHv+AlcBUtST+KanT/BBz
+         yzliVaXO7kX944QEpoPSQcFzJd+x35dNkW2YIYH2v6OdVmPS12Umol2uu210W0s/SyV3
+         rY93bKMTNTzP7G/DK3sR2ylirI5Rmsi1RerVVLDb8KSwSgLIIE+j5dORfmtppyNmMlUH
+         8XcwNf6UE47ZdHQChr5VWpPUmlhUOdJO0TZcDABTtS7INF2msc2lJUX4y80jt3eFW/S8
+         JuxuLnOpI6WFQ0HBp7icctWkaCdqxN8tCz2tZDDeoWxdQ01ePughot6yQ74xV9bngA2E
+         et6A==
+X-Gm-Message-State: APjAAAW3sWQtVEuaN3cI8XJg1Bgwk4fbxTsA7wwl89EcNwZqPdzgCJ7A
+        xVM1XHE4Hk1rccAGm3wmoLc=
+X-Google-Smtp-Source: APXvYqwQG+ZpFPzQJF7IasX91H6w8GEyPcnxbOAAQ2nHd6IPilq17lB4KnK481iqBLiq5LMwx/cg1A==
+X-Received: by 2002:adf:ef92:: with SMTP id d18mr9652877wro.234.1576767531302;
+        Thu, 19 Dec 2019 06:58:51 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id t1sm6457866wma.43.2019.12.19.06.58.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Dec 2019 06:58:50 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     ulf.hansson@linaro.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: mmc: clarify disable-wp text
+Date:   Thu, 19 Dec 2019 15:58:43 +0100
+Message-Id: <20191219145843.3823-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-12-19 19:28, Rob Herring wrote:
->> > Is that your intent?
->> >
->> 
->> No, I want any combination of interrupts to be valid with atleast one
->> interrupt as mandatory.
->> I thought specifying minItems as 1 and maxItems as 4 will take care of
->> this,  am I doing something wrong?
-> 
-> Interrupts (really all properties) have a defined order in DT and an
-> 'items' list defines both the order and index. You'll need to use
-> oneOf and list out the possibilities. Stick to ones you actually need.
-> 
+Clarify disable-wp text.
+Clean up and add that "disable-wp" is not used in combination
+with eMMC or SDIO.
 
-Thanks, I will make the change in the next spin.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
--Sai
-
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+index b130450c3..3c0df4016 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
++++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+@@ -96,11 +96,10 @@ properties:
+     description:
+       When set, no physical write-protect line is present. This
+       property should only be specified when the controller has a
+-      dedicated write-protect detection logic. If a GPIO is always
+-      used for the write-protect detection. If a GPIO is always used
++      dedicated write-protect detection logic. If a GPIO is always used
+       for the write-protect detection logic, it is sufficient to not
+       specify the wp-gpios property in the absence of a write-protect
+-      line.
++      line. Not used in combination with eMMC or SDIO.
+ 
+   wp-gpios:
+     description:
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.11.0
+
