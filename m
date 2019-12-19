@@ -7,102 +7,122 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C716CC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 22:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68032C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 22:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B1F227BF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 22:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34EF824679
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 22:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576793390;
-	bh=wqMKQK4mw5tODaGVCgyksnod/0pmknI0fBsf9GXStxs=;
+	s=default; t=1576793829;
+	bh=hBitebeHLpRJrPRWGnWKAypqkhFpKyFeoVOBqiwoKOs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LMvbfVRxQ/N8nWOe23GbEVfb+2GK0Ptpvrqhr9mmyNiAlsCIry4EvwHxC6meb+p31
-	 lRffH9PLdUXnFH+4Yu0SMajW4EqfaGJpyBOPgr4I3iNj2kPT3DpGoA+7JIUg742S8Z
-	 E4hEoOMcydHUXN3VpeDF2iZQXn2rdo9YrHgVQySo=
+	b=WQ1CnPiIVaNAPPjgVYjtDZv4dvSlFGi5Vlf2B+7Z7ygarH1+0yBRhxvRJSlc1PkHT
+	 mI6wFoPV6YK1Jn65kFxPfpyYMTtsdpbfu1p/5icNzLU7K+5CzzcYc2P3TPqtyZyTBw
+	 GQmJZywXpkc/1eqSwKnuv0oSr4JiZg7hEngNJ2FY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfLSWJu (ORCPT
+        id S1726930AbfLSWRI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 17:09:50 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33666 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbfLSWJu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 17:09:50 -0500
-Received: by mail-ot1-f67.google.com with SMTP id b18so9110336otp.0;
-        Thu, 19 Dec 2019 14:09:49 -0800 (PST)
+        Thu, 19 Dec 2019 17:17:08 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38909 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbfLSWRI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 17:17:08 -0500
+Received: by mail-ot1-f68.google.com with SMTP id d7so4718700otf.5;
+        Thu, 19 Dec 2019 14:17:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U/RsU+PHhomGsnfo9Kn/8bLlHcdkcwPTofimyib2fkg=;
-        b=BMLeNW0InQUQqfM/4MntTroiczI7RL2g2OkifXkRp6Uq414c9O/Qw1Y3M8t86qtwT8
-         WD4U9KwM4vaqRF33qrWlV+XP7r9xyXGJ895Ku2ZhrvE0wqgQZsuQInnXT5N6Ak4C8j2n
-         hBI26ckubhbKHHz5LNJEG+IV+8l7WUCIB10xeNLiCWMSIzYYxMWNBQ32TYtGZO/kXrrb
-         wVnLHts6THkX1ShxgoH5POTVonXvaR8XHUCKT8g53jlDx7IczS3M8zugRyLHBjBv2cZk
-         nB8T1y95TubAX50mXuvdithbPqFImp+UerhHHdGTTEvEgCc0scd7vxltpi3rvwg9wN1n
-         zSBg==
-X-Gm-Message-State: APjAAAV2ISqEYkpnPNbnWFebf46eHN7BYJYDyccihsPQ7w1mnFhg+dAG
-        HTCYCDEUbL2djP47K/4imw==
-X-Google-Smtp-Source: APXvYqw5FQ4e+aIqVsw74a4fj9fZYz5Nsy+tPvDT5b5N8G/g1Ad8B4kx9pwAtrDVKMSqRUmTsoVXSA==
-X-Received: by 2002:a9d:66c1:: with SMTP id t1mr9925887otm.73.1576793389133;
-        Thu, 19 Dec 2019 14:09:49 -0800 (PST)
+        bh=5ILXDN1450NSoTBVRQ9h8p5BBXStd/5/sYnUN4gZkEU=;
+        b=AfcCnxw66Xm4xj3/uaj96hUih/wZPWp/39S37oqu1AXBgSrPH/uohnYPdWQMPRQbID
+         nMmUuLKnBbe8PPGRG/uqYJYbB/XmsbzgZ5vhLMB0B7GLeQ7pJWkkxAxLNNPH+bhG681+
+         0u2suoR1abdpNr8RBWkITO27Jyd3w5yNwqYKEJn/UmkwaJ72H4XUixNEotg//kn6rMHe
+         C6gniUcBc9Q7zHjqYHE85iXRlSQbr2jihh6U7kIBr+xrg8Apmsyb9nBlkL7lBcdSHV/t
+         51iczsUGblldhoAnlXE7SpsyWNWPvF1axwkfi08fSnUAM2saMceeM+KSJgeTCg34jt1W
+         95LA==
+X-Gm-Message-State: APjAAAXvjOLV4Sr1DCBrgJdKX1zlKHrql32TDdmam1piHFesmBNMtEZy
+        fNewOtetDKBiYw5B3vWFk724esfouK+E
+X-Google-Smtp-Source: APXvYqzgo2yxPw/RLQelQ/Toif55vOb7c6TRuzug4aYI/qpUspauUD8BYilEuy4TBwLluzpi2tS75g==
+X-Received: by 2002:a9d:367:: with SMTP id 94mr10557603otv.329.1576793827572;
+        Thu, 19 Dec 2019 14:17:07 -0800 (PST)
 Received: from localhost (ip-184-205-0-249.ftwttx.spcsdns.net. [184.205.0.249])
-        by smtp.gmail.com with ESMTPSA id a17sm1700902otp.66.2019.12.19.14.09.47
+        by smtp.gmail.com with ESMTPSA id n16sm2605492otk.25.2019.12.19.14.17.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 14:09:48 -0800 (PST)
-Date:   Thu, 19 Dec 2019 16:09:46 -0600
+        Thu, 19 Dec 2019 14:17:07 -0800 (PST)
+Date:   Thu, 19 Dec 2019 16:17:04 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         John Youn <John.Youn@synopsys.com>
-Subject: Re: [RFC PATCH 06/14] usb: devicetree: dwc3: Add max lane and lsm
-Message-ID: <20191219220946.GA24304@bogus>
+Subject: Re: [RFC PATCH 13/14] usb: devicetree: dwc3: Add property to disable
+ mult TRB fetch
+Message-ID: <20191219221704.GA29965@bogus>
 References: <cover.1576118671.git.thinhn@synopsys.com>
- <aa9816c1efcdd492d698b421a94f0771961f414e.1576118671.git.thinhn@synopsys.com>
+ <b791f032edb8e6a739c342dbd0d2d5faa66ddfb8.1576118671.git.thinhn@synopsys.com>
+ <87mubyvtuh.fsf@kernel.org>
+ <6193f738-03ac-51b5-cdf0-d9b252a50146@synopsys.com>
+ <87d0cswvs9.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aa9816c1efcdd492d698b421a94f0771961f414e.1576118671.git.thinhn@synopsys.com>
+In-Reply-To: <87d0cswvs9.fsf@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 06:49:37PM -0800, Thinh Nguyen wrote:
-> Add a new property to set maximum number of lanes and transfer rated
-> supported for DWC_usb32. By default, the driver will configure the
-> controller to use dual-lane at 10Gbps.
+On Fri, Dec 13, 2019 at 09:04:54AM +0200, Felipe Balbi wrote:
 > 
-> Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+> Hi,
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index 66780a47ad85..7da1c4e7d380 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -85,6 +85,10 @@ Optional properties:
->   - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
->  	register for post-silicon frame length adjustment when the
->  	fladj_30mhz_sdbnd signal is invalid or incorrect.
-> + - snps,maximum-lane-count: set to specify the number of lanes to use for
-> +			DWC_usb32 and later. Default is dual-lanes.
-
-Why do you need this? When is it not the number of lanes the phy has?
-
-Reuse 'num-lanes' from PCI binding?
-
-> + - snps,maximum-lsm: set to specify the lane speed mantissa to use in Gbps.
-> + 			Default is 10Gbps for SuperSpeed Plus.
-
-So the value is '10' or '10Gbps'. Other valid values?
-
->   - snps,rx-thr-num-pkt-prd: periodic ESS RX packet threshold count - host mode
->  			only. Set this and rx-max-burst-prd to a valid,
->  			non-zero value 1-16 (DWC_usb31 programming guide
-> -- 
-> 2.11.0
+> Thinh Nguyen <Thinh.Nguyen@synopsys.com> writes:
+> >> Thinh Nguyen <Thinh.Nguyen@synopsys.com> writes:
+> >>> DWC_usb32 has a feature where it can issue multiple TRB fetch requests.
+> >>> Add a new property to limit and only do only single TRB fetch request.
+> >>>
+> >>> Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+> >>> ---
+> >>>   Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
+> >>>   1 file changed, 2 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> >>> index ff35fa6de2eb..29d6f9b1fc70 100644
+> >>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> >>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> >>> @@ -108,6 +108,8 @@ Optional properties:
+> >>>    - snps,num-trb-prefetch: max value to do TRBs cache for DWC_usb32. The value
+> >>>   			can be from 1 to DWC_USB32_CACHE_TRBS_PER_TRANSFER.
+> >>>   			Default value is DWC_USB32_CACHE_TRBS_PER_TRANSFER.
+> >>> + - snps,dis-mult-trb-fetch: set to issue only single TRB fetch request in
+> >>> +			DWC_usb32.
+> >> two questions:
+> >>
+> >> - how is this different from passing 1 to the previous DT binding
+> >
+> > The previous DT binding is related to the number TRBs to cache while 
+> > this one is related to whether the controller will send multiple 
+> > (internal) fetch commands to fetch the TRBs.
+> >
+> >> - do we know of anybody having issues with multi-trb prefetch?
+> >
+> > No, we added this for various internal tests.
 > 
+> We really a better way for you guys to have your test coverage enabled
+> with upstream kernel. I wonder if DT guys would accept a set of bindings
+> marked as "for testing purposes". In any case, we really need to enable
+> Silicon Validation with upstream kernel.
+
+Well, anything would be better than the endless stream of new 
+properties. Include 'test-mode' in the property names would be fine I 
+guess.
+
+However, why do they need to be in DT rather than module params or 
+debugfs settings? Changing at runtime or reloading the module is a 
+better experience than editting a DT and rebooting.
+
+Rob
