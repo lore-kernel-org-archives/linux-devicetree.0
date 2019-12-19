@@ -2,127 +2,362 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7746C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 15:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C051C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84093227BF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 15:57:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cmz6/G6Y"
+	by mail.kernel.org (Postfix) with ESMTP id 2A7E824650
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfLSP5U (ORCPT
+        id S1726866AbfLSQAv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 10:57:20 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:34732 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfLSP5T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 10:57:19 -0500
-Received: by mail-yw1-f68.google.com with SMTP id b186so2343782ywc.1;
-        Thu, 19 Dec 2019 07:57:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yhTnmr/VJ4AJ01HwBs+ZAFD8EOFGnGlia8f2h6iSFZU=;
-        b=Cmz6/G6Y0m1HQmz2q1FxdrA1SpVCmyT5uistLN2Y24TZilQKfjH+fhteww874a3ra9
-         DGTXyMz09ohrtHGgtt1chZC8K0UsPLuAz9yQgazxEJ+e+EEjL8wPtlGYVnMCAyPih7ne
-         DGpgMjjpXE8PuQukl1MDMvXU6lMAjjhrMew1MeWLZMaftt4ZBHqHfqkH979EkocjXTTN
-         pzBKD7iQ49xDx/m24/3xpSCC6SoLH6vL0frB2jfEtpTHeRaHFe7YVFtwIsF/MvZPLuci
-         jpuYNIdysuDUtdBsZ6zdpzzIW2emDBRrHP/5T7LaQXMeYs48+CFGGyHL27HgzPsg5ENl
-         JJeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yhTnmr/VJ4AJ01HwBs+ZAFD8EOFGnGlia8f2h6iSFZU=;
-        b=V+CoVL6by+hEuBjeMhxlMJIwHn58Y2V/dA3xQe2l4/FBczu74kBbxwoLbUk+l3obKk
-         MzT2SWkIYIhytlPhRa74JnFge8ecKMwYVIaO0DUkrhFa8lO7Di2jgGFjhgW2Zz3X9znM
-         PwGszYfivt5Rn6rmvxD4WVbMGrLJnsJsvXAKM6Xfc/c3fCED8GWP+Vd2WtjoYS0+xsNZ
-         RAWK0AaRaiGuwerP5SvvlC6Wy7hcyq7VyZA2FYQO4UOHgDOud5VUoB12TBQS9zqU/4iF
-         SLLq1DFNmeoBHMh83VdS3qlJz0qfvNhxHhsZ0gTnCMClWmxMbYhwcqNrULC8cdh+0T6H
-         +vjg==
-X-Gm-Message-State: APjAAAVtJaYK+5j/s30NbbM8puYBqVgtCWcI/qOC1xtEfHuLBeFVniJx
-        mafjfcWrxu4WdaDMf0YeTrNaBIGV
-X-Google-Smtp-Source: APXvYqwdVAFztUWBozK65C6Q3f4EkdIlyHUGHM2EtcVxhXPRSezFuunMsLNz/5bHo6m0IM4CU7FvXg==
-X-Received: by 2002:a0d:eb92:: with SMTP id u140mr7076375ywe.6.1576771038781;
-        Thu, 19 Dec 2019 07:57:18 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id y206sm2704594ywa.102.2019.12.19.07.57.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Dec 2019 07:57:18 -0800 (PST)
-Subject: Re: [PATCH] of: refcount leak when phandle_cache entry replaced
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-References: <1575965693-30395-1-git-send-email-frowand.list@gmail.com>
- <20191211201856.GA21857@bogus>
- <486ce60c-8a74-7baf-1054-c81c83e79e56@gmail.com>
- <CAL_JsqL_0UUrjPG3G4vzO5fzzREV4tr5Y+ykRxzU+Cqz4_YgdQ@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <1b02de95-acd2-5acd-4427-b89ec2cb5119@gmail.com>
-Date:   Thu, 19 Dec 2019 09:57:17 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 19 Dec 2019 11:00:51 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9102 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726789AbfLSQAv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 11:00:51 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJFwhjT089605;
+        Thu, 19 Dec 2019 11:00:35 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2x089gv1wc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Dec 2019 11:00:34 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBJG0ROH001030;
+        Thu, 19 Dec 2019 16:00:33 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03dal.us.ibm.com with ESMTP id 2wvqc7bheu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Dec 2019 16:00:33 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBJG0VLe28180824
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 16:00:31 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A6F30BE068;
+        Thu, 19 Dec 2019 16:00:31 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C1E8BE06A;
+        Thu, 19 Dec 2019 16:00:31 +0000 (GMT)
+Received: from [9.211.143.195] (unknown [9.211.143.195])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 19 Dec 2019 16:00:30 +0000 (GMT)
+Subject: Re: [PATCH v3 07/12] soc: aspeed: xdma: Add user interface
+To:     Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de,
+        Joel Stanley <joel@jms.id.au>
+References: <1576681778-18737-1-git-send-email-eajames@linux.ibm.com>
+ <1576681778-18737-8-git-send-email-eajames@linux.ibm.com>
+ <de68ff11-0942-422a-b233-ff578b06eefc@www.fastmail.com>
+From:   Eddie James <eajames@linux.ibm.com>
+Message-ID: <22d81b7d-4f1c-30b9-e895-1f38a862462e@linux.ibm.com>
+Date:   Thu, 19 Dec 2019 10:00:30 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqL_0UUrjPG3G4vzO5fzzREV4tr5Y+ykRxzU+Cqz4_YgdQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <de68ff11-0942-422a-b233-ff578b06eefc@www.fastmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-19_04:2019-12-17,2019-12-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=2
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 adultscore=0 spamscore=0
+ clxscore=1015 malwarescore=0 mlxscore=0 mlxlogscore=999 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912190133
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/12/19 8:00 AM, Rob Herring wrote:
-> On Thu, Dec 12, 2019 at 5:17 AM Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> On 12/11/19 2:18 PM, Rob Herring wrote:
->>> On Tue, 10 Dec 2019 02:14:53 -0600, frowand.list@gmail.com wrote:
->>>> From: Frank Rowand <frank.rowand@sony.com>
->>>>
->>>> of_find_node_by_phandle() does not do an of_node_put() of the existing
->>>> node in a phandle cache entry when that node is replaced by a new node.
->>>>
->>>> Reported-by: Rob Herring <robh+dt@kernel.org>
->>>> Fixes: b8a9ac1a5b99 ("of: of_node_get()/of_node_put() nodes held in phandle cache")
->>>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->>>> ---
->>>>
->>>> Checkpatch will warn about a line over 80 characters.  Let me know
->>>> if that bothers you.
->>>>
->>>>  drivers/of/base.c | 2 ++
->>>>  1 file changed, 2 insertions(+)
->>>>
->>>
->>> Applied, thanks.
->>>
->>> Rob
->>>
->>
->> If the rework patch of the cache that you posted shortly after accepting
->> my patch, then my patch becomes not needed and is just extra noise in the
->> history.  Once your patch finishes review (I am assuming it probably
->> will), then my patch should be reverted.
-> 
-> The question is what to backport: nothing, this patch or mine? My
-> thought was to apply this mainly to backport. If you're fine with
-> nothing or mine, then we can drop it. I'm a bit nervous marking mine
-> for stable.
-> 
-> Rob
-> 
 
-Your rework patch is slightly larger than what is preferred for stable,
-but it is more likely that future patches to the files in the rework
-patch will be able to be applied to stable.  So I am happy with
-either nothing or your patch.
+On 12/18/19 7:19 PM, Andrew Jeffery wrote:
+>
+> On Thu, 19 Dec 2019, at 01:39, Eddie James wrote:
+>> This commits adds a miscdevice to provide a user interface to the XDMA
+>> engine. The interface provides the write operation to start DMA
+>> operations. The DMA parameters are passed as the data to the write call.
+>> The actual data to transfer is NOT passed through write. Note that both
+>> directions of DMA operation are accomplished through the write command;
+>> BMC to host and host to BMC.
+>>
+>> The XDMA driver reserves an area of physical memory for DMA operations,
+>> as the XDMA engine is restricted to accessing certain physical memory
+>> areas on some platforms. This memory forms a pool from which users can
+>> allocate pages for their usage with calls to mmap. The space allocated
+>> by a client will be the space used in the DMA operation. For an
+>> "upstream" (BMC to host) operation, the data in the client's area will
+>> be transferred to the host. For a "downstream" (host to BMC) operation,
+>> the host data will be placed in the client's memory area.
+>>
+>> Poll is also provided in order to determine when the DMA operation is
+>> complete for non-blocking IO.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> ---
+>> Changes since v2:
+>>   - Rework commit message to talk about VGA memory less
+>>   - Remove user reset functionality
+>>   - Clean up sanity checks in aspeed_xdma_write()
+>>   - Wait for transfer complete in the vm area close function
+>>
+>>   drivers/soc/aspeed/aspeed-xdma.c | 205 ++++++++++++++++++++++++++++++-
+>>   1 file changed, 203 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/soc/aspeed/aspeed-xdma.c b/drivers/soc/aspeed/aspeed-xdma.c
+>> index cb94adf798b1..e844937dc925 100644
+>> --- a/drivers/soc/aspeed/aspeed-xdma.c
+>> +++ b/drivers/soc/aspeed/aspeed-xdma.c
+>> @@ -13,6 +13,7 @@
+>>   #include <linux/io.h>
+>>   #include <linux/jiffies.h>
+>>   #include <linux/mfd/syscon.h>
+>> +#include <linux/miscdevice.h>
+>>   #include <linux/module.h>
+>>   #include <linux/mutex.h>
+>>   #include <linux/of_device.h>
+>> @@ -201,6 +202,8 @@ struct aspeed_xdma {
+>>   	struct clk *clock;
+>>   	struct reset_control *reset;
+>>   
+>> +	/* file_lock serializes reads of current_client */
+>> +	struct mutex file_lock;
+> I wonder whether start_lock can serve this purpose.
+>
+>>   	/* client_lock protects error and in_progress of the client */
+>>   	spinlock_t client_lock;
+>>   	struct aspeed_xdma_client *current_client;
+>> @@ -223,6 +226,8 @@ struct aspeed_xdma {
+>>   	void __iomem *mem_virt;
+>>   	dma_addr_t cmdq_phys;
+>>   	struct gen_pool *pool;
+>> +
+>> +	struct miscdevice misc;
+>>   };
+>>   
+>>   struct aspeed_xdma_client {
+>> @@ -522,6 +527,185 @@ static irqreturn_t aspeed_xdma_pcie_irq(int irq,
+>> void *arg)
+>>   	return IRQ_HANDLED;
+>>   }
+>>   
+>> +static ssize_t aspeed_xdma_write(struct file *file, const char __user *buf,
+>> +				 size_t len, loff_t *offset)
+>> +{
+>> +	int rc;
+>> +	struct aspeed_xdma_op op;
+>> +	struct aspeed_xdma_client *client = file->private_data;
+>> +	struct aspeed_xdma *ctx = client->ctx;
+>> +
+>> +	if (len != sizeof(op))
+>> +		return -EINVAL;
+>> +
+>> +	rc = copy_from_user(&op, buf, len);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	if (!op.len || op.len > client->size ||
+>> +	    op.direction > ASPEED_XDMA_DIRECTION_UPSTREAM)
+>> +		return -EINVAL;
+>> +
+>> +	if (file->f_flags & O_NONBLOCK) {
+>> +		if (!mutex_trylock(&ctx->file_lock))
+>> +			return -EAGAIN;
+>> +
+>> +		if (ctx->current_client) {
+> Should be tested under client_lock for consistency with the previous patch,
+> though perhaps you could use READ_ONCE()?
 
--Frank
+
+I think READ_ONCE will work.
+
+
+
+>
+>> +			mutex_unlock(&ctx->file_lock);
+>> +			return -EBUSY;
+>> +		}
+>> +	} else {
+>> +		mutex_lock(&ctx->file_lock);
+>> +
+>> +		rc = wait_event_interruptible(ctx->wait, !ctx->current_client);
+>> +		if (rc) {
+>> +			mutex_unlock(&ctx->file_lock);
+>> +			return -EINTR;
+>> +		}
+>> +	}
+>> +
+>> +	aspeed_xdma_start(ctx, &op, client->phys, client);
+>> +
+>> +	mutex_unlock(&ctx->file_lock);
+> Shouldn't we lift start_lock out of aspeed_xdma_start() use that here
+> instead of file_lock? I think that would mean that we could remove
+> file_lock.
+
+
+That wouldn't work with the reset though. The reset should hold 
+start_lock as well, but if a client is waiting here with start_lock, 
+we'd never get to the reset if the transfer doesn't complete. I think 
+file_lock is necessary.
+
+
+>
+>> +
+>> +	if (!(file->f_flags & O_NONBLOCK)) {
+>> +		rc = wait_event_interruptible(ctx->wait, !client->in_progress);
+>> +		if (rc)
+>> +			return -EINTR;
+>> +
+>> +		if (client->error)
+>> +			return -EIO;
+>> +	}
+>> +
+>> +	return len;
+>> +}
+>> +
+>> +static __poll_t aspeed_xdma_poll(struct file *file,
+>> +				 struct poll_table_struct *wait)
+>> +{
+>> +	__poll_t mask = 0;
+>> +	__poll_t req = poll_requested_events(wait);
+>> +	struct aspeed_xdma_client *client = file->private_data;
+>> +	struct aspeed_xdma *ctx = client->ctx;
+>> +
+>> +	if (req & (EPOLLIN | EPOLLRDNORM)) {
+>> +		if (client->in_progress)
+>> +			poll_wait(file, &ctx->wait, wait);
+>> +
+>> +		if (!client->in_progress) {
+>> +			if (client->error)
+>> +				mask |= EPOLLERR;
+>> +			else
+>> +				mask |= EPOLLIN | EPOLLRDNORM;
+>> +		}
+>> +	}
+>> +
+>> +	if (req & (EPOLLOUT | EPOLLWRNORM)) {
+>> +		if (ctx->current_client)
+>> +			poll_wait(file, &ctx->wait, wait);
+>> +
+>> +		if (!ctx->current_client)
+>> +			mask |= EPOLLOUT | EPOLLWRNORM;
+>> +	}
+>> +
+>> +	return mask;
+>> +}
+>> +
+>> +static void aspeed_xdma_vma_close(struct vm_area_struct *vma)
+>> +{
+>> +	int rc;
+>> +	struct aspeed_xdma_client *client = vma->vm_private_data;
+>> +
+>> +	rc = wait_event_interruptible(client->ctx->wait, !client->in_progress);
+>> +	if (rc)
+>> +		return;
+>> +
+>> +	gen_pool_free(client->ctx->pool, (unsigned long)client->virt,
+>> +		      client->size);
+>> +
+>> +	client->virt = NULL;
+>> +	client->phys = 0;
+>> +	client->size = 0;
+>> +}
+>> +
+>> +static const struct vm_operations_struct aspeed_xdma_vm_ops = {
+>> +	.close =	aspeed_xdma_vma_close,
+>> +};
+>> +
+>> +static int aspeed_xdma_mmap(struct file *file, struct vm_area_struct *vma)
+>> +{
+>> +	int rc;
+>> +	struct aspeed_xdma_client *client = file->private_data;
+>> +	struct aspeed_xdma *ctx = client->ctx;
+>> +
+>> +	/* restrict file to one mapping */
+>> +	if (client->size)
+>> +		return -EBUSY;
+>> +
+>> +	client->size = vma->vm_end - vma->vm_start;
+>> +	client->virt = gen_pool_dma_alloc(ctx->pool, client->size,
+>> +					  &client->phys);
+>> +	if (!client->virt) {
+>> +		client->phys = 0;
+>> +		client->size = 0;
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	vma->vm_pgoff = (client->phys - ctx->mem_phys) >> PAGE_SHIFT;
+>> +	vma->vm_ops = &aspeed_xdma_vm_ops;
+>> +	vma->vm_private_data = client;
+>> +	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+>> +
+>> +	rc = io_remap_pfn_range(vma, vma->vm_start, client->phys >> PAGE_SHIFT,
+>> +				client->size, vma->vm_page_prot);
+>> +	if (rc) {
+> Probably worth a dev_warn() here so we know what happened?
+
+
+Sure.
+
+
+>
+>> +		gen_pool_free(ctx->pool, (unsigned long)client->virt,
+>> +			      client->size);
+>> +
+>> +		client->virt = NULL;
+>> +		client->phys = 0;
+>> +		client->size = 0;
+>> +		return rc;
+>> +	}
+>> +
+>> +	dev_dbg(ctx->dev, "mmap: v[%08lx] to p[%08x], s[%08x]\n",
+>> +		vma->vm_start, (u32)client->phys, client->size);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int aspeed_xdma_open(struct inode *inode, struct file *file)
+>> +{
+>> +	struct miscdevice *misc = file->private_data;
+>> +	struct aspeed_xdma *ctx = container_of(misc, struct aspeed_xdma, misc);
+>> +	struct aspeed_xdma_client *client = kzalloc(sizeof(*client),
+>> +						    GFP_KERNEL);
+>> +
+>> +	if (!client)
+>> +		return -ENOMEM;
+>> +
+>> +	client->ctx = ctx;
+>> +	file->private_data = client;
+>> +	return 0;
+>> +}
+>> +
+>> +static int aspeed_xdma_release(struct inode *inode, struct file *file)
+>> +{
+>> +	struct aspeed_xdma_client *client = file->private_data;
+>> +
+>> +	kfree(client);
+> I assume the vma gets torn down before release() gets invoked? I haven't
+> looked closely.
+
+
+ From what I've read, yes, the VMA has to be closed before release() can 
+be called.
+
+
+Thanks for the review!
+
+Eddie
+
+
+>
+> Andrew
