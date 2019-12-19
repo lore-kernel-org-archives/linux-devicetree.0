@@ -2,210 +2,148 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E718C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611B3C2D0C1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 319182465E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:35:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="IXIl2AZ6"
+	by mail.kernel.org (Postfix) with ESMTP id 348482467E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576791537;
+	bh=oOst0TpWxhm5WEYkozLH7AQ99Nmcvz5QtmDfatMC2pA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n+chnP/Gv4TqjFIEI2hM6BISnnIrET8HHFlwQYxzJIrygEJZqrCyaSPYsWeF+gr2Z
+	 s7eBbGs9Wk66XDbth9tjGjV+5hlVewn3QOhHqKJL36fe3xBEb5G6k2Zk9dL+KfGuRE
+	 K8JPp1B9dyMgAtM2dIjfiQBYw+/YTK5SxuDKT5Qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfLSVfF (ORCPT
+        id S1727344AbfLSViu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:35:05 -0500
-Received: from mail-eopbgr70087.outbound.protection.outlook.com ([40.107.7.87]:15837
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726959AbfLSVfF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 16:35:05 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bNxWaUN0ch1aGaaJaDYAKlnwU+LG4U/Oe1eYFQiTyyaaFsjKseL8Sy1D0FfUCIoaaAIFBCIt90TFSVmo5FQegzBZ694pxUPg/KRBT7cvQ+hkHkV4AxtgssVLhmWkbH/Tu3RvKqYPrE0b9OlHWFD4VIJN7TYJJSEeF4CZ9WdI3p9SO/fTFtTAlGAtiOTWhLCdzYCIegcuwRmYEhBCtqQLsaq8AHEAYoYfu3+VF/Nucq3ZoSGcSqMimfzDS2VO/mvh3U0FkIDLcqZzF2/7ulQToh7t5qZDf1r1o5hfZIXmAP1WcoYStVBIRJvV3ogNQTfFFpMcAbLRAV+1WjSdnLJHPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x80zUu1xVgFTooyKCf4/iax/nNkFcz/k8VqP7dv8Nh4=;
- b=gHafL/FCBBgCJmkkzXfk8JZ37Xv19NQeXEHnO06Sn2ZFsLneOY/BptzM4f7fjNanDRCbjfEOyqotrSXKpRHxSpB3CrSiFB64KQvPX1+vUx6snjjQlu5gzQs9J58ve+Mn5cTJhrfI+xNDzG95cYwLEH5lalDUkUKNmAsZIBID63ophCJlIsz2TI0EyfrxL/k28RdA/FPOdo6lQXTnzqG+WalMD0Zf0o7upaRzodA/6HFEXBPCNjScPBpVbvVINrWTBXRm+J8u23aVymlLWT4mV51IVaCJ+dlzNWAP8Cmx24ZYAARMZdFuOEsZ2uwi7ldDVlZts19teZ7A5ZzkawV/Dw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x80zUu1xVgFTooyKCf4/iax/nNkFcz/k8VqP7dv8Nh4=;
- b=IXIl2AZ6bfxhBm13HPOMFwXnt7Z3V2/sYBMbOgqlYHI3CVONfdEsPX/OR4AJE9jT0XI6jNzR/f6/zFJeuyaiYHWunRrk5SKInFt7SvBLBQfYsivRV6y+DKP1+SjTWks2s8TREkx/aAEPfI4jDjD8xyWF7Il1WrpvgFOUchk6URg=
-Received: from VI1PR04MB5567.eurprd04.prod.outlook.com (20.178.123.83) by
- VI1PR04MB4062.eurprd04.prod.outlook.com (52.133.12.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.13; Thu, 19 Dec 2019 21:34:58 +0000
-Received: from VI1PR04MB5567.eurprd04.prod.outlook.com
- ([fe80::f099:4735:430c:ef1d]) by VI1PR04MB5567.eurprd04.prod.outlook.com
- ([fe80::f099:4735:430c:ef1d%2]) with mapi id 15.20.2559.016; Thu, 19 Dec 2019
- 21:34:58 +0000
-From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Thread-Topic: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Thread-Index: AQHVtn//emqdPRPEmEKC7Ncoej9h46fBtnoAgAAMIfCAAA5LAIAAIOYw
-Date:   Thu, 19 Dec 2019 21:34:57 +0000
-Message-ID: <VI1PR04MB5567010C06EB9A4734431106EC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
-References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
- <20191219172834.GC25745@shell.armlinux.org.uk>
- <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
- <20191219190308.GE25745@shell.armlinux.org.uk>
-In-Reply-To: <20191219190308.GE25745@shell.armlinux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=madalin.bucur@oss.nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [188.27.188.128]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 99e87d89-63f2-47d0-d91f-08d784cb4bcd
-x-ms-traffictypediagnostic: VI1PR04MB4062:
-x-microsoft-antispam-prvs: <VI1PR04MB40626ED801F8D30B8A22F61FAD520@VI1PR04MB4062.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0256C18696
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(346002)(376002)(366004)(199004)(189003)(13464003)(6506007)(53546011)(7696005)(86362001)(71200400001)(66446008)(4326008)(66946007)(52536014)(64756008)(66556008)(76116006)(9686003)(66476007)(186003)(6916009)(2906002)(81166006)(81156014)(8676002)(478600001)(5660300002)(33656002)(54906003)(26005)(55016002)(8936002)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4062;H:VI1PR04MB5567.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: oss.nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4jV6nx2BbBI4EHEK5ni18xnfsc1HDGGPN6A6x6ASW4mQ1pa+EhJ+L6LG6W+qixzo58cdQspf7QSAFS+u12j09lTIrox7R9MV+UNWncR4zasog8MbD7k4tI3+GxvLqqeKxP3cCpFykm3edpvpKo9Gg1k1/OysG4e3bQQpRGsOxcZH+5jwhzvBory77hANnttgtWLqBzqfUOKluPnss6uYAVXZuaW5CMPv2lAu5DtOtDkVQIg0UnbA97QHwc7AmVBzu036JTsKxxiyHmhJsfKXhEIkafSO3DaXYQLGBhi+dfFMOF//NapsGvtpqsDYh1V1/+9uQGCaqJVM7bJ3hfPNVUmKXIzgsI4dTSyFm/m6vg+AHb5gUlzLj8Q7FPH7Tpf2jnHRRGfxeIk0AzWyrWGBdCIO4Y1I5sLlEyxaSSftimxpnRr/hE0k9E73oEqkE0TeqiUHeM5nB5K6DeWCICl8L1FYJiXb1u6hPI0fXJHfGWO1uxRZ0BhRPsFX5hauV3um
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 19 Dec 2019 16:38:50 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46364 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLSViu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 16:38:50 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y14so4005794pfm.13;
+        Thu, 19 Dec 2019 13:38:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=A8qzfXgJqfz0JsylJ7w5yc0iwoDWilLcpVP41fGSaVY=;
+        b=sp6jN/DAYmh1enzLowAxt+CQNyzsEJFI4+AW3rDNa98uIQiqkHydnmsh4uBOi0hujT
+         hM+8ZT5cd1m5ZN7C10poqLosAYdj4Hi2i3bIaYJ3ksj/3Ibko6A/nJeCmwcMM58c3f4V
+         PHvHESWX3AQIOHxMkssH6KXSfZr1g1xwXk8AgBDtkkz2jvGkfe5l0yGqV0AYao8YuUdl
+         KDowwrZsS5ynK6XrZf+Dc/Bty4NpMwCVVxaBnbXXhb13V214oME/1nosB6bFQTrHrCBL
+         PAOl23apfnUVawQ72qrtdc74WHa5c1NmgC9V54FZjDIX2jwdfOXEN7GpZDO7QaeakdzI
+         DUYA==
+X-Gm-Message-State: APjAAAVd2O+lEC7uBWbOsslf5W9RabYx83PsGHK9Mtoi5hrHfWlWP1wf
+        ozyDDNbgp9th1RpaPEhrRw==
+X-Google-Smtp-Source: APXvYqxZh6usqcMuDpjIzx8tWU+6WwnJbiDYBNuEG9Di9Qzpk8aU8oFtnRSoasoMfjjZop8d7zm5Lw==
+X-Received: by 2002:a63:a707:: with SMTP id d7mr10954574pgf.93.1576791529663;
+        Thu, 19 Dec 2019 13:38:49 -0800 (PST)
+Received: from localhost ([172.58.27.162])
+        by smtp.gmail.com with ESMTPSA id p5sm8161313pgs.28.2019.12.19.13.38.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 13:38:48 -0800 (PST)
+Date:   Thu, 19 Dec 2019 13:38:45 -0800
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Peter Chen <peter.chen@nxp.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, od@zcrc.me,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] power/supply: Add generic USB charger driver
+Message-ID: <20191219213845.GA3481@bogus>
+References: <20191211155032.167032-1-paul@crapouillou.net>
+ <20191211155032.167032-3-paul@crapouillou.net>
+ <20191212091814.GA7035@b29397-desktop>
+ <1576270147.3.0@crapouillou.net>
+ <VI1PR04MB5327401FFD2D32E937548DD48B510@VI1PR04MB5327.eurprd04.prod.outlook.com>
+ <1576493525.3.0@crapouillou.net>
 MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99e87d89-63f2-47d0-d91f-08d784cb4bcd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Dec 2019 21:34:57.9474
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OlN0E+weznj33vKxdN5V0LJboxj6DSvqWKodd55IrrWJgq2XtFSTlTlhHNmsBKR0cLKXugvBVundpaky1LWe5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4062
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1576493525.3.0@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> Sent: Thursday, December 19, 2019 9:03 PM
-> To: Madalin Bucur <madalin.bucur@nxp.com>
-> Cc: davem@davemloft.net; netdev@vger.kernel.org; andrew@lunn.ch;
-> f.fainelli@gmail.com; hkallweit1@gmail.com; shawnguo@kernel.org;
-> devicetree@vger.kernel.org
-> Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
->=20
-> On Thu, Dec 19, 2019 at 06:32:51PM +0000, Madalin Bucur wrote:
-> > > -----Original Message-----
-> > > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > > Sent: Thursday, December 19, 2019 7:29 PM
-> > > To: Madalin Bucur <madalin.bucur@nxp.com>
-> > > Cc: davem@davemloft.net; netdev@vger.kernel.org; andrew@lunn.ch;
-> > > f.fainelli@gmail.com; hkallweit1@gmail.com; shawnguo@kernel.org;
-> > > devicetree@vger.kernel.org
-> > > Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-> > >
-> > > On Thu, Dec 19, 2019 at 05:21:16PM +0200, Madalin Bucur wrote:
-> > > > From: Madalin Bucur <madalin.bucur@nxp.com>
-> > > >
-> > > > Add explicit entries for XFI, SFI to make sure the device
-> > > > tree entries for phy-connection-type "xfi" or "sfi" are
-> > > > properly parsed and differentiated against the existing
-> > > > backplane 10GBASE-KR mode.
-> > >
-> > > 10GBASE-KR is actually used for XFI and SFI (due to a slight mistake
-> on
-> > > my part, it should've been just 10GBASE-R).
-> > >
-> > > Please explain exactly what the difference is between XFI, SFI and
-> > > 10GBASE-R. I have not been able to find definitive definitions for
-> > > XFI and SFI anywhere, and they appear to be precisely identical to
-> > > 10GBASE-R. It seems that it's just a terminology thing, with
-> > > different groups wanting to "own" what is essentially exactly the
-> > > same interface type.
-> >
-> > Hi Russell,
-> >
-> > 10GBase-R could be used as a common nominator but just as well 10G and
-> > remove the rest while we're at it. There are/may be differences in
-> > features, differences in the way the HW is configured (the most
-> > important aspect) and one should be able to determine what interface
-> > type is in use to properly configure the HW. SFI does not have the CDR
-> > function in the PMD, relying on the PMA signal conditioning vs the XFI
-> > that requires this in the PMD. We kept the xgmii compatible for so long
-> > without much issues until someone started cleaning up the PHY supported
-> > modes. Since we're doing that, let's be rigorous. The 10GBase-KR is
-> > important too, we have some backplane code in preparation and having it
-> > there could pave the way for a simpler integration.
->=20
-> The problem we currently have is:
->=20
-> $ grep '10gbase-kr' arch/*/boot/dts -r
->=20
-> virtually none of those are actually backplane. For the mcbin matches,
-> these are either to a 88x3310 PHY for the doubleshot, which dynamically
-> operates between XFI, 5GBASE-R, 2500BASE-X, or SGMII according to the
-> datasheet.
+On Mon, Dec 16, 2019 at 11:52:05AM +0100, Paul Cercueil wrote:
+> Hi Peter,
+> 
+> 
+> Le lun., déc. 16, 2019 at 01:24, Peter Chen <peter.chen@nxp.com> a écrit :
+> > 
+> > >  >>  +
+> > >  >>  +	desc = &charger->desc;
+> > >  >>  +	desc->name = "usb-charger";
+> > >  >>  +	desc->properties = usb_charger_properties;
+> > >  >>  +	desc->num_properties = ARRAY_SIZE(usb_charger_properties);
+> > >  >>  +	desc->get_property = usb_charger_get_property;
+> > >  >>  +	desc->type = POWER_SUPPLY_TYPE_USB;
+> > >  >
+> > >  > What's your further plan for this generic USB charger?
+> > >  > To support BC1.2, we need to know charger type, and how we could
+> > > get
+> > >  > it?
+> > >  >
+> > >  > Peter
+> > > 
+> > >  Well I don't really know. The USB role framework does not give any
+> > > info about
+> > >  what's plugged.
+> > > 
+> > 
+> > What's the use case for this patch set? How it be used?
+> 
+> My devicetree:
+> 
+> usb_otg: usb@13440000 {
+> 	compatible = "ingenic,jz4770-musb", "simple-mfd";
+> 	reg = <0x13440000 0x10000>;
+> 	[...]
+> 
+> 	usb-role-switch;
+> 
+> 	connector {
+> 		compatible = "gpio-usb-b-connector", "usb-b-connector";
+> 		label = "mini-USB";
+> 		type = "mini";
+> 
+> 		id-gpios = <&gpf 18 GPIO_ACTIVE_HIGH>;
+> 		vbus-gpios = <&gpb 5 GPIO_ACTIVE_HIGH>;
+> 		[...]
+> 	};
+> 
+> 	usb_charger: usb-charger {
+> 		compatible = "usb-charger";
 
-Yes, I've seen it's used already in several places:
+What h/w device is this?
 
-$ grep PHY_INTERFACE_MODE_10GKR drivers/net -nr
-drivers/net/phy/marvell10g.c:219:       if (iface !=3D PHY_INTERFACE_MODE_1=
-0GKR) {
-drivers/net/phy/marvell10g.c:307:           phydev->interface !=3D PHY_INTE=
-RFACE_MODE_10GKR)
-drivers/net/phy/marvell10g.c:389:            phydev->interface =3D=3D PHY_I=
-NTERFACE_MODE_10GKR) && phydev->link) {
-drivers/net/phy/marvell10g.c:398:                       phydev->interface =
-=3D PHY_INTERFACE_MODE_10GKR;
-drivers/net/phy/phylink.c:296:          case PHY_INTERFACE_MODE_10GKR:
-drivers/net/phy/aquantia_main.c:361:            phydev->interface =3D PHY_I=
-NTERFACE_MODE_10GKR;
-drivers/net/phy/aquantia_main.c:499:        phydev->interface !=3D PHY_INTE=
-RFACE_MODE_10GKR)
-drivers/net/phy/sfp-bus.c:340:          return PHY_INTERFACE_MODE_10GKR;
-drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1117:   return interface =
-=3D=3D PHY_INTERFACE_MODE_10GKR ||
-drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1203:   case PHY_INTERFACE_=
-MODE_10GKR:
-drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1652:   case PHY_INTERFACE_=
-MODE_10GKR:
-drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:4761:   case PHY_INTERFACE_=
-MODE_10GKR:
-drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:4783:   case PHY_INTERFACE_=
-MODE_10GKR:
+> 	};
+> };
+> 
+> The new gpio-usb-connector driver uses the ID/VBUS GPIOs to detect in which
+> state (device, host, unconnected) a OTG connector is. However, that means I
+> cannot use the standard gpio-charger driver to detect the presence of a
+> charger based on the state of the VBUS gpio, since it's already requested
+> here. So the point of this patchset is to provide an alternative to
+> gpio-charger that works with OTG controllers compatible with
+> 'usb-role-switch'.
 
-We should fix this, if it's incorrect.
+Why not fix gpio-charger or make whatever 'owns' vbus-gpios to register 
+a charger device?
 
-> If we add something else, then the problem becomes what to do about
-> that lot - one of the problems is, it seems we're going to be breaking
-> DT compatibility by redefining 10gbase-kr to be correct.
+I guess you could have Vbus sensing with no charging capability, but 
+that sounds like a new property, not a node to me.
 
-We need the committer/maintainer to update that to a correct value.
-=20
-> It's interesting to hear what the difference is between XFI and SFI,
-> but it's weird that PHYs such as 88x3310 have no configuration of their
-> fiber interface to enable or disable the CDR, yet it supports fiber
-> interfaces, and explicitly shows applications involving "XFI/SFI".
-> There's no mention of the CDR in the datasheet either.
-
-I understand SFI came later, with the advantage of cheaper and less power
-consuming SFP+ modules.
+Rob
