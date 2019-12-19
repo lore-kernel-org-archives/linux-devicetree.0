@@ -2,226 +2,330 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CE7C2D0C1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A2CC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C15A227BF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0162820684
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:39:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="hTbCt7nR"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VOQZSx8C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfLSNhr (ORCPT
+        id S1726779AbfLSNjL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 08:37:47 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:46940 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726695AbfLSNhr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 08:37:47 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJDUF3Q027292;
-        Thu, 19 Dec 2019 08:37:25 -0500
-Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2056.outbound.protection.outlook.com [104.47.44.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2wvtfdmhta-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Dec 2019 08:37:25 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DK7ZS/bAx0cjmCK5FeTNhZ1dwrd6SwqfUbvPNFeJcXFKJDxRywZP61EV5wQsRK14xXzkFvZ/4Fok0dJGlg5FsldpXrmnQ80fLhTtTzQblaNHdUcEyySt5tDY2/aEvCsi6kvVfR0Gr9hCCIXJLQYbwI6TuxtONcSTa4V2RFok2cGgsx1lg+p3N01c2HV1rCxcCOXWUvUlH0mOREG0/L68gsUbLIQ9Qp2vlo3RcZ+2rzRHyQllY9rNnSQ6I5KA7Z33xuNz1r2CT7JyeRqzDrU3GU0bjIxKgm9zudeRV6PzRIyAd2/mUDc/FVq7kFkhVeLgETOP7hFEvz/RNTdBAbZXGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oy3B1hnmT/YRaT5SeWs2Fs9eNIM9YStQjj6aIqH2DMw=;
- b=lxXt7tsvNAUkhp3mhXGuJh8eFpJJYat5+BjaHVZrufEt07SYX0zg7y6Af12jiEUFUIO3RZ0gLq/oKjjfGFYgYmUIr7Ztn7j7xQY589r7lVxmFRd2KHgRGtPOnshPRPFxxnVkI9hqpI2wCjCOj8sPzN71Af0QrOZp6gAW6bSknJZkszi/FCKUIb78R51LDsIVyGPi9RJEvDFHCsUtgTYoLnyhdelJDVxlvdAjmJNIr9yVr3MylVwZdjdRhc8K+pDox3rkckxLSPjtEl8qujUZ8orZfEVZYCLTnvcuZgz3cruLzY/M4lwfKb+yt/kA6mfIGZwj0+4d/WByUeeRGsHgRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oy3B1hnmT/YRaT5SeWs2Fs9eNIM9YStQjj6aIqH2DMw=;
- b=hTbCt7nRabmEHdTBISGYPbK1okyg+/3utAkkjdPvK/cBN7GKLC/x1JF0bjMfvBMtONWJg5zgLc1mGlU/lYfoDEuV/lOfTUJN1JtmdTSxVgMzX0VCgvHE0LQ5UcCqzXNpN/xeMxwGBFkwd4E71BpD3VjsagGCfB/MKnPzx0Fgf9Q=
-Received: from SN6PR2101CA0004.namprd21.prod.outlook.com
- (2603:10b6:805:106::14) by CY4PR03MB2918.namprd03.prod.outlook.com
- (2603:10b6:903:133::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.18; Thu, 19 Dec
- 2019 13:37:14 +0000
-Received: from SN1NAM02FT061.eop-nam02.prod.protection.outlook.com
- (2603:10b6:805:106:cafe::b8) by SN6PR2101CA0004.outlook.office365.com
- (2603:10b6:805:106::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.3 via Frontend
- Transport; Thu, 19 Dec 2019 13:37:14 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- SN1NAM02FT061.mail.protection.outlook.com (10.152.72.196) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2538.14
- via Frontend Transport; Thu, 19 Dec 2019 13:37:14 +0000
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id xBJDbCtP012887
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Thu, 19 Dec 2019 05:37:13 -0800
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 19 Dec
- 2019 08:37:06 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 19 Dec 2019 05:37:05 -0800
-Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id xBJDal8f000582;
-        Thu, 19 Dec 2019 08:37:01 -0500
-From:   Beniamin Bia <beniamin.bia@analog.com>
-To:     <jic23@kernel.org>
-CC:     <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <Michael.Hennerich@analog.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>,
-        Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH 3/3] dt-binding: iio: Add documentation for ADF4371 channel child notes
-Date:   Thu, 19 Dec 2019 15:37:55 +0200
-Message-ID: <20191219133755.26109-3-beniamin.bia@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191219133755.26109-1-beniamin.bia@analog.com>
-References: <20191219133755.26109-1-beniamin.bia@analog.com>
+        Thu, 19 Dec 2019 08:39:11 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59834 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbfLSNjL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 08:39:11 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJDctTQ011473;
+        Thu, 19 Dec 2019 07:38:55 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576762735;
+        bh=q3XvOrjcBieYOQeFtXPER0GdvzA5likRlphOgOxfl/4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VOQZSx8CS3ADxMHslB/W26nMhWIMUenIMwVtfVwApeKzqlQLF+Ndz2k9mMdUgO1N7
+         9ePNWoMwfn39jlL7Ii1bYVpxGe9EcmuJ0QTaElh7FWJ2DbVqhyOHMw35UfbJqwtCtH
+         kWfvO5zJ10wWLqvFMQ52VNH8TK+V00NS5I4AcjlY=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJDctId128028
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Dec 2019 07:38:55 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 07:38:47 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 07:38:47 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJDcilX005205;
+        Thu, 19 Dec 2019 07:38:45 -0600
+Subject: Re: [PATCH v4 3/5] dt-bindings: display: ti,j721e-dss: Add dt-schema
+ yaml binding
+To:     Jyri Sarha <jsarha@ti.com>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
+        <bparrot@ti.com>, <subhajit_paul@ti.com>, <praneeth@ti.com>,
+        <yamonkar@cadence.com>, <sjakhade@cadence.com>, <sam@ravnborg.org>,
+        <robh+dt@kernel.org>, <maxime@cerno.tech>
+References: <cover.1576704528.git.jsarha@ti.com>
+ <89db418c91689beb6e63e0c3c99b39655948b429.1576704528.git.jsarha@ti.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <4fc85057-5867-a082-fd21-22bd5dd258f6@ti.com>
+Date:   Thu, 19 Dec 2019 15:39:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(39860400002)(376002)(136003)(346002)(189003)(199004)(426003)(1076003)(70206006)(70586007)(6916009)(7636002)(7696005)(2616005)(478600001)(54906003)(44832011)(8676002)(6666004)(36756003)(26005)(356004)(336012)(107886003)(246002)(5660300002)(86362001)(8936002)(186003)(2906002)(316002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR03MB2918;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 235bb793-53e0-4c17-1b37-08d784888ebc
-X-MS-TrafficTypeDiagnostic: CY4PR03MB2918:
-X-Microsoft-Antispam-PRVS: <CY4PR03MB29180BF960553045F4580861F0520@CY4PR03MB2918.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 0256C18696
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0z7Pd0TJnZtArvG/Lsu0EdahZslZ3sZDIR2OhcfUgfgLqa6voG2ltabk+K0/nqonDxKCUBeM8M6CxttXErungwsZyZQ0icP1a6pGsvbzOBqf1zrHKQq4RHu7aBodmyzTMHX+fH9YaIqykWNNIxoKH3m6Cnn/8fkg9EyTwGGSUAEwPEH39kXFJM8kTB2wqGz1yM5n7vo5oEii+WTDQ1LHm7d9lzXJmNmqQuBqG2uHWfphKRi9TyC3o65eqZ05hQKKKXy2B+gZyPODDxA12nIrayWGkka3Kf7MMpaL6+oQMHFKZX6YaaumIOEWB/ploSXKlB1Hj8RNVEk3kHRGxLlygEFPsLxNIp/YTdmY+H7Vy0NewYesYq2/GHOmsE5Gnf+9fsMMYOKze+vQuU9H8zGOakrqUs+Zvjr1B+ndux4FHIILSfaJTOWS5KRgX/f18qdQ
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Dec 2019 13:37:14.0114
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 235bb793-53e0-4c17-1b37-08d784888ebc
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR03MB2918
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-19_01:2019-12-17,2019-12-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- clxscore=1015 impostorscore=0 phishscore=0 spamscore=0 mlxscore=0
- malwarescore=0 suspectscore=1 bulkscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912190117
+In-Reply-To: <89db418c91689beb6e63e0c3c99b39655948b429.1576704528.git.jsarha@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch documents the ADF4371 individual channel configuration.
+Hi Jyri,
 
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
----
- .../bindings/iio/frequency/adf4371.yaml       | 63 +++++++++++++++++++
- 1 file changed, 63 insertions(+)
+On 19/12/2019 10.23, Jyri Sarha wrote:
+> Add dt-schema yaml bindig for J721E DSS, J721E version TI Keystone
+> Display SubSystem.
+> 
+> Version history:
+> 
+> v2: no change
+> 
+> v3: - reg-names: "wp" -> "wb"
+>     - Add ports node
+>     - Add includes to dts example
+>     - reindent dts example
+> 
+> v4: - Add descriptions to reg, clocks, and interrups properties
+>     - Remove minItems when its value is the same as maxItems value
+> 
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  .../bindings/display/ti/ti,j721e-dss.yaml     | 209 ++++++++++++++++++
+>  1 file changed, 209 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> new file mode 100644
+> index 000000000000..cd68c4294f9a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> @@ -0,0 +1,209 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 Texas Instruments Incorporated
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/ti/ti,j721e-dss.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Texas Instruments J721E Display Subsystem
+> +
+> +maintainers:
+> +  - Jyri Sarha <jsarha@ti.com>
+> +  - Tomi Valkeinen <tomi.valkeinen@ti.com>
+> +
+> +description: |
+> +  The J721E TI Keystone Display SubSystem with four output ports and
+> +  four video planes. There is two full video planes and two "lite
+> +  planes" without scaling support. The video ports can be connected to
+> +  the SoC's DPI pins or to integrated display bridges on the SoC.
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,j721e-dss
+> +
+> +  reg:
+> +    maxItems: 17
+> +    description: |
+> +      Addresses to each DSS memory region described in the SoC's TRM.
+> +      The reg-names refer to memory regions as follows:
+> +      reg-names: Region Name in TRM:     Description:
+> +      common_m   DSS0_DISPC_0_COMMON_M   DSS Master common register area
+> +      common_s0  DSS0_DISPC_0_COMMON_SO  DSS Shared common register area 0
+> +      common_s1  DSS0_DISPC_0_COMMON_S1  DSS Shared common register area 1
+> +      common_s2  DSS0_DISPC_0_COMMON_S2  DSS Shared common register area 2
+> +      vidl1      DSS0_VIDL1              VIDL1 light video plane 1
+> +      vidl2      DSS0_VIDL2              VIDL2 light video plane 2
+> +      vid1       DSS0_VID1               VID1 video plane 1
+> +      vid2       DSS0_VID2               VID1 video plane 2
+> +      ovr1       DSS0_OVR1               OVR1 overlay manager for vp1
+> +      ovr2       DSS0_OVR2               OVR2 overlay manager for vp2
+> +      ovr3       DSS0_OVR3               OVR1 overlay manager for vp3
+> +      ovr4       DSS0_OVR4               OVR2 overlay manager for vp4
+> +      vp1        DSS0_VP1                VP1 video port 1
+> +      vp2        DSS0_VP2                VP1 video port 2
+> +      vp3        DSS0_VP3                VP1 video port 3
+> +      vp4        DSS0_VP4                VP1 video port 4
+> +      wp         DSS0_WB                 Write Back registers
 
-diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-index 7ec3ec94356b..5339c929e883 100644
---- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-+++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-@@ -40,12 +40,48 @@ properties:
-       output stage will shut down until the ADF4371/ADF4372 achieves lock as
-       measured by the digital lock detect circuitry.
- 
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
- required:
-   - compatible
-   - reg
-   - clocks
-   - clock-names
- 
-+  patternProperties:
-+  "^channel@[01]$":
-+    type: object
-+    description: Represents the external channels which are connected to the device.
-+
-+    properties:
-+      reg:
-+        description: |
-+          The channel number. It can have up to 3 channels on adf4372
-+          and 4 channels on adf4371, numbered from 0 to 3.
-+        maxItems: 1
-+
-+      adi,output-enable:
-+        description: |
-+          If this property is specified, the output channel will be enabled.
-+          If left empty, the driver will initialize the defaults (RF8x, channel 0
-+          will be the only one enabled).
-+        maxItems: 1
-+
-+      adi,power-up-frequency:
-+        description: |
-+          Set the frequency after power up for the channel. If this property is
-+          specified, it has to be in sync with the power up frequency set on the
-+          other channels. This limitation is due to the fact that all the channel
-+          frequencies are derived from the VCO fundamental frequency.
-+        maxItems: 1
-+
-+    required:
-+      - reg
-+
- examples:
-   - |
-     spi0 {
-@@ -55,9 +91,36 @@ examples:
-         frequency@0 {
-                 compatible = "adi,adf4371";
-                 reg = <0>;
-+
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-                 spi-max-frequency = <1000000>;
-                 clocks = <&adf4371_clkin>;
-                 clock-names = "clkin";
-+
-+                channel@0 {
-+                        reg = <0>;
-+                        adi,output-enable;
-+                        adi,power-up-frequency = /bits/ 64 <8000000000>;
-+                };
-+
-+                channel@1 {
-+                        reg = <1>;
-+                        adi,output-enable;
-+                };
-+
-+                channel@2 {
-+                        reg = <2>;
-+                        adi,output-enable;
-+                        adi,power-up-frequency = /bits/ 64 <16000000000>;
-+                };
-+
-+                channel@3 {
-+                        reg = <3>;
-+                        adi,output-enable;
-+                        adi,power-up-frequency = /bits/ 64 <32000000000>;
-+                };
-         };
-     };
- ...
--- 
-2.17.1
+'wp' is back ;)
 
+> +
+> +  reg-names:
+> +    items:
+> +      - const: common_m
+> +      - const: common_s0
+> +      - const: common_s1
+> +      - const: common_s2
+> +      - const: vidl1
+> +      - const: vidl2
+> +      - const: vid1
+> +      - const: vid2
+> +      - const: ovr1
+> +      - const: ovr2
+> +      - const: ovr3
+> +      - const: ovr4
+> +      - const: vp1
+> +      - const: vp2
+> +      - const: vp3
+> +      - const: vp4
+> +      - const: wb
+
+imho the description you put under the 'reg' would be more natural here,
+where you actually specifying the names of the register ranges.
+
+> +
+> +  clocks:
+> +    maxItems: 5
+> +    description:
+> +      phandles to clock nodes for DSS functional clock (fck) and video
+> +      port 1, 2, 3 and 4 pixel clocks (vp1, vp2, vp3, vp4).
+> +
+> +  clock-names:
+> +    items:
+> +      - const: fck
+> +      - const: vp1
+> +      - const: vp2
+> +      - const: vp3
+> +      - const: vp4
+
+Same comment, it is more natural to have the description coupled with
+what you are describing.
+
+> +
+> +  interrupts:
+> +    maxItems: 4
+> +    description:
+> +      Interrupt descriptions for common irq registers in common_m,
+> +      common_m0, common_m1, and common_m2, sections.
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: common_m
+> +      - const: common_s0
+> +      - const: common_s1
+> +      - const: common_s2
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +    description: phandle to the associated power domain
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      Ports as described in Documentation/devictree/bindings/graph.txt
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        description:
+> +          The output port node form video port 1
+> +
+> +      port@1:
+> +        type: object
+> +        description:
+> +          The output port node from video port 2
+> +
+> +      port@2:
+> +        type: object
+> +        description:
+> +          The output port node from video port 3
+> +
+> +      port@3:
+> +        type: object
+> +        description:
+> +          The output port node from video port 4
+> +
+> +    required:
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +
+> +  max-memory-bandwidth:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Input memory (from main memory to dispc) bandwidth limit in
+> +      bytes per second
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - interrupt-names
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +
+> +    dss: dss@04a00000 {
+> +            compatible = "ti,j721e-dss";
+> +            reg =   <0x00 0x04a00000 0x00 0x10000>, /* common_m */
+> +                    <0x00 0x04a10000 0x00 0x10000>, /* common_s0*/
+> +                    <0x00 0x04b00000 0x00 0x10000>, /* common_s1*/
+> +                    <0x00 0x04b10000 0x00 0x10000>, /* common_s2*/
+> +                    <0x00 0x04a20000 0x00 0x10000>, /* vidl1 */
+> +                    <0x00 0x04a30000 0x00 0x10000>, /* vidl2 */
+> +                    <0x00 0x04a50000 0x00 0x10000>, /* vid1 */
+> +                    <0x00 0x04a60000 0x00 0x10000>, /* vid2 */
+> +                    <0x00 0x04a70000 0x00 0x10000>, /* ovr1 */
+> +                    <0x00 0x04a90000 0x00 0x10000>, /* ovr2 */
+> +                    <0x00 0x04ab0000 0x00 0x10000>, /* ovr3 */
+> +                    <0x00 0x04ad0000 0x00 0x10000>, /* ovr4 */
+> +                    <0x00 0x04a80000 0x00 0x10000>, /* vp1 */
+> +                    <0x00 0x04aa0000 0x00 0x10000>, /* vp2 */
+> +                    <0x00 0x04ac0000 0x00 0x10000>, /* vp3 */
+> +                    <0x00 0x04ae0000 0x00 0x10000>, /* vp4 */
+> +                    <0x00 0x04af0000 0x00 0x10000>; /* wb */
+> +            reg-names = "common_m", "common_s0",
+> +                    "common_s1", "common_s2",
+> +                    "vidl1", "vidl2","vid1","vid2",
+> +                    "ovr1", "ovr2", "ovr3", "ovr4",
+> +                    "vp1", "vp2", "vp3", "vp4",
+> +                    "wb";
+> +            clocks =        <&k3_clks 152 0>,
+> +                            <&k3_clks 152 1>,
+> +                            <&k3_clks 152 4>,
+> +                            <&k3_clks 152 9>,
+> +                            <&k3_clks 152 13>;
+> +            clock-names = "fck", "vp1", "vp2", "vp3", "vp4";
+> +            power-domains = <&k3_pds 152 TI_SCI_PD_EXCLUSIVE>;
+> +            interrupts =    <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
+> +            interrupt-names =       "common_m",
+> +                                    "common_s0",
+> +                                    "common_s1",
+> +                                    "common_s2";
+> +            ports {
+> +                    #address-cells = <1>;
+> +                    #size-cells = <0>;
+> +                    port@0 {
+> +                            reg = <0>;
+> +
+> +                            dpi_out_0: endpoint {
+> +                                    remote-endpoint = <&dp_bridge_input>;
+> +                            };
+> +                    };
+> +            };
+> +    };
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
