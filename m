@@ -7,89 +7,142 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F87C2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF2FC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB402467E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161C124679
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576786955;
-	bh=2usS5KAg+sLWPldg9Hh1oSd8xcmAlqs8W/mIURXnf64=;
+	s=default; t=1576787903;
+	bh=OX7ZSW6zhxxrk2TSsUvaLxIooWQypq4oIYfLzP+HueI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DLExYot/CeyTD0IYzZxi2OAJLmitZiInQz7Td7mYetl/IxFo4lM3JwlAeC9+gRgVt
-	 5SR3KDhyPHUy330ocjzN4pS0kpSxPbS5olU/Fpmlo0HErRrsKA2GFBmRwuXXrg/cQT
-	 rPCT/8L2273v+DRXN8iYURJobnzQ5eg28Zcm2/nk=
+	b=qhsIthTIw+1MYz44/F35jIgXIsjRzkoqqVchy/IneqHp4/TMQNTCISTsNB2VmL2r5
+	 uoltnbTgxrNvV+97JuOW06Bqtj6a5g1MwYNpfJdP2lnFEJQD0d4EkevHsoZlPcooVk
+	 5KJ8DMb67E/ahFbc+ddYW54vvr7sJSqNEk5FbBxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbfLSUW1 (ORCPT
+        id S1726982AbfLSUiW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:22:27 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41483 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727552AbfLSUW0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 15:22:26 -0500
-Received: by mail-ed1-f66.google.com with SMTP id c26so6139276eds.8;
-        Thu, 19 Dec 2019 12:22:24 -0800 (PST)
+        Thu, 19 Dec 2019 15:38:22 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35152 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfLSUiW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 15:38:22 -0500
+Received: by mail-oi1-f193.google.com with SMTP id k4so3688934oik.2;
+        Thu, 19 Dec 2019 12:38:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+XwXmMLYM0uNSnbJNWZYduJB3McxlK0rmyyXpOOOY+E=;
-        b=Q61p1QlHzlZXUxnnL3/GYWbDtQRd4v8Qz++Rh+adjdxI1kJGg/ID1V/rmWNMdgOctw
-         +AksTB8M/yI1I3kNIwkiepsWvbA9WK8PTjqharvualRUNDS/Q9dfQT06PYFvAH81mL4F
-         OmAF9/0wxyYEvWABJoN+yMkcTJvOjbNwZuMzH2ASmZnE59YL0pjX8V8sQ+fXJpw4DOdd
-         4jQVApDlNdE3243tZXvM9Lu4NPIyioeS9MUxB4ftESTgpbJT69Lf4tAOKtijvv8rO4/6
-         JpnbtKnnrRON2RRzsduvv9brlr26JJpQph+BHuy5/Q/0ZMDT62/ePJffmuE0Hu5EZzTp
-         KpEA==
-X-Gm-Message-State: APjAAAV/86KwEkcYWof+082ahooju/eslCxPLOz0+GJfJ9SkRpED5MI0
-        sSoOlgPhffUly9rA9H+Y6seQPfHw
-X-Google-Smtp-Source: APXvYqyvXs1b77JsdU/bIq/7bJEZPvD05zPHc+WyTqQxuAEMRrkLbVyqmxjhV8KF6k+gHok+ePJnvg==
-X-Received: by 2002:a17:907:20a8:: with SMTP id pw8mr11469298ejb.248.1576786944265;
-        Thu, 19 Dec 2019 12:22:24 -0800 (PST)
-Received: from kozik-lap ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id s15sm626909edc.22.2019.12.19.12.22.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 19 Dec 2019 12:22:23 -0800 (PST)
-Date:   Thu, 19 Dec 2019 21:22:20 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, kgene@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 9/9] arm64: dts: exynos: Replace deprecated property for
- Exynos bus
-Message-ID: <20191219202220.GC21576@kozik-lap>
-References: <20191217055738.28445-1-cw00.choi@samsung.com>
- <CGME20191217055107epcas1p44d46bdea7b326b86689f326742f5444a@epcas1p4.samsung.com>
- <20191217055738.28445-10-cw00.choi@samsung.com>
+        bh=lvcWgSs9CsFC10Off4IxnD7dpuy8j7JrLycgYVcspt0=;
+        b=X9RHNnr4pPvAblRReJl7bH4TK0QS0ApYlqHEvdz5b9cexw/lVNNHvufv/kVNxTj1Oy
+         3aAoJlWlaruijp7OwYiH/ES3iNUqLWvnEILuJIARSL+alfks+YSEMGRyb3DhQhFIBkkj
+         ERJg80mxXh563onKBU76Jk1JjWUQ/3ND1s6Yph7D/IpvBuKsgx99CJjBLvYhVDkqvIUZ
+         Pl2LpMe31l8a1B+pQH/9ZHSy/Uij2wrLhzJ+QWxLn85dANiRfZe0dmUIAFWdSfz41/iN
+         Lvz5WeORjZJxUHFtkoMHOD1BXcIlOM8nwI5QlqYF8H2ucQb/e8io+ce57h1/d9uSNelK
+         uXKw==
+X-Gm-Message-State: APjAAAWYMMCGJccsbiD9fuJEVlL8dWfV8XWe4QgQFuZTtKL4SMIVx3l1
+        ALYAHA27Kq1r4OrWYK88Nf8G/GbCyg==
+X-Google-Smtp-Source: APXvYqw09TK+NgOVuSVlbNn3H/Uxf/mxAUrMwkfyQV/yAj9AZMiSAnScKaiMt6kmtIUSKyuB74tCHA==
+X-Received: by 2002:aca:b7c5:: with SMTP id h188mr3123999oif.100.1576787901767;
+        Thu, 19 Dec 2019 12:38:21 -0800 (PST)
+Received: from localhost (ip-184-205-110-29.ftwttx.spcsdns.net. [184.205.110.29])
+        by smtp.gmail.com with ESMTPSA id b3sm2340330oie.25.2019.12.19.12.38.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 12:38:21 -0800 (PST)
+Date:   Thu, 19 Dec 2019 14:38:09 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>,
+        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Subject: Re: [PATCH RFC 1/2] dt-bindings: memory: document Renesas RPC-IF
+ bindings
+Message-ID: <20191219203742.GA27539@bogus>
+References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
+ <bd2c82fa-b0f0-9274-8c69-d13f7cddefc5@cogentembedded.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191217055738.28445-10-cw00.choi@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <bd2c82fa-b0f0-9274-8c69-d13f7cddefc5@cogentembedded.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 02:57:38PM +0900, Chanwoo Choi wrote:
-> Replace the property related to devfreq and devfreq-event device
-> to remove the deprecated property name.
-> - Replace 'devfreq' with 'exynos,parent-bus' property
->   for getting the parent devfreq device of exynos-bus.
-> - Replace 'devfreq-events' with 'exynos,ppmu-device' property
->   for getting the devfreq-event device to monitor bus utilization.
+On Tue, Dec 10, 2019 at 10:37:34PM +0300, Sergei Shtylyov wrote:
+> Renesas Reduced Pin Count Interface (RPC-IF) allows a SPI flash or
+> HyperFlash connected to the SoC to be accessed via the external address
+> space read mode or the manual mode.
 > 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Document the device tree bindings for the Renesas RPC-IF found in the R-Car
+> gen3 SoCs.
+> 
+> Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
 > ---
->  .../dts/exynos/exynos5433-tm2-common.dtsi     | 20 +++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
+>  Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.txt |   52 ++++++++++
+>  1 file changed, 52 insertions(+)
 
-I'll pick it up the next cycle after driver get merged.
+Please convert to DT schema.
 
-Best regards,
-Krzysztof
-
+> 
+> Index: linux/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.txt
+> ===================================================================
+> --- /dev/null
+> +++ linux/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.txt
+> @@ -0,0 +1,52 @@
+> +Renesas Reduced Pin Count Interface (RPC-IF)
+> +--------------------------------------------
+> +
+> +Renesas RPC-IF allows a SPI flash or HyperFlash connected to the SoC to
+> +be accessed via the external address space read mode or the manual mode.
+> +
+> +Required properties:
+> +- compatible: should be an SoC-specific compatible value, followed by
+> +		"renesas,rcar-gen3-rpc-if" as a fallback.
+> +		supported SoC-specific values are:
+> +		"renesas,r8a77980-rpc-if" (R-Car V3H),
+> +		"renesas,r8a77995-rpc-if" (R-Car D3).
+> +- reg: should list 3 register areas:
+> +	1st for the RPC-IF registers,
+> +	2nd for the direct mapping read mode,
+> +	3rd for the write buffer area.
+> +- reg-names: should contain "regs", "dirmap", and "wbuf".
+> +- clocks: should contain the clock phandle/specifier pair for the module clock.
+> +- power-domains: should contain the power domain phandle/specifier pair.
+> +- resets: should contain the reset controller phandle/specifier pair.
+> +- #address-cells: should be 1.
+> +- #size-cells: should be 0.
+> +
+> +The flash chip itself should be represented by a subnode of the RPC-IF node.
+> +The flash interface is selected based on the "compatible" property of this
+> +subnode:
+> +- if it contains "jedec,spi-nor", then SPI is used;
+> +- if it contains "cfi-flash", then HyperFlash is used.
+> +
+> +Example:
+> +
+> +	rpc: spi@ee200000 {
+> +		compatible = "renesas,r8a77995-rpc-if",
+> +			     "renesas,rcar-gen3-rpc-if";
+> +		reg = <0 0xee200000 0 0x200>,
+> +		      <0 0x08000000 0 0x4000000>,
+> +		      <0 0xee208000 0 0x100>;
+> +		reg-names = "regs", "dirmap", "wbuf";
+> +		clocks = <&cpg CPG_MOD 917>;
+> +		power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+> +		resets = <&cpg 917>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		flash@0 {
+> +			compatible = "jedec,spi-nor";
+> +			reg = <0>;
+> +			spi-max-frequency = <40000000>;
+> +			spi-tx-bus-width = <1>;
+> +			spi-rx-bus-width = <1>;
+> +		};
+> +	};
