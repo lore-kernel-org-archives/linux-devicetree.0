@@ -2,133 +2,101 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6F9C2D0C1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FA0C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEB824682
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AD2B24650
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:18:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GyQUlmhV"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lv3Rm7/Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfLSMK6 (ORCPT
+        id S1726692AbfLSMSv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:10:58 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55792 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfLSMK6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 07:10:58 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJCAm6A100054;
-        Thu, 19 Dec 2019 06:10:48 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576757448;
-        bh=v7Np/OFkk20fqw6MV6RMIPQQKnOLNyFYGAZXUuSYuis=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=GyQUlmhVIxuCexAwcASlKaNdBf4wIzpZSBhv1Apxw/aaLiQRDVPrssznmXnsNX/eY
-         5okO5d8vuR3DuOJtiuAdGVdMHZ0gU5mTeJp1hpz+D6NghP5Cjzr38iyopE6FnuZXZv
-         a5+u5ytJzvZEpuRScDl0GmdeuUKn3g8nSko27ZZE=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJCAmkd026460;
-        Thu, 19 Dec 2019 06:10:48 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Dec 2019 06:10:48 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Dec 2019 06:10:47 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJCAiUg062952;
-        Thu, 19 Dec 2019 06:10:45 -0600
-Subject: Re: [PATCH 08/13] PCI: cadence: Use local management register to
- configure Vendor ID
-To:     Andrew Murray <andrew.murray@arm.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, Tom Joseph <tjoseph@cadence.com>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-9-kishon@ti.com>
- <20191217124238.GE24359@e119886-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <cdb15479-6cc4-e00f-34a6-6cf191179bf7@ti.com>
-Date:   Thu, 19 Dec 2019 17:42:27 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 19 Dec 2019 07:18:51 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:20500 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726668AbfLSMSv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:18:51 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJCIa0u028198;
+        Thu, 19 Dec 2019 13:18:38 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=YKewLXKdy0X/pTBaXdqh9MV8IDUvEyr+N3muSF/2Jy4=;
+ b=lv3Rm7/QZzFR2Mast1jfLvQS90hX0m6bdp25R9wgdqbkNWCH9LUmMooKEmDgWysOELLu
+ uOY4/LSSl8IemCI3mlcJUO29+XKjDRZNhZlJsoa05srM9PSnRaONEe5Cx2jAW4lZhqux
+ WXDMFGCAM+2guMguIxvuM9lGqRmOs+j5kWx8XAXptIKyYIwxltIbBOFJ+SV0e7sEktIo
+ MCdNqyACEj8SuGQzqQXixf6Bya5dcVRoNEeR9gMj2UyHqYcnze6bXsavgyoCaW51adbf
+ YTXPJ3x7JtXYB2NzwNoxsmU4kUuAJseuIvb9WDYMsVZb4KD2EiZKEG9x5tzEk2TtR28d KQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wvnresmds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Dec 2019 13:18:38 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 007C410002A;
+        Thu, 19 Dec 2019 13:18:29 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7D2192BE249;
+        Thu, 19 Dec 2019 13:18:29 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Dec 2019 13:18:29
+ +0100
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: [PATCH v2] ARM: dts: stm32: update mlahb node according to the bindings
+Date:   Thu, 19 Dec 2019 13:18:15 +0100
+Message-ID: <20191219121815.22987-1-arnaud.pouliquen@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191217124238.GE24359@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-19_01:2019-12-17,2019-12-19 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-+Tom
+Update of the mlahb node according to to DT bindings using json-schema
 
-Hi,
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+---
+ arch/arm/boot/dts/stm32mp151.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-On 17/12/19 6:12 pm, Andrew Murray wrote:
-> On Mon, Dec 09, 2019 at 02:51:42PM +0530, Kishon Vijay Abraham I wrote:
->> PCI_VENDOR_ID in root port configuration space is read-only register
->> and writing to it will have no effect. Use local management register to
->> configure Vendor ID and Subsystem Vendor ID.
-> 
-> Is this a bug fix? Can you add a Fixes tag and make that clearer?
+diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
+index 3dd570b10181..047051c56ef7 100644
+--- a/arch/arm/boot/dts/stm32mp151.dtsi
++++ b/arch/arm/boot/dts/stm32mp151.dtsi
+@@ -1669,10 +1669,11 @@
+ 		};
+ 	};
+ 
+-	mlahb {
+-		compatible = "simple-bus";
++	mlahb: ahb {
++		compatible = "st,mlahb", "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
++		ranges;
+ 		dma-ranges = <0x00000000 0x38000000 0x10000>,
+ 			     <0x10000000 0x10000000 0x60000>,
+ 			     <0x30000000 0x30000000 0x60000>;
+-- 
+2.17.1
 
-I think this might have worked in Cadence platform? Tom?
-
-Thanks
-Kishon
-
-> 
-> Thanks,
-> 
-> Andrew Murray
-> 
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  drivers/pci/controller/cadence/pcie-cadence-host.c | 9 +++++++--
->>  1 file changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index cf817be237af..afb2c96a6538 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -71,6 +71,7 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->>  {
->>  	struct cdns_pcie *pcie = &rc->pcie;
->>  	u32 value, ctrl;
->> +	u32 id;
->>  
->>  	/*
->>  	 * Set the root complex BAR configuration register:
->> @@ -90,8 +91,12 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->>  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
->>  
->>  	/* Set root port configuration space */
->> -	if (rc->vendor_id != 0xffff)
->> -		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
->> +	if (rc->vendor_id != 0xffff) {
->> +		id = CDNS_PCIE_LM_ID_VENDOR(rc->vendor_id) |
->> +			CDNS_PCIE_LM_ID_SUBSYS(rc->vendor_id);
->> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
->> +	}
->> +
->>  	if (rc->device_id != 0xffff)
->>  		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
->>  
->> -- 
->> 2.17.1
->>
