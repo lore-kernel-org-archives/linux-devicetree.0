@@ -2,83 +2,152 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A4DC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFD0C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9818206D3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF59F222C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782278;
-	bh=UognCO9PhPJNz6xOFitRmIm5rhlH3RIdFpJ0UCckXsk=;
+	s=default; t=1576782435;
+	bh=EgbNXCKO32bDznwIxG/zUcXXSse1WyN1wD/XW0tsgKs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B8a5Us7P/WSrmEBUSQo7WSsr+yvaSsqxZpbQM01lTkhThYX1HoO1t+bCF7ZtffRz6
-	 TS3gKK+4lyM+sjSTO596CtkqjInn2jyRvustA0N5w5LOZy7AQSB+zmULfJJybcG4K5
-	 vJQgZ6A4a3EJlFH45Qb3kr0RgNVpTrmoQ97qO3Jg=
+	b=JS7eA9kC3I5A5BKWIAnN1TsZUdApllrc0PCEhO4AvEhP9AIK6v0AcmnTYUTnlU5Vl
+	 FWjhwuT8KQX8sGs0TtbxOEhBLadx5oueWydugG0ujuMWn+RTWRxZgJ/i8Wgkl2aMWc
+	 9Hd0eMiNN0a/dNWZsRQhtYfCsKAAoj4Q/Z16XybU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbfLSTEd (ORCPT
+        id S1727991AbfLSTHL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:04:33 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45293 "EHLO
+        Thu, 19 Dec 2019 14:07:11 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41860 "EHLO
         mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727782AbfLSTEc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 14:04:32 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 59so8416380otp.12;
-        Thu, 19 Dec 2019 11:04:32 -0800 (PST)
+        with ESMTP id S1728137AbfLSSnX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 13:43:23 -0500
+Received: by mail-ot1-f66.google.com with SMTP id r27so8339997otc.8;
+        Thu, 19 Dec 2019 10:43:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3TwLMjIi0ztUcgqXnz6W6DiP3C/BFPmUt8EF/msCgyo=;
-        b=MtQALT4d2mqzgjFYhGUlBfrkM3EXSaAHHdxBTaPWuq1Q8r9TkJi057D/flwWhqRQI5
-         rL34sGT0RZ/7x95q4y4mX9aFuwG77bKLjSM5fJDx2Boapv5g3zPfsYVlDr1fGmEJdg17
-         vLDmg/0EL0QhoiKcn491q3prUDgsnCrhzOrM4/SbYiBSWdCuSLMfLmj7tI2tv67o7Dik
-         pb2iabObuA1UkfzOixDA96Ns4vaVD7aofN9Vm3SFKfBSPlDd+6z73hOj8gp6rCyCSu9Y
-         TCMC7N9pMCsBV5BM/vlPrxpPmJ5vh/QfEEhwxWltu54X6Lf06vVT0G104cSyM0OqvltV
-         KQOg==
-X-Gm-Message-State: APjAAAWU/tHcuUveANex3orAPqbC5j3HfWyT9WTOoo/khh3gtB7W7XYb
-        EuBq1DNPoVGFLVwqR0j+wSUks+frbg==
-X-Google-Smtp-Source: APXvYqzXMS+BPPjyZuUTUxZ0kvBQRUp13g/7NP8niTT5xFM1Uguo50OG2xZFpz1MwnDNbqhaPlAKEA==
-X-Received: by 2002:a05:6830:22e3:: with SMTP id t3mr9837378otc.193.1576782271973;
-        Thu, 19 Dec 2019 11:04:31 -0800 (PST)
+        bh=ATCr26B2OQVBaMy930gvC8+YwzqQLoxjbV1kq1l7KCk=;
+        b=CjcHXC7bZXk5AsbMcdwa+6cfASsiCGVz+wR56vMtBUcxd5jDPbYMhnK4oYaexzOTug
+         u4tPYpYd/NxUejUhl6V7DD2j/rnc9CjQfNcFAWc4DBZdm9V3DWI+h0I3aHq1myFSFS+Q
+         8ybcBFLJBnTCDB+UTlzxm7b+10RKjTQ1PgQnXPLnPITiKn2/zZkuYp1hnOOVWKzCah2B
+         ssY7r1rMqo+YB98MYw6hQF8ir91mb6C92kPJbgAwLQ8LkUtqYirtdsiJVI8v97ZB2Cny
+         OdpTnwj6ZdsRbOc19lj+G07GCvVQ711SdE7AjTqev9emjZquJkqr6Q5ZVug8Hxeogqma
+         sUoA==
+X-Gm-Message-State: APjAAAXB2965kvh0ogAd3ywbMTXMzOc2chjy2Dto3hLAktctn5Mx8Cop
+        ycUUAzUva8gjldq+f1tmWbD5vYRMlQ==
+X-Google-Smtp-Source: APXvYqzHVHy4Y8bxjQIOFjcCok4NiCDbPD19EFZ7LpJjtchr7wNNUALhEQj3m9Oz59bjfHKnScEnxw==
+X-Received: by 2002:a9d:6d06:: with SMTP id o6mr10381223otp.239.1576781002486;
+        Thu, 19 Dec 2019 10:43:22 -0800 (PST)
 Received: from localhost ([2607:fb90:bdf:98e:3549:d84c:9720:edb4])
-        by smtp.gmail.com with ESMTPSA id n19sm2284468oig.57.2019.12.19.11.04.30
+        by smtp.gmail.com with ESMTPSA id r205sm2279361oih.54.2019.12.19.10.43.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 11:04:31 -0800 (PST)
-Date:   Thu, 19 Dec 2019 13:04:28 -0600
+        Thu, 19 Dec 2019 10:43:21 -0800 (PST)
+Date:   Thu, 19 Dec 2019 12:43:18 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jyri Sarha <jsarha@ti.com>
-Cc:     kishon@ti.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, tomi.valkeinen@ti.com, praneeth@ti.com,
-        yamonkar@cadence.com, sjakhade@cadence.com, rogerq@ti.com,
-        jsarha@ti.com
-Subject: Re: [PATCH 1/3] dt-bindings: phy: Add PHY_TYPE_DP definition
-Message-ID: <20191219190428.GA16167@bogus>
-References: <cover.1575906694.git.jsarha@ti.com>
- <89dfcd484bad19cb954ee4f74305d1aa172ea292.1575906694.git.jsarha@ti.com>
+To:     shubhrajyoti.datta@gmail.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        michal.simek@xilinx.com, gregkh@linuxfoundation.org,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: Re: [PATCH v2 2/2] devicetree: bindings: Add the binding doc for
+ xilinx APM
+Message-ID: <20191219184318.GA13328@bogus>
+References: <1575901405-3084-1-git-send-email-shubhrajyoti.datta@gmail.com>
+ <1575901405-3084-2-git-send-email-shubhrajyoti.datta@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <89dfcd484bad19cb954ee4f74305d1aa172ea292.1575906694.git.jsarha@ti.com>
+In-Reply-To: <1575901405-3084-2-git-send-email-shubhrajyoti.datta@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 9 Dec 2019 18:21:09 +0200, Jyri Sarha wrote:
-> Add definition for DisplayPort phy type.
+On Mon, Dec 09, 2019 at 07:53:25PM +0530, shubhrajyoti.datta@gmail.com wrote:
+> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 > 
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> Reviewed-by: Roger Quadros <rogerq@ti.com>
-> Reviewed-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Add the devicetree binding for xilinx APM.
+> 
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 > ---
->  include/dt-bindings/phy/phy.h | 1 +
->  1 file changed, 1 insertion(+)
+> v2:
+> patch added
 > 
+>  .../devicetree/bindings/perf/xilinx_apm.txt        | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/perf/xilinx_apm.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+As Michal said, DT schema please.
+> 
+> diff --git a/Documentation/devicetree/bindings/perf/xilinx_apm.txt b/Documentation/devicetree/bindings/perf/xilinx_apm.txt
+> new file mode 100644
+> index 0000000..a11c82e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/perf/xilinx_apm.txt
+> @@ -0,0 +1,44 @@
+> +* Xilinx AXI Performance monitor IP
+> +
+> +Required properties:
+> +- compatible: "xlnx,axi-perf-monitor"
+
+Version?
+
+> +- interrupts: Should contain APM interrupts.
+> +- interrupt-parent: Must be core interrupt controller.
+
+Drop this.
+
+> +- reg: Should contain APM registers location and length.
+> +- xlnx,enable-profile: Enables the profile mode.
+> +- xlnx,enable-trace: Enables trace mode.
+> +- xlnx,num-monitor-slots: Maximum number of slots in APM.
+> +- xlnx,enable-event-count: Enable event count.
+> +- xlnx,enable-event-log: Enable event logging.
+> +- xlnx,have-sampled-metric-cnt:Sampled metric counters enabled in APM.
+> +- xlnx,num-of-counters: Number of counters in APM
+> +- xlnx,metric-count-width: Metric Counter width (32/64)
+> +- xlnx,metrics-sample-count-width: Sampled metric counter width
+> +- xlnx,global-count-width: Global Clock counter width
+
+All these synthesis time config and not discoverable?
+
+Tell h/w designers to add feature registers so all this is 
+discoverable. </rant>
+
+> +- clocks: Input clock specifier.
+> +
+> +Optional properties:
+> +- xlnx,id-filter-32bit: APM is in 32-bit mode
+> +
+> +Example:
+> +++++++++
+> +
+> +apm: apm@44a00000 {
+> +    compatible = "xlnx,axi-perf-monitor";
+> +    interrupt-parent = <&axi_intc_1>;
+> +    interrupts = <1 2>;
+> +    reg = <0x44a00000 0x1000>;
+> +    clocks = <&clkc 15>;
+> +    xlnx,enable-profile = <0>;
+> +    xlnx,enable-trace = <0>;
+> +    xlnx,num-monitor-slots = <4>;
+> +    xlnx,enable-event-count = <1>;
+> +    xlnx,enable-event-log = <1>;
+> +    xlnx,have-sampled-metric-cnt = <1>;
+> +    xlnx,num-of-counters = <8>;
+> +    xlnx,metric-count-width = <32>;
+> +    xlnx,metrics-sample-count-width = <32>;
+> +    xlnx,global-count-width = <32>;
+> +    xlnx,metric-count-scale = <1>;
+> +    xlnx,id-filter-32bit;
+> +};
+> -- 
+> 2.1.1
+> 
