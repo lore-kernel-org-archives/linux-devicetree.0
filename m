@@ -2,144 +2,160 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	USER_AGENT_GIT,WEIRD_QUOTING autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F7EC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 18:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92112C2D0C1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 18:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEDA222C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 18:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66FC024672
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 18:34:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="g5qISFWs"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="VGZLUlUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfLSSc4 (ORCPT
+        id S1727078AbfLSSeE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:32:56 -0500
-Received: from mail-eopbgr70054.outbound.protection.outlook.com ([40.107.7.54]:37020
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726884AbfLSSc4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:32:56 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Oru0HYY1hVW5TlL8AZlmov7YFdMRN3xEhIRF1XWB18y+AZBsUR+AOx1SPGFrKUzhavL8BWWsLmVp7yKlGhGaDk6UPWVw+hbWDrWIZWljQSJuv0wQ6eJ+JZCGWqkBps1hTOKmnFiW/guaWSarD6KeNLbAYUdS3qSF+bHqo5ZYUKikwlzZz4BlD6Qy5o1bXyyS0YnIXRDfVigbieTdx2W0U9sR6CuNUPGBC5E+ufo+QPnmaF4iVCdZ0Xd4kxTFe2M+sTkmnwbKx/iCoojQJctI47fKW+rBRUuRP1aw7YultblkucZH+o2YWhgMRcKlrjyUM/Rqimcq1mwDzpNNK9EfCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZS4jVzTZok1mqeB9xxlh00YMVjmBmHo/pcVQ1DRA+nA=;
- b=CGG9WDPKfWEVvDyaYcqL1L2B5O8QZUxRb1kCI0xMQVMlmXNyomBtKAs8OU52UZYFutpjcThAjXMbZFooPPgKurqunOvLsNhN1trHCwDpoz8aXae8Ts1Wh8r/XE+idSUIzFd77a81ooXr0zchMBIxPgAeiwB4s8Mr1xNiMZrt/7UK9vXAhpFL5r4xP1kKASif35oHw+VkaQ4w7PGx8Sube5i9dt5FIp6VcFgZDrqQntShzOUWx1aWQkQXH5Geb2r6eXPYwKu3A/ePcopPWU0nt55hKtwjkdTbSAGaqSWbh6TBCRq98QV+ziGaERy0l4LjSzTY+36jF1ntzXMBt2I3+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZS4jVzTZok1mqeB9xxlh00YMVjmBmHo/pcVQ1DRA+nA=;
- b=g5qISFWsdwKb5ammZ8tEdNUMQdS+kYdoCCtHNoeTH/zvjKaRnAvlRZgvCgYF/WBB0yKdNaHbnjq7PwYyzFUQTGmX93DapzIghRytnJQ/1grA5OuKtf5KxGtFrZ1kXws5UIF169Bgp3zhPv3QdDdxwjZqaAYDVtiajpjQKd3qHII=
-Received: from VI1PR04MB5567.eurprd04.prod.outlook.com (20.178.123.83) by
- VI1PR04MB4974.eurprd04.prod.outlook.com (20.177.48.91) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.15; Thu, 19 Dec 2019 18:32:51 +0000
-Received: from VI1PR04MB5567.eurprd04.prod.outlook.com
- ([fe80::f099:4735:430c:ef1d]) by VI1PR04MB5567.eurprd04.prod.outlook.com
- ([fe80::f099:4735:430c:ef1d%2]) with mapi id 15.20.2559.015; Thu, 19 Dec 2019
- 18:32:51 +0000
-From:   Madalin Bucur <madalin.bucur@nxp.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Thread-Topic: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Thread-Index: AQHVtn//emqdPRPEmEKC7Ncoej9h46fBtnoAgAAMIfA=
-Date:   Thu, 19 Dec 2019 18:32:51 +0000
-Message-ID: <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
-References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
- <20191219172834.GC25745@shell.armlinux.org.uk>
-In-Reply-To: <20191219172834.GC25745@shell.armlinux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=madalin.bucur@nxp.com; 
-x-originating-ip: [188.27.188.128]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 623fcd49-b91b-4c5d-2054-08d784b1db20
-x-ms-traffictypediagnostic: VI1PR04MB4974:
-x-microsoft-antispam-prvs: <VI1PR04MB497451CF47FD663B529C57D6EC520@VI1PR04MB4974.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0256C18696
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(366004)(376002)(136003)(13464003)(199004)(189003)(81156014)(8936002)(86362001)(71200400001)(478600001)(64756008)(66556008)(66476007)(66446008)(66946007)(52536014)(76116006)(5660300002)(4326008)(44832011)(186003)(26005)(53546011)(7696005)(2906002)(81166006)(9686003)(55016002)(54906003)(316002)(33656002)(6916009)(6506007)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4974;H:VI1PR04MB5567.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: J5JCFUZsT1j8VHd0AhBQK4qSfRfS033nMOeRx/CtV+11v3Iv3MczXyFQbCr6o8l9+f1U8gvSYBEiHdv4joO2DZsbjkJFmvz6vpHWuE7z9p9XfHuufdJqk1HHop9p4AqWVWmvbLPZFVg/LCTSuCPpF8T8i2ccGx5Y29iS2lItx5IVwMY0scWDktOBxYPxaRf7KTjTmzI3Dk0/VtNBz8E2L7cnmCK58WzSc4PtrolKMEO1TuPXvaKCoXKXrxl0rW36TGhNzfHMjBWB/c/rX/euLVLmARmz9BBtAQeU+GmrnCWCqQ+ibgyAYYzUSlblJLo7kyuBicTB5MkIPXhlF0//s/e99h4eh2f3Dq7cMBjFu3it7XZ191bJwdMrCYhq3/R7eLT5ELr8nc6fBYYro8FoK39wtHmH33uGRsE28ehuWDfwsKmVOekeRJxccqVGTFwH7JFIiMTCGlz54/FqFQsjhn/JUbtFLrB5V1XCfK59BMOXyWNftIpH3UJLaetycCwd
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 19 Dec 2019 13:34:04 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:61064 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726858AbfLSSeE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:34:04 -0500
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJIOb8Q022747
+        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 10:34:03 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=3JRBFKRpQH94huaiHVUb2DXHVLx5xpYAZyUWzz+kx7c=;
+ b=VGZLUlUKoCM0oSy8t96sgj6bgrn5cq4RdC1w6+VJWVjuzahszuSbtiDMOnmJd9g9Psnz
+ jvox/YsjtpFWsOMqhGe4hJ4Ouwl2s/iHevPD69FHGVwGFpoh4XgWBphZ5t/fSKaW9A8T
+ /Zqe6B7rlB+USs2TBdrkL+fr67SB4TpDz2c= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2wysvhwhgg-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 10:34:03 -0800
+Received: from intmgw004.06.prn3.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Thu, 19 Dec 2019 10:33:44 -0800
+Received: by devvm4117.prn2.facebook.com (Postfix, from userid 167582)
+        id 7964818A1DBBE; Thu, 19 Dec 2019 10:33:42 -0800 (PST)
+Smtp-Origin-Hostprefix: devvm
+From:   Vijay Khemka <vijaykhemka@fb.com>
+Smtp-Origin-Hostname: devvm4117.prn2.facebook.com
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+CC:     <vijaykhemka@fb.com>, <sdasari@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH] ARM: dts: aspeed: tiogapass: Add gpio line names
+Date:   Thu, 19 Dec 2019 10:33:30 -0800
+Message-ID: <20191219183330.2860724-1-vijaykhemka@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 623fcd49-b91b-4c5d-2054-08d784b1db20
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Dec 2019 18:32:51.5108
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: K7zHUhPK/I6z0QS9p4BD2bgIzOp57LTWwbaH28FJq/WFWLZRv2Jq7fgZgW1aw0jrP5T/tSw/TcIqcFsyUGx1KA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4974
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-19_06:2019-12-17,2019-12-19 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 bulkscore=0 impostorscore=0 spamscore=0 adultscore=0
+ mlxlogscore=990 phishscore=0 suspectscore=0 clxscore=1015 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912190135
+X-FB-Internal: deliver
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> Sent: Thursday, December 19, 2019 7:29 PM
-> To: Madalin Bucur <madalin.bucur@nxp.com>
-> Cc: davem@davemloft.net; netdev@vger.kernel.org; andrew@lunn.ch;
-> f.fainelli@gmail.com; hkallweit1@gmail.com; shawnguo@kernel.org;
-> devicetree@vger.kernel.org
-> Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
->=20
-> On Thu, Dec 19, 2019 at 05:21:16PM +0200, Madalin Bucur wrote:
-> > From: Madalin Bucur <madalin.bucur@nxp.com>
-> >
-> > Add explicit entries for XFI, SFI to make sure the device
-> > tree entries for phy-connection-type "xfi" or "sfi" are
-> > properly parsed and differentiated against the existing
-> > backplane 10GBASE-KR mode.
->=20
-> 10GBASE-KR is actually used for XFI and SFI (due to a slight mistake on
-> my part, it should've been just 10GBASE-R).
->=20
-> Please explain exactly what the difference is between XFI, SFI and
-> 10GBASE-R. I have not been able to find definitive definitions for
-> XFI and SFI anywhere, and they appear to be precisely identical to
-> 10GBASE-R. It seems that it's just a terminology thing, with
-> different groups wanting to "own" what is essentially exactly the
-> same interface type.
+Added GPIO line names for all gpio used in tiogapass platform,
+these line names will be used by libgpiod to control GPIOs
 
-Hi Russell,
+Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+---
+ .../dts/aspeed-bmc-facebook-tiogapass.dts     | 63 +++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-10GBase-R could be used as a common nominator but just as well 10G and
-remove the rest while we're at it. There are/may be differences in
-features, differences in the way the HW is configured (the most
-important aspect) and one should be able to determine what interface
-type is in use to properly configure the HW. SFI does not have the CDR
-function in the PMD, relying on the PMA signal conditioning vs the XFI
-that requires this in the PMD. We kept the xgmii compatible for so long
-without much issues until someone started cleaning up the PHY supported
-modes. Since we're doing that, let's be rigorous. The 10GBase-KR is
-important too, we have some backplane code in preparation and having it
-there could pave the way for a simpler integration.
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+index 682f729ea25e..28c3a69437b1 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+@@ -121,6 +121,69 @@
+ 	kcs_addr = <0xca2>;
+ };
+ 
++&gpio {
++	status = "okay";
++	gpio-line-names =
++	/*A0-A7*/	"BMC_CPLD_FPGA_SEL","","","","","","","",
++	/*B0-B7*/	"","BMC_DEBUG_EN","","","","BMC_PPIN","PS_PWROK",
++			"IRQ_PVDDQ_GHJ_VRHOT_LVT3",
++	/*C0-C7*/	"","","","","","","","",
++	/*D0-D7*/	"BIOS_MRC_DEBUG_MSG_DIS","BOARD_REV_ID0","",
++			"BOARD_REV_ID1","IRQ_DIMM_SAVE_LVT3","BOARD_REV_ID2",
++			"CPU_ERR0_LVT3_BMC","CPU_ERR1_LVT3_BMC",
++	/*E0-E7*/	"RESET_BUTTON","RESET_OUT","POWER_BUTTON",
++			"POWER_OUT","NMI_BUTTON","","CPU0_PROCHOT_LVT3_ BMC",
++			"CPU1_PROCHOT_LVT3_ BMC",
++	/*F0-F7*/	"IRQ_PVDDQ_ABC_VRHOT_LVT3","",
++			"IRQ_PVCCIN_CPU0_VRHOT_LVC3",
++			"IRQ_PVCCIN_CPU1_VRHOT_LVC3",
++			"IRQ_PVDDQ_KLM_VRHOT_LVT3","","P3VBAT_BRIDGE_EN","",
++	/*G0-G7*/	"CPU_ERR2_LVT3","CPU_CATERR_LVT3","PCH_BMC_THERMTRIP",
++			"CPU0_SKTOCC_LVT3","","","","BIOS_SMI_ACTIVE",
++	/*H0-H7*/	"LED_POST_CODE_0","LED_POST_CODE_1","LED_POST_CODE_2",
++			"LED_POST_CODE_3","LED_POST_CODE_4","LED_POST_CODE_5",
++			"LED_POST_CODE_6","LED_POST_CODE_7",
++	/*I0-I7*/	"CPU0_FIVR_FAULT_LVT3","CPU1_FIVR_FAULT_LVT3",
++			"FORCE_ADR","UV_ADR_TRIGGER_EN","","","","",
++	/*J0-J7*/	"","","","","","","","",
++	/*K0-K7*/	"","","","","","","","",
++	/*L0-L7*/	"IRQ_UV_DETECT","IRQ_OC_DETECT","HSC_TIMER_EXP","",
++			"MEM_THERM_EVENT_PCH","PMBUS_ALERT_BUF_EN","","",
++	/*M0-M7*/	"CPU0_RC_ERROR","CPU1_RC_ERROR","","OC_DETECT_EN",
++			"CPU0_THERMTRIP_LATCH_LVT3",
++			"CPU1_THERMTRIP_LATCH_LVT3","","",
++	/*N0-N7*/	"","","","CPU_MSMI_LVT3","","","","",
++	/*O0-O7*/	"","","","","","","","",
++	/*P0-P7*/	"BOARD_SKU_ID0","BOARD_SKU_ID1","BOARD_SKU_ID2",
++			"BOARD_SKU_ID3","BOARD_SKU_ID4","BMC_PREQ",
++			"BMC_PWR_DEBUG","RST_RSMRST",
++	/*Q0-Q7*/	"","","","","UARTSW_LSB","UARTSW_MSB",
++			"POST_CARD_PRES_BMC","PE_BMC_WAKE",
++	/*R0-R7*/	"","","BMC_TCK_MUX_SEL","BMC_PRDY",
++			"BMC_XDP_PRSNT_IN","RST_BMC_PLTRST_BUF","SLT_CFG0",
++			"SLT_CFG1",
++	/*S0-S7*/	"THROTTLE","BMC_READY","","HSC_SMBUS_SWITCH_EN","",
++			"","","",
++	/*T0-T7*/	"","","","","","","","",
++	/*U0-U7*/	"","","","","","BMC_FAULT","","",
++	/*V0-V7*/	"","","","FAST_PROCHOT_EN","","","","",
++	/*W0-W7*/	"","","","","","","","",
++	/*X0-X7*/	"","","","GLOBAL_RST_WARN",
++			"CPU0_MEMABC_MEMHOT_LVT3_BMC",
++			"CPU0_MEMDEF_MEMHOT_LVT3_BMC",
++			"CPU1_MEMGHJ_MEMHOT_LVT3_BMC",
++			"CPU1_MEMKLM_MEMHOT_LVT3_BMC",
++	/*Y0-Y7*/	"SIO_S3","SIO_S5","BMC_JTAG_SEL","SIO_ONCONTROL","",
++			"","","",
++	/*Z0-Z7*/	"","SIO_POWER_GOOD","IRQ_PVDDQ_DEF_VRHOT_LVT3","",
++			"","","","",
++	/*AA0-AA7*/	"CPU1_SKTOCC_LVT3","IRQ_SML1_PMBUS_ALERT",
++			"SERVER_POWER_LED","","PECI_MUX_SELECT","UV_HIGH_SET",
++			"","POST_COMPLETE",
++	/*AB0-AB7*/	"IRQ_HSC_FAULT","OCP_MEZZA_PRES","","","","","","",
++	/*AC0-AC7*/	"","","","","","","","";
++};
++
+ &mac0 {
+ 	status = "okay";
+ 
+-- 
+2.17.1
 
-Thank you,
-Madalin
