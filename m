@@ -2,158 +2,278 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43188C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 02:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECF6C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 02:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9972465E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 02:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25154222C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 02:58:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ufpe.br header.i=@ufpe.br header.b="ABS+CfH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfLSCua (ORCPT
+        id S1726762AbfLSC6c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 21:50:30 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:54507 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLSCua (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 21:50:30 -0500
-Received: from [10.28.19.135] (10.28.19.135) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 19 Dec
- 2019 10:51:04 +0800
-Subject: Re: [PATCH v5 2/4] dt-bindings: watchdog: add new binding for meson
- secure watchdog
-To:     Rob Herring <robh@kernel.org>
-CC:     Guenter Roeck <linux@roeck-us.net>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        <devicetree@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        <linux-kernel@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        Jerome Brunet <jbrunet@baylibre.com>
-References: <1576153187-28378-1-git-send-email-xingyu.chen@amlogic.com>
- <1576153187-28378-3-git-send-email-xingyu.chen@amlogic.com>
- <CAFBinCBHLqgPExPsVaSWdSOr0Oj-jeYa4Z82U-pJ=fS+D1wGnA@mail.gmail.com>
- <f7b0afe7-e317-2422-de7e-878837f9f238@amlogic.com>
- <a8f5ab1d-264c-5b2c-e72b-3774b9f44c22@roeck-us.net>
- <1da513d7-20e1-726a-dcc4-952cbfbbe63a@amlogic.com>
- <20191218203404.GA2451@bogus>
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-Message-ID: <2d762720-cb08-e72a-06e5-4096e211e34b@amlogic.com>
-Date:   Thu, 19 Dec 2019 10:51:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 18 Dec 2019 21:58:32 -0500
+Received: from titan.ufpe.br ([150.161.6.80]:48992 "EHLO canit.ufpe.br"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbfLSC6c (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 21:58:32 -0500
+Received: from zimbraufpe.ufpe.br (zimbraufpe.ufpe.br [150.161.6.73])
+        by canit.ufpe.br (8.14.4/8.14.4/Debian-4) with ESMTP id xBJ2wAhG074405
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 23:58:10 -0300
+Received: from localhost (localhost [127.0.0.1])
+        by zimbraufpe.ufpe.br (Postfix) with ESMTP id 95F1C5F4C641;
+        Wed, 18 Dec 2019 23:58:08 -0300 (-03)
+X-Virus-Scanned: amavisd-new at ufpe.br
+Received: from zimbraufpe.ufpe.br ([127.0.0.1])
+        by localhost (zimbraufpe.ufpe.br [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id X7TU4AJj4yVF; Wed, 18 Dec 2019 23:58:08 -0300 (-03)
+Received: from zimbraufpe.ufpe.br (zimbraufpe.ufpe.br [150.161.6.73])
+        by zimbraufpe.ufpe.br (Postfix) with ESMTP id 6829CEC7A0F;
+        Wed, 18 Dec 2019 23:58:08 -0300 (-03)
+Date:   Wed, 18 Dec 2019 23:58:08 -0300 (BRT)
+From:   Victhor Foster <victhor.foster@ufpe.br>
+To:     linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Cc:     agross <agross@kernel.org>, robh+dt <robh+dt@kernel.org>,
+        mark rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>
+Message-ID: <553281524.9008431.1576724288201.JavaMail.zimbra@ufpe.br>
+In-Reply-To: <20191218062825.GA3755841@builder>
+References: <587764682.8806511.1576626759806.JavaMail.zimbra@ufpe.br> <20191218062825.GA3755841@builder>
+Subject: Re: [PATCH] arm: dts: apq8084: Fix tsens kernel panic during boot
+ and kernel warnings due to IRQ_TYPE_NONE interrupt type
 MIME-Version: 1.0
-In-Reply-To: <20191218203404.GA2451@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.28.19.135]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [179.235.209.15]
+X-Mailer: Zimbra 8.8.7_GA_1964 (ZimbraWebClient - GC77 (Linux)/8.8.7_GA_1964)
+Thread-Topic: apq8084: Fix tsens kernel panic during boot and kernel warnings due to IRQ_TYPE_NONE interrupt type
+Thread-Index: 2/ZLp2v1oGtHmTFJSJq7LgG596nBCw==
+X-Bayes-Prob: 0.5 (Score 0: No Bayes scoring rules defined, tokens from: SAIDA)
+X-CanIt-Incident-Id: 011DCWa4z
+X-CanIt-Geo: ip=150.161.6.73; country=BR; region=Pernambuco; city=Recife; latitude=-8.05; longitude=-34.9000; http://maps.google.com/maps?q=-8.05,-34.9000&z=6
+X-CanItPRO-Stream: SAIDA
+X-Canit-Stats-ID: 011DCWa4z - 3d537397b03d - 20191218
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=ufpe.br; h=date:from:to
+        :cc:message-id:in-reply-to:references:subject:mime-version
+        :content-type:content-transfer-encoding; s=ufpe201801; bh=jRQ1cZ
+        uYrqdFKIHLY8r15p0BznYR1rk59sFYGddo2gU=; b=ABS+CfH6uMUKE+xV4pJ8v1
+        Fuxk9XdkIIiLefau/h419MR9sQEIszGbHoCdGxMU41X+PEZv+x/+NMs4HKIPhB2z
+        vqptj49J5/ouvQG+TVtvyrgCxSkkt3a7dkFJaSHtqjFGmYcpkZf1w2JJEK2bR1o9
+        6zwjHTAJ+sPYobedVSqUxDZ0x6ABCD3L2oP7es7nfMqlE++ISzrvkhOCx2RM9vlN
+        3HtSS0YXSf+zavnfDZjgq1eQtPy3mdoTeqPA/l8831qkWIc59LSJIrnkT6QA5SWc
+        4q6kQfjPiHPw5dZchJVUti1cNr815C0ZHm+Ijo4Byt2u0Q+KJCLmyPDxp4q72dAA
+        ==
+X-Scanned-By: CanIt (www . roaringpenguin . com) on 150.161.6.80
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Rob
 
-On 2019/12/19 4:34, Rob Herring wrote:
-> On Wed, Dec 18, 2019 at 03:37:49PM +0800, Xingyu Chen wrote:
->> Hi, Guenter Martin
->>
->> On 2019/12/16 21:30, Guenter Roeck wrote:
->>> On 12/15/19 10:03 PM, Xingyu Chen wrote:
->>>> Hi, Martin
->>>>
->>>> Sorry for the late reply.
->>>>
->>>> On 2019/12/13 4:05, Martin Blumenstingl wrote:
->>>>> Hi Xingyu and Rob,
->>>>>
->>>>> On Thu, Dec 12, 2019 at 1:20 PM Xingyu Chen
->>>>> <xingyu.chen@amlogic.com> wrote:
->>>>> [...]
->>>>>> +examples:
->>>>>> +  - |
->>>>>> +    watchdog {
->>>>>> +          compatible = "amlogic,meson-sec-wdt";
->>>>>> +          timeout-sec = <60>;
->>>>>> +    };
->>>>> in v3 of this patch Rob commented that there shouldn't be an OF node
->>>>> if there are no additional properties
->>>>> with timeout-sec there's now an additional property so my
->>>>> understanding is that it's fine to have an OF node
->>>> Your understanding is correct.
->>>>> what I don't understand yet is where this node should be placed.
->>>>> is it supposed to be a child node of the secure monitor node (for
->>>>> which we already have a binding here:
->>>>> Documentation/devicetree/bindings/firmware/meson/meson_sm.txt) or
->>>>> where else would we place it inside the .dts?
->>>> IMO,  Although the watchdog node need to reference the meson_sm
->>>> node, there is no
->>>> bus-like dependencies between the devices which the two nodes
->>>> corresponding to.
->>>> so i think that the watchdog node as child node of meson_sm maybe
->>>> not appropriate.
->>> The watchdog driver needs the meson SM's dt node, and it depends on the
->>> existence
->>> of that node. That seems enough of a relationship to warrant having it
->>> as child note.
->> Thanks for your reply, if i take the wdt node as child of secure monitor
->> (sm), how should
->> i register or find the wdt device ?
->>
->> I only think of the following three methods :
->> 1). update the sm driver，and scan&register wdt device when the sm driver
->> probes(It is like i2c), but there
->> are too many changes involved.
-> Just add of_platform_default_populate() call and clean-up calls. That's
-> not what I'd call 'too many changes'.
-Thanks for your guidance.
->
->   
->> 2). add "simple-bus" key string to compatible of sm node, and it will make
->> the child node is registered as
->> platform device, but it seems that the key string is not match current
->> scene.
-> You previously said it's not a bus...
->
->> secure-monitor {
->>      compatible = "amlogic,meson-gxbb-sm",  "simple-bus";
->>
->>      watchdog {
->>          compatible = "amlogic,meson-sec-wdt";
->>          timeout-sec = <60>;
->>      }
->> }
->>
->> 3).  don't register device, and find directly the watchdog node by using the
->> of_* API in watchdog
->> driver (Eg: linux-4.x/drivers/tee/optee/core.c)
->>
->> secure-monitor {
->>      compatible = "amlogic,meson-gxbb-sm";
->>
->>      watchdog {
->>          compatible = "amlogic,meson-sec-wdt";
->>          timeout-sec = <60>;
->>      }
->> }
->>
->> The method 3 looks better for me, do you have a better suggestion ? Thanks
->>
->> BR
->>> Guenter
->>>
->>> .
->>>
-> .
->
+
+----- On Dec 18, 2019, at 3:28 AM, Bjorn Andersson bjorn.andersson@linaro.org wrote:
+
+> On Tue 17 Dec 15:52 PST 2019, Victhor Foster wrote:
+> 
+>> This patch fixes a kernel panic on the tsens driver that prevented APQ8084
+>> platforms from booting, by adding a missing register property and the number of
+>> sensors
+> 
+> I was under the impression that the tsens driver did maintain backwards
+> compatibility wrt a single reg cell...
+> 
+I wrote this patch based on 5.5-rc1, which was the latest version in the linux-stable repository at the time. I did notice that patch on the mailing list, but I hadn't tested it.
+The peripheral is compatible with the new driver, from what I can tell, so I thought this change made sense.
+
+>> , corrects all instances of IRQ_TYPE_NONE in interrupts, to avoid causing kernel
+>> warnings during boot, and also changes most interrupt properties to their
+>> respective macros, as defined by arm-gic.h.
+>> 
+>> Signed-off by: Victhor Foster <victhor.foster@ufpe.br>
+> 
+> The content looks good, but can you please split it in two; one for the
+> tsens change and one for the interrupts cells? And please limit your
+> commit message to 72 chars.
+> 
+Sure, I'll do the changes as requested and submit the patch again, I'll keep the character limit in mind. Thanks for the feedback.
+
+> Thanks,
+> Bjorn
+> 
+
+Thank you,
+Victhor
+>> ---
+>>  arch/arm/boot/dts/qcom-apq8084.dtsi | 43 +++++++++++++++--------------
+>>  1 file changed, 23 insertions(+), 20 deletions(-)
+>> 
+>> diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi
+>> b/arch/arm/boot/dts/qcom-apq8084.dtsi
+>> index 0a0fb147ebb9..dc4ea3a8dc6d 100644
+>> --- a/arch/arm/boot/dts/qcom-apq8084.dtsi
+>> +++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
+>> @@ -1,6 +1,7 @@
+>>  // SPDX-License-Identifier: GPL-2.0
+>>  /dts-v1/;
+>>  
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>>  #include <dt-bindings/clock/qcom,gcc-apq8084.h>
+>>  #include <dt-bindings/gpio/gpio.h>
+>>  
+>> @@ -184,7 +185,7 @@
+>>  
+>>  	cpu-pmu {
+>>  		compatible = "qcom,krait-pmu";
+>> -		interrupts = <1 7 0xf04>;
+>> +		interrupts = <GIC_PPI 7 0xf04>;
+>>  	};
+>>  
+>>  	clocks {
+>> @@ -203,10 +204,10 @@
+>>  
+>>  	timer {
+>>  		compatible = "arm,armv7-timer";
+>> -		interrupts = <1 2 0xf08>,
+>> -			     <1 3 0xf08>,
+>> -			     <1 4 0xf08>,
+>> -			     <1 1 0xf08>;
+>> +		interrupts = <GIC_PPI 2 0xf08>,
+>> +			     <GIC_PPI 3 0xf08>,
+>> +			     <GIC_PPI 4 0xf08>,
+>> +			     <GIC_PPI 1 0xf08>;
+>>  		clock-frequency = <19200000>;
+>>  	};
+>>  
+>> @@ -253,9 +254,11 @@
+>>  
+>>  		tsens: thermal-sensor@fc4a8000 {
+>>  			compatible = "qcom,msm8974-tsens";
+>> -			reg = <0xfc4a8000 0x2000>;
+>> +			reg = <0xfc4a9000 0x1000>, /* TM */
+>> +			      <0xfc4a8000 0x1000>; /* SROT */
+>>  			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
+>>  			nvmem-cell-names = "calib", "calib_backup";
+>> +			#qcom,sensors = <11>;
+>>  			#thermal-sensor-cells = <1>;
+>>  		};
+>>  
+>> @@ -269,50 +272,50 @@
+>>  
+>>  			frame@f9021000 {
+>>  				frame-number = <0>;
+>> -				interrupts = <0 8 0x4>,
+>> -					     <0 7 0x4>;
+>> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+>> +					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+>>  				reg = <0xf9021000 0x1000>,
+>>  				      <0xf9022000 0x1000>;
+>>  			};
+>>  
+>>  			frame@f9023000 {
+>>  				frame-number = <1>;
+>> -				interrupts = <0 9 0x4>;
+>> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>>  				reg = <0xf9023000 0x1000>;
+>>  				status = "disabled";
+>>  			};
+>>  
+>>  			frame@f9024000 {
+>>  				frame-number = <2>;
+>> -				interrupts = <0 10 0x4>;
+>> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+>>  				reg = <0xf9024000 0x1000>;
+>>  				status = "disabled";
+>>  			};
+>>  
+>>  			frame@f9025000 {
+>>  				frame-number = <3>;
+>> -				interrupts = <0 11 0x4>;
+>> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+>>  				reg = <0xf9025000 0x1000>;
+>>  				status = "disabled";
+>>  			};
+>>  
+>>  			frame@f9026000 {
+>>  				frame-number = <4>;
+>> -				interrupts = <0 12 0x4>;
+>> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+>>  				reg = <0xf9026000 0x1000>;
+>>  				status = "disabled";
+>>  			};
+>>  
+>>  			frame@f9027000 {
+>>  				frame-number = <5>;
+>> -				interrupts = <0 13 0x4>;
+>> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+>>  				reg = <0xf9027000 0x1000>;
+>>  				status = "disabled";
+>>  			};
+>>  
+>>  			frame@f9028000 {
+>>  				frame-number = <6>;
+>> -				interrupts = <0 14 0x4>;
+>> +				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+>>  				reg = <0xf9028000 0x1000>;
+>>  				status = "disabled";
+>>  			};
+>> @@ -404,13 +407,13 @@
+>>  			#gpio-cells = <2>;
+>>  			interrupt-controller;
+>>  			#interrupt-cells = <2>;
+>> -			interrupts = <0 208 0>;
+>> +			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+>>  		};
+>>  
+>>  		blsp2_uart2: serial@f995e000 {
+>>  			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+>>  			reg = <0xf995e000 0x1000>;
+>> -			interrupts = <0 114 0x0>;
+>> +			interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
+>>  			clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>, <&gcc GCC_BLSP2_AHB_CLK>;
+>>  			clock-names = "core", "iface";
+>>  			status = "disabled";
+>> @@ -420,7 +423,7 @@
+>>  			compatible = "qcom,apq8084-sdhci", "qcom,sdhci-msm-v4";
+>>  			reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
+>>  			reg-names = "hc_mem", "core_mem";
+>> -			interrupts = <0 123 0>, <0 138 0>;
+>> +			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 138
+>> IRQ_TYPE_LEVEL_HIGH>;
+>>  			interrupt-names = "hc_irq", "pwr_irq";
+>>  			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+>>  				 <&gcc GCC_SDCC1_AHB_CLK>,
+>> @@ -433,7 +436,7 @@
+>>  			compatible = "qcom,apq8084-sdhci", "qcom,sdhci-msm-v4";
+>>  			reg = <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
+>>  			reg-names = "hc_mem", "core_mem";
+>> -			interrupts = <0 125 0>, <0 221 0>;
+>> +			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 221
+>> IRQ_TYPE_LEVEL_HIGH>;
+>>  			interrupt-names = "hc_irq", "pwr_irq";
+>>  			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
+>>  				 <&gcc GCC_SDCC2_AHB_CLK>,
+>> @@ -449,7 +452,7 @@
+>>  			      <0xfc4cb000 0x1000>,
+>>  			      <0xfc4ca000 0x1000>;
+>>  			interrupt-names = "periph_irq";
+>> -			interrupts = <0 190 0>;
+>> +			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
+>>  			qcom,ee = <0>;
+>>  			qcom,channel = <0>;
+>>  			#address-cells = <2>;
+>> @@ -463,7 +466,7 @@
+>>  		compatible = "qcom,smd";
+>>  
+>>  		rpm {
+>> -			interrupts = <0 168 1>;
+>> +			interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
+>>  			qcom,ipc = <&apcs 8 0>;
+>>  			qcom,smd-edge = <15>;
+>>  
+>> --
+> > 2.24.0
