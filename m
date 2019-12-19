@@ -2,149 +2,121 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF777C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A7EC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 981F724680
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5010824650
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:28:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A8WKkHjg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JCGh18A4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfLSR2k (ORCPT
+        id S1727144AbfLSR2q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:28:40 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:47053 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbfLSR2i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 12:28:38 -0500
-Received: by mail-pg1-f195.google.com with SMTP id z124so3452699pgb.13;
-        Thu, 19 Dec 2019 09:28:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PkNqtr4xDaqPvN6Vsjd/SlEQaI+42QLqvwGVf2EVSjU=;
-        b=A8WKkHjgMjO9lYnzetKkZVflOAc4LP08kIWqHRxOM86qXG7wzpd5ylfGwqBY3rTTtp
-         XP8dNkC1cDopPzttDX7A+W+JaEhHDfnT9DhjE5EWa6JwrUDO1P9TIwW4Z0NbkbYFdfsP
-         L3rOtzqHFgx1NPUo0h1mV3aoE4ZsJzesUIXVWR8tx3meyyu5le64yu2xjjWB2soI/pQn
-         xqwwBVscx7C1W7s7/5LQ/wrG4B0JG47P/7Yn3HI3EpI2EY3MzwBgHZ0Zf5N8FO/t/ZbD
-         HZXjRgkjJ6tH/svSMp4XlVVrEnloOwhA2Oco59k9F9F9V7he/qf9zMsjdkhXaxEU+X9J
-         BWyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PkNqtr4xDaqPvN6Vsjd/SlEQaI+42QLqvwGVf2EVSjU=;
-        b=YFXdB/CFxlzv2jjS/5jzYarv+TDuoLPuXinKBo7jaCllwWtej+aDftLaxOi9OQ0wSc
-         nPo1PJypimXeRDoDJRWmVHJhtAugfAkyC5Q3if4V57S4pCsMLupLT1qgnGTNmt8GrM1s
-         dEUI6rkMV4HQCqfM4ShmZqrh9KOeM+L3ZTfw1ThsnW6D7DgmmGNRZGF1tVLnc1zN1MdQ
-         VkiPgtzA26KhCzo7Jw2ex85De8TX7ThorHpra0BdUYd4R+fEnFEiyqdsTTO6P3HCPduB
-         h30ZgatqhmsrCkuDYfX2G4CPFJVH5RZa9HohNULunT4TVxvcRLNXBFijg/weO65bZI+y
-         V6JQ==
-X-Gm-Message-State: APjAAAXWx296wp433RwaHJ7rkBCEpDqesmteK6pZocMcMP8w/knp1mZe
-        CFkewtAGEnb7mbOr7Cd6A/0=
-X-Google-Smtp-Source: APXvYqzdaGLjH+p1iK/lsf/2RbMuIf5/AaD9ZMle/RdJ1ljBPI+3ZTkZaByhMP4ycU45gLNpiIdCaA==
-X-Received: by 2002:aa7:8a8b:: with SMTP id a11mr11164923pfc.207.1576776517736;
-        Thu, 19 Dec 2019 09:28:37 -0800 (PST)
-Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id v143sm536209pfc.71.2019.12.19.09.28.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 09:28:37 -0800 (PST)
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH v8 4/7] ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
-Date:   Thu, 19 Dec 2019 09:28:20 -0800
-Message-Id: <20191219172823.1652600-5-anarsoul@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219172823.1652600-1-anarsoul@gmail.com>
-References: <20191219172823.1652600-1-anarsoul@gmail.com>
+        Thu, 19 Dec 2019 12:28:46 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:37114 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727106AbfLSR2o (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 12:28:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8zbAzNcfI9oZ8v2ntYbWufi4k/9wq+l907iSnZf7FUU=; b=JCGh18A4PCK/syxO0EHwoSBYV
+        GJY9Xh1XgWA/1ErUDsZmPaD49K/DdJzNttu0WKagLhKCq9E711XrlzoL3vam914Lxv/Lq2y3WL0te
+        V0MX7ay20xSl4NYHh1GX0AGiaIDatTAUiZYeoMkD7mRs34iN38nU0MGiicqDNMOma7gQ30LwGd1tm
+        gbu1osGT/LwYpIQcbG3Fxa0LWQS3ry0cBr03xm9EFPoOCaTLePgKQFdGJMqZpqHfHj+ujS0ctOXz9
+        ax/IJView/HciZicjXKrXlGCmP3+5qWTi2TSeYfjkx3/GBMUE7p0H9i6qfOF2214eeAP0PLOq3nDL
+        Ds8hCmMzQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55164)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ihzbK-0003pn-8y; Thu, 19 Dec 2019 17:28:38 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ihzbG-0005XL-Kp; Thu, 19 Dec 2019 17:28:34 +0000
+Date:   Thu, 19 Dec 2019 17:28:34 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     madalin.bucur@nxp.com
+Cc:     davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, shawnguo@kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+Message-ID: <20191219172834.GC25745@shell.armlinux.org.uk>
+References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
+ <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+On Thu, Dec 19, 2019 at 05:21:16PM +0200, Madalin Bucur wrote:
+> From: Madalin Bucur <madalin.bucur@nxp.com>
+> 
+> Add explicit entries for XFI, SFI to make sure the device
+> tree entries for phy-connection-type "xfi" or "sfi" are
+> properly parsed and differentiated against the existing
+> backplane 10GBASE-KR mode.
 
-There is just one sensor for the CPU.
+10GBASE-KR is actually used for XFI and SFI (due to a slight mistake on
+my part, it should've been just 10GBASE-R).
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- arch/arm/boot/dts/sun8i-h3.dtsi    | 20 ++++++++++++++++++++
- arch/arm/boot/dts/sunxi-h3-h5.dtsi |  6 ++++++
- 2 files changed, 26 insertions(+)
+Please explain exactly what the difference is between XFI, SFI and
+10GBASE-R. I have not been able to find definitive definitions for
+XFI and SFI anywhere, and they appear to be precisely identical to
+10GBASE-R. It seems that it's just a terminology thing, with
+different groups wanting to "own" what is essentially exactly the
+same interface type.
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index fe773c72a69b..be8f601ab8cf 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -199,6 +199,26 @@ mali: gpu@1c40000 {
- 			assigned-clocks = <&ccu CLK_GPU>;
- 			assigned-clock-rates = <384000000>;
- 		};
-+
-+		ths: thermal-sensor@1c25000 {
-+			compatible = "allwinner,sun8i-h3-ths";
-+			reg = <0x01c25000 0x400>;
-+			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&ccu RST_BUS_THS>;
-+			clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
-+			clock-names = "bus", "mod";
-+			nvmem-cells = <&ths_calibration>;
-+			nvmem-cell-names = "calibration";
-+			#thermal-sensor-cells = <0>;
-+		};
-+	};
-+
-+	thermal-zones {
-+		cpu_thermal: cpu-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&ths 0>;
-+		};
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index 0afea59486c2..6e68ed831015 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -231,6 +231,12 @@ mmc2: mmc@1c11000 {
- 		sid: eeprom@1c14000 {
- 			/* compatible is in per SoC .dtsi file */
- 			reg = <0x1c14000 0x400>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			ths_calibration: thermal-sensor-calibration@34 {
-+				reg = <0x34 4>;
-+			};
- 		};
- 
- 		usb_otg: usb@1c19000 {
+> 
+> Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+> ---
+>  include/linux/phy.h | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/phy.h b/include/linux/phy.h
+> index 5032d453ac66..ebb793621f0b 100644
+> --- a/include/linux/phy.h
+> +++ b/include/linux/phy.h
+> @@ -99,7 +99,8 @@ typedef enum {
+>  	PHY_INTERFACE_MODE_2500BASEX,
+>  	PHY_INTERFACE_MODE_RXAUI,
+>  	PHY_INTERFACE_MODE_XAUI,
+> -	/* 10GBASE-KR, XFI, SFI - single lane 10G Serdes */
+> +	PHY_INTERFACE_MODE_XFI,
+> +	PHY_INTERFACE_MODE_SFI,
+>  	PHY_INTERFACE_MODE_10GKR,
+>  	PHY_INTERFACE_MODE_USXGMII,
+>  	PHY_INTERFACE_MODE_MAX,
+> @@ -175,6 +176,10 @@ static inline const char *phy_modes(phy_interface_t interface)
+>  		return "rxaui";
+>  	case PHY_INTERFACE_MODE_XAUI:
+>  		return "xaui";
+> +	case PHY_INTERFACE_MODE_XFI:
+> +		return "xfi";
+> +	case PHY_INTERFACE_MODE_SFI:
+> +		return "sfi";
+>  	case PHY_INTERFACE_MODE_10GKR:
+>  		return "10gbase-kr";
+>  	case PHY_INTERFACE_MODE_USXGMII:
+> -- 
+> 2.1.0
+> 
+> 
+
 -- 
-2.24.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
