@@ -2,162 +2,133 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C31C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6F9C2D0C1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE4620716
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EEB824682
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:11:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="unrgmKuz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GyQUlmhV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfLSMGw (ORCPT
+        id S1726736AbfLSMK6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:06:52 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:36634 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726719AbfLSMGw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:06:52 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576757211; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=IF4vMvqiy9Q7KLJ8/f0lHi+0oxVzVOrufU/ebDNywnM=; b=unrgmKuzVlP9erLClJBzHyllYxA6hLSyzyZvmJww8Gd5aAvAuPEXg6F0LMoEiLkUOr0sPRR3
- KHMUxymObo0P5PSumyhYYnPRvg9vo8Xg+an/HUj7huOw/d65/+vpwA9kH9PwdgueNZVhxjmt
- a84Mc6VQRenNNgp5CvkXwd3uNPE=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfb67d7.7f533b9aa148-smtp-out-n01;
- Thu, 19 Dec 2019 12:06:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8DA9AC4479D; Thu, 19 Dec 2019 12:06:46 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3CB0CC433CB;
-        Thu, 19 Dec 2019 12:06:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3CB0CC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, amit.kucheria@linaro.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH] arm64: dts: qcom: sm8150: Add cpufreq HW device node
-Date:   Thu, 19 Dec 2019 17:36:33 +0530
-Message-Id: <20191219120633.20723-1-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.1
+        Thu, 19 Dec 2019 07:10:58 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:55792 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfLSMK6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 07:10:58 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJCAm6A100054;
+        Thu, 19 Dec 2019 06:10:48 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576757448;
+        bh=v7Np/OFkk20fqw6MV6RMIPQQKnOLNyFYGAZXUuSYuis=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GyQUlmhVIxuCexAwcASlKaNdBf4wIzpZSBhv1Apxw/aaLiQRDVPrssznmXnsNX/eY
+         5okO5d8vuR3DuOJtiuAdGVdMHZ0gU5mTeJp1hpz+D6NghP5Cjzr38iyopE6FnuZXZv
+         a5+u5ytJzvZEpuRScDl0GmdeuUKn3g8nSko27ZZE=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJCAmkd026460;
+        Thu, 19 Dec 2019 06:10:48 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 06:10:48 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 06:10:47 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJCAiUg062952;
+        Thu, 19 Dec 2019 06:10:45 -0600
+Subject: Re: [PATCH 08/13] PCI: cadence: Use local management register to
+ configure Vendor ID
+To:     Andrew Murray <andrew.murray@arm.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, Tom Joseph <tjoseph@cadence.com>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-9-kishon@ti.com>
+ <20191217124238.GE24359@e119886-lin.cambridge.arm.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <cdb15479-6cc4-e00f-34a6-6cf191179bf7@ti.com>
+Date:   Thu, 19 Dec 2019 17:42:27 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217124238.GE24359@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add cpufreq HW device node to scale 4-Silver/3-Gold/1-Gold+ cores
-on SM8150 SoCs.
++Tom
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Hi,
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 694be3c001a68..bad77e539cb1d 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -45,6 +45,7 @@
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_0: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -60,6 +61,7 @@
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_100>;
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_100: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -73,6 +75,7 @@
- 			reg = <0x0 0x200>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_200>;
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_200: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -85,6 +88,7 @@
- 			reg = <0x0 0x300>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_300>;
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_300: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -97,6 +101,7 @@
- 			reg = <0x0 0x400>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_400>;
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			L2_400: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -109,6 +114,7 @@
- 			reg = <0x0 0x500>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_500>;
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			L2_500: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -121,6 +127,7 @@
- 			reg = <0x0 0x600>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_600>;
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			L2_600: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -133,6 +140,7 @@
- 			reg = <0x0 0x700>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_700>;
-+			qcom,freq-domain = <&cpufreq_hw 2>;
- 			L2_700: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -834,6 +842,19 @@
- 				};
- 			};
- 		};
-+
-+		cpufreq_hw: cpufreq@18323000 {
-+			compatible = "qcom,cpufreq-hw";
-+			reg = <0 0x18323000 0 0x1400>, <0 0x18325800 0 0x1400>,
-+			      <0 0x18327800 0 0x1400>;
-+			reg-names = "freq-domain0", "freq-domain1",
-+				    "freq-domain2";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
-+			clock-names = "xo", "alternate";
-+
-+			#freq-domain-cells = <1>;
-+		};
- 	};
- 
- 	timer {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On 17/12/19 6:12 pm, Andrew Murray wrote:
+> On Mon, Dec 09, 2019 at 02:51:42PM +0530, Kishon Vijay Abraham I wrote:
+>> PCI_VENDOR_ID in root port configuration space is read-only register
+>> and writing to it will have no effect. Use local management register to
+>> configure Vendor ID and Subsystem Vendor ID.
+> 
+> Is this a bug fix? Can you add a Fixes tag and make that clearer?
+
+I think this might have worked in Cadence platform? Tom?
+
+Thanks
+Kishon
+
+> 
+> Thanks,
+> 
+> Andrew Murray
+> 
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/pci/controller/cadence/pcie-cadence-host.c | 9 +++++++--
+>>  1 file changed, 7 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index cf817be237af..afb2c96a6538 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -71,6 +71,7 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>>  {
+>>  	struct cdns_pcie *pcie = &rc->pcie;
+>>  	u32 value, ctrl;
+>> +	u32 id;
+>>  
+>>  	/*
+>>  	 * Set the root complex BAR configuration register:
+>> @@ -90,8 +91,12 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>>  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+>>  
+>>  	/* Set root port configuration space */
+>> -	if (rc->vendor_id != 0xffff)
+>> -		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
+>> +	if (rc->vendor_id != 0xffff) {
+>> +		id = CDNS_PCIE_LM_ID_VENDOR(rc->vendor_id) |
+>> +			CDNS_PCIE_LM_ID_SUBSYS(rc->vendor_id);
+>> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
+>> +	}
+>> +
+>>  	if (rc->device_id != 0xffff)
+>>  		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
+>>  
+>> -- 
+>> 2.17.1
+>>
