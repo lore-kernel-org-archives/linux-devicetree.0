@@ -6,57 +6,57 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 248B0C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 08:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB27C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 08:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB502465E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 08:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A7821D7D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 08:34:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ups+DeAF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="naz3+STH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbfLSIdH (ORCPT
+        id S1726668AbfLSIeG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:33:07 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42195 "EHLO
+        Thu, 19 Dec 2019 03:34:06 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33136 "EHLO
         mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbfLSIdH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 03:33:07 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y19so3695052lfl.9
-        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 00:33:05 -0800 (PST)
+        with ESMTP id S1726618AbfLSIeG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 03:34:06 -0500
+Received: by mail-lf1-f66.google.com with SMTP id n25so3734203lfl.0
+        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 00:34:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pKdZfjZH2e9GPk64PhPrvn+Af7qtk63t1BrhD8ePLsU=;
-        b=ups+DeAFHChjjhe00lTLkddxXH/4Fj4vJxKQxTZyRQUhNa5WYcT4QLFVaOYgIG9r11
-         XZjY6i2KSGElJ85ll3SVN9fSLBUUnDpLdtvHv6ij7Kx3Kat91MkOSlk73ASzPJPqAAWA
-         IYhXOv9N59rxPghhC5IaLpRXKdjN0DeiNFlNpWuvXHHWbYuNXsZZUla0UsCKpd+r14z7
-         0khEuAjteuDiUihfU6aNrx6+5Dgs+XNpoqFSm90V60ro55cP2ZDIgMW90B4N2AbZ5Wf+
-         l7euIyQ6SYTeF8sXuKMX3kooTwhq+MOUafqIzgO3OQgdIh7ek+W9F33brCanGDw0CfL5
-         bOdg==
+        bh=taX3HoxwkEVB7pXAcY+Ri+PyRxj8E80icnv90TNS3CU=;
+        b=naz3+STHjMphw1sGKzwtcsWblBGGkqnZUFM8Fo/D2ib3OFqybDV54Fgm6dF/A4RZ61
+         ZSAyiPStc2psl1X2tDaUJTBJFlxpb1MK3/OSvbpn19aqs+IQvraV4OLed+S70nCk/KYJ
+         c4r8b2UMw6p7TIIY0fnrjUzLX2LFt2boGQ9w+iySYhO4uxhXl2V6Ui0IqhiHofuMT+Il
+         v8Ul4LgIgycMb0tfiO0pJ5+dlByvuaLlP51UR0vGbMKPybivEqX7gnjCpHHMqqACaGmy
+         +xfxTXwSJTDtbXww2rAzwB2OelFHVXoLESuI8ALflrVgOsOEQPRq3htvpgCRPlYEGeIi
+         2kLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pKdZfjZH2e9GPk64PhPrvn+Af7qtk63t1BrhD8ePLsU=;
-        b=AYbUpE6HNFpVCZt4RO4CEb315CFtvtCvJT52lz2BhcDemK3/YTwim4NSVJDC9+XC7a
-         dIVxdgPnAOHHCwniyiakSj7kcxR2/sAKFgu63GGJLF3TnQoTa+4X83oViZUlgORySEoZ
-         pSyIEOxemRdxLWEljjRW5TAsp9ZfGB/1IFo7RMl4GQatk0tlxogm0HOP8TVqRXnt1KXr
-         /dz/fc42lrhEjTaQDqCddMSlAhb8AVZLUdFJzV8RUEf4toEDgqW9D063KLVnYCPdalkL
-         bsJqiX1HLQjDg60fzALBGDqIilZxKXJyzbkd1kwkDWYfdlVA7zCAcd9lTXFXEJKVBnRh
-         6e4g==
-X-Gm-Message-State: APjAAAVQOdbWq74kxhkmzkMxz5lKrn3myi9ILw1ZWLnqifK0ApBxvXw8
-        Y3qXcmuRA808IpljVL4vJxi9qie3uB97sW9k5dRzgQ==
-X-Google-Smtp-Source: APXvYqzaAgCVHUdj5DNEslSqFxuU1AVBFaR71PPbkZqONekNTb+Jgw52NqXDCfJNyzkThI+t+ljGL6aObMtlDFqv8Ps=
-X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr4543811lfp.133.1576744385217;
- Thu, 19 Dec 2019 00:33:05 -0800 (PST)
+        bh=taX3HoxwkEVB7pXAcY+Ri+PyRxj8E80icnv90TNS3CU=;
+        b=Ysq9j5fdWK6LeZpzxqDeOj68PDdFzNKM7u5w6esj23H0InWVoAg+9b8rHYJWKpOO9B
+         cqzkT8DhdrHWHPjzT9+wRp6iACJA/Yn1yJCt8gL5/EwWRAJKUjUoIhIqTT7IaXOThvxA
+         GObk+ngL3Y4VLlQQ5v0Q+AfNUT+LO5K0BBS0KHAgRsj8GUig1FNHsrEgqzQ6Uoemhb5n
+         p5B4dCqNiTbk0LKHo8tNqfYB0KVa69X1OQukMbSWyaB2BkW6FQfXnAKyo8eaIHd0jASu
+         ZnwexK5tHvdjyq89LBozZWHs5tIFw7AYqNSv171no+D4UO28DZKf1dwz9zoXbKtoX0+X
+         FhIw==
+X-Gm-Message-State: APjAAAVafWzuuysMb2a5wSSlWGMDat0udnY/z1CTbiNN+k5xQ7jB7rBA
+        4safR/Fm8auBY5Xlegj3v1fM6SWqJBBIh0MyCHQTyg==
+X-Google-Smtp-Source: APXvYqyd9rjB5aj6i4ChpgDIEs1Yag+wZMWm8rCkrgw+wMRtis/I8Z20t1/Brk6ZFBE7LxJh4nTT76LiCUWT4HSvGW0=
+X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr4545920lfp.133.1576744444532;
+ Thu, 19 Dec 2019 00:34:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20191219041039.23396-1-dan@dlrobertson.com> <20191219041039.23396-2-dan@dlrobertson.com>
-In-Reply-To: <20191219041039.23396-2-dan@dlrobertson.com>
+References: <20191219041039.23396-1-dan@dlrobertson.com> <20191219041039.23396-3-dan@dlrobertson.com>
+In-Reply-To: <20191219041039.23396-3-dan@dlrobertson.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 19 Dec 2019 09:32:53 +0100
-Message-ID: <CACRpkdbNZMfUtpYXEJVNyHA+TnoT_vAnR5c++_LDZ3XADZYOkg@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] dt-bindings: iio: accel: bma400: add bindings
+Date:   Thu, 19 Dec 2019 09:33:52 +0100
+Message-ID: <CACRpkdaO3ZYHXBn=Lsg9s=fxBzxH06LYKCnavN=TxFtCZYfT4w@mail.gmail.com>
+Subject: Re: [PATCH v7 2/3] iio: (bma400) add driver for the BMA400
 To:     Dan Robertson <dan@dlrobertson.com>
 Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
@@ -76,8 +76,10 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Thu, Dec 19, 2019 at 5:27 AM Dan Robertson <dan@dlrobertson.com> wrote:
 
-> Add devicetree binding for the Bosch BMA400 3-axes ultra-low power
-> accelerometer sensor.
+> Add a IIO driver for the Bosch BMA400 3-axes ultra-low power accelerometer.
+> The driver supports reading from the acceleration and temperature
+> registers. The driver also supports reading and configuring the output data
+> rate, oversampling ratio, and scale.
 >
 > Signed-off-by: Dan Robertson <dan@dlrobertson.com>
 
