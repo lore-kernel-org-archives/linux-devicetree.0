@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD05C2D0C1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 08:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2618C2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 08:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4504224676
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 08:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8512F2465E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 08:23:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oCM5OJVC"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Oq7g6zyI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfLSIX7 (ORCPT
+        id S1726656AbfLSIX7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Thu, 19 Dec 2019 03:23:59 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40720 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbfLSIX7 (ORCPT
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53706 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfLSIX7 (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 03:23:59 -0500
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJ8NTTq122321;
-        Thu, 19 Dec 2019 02:23:29 -0600
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJ8NQ3T036225;
+        Thu, 19 Dec 2019 02:23:26 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576743809;
-        bh=LSt5PHn/W84Au3xM6G0khj4qkObbM4ipblw3wB39Gmk=;
+        s=ti-com-17Q1; t=1576743806;
+        bh=4SdVxjR+zOM6VA8t/16WqwKT6bljtLTGX5bR3GE62pE=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=oCM5OJVCYjDMuSH6l3Bo5sZriH6A8hHwvcG/RXLZFVHIREyKPVD4KiJC3NfLxR64s
-         pIwBMD26Mto1pbvTeSWchp1pJNekTbIYjOV5/rYGZPjJTuvLyAfZUxVHvPb6o4j7Aj
-         f0SYQtd6gflUrbwwhs18a1q1nqU6gn6XrZkXlz90=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJ8NTxa086541
+        b=Oq7g6zyIZZckXEI1APgeRQJaYzjlnFkpxPQ1BiN9t+HhM94OBsVrYg9rmDFJPHkqt
+         tJoIVfIjh1DxJBMJGk5ZkpWJg4sK7ZGYeHjFy/LChnGvQMSHEsAMg3uXC6acScen3b
+         fmtmNFyKgCTw0yOG6pFIeO/RUSkE/fFwcO0fDqqU=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJ8NQcL086477
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Dec 2019 02:23:29 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 19 Dec 2019 02:23:26 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Dec 2019 02:23:28 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 02:23:25 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Dec 2019 02:23:28 -0600
+ Frontend Transport; Thu, 19 Dec 2019 02:23:25 -0600
 Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJ8NJI6095098;
-        Thu, 19 Dec 2019 02:23:25 -0600
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJ8NJI5095098;
+        Thu, 19 Dec 2019 02:23:23 -0600
 From:   Jyri Sarha <jsarha@ti.com>
 To:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>
 CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
         <peter.ujfalusi@ti.com>, <bparrot@ti.com>, <subhajit_paul@ti.com>,
         <praneeth@ti.com>, <yamonkar@cadence.com>, <sjakhade@cadence.com>,
         <sam@ravnborg.org>, <robh+dt@kernel.org>, <maxime@cerno.tech>
-Subject: [PATCH v4 2/5] dt-bindings: display: ti,am65x-dss: Add dt-schema yaml binding
-Date:   Thu, 19 Dec 2019 10:23:16 +0200
-Message-ID: <d439a2cdb22964813fca2b44ee98fca9cde9f481.1576704528.git.jsarha@ti.com>
+Subject: [PATCH v4 1/5] dt-bindings: display: ti,k2g-dss: Add dt-schema yaml binding
+Date:   Thu, 19 Dec 2019 10:23:15 +0200
+Message-ID: <f50bdabe4ef9c57b516620d826875d81586722a1.1576704528.git.jsarha@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1576704528.git.jsarha@ti.com>
 References: <cover.1576704528.git.jsarha@ti.com>
@@ -67,91 +67,85 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add dt-schema yaml bindig for AM65x DSS, AM65x version TI Keystone
-Display SubSystem.
+Add dt-schema yaml bindig for K2G DSS, an ultra-light version of TI
+Keystone Display SubSystem.
 
 Version history:
 
 v2: no change
 
 v3: - Add ports node
-    - use allOf in ti,am65x-oldi-io-ctrl to add both $ref and maxItems
     - Add includes to dts example
     - reindent dts example
 
 v4: - Add descriptions to reg and clocks properties
     - Remove minItems when its value is the same as maxItems value
+    - Remove ports node
 
 Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- .../bindings/display/ti/ti,am65x-dss.yaml     | 154 ++++++++++++++++++
- 1 file changed, 154 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+ .../bindings/display/ti/ti,k2g-dss.yaml       | 114 ++++++++++++++++++
+ 1 file changed, 114 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
 new file mode 100644
-index 000000000000..16137770b995
+index 000000000000..17d27ed84bc0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-@@ -0,0 +1,154 @@
++++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+@@ -0,0 +1,114 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +# Copyright 2019 Texas Instruments Incorporated
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/display/ti/ti,am65x-dss.yaml#"
++$id: "http://devicetree.org/schemas/display/ti/ti,k2g-dss.yaml#"
 +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+title: Texas Instruments AM65x Display Subsystem
++title: Texas Instruments K2G Display Subsystem
 +
 +maintainers:
 +  - Jyri Sarha <jsarha@ti.com>
 +  - Tomi Valkeinen <tomi.valkeinen@ti.com>
 +
 +description: |
-+  The AM65x TI Keystone Display SubSystem with two output ports and
-+  two video planes. The first video port supports OLDI and the second
-+  supports DPI format. The fist plane is full video plane with all
-+  features and the second is a "lite plane" without scaling support.
++  The K2G DSS is an ultra-light version of TI Keystone Display
++  SubSystem. It has only one output port and video plane. The
++  output is DPI.
 +
 +properties:
 +  compatible:
-+    const: ti,am65x-dss
++    const: ti,k2g-dss
 +
 +  reg:
-+    maxItems: 7
++    maxItems: 5
 +    description: |
 +      Addresses to each DSS memory region described in the SoC's TRM.
 +      The reg-names refer to memory regions as follows:
 +      reg-names: Region Name in TRM:  Description:
-+      common     DSS0_COMMON          DSS common register area
-+      vidl1      DSS0_VIDL1           VIDL1 light video plane
-+      vid        DSS0_VID             VID video plane
-+      ovr1       DSS0_OVR1            OVR1 overlay manager for vp1
-+      ovr2       DSS0_OVR2            OVR2 overlay manager for vp2
-+      vp1        DSS0_VP1             VP1 video port 1
-+      vp2        DSS0_VP2             VP1 video port 2
++      cfg        DSSUL_0_CFG          DSS top level
++      common     DISPC_COMMON         DISPC common
++      vid1       DISPC_VID1           VID1 video plane
++      ovr1       DISPC_OVR1           OVR1 overlay manager for vp1
++      vp1        DISPC_VP1            VP1 video port 1
 +
 +  reg-names:
 +    items:
++      - const: cfg
 +      - const: common
-+      - const: vidl1
-+      - const: vid
++      - const: vid1
 +      - const: ovr1
-+      - const: ovr2
 +      - const: vp1
-+      - const: vp2
 +
 +  clocks:
-+    maxItems: 3
++    maxItems: 2
 +    description:
 +      phandles to clock nodes for DSS functional clock (fck) and video
-+      port 1 and 2 pixel clocks (vp1, vp2).
++      port 1 pixel clock (vp1).
 +
 +  clock-names:
 +    items:
 +      - const: fck
 +      - const: vp1
-+      - const: vp2
 +
 +  interrupts:
 +    maxItems: 1
@@ -160,41 +154,11 @@ index 000000000000..16137770b995
 +    maxItems: 1
 +    description: phandle to the associated power domain
 +
-+  ports:
++  port:
 +    type: object
 +    description:
-+      Ports as described in Documentation/devictree/bindings/graph.txt
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+      port@0:
-+        type: object
-+        description:
-+          The DSS OLDI output port node form video port 1
-+
-+      port@1:
-+        type: object
-+        description:
-+          The DSS DPI output port node from video port 2
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+
-+  ti,am65x-oldi-io-ctrl:
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+      - maxItems: 1
-+    description:
-+      phandle to syscon device node mapping OLDI IO_CTRL registers.
-+      The mapped range should point to OLDI_DAT0_IO_CTRL, map it and
-+      following OLDI_DAT1_IO_CTRL, OLDI_DAT2_IO_CTRL, OLDI_DAT3_IO_CTRL,
-+      and OLDI_CLK_IO_CTRL registers. This property is needed for OLDI
-+      interface to work.
++      Port as described in Documentation/devictree/bindings/graph.txt.
++      The DSS DPI output port node
 +
 +  max-memory-bandwidth:
 +    $ref: /schemas/types.yaml#/definitions/uint32
@@ -209,7 +173,7 @@ index 000000000000..16137770b995
 +  - clocks
 +  - clock-names
 +  - interrupts
-+  - ports
++  - port
 +
 +additionalProperties: false
 +
@@ -217,33 +181,29 @@ index 000000000000..16137770b995
 +  - |
 +    #include <dt-bindings/interrupt-controller/arm-gic.h>
 +    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
 +
-+    dss: dss@04a00000 {
-+            compatible = "ti,am65x-dss";
-+            reg =   <0x0 0x04a00000 0x0 0x1000>, /* common */
-+                    <0x0 0x04a02000 0x0 0x1000>, /* vidl1 */
-+                    <0x0 0x04a06000 0x0 0x1000>, /* vid */
-+                    <0x0 0x04a07000 0x0 0x1000>, /* ovr1 */
-+                    <0x0 0x04a08000 0x0 0x1000>, /* ovr2 */
-+                    <0x0 0x04a0a000 0x0 0x1000>, /* vp1 */
-+                    <0x0 0x04a0b000 0x0 0x1000>; /* vp2 */
-+            reg-names = "common", "vidl1", "vid",
-+                    "ovr1", "ovr2", "vp1", "vp2";
-+            ti,am65x-oldi-io-ctrl = <&dss_oldi_io_ctrl>;
-+            power-domains = <&k3_pds 67 TI_SCI_PD_EXCLUSIVE>;
-+            clocks =        <&k3_clks 67 1>,
-+                            <&k3_clks 216 1>,
-+                            <&k3_clks 67 2>;
-+            clock-names = "fck", "vp1", "vp2";
-+            interrupts = <GIC_SPI 166 IRQ_TYPE_EDGE_RISING>;
++    dss: dss@02540000 {
++            compatible = "ti,k2g-dss";
++            reg =   <0x02540000 0x400>,
++                    <0x02550000 0x1000>,
++                    <0x02557000 0x1000>,
++                    <0x0255a800 0x100>,
++                    <0x0255ac00 0x100>;
++            reg-names = "cfg", "common", "vid1", "ovr1", "vp1";
++            clocks =        <&k2g_clks 0x2 0>,
++                            <&k2g_clks 0x2 1>;
++            clock-names = "fck", "vp1";
++            interrupts = <GIC_SPI 247 IRQ_TYPE_EDGE_RISING>;
++
++            power-domains = <&k2g_pds 0x2>;
++
++            max-memory-bandwidth = <230000000>;
 +            ports {
 +                    #address-cells = <1>;
 +                    #size-cells = <0>;
 +                    port@0 {
-+                            reg = <0>;
-+                            oldi_out0: endpoint {
-+                                    remote-endpoint = <&lcd_in0>;
++                            dpi_out: endpoint {
++                                    remote-endpoint = <&sii9022_in>;
 +                            };
 +                    };
 +            };
