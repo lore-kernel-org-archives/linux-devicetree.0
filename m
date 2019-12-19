@@ -2,278 +2,187 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECF6C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 02:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F426C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 03:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25154222C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 02:58:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ufpe.br header.i=@ufpe.br header.b="ABS+CfH6"
+	by mail.kernel.org (Postfix) with ESMTP id E47AF24672
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 03:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfLSC6c (ORCPT
+        id S1726751AbfLSDAE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 21:58:32 -0500
-Received: from titan.ufpe.br ([150.161.6.80]:48992 "EHLO canit.ufpe.br"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726751AbfLSC6c (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 21:58:32 -0500
-Received: from zimbraufpe.ufpe.br (zimbraufpe.ufpe.br [150.161.6.73])
-        by canit.ufpe.br (8.14.4/8.14.4/Debian-4) with ESMTP id xBJ2wAhG074405
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Dec 2019 23:58:10 -0300
-Received: from localhost (localhost [127.0.0.1])
-        by zimbraufpe.ufpe.br (Postfix) with ESMTP id 95F1C5F4C641;
-        Wed, 18 Dec 2019 23:58:08 -0300 (-03)
-X-Virus-Scanned: amavisd-new at ufpe.br
-Received: from zimbraufpe.ufpe.br ([127.0.0.1])
-        by localhost (zimbraufpe.ufpe.br [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id X7TU4AJj4yVF; Wed, 18 Dec 2019 23:58:08 -0300 (-03)
-Received: from zimbraufpe.ufpe.br (zimbraufpe.ufpe.br [150.161.6.73])
-        by zimbraufpe.ufpe.br (Postfix) with ESMTP id 6829CEC7A0F;
-        Wed, 18 Dec 2019 23:58:08 -0300 (-03)
-Date:   Wed, 18 Dec 2019 23:58:08 -0300 (BRT)
-From:   Victhor Foster <victhor.foster@ufpe.br>
-To:     linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Cc:     agross <agross@kernel.org>, robh+dt <robh+dt@kernel.org>,
-        mark rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>
-Message-ID: <553281524.9008431.1576724288201.JavaMail.zimbra@ufpe.br>
-In-Reply-To: <20191218062825.GA3755841@builder>
-References: <587764682.8806511.1576626759806.JavaMail.zimbra@ufpe.br> <20191218062825.GA3755841@builder>
-Subject: Re: [PATCH] arm: dts: apq8084: Fix tsens kernel panic during boot
- and kernel warnings due to IRQ_TYPE_NONE interrupt type
+        Wed, 18 Dec 2019 22:00:04 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33828 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfLSDAE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 22:00:04 -0500
+Received: by mail-ed1-f67.google.com with SMTP id l8so3416569edw.1;
+        Wed, 18 Dec 2019 19:00:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=g1k0BfhD91RWdaRPR5uZq9FkzKab5ZId9wcg8EwMfWw=;
+        b=uQeck9UNa+wscfergSST6J8GX+OoiCm8RRW+ysCIEFejoGWP020UHQ+MYFaSUQkBpc
+         BNP/T5iX7BQKsbziNrxF3rX+D4ygqcwiCyyNp11iFKSKGiJLGd+87SdGV+zsqzTHigVE
+         d9lOlyvBs3MhDaqC/TAMj/zxrrf2pf3/DdB6y533OlBq8As7S9tZKRTuuQjAfE1VSpQY
+         oHBIvulf+myE8yvCXlN2TTwaaA2cSUI5mrDqVWV6wgVOfCBPJvUXYKddy0EsTlW3UjtG
+         DxxDA2WbGqjg0Jo5ZRbo2VyE+CRo6Z2yiaaOG86XzKW1JDx+y0Xg83N0Ygk9f4C+jw+U
+         g0rg==
+X-Gm-Message-State: APjAAAUUH32JcJZK4rc7rqF+tJzOklCW8ibnqnKqJXwwHF37P2EVq/1J
+        0S1blLkwvvq7MVVCdgjVi5caYUUSyJE=
+X-Google-Smtp-Source: APXvYqxOrTmUmUDUDSgWAjMFlQI5wFXuqR+FgD5Yg60DEqnuoIp3UMBBtxs7GboUu8tl0QN5er1ZHA==
+X-Received: by 2002:aa7:d04f:: with SMTP id n15mr6546789edo.76.1576724401088;
+        Wed, 18 Dec 2019 19:00:01 -0800 (PST)
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com. [209.85.128.44])
+        by smtp.gmail.com with ESMTPSA id w2sm140588eja.49.2019.12.18.19.00.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Dec 2019 19:00:00 -0800 (PST)
+Received: by mail-wm1-f44.google.com with SMTP id p9so3913657wmc.2;
+        Wed, 18 Dec 2019 19:00:00 -0800 (PST)
+X-Received: by 2002:a1c:3c45:: with SMTP id j66mr6922931wma.2.1576724400195;
+ Wed, 18 Dec 2019 19:00:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [179.235.209.15]
-X-Mailer: Zimbra 8.8.7_GA_1964 (ZimbraWebClient - GC77 (Linux)/8.8.7_GA_1964)
-Thread-Topic: apq8084: Fix tsens kernel panic during boot and kernel warnings due to IRQ_TYPE_NONE interrupt type
-Thread-Index: 2/ZLp2v1oGtHmTFJSJq7LgG596nBCw==
-X-Bayes-Prob: 0.5 (Score 0: No Bayes scoring rules defined, tokens from: SAIDA)
-X-CanIt-Incident-Id: 011DCWa4z
-X-CanIt-Geo: ip=150.161.6.73; country=BR; region=Pernambuco; city=Recife; latitude=-8.05; longitude=-34.9000; http://maps.google.com/maps?q=-8.05,-34.9000&z=6
-X-CanItPRO-Stream: SAIDA
-X-Canit-Stats-ID: 011DCWa4z - 3d537397b03d - 20191218
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=ufpe.br; h=date:from:to
-        :cc:message-id:in-reply-to:references:subject:mime-version
-        :content-type:content-transfer-encoding; s=ufpe201801; bh=jRQ1cZ
-        uYrqdFKIHLY8r15p0BznYR1rk59sFYGddo2gU=; b=ABS+CfH6uMUKE+xV4pJ8v1
-        Fuxk9XdkIIiLefau/h419MR9sQEIszGbHoCdGxMU41X+PEZv+x/+NMs4HKIPhB2z
-        vqptj49J5/ouvQG+TVtvyrgCxSkkt3a7dkFJaSHtqjFGmYcpkZf1w2JJEK2bR1o9
-        6zwjHTAJ+sPYobedVSqUxDZ0x6ABCD3L2oP7es7nfMqlE++ISzrvkhOCx2RM9vlN
-        3HtSS0YXSf+zavnfDZjgq1eQtPy3mdoTeqPA/l8831qkWIc59LSJIrnkT6QA5SWc
-        4q6kQfjPiHPw5dZchJVUti1cNr815C0ZHm+Ijo4Byt2u0Q+KJCLmyPDxp4q72dAA
-        ==
-X-Scanned-By: CanIt (www . roaringpenguin . com) on 150.161.6.80
+References: <20191218042121.1471954-1-anarsoul@gmail.com> <20191218042121.1471954-7-anarsoul@gmail.com>
+ <CAGb2v65Qv6_KQ_MPg0u37P+o5gnnQWhbifOrY6g5FiWvnadmiw@mail.gmail.com>
+ <CA+E=qVdKwkUSsG9WA_4x5QntaOxQqfH1eZQ7TEeUrM_3W5mqTg@mail.gmail.com>
+ <20191219010321.kri5e7knjhc5d6ts@core.my.home> <CA+E=qVf0LT26AoPtooTFcvZR_OGXbFVkMfXJuuoXvPvTSQMLBQ@mail.gmail.com>
+In-Reply-To: <CA+E=qVf0LT26AoPtooTFcvZR_OGXbFVkMfXJuuoXvPvTSQMLBQ@mail.gmail.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Thu, 19 Dec 2019 10:59:48 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64iF+vZN3A9PfuV0NHmL9_M_bANueZDUnxZbZm8Sk2Uzw@mail.gmail.com>
+Message-ID: <CAGb2v64iF+vZN3A9PfuV0NHmL9_M_bANueZDUnxZbZm8Sk2Uzw@mail.gmail.com>
+Subject: Re: [PATCH v7 6/7] arm64: dts: allwinner: h6: Add thermal sensor and
+ thermal zones
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Dec 19, 2019 at 9:42 AM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> On Wed, Dec 18, 2019 at 5:03 PM Ondřej Jirman <megous@megous.com> wrote:
+> >
+> > On Wed, Dec 18, 2019 at 03:18:51PM -0800, Vasily Khoruzhick wrote:
+> > > On Tue, Dec 17, 2019 at 8:32 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> > > >
+> > > > On Wed, Dec 18, 2019 at 12:22 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+> > > > >
+> > > > > From: Ondrej Jirman <megous@megous.com>
+> > > > >
+> > > > > There are two sensors, one for CPU, one for GPU.
+> > > > >
+> > > > > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > > > > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > > > > ---
+> > > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 33 ++++++++++++++++++++
+> > > > >  1 file changed, 33 insertions(+)
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > index 29824081b43b..cdcb1a36301a 100644
+> > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > @@ -11,6 +11,7 @@
+> > > > >  #include <dt-bindings/reset/sun50i-h6-ccu.h>
+> > > > >  #include <dt-bindings/reset/sun50i-h6-r-ccu.h>
+> > > > >  #include <dt-bindings/reset/sun8i-de2.h>
+> > > > > +#include <dt-bindings/thermal/thermal.h>
+> > > > >
+> > > > >  / {
+> > > > >         interrupt-parent = <&gic>;
+> > > > > @@ -233,6 +234,12 @@ dma: dma-controller@3002000 {
+> > > > >                 sid: efuse@3006000 {
+> > > > >                         compatible = "allwinner,sun50i-h6-sid";
+> > > > >                         reg = <0x03006000 0x400>;
+> > > > > +                       #address-cells = <1>;
+> > > > > +                       #size-cells = <1>;
+> > > > > +
+> > > > > +                       ths_calibration: thermal-sensor-calibration@14 {
+> > > > > +                               reg = <0x14 0x6>;
+> > > >
+> > > > Nit: my preference is to use words as the smallest increment, so this
+> > > > would have a size of 8 instead of 6. Same goes for the A64 dts.
+> > > >
+> > > > AFAICT this doesn't impact the driver in any way.
+> > >
+> > > H6 has only 2 sensors, so it should be 4. That's my overlook, I'll
+> > > change it to 4 for H6 and to 8 for A64.
+> >
+> > No it's correct. There's 2 bytes reference temperature and 2x 2 byte
+> > values for individual sensor calibration constants.
+>
+> So it should be 8 if we round it up to word boundary?
 
+That is correct.
 
------ On Dec 18, 2019, at 3:28 AM, Bjorn Andersson bjorn.andersson@linaro.org wrote:
-
-> On Tue 17 Dec 15:52 PST 2019, Victhor Foster wrote:
-> 
->> This patch fixes a kernel panic on the tsens driver that prevented APQ8084
->> platforms from booting, by adding a missing register property and the number of
->> sensors
-> 
-> I was under the impression that the tsens driver did maintain backwards
-> compatibility wrt a single reg cell...
-> 
-I wrote this patch based on 5.5-rc1, which was the latest version in the linux-stable repository at the time. I did notice that patch on the mailing list, but I hadn't tested it.
-The peripheral is compatible with the new driver, from what I can tell, so I thought this change made sense.
-
->> , corrects all instances of IRQ_TYPE_NONE in interrupts, to avoid causing kernel
->> warnings during boot, and also changes most interrupt properties to their
->> respective macros, as defined by arm-gic.h.
->> 
->> Signed-off by: Victhor Foster <victhor.foster@ufpe.br>
-> 
-> The content looks good, but can you please split it in two; one for the
-> tsens change and one for the interrupts cells? And please limit your
-> commit message to 72 chars.
-> 
-Sure, I'll do the changes as requested and submit the patch again, I'll keep the character limit in mind. Thanks for the feedback.
-
-> Thanks,
-> Bjorn
-> 
-
-Thank you,
-Victhor
->> ---
->>  arch/arm/boot/dts/qcom-apq8084.dtsi | 43 +++++++++++++++--------------
->>  1 file changed, 23 insertions(+), 20 deletions(-)
->> 
->> diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi
->> b/arch/arm/boot/dts/qcom-apq8084.dtsi
->> index 0a0fb147ebb9..dc4ea3a8dc6d 100644
->> --- a/arch/arm/boot/dts/qcom-apq8084.dtsi
->> +++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
->> @@ -1,6 +1,7 @@
->>  // SPDX-License-Identifier: GPL-2.0
->>  /dts-v1/;
->>  
->> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->>  #include <dt-bindings/clock/qcom,gcc-apq8084.h>
->>  #include <dt-bindings/gpio/gpio.h>
->>  
->> @@ -184,7 +185,7 @@
->>  
->>  	cpu-pmu {
->>  		compatible = "qcom,krait-pmu";
->> -		interrupts = <1 7 0xf04>;
->> +		interrupts = <GIC_PPI 7 0xf04>;
->>  	};
->>  
->>  	clocks {
->> @@ -203,10 +204,10 @@
->>  
->>  	timer {
->>  		compatible = "arm,armv7-timer";
->> -		interrupts = <1 2 0xf08>,
->> -			     <1 3 0xf08>,
->> -			     <1 4 0xf08>,
->> -			     <1 1 0xf08>;
->> +		interrupts = <GIC_PPI 2 0xf08>,
->> +			     <GIC_PPI 3 0xf08>,
->> +			     <GIC_PPI 4 0xf08>,
->> +			     <GIC_PPI 1 0xf08>;
->>  		clock-frequency = <19200000>;
->>  	};
->>  
->> @@ -253,9 +254,11 @@
->>  
->>  		tsens: thermal-sensor@fc4a8000 {
->>  			compatible = "qcom,msm8974-tsens";
->> -			reg = <0xfc4a8000 0x2000>;
->> +			reg = <0xfc4a9000 0x1000>, /* TM */
->> +			      <0xfc4a8000 0x1000>; /* SROT */
->>  			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
->>  			nvmem-cell-names = "calib", "calib_backup";
->> +			#qcom,sensors = <11>;
->>  			#thermal-sensor-cells = <1>;
->>  		};
->>  
->> @@ -269,50 +272,50 @@
->>  
->>  			frame@f9021000 {
->>  				frame-number = <0>;
->> -				interrupts = <0 8 0x4>,
->> -					     <0 7 0x4>;
->> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
->> +					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
->>  				reg = <0xf9021000 0x1000>,
->>  				      <0xf9022000 0x1000>;
->>  			};
->>  
->>  			frame@f9023000 {
->>  				frame-number = <1>;
->> -				interrupts = <0 9 0x4>;
->> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
->>  				reg = <0xf9023000 0x1000>;
->>  				status = "disabled";
->>  			};
->>  
->>  			frame@f9024000 {
->>  				frame-number = <2>;
->> -				interrupts = <0 10 0x4>;
->> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
->>  				reg = <0xf9024000 0x1000>;
->>  				status = "disabled";
->>  			};
->>  
->>  			frame@f9025000 {
->>  				frame-number = <3>;
->> -				interrupts = <0 11 0x4>;
->> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
->>  				reg = <0xf9025000 0x1000>;
->>  				status = "disabled";
->>  			};
->>  
->>  			frame@f9026000 {
->>  				frame-number = <4>;
->> -				interrupts = <0 12 0x4>;
->> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
->>  				reg = <0xf9026000 0x1000>;
->>  				status = "disabled";
->>  			};
->>  
->>  			frame@f9027000 {
->>  				frame-number = <5>;
->> -				interrupts = <0 13 0x4>;
->> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
->>  				reg = <0xf9027000 0x1000>;
->>  				status = "disabled";
->>  			};
->>  
->>  			frame@f9028000 {
->>  				frame-number = <6>;
->> -				interrupts = <0 14 0x4>;
->> +				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
->>  				reg = <0xf9028000 0x1000>;
->>  				status = "disabled";
->>  			};
->> @@ -404,13 +407,13 @@
->>  			#gpio-cells = <2>;
->>  			interrupt-controller;
->>  			#interrupt-cells = <2>;
->> -			interrupts = <0 208 0>;
->> +			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
->>  		};
->>  
->>  		blsp2_uart2: serial@f995e000 {
->>  			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
->>  			reg = <0xf995e000 0x1000>;
->> -			interrupts = <0 114 0x0>;
->> +			interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
->>  			clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>, <&gcc GCC_BLSP2_AHB_CLK>;
->>  			clock-names = "core", "iface";
->>  			status = "disabled";
->> @@ -420,7 +423,7 @@
->>  			compatible = "qcom,apq8084-sdhci", "qcom,sdhci-msm-v4";
->>  			reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
->>  			reg-names = "hc_mem", "core_mem";
->> -			interrupts = <0 123 0>, <0 138 0>;
->> +			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 138
->> IRQ_TYPE_LEVEL_HIGH>;
->>  			interrupt-names = "hc_irq", "pwr_irq";
->>  			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
->>  				 <&gcc GCC_SDCC1_AHB_CLK>,
->> @@ -433,7 +436,7 @@
->>  			compatible = "qcom,apq8084-sdhci", "qcom,sdhci-msm-v4";
->>  			reg = <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
->>  			reg-names = "hc_mem", "core_mem";
->> -			interrupts = <0 125 0>, <0 221 0>;
->> +			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 221
->> IRQ_TYPE_LEVEL_HIGH>;
->>  			interrupt-names = "hc_irq", "pwr_irq";
->>  			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
->>  				 <&gcc GCC_SDCC2_AHB_CLK>,
->> @@ -449,7 +452,7 @@
->>  			      <0xfc4cb000 0x1000>,
->>  			      <0xfc4ca000 0x1000>;
->>  			interrupt-names = "periph_irq";
->> -			interrupts = <0 190 0>;
->> +			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
->>  			qcom,ee = <0>;
->>  			qcom,channel = <0>;
->>  			#address-cells = <2>;
->> @@ -463,7 +466,7 @@
->>  		compatible = "qcom,smd";
->>  
->>  		rpm {
->> -			interrupts = <0 168 1>;
->> +			interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
->>  			qcom,ipc = <&apcs 8 0>;
->>  			qcom,smd-edge = <15>;
->>  
->> --
-> > 2.24.0
+> > regards,
+> >         o.
+> >
+> > > >
+> > > > ChenYu
+> > > >
+> > > >
+> > > > > +                       };
+> > > > >                 };
+> > > > >
+> > > > >                 watchdog: watchdog@30090a0 {
+> > > > > @@ -856,5 +863,31 @@ r_i2c: i2c@7081400 {
+> > > > >                         #address-cells = <1>;
+> > > > >                         #size-cells = <0>;
+> > > > >                 };
+> > > > > +
+> > > > > +               ths: thermal-sensor@5070400 {
+> > > > > +                       compatible = "allwinner,sun50i-h6-ths";
+> > > > > +                       reg = <0x05070400 0x100>;
+> > > > > +                       interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > +                       clocks = <&ccu CLK_BUS_THS>;
+> > > > > +                       clock-names = "bus";
+> > > > > +                       resets = <&ccu RST_BUS_THS>;
+> > > > > +                       nvmem-cells = <&ths_calibration>;
+> > > > > +                       nvmem-cell-names = "calibration";
+> > > > > +                       #thermal-sensor-cells = <1>;
+> > > > > +               };
+> > > > > +       };
+> > > > > +
+> > > > > +       thermal-zones {
+> > > > > +               cpu-thermal {
+> > > > > +                       polling-delay-passive = <0>;
+> > > > > +                       polling-delay = <0>;
+> > > > > +                       thermal-sensors = <&ths 0>;
+> > > > > +               };
+> > > > > +
+> > > > > +               gpu-thermal {
+> > > > > +                       polling-delay-passive = <0>;
+> > > > > +                       polling-delay = <0>;
+> > > > > +                       thermal-sensors = <&ths 1>;
+> > > > > +               };
+> > > > >         };
+> > > > >  };
+> > > > > --
+> > > > > 2.24.1
+> > > > >
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
