@@ -2,126 +2,89 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C7DC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA998C2D0D1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 080292467E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E1A2467F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576786768;
-	bh=3FSspEqjeV/r3JnSiuDrlylG7Wl9eHwnoKBtJftz4gk=;
+	s=default; t=1576786881;
+	bh=Bg4MZCf/io/U8m0pcVHM0soaT16dlZKZV12sx1lF/TY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lgRKroU4vIqj7sP8aYMfBXF9LTyCU5ROXnjtN3hHomLtROP2prQfMNhi2RurDEC95
-	 /EtLHY7u6GNP/e6y8OFqEGMsn3+A7qoKqNb9ay7GyF1V+7C0PbTmwmfvBCrnaB+OyP
-	 DX/DPBs6oS4+BySra/qFaryK5MnUskY4IBgmNdeI=
+	b=J4m9uR0W5R6Zq8T9Pexqzct1IVGRwo7aeuzSNLyD42AHrCuuYF3cJU1+42J8DpnEK
+	 Zg3YelIkB+d+74bH3Zqgz3mdF/D/U/Dca/Ksl3Q3KYJSkKStDw2ZQcTTa7D+riI0zT
+	 EnGeydbRagGgbn26qjm0Mxufo1aA4SLhxNAMemIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfLSUTY (ORCPT
+        id S1727120AbfLSUVV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:19:24 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39358 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfLSUTX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 15:19:23 -0500
-Received: by mail-ed1-f65.google.com with SMTP id t17so6136013eds.6;
-        Thu, 19 Dec 2019 12:19:22 -0800 (PST)
+        Thu, 19 Dec 2019 15:21:21 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39348 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLSUVU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 15:21:20 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a67so3641121oib.6;
+        Thu, 19 Dec 2019 12:21:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1z6z1Ui8LL1nkwwIvcM2qSFeAknNPztf5Dw5KcO2dK8=;
-        b=sS8NsZJcXcY8TgpHCpIbqW9V5OzarWXytTpQ8I79KR+JDiVB1Q4w0df8fgVfLkZLsP
-         QppebyM5rQLw4qBSyvplYNDscsIFUI7WytzCjfgSNR28svfrltxPY4sMrHe/KtE+gqKc
-         7o2xqq82jbtzbPzYCjvTd1E7C7k8iCwJwG6DuZ6augRV4mTuVT5iOZibGaICkZIk4OVs
-         /duT5SKPDGxCtDrTGp2snC0E4I0dMSi4j/6yeVfQIYdnd3w8Z7pPU0r5PqKoOODUJgKF
-         mBLPBfSlIyvl1WKvxRvYrzo5yl3kK+LEThN94aDmshg+bpNWNRO3soKrVjqgyJ8f1vDK
-         1r7g==
-X-Gm-Message-State: APjAAAVwDJaEYLWKsuFyemHOkK1sW++kXNjjvM+nrEaE6BpHxfVUL5pR
-        1v3dDHwmBIMCvNc+yE31cKo=
-X-Google-Smtp-Source: APXvYqwwejroRBv27RRKI+KjHOuS4q02b2b9jWEyzsgC2C9l3pOef3KwtMfRZqXDwDfmgHuveS0ogQ==
-X-Received: by 2002:a17:906:5606:: with SMTP id f6mr11822819ejq.179.1576786761612;
-        Thu, 19 Dec 2019 12:19:21 -0800 (PST)
-Received: from kozik-lap ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id m2sm626166edp.85.2019.12.19.12.19.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 19 Dec 2019 12:19:20 -0800 (PST)
-Date:   Thu, 19 Dec 2019 21:19:17 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, kgene@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 7/9] memory: samsung: exynos5422-dmc: Replace deprecated
- 'devfreq-events' property
-Message-ID: <20191219201917.GA21576@kozik-lap>
-References: <20191217055738.28445-1-cw00.choi@samsung.com>
- <CGME20191217055106epcas1p2c43a45e34983c1b3e60cc6fd842dd33e@epcas1p2.samsung.com>
- <20191217055738.28445-8-cw00.choi@samsung.com>
+        bh=vCk/wZ8+53X69AE5Vwm5AlfPBaAA/4+cWf78YhT9OhQ=;
+        b=KMGR05cmpZ/VgyhfvYsl3uHe4ReFrC2x3D6XS/k0SM0xmKjN5zdJ2iNQLYB/fU8meP
+         h/PYNE/XCdOitb1N28A6hOJijfdIlIvVO7ZeUPg3pZ1Bdv1jaOificzPxKi2oULmOyPT
+         pZ+w3JWDjjNsso4jpccJusn5qQ5JHUnRzWRiULrOTjbGpQvqKsXpv8WAWSG1MbrN7GSW
+         rW/TP3+jL18bPsOkeaiHWSwJqFGAPQF/b/h2eImxkdmRtcqshng5VJyd/xCtBeDz8Hdm
+         eS+DEReDft4JhbklxXA5DWBtLwQDg0AKubx6TamuxLahO3aDzVbUytCIEMtT+8CaOLEM
+         oAOQ==
+X-Gm-Message-State: APjAAAWwdk11ZdDX66b2uAkZLrKh79X8Zp2ah+FQgIIPodneFQZaXVDw
+        SF/FlcqNU2KIa6KMdq9/37kSsmMsyA==
+X-Google-Smtp-Source: APXvYqwbFiuAJFyxAMCtPYazAAIq9AV9TjEXYJL4GBqW7nJ7J1Biy0JAgWT/L+qjqI5/lWeQMyJdVA==
+X-Received: by 2002:aca:1b08:: with SMTP id b8mr2901674oib.106.1576786879892;
+        Thu, 19 Dec 2019 12:21:19 -0800 (PST)
+Received: from localhost (ip-184-205-110-29.ftwttx.spcsdns.net. [184.205.110.29])
+        by smtp.gmail.com with ESMTPSA id k6sm2480458otb.65.2019.12.19.12.21.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 12:21:19 -0800 (PST)
+Date:   Thu, 19 Dec 2019 14:21:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Jaedon Shin <jaedon.shin@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 7/8] dt-bindings: ata: Document BCM7216 AHCI controller
+ compatible
+Message-ID: <20191219202117.GA23339@bogus>
+References: <20191210185351.14825-1-f.fainelli@gmail.com>
+ <20191210185351.14825-8-f.fainelli@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191217055738.28445-8-cw00.choi@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191210185351.14825-8-f.fainelli@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 02:57:36PM +0900, Chanwoo Choi wrote:
-> In order to remove the deprecated 'devfreq-events' property, replace with
-> new 'exynos,ppmu-device' property in order to get the devfreq-event device
-> in devicetree file instead of 'devfreq-events' property. But, to guarantee
-> the backward-compatibility, keep the support 'devfreq-events' property.
+On Tue, 10 Dec 2019 10:53:50 -0800, Florian Fainelli wrote:
+> The BCM7216 AHCI controller makes use of a specific reset controller
+> line/name, document the compatible string and the optional reset
+> properties.
 > 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  .../memory-controllers/exynos5422-dmc.txt     |  6 ++--
->  drivers/memory/samsung/exynos5422-dmc.c       | 29 +++++++++++++++----
->  2 files changed, 26 insertions(+), 9 deletions(-)
-
-In general looks good for me but I need an ack from Rob.  Patch should
-be also split and sent as one of first in the series (before code).
-
+>  Documentation/devicetree/bindings/ata/brcm,sata-brcm.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> index 02e4a1f862f1..1e1b3702f045 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> @@ -17,14 +17,14 @@ Required properties for DMC device for Exynos5422:
->  - clock-names : should include "fout_spll", "mout_sclk_spll", "ff_dout_spll2",
->    "fout_bpll", "mout_bpll", "sclk_bpll", "mout_mx_mspll_ccore",
->    "mout_mclk_cdrex"  entries
-> -- devfreq-events : phandles for PPMU devices connected to this DMC.
-> +- exynos,ppmu-device : phandles for PPMU devices connected to this DMC.
->  - vdd-supply : phandle for voltage regulator which is connected.
->  - reg : registers of two CDREX controllers.
->  - operating-points-v2 : phandle for OPPs described in v2 definition.
->  - device-handle : phandle of the connected DRAM memory device. For more
->  	information please refer to documentation file:
->  	Documentation/devicetree/bindings/ddr/lpddr3.txt
-> -- devfreq-events : phandles of the PPMU events used by the controller.
-> +- exynos,ppmu-device : phandles of the PPMU events used by the controller.
->  - samsung,syscon-clk : phandle of the clock register set used by the controller,
->  	these registers are used for enabling a 'pause' feature and are not
->  	exposed by clock framework but they must be used in a safe way.
-> @@ -73,7 +73,7 @@ Example:
->  			      "mout_mx_mspll_ccore",
->  			      "mout_mclk_cdrex";
->  		operating-points-v2 = <&dmc_opp_table>;
-> -		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
-> +		exynos,ppmu-device = <&ppmu_event3_dmc0_0>, <&ppmu_event3_dmc0_1>,
->  				 <&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
 
-Indentation is broken here.
-
-Best regards,
-Krzysztof
-
+Reviewed-by: Rob Herring <robh@kernel.org>
