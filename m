@@ -2,133 +2,100 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D482C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 14:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 902FEC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 14:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48DC624676
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 14:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC2221D7D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 14:41:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YK7Ldqaa"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="pivPKPDA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfLSOgu (ORCPT
+        id S1726757AbfLSOlo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:36:50 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53125 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726830AbfLSOgu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 09:36:50 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p9so5672478wmc.2
-        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 06:36:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=AoW0ANcjhnWhVQy1nVWVlNehespmk84ZLnrhmIANeDA=;
-        b=YK7LdqaacIifpKR43grXurOLS6lstMbGSX6yh9BiZsQbKGNAobIumTzzfI0vzVab3R
-         BkL1DaoAW+buzNT46GZR1VAyTxwQHfe6Iqdri+qpsLkTm1jLnks+ua7+UCV5dwzRWpBr
-         zHE1KRA4Iy2WKEJFJsjuikO4s1AxpUw2M4/JDE9e80qW+IzcNdabq4wW2jwE6Xy00jH5
-         8JUp76OYneB+zZAZuHdXWgdWHsHIhMW2gicqtOp+PQxuKbTk7uEprMzGXTs55KHJtezM
-         aAawLm+qXV4CRlSmp8cS3SguI+nL2u/3rdPi/AuPaXieEK/Qv5k6q+UklgBSCRaqY02x
-         TROw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=AoW0ANcjhnWhVQy1nVWVlNehespmk84ZLnrhmIANeDA=;
-        b=r9HKUS0AStJQEWscJAvi5rtG57bcQAyci1N0p/MBFfqXiuwwgVRNNHoPYpm57i8Y0/
-         QWJEJ3ws7NbJtEViWMELoMxAoQYlYAuWcz7CLbLRs2tWNsFkGB4B4o0PHe+BxZEiml2c
-         qy22p6CmFTAZQhuhrVx5bwEZyZvGOhR5yVSkScjAJgh7uZmxdlp6ikbQFn3ytgMmAONU
-         mU+sQLUvf6weFywscOiax2wytGIjcKHriC58BFE8lNOhm9k9HW3RV+YU0xh7uHLwcVK5
-         eLfLstN6gY4aS6yFvsyPUvHxUeD/twKmJeWpi54TbRjGD5CEq1pc0LFHjtw9Xi8nXp78
-         fWgQ==
-X-Gm-Message-State: APjAAAUlEuxWyxIrJ0DbHNjKihH0icUkl8JBDWQCOyEnnCBAxPr5cujk
-        vB0XPFj77yXxdfp6aaVOiCIjdQ==
-X-Google-Smtp-Source: APXvYqzWCOPBrg4orgmeiuAAjBbDOGoPenNVv75ndLEhJ5dP0c89acYNuswyk6Faok6Xlh/8ZdFv0Q==
-X-Received: by 2002:a7b:ce81:: with SMTP id q1mr10589381wmj.47.1576766208594;
-        Thu, 19 Dec 2019 06:36:48 -0800 (PST)
-Received: from dell ([2.27.35.132])
-        by smtp.gmail.com with ESMTPSA id 188sm6700579wmd.1.2019.12.19.06.36.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 06:36:47 -0800 (PST)
-Date:   Thu, 19 Dec 2019 14:36:47 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: [PATCH v7 02/12] dt-bindings: mfd: Document ROHM BD71828 bindings
-Message-ID: <20191219143647.GQ18955@dell>
-References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
- <702daeb9d8604e2feddd5f6f92b067a2d60d81ad.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
- <f9b0fbb7b898691d09ed8954e8df67cf3706aa96.camel@fi.rohmeurope.com>
+        Thu, 19 Dec 2019 09:41:44 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:26602 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726701AbfLSOln (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 09:41:43 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJEaUs2014020;
+        Thu, 19 Dec 2019 15:41:29 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=4w2ShoR7xwVF0wnOQZIXhRopSNfU1RmvtACz1IZSq24=;
+ b=pivPKPDAsmSlxywUl2qBLLWzbiUw8lh/4aWPzNYh0h+XpFJ/gTs1/t7G+UvSFCVlLe6Z
+ g19MJMhmGqPE36afaXAyE6sfAy7HKU8uMG2tPPBSKoF8iVIsoVzluCfPRGSNN6vIRYr3
+ ToTp23Ql8+Ehgi/vpaVf4h1T55ibG1aJ606oDrh3Nt3e4whoNd6fX8i+hGPzCIkVNoCb
+ jxV4bF35F8WRZHxZgp47NtsDKlO1BtntAN98Ei36eadIpz1p6b53cb4nz4iUbh8r+I7S
+ NvRAcOcNz7839roTATzmN/RlFsKnrt5yOgCkCmWkiNd0CdI+M/f7ac61LeHDilng6l8s 0g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wvp37a8h6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Dec 2019 15:41:29 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1C85D100042;
+        Thu, 19 Dec 2019 15:41:21 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 022D62C6B65;
+        Thu, 19 Dec 2019 15:41:21 +0100 (CET)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 19 Dec 2019 15:41:20
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <srinivas.kandagatla@linaro.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH 3/3] ARM: dts: stm32: change nvmem node name on stm32mp1
+Date:   Thu, 19 Dec 2019 15:41:17 +0100
+Message-ID: <20191219144117.21527-4-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20191219144117.21527-1-benjamin.gaignard@st.com>
+References: <20191219144117.21527-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f9b0fbb7b898691d09ed8954e8df67cf3706aa96.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-19_01:2019-12-17,2019-12-19 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 19 Dec 2019, Vaittinen, Matti wrote:
+Change non volatile node name from nvmem to efuse to be compliant
+with yaml schema.
 
-> Hello Mark, Lee, Rob
-> 
-> I just noticed we have a dependency here. This binding is referring to
-> regulator binding - which was applied by Mark and is thus missing from
-> the series. What's the best way forward?
-> 
-> On Thu, 2019-12-19 at 11:46 +0200, Matti Vaittinen wrote:
-> > ROHM BD71828 Power management IC integrates 7 buck converters, 7
-> > LDOs,
-> > a real-time clock (RTC), 3 GPO/regulator control pins, HALL input
-> > and a 32.768 kHz clock gate.
-> > 
-> > Document the dt bindings drivers are using.
-> > 
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> > 
-> > No changes since v6
-> 
-> //snip
-> 
-> > +  regulators:
-> > +    $ref: ../regulator/rohm,bd71828-regulator.yaml
-> 
-> This file is missing from the series and is applied to Mark's tree.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ arch/arm/boot/dts/stm32mp151.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Shouldn't matter.  I guess they're all heading for he same release.
-
+diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
+index 3dd570b10181..c157d122b0f0 100644
+--- a/arch/arm/boot/dts/stm32mp151.dtsi
++++ b/arch/arm/boot/dts/stm32mp151.dtsi
+@@ -1485,7 +1485,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		bsec: nvmem@5c005000 {
++		bsec: efuse@5c005000 {
+ 			compatible = "st,stm32mp15-bsec";
+ 			reg = <0x5c005000 0x400>;
+ 			#address-cells = <1>;
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.15.0
+
