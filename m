@@ -2,107 +2,191 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5D3C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F300CC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 144E420716
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7A620716
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:13:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="uD+xPxmk"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GK1cbM7H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfLSNMD (ORCPT
+        id S1726760AbfLSNNR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 08:12:03 -0500
-Received: from mail2.skidata.com ([91.230.2.91]:1919 "EHLO mail2.skidata.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbfLSNMD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 08:12:03 -0500
-X-Greylist: delayed 431 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Dec 2019 08:12:01 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1576761121; x=1608297121;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=hpGpnei3YuU55LYgQE+yfJBdpW21E9D9/s47zz+iJAM=;
-  b=uD+xPxmkyM49ckkXbRED6mBuSjpOsyzupwQMU7QEEDmeQMEbn/y24zuX
-   K8fxbRX5tV4oP+m6E6WixManbpimg8eqOI2+3ck1N6S/i8DJ6nHreMjLY
-   ixUJ5OdjyizkrXFx4xVzXzONK/KNemrgdIsQwSkTRn23wolidtxb97EW6
-   caC6B1iDvgRxUVXeCXqtglzepFlmLmdJsIKgPmNOZU7oPh2mUEvEZMl32
-   mfsq34Qdd/pdlyCv2wEWKf0D43oaLa4xpd3btIiK3QqTMw9ARn9TvTnXc
-   0CfTk6mkDiO4X3rfSUtr/UubO7T0CgMjGGNglqlu4ozOU7DUOe21I0nQh
-   Q==;
-IronPort-SDR: w+2/yQT+N2QjYg6FunUrwibsU+/63Ewts5//AkTANTRgrePIaX7w1+ciRBr6sB+f4PoGJ05Vl9
- 3SM0m9zvcBPGbi61NnQlfWT2Sh9G63bYjYJxj6LRtRvsYp62XBNraYEBMq0166UnFUo11hUKtG
- Ph2oiHAZHTYAmQd1sYX/NNdmRaB/irJJV08+WrAgRqWdMKGnsp66J3tT2PGKPfBZLS2KSyholb
- UlJ9L2pkREVG1n+lKnoDQXJLqPZxeyw0+0hB7ZD3AHDEo3e+jqNzG/fWJcuP4RCxDbu1JCZcNY
- Y5Q=
-X-IronPort-AV: E=Sophos;i="5.69,332,1571695200"; 
-   d="scan'208";a="2466933"
-From:   Richard Leitner <richard.leitner@skidata.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Richard Leitner <richard.leitner@skidata.com>
-Subject: [PATCH 1/2] ARM: dts: tegra20: add labels to i2c nodes
-Date:   Thu, 19 Dec 2019 14:04:30 +0100
-Message-ID: <20191219130431.30458-1-richard.leitner@skidata.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 19 Dec 2019 08:13:17 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56236 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfLSNNR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 08:13:17 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJDD7UZ002286;
+        Thu, 19 Dec 2019 07:13:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576761188;
+        bh=KpH/tH+NsOsRovCmkYgi/0I9FOPMrHG3B7b6JVEqIBE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GK1cbM7HGrsGlHyIwq3TvwgMootFKhnrfTJ6xdxhfI2jWttjRU+6bS7CvJJRMV6Ns
+         Fy1X2rit3h1sXjIBI1C0gsaOBHK8HIfj3LzDID3SnVFdV2L0SoCufpiVHa+d6XltYC
+         3ZxjXuWhR1bOHoPjfnpfAAvsJsISvV/xk8hyvqos=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJDD7nb020647
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Dec 2019 07:13:07 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 07:13:06 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 07:13:06 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJDD38D090087;
+        Thu, 19 Dec 2019 07:13:03 -0600
+Subject: Re: [PATCH 10/13] dt-bindings: PCI: Add EP mode dt-bindings for TI's
+ J721E SoC
+To:     Rob Herring <robh@kernel.org>, Tom Joseph <tjoseph@cadence.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Murray <andrew.murray@arm.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-11-kishon@ti.com> <20191219001408.GA20303@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <fb090674-abff-e2e1-492d-0585100980d0@ti.com>
+Date:   Thu, 19 Dec 2019 18:44:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [192.168.111.252]
-X-ClientProxiedBy: sdex4srv.skidata.net (192.168.111.82) To
- sdex5srv.skidata.net (192.168.111.83)
+In-Reply-To: <20191219001408.GA20303@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add numbered labels to the i2c nodes of the Tegra20 SoC so we just need
-to alias it from derived boards.
++Tom
 
-Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
----
- arch/arm/boot/dts/tegra20.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On 19/12/19 5:44 am, Rob Herring wrote:
+> On Mon, Dec 09, 2019 at 02:51:44PM +0530, Kishon Vijay Abraham I wrote:
+>> Add PCIe EP mode dt-bindings for TI's J721E SoC.
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../bindings/pci/ti,j721e-pci-ep.yaml         | 113 ++++++++++++++++++
+>>  1 file changed, 113 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>> new file mode 100644
+>> index 000000000000..4e2af4733998
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>> @@ -0,0 +1,113 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/pci/ti,j721e-pci-ep.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: TI J721E PCI EP (PCIe Wrapper)
+>> +
+>> +maintainers:
+>> +  - Kishon Vijay Abraham I <kishon@ti.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +      enum:
+>> +          - ti,j721e-pcie-ep
+> 
+> Indentation.
+> 
+>> +
+>> +  reg:
+>> +    maxItems: 4
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: intd_cfg
+>> +      - const: user_cfg
+>> +      - const: reg
+>> +      - const: mem
+>> +
+>> +  ti,syscon-pcie-ctrl:
+>> +    description: Phandle to the SYSCON entry required for configuring PCIe mode
+>> +                 and link speed.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/phandle
+>> +
+>> +  max-link-speed:
+>> +    minimum: 1
+>> +    maximum: 3
+>> +
+>> +  num-lanes:
+>> +    minimum: 1
+>> +    maximum: 2
+>> +
+>> +  power-domains:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +    description: clock-specifier to represent input to the PCIe
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: fck
+>> +
+>> +  cdns,max-outbound-regions:
+>> +    description: As defined in
+>> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/int32
+> 
+> uint32
+> 
+>> +      - enum: [16]
+>> +
+>> +  max-functions:
+>> +    minimum: 1
+>> +    maximum: 6
+> 
+> Needs a type ref. Or a common definition.
+> 
+>> +
+>> +  dma-coherent:
+>> +    description: Indicates that the PCIe IP block can ensure the coherency
+>> +
+>> +  phys:
+> 
+> How many? Need to convert cdns,cdns-pcie-host.txt...
 
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index 9c58e7fcf5c0..e02f75757a7e 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -464,7 +464,7 @@
- 		clocks = <&tegra_car TEGRA20_CLK_RTC>;
- 	};
- 
--	i2c@7000c000 {
-+	i2c1: i2c@7000c000 {
- 		compatible = "nvidia,tegra20-i2c";
- 		reg = <0x7000c000 0x100>;
- 		interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-@@ -494,7 +494,7 @@
- 		status = "disabled";
- 	};
- 
--	i2c@7000c400 {
-+	i2c2: i2c@7000c400 {
- 		compatible = "nvidia,tegra20-i2c";
- 		reg = <0x7000c400 0x100>;
- 		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-@@ -510,7 +510,7 @@
- 		status = "disabled";
- 	};
- 
--	i2c@7000c500 {
-+	i2c3: i2c@7000c500 {
- 		compatible = "nvidia,tegra20-i2c";
- 		reg = <0x7000c500 0x100>;
- 		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.21.0
 
+Tom, Can you convert cdns,cdns-pcie-host.txt to YAML binding?
+> 
+>> +    description: As defined in
+>> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+>> +
+>> +  phy-names:
+>> +    description: As defined in
+>> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+> 
+> For all the properties shared with host mode, it might make sense to 
+> define a common schema with all those properties and then include it in 
+> the host and endpoint schemas.
+
+Sure.
+
+Thanks
+Kishon
