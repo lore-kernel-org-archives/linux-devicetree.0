@@ -8,70 +8,70 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79E2C2D0C1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBF6C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73BB72082E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6746324672
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:37:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IjNM03Ql"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MoN7GjgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfLSN05 (ORCPT
+        id S1726744AbfLSNhN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 08:26:57 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33248 "EHLO
+        Thu, 19 Dec 2019 08:37:13 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34436 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbfLSN04 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 08:26:56 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b6so6013205wrq.0;
-        Thu, 19 Dec 2019 05:26:53 -0800 (PST)
+        with ESMTP id S1726695AbfLSNhN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 08:37:13 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t2so6032813wrr.1;
+        Thu, 19 Dec 2019 05:37:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=pgA2WnQuOOK5keoT2+uwrCJ8Ew20ApXTSGtm6g1GwaY=;
-        b=IjNM03QlmHOruxygv44q848uKGGUHIksJLHtNl0a7NfqYYLWsDlKXBvHArD1aVlT7Y
-         K9Y5KEHBEPdm+66HtSCz6vyoV9BGtCXU9svvc4w3/2OX8rpXF2/siJdmFHwgs7/LL8Og
-         SHxLR01hl7tIwAl5fWJNGTTb3f525E6sAvt5VlYbc8GFvXhkcfW4FGl4iDKM6vEBwszp
-         g6L4TS/wY2g5Z8K+SN5p4zbB3vm9mbcdzTEuaCm3lXnj5PXvVeIXC8pHJ1rTE9i8Fpr2
-         VZB3P8CAnM+57Utv8D6tusymsBwBQYPC06DjyERa3M6xjxqX3CpQRR/dHfSWcgYHNHEE
-         v0fA==
+        bh=wRKK6aQkbHwNeV0I7+gSsT5iT4e+yP8blqqWWTkBp2g=;
+        b=MoN7GjgFCdL+dP8M0bsD3fajXxpfFXDK33xLbeuEGVm08o8kfJFbP0fGl+TPDdoKtr
+         LGSiFwurRI9QlkWBxeH0VlnVsaVJJVUCUCs02cg4MgEX8V8zP3loe70LfD/zizOT/AT9
+         ybvBBB+cKA1V6nIRDbvtFL4WutAbX/YVHXPEGojFnD8rbEPFM9SgTi6LJ8/Ht6cbQ+qM
+         YPouv8cVRQS9KTQhT5YGeODpmy0LF2X7k/kRbNg+F/0bCXHoDQ6IwFckFumFXLpNBgr7
+         fRVm+ILgLCrmJ7mFsdyVKQy6Ed4I4fUFZa7Q295fkPXxGWpRVWCSYCPvfsnn1bIFM4ez
+         THYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pgA2WnQuOOK5keoT2+uwrCJ8Ew20ApXTSGtm6g1GwaY=;
-        b=qKUZhLjav+mVZIUGlzacorVe+inQRpCnFLgfVBdZA94i789pnJR0jqzxAhFqnxqHc3
-         dNsNXMq+l9ntiQG0MChFP33ZpqL7Y7w2+/obXnW1BbJ/xiSdy2een3PCxg+gBUg1s3f9
-         Am7Tf8QYbL9luJT6ggwBwzSbqEDqFHF2h3Gvb9X0ulZ8QCxZIVLLGzpb6uQaj16yoc8L
-         3rKhDExOJtJe4EiS5wz+XXAYhMQBzOj1OtprLZhJmEWs+Zx5HfK4A1mLuSL9Z7RF+yix
-         aM6ZCG+ywmcDf9ikDGbEab0l8DvIgW4aA87eopCg8pbb8PQuRhjzTq+PhsG9DrZY1dHT
-         9gmg==
-X-Gm-Message-State: APjAAAV5MF4bcaZ/TNUQ9PypkJFYibsWJk4s6i8dBpgbRNr6x0Ysxo4J
-        X1kuTHNbfwLaqriZoKpp83k=
-X-Google-Smtp-Source: APXvYqyre8RZu1DEGNLYP7pKwoNqZLaZaKqayoh1JPAxp0cRQoIB+ygEMD2j7iLjvlFmca0MhKYoGQ==
-X-Received: by 2002:a5d:46c1:: with SMTP id g1mr9300231wrs.200.1576762013089;
-        Thu, 19 Dec 2019 05:26:53 -0800 (PST)
+        bh=wRKK6aQkbHwNeV0I7+gSsT5iT4e+yP8blqqWWTkBp2g=;
+        b=JzZCJck6aKcP4eHbwgPKLw/n0Cqndk3CnZw0CK5DvozlDooBpcgRyufmppwVmFMO+k
+         Q3hec638YjJh4u+j6wNJ0rdLDPKql5vkWHQE0JEfIcqZ/WIHlbWqT6NLExDAto85vw2g
+         7JY5rEtDnrqeOzx+hVPmblYbzlJpW7O4lqi+DBVQNNeyjxHSEu3j/YMC5go4oWsEiBCR
+         rRqYyWKyY0KumCOi7yzUWS57NIiEqlZzjR5T3eu9cCTA4SrbuAr1d9WDRTxErqnSCV9A
+         SeUFLU+XPGtowNOBERyKkx8cLV8D+SuU3TAFSXPrtsBKRnhiygRJbV7Oyui/ba7FdvyR
+         Drvw==
+X-Gm-Message-State: APjAAAX8OVIrGVlCr5vU/ds1MSZ2AFGVxzby3S4OEmc+woAyFHnjaCQc
+        pPMsixPy5ZA186g8e+q2uik=
+X-Google-Smtp-Source: APXvYqyN0n3ZFoEkN2kG+/+A+dVPTGD/dpwktPLP+Xk4xdo3TzWSGsT9SGlZazuYNwvmtVIgxU+goA==
+X-Received: by 2002:a05:6000:118d:: with SMTP id g13mr10047467wrx.141.1576762629821;
+        Thu, 19 Dec 2019 05:37:09 -0800 (PST)
 Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id u16sm5973478wmj.41.2019.12.19.05.26.51
+        by smtp.gmail.com with ESMTPSA id y139sm6649642wmd.24.2019.12.19.05.37.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 05:26:51 -0800 (PST)
-Date:   Thu, 19 Dec 2019 14:26:50 +0100
+        Thu, 19 Dec 2019 05:37:08 -0800 (PST)
+Date:   Thu, 19 Dec 2019 14:37:07 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Nagarjuna Kristam <nkristam@nvidia.com>
 Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
         mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
         devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch V2 03/18] phy: tegra: xusb: Add usb-role-switch support
-Message-ID: <20191219132650.GJ1440537@ulmo>
+Subject: Re: [Patch V2 04/18] phy: tegra: xusb: Add usb-phy support
+Message-ID: <20191219133707.GK1440537@ulmo>
 References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
- <1576660591-10383-4-git-send-email-nkristam@nvidia.com>
+ <1576660591-10383-5-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2VXyA7JGja7B50zs"
+        protocol="application/pgp-signature"; boundary="mPOSj6iWmtyhwOMz"
 Content-Disposition: inline
-In-Reply-To: <1576660591-10383-4-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <1576660591-10383-5-git-send-email-nkristam@nvidia.com>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -79,205 +79,199 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---2VXyA7JGja7B50zs
+--mPOSj6iWmtyhwOMz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 18, 2019 at 02:46:16PM +0530, Nagarjuna Kristam wrote:
-> If usb-role-switch property is present in USB 2 port, register
-> usb-role-switch to receive usb role changes.
+On Wed, Dec 18, 2019 at 02:46:17PM +0530, Nagarjuna Kristam wrote:
+> For USB 2 ports that has usb-role-switch enabled, add usb-phy for
+> corresponding USB 2 phy. USB role changes from role switch are then
+> updated to corresponding host and device mode drivers via usb-phy notifier
+> block.
 >=20
 > Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
 > ---
 > V2:
->  - Removed dev_set_drvdata for port->dev.
->  - Added of_platform_depopulate during error handling and driver removal.
+>  - Added dev_set_drvdata for port->dev.
 > ---
->  drivers/phy/tegra/Kconfig |  1 +
->  drivers/phy/tegra/xusb.c  | 42 ++++++++++++++++++++++++++++++++++++++++++
->  drivers/phy/tegra/xusb.h  |  3 +++
->  3 files changed, 46 insertions(+)
+>  drivers/phy/tegra/xusb.c | 71 ++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  drivers/phy/tegra/xusb.h |  2 ++
+>  2 files changed, 73 insertions(+)
 >=20
-> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
-> index f9817c3..df07c4d 100644
-> --- a/drivers/phy/tegra/Kconfig
-> +++ b/drivers/phy/tegra/Kconfig
-> @@ -2,6 +2,7 @@
->  config PHY_TEGRA_XUSB
->  	tristate "NVIDIA Tegra XUSB pad controller driver"
->  	depends on ARCH_TEGRA
-> +	select USB_CONN_GPIO
->  	help
->  	  Choose this option if you have an NVIDIA Tegra SoC.
-> =20
 > diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-> index f98ec39..dc00b42 100644
+> index dc00b42..5bde8f1 100644
 > --- a/drivers/phy/tegra/xusb.c
 > +++ b/drivers/phy/tegra/xusb.c
-> @@ -523,6 +523,7 @@ static int tegra_xusb_port_init(struct tegra_xusb_por=
+> @@ -533,6 +533,8 @@ static int tegra_xusb_port_init(struct tegra_xusb_por=
 t *port,
->  	port->dev.type =3D &tegra_xusb_port_type;
->  	port->dev.of_node =3D of_node_get(np);
->  	port->dev.parent =3D padctl->dev;
-> +	port->dev.driver =3D padctl->dev->driver;
-> =20
->  	err =3D dev_set_name(&port->dev, "%s-%u", name, index);
 >  	if (err < 0)
-> @@ -541,6 +542,10 @@ static int tegra_xusb_port_init(struct tegra_xusb_po=
-rt *port,
+>  		goto unregister;
 > =20
->  static void tegra_xusb_port_unregister(struct tegra_xusb_port *port)
->  {
-> +	if (!IS_ERR_OR_NULL(port->usb_role_sw)) {
-> +		of_platform_depopulate(&port->dev);
-> +		usb_role_switch_unregister(port->usb_role_sw);
-> +	}
+> +	dev_set_drvdata(&port->dev, port);
+> +
+>  	return 0;
+> =20
+>  unregister:
+> @@ -545,6 +547,8 @@ static void tegra_xusb_port_unregister(struct tegra_x=
+usb_port *port)
+>  	if (!IS_ERR_OR_NULL(port->usb_role_sw)) {
+>  		of_platform_depopulate(&port->dev);
+>  		usb_role_switch_unregister(port->usb_role_sw);
+> +		cancel_work_sync(&port->usb_phy_work);
+> +		usb_remove_phy(&port->usb_phy);
+>  	}
 >  	device_unregister(&port->dev);
-
-Nit: I prefer blank lines after blocks for readability.
-
 >  }
-> =20
-> @@ -551,11 +556,42 @@ static const char *const modes[] =3D {
+> @@ -556,16 +560,59 @@ static const char *const modes[] =3D {
 >  	[USB_DR_MODE_OTG] =3D "otg",
 >  };
 > =20
-> +static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
+> +static void tegra_xusb_usb_phy_work(struct work_struct *work)
 > +{
-> +	dev_dbg(dev, "%s calling notifier for role is %d\n", __func__, role);
+> +	struct tegra_xusb_port *port =3D container_of(work,
+> +				struct tegra_xusb_port, usb_phy_work);
 
-I don't understand what "for role is %d" means here. I think perhaps you
-meant to simply say "for role %d"? Also, perhaps add parentheses after
-the "%s" to clarify that you're referring to a function.
+Perhaps add a static inline function to cast this? Might not be worth it
+since we only need to cast once. In that case, perhaps make this look a
+little prettier by aligning arguments on subsequent lines with "work" on
+the first line?
 
+> +	enum usb_role role =3D usb_role_switch_get_role(port->usb_role_sw);
+> +
+> +	dev_dbg(&port->dev, "%s calling notifier for role %d\n", __func__,
+> +		role);
+> +
+> +	atomic_notifier_call_chain(&port->usb_phy.notifier, role,
+> +				   &port->usb_phy);
+
+I'm curious: you use an atomic notifier call chain here but then you
+schedule work to call it. Typically you only need to schedule work if
+you get notified in atomic context and you need to process the event
+outside of the atomic context.
+
+Since these are atomic notifiers, do we really need the work? Or the
+other way around: why not use regular notifiers if we're processing them
+=66rom non-atomic contexts only anyway?
+
+> +}
+> +
+>  static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
+>  {
+> +	struct tegra_xusb_port *port =3D dev_get_drvdata(dev);
+> +
+>  	dev_dbg(dev, "%s calling notifier for role is %d\n", __func__, role);
+> =20
+> +	schedule_work(&port->usb_phy_work);
 > +
 > +	return 0;
 > +}
 > +
-> +static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
+> +static int tegra_xusb_set_peripheral(struct usb_otg *otg,
+> +					struct usb_gadget *gadget)
 > +{
-> +	int err =3D 0;
-> +	struct usb_role_switch_desc role_sx_desc =3D {
-> +					.set =3D tegra_xusb_role_sw_set,
-> +					.fwnode =3D dev_fwnode(&port->dev),
-> +						   };
-
-The indentation here is odd. Use a single tab to indent lines after the
-opening { and put the closing } on the same column as "struct". Also,
-the above may become more readable if you follow the "inverse Christmas
-tree" style of declaring functions, where you order lines by their
-length, with the longest line first, like so:
-
-	struct usb_role_switch_desc role_sx_desc =3D {
-		.fwnode =3D dev_fwnode(&port->dev),
-		.set =3D tegra_xusb_role_sw_set,
-	};
-	int err =3D 0;
-
+> +	struct tegra_xusb_port *port =3D container_of(otg->usb_phy,
+> +					struct tegra_xusb_port, usb_phy);
 > +
-> +	port->usb_role_sw =3D usb_role_switch_register(&port->dev,
-> +						&role_sx_desc);
+> +	if (gadget !=3D NULL)
+> +		schedule_work(&port->usb_phy_work);
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_xusb_set_host(struct usb_otg *otg, struct usb_bus *host)
+> +{
+> +	struct tegra_xusb_port *port =3D container_of(otg->usb_phy,
+> +					struct tegra_xusb_port, usb_phy);
+> +
+> +	if (host !=3D NULL)
+> +		schedule_work(&port->usb_phy_work);
+> +
+>  	return 0;
+>  }
+> =20
+> +
+>  static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
+>  {
+>  	int err =3D 0;
+> +	struct tegra_xusb_lane *lane =3D tegra_xusb_find_lane(port->padctl,
+> +							"usb2", port->index);
 
-&role_sx_desc should be aligned with &port->dev.
-
-> +	if (IS_ERR(port->usb_role_sw)) {
-> +		err =3D PTR_ERR(port->usb_role_sw);
-> +		if (err !=3D EPROBE_DEFER)
-> +			dev_err(&port->dev, "Failed to register USB role SW: %d",
-
-Error messages typically start with a lowercase letter (at least in this
-driver). Also perhaps spell out "switch" above because SW could easily
-be confused with "software".
-
-> +				err);
-
-Shouldn't we abort here? Consider the case where this indeed defers
-probe. If we don't abort here, the of_platform_populate() below will be
-called multiple times. Shouldn't it only be called when we actually
-succeed in registering the switch?
-
-Also, looking at usb_role_switch_register(), I don't think it ever can
-return -EPROBE_DEFER, so I think you can drop that check and print the
-error unconditionally.
+You're not properly aligning the arguments here.
 
 Thierry
 
+>  	struct usb_role_switch_desc role_sx_desc =3D {
+>  					.set =3D tegra_xusb_role_sw_set,
+>  					.fwnode =3D dev_fwnode(&port->dev),
+> @@ -578,6 +625,30 @@ static int tegra_xusb_setup_usb_role_switch(struct t=
+egra_xusb_port *port)
+>  		if (err !=3D EPROBE_DEFER)
+>  			dev_err(&port->dev, "Failed to register USB role SW: %d",
+>  				err);
+> +		return err;
 > +	}
 > +
-> +	/* populate connector entry */
-> +	of_platform_populate(port->dev.of_node, NULL, NULL, &port->dev);
+> +	INIT_WORK(&port->usb_phy_work, tegra_xusb_usb_phy_work);
 > +
-> +	return err;
-> +}
+> +	port->usb_phy.otg =3D devm_kzalloc(&port->dev,
+> +					 sizeof(struct usb_otg), GFP_KERNEL);
+> +	if (!port->usb_phy.otg)
+> +		return -ENOMEM;
 > +
->  static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *us=
-b2)
->  {
->  	struct tegra_xusb_port *port =3D &usb2->base;
->  	struct device_node *np =3D port->dev.of_node;
->  	const char *mode;
-> +	int err;
-> =20
->  	usb2->internal =3D of_property_read_bool(np, "nvidia,internal");
-> =20
-> @@ -572,6 +608,12 @@ static int tegra_xusb_usb2_port_parse_dt(struct tegr=
-a_xusb_usb2_port *usb2)
->  		usb2->mode =3D USB_DR_MODE_HOST;
+> +	/*
+> +	 * Assign phy dev to usb-phy dev. Host/device drivers can use phy
+> +	 * reference to retrieve usb-phy details.
+> +	 */
+> +	port->usb_phy.dev =3D &lane->pad->lanes[port->index]->dev;
+> +	port->usb_phy.dev->driver =3D port->padctl->dev->driver;
+> +	port->usb_phy.otg->usb_phy =3D &port->usb_phy;
+> +	port->usb_phy.otg->set_peripheral =3D tegra_xusb_set_peripheral;
+> +	port->usb_phy.otg->set_host =3D tegra_xusb_set_host;
+> +
+> +	err =3D usb_add_phy_dev(&port->usb_phy);
+> +	if (err < 0) {
+> +		dev_err(&port->dev, "Failed to add usbphy: %d\n", err);
+> +		return err;
 >  	}
 > =20
-> +	if (of_property_read_bool(np, "usb-role-switch")) {
-> +		err =3D tegra_xusb_setup_usb_role_switch(port);
-> +		if (err < 0)
-> +			return err;
-> +	}
-> +
->  	usb2->supply =3D devm_regulator_get(&port->dev, "vbus");
->  	return PTR_ERR_OR_ZERO(usb2->supply);
->  }
+>  	/* populate connector entry */
 > diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
-> index da94fcc..9f27899 100644
+> index 9f27899..2345657 100644
 > --- a/drivers/phy/tegra/xusb.h
 > +++ b/drivers/phy/tegra/xusb.h
-> @@ -12,6 +12,7 @@
->  #include <linux/workqueue.h>
-> =20
->  #include <linux/usb/otg.h>
-> +#include <linux/usb/role.h>
-> =20
->  /* legacy entry points for backwards-compatibility */
->  int tegra_xusb_padctl_legacy_probe(struct platform_device *pdev);
-> @@ -266,6 +267,8 @@ struct tegra_xusb_port {
->  	struct list_head list;
+> @@ -268,6 +268,8 @@ struct tegra_xusb_port {
 >  	struct device dev;
 > =20
-> +	struct usb_role_switch *usb_role_sw;
-> +
+>  	struct usb_role_switch *usb_role_sw;
+> +	struct work_struct usb_phy_work;
+> +	struct usb_phy usb_phy;
+> =20
 >  	const struct tegra_xusb_port_ops *ops;
 >  };
-> =20
 > --=20
 > 2.7.4
 >=20
 
---2VXyA7JGja7B50zs
+--mPOSj6iWmtyhwOMz
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl37epgACgkQ3SOs138+
-s6Hh5RAAh0cel4clHZg+GIdIG6ZyBOYP5icjLpq2J4MtTqiQYoh6mSG4V+bLrqvb
-Vaal7meApdBQ0b31/Rv3bJRrFz0RQAy0cjiwkZWFKRASrM4s+aAgRBQoOXYPq0AM
-bqsVMloKvS5zBEI/JAy6e7/I+d41cjF+RGWIt4i2A7ubTYMlSs8d4Xl+SC81K3pb
-ufTs/0cI8e5rB75l6sgaEaareIX9tpXhbCzGpG1Etwp2ciXlUPE51+EQHxF//OXk
-WK/i3rrf07n438IAat5Ktu9PUxJxpoKKQVqoHRehYK7ujqZDZ8SaR6pXL9W6xLSe
-4TtrjD+snsZQ7KtgNbUxQ7s6iucg3woUpAglT6LIVyadcTLeLnXqInyaIbz6b+oS
-rrT6vhfJ2xXL4N4UP46epowWgEpJZ42L27h6dSB/VzsNMqcZYtzJ2687rVMMy6Lu
-VjsIpL0JTVRIOkUCYr01kB76jA1WKN+LwlpTX5zloIqTwCSw2TTj5bQw1odZuXxM
-ByhBAD8xshUZ/KFQPKiJIsYs6FmYWN/UQeNKPmIKiyLYKauFu4Yi3NRxUkCR9ACj
-lF6uv10ed/e2VDuHFhvOferCu+e1+tJVT5IJbQqy8Fg0YvoAfnoSzMOAKbrObq/5
-sgJnTS/mip96YoA8mu91XXHW/H4cW8Dei0aQ6113q9ppPqDcoS8=
-=od3S
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl37fQEACgkQ3SOs138+
+s6Fv7hAAvExHkWdrmkYkFGItZhn0RkHOADu6gyYBaXUdmmoZpdiDhyHdYqA1NXKg
+8w5wnvxpOB7t5Mam78jpQmKG8CbT2BtrxGY2K21b2B4RSD7ocAMtlGopRXZlEfcF
+8f5N4/uwQdUOEqy93guL7N32cfErmidGhs6ZizTZxPCNhr+xZ/3Xpby+yZobYwLG
+NcmtSEgYSvMxaTHC9q9BfY7Zp00psaUe9L1cHzbaBDwv/MZ2EGfhcky8jtqldvcv
+pxNtuw5wXMGa1PW5RapONA3YavQxvyW5/xDip2kpCQjhLaeZEjNui6poSxtjacAe
+LLutnzm5/ptcKpvzg19Suoco6Akysvf1JybJUrT//mBmiR/bHhmq/1jgXQiG5mkh
+j/RvkrXquTYR+SRbzfdV1smG5NQukv7Bzd5ZclIXjAbbuEDuUQ2wPjsuq2OwaP+p
+KgufXZjj4juLh4AGi+4LpVGkkq7tNJBcOjXYnQq84mu2j0QtZUo1A0AK+Lo/OgKf
+KOFwbA2mFta/OB4G6gmOIeL9lDaRLw/pJYFociyubgGNyON+qm0xFIOUrJ7EyTcJ
+VvhdzRmW8r4Ec1qSl3HnUQaI83TRTUg3mZmcP2rzQ+mgJVirQAMLsuYwYcWOOlMr
+0ZdpG+39vuH5TttVG9XycrS9/RHGR1V36DaInWOkULE3yZhkLjE=
+=U3pb
 -----END PGP SIGNATURE-----
 
---2VXyA7JGja7B50zs--
+--mPOSj6iWmtyhwOMz--
