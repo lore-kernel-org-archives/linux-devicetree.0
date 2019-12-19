@@ -2,102 +2,102 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAE2C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2708C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72371222C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:18:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="CcoAQ8RP";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="CcoAQ8RP"
+	by mail.kernel.org (Postfix) with ESMTP id 9754C24679
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:25:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576790752;
+	bh=Hr3A52RHcjmG1auaTGUXBvxSO4ri6tQxYw9jNYLxq6M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1p7epV+AM3M+S3zDkykqxbL0vpsPDG+oQ3zkE5a1fpi/1NPsGJWjsU+zDs1LHa9Rg
+	 s/SIrzKBMaCBtnh5X35GYPZeD4BlQDa5Y7vPCtEFfc5QA14pKCWAhy2LXoEJW06H3V
+	 WE9Z+DHXtn1GmzQ6caekMKrk4oBpXiVG2TzpJqlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfLSVSD (ORCPT
+        id S1726984AbfLSVZw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:18:03 -0500
-Received: from node.akkea.ca ([192.155.83.177]:35702 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726967AbfLSVSC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 16:18:02 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 61CDB4E2006;
-        Thu, 19 Dec 2019 21:18:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1576790282; bh=OFvkXpgSlnb0/pUde8cMlEl0cLNJVrFCr4s08Ho54bQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=CcoAQ8RPcCBtfw7CpmT+5ehRWvIo07gAA5GsrhmxS4lEoacb9JvZNlJ7Hgrar3uPs
-         XMCWZ/8rcendV4xcx6LTmFMfuDbBn5Sjcc+Ep9TFmyTDXQVYIJ9zCgXTtevZjf7Q8W
-         CRjLEe8tw7Q0/M2PBJqTULSpJSNd/8qCti0Vef6I=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id WS9QXKpTBfZG; Thu, 19 Dec 2019 21:18:02 +0000 (UTC)
-Received: from www.akkea.ca (node.akkea.ca [192.155.83.177])
-        by node.akkea.ca (Postfix) with ESMTPSA id 095444E2003;
-        Thu, 19 Dec 2019 21:18:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1576790282; bh=OFvkXpgSlnb0/pUde8cMlEl0cLNJVrFCr4s08Ho54bQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=CcoAQ8RPcCBtfw7CpmT+5ehRWvIo07gAA5GsrhmxS4lEoacb9JvZNlJ7Hgrar3uPs
-         XMCWZ/8rcendV4xcx6LTmFMfuDbBn5Sjcc+Ep9TFmyTDXQVYIJ9zCgXTtevZjf7Q8W
-         CRjLEe8tw7Q0/M2PBJqTULSpJSNd/8qCti0Vef6I=
+        Thu, 19 Dec 2019 16:25:52 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:47051 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLSVZw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 16:25:52 -0500
+Received: by mail-oi1-f193.google.com with SMTP id p67so3715741oib.13;
+        Thu, 19 Dec 2019 13:25:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xdaDqv389nwuJfMr+9dWIhmrpQWZvQQTZ6l0w6zcmrw=;
+        b=ldxA4KeDrKr4iTvlEahUdcsA6FfaswGNh3zgTNfqRyCel/WwpFjwuDMcO4SQ3nrxUr
+         k9Y8Dntjq2RjFd4n3tZRTwMVbV9770fPj8INhBfzrE4Llbb9XOsHd+a8uVpQtRhNgsx8
+         0GTUOD2uHn33Eo4cWNSdYQQq5HKH9p0hGDxtdQw/g/VrMnIV7JA+GqLKKAf4noVX4EQR
+         TUzrd68OvNHl8R5D//Y2I9vBefagoFeuQpHz661NxkEvcTIe9Ut5DvI/KErYTZDrP+R7
+         DciMdSUv/YdqvM4amQtJVzqMgg76sBkZ8bsUVNSzjxbaLeMVImGVk0NFkip6xlKZwqPt
+         CIKw==
+X-Gm-Message-State: APjAAAXcONpqVvnPrG8FbxUMOISd3gYZBdeM0S0/hWTxzoA5x42Wjmzv
+        ZAjcRmvBAqiiUjImDTfvww==
+X-Google-Smtp-Source: APXvYqwuflBeMf3NnXJqeB759MW7dgiGU+PZzQooZ8wP5La+lozOJLuQYKSin8mu5r+taziTEOI2Sg==
+X-Received: by 2002:a05:6808:8cd:: with SMTP id k13mr3170983oij.4.1576790751013;
+        Thu, 19 Dec 2019 13:25:51 -0800 (PST)
+Received: from localhost ([2607:fb90:1cdf:948a:3549:d84c:9720:edb4])
+        by smtp.gmail.com with ESMTPSA id 4sm2633539otu.0.2019.12.19.13.25.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 13:25:50 -0800 (PST)
+Date:   Thu, 19 Dec 2019 15:25:46 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Yuti Amonkar <yamonkar@cadence.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, mark.rutland@arm.com, jsarha@ti.com,
+        tomi.valkeinen@ti.com, praneeth@ti.com, mparab@cadence.com,
+        sjakhade@cadence.com
+Subject: Re: [RESEND PATCH v1 14/15] dt-bindings: phy: phy-cadence-torrent:
+ Add platform dependent compatible string
+Message-ID: <20191219212546.GA30631@bogus>
+References: <1576069760-11473-1-git-send-email-yamonkar@cadence.com>
+ <1576069760-11473-15-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 19 Dec 2019 13:18:02 -0800
-From:   Angus Ainslie <angus@akkea.ca>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     krzk@kernel.org, Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-Subject: Re: [PATCH v2 0/2] Add MAX17055 fuel guage
-In-Reply-To: <20191219001531.gnav4roprttdwknc@earth.universe>
-References: <20191214152755.25138-1-angus@akkea.ca>
- <20191219001531.gnav4roprttdwknc@earth.universe>
-Message-ID: <cb3c9effe0995d2cd7b48ef4a9c6ae03@akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.3.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576069760-11473-15-git-send-email-yamonkar@cadence.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-12-18 16:15, Sebastian Reichel wrote:
-> Hi,
+On Wed, Dec 11, 2019 at 02:09:19PM +0100, Yuti Amonkar wrote:
+> Add a new compatible string used for TI SoCs using Torrent PHY.
 > 
-> On Sat, Dec 14, 2019 at 07:27:53AM -0800, Angus Ainslie (Purism) wrote:
->> Extend the max17042_battery driver to include the MAX17055.
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> ---
+>  Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> Thanks, queued to power-suply's for-next branch.
-> 
-> -- Sebastian
-> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> index 8069498..60e024b 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> +++ b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> @@ -15,7 +15,9 @@ maintainers:
+>  
+>  properties:
+>    compatible:
+> -    const: cdns,torrent-phy
+> +    anyOf:
 
-Thanks
+Should be an enum or if both strings can be present then you need 2 
+oneOf entries for 1 string and 2 strings.
 
-Angus
-
->> 
->> Changes since v1:
->> 
->> Change blacklist driver checks to whitelists.
->> 
->> Angus Ainslie (Purism) (2):
->>   power: supply: max17042: add MAX17055 support
->>   device-tree: bindings: max17042_battery: add all of the compatible
->>     strings
->> 
->>  .../power/supply/max17042_battery.txt         |  6 ++-
->>  drivers/power/supply/max17042_battery.c       | 17 +++++--
->>  include/linux/power/max17042_battery.h        | 48 
->> ++++++++++++++++++-
->>  3 files changed, 66 insertions(+), 5 deletions(-)
->> 
->> --
->> 2.17.1
->> 
+> +      - const: cdns,torrent-phy
+> +      - const: ti,j721e-serdes-10g
+>  
+>    clocks:
+>      maxItems: 1
+> -- 
+> 2.7.4
+> 
