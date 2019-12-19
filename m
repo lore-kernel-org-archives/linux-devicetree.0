@@ -2,122 +2,173 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E723C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 00:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23406C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 01:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E852218AC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 00:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFBD122314
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 01:03:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="U716KQDW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfLSAyo (ORCPT
+        id S1726536AbfLSBDZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:54:44 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39278 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfLSAyn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 19:54:43 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id AFFC52911A3
-Received: by earth.universe (Postfix, from userid 1000)
-        id 759783C0C7B; Thu, 19 Dec 2019 01:54:39 +0100 (CET)
-Date:   Thu, 19 Dec 2019 01:54:39 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yuanjiang.yu@unisoc.com, baolin.wang@linaro.org,
-        zhang.lyra@gmail.com, orsonzhai@gmail.com
-Subject: Re: [PATCH v3 0/5] Improve the SC27XX fuel gauge controller
-Message-ID: <20191219005439.63nk4fpraveoeqyv@earth.universe>
-References: <cover.1575863274.git.baolin.wang7@gmail.com>
+        Wed, 18 Dec 2019 20:03:25 -0500
+Received: from vps.xff.cz ([195.181.215.36]:41788 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbfLSBDY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Dec 2019 20:03:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1576717401; bh=hTtYEKPfKcEQF9zxM3iLzPQCOmc0v1ZBKSXbqSJHaxk=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=U716KQDW0NA1TYZk7/LCB8IjiqPyVfh9ZWp0+sI9GXC506EcUxTq1F+OZsKQRtAu/
+         Yajp1L7cH5MqaUqoqofwt4pNzAdsOS9z3h8zPpFu6tlAYgFipDLkk7z6riPtwr9VNd
+         zTYBOItSg+xmlAc37i9nGe0+tpt1nuvwHkQ2C2Iw=
+Date:   Thu, 19 Dec 2019 02:03:21 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 6/7] arm64: dts: allwinner: h6: Add thermal sensor and
+ thermal zones
+Message-ID: <20191219010321.kri5e7knjhc5d6ts@core.my.home>
+Mail-Followup-To: Vasily Khoruzhick <anarsoul@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20191218042121.1471954-1-anarsoul@gmail.com>
+ <20191218042121.1471954-7-anarsoul@gmail.com>
+ <CAGb2v65Qv6_KQ_MPg0u37P+o5gnnQWhbifOrY6g5FiWvnadmiw@mail.gmail.com>
+ <CA+E=qVdKwkUSsG9WA_4x5QntaOxQqfH1eZQ7TEeUrM_3W5mqTg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qluf4zgj5ugicewn"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1575863274.git.baolin.wang7@gmail.com>
+In-Reply-To: <CA+E=qVdKwkUSsG9WA_4x5QntaOxQqfH1eZQ7TEeUrM_3W5mqTg@mail.gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Dec 18, 2019 at 03:18:51PM -0800, Vasily Khoruzhick wrote:
+> On Tue, Dec 17, 2019 at 8:32 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> >
+> > On Wed, Dec 18, 2019 at 12:22 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+> > >
+> > > From: Ondrej Jirman <megous@megous.com>
+> > >
+> > > There are two sensors, one for CPU, one for GPU.
+> > >
+> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > > ---
+> > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 33 ++++++++++++++++++++
+> > >  1 file changed, 33 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > index 29824081b43b..cdcb1a36301a 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > @@ -11,6 +11,7 @@
+> > >  #include <dt-bindings/reset/sun50i-h6-ccu.h>
+> > >  #include <dt-bindings/reset/sun50i-h6-r-ccu.h>
+> > >  #include <dt-bindings/reset/sun8i-de2.h>
+> > > +#include <dt-bindings/thermal/thermal.h>
+> > >
+> > >  / {
+> > >         interrupt-parent = <&gic>;
+> > > @@ -233,6 +234,12 @@ dma: dma-controller@3002000 {
+> > >                 sid: efuse@3006000 {
+> > >                         compatible = "allwinner,sun50i-h6-sid";
+> > >                         reg = <0x03006000 0x400>;
+> > > +                       #address-cells = <1>;
+> > > +                       #size-cells = <1>;
+> > > +
+> > > +                       ths_calibration: thermal-sensor-calibration@14 {
+> > > +                               reg = <0x14 0x6>;
+> >
+> > Nit: my preference is to use words as the smallest increment, so this
+> > would have a size of 8 instead of 6. Same goes for the A64 dts.
+> >
+> > AFAICT this doesn't impact the driver in any way.
+> 
+> H6 has only 2 sensors, so it should be 4. That's my overlook, I'll
+> change it to 4 for H6 and to 8 for A64.
 
---qluf4zgj5ugicewn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No it's correct. There's 2 bytes reference temperature and 2x 2 byte
+values for individual sensor calibration constants.
 
-Hi,
+regards,
+	o.
 
-On Mon, Dec 09, 2019 at 11:56:20AM +0800, Baolin Wang wrote:
-> This patch set adds one battery resistance-temperature table to optimize
-> the real battery internal resistance in different tempertures, and
-> calibrates the resistance of coulomb counter to improve the accuracy
-> of the coulomb counter.
->=20
-> Any comments are welcome. Thanks.
-
-Thanks, queued to power-supply's for-next branch. I changed the
-comment for struct sc27xx_fgu_data, so that it states calib_resist
-being in uOhm instead of mOhm.
-
--- Sebastian
-
-> Changes from v2:
->  - Add reviewed tag from Rob.
->  - Rebased.
->=20
-> Changes from v1:
->  - Fix the order of values in resistance-temp-table property's descriptio=
-n.
->  - Add an unit suffix for FGU resistance property.
->=20
-> Baolin Wang (4):
->   dt-bindings: power: Introduce one property to describe the battery
->     resistance with temperature changes
->   power: supply: core: Add battery internal resistance temperature
->     table support
->   dt-bindings: power: sc27xx: Add a new property to describe the real
->     resistance of coulomb counter chip
->   power: supply: sc27xx: Calibrate the resistance of coulomb counter
->=20
-> Yuanjiang Yu (1):
->   power: supply: sc27xx: Optimize the battery resistance with measuring
->     temperature
->=20
->  .../devicetree/bindings/power/supply/battery.txt   |    5 ++
->  .../devicetree/bindings/power/supply/sc27xx-fg.txt |    3 +
->  drivers/power/supply/power_supply_core.c           |   67 ++++++++++++++=
-+++++-
->  drivers/power/supply/sc27xx_fuel_gauge.c           |   49 +++++++++++++-
->  include/linux/power_supply.h                       |   10 +++
->  5 files changed, 130 insertions(+), 4 deletions(-)
->=20
-> --=20
-> 1.7.9.5
->=20
-
---qluf4zgj5ugicewn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl36yk8ACgkQ2O7X88g7
-+poFRA//ZbDQYkhRD6/Q/fzYBgBG46iBNRtyH3Tt6DDbLi5YmKjUfS27L2gXusg7
-bL44L/IGuDNLsVa8gMQrmYpznn8BjARgZD5JDcejaTl0Vxe/dPxTnjP1hlxss5rQ
-FYm4D9W7Fsy30B5QSz1C6ZjOaDE2HOGb/M9ctn/MPVJwWGIHzMtKjHqJ8gu/5K9P
-Afs5pRNaXtX7MUP45T2CODJG+gNqQy5/hdNyQMcCm9JJ2KuD56Qo5JHcuFY+Z3iz
-n+ycAYrfCp66Aeape0ZemWa0d/rtH6fZ6rpON15KZ/759a+gGDhribDTuqVtZEu0
-iolyC8pUm4MIh2YREsSbwZhr4hGnMcM1kZz4d+x4q2JeSKZXnMaXr4ZL3wjdqUYj
-eV1FHzTvQ623yks3/YGjlBx414T5mPGaswuMdqwssEjkCwojXykxiAfdWNXkPaHs
-0Pq4V/0SzuHro64JWeZVX7kBnymO/7XFTm1jdM6jcbEjmukPxY7PEC6xbaiUIjkQ
-lj8TzPR2vF+WDyIY1BKVyDdsgQaeIW2n+2ZTOZfGm0qZ7emN53z7NWWmx3VEYdKj
-LS6FvpQzDI1LOH7uO75SeksubEBqTt4xlJ5MwFD4Pk6s4zI+44bUDR1CCoJpedne
-RobZE/OVQ7VELZqWZOeXYF6KfyVEZj0qDVl8ByszqPLMVYeL74Q=
-=YEHq
------END PGP SIGNATURE-----
-
---qluf4zgj5ugicewn--
+> >
+> > ChenYu
+> >
+> >
+> > > +                       };
+> > >                 };
+> > >
+> > >                 watchdog: watchdog@30090a0 {
+> > > @@ -856,5 +863,31 @@ r_i2c: i2c@7081400 {
+> > >                         #address-cells = <1>;
+> > >                         #size-cells = <0>;
+> > >                 };
+> > > +
+> > > +               ths: thermal-sensor@5070400 {
+> > > +                       compatible = "allwinner,sun50i-h6-ths";
+> > > +                       reg = <0x05070400 0x100>;
+> > > +                       interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> > > +                       clocks = <&ccu CLK_BUS_THS>;
+> > > +                       clock-names = "bus";
+> > > +                       resets = <&ccu RST_BUS_THS>;
+> > > +                       nvmem-cells = <&ths_calibration>;
+> > > +                       nvmem-cell-names = "calibration";
+> > > +                       #thermal-sensor-cells = <1>;
+> > > +               };
+> > > +       };
+> > > +
+> > > +       thermal-zones {
+> > > +               cpu-thermal {
+> > > +                       polling-delay-passive = <0>;
+> > > +                       polling-delay = <0>;
+> > > +                       thermal-sensors = <&ths 0>;
+> > > +               };
+> > > +
+> > > +               gpu-thermal {
+> > > +                       polling-delay-passive = <0>;
+> > > +                       polling-delay = <0>;
+> > > +                       thermal-sensors = <&ths 1>;
+> > > +               };
+> > >         };
+> > >  };
+> > > --
+> > > 2.24.1
+> > >
