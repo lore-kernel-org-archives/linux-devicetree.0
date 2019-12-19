@@ -2,99 +2,133 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9E8C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9D4C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99BC4227BF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:33:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576776804;
-	bh=Y3xByJTEgCOaNoNsGe4pKVIS9XI0ZCLfbAdIESGvlxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DJFS0GbAafMfRVwyEt34Ft1GymT0IEWARERLdziDOtWJbgk8Cqn9jsIiKcZ8SaWvG
-	 OPj05pSBn4m2d7L/N8T7y0+s1JSjpddo16JNtKsxtUgn1rXbbtH4Go08OMzvvqbP/V
-	 L8MGSP3aSBii8Le6WJlvMbDADSxncA3b+a+VXCPc=
+	by mail.kernel.org (Postfix) with ESMTP id 7261C222C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:47:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LnwL81uJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfLSRdY (ORCPT
+        id S1726905AbfLSRr7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:33:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbfLSRdY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 12:33:24 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F14EB21655;
-        Thu, 19 Dec 2019 17:33:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576776803;
-        bh=Y3xByJTEgCOaNoNsGe4pKVIS9XI0ZCLfbAdIESGvlxM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A7XHdThvled/qPuJrHfh8WDRBCGmbBlX8Qm16xJmq4b3/auOSP0X0WdRi7kcVRQft
-         AxxquNXIx9tq78P+zTe7QRWMJYF+DCqi0KUdHrYBZVNzlVKfUcGChxMp8Lyc+CYNEM
-         ObsJprmDL5/iDJDSnRhoA7meyAwq3o+5Ydrsv7vs=
-Date:   Thu, 19 Dec 2019 18:33:21 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
- H6, R40
-Message-ID: <20191219173321.bni4tbrhfkkphv7k@gilmour.lan>
-References: <20191219172823.1652600-1-anarsoul@gmail.com>
+        Thu, 19 Dec 2019 12:47:59 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37305 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbfLSRr6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 12:47:58 -0500
+Received: by mail-pl1-f195.google.com with SMTP id c23so2886208plz.4
+        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 09:47:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=T1xXSYuN/agEP+xV7gR2YsC5IQk2uBuXdMCptm0m2YY=;
+        b=LnwL81uJzzHpQGW58xTLid7cnT2djPHkv4Ix1kkA+y3mk249gC8TuTISQnyzyotyvR
+         GyrXXz8pSMkQCGZKN87K77JEeY6MIF+M9UKKVsbZTWFw2RWST60PkhbUouCoWzY5eggA
+         /JVtw0QINwXh9GTwNFh+9uWyDM5/are+lQXj4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=T1xXSYuN/agEP+xV7gR2YsC5IQk2uBuXdMCptm0m2YY=;
+        b=WEo7ujJ3DH1bZpYM2FWSkvK62o3kSFBkXZzFMAvjg6uIx0HIA6TUrdGx7NajG5soBn
+         Q2e9gnbS6Ld1muThOftX07FoZhgOTb6GHp4X5QmP0s/cl5kjFdvbcMCjyJeUcAXjmhc6
+         aDYLYu3hMnZh+oa5XPbhIHhblA2tWHIu8Tacce1rL8WL1xC9rb32VLtbOQzeS0C6tOyJ
+         yI9W7LHgV1hpdGojqZ3nUmHlTNhyk7UYOOdExRhsrtSMY8R88h9/WxcmwsOce32mrCLw
+         yI8FqP47bYS1+H/Vu6iOdjYuXGxKCaabxJVcroRh4TxbRgmTqYnuwxFSjEjbjx4r3/qa
+         /Ffg==
+X-Gm-Message-State: APjAAAVAnLW7Ljgkt8MKgvgaTavBC8goDtiX+mgvU9zMXnFhglyahskf
+        9tEeglZZtzuVaH+oTrsCbPMfog==
+X-Google-Smtp-Source: APXvYqxSvas1HYsFv66zRl2Qk5NQy60MqFsqe7M1+Z+WlhN/myDxxhPJLJMBff2b/jwrzeoQaazX4A==
+X-Received: by 2002:a17:90a:cb96:: with SMTP id a22mr10875633pju.96.1576777677975;
+        Thu, 19 Dec 2019 09:47:57 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id g11sm7967658pgd.26.2019.12.19.09.47.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2019 09:47:57 -0800 (PST)
+Date:   Thu, 19 Dec 2019 09:47:55 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rakesh Pillai <pillair@codeaurora.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
+ device node
+Message-ID: <20191219174755.GY228856@google.com>
+References: <1576741521-30102-1-git-send-email-pillair@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="w5q3jazkvks4ahe3"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191219172823.1652600-1-anarsoul@gmail.com>
+In-Reply-To: <1576741521-30102-1-git-send-email-pillair@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Dec 19, 2019 at 01:15:21PM +0530, Rakesh Pillai wrote:
+> Add device node for the ath10k SNOC platform driver probe
+> and add resources required for WCN3990 on sc7180 soc.
+> 
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> ---
 
---w5q3jazkvks4ahe3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This does not apply cleanly against the current qcom/arm64-for-5.6
+or for-next branch, looks like you need to rebase.
 
-Hi,
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  5 +++++
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 28 ++++++++++++++++++++++++++++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 189254f..b2ca143f 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -248,6 +248,11 @@
+>  	status = "okay";
+>  };
+>  
+> +&wifi {
+> +	status = "okay";
+> +	qcom,msa_fixed_perm;
 
-On Thu, Dec 19, 2019 at 09:28:16AM -0800, Vasily Khoruzhick wrote:
-> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
-> H6 and R40 SoCs.
+What is the status of the patch adding this flag?
 
-Thanks again for working on this.
+> +};
+> +
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>  
+>  &qup_i2c2_default {
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 666e9b9..ce2d2a5 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -42,6 +42,12 @@
+>  			compatible = "qcom,cmd-db";
+>  			no-map;
+>  		};
+> +
+> +		wlan_fw_mem: memory@93900000 {
+> +			compatible = "removed-dma-pool";
+> +			no-map;
+> +			reg = <0 0x93900000 0 0x200000>;
+> +		};
+>  	};
+>  
+>  	cpus {
+> @@ -1119,6 +1125,28 @@
+>  				#clock-cells = <1>;
+>  			};
+>  		};
+> +
+> +		wifi: wifi@18800000 {
+> +			status = "disabled";
 
-I'll merge the DT patches when the driver will have been merged.
-
-Maxime
-
---w5q3jazkvks4ahe3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfu0YQAKCRDj7w1vZxhR
-xb1VAP4xjI8YI2zdKwYfiKElxYGUogPWWoFs7p5Em1VmwApCcwEAv4GZSBrUwgDf
-iL9xxj+jWVL/hIbcgq1jXocUjXhSiQY=
-=1zC1
------END PGP SIGNATURE-----
-
---w5q3jazkvks4ahe3--
+nit: the convention seems to be to add this at the end of the node,
+which IMO makes sense since most other fields provide more 'interesting'
+information.
