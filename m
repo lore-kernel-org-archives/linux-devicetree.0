@@ -2,74 +2,237 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E66C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B394C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A00024650
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5CF824650
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:31:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CYqcWR1v"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YagIWdxn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfLSQFq (ORCPT
+        id S1726760AbfLSQbW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:05:46 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:33556 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726778AbfLSQFq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:05:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=IaGxRhDW1sFamH1CbhCP9ZpYf0Q8281Vz+4JiCX3/Ic=; b=CYqcWR1vXFNLed0Epssfv18qhx
-        8qTuOa8IT8mVpDlYPzox7qts0uDQCovkvTKjNv4ZPPKd7N9BSYnupTVl8eIUiN5isIEKMkmlWIESs
-        2A+IzDXHl3s1VjVNC2/TeQI6a1AJgjXJ0slGzwiMGVNIco7+cSq96FdrpzQxRPGXDheA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ihyIz-00025I-1o; Thu, 19 Dec 2019 17:05:37 +0100
-Date:   Thu, 19 Dec 2019 17:05:37 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     madalin.bucur@nxp.com
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, linux@armlinux.org.uk,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, shawnguo@kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/6] arm64: dts: ls104xardb: set correct PHY interface
- mode
-Message-ID: <20191219160537.GI17475@lunn.ch>
-References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1576768881-24971-3-git-send-email-madalin.bucur@oss.nxp.com>
+        Thu, 19 Dec 2019 11:31:22 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53880 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfLSQbW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 11:31:22 -0500
+Received: by mail-wm1-f65.google.com with SMTP id m24so6069980wmc.3
+        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 08:31:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=okmk+BI1MrI+rld+DNPC4brvepklr4RhuiyqBz4opVk=;
+        b=YagIWdxnqZEYbzLOTomTEPehf1xvgF5XuPHQGU/XLL30WhRHxWutX4q3ifHo5xAtQ1
+         ekOjUoXMXwawwN07pmCLeSmQHh3BBpftBOgfuk1jQfJNEVkDDepZAoBUyU6qgK39HVSS
+         ROhucjwLOUUC//YK/84Rf2RDIJr35Louu9n21fsQjq2P3zkmXVwMTVN3VY5FqwvZfuqI
+         NrXLHJw45Y2g9Dfxf3y/ofeU9p0tQtP/jQGEOm7Ko1CieRyMN7+I12hmj3EpYpjzb1Fd
+         jSTKhUYEeSM3U6DjZwyjwFX6vO/TgkYgJ+nSyQV9u9Z6BOGaVEcOUqsAcd63OVBczCZs
+         l/MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=okmk+BI1MrI+rld+DNPC4brvepklr4RhuiyqBz4opVk=;
+        b=OgeV3NbXzX1qAFDqkwYp63N3wjXbNWA9UKkqvZYHLkTFfOibcRM7PtReOvIGDEG6eC
+         D6YXVEqHXyTvJJZssJGB5py0TrlQXsuH/6cueOZ9LdGXng39/UOU9gRaItZ4NZpytava
+         8+PKmZf6gD4tDDpqPJWojKNsGmI3jC/64f2NUYF989S7iiUcMU7mIf6LhTbQTjnxD3uE
+         eS+JXdsbT/Z9RqHM+UNVWsd0EwC7nkoB2tLoHs+2dYYNAht+ZYF0F/eRhrZsnAjDpQ8v
+         1efWpxJr+vXURFR7ZHCwiWguCmyVsqqi68atlpU0yRrp0Himjl6ihiubYeGnptOA1u9z
+         jHIw==
+X-Gm-Message-State: APjAAAVg6qFkTMsXApR4LnEllrjDquVyB3W+shEkuE6el8WdNA6LtT6D
+        wq4P/e+2GDGgHhmiD4gNtv3UhA==
+X-Google-Smtp-Source: APXvYqyDpiGAd7nQQ2q/5btqSJSDJTY/kKmqQOHE8h/KWaNgKKEqspPoPutrYt+t26mJAZ1XjmXIYA==
+X-Received: by 2002:a7b:c190:: with SMTP id y16mr11282797wmi.107.1576773078800;
+        Thu, 19 Dec 2019 08:31:18 -0800 (PST)
+Received: from localhost.localdomain (adsl-84-227-176-239.adslplus.ch. [84.227.176.239])
+        by smtp.gmail.com with ESMTPSA id u22sm7092068wru.30.2019.12.19.08.31.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 08:31:17 -0800 (PST)
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
+        eric.auger@redhat.com, jonathan.cameron@huawei.com,
+        zhangfei.gao@linaro.org
+Subject: [PATCH v4 00/13] iommu: Add PASID support to Arm SMMUv3
+Date:   Thu, 19 Dec 2019 17:30:20 +0100
+Message-Id: <20191219163033.2608177-1-jean-philippe@linaro.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576768881-24971-3-git-send-email-madalin.bucur@oss.nxp.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 05:21:17PM +0200, Madalin Bucur wrote:
-> From: Madalin Bucur <madalin.bucur@nxp.com>
-> 
-> The DPAA 1 based LS1043ARDB and LS1046ARDB boards are using
-> XFI for the 10G interfaces. Since at the moment of the addition
-> of the first DPAA platforms the only 10G PHY interface type used
-> was XGMII, although the boards were actually using XFI, they were
-> wrongly declared as xgmii. This has propagated along the DPAA
-> family of SoCs, all 10G interfaces being declared wrongly as
-> XGMII. This patch addresses the problem for the ARM based DPAA
-> SoCs. After the introduction of XFI PHY interface type we can
-> address this issue.
+Add support for Substream ID and PASIDs to the SMMUv3 driver. Since v3
+[1], I added review and tested tags where appropriate and applied the
+suggested changes, shown in the diff below. Thanks all!
 
-Hi Madalin
+I'm testing using the zip accelerator on the Hisilicon KunPeng920 and
+Zhangfei's uacce module [2]. The full SVA support, which I'll send out
+early next year, is available on my branch sva/zip-devel at
+https://jpbrucker.net/git/linux/
 
-This patch should come at the end, after you have added support for
-these new modes. Otherwise anybody doing a git bisect could land on
-code which has broken ethernet.
+[1] https://lore.kernel.org/linux-iommu/20191209180514.272727-1-jean-philippe@linaro.org/
+[2] https://lore.kernel.org/linux-iommu/1576465697-27946-1-git-send-email-zhangfei.gao@linaro.org/
 
-     Andrew
+Jean-Philippe Brucker (13):
+  iommu/arm-smmu-v3: Drop __GFP_ZERO flag from DMA allocation
+  dt-bindings: document PASID property for IOMMU masters
+  iommu/arm-smmu-v3: Parse PASID devicetree property of platform devices
+  ACPI/IORT: Parse SSID property of named component node
+  iommu/arm-smmu-v3: Prepare arm_smmu_s1_cfg for SSID support
+  iommu/arm-smmu-v3: Add context descriptor tables allocators
+  iommu/arm-smmu-v3: Add support for Substream IDs
+  iommu/arm-smmu-v3: Propagate ssid_bits
+  iommu/arm-smmu-v3: Prepare for handling arm_smmu_write_ctx_desc()
+    failure
+  iommu/arm-smmu-v3: Add second level of context descriptor table
+  iommu/arm-smmu-v3: Improve add_device() error handling
+  PCI/ATS: Add PASID stubs
+  iommu/arm-smmu-v3: Add support for PCI PASID
+
+ .../devicetree/bindings/iommu/iommu.txt       |   6 +
+ drivers/acpi/arm64/iort.c                     |  18 +
+ drivers/iommu/arm-smmu-v3.c                   | 467 +++++++++++++++---
+ drivers/iommu/of_iommu.c                      |   6 +-
+ include/linux/iommu.h                         |   2 +
+ include/linux/pci-ats.h                       |   3 +
+ 6 files changed, 442 insertions(+), 60 deletions(-)
+
+-- 
+Diff since v3:
+#diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index cde7af39681c..8e95ecad4c9a 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -589,8 +589,10 @@ struct arm_smmu_cd_table {
+ };
+
+ struct arm_smmu_s1_cfg {
++	/* Leaf tables or linear table */
+ 	struct arm_smmu_cd_table	*tables;
+ 	size_t				num_tables;
++	/* First level tables, when two levels are used */
+ 	__le64				*l1ptr;
+ 	dma_addr_t			l1ptr_dma;
+ 	struct arm_smmu_ctx_desc	cd;
+@@ -1561,27 +1563,22 @@ static __le64 *arm_smmu_get_cd_ptr(struct arm_smmu_domain *smmu_domain,
+ 	struct arm_smmu_device *smmu = smmu_domain->smmu;
+ 	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+
+-	if (cfg->s1fmt == STRTAB_STE_0_S1FMT_LINEAR) {
+-		table = &cfg->tables[0];
+-		idx = ssid;
+-	} else {
+-		idx = ssid >> CTXDESC_SPLIT;
+-		if (idx >= cfg->num_tables)
+-			return NULL;
++	if (cfg->s1fmt == STRTAB_STE_0_S1FMT_LINEAR)
++		return cfg->tables[0].ptr + ssid * CTXDESC_CD_DWORDS;
+
+-		table = &cfg->tables[idx];
+-		if (!table->ptr) {
+-			if (arm_smmu_alloc_cd_leaf_table(smmu, table,
+-							 CTXDESC_L2_ENTRIES))
+-				return NULL;
++	idx = ssid >> CTXDESC_SPLIT;
++	table = &cfg->tables[idx];
++	if (!table->ptr) {
++		if (arm_smmu_alloc_cd_leaf_table(smmu, table,
++						 CTXDESC_L2_ENTRIES))
++			return NULL;
+
+-			l1ptr = cfg->l1ptr + idx * CTXDESC_L1_DESC_DWORDS;
+-			arm_smmu_write_cd_l1_desc(l1ptr, table);
+-			/* An invalid L1CD can be cached */
+-			arm_smmu_sync_cd(smmu_domain, ssid, false);
+-		}
+-		idx = ssid & (CTXDESC_L2_ENTRIES - 1);
++		l1ptr = cfg->l1ptr + idx * CTXDESC_L1_DESC_DWORDS;
++		arm_smmu_write_cd_l1_desc(l1ptr, table);
++		/* An invalid L1CD can be cached */
++		arm_smmu_sync_cd(smmu_domain, ssid, false);
+ 	}
++	idx = ssid & (CTXDESC_L2_ENTRIES - 1);
+ 	return table->ptr + idx * CTXDESC_CD_DWORDS;
+ }
+
+@@ -1617,8 +1614,12 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+ 	u64 val;
+ 	bool cd_live;
+ 	struct arm_smmu_device *smmu = smmu_domain->smmu;
+-	__le64 *cdptr = arm_smmu_get_cd_ptr(smmu_domain, ssid);
++	__le64 *cdptr;
+
++	if (WARN_ON(ssid >= (1 << smmu_domain->s1_cfg.s1cdmax)))
++		return -E2BIG;
++
++	cdptr = arm_smmu_get_cd_ptr(smmu_domain, ssid);
+ 	if (!cdptr)
+ 		return -ENOMEM;
+
+@@ -1640,9 +1641,9 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+ 		cdptr[3] = cpu_to_le64(cd->mair);
+
+ 		/*
+-		 * STE is live, and the SMMU might fetch this CD at any
+-		 * time. Ensure that it observes the rest of the CD before we
+-		 * enable it.
++		 * STE is live, and the SMMU might read dwords of this CD in any
++		 * order. Ensure that it observes valid values before reading
++		 * V=1.
+ 		 */
+ 		arm_smmu_sync_cd(smmu_domain, ssid, true);
+
+@@ -1706,7 +1707,7 @@ static int arm_smmu_alloc_cd_tables(struct arm_smmu_domain *smmu_domain)
+ 	 * Only allocate a leaf table for linear case. With two levels, leaf
+ 	 * tables are allocated lazily.
+ 	 */
+-	if (!cfg->l1ptr) {
++	if (cfg->s1fmt == STRTAB_STE_0_S1FMT_LINEAR) {
+ 		ret = arm_smmu_alloc_cd_leaf_table(smmu, &cfg->tables[0],
+ 						   max_contexts);
+ 		if (ret)
+@@ -2657,17 +2658,21 @@ static int arm_smmu_enable_pasid(struct arm_smmu_master *master)
+
+ 	features = pci_pasid_features(pdev);
+ 	if (features < 0)
+-		return -ENODEV;
++		return features;
+
+ 	num_pasids = pci_max_pasids(pdev);
+ 	if (num_pasids <= 0)
+-		return -ENODEV;
++		return num_pasids;
+
+ 	ret = pci_enable_pasid(pdev, features);
+-	if (!ret)
+-		master->ssid_bits = min_t(u8, ilog2(num_pasids),
+-					  master->smmu->ssid_bits);
+-	return ret;
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to enable PASID\n");
++		return ret;
++	}
++
++	master->ssid_bits = min_t(u8, ilog2(num_pasids),
++				  master->smmu->ssid_bits);
++	return 0;
+ }
+
+ static void arm_smmu_disable_pasid(struct arm_smmu_master *master)
+
+
