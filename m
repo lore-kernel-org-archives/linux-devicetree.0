@@ -2,190 +2,135 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E786C2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D34CC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB9624680
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:29:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LIYGkG4+"
+	by mail.kernel.org (Postfix) with ESMTP id 20BE824676
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:31:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576798294;
+	bh=hF7FeZOLBAbbbuxHjCzaeZODUTMfWk4z9rlsOrwRQik=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tvAr4vXJuzOo2dfgIEWrmazXLnwqqRiwZsXgwn8gZQTJJVt0bXtwEvZTCLn5ubkK5
+	 /270MQMhPFU2nqBynra/oDjQlQpJHsmYH1vsEA0DyzWTP5vDFgHkseRh4eZlkFiyxq
+	 /cwD2jLO1ezhF3UkRgS9CpGA9qzW5K8v/D6gl0eQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfLSX3L (ORCPT
+        id S1727135AbfLSXbd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:29:11 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37378 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfLSX3L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 18:29:11 -0500
-Received: by mail-pf1-f194.google.com with SMTP id p14so4154421pfn.4
-        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 15:29:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Jsi+F0iX2PzBdBAMLJPSaUkUuxSr3VLCQXp5gSjIoW8=;
-        b=LIYGkG4+kJk0lp1PkIDafWCnaoooIAJXV1BFG4P86uc8iWle3bJipXQbjnuAyBFvdj
-         /eGVwgZEG6jXAmnujn9RyenMxtf9baMOH+xarAEBG5Uvts3b1XnuDrgSxBqXP81bXwA1
-         relGzchU1zH/YqQ66+QXAhhALXdnw2Jo6Svek=
+        Thu, 19 Dec 2019 18:31:33 -0500
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:40302 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfLSXbd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 18:31:33 -0500
+Received: by mail-ot1-f41.google.com with SMTP id w21so1557869otj.7;
+        Thu, 19 Dec 2019 15:31:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jsi+F0iX2PzBdBAMLJPSaUkUuxSr3VLCQXp5gSjIoW8=;
-        b=A1UZAhsy+ol7+CanqhQ1tvWaqCLcD20Q3W5K2QN2SzdRpbHQOwovA9QQMLNnxzBHjk
-         gs5wQEGyfndDLfhZDQUPXLoTWv1VhwdDKmziIQ+066idVcOZNH4oH34uB7fn2GBVcm8x
-         aPEXnFwlVeYpYCgQS8sMnM0ilxMX0Z2kNpcr3klxOTLySTzR7VKkKIXOwKbpRzcg+cde
-         kVKIF258LLbQltosDuRUmKydOQsyU7TGapobU/8MD9uUc7wveB5rzC9M1nCxguO8f2mU
-         AcIElQtwWc48i99Po0VawhGV1bgow/ArkQTHP8EtS+GYH0eeioe4Ko1XM6BUo4ZihMxz
-         gVoA==
-X-Gm-Message-State: APjAAAUTINjfuOuoNxGT6vI8Tl0TKMGr5UwJAIwUGpVuaW/4x7CoFSSU
-        loHoJosytvBvpRrYq466WMee9A==
-X-Google-Smtp-Source: APXvYqxnxUNXSFAedpvMV3Vof65Su8H7bj4aXmgynUniBeReHLqhhSUJJOJXjjHnv73UGqdw4rJhtQ==
-X-Received: by 2002:a63:504f:: with SMTP id q15mr11563591pgl.8.1576798150841;
-        Thu, 19 Dec 2019 15:29:10 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id e12sm8087062pjs.3.2019.12.19.15.29.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 15:29:10 -0800 (PST)
-Date:   Thu, 19 Dec 2019 15:29:08 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, asutoshd@codeaurora.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        cang@codeaurora.org, rampraka@codeaurora.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V2] arm64: dts: qcom: sc7180: Add nodes for eMMC and SD
- card
-Message-ID: <20191219232908.GA228856@google.com>
-References: <1576288475-7606-1-git-send-email-vbadigan@codeaurora.org>
+        bh=cHN0yTmRtblTpyKmg4iRlUo8Qwlh54zEqesHcqtc4tw=;
+        b=d+jLduKnzyv9knYWRuHHTI8kuyrwaRtTGAzk003ScdHmpph+m0EfL+OAilo7LrwZ/w
+         ZyVvW0kqXeOoG7WqKWWbi4tBY/KDVpPDaaQX2MYATCNp754CVHtxKv4K4O4a2Vfvlw95
+         XDnRaufSupT1rKdqUyaXW1B2ZUTAAfNzva1D3vb6onhrI+Pprok6Kzo6pKsTX+5u9LZ9
+         eGUd0gnOYCqAHpM0jOffJ7Y2z897VF3putvc15Oo3EgZh+Pq4afvnG6lK46BEUNpWWg8
+         TWAJ6LL4E8CWje/6jXWqcgSKHzq+a9WKUqefl0eqGvHfzY6EPX/HKVvceHNPJm5gCJXo
+         4y1A==
+X-Gm-Message-State: APjAAAWOx8ClZHYGOPcUv9aPSTs0OMpZe7HcaZOll+RH8ghmZdZ8iMIy
+        OV3Z511TbOSQIl/EA1Ab0Q==
+X-Google-Smtp-Source: APXvYqyjZvh03uk/NUEQwvqjY4ru5OS3ZB9R5H2+OfsQFZsDDFfjxfktkVMWSrQ5ILJVZfDTUO1a6Q==
+X-Received: by 2002:a9d:1e4:: with SMTP id e91mr5962233ote.324.1576798292085;
+        Thu, 19 Dec 2019 15:31:32 -0800 (PST)
+Received: from localhost (ip-184-205-174-147.ftwttx.spcsdns.net. [184.205.174.147])
+        by smtp.gmail.com with ESMTPSA id n7sm2524611oij.14.2019.12.19.15.31.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 15:31:31 -0800 (PST)
+Date:   Thu, 19 Dec 2019 17:31:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [v2 3/6] of: address: add support to parse PCI outbound-ranges
+Message-ID: <20191219233129.GA5484@bogus>
+References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191213084748.11210-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAL_JsqLSYroDZGWksJJ=E+01X=3Tji4+GmK8s3i+d2BJphqiLQ@mail.gmail.com>
+ <CA+V-a8uKBuVUQvkoJ9pJYX97Qy3JazTyLCy-2T35gOX77AP8vg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576288475-7606-1-git-send-email-vbadigan@codeaurora.org>
+In-Reply-To: <CA+V-a8uKBuVUQvkoJ9pJYX97Qy3JazTyLCy-2T35gOX77AP8vg@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Dec 14, 2019 at 07:24:34AM +0530, Veerabhadrarao Badiganti wrote:
-> Add sdhc instances for supporting eMMC and SD-card on sc7180.
-> The regulators should be in HPM state for proper functionality of
-> eMMC and SD-card. Updating corresponding regulators accordingly.
+On Mon, Dec 16, 2019 at 08:49:23AM +0000, Lad, Prabhakar wrote:
+> Hi Rob,
 > 
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> ---
+> Thank you for the review.
 > 
-> This depends on the patch series (dt support for sc7180):
-> https://lkml.org/lkml/2019/11/8/149
-> Also depends on documentation commit 2078158 (Present on mmc-next)
-> 
-> Changes since V1:
-> 	- Updated the regulator min, max voltages as per
-> 	  eMMC/SD-card voltage requirements
-> 	- Enabled IOMMU for eMMC and SD-card.
-> 	- Added pull and drive strength to SD-card cd-gpio.
-> 	- Incorporated review comments by Matthias Kaehlcke.
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  47 +++++++---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 148 ++++++++++++++++++++++++++++++++
->  2 files changed, 183 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 189254f..b6d4dc1 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -7,6 +7,7 @@
->  
->  /dts-v1/;
->  
-> +#include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
->  #include "sc7180.dtsi"
->  #include "pm6150.dtsi"
-> @@ -101,9 +102,9 @@
->  		};
->  
->  		vreg_l12a_1p8: ldo12 {
-> -			regulator-min-microvolt = <1696000>;
-> -			regulator-max-microvolt = <1952000>;
-> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
->  		vreg_l13a_1p8: ldo13 {
-> @@ -143,9 +144,9 @@
->  		};
->  
->  		vreg_l19a_2p9: ldo19 {
-> -			regulator-min-microvolt = <2696000>;
-> -			regulator-max-microvolt = <3304000>;
-> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-> +			regulator-min-microvolt = <2960000>;
-> +			regulator-max-microvolt = <2960000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  	};
->  
-> @@ -189,9 +190,9 @@
->  		};
->  
->  		vreg_l6c_2p9: ldo6 {
-> -			regulator-min-microvolt = <2696000>;
-> -			regulator-max-microvolt = <3304000>;
-> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <2950000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
->  		vreg_l7c_3p0: ldo7 {
-> @@ -207,9 +208,9 @@
->  		};
->  
->  		vreg_l9c_2p9: ldo9 {
-> -			regulator-min-microvolt = <2952000>;
-> -			regulator-max-microvolt = <3304000>;
-> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-> +			regulator-min-microvolt = <2960000>;
-> +			regulator-max-microvolt = <2960000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
->  		vreg_l10c_3p3: ldo10 {
-> @@ -400,3 +401,25 @@
->  			bias-pull-up;
->  		};
->  };
-> +
-> +&sdhc_1 {
-> +	status = "ok";
+> On Fri, Dec 13, 2019 at 8:37 PM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Fri, Dec 13, 2019 at 2:48 AM Lad Prabhakar
+> > <prabhakar.csengg@gmail.com> wrote:
+> > >
+> > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > this patch adds support to parse PCI outbound-ranges, the
+> > > outbound-regions are similar to pci ranges except it doesn't
+> > > have pci address, below is the format for bar-ranges:
+> > >
+> > > outbound-ranges = <flags upper32_cpuaddr lower32_cpuaddr
+> > >                    upper32_size lower32_size>;
+> >
+> > You can't just make up a new ranges property. Especially one that
+> > doesn't follow how 'ranges' works. We already have 'dma-ranges' to
+> > translate device to memory addresses.
+> >
+> > Explain the problem or feature you need, not the solution you came up
+> > with. Why do you need this and other endpoint bindings haven't?
+> >
+> rcar SoC's supports multiple outbound region for mapping the PCI address
+> locally to the system. This lead to discussion where there exist controllers
+> which support regions for high/low priority transfer and similarly regions
+> for large/small memory allocations, as a result a new ranges property was
+> added, where we can specify the flags which would indicate how the outbound
+> region can be used during requests.
 
-another nit: the DT code is fine with both "okay" and "ok", however
-the rest of this file uses "okay", so let's be consistent and use the
-same string in all nodes.
+What are the flags?
 
-> +
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&sdc1_on>;
-> +	pinctrl-1 = <&sdc1_off>;
-> +	vmmc-supply = <&vreg_l19a_2p9>;
-> +	vqmmc-supply = <&vreg_l12a_1p8>;
-> +};
-> +
-> +&sdhc_2 {
-> +	status = "ok";
-
-ditto
+Rob
